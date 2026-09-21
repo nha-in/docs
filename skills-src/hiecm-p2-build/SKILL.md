@@ -23,6 +23,7 @@ Loop limit: 8 passes per step. Hitting the limit is an escalation: state what wa
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/request/otp \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -43,6 +44,7 @@ curl --request POST \
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/verify \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -86,6 +88,7 @@ A 200 whose body matches:
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/request/otp \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -106,6 +109,7 @@ curl --request POST \
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/verify \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -149,6 +153,7 @@ A 200 whose body matches:
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/verify \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -192,6 +197,7 @@ A 200 whose body matches:
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/request/otp \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -202,7 +208,7 @@ curl --request POST \
     "mobile-verify"
   ],
   "loginHint": "abha-number",
-  "loginId": "<BASE64_PHOTO>",
+  "loginId": "<ENCRYPTED_LOGIN_ID>",
   "otpSystem": "abdm"
 }'
 ```
@@ -212,6 +218,7 @@ curl --request POST \
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/verify \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -238,6 +245,7 @@ curl --request POST \
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/link \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -268,6 +276,7 @@ A 200 whose body matches:
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/request/otp \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -278,7 +287,7 @@ curl --request POST \
     "aadhaar-verify"
   ],
   "loginHint": "abha-number",
-  "loginId": "<BASE64_PHOTO>",
+  "loginId": "<ENCRYPTED_LOGIN_ID>",
   "otpSystem": "aadhaar"
 }'
 ```
@@ -288,6 +297,7 @@ curl --request POST \
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/verify \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -303,7 +313,7 @@ curl --request POST \
     ],
     "otp": {
       "txnId": "37d8d312-35a0-41e7-a6e4-1074eb18a5fa",
-      "otpValue": "<BASE64_PHOTO>"
+      "otpValue": "<ENCRYPTED_OTP_VALUE>"
     }
   }
 }'
@@ -314,6 +324,7 @@ curl --request POST \
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/link \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -344,6 +355,7 @@ A 200 whose body matches:
 ```bash
 curl --request GET \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/switch-profile \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
@@ -354,6 +366,7 @@ curl --request GET \
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/verify/switch-profile/user \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'T-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -386,9 +399,11 @@ A 200 whose body matches:
 ```bash
 curl --request GET \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
+  --header 'X-AUTH-TOKEN: <X_AUTH_TOKEN>'
 ```
 
 #### 2. Get QR code (`p2_get_v3_phr_app_login_profile_qrcode`)
@@ -396,9 +411,11 @@ curl --request GET \
 ```bash
 curl --request GET \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/qrCode \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
+  --header 'X-AUTH-TOKEN: <X_AUTH_TOKEN>'
 ```
 
 #### 3. Get PHR card (`p2_get_v3_phr_app_login_profile_phrcard`)
@@ -406,9 +423,11 @@ curl --request GET \
 ```bash
 curl --request GET \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/phrCard \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
+  --header 'X-AUTH-TOKEN: <X_AUTH_TOKEN>'
 ```
 
 #### 4. Update profile (`p2_post_v3_phr_app_login_profile_updateprofile`)
@@ -416,6 +435,7 @@ curl --request GET \
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/updateProfile \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -445,6 +465,7 @@ curl --request POST \
 ```bash
 curl --request GET \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/request/token \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'R-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
@@ -455,6 +476,7 @@ curl --request GET \
 ```bash
 curl --request GET \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/request/logout \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
@@ -695,9 +717,7 @@ curl --request POST \
     },
     "hip": null,
     "hiu": {
-      "id": "cowin_hiu_01",
-      "name": "Cowin",
-      "type": "HIU"
+      "id": "cowin_hiu_01"
     },
     "careContexts": [
       {
@@ -763,10 +783,6 @@ curl --request POST \
   "acknowledgement": {
     "status": "OK",
     "consentId": "e3c74829-3f82-4f94-959e-e10f57bcd57b"
-  },
-  "error": {
-    "code": "ABDM-1001",
-    "message": "unable to connect database"
   },
   "response": {
     "requestId": "6f0b4665-a915-4c92-aa36-65afb4a2cd71"

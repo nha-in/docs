@@ -1,26 +1,37 @@
 ---
-name: abdm-scan-and-register
-description: Use when building, debugging or testing ABDM scan and register: receiving the profile a patient shares by QR code at a counter and answering with a queue token.
+name: abdm-p1
+description: Use when building, debugging or testing ABDM P1 in a PHR app: creating an ABHA address and logging in to it.
 ---
 
-# ABDM Scan and register
+# ABDM P1, PHR registration and login
 
 Generated from the ABDM Developer Portal on 2026-09-16, catalogue version 2026.09.16. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.
 
-This file is a snapshot. Re-download the whole folder from the portal's /skills/abdm-scan-and-register/ path when it is older than the work you are doing: this router and every file under references/ that it links to. Fetching this file alone leaves those links pointing at files you do not have.
+This file is a snapshot. Re-download the whole folder from the portal's /skills/abdm-p1/ path when it is older than the work you are doing: this router and every file under references/ that it links to. Fetching this file alone leaves those links pointing at files you do not have.
 If the abdm-docs MCP server is connected, trust its answers over this file: it serves the current catalogue and stamps every response with its catalogue_version, which you can compare against the version above.
 
-## What you can do with Scan and register
+## What you can do with P1
 
-- Scan and register
+- PHR certificate and session token
+- Create ABHA address, mobile number
+- Create ABHA address, ABHA number with ABHA OTP
+- Create ABHA address, ABHA number with Aadhaar OTP
+- PHR login, mobile number
+- PHR login, email (optional)
+- PHR login, ABHA address with mobile OTP
+- PHR login, ABHA number with Aadhaar OTP
+- PHR login, ABHA number with ABHA OTP
+- PHR login, ABHA address with password
+- PHR login, ABHA address with email OTP (optional)
+- PHR login, Aadhaar OTP
 
 What it cannot do yet matters as much. Read **Before anything else** below before assuming a capability is one endpoint away.
 
 ## What is in this folder
 
 - **Scaffold.** Survey the codebase first when one exists, then build it flow by flow against the sandbox, as a loop that ends when the step's exit condition holds rather than on a call returning 200. [references/scaffold.md](references/scaffold.md)
-- **Integrate.** 13 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
-- **Debug.** The specification's examples return no error code for this module. [references/debug.md](references/debug.md)
+- **Integrate.** 22 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
+- **Debug.** The loop from a failed call to a named fix, and 4 error codes from the specification's examples. [references/debug.md](references/debug.md)
 
 This file is the map. Each line above is a file beside it, opened one at a time rather than read through.
 
@@ -53,6 +64,6 @@ This file is the map. Each line above is a file beside it, opened one at a time 
 
 ## Where the detail is
 
-- Every endpoint, with its body fields and responses: /docs/hiecm/v3/use-cases/scan-and-register
+- Every endpoint, with its body fields and responses: /docs/hiecm/v3/api/p1
 - Every error code across modules: /docs/hiecm/v3/reference/error-codes
 - Terms: /docs/hiecm/v3/getting-started/glossary
