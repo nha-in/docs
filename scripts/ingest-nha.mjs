@@ -264,6 +264,32 @@ specs.m1['x-abdm-sources'].push({file: 'catalogue/openapi/.raw/nha-2026-09-16/ab
   describeKeyMaterial(specs.m2.webhooks?.['/api/v3/hip/health-information/request']?.post?.requestBody?.content?.['application/json']?.schema, 'callback POST /api/v3/hip/health-information/request');
 }
 
+// 10. NHA's AI sandbox observations, 21 September 2026, on the M1 reference
+// pages: the session API named Keycloak and described its credentials with a
+// broken sentence, the public key call said what it returned rather than what
+// the key is for, and the search call's scope carried only an example.
+{
+  const sessions = specs.gateway.paths['/api/hiecm/gateway/v3/sessions']?.post;
+  if (sessions) {
+    sessions.summary = 'This API is invoked to generate access token.';
+    const props = sessions.requestBody?.content?.['application/json']?.schema?.properties ?? {};
+    if (props.clientId) props.clientId.description = 'The client ID issued to the integrator by ABDM at registration.';
+    if (props.clientSecret) props.clientSecret.description = 'The client secret issued to the integrator by ABDM along with the client ID.';
+    note('gateway', 'POST /api/hiecm/gateway/v3/sessions', 'summary no longer names Keycloak, and clientId and clientSecret are described as the credentials issued to the integrator; the raw file says "Mandatory when the clientId." for both. NHA review, 21 September 2026');
+  }
+  const certificate = specs.m1.paths['/abha/api/v3/profile/public/certificate']?.get;
+  if (certificate) {
+    certificate.description = 'This API is used to fetch the public key used for encryption of Aadhaar, OTP, mobile and other fields which require encryption.';
+    note('m1', 'GET /abha/api/v3/profile/public/certificate', 'description says what the key is for, encryption of Aadhaar, OTP, mobile and other fields; the raw file says it returns the key and algorithm. NHA review, 21 September 2026');
+  }
+  const scope = specs.m1.paths['/abha/api/v3/profile/account/abha/search']?.post?.requestBody?.content?.['application/json']?.schema?.properties?.scope;
+  if (scope) {
+    scope.description = 'The scope of the request. Use search-abha.';
+    scope.items = {...(scope.items ?? {type: 'string'}), enum: ['search-abha']};
+    note('m1', 'POST /abha/api/v3/profile/account/abha/search', 'scope described and constrained to search-abha; the raw file carried only the example. NHA review, 21 September 2026');
+  }
+}
+
 for (const [id, m] of Object.entries(MODULES)) {
   const count = Object.values(specs[id].paths).reduce((n, i) => n + METHODS.filter((x) => i[x]).length, 0) + Object.values(specs[id].webhooks).reduce((n, i) => n + METHODS.filter((x) => i[x]).length, 0);
   if (count !== m.expected) throw new Error(`${id}: ${count} operations, expected ${m.expected}`);
