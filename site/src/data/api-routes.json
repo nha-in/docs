@@ -5162,7 +5162,7 @@
     "method": "POST",
     "path": "/abha/api/v3/profile/account/request/emailVerificationLink",
     "summary": "Email Verification Link",
-    "route": "/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-number-aadhaar-otp/05-p1-post-v3-profile-account-request-emailverificationlink",
+    "route": "/docs/hiecm/v3/api/p1/endpoints/p1-post-v3-profile-account-request-emailverificationlink",
     "callbacks": []
   },
   {
