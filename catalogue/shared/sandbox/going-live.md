@@ -95,9 +95,9 @@ not describe their shape beyond that they differ from sandbox values.
 ## When it goes wrong
 
 Questions about the exit process itself, including where to submit the exit form or what
-counts as a valid supporting document, go to
-[NHA's developer forum](https://devforum.abdm.gov.in) or `integration.support@nha.gov.in`, both
-named in NHA's FAQ. See [Support](/docs/support) for the report format.
+counts as a valid supporting document, go to the
+[support ticketing platform](https://sandboxsupport.abdm.gov.in/) or
+`integration.support@nha.gov.in`. See [Support](/docs/support) for the report format.
 
 If a call that worked in the sandbox fails in production, check the base URL and the `X-CM-ID`
 header first: see [Everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401),

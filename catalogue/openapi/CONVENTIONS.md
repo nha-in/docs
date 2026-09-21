@@ -9,7 +9,7 @@ without three different shapes of truth.
 | File | Module | Gateway host |
 |---|---|---|
 | `hiecm-gateway.yaml` | Session token, used by all modules | `dev.abdm.gov.in` |
-| `hiecm-m1.yaml` | ABHA identity | `abhasbx.abdm.gov.in` |
+| `hiecm-m1.yaml` | ABHA creation and verification | `abhasbx.abdm.gov.in` |
 | `hiecm-m2.yaml` | Care context linking and HIP data sharing | `dev.abdm.gov.in` |
 | `hiecm-m3.yaml` | Consent and HIU data fetch | `dev.abdm.gov.in` |
 | `hiecm-m4.yaml` | HPR and HFR registration. Phase 2, nothing written | `apihspsbx.abdm.gov.in` |

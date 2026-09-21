@@ -37,7 +37,8 @@ verification, so a facility can exist in a self declared state before it
 is verified.
 
 HFR and the Healthcare Professionals Registry together make up the
-National Healthcare Providers Registry, NHPR, which is milestone M4.
+National Healthcare Professionals and Facilities Registry, NHPR, which
+is milestone M4.
 
 ## Before you start
 
