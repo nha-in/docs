@@ -2642,15 +2642,7 @@
     "path": "/api/hiecm/data-flow/v3/health-information/notify",
     "summary": "Notifications corresponding to events during data flow",
     "route": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/03-m2-post-data-flow-v3-health-information-notify",
-    "callbacks": [
-      {
-        "method": "POST",
-        "path": "/health-information/transfer",
-        "summary": "health information transfer API",
-        "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/10-m2-post-health-information-transfer",
-        "relation": "answered-by"
-      }
-    ]
+    "callbacks": []
   },
   {
     "key": "health-information/transfer",

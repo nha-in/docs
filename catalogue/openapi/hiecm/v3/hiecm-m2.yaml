@@ -4515,7 +4515,6 @@ webhooks:
                 type: string
                 example: Forbidden
       x-abdm-nha-operation-id: abdm-consent-management 6
-      x-abdm-answered-by: m2_post_data_flow_v3_health_information_notify
 components:
   securitySchemes:
     bearerAuth:

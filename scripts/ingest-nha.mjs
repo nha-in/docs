@@ -439,7 +439,6 @@ specs.m1['x-abdm-sources'].push({file: 'catalogue/openapi/.raw/nha-2026-09-16/ab
       '/api/v3/hip/link/care-context/init': ['x-abdm-answered-by', 'm2_post_user_initiated_linking_v3_link_care_context_on_init'],
       '/api/v3/hip/link/care-context/confirm': ['x-abdm-answered-by', 'm2_post_user_initiated_linking_v3_link_care_context_on_confirm'],
       '/api/v3/hip/health-information/request': ['x-abdm-answered-by', 'm2_post_data_flow_v3_health_information_hip_on_request'],
-      '/health-information/transfer': ['x-abdm-answered-by', 'm2_post_data_flow_v3_health_information_notify'],
     },
     p2: {
       '/api/v3/hiu/patient/care-context/on-discover': ['x-abdm-triggered-by', 'p2_post_user_initiated_linking_v3_patient_care_context_discover'],
@@ -536,7 +535,7 @@ specs.m1['x-abdm-sources'].push({file: 'catalogue/openapi/.raw/nha-2026-09-16/ab
     if (!op) continue;
     op.parameters ??= [];
     if (!op.parameters.some((x) => x.name === 'X-AUTH-TOKEN')) {
-      op.parameters.push({name: 'X-AUTH-TOKEN', in: 'header', required: true, schema: {type: 'string'}, description: 'The user token issued at login, sent beside X-token, as the PHR V3 document requires on this call.'});
+      op.parameters.push({name: 'X-AUTH-TOKEN', in: 'header', required: true, schema: {type: 'string'}, description: 'The user token issued at login. Send it beside X-token.'});
       note('p2', `GET ${path}`, 'X-AUTH-TOKEN header added; the PHR V3 document marks it mandatory beside X-token and the raw file declares X-token only');
     }
   }
