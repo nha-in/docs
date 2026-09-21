@@ -82,9 +82,9 @@ with it works on both web and mobile. And anything failing the rules above is
 refused at creation rather than at submission.
 
 :::caution[The minimum length is stated twice, differently]
-NHA's PHR document gives the minimum as 4 characters in its narrative and as 8
-in the test case for creating an address by mobile number. Neither has been
-run against the sandbox from here. Build to 8, which is the stricter reading.
+The minimum length is given as 4 characters in one place and as 8 in the test
+case for creating an address by mobile number. Build to 8, which is the
+stricter reading.
 :::
 
 A password is created alongside the address: at least 8 characters, at least
