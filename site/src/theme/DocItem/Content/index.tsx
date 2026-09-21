@@ -8,6 +8,32 @@ import PageActions from '@site/src/components/docs/PageActions';
 type Props = WrapperProps<typeof ContentType>;
 
 /**
+ * Open a rendered mermaid diagram in its own tab at its natural size. The
+ * diagram in the page is scaled to fit the column (site/src/css/mdx.css),
+ * which keeps the shape readable and the labels small; this is the way back
+ * to the labels. The svg is copied out with its viewBox as its size, so the
+ * new tab shows it at the size mermaid drew it.
+ */
+function openFullSize(box: HTMLElement): void {
+  const svg = box.querySelector('svg');
+  if (!svg) return;
+  const copy = svg.cloneNode(true) as SVGSVGElement;
+  copy.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+  const [, , w, h] = (copy.getAttribute('viewBox') ?? '').split(/\s+/);
+  if (w && h) {
+    copy.setAttribute('width', w);
+    copy.setAttribute('height', h);
+  }
+  copy.style.maxWidth = '';
+  const url = URL.createObjectURL(
+    new Blob([new XMLSerializer().serializeToString(copy)], {type: 'image/svg+xml'}),
+  );
+  window.open(url, '_blank', 'noopener');
+  // ponytail: one minute is past any tab open; revoke so blobs do not pile up.
+  window.setTimeout(() => URL.revokeObjectURL(url), 60000);
+}
+
+/**
  * The page actions sit under the lede: after the H1 and the first paragraph
  * that follows it, above the body. Content renders the title and the MDX
  * body as one unit, so there is no prop to slot a row in at that point.
@@ -69,7 +95,11 @@ export default function ContentWrapper(props: Props): React.ReactNode {
         box.dataset.scrollable = 'true';
         box.setAttribute('role', 'region');
         box.setAttribute('tabindex', '0');
-        box.setAttribute('aria-label', 'Diagram, scrollable');
+        box.setAttribute('aria-label', 'Diagram. Double-click or press Enter to open at full size');
+        box.addEventListener('dblclick', () => openFullSize(box));
+        box.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter') openFullSize(box);
+        });
       }
     };
     // Mermaid renders its diagrams asynchronously, so the containers do not

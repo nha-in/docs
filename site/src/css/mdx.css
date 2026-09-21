@@ -377,12 +377,19 @@ li.docs-step:last-child {
    mermaid computed from that diagram's own viewBox, clamps it back to exactly
    that. A diagram narrower than the column is left at its own size rather than
    stretched, which is what mermaid does when nothing constrains it. */
-/* At every width now, not only on phones. The diagrams carry the exact call
-   and its fields on each arrow, so scaling one to fit the column turned 13px
-   labels into 8px ones on the M3 page. A wide diagram scrolls; a narrow one is
-   left at its own size. */
+/* Fit the column. A wide diagram scales down to the column and a narrow one
+   stays at its own size, since mermaid's inline max-width is its natural
+   width. The labels get small on a wide flow, which is the trade for seeing
+   the whole shape at once: double-clicking the diagram, or pressing Enter on
+   it, opens the SVG at full size in its own tab
+   (site/src/theme/DocItem/Content/index.tsx). */
 .docusaurus-mermaid-container svg {
-  width: 100000px;
+  width: 100%;
+  height: auto;
+}
+
+.docusaurus-mermaid-container {
+  cursor: zoom-in;
 }
 
 /* Colours from the site's tokens, so the diagram follows the theme switch.
