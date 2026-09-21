@@ -81,32 +81,6 @@ assistant in one click.
 <LegacyAnchor id="abha-with-aadhaar" />
 <LegacyAnchor id="the-page-map" />
 
-A Self-Declared profile may transition to a KYC-verified profile following
-successful linkage and verification of an ABHA number, in accordance with ABDM
-guidelines. Relevant profile information is retained and updated as part of the
-profile lifecycle management process. This section describes the supported
-onboarding pathways, including workflows for individuals who already possess an
-ABHA. Interactions involving identity verification are facilitated through
-ABDM-authorized services and prescribed integration workflows, while the
-diagrams illustrate the recommended sequence of steps for each implementation
-flow.
-
-The Aadhaar-based pathways produce the 14-digit
-[ABHA number](/docs/hiecm/v3/getting-started/glossary#abha-number). Aadhaar verifies the individual's identity, the
-ABHA service issues the number, and the individual selects an
-[ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address) linked to it. The pathways differ only in the
-Aadhaar authentication mechanism used.
-
-### Which creation route you must build
-
-| Creation route | Private integrator | Government integrator |
-|---|---|---|
-| Aadhaar OTP | Mandatory | Mandatory |
-| Aadhaar face authentication | Optional | Optional |
-| Aadhaar fingerprint or iris | Optional | Optional |
-| Aadhaar demographic authentication | Not required | Mandatory |
-| Child ABHA | Not available | Only on NHA leadership approval |
-
 ### ABHA creation by an Aadhaar OTP
 
 <LegacyAnchor id="journey-1-abha-creation-by-aadhaar-otp" />
@@ -232,14 +206,6 @@ integrators, subject to approval by the National Health Authority (NHA). The
 workflow includes creation of a child ABHA linked to a verified parent or
 guardian account, updating child profile information, and retrieval of child
 accounts associated with the parent or guardian.
-
-- **Create.** The same `enrol/byAadhaar` call, with `authMethods` set to `child`
-  and a `child` block carrying the child's name, date of birth and gender, and
-  the parent's ABHA number or ABHA address. The parent is authenticated first.
-- **Update.** `PATCH /v3/profile/account` with the child's ABHA number, name,
-  date of birth and gender.
-- **List.** `GET /v3/enrollment/profile/children`, which returns the children
-  under the account and their count.
 
 ## ABHA login via mobile number
 
