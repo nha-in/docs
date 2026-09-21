@@ -27,7 +27,7 @@ record sharing hang off it. There are six jobs:
 | Job | What the user sees |
 | --- | --- |
 | Create or link an ABHA address | Register with a mobile number, or with an existing 14 digit ABHA number |
-| Log in | Mobile number, ABHA address, or ABHA number |
+| Log in | Mobile number, ABHA address, ABHA number, or Aadhaar number |
 | Manage a profile | Demographics, photo, password, QR code, downloadable ABHA card |
 | Share a profile at a facility | Scan the facility QR code, consent, receive a queue token |
 | Find and link past records | Search a facility, discover [care contexts](/docs/hiecm/v3/getting-started/glossary#care-context), verify by [OTP](/docs/hiecm/v3/getting-started/glossary#otp), link |
@@ -85,7 +85,7 @@ ABHA number, the number becomes visible, and the status changes to KYC Verified.
 
 ### Login
 
-All these routes are mandatory.
+All these routes are mandatory, except login by email OTP, which is optional.
 
 | Route | Validated by |
 | --- | --- |

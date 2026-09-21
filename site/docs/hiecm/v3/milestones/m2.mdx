@@ -74,8 +74,7 @@ All use cases, and the milestone each belongs to: [Use cases](/docs/hiecm/v3/use
 
 M2 is applicable to healthcare facilities and systems that create and maintain
 digital health records, including hospitals, clinics, laboratories, pharmacies
-and diagnostic or imaging centres. A citizen pushing their own records from a
-PHR app builds [P2 Linking and records](./p2), the patient side of M2.
+and diagnostic or imaging centres.
 
 ## Prerequisites
 
@@ -96,6 +95,11 @@ fulfilled:
 ## Health record formats
 
 <LegacyAnchor id="record-types-you-can-link" />
+
+Each applicable health-information type shall be represented as a FHIR document
+Bundle. Depending on the applicable profile and use case, the Bundle may contain
+structured clinical data and, where permitted, an attachment such as a PDF
+document or image.
 
 [HRP](/docs/hiecm/v3/getting-started/glossary#hrp) can only link the following
 type of health records to an ABHA Address. All health records must be
