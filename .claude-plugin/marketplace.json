@@ -4,7 +4,7 @@
   "description": "The ABDM Developer Portal: integration skills for ABDM integrators, and the contributor's assistant for building the portal itself",
   "owner": {
     "name": "ABDM Developer Portal working group",
-    "url": "https://github.com/eka-care/abdm-docs"
+    "url": "https://github.com/nha-in/docs"
   },
   "plugins": [
     {
@@ -21,14 +21,14 @@
         "healthcare",
         "india-health"
       ],
-      "homepage": "https://github.com/eka-care/abdm-docs"
+      "homepage": "https://github.com/nha-in/docs"
     },
     {
       "name": "abdm-contributors-assistant",
       "source": "./plugins/abdm-contributors-assistant",
       "description": "Build and operate the ABDM Developer Portal: atom authoring, verification, linting, OpenAPI ingestion, Scalar docs, skill compilation, the update pipeline, the support agent, planning and proof. Compiled from the architecture and execution plan in this repo.",
       "category": "documentation",
-      "homepage": "https://github.com/eka-care/abdm-docs"
+      "homepage": "https://github.com/nha-in/docs"
     }
   ]
 }
