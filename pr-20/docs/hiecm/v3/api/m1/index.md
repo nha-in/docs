@@ -12,4 +12,4 @@ Login by fingerprint or iris uses the same base URL, through `profile/login/veri
 
 [See the user journeyWhat the person experiences, screen by screen, before you write any code.](/docs/pr-20/docs/hiecm/v3/milestones/m1)[When it goes wrongThe recorded error shapes and codes, and what to do about each.](/docs/pr-20/docs/hiecm/v3/api/m1/errors)
 
-New to this? Start with [M1 Create](/docs/pr-20/docs/hiecm/v3/milestones/m1).
+New to this? Start with [M1 Identity](/docs/pr-20/docs/hiecm/v3/milestones/m1).

@@ -8,7 +8,7 @@ The calls themselves: where they live, what they need in their headers, and one 
 - `https://apis.abdm.gov.in` ABDM gateway, production
 ## Endpoints
 
-33 operations, grouped by the journey they belong to.
+31 operations, grouped by the journey they belong to.
 
 ### Other operations
 
@@ -31,7 +31,6 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `POST` | `/api/hiecm/hip/v3/link/carecontext` | Perform HIP initiated linking. |
 | `POST` | `/api/hiecm/hip/v3/link/context/notify` | Notify CM about any update on the already linked care context for a patient. |
 | `POST` | `/api/hiecm/hip/v3/link/patient/links/sms/notify2` | Send SMS notification to patient that a care context is linked. |
-| `POST` | `/api/hiecm/patient-share/v3/on-share` | Sharing the response of HIECM's /api/hiecm/patient-share/v3/on-share API |
 | `POST` | `/api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm` | Sharing the response of /api/hiecm/user-initiated-linking/v3/link/care-context/… |
 | `POST` | `/api/hiecm/user-initiated-linking/v3/link/care-context/on-init` | As a result of the initialization, HIP has to generate a unique reference-numbe… |
 | `POST` | `/api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover` | HMIS/LIMS/HIP has to ensure that only unlinked records of the patient has to be… |
@@ -41,7 +40,6 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `POST` | `/api/v3/hip/link/care-context/confirm` | Confirm the linking of care contexts for a patient. It allows healthcare inform… |
 | `POST` | `/api/v3/hip/link/care-context/init` | Initiate the linking of care contexts for a patient. It allows healthcare infor… |
 | `POST` | `/api/v3/hip/patient/care-context/discover` | Discover care contexts associated with a patient. It allows healthcare informat… |
-| `POST` | `/api/v3/hip/patient/share` | This API will be invoked to the HIP for sharing the response of HIECM's /api/hi… |
 | `POST` | `/api/v3/hip/token/on-generate-token` | This is a call back API of [/api/hiecm/v3/token/generate-token]. |
 | `POST` | `/api/v3/link/on_carecontext` | Is a callback API that will be called by HIE-CM. The response will be received … |
 | `POST` | `/api/v3/links/context/on-notify` | This API endpoint is a call back API for /api/hiecm/hip/v3/link/context/notify … |

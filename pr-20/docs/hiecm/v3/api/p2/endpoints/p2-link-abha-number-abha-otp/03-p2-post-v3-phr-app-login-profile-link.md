@@ -21,7 +21,7 @@ curl --request POST \
 
 ## Headers
 
-- `X-token` (string, required)
+- `X-token` (string, required): The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
 - `REQUEST-ID` (string, required): Unique UUID for each request.
 - `TIMESTAMP` (string, required): Request timestamp in UTC, ISO-8601 with Z.
 

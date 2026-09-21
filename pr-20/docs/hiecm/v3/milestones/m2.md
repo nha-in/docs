@@ -1,4 +1,4 @@
-# M2 Attach: Health Information Provider Services
+# M2 Health Information Provider: Create and link records
 
 Milestone 2 enables a [Health Information Provider](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#hip) (HIP) to create digital health records and to generate and link [care contexts](/docs/pr-20/docs/hiecm/v3/concepts/care-context) with a patient's [ABHA Address](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#abha-address). It also enables the HIP to facilitate record [discovery](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#discovery) through a Personal Health Record ([PHR](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#phr)) application, and to securely share encrypted health information across the ABDM ecosystem.
 
@@ -21,6 +21,14 @@ The following capabilities shall be supported by an ABDM-compliant HIP system, a
 | Notification to mobile                  | Enables the HIP to notify the patient upon successful linkage of health records.                                                                                                        |
 | Discovery and linking                   | Enables the identification and linkage of a patient's previously generated health records with the patient's ABHA Address through a discovery request initiated via a PHR application.  |
 | Health-information request and transfer | Enables the secure, consent-based exchange of a patient's health records in ABDM-prescribed HL7 FHIR R4 format within the ABDM ecosystem.                                               |
+
+## Use cases
+
+| Use case                                                         | What it does                                                                                                                                                                                                                                 |
+| ---------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Scan and Pay](/docs/pr-20/docs/hiecm/v3/use-cases/scan-and-pay) | A patient scans the QR code at your counter, sees their open orders in their PHR app and pays there. You answer with the orders and the payment bundle, and report the payment status. The callbacks land on the bridge you register for M2. |
+
+All use cases, and the milestone each belongs to: [Use cases](/docs/pr-20/docs/hiecm/v3/use-cases).
 
 ## Who needs it
 
@@ -77,7 +85,7 @@ Every M2 call and callback, its error codes and its certification cases in one f
 
 - ScaffoldThe loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.
 - Design
-- Integrate33 operations, with their hosts, headers and the rules that hold across them.
+- Integrate31 operations, with their hosts, headers and the rules that hold across them.
 - DebugNo error code is recorded for this module yet.
 
 `mkdir -p .claude/skills/abdm-m2/references && curl -fsSL https://nha-in.github.io/docs/pr-20/skills/abdm-m2/SKILL.md -o .claude/skills/abdm-m2/SKILL.md && for f in scaffold design integrate debug; do curl -fsSL https://nha-in.github.io/docs/pr-20/skills/abdm-m2/references/$f.md -o .claude/skills/abdm-m2/references/$f.md; done`
@@ -272,6 +280,7 @@ During ABDM integration, systems may encounter issues across discovery, linking,
 
 ## Next
 
-- Requesting records from other facilities is [M3 Retrieve](/docs/pr-20/docs/hiecm/v3/milestones/m3).
+- Take payment for open orders from a patient's app: [Scan and Pay](/docs/pr-20/docs/hiecm/v3/use-cases/scan-and-pay).
+- Requesting records from other facilities is [M3 Health Information User](/docs/pr-20/docs/hiecm/v3/milestones/m3).
 - The calls, callbacks and error codes: [M2 API reference](/docs/pr-20/docs/hiecm/v3/api/m2).
 - The cases M2 is tested against: the certification pack NHA issues. Certification runs once, for the whole integration: [Go live](/docs/pr-20/docs/hiecm/v3/getting-started/going-live).

@@ -83,7 +83,7 @@ curl --request POST \
 
 ## Headers
 
-- `x-hprid-auth` (string, required)
+- `x-hprid-auth` (string, required): The HPR token of the signed-in professional, from the HPR login.
 
 ## Body
 

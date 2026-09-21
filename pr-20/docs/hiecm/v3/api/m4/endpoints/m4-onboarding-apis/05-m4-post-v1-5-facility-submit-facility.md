@@ -23,8 +23,8 @@ curl --request POST \
 
 ## Headers
 
-- `x-hprid-auth` (string, required)
-- `x-hprid-auth-verifier` (string)
+- `x-hprid-auth` (string, required): The HPR token of the signed-in professional, from the HPR login.
+- `x-hprid-auth-verifier` (string): The HPR token of the professional verifying the facility submission.
 
 ## Body
 

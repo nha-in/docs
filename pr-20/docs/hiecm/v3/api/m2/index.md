@@ -11,4 +11,4 @@ Link care contexts to a patient's ABHA address, answer discovery requests, and s
 
 The full operation list is in the [M2 API reference](/docs/pr-20/reference/hiecm-m2).
 
-New to this? Start with [M2 Attach](/docs/pr-20/docs/hiecm/v3/milestones/m2).
+New to this? Start with [M2 Health Information Provider](/docs/pr-20/docs/hiecm/v3/milestones/m2).

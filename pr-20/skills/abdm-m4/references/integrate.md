@@ -133,9 +133,9 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `REQUEST-ID` | Unique UUID for track the end to end request transaction |
 | `TIMESTAMP` | Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, follow… |
 | `X-CM-ID` | Suffix of the consent manager to which the request was intended |
-| `x-hprid-auth` |  |
-| `x-hprid-auth-verifier` |  |
-| `X-Token` |  |
+| `x-hprid-auth` | The HPR token of the signed-in professional, from the HPR login. |
+| `x-hprid-auth-verifier` | The HPR token of the professional verifying the facility submission. |
+| `X-Token` | The HPR token of the signed-in professional, from the HPR login. |
 ## A request, in full
 
 ```bash

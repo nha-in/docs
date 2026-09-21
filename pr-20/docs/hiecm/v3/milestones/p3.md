@@ -1,6 +1,6 @@
 # P3 Consent and notifications
 
-P3 is the other side of [M3 Retrieve](/docs/pr-20/docs/hiecm/v3/milestones/m3). M3 is a requester asking for records. P3 is the patient deciding, and being told each time.
+P3 is the other side of [M3 Health Information User](/docs/pr-20/docs/hiecm/v3/milestones/m3). M3 is a requester asking for records. P3 is the patient deciding, and being told each time.
 
 A citizen fetching records is the [HIU](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#hiu), so every [PHR](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#phr) application must implement that side.
 

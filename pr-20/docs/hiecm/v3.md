@@ -16,7 +16,7 @@ Three gateways carry different work, and this section documents the first.
 | [UHI](/docs/pr-20/docs/uhi/v1)                                      | Unified Health Interface: discovery and delivery of digital health services through an open and interoperable network                                                                                                                                                                |
 | [NHCX](/docs/pr-20/docs/nhcx/v1)                                    | National Health Claims Exchange: standardised exchange of health insurance claim information among payers, healthcare providers, beneficiaries, third-party administrators and other participating entities                                                                          |
 
-Your work on HIE-CM is four milestones, and they spell [CARE](/docs/pr-20/docs/hiecm/v3/milestones): Create the identity, Attach your records to it, Retrieve records held elsewhere, Enrol your facility and your professionals.
+Your work on HIE-CM is [four milestones](/docs/pr-20/docs/hiecm/v3/milestones): Create the identity, Attach your records to it, Retrieve records held elsewhere, Enrol your facility and your professionals.
 
 ## Who are you?
 

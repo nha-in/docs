@@ -1,4 +1,4 @@
-# M1 Create: ABHA Creation and Verification
+# M1 Identity: Create and verify ABHA
 
 Milestone 1 focuses on the creation and management of [ABHA](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#abha), the unique health identifier under [ABDM](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#abdm). This milestone enables the creation of ABHA, authentication of users, and retrieval or updating of ABHA profile information through ABDM-compliant workflows. ABHA is a 14-digit unique health identifier issued to an individual upon successful completion of the prescribed verification process. ABHA serves as a foundational component for several ABDM services and workflows. Organizations implementing these services may be required to support ABHA creation and management capabilities, as applicable to their use case.
 
@@ -13,13 +13,21 @@ Milestone 1 focuses on ABHA creation, authentication, and profile management fun
 
 ## Capabilities enabled under Milestone 1 (M1)
 
-| Capability                                                                  | What it enables                                                                                                                                                                  |
-| --------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Session and tokens                                                          | Establish gateway sessions, manage access and refresh tokens, and retrieve public key certificates required for secure ABDM interactions.                                        |
-| ABHA creation                                                               | Support creation of ABHA and associated identifiers in accordance with ABDM onboarding and verification workflows.                                                               |
-| ABHA login                                                                  | Authenticate an ABHA holder using approved identifiers and authentication mechanisms, including mobile number, ABHA number, or ABHA address, as applicable.                      |
-| Profile management                                                          | Retrieve and manage ABHA profile information, display ABHA credentials and QR codes, update eligible profile attributes, and support re-verification workflows where applicable. |
-| [Scan and Register](/docs/pr-20/docs/hiecm/v3/milestones/scan-and-register) | Support patient registration through QR-based workflows and generate service or queue identifiers in accordance with organization-specific processes.                            |
+| Capability                                                                 | What it enables                                                                                                                                                                  |
+| -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Session and tokens                                                         | Establish gateway sessions, manage access and refresh tokens, and retrieve public key certificates required for secure ABDM interactions.                                        |
+| ABHA creation                                                              | Support creation of ABHA and associated identifiers in accordance with ABDM onboarding and verification workflows.                                                               |
+| ABHA login                                                                 | Authenticate an ABHA holder using approved identifiers and authentication mechanisms, including mobile number, ABHA number, or ABHA address, as applicable.                      |
+| Profile management                                                         | Retrieve and manage ABHA profile information, display ABHA credentials and QR codes, update eligible profile attributes, and support re-verification workflows where applicable. |
+| [Scan and Register](/docs/pr-20/docs/hiecm/v3/use-cases/scan-and-register) | Support patient registration through QR-based workflows and generate service or queue identifiers in accordance with organization-specific processes.                            |
+
+## Use cases
+
+| Use case                                                                   | What it does                                                                                                                                                                                              |
+| -------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Scan and Register](/docs/pr-20/docs/hiecm/v3/use-cases/scan-and-register) | A patient scans the QR code at your counter and shares their ABHA profile. Registration needs no typing, every record from the visit links to the right ABHA address, and the patient gets a queue token. |
+
+All use cases, and the milestone each belongs to: [Use cases](/docs/pr-20/docs/hiecm/v3/use-cases).
 
 ## Building blocks you use
 
@@ -222,7 +230,7 @@ The workflow also supports profile updates in accordance with applicable ABDM gu
 
 ## Next
 
-- Register a patient who scanned your counter QR code: [Scan and Register](/docs/pr-20/docs/hiecm/v3/milestones/scan-and-register).
+- Register a patient who scanned your counter QR code: [Scan and Register](/docs/pr-20/docs/hiecm/v3/use-cases/scan-and-register).
 - The calls, base URLs and error shapes: [M1 API reference](/docs/pr-20/docs/hiecm/v3/api/m1).
 - Certification runs once, for the whole integration: [Go live](/docs/pr-20/docs/hiecm/v3/getting-started/going-live).
-- The next milestone: [M2 Attach](/docs/pr-20/docs/hiecm/v3/milestones/m2).
+- The next milestone: [M2 Health Information Provider](/docs/pr-20/docs/hiecm/v3/milestones/m2).

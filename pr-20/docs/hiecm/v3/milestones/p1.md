@@ -1,6 +1,6 @@
 # P1 Identity and profile
 
-P1 is the patient side of [M1 Create](/docs/pr-20/docs/hiecm/v3/milestones/m1). M1 is how a hospital system creates an [ABHA](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#abha). P1 is how the patient's own [PHR](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#phr) app does it, and how it maintains the account afterwards.
+P1 is the patient side of [M1 Identity](/docs/pr-20/docs/hiecm/v3/milestones/m1). M1 is how a hospital system creates an [ABHA](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#abha). P1 is how the patient's own [PHR](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#phr) app does it, and how it maintains the account afterwards.
 
 ## In short
 

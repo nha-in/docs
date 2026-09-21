@@ -42,7 +42,7 @@ These pages cover the shape of M4 and the endpoints that are named. They are not
 
 ## Intended users
 
-- **Facilities going live.** A facility must be registered in the HFR and have a bridge linked to it to share health information as a HIP or retrieve it as an HIU. For facilities that have implemented [M2 Attach](/docs/pr-20/docs/hiecm/v3/milestones/m2) or [M3 Retrieve](/docs/pr-20/docs/hiecm/v3/milestones/m3), M4 is the next step towards production readiness.
+- **Facilities going live.** A facility must be registered in the HFR and have a bridge linked to it to share health information as a HIP or retrieve it as an HIU. For facilities that have implemented [M2 Health Information Provider](/docs/pr-20/docs/hiecm/v3/milestones/m2) or [M3 Retrieve](/docs/pr-20/docs/hiecm/v3/milestones/m3), M4 is the next step towards production readiness.
 - **Professionals registering.** An HPR ID provides a verified professional identity within ABDM. Currently, registration is available for three categories: doctors, nurses and pharmacists.
 - **Software acting for others.** An [HMIS](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#hmis) or practice management product can drive these calls for its own customers.
 

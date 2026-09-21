@@ -73,7 +73,7 @@ curl --request PUT \
 
 ## Authorization
 
-- `Authorization` (bearer token, required)
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
 
 ## Headers
 

@@ -106,6 +106,15 @@
       ]
     },
     {
+      "name": "abdm-scan-and-register",
+      "title": "Scan and register",
+      "files": [
+        "SKILL.md",
+        "references/integrate.md",
+        "references/debug.md"
+      ]
+    },
+    {
       "name": "abdm-scan-and-pay",
       "title": "Scan and pay",
       "files": [

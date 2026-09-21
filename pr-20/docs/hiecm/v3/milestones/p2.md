@@ -1,6 +1,6 @@
 # P2 Linking and records
 
-P2 is the mirror of [M2 Attach](/docs/pr-20/docs/hiecm/v3/milestones/m2). M2 is a provider publishing a record. P2 is the patient discovering it and linking it to their own [ABHA address](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#abha-address).
+P2 is the mirror of [M2 Health Information Provider](/docs/pr-20/docs/hiecm/v3/milestones/m2). M2 is a provider publishing a record. P2 is the patient discovering it and linking it to their own [ABHA address](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#abha-address).
 
 ## In short
 

@@ -23,13 +23,13 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions.
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
 
 ## Headers
 
 - `REQUEST-ID` (string, required): Unique UUID for each request.
 - `TIMESTAMP` (string, required): Request timestamp in UTC, ISO-8601 with Z.
-- `X-token` (string, required)
+- `X-token` (string, required): The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
 
 ## Body
 

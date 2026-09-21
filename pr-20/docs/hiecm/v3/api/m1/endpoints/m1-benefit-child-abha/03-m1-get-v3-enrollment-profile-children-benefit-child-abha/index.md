@@ -25,13 +25,13 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required)
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
 
 ## Headers
 
 - `TIMESTAMP` (string, required): Current UTC timestamp in ISO-8601 format.
 - `REQUEST-ID` (string, required): Unique UUID for every request.
-- `Content-Type` (string, required)
+- `Content-Type` (string, required): `application/json`.
 - `BENEFIT_NAME` (string, required): Benefit / program name approved by NHA for the integrator.
 - `X-token` (string, required): User token (`Bearer <token>`) received after ABHA creation / login.
 

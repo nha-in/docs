@@ -1,4 +1,4 @@
-# M3 Retrieve: Health Information User Services
+# M3 Health Information User: Fetch data with consent
 
 Milestone 3 enables a participating entity, acting as a [Health Information User](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#hiu) (HIU), to request and retrieve a patient's health information through the ABDM consent-management framework. The HIU initiates a consent request with the prescribed parameters. Upon the patient's approval, the [HIE-CM](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#hie-cm) provides the applicable [consent artefact](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#consent-artefact) details. These enable the HIU to request and retrieve authorised health information from the concerned Health Information Provider(s).
 
@@ -13,6 +13,14 @@ The HIU initiates a consent request using the patient's [ABHA Address](/docs/pr-
 3. Receive and fetch all consent artefacts generated upon approval.
 4. Request health information under a valid consent artefact.
 5. Receive and decrypt the information through the specified data-push URL and submit the prescribed receipt-status notification.
+
+## Use cases
+
+| Use case                                                                         | What it does                                                                                                                                                                                                                   |
+| -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [Patient record share](/docs/pr-20/docs/hiecm/v3/use-cases/patient-record-share) | A patient scans the QR code at your counter and pushes chosen records from their PHR app to your system. You raise no consent request: you reply with a data push URL and a key, receive the records, and report what arrived. |
+
+All use cases, and the milestone each belongs to: [Use cases](/docs/pr-20/docs/hiecm/v3/use-cases).
 
 ## Applicable for
 
@@ -152,4 +160,5 @@ Using the consent artefact ID, the HIU fetches the consent artefact and requests
 
 - The calls, callbacks and error codes: [M3 API reference](/docs/pr-20/docs/hiecm/v3/api/m3).
 - The cases M3 is tested against: the certification pack NHA issues. Certification runs once, for the whole integration: [Go live](/docs/pr-20/docs/hiecm/v3/getting-started/going-live).
-- The next milestone: [M4 Enrol](/docs/pr-20/docs/hiecm/v3/milestones/m4).
+- Receive records a patient pushes from their app: [Patient record share](/docs/pr-20/docs/hiecm/v3/use-cases/patient-record-share).
+- The next milestone: [M4 Registry Integration](/docs/pr-20/docs/hiecm/v3/milestones/m4).

@@ -3,8 +3,9 @@ info:
   x-portal:
     module: scan-and-pay
     label: Scan and Pay
-    position: 11
+    position: 13
     icon: qr-code
+    section: use-cases
   title: ABDM Scan and Pay
   summary: Open orders, patient selection and payment status between a facility and a PHR app.
   version: abdm-v3
@@ -4357,3 +4358,4 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+      description: The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.

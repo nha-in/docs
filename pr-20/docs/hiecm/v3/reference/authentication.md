@@ -4,19 +4,19 @@ Generated from the specifications. Every scheme and header below is declared in 
 
 ## Gateway session
 
-**bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions.
+**bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer `prefix.
 
 ## M1 ABHA creation and verification
 
-**bearerAuth**, `http` `bearer`.
+**bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer `prefix.
 
 ## M2 Health information provider services
 
-**bearerAuth**, `http` `bearer`.
+**bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer `prefix.
 
 ## M3 Health information user services
 
-**bearerAuth**, `http` `bearer`.
+**bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer `prefix.
 
 ## M4 HPR and HFR
 
@@ -24,27 +24,27 @@ Generated from the specifications. Every scheme and header below is declared in 
 
 ## P1 Registration and login
 
-**bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions.
+**bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer `prefix.
 
 ## P2 Management
 
-**bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions.
+**bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer `prefix.
 
 ## P3 Subscription
 
-**bearerAuth**, `http` `bearer`.
+**bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer `prefix.
 
 ## P4 Locker
 
-**bearerAuth**, `http` `bearer`.
+**bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer `prefix.
 
 ## Subscriptions
 
-**bearerAuth**, `http` `bearer`.
+**bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer `prefix.
 
-## Scan and Pay
+## Scan and Register
 
-**bearerAuth**, `http` `bearer`.
+**bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer `prefix.
 
 ## Patient scan and record share
 
@@ -60,3 +60,7 @@ Generated from the specifications. Every scheme and header below is declared in 
 | `request-id`   | yes      | Random UUID, a v4 style guid, unique per callback.                                                                                        |
 | `timestamp`    | yes      | ISO 8601 timestamp of when the callback was sent.                                                                                         |
 | `x-hiu-id`     | yes      | Identifier of the health information user to which the request was intended.                                                              |
+
+## Scan and Pay
+
+**bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer `prefix.

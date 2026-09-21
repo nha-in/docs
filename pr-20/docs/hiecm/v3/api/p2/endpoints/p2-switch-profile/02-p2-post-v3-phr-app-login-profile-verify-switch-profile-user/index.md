@@ -17,7 +17,7 @@ curl --request POST \
 
 ## Headers
 
-- `T-token` (string, required)
+- `T-token` (string, required): The transaction token from the preceding login step, sent with a `Bearer ` prefix. It is valid only for that login.
 - `REQUEST-ID` (string, required): Unique UUID for each request.
 - `TIMESTAMP` (string, required): Request timestamp in UTC, ISO-8601 with Z.
 
