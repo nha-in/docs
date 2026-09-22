@@ -1,8 +1,0 @@
-{
-  "module": "7.N",
-  "run": 1,
-  "date": "",
-  "checks": [
-    {"skill": "", "check": "", "how": "", "observed": "", "ok": false, "guards": ""}
-  ]
-}

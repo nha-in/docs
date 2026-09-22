@@ -1,9 +1,0 @@
-# SCAN-AND-REGISTER
-
-> Every page of the SCAN-AND-REGISTER module of the ABDM Developer Portal, fetchable as markdown.
-
-## Pages
-
-- [Share HIP patient](https://nha-in.github.io/docs/pr-25/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/01-scan-and-register-post-v3-hip-patient-share): Hosted by the HIP/HIU, not by ABDM. ABDM calls this endpoint at the callback URL registered for your bridge, so the path below is relative to that URL. This...
-- [Answer the patient share request](https://nha-in.github.io/docs/pr-25/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/02-scan-and-register-post-patient-share-v3-on-share): Share the response of HIECM's /api/hiecm/patient-share/v3/on-share API.
-- [Scan and Register errors](https://nha-in.github.io/docs/pr-25/docs/hiecm/v3/api/scan-and-register/errors): What Scan and Register returns when a call fails, and what to do about it.
