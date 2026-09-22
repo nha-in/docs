@@ -18,12 +18,12 @@ Nothing here was sent to the sandbox. "Applied" means the published page now mat
 
 | # | Row (sheet text) | Status | Evidence |
 | --- | --- | --- | --- |
-| 1 | Management → Consents Management | APPLIED | `p2.label` in `ingest-nha.mjs` is `P2 Consents Management`; sidebar, P2 errors page, authentication and error code pages follow |
+| 1 | Management → Consents Management | APPLIED | `p2.label` and the P2 reference title read Consents Management; sidebar, P2 errors page, authentication and error code pages, the skill picker and the plugin manifest follow, and NHA's collection paths in the P2 descriptions read P2-Consents Management. The milestone page keeps its own name, P2 Linking and records |
 | 2 | Scroll issue MacBook, P1 session page | APPLIED, not deployed | `ca4125e58` removed the gesture that left the reference when the page was pulled past the top. It was on `docs/m2-care-context-links`, not `main`, when the sheet was written |
 | 3 | Aadhaar flow registration, Aadhaar number API missing | APPLIED | Journey `p1-create-abha-number-aadhaar-otp` restored in `journeys/p1.yaml`; steps name the M1 operations. P1 page registration table and diagram add the Aadhaar number route. Reverses `705416d4d` |
-| 4 | Update email, deprecated | APPLIED | Journey `p2-update-email` removed; the P2 page no longer lists it. The shared OTP calls keep their other examples |
-| 5 | Get the historical token numbers → OPD Token History | APPLIED | `catalogue/titles.yaml` |
-| 6 | Share patient share → OPD token generation | APPLIED | `catalogue/titles.yaml` |
+| 4 | Update email, deprecated | APPLIED | Journey `p2-update-email` removed; the P2 page no longer lists it. The shared OTP and verify calls drop the email examples, flow names, description lines and the Update Email (optional) tag, and keep the mobile, password and link flows |
+| 5 | Get the historical token numbers → OPD Token History | APPLIED | `catalogue/titles.yaml` for the page; the spec summary, which the P2 reference shows, carries the name too |
+| 6 | Share patient share → OPD token generation | APPLIED | As row 5 |
 | 7 | Patient share → Quick OPD Registration | APPLIED | journey title in `journeys/p2.yaml` |
 | 8 | Discover his/her health records, wrong body | APPLIED (R1) | Host fixed. Body kept as `hip.id`: the swagger and collection send it; the document's 10.3.1 table says `hipId` but its own example sends `hip`. Q1 |
 | 9 | Approve subscription request, pasted curl | NO CHANGE (R4) | See R4. R3 applies to the page's example |
@@ -61,7 +61,7 @@ The PHR and Locker swagger and collection in NHA's shared Drive folder carry the
 
 ## Follow up: structure
 
-- The Subscriptions module (subscription request init and its three notifications) joins P3 as the journey `p3-subscription-hiu`. Its six endpoint pages redirect to their P3 pages.
+- The Subscriptions module (the subscription request, its on-init callback, and two notifications with their answers, six pages) joins P3 as the journey `p3-subscription-hiu`. Its six endpoint pages redirect to their P3 pages. The MCP server's module list and the plugin manifest no longer name it. The plan and the portal index compiled from it still do; that is a plan change.
 - The PHR applications concept page merges into the PHR application participant page. What the milestone pages already carried (creation, login, profile, scan and share, discovery, consent, fetching) is not repeated; the server, subscription, deep link and out of scope sections move across, and its M1 to M3 framing becomes P1 to P3. The old URL redirects.
 
 ## Follow up: the two observation documents
@@ -70,9 +70,13 @@ The PHR and Locker swagger and collection in NHA's shared Drive folder carry the
 | --- | --- | --- | --- |
 | D1 | Replace "Keycloak token" with access token or session token | APPLIED, not deployed | `888f22d57` removed it from the session call on 21 September; nothing this branch builds carries the word. The deployed site predates it |
 | D2 | Try it response overlaps and cannot be expanded at 100% zoom | APPLIED | Reproduced at 1366x768: the description took the height and long lines ran past the edge. The description is two lines at most, response lines wrap, and an Expand button gives the response the whole console. `TryIt.tsx`, `api.css` |
-| D3 | Fixed request values pre-filled and not editable in Try it | APPLIED | A field the schema allows one value for (a one value enum, or an array that must carry exactly its listed items) is filled in and locked, marked "fixed": 70 M1 and P1 fields such as `otpSystem`, `loginHint` and `scope`, and the session call's `grantType`, now stated as `client_credentials` only. Found beside it: an empty form sent no body and no Content-Type, so the sandbox answered 415; the session call now always sends its grant type |
+| D3 | Fixed request values pre-filled and not editable in Try it | APPLIED | A field the schema allows one value for (a one value enum, or an array that must carry exactly its listed items) is filled in and locked, marked "fixed": 176 fields, 169 of them on the M1 use case calls (`otpSystem`, `loginHint`, `scope`), four in M2 key material and media type, two in record share, and the session call's `grantType`, now stated as `client_credentials` only. Found beside it: an empty form sent no body and no Content-Type, so the sandbox answered 415; the session call now always sends its grant type |
 | D4 | Request and response examples in one view | APPLIED | A long request body filled the sticky column and pushed the response below the fold at 1366x768. Each panel's code now scrolls in its own box |
 | D5 | Gateway, Bridge and providers: keep the first three calls | APPLIED | The gateway lists the bridge services, service details and bridge URL calls. Providers, provider by id and government programmes move to P2's user initiated linking, where a PHR app uses them, and the health locker list to P4; update bridge service is left out. Old pages redirect. Steps are appended so no other page changes address |
 | D6 | Gateway, Session and certificates: keep only the session call | APPLIED | The OpenID configuration and key set calls are left out of the reference; callback authenticity still describes them from NHA's gateway swagger |
 | D7 | M2 on-generate-token callback differs from the swagger | APPLIED | The body is `oneOf` a success and an error shape with no example, and the generator read neither. It now reads the first branch: `abhaAddress`, `linkToken`, `response.requestId`, as NHA's swagger shows. Nine other bodies had the same fault |
 | D8 | M2 link on carecontext callback shows `"<VALUE>"` | APPLIED | Same cause as D7. The body is `abhaAddress`, `status`, `response.requestId` |
+
+## Final review, 23 September 2026
+
+An adversarial review of the branch found the renames and the email deprecation applied to page titles only, not to the spec text the P2 reference and the skills show; the MCP server and plugin manifest still naming the retired Subscriptions module; and sample URLs for NHCX Onboarding carrying spaces once required query parameters joined them. All are fixed above or in `scripts/build-api-reference.mjs`. Two more changes it surfaced are deliberate and recorded here: reading operation level servers moves three NHCX calls to the hosts their specification names for them, and a success or error callback body shows its success shape only. Rows 10 and 23 stay NO CHANGE until NHA answers Q2.

@@ -479,7 +479,7 @@ const config: Config = {
           {from: '/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/05-gateway-get-gateway-v3-providers', to: '/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/01-p2-get-gateway-v3-providers'},
           {from: '/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/06-gateway-get-gateway-v3-providers-provider-id', to: '/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/02-p2-get-gateway-v3-providers-provider-id'},
           {from: '/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/02-gateway-get-gateway-v3-well-known-openid-configuration', to: '/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions'},
-          {from: '/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/04-gateway-put-gateway-v3-bridge-service', to: '/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions'},
+          {from: '/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/04-gateway-put-gateway-v3-bridge-service', to: '/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/01-gateway-get-gateway-v3-bridge-services'},
           {from: '/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/01-gateway-get-gateway-v3-providers', to: '/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/01-p2-get-gateway-v3-providers'},
           {from: '/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/02-gateway-get-gateway-v3-providers-provider-id', to: '/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/02-p2-get-gateway-v3-providers-provider-id'},
           // The PHR applications concept page merged into the participant page, 23 September 2026.

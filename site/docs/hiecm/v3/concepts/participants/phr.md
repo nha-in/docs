@@ -3,7 +3,6 @@ title: Personal Health Record (PHR) Application
 sidebar_label: PHR application
 sidebar_position: 7
 description: 'The citizen facing application: its role in ABDM, the capabilities each phase adds, and why it is where consent is managed.'
-covers: [hiecm.concept.phr-subscriptions]
 source: PHR - Sandbox (2).docx, NHA content review of 21 September 2026, catalogue/openapi/hiecm/v3/hiecm-p1.yaml, catalogue/openapi/hiecm/v3/hiecm-p2.yaml, catalogue/openapi/hiecm/v3/hiecm-p3.yaml, catalogue/openapi/hiecm/v3/hiecm-p4.yaml
 sidebar_class_name: sidebar-icon sidebar-icon--smartphone
 ---
@@ -76,7 +75,7 @@ signing in does not imply it.
 
 A subscription is not consent and gives nobody a record. Reading the record
 still needs a consent, which is why a subscription usually runs alongside an
-auto approval policy. [P3](/docs/hiecm/v3/milestones/p3) builds both.
+auto approval policy. [P3](/docs/hiecm/v3/milestones/p3) describes both.
 
 ## Deep links
 
@@ -92,6 +91,15 @@ number they gave the facility, since a mismatch stops the records being found.
 
 To be listed, submit the application name, Play Store URL and App Store URL at
 sandbox exit.
+
+## Records the person uploads
+
+A PHR application accepts records the person adds: scanned paper records, and
+readings from devices such as BP meters, glucose meters, fitness trackers and
+smartwatches. Set the health information type from the contents or from what
+the person tells you, and use `HealthDocumentRecord` when it cannot be
+determined. Sharing an uploaded record makes you a HIP for it, which the Health
+Locker row above covers.
 
 ## What a PHR application does not build
 
@@ -114,8 +122,9 @@ sandbox exit.
   discovery, the profile and the card, with the
   [P2 API reference](/reference/hiecm-p2).
 - [P3 Consent and notifications](/docs/hiecm/v3/milestones/p3): subscriptions,
-  auto approval, consent and fetching records, with the
-  [P3 API reference](/reference/hiecm-p3) and the
-  [P4 health locker reference](/reference/hiecm-p4).
+  auto approval, consent and fetching records. The subscription calls are in the
+  [P3 API reference](/reference/hiecm-p3), the auto approval and consent calls in
+  the [P2 API reference](/reference/hiecm-p2), and the health locker calls in the
+  [P4 API reference](/reference/hiecm-p4).
 - [Get started](/docs/hiecm/v3/getting-started/sandbox) for sandbox signup and
   your first call.
