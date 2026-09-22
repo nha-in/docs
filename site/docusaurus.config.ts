@@ -472,6 +472,16 @@ const config: Config = {
           {from: '/docs/hiecm/v3/api/subscription/endpoints/subscription-subscription-hiu/05-subscription-post-v3-hiu-subscription-notify', to: '/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/05-p3-post-v3-hiu-subscription-notify'},
           {from: '/docs/hiecm/v3/api/subscription/endpoints/subscription-subscription-hiu/03-subscription-post-v3-hiu-subscription-requests-hiu-notify', to: '/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/03-p3-post-v3-hiu-subscription-requests-hiu-notify'},
           {from: '/reference/hiecm-subscription', to: '/reference/hiecm-p3'},
+          // Gateway calls NHA's sandbox observations of 23 September 2026 moved out of the gateway, or left out.
+          {from: '/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/03-gateway-get-gateway-v3-certs', to: '/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions'},
+          {from: '/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/07-gateway-get-gateway-v3-govt-programs', to: '/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/09-p2-get-gateway-v3-govt-programs'},
+          {from: '/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/08-gateway-get-gateway-v3-health-lockers', to: '/docs/hiecm/v3/api/p4/endpoints/p4-locker/05-p4-get-gateway-v3-health-lockers'},
+          {from: '/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/05-gateway-get-gateway-v3-providers', to: '/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/01-p2-get-gateway-v3-providers'},
+          {from: '/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/06-gateway-get-gateway-v3-providers-provider-id', to: '/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/02-p2-get-gateway-v3-providers-provider-id'},
+          {from: '/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/02-gateway-get-gateway-v3-well-known-openid-configuration', to: '/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions'},
+          {from: '/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/04-gateway-put-gateway-v3-bridge-service', to: '/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions'},
+          {from: '/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/01-gateway-get-gateway-v3-providers', to: '/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/01-p2-get-gateway-v3-providers'},
+          {from: '/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/02-gateway-get-gateway-v3-providers-provider-id', to: '/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/02-p2-get-gateway-v3-providers-provider-id'},
           // The PHR applications concept page merged into the participant page, 23 September 2026.
           {from: '/docs/hiecm/v3/concepts/phr', to: '/docs/hiecm/v3/concepts/participants/phr'},
           {from: '/docs/hiecm/v3/api/m2/endpoints/m2-abdm-patient-share-hip/01-m2-post-v3-hip-patient-share', to: '/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/01-scan-and-register-post-v3-hip-patient-share'},

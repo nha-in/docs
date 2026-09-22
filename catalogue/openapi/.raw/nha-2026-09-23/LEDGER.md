@@ -63,3 +63,16 @@ The PHR and Locker swagger and collection in NHA's shared Drive folder carry the
 
 - The Subscriptions module (subscription request init and its three notifications) joins P3 as the journey `p3-subscription-hiu`. Its six endpoint pages redirect to their P3 pages.
 - The PHR applications concept page merges into the PHR application participant page. What the milestone pages already carried (creation, login, profile, scan and share, discovery, consent, fetching) is not repeated; the server, subscription, deep link and out of scope sections move across, and its M1 to M3 framing becomes P1 to P3. The old URL redirects.
+
+## Follow up: the two observation documents
+
+| # | Observation | Status | Evidence |
+| --- | --- | --- | --- |
+| D1 | Replace "Keycloak token" with access token or session token | APPLIED, not deployed | `888f22d57` removed it from the session call on 21 September; nothing this branch builds carries the word. The deployed site predates it |
+| D2 | Try it response overlaps and cannot be expanded at 100% zoom | APPLIED | Reproduced at 1366x768: the description took the height and long lines ran past the edge. The description is two lines at most, response lines wrap, and an Expand button gives the response the whole console. `TryIt.tsx`, `api.css` |
+| D3 | Fixed request values pre-filled and not editable in Try it | APPLIED | A field the schema allows one value for (a one value enum, or an array that must carry exactly its listed items) is filled in and locked, marked "fixed": 70 M1 and P1 fields such as `otpSystem`, `loginHint` and `scope`, and the session call's `grantType`, now stated as `client_credentials` only. Found beside it: an empty form sent no body and no Content-Type, so the sandbox answered 415; the session call now always sends its grant type |
+| D4 | Request and response examples in one view | APPLIED | A long request body filled the sticky column and pushed the response below the fold at 1366x768. Each panel's code now scrolls in its own box |
+| D5 | Gateway, Bridge and providers: keep the first three calls | APPLIED | The gateway lists the bridge services, service details and bridge URL calls. Providers, provider by id and government programmes move to P2's user initiated linking, where a PHR app uses them, and the health locker list to P4; update bridge service is left out. Old pages redirect. Steps are appended so no other page changes address |
+| D6 | Gateway, Session and certificates: keep only the session call | APPLIED | The OpenID configuration and key set calls are left out of the reference; callback authenticity still describes them from NHA's gateway swagger |
+| D7 | M2 on-generate-token callback differs from the swagger | APPLIED | The body is `oneOf` a success and an error shape with no example, and the generator read neither. It now reads the first branch: `abhaAddress`, `linkToken`, `response.requestId`, as NHA's swagger shows. Nine other bodies had the same fault |
+| D8 | M2 link on carecontext callback shows `"<VALUE>"` | APPLIED | Same cause as D7. The body is `abhaAddress`, `status`, `response.requestId` |

@@ -2,7 +2,7 @@
 title: Proving a callback came from ABDM
 sidebar_label: Callback authenticity
 description: Your callback URL is a public address, so anything can post to it. How ABDM authenticates what it sends, and how to check that before your handler acts.
-source: catalogue/openapi/hiecm/v3/hiecm-gateway.yaml
+source: catalogue/openapi/.raw/nha-2026-09-16/hiecm/gateway.yaml
 sidebar_position: 10
 covers: [hiecm.concept.callback-authenticity]
 sidebar_class_name: sidebar-icon sidebar-icon--signature

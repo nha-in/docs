@@ -39,4 +39,14 @@ journey in [P3](/reference/hiecm-p3), beside the approve and deny calls they pai
 page links redirect. Listing providers takes optional `stateCode` and `districtCode`, and the
 discovery reply `on-discover` requires `X-HIU-ID`, as the PHR swagger declares.
 
+### Try it fills in fixed values, and the gateway lists what it owns
+
+In Try it, a field that takes only one value, such as `otpSystem` on an M1 use case or
+`grantType` on the session call, is filled in and locked. The response panel expands to
+the whole console, and long lines wrap. Callback bodies declared as a success or an error
+shape, such as [link on care context](/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/02-m2-post-v3-link-on-carecontext),
+show their fields. The [gateway](/reference/hiecm-gateway) lists the bridge calls and the session
+call. Providers and government programmes are in [P2](/reference/hiecm-p2), the health locker list in
+[P4](/reference/hiecm-p4).
+
 </ReleaseGroup>
