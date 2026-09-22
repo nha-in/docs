@@ -120,8 +120,8 @@ const TARGETS: Record<AgentId, Target> = {
  * scaffolding loop of its own does not get a row promising one.
  */
 const DETAIL: Record<string, (entry: Entry) => string> = {
-  scaffold: () =>
-    'The loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.',
+  scaffold: () => 'Builds the module flow by flow against the sandbox.',
+  design: () => 'What the journey around the calls has to do, and what a screen may not claim.',
   generate: () => 'Building NRCES compliant bundle generation into a codebase.',
   audit: () => "Checking an existing FHIR store's output against the same profiles.",
 };
@@ -132,15 +132,15 @@ function capabilities(entry: Entry) {
       label: 'Integrate',
       detail:
         (entry.operations ?? 0) > 0
-          ? `${entry.operations} operations, with their hosts, headers and the rules that hold across them.`
-          : 'No operation is recorded for this module yet.',
+          ? `${entry.operations} operations, with their hosts and headers.`
+          : 'No operation is recorded yet.',
     },
     {
       label: 'Debug',
       detail:
         (entry.codes ?? 0) > 0
-          ? `${entry.codes} recorded error codes, each with its message and what to do about it.`
-          : 'No error code is recorded for this module yet.',
+          ? `${entry.codes} error codes, each with what to do about it.`
+          : 'No error code is recorded yet.',
     },
   ];
   const named = new Map(counted.map((row) => [row.label.toLowerCase(), row]));

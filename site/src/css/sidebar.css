@@ -754,7 +754,7 @@ body.is-resizing-sidebar {
    there is no room for three. */
 .skill-caps {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1rem;
   margin: 1.5rem 0 0;
   padding: 1.25rem 0 0;
@@ -764,6 +764,12 @@ body.is-resizing-sidebar {
 
 .markdown .skill-caps {
   padding-left: 0;
+}
+
+@media (max-width: 767px) {
+  .skill-caps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .skill-caps__item {
