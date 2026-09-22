@@ -2,7 +2,7 @@ openapi: 3.1.1
 info:
   x-portal:
     module: m4
-    label: M4 HPR and HFR
+    label: M4 Registry Integration
     position: 5
     icon: building-2
   title: ABDM M4, professional and facility registries
