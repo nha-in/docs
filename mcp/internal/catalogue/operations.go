@@ -227,6 +227,52 @@ func specErrorCodes(specPath, module string, raw []byte) ([]SpecErrorCode, error
 			}
 		}
 	}
+	// NHA's own list for the module, from errors/<module>.yaml beside the
+	// specifications, follows in NHA's order. It names no HTTP status and no
+	// call. A row an example already carries, by code and message, is not
+	// repeated. Same rule as scripts/lib/spec-errors.mjs.
+	listed, err := listedErrorCodes(filepath.Join(filepath.Dir(specPath), "errors", module+".yaml"), module)
+	if err != nil {
+		return nil, err
+	}
+	have := map[string]bool{}
+	for _, e := range out {
+		have[e.Code+"|"+e.Message] = true
+	}
+	for _, e := range listed {
+		key := e.Code + "|" + e.Message
+		if have[key] {
+			continue
+		}
+		have[key] = true
+		out = append(out, e)
+	}
+	return out, nil
+}
+
+// listedErrorCodes reads one errors/<module>.yaml, the code list NHA supplied
+// for a module without tying the codes to calls. A missing file is no list.
+func listedErrorCodes(path, module string) ([]SpecErrorCode, error) {
+	raw, err := os.ReadFile(path)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	var list struct {
+		Codes []struct {
+			Code    string `yaml:"code"`
+			Message string `yaml:"message"`
+		} `yaml:"codes"`
+	}
+	if err := yaml.Unmarshal(raw, &list); err != nil {
+		return nil, fmt.Errorf("%s: %w", path, err)
+	}
+	var out []SpecErrorCode
+	for _, c := range list.Codes {
+		out = append(out, SpecErrorCode{Code: c.Code, Message: strings.TrimSpace(c.Message), Module: module})
+	}
 	return out, nil
 }
 

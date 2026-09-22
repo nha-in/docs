@@ -33,7 +33,11 @@ const siteBase = process.env.DOCUSAURUS_BASE_URL ?? '/';
 function listSpecFiles(dir: string): string[] {
   return readdirSync(dir, {withFileTypes: true}).flatMap((entry) => {
     if (entry.isDirectory()) {
-      return entry.name.startsWith('.') ? [] : listSpecFiles(join(dir, entry.name));
+      // journeys/ holds step lists and errors/ holds NHA's per-module error
+      // code lists. Neither is an OpenAPI document, so neither gets a reference.
+      return entry.name.startsWith('.') || entry.name === 'journeys' || entry.name === 'errors'
+        ? []
+        : listSpecFiles(join(dir, entry.name));
     }
     return /\.(yaml|json)$/.test(entry.name) ? [entry.name] : [];
   });
