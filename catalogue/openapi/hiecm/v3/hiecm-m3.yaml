@@ -2,7 +2,7 @@ openapi: 3.1.1
 info:
   x-portal:
     module: m3
-    label: M3 Health information user services
+    label: M3 Health Information User
     position: 4
     icon: file-check
   title: ABDM M3, health information user services as an HIU
