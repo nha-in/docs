@@ -560,7 +560,20 @@ curl --request GET \
 A 200 whose body matches:
 
 ```json
-"<VALUE>"
+[
+  {
+    "id": 1,
+    "patientId": "<ABHA_ADDRESS>",
+    "tokenNumber": "1",
+    "hipId": "ABDM_HIP",
+    "hipName": "Health Information Provider Name",
+    "hipAddress": "sample address",
+    "expiresIn": 1800,
+    "clientId": "ABDM",
+    "dateCreated": "2024-09-11T07:31:02.357Z",
+    "counterCode": "Counter 1"
+  }
+]
 ```
 
 ### User initiated linking (`p2-abdm-user-initiated-linking-phr`)

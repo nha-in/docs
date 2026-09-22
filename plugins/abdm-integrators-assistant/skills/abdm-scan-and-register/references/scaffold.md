@@ -141,7 +141,24 @@ curl --request POST \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
   --header 'Content-Type: application/json' \
-  --data '"<VALUE>"'
+  --data '{
+  "acknowledgement": {
+    "status": "SUCCESS",
+    "abhaAddress": "<ABHA_ADDRESS>",
+    "profile": {
+      "context": "43",
+      "tokenNumber": "3",
+      "expiry": 180
+    }
+  },
+  "error": {
+    "code": "ABDM-9999",
+    "message": "Unknown exception"
+  },
+  "response": {
+    "requestId": "6f0b4665-a915-4c92-aa36-65afb4a2cd71"
+  }
+}'
 ```
 
 **Exit condition (Observe until this is true)**

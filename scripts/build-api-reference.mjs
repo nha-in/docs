@@ -91,8 +91,38 @@ function deref(spec, node, depth = 0) {
 // response is never in this set.
 const ENCRYPTED_FIELDS = new Set(['loginId', 'aadhaar', 'otpValue', 'password']);
 
+/**
+ * The one shape a composed schema is documented as.
+ *
+ * NHA writes a callback body that is either a success or an error as a top
+ * level `oneOf` (or `anyOf`), with no properties of its own. Walking only
+ * `properties` rendered those bodies as an empty table and a bare "<VALUE>"
+ * in the curl, which NHA read as a different callback. The first alternative
+ * is the success shape in every such file, so it is the one shown; `allOf`
+ * merges its members. The response side is untouched: it reads the
+ * specification's own examples.
+ */
+function shape(schema) {
+  if (!schema || typeof schema !== 'object') return schema;
+  const alternatives = schema.oneOf ?? schema.anyOf;
+  if (Array.isArray(alternatives) && alternatives.length > 0 && !schema.properties) {
+    return shape({...schema, oneOf: undefined, anyOf: undefined, ...shape(alternatives[0])});
+  }
+  if (Array.isArray(schema.allOf) && schema.allOf.length > 0) {
+    const merged = {...schema, allOf: undefined, properties: {...(schema.properties ?? {})}, required: [...(schema.required ?? [])]};
+    for (const member of schema.allOf.map(shape)) {
+      Object.assign(merged.properties, member?.properties ?? {});
+      merged.required.push(...(member?.required ?? []));
+      merged.type ??= member?.type;
+    }
+    return merged;
+  }
+  return schema;
+}
+
 /** Flatten a JSON schema into rows a table can render, two levels deep. */
-function fields(schema, prefix = '', depth = 0) {
+function fields(rawSchema, prefix = '', depth = 0) {
+  const schema = shape(rawSchema);
   if (!schema || depth > 3) return [];
   const required = new Set(schema.required ?? []);
   const rows = [];
@@ -110,7 +140,7 @@ function fields(schema, prefix = '', depth = 0) {
       format: property.format,
       encrypted: property['x-abdm-encrypted'] === true || ENCRYPTED_FIELDS.has(name),
     });
-    const child = property.type === 'array' ? property.items : property;
+    const child = shape(property.type === 'array' ? property.items : property);
     if (child?.properties) {
       rows.push(...fields(child, prefix ? `${prefix}.${name}` : name, depth + 1));
     }
@@ -128,7 +158,8 @@ function fields(schema, prefix = '', depth = 0) {
  * the specification states are used as written; everything else becomes a
  * named placeholder, so a reader can see what to substitute.
  */
-function sampleFromSchema(schema, name = '', depth = 0) {
+function sampleFromSchema(rawSchema, name = '', depth = 0) {
+  const schema = shape(rawSchema);
   if (!schema || depth > 6) return undefined;
   if (schema.example !== undefined) return schema.example;
   if (Array.isArray(schema.enum) && schema.enum.length > 0) return schema.enum[0];
