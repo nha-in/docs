@@ -464,6 +464,16 @@ const config: Config = {
           {from: '/docs/abdm/v3/what-you-can-build', to: '/docs/hiecm/v3/milestones'},
           {from: '/docs/hiecm/v3/getting-started/what-you-can-build', to: '/docs/hiecm/v3/milestones'},
           {from: '/docs/hiecm/v3/milestones/scan-and-register', to: '/docs/hiecm/v3/use-cases/scan-and-register'},
+          // The subscription module joined P3 on 23 September 2026.
+          {from: '/docs/hiecm/v3/api/subscription/endpoints/subscription-subscription-hiu/06-subscription-post-subscription-requests-v3-hiu-care-conte-96bc45', to: '/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/06-p3-post-subscription-requests-v3-hiu-care-context-on-notify'},
+          {from: '/docs/hiecm/v3/api/subscription/endpoints/subscription-subscription-hiu/04-subscription-post-subscription-requests-v3-hiu-on-notify', to: '/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/04-p3-post-subscription-requests-v3-hiu-on-notify'},
+          {from: '/docs/hiecm/v3/api/subscription/endpoints/subscription-subscription-hiu/01-subscription-post-subscription-requests-v3-init', to: '/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/01-p3-post-subscription-requests-v3-init'},
+          {from: '/docs/hiecm/v3/api/subscription/endpoints/subscription-subscription-hiu/02-subscription-post-v3-hiu-hiecm-subscription-requests-on-init', to: '/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/02-p3-post-v3-hiu-hiecm-subscription-requests-on-init'},
+          {from: '/docs/hiecm/v3/api/subscription/endpoints/subscription-subscription-hiu/05-subscription-post-v3-hiu-subscription-notify', to: '/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/05-p3-post-v3-hiu-subscription-notify'},
+          {from: '/docs/hiecm/v3/api/subscription/endpoints/subscription-subscription-hiu/03-subscription-post-v3-hiu-subscription-requests-hiu-notify', to: '/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/03-p3-post-v3-hiu-subscription-requests-hiu-notify'},
+          {from: '/reference/hiecm-subscription', to: '/reference/hiecm-p3'},
+          // The PHR applications concept page merged into the participant page, 23 September 2026.
+          {from: '/docs/hiecm/v3/concepts/phr', to: '/docs/hiecm/v3/concepts/participants/phr'},
           {from: '/docs/hiecm/v3/api/m2/endpoints/m2-abdm-patient-share-hip/01-m2-post-v3-hip-patient-share', to: '/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/01-scan-and-register-post-v3-hip-patient-share'},
           {from: '/docs/hiecm/v3/api/m2/endpoints/m2-abdm-patient-share-hip/02-m2-post-patient-share-v3-on-share', to: '/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/02-scan-and-register-post-patient-share-v3-on-share'},
           // The endpoint pages NHA's API review of 15 September 2026 links to, at
@@ -478,7 +488,7 @@ const config: Config = {
           {from: '/docs/hiecm/v3/api/m3/endpoints/m3-consent-hiu-on-notify', to: '/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/03-m3-post-consent-v3-request-hiu-on-notify'},
           {from: '/docs/hiecm/v3/api/m3/endpoints/m3-hiu-health-information-request', to: '/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/05-m3-post-data-flow-v3-health-information-request'},
           {from: '/docs/abdm/v3/glossary', to: '/docs/hiecm/v3/getting-started/glossary'},
-          {from: '/docs/abdm/v3/phr', to: '/docs/hiecm/v3/concepts/phr'},
+          {from: '/docs/abdm/v3/phr', to: '/docs/hiecm/v3/concepts/participants/phr'},
           {from: '/docs/abdm/v3/registries/hpr', to: '/docs/hiecm/v3/registries/nhpr/hpr'},
           {from: '/docs/abdm/v3/registries/hfr', to: '/docs/hiecm/v3/registries/nhpr/hfr'},
           {from: '/docs/uhi/v1/onboarding', to: '/docs/uhi/v1/getting-started/onboarding'},

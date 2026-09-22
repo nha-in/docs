@@ -88,4 +88,4 @@ The full list is on [M2 errors](/docs/hiecm/v3/api/m2/errors).
 - [M2 Health Information Provider, Health Information Provider Services](/docs/hiecm/v3/api/m2), the call order for all three routes.
 - [Consent](/docs/hiecm/v3/concepts/consent), what happens once somebody asks for a linked care context.
 - [How a record travels](/docs/hiecm/v3/concepts/data-flow), what you do when that request arrives.
-- [PHR applications](/docs/hiecm/v3/concepts/phr), the patient side of discovery and linking.
+- [PHR applications](/docs/hiecm/v3/concepts/participants/phr), the patient side of discovery and linking.

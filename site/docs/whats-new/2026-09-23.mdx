@@ -32,4 +32,11 @@ path alone and the call was refused. Listing subscription requests now requires 
 again, through the ABHA number the Aadhaar OTP creates. Updating the email on a PHR profile is
 deprecated and no longer listed in P2. On approving a subscription request, `hip` is optional.
 
+### Subscriptions are part of P3, and gateway calls gain two fields
+
+The subscription request and its notifications, a module of their own until now, are the first
+journey in [P3](/reference/hiecm-p3), beside the approve and deny calls they pair with. Old
+page links redirect. Listing providers takes optional `stateCode` and `districtCode`, and the
+discovery reply `on-discover` requires `X-HIU-ID`, as the PHR swagger declares.
+
 </ReleaseGroup>

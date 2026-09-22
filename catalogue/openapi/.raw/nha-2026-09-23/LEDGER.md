@@ -49,3 +49,17 @@ Nothing here was sent to the sandbox. "Applied" means the published page now mat
 - **Q2.** Rows 10 and 23 are marked wrong, but the published method, host, path and headers match the PHR V3 document and the collection. Which request or response did the tester see fail?
 - **Q3.** Auto approval enable and disable: the document names the path parameter `{{consentId}}`. The portal uses the auto approval id the create call returns. Confirm.
 - **Q4.** Patient approve of a consent request (`POST /api/hiecm/consent/v3/request/{request-id}/approve`) has no section in the PHR V3 document. Send the request and response to document.
+
+## Follow up: PHR swagger and collection against the portal
+
+The PHR and Locker swagger and collection in NHA's shared Drive folder carry the 16 September 2026 date and names of the files in `../nha-2026-09-16/phr/`; Drive gives no checksum, so the committed originals were compared. Every swagger operation and every collection request maps to a published operation. Of 41 field differences, 39 are corrections already logged in `catalogue/openapi/corrections/2026-09-16-final-set.md` (the PHR V3 required fields, the M1 split swagger, NHA's review edits). Two were lost where the HIE-CM swagger won over the PHR swagger, and are now added:
+
+| Call | Added | Also in |
+| --- | --- | --- |
+| `GET /api/hiecm/gateway/v3/providers` | optional query `stateCode`, `districtCode` | PHR V3 document 10.3.13 |
+| `POST /api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover` | required header `X-HIU-ID` | PHR V3 document 10.3.3 |
+
+## Follow up: structure
+
+- The Subscriptions module (subscription request init and its three notifications) joins P3 as the journey `p3-subscription-hiu`. Its six endpoint pages redirect to their P3 pages.
+- The PHR applications concept page merges into the PHR application participant page. What the milestone pages already carried (creation, login, profile, scan and share, discovery, consent, fetching) is not repeated; the server, subscription, deep link and out of scope sections move across, and its M1 to M3 framing becomes P1 to P3. The old URL redirects.
