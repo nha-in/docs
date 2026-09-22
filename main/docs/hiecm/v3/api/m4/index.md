@@ -1,4 +1,4 @@
-# M4 HPR and HFR
+# Milestone 4 (M4): Register Healthcare Professionals and Facilities
 
 Register a healthcare professional on the HPR, onboard a facility to the HFR, and link the facility to its bridges.
 

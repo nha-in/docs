@@ -1,4 +1,4 @@
-# M1 ABHA creation and verification errors
+# M1 Identity errors
 
 Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/main/docs/hiecm/v3/troubleshooting/).
 
@@ -24,6 +24,6 @@ Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/main/docs/
 | `ABDM-1211` | 400  | User not found.                                                                                                                 | `m1_post_v3_phr_web_login_abha_search_abha_address_login_m_27a20f` |
 | `ABDM-1224` | 401  | Login via Biometric is not allowed.                                                                                             | `m1_post_v3_profile_login_request_otp_find_abha_face`              |
 
-Every code above is recorded in the specification that owns it. The aggregated list across modules is at [error codes](/docs/main/docs/hiecm/v3/reference/error-codes).
+Every code above is recorded in the specification that owns it or in NHA's list for the module. The aggregated list across modules is at [error codes](/docs/main/docs/hiecm/v3/reference/error-codes).
 
 [Next Still stuck? Ask for help Where to file what you hit, so the answer lands back in these pages.](/docs/main/docs/support)

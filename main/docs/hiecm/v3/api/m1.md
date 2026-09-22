@@ -1,4 +1,4 @@
-# M1 ABHA identity
+# M1 Identity: Create and verify ABHA
 
 Create an ABHA, authenticate a holder, and read or update the profile, QR code and linked mobile number.
 

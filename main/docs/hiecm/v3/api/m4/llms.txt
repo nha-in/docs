@@ -4,7 +4,7 @@
 
 ## Pages
 
-- [M4 HPR and HFR](https://nha-in.github.io/docs/main/docs/hiecm/v3/api/m4): M4 base URLs and the HPR and HFR operations.
+- ['Milestone 4 (M4): Register Healthcare Professionals and Facilities'](https://nha-in.github.io/docs/main/docs/hiecm/v3/api/m4): M4 base URLs and the HPR and HFR operations.
 - [Login via password](https://nha-in.github.io/docs/main/docs/hiecm/v3/api/m4/endpoints/m4-authentication/01-m4-post-v1-auth-authpassword): Login Via Password
 - [Get public certificate](https://nha-in.github.io/docs/main/docs/hiecm/v3/api/m4/endpoints/m4-authentication/02-m4-get-v1-auth-cert): Get Public Certificate
 - [Verify Aadhaar OTP 1](https://nha-in.github.io/docs/main/docs/hiecm/v3/api/m4/endpoints/m4-authentication/03-m4-post-v1-auth-confirmwithaadhaarotp): Verify Aadhaar OTP 1

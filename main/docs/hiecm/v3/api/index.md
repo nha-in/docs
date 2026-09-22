@@ -12,25 +12,25 @@ In M2 and M3 a call is acknowledged now and answered later. The answer arrives a
 
 [Read the whole specification](/docs/main/reference/hiecm-gateway)
 
-## M1 ABHA creation and verification
+## M1 Identity
 
 122 endpoints across 10 use cases: Create ABHA, Child ABHA, Login, Profile, ABHA Card & Profile, Find ABHA, Forgot ABHA, Benefit, Access Tokens & Encryption, ABHA Address Login. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/docs/main/reference/hiecm-m1)
 
-## M2 Health information provider services
+## M2 Health Information Provider
 
 20 endpoints across 5 use cases: Link token, HIP initiated linking, User initiated linking, Consent and data flow, Callbacks. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/docs/main/reference/hiecm-m2)
 
-## M3 Health information user services
+## M3 Health Information User
 
 12 endpoints across 2 use cases: Consent and data flow, Callbacks. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/docs/main/reference/hiecm-m3)
 
-## M4 HPR and HFR
+## M4 Registry Integration
 
 100 endpoints across 4 use cases: HPID, HFR, HRP bridge services, HPR. Each endpoint has its own page in the sidebar.
 

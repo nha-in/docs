@@ -4,7 +4,7 @@
 
 ## Pages
 
-- [M1 ABHA identity](https://nha-in.github.io/docs/main/docs/hiecm/v3/api/m1): M1 base URLs and the operations grouped by use case.
+- ['M1 Identity: Create and verify ABHA'](https://nha-in.github.io/docs/main/docs/hiecm/v3/api/m1): M1 base URLs and the operations grouped by use case.
 - [Search ABHA address (auth methods)](https://nha-in.github.io/docs/main/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-aadhaar-otp/01-m1-post-v3-phr-web-login-abha-search-abha-address-login-a-de8184): Endpoint: POST /abha/api/v3/phr/web/login/abha/search
 - [ABHA address login via Aadhaar OTP - send OTP](https://nha-in.github.io/docs/main/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-aadhaar-otp/02-m1-post-v3-phr-web-login-abha-request-otp-aadhaar-otp): Starts login with an ABHA address. UIDAI sends an OTP to the Aadhaar-linked mobile. loginId is the RSA-encrypted ABHA address. Use *Search ABHA address...
 - [ABHA address login via Aadhaar OTP - verify](https://nha-in.github.io/docs/main/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-aadhaar-otp/03-m1-post-v3-phr-web-login-abha-verify-aadhaar-otp): Verifies the Aadhaar OTP for ABHA-address login. Returns the linked ABHA address(es) in users and tokens.token. Send that token as the X-token header to the...
@@ -127,4 +127,4 @@
 - [Update mobile - send OTP](https://nha-in.github.io/docs/main/docs/hiecm/v3/api/m1/endpoints/m1-profile-update-mobile/01-m1-post-v3-profile-account-request-otp-update-mobile): Starts a mobile number change for a logged-in ABHA user (X-token). ABDM sends an OTP to the new mobile number.
 - [Update mobile - verify OTP](https://nha-in.github.io/docs/main/docs/hiecm/v3/api/m1/endpoints/m1-profile-update-mobile/02-m1-post-v3-profile-account-verify-update-mobile): Verifies the OTP sent by *Update mobile - send OTP* and updates the mobile number on the ABHA profile.
 - [Update profile photo](https://nha-in.github.io/docs/main/docs/hiecm/v3/api/m1/endpoints/m1-profile-update-photo/01-m1-patch-v3-profile-account-profile-photo): Updates the profile photo of the logged-in ABHA user (X-token). Send the photo as a Base64 string.
-- [M1 ABHA creation and verification errors](https://nha-in.github.io/docs/main/docs/hiecm/v3/api/m1/errors): What M1 ABHA creation and verification returns when a call fails, and what to do about it.
+- [M1 Identity errors](https://nha-in.github.io/docs/main/docs/hiecm/v3/api/m1/errors): What M1 Identity returns when a call fails, and what to do about it.

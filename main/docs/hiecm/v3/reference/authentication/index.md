@@ -6,19 +6,19 @@ Generated from the specifications. Every scheme and header below is declared in 
 
 **bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer `prefix.
 
-## M1 ABHA creation and verification
+## M1 Identity
 
 **bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer `prefix.
 
-## M2 Health information provider services
+## M2 Health Information Provider
 
 **bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer `prefix.
 
-## M3 Health information user services
+## M3 Health Information User
 
 **bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer `prefix.
 
-## M4 HPR and HFR
+## M4 Registry Integration
 
 **bearerAuth**, `http` `bearer`. M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
 

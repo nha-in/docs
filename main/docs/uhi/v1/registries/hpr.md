@@ -24,4 +24,4 @@ Not from UHI. A professional is registered in the HPR through [M4](/docs/main/do
 ## Next
 
 - [HFR on UHI](/docs/main/docs/uhi/v1/registries/hfr), the facility the practitioner works in
-- [M4 HPR and HFR](/docs/main/docs/hiecm/v3/api/m4), where both are written
+- [M4 Registry Integration](/docs/main/docs/hiecm/v3/api/m4), where both are written

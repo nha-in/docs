@@ -707,25 +707,25 @@ In M2 and M3 a call is acknowledged now and answered later. The answer arrives a
 
 [Read the whole specification](/docs/main/reference/hiecm-gateway)
 
-## M1 ABHA creation and verification
+## M1 Identity
 
 122 endpoints across 10 use cases: Create ABHA, Child ABHA, Login, Profile, ABHA Card & Profile, Find ABHA, Forgot ABHA, Benefit, Access Tokens & Encryption, ABHA Address Login. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/docs/main/reference/hiecm-m1)
 
-## M2 Health information provider services
+## M2 Health Information Provider
 
 20 endpoints across 5 use cases: Link token, HIP initiated linking, User initiated linking, Consent and data flow, Callbacks. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/docs/main/reference/hiecm-m2)
 
-## M3 Health information user services
+## M3 Health Information User
 
 12 endpoints across 2 use cases: Consent and data flow, Callbacks. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/docs/main/reference/hiecm-m3)
 
-## M4 HPR and HFR
+## M4 Registry Integration
 
 100 endpoints across 4 use cases: HPID, HFR, HRP bridge services, HPR. Each endpoint has its own page in the sidebar.
 
@@ -11681,7 +11681,7 @@ Shape of the 200 response, generated from the schema. The values are placeholder
 
 ---
 
-# M1 ABHA creation and verification errors
+# M1 Identity errors
 
 Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/main/docs/hiecm/v3/troubleshooting/).
 
@@ -11707,14 +11707,14 @@ Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/main/docs/
 | `ABDM-1211` | 400  | User not found.                                                                                                                 | `m1_post_v3_phr_web_login_abha_search_abha_address_login_m_27a20f` |
 | `ABDM-1224` | 401  | Login via Biometric is not allowed.                                                                                             | `m1_post_v3_profile_login_request_otp_find_abha_face`              |
 
-Every code above is recorded in the specification that owns it. The aggregated list across modules is at [error codes](/docs/main/docs/hiecm/v3/reference/error-codes).
+Every code above is recorded in the specification that owns it or in NHA's list for the module. The aggregated list across modules is at [error codes](/docs/main/docs/hiecm/v3/reference/error-codes).
 
 [Next Still stuck? Ask for help Where to file what you hit, so the answer lands back in these pages.](/docs/main/docs/support)
 
 
 ---
 
-# M1 ABHA identity
+# M1 Identity: Create and verify ABHA
 
 Create an ABHA, authenticate a holder, and read or update the profile, QR code and linked mobile number.
 
@@ -11729,143 +11729,6 @@ Login by fingerprint or iris uses the same base URL, through `profile/login/veri
 [See the user journeyWhat the person experiences, screen by screen, before you write any code.](/docs/main/docs/hiecm/v3/milestones/m1)[When it goes wrongThe recorded error shapes and codes, and what to do about each.](/docs/main/docs/hiecm/v3/api/m1/errors)
 
 New to this? Start with [M1 Identity](/docs/main/docs/hiecm/v3/milestones/m1).
-
-
----
-
-# M2 custom error codes
-
-During ABDM integration, systems may encounter issues across discovery, linking, consent, encryption, and data exchange workflows. This section lists the error codes, to help ensure smooth implementation. A code can carry more than one message: match on the message as well as the code.
-
-| Code      | Error                                                                                                                                                      |
-| --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ABDM-1000 | Unable to connect the database                                                                                                                             |
-| ABDM-1001 | No data found                                                                                                                                              |
-| ABDM-1004 | SMS Gateway is unavailable                                                                                                                                 |
-| ABDM-1006 | Bad Request, invalid request Body                                                                                                                          |
-| ABDM-1007 | Connection failed due to timeout                                                                                                                           |
-| ABDM-1008 | SMS service currently disabled                                                                                                                             |
-| ABDM-1010 | Validation failed                                                                                                                                          |
-| ABDM-1011 | Gateway database unavailable                                                                                                                               |
-| ABDM-1012 | No records found against the ABHA Address                                                                                                                  |
-| ABDM-1013 | Invalid ABHA Number                                                                                                                                        |
-| ABDM-1015 | Invalid Response                                                                                                                                           |
-| ABDM-1016 | Invalid TimeStamp                                                                                                                                          |
-| ABDM-1017 | Invalid TransactionId                                                                                                                                      |
-| ABDM-1018 | Share Profile database unavailable                                                                                                                         |
-| ABDM-1019 | Dependent Service Unavailable                                                                                                                              |
-| ABDM-1020 | Unknown database                                                                                                                                           |
-| ABDM-1022 | Too many requests                                                                                                                                          |
-| ABDM-1023 | Invalid User                                                                                                                                               |
-| ABDM-1024 | Dependent service unavailable                                                                                                                              |
-| ABDM-1025 | Invalid ServiceId                                                                                                                                          |
-| ABDM-1026 | Invalid Link Token                                                                                                                                         |
-| ABDM-1027 | You are blocked. Please try again after 24 hours.                                                                                                          |
-| ABDM-1028 | HIP is unavailable                                                                                                                                         |
-| ABDM-1029 | Redis server is unavailable                                                                                                                                |
-| ABDM-1030 | Invalid request ID                                                                                                                                         |
-| ABDM-1031 | Invalid request                                                                                                                                            |
-| ABDM-1032 | Invalid header                                                                                                                                             |
-| ABDM-1033 | HIU is unavailable                                                                                                                                         |
-| ABDM-1034 | Notification service unavailable                                                                                                                           |
-| ABDM-1035 | Invalid HIP ID                                                                                                                                             |
-| ABDM-1036 | Data does not matched                                                                                                                                      |
-| ABDM-1037 | Counter and Care context count mismatch                                                                                                                    |
-| ABDM-1038 | ABHA address and Link token mismatch                                                                                                                       |
-| ABDM-1040 | Invalid HIU ID                                                                                                                                             |
-| ABDM-1041 | Invalid Acknowledgement                                                                                                                                    |
-| ABDM-1042 | Provider Mandatory                                                                                                                                         |
-| ABDM-1043 | ABHA Address does not match with KYC details.                                                                                                              |
-| ABDM-1044 | Broadcast Failed                                                                                                                                           |
-| ABDM-1045 | Database Access is restricted                                                                                                                              |
-| ABDM-1046 | Invalid Purpose                                                                                                                                            |
-| ABDM-1047 | Purpose does not exist                                                                                                                                     |
-| ABDM-1048 | Timeout                                                                                                                                                    |
-| ABDM-1049 | Invalid Profile Share Intent Keys                                                                                                                          |
-| ABDM-1050 | Invalid Profile Share Metadata Keys                                                                                                                        |
-| ABDM-1051 | Invalid ABHA Number or ABHA Address                                                                                                                        |
-| ABDM-1052 | Invalid TransactionId or response's requestId                                                                                                              |
-| ABDM-1401 | HIP is not available                                                                                                                                       |
-| ABDM-1061 | Consent artefact expired                                                                                                                                   |
-| ABDM-1062 | Consent Not granted                                                                                                                                        |
-| ABDM-1063 | Date Range given is invalid                                                                                                                                |
-| ABDM-1064 | request with this request id already exists                                                                                                                |
-| ABDM-1017 | Invalid TransactionId                                                                                                                                      |
-| ABDM-1109 | ABHA DB service unavailable                                                                                                                                |
-| ABDM-1108 | Notification DB service unavailable                                                                                                                        |
-| ABDM-1034 | Notification service unavailable                                                                                                                           |
-| ABDM-1029 | Redis server is unavailable                                                                                                                                |
-| ABDM-1201 | IDP Gateway is unavailable                                                                                                                                 |
-| ABDM-9999 | Unknown exception                                                                                                                                          |
-| ABDM-1006 | Invalid combinations of scopes                                                                                                                             |
-| ABDM-1006 | Bad Request, invalid request Body                                                                                                                          |
-| ABDM-1056 | This care contexts has been already linked                                                                                                                 |
-| ABDM-1055 | Invalid HIP Id or PHR Id                                                                                                                                   |
-| ABDM-1056 | Invalid Link Reference Number                                                                                                                              |
-| ABDM-1057 | Invalid Care Contexts                                                                                                                                      |
-| ABDM-1059 | Invalid Care Contexts count                                                                                                                                |
-| ABDM-1060 | Invalid Patient Reference Number                                                                                                                           |
-| ABDM-1061 | Invalid Patient Display                                                                                                                                    |
-| ABDM-1062 | ABHA number mismatch with Link token                                                                                                                       |
-| ABDM-1063 | HIP Id mismatch with Link token                                                                                                                            |
-| ABDM-1064 | Request body was missing                                                                                                                                   |
-| ABDM-1065 | Invalid X Auth token                                                                                                                                       |
-| ABDM-1066 | Invalid JWT token                                                                                                                                          |
-| ABDM-1067 | Request body not required                                                                                                                                  |
-| ABDM-1170 | Invalid ABHA address                                                                                                                                       |
-| ABDM-1084 | ABHA address mismatch with X Auth token                                                                                                                    |
-| ABDM-1085 | ABHA number mismatch with X Auth token                                                                                                                     |
-| ABDM-1086 | Patient profile mismatch with X Auth token                                                                                                                 |
-| ABDM-1087 | Duplicate patient share request                                                                                                                            |
-| ABDM-1090 | Duplicate HIP link request                                                                                                                                 |
-| ABDM-1091 | Duplicate Get links request                                                                                                                                |
-| ABDM-1092 | Duplicate Link token request                                                                                                                               |
-| ABDM-1093 | Duplicate Bridge request                                                                                                                                   |
-| ABDM-1094 | Duplicate bridge patch request                                                                                                                             |
-| ABDM-1095 | Duplicate Bridge service request                                                                                                                           |
-| ABDM-1102 | Profile information cannot be null                                                                                                                         |
-| ABDM-1103 | Duplicate Discovery request                                                                                                                                |
-| ABDM-1104 | Duplicate Init request                                                                                                                                     |
-| ABDM-1105 | Duplicate Confirm request                                                                                                                                  |
-| ABDM-1106 | Duplicate On discovery request                                                                                                                             |
-| ABDM-1107 | Duplicate On init request                                                                                                                                  |
-| ABDM-1108 | Duplicate On confirm request                                                                                                                               |
-| ABDM-1109 | Invalid On discovery response                                                                                                                              |
-| ABDM-1110 | Invalid On init response                                                                                                                                   |
-| ABDM-1111 | Invalid On confirm response                                                                                                                                |
-| ABDM-1112 | Invalid or already expired consent artefact id                                                                                                             |
-| ABDM-1113 | Duplicate health information provider data flow response                                                                                                   |
-| ABDM-1149 | Intent type is not supported at HIP end                                                                                                                    |
-| ABDM-1150 | Bridge API version cannot be null                                                                                                                          |
-| ABDM-1401 | HIP is not available                                                                                                                                       |
-| ABDM-1402 | Acknowledgement is not received from HIP                                                                                                                   |
-| ABDM-9999 | HIP is unable to generate a token at this time. Please try again later.                                                                                    |
-| ABDM-9999 | HIP is unable to process at this time. Please try again later.                                                                                             |
-| ABDM-1030 | Request id not found                                                                                                                                       |
-| ABDM-2500 | No mapping found for                                                                                                                                       |
-| ABDM-2401 | The X Auth token is invalid.                                                                                                                               |
-| ABDM-2402 | Invalid Timestamp                                                                                                                                          |
-| ABDM-2404 | Invalid Request Id                                                                                                                                         |
-| ABDM-2429 | Too many requests found                                                                                                                                    |
-| ABDM-2501 | Payment status should be : SUCCESS,CANCELED,PENDING,FAIL,REFUND\_INITIATED,REFUND\_SUCCESS                                                                 |
-| ABDM-2500 | Authorization header is missing                                                                                                                            |
-| ABDM-2403 | Invalid X-CM-ID                                                                                                                                            |
-| ABDM-1086 | Patient profile mismatch with X Auth token                                                                                                                 |
-| ABDM-2406 | Invalid API sequence flow, please follow logical flow                                                                                                      |
-| ABDM-2406 | The status is invalid. Please follow the logical status flow or transition.                                                                                |
-| ABDM-9999 | User not found                                                                                                                                             |
-| ABDM-1024 | Dependent service unavailable                                                                                                                              |
-| ABDM-9999 | Cannot process the request at the moment, please try later.                                                                                                |
-| ABDM-9001 | No open order against ABHA. Please ensure a minimum of one open order                                                                                      |
-| ABDM-9002 | No registration found at <\<hospital name>>. Contact counter support                                                                                       |
-| ABDM-9003 | Hospital services temporarily unavailable. Please try again after some time.                                                                               |
-| ABDM-9004 | Services disrupted, please try again.                                                                                                                      |
-| ABDM-9005 | Bank server not responding. Please try again later                                                                                                         |
-| ABDM-9006 | Service details mismatch. Please ensure original service ID from HMIS                                                                                      |
-| ABDM-9007 | The Scan and Pay functionality is not enabled at this facility. Kindly contact the hospital administration.                                                |
-| ABDM-1006 | Invalid count, must be 2 digit and ranges between 1 to 20                                                                                                  |
-| ABDM-1407 | The ABHA Number associated with this ABHA Address is currently deactivated. Please reactivate it.                                                          |
-| ABDM-1006 | Invalid HIType, it must be in Prescription,DiagnosticReport,OPConsultation,DischargeSummary,ImmunizationRecord,HealthDocumentRecord,WellnessRecord,Invoice |
 
 
 ---
@@ -13389,20 +13252,147 @@ curl --request POST \
 
 ---
 
-# M2 Health information provider services errors
+# M2 Health Information Provider errors
 
 Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/main/docs/hiecm/v3/troubleshooting/).
 
-The M2 Health information provider services specification records no error code yet. That is a gap in the specification, not a promise that this module cannot fail.
+During ABDM integration, systems may encounter issues across discovery, linking, consent, encryption, and data exchange workflows. This section outlines common errors, their causes, and recommended resolutions to help ensure smooth implementation.
 
-Every code above is recorded in the specification that owns it. The aggregated list across modules is at [error codes](/docs/main/docs/hiecm/v3/reference/error-codes).
+## Codes
+
+| Code        | HTTP | Message                                                                                                                                                    | Returned by |
+| ----------- | ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| `ABDM-1000` |      | Unable to connect the database                                                                                                                             |             |
+| `ABDM-1001` |      | No data found                                                                                                                                              |             |
+| `ABDM-1004` |      | SMS Gateway is unavailable                                                                                                                                 |             |
+| `ABDM-1006` |      | Bad Request, invalid request Body                                                                                                                          |             |
+| `ABDM-1007` |      | Connection failed due to timeout                                                                                                                           |             |
+| `ABDM-1008` |      | SMS service currently disabled                                                                                                                             |             |
+| `ABDM-1010` |      | Validation failed                                                                                                                                          |             |
+| `ABDM-1011` |      | Gateway database unavailable                                                                                                                               |             |
+| `ABDM-1012` |      | No records found against the ABHA Address                                                                                                                  |             |
+| `ABDM-1013` |      | Invalid ABHA Number                                                                                                                                        |             |
+| `ABDM-1015` |      | Invalid Response                                                                                                                                           |             |
+| `ABDM-1016` |      | Invalid TimeStamp                                                                                                                                          |             |
+| `ABDM-1017` |      | Invalid TransactionId                                                                                                                                      |             |
+| `ABDM-1018` |      | Share Profile database unavailable                                                                                                                         |             |
+| `ABDM-1019` |      | Dependent Service Unavailable                                                                                                                              |             |
+| `ABDM-1020` |      | Unknown database                                                                                                                                           |             |
+| `ABDM-1022` |      | Too many requests                                                                                                                                          |             |
+| `ABDM-1023` |      | Invalid User                                                                                                                                               |             |
+| `ABDM-1024` |      | Dependent service unavailable                                                                                                                              |             |
+| `ABDM-1025` |      | Invalid ServiceId                                                                                                                                          |             |
+| `ABDM-1026` |      | Invalid Link Token                                                                                                                                         |             |
+| `ABDM-1027` |      | You are blocked. Please try again after 24 hours.                                                                                                          |             |
+| `ABDM-1028` |      | HIP is unavailable                                                                                                                                         |             |
+| `ABDM-1029` |      | Redis server is unavailable                                                                                                                                |             |
+| `ABDM-1030` |      | Invalid request ID                                                                                                                                         |             |
+| `ABDM-1031` |      | Invalid request                                                                                                                                            |             |
+| `ABDM-1032` |      | Invalid header                                                                                                                                             |             |
+| `ABDM-1033` |      | HIU is unavailable                                                                                                                                         |             |
+| `ABDM-1034` |      | Notification service unavailable                                                                                                                           |             |
+| `ABDM-1035` |      | Invalid HIP ID                                                                                                                                             |             |
+| `ABDM-1036` |      | Data does not matched                                                                                                                                      |             |
+| `ABDM-1037` |      | Counter and Care context count mismatch                                                                                                                    |             |
+| `ABDM-1038` |      | ABHA address and Link token mismatch                                                                                                                       |             |
+| `ABDM-1040` |      | Invalid HIU ID                                                                                                                                             |             |
+| `ABDM-1041` |      | Invalid Acknowledgement                                                                                                                                    |             |
+| `ABDM-1042` |      | Provider Mandatory                                                                                                                                         |             |
+| `ABDM-1043` |      | ABHA Address does not match with KYC details.                                                                                                              |             |
+| `ABDM-1044` |      | Broadcast Failed                                                                                                                                           |             |
+| `ABDM-1045` |      | Database Access is restricted                                                                                                                              |             |
+| `ABDM-1046` |      | Invalid Purpose                                                                                                                                            |             |
+| `ABDM-1047` |      | Purpose does not exist                                                                                                                                     |             |
+| `ABDM-1048` |      | Timeout                                                                                                                                                    |             |
+| `ABDM-1049` |      | Invalid Profile Share Intent Keys                                                                                                                          |             |
+| `ABDM-1050` |      | Invalid Profile Share Metadata Keys                                                                                                                        |             |
+| `ABDM-1051` |      | Invalid ABHA Number or ABHA Address                                                                                                                        |             |
+| `ABDM-1052` |      | Invalid TransactionId or response's requestId                                                                                                              |             |
+| `ABDM-1401` |      | HIP is not available                                                                                                                                       |             |
+| `ABDM-1061` |      | Consent artefact expired                                                                                                                                   |             |
+| `ABDM-1062` |      | Consent Not granted                                                                                                                                        |             |
+| `ABDM-1063` |      | Date Range given is invalid                                                                                                                                |             |
+| `ABDM-1064` |      | request with this request id already exists                                                                                                                |             |
+| `ABDM-1109` |      | ABHA DB service unavailable                                                                                                                                |             |
+| `ABDM-1108` |      | Notification DB service unavailable                                                                                                                        |             |
+| `ABDM-1201` |      | IDP Gateway is unavailable                                                                                                                                 |             |
+| `ABDM-9999` |      | Unknown exception                                                                                                                                          |             |
+| `ABDM-1006` |      | Invalid combinations of scopes                                                                                                                             |             |
+| `ABDM-1056` |      | This care contexts has been already linked                                                                                                                 |             |
+| `ABDM-1055` |      | Invalid HIP Id or PHR Id                                                                                                                                   |             |
+| `ABDM-1056` |      | Invalid Link Reference Number                                                                                                                              |             |
+| `ABDM-1057` |      | Invalid Care Contexts                                                                                                                                      |             |
+| `ABDM-1059` |      | Invalid Care Contexts count                                                                                                                                |             |
+| `ABDM-1060` |      | Invalid Patient Reference Number                                                                                                                           |             |
+| `ABDM-1061` |      | Invalid Patient Display                                                                                                                                    |             |
+| `ABDM-1062` |      | ABHA number mismatch with Link token                                                                                                                       |             |
+| `ABDM-1063` |      | HIP Id mismatch with Link token                                                                                                                            |             |
+| `ABDM-1064` |      | Request body was missing                                                                                                                                   |             |
+| `ABDM-1065` |      | Invalid X Auth token                                                                                                                                       |             |
+| `ABDM-1066` |      | Invalid JWT token                                                                                                                                          |             |
+| `ABDM-1067` |      | Request body not required                                                                                                                                  |             |
+| `ABDM-1170` |      | Invalid ABHA address                                                                                                                                       |             |
+| `ABDM-1084` |      | ABHA address mismatch with X Auth token                                                                                                                    |             |
+| `ABDM-1085` |      | ABHA number mismatch with X Auth token                                                                                                                     |             |
+| `ABDM-1086` |      | Patient profile mismatch with X Auth token                                                                                                                 |             |
+| `ABDM-1087` |      | Duplicate patient share request                                                                                                                            |             |
+| `ABDM-1090` |      | Duplicate HIP link request                                                                                                                                 |             |
+| `ABDM-1091` |      | Duplicate Get links request                                                                                                                                |             |
+| `ABDM-1092` |      | Duplicate Link token request                                                                                                                               |             |
+| `ABDM-1093` |      | Duplicate Bridge request                                                                                                                                   |             |
+| `ABDM-1094` |      | Duplicate bridge patch request                                                                                                                             |             |
+| `ABDM-1095` |      | Duplicate Bridge service request                                                                                                                           |             |
+| `ABDM-1102` |      | Profile information cannot be null                                                                                                                         |             |
+| `ABDM-1103` |      | Duplicate Discovery request                                                                                                                                |             |
+| `ABDM-1104` |      | Duplicate Init request                                                                                                                                     |             |
+| `ABDM-1105` |      | Duplicate Confirm request                                                                                                                                  |             |
+| `ABDM-1106` |      | Duplicate On discovery request                                                                                                                             |             |
+| `ABDM-1107` |      | Duplicate On init request                                                                                                                                  |             |
+| `ABDM-1108` |      | Duplicate On confirm request                                                                                                                               |             |
+| `ABDM-1109` |      | Invalid On discovery response                                                                                                                              |             |
+| `ABDM-1110` |      | Invalid On init response                                                                                                                                   |             |
+| `ABDM-1111` |      | Invalid On confirm response                                                                                                                                |             |
+| `ABDM-1112` |      | Invalid or already expired consent artefact id                                                                                                             |             |
+| `ABDM-1113` |      | Duplicate health information provider data flow response                                                                                                   |             |
+| `ABDM-1149` |      | Intent type is not supported at HIP end                                                                                                                    |             |
+| `ABDM-1150` |      | Bridge API version cannot be null                                                                                                                          |             |
+| `ABDM-1402` |      | Acknowledgement is not received from HIP                                                                                                                   |             |
+| `ABDM-9999` |      | HIP is unable to generate a token at this time. Please try again later.                                                                                    |             |
+| `ABDM-9999` |      | HIP is unable to process at this time. Please try again later.                                                                                             |             |
+| `ABDM-1030` |      | Request id not found                                                                                                                                       |             |
+| `ABDM-2500` |      | No mapping found for                                                                                                                                       |             |
+| `ABDM-2401` |      | The X Auth token is invalid.                                                                                                                               |             |
+| `ABDM-2402` |      | Invalid Timestamp                                                                                                                                          |             |
+| `ABDM-2404` |      | Invalid Request Id                                                                                                                                         |             |
+| `ABDM-2429` |      | Too many requests found                                                                                                                                    |             |
+| `ABDM-2501` |      | Payment status should be : SUCCESS,CANCELED,PENDING,FAIL,REFUND\_INITIATED,REFUND\_SUCCESS                                                                 |             |
+| `ABDM-2500` |      | Authorization header is missing                                                                                                                            |             |
+| `ABDM-2403` |      | Invalid X-CM-ID                                                                                                                                            |             |
+| `ABDM-2406` |      | Invalid API sequence flow, please follow logical flow                                                                                                      |             |
+| `ABDM-2406` |      | The status is invalid. Please follow the logical status flow or transition.                                                                                |             |
+| `ABDM-9999` |      | User not found                                                                                                                                             |             |
+| `ABDM-9999` |      | Cannot process the request at the moment, please try later.                                                                                                |             |
+| `ABDM-9001` |      | No open order against ABHA. Please ensure a minimum of one open order                                                                                      |             |
+| `ABDM-9002` |      | No registration found at <>. Contact counter support                                                                                                       |             |
+| `ABDM-9003` |      | Hospital services temporarily unavailable. Please try again after some time.                                                                               |             |
+| `ABDM-9004` |      | Services disrupted, please try again.                                                                                                                      |             |
+| `ABDM-9005` |      | Bank server not responding. Please try again later                                                                                                         |             |
+| `ABDM-9006` |      | Service details mismatch. Please ensure original service ID from HMIS                                                                                      |             |
+| `ABDM-9007` |      | The Scan and Pay functionality is not enabled at this facility. Kindly contact the hospital administration.                                                |             |
+| `ABDM-1006` |      | Invalid count, must be 2 digit and ranges between 1 to 20                                                                                                  |             |
+| `ABDM-1407` |      | The ABHA Number associated with this ABHA Address is currently deactivated. Please reactivate it.                                                          |             |
+| `ABDM-1006` |      | Invalid HIType, it must be in Prescription,DiagnosticReport,OPConsultation,DischargeSummary,ImmunizationRecord,HealthDocumentRecord,WellnessRecord,Invoice |             |
+
+A row with no HTTP status and no call is one NHA lists for this module (Sandbox2.0 M2 and M3 API review v2, NHA, 21 September 2026) without saying which call returns it.
+
+Every code above is recorded in the specification that owns it or in NHA's list for the module. The aggregated list across modules is at [error codes](/docs/main/docs/hiecm/v3/reference/error-codes).
 
 [Next Still stuck? Ask for help Where to file what you hit, so the answer lands back in these pages.](/docs/main/docs/support)
 
 
 ---
 
-# M2 linking and sharing
+# M2 Health Information Provider: Create and link records
 
 Link care contexts to a patient's ABHA address, answer discovery requests, and share encrypted health records with consent.
 
@@ -14400,20 +14390,20 @@ Shape of the 200 response, generated from the schema. The values are placeholder
 
 ---
 
-# M3 Health information user services errors
+# M3 Health Information User errors
 
 Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/main/docs/hiecm/v3/troubleshooting/).
 
-The M3 Health information user services specification records no error code yet. That is a gap in the specification, not a promise that this module cannot fail.
+The M3 Health Information User specification records no error code yet. That is a gap in the specification, not a promise that this module cannot fail.
 
-Every code above is recorded in the specification that owns it. The aggregated list across modules is at [error codes](/docs/main/docs/hiecm/v3/reference/error-codes).
+Every code above is recorded in the specification that owns it or in NHA's list for the module. The aggregated list across modules is at [error codes](/docs/main/docs/hiecm/v3/reference/error-codes).
 
 [Next Still stuck? Ask for help Where to file what you hit, so the answer lands back in these pages.](/docs/main/docs/support)
 
 
 ---
 
-# M3 consent and fetching
+# M3 Health Information User: Fetch data with consent
 
 Request patient consent, track its status, and fetch the health records a granted consent artefact covers.
 
@@ -19236,7 +19226,7 @@ curl --request POST \
 
 ---
 
-# M4 HPR and HFR
+# Milestone 4 (M4): Register Healthcare Professionals and Facilities
 
 Register a healthcare professional on the HPR, onboard a facility to the HFR, and link the facility to its bridges.
 
@@ -22210,7 +22200,7 @@ Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/main/docs/
 | `ABDM-1211` | 400  | User not found.                | `p1_post_v3_phr_app_login_search`           |
 | `ABDM-9999` | 400  | Invalid LoginId                | `p1_post_v3_phr_app_enrollment_request_otp` |
 
-Every code above is recorded in the specification that owns it. The aggregated list across modules is at [error codes](/docs/main/docs/hiecm/v3/reference/error-codes).
+Every code above is recorded in the specification that owns it or in NHA's list for the module. The aggregated list across modules is at [error codes](/docs/main/docs/hiecm/v3/reference/error-codes).
 
 [Next Still stuck? Ask for help Where to file what you hit, so the answer lands back in these pages.](/docs/main/docs/support)
 
@@ -25899,7 +25889,7 @@ Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/main/docs/
 | `900902`    | 401  | Missing Credentials | `p2_get_v3_phr_app_login_profile`              |
 | `ABDM-9999` | 400  | Invalid LoginId     | `p2_post_v3_phr_app_login_profile_request_otp` |
 
-Every code above is recorded in the specification that owns it. The aggregated list across modules is at [error codes](/docs/main/docs/hiecm/v3/reference/error-codes).
+Every code above is recorded in the specification that owns it or in NHA's list for the module. The aggregated list across modules is at [error codes](/docs/main/docs/hiecm/v3/reference/error-codes).
 
 [Next Still stuck? Ask for help Where to file what you hit, so the answer lands back in these pages.](/docs/main/docs/support)
 
@@ -27911,7 +27901,7 @@ Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/main/docs/
 
 The Patient scan and record share specification records no error code yet. That is a gap in the specification, not a promise that this module cannot fail.
 
-Every code above is recorded in the specification that owns it. The aggregated list across modules is at [error codes](/docs/main/docs/hiecm/v3/reference/error-codes).
+Every code above is recorded in the specification that owns it or in NHA's list for the module. The aggregated list across modules is at [error codes](/docs/main/docs/hiecm/v3/reference/error-codes).
 
 [Next Still stuck? Ask for help Where to file what you hit, so the answer lands back in these pages.](/docs/main/docs/support)
 
@@ -29557,7 +29547,7 @@ Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/main/docs/
 
 The Scan and Pay specification records no error code yet. That is a gap in the specification, not a promise that this module cannot fail.
 
-Every code above is recorded in the specification that owns it. The aggregated list across modules is at [error codes](/docs/main/docs/hiecm/v3/reference/error-codes).
+Every code above is recorded in the specification that owns it or in NHA's list for the module. The aggregated list across modules is at [error codes](/docs/main/docs/hiecm/v3/reference/error-codes).
 
 [Next Still stuck? Ask for help Where to file what you hit, so the answer lands back in these pages.](/docs/main/docs/support)
 
@@ -29756,7 +29746,7 @@ Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/main/docs/
 
 The Scan and Register specification records no error code yet. That is a gap in the specification, not a promise that this module cannot fail.
 
-Every code above is recorded in the specification that owns it. The aggregated list across modules is at [error codes](/docs/main/docs/hiecm/v3/reference/error-codes).
+Every code above is recorded in the specification that owns it or in NHA's list for the module. The aggregated list across modules is at [error codes](/docs/main/docs/hiecm/v3/reference/error-codes).
 
 [Next Still stuck? Ask for help Where to file what you hit, so the answer lands back in these pages.](/docs/main/docs/support)
 
@@ -30271,7 +30261,7 @@ Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/main/docs/
 
 The Subscriptions specification records no error code yet. That is a gap in the specification, not a promise that this module cannot fail.
 
-Every code above is recorded in the specification that owns it. The aggregated list across modules is at [error codes](/docs/main/docs/hiecm/v3/reference/error-codes).
+Every code above is recorded in the specification that owns it or in NHA's list for the module. The aggregated list across modules is at [error codes](/docs/main/docs/hiecm/v3/reference/error-codes).
 
 [Next Still stuck? Ask for help Where to file what you hit, so the answer lands back in these pages.](/docs/main/docs/support)
 
@@ -32957,80 +32947,56 @@ The workflow also supports profile updates in accordance with applicable ABDM gu
 
 # M2 Health Information Provider: Create and link records
 
-Milestone 2 enables a [Health Information Provider](/docs/main/docs/hiecm/v3/getting-started/glossary#hip) (HIP) to create digital health records and to generate and link [care contexts](/docs/main/docs/hiecm/v3/concepts/care-context) with a patient's [ABHA Address](/docs/main/docs/hiecm/v3/getting-started/glossary#abha-address). It also enables the HIP to facilitate record [discovery](/docs/main/docs/hiecm/v3/getting-started/glossary#discovery) through a Personal Health Record ([PHR](/docs/main/docs/hiecm/v3/getting-started/glossary#phr)) application, and to securely share encrypted health information across the ABDM ecosystem.
+Milestone 2 enables a [Health Information Provider](/docs/main/docs/hiecm/v3/getting-started/glossary#hip) (HIP) to create digital health records and link them with a patient's [ABHA Address](/docs/main/docs/hiecm/v3/getting-started/glossary#abha-address), facilitate record [discovery](/docs/main/docs/hiecm/v3/getting-started/glossary#discovery) through a Personal Health Record ([PHR](/docs/main/docs/hiecm/v3/getting-started/glossary#phr)) application, and securely share encrypted health information across the ABDM ecosystem.
 
 ## In short
 
-Milestone 2 enables a Healthcare Facility, acting as a Health Information Provider (HIP), to link a patient's health records with the patient's ABHA Address and make such records available within the ABDM ecosystem. The linkage of records may be carried out through either HIP-Initiated Linking or User-Initiated Linking.
+Health Information Provider (HIP) links a patient's health records with the patient's ABHA Address and makes such records available within the ABDM ecosystem. The linkage of records may be carried out through either HIP-Initiated Linking or User-Initiated Linking.
 
-- **HIP-Initiated Linking.** In this workflow, an ABDM-enabled Healthcare Facility links the patient's health records and care contexts with the patient's ABHA Address during the course of care, following successful patient authentication. The linked records are subsequently made available through the patient's PHR application.
-- **User-Initiated Linking.** In this workflow, a patient initiates the linkage of previously generated health records through a PHR application. The HIP validates the patient details, identifies the corresponding records, and links the associated care contexts with the patient's ABHA Address upon successful verification.
-- **Data Transfer.** Health information is structured in accordance with the HL7 [FHIR](/docs/main/docs/hiecm/v3/getting-started/glossary#fhir) R4 standard. The FHIR bundle is encrypted and securely exchanged through the ABDM ecosystem.
+## M2 functionalities
 
-## Capabilities under M2
+**Care Context:** A Care Context represents a patient's visit to a healthcare facility and contains the health records generated during that visit. The healthcare facility links the Care Context with the patient's ABHA Address.
 
-The following capabilities shall be supported by an ABDM-compliant HIP system, as applicable to the integrating entity.
+The records may be linked through either HIP-Initiated Linking or User-Initiated Linking.
 
-| Capability                              | What it enables                                                                                                                                                                         |
-| --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Care contexts                           | Organise health records relating to a visit, admission or other episode of care into an identifiable care context that can be linked with the patient's ABHA Address.                   |
-| HIP-initiated linking                   | Enables a Healthcare Facility to link a patient's health records with the patient's ABHA Address at the point of care, following successful verification of the patient's ABHA Address. |
-| Notification to mobile                  | Enables the HIP to notify the patient upon successful linkage of health records.                                                                                                        |
-| Discovery and linking                   | Enables the identification and linkage of a patient's previously generated health records with the patient's ABHA Address through a discovery request initiated via a PHR application.  |
-| Health-information request and transfer | Enables the secure, consent-based exchange of a patient's health records in ABDM-prescribed HL7 FHIR R4 format within the ABDM ecosystem.                                               |
+**HIP-Initiated Linking:** In this workflow, an ABDM-enabled healthcare facility generates a link token to authenticate the patient and links the care contexts with the patient's ABHA Address. The linked care contexts are subsequently made available in the patient's PHR application.
 
-## Use cases
+**User-Initiated Linking:** This flow allows a patient to find and link health records created earlier without an ABHA Address. The records are stored in the [HMIS](/docs/main/docs/hiecm/v3/getting-started/glossary#hmis) using the patient's registered details. When the patient selects the fetch option in the PHR application, the healthcare facility matches the respective demographic details and shows the available records for linking with the patient's ABHA Address.
 
-| Use case                                                        | What it does                                                                                                                                                                                                                                 |
-| --------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Scan and Pay](/docs/main/docs/hiecm/v3/use-cases/scan-and-pay) | A patient scans the QR code at your counter, sees their open orders in their PHR app and pays there. You answer with the orders and the payment bundle, and report the payment status. The callbacks land on the bridge you register for M2. |
-
-All use cases, and the milestone each belongs to: [Use cases](/docs/main/docs/hiecm/v3/use-cases).
-
-## Who needs it
-
-M2 is applicable to healthcare facilities and systems that create and maintain digital health records, including hospitals, clinics, laboratories, pharmacies and diagnostic or imaging centres.
+**Data Transfer:** In this flow, each health record is converted into the prescribed [FHIR](/docs/main/docs/hiecm/v3/getting-started/glossary#fhir) format, packaged as a FHIR bundle, encrypted, and securely transmitted through the ABDM ecosystem.
 
 ## Prerequisites
 
-Prior to implementation of Milestone 2, the following requirements shall be fulfilled:
+Before implementing Milestone 2 (M2), ensure that the following prerequisites are fulfilled:
 
-1. The Healthcare Facility shall have a valid Health Facility Registry ([HFR](/docs/main/docs/hiecm/v3/getting-started/glossary#hfr)) ID, and the integrating software shall be registered and mapped to the facility as a Health Information Provider (HIP).
-2. The system shall support capture and verification of the patient's ABHA Address through the applicable ABDM authentication mechanism.
-3. The system shall generate and maintain digital health records for linking with the patient's ABHA Address.
-4. Health information shall be packaged in HL7 FHIR R4 format and conform to the applicable ABDM FHIR profiles published by NRCeS at [nrces.in](https://nrces.in/ndhm/fhir/r4/index.html).
+1. The healthcare facility must be registered in the Health Facility Registry ([HFR](/docs/main/docs/hiecm/v3/getting-started/glossary#hfr)) and have a valid HFR ID (facility ID).
+2. The HIP ID (Facility ID) must be linked to the corresponding Client ID to receive callbacks through the NHPR Portal or [M4](/docs/main/docs/hiecm/v3/milestones/m4) APIs using software linkage.
+3. A valid callback URL must be configured for the Client ID using the [Update Bridge API](/docs/main/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/03-gateway-patch-gateway-v3-bridge-url).
 
-## Health record formats
+## FHIR-based health records
 
-Each applicable health-information type shall be represented as a FHIR document Bundle. Depending on the applicable profile and use case, the Bundle may contain structured clinical data and, where permitted, an attachment such as a PDF document or image.
+In the ABDM ecosystem, every health record is created and shared in a standardized format called FHIR (Fast Healthcare Interoperability Resources) to enable secure and interoperable exchange of health information.
 
-[HRP](/docs/main/docs/hiecm/v3/getting-started/glossary#hrp) can only link the following type of health records to an ABHA Address. All health records must be structured as FHIR (Fast Healthcare Interoperability Resources) formats. The FHIR specifications used by ABDM are published and maintained by the National Resource Centre for E-Health Standards (NRCES) at [nrces.in](https://nrces.in/ndhm/fhir/r4/index.html).
+FHIR is a globally recognized standard for structuring and exchanging digital health records.
 
-All health records have been designed to be used in 2 ways:
+FHIR Implementation Guide (ABDM): [nrces.in/ndhm/fhir/r4](https://nrces.in/ndhm/fhir/r4/index.html)
 
-- A simple FHIR bundle with a PDF or image attachment containing the detailed health information
-- A structured FHIR bundle with coded health information.
+### Health information types
 
-Here is a list of Health Records, based on FHIR's specifications:
+ABDM has defined 08 Health Information (HI) Types, comprising 07 Clinical and 01 Billing artefact.
 
-| Name                     | Definition                                                                                                                           |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
-| Diagnostic Report Record | Represents diagnostic reports including radiology and laboratory reports that can be shared across the health ecosystem.             |
-| Discharge Summary Record | Clinical document representing the discharge summary record for ABDM HDE data set.                                                   |
-| Health Document Record   | Represents unstructured historical health records as single or multiple documents, typically uploaded by patients via Health Locker. |
-| Immunization Record      | Represents immunization records along with additional documents such as vaccine certificates and next dose recommendations.          |
-| OP Consult Record        | Represents outpatient consultation notes including examinations, procedures, medications, and clinical advice.                       |
-| Prescription Record      | Represents medication advice compliant with Pharmacy Council of India (PCI) guidelines.                                              |
-| Wellness Record          | Represents routine wellness information including vitals, physical examination, and general health data captured via PHR apps.       |
-| Invoice Record           | Represents billing details such as pharmacy invoices, consultation invoices, and other financial records.                            |
+| Name                                                                                                    | Definition                                                                                                                                                                                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [DiagnosticReportRecord](https://nrces.in/ndhm/fhir/r4/StructureDefinition-DiagnosticReportRecord.html) | The Clinical Artifact represents diagnostic reports including Radiology and Laboratory reports that can be shared across the health ecosystem.                                                                                                                                                      |
+| [DischargeSummaryRecord](https://nrces.in/ndhm/fhir/r4/StructureDefinition-DischargeSummaryRecord.html) | Clinical document used to represent the discharge summary record for ABDM HDE data set.                                                                                                                                                                                                             |
+| [HealthDocumentRecord](https://nrces.in/ndhm/fhir/r4/StructureDefinition-HealthDocumentRecord.html)     | The Clinical Artifact represents the unstructured historical health records as a single of multiple Health Record Documents generally uploaded by the patients through the Health Locker and can be shared across the health ecosystem.                                                             |
+| [ImmunizationRecord](https://nrces.in/ndhm/fhir/r4/StructureDefinition-ImmunizationRecord.html)         | The Clinical Artifact represents the Immunization records with any additional documents such as vaccine certificate, the next immunization recommendations, etc. This can be further shared across the health ecosystem.                                                                            |
+| [OPConsultRecord](https://nrces.in/ndhm/fhir/r4/StructureDefinition-OPConsultRecord.html)               | The Clinical Artifact represents the outpatient visit consultation note which may include clinical information on any OP examinations, procedures along with medication administered, and advice that can be shared across the health ecosystem.                                                    |
+| [PrescriptionRecord](https://nrces.in/ndhm/fhir/r4/StructureDefinition-PrescriptionRecord.html)         | The Clinical Artifact represents the medication advice to the patient in compliance with the Pharmacy Council of India (PCI) guidelines, which can be shared across the health ecosystem.                                                                                                           |
+| [WellnessRecord](https://nrces.in/ndhm/fhir/r4/StructureDefinition-WellnessRecord.html)                 | The Clinical Artifact represents regular wellness information of patients typically through the Patient Health Record (PHR) application covering clinical information such as vitals, physical examination, general wellness, women wellness, etc., that can be shared across the health ecosystem. |
+| [InvoiceRecord](https://nrces.in/ndhm/fhir/r4/StructureDefinition-InvoiceRecord.html)                   | The billing artifact represents the invoice details such as pharmacy invoice, consultation invoice etc. along with the support for scanned documents attached for the patient which can be shared across the health ecosystem.                                                                      |
 
-Note: Implementing all HI types is mandatory for [HMIS](/docs/main/docs/hiecm/v3/getting-started/glossary#hmis).
-
-## Care contexts
-
-A Care Context represents a logical grouping of a patient's health records. Each HMIS/[LMIS](/docs/main/docs/hiecm/v3/getting-started/glossary#lmis) system should define how patient data is organised into one or more care contexts in a meaningful and consistent way. A care context serves as the unit that is associated with a patient's ABHA address within the system.
-
-The components of a care context, the recommended structure per visit and per admission, and the JSON shape are on [Care contexts](/docs/main/docs/hiecm/v3/concepts/care-context).
+**Note:** Each applicable Health Information Type is represented as a FHIR Document Bundle in accordance with ABDM standards.
 
 ## Build M2 with an AI coding assistant
 
@@ -33045,7 +33011,7 @@ Every M2 call and callback, its error codes and its certification cases in one f
 - ScaffoldThe loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.
 - Design
 - Integrate31 operations, with their hosts, headers and the rules that hold across them.
-- DebugNo error code is recorded for this module yet.
+- Debug120 recorded error codes, each with its message and what to do about it.
 
 `mkdir -p .claude/skills/abdm-m2/references && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m2/SKILL.md -o .claude/skills/abdm-m2/SKILL.md && for f in scaffold design integrate debug; do curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m2/references/$f.md -o .claude/skills/abdm-m2/references/$f.md; done`
 
@@ -33056,193 +33022,190 @@ Drops the skill into this project. Claude loads it when a task matches.
 How to use it
 
 1. Run the command above in the repository you are integrating.
-2. Ask your agent for the job in your own words. "Link a care context for this patient". The skill loads when the task matches it.
+2. Ask your agent for the job in your own words. "Link a care context for this patient", "why am I getting ABDM-1000". The skill loads when the task matches it.
 3. Check what it writes against these pages. The skill carries the facts, not the sandbox: nothing in it has been run against ABDM.
 4. Open in Claude needs that app installed. It fills the composer and waits: nothing runs until you read it and press Enter.
 
 ## Workflow overview
 
-This section presents the principal M2 workflows through separate sequence diagrams to provide an overview of the interactions among the participating systems before the detailed API specifications are described.
+This section explains the key Milestone 2 (M2) workflows using sequence diagrams. These diagrams provide a high-level view of how different systems interact before the detailed API specifications are discussed.
 
-For the diagrams, "Your system" refers to the HMIS, LMIS, [EMR](/docs/main/docs/hiecm/v3/getting-started/glossary#emr) or other ABDM-compliant software used by the health facility to perform HIP functions. "HIE-CM" refers to the Health Information Exchange and Consent Manager that facilitates consent management and the secure exchange of health information within the ABDM ecosystem.
-
-## Linking care context
-
-### HIP initiated linking
+## Journey 1: HIP initiated linking
 
 ```mermaid
 sequenceDiagram
     autonumber
-    participant S as Your system
-    participant CM as HIE-CM
-    actor P as Patient
-    Note over S: Every call carries REQUEST-ID, TIMESTAMP,<br/>X-CM-ID, X-HIP-ID and the gateway access token
-    S->>CM: POST /api/hiecm/v3/token/generate-token<br/>abhaNumber or abhaAddress, name, gender, yearOfBirth
-    CM-->>S: 202 Accepted
-    CM-)S: callback POST {bridgeUrl}/api/v3/hip/token/on-generate-token<br/>linkToken (valid six months), response.requestId
-    Note over S: Store the linkToken against the patient
-    S->>CM: POST /api/hiecm/hip/v3/link/carecontext<br/>header X-LINK-TOKEN, abhaAddress,<br/>patient [referenceNumber, display,<br/>careContexts [referenceNumber, display], hiTypes,
-    CM-->>S: 202 Accepted
-    CM-)S: callback POST {bridgeUrl}/api/v3/link/on_carecontext<br/>status, error, response.requestId
-    CM-)P: Linked records appear in the PHR app
+    participant S as Your system (HIP)
+    participant G as ABDM Gateway
+    participant P as ABHA / PHR app
+    Note over S,G: Step 1: generate link token
+    S->>G: POST /api/hiecm/v3/token/generate-token<br/>abhaNumber, abhaAddress, name, gender, yearOfBirth
+    G-->>S: 202 Accepted
+    Note over S,G: Step 2: ABDM responds asynchronously with token details
+    G-)S: POST /api/v3/hip/token/on-generate-token<br/>abhaAddress, linkToken
+    S-->>G: 202 Accepted
+    Note over S,G: Step 3: push care contexts
+    S->>G: POST /api/hiecm/hip/v3/link/carecontext<br/>Authorization: Bearer accessToken, X-Link-Token: linkToken<br/>abhaNumber, abhaAddress, patient [referenceNumber, display,<br/>careContexts [referenceNumber, display], hiType, count]
+    G-->>S: 202 Accepted, care contexts queued
+    Note over S,G: Step 4: ABDM responds asynchronously with the status of linking
+    G-)S: POST /api/v3/link/on_carecontext<br/>status
+    S-->>G: 202 Accepted
+    G-)P: Push notification, record linked
+    P->>P: Patient sees a new record linked
 ```
 
-This workflow is applicable when the user has shared their ABHA address at the time of registration with the healthcare facility.
+The HIP generates a linking token using the patient's ABHA address and demographic details for authentication. After successful verification, a linking token valid for 6 months is created, and the patient's care context is linked to the ABHA Address.
 
-The HIP generates a [link token](/docs/main/docs/hiecm/v3/getting-started/glossary#link-token) using the patient's ABHA address and demographic details, which is then shared with the patient for authentication. Upon successful verification, a linking token valid for 6 months is created, and the patient's care context is linked to the corresponding ABHA address.
+The steps, as drawn:
 
-Process flow:
+1. Your system calls `POST /api/hiecm/v3/token/generate-token` with the patient's ABHA number or ABHA address, name, gender and year of birth.
+2. The gateway answers 202 Accepted.
+3. The gateway calls `POST /api/v3/hip/token/on-generate-token` on your bridge with the ABHA address and the link token.
+4. Your system answers 202 Accepted and stores the link token against the patient.
+5. Your system calls `POST /api/hiecm/hip/v3/link/carecontext` with the gateway access token, the link token in `X-Link-Token`, and the patient's care contexts: for each, a reference number and a display name, the HI type and the count of records.
+6. The gateway answers 202 Accepted and queues the care contexts.
+7. The gateway calls `POST /api/v3/link/on_carecontext` on your bridge with the status of the linking.
+8. Your system answers 202 Accepted.
+9. The gateway pushes a notification to the patient's ABHA or PHR app that a record is linked.
+10. The patient sees the new record linked in the app.
 
-1. **Assigning Records to Care Contexts.** Whenever a new health record is created, the HRP (HMIS/LMIS) must determine which care context the record belongs to. This ensures that records are grouped logically (e.g., per OPD or IPD visit).
-2. **Linking Care Contexts to ABHA.** The HRP must link the care context to the user's ABHA address as soon as the health record is ready to be shared. Linking is essential for enabling the user to access their records through PHR applications.
-3. **Linking Token Requirement.** A linking token is required to perform care context linking. This token is generated and stored at the time of user registration, and used as an authorization mechanism for linking.
-4. **Token Validation and Validity.** The linking token should be validated (e.g., via tools like jwt.io) before use. Current validity period: 6 months. Expired or invalid tokens must not be used for linking.
-5. **Token Regeneration.** If a valid linking token is not available, the HRP must regenerate the token using demographic authentication.
-6. **Notifications to PHR Applications.** Whenever a new care context is linked, or an existing care context is updated with new health records, a notification is automatically sent to all PHR (Personal Health Record) applications that are subscribed to the user's ABHA address.
-
-Step 6 is the acknowledgement. Step 7 is the answer. The link is confirmed only when the callback arrives at `/api/v3/link/on_carecontext` on your bridge, so do not mark a record as linked on the strength of the 202. See [the outcome of a care context linking call](/docs/main/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/02-m2-post-v3-link-on-carecontext).
-
-Which steps are callbacks?
-
-A step drawn from the HIE-CM to your system is a POST to the callback URL registered for your bridge. It arrives on its own. Do not poll for it.
-
-One call links a care context. When an existing care context is updated with new health records, call `POST /api/hiecm/hip/v3/link/context/notify` instead of linking it again; the acknowledgement arrives at `/api/v3/links/context/on-notify` on your bridge.
-
-### Notification to mobile
-
-This workflow applies when a user does not share an ABHA address during registration, but provides basic demographic details such as:
-
-- Mobile number
-- Name
-- Age
-- Gender
-
-Process overview:
-
-1. **Health Record Creation.** When a new health record is generated for such a user, the Health Information Provider (HIP) must initiate the process to make the record discoverable.
-2. **ABDM Notification Trigger.** The HIP calls the relevant ABDM API once the health record is ready to be shared. This triggers ABDM to notify the user.
-3. **User Notification via SMS.** ABDM sends an SMS notification to the user's registered mobile number. The SMS informs the user that a new health record is available for access.
-4. **Deep Link for PHR Access.** The SMS contains a secure deep link. Clicking the link launches the user's PHR (Personal Health Record) application (if installed), or redirects them to install and access a PHR app.
-5. **ABHA Creation and Record Linking.** Through the PHR app, the user can create an ABHA address, if not already available, discover the newly created health record, and link the record to their ABHA.
-
-The call is `POST /api/hiecm/hip/v3/link/patient/links/sms/notify2`, and the acknowledgement arrives at `/api/v3/patients/sms/on-notify` on your bridge.
-
-### Discovery and link
+## Journey 2: user initiated linking
 
 ```mermaid
 sequenceDiagram
     autonumber
-    actor P as Patient (PHR app)
-    participant CM as HIE-CM
-    participant S as Your system
-    P->>CM: Selects your facility and asks to discover records
-    CM-)S: callback POST {bridgeUrl}/api/v3/hip/patient/care-context/discover<br/>transactionId, patient {id, verifiedIdentifiers,<br/>unverifiedIdentifiers, name, gender, yearOfBirth}
-    S->>S: Matches the patient against your records,<br/>unlinked care contexts only
-    S->>CM: POST /api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover<br/>transactionId, patient [referenceNumber, display,<br/>careContexts, hiType, count], matchedBy,<br/>response.requestId
-    CM-->>P: Care contexts to review, metadata only
-    P->>CM: Selects the care contexts to link
-    CM-)S: callback POST {bridgeUrl}/api/v3/hip/link/care-context/init<br/>transactionId, abhaAddress,<br/>patient [referenceNumber, careContexts]
-    S->>S: Creates a link reference and sends an OTP<br/>to the patient's registered contact
-    S->>CM: POST /api/hiecm/user-initiated-linking/v3/link/care-context/on-init<br/>transactionId, link {referenceNumber,<br/>authenticationType DIRECT,<br/>meta {communicationMedium, communicationHint,
-    P->>CM: Enters the OTP
-    CM-)S: callback POST {bridgeUrl}/api/v3/hip/link/care-context/confirm<br/>confirmation {linkRefNumber, token}
-    S->>S: Validates the token and links the care contexts
-    S->>CM: POST /api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm<br/>patient [referenceNumber, display,<br/>careContexts [referenceNumber, display], hiType,<br/>count], response.requestId
-    CM-->>P: Records now linked to the ABHA address
+    actor U as User
+    participant P as ABHA / PHR app
+    participant G as ABDM Gateway
+    participant B as HIP bridge URL
+    participant S as HIP system
+    Note over U,S: Phase 1: patient triggers discovery
+    U->>P: Search for records at a specific HIP
+    P->>G: Initiate discovery, patient demographics and HIP ID
+    G->>B: POST callback_url/api/v3/hip/patient/care-context/discover<br/>transactionId, patient {id, name, gender, dob, verifiedIdentifiers}
+    B->>S: Look up matching records
+    S->>G: POST /api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover<br/>Authorization: Bearer accessToken<br/>transactionId, patient [referenceNumber, display,<br/>careContexts [referenceNumber, display], hiType, count],<br/>response {requestId}
+    G-->>S: 202 Accepted
+    G->>P: Forward discovered records to the PHR app
+    P->>U: Display discovered care contexts
+    U->>P: Select care contexts to link
+    Note over U,S: Phase 2: patient initiates link
+    P->>G: POST /api/hiecm/user-initiated-linking/v3/link/care-context/init<br/>selected care contexts
+    G->>B: POST callback_url/api/v3/hip/link/care-context/init<br/>transactionId, patient {id, referenceNumber, careContexts}
+    B->>S: Prepare OTP verification
+    S->>G: POST /api/hiecm/user-initiated-linking/v3/link/care-context/on-init<br/>Authorization: Bearer accessToken<br/>transactionId, link {referenceNumber, authenticationType DIRECT,<br/>meta {communicationMedium MOBILE, communicationHint OTP,<br/>communicationExpiry}}, response {requestId}
+    G-->>S: 202 Accepted
+    G->>P: OTP sent to the patient's mobile
+    Note over U,S: Phase 3: patient enters OTP, link confirm
+    U->>P: Enter the OTP received on mobile
+    P->>G: POST /api/hiecm/user-initiated-linking/v3/link/care-context/confirm<br/>OTP and linkRefNumber
+    G->>B: POST callback_url/api/v3/hip/link/care-context/confirm<br/>transactionId, confirmation {linkRefNumber, token}
+    B->>S: Validate the OTP, confirm the link
+    S->>G: POST /api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm<br/>Authorization: Bearer accessToken<br/>patient [referenceNumber, display,<br/>careContexts [referenceNumber, display], hiType, count],<br/>response {requestId}
+    G-->>S: 202 Accepted
+    G->>P: Linking confirmed
+    P->>U: Care contexts linked successfully
 ```
 
-ABDM enables users to discover and link their health records from any health facility they have visited through a standardized discovery process.
+ABDM enables users to discover their health records from healthcare facilities they have visited through a PHR application. The discovery request is sent by the HIE-CM to the respective HRP/HIP, which searches for and returns the user's available care contexts.
 
-Overview of the discovery process:
+If matching records are found, all relevant care contexts are shared with the user. The user can then select and link these care contexts to their ABHA Address.
 
-- **Initiation via PHR Application.** The user initiates a Discovery request using a PHR (Personal Health Record) application. The user selects the health facility where they received care.
-- **Request Routing.** The HIE-CM (Health Information Exchange & Consent Manager) forwards the discovery request to the relevant HRP/HIP associated with the selected health facility.
-- **Mandatory API Implementation.** All HRPs/HIPs must correctly implement the Discovery API to ensure compliance and interoperability.
-- **Response from HRP/HIP.** The HRP searches for matching patient records. If records are found, it returns a list of care contexts associated with the user. The user can then review and link these care contexts to their ABHA address.
+The steps, as drawn:
 
-Implementing the discovery algorithm. When a discovery request is received, the HRP/HIP is provided with verified and unverified identifiers to help match patient records.
+1. The user searches for records at a specific HIP in the PHR app.
+2. The PHR app initiates discovery with the patient's demographics and the HIP ID.
+3. The gateway calls `POST /api/v3/hip/patient/care-context/discover` on your bridge with the transaction ID and the patient's id, name, gender, date of birth and verified identifiers.
+4. Your system looks up the matching records.
+5. Your system calls `POST /api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover` with the transaction ID, the matching care contexts and the request ID it answers.
+6. The gateway answers 202 Accepted.
+7. The gateway forwards the discovered records to the PHR app.
+8. The PHR app displays the discovered care contexts.
+9. The user selects the care contexts to link.
+10. The PHR app calls `POST /api/hiecm/user-initiated-linking/v3/link/care-context/init` with the selected care contexts.
+11. The gateway calls `POST /api/v3/hip/link/care-context/init` on your bridge with the transaction ID, the patient's id and reference number, and the care contexts.
+12. Your system prepares OTP verification.
+13. Your system calls `POST /api/hiecm/user-initiated-linking/v3/link/care-context/on-init` with the transaction ID, a link reference number, authentication type DIRECT, and the communication medium, hint and expiry.
+14. The gateway answers 202 Accepted.
+15. An OTP is sent to the patient's mobile.
+16. The user enters the OTP received on the mobile.
+17. The PHR app calls `POST /api/hiecm/user-initiated-linking/v3/link/care-context/confirm` with the OTP and the link reference number.
+18. The gateway calls `POST /api/v3/hip/link/care-context/confirm` on your bridge with the transaction ID, the link reference number and the token.
+19. Your system validates the OTP and confirms the link.
+20. Your system calls `POST /api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm` with the linked care contexts and the request ID it answers.
+21. The gateway answers 202 Accepted.
+22. The gateway tells the PHR app the linking is confirmed.
+23. The PHR app shows the user that the care contexts are linked.
 
-1. **Input Data for Matching.** Verified identifiers are reliable, system-verified attributes: ABHA address, mobile number, name, gender, year of birth. Unverified / user-declared information may include health facility-issued identifiers (e.g., medical registration number / patient ID).
-2. **Record Matching Logic.** The HRP must implement a matching algorithm to identify the correct patient records. Matching should be based on a combination of verified identifiers (preferred and higher weight) and supplementary unverified information.
-3. **Response Construction.** Once matching records are identified, the HRP must organize the records into care contexts. Each care context should follow the defined structure (reference ID + display name). The response must include a list of care contexts associated with the patient.
-4. **Important Compliance Requirement.** No clinical or sensitive information (e.g., diagnosis, reports, test results) must be included in the discovery response. Only metadata describing the care context should be shared.
-
-Steps 7 to 13 are the link init and confirm exchange: the gateway calls your `init` and `confirm` callbacks, and you answer each with `on-init` and `on-confirm`. The fields are on the [M2 API reference](/docs/main/docs/hiecm/v3/api/m2).
-
-## Request for health records and data transfer
+## Journey 3: data transfer flow
 
 ```mermaid
 sequenceDiagram
     autonumber
-    participant U as HIU
-    participant CM as HIE-CM
-    participant S as Your system
-    CM-)S: callback POST {bridgeUrl}/api/v3/consent/request/hip/notify<br/>notification {status GRANTED, consentId,<br/>consentDetail {hiTypes, permission.dateRange,<br/>careContexts}, signature}
-    S->>CM: POST /api/hiecm/consent/v3/request/hip/on-notify<br/>acknowledgement {status OK, consentId},<br/>response.requestId
-    U->>CM: POST /api/hiecm/data-flow/v3/health-information/request
-    CM-)S: callback POST {bridgeUrl}/api/v3/hip/health-information/request<br/>transactionId, hiRequest {consent.id, dateRange,<br/>dataPushUrl, keyMaterial {cryptoAlg, curve,<br/>dhPublicKey, nonce}}
-    S->>CM: POST /api/hiecm/data-flow/v3/health-information/hip/on-request<br/>hiRequest {transactionId,<br/>sessionStatus ACKNOWLEDGED}, response.requestId
-    S->>S: Checks the consent is GRANTED and the<br/>date range sits inside it, builds one FHIR R4<br/>bundle per care context, encrypts each with<br/>ECDH (Curve25519) and AES-GCM
-    S->>U: POST dataPushUrl<br/>pageNumber, pageCount, transactionId,<br/>entries [content, media, checksum,<br/>careContextReference], keyMaterial
-    S->>CM: POST /api/hiecm/data-flow/v3/health-information/notify<br/>notification {consentId, transactionId,<br/>notifier {type HIP},<br/>statusNotification {sessionStatus TRANSFERRED,
-    U->>CM: POST /api/hiecm/data-flow/v3/health-information/notify<br/>notifier {type HIU}, sessionStatus DELIVERED
+    actor U as Patient
+    participant H as HIU system (data requester)
+    participant CM as Consent manager (ABDM Gateway)
+    participant B as HIP bridge URL
+    participant S as HIP system
+    participant G as ABDM Gateway
+    Note over U,G: Phase 1: HIU requests consent
+    H->>CM: POST /api/hiecm/consent/v3/request/init<br/>patient ABHA, HI types, date range
+    CM->>U: Notify the patient in the ABHA app, consent request pending
+    U->>CM: Approve consent in the ABHA app
+    Note over U,G: Phase 2: consent artefact delivery to the HIP
+    CM->>B: POST callback_url/api/v3/consent/request/hip/notify<br/>notification {consentId, status GRANTED,<br/>consentDetail {hiTypes, dateRange, careContexts},<br/>signature, grantAcknowledgement}
+    S->>G: POST /api/hiecm/consent/v3/request/hip/on-notify<br/>Authorization: Bearer accessToken<br/>acknowledgement {status OK, consentId}, response {requestId}
+    G-->>S: 202 Accepted, acknowledgement recorded
+    Note over U,G: Phase 3: HIU requests health data
+    H->>G: POST /api/hiecm/data-flow/v3/health-information/request<br/>consent {id: consentId}, dateRange,<br/>dataPushUrl, keyMaterial {publicKey}
+    G->>B: POST callback_url/api/v3/hip/health-information/request<br/>transactionId, hiRequest {consent, dateRange,<br/>dataPushUrl, keyMaterial}
+    S->>G: POST /api/hiecm/data-flow/v3/health-information/hip/on-request<br/>Authorization: Bearer accessToken<br/>hiRequest {transactionId, sessionStatus ACKNOWLEDGED},<br/>response {requestId}
+    G-->>S: 202 Accepted
+    Note over U,G: Phase 4: HIP prepares and pushes encrypted data
+    S->>S: Fetch matching records for the consent date range
+    S->>S: Encrypt FHIR bundles with the HIU public key (ECDH)
+    loop For each page of records
+        S->>H: POST dataPushUrl<br/>pageNumber, pageCount, transactionId,<br/>entries [{content: encrypted FHIR+JSON, media application/fhir+json,<br/>checksum, careContextReference}], keyMaterial {publicKey, nonce}
+        H-->>S: 202 Accepted
+    end
+    Note over U,G: Phase 5: HIP notifies the gateway that the transfer is complete
+    S->>G: POST /api/hiecm/data-flow/v3/health-information/notify<br/>Authorization: Bearer accessToken<br/>notification {consentId, transactionId, doneAt,<br/>notifier {type HIP, id HIP_ID},<br/>statusNotification {sessionStatus TRANSFERRED, hipId,<br/>statusResponses [{careContextReference, hiStatus OK, description}]}}
+    G-->>S: 202 Accepted
+    G->>H: Notify the HIU, data transfer complete
+    H->>H: Decrypt and process the FHIR records
 ```
 
-The process for requesting and transferring health records between the [HIU](/docs/main/docs/hiecm/v3/getting-started/glossary#hiu) (Health Information User), HIE-CM, and HIP (Health Information Provider) is carried out in three stages.
+The HIP sends structured and unstructured health information types in accordance with the NRCES FHIR standards. The FHIR bundle is encrypted and securely exchanged through the ABDM ecosystem.
 
-**Stage 1: Initiation of Health Information Request.** The HIU initiates a request for a patient's health information from the HIP, routed through the HIE-CM, based on a valid [consent artefact](/docs/main/docs/hiecm/v3/getting-started/glossary#consent-artefact). The HIE-CM generates a Transaction ID for the entire data exchange, and shares this ID with both the HIU and HIP repositories to track the request lifecycle. The HIU includes the following key elements in the request:
+The steps, as drawn:
 
-- **Consent ID.** Identifies the consent artefact under which the data request is authorized.
-- **Data Push URL (Callback URL).** Specifies where the HIP should send the requested data. This may differ from the HIU's registered gateway URL to enhance privacy and anonymity.
-- **Request Parameters.** Date-time range for which health records are requested, and encryption parameters, including keys required for secure data transfer. ABDM uses Elliptic Curve Diffie–Hellman ([ECDH](/docs/main/docs/hiecm/v3/getting-started/glossary#ecdh)) for encrypting health information.
+1. The HIU calls `POST /api/hiecm/consent/v3/request/init` with the patient's ABHA address, the HI types and the date range.
+2. The consent manager notifies the patient in the ABHA app that a consent request is pending.
+3. The patient approves the consent in the ABHA app.
+4. The consent manager calls `POST /api/v3/consent/request/hip/notify` on your bridge with the consent ID, status GRANTED, the consent detail (HI types, date range, care contexts), the signature and the grant acknowledgement.
+5. Your system calls `POST /api/hiecm/consent/v3/request/hip/on-notify` with the acknowledgement (status OK, consent ID) and the request ID it answers.
+6. The gateway answers 202 Accepted and records the acknowledgement.
+7. The HIU calls `POST /api/hiecm/data-flow/v3/health-information/request` with the consent ID, the date range, its data push URL and its key material.
+8. The gateway calls `POST /api/v3/hip/health-information/request` on your bridge with the transaction ID and the request: consent, date range, data push URL and key material.
+9. Your system calls `POST /api/hiecm/data-flow/v3/health-information/hip/on-request` with the transaction ID, session status ACKNOWLEDGED and the request ID it answers.
+10. The gateway answers 202 Accepted.
+11. Your system fetches the matching records for the consent date range.
+12. Your system encrypts the FHIR bundles with the HIU's public key ([ECDH](/docs/main/docs/hiecm/v3/getting-started/glossary#ecdh)).
+13. For each page of records, your system posts to the HIU's data push URL: the page number and count, the transaction ID, the entries (encrypted FHIR+JSON content, media type application/fhir+json, checksum, care context reference) and your key material (public key, nonce).
+14. The HIU answers 202 Accepted for each page.
+15. Your system calls `POST /api/hiecm/data-flow/v3/health-information/notify` with the consent ID, the transaction ID, the completion time, the notifier (type HIP, your HIP ID), session status TRANSFERRED and a status response per care context.
+16. The gateway answers 202 Accepted.
+17. The gateway notifies the HIU that the data transfer is complete.
+18. The HIU decrypts and processes the FHIR records.
 
-**Stage 2: Validation and Data Transfer by HIP.** Upon receiving the request, the HIP repository performs validation checks: verify the Consent ID status (must be valid and active, not expired, paused, or revoked), ensure the requested date-time range falls within the permitted range defined in the consent artefact, and validate encryption parameters. After successful validation, the HIP retrieves the requested health records, encrypts the data using the provided ECDH-based encryption parameters, and digitally signs the encrypted payload using its long-term private key. The encrypted data, along with the Transaction ID, is then sent to the HIU's Data Push URL.
+## Error codes
 
-**Stage 3: Notifications and Completion.** The HIP repository notifies the HIE-CM that the requested health data has been successfully transmitted. The HIU repository notifies the HIE-CM of the outcome: success (data received and processed) or failure (data transfer failed or could not be processed).
-
-Pushing the data to HIU. Once the health records are prepared and encrypted, the HIP/HRP is responsible for transmitting the data to the HIU within the defined timelines and protocols.
-
-1. **Timely Data Transmission.** The encrypted health data must be pushed to the HIU within a defined time window. The current timeout limit is 20 minutes from the initiation of the request. Delays beyond this limit may result in request failure or timeout handling.
-2. **Handling Large Data Volumes.** For large datasets (e.g., CT scans, MRI images, or files in hundreds of MBs), data may be split and transmitted in multiple parts. This ensures reliable transfer without overloading network or system limits.
-3. **Streaming for Large Files.** For very large files, it is recommended to use a streaming approach rather than sending the entire payload at once. Streaming improves transfer efficiency, reliability and resource utilization.
-4. **Completion Notification.** After successfully pushing the data, the HIP/HRP must notify the HIE-CM. This is done via the designated API endpoint: `health-information/notify`. This notification confirms that the data transfer has been completed.
-
-Testing and verifying data transfer, with the PHR application:
-
-1. On the PHR app, log in with an SBX ABHA address.
-2. Register a patient with the same SBX ABHA address in your HIP/HRP.
-3. Create a new health record for this patient.
-4. Link a care context for this health record using HIP initiated linking.
-5. PHR App should automatically make a request for the health record along with apt consents.
-6. Prepare the health record, encrypt & transfer to the data push URL provided by the PHR app.
-7. Your record should be successfully displayed in the ABHA PHR app.
-
-## Packaging health data
-
-The base FHIR envelope contains all the data that you want to transfer, compiled as a FHIR Bundle. A FHIR Bundle, referred to as data content, allows for packaging information of multiple types or as a Document. You can send over multiple such bundles through the data transfer API. Note that the bundle itself must be encrypted.
-
-The bundle structure, the Composition rules and the document type codes are on [FHIR and health record formats](/docs/main/docs/hiecm/v3/concepts/fhir#the-bundle-shape).
-
-## Validation of FHIR bundle
-
-Validate every bundle against the NRCeS implementation guide before you send it. The validator, the command and what it checks are on [Validate before you ship](/docs/main/docs/hiecm/v3/concepts/fhir#validate-before-you-ship).
-
-## Encryption of the health data
-
-The primary goal of encryption in the ABDM ecosystem is to ensure that only the authorized Health Information User (HIU), who has received patient consent, can access the patient's health data. This process ensures secure, consent-driven data exchange between the HIP (Health Information Provider) and the HIU.
-
-The key exchange, the derivation of the session key and the reference implementations are on [How a record travels](/docs/main/docs/hiecm/v3/concepts/data-flow#the-encryption).
-
-## Custom error codes
-
-During ABDM integration, systems may encounter issues across discovery, linking, consent, encryption, and data exchange workflows. The codes are in one place on [M2 custom error codes](/docs/main/docs/hiecm/v3/api/m2/custom-error-codes).
+The codes an M2 integration may meet across discovery, linking, consent, encryption and data exchange are listed in one place: [M2 error codes](/docs/main/docs/hiecm/v3/api/m2/errors).
 
 ## Next
 
-- Take payment for open orders from a patient's app: [Scan and Pay](/docs/main/docs/hiecm/v3/use-cases/scan-and-pay).
-- Requesting records from other facilities is [M3 Health Information User](/docs/main/docs/hiecm/v3/milestones/m3).
 - The calls, callbacks and error codes: [M2 API reference](/docs/main/docs/hiecm/v3/api/m2).
-- The cases M2 is tested against: the certification pack NHA issues. Certification runs once, for the whole integration: [Go live](/docs/main/docs/hiecm/v3/getting-started/going-live).
+- The next milestone: [M3 Health Information User](/docs/main/docs/hiecm/v3/milestones/m3).
 
 
 ---
@@ -33923,19 +33886,19 @@ Generated from the specifications. Every scheme and header below is declared in 
 
 **bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer `prefix.
 
-## M1 ABHA creation and verification
+## M1 Identity
 
 **bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer `prefix.
 
-## M2 Health information provider services
+## M2 Health Information Provider
 
 **bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer `prefix.
 
-## M3 Health information user services
+## M3 Health Information User
 
 **bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer `prefix.
 
-## M4 HPR and HFR
+## M4 Registry Integration
 
 **bearerAuth**, `http` `bearer`. M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
 
@@ -33989,9 +33952,9 @@ Generated from the specifications. Every scheme and header below is declared in 
 
 Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/main/docs/hiecm/v3/troubleshooting/).
 
-A code is on this page because a response example in a specification returns it.
+A code is on this page because a response example in a specification returns it, or because NHA lists it for the module. A row with no HTTP status and no call is one NHA lists without saying which call returns it.
 
-## M1 ABHA creation and verification
+## M1 Identity
 
 | Code        | HTTP | Message                                                                                                                         | Returned by                                                        |
 | ----------- | ---- | ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
@@ -34013,6 +33976,131 @@ A code is on this page because a response example in a specification returns it.
 | `ABDM-1211` | 400  | User not found.                                                                                                                 | `m1_post_v3_phr_web_login_abha_search_abha_address_login_m_27a20f` |
 | `ABDM-1224` | 401  | Login via Biometric is not allowed.                                                                                             | `m1_post_v3_profile_login_request_otp_find_abha_face`              |
 
+## M2 Health Information Provider
+
+| Code        | HTTP | Message                                                                                                                                                    | Returned by |
+| ----------- | ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| `ABDM-1000` |      | Unable to connect the database                                                                                                                             |             |
+| `ABDM-1001` |      | No data found                                                                                                                                              |             |
+| `ABDM-1004` |      | SMS Gateway is unavailable                                                                                                                                 |             |
+| `ABDM-1006` |      | Bad Request, invalid request Body                                                                                                                          |             |
+| `ABDM-1007` |      | Connection failed due to timeout                                                                                                                           |             |
+| `ABDM-1008` |      | SMS service currently disabled                                                                                                                             |             |
+| `ABDM-1010` |      | Validation failed                                                                                                                                          |             |
+| `ABDM-1011` |      | Gateway database unavailable                                                                                                                               |             |
+| `ABDM-1012` |      | No records found against the ABHA Address                                                                                                                  |             |
+| `ABDM-1013` |      | Invalid ABHA Number                                                                                                                                        |             |
+| `ABDM-1015` |      | Invalid Response                                                                                                                                           |             |
+| `ABDM-1016` |      | Invalid TimeStamp                                                                                                                                          |             |
+| `ABDM-1017` |      | Invalid TransactionId                                                                                                                                      |             |
+| `ABDM-1018` |      | Share Profile database unavailable                                                                                                                         |             |
+| `ABDM-1019` |      | Dependent Service Unavailable                                                                                                                              |             |
+| `ABDM-1020` |      | Unknown database                                                                                                                                           |             |
+| `ABDM-1022` |      | Too many requests                                                                                                                                          |             |
+| `ABDM-1023` |      | Invalid User                                                                                                                                               |             |
+| `ABDM-1024` |      | Dependent service unavailable                                                                                                                              |             |
+| `ABDM-1025` |      | Invalid ServiceId                                                                                                                                          |             |
+| `ABDM-1026` |      | Invalid Link Token                                                                                                                                         |             |
+| `ABDM-1027` |      | You are blocked. Please try again after 24 hours.                                                                                                          |             |
+| `ABDM-1028` |      | HIP is unavailable                                                                                                                                         |             |
+| `ABDM-1029` |      | Redis server is unavailable                                                                                                                                |             |
+| `ABDM-1030` |      | Invalid request ID                                                                                                                                         |             |
+| `ABDM-1031` |      | Invalid request                                                                                                                                            |             |
+| `ABDM-1032` |      | Invalid header                                                                                                                                             |             |
+| `ABDM-1033` |      | HIU is unavailable                                                                                                                                         |             |
+| `ABDM-1034` |      | Notification service unavailable                                                                                                                           |             |
+| `ABDM-1035` |      | Invalid HIP ID                                                                                                                                             |             |
+| `ABDM-1036` |      | Data does not matched                                                                                                                                      |             |
+| `ABDM-1037` |      | Counter and Care context count mismatch                                                                                                                    |             |
+| `ABDM-1038` |      | ABHA address and Link token mismatch                                                                                                                       |             |
+| `ABDM-1040` |      | Invalid HIU ID                                                                                                                                             |             |
+| `ABDM-1041` |      | Invalid Acknowledgement                                                                                                                                    |             |
+| `ABDM-1042` |      | Provider Mandatory                                                                                                                                         |             |
+| `ABDM-1043` |      | ABHA Address does not match with KYC details.                                                                                                              |             |
+| `ABDM-1044` |      | Broadcast Failed                                                                                                                                           |             |
+| `ABDM-1045` |      | Database Access is restricted                                                                                                                              |             |
+| `ABDM-1046` |      | Invalid Purpose                                                                                                                                            |             |
+| `ABDM-1047` |      | Purpose does not exist                                                                                                                                     |             |
+| `ABDM-1048` |      | Timeout                                                                                                                                                    |             |
+| `ABDM-1049` |      | Invalid Profile Share Intent Keys                                                                                                                          |             |
+| `ABDM-1050` |      | Invalid Profile Share Metadata Keys                                                                                                                        |             |
+| `ABDM-1051` |      | Invalid ABHA Number or ABHA Address                                                                                                                        |             |
+| `ABDM-1052` |      | Invalid TransactionId or response's requestId                                                                                                              |             |
+| `ABDM-1401` |      | HIP is not available                                                                                                                                       |             |
+| `ABDM-1061` |      | Consent artefact expired                                                                                                                                   |             |
+| `ABDM-1062` |      | Consent Not granted                                                                                                                                        |             |
+| `ABDM-1063` |      | Date Range given is invalid                                                                                                                                |             |
+| `ABDM-1064` |      | request with this request id already exists                                                                                                                |             |
+| `ABDM-1109` |      | ABHA DB service unavailable                                                                                                                                |             |
+| `ABDM-1108` |      | Notification DB service unavailable                                                                                                                        |             |
+| `ABDM-1201` |      | IDP Gateway is unavailable                                                                                                                                 |             |
+| `ABDM-9999` |      | Unknown exception                                                                                                                                          |             |
+| `ABDM-1006` |      | Invalid combinations of scopes                                                                                                                             |             |
+| `ABDM-1056` |      | This care contexts has been already linked                                                                                                                 |             |
+| `ABDM-1055` |      | Invalid HIP Id or PHR Id                                                                                                                                   |             |
+| `ABDM-1056` |      | Invalid Link Reference Number                                                                                                                              |             |
+| `ABDM-1057` |      | Invalid Care Contexts                                                                                                                                      |             |
+| `ABDM-1059` |      | Invalid Care Contexts count                                                                                                                                |             |
+| `ABDM-1060` |      | Invalid Patient Reference Number                                                                                                                           |             |
+| `ABDM-1061` |      | Invalid Patient Display                                                                                                                                    |             |
+| `ABDM-1062` |      | ABHA number mismatch with Link token                                                                                                                       |             |
+| `ABDM-1063` |      | HIP Id mismatch with Link token                                                                                                                            |             |
+| `ABDM-1064` |      | Request body was missing                                                                                                                                   |             |
+| `ABDM-1065` |      | Invalid X Auth token                                                                                                                                       |             |
+| `ABDM-1066` |      | Invalid JWT token                                                                                                                                          |             |
+| `ABDM-1067` |      | Request body not required                                                                                                                                  |             |
+| `ABDM-1170` |      | Invalid ABHA address                                                                                                                                       |             |
+| `ABDM-1084` |      | ABHA address mismatch with X Auth token                                                                                                                    |             |
+| `ABDM-1085` |      | ABHA number mismatch with X Auth token                                                                                                                     |             |
+| `ABDM-1086` |      | Patient profile mismatch with X Auth token                                                                                                                 |             |
+| `ABDM-1087` |      | Duplicate patient share request                                                                                                                            |             |
+| `ABDM-1090` |      | Duplicate HIP link request                                                                                                                                 |             |
+| `ABDM-1091` |      | Duplicate Get links request                                                                                                                                |             |
+| `ABDM-1092` |      | Duplicate Link token request                                                                                                                               |             |
+| `ABDM-1093` |      | Duplicate Bridge request                                                                                                                                   |             |
+| `ABDM-1094` |      | Duplicate bridge patch request                                                                                                                             |             |
+| `ABDM-1095` |      | Duplicate Bridge service request                                                                                                                           |             |
+| `ABDM-1102` |      | Profile information cannot be null                                                                                                                         |             |
+| `ABDM-1103` |      | Duplicate Discovery request                                                                                                                                |             |
+| `ABDM-1104` |      | Duplicate Init request                                                                                                                                     |             |
+| `ABDM-1105` |      | Duplicate Confirm request                                                                                                                                  |             |
+| `ABDM-1106` |      | Duplicate On discovery request                                                                                                                             |             |
+| `ABDM-1107` |      | Duplicate On init request                                                                                                                                  |             |
+| `ABDM-1108` |      | Duplicate On confirm request                                                                                                                               |             |
+| `ABDM-1109` |      | Invalid On discovery response                                                                                                                              |             |
+| `ABDM-1110` |      | Invalid On init response                                                                                                                                   |             |
+| `ABDM-1111` |      | Invalid On confirm response                                                                                                                                |             |
+| `ABDM-1112` |      | Invalid or already expired consent artefact id                                                                                                             |             |
+| `ABDM-1113` |      | Duplicate health information provider data flow response                                                                                                   |             |
+| `ABDM-1149` |      | Intent type is not supported at HIP end                                                                                                                    |             |
+| `ABDM-1150` |      | Bridge API version cannot be null                                                                                                                          |             |
+| `ABDM-1402` |      | Acknowledgement is not received from HIP                                                                                                                   |             |
+| `ABDM-9999` |      | HIP is unable to generate a token at this time. Please try again later.                                                                                    |             |
+| `ABDM-9999` |      | HIP is unable to process at this time. Please try again later.                                                                                             |             |
+| `ABDM-1030` |      | Request id not found                                                                                                                                       |             |
+| `ABDM-2500` |      | No mapping found for                                                                                                                                       |             |
+| `ABDM-2401` |      | The X Auth token is invalid.                                                                                                                               |             |
+| `ABDM-2402` |      | Invalid Timestamp                                                                                                                                          |             |
+| `ABDM-2404` |      | Invalid Request Id                                                                                                                                         |             |
+| `ABDM-2429` |      | Too many requests found                                                                                                                                    |             |
+| `ABDM-2501` |      | Payment status should be : SUCCESS,CANCELED,PENDING,FAIL,REFUND\_INITIATED,REFUND\_SUCCESS                                                                 |             |
+| `ABDM-2500` |      | Authorization header is missing                                                                                                                            |             |
+| `ABDM-2403` |      | Invalid X-CM-ID                                                                                                                                            |             |
+| `ABDM-2406` |      | Invalid API sequence flow, please follow logical flow                                                                                                      |             |
+| `ABDM-2406` |      | The status is invalid. Please follow the logical status flow or transition.                                                                                |             |
+| `ABDM-9999` |      | User not found                                                                                                                                             |             |
+| `ABDM-9999` |      | Cannot process the request at the moment, please try later.                                                                                                |             |
+| `ABDM-9001` |      | No open order against ABHA. Please ensure a minimum of one open order                                                                                      |             |
+| `ABDM-9002` |      | No registration found at <>. Contact counter support                                                                                                       |             |
+| `ABDM-9003` |      | Hospital services temporarily unavailable. Please try again after some time.                                                                               |             |
+| `ABDM-9004` |      | Services disrupted, please try again.                                                                                                                      |             |
+| `ABDM-9005` |      | Bank server not responding. Please try again later                                                                                                         |             |
+| `ABDM-9006` |      | Service details mismatch. Please ensure original service ID from HMIS                                                                                      |             |
+| `ABDM-9007` |      | The Scan and Pay functionality is not enabled at this facility. Kindly contact the hospital administration.                                                |             |
+| `ABDM-1006` |      | Invalid count, must be 2 digit and ranges between 1 to 20                                                                                                  |             |
+| `ABDM-1407` |      | The ABHA Number associated with this ABHA Address is currently deactivated. Please reactivate it.                                                          |             |
+| `ABDM-1006` |      | Invalid HIType, it must be in Prescription,DiagnosticReport,OPConsultation,DischargeSummary,ImmunizationRecord,HealthDocumentRecord,WellnessRecord,Invoice |             |
+
 ## P1 Registration and login
 
 | Code        | HTTP | Message                        | Returned by                                 |
@@ -34029,7 +34117,7 @@ A code is on this page because a response example in a specification returns it.
 | `900902`    | 401  | Missing Credentials | `p2_get_v3_phr_app_login_profile`              |
 | `ABDM-9999` | 400  | Invalid LoginId     | `p2_post_v3_phr_app_login_profile_request_otp` |
 
-23 codes are recorded. A code you meet that is not here is one the specifications do not carry yet.
+143 codes are recorded. A code you meet that is not here is one the specifications do not carry yet.
 
 
 ---
@@ -36414,7 +36502,7 @@ Shape of the 202 response, generated from the schema. The values are placeholder
 
 The Claim specification records no error code yet. That is a gap in the specification, not a promise that this module cannot fail.
 
-Every code above is recorded in the specification that owns it. The aggregated list across modules is at [error codes](/docs/main/docs/nhcx/v1/reference/error-codes).
+Every code above is recorded in the specification that owns it or in NHA's list for the module. The aggregated list across modules is at [error codes](/docs/main/docs/nhcx/v1/reference/error-codes).
 
 [Next Still stuck? Ask for help Where to file what you hit, so the answer lands back in these pages.](/docs/main/docs/support)
 
@@ -37090,7 +37178,7 @@ Shape of the 202 response, generated from the schema. The values are placeholder
 
 The Communication specification records no error code yet. That is a gap in the specification, not a promise that this module cannot fail.
 
-Every code above is recorded in the specification that owns it. The aggregated list across modules is at [error codes](/docs/main/docs/nhcx/v1/reference/error-codes).
+Every code above is recorded in the specification that owns it or in NHA's list for the module. The aggregated list across modules is at [error codes](/docs/main/docs/nhcx/v1/reference/error-codes).
 
 [Next Still stuck? Ask for help Where to file what you hit, so the answer lands back in these pages.](/docs/main/docs/support)
 
@@ -37755,7 +37843,7 @@ Shape of the 202 response, generated from the schema. The values are placeholder
 
 The Coverage eligibility specification records no error code yet. That is a gap in the specification, not a promise that this module cannot fail.
 
-Every code above is recorded in the specification that owns it. The aggregated list across modules is at [error codes](/docs/main/docs/nhcx/v1/reference/error-codes).
+Every code above is recorded in the specification that owns it or in NHA's list for the module. The aggregated list across modules is at [error codes](/docs/main/docs/nhcx/v1/reference/error-codes).
 
 [Next Still stuck? Ask for help Where to file what you hit, so the answer lands back in these pages.](/docs/main/docs/support)
 
@@ -38522,7 +38610,7 @@ Shape of the 202 response, generated from the schema. The values are placeholder
 
 The Insurance plan specification records no error code yet. That is a gap in the specification, not a promise that this module cannot fail.
 
-Every code above is recorded in the specification that owns it. The aggregated list across modules is at [error codes](/docs/main/docs/nhcx/v1/reference/error-codes).
+Every code above is recorded in the specification that owns it or in NHA's list for the module. The aggregated list across modules is at [error codes](/docs/main/docs/nhcx/v1/reference/error-codes).
 
 [Next Still stuck? Ask for help Where to file what you hit, so the answer lands back in these pages.](/docs/main/docs/support)
 
@@ -40935,7 +41023,7 @@ Shape of the 202 response, generated from the schema. The values are placeholder
 
 The Other specification records no error code yet. That is a gap in the specification, not a promise that this module cannot fail.
 
-Every code above is recorded in the specification that owns it. The aggregated list across modules is at [error codes](/docs/main/docs/nhcx/v1/reference/error-codes).
+Every code above is recorded in the specification that owns it or in NHA's list for the module. The aggregated list across modules is at [error codes](/docs/main/docs/nhcx/v1/reference/error-codes).
 
 [Next Still stuck? Ask for help Where to file what you hit, so the answer lands back in these pages.](/docs/main/docs/support)
 
@@ -41615,7 +41703,7 @@ Shape of the 202 response, generated from the schema. The values are placeholder
 
 The Payment notice specification records no error code yet. That is a gap in the specification, not a promise that this module cannot fail.
 
-Every code above is recorded in the specification that owns it. The aggregated list across modules is at [error codes](/docs/main/docs/nhcx/v1/reference/error-codes).
+Every code above is recorded in the specification that owns it or in NHA's list for the module. The aggregated list across modules is at [error codes](/docs/main/docs/nhcx/v1/reference/error-codes).
 
 [Next Still stuck? Ask for help Where to file what you hit, so the answer lands back in these pages.](/docs/main/docs/support)
 
@@ -42295,7 +42383,7 @@ Shape of the 202 response, generated from the schema. The values are placeholder
 
 The Pre-authorisation specification records no error code yet. That is a gap in the specification, not a promise that this module cannot fail.
 
-Every code above is recorded in the specification that owns it. The aggregated list across modules is at [error codes](/docs/main/docs/nhcx/v1/reference/error-codes).
+Every code above is recorded in the specification that owns it or in NHA's list for the module. The aggregated list across modules is at [error codes](/docs/main/docs/nhcx/v1/reference/error-codes).
 
 [Next Still stuck? Ask for help Where to file what you hit, so the answer lands back in these pages.](/docs/main/docs/support)
 
@@ -42693,7 +42781,7 @@ Shape of the 202 response, generated from the schema. The values are placeholder
 
 The Predetermination specification records no error code yet. That is a gap in the specification, not a promise that this module cannot fail.
 
-Every code above is recorded in the specification that owns it. The aggregated list across modules is at [error codes](/docs/main/docs/nhcx/v1/reference/error-codes).
+Every code above is recorded in the specification that owns it or in NHA's list for the module. The aggregated list across modules is at [error codes](/docs/main/docs/nhcx/v1/reference/error-codes).
 
 [Next Still stuck? Ask for help Where to file what you hit, so the answer lands back in these pages.](/docs/main/docs/support)
 
@@ -45716,7 +45804,7 @@ Shape of the 202 response, generated from the schema. The values are placeholder
 
 The Status and search specification records no error code yet. That is a gap in the specification, not a promise that this module cannot fail.
 
-Every code above is recorded in the specification that owns it. The aggregated list across modules is at [error codes](/docs/main/docs/nhcx/v1/reference/error-codes).
+Every code above is recorded in the specification that owns it or in NHA's list for the module. The aggregated list across modules is at [error codes](/docs/main/docs/nhcx/v1/reference/error-codes).
 
 [Next Still stuck? Ask for help Where to file what you hit, so the answer lands back in these pages.](/docs/main/docs/support)
 
@@ -50666,7 +50754,7 @@ Show the payer's sentence verbatim in every case. The reference payer's messages
 
 # Error codes
 
-A code is on this page because a response example in a specification returns it.
+A code is on this page because a response example in a specification returns it, or because NHA lists it for the module. A row with no HTTP status and no call is one NHA lists without saying which call returns it.
 
 0 codes are recorded. A code you meet that is not here is one the specifications do not carry yet.
 
@@ -62445,7 +62533,7 @@ Not from UHI. A professional is registered in the HPR through [M4](/docs/main/do
 ## Next
 
 - [HFR on UHI](/docs/main/docs/uhi/v1/registries/hfr), the facility the practitioner works in
-- [M4 HPR and HFR](/docs/main/docs/hiecm/v3/api/m4), where both are written
+- [M4 Registry Integration](/docs/main/docs/hiecm/v3/api/m4), where both are written
 
 
 ---
