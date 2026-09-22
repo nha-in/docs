@@ -1,0 +1,21 @@
+---
+title: PMJAY error codes
+sidebar_label: PMJAY error codes
+description: Every NHCX and PMJAY error code in one searchable table, with the message as sent, what it means and the path it arrives on.
+displayed_sidebar: null
+hide_table_of_contents: true
+hide_last_update: true
+page_type: reference
+sidebar_class_name: sidebar-icon sidebar-icon--circle-alert
+source: catalogue/nhcx/errors, through scripts/build-api-reference.mjs
+---
+
+import ErrorCodeExplorer from '@site/src/components/mdx/ErrorCodeExplorer';
+
+# PMJAY error codes
+
+Every error code a PMJAY integration can meet, in one table. `NHCX-` codes come from the exchange, `PAYR-` codes from the PMJAY payer, and `ERR-PYR-` codes have been seen only in live traffic. Search by code, by a phrase from the message, or by the path you called. Filter by the part of the claim the code belongs to.
+
+Eighteen codes from `PAYR-1001` to `PAYR-1020` mean different things on the standard payer sheet and on the PMJAY payer's, so read a code with the message beside it. [Reading error codes](/docs/nhcx/v1/reference/error-code-guide) explains the code spaces and what to do about each collision.
+
+<ErrorCodeExplorer />

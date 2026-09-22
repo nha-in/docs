@@ -1,25 +1,31 @@
 # NHCX agent skills
 
-One skill per NHCX use case, in episode order: `nhcx-coverage`,
-`nhcx-insurance`, `nhcx-preauth`, `nhcx-claim`, `nhcx-payment`,
-`nhcx-communication` and `nhcx-reprocess`. Each builds its use case into a
-hospital information system or a standalone claims desk, held to the pinned
-FHIR bundles of the NHCX package.
+Seven skills for building the provider side of NHCX into a hospital
+information system: `nhcx-full`, the whole integration end to end, and one per
+use case, `nhcx-coverage`, `nhcx-preauth`, `nhcx-claim`,
+`nhcx-communication`, `nhcx-payment` and `nhcx-reprocess`.
 
-Each skill is a folder, not a single file: `SKILL.md` points into the folder's
-own `core/`, `stages/`, `references/`, `fhir/`, `flow/`, `ui/`, `templates/`
-and `scripts/`, and the shared files are repeated in every folder so any one
-installs alone. `scripts/fetch-package.sh` fetches the NHCX package from
-github.com/nha-in/nhcx-package into the project being built.
+Each skill is a folder, not a single file. `SKILL.md` routes: it names the
+goal, the knowledge source and the eight steps, from discovery to end-to-end
+tests. The folder holds what those steps read: `steps/` for the steps
+themselves, `references/` for the binding rules (`CORE.md` first) and the
+scaffolding, and one folder per kind of spec, `apis/`, `callbacks/`,
+`database/`, `fhir/`, `gateway/` and `screens/`. A skill holds only the specs
+its goal needs, so the folders differ: a spec shared by two skills can name
+the other skill it links to, and `nhcx-full` holds every spec. Each folder
+installs alone.
 
-Install all seven with `claude plugin install nhcx@nha-in`, after
-`claude plugin marketplace add` for this repository, or one at a time with
-`scripts/install-skill.sh <name> <target>`. The site build copies each folder
-to `/skills/<name>/` and packs it as `/skills/<name>.tar.gz`, which the site's
-install commands unpack.
+Every skill takes its NHCX facts from one knowledge source: the nhcx-docs MCP
+server when it is connected, otherwise the release of the NHCX package at
+github.com/nha-in/nhcx-package.
+
+Install all seven with `claude plugin install nhcx@abdm-portal`, after
+`claude plugin marketplace add` for this repository, or one at a time from the
+site. The site build copies each folder to `/skills/<name>/` and packs it as
+`/skills/<name>.tar.gz`, which the site's install commands unpack.
 
 They come from github.com/nha-in/nhcx-skills, taken from its working tree on
-15 September 2026, over commit 0e7545f. Update them there and copy them across
+21 September 2026, over commit 7f59d09. Update them there and copy them across
 again rather than editing them here.
 
 One block in each `SKILL.md` is the exception, and it is generated rather than
@@ -29,10 +35,7 @@ outranks it, and what its claims rest on. The counts in it are read from this
 repository, so the block goes stale when the Catalogue moves.
 `npm run check:nhcx-stamp` fails when it has, and CI runs it.
 
-`npm run validate:skills` now opens these folders. It checks each router's
-frontmatter, that the provenance block is present, and that no file carries an
-em dash. It also checks that the files every folder repeats are byte identical
-across all seven, which is the rule that matters here: 57 of each folder's 58
-files are copies, so a fix applied to one folder and not the rest would
-otherwise ship as six stale copies. They cite no Catalogue atom, so the
-Catalogue checks that the compiled ABDM skills get still do not reach them.
+`npm run validate:skills` opens these folders. It checks each router's
+frontmatter, that its name matches its folder, that the provenance block is
+present, that every file the router links to exists in the folder, and that no
+file carries an em dash.

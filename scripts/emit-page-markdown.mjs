@@ -450,9 +450,9 @@ function main() {
     process.exit(1);
   }
   if (!process.env.DOCUSAURUS_URL) {
-    console.warn('emit-page-markdown: DOCUSAURUS_URL unset, module llms.txt will use the example.com placeholder (local build only).');
+    console.warn('emit-page-markdown: DOCUSAURUS_URL unset, module llms.txt will use https://docs.abdm.gov.in.');
   }
-  const siteUrl = (process.env.DOCUSAURUS_URL ?? 'https://abdm-docs.example.com').replace(/\/+$/, '');
+  const siteUrl = (process.env.DOCUSAURUS_URL ?? 'https://docs.abdm.gov.in').replace(/\/+$/, '');
   const base = (process.env.DOCUSAURUS_BASE_URL ?? '/').replace(/\/+$/, '');
 
   // Same llmstxt.org shape as the root llms.txt (build-nav.mjs): H1, a `>`

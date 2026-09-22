@@ -24,11 +24,12 @@ import {AGENTS, AgentId, guarded} from './agents';
  * page's three ways in all answer for the same agents.
  */
 
-const PLUGIN = 'abdm-integrators-assistant';
-
-function fetchPrompt(base: string) {
-  return `Fetch and execute the instructions to set me up for ABDM integration from ${base}/agent-setup/prompt.md`;
-}
+/** Each gateway's plugin, the word the prompts use for it, and its hosted
+    instructions (scripts/build-skills.mjs writes both prompt files). */
+const SETS = {
+  abdm: {plugin: 'abdm-integrators-assistant', label: 'ABDM', prompt: 'prompt.md'},
+  nhcx: {plugin: 'nhcx', label: 'NHCX', prompt: 'nhcx.md'},
+} as const;
 
 /** Everything a line here is built from: where this site is published, and
     which repository serves its plugin marketplace. Both come from the build,
@@ -43,7 +44,11 @@ type Surface = {
   note: string;
 };
 
-const SURFACES: Record<AgentId, Surface> = {
+function surfacesFor(set: keyof typeof SETS): Record<AgentId, Surface> {
+  const {plugin: PLUGIN, label: LABEL, prompt: PROMPT} = SETS[set];
+  const fetchPrompt = (base: string) =>
+    `Fetch and execute the instructions to set me up for ${LABEL} integration from ${base}/agent-setup/${PROMPT}`;
+  return {
   claude: {
     command: ({repo, marketplace}) =>
       `claude plugin marketplace add ${repo} && claude plugin install ${PLUGIN}@${marketplace}`,
@@ -52,12 +57,12 @@ const SURFACES: Record<AgentId, Surface> = {
       `claude://code/new?q=${encodeURIComponent(
         guarded(
           [
-            'Set this project up for ABDM integration. Run:',
+            `Set this project up for ${LABEL} integration. Run:`,
             '',
             `claude plugin marketplace add ${repo}`,
             `claude plugin install ${PLUGIN}@${marketplace}`,
             '',
-            `If the marketplace add fails (the repository may not be accessible), instead fetch and execute the instructions from ${base}/agent-setup/prompt.md`,
+            `If the marketplace add fails (the repository may not be accessible), instead fetch and execute the instructions from ${base}/agent-setup/${PROMPT}`,
           ].join('\n'),
         ),
       )}`,
@@ -97,10 +102,13 @@ const SURFACES: Record<AgentId, Surface> = {
       `https://chatgpt.com/?q=${encodeURIComponent(guarded(fetchPrompt(base)))}`,
     note: 'One line, any agent that can fetch a URL, ChatGPT included. The instructions live on this site and are rebuilt with it.',
   },
-};
 
-export default function AgentSetup(): React.ReactNode {
+  };
+}
+
+export default function AgentSetup({set = 'abdm'}: {set?: keyof typeof SETS}): React.ReactNode {
   const {siteConfig} = useDocusaurusContext();
+  const SURFACES = surfacesFor(set);
   const [active, setActive] = useState<AgentId>(AGENTS[0].id);
   const [copied, setCopied] = useState(false);
   const base = `${siteConfig.url}${siteConfig.baseUrl}`.replace(/\/+$/, '');

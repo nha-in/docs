@@ -368,18 +368,18 @@
     {
       "atom": "nhcx.callback.task-on-submit",
       "type": "callback",
-      "route": "/docs/nhcx/v1/api/other/endpoints/other-v1-task-on-submit",
+      "route": "/docs/nhcx/v1/api/task/endpoints/task-v1-task-on-submit",
       "anchor": null,
-      "link": "/docs/nhcx/v1/api/other/endpoints/other-v1-task-on-submit",
+      "link": "/docs/nhcx/v1/api/task/endpoints/task-v1-task-on-submit",
       "rule": "method and path in the atom title match the generated API page",
       "confidence": "derived"
     },
     {
       "atom": "nhcx.callback.task-submit",
       "type": "callback",
-      "route": "/docs/nhcx/v1/api/other/endpoints/other-v1-task-submit",
+      "route": "/docs/nhcx/v1/api/task/endpoints/task-v1-task-submit",
       "anchor": null,
-      "link": "/docs/nhcx/v1/api/other/endpoints/other-v1-task-submit",
+      "link": "/docs/nhcx/v1/api/task/endpoints/task-v1-task-submit",
       "rule": "method and path in the atom title match the generated API page",
       "confidence": "derived"
     },
@@ -1088,18 +1088,18 @@
     {
       "atom": "nhcx.endpoint.task-on-submit",
       "type": "endpoint",
-      "route": "/docs/nhcx/v1/api/other/endpoints/other-v1-task-on-submit",
+      "route": "/docs/nhcx/v1/api/task/endpoints/task-v1-task-on-submit",
       "anchor": null,
-      "link": "/docs/nhcx/v1/api/other/endpoints/other-v1-task-on-submit",
+      "link": "/docs/nhcx/v1/api/task/endpoints/task-v1-task-on-submit",
       "rule": "method and path in the atom title match the generated API page",
       "confidence": "derived"
     },
     {
       "atom": "nhcx.endpoint.task-submit",
       "type": "endpoint",
-      "route": "/docs/nhcx/v1/api/other/endpoints/other-v1-task-submit",
+      "route": "/docs/nhcx/v1/api/task/endpoints/task-v1-task-submit",
       "anchor": null,
-      "link": "/docs/nhcx/v1/api/other/endpoints/other-v1-task-submit",
+      "link": "/docs/nhcx/v1/api/task/endpoints/task-v1-task-submit",
       "rule": "method and path in the atom title match the generated API page",
       "confidence": "derived"
     },
@@ -4220,10 +4220,10 @@
     {
       "atom": "nhcx.flow.pmjay-hospital-migration",
       "type": "flow",
-      "route": "/docs/nhcx/v1/concepts/pmjay-scheme-rules",
-      "anchor": null,
-      "link": "/docs/nhcx/v1/concepts/pmjay-scheme-rules",
-      "rule": "claimed by pmjay-scheme-rules",
+      "route": "/docs/nhcx/v1/concepts/pmjay-on-nhcx",
+      "anchor": "about-the-source",
+      "link": "/docs/nhcx/v1/concepts/pmjay-on-nhcx#about-the-source",
+      "rule": "claimed by pmjay-on-nhcx",
       "confidence": "derived"
     },
     {
@@ -4562,10 +4562,10 @@
     {
       "atom": "nhcx.glossary.reprocess",
       "type": "glossary",
-      "route": "/docs/nhcx/v1/reference/fhir/cancel-reprocess-and-shortfall",
+      "route": "/docs/nhcx/v1/reference/authentication",
       "anchor": "reprocess",
-      "link": "/docs/nhcx/v1/reference/fhir/cancel-reprocess-and-shortfall#reprocess",
-      "rule": "term defined under its own heading on cancel-reprocess-and-shortfall",
+      "link": "/docs/nhcx/v1/reference/authentication#reprocess",
+      "rule": "term defined under its own heading on authentication",
       "confidence": "derived"
     },
     {
@@ -5642,10 +5642,10 @@
     {
       "atom": "shared.glossary.timestamp-header",
       "type": "glossary",
-      "route": "/docs/nhcx/v1/reference/envelope-fields",
+      "route": "/docs/nhcx/v1/getting-started/jwe-message-format",
       "anchor": "timestamp",
-      "link": "/docs/nhcx/v1/reference/envelope-fields#timestamp",
-      "rule": "term defined under its own heading on envelope-fields",
+      "link": "/docs/nhcx/v1/getting-started/jwe-message-format#timestamp",
+      "rule": "term defined under its own heading on jwe-message-format",
       "confidence": "derived"
     },
     {

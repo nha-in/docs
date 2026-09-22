@@ -34,7 +34,7 @@ still published and still read.
 | `x-hcx-workflow_id` | String | **Optional** | Which step, or which case. See the two readings below |
 | `x-hcx-timestamp` | datetime | Mandatory | See the format note below |
 | `x-hcx-status` | String | Mandatory | Where this message stands. Values below |
-| `x-hcx-ben-abha-id` | String | **Mandatory** | The beneficiary's ABHA number. Mandatory on every exchange, including those with no beneficiary in the payload |
+| `x-hcx-ben-abha-id` | String | **Mandatory** | The beneficiary's ABHA number. Mandatory on every exchange, including those with no beneficiary in the payload. The format is per field: the bundle carries 14 digits without hyphens, and `NHCX-1018` asks for `XX-XXXX-XXXX-XXXX` on this header |
 | `x-hcx-use_case` | String | Optional | Values differ by exchange, see below |
 | `x-hcx-error_details` | JSON object | Optional | `code`, `message`, `trace`. Mandatory on a protocol response |
 | `x-hcx-debug_details` | JSON object | Optional | The same shape, for debugging |
@@ -146,7 +146,7 @@ draft. Do not build against it, and be ready to meet it in older material.
 
 ## Timestamp
 
-Contested in format and in zone, and the chapter on JWE, Status and Errors sets
+Contested in format and in zone, and [The JWE message format](/docs/nhcx/v1/getting-started/jwe-message-format) sets
 out the disagreement. Two facts settle part of it.
 
 - **The workbook types the field as a Unix timestamp** and gives `1706308383`

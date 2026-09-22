@@ -11,6 +11,7 @@ import {Tabs, TabsContent, TabsList, TabsTrigger} from '@site/src/components/ui/
 import AgentSetup from './AgentSetup';
 import McpInstall from './McpInstall';
 import SkillPicker from './SkillPicker';
+import {activePlatform, useRoutePath} from '@site/src/config/navigation';
 
 export type InstallToolsDialogProps = {
   open: boolean;
@@ -42,6 +43,13 @@ export default function InstallToolsDialog({
   open,
   onOpenChange,
 }: InstallToolsDialogProps): React.ReactNode {
+  // The tools belong to the gateway the reader is on: NHCX pages offer the
+  // nhcx-docs server, the nhcx plugin and the NHCX skills; every other page
+  // keeps ABDM's, with HIE-CM's Build with AI page as the long form.
+  const platform = activePlatform(useRoutePath());
+  const set = platform?.id === 'nhcx' ? 'nhcx' : 'abdm';
+  const buildWithAi =
+    set === 'nhcx' ? `${platform!.to}/getting-started/build-with-ai` : '/docs/hiecm/v3/getting-started/build-with-ai';
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="flex max-h-[85vh] flex-col gap-0 p-0 sm:max-w-[720px]">
@@ -66,28 +74,28 @@ export default function InstallToolsDialog({
                 time as your agent works. It cannot go stale, because it is this
                 site answering.
               </p>
-              <McpInstall />
+              <McpInstall set={set} />
             </TabsContent>
             <TabsContent value="plugin">
               <p className="install-tools__lead">
                 One command that sets your agent up with both of the others: the
                 skills as files, the server as a connection.
               </p>
-              <AgentSetup />
+              <AgentSetup set={set} />
             </TabsContent>
             <TabsContent value="skills">
               <p className="install-tools__lead">
-                One file per job, carrying a whole milestone: every endpoint,
-                header, error code and test. Works offline, and ages until you
-                update it.
+                {set === 'nhcx'
+                  ? 'One folder per NHCX use case, or one for the whole integration: the steps, the specs and the tests. Works offline, and ages until you update it.'
+                  : 'One file per job, carrying a whole milestone: every endpoint, header, error code and test. Works offline, and ages until you update it.'}
               </p>
-              <SkillPicker />
+              <SkillPicker set={set} />
             </TabsContent>
           </Tabs>
         </div>
 
         <p className="m-0 border-t border-[var(--border)] px-6 py-4 text-sm text-[var(--text-muted)]">
-          <Link to="/docs/hiecm/v3/getting-started/build-with-ai">
+          <Link to={buildWithAi}>
             Everything about building with AI
           </Link>
         </p>

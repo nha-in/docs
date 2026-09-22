@@ -24,7 +24,7 @@ PAYR numbers are not unique. The same number means different things from differe
 
 ## Then match it
 
-If the nhcx-docs MCP server is connected, call `decode_error` with the code and trust it over any file. Otherwise load any NHCX skill, since all seven carry the same file, and read `references/errors-and-debugging.md`: section 2 for PAYR and ERR codes met live, section 3 for gateway protocol errors.
+If the nhcx-docs MCP server is connected, call `decode_error` with the code and trust it over any file. Otherwise read the code in the NHCX package's `nhcx-error.yaml`, which holds the gateway, standard payer and reference payer codes (any NHCX skill's `references/KNOWLEDGE.md` says how to fetch the package), or in the table at https://docs.abdm.gov.in/docs/nhcx/v1/reference/pmjay-error-codes. A PAYR code in PAYR-1001 to PAYR-1020 means different things from the standard payer and the PMJAY payer, so read it with its message.
 
 ## Output
 

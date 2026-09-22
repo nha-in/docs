@@ -28,6 +28,15 @@ PMJAY requires proof that the beneficiary was physically present.
 | --- | --- |
 | Sandbox. | `https://apisbx.abdm.gov.in` |
 
+The six calls share a hostname and split across two bases under it. A client configured with one base reaches only half of them.
+
+| Modality | Base, sandbox |
+| --- | --- |
+| Fingerprint, iris and token refresh | `https://apisbx.abdm.gov.in/hcx/abha/biometric/` |
+| Face | `https://apisbx.abdm.gov.in/pmjay/sbxhcx/abdmproxy/abha/biometric/` |
+
+If fingerprint works and every face call fails, check the base before you check the face flow. [Biometric authentication](/docs/nhcx/v1/roles/provider/biometric-authentication#two-hosts-and-this-is-the-first-thing-to-get-right) sets out both.
+
 ## Guides that use these calls
 
 - [Biometric authentication](/docs/nhcx/v1/roles/provider/biometric-authentication)

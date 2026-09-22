@@ -13,7 +13,7 @@ info:
   title: NHCX pre-authorisation
   summary: Pre-authorisation is the provider's formal request for the payer's approval to deliver a specific treatment to a covered beneficiary.
   description: |-
-    The Pre-authorisation calls on the National Health Claims Exchange (NHCX): 4 operations, and 2 callbacks you host.
+    The Pre-authorisation calls on the National Health Claims Exchange (NHCX): 2 operations, and 2 callbacks you host.
 
     Pre-authorisation is the provider's formal request for the payer's approval to deliver a specific treatment to a covered beneficiary.
 
@@ -52,8 +52,6 @@ servers:
 tags:
   - name: Pre-authorisation
     description: Pre-authorisation is the provider's formal request for the payer's approval to deliver a specific treatment to a covered beneficiary.
-  - name: Adapter
-    description: Exposed for the NHCX adapter deployment rather than for direct integration.
 security:
   - bearerAuth: []
 paths:
@@ -74,29 +72,24 @@ paths:
 
         ### When to use
 
-        Called after eligibility has confirmed cover and the mandatory documents are in hand. The same endpoint carries several business steps; the x-hcx-workflow_id header (and the optional x-hcx-use_case header with values New, Enhancement or Resubmit) is the discriminator: 12 PREAUTH_REQUEST_INITIATED for a new preauth; 121 PREAUTH_REQUEST_RESUBMITTED after a query or rejection; 19 PREAUTH_QUERY_RESPONSE_SUBMITTED to answer a payer query received under 24; 13 ENHANCEMENT_REQUEST_INITIATED for an additional amount on an already approved preauth, with 131 answering an enhancement query (241); and 14 DISCHARGE_SUBMITTED for the provisional pre-discharge submission that the claim chapter describes for non-PMJAY schemes (answered by 261, 262 or 263), with 141 answering a discharge query. Send x-hcx-status request.initiated on every one of these. Cancellation is not sent here; it goes to /v1/task/submit (PC01 or 122).
+        Use it to ask the payer to approve a treatment before it starts. The same call also sends a resubmission, an enhancement or an answer to a payer query: the workflow code in the header says which.
 
         ### Preconditions
 
-        - Provider is an active NHCX participant with a valid NPI facility code and a current Bearer token.
-        - Patient resource carries the PMJAY Member ID and ABHA number; an active Coverage resource with a valid policy identifier is included.
-        - Diagnosis (ICD-10), procedure (NRCes ndhm-procedure-code), care team and supportingInfo are present, and the mandatory documents named by the InsurancePlan or the eligibility auth-requirements response are attached.
-        - For a new PMJAY preauth, either biometric authentication or the Authentication Consent questionnaire response is included (PAYR-1256, PAYR-1271).
-        - For 13, 19, 121 or 131 a prior preauth in the right state exists (PAYR-1212, PAYR-1214, PAYR-1218, PAYR-1219 otherwise) and the message reuses the episode's correlation identity.
-        - Payer certificate fetched, bundle JWE-encrypted, recipient code taken from processingID, timestamp in IST.
+        - You have a valid access token and the payer's certificate.
+        - Coverage is confirmed and the documents the payer asks for are ready.
+        - The bundle is a FHIR `Claim` with `use` set to `preauthorization`, encrypted for the payer.
 
         ### Postconditions
 
-        NHCX returns HTTP 202 Accepted with a StatusSuccessResponse acknowledgement (entity_type preauth, protocol_status request.queued or request.dispatched). This is not an adjudication; the gateway validates structure and open headers, then forwards asynchronously. The payer may first acknowledge under workflow 20, then answer on /v1/preauth/on_submit with a ClaimResponseBundle: 21 approved (preAuthRef issued), 23 rejected, 24 queried, 22 enhancement approved or 241 enhancement queried, 261, 262 or 263 for discharge. Protocol failures return a ProtocolResponse with x-hcx-error_details. Errors marked 400, 404 and 500 carry the same schema.
+        - NHCX answers `202` at once. That only means the message was accepted, not approved.
+        - The payer's decision arrives later on `/v1/preauth/on_submit`.
 
         ### Common mistakes
 
-        - Answering a query (24) with a fresh 12 instead of 19, or answering an enhancement query (241) with 19 instead of 131; both arrive on the same callback and are easily crossed.
-        - Sending an enhancement (13) against a preauth that is not yet approved (PAYR-1212) or while another case is in progress (PAYR-1213), or a new 12 when an approved preauth already exists (PAYR-1217).
-        - Reusing a correlation ID across cycles (NHCX-1006) or after a failure, when NHCX has marked it inactive.
-        - Leaving out x-hcx-workflow_id and x-hcx-use_case because the spec marks them Optional; without them the payer cannot tell an enhancement from a duplicate.
-        - Item and amount errors: PAYR-1017 incorrect calculations, PAYR-1209 net amount not greater than zero, PAYR-1248 invalid item code, PAYR-1254 missing STG questionnaire response, PAYR-1270 sending LM100 at preauth stage.
-        - Branching on ClaimResponse.outcome alone when the callback arrives; complete means approved or rejected depending on adjudication reason.
+        - Sending to the insurer's code instead of the claims processor's.
+        - Treating the `202` as an approval.
+        - Reusing a correlation ID after a failed request.
 
         ### Best practices
 
@@ -194,118 +187,6 @@ paths:
                 error:
                   code: ""
                   message: ""
-  /internal/v1/preauth/submit:
-    post:
-      operationId: preauth_internal_v1_preauth_submit
-      x-abdm-use-case: Adapter
-      tags:
-        - Adapter
-      summary: Pre-authorisation submit (internal) (adapter)
-      description: |-
-        Internal twin of /v1/preauth/submit (operationId preauthSubmitPostInternal) with the same JWEPayload body and response set. Exposed for the NHCX adapter deployment rather than for direct integration.
-
-        ### Business purpose
-
-        The preauth service publishes its submit operation twice, at /v1 and at /internal/v1, with identical descriptions, request bodies and response sets. Only the operationId differs, by an Internal suffix. The /internal prefix is the route the NHCX adapter sits on: a participant running the adapter alongside its own system calls the internal path, and the adapter handles the encryption, headers and gateway hop. A participant integrating directly against NHCX calls the public path and does that work itself. No separate business purpose is documented for the internal route beyond that.
-
-        ### When to use
-
-        Use it only when you are running the NHCX adapter and it is configured to serve this path; otherwise call /v1/preauth/submit. Everything else is unchanged: the same JWEPayload body, the same x-hcx-* protected header, the same workflow discriminators and the same asynchronous callback. The specs do not document what makes the internal variant different beyond the operationId, so treat it as a mirror of the public path and confirm with NHCX onboarding before pointing production at it.
-
-        ### Preconditions
-
-        Identical to /v1/preauth/submit. Nothing additional is documented for the internal route, beyond an adapter deployment that actually serves the /internal prefix.
-
-        ### Postconditions
-
-        NHCX returns HTTP 202 Accepted with a StatusSuccessResponse acknowledgement (entity_type preauth, protocol_status request.queued or request.dispatched). This is not an adjudication; the gateway validates structure and open headers, then forwards asynchronously. The payer may first acknowledge under workflow 20, then answer on /v1/preauth/on_submit with a ClaimResponseBundle: 21 approved (preAuthRef issued), 23 rejected, 24 queried, 22 enhancement approved or 241 enhancement queried, 261, 262 or 263 for discharge. Protocol failures return a ProtocolResponse with x-hcx-error_details. Errors marked 400, 404 and 500 carry the same schema.
-
-        ### Common mistakes
-
-        - Assuming a different body or different semantics for the internal route; the spec gives it the same JWEPayload body and the same responses.
-        - Calling it without an adapter deployment behind it and then chasing a 404.
-        - Every pitfall of the public path applies unchanged.
-
-        ### Best practices
-
-        - Default to /v1/preauth/submit and keep the internal path as a configuration option only.
-        - Share one client implementation across both paths, so header hygiene, encryption and correlation handling cannot diverge between them.
-        - Record which variant carried each correlation ID, for support conversations.
-
-        ### Related scenario
-
-        A vendor reading the preauth OpenAPI document sees preauthSubmitPostInternal sitting beside its public twin and asks which one to build against. The answer is the public path, unless NHCX onboarding has given them an adapter deployment, in which case the adapter takes the bundle unencrypted on the internal path and does the JWE and the gateway hop for them. The end-to-end flow is identical either way.
-
-        ### Specification
-
-        Chapter [Preauthorisation request](/docs/nhcx/v1/reference/fhir/preauthorisation-request) of the NHCX integration specification.
-      parameters:
-        - $ref: "#/components/parameters/BearerAuth"
-        - $ref: "#/components/parameters/XHcxSenderCode"
-        - $ref: "#/components/parameters/XHcxRecipientCode"
-        - $ref: "#/components/parameters/XHcxApiCallId"
-        - $ref: "#/components/parameters/XHcxRequestId"
-        - $ref: "#/components/parameters/XHcxCorrelationId"
-        - $ref: "#/components/parameters/XHcxWorkflowId"
-        - $ref: "#/components/parameters/XHcxTimestamp"
-        - $ref: "#/components/parameters/XHcxStatus"
-        - $ref: "#/components/parameters/XHcxBenAbhaId"
-        - $ref: "#/components/parameters/XHcxUseCase"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                payload:
-                  type: string
-            example:
-              payload: eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2R0NNIiwieC1oY3gtc2VuZGVyX2NvZGUiOi4uLn0.encrypted_key.iv.ciphertext.tag
-      responses:
-        "202":
-          description: NHCX returns HTTP 202 Accepted with a StatusSuccessResponse acknowledgement (entity_type preauth, protocol_status request.queued or request.dispatched).
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  timestamp:
-                    type: string
-                  api_call_id:
-                    type: string
-                  correlation_id:
-                    type: string
-                  result:
-                    type: object
-                    properties:
-                      sender_code:
-                        type: string
-                      recipient_code:
-                        type: string
-                      entity_type:
-                        type: string
-                      protocol_status:
-                        type: string
-                  error:
-                    type: object
-                    properties:
-                      code:
-                        type: string
-                      message:
-                        type: string
-              example:
-                timestamp: 19/03/2026 11:46:35:120
-                api_call_id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
-                correlation_id: 11223344-5566-7788-99aa-bbccddeeff00
-                result:
-                  sender_code: 1000004446@hcx
-                  recipient_code: 1518@hcx
-                  entity_type: preauth
-                  protocol_status: request.queued
-                error:
-                  code: ""
-                  message: ""
   /v1/preauth/on_submit:
     post:
       operationId: preauth_v1_preauth_on_submit
@@ -323,28 +204,25 @@ paths:
 
         ### When to use
 
-        Called by the payer or its TPA after adjudicating a /v1/preauth/submit message, using the same correlation ID. The x-hcx-workflow_id identifies the outcome: 20 received, 21 approved, 23 rejected, 24 queried, 22 enhancement approved, 241 enhancement queried, 231 enhancement denied, 261, 262 and 263 for discharge. The NHA status sheet frames approvals and rejections as response.complete and queries (24, 241) as request.initiated because the payer is authoring a new request to the provider. ClaimResponse.outcome is complete for approved and rejected, partial for partially approved and queried; adjudication[0].reason.coding.code (approved, queried, cancelled) is the real discriminator.
+        The payer calls it after deciding on a pre-authorisation, with the same correlation ID. It carries an approval, a partial approval, a query or a rejection: the workflow code in the header says which.
 
         ### Preconditions
 
-        - A preauth request with this correlation ID exists in NHCX and has not been deleted after failed deliveries (NHCX-1010 otherwise).
-        - The payer holds a valid Bearer token and the provider's certificate, and encrypts the ClaimResponseBundle for the provider.
-        - x-hcx-correlation_id is echoed from the request; x-hcx-api_call_id is new; sender and recipient codes are swapped.
-        - x-hcx-status is response.complete, response.partial or response.error; on error the body is a ProtocolResponse with x-hcx-error_details mandatory.
-        - preAuthRef is populated on approval and partial approval; processNote explains any reduction; clinical or business error detail stays inside the encrypted resource.
+        - A pre-authorisation with this correlation ID exists in NHCX.
+        - The payer has a valid access token and the provider's certificate, and encrypts the decision for the provider.
+        - The correlation ID matches the request, the call ID is new, and sender and recipient are swapped.
+        - An approval carries the `preAuthRef`, and any cut in the amount is explained.
 
         ### Postconditions
 
-        HTTP 202 Accepted with the StatusSuccessResponse acknowledgement (entity_type preauth) from NHCX, then asynchronous delivery to the provider's registered /v1/preauth/on_submit. The provider must acknowledge with 202 within 30 seconds; otherwise NHCX retries, and after five failures the request is deleted and the sender is notified via v1/error. On an approved or partially approved response the provider persists preAuthRef and may treat; on a query the conversation stays open awaiting 19, 131 or 121; on a rejection the preauth is closed and a new case number is needed to proceed.
+        - NHCX answers `202` and forwards the decision to the provider, who must reply `202` within 30 seconds.
+        - On approval the provider stores the `preAuthRef` and may treat. A query keeps the request open. A rejection closes it.
 
         ### Common mistakes
 
-        - Provider side: branching on outcome alone; complete plus reason cancelled is a rejection, complete plus approved is an approval.
-        - Provider side: treating the pipe-delimited query audit trail (USER~datetime~type~comment~trust) as a FHIR coding and failing to parse it.
-        - Provider side: returning 200 or a bare body instead of the 202 acceptance shape, which triggers retries and eventual deletion.
-        - Payer side: minting a new correlation ID, or sending a JWEPayloadResponse where a ProtocolResponse is expected (PAYR-1517).
-        - Payer side: using the superseded status spelling; the sources show both response.fail and response.error for failures, and the technical specification vocabulary is response.error.
-        - Both sides: relying on the position of ClaimResponse.total[] entries rather than total[].category.coding.code.
+        - Provider side: deciding on `outcome` alone. The adjudication reason says whether it was approved or rejected.
+        - Provider side: replying with `200` or a bare body, which triggers retries.
+        - Payer side: creating a new correlation ID instead of reusing the request's.
 
         ### Best practices
 
@@ -453,144 +331,8 @@ paths:
                 error:
                   code: ""
                   message: ""
-  /internal/v1/preauth/on_submit:
-    post:
-      operationId: preauth_internal_v1_preauth_on_submit
-      x-abdm-use-case: Adapter
-      tags:
-        - Adapter
-      summary: Pre-authorisation callback (internal) (adapter)
-      description: |-
-        Internal twin of /v1/preauth/on_submit (operationId preauthOnSubmitPostInternal) with the same JWEPayload body and response set. Exposed for the NHCX adapter deployment rather than for direct integration.
-
-        ### Business purpose
-
-        The preauth service publishes its on_submit operation twice, at /v1 and at /internal/v1, with identical descriptions, request bodies and response sets. Only the operationId differs, by an Internal suffix. The /internal prefix is the route the NHCX adapter sits on: a participant running the adapter alongside its own system calls the internal path, and the adapter handles the encryption, headers and gateway hop. A participant integrating directly against NHCX calls the public path and does that work itself. No separate business purpose is documented for the internal route beyond that.
-
-        ### When to use
-
-        Use it only when you are running the NHCX adapter and it is configured to serve this path; otherwise call /v1/preauth/on_submit. Everything else is unchanged: the same JWEPayload body, the same x-hcx-* protected header, the same workflow discriminators and the same asynchronous callback. The specs do not document what makes the internal variant different beyond the operationId, so treat it as a mirror of the public path and confirm with NHCX onboarding before pointing production at it.
-
-        ### Preconditions
-
-        Identical to /v1/preauth/on_submit. Nothing additional is documented for the internal route, beyond an adapter deployment that actually serves the /internal prefix.
-
-        ### Postconditions
-
-        HTTP 202 Accepted with the StatusSuccessResponse acknowledgement (entity_type preauth) from NHCX, then asynchronous delivery to the provider's registered /v1/preauth/on_submit. The provider must acknowledge with 202 within 30 seconds; otherwise NHCX retries, and after five failures the request is deleted and the sender is notified via v1/error. On an approved or partially approved response the provider persists preAuthRef and may treat; on a query the conversation stays open awaiting 19, 131 or 121; on a rejection the preauth is closed and a new case number is needed to proceed.
-
-        ### Common mistakes
-
-        - Assuming a different body or different semantics for the internal route; the spec gives it the same JWEPayload body and the same responses.
-        - Calling it without an adapter deployment behind it and then chasing a 404.
-        - Every pitfall of the public path applies unchanged.
-
-        ### Best practices
-
-        - Default to /v1/preauth/on_submit and keep the internal path as a configuration option only.
-        - Share one client implementation across both paths, so header hygiene, encryption and correlation handling cannot diverge between them.
-        - Record which variant carried each correlation ID, for support conversations.
-
-        ### Related scenario
-
-        A vendor reading the preauth OpenAPI document sees preauthOnSubmitPostInternal sitting beside its public twin and asks which one to build against. The answer is the public path, unless NHCX onboarding has given them an adapter deployment, in which case the adapter takes the bundle unencrypted on the internal path and does the JWE and the gateway hop for them. The end-to-end flow is identical either way.
-
-        ### Specification
-
-        Chapter [Preauthorisation response](/docs/nhcx/v1/reference/fhir/preauthorisation-response) of the NHCX integration specification.
-      parameters:
-        - $ref: "#/components/parameters/BearerAuth"
-        - name: x-hcx-sender_code
-          in: header
-          required: true
-          description: Your participant code. Mandatory on the envelope.
-          schema:
-            type: string
-          example: 1518@hcx
-        - name: x-hcx-recipient_code
-          in: header
-          required: true
-          description: The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
-          schema:
-            type: string
-          example: 1000004446@hcx
-        - $ref: "#/components/parameters/XHcxApiCallId"
-        - $ref: "#/components/parameters/XHcxRequestId"
-        - $ref: "#/components/parameters/XHcxCorrelationId"
-        - name: x-hcx-workflow_id
-          in: header
-          required: false
-          description: Which step, or which case. See the two readings below. Optional on the envelope.
-          schema:
-            type: string
-          example: "21"
-        - $ref: "#/components/parameters/XHcxTimestamp"
-        - name: x-hcx-status
-          in: header
-          required: true
-          description: Where this message stands. Values below. Mandatory on the envelope.
-          schema:
-            type: string
-          example: response.complete
-        - $ref: "#/components/parameters/XHcxBenAbhaId"
-        - $ref: "#/components/parameters/XHcxDebugFlag"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                payload:
-                  type: string
-            example:
-              payload: eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2R0NNIiwieC1oY3gtc2VuZGVyX2NvZGUiOi4uLn0.encrypted_key.iv.ciphertext.tag
-      responses:
-        "202":
-          description: HTTP 202 Accepted with the StatusSuccessResponse acknowledgement (entity_type preauth) from NHCX, then asynchronous delivery to the provider's registered /v1/preauth/on_submit.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  timestamp:
-                    type: string
-                  api_call_id:
-                    type: string
-                  correlation_id:
-                    type: string
-                  result:
-                    type: object
-                    properties:
-                      sender_code:
-                        type: string
-                      recipient_code:
-                        type: string
-                      entity_type:
-                        type: string
-                      protocol_status:
-                        type: string
-                  error:
-                    type: object
-                    properties:
-                      code:
-                        type: string
-                      message:
-                        type: string
-              example:
-                timestamp: 19/03/2026 11:46:35:120
-                api_call_id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
-                correlation_id: 11223344-5566-7788-99aa-bbccddeeff00
-                result:
-                  sender_code: 1518@hcx
-                  recipient_code: 1000004446@hcx
-                  entity_type: preauth
-                  protocol_status: request.dispatched
-                error:
-                  code: ""
-                  message: ""
 webhooks:
-  v1_preauth_submit:
+  /v1/preauth/submit:
     post:
       operationId: preauth_webhook_v1_preauth_submit
       x-abdm-atom: nhcx.callback.preauth-submit
@@ -677,7 +419,7 @@ webhooks:
                 error:
                   code: ""
                   message: ""
-  v1_preauth_on_submit:
+  /v1/preauth/on_submit:
     post:
       operationId: preauth_webhook_v1_preauth_on_submit
       x-abdm-atom: nhcx.callback.preauth-on-submit

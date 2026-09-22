@@ -89,7 +89,7 @@ You need the earlier decision: the claim or preauthorisation number and the paye
 ### What the task carries
 
 - `Task.status` `requested` and `Task.intent` `order`.
-- An input `claimNumber` with the case number, and for a preauthorisation an input `initimationNumber`, spelt that way.
+- An input `claimNumber` with the case number, and for a preauthorisation an input `intimationNumber`.
 - A supporting document. It is mandatory for a reprocess and for an erroneous claim.
 - For an erroneous claim only, the amount: never more than the gap between claimed and paid.
 
@@ -123,7 +123,7 @@ You have understood this when you can answer both of these.
 
 **Wrong combination of code, reason and input.** The PMJAY payer refuses the task with "Invalid input, code and reason code received". Its structure checks use [PAYR-1017](../errors/payr-1017.md) for "No task code received" and [PAYR-1018](../errors/payr-1018.md) for "No task reason code received".
 
-**Missing case number.** The payer refuses a task without a valid `claimNumber` or `initimationNumber`.
+**Missing case number.** The payer refuses a task without a valid `claimNumber` or `intimationNumber`.
 
 **Cancelling too late.** The PMJAY payer refuses to cancel a case that is not active ([PAYR-1252](../errors/payr-1252.md)), already cancelled ([PAYR-1253](../errors/payr-1253.md)), or in payment ([PAYR-1257](../errors/payr-1257.md), [PAYR-1258](../errors/payr-1258.md)).
 

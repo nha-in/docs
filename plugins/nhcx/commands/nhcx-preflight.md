@@ -38,4 +38,4 @@ Every row is answered with the file, the line or the command output that proves 
 
 ## Output
 
-One table: check, verdict (present, partial, absent), proof. Then the absent and partial rows in the order they block a first send. The detail behind every row is in any NHCX skill's `references/transport-knowledge.md` and `core/FOUNDATION.md`.
+One table: check, verdict (present, partial, absent), proof. Then the absent and partial rows in the order they block a first send. The detail behind every row is in any NHCX skill's `references/CORE.md` and its `gateway/` specs, `G11-startup-checks.md` first.

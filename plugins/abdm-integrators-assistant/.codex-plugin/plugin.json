@@ -21,6 +21,7 @@
     "india-health"
   ],
   "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "ABDM Developer Portal",
     "shortDescription": "Build and debug an ABDM integration, milestone by milestone.",

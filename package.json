@@ -22,6 +22,7 @@
     "compile:skills": "node scripts/compile-skills.mjs",
     "build:plugins": "node scripts/build-plugin-manifests.mjs",
     "check:plugins": "node scripts/build-plugin-manifests.mjs --check",
+    "check:build-assets": "node scripts/check-build-assets.mjs",
     "validate:skills": "node scripts/validate-skills.mjs",
     "stamp:nhcx": "node scripts/stamp-nhcx-skills.mjs",
     "check:nhcx-stamp": "node scripts/stamp-nhcx-skills.mjs --check",

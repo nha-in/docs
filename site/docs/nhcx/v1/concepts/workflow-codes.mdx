@@ -1,0 +1,85 @@
+---
+title: Workflow Codes
+sidebar_label: Workflow Codes
+sidebar_position: 6
+description: The 74 workflow IDs and their message directions
+sidebar_class_name: sidebar-icon sidebar-icon--workflow
+source: nhcx-package/docs/01-Overview/06-Workflow Codes.md
+generated: true
+---
+
+import WorkflowCodeExplorer from '@site/src/components/mdx/WorkflowCodeExplorer';
+
+# Workflow Codes
+
+The address a message is sent to does not say which step of a claim it is. A new preauthorisation, a resubmission, an enhancement and an answer to a query all go to the same place, in the same kind of bundle. The workflow code in the message header is what tells them apart. Each code also comes with a status that says whether the message starts a request, answers one, or refuses it. The official Workflow Status Sheet is the authority, and new codes appear there first.
+
+## Every workflow code
+
+Search by code, name or status, and switch between the codes a provider sends, the codes a payer sends, every row of the Workflow Status Sheet, and the lettered families.
+
+<WorkflowCodeExplorer />
+
+## Mainline Cashless State Machines
+
+In the diagrams below, each arrow carries the workflow code of the message that moves the case.
+
+### Preauthorisation Lifecycle
+
+```mermaid
+stateDiagram-v2
+  [*] --> Requested: 12
+  Requested --> Received: 20
+  Received --> Approved: 21
+  Received --> Rejected: 23
+  Received --> Queried: 24
+  Queried --> QueryAnswered: 19
+  QueryAnswered --> Received
+  Rejected --> Resubmitted: 121
+  Resubmitted --> Received: 251
+  Approved --> EnhancementAsked: 13
+  EnhancementAsked --> Approved: 22
+  EnhancementAsked --> EnhancementDenied: 231
+  EnhancementAsked --> EnhancementQueried: 241
+  EnhancementQueried --> EnhancementAnswered: 131
+  EnhancementAnswered --> Approved: 22
+  EnhancementAnswered --> EnhancementDenied: 231
+  Received --> CancelAsked: PC01
+  Approved --> CancelAsked: PC01
+  CancelAsked --> Cancelled: PC02
+  Approved --> [*]
+```
+
+### Claim Lifecycle
+
+```mermaid
+stateDiagram-v2
+  [*] --> Submitted: 15
+  Submitted --> Received: 25
+  Received --> InProcess: 28
+  InProcess --> Forwarded: 29
+  Forwarded --> InProcess
+  InProcess --> Queried: 27
+  Queried --> QueryAnswered: 151
+  QueryAnswered --> InProcess
+  InProcess --> Approved: 26
+  InProcess --> Denied: 291
+  Denied --> ArbitrationAsked: 36
+  ArbitrationAsked --> ArbitrationAcknowledged: 37
+  ArbitrationAcknowledged --> ReprocessApproved: 252
+  ArbitrationAcknowledged --> ReprocessRejected: 253
+  ArbitrationAcknowledged --> ReprocessQueried: 254
+  ReprocessQueried --> ArbitrationAcknowledged
+  Approved --> [*]
+```
+
+### Payment & Settlement Lifecycle
+
+```mermaid
+stateDiagram-v2
+  [*] --> Initiated: 30
+  Initiated --> Processed: 31
+  Processed --> Settled: 33, UTR available
+  Settled --> Acknowledged: 17, sent by the provider
+  Acknowledged --> [*]
+```

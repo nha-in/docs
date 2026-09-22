@@ -20,15 +20,12 @@ Started, explains how a path is appended to them and what is easy to get wrong.
 
 | Service | Sandbox | Production |
 | :---- | :---- | :---- |
-| ABDM session token | `https://dev.abdm.gov.in` | `https://apis.abdm.gov.in`. ABDM's published production gateway. Confirm it in your onboarding letter. |
+| ABDM session token | `https://dev.abdm.gov.in` | `https://apis.abdm.gov.in` |
 | NHCX exchange | `https://apisbx.abdm.gov.in/hcx` | `https://apisprod.nha.gov.in/hcx` |
 | Participant service | `https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice` | `https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice` |
-| ABDM proxy | `https://apisbx.abdm.gov.in/pmjay/sbxhcx/abdmproxy` | Not published. Confirm at onboarding. |
-| PMJAY payer service, role lookup | `https://apisbx.abdm.gov.in` | Not published. Confirm at onboarding. |
-| PMJAY payer service, act on a case | `https://apisbeta.nha.gov.in` | Not published. Confirm at onboarding. |
-| Dummy payer | `https://apisbx.abdm.gov.in/pmjay/sbxhcx/dummyhcxpayer` | A sandbox test hook only. |
-| NHCX portal | `https://hcxsbx.abdm.gov.in` | Not published. |
-| Face authentication page | `https://phrsbx.abdm.gov.in/face-auth` | Not published. |
+| ABDM proxy | `https://apisbx.abdm.gov.in/pmjay/sbxhcx/abdmproxy` | `https://apisprod.nha.gov.in/pmjay/hcx/abdmproxy` |
+| NHCX portal | `https://hcxsbx.abdm.gov.in` | `https://nhcx.abdm.gov.in` |
+| Face authentication page | `https://phrsbx.abdm.gov.in/face-auth` | `https://phr.abdm.gov.in/face-auth` |
 
 What each one serves:
 
@@ -36,9 +33,6 @@ What each one serves:
 - **NHCX exchange**: Every use-case call under /v1, fingerprint and iris authentication under /abha.
 - **Participant service**: Creating and updating a participant, the registry search, certificates and policies.
 - **ABDM proxy**: Face authentication for PMJAY biometrics.
-- **PMJAY payer service, role lookup**: The roles a PMJAY adjudicator user holds, at /pmjay/sbxhcx/nhcxpayerservice/v1/get/user-role.
-- **PMJAY payer service, act on a case**: Acting on a PMJAY case, at /pmjay/hcx/nhcxpayerservice/wrapper/process/case.
-- **Dummy payer**: The sandbox test hooks that make the dummy payer answer.
 - **NHCX portal**: The portal, the live Swagger specifications it publishes, and notification subscribe.
 - **Face authentication page**: The QR page a patient opens to complete face authentication, with ?txnId=&lt;txnId>.
 
@@ -50,14 +44,10 @@ The ABDM gateway also reads `X-CM-ID` on the session call: `sbx` in the sandbox,
 | :---- | :---- |
 | Session token | `https://dev.abdm.gov.in/api/hiecm/gateway/v3/sessions` |
 | Use-case calls | `https://apisbx.abdm.gov.in/hcx/v1` |
-| Dummy payer test hook | `https://apisbx.abdm.gov.in/pmjay/sbxhcx/dummyhcxpayer/process/request` |
-| Dummy payer payment hook | `https://apisbx.abdm.gov.in/pmjay/sbxhcx/dummyhcxpayer/paymentNotice/init` |
 | Biometric, fingerprint and iris | `https://apisbx.abdm.gov.in/hcx/abha/biometric/auth/{init,verify}` |
 | Biometric, token refresh | `https://apisbx.abdm.gov.in/hcx/abha/biometric/auth/refresh/token` |
 | Biometric, face | `https://apisbx.abdm.gov.in/pmjay/sbxhcx/abdmproxy/abha/biometric/` |
 | Face auth QR page | `https://phrsbx.abdm.gov.in/face-auth?txnId=<txnId>` |
-| PMJAY payer service, role lookup | `https://apisbx.abdm.gov.in/pmjay/sbxhcx/nhcxpayerservice/v1/get/user-role` |
-| PMJAY payer service, act on a case | `https://apisbeta.nha.gov.in/pmjay/hcx/nhcxpayerservice/wrapper/process/case` |
 | Notification subscribe | `https://hcxsbx.abdm.gov.in/v1/notification/subscribe` |
 | The portal itself | `https://hcxsbx.abdm.gov.in` |
 

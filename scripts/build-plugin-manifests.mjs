@@ -207,10 +207,10 @@ for (const entry of market.plugins) {
   }));
 
   // Codex reads its own manifest and wants the component paths spelled out
-  // rather than discovered. No mcpServers line: the Docs MCP server's address
-  // is set at deploy and is not in this repository, so pointing at a file that
-  // does not exist would be worse than leaving the field out. When the address
-  // is published, add ./.mcp.json here and beside it.
+  // rather than discovered. A plugin that carries ./.mcp.json, the Docs MCP
+  // server at its published address, names it; Claude Code finds the same
+  // file on its own.
+  const mcp = existsSync(join(dir, '.mcp.json')) ? {mcpServers: './.mcp.json'} : {};
   record(join(dir, '.codex-plugin', 'plugin.json'), {
     name: claude.name,
     version: claude.version,
@@ -221,6 +221,7 @@ for (const entry of market.plugins) {
     license: claude.license,
     keywords: claude.keywords,
     skills: './skills/',
+    ...mcp,
     interface: {
       displayName: claude.displayName ?? claude.name,
       shortDescription: storefront.shortDescription,

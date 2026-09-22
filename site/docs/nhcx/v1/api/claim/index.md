@@ -17,8 +17,17 @@ The claim is where money actually moves.
 | --- | --- | --- |
 | [Claim submit](/docs/nhcx/v1/api/claim/endpoints/claim-v1-claim-submit) | `POST /v1/claim/submit` | Provider submits the final itemised Claim bundle (Claim.use claim), or a claim query response or resubmission; NHCX routes it to the payer. |
 | [Claim callback](/docs/nhcx/v1/api/claim/endpoints/claim-v1-claim-on-submit) | `POST /v1/claim/on_submit` | Payer returns interim (response.partial) and final (response.complete) ClaimResponseBundles for a claim to the provider via NHCX. |
-| [Claim submit (internal) (adapter)](/docs/nhcx/v1/api/claim/endpoints/claim-internal-v1-claim-submit) | `POST /internal/v1/claim/submit` | Internal twin of /v1/claim/submit (operationId claimSubmitPostInternal) with the same JWEPayload body and response set. |
-| [Claim callback (internal) (adapter)](/docs/nhcx/v1/api/claim/endpoints/claim-internal-v1-claim-on-submit) | `POST /internal/v1/claim/on_submit` | Internal twin of /v1/claim/on_submit (operationId claimOnSubmitPostInternal) taking the same bare object body. |
+
+## One path, two meanings by scheme
+
+Nothing in the envelope names the scheme, so the payer you address decides what `/v1/claim/submit` carries.
+
+| Payer | What travels on `/v1/claim/submit` | Workflow |
+| --- | --- | --- |
+| General network | A provisional discharge submission first, then the final claim | `14`, then `15` |
+| PMJAY | One combined discharge and claim submission. No separate discharge step exists | `15` |
+
+[Discharge and claim](/docs/nhcx/v1/roles/provider/discharge-and-claim) and [PMJAY scheme rules](/docs/nhcx/v1/concepts/pmjay-use-cases#scheme-rules-the-hmis-must-implement) carry the detail.
 
 ## Callbacks you host
 

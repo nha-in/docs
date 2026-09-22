@@ -22,7 +22,7 @@ The token does not come from NHCX.
 | Environment | Base URL |
 | --- | --- |
 | Sandbox, ABDM session token. | `https://dev.abdm.gov.in` |
-| Production. ABDM's published production gateway. Confirm it in your onboarding letter. | `https://apis.abdm.gov.in` |
+| Production. | `https://apis.abdm.gov.in` |
 
 ## Guides that use these calls
 

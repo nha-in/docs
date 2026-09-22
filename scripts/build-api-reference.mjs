@@ -15,7 +15,7 @@ import {listSpecTree} from './specs.mjs';
 import {joinKey, hostOf} from './lib/api-join.mjs';
 import {loadJourneys, operationIndex, stepDataName} from './lib/journeys.mjs';
 import {errorsFromSpec} from './lib/spec-errors.mjs';
-import {loadAtoms} from './lib/atoms.mjs';
+import {loadAtoms, section} from './lib/atoms.mjs';
 import {cleanTitle, cleanGroupLabel, caseTerms, imperative, cleanDescription} from './lib/titles.mjs';
 import {fixProse} from './lib/prose.mjs';
 
@@ -300,6 +300,143 @@ function nodeFor(operation) {
   return lines.join('\n');
 }
 
+// Five more languages, each on what the language ships with, so a sample runs
+// without a package to install: PHP's curl extension, Java's java.net.http,
+// Go's net/http, .NET's HttpClient and Ruby's net/http. They render from the
+// same request as the curl, so a header cannot go missing from one of them.
+const indent = (text, pad) =>
+  text
+    .split('\n')
+    .map((line) => (line ? `${pad}${line}` : line))
+    .join('\n');
+const phpString = (value) => `'${String(value).replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`;
+const rubyString = phpString;
+
+function phpFor(operation) {
+  const {method, url, headers, body} = requestFor(operation);
+  const lines = ['<?php', '', `$ch = curl_init(${phpString(url)});`, 'curl_setopt_array($ch, ['];
+  lines.push(`    CURLOPT_CUSTOMREQUEST => ${phpString(method)},`);
+  lines.push('    CURLOPT_RETURNTRANSFER => true,');
+  lines.push('    CURLOPT_HTTPHEADER => [');
+  for (const header of headers) lines.push(`        ${phpString(`${header.name}: ${header.value}`)},`);
+  lines.push('    ],');
+  if (body !== undefined) {
+    lines.push("    CURLOPT_POSTFIELDS => <<<'JSON'");
+    lines.push(indent(JSON.stringify(body, null, 4), '    '));
+    lines.push('    JSON,');
+  }
+  lines.push(']);', '', '$response = curl_exec($ch);', "echo curl_getinfo($ch, CURLINFO_HTTP_CODE), ' ', $response, PHP_EOL;");
+  return lines.join('\n');
+}
+
+function javaFor(operation) {
+  const {method, url, headers, body} = requestFor(operation);
+  const lines = [
+    'import java.net.URI;',
+    'import java.net.http.HttpClient;',
+    'import java.net.http.HttpRequest;',
+    'import java.net.http.HttpResponse;',
+    '',
+    'HttpClient client = HttpClient.newHttpClient();',
+    'HttpRequest request = HttpRequest.newBuilder()',
+    `    .uri(URI.create(${JSON.stringify(url)}))`,
+  ];
+  for (const header of headers) lines.push(`    .header(${JSON.stringify(header.name)}, ${JSON.stringify(header.value)})`);
+  if (body !== undefined) {
+    lines.push(`    .method(${JSON.stringify(method)}, HttpRequest.BodyPublishers.ofString("""`);
+    lines.push(indent(JSON.stringify(body, null, 4), '        '));
+    lines.push('        """))');
+  } else {
+    lines.push(`    .method(${JSON.stringify(method)}, HttpRequest.BodyPublishers.noBody())`);
+  }
+  lines.push('    .build();', '');
+  lines.push('HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());');
+  lines.push('System.out.println(response.statusCode() + " " + response.body());');
+  return lines.join('\n');
+}
+
+function goFor(operation) {
+  const {method, url, headers, body} = requestFor(operation);
+  const lines = ['package main', '', 'import (', '\t"fmt"', '\t"io"', '\t"net/http"'];
+  if (body !== undefined) lines.push('\t"strings"');
+  lines.push(')', '', 'func main() {');
+  if (body !== undefined) {
+    lines.push(`\tbody := strings.NewReader(\`${JSON.stringify(body, null, 2)}\`)`);
+    lines.push(`\treq, err := http.NewRequest(${JSON.stringify(method)}, ${JSON.stringify(url)}, body)`);
+  } else {
+    lines.push(`\treq, err := http.NewRequest(${JSON.stringify(method)}, ${JSON.stringify(url)}, nil)`);
+  }
+  lines.push('\tif err != nil {', '\t\tpanic(err)', '\t}');
+  for (const header of headers) lines.push(`\treq.Header.Set(${JSON.stringify(header.name)}, ${JSON.stringify(header.value)})`);
+  lines.push(
+    '',
+    '\tresp, err := http.DefaultClient.Do(req)',
+    '\tif err != nil {',
+    '\t\tpanic(err)',
+    '\t}',
+    '\tdefer resp.Body.Close()',
+    '\tout, _ := io.ReadAll(resp.Body)',
+    '\tfmt.Println(resp.StatusCode, string(out))',
+    '}',
+  );
+  return lines.join('\n');
+}
+
+function csharpFor(operation) {
+  const {method, url, headers, body} = requestFor(operation);
+  const lines = [
+    'using var client = new HttpClient();',
+    `var request = new HttpRequestMessage(new HttpMethod(${JSON.stringify(method)}), ${JSON.stringify(url)});`,
+  ];
+  // Content-Type belongs to the content in .NET, so it is set there instead.
+  for (const header of headers) {
+    if (header.name.toLowerCase() === 'content-type') continue;
+    lines.push(`request.Headers.TryAddWithoutValidation(${JSON.stringify(header.name)}, ${JSON.stringify(header.value)});`);
+  }
+  if (body !== undefined) {
+    lines.push('request.Content = new StringContent("""');
+    lines.push(indent(JSON.stringify(body, null, 4), '    '));
+    lines.push('    """, System.Text.Encoding.UTF8, "application/json");');
+  }
+  lines.push('', 'var response = await client.SendAsync(request);');
+  lines.push('Console.WriteLine($"{(int)response.StatusCode} {await response.Content.ReadAsStringAsync()}");');
+  return lines.join('\n');
+}
+
+function rubyFor(operation) {
+  const {method, url, headers, body} = requestFor(operation);
+  const verb = method.charAt(0).toUpperCase() + method.slice(1).toLowerCase();
+  const lines = ["require 'net/http'", '', `uri = URI(${rubyString(url)})`, `request = Net::HTTP::${verb}.new(uri)`];
+  for (const header of headers) lines.push(`request[${rubyString(header.name)}] = ${rubyString(header.value)}`);
+  if (body !== undefined) {
+    lines.push("request.body = <<~'JSON'");
+    lines.push(indent(JSON.stringify(body, null, 2), '  '));
+    lines.push('JSON');
+  }
+  lines.push(
+    '',
+    "response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == 'https') do |http|",
+    '  http.request(request)',
+    'end',
+    'puts response.code, response.body',
+  );
+  return lines.join('\n');
+}
+
+/** Every language the request panel offers, in the order it lists them. */
+function samplesFor(operation) {
+  return [
+    {id: 'curl', label: 'cURL', language: 'bash', code: operation.curl},
+    {id: 'python', label: 'Python', language: 'python', code: pythonFor(operation)},
+    {id: 'node', label: 'Node.js', language: 'javascript', code: nodeFor(operation)},
+    {id: 'java', label: 'Java', language: 'java', code: javaFor(operation)},
+    {id: 'php', label: 'PHP', language: 'php', code: phpFor(operation)},
+    {id: 'go', label: 'Go', language: 'go', code: goFor(operation)},
+    {id: 'csharp', label: 'C#', language: 'csharp', code: csharpFor(operation)},
+    {id: 'ruby', label: 'Ruby', language: 'ruby', code: rubyFor(operation)},
+  ];
+}
+
 // Clear previous output so a renamed operation cannot linger.
 rmSync(dataDir, {recursive: true, force: true});
 mkdirSync(dataDir, {recursive: true});
@@ -313,6 +450,9 @@ let count = 0;
 // in the order a reader walks them, so the sidebar follows the journey
 // without the order being copied anywhere else.
 const journeys = loadJourneys();
+
+// The group for what a module's journeys do not name.
+const LEFTOVERS = 'Other operations';
 const opIndex = operationIndex();
 
 for (const {platform, version, files} of tree) {
@@ -597,6 +737,11 @@ for (const {platform, version, files} of tree) {
     const named = new Set(
       [...(journeys.get(module.id) ?? [])].flatMap((j) => j.steps.map((s) => s.op)),
     );
+    // A module with no journey file has nothing for its operations to be
+    // "other" than. Every NHCX module is one: grouped as leftovers, each opened
+    // onto a single "Other operations" folder holding all of it. Its operations
+    // sit directly under the module instead, where a journey would.
+    const hasJourneys = (journeys.get(module.id) ?? []).length > 0;
 
     const entries = [];
     for (const [path, item] of Object.entries(spec.paths ?? {})) {
@@ -642,7 +787,7 @@ for (const {platform, version, files} of tree) {
       // operation a journey names is read through that journey, so it carries
       // no tag and gets no page outside the journey.
       const unnamed = !named.has(id);
-      const tag = unnamed ? 'Other operations' : undefined;
+      const tag = unnamed && hasJourneys ? LEFTOVERS : undefined;
 
       const operation = {
         id,
@@ -693,11 +838,7 @@ for (const {platform, version, files} of tree) {
       operation.curl = curlFor(operation);
       // `curl` stays as it was: the console, the page markdown and llms-full
       // all read it by that name. The other two sit beside it.
-      operation.samples = [
-        {id: 'curl', label: 'cURL', language: 'bash', code: operation.curl},
-        {id: 'python', label: 'Python', language: 'python', code: pythonFor(operation)},
-        {id: 'node', label: 'Node', language: 'javascript', code: nodeFor(operation)},
-      ];
+      operation.samples = samplesFor(operation);
 
       writeFileSync(
         join(dataDir, `${name}.json`),
@@ -738,8 +879,8 @@ for (const {platform, version, files} of tree) {
       ].join('\n');
       writeFileSync(join(endpointsDir, `${name}.mdx`), frontMatter);
 
-        if (!byTag.has(tag)) byTag.set(tag, []);
-        byTag.get(tag).push({
+        if (!byTag.has(LEFTOVERS)) byTag.set(LEFTOVERS, []);
+        byTag.get(LEFTOVERS).push({
           type: 'doc',
           id: `${platform}/${version}/api/${module.dir}/endpoints/${name}`,
           label: operation.title,
@@ -776,11 +917,7 @@ for (const {platform, version, files} of tree) {
           stepped.requestExample = ex.value;
           stepped.exampleName = step.example;
           stepped.curl = curlFor(stepped);
-          stepped.samples = [
-            {id: 'curl', label: 'cURL', language: 'bash', code: stepped.curl},
-            {id: 'python', label: 'Python', language: 'python', code: pythonFor(stepped)},
-            {id: 'node', label: 'Node', language: 'javascript', code: nodeFor(stepped)},
-          ];
+          stepped.samples = samplesFor(stepped);
         }
         const dataName = stepDataName(step.op, journey.id, i);
         writeFileSync(join(dataDir, `${dataName}.json`), `${JSON.stringify(stepped, null, 2)}\n`);
@@ -856,7 +993,9 @@ for (const {platform, version, files} of tree) {
     }
     const groups = [...families.entries()].map(([family, members]) =>
       members.length === 1
-        ? members[0]
+        ? // `flat` tells the sidebar to list the items under the module itself
+          // rather than inside a category of this name.
+          {...members[0], ...(!hasJourneys && {flat: true})}
         : {
             label: family,
             children: members.map((member) => {
@@ -918,8 +1057,12 @@ for (const {platform, version, files} of tree) {
     const total = flatGroups.reduce((n, g) => n + g.items.length, 0);
     indexLines.push(`## ${module.label}`);
     indexLines.push('');
+    // A module with no journeys has no use cases to count or name.
+    const flat = entry.groups.every((g) => g.flat);
     indexLines.push(
-      total
+      total && flat
+        ? `${total} endpoint${total === 1 ? ', with' : 's, each with'} its own page in the sidebar.`
+        : total
         ? `${total} endpoint${total === 1 ? '' : 's'} across ${
             entry.groups.length
           } use case${entry.groups.length === 1 ? '' : 's'}: ${entry.groups
@@ -1071,6 +1214,51 @@ for (const {platform, version, files} of tree) {
       });
     }
     atomCodes.sort((a, b) => a.code.localeCompare(b.code, 'en', {numeric: true}));
+
+    // The same codes as data, for the searchable error table the Error codes
+    // tab opens. Each row adds what the table shows beyond the list: the
+    // literal message as sent, the plain-words reading, and the sheet of the
+    // Standard Error Codes workbook the code comes from.
+    if (platform === 'nhcx') {
+      const clean = (text) =>
+        text
+          .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+          .replace(/`/g, '')
+          .replace(/\s+/g, ' ')
+          .trim();
+      const rows = [];
+      for (const [, atom] of atoms) {
+        if (atom.fm.gateway !== platform || atom.fm.type !== 'error') continue;
+        const m = String(atom.fm.title).replace(/\s+/g, ' ').match(/^([A-Z]+(?:-[A-Z]+)*-\d+)[:,]\s+(.+)$/);
+        if (!m) continue;
+        const notes = (atom.fm.sources ?? []).map((src) => String(src.note ?? '')).join(' ');
+        const sheets = [
+          ...new Set(
+            [...notes.matchAll(/Sheets? ([^.]+)\./g)].flatMap((x) =>
+              x[1].split(',').map((sheet) => sheet.trim()),
+            ),
+          ),
+        ];
+        // The literal message is a text block in some atoms and a quoted
+        // line in the others; either is the text the sender puts on the wire.
+        const quoted = (atom.body.match(/(?:^> .*\n?)+/m) ?? [])[0] ?? '';
+        const message =
+          (atom.body.match(/```text\n([\s\S]*?)\n```/) ?? [])[1] ??
+          quoted.replace(/^> ?/gm, '').replace(/`/g, '');
+        const plain = clean(section(atom.body, 'In plain words').split(/\n\s*\n/)[0] ?? '');
+        const listed = atomCodes.find((e) => e.code === m[1]);
+        rows.push({
+          code: m[1],
+          meaning: m[2].charAt(0).toUpperCase() + m[2].slice(1),
+          plain,
+          message: message.replace(/\s+/g, ' ').trim(),
+          sheets,
+          paths: listed?.paths ?? [],
+        });
+      }
+      rows.sort((a, b) => a.code.localeCompare(b.code, 'en', {numeric: true}));
+      writeFileSync(join(dataDir, 'nhcx-errors.json'), `${JSON.stringify(rows, null, 2)}\n`);
+    }
   }
   const specCodeTotal = modules.reduce((n, module) => n + errorsFromSpec(module.spec).length, 0);
   const fromAtoms = specCodeTotal === 0 && atomCodes.length > 0;
@@ -1095,6 +1283,11 @@ for (const {platform, version, files} of tree) {
       // exist.
       ...(isHiecmV3
         ? [`Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/${platform}/${version}/troubleshooting/).`, '']
+        : []),
+      // The list cannot show that one code means two things from two payers.
+      // The guide can, so it is named before the first code, not after the last.
+      ...(fromAtoms
+        ? [`Read [reading error codes](/docs/${platform}/${version}/reference/error-code-guide) first. Eighteen \`PAYR-\` codes mean different things from two payers, and this list cannot show which reading you have met.`, '']
         : []),
       fromAtoms
         ? 'A code is on this page because the Catalogue records it. The specifications carry no code in their response examples, because a code reaches you sealed inside a callback rather than in the response to your call.'
@@ -1128,11 +1321,14 @@ for (const {platform, version, files} of tree) {
     }
     lines.push(
       fromAtoms
-        ? `${total} codes are recorded. The same code can mean two things from two payers, so read it with the message text beside it: [reading error codes](/docs/${platform}/${version}/reference/error-code-guide) has the collisions and what to do about each.`
+        ? `${total} codes are recorded. Read a code with its message text beside it: [reading error codes](/docs/${platform}/${version}/reference/error-code-guide) has the collisions and what to do about each.`
         : `${total} code${total === 1 ? '' : 's'} are recorded. A code you meet that is not here is one the specifications do not carry yet.`,
     );
     lines.push('');
-    writeGenerated(join(refDir, 'error-codes.md'), `${lines.join('\n')}\n`);
+    writeGenerated(
+      join(refDir, 'error-codes.md'),
+      `${lines.join('\n').replace(/^generated: true$/m, 'generated: true\nhide_last_update: true')}\n`,
+    );
     console.log(`Built the ${platform}/${version} error reference from ${total} recorded code(s).`);
   }
 
@@ -1160,6 +1356,9 @@ for (const {platform, version, files} of tree) {
       `description: What ${module.label} returns when a call fails, and what to do about it.`,
         `source: ${module.file}`,
       'generated: true',
+      // A generated page's last-updated date is the generator run, not a
+      // change anyone made, so the footer does not show it.
+      'hide_last_update: true',
       '---',
       '',
       `# ${module.label} errors`,
@@ -1180,9 +1379,11 @@ for (const {platform, version, files} of tree) {
         lines.push(
           `A ${module.label} code arrives sealed inside the callback, not in the response to your call. These are the codes the Catalogue records on this module's paths.`,
           '',
-          '## Codes', '', '| Code | What it means | Arrives on |', '| --- | --- | --- |',
+          '## Codes', '', '| Code | What it means |', '| --- | --- |',
         );
-        for (const e of here) lines.push(codeRow({...e, paths: e.paths.filter((x) => own.has(x))}));
+        // The page is already one module's, so the path column said the same
+        // thing on every row.
+        for (const e of here) lines.push(`| \`${e.code}\` | ${e.meaning.replace(/\|/g, '\\|')} |`);
         lines.push('');
       } else {
         lines.push(
@@ -1193,7 +1394,7 @@ for (const {platform, version, files} of tree) {
     }
 
     lines.push(
-      `${fromAtoms ? 'Every code above is recorded in the Catalogue.' : 'Every code above is recorded in the specification that owns it.'} The aggregated list across modules is at [error codes](/docs/${platform}/${version}/reference/error-codes).`,
+      `${fromAtoms ? 'Every code above is recorded in the Catalogue.' : 'Every code above is recorded in the specification that owns it.'} The aggregated list across modules is at [error codes](/docs/${platform}/${version}/reference/${platform === 'nhcx' ? 'pmjay-error-codes' : 'error-codes'}).`,
     );
     lines.push('');
 

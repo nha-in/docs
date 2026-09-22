@@ -71,24 +71,23 @@ paths:
 
         ### When to use
 
-        Before every call to `Adjudicator: act on a case`, because the role that answers is the only one whose action names are legal, and whenever a PMJAY case has gone quiet. The service moves cases on its own schedule, so read the role again rather than assuming the next step.
+        Call it before every `Adjudicator: act on a case`, and whenever a PMJAY case has gone quiet. The case moves on its own, so read the role each time.
 
         ### Preconditions
 
-        - `caseid` is the scheme's case ID, the digits at the end of the case reference the payer issues, not the hospital's claim number. The sandbox hands it out inside the `PAYR-1238` refusal of a later request for the same beneficiary, and in the payer's acknowledgement and status answers once a request is accepted.
+        - `caseid` is the scheme's case ID, not the hospital's claim number.
         - `payerid` is the scheme payer's code.
-        - An ordinary ABDM session token on `bearer_auth`, with `Content-Type` and `Accept` set to `application/json`.
+        - A valid ABDM session token.
 
         ### Postconditions
 
-        The service answers with the role that holds the case in `currentuserrole`, and `errormessage` empty. Once a case is decided, the lookup answers with no role at all. Asked about the hospital's own number, it answers `No Data found with the caseid <id>. Please use the current active case id.`
+        Returns the role that holds the case in `currentuserrole`. A decided case has no role.
 
         ### Common mistakes
 
         - Sending the hospital's claim number as `caseid`.
-        - Acting on the case without reading the role first, and being refused because it has moved.
-        - Reading a pre-authorisation role on a claim as an error. `PPD-Trust` while you are asking about a claim means the case has not yet left the pre-authorisation queue.
-        - Expecting a status API over NHCX for a PMJAY case.
+        - Acting on the case without reading the role first.
+        - Taking a pre-authorisation role on a claim as an error. The case is still in the pre-authorisation queue.
 
         ### Best practices
 
@@ -153,35 +152,25 @@ paths:
 
         ### When to use
 
-        After `Adjudicator: role for a case` has named the role that holds the case, with the action spelled exactly as that role takes it:
-
-        - `PPD-Trust`, pre-authorisation: `Approve`, `Reject`, `Query`, with `usecase` `PREAUTH`.
-        - `CEX-Trust`, first claim desk: `Forward`, with `usecase` `CLAIM`.
-        - `CPD-Trust`, second claim desk: `cpdApprove`, `cpdReject`, `Pending`, with `usecase` `CLAIM`.
-        - Medical Audit Committee: `Approve`, `Reject`, `iQuery`, with `usecase` `Medical Audit Committee`.
-        - `ACO-Trust` and `SHA-Trust`: `Approve`, `Reject`, `Pending`, with `usecase` `CLAIM`.
-        - Claim Review Committee: `Approve`, `Reject`, `Pending`, with `usecase` `Claim Review Committee`.
+        Call it after `Adjudicator: role for a case` names the role that holds the case. Each role accepts its own action names, and `usecase` must match the role.
 
         ### Preconditions
 
         - `casenumber` is the scheme's case ID, not the hospital's claim number.
-        - `action` is spelled exactly as the holding role takes it. It is case-sensitive.
-        - `receivercode` is the payer's registry ID and `sendercode` the provider's participant code, both without the `@hcx` suffix.
-        - `memberid` names the beneficiary, and `remarks` is free text the desk records.
-        - `correlationid` is a fresh UUID for every call.
-        - An ordinary ABDM session token on `bearer_auth`.
+        - `action` is spelled exactly as the current role expects. It is case-sensitive.
+        - A fresh `correlationid` for every call.
+        - A valid ABDM session token.
 
         ### Postconditions
 
-        Acting on the case makes the scheme issue its verdict, which reaches the provider over NHCX as an ordinary `ClaimResponse` on the original request's correlation ID. The desk call and that callback are two halves of one step, correlated by the case rather than by this call's own correlation ID. An action refused for the current role means the role has moved, or was never what you assumed.
+        The scheme's decision reaches you over NHCX as a normal `ClaimResponse` on the original request's correlation ID. If the action is refused, the role has moved, so read it again.
 
         ### Common mistakes
 
-        - Sending `Approve` to `CPD-Trust`, which takes `cpdApprove` and `cpdReject`.
-        - Sending `CLAIM` as the `usecase` at either committee, which takes its full name with spaces.
-        - Assuming a case walks all six claim roles. On the recorded sandbox run neither committee held the case.
-        - Reusing a correlation ID across desk calls.
-        - Raising a second request on a case while the first is still queued, which the sandbox refused with `PAYR-1322`.
+        - Sending `Approve` to `CPD-Trust`, which takes `cpdApprove`.
+        - Sending `CLAIM` as `usecase` at a committee, which takes its full name.
+        - Reusing a correlation ID across calls.
+        - Raising a second request on a case while the first is still queued.
 
         ### Best practices
 
@@ -266,23 +255,23 @@ paths:
 
         ### When to use
 
-        Sandbox testing only, after submitting a pre-authorisation or claim addressed to the dummy payer. `action` is `Approve`, `Reject` or `Query`. `method` is `Preauth` or `Claim`. `correlationId` is the correlation ID of the request you sent.
+        Use it in the sandbox only. It makes the dummy payer approve, reject or query a pre-authorisation or claim you sent it.
 
         ### Preconditions
 
-        - A pre-authorisation or claim has been sent to the dummy payer, `1000003538@hcx`, and you hold its correlation ID.
-        - Your callback address is registered, reachable by the exchange, and answers 202 within 30 seconds.
-        - An ordinary ABDM session token on `bearer_auth`.
+        - You sent a pre-authorisation or claim to the dummy payer and hold its correlation ID.
+        - Your callback address is registered and answers `202` within 30 seconds.
+        - A valid ABDM session token.
 
         ### Postconditions
 
-        The answer arrives on your callback for the request's family, `/v1/preauth/on_submit` for a pre-authorisation, as a sealed `ClaimResponse` or as a `ProtocolResponse` carrying a refusal, on the correlation ID you sent. A `Query` makes the dummy payer raise a communication request instead, which you answer on `/v1/communication/on_request` before the decision comes back on `on_submit`.
+        The decision arrives on your callback, for example `/v1/preauth/on_submit`, on the same correlation ID. A `Query` first sends you a communication request, which you answer on `/v1/communication/on_request`.
 
         ### Common mistakes
 
-        - Passing the correlation ID of a request that was not addressed to the dummy payer.
-        - Waiting for the decision after a `Query` without answering the communication request first.
-        - Treating a refusal of the empty smoke-test bundle as a failure. The dummy payer rejects it because there is no `Claim` inside, and that rejection is the expected answer.
+        - Passing the correlation ID of a request not sent to the dummy payer.
+        - Waiting for a decision after a `Query` without answering the communication request.
+        - Reading the rejection of an empty test bundle as a failure. It is the expected answer.
 
         ### Best practices
 
@@ -336,23 +325,23 @@ paths:
 
         ### When to use
 
-        Sandbox testing of the payment notice flow, once your `/v1/paymentnotice/request` callback is in place. The body names your participant code in `providerId`. It also carries a `claimNumber` field, left empty in this collection, whose effect the documentation does not describe.
+        Use it in the sandbox to make the dummy payer send you a payment notice. Put your own participant code in `providerId`.
 
         ### Preconditions
 
-        - Your participant is registered on the sandbox with a reachable callback address.
-        - You host `/v1/paymentnotice/request` and answer it 202 within 30 seconds.
-        - An ordinary ABDM session token.
+        - Your participant is registered with a reachable callback address.
+        - You host `/v1/paymentnotice/request` and answer it `202` within 30 seconds.
+        - A valid ABDM session token.
 
         ### Postconditions
 
-        The dummy payer sends a payment notice to the provider named, arriving on `/v1/paymentnotice/request`. The provider acknowledges it on `/v1/paymentnotice/on_request`.
+        The notice arrives on `/v1/paymentnotice/request`. You acknowledge it on `/v1/paymentnotice/on_request`.
 
         ### Common mistakes
 
-        - Triggering the notice before the `/v1/paymentnotice/request` handler is in place.
+        - Triggering the notice before your `/v1/paymentnotice/request` handler is ready.
         - Sending another participant's code in `providerId`.
-        - Receiving the notice and never sending the acknowledgement on `/v1/paymentnotice/on_request`.
+        - Never sending the acknowledgement on `/v1/paymentnotice/on_request`.
 
         ### Best practices
 

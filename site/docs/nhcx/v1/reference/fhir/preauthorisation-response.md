@@ -93,7 +93,7 @@ NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-
 | `identifier[]` | system `https://facility.abdm.gov.in`, value `IN1910000151` |
 | `identifier[].type.coding[]` | `NPI` National provider identifier in `http://terminology.hl7.org/CodeSystem/v2-0203` |
 | `type[].coding[]` | `prov` Healthcare Provider in `http://terminology.hl7.org/CodeSystem/organization-type` |
-| `name` | `KyroCare Multispeciality Hospital` |
+| `name` | `XYZ Multispeciality Hospital` |
 
 ### 5. Coverage
 

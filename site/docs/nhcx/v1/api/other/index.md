@@ -9,16 +9,14 @@ generated: true
 
 # Other
 
-Claims are often not fully approved first time, for mundane reasons: missing documents, policy interpretation differences, package or pricing discrepancies.
+Calls that belong to no single use case: notification subscription, deletion, the status callback, the protocol error report and the service's own Swagger documents.
+
+Reprocess, cancellation and shortfall moved to their own group: [Reprocess, cancel and shortfall](/docs/nhcx/v1/api/task/).
 
 ## Calls
 
 | Call | Method and path | What it does |
 | --- | --- | --- |
-| [Task submit (reprocess or cancel)](/docs/nhcx/v1/api/other/endpoints/other-v1-task-submit) | `POST /v1/task/submit` | Provider sends a FHIR Task asking the payer to reprocess a rejected or short-paid claim or to cancel a preauth; Task.code and reasonCode set the intent. |
-| [Task callback (reprocess or cancel outcome)](/docs/nhcx/v1/api/other/endpoints/other-v1-task-on-submit) | `POST /v1/task/on_submit` | Payer returns a Task bundle with Task.status completed whose Task.output references a ClaimResponse carrying the reprocess or cancellation outcome. |
-| [Task submit (internal variant) (adapter)](/docs/nhcx/v1/api/other/endpoints/other-internal-v1-task-submit) | `POST /internal/v1/task/submit` | Internal twin of /v1/task/submit on the taskhcxservice, operationId hcxTaskPostInternal, with the same JWEPayload Task body and 202 envelope. |
-| [Task callback (internal variant) (adapter)](/docs/nhcx/v1/api/other/endpoints/other-internal-v1-task-on-submit) | `POST /internal/v1/task/on_submit` | Internal twin of /v1/task/on_submit (hcxOnTaskPostInternal): the payer Task bundle wrapping the ClaimResponse outcome of a reprocess or cancel. |
 | [Notification subscribe](/docs/nhcx/v1/api/other/endpoints/other-v1-notification-subscribe) | `POST /v1/notification/subscribe` | A Beneficiary Service Provider (PHR app) subscribes an ABHA id to notification topics; NHCX persists it synchronously, Last-Linked-Wins per ABHA id. |
 | [Notification on_subscribe](/docs/nhcx/v1/api/other/endpoints/other-v1-notification-on-subscribe) | `POST /v1/notification/on_subscribe` | BSP-side subscription acknowledgement; the same name denotes the callback where NHCX pushes claim-event notifications for a subscribed ABHA id. |
 | [Delete records (troubleshooting)](/docs/nhcx/v1/api/other/endpoints/other-v1-delete) | `POST /v1/delete` | Internal troubleshooting operation on the claim service that deletes records by correlationid and action; not part of the business transaction flows. |
@@ -36,8 +34,6 @@ The exchange posts these to the `endpoint_url` you registered. Answer each with 
 
 | Path | Hosted by |
 | --- | --- |
-| `/v1/task/submit` | The payer |
-| `/v1/task/on_submit` | The provider |
 | `/v1/on_status` | The provider |
 | `/v1/error` | Every participant |
 
@@ -50,7 +46,6 @@ The exchange posts these to the `endpoint_url` you registered. Answer each with 
 
 ## Guides that use these calls
 
-- [Cancel, reprocess and shortfall](/docs/nhcx/v1/reference/fhir/cancel-reprocess-and-shortfall)
 - [Predetermination, status and search](/docs/nhcx/v1/reference/fhir/predetermination-status-and-search)
 - [Notifications and patient apps](/docs/nhcx/v1/reference/notifications-and-patient-apps)
 - [Accepted with 202, and no callback arrives](/docs/nhcx/v1/troubleshooting/accepted-then-no-callback)

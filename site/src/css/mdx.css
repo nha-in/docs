@@ -414,3 +414,569 @@ li.docs-step:last-child {
   background-repeat: no-repeat;
   background-attachment: local, scroll;
 }
+
+/* ---------- Use case cards ----------
+
+   The use case matrix on the NHCX use cases page. Each use case is a
+   <details> accordion: a coloured header with the number and title, opening
+   to a plain-language explanation and the API call beside the callback. */
+
+.usecase-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.625rem;
+  margin: 1rem 0 2rem;
+}
+
+.usecase-card {
+  --uc-hue: oklch(55.4% 0.046 257.417);
+  --uc-ink: var(--text-heading);
+  border: 1px solid color-mix(in oklab, var(--uc-hue) 35%, var(--border));
+  border-radius: var(--radius-panel);
+  background: var(--surface);
+  overflow: hidden;
+  scroll-margin-top: 5rem;
+}
+
+.usecase-card__head {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.625rem 0.875rem;
+  background: color-mix(in oklab, var(--uc-hue) 10%, transparent);
+  color: var(--text-heading);
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+}
+
+.usecase-card__head::-webkit-details-marker {
+  display: none;
+}
+
+.usecase-card__head::after {
+  content: '';
+  margin-left: auto;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 2px solid var(--text-faint);
+  border-bottom: 2px solid var(--text-faint);
+  transform: rotate(45deg);
+  transition: transform 0.15s ease;
+}
+
+.usecase-card[open] > .usecase-card__head::after {
+  transform: rotate(225deg);
+}
+
+.usecase-card[open] > .usecase-card__head {
+  border-bottom: 1px solid color-mix(in oklab, var(--uc-hue) 35%, var(--border));
+}
+
+.usecase-card__head:hover {
+  background: color-mix(in oklab, var(--uc-hue) 16%, transparent);
+}
+
+.usecase-card__no {
+  display: inline-block;
+  min-width: 2.5rem;
+  padding: 0 0.375rem;
+  border-radius: var(--radius-chip);
+  background: color-mix(in oklab, var(--uc-hue) 18%, transparent);
+  color: var(--uc-ink);
+  font-size: 0.8125rem;
+  text-align: center;
+}
+
+.usecase-card__body {
+  padding: 0.75rem 0.875rem 0.875rem;
+  font-size: 0.9375rem;
+}
+
+.markdown .usecase-card__text p {
+  margin-bottom: 0.75rem;
+}
+
+.usecase-card__calls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+
+@media (max-width: 640px) {
+  .usecase-card__calls {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.usecase-card__calls code {
+  font-size: 0.8125rem;
+}
+
+.usecase-card__label {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: var(--text-faint);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* ---------- Workflow status pills ----------
+
+   The status an NHCX message travels with, coloured by kind on the workflow
+   codes page: initiated sky, partial amber, complete emerald, error red. */
+
+.wf-status {
+  --wf-hue: oklch(55.4% 0.046 257.417);
+  --wf-ink: oklch(37.2% 0.044 257.287);
+  display: inline-block;
+  margin: 0.125rem 0.25rem 0.125rem 0;
+  padding: 0.0625rem 0.5rem;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--wf-hue) 15%, transparent);
+  color: var(--wf-ink);
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.wf-status--initiated { --wf-hue: oklch(68.5% 0.169 237.323); --wf-ink: oklch(50% 0.134 242.749); }
+.wf-status--partial { --wf-hue: oklch(76.9% 0.188 70.08); --wf-ink: oklch(55.5% 0.163 48.998); }
+.wf-status--complete { --wf-hue: oklch(69.6% 0.17 162.48); --wf-ink: oklch(50.8% 0.118 165.612); }
+.wf-status--error { --wf-hue: oklch(63.7% 0.237 25.331); --wf-ink: oklch(50.5% 0.213 27.518); }
+
+[data-theme='dark'] .wf-status--initiated { --wf-ink: oklch(82.8% 0.111 230.318); }
+[data-theme='dark'] .wf-status--partial { --wf-ink: oklch(87.9% 0.169 91.605); }
+[data-theme='dark'] .wf-status--complete { --wf-ink: oklch(84.5% 0.143 164.978); }
+[data-theme='dark'] .wf-status--error { --wf-ink: oklch(80.8% 0.114 19.571); }
+
+/* ---------- Workflow code explorer ----------
+
+   The searchable, tabbed catalogue on the workflow codes page. */
+
+.wf-explorer {
+  margin: 1rem 0 2rem;
+}
+
+.wf-explorer__controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.wf-explorer__search {
+  width: 100%;
+  max-width: 24rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  color: var(--text-body);
+  font-size: 0.875rem;
+}
+
+.wf-explorer__search:focus {
+  outline: 2px solid var(--accent-line);
+  outline-offset: 1px;
+}
+
+.wf-explorer__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.wf-explorer__tab {
+  padding: 0.375rem 0.75rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text-faint);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.wf-explorer__tab:hover {
+  color: var(--text-heading);
+  border-color: var(--accent-line);
+}
+
+.wf-explorer__tab--active,
+.wf-explorer__tab--active:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-contrast);
+}
+
+.wf-explorer__count {
+  margin-left: 0.25rem;
+  opacity: 0.75;
+  font-variant-numeric: tabular-nums;
+}
+
+.wf-explorer__panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.wf-explorer__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-panel);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.markdown .wf-explorer__list > li {
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.875rem;
+}
+
+.markdown .wf-explorer__list > li:first-child {
+  border-top: 0;
+}
+
+.wf-explorer__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.625rem;
+}
+
+.markdown .wf-explorer__head,
+.markdown .wf-explorer__desc,
+.markdown .wf-explorer__note {
+  margin: 0;
+}
+
+.wf-explorer__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.625rem;
+}
+
+.wf-explorer__list code {
+  display: inline-block;
+  min-width: 3rem;
+  text-align: center;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.wf-explorer__name {
+  flex: 1;
+  min-width: 0;
+  color: var(--text-heading);
+  font-weight: 600;
+}
+
+.wf-explorer__row .wf-explorer__name {
+  font-weight: 400;
+}
+
+.wf-explorer__tag {
+  padding: 0 0.5rem;
+  border-radius: var(--radius-chip);
+  background: var(--surface-sunken);
+  color: var(--text-faint);
+  font-size: 0.75rem;
+}
+
+.markdown .wf-explorer__desc {
+  margin-top: 0.125rem;
+  color: var(--text-faint);
+  font-size: 0.8125rem;
+}
+
+.markdown .wf-explorer__note {
+  color: var(--text-faint);
+  font-size: 0.875rem;
+}
+
+.wf-explorer__family .wf-explorer__head {
+  margin-bottom: 0.125rem;
+}
+
+.wf-explorer__family .wf-explorer__list {
+  margin-top: 0.5rem;
+}
+
+.markdown .wf-explorer__empty {
+  margin: 0;
+  padding: 1rem;
+  color: var(--text-faint);
+  font-style: italic;
+  text-align: center;
+}
+
+/* Each role in the use case matrix has its own colour, on the number badge
+   and a light wash on the title row, so the groups read apart at a glance. */
+.usecase-grid--shared .usecase-card { --uc-hue: oklch(68.5% 0.169 237.323); --uc-ink: oklch(50% 0.134 242.749); }
+.usecase-grid--provider .usecase-card { --uc-hue: oklch(69.6% 0.17 162.48); --uc-ink: oklch(50.8% 0.118 165.612); }
+.usecase-grid--pmjay .usecase-card { --uc-hue: oklch(60.6% 0.25 292.717); --uc-ink: oklch(49.1% 0.27 292.581); }
+.usecase-grid--payer .usecase-card { --uc-hue: oklch(76.9% 0.188 70.08); --uc-ink: oklch(55.5% 0.163 48.998); }
+.usecase-grid--patient .usecase-card { --uc-hue: oklch(64.5% 0.246 16.439); --uc-ink: oklch(51.4% 0.222 16.935); }
+
+[data-theme='dark'] .usecase-grid--shared .usecase-card { --uc-ink: oklch(82.8% 0.111 230.318); }
+[data-theme='dark'] .usecase-grid--provider .usecase-card { --uc-ink: oklch(84.5% 0.143 164.978); }
+[data-theme='dark'] .usecase-grid--pmjay .usecase-card { --uc-ink: oklch(81.1% 0.111 293.571); }
+[data-theme='dark'] .usecase-grid--payer .usecase-card { --uc-ink: oklch(87.9% 0.169 91.605); }
+[data-theme='dark'] .usecase-grid--patient .usecase-card { --uc-ink: oklch(81% 0.117 11.638); }
+
+/* Tables inside a use case card stay inside it: the page-level bleed into the
+   article padding would push them past the card's border. */
+.markdown .usecase-card .table-scroll {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  margin-inline: 0;
+  padding-inline: 0;
+  margin-bottom: 1rem;
+}
+
+.markdown .usecase-card table {
+  font-size: 0.875rem;
+}
+
+/* The API call and callback in a use case card link to the API reference. */
+.markdown .usecase-card a.usecase-card__ref {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+  text-decoration: none;
+}
+
+.usecase-card__ref-label {
+  color: var(--accent);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.usecase-card__ref-label::after {
+  content: ' \2192';
+}
+
+/* ---------- NHCX adapter download ----------
+
+   The download box on the NHCX adapter page: the latest release, an OS and
+   an architecture, the archive, its checksums and a terminal one-liner. */
+
+.adapter-dl {
+  margin: 1rem 0 1.5rem;
+  padding: 1rem 1.125rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-panel);
+  background: var(--surface);
+}
+
+.adapter-dl__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 0.875rem;
+  font-size: 0.875rem;
+}
+
+.adapter-dl__version {
+  color: var(--text-heading);
+  font-weight: 600;
+}
+
+.adapter-dl__pickers {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 640px) {
+  .adapter-dl__pickers {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.adapter-dl__pickers label span {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: var(--text-faint);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.adapter-dl__pickers select {
+  width: 100%;
+  padding: 0.5rem 0.625rem;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  color: var(--text-body);
+  font-size: 0.875rem;
+}
+
+.adapter-dl__file {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+}
+
+.markdown .adapter-dl a.adapter-dl__button.adapter-dl__button {
+  /* Doubled class: outranks the site-wide .markdown a link colour. */
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-control);
+  background: var(--accent);
+  color: var(--accent-contrast);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.markdown .adapter-dl a.adapter-dl__button.adapter-dl__button:hover {
+  color: var(--accent-contrast);
+  background: var(--accent-hover);
+}
+
+.adapter-dl__size {
+  color: var(--text-faint);
+  font-size: 0.8125rem;
+}
+
+.adapter-dl__sums {
+  font-size: 0.8125rem;
+}
+
+.markdown .adapter-dl__label,
+.markdown .adapter-dl__note {
+  margin: 1rem 0 0.375rem;
+  color: var(--text-faint);
+  font-size: 0.8125rem;
+}
+
+.markdown .adapter-dl__note {
+  margin: 0;
+}
+
+.markdown .adapter-dl__cmd {
+  margin: 0;
+  font-size: 0.8125rem;
+}
+
+/* ---------- Error code explorer ----------
+
+   The PMJAY error code table the Error codes tab opens: search and area
+   filters from the workflow explorer, then one wide table. The page has no
+   sidebar, so the table gets the full width. */
+
+/* The error code page has no sidebar, and five columns do not fit in a column
+   set for prose, so the whole page widens: intro and table share one width. */
+.docs-content:has(.err-explorer) {
+  max-width: 1400px;
+}
+
+.err-explorer {
+  margin: 1rem 0 2rem;
+}
+
+.markdown .err-explorer__count {
+  margin: 0 0 0.5rem;
+  color: var(--text-faint);
+  font-size: 0.8125rem;
+}
+
+.err-explorer__scroll {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-panel);
+}
+
+.markdown table.err-explorer__table {
+  width: 100%;
+  margin: 0;
+  border: 0;
+  font-size: 0.875rem;
+}
+
+.markdown table.err-explorer__table thead {
+  position: sticky;
+  top: 0;
+  background: var(--surface-sunken);
+}
+
+.markdown table.err-explorer__table th,
+.markdown table.err-explorer__table td {
+  padding: 0.625rem 0.75rem;
+  vertical-align: top;
+}
+
+.markdown table.err-explorer__table td:nth-child(2) {
+  min-width: 18rem;
+}
+
+.markdown table.err-explorer__table td:nth-child(3) {
+  min-width: 16rem;
+}
+
+.err-explorer__plain {
+  display: block;
+  margin-top: 0.25rem;
+  color: var(--text-faint);
+  font-size: 0.8125rem;
+}
+
+.err-explorer__message {
+  color: var(--text-body);
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+.err-explorer__area {
+  display: inline-block;
+  margin: 0 0.25rem 0.25rem 0;
+  white-space: nowrap;
+}
+
+.markdown .err-explorer__paths code {
+  display: block;
+  margin-bottom: 0.25rem;
+  white-space: nowrap;
+  font-size: 0.75rem;
+}
+
+.err-code {
+  display: inline-block;
+  padding: 0.0625rem 0.5rem;
+  border-radius: 999px;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.err-code--gateway { background: color-mix(in oklab, oklch(68.5% 0.169 237.323) 15%, transparent); color: oklch(50% 0.134 242.749); }
+.err-code--payer { background: color-mix(in oklab, oklch(76.9% 0.188 70.08) 18%, transparent); color: oklch(55.5% 0.163 48.998); }
+.err-code--live { background: color-mix(in oklab, oklch(60.6% 0.25 292.717) 15%, transparent); color: oklch(49.1% 0.27 292.581); }
+
+[data-theme='dark'] .err-code--gateway { color: oklch(82.8% 0.111 230.318); }
+[data-theme='dark'] .err-code--payer { color: oklch(87.9% 0.169 91.605); }
+[data-theme='dark'] .err-code--live { color: oklch(81.1% 0.111 293.571); }

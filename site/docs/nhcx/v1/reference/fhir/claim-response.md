@@ -92,7 +92,7 @@ NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-
 | `identifier[]` | system `https://facility.abdm.gov.in`, value `IN1910000151` |
 | `identifier[].type.coding[]` | `NPI` National provider identifier in `http://terminology.hl7.org/CodeSystem/v2-0203` |
 | `type[].coding[]` | `prov` Healthcare Provider in `http://terminology.hl7.org/CodeSystem/organization-type` |
-| `name` | `KyroCare Multispeciality Hospital` |
+| `name` | `XYZ Multispeciality Hospital` |
 
 ### 5. Coverage
 
@@ -190,7 +190,7 @@ The adjudicated claim, item by item, with any deduction and its reason. The ackn
 
 | Code | Name | Authored by | `x-hcx-status` | Means |
 | :-- | :-- | :-- | :-- | :-- |
-| `25` | Claim Request Received | payer | `response.partial`, `response.error` | Final claim received by payer |
+| `25` | Claim Doc Ack | payer | `response.partial`, `response.error` | The payer acknowledges the claim documents: success or failure |
 | `26` | Claim Request Approved | payer | `response.complete` | Final claim approved |
 | `27` | Claim Request Queried | payer | `request.initiated`, `response.partial/complete` | Final claim queried - payer needs additional documents; under PMJAY answer with 161 |
 | `28` | Claim Request In Process | payer | `response.partial` | Final claim is being processed by payer |

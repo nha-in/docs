@@ -5,7 +5,7 @@ import {
   activeTab,
   isLanding,
   tabHref,
-  tabs,
+  visibleTabs,
   useRoutePath,
 } from '@site/src/config/navigation';
 
@@ -25,7 +25,7 @@ export default function DocsTabs() {
 
   return (
     <nav className="docs-tabs" aria-label="Documentation sections">
-      {tabs.map((tab) => {
+      {visibleTabs(pathname).map((tab) => {
         const isActive = tab === current;
         return (
           <Link

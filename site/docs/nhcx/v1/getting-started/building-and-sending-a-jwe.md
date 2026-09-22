@@ -18,6 +18,8 @@ A message on the exchange is a JSON Web Encryption token: a readable protected h
 
 Every field the exchange needs to route and log the message. All the `x-hcx-` names are fixed.
 
+Every field, its obligation and its allowed values are in [The JWE message format](/docs/nhcx/v1/getting-started/jwe-message-format).
+
 ```json
 {
   "alg": "RSA-OAEP-256",
@@ -39,7 +41,10 @@ Every field the exchange needs to route and log the message. All the `x-hcx-` na
 - `workflow_id` says which step this is. `12` is a new preauthorisation.
 - `timestamp` is ISO 8601. Which zone is contested: the handbook says Indian time and that UTC will fail validation, the FAQ says UTC with a trailing `Z`. The sample bundles use `+05:30`. Confirm before building; it is a validated field.
 - `status` is always `request.initiated` on something you initiate.
-- `ben-abha-id` is the beneficiary's ABHA number without hyphens.
+- `ben-abha-id` is the beneficiary's ABHA number. Its form depends on where it travels:
+  - Inside the bundle, the ABHA identifier is 14 digits without hyphens.
+  - On this header, the published sample also sends 14 digits without hyphens. The gateway's own refusal, `NHCX-1018`, asks for `XX-XXXX-XXXX-XXXX`.
+  - Store the 14 digits once and format them where you build the header. If the gateway answers `NHCX-1018`, send the hyphenated form on the header and leave the bundle alone.
 
 ## The smallest possible bundle
 

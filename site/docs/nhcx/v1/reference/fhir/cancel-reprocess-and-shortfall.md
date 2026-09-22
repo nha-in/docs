@@ -11,6 +11,30 @@ generated: true
 
 The post-decision exchanges. All are `Task` bundles on `/v1/task/submit`, answered on `/v1/task/on_submit`, and `Task.code` with its reason is the only thing that tells them apart.
 
+## One endpoint, five requests
+
+`/v1/task/submit` has no path per purpose. Build the request from this table, and route an inbound one by the same three columns.
+
+| You want to | `Task.code` | Reason | Workflow on the request | Workflow on the answer |
+| :-- | :-- | :-- | :-- | :-- |
+| Cancel a preauthorisation | `cancel` | One of the seven `ndhm-reason-code` values in [rule 1](#1-cancel) | `PC01` | `PC02` |
+| Reprocess a rejected claim | `reprocess` | `claimrejected` | `36` | `37`, then the verdict on the claim's thread |
+| Claim a shortfall | `reprocess` | `partialpayment` | `36` | `37`, then the verdict on the claim's thread |
+| Release an amount | `release` | `partialpayment` | Not published | Not published |
+| Nullify a claim | `nullify` | Not published | Not published | Not published |
+
+`suspend` is a listed code with no exchange behind it, so it has no row. A payment acknowledgement does not travel here: it goes on `/v1/paymentnotice/on_request`, as [Payment notice and acknowledgement](/docs/nhcx/v1/reference/fhir/payment-notice-and-acknowledgement) sets out.
+
+## The answer is nested, unlike every other callback
+
+On every other use case the decision is an entry you read straight from the callback bundle. Here the callback's first resource is a `Task`, and the decision sits behind it:
+
+1. Read `Task.output[0].valueReference.reference`, for example `ClaimResponse/cr-reprocess-approved`.
+2. Find the `ClaimResponse` entry with that identity in the same bundle.
+3. Read the result from that `ClaimResponse`, as [rule 6](#6-the-answer) sets out.
+
+A parser that looks for a `ClaimResponse` as the bundle's leading resource finds nothing on this callback.
+
 ## Cancel
 
 Sent on `/v1/task/submit`, workflow PC01.
@@ -52,7 +76,7 @@ NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-
 | `identifier[]` | system `https://nhcx.abdm.gov.in`, value `IN1910000151` |
 | `identifier[].type.coding[]` | `NPI` National provider identifier in `http://terminology.hl7.org/CodeSystem/v2-0203` |
 | `type[].coding[]` | `prov` Healthcare Provider in `http://terminology.hl7.org/CodeSystem/organization-type` |
-| `name` | `KyroCare Multispeciality Hospital` |
+| `name` | `XYZ Multispeciality Hospital` |
 
 #### 3. Organization (pay)
 
@@ -111,7 +135,7 @@ NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-
 | `identifier[]` | system `https://nhcx.abdm.gov.in`, value `IN1910000151` |
 | `identifier[].type.coding[]` | `NPI` National provider identifier in `http://terminology.hl7.org/CodeSystem/v2-0203` |
 | `type[].coding[]` | `prov` Healthcare Provider in `http://terminology.hl7.org/CodeSystem/organization-type` |
-| `name` | `KyroCare Multispeciality Hospital` |
+| `name` | `XYZ Multispeciality Hospital` |
 
 #### 3. Organization (pay)
 
@@ -380,8 +404,8 @@ One endpoint, several jobs, told apart by the Task's code and reason: reprocess 
 
 | | |
 | :-- | :-- |
-| **API** | `/v1/task/submit` [`apis/13-other/v1-task-submit.bru`](/docs/nhcx/v1/api/other/endpoints/other-v1-task-submit) |
-| **Callback** | `/v1/task/on_submit` [`apis/13-other/v1-task-on-submit.bru`](/docs/nhcx/v1/api/other/endpoints/other-v1-task-on-submit) |
+| **API** | `/v1/task/submit` [`apis/13-other/v1-task-submit.bru`](/docs/nhcx/v1/api/task/endpoints/task-v1-task-submit) |
+| **Callback** | `/v1/task/on_submit` [`apis/13-other/v1-task-on-submit.bru`](/docs/nhcx/v1/api/task/endpoints/task-v1-task-on-submit) |
 | **Workflow** | PC01 cancel, 36 reprocess or shortfall |
 | **Carries JWE** | yes |
 | **Focal resource** | `Task` |
@@ -424,8 +448,8 @@ A Task with code cancel, the case number as input and one of seven reasons: trea
 
 | | |
 | :-- | :-- |
-| **API** | `/v1/task/submit` [`apis/13-other/v1-task-submit.bru`](/docs/nhcx/v1/api/other/endpoints/other-v1-task-submit) |
-| **Callback** | `/v1/task/on_submit` [`apis/13-other/v1-task-on-submit.bru`](/docs/nhcx/v1/api/other/endpoints/other-v1-task-on-submit) |
+| **API** | `/v1/task/submit` [`apis/13-other/v1-task-submit.bru`](/docs/nhcx/v1/api/task/endpoints/task-v1-task-submit) |
+| **Callback** | `/v1/task/on_submit` [`apis/13-other/v1-task-on-submit.bru`](/docs/nhcx/v1/api/task/endpoints/task-v1-task-on-submit) |
 | **Workflow** | PC01 |
 | **Carries JWE** | yes |
 | **Focal resource** | `Task` |
@@ -466,8 +490,8 @@ An appeal, not a resubmission: a Task with code reprocess and reason claimreject
 
 | | |
 | :-- | :-- |
-| **API** | `/v1/task/submit` [`apis/13-other/v1-task-submit.bru`](/docs/nhcx/v1/api/other/endpoints/other-v1-task-submit) |
-| **Callback** | `/v1/task/on_submit` [`apis/13-other/v1-task-on-submit.bru`](/docs/nhcx/v1/api/other/endpoints/other-v1-task-on-submit) |
+| **API** | `/v1/task/submit` [`apis/13-other/v1-task-submit.bru`](/docs/nhcx/v1/api/task/endpoints/task-v1-task-submit) |
+| **Callback** | `/v1/task/on_submit` [`apis/13-other/v1-task-on-submit.bru`](/docs/nhcx/v1/api/task/endpoints/task-v1-task-on-submit) |
 | **Workflow** | 36 |
 | **Carries JWE** | yes |
 | **Focal resource** | `Task` |
@@ -509,8 +533,8 @@ The same Task with reason partialpayment and an amount capped at the difference,
 
 | | |
 | :-- | :-- |
-| **API** | `/v1/task/submit` [`apis/13-other/v1-task-submit.bru`](/docs/nhcx/v1/api/other/endpoints/other-v1-task-submit) |
-| **Callback** | `/v1/task/on_submit` [`apis/13-other/v1-task-on-submit.bru`](/docs/nhcx/v1/api/other/endpoints/other-v1-task-on-submit) |
+| **API** | `/v1/task/submit` [`apis/13-other/v1-task-submit.bru`](/docs/nhcx/v1/api/task/endpoints/task-v1-task-submit) |
+| **Callback** | `/v1/task/on_submit` [`apis/13-other/v1-task-on-submit.bru`](/docs/nhcx/v1/api/task/endpoints/task-v1-task-on-submit) |
 | **Workflow** | 36 |
 | **Carries JWE** | yes |
 | **Focal resource** | `Task` |
@@ -552,9 +576,9 @@ The answer to a reprocess, shortfall or cancel. A cancellation done is PC02 and 
 
 | | |
 | :-- | :-- |
-| **API** | `/v1/task/on_submit` [`apis/13-other/v1-task-on-submit.bru`](/docs/nhcx/v1/api/other/endpoints/other-v1-task-on-submit) |
-| **Callback** | `/v1/task/submit` [`apis/13-other/v1-task-submit.bru`](/docs/nhcx/v1/api/other/endpoints/other-v1-task-submit) |
-| **Workflow** | 251 acknowledged, 252 approved, 253 rejected, 254 queried, PC02 cancelled, 37 arbitration acknowledged |
+| **API** | `/v1/task/on_submit` [`apis/13-other/v1-task-on-submit.bru`](/docs/nhcx/v1/api/task/endpoints/task-v1-task-on-submit) |
+| **Callback** | `/v1/task/submit` [`apis/13-other/v1-task-submit.bru`](/docs/nhcx/v1/api/task/endpoints/task-v1-task-submit) |
+| **Workflow** | 252 approved, 253 rejected, 254 queried, PC02 cancelled, 37 arbitration acknowledged |
 | **Carries JWE** | yes |
 | **Focal resource** | `Task` |
 
@@ -576,7 +600,6 @@ The answer to a reprocess, shortfall or cancel. A cancellation done is PC02 and 
 
 | Code | Name | Authored by | `x-hcx-status` | Means |
 | :-- | :-- | :-- | :-- | :-- |
-| `251` | Reprocess Request Received | payer | `response.complete` | Reprocess request received |
 | `252` | Reprocess Request Approved | payer | `response.complete` | Reprocess request approved |
 | `253` | Reprocess Request Rejected | payer | `response.complete` | Reprocess request rejected |
 | `254` | Reprocess Request Queried | payer | `request.initiated` | Reprocess request queried |

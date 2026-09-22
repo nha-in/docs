@@ -71,6 +71,21 @@
   padding-left: 1.25rem;
 }
 
+/* Tailwind's preflight sets `list-style: none` on every list. Lists written
+   in markdown carry no class, so give those their markers back and leave
+   component lists (tabs, steps, cards) alone. */
+.markdown ul:not([class]) {
+  list-style: disc outside;
+}
+
+.markdown ol:not([class]) {
+  list-style: decimal outside;
+}
+
+.markdown ul:not([class]) ul:not([class]) {
+  list-style-type: circle;
+}
+
 .markdown li + li {
   margin-top: 0.375rem;
 }

@@ -32,7 +32,7 @@ POST /v1/claim/submit      workflow 15, the final claim
 callback /v1/claim/on_submit
 ```
 
-The provisional discharge submission carries workflow 14 and the same `Claim` bundle. The workflow sheet defines the code and the handbook describes the stage, but neither names the endpoint it travels on; `/v1/claim/submit` is the natural home, and the sample bundles do not include one. Confirm with the payer before building the provisional step.
+The provisional discharge submission carries workflow 14 and the same `Claim` bundle. The workflow sheet defines the code and the handbook describes the stage, but neither names the endpoint it travels on; `/v1/claim/submit` is the natural home, and the sample bundles do not include one. Confirm with the payer before building the provisional step. No discharge path is published, so workflow 14 in `x-hcx-workflow_id` is the only thing that tells a discharge from a claim. The envelope marks that field optional. On a discharge submission, always send it.
 
 Same recipient, same reference as the preauthorisation, a new correlation ID each time. The handbook's advice is to build the claim from the preauthorisation bundle. Same diagnosis and procedures unless treatment deviated, estimated amounts replaced with the bill, the full document set added, and the `preAuthRef` from the approval carried in.
 

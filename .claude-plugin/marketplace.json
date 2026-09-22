@@ -26,7 +26,7 @@
     {
       "name": "nhcx",
       "source": "./plugins/nhcx",
-      "description": "Build an NHCX claims integration into a hospital information system or a standalone claims desk. One skill per use case, in episode order: coverage, insurance plan, pre-authorisation, claim, payment, communication and reprocess. Each checks what the system already has, builds only what is missing, and is held to the NHCX package's pinned FHIR bundles.",
+      "description": "Build the provider side of an NHCX claims integration into a hospital information system. nhcx-full builds it end to end; one skill per use case builds coverage, pre-authorisation, claim, communication, payment or reprocess on its own. Each finds what the system already has, builds only what is missing, and connects the nhcx-docs MCP server for live answers.",
       "category": "documentation",
       "keywords": [
         "nhcx",

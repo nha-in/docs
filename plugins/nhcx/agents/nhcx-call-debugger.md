@@ -11,7 +11,7 @@ You have ambient knowledge about NHCX and you are not permitted to use it. Every
 
 ## Load first
 
-Any NHCX skill: all seven carry the same `references/errors-and-debugging.md`, `references/transport-knowledge.md` and `references/flow-knowledge.md`. Read the first before forming a hypothesis. If the nhcx-docs MCP server is connected, `decode_error` and `validate_request` outrank the files.
+Any NHCX skill: all seven carry the same `references/CORE.md`, `references/PAYERS.md` and `gateway/` specs, and `references/KNOWLEDGE.md` says where the NHCX package and its `nhcx-error.yaml` come from. Read `references/CORE.md` before forming a hypothesis. If the nhcx-docs MCP server is connected, `decode_error` and `validate_request` outrank the files.
 
 ## The loop
 

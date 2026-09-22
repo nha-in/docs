@@ -61,8 +61,25 @@ export function acronyms(dir = catalogueDir) {
   return cached;
 }
 
-/** Cases every acronym and proper noun in `text`, whatever case it arrived in. */
+// The address of a markdown link, `](/docs/...)`. It is a route, not prose.
+const LINK_TARGET = /(\]\([^)\s]*\))/;
+
+/**
+ * Cases every acronym and proper noun in `text`, whatever case it arrived in.
+ *
+ * A link's address is left as it was written. The guard below keeps a term
+ * off anything touching a slash, but the last segment of a route ends at the
+ * closing bracket: `.../building-and-sending-a-jwe)` came out as
+ * `...-a-JWE)`, which is a page that does not exist.
+ */
 export function caseTerms(text, vocab = acronyms()) {
+  return String(text)
+    .split(LINK_TARGET)
+    .map((part) => (LINK_TARGET.test(part) ? part : caseProse(part, vocab)))
+    .join('');
+}
+
+function caseProse(text, vocab) {
   let out = text;
   for (const [pattern, joined] of SPLIT) out = out.replace(pattern, joined);
   for (const term of vocab) {

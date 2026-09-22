@@ -11,13 +11,13 @@ info:
     label: Other
     position: 13
   title: NHCX other
-  summary: "Claims are often not fully approved first time, for mundane reasons: missing documents, policy interpretation differences, package or pricing discrepancies."
+  summary: "Calls that belong to no single use case: notification subscription, deletion, the status callback, the protocol error report and the service's own Swagger documents."
   description: |-
-    The Other calls on the National Health Claims Exchange (NHCX): 14 operations, and 4 callbacks you host.
+    The Other calls on the National Health Claims Exchange (NHCX): 10 operations, and 2 callbacks you host.
 
-    Claims are often not fully approved first time, for mundane reasons: missing documents, policy interpretation differences, package or pricing discrepancies.
+    Calls that belong to no single use case: notification subscription, deletion, the status callback, the protocol error report and the service's own Swagger documents.
 
-    Guides that use these calls: [Cancel, reprocess and shortfall](/docs/nhcx/v1/reference/fhir/cancel-reprocess-and-shortfall), [Predetermination, status and search](/docs/nhcx/v1/reference/fhir/predetermination-status-and-search), [Notifications and patient apps](/docs/nhcx/v1/reference/notifications-and-patient-apps), [Accepted with 202, and no callback arrives](/docs/nhcx/v1/troubleshooting/accepted-then-no-callback).
+    Guides that use these calls: [Predetermination, status and search](/docs/nhcx/v1/reference/fhir/predetermination-status-and-search), [Notifications and patient apps](/docs/nhcx/v1/reference/notifications-and-patient-apps), [Accepted with 202, and no callback arrives](/docs/nhcx/v1/troubleshooting/accepted-then-no-callback).
 
     Production address for the NHCX portal: not published.
   version: nhcx-v1
@@ -53,543 +53,10 @@ servers:
     description: Production.
 tags:
   - name: Other
-    description: "Claims are often not fully approved first time, for mundane reasons: missing documents, policy interpretation differences, package or pricing discrepancies."
-  - name: Adapter
-    description: Internal twins of the exchange calls, for the NHCX adapter deployment.
+    description: "Calls that belong to no single use case: notification subscription, deletion, the status callback, the protocol error report and the service's own Swagger documents."
 security:
   - bearerAuth: []
 paths:
-  /v1/task/submit:
-    post:
-      operationId: other_v1_task_submit
-      x-abdm-atom: nhcx.endpoint.task-submit
-      x-abdm-use-case: Other
-      tags:
-        - Other
-      summary: Task submit (reprocess or cancel)
-      description: |-
-        Provider sends a FHIR Task asking the payer to reprocess a rejected or short-paid claim or to cancel a preauth; Task.code and reasonCode set the intent.
-
-        ### Business purpose
-
-        Claims are often not fully approved first time, for mundane reasons: missing documents, policy interpretation differences, package or pricing discrepancies. Without a formal appeal path, disputes leave the system and become phone calls and email. The Task flow gives providers a structured, auditable way to contest a decision with new evidence, and to withdraw a pre-authorisation that will never be used. Payers get a controlled re-adjudication workflow with SLA adherence, aligned with NHA and IRDAI expectations of transparent dispute resolution.
-
-        ### When to use
-
-        After adjudication, when a claim was rejected or partially paid and you have valid justification and additional evidence: Task.code reprocess with reasonCode claimrejected (or partialpayment for a short payment; the handbook sample uses rejectiondisputed), workflow 18 REPROCESS_REQUEST_SUBMITTED, with 36 listed for the arbitration or erroneous case. For cancelling a submitted or approved preauth: Task.code cancel with a cancellation reasonCode (treatmentplanchanged, patientrequest, financialconstraints, alternativetreatment, duplicateclaim, administrativeerror, other), workflow 122 PREAUTH_CANCEL_INITIATED (PC01 in the scenario sheet). x-hcx-correlation_id carries the correlation id of the original claim or preauth. Reprocess outcomes are final within the workflow.
-
-        ### Preconditions
-
-        - Provider is an active NHCX participant with a valid NPI facility code and Bearer token; payer certificate available for JWE encryption.
-        - The original claim or preauth exists; Task.basedOn references it with the sender's reference id, and Task.input carries claimNumber and the intimation number.
-        - Patient resource carries PMJAY Member ID and ABHA number; supporting evidence attached (the FAQ says a document as valueAttachment is mandatory for reprocess).
-        - Task.status requested, Task.intent order, Task.code from http://terminology.hl7.org/CodeSystem/financialtaskcode, reasonCode from ndhm-reason-code; Task.description explains when reasonCode is other.
-        - Protected header with the original correlation id, fresh api_call_id, IST timestamp, workflow id and status request.initiated.
-
-        ### Postconditions
-
-        The gateway returns HTTP 202 with a StatusSuccessResponse whose result carries entity_type task and a protocol_status; 400, 404 and 500 use the same envelope. The payer validates completeness and eligibility (workflow 251 acknowledges receipt), re-adjudicates and answers on /v1/task/on_submit with a Task bundle whose Task.output references a ClaimResponse: 252 approved, 253 rejected (outcome complete with adjudication reason cancelled), 254 queried (answer with workflow 19). Approval may be followed by payment workflows 30, 31 and 33. For cancellation, only preauths in submitted or approved state can be cancelled; PAYR-1252, PAYR-1253, PAYR-1257 and PAYR-1258 explain refusals.
-
-        ### Common mistakes
-
-        - Omitting Task.basedOn, so the payer has nothing to act on; or sending the sender's reference only in input and not in basedOn.
-        - Minting a fresh correlation id instead of carrying the original claim or preauth's.
-        - Submitting a reprocess without new evidence; the handbook restricts appeals to cases with valid justification and supporting documents.
-        - Cancelling a preauth that is already cancelled, paid or not in an active state (PAYR-1252, PAYR-1253, PAYR-1257, PAYR-1258).
-        - Spelling the intimation input anything other than intimationNumber; a reprocess under another spelling is refused with PAYR-1008.
-        - Offering a second reprocess by default; the response is final unless scheme rules allow otherwise.
-        - Using unverified codes such as a numeric PC01 reason or workflow 36 for a plain reprocess without checking the workflow reference.
-
-        ### Best practices
-
-        - Link the Task to the original entity twice: basedOn with the sender's reference id and Task.input with claimNumber and intimation number.
-        - Use reasonCode other only with a clear Task.description.
-        - Persist the correlation id and workflow id so the on_submit Task bundle can be matched and the ClaimResponse extracted from Task.output.
-        - Design the case state machine so 252 or 253 terminates the appeal branch.
-        - Fresh api_call_id per call, IST timestamps, request.initiated on the outbound header.
-        - Implement v1/error; a Task that never reaches the payer is otherwise silent.
-
-        ### Related scenario
-
-        A hospital's claim for a cardiac package, submitted on /v1/claim/submit, comes back on /v1/claim/on_submit rejected for a missing implant invoice. The billing team obtains the invoice and the integration builds a Task: code reprocess, reasonCode claimrejected, basedOn the original claim, input claimNumber and intimation number, the invoice attached, workflow 18, and the claim's correlation id. It posts /v1/task/submit and receives 202. The payer acknowledges (251), re-adjudicates and returns a Task bundle on /v1/task/on_submit whose Task.output wraps a ClaimResponse with outcome complete and workflow 252; a payment notice follows on /v1/paymentnotice/request.
-
-        ### Specification
-
-        Chapter [Cancel, reprocess and shortfall](/docs/nhcx/v1/reference/fhir/cancel-reprocess-and-shortfall) of the NHCX integration specification.
-      parameters:
-        - $ref: "#/components/parameters/BearerAuth"
-        - $ref: "#/components/parameters/XHcxSenderCode"
-        - $ref: "#/components/parameters/XHcxRecipientCode"
-        - $ref: "#/components/parameters/XHcxApiCallId"
-        - $ref: "#/components/parameters/XHcxRequestId"
-        - $ref: "#/components/parameters/XHcxCorrelationId"
-        - $ref: "#/components/parameters/XHcxWorkflowId"
-        - $ref: "#/components/parameters/XHcxTimestamp"
-        - $ref: "#/components/parameters/XHcxStatus"
-        - $ref: "#/components/parameters/XHcxBenAbhaId"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                payload:
-                  type: string
-            example:
-              payload: eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2R0NNIiwieC1oY3gtc2VuZGVyX2NvZGUiOiIxMDAwMDA0NDQ2QGhjeCJ9.encrypted_key.iv.ciphertext.tag
-      responses:
-        "202":
-          description: The gateway returns HTTP 202 with a StatusSuccessResponse whose result carries entity_type task and a protocol_status; 400, 404 and 500 use the same envelope.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  timestamp:
-                    type: string
-                  api_call_id:
-                    type: string
-                  correlation_id:
-                    type: string
-                  result:
-                    type: object
-                    properties:
-                      sender_code:
-                        type: string
-                      recipient_code:
-                        type: string
-                      entity_type:
-                        type: string
-                      protocol_status:
-                        type: string
-                  error:
-                    type: object
-                    properties:
-                      code:
-                        type: string
-                      message:
-                        type: string
-              example:
-                timestamp: 25/08/2026 10:00:00:154
-                api_call_id: f2a3b4c5-d6e7-8901-5678-012345678901
-                correlation_id: 66778899-aabb-ccdd-eeff-001122334455
-                result:
-                  sender_code: 1000004446@hcx
-                  recipient_code: 1518@hcx
-                  entity_type: task
-                  protocol_status: request.queued
-                error:
-                  code: ""
-                  message: ""
-  /v1/task/on_submit:
-    post:
-      operationId: other_v1_task_on_submit
-      x-abdm-atom: nhcx.endpoint.task-on-submit
-      x-abdm-use-case: Other
-      tags:
-        - Other
-      summary: Task callback (reprocess or cancel outcome)
-      description: |-
-        Payer returns a Task bundle with Task.status completed whose Task.output references a ClaimResponse carrying the reprocess or cancellation outcome.
-
-        ### Business purpose
-
-        This callback closes the appeal or cancellation the provider opened on /v1/task/submit. It carries the payer's final decision on a reprocess (approved, partially approved, queried or rejected) or confirms a pre-authorisation cancellation, in the same ClaimResponse shape used for ordinary adjudication so hospitals can reuse their parsers. Because the reprocess response is final within the workflow, it delivers closure, a clean audit trail and reduced ambiguity for both sides, which is the point of moving disputes inside NHCX.
-
-        ### When to use
-
-        The payer calls it after acknowledging a Task (workflow 251 REPROCESS_REQUEST_RECEIVED), validating it and re-adjudicating. The outer wrapper is a collection Bundle with a Task whose status is completed and whose Task.output.type references a ClaimResponse for the entity the sender named; workflow 252 approved (outcome complete), 253 rejected (outcome complete with adjudication reason cancelled, display Rejected), 254 queried (outcome partial, often zero totals; provider answers with workflow 19). Cancellation accomplished is PC02. Carry the same x-hcx-correlation_id and a responder status (response.complete, or request.initiated for a query per the workflow sheet).
-
-        ### Preconditions
-
-        - The inbound Task was decrypted, its correlation id and workflow captured, and the 202 acceptance body returned within 30 seconds.
-        - Payer registered with a valid Bearer token and the provider's certificate for encryption.
-        - A Task bundle: Task.status completed, Task.output[0].valueReference pointing to a ClaimResponse entry that is structurally identical to a normal adjudication response (total, item adjudication, processNote, adjudication reason).
-        - Protected header echoing the request's correlation id with a fresh api_call_id, IST timestamp, the outcome workflow id and a responder status.
-
-        ### Postconditions
-
-        The gateway returns HTTP 202 with the StatusSuccessResponse envelope (400, 404, 500 in the same shape) and forwards the bundle to the provider, which must acknowledge within 30 seconds. The provider resolves Task.output[0].valueReference.reference within the bundle and passes the ClaimResponse through its standard adjudication parser. The reprocess decision is final within the workflow context; no further standard reprocessing cycles are expected unless scheme rules allow. After approval, payment proceeds through workflows 30 PAYMENT_INITIATED, 31 PAYMENT_PROCESSED and 33 PAYMENT_SETTLED. A cancelled preauth requires a new preauth with a new case number if treatment resumes (PAYR-1255).
-
-        ### Common mistakes
-
-        - Provider side: looking for the ClaimResponse as a direct Bundle.entry instead of following Task.output[].valueReference.
-        - Reading outcome complete as approval; a rejected reprocess is outcome complete with adjudication reason cancelled.
-        - Treating a queried response with outcome partial and zero totals as a zero-value approval.
-        - Payer side: minting a new correlation id on the callback (NHCX-1010) or sending a standalone ClaimResponse bundle instead of a Task wrapper.
-        - Missing the 30-second 202 on the inbound Task, triggering five redeliveries and deletion of the request.
-        - Splitting the PMJAY pipe-delimited adjudication reason (USER~datetime~type~comment~trust) as if it were structured.
-
-        ### Best practices
-
-        - Payer: acknowledge first, re-adjudicate asynchronously, then post the Task bundle with the outcome workflow id and ClaimResponse nested in Task.output.
-        - Provider: share the ClaimResponse parser between /v1/claim/on_submit and this callback; only the extraction path differs.
-        - Branch on adjudication reason as well as outcome; check processNote for reductions or query text.
-        - Terminate the appeal branch of the case state machine on 252 or 253; on 254 respond with workflow 19.
-        - Be idempotent on correlation id; expect redeliveries.
-        - Fresh api_call_id, IST timestamp, responder status on the callback header.
-
-        ### Related scenario
-
-        A scheme payer's TPA receives a reprocess Task on a rejected claim with the missing implant invoice attached. Its endpoint returns 202 and the case reopens for re-adjudication with the original claim, the new document and the justification. The reviewer approves at the package rate, and the TPA posts /v1/task/on_submit: a Task bundle, status completed, Task.output referencing a ClaimResponse with outcome complete, workflow 252, under the claim's correlation id. The hospital acknowledges within 30 seconds, extracts the ClaimResponse from Task.output, marks the appeal closed and awaits the payment notice on /v1/paymentnotice/request.
-
-        ### Specification
-
-        Chapter [Cancel, reprocess and shortfall](/docs/nhcx/v1/reference/fhir/cancel-reprocess-and-shortfall) of the NHCX integration specification.
-      parameters:
-        - $ref: "#/components/parameters/BearerAuth"
-        - name: x-hcx-sender_code
-          in: header
-          required: true
-          description: Your participant code. Mandatory on the envelope.
-          schema:
-            type: string
-          example: 1518@hcx
-        - name: x-hcx-recipient_code
-          in: header
-          required: true
-          description: The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
-          schema:
-            type: string
-          example: 1000004446@hcx
-        - $ref: "#/components/parameters/XHcxApiCallId"
-        - $ref: "#/components/parameters/XHcxRequestId"
-        - $ref: "#/components/parameters/XHcxCorrelationId"
-        - name: x-hcx-workflow_id
-          in: header
-          required: false
-          description: Which step, or which case. See the two readings below. Optional on the envelope.
-          schema:
-            type: string
-          example: "252"
-        - $ref: "#/components/parameters/XHcxTimestamp"
-        - name: x-hcx-status
-          in: header
-          required: true
-          description: Where this message stands. Values below. Mandatory on the envelope.
-          schema:
-            type: string
-          example: response.complete
-        - $ref: "#/components/parameters/XHcxBenAbhaId"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                payload:
-                  type: string
-            example:
-              payload: eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2R0NNIiwieC1oY3gtc2VuZGVyX2NvZGUiOiIxNTE4QGhjeCJ9.encrypted_key.iv.ciphertext.tag
-      responses:
-        "202":
-          description: The gateway returns HTTP 202 with the StatusSuccessResponse envelope (400, 404, 500 in the same shape) and forwards the bundle to the provider, which must acknowledge within 30 seconds.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  timestamp:
-                    type: string
-                  api_call_id:
-                    type: string
-                  correlation_id:
-                    type: string
-                  result:
-                    type: object
-                    properties:
-                      sender_code:
-                        type: string
-                      recipient_code:
-                        type: string
-                      entity_type:
-                        type: string
-                      protocol_status:
-                        type: string
-                  error:
-                    type: object
-                    properties:
-                      code:
-                        type: string
-                      message:
-                        type: string
-              example:
-                timestamp: 26/08/2026 16:30:00:611
-                api_call_id: a3b4c5d6-e7f8-9012-6789-123456789012
-                correlation_id: 66778899-aabb-ccdd-eeff-001122334455
-                result:
-                  sender_code: 1518@hcx
-                  recipient_code: 1000004446@hcx
-                  entity_type: task
-                  protocol_status: request.queued
-                error:
-                  code: ""
-                  message: ""
-  /internal/v1/task/submit:
-    post:
-      operationId: other_internal_v1_task_submit
-      x-abdm-use-case: Adapter
-      tags:
-        - Adapter
-      summary: Task submit (internal variant) (adapter)
-      description: |-
-        Internal twin of /v1/task/submit on the taskhcxservice, operationId hcxTaskPostInternal, with the same JWEPayload Task body and 202 envelope.
-
-        ### Business purpose
-
-        The taskhcxservice is one of six NHCX services that publish each operation at both /v1/... and /internal/v1/... with identical descriptions and request bodies, differing only in the operationId suffix. This is the internal form of the provider's reprocess or cancel request: the structured appeal path for rejected or short-paid claims and the withdrawal path for unused pre-authorisations. The specifications document no behavioural difference from the public endpoint.
-
-        ### When to use
-
-        Same circumstances as /v1/task/submit: a reprocess (Task.code reprocess, reasonCode claimrejected or partialpayment, workflow 18) after an adverse adjudication with new evidence, or a preauth cancellation (Task.code cancel with a cancellation reasonCode, workflow 122 or PC01). x-hcx-correlation_id carries the original claim or preauth correlation id. The specs do not say when the internal path applies; default to the public path unless onboarding guidance names this one.
-
-        ### Preconditions
-
-        - As for the public endpoint: active provider with NPI facility code, Bearer token, payer certificate for JWE encryption.
-        - Body is a JWEPayload whose plaintext is the Task resource with basedOn referencing the original entity by the sender's reference id, Task.input with claimNumber and intimation number, and supporting evidence.
-        - Protected header with the original correlation id, fresh api_call_id, IST timestamp, workflow id and status request.initiated.
-        - Confirmation that the internal route is intended for your integration.
-
-        ### Postconditions
-
-        Returns 202 Accepted with StatusSuccessResponse (entity_type task), or 400, 404 or 500 in the same envelope. The payer answers later on the task on_submit callback with a Task bundle wrapping a ClaimResponse: workflows 251 received, 252 approved, 253 rejected, 254 queried, PC02 cancellation accomplished. The decision is final within the workflow context. No additional behaviour is documented for the internal variant.
-
-        ### Common mistakes
-
-        - Expecting the internal path to skip validation of basedOn, correlation id or status; it is documented as identical.
-        - Omitting Task.basedOn or minting a fresh correlation id.
-        - Cancelling a preauth not in submitted or approved state (PAYR-1252, PAYR-1253, PAYR-1257, PAYR-1258).
-        - Hard-coding the internal prefix without confirming the route; a 404 may be a host or prefix mismatch.
-
-        ### Best practices
-
-        - Reuse the public endpoint's Task builder; make only the path prefix configurable.
-        - Link to the original entity in both basedOn and Task.input; use Task.description with reasonCode other.
-        - Fresh api_call_id per call, IST timestamps, request.initiated on the outbound header.
-        - Persist correlation id and workflow id for matching the callback; implement v1/error.
-
-        ### Related scenario
-
-        A hospital integrator generating a client from the taskhcxservice Swagger sees hcxTaskPost and hcxTaskPostInternal with the same description. The team builds one reprocess-and-cancel module that posts to /v1/task/submit by default and can be switched to the internal path if NHCX onboarding requires it. When a surgeon changes the treatment plan after a preauth was approved, the module sends Task.code cancel with reasonCode treatmentplanchanged under the preauth's correlation id, receives 202, and later gets the cancellation confirmation on the task on_submit callback before a new preauth is raised.
-
-        ### Specification
-
-        Chapter [Cancel, reprocess and shortfall](/docs/nhcx/v1/reference/fhir/cancel-reprocess-and-shortfall) of the NHCX integration specification.
-      parameters:
-        - $ref: "#/components/parameters/BearerAuth"
-        - $ref: "#/components/parameters/XHcxSenderCode"
-        - $ref: "#/components/parameters/XHcxRecipientCode"
-        - $ref: "#/components/parameters/XHcxApiCallId"
-        - $ref: "#/components/parameters/XHcxRequestId"
-        - $ref: "#/components/parameters/XHcxCorrelationId"
-        - name: x-hcx-workflow_id
-          in: header
-          required: false
-          description: Which step, or which case. See the two readings below. Optional on the envelope.
-          schema:
-            type: string
-          example: "122"
-        - $ref: "#/components/parameters/XHcxTimestamp"
-        - $ref: "#/components/parameters/XHcxStatus"
-        - $ref: "#/components/parameters/XHcxBenAbhaId"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                payload:
-                  type: string
-            example:
-              payload: eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2R0NNIiwieC1oY3gtc2VuZGVyX2NvZGUiOiIxMDAwMDA0NDQ2QGhjeCJ9.encrypted_key.iv.ciphertext.tag
-      responses:
-        "200":
-          description: Returns 202 Accepted with StatusSuccessResponse (entity_type task), or 400, 404 or 500 in the same envelope.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  timestamp:
-                    type: string
-                  api_call_id:
-                    type: string
-                  correlation_id:
-                    type: string
-                  result:
-                    type: object
-                    properties:
-                      sender_code:
-                        type: string
-                      recipient_code:
-                        type: string
-                      entity_type:
-                        type: string
-                      protocol_status:
-                        type: string
-                  error:
-                    type: object
-                    properties:
-                      code:
-                        type: string
-                      message:
-                        type: string
-              example:
-                timestamp: 25/08/2026 10:20:00:093
-                api_call_id: b4c5d6e7-f8a9-0123-7890-234567890123
-                correlation_id: 778899aa-bbcc-ddee-ff00-112233445566
-                result:
-                  sender_code: 1000004446@hcx
-                  recipient_code: 1518@hcx
-                  entity_type: task
-                  protocol_status: request.queued
-                error:
-                  code: ""
-                  message: ""
-  /internal/v1/task/on_submit:
-    post:
-      operationId: other_internal_v1_task_on_submit
-      x-abdm-use-case: Adapter
-      tags:
-        - Adapter
-      summary: Task callback (internal variant) (adapter)
-      description: |-
-        Internal twin of /v1/task/on_submit (hcxOnTaskPostInternal): the payer Task bundle wrapping the ClaimResponse outcome of a reprocess or cancel.
-
-        ### Business purpose
-
-        This is the internal-path form of the callback that closes a reprocess or cancellation. The OpenAPI lists it with the same description and bare object body as the public callback and distinguishes it only by the operationId suffix. Its role is unchanged: deliver the payer's final, auditable decision on an appeal, or confirmation of a preauth cancellation, in a Task bundle whose Task.output references a ClaimResponse that hospitals can parse with their normal adjudication logic.
-
-        ### When to use
-
-        Same as the public callback: after acknowledging and re-adjudicating a Task, the payer posts a Task bundle with status completed and Task.output referencing the ClaimResponse, under the original correlation id, with workflow 252, 253 or 254 (or PC02 for cancellation) and a responder status. The specifications do not say when the internal path is used in preference to the public one.
-
-        ### Preconditions
-
-        - Inbound Task decrypted, correlation id captured, 202 acceptance returned within 30 seconds.
-        - Registered payer with a valid Bearer token and the provider's certificate.
-        - Task bundle with Task.status completed and Task.output[0].valueReference resolving to a ClaimResponse entry in the bundle.
-        - Protected header echoing the request's correlation id with a fresh api_call_id, IST timestamp, outcome workflow id and responder status.
-        - Confirmation that the internal route is the intended one.
-
-        ### Postconditions
-
-        Returns 202 Accepted with the StatusSuccessResponse envelope, or 400, 404 or 500 in the same shape; the bundle is forwarded to the provider, which acknowledges within 30 seconds, extracts the ClaimResponse from Task.output and closes the appeal branch. The decision is final within the workflow context; approval leads to payment workflows 30, 31 and 33. No additional behaviour is documented for the internal variant.
-
-        ### Common mistakes
-
-        - Expecting a different envelope or relaxed validation; none is documented.
-        - Sending a standalone ClaimResponse bundle rather than a Task wrapper, or minting a new correlation id (NHCX-1010).
-        - Provider side: reading the ClaimResponse from Bundle.entry directly, or treating outcome complete as approval without checking the adjudication reason.
-        - Using an unconfigurable path that cannot switch between public and internal forms.
-
-        ### Best practices
-
-        - Share the public callback's bundle builder; only the path differs.
-        - Acknowledge the inbound Task first, re-adjudicate asynchronously, then post.
-        - Provider: reuse the claim ClaimResponse parser, reached via Task.output[0].valueReference.reference.
-        - Idempotent handling on correlation id; fresh api_call_id and IST timestamp on the callback.
-
-        ### Related scenario
-
-        A payer platform reviewing the taskhcxservice specification sees hcxOnTaskPost and hcxOnTaskPostInternal side by side. It implements a single outcome publisher that wraps the ClaimResponse in a Task bundle and posts to the public /v1/task/on_submit path unless configured for the internal one. When a hospital's cancellation Task for an unused preauth is processed, the publisher posts the Task bundle with PC02 semantics under the preauth's correlation id; the hospital acknowledges within 30 seconds and raises a fresh preauth with a new case number for the revised treatment.
-
-        ### Specification
-
-        Chapter [Cancel, reprocess and shortfall](/docs/nhcx/v1/reference/fhir/cancel-reprocess-and-shortfall) of the NHCX integration specification.
-      parameters:
-        - $ref: "#/components/parameters/BearerAuth"
-        - name: x-hcx-sender_code
-          in: header
-          required: true
-          description: Your participant code. Mandatory on the envelope.
-          schema:
-            type: string
-          example: 1518@hcx
-        - name: x-hcx-recipient_code
-          in: header
-          required: true
-          description: The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
-          schema:
-            type: string
-          example: 1000004446@hcx
-        - $ref: "#/components/parameters/XHcxApiCallId"
-        - $ref: "#/components/parameters/XHcxRequestId"
-        - $ref: "#/components/parameters/XHcxCorrelationId"
-        - name: x-hcx-workflow_id
-          in: header
-          required: false
-          description: Which step, or which case. See the two readings below. Optional on the envelope.
-          schema:
-            type: string
-          example: PC02
-        - $ref: "#/components/parameters/XHcxTimestamp"
-        - name: x-hcx-status
-          in: header
-          required: true
-          description: Where this message stands. Values below. Mandatory on the envelope.
-          schema:
-            type: string
-          example: response.complete
-        - $ref: "#/components/parameters/XHcxBenAbhaId"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                payload:
-                  type: string
-            example:
-              payload: eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2R0NNIiwieC1oY3gtc2VuZGVyX2NvZGUiOiIxNTE4QGhjeCJ9.encrypted_key.iv.ciphertext.tag
-      responses:
-        "200":
-          description: Returns 202 Accepted with the StatusSuccessResponse envelope, or 400, 404 or 500 in the same shape; the bundle is forwarded to the provider, which acknowledges within 30 seconds, extracts the ClaimResponse from Task.output and closes the appeal branch.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  timestamp:
-                    type: string
-                  api_call_id:
-                    type: string
-                  correlation_id:
-                    type: string
-                  result:
-                    type: object
-                    properties:
-                      sender_code:
-                        type: string
-                      recipient_code:
-                        type: string
-                      entity_type:
-                        type: string
-                      protocol_status:
-                        type: string
-                  error:
-                    type: object
-                    properties:
-                      code:
-                        type: string
-                      message:
-                        type: string
-              example:
-                timestamp: 25/08/2026 11:05:00:448
-                api_call_id: c5d6e7f8-a9b0-1234-8901-345678901234
-                correlation_id: 778899aa-bbcc-ddee-ff00-112233445566
-                result:
-                  sender_code: 1518@hcx
-                  recipient_code: 1000004446@hcx
-                  entity_type: task
-                  protocol_status: request.queued
-                error:
-                  code: ""
-                  message: ""
   /v1/notification/subscribe:
     post:
       operationId: other_v1_notification_subscribe
@@ -607,29 +74,25 @@ paths:
 
         ### When to use
 
-        Call it on every beneficiary login (Subscribe-on-Login): the user authenticates with the ABHA address, the app checks its NHCX token, refreshes via the sessions endpoint if expired, then subscribes the ABHA id and stores the returned subscription_id. Because Last-Linked-Wins replaces any earlier app's subscription, resubscribe on each login rather than trusting a stored id. Most PHR apps need only topic_code workflow_events; network_events and participant_events are also defined. The call is synchronous and sits outside the workflow-code sequence; a fresh x-hcx-correlation_id is required per attempt.
+        Call it every time a beneficiary logs in to your app. The last app to subscribe an ABHA ID wins, so do not trust a stored subscription.
 
         ### Preconditions
 
-        - ABDM M1 integration completed; BSP sandbox testing on hcxsbx.abdm.gov.in, certification and production registry onboarding.
-        - An HTTPS callback endpoint with TLS 1.2 or higher registered as on_notification_url, and JWT capability.
-        - Access token from the ABDM session token call (01-session/session-token.bru); sent as Authorization: Bearer with Content-Type application/json.
-        - Body is a JWEPayload whose compact JWE carries protected headers alg RSA-OAEP, enc A256GCM, x-hcx-sender_code (your BSP code), x-hcx-recipient_code (NHCX gateway code), x-hcx-timestamp (ISO 8601) and a unique x-hcx-correlation_id, plus the subscribe JSON: subscription_id, topic_code array, recipient_code, subscriber.id (ABHA id), on_notification_url and optional expiry.
-        - Explicit user consent obtained before subscribing.
+        - You have a valid access token, sent in the `Authorization` header.
+        - Your callback URL is registered over HTTPS, with TLS 1.2 or higher.
+        - The user has agreed to receive notifications.
+        - The body is encrypted and carries a new `x-hcx-correlation_id`.
 
         ### Postconditions
 
-        NHCX decrypts the request with its private key, validates headers and payload, persists the subscription with Last-Linked-Wins per ABHA id and returns the subscription state synchronously: HTTP 200 with a SubscribeResponse carrying timestamp, api_call_id, correlation_id, subscription_id, subscription_status (active, replaced or expired), expiry and message. Thereafter, when a hospital submits a preauth or claim with that ABHA id and the payer responds, NHCX pushes a notification (notification_id, topic_code, timestamp, subscriber.id, a displayable message and optional domain_values) to the registered callback. Errors: 400 validation, 401 sender not authorised, 403 sender not permitted, 409 duplicate correlation id, 500 decryption or persistence failure.
+        NHCX saves the subscription and answers `200` with a `subscription_id` and its status. From then on, claim events for that ABHA ID are pushed to your callback.
 
         ### Common mistakes
 
-        - Reusing x-hcx-correlation_id across attempts or retries, which returns 409 (the API reference defines 409 as replay detection, not an existing-subscription conflict).
-        - Subscribing once and trusting the stored subscription_id; another app's login silently replaces it (subscription_status replaced).
-        - Sending it to the exchange host, https://apisbx.abdm.gov.in/hcx, where the other /v1 calls go. The notification integration guide gives the portal host: https://hcxsbx.abdm.gov.in/v1/notification/subscribe.
-        - Sending the token on bearer_auth. This call reads it from Authorization: Bearer.
-        - Sending protocol headers in the clear rather than inside the JWE protected header.
-        - Using the NHCX client-credentials token endpoint instead of the ABDM gateway sessions endpoint.
-        - Subscribing silently without consent or without showing subscription status in settings.
+        - Reusing a correlation ID on a retry, which returns `409`.
+        - Subscribing once and assuming it still holds after another app logs in.
+        - Sending it to the exchange host instead of `https://hcxsbx.abdm.gov.in/v1/notification/subscribe`.
+        - Sending the token on `bearer_auth` instead of `Authorization`.
 
         ### Best practices
 
@@ -750,27 +213,24 @@ paths:
 
         ### When to use
 
-        As a BSP you implement this path on your host, registered through on_notification_url, and receive a push whenever a workflow event occurs for a subscribed ABHA id: preauth_request (queued, processing), preauth_response (approved, rejected), claim_request, claim_response, payment_notice (paid, pending) and communication (information_required). The NHCX-side operation is invoked with hvalues senderid, receiverid, correlationid and status required, and workflowid, source, api_caller_id, call_type and usertoken optional. It sits outside the workflow-code sequence; domain_values may carry x-hcx-workflow_id, x-hcx-correlation_id, x-hcx-status, x-hcx-action and amount fields.
+        A beneficiary app hosts this path to receive notifications for the ABHA IDs it subscribed. NHCX calls it when a pre-authorisation, claim, payment or query event happens.
 
         ### Preconditions
 
-        - An active subscription created via /v1/notification/subscribe for the ABHA id; Last-Linked-Wins means only the most recently linked app receives events.
-        - The BSP callback exposed over HTTPS with TLS 1.2 or higher at the registered on_notification_url, validating the JWT from NHCX, verifying sender_code and rate-limiting.
-        - For the NHCX-side operation: a NotificationOnSubscribePayload with request.abhaid (required) and optional request.domain_values, plus hvalues with senderid, receiverid, correlationid and status.
-        - The ordinary preauth or claim exchange between hospital and payer has produced an event for that beneficiary.
+        - An active subscription exists for the ABHA ID, made through `/v1/notification/subscribe`.
+        - Your callback runs over HTTPS with TLS 1.2 or higher, at the registered `on_notification_url`.
+        - You check the token NHCX sends and its sender code.
 
         ### Postconditions
 
-        The NHCX-side operation returns HTTP 200 with a SubscribeResponse (timestamp, api_call_id, correlation_id, subscription_id, subscription_status active, replaced or expired, expiry, message); 400, 401, 403, 409 and 500 return a StatusSuccessResponse with the same descriptions as the subscribe table. On the BSP callback the delivered payload carries notification_id, topic_code, timestamp, subscriber.id, a human-readable message that can be shown directly to the user, and optional domain_values with x-hcx-* headers for audit or custom formatting. Nothing changes in the hospital-payer exchange; the notification is a forked copy of the outcome.
+        Each notification carries a `message` you can show the user as it is. Nothing changes in the exchange between hospital and payer.
 
         ### Common mistakes
 
-        - Conflating the NHCX-side operation with your own callback and implementing only one of them.
-        - Parsing domain_values to build the user message instead of displaying the message field; domain_values is optional and may be absent.
-        - Reading status from the x-hcx-workflow_id description (approved, rejected, queued, processing), which is a documentation error; the example carries an identifier and status lives in x-hcx-status.
-        - Assuming the subscription is still yours; a subscription_status of replaced means another app took the routing slot on login.
-        - Accepting callbacks without validating the JWT or sender_code, or without TLS 1.2 or higher.
-        - Treating the senderid and receiverid descriptions (payer id, hospital id) literally in the notification context; they are inherited boilerplate.
+        - Building the user message from `domain_values`, which may be missing, instead of showing `message`.
+        - Reading the status from `x-hcx-workflow_id`. It lives in `x-hcx-status`.
+        - Assuming the subscription is still yours after it shows `replaced`.
+        - Accepting calls without checking the token or the sender code.
 
         ### Best practices
 
@@ -897,24 +357,23 @@ paths:
 
         ### When to use
 
-        Only in troubleshooting, and only as directed by NHCX support. The endpoint index describes it as internal troubleshooting, deleting records by correlationid plus action. It does not appear in any transaction flow, sample bundle or workflow-code table, and it carries no x-hcx-workflow_id semantics. It is unrelated to the platform behaviour in which NHCX itself deletes a request after five failed delivery attempts; that deletion is automatic and needs no call.
+        Only for troubleshooting, and only when NHCX support asks you to. It is not part of any claim flow.
 
         ### Preconditions
 
-        - A valid Bearer token and the HTTP headers Accept: application/json, Content-Type: application/json and bearer_auth.
-        - The correlation ID of the record to be removed and the action it was recorded under; the docs name these two inputs (correlationid and action) but do not publish a schema, sample body or authorisation rule.
-        - Agreement from NHCX support that deletion is the right remedy; the documentation does not describe any business validation performed by the endpoint.
+        - You have a valid access token.
+        - You know the correlation ID and the action of the record to remove.
+        - NHCX support agrees that deleting it is the right fix.
 
         ### Postconditions
 
-        The endpoint sits in the claim service, whose domain operations all return 202 Accepted, 400 Request Validation failed, 404 Requested resource was not found and 500 Downstream systems down, each carrying StatusSuccessResponse. No worked response body, callback or state change is documented for /v1/delete beyond the removal of the record identified by correlationid and action. After deletion a fresh request cycle with a new correlation UUID is the documented way to proceed, since a deleted or inactive correlation ID cannot be resumed.
+        The record is removed. To carry on, start a new request with a new correlation ID.
 
         ### Common mistakes
 
-        - Treating /v1/delete as a way to cancel a preauth or claim; cancellation is a Task on /v1/task/submit (code cancel, workflow PC01 or 122) and reprocess is workflow 36 on the same endpoint.
-        - Calling it to recover from a failed delivery and then reusing the same correlation ID; NHCX marks failed correlation IDs inactive and a new cycle is required.
-        - Assuming the input names or authorisation are documented; only correlationid and action are named, and the specs do not say who may call it.
-        - Using it in production without NHCX support involvement; it is described as internal troubleshooting.
+        - Using it to cancel a pre-authorisation. Cancel with a `Task` on `/v1/task/submit`, workflow `PC01`.
+        - Reusing the old correlation ID after a delete.
+        - Calling it in production without NHCX support.
 
         ### Best practices
 
@@ -980,24 +439,22 @@ paths:
 
         ### When to use
 
-        Use it during integration setup, when generating or refreshing an API client, and when a status call is failing and you want to confirm the exact schema and server prefix the service advertises. The endpoint index lists it as endpoint 19 with an optional group query parameter. It is not part of any transaction workflow and is not referenced by the sandbox exit checklists.
+        Use it when you set up an integration or generate a client, to read the status service's contract. It is not part of any claim flow.
 
         ### Preconditions
 
-        - A GET request to the status service host; the OpenAPI documents in this corpus were captured from https://hcxsbx.abdm.gov.in/<service>/api-docs, and the status service declares the server prefix /statushcxservice.
-        - No JWE envelope, no x-hcx-* protocol headers and no correlation id; the docs do not state that a Bearer token is required for these discovery endpoints.
-        - No request body.
+        - A plain `GET` to the status service host, under `/statushcxservice`.
+        - No encryption, no `x-hcx-*` headers and no request body.
 
         ### Postconditions
 
-        The service returns HTTP 200 with a JSON OpenAPI 3 document describing the status service: its info block, the /statushcxservice server entry and the /v1/status operation with its StatusSuccessResponse responses. Nothing changes on NHCX and no callback follows. The document is a description of the service as deployed and may differ from the handbook's gateway-side conventions, which the docs flag as an unresolved conflict.
+        The service returns `200` with its OpenAPI 3 document. Nothing changes and no callback follows.
 
         ### Common mistakes
 
-        - Pointing at the gateway base https://apisbx.abdm.gov.in/pmjay/sbxhcx and expecting the per-service spec host; the docs advise swapping between the two URL shapes when a path 404s.
-        - Treating the served document as the integration contract for gateway traffic; the handbook's gateway base and header conventions take precedence where the two disagree.
-        - Sending a POST or a JSON body to a GET discovery endpoint.
-        - Wrapping the call in JWE or adding x-hcx-* headers, which only apply to protocol APIs such as /v1/status.
+        - Calling the gateway address instead of the status service host.
+        - Treating this document as the contract for gateway traffic.
+        - Sending a `POST`, a request body or `x-hcx-*` headers.
 
         ### Best practices
 
@@ -1088,24 +545,22 @@ paths:
 
         ### When to use
 
-        Use it when your client generator or API tooling requires Swagger 2 input, or when comparing the Swagger 2 and OpenAPI 3 renderings of the status service during a troubleshooting session. The endpoint index lists it as endpoint 20 with an optional group query parameter. It plays no part in any transaction workflow.
+        Use it when your tools need the older Swagger 2 format. It describes the same service as `/v3/api-docs`.
 
         ### Preconditions
 
-        - A GET request to the status service host; the OpenAPI documents in this corpus were captured from https://hcxsbx.abdm.gov.in/<service>/api-docs, and the status service declares the server prefix /statushcxservice.
-        - No JWE envelope, no x-hcx-* protocol headers and no correlation id; the docs do not state that a Bearer token is required for these discovery endpoints.
-        - No request body.
+        - A plain `GET` to the status service host, under `/statushcxservice`.
+        - No encryption, no `x-hcx-*` headers and no request body.
 
         ### Postconditions
 
-        The service returns HTTP 200 with a JSON Swagger 2 document (swagger: 2.0) describing the status service, its base path and the /v1/status operation. Nothing changes on NHCX and no callback follows. Where the served document and the handbook disagree on URL shape, the docs advise treating the per-service spec host as the exploration surface and the handbook's gateway base as the integration surface.
+        The service returns `200` with its Swagger 2 document. Nothing changes and no callback follows.
 
         ### Common mistakes
 
-        - Pointing at the gateway base https://apisbx.abdm.gov.in/pmjay/sbxhcx and expecting the per-service spec host; the docs advise swapping between the two URL shapes when a path 404s.
-        - Treating the served document as the integration contract for gateway traffic; the handbook's gateway base and header conventions take precedence where the two disagree.
-        - Sending a POST or a JSON body to a GET discovery endpoint.
-        - Wrapping the call in JWE or adding x-hcx-* headers, which only apply to protocol APIs such as /v1/status.
+        - Calling the gateway address instead of the status service host.
+        - Treating this document as the contract for gateway traffic.
+        - Sending a `POST`, a request body or `x-hcx-*` headers.
 
         ### Best practices
 
@@ -1190,24 +645,22 @@ paths:
 
         ### When to use
 
-        Use it only when hosting or debugging a Swagger UI session against the status service, or when a tool needs to discover the available document URLs before fetching them. The endpoint index lists it as endpoint 21. It is not part of any transaction workflow and is not referenced by the sandbox exit checklists.
+        Use it only with Swagger UI, or when a tool needs to find the service's API documents. Integrations never call it.
 
         ### Preconditions
 
-        - A GET request to the status service host; the OpenAPI documents in this corpus were captured from https://hcxsbx.abdm.gov.in/<service>/api-docs, and the status service declares the server prefix /statushcxservice.
-        - No JWE envelope, no x-hcx-* protocol headers and no correlation id; the docs do not state that a Bearer token is required for these discovery endpoints.
-        - No request body.
+        - A plain `GET` to the status service host, under `/statushcxservice`.
+        - No encryption, no `x-hcx-*` headers and no request body.
 
         ### Postconditions
 
-        The service returns HTTP 200 with a JSON list of resource descriptors that locate the service's API documents. Nothing changes on NHCX and no callback follows. The documentation does not detail the descriptor fields beyond the purpose line, so treat the shape shown here as illustrative and read the live response.
+        The service returns `200` with a list of where its API documents live. Nothing changes and no callback follows.
 
         ### Common mistakes
 
-        - Pointing at the gateway base https://apisbx.abdm.gov.in/pmjay/sbxhcx and expecting the per-service spec host; the docs advise swapping between the two URL shapes when a path 404s.
-        - Treating the served document as the integration contract for gateway traffic; the handbook's gateway base and header conventions take precedence where the two disagree.
-        - Sending a POST or a JSON body to a GET discovery endpoint.
-        - Wrapping the call in JWE or adding x-hcx-* headers, which only apply to protocol APIs such as /v1/status.
+        - Calling the gateway address instead of the status service host.
+        - Treating this document as the contract for gateway traffic.
+        - Sending a `POST`, a request body or `x-hcx-*` headers.
 
         ### Best practices
 
@@ -1268,24 +721,22 @@ paths:
 
         ### When to use
 
-        Use it only in the context of a Swagger UI session against the status service; ordinary integrations never call it. The endpoint index lists it as endpoint 22. It is not part of any transaction workflow and does not appear in the sandbox exit checklists.
+        Use it only in a Swagger UI session against the status service. Integrations never call it.
 
         ### Preconditions
 
-        - A GET request to the status service host; the OpenAPI documents in this corpus were captured from https://hcxsbx.abdm.gov.in/<service>/api-docs, and the status service declares the server prefix /statushcxservice.
-        - No JWE envelope, no x-hcx-* protocol headers and no correlation id; the docs do not state that a Bearer token is required for these discovery endpoints.
-        - No request body.
+        - A plain `GET` to the status service host, under `/statushcxservice`.
+        - No encryption, no `x-hcx-*` headers and no request body.
 
         ### Postconditions
 
-        The service returns HTTP 200 with a small JSON object of UI settings. Nothing changes on NHCX and no callback follows. The documentation does not enumerate the settings, so the example below is illustrative; read the live response if you need specific values.
+        The service returns `200` with a small set of UI settings. Nothing changes and no callback follows.
 
         ### Common mistakes
 
-        - Pointing at the gateway base https://apisbx.abdm.gov.in/pmjay/sbxhcx and expecting the per-service spec host; the docs advise swapping between the two URL shapes when a path 404s.
-        - Treating the served document as the integration contract for gateway traffic; the handbook's gateway base and header conventions take precedence where the two disagree.
-        - Sending a POST or a JSON body to a GET discovery endpoint.
-        - Wrapping the call in JWE or adding x-hcx-* headers, which only apply to protocol APIs such as /v1/status.
+        - Calling the gateway address instead of the status service host.
+        - Treating this document as the contract for gateway traffic.
+        - Sending a `POST`, a request body or `x-hcx-*` headers.
 
         ### Best practices
 
@@ -1337,25 +788,23 @@ paths:
 
         ### When to use
 
-        Use it only in a Swagger UI session against the status service; integrations never need it. The endpoint index lists it as endpoint 23. It is not part of any transaction workflow, not a source of credentials, and not referenced by the sandbox exit checklists.
+        Use it only in a Swagger UI session against the status service. It does not issue tokens, and integrations never call it.
 
         ### Preconditions
 
-        - A GET request to the status service host; the OpenAPI documents in this corpus were captured from https://hcxsbx.abdm.gov.in/<service>/api-docs, and the status service declares the server prefix /statushcxservice.
-        - No JWE envelope, no x-hcx-* protocol headers and no correlation id; the docs do not state that a Bearer token is required for these discovery endpoints.
-        - No request body.
+        - A plain `GET` to the status service host, under `/statushcxservice`.
+        - No encryption, no `x-hcx-*` headers and no request body.
 
         ### Postconditions
 
-        The service returns HTTP 200 with a small JSON object describing how Swagger UI should handle security inputs. Nothing changes on NHCX, no token is issued and no callback follows. The documentation does not enumerate the fields, so the example below is illustrative.
+        The service returns `200` with the UI's security settings. No token is issued and no callback follows.
 
         ### Common mistakes
 
-        - Pointing at the gateway base https://apisbx.abdm.gov.in/pmjay/sbxhcx and expecting the per-service spec host; the docs advise swapping between the two URL shapes when a path 404s.
-        - Treating the served document as the integration contract for gateway traffic; the handbook's gateway base and header conventions take precedence where the two disagree.
-        - Sending a POST or a JSON body to a GET discovery endpoint.
-        - Wrapping the call in JWE or adding x-hcx-* headers, which only apply to protocol APIs such as /v1/status.
-        - Mistaking this endpoint for an authentication API; tokens come only from the client-credentials call documented in the authentication chapter.
+        - Calling the gateway address instead of the status service host.
+        - Treating this document as the contract for gateway traffic.
+        - Sending a `POST`, a request body or `x-hcx-*` headers.
+        - Mistaking it for a way to get a token.
 
         ### Best practices
 
@@ -1408,23 +857,22 @@ paths:
 
         ### When to use
 
-        Hosted by every participant that sends `/v1/status`. It arrives in answer to a status request you sent.
+        Every participant that sends `/v1/status` hosts this path. It carries the answer to your status request.
 
         ### Preconditions
 
-        - You sent `/v1/status` with `x-hcx-correlation_id` set to the `api_call_id` of the message you were asking about, and you kept that mapping.
-        - Your callback address is registered and answers 202 within 30 seconds.
+        - You sent `/v1/status` and kept track of which request it asked about.
+        - Your callback URL is registered and answers `202` within 30 seconds.
 
         ### Postconditions
 
-        Read `x-hcx-status` from the protected header. `request.dispatched` means the message reached the recipient, and `request.queued` that the exchange still holds it. `request.stopped` means redelivery was exhausted and the correlation ID retired, so the original request is dead and a retry needs a fresh correlation ID. `x-hcx-error_details`, with `code`, `message` and `trace`, is present where the original failed. Answer 202 with the receipt.
+        Read `x-hcx-status` in the header. `request.dispatched` means the message reached the recipient, and `request.queued` means NHCX still holds it. `request.stopped` means the request is dead, so a retry needs a new correlation ID. Answer `202`.
 
         ### Common mistakes
 
-        - Expecting a bundle. The payload is an empty string and everything travels in the header.
-        - Matching the answer on the original request's correlation ID. It carries the correlation of your status request.
-        - Retrying a `request.stopped` message on its old correlation ID.
-        - Offering a refresh or chase control in the user interface with no status exchange behind it.
+        - Expecting a bundle. The payload is an empty string.
+        - Matching on the original request's correlation ID instead of your status request's.
+        - Retrying a stopped request on its old correlation ID.
 
         ### Best practices
 
@@ -1526,22 +974,22 @@ paths:
 
         ### When to use
 
-        Hosted, never called. Implement it before anything else that is asynchronous. Providers and payers both host it.
+        You host this path and never call it. Providers and payers both need it, so build it first.
 
         ### Preconditions
 
-        - Your callback address is registered: a domain name over HTTPS with TLS 1.2 or newer, hosted in India, reachable from the exchange's outbound addresses and answering within 30 seconds.
-        - The handler accepts a body it does not recognise. What arrives is a plain JSON report of the request the exchange gave up on, with the rejection details, not a sealed `JWEPayload`. Its field names are not published, so the body in this request is an illustration rather than a schema.
+        - Your callback URL is registered: a domain name over HTTPS, hosted in India, answering within 30 seconds.
+        - Your handler accepts a body it does not know. The report is plain JSON, not encrypted.
 
         ### Postconditions
 
-        Answer 202 with the receipt, like every other delivery, filling in whatever identifiers the report carries and leaving the rest empty. The original request is dead: its correlation ID has been retired, so a retry needs a fresh one.
+        Answer `202`. The original request is dead, so a retry needs a new correlation ID.
 
         ### Common mistakes
 
-        - Not hosting it, so failed deliveries are never seen.
-        - Parsing the report against a fixed schema and answering `4xx` when it does not match.
-        - Retrying the failed request on the retired correlation ID.
+        - Not hosting it, so failed deliveries go unseen.
+        - Rejecting the report because it does not match a fixed schema.
+        - Retrying the failed request on the old correlation ID.
 
         ### Best practices
 
@@ -1681,189 +1129,7 @@ paths:
                   code: ""
                   message: ""
 webhooks:
-  v1_task_submit:
-    post:
-      operationId: other_webhook_v1_task_submit
-      x-abdm-atom: nhcx.callback.task-submit
-      x-abdm-triggered-by: other_v1_task_submit
-      x-abdm-use-case: Webhooks
-      tags:
-        - Other
-      summary: Receive task submit (reprocess or cancel)
-      description: |-
-        Hosted by the payer. The exchange posts this message to the `endpoint_url` you registered, at `/v1/task/submit`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
-
-        Provider sends a FHIR Task asking the payer to reprocess a rejected or short-paid claim or to cancel a preauth; Task.code and reasonCode set the intent.
-      parameters:
-        - $ref: "#/components/parameters/BearerAuth"
-        - $ref: "#/components/parameters/XHcxSenderCode"
-        - $ref: "#/components/parameters/XHcxRecipientCode"
-        - $ref: "#/components/parameters/XHcxApiCallId"
-        - $ref: "#/components/parameters/XHcxRequestId"
-        - $ref: "#/components/parameters/XHcxCorrelationId"
-        - $ref: "#/components/parameters/XHcxWorkflowId"
-        - $ref: "#/components/parameters/XHcxTimestamp"
-        - $ref: "#/components/parameters/XHcxStatus"
-        - $ref: "#/components/parameters/XHcxBenAbhaId"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                payload:
-                  type: string
-            example:
-              payload: eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2R0NNIiwieC1oY3gtc2VuZGVyX2NvZGUiOiIxMDAwMDA0NDQ2QGhjeCJ9.encrypted_key.iv.ciphertext.tag
-      responses:
-        "202":
-          description: Received. The receipt names the message it answers; the answer itself follows as a call of your own.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  timestamp:
-                    type: string
-                  api_call_id:
-                    type: string
-                  correlation_id:
-                    type: string
-                  result:
-                    type: object
-                    properties:
-                      sender_code:
-                        type: string
-                      recipient_code:
-                        type: string
-                      entity_type:
-                        type: string
-                      protocol_status:
-                        type: string
-                  error:
-                    type: object
-                    properties:
-                      code:
-                        type: string
-                      message:
-                        type: string
-              example:
-                timestamp: 04/09/2026 11:46:41:305
-                api_call_id: <from the incoming header>
-                correlation_id: <from the incoming header>
-                result:
-                  sender_code: 1000003538@hcx
-                  recipient_code: 1000004446@hcx
-                  entity_type: preauth
-                  protocol_status: request.queued
-                error:
-                  code: ""
-                  message: ""
-  v1_task_on_submit:
-    post:
-      operationId: other_webhook_v1_task_on_submit
-      x-abdm-atom: nhcx.callback.task-on-submit
-      x-abdm-triggered-by: other_v1_task_on_submit
-      x-abdm-use-case: Webhooks
-      tags:
-        - Other
-      summary: Receive task callback (reprocess or cancel outcome)
-      description: |-
-        Hosted by the provider. The exchange posts this message to the `endpoint_url` you registered, at `/v1/task/on_submit`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
-
-        Payer returns a Task bundle with Task.status completed whose Task.output references a ClaimResponse carrying the reprocess or cancellation outcome.
-      parameters:
-        - $ref: "#/components/parameters/BearerAuth"
-        - name: x-hcx-sender_code
-          in: header
-          required: true
-          description: Your participant code. Mandatory on the envelope.
-          schema:
-            type: string
-          example: 1518@hcx
-        - name: x-hcx-recipient_code
-          in: header
-          required: true
-          description: The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
-          schema:
-            type: string
-          example: 1000004446@hcx
-        - $ref: "#/components/parameters/XHcxApiCallId"
-        - $ref: "#/components/parameters/XHcxRequestId"
-        - $ref: "#/components/parameters/XHcxCorrelationId"
-        - name: x-hcx-workflow_id
-          in: header
-          required: false
-          description: Which step, or which case. See the two readings below. Optional on the envelope.
-          schema:
-            type: string
-          example: "252"
-        - $ref: "#/components/parameters/XHcxTimestamp"
-        - name: x-hcx-status
-          in: header
-          required: true
-          description: Where this message stands. Values below. Mandatory on the envelope.
-          schema:
-            type: string
-          example: response.complete
-        - $ref: "#/components/parameters/XHcxBenAbhaId"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                payload:
-                  type: string
-            example:
-              payload: eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2R0NNIiwieC1oY3gtc2VuZGVyX2NvZGUiOiIxNTE4QGhjeCJ9.encrypted_key.iv.ciphertext.tag
-      responses:
-        "202":
-          description: Received. The receipt names the message it answers; the answer itself follows as a call of your own.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  timestamp:
-                    type: string
-                  api_call_id:
-                    type: string
-                  correlation_id:
-                    type: string
-                  result:
-                    type: object
-                    properties:
-                      sender_code:
-                        type: string
-                      recipient_code:
-                        type: string
-                      entity_type:
-                        type: string
-                      protocol_status:
-                        type: string
-                  error:
-                    type: object
-                    properties:
-                      code:
-                        type: string
-                      message:
-                        type: string
-              example:
-                timestamp: 04/09/2026 11:46:41:305
-                api_call_id: <from the incoming header>
-                correlation_id: <from the incoming header>
-                result:
-                  sender_code: 1000003538@hcx
-                  recipient_code: 1000004446@hcx
-                  entity_type: preauth
-                  protocol_status: request.queued
-                error:
-                  code: ""
-                  message: ""
-  v1_on_status:
+  /v1/on_status:
     post:
       operationId: other_webhook_v1_on_status
       x-abdm-atom: nhcx.callback.on-status
@@ -1963,7 +1229,7 @@ webhooks:
                 error:
                   code: ""
                   message: ""
-  v1_error:
+  /v1/error:
     post:
       operationId: other_webhook_v1_error
       x-abdm-atom: nhcx.callback.error

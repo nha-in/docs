@@ -1,13 +1,14 @@
 ---
-title: Error codes
+title: Reading error codes
 sidebar_label: Reading error codes
 sidebar_position: 11
-description: Directory of 309 error codes, the three code spaces, and collisions
+description: Start here for errors. The four code spaces, the 18 PAYR codes that mean two things, and all 309 codes.
 source: nhcx-package/docs/06-Reference/01-Error Codes.md
 generated: true
+hide_last_update: true
 ---
 
-# Error codes
+# Reading error codes
 
 Every error code NHCX and the reference payer can send, in one place. The
 workflow codes are in the Overview's Workflow Codes chapter and the FHIR value

@@ -88,9 +88,9 @@ writeFileSync(
     process.exit(1);
   }
   if (!process.env.DOCUSAURUS_URL) {
-    console.warn('build-nav: DOCUSAURUS_URL unset, llms.txt will use the example.com placeholder (local build only).');
+    console.warn('build-nav: DOCUSAURUS_URL unset, llms.txt will use https://docs.abdm.gov.in.');
   }
-  const siteUrl = (process.env.DOCUSAURUS_URL ?? 'https://abdm-docs.example.com').replace(/\/+$/, '');
+  const siteUrl = (process.env.DOCUSAURUS_URL ?? 'https://docs.abdm.gov.in').replace(/\/+$/, '');
   const base = (process.env.DOCUSAURUS_BASE_URL ?? '/').replace(/\/+$/, '');
 
   const pages = [];

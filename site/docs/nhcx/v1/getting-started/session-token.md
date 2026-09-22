@@ -70,6 +70,19 @@ The token is short-lived. The portal's documents put its life at 300 seconds in 
 
 One token serves every call: the participant service, the use-case endpoints, and the status check.
 
+## The other call named session
+
+The participant service publishes its own [`POST /get/session`](/docs/nhcx/v1/api/registry/endpoints/registry-get-session). It is a different call from the gateway sessions call above, and a request built for one fails on the other.
+
+| | Gateway sessions call | Participant service `/get/session` |
+| :---- | :---- | :---- |
+| Address | `dev.abdm.gov.in/api/hiecm/gateway/v3/sessions` | `/get/session` on the participant service base |
+| Headers | `REQUEST-ID`, `TIMESTAMP`, `X-CM-ID` | None of the three |
+| Body | JSON, with `clientId`, `clientSecret`, `grantType` | Form encoded, with `client_id`, `client_secret`, `grant_type` |
+| Token field | `accessToken` | `access_token` |
+
+Use the gateway sessions call by default. The sandbox exit test cases name `/get/session` as the token call, so point your token client there when you demonstrate them. Keep the address, the body format and the field names in configuration, so switching is not a code change.
+
 ## What can go wrong
 
 | Symptom | Cause |

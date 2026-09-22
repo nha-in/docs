@@ -13,7 +13,7 @@ info:
   title: NHCX coverage eligibility
   summary: Coverage eligibility is the pre-check a hospital desk runs before committing a patient to a cashless pathway.
   description: |-
-    The Coverage eligibility calls on the National Health Claims Exchange (NHCX): 4 operations, and 2 callbacks you host.
+    The Coverage eligibility calls on the National Health Claims Exchange (NHCX): 2 operations, and 2 callbacks you host.
 
     Coverage eligibility is the pre-check a hospital desk runs before committing a patient to a cashless pathway.
 
@@ -52,8 +52,6 @@ servers:
 tags:
   - name: Coverage eligibility
     description: Coverage eligibility is the pre-check a hospital desk runs before committing a patient to a cashless pathway.
-  - name: Adapter
-    description: Internal twins of the exchange calls, for the NHCX adapter deployment.
 security:
   - bearerAuth: []
 paths:
@@ -74,29 +72,26 @@ paths:
 
         ### When to use
 
-        Call it at registration or admission, before /v1/preauth/submit. The CoverageEligibilityRequest.purpose field (1..*) decides what the payer computes: discovery is the fallback when /participant/get/policies does not yield a policy code; validation retrieves used amount, available balance and wallet liability; auth-requirements checks whether a chosen procedure is covered at this hospital and returns the STG questionnaires and MAND document codes the preauth must carry; benefits is also listed. Send x-hcx-status request.initiated. No eligibility-specific workflow code is published in the workflow tables; the workbook sample shows x-hcx-workflow_id 11 (PATIENT_ADMITTED). For PMJAY an unspecified procedure still requires an auth-requirements check.
+        Call it at registration or admission, before you submit a pre-authorisation. The `purpose` field says what you want back, such as whether the policy is active or whether a procedure needs approval.
 
         ### Preconditions
 
-        - The provider is an onboarded NHCX participant (otherwise NHCX-1002) holding a valid Bearer token from the client-credentials session call; tokens expire after 1200 seconds.
-        - The payer's public certificate has been fetched via /fetch/certs (cache 24 hours) and the bundle is JWE-encrypted with RSA-OAEP-256 and A256GCM.
-        - x-hcx-recipient_code is the processingID from the get/policies response, not the PayerID.
-        - x-hcx-correlation_id is a fresh UUID for this request cycle; x-hcx-api_call_id is unique per call.
-        - The bundle contains the Patient (PMJAY Member ID and/or ABHA number), the Coverage record, both Organisations (provider and insurer) and a PractitionerRole for the enterer; items are included when purpose is auth-requirements.
-        - HTTP headers Accept: application/json, Content-Type: application/json and bearer_auth are all present.
+        - You have a valid access token and the payer's certificate.
+        - `x-hcx-recipient_code` is the processing ID from the policy lookup, not the payer ID.
+        - `x-hcx-correlation_id` is a new UUID for this check.
+        - The bundle names the patient, the coverage, the hospital and the insurer, encrypted for the payer.
 
         ### Postconditions
 
-        NHCX replies synchronously with HTTP 202 Accepted and a StatusSuccessResponse acknowledgement (timestamp, api_call_id, correlation_id, result with sender_code, recipient_code, entity_type coverageeligibility and protocol_status such as request.queued or request.dispatched, plus an empty error object). The 202 means only that the JWE structure and open protocol headers validated; the gateway then forwards the request to the payer asynchronously. The eligibility answer arrives later on the provider's /v1/coverageeligibility/on_check endpoint as a CoverageEligibilityResponseBundle, or as a ProtocolResponse carrying x-hcx-error_details, or as a redirect or forward instruction to try another payer. Other documented statuses are 400 request validation failed, 404 resource not found and 500 downstream systems down.
+        - NHCX answers `202` at once. That only means the message was accepted.
+        - The payer's answer arrives later on `/v1/coverageeligibility/on_check`.
 
         ### Common mistakes
 
-        - Treating the 202 as the eligibility answer instead of waiting for the on_check callback; NHCX never returns a synchronous FHIR decision.
-        - Using the PayerID from get/policies as x-hcx-recipient_code instead of the processingID (NHCX-1003 receiver not registered).
-        - Reusing a correlation ID from an earlier cycle (NHCX-1006 duplicate request) or retrying a failed cycle under the same ID, which NHCX has already marked inactive.
-        - Sending the wrong status string; only request.initiated is accepted on an initiating request (NHCX-1011).
-        - Payer-side business rejections such as PAYR-1113 invalid item code, PAYR-1115 quantity not greater than 1, PAYR-1116 hospital not authorised for the policy, PAYR-1117 or PAYR-1122 no policy details, PAYR-1123 beneficiary not a covered member, and PAYR-1014 date of birth after date of service.
-        - Omitting the Accept header on the HTTP call.
+        - Treating the `202` as the eligibility answer.
+        - Using the payer ID as the recipient code instead of the processing ID.
+        - Reusing a correlation ID from an earlier check.
+        - Sending a status other than `request.initiated`.
 
         ### Best practices
 
@@ -197,27 +192,26 @@ paths:
 
         ### When to use
 
-        The payer calls it after it has processed a /v1/coverageeligibility/check request, using the same x-hcx-correlation_id. The protected header carries x-hcx-status response.complete for a final answer (the coverage-eligibility workbook sheets spell this response.completed; the preauth and claim sheets use response.complete), response.partial for a partial answer, or response.error for a protocol-level rejection with x-hcx-error_details populated. The plaintext is a CoverageEligibilityResponseBundle with outcome complete, insurance[*].inforce, item[*].excluded, item[*].authorizationRequired and item[*].authorizationSupporting. A redirect or forward instruction to another payer is an alternate documented outcome.
+        The payer calls it after processing an eligibility check, with the same correlation ID. It says whether the policy is active, what is covered and whether a pre-authorisation is needed.
 
         ### Preconditions
 
-        - A /v1/coverageeligibility/check request with this correlation ID must exist in NHCX; a callback against an unknown or already deleted correlation ID fails with NHCX-1010.
-        - The payer has a valid Bearer token and has fetched the provider's certificate to encrypt the response bundle for the provider's private key.
-        - x-hcx-correlation_id echoes the request's value; x-hcx-api_call_id is a new UUID; sender and recipient codes are swapped relative to the request.
-        - x-hcx-status is one of response.complete, response.partial or response.error (NHCX-1011 otherwise).
-        - Business or clinical errors are embedded inside the encrypted CoverageEligibilityResponse, never in the clear header; only protocol errors go in x-hcx-error_details.
+        - A check with this correlation ID exists in NHCX.
+        - The payer has a valid access token and the provider's certificate, and encrypts the answer for the provider.
+        - `x-hcx-status` is `response.complete`, `response.partial` or `response.error`.
+        - Business errors go inside the encrypted answer. Only protocol errors go in `x-hcx-error_details`.
 
         ### Postconditions
 
-        The gateway (and, when the callback reaches it, the provider system) returns HTTP 202 Accepted with the StatusSuccessResponse acknowledgement echoing correlation_id and api_call_id, entity_type coverageeligibility and a protocol_status. NHCX forwards the encrypted response to the provider's registered callback URL; the provider must acknowledge with 202 within 30 seconds or NHCX retries, and after five failed attempts the request under that correlation ID is deleted and the sender is notified via v1/error. On success the eligibility conversation is closed and the provider can decide whether to proceed to preauth.
+        - NHCX answers `202` and forwards the answer to the provider.
+        - The provider must reply `202` within 30 seconds, or NHCX retries up to five times.
+        - On success the check is closed and the provider can move on to pre-authorisation.
 
         ### Common mistakes
 
-        - Returning HTTP 200 or an ad-hoc body instead of the 202 acceptance shape on the receiving side, which NHCX treats as an error and retries up to five times.
-        - Minting a new correlation ID on the callback instead of echoing the request's (NHCX-1010 no data with given correlation id).
-        - Sending a JWEPayloadResponse where a ProtocolResponse is expected on error (PAYR-1517), or using the superseded status spelling response.fail versus response.error; the sources disagree, so check which your gateway build accepts.
-        - Placing patient or clinical error detail in x-hcx-error_details, which the gateway stores for audit.
-        - Provider side: expecting the response codes to match the request codes verbatim; the payer answers in its own master codes.
+        - Replying with `200` or a custom body on the receiving side, which makes NHCX retry.
+        - Creating a new correlation ID instead of reusing the request's.
+        - Putting patient or clinical details in `x-hcx-error_details`.
 
         ### Best practices
 
@@ -319,248 +313,8 @@ paths:
                 error:
                   code: ""
                   message: ""
-  /internal/v1/coverageeligibility/check:
-    post:
-      operationId: eligibility_internal_v1_coverageeligibility_check
-      x-abdm-use-case: Adapter
-      tags:
-        - Adapter
-      summary: Coverage eligibility check (internal) (adapter)
-      description: |-
-        Internal twin of /v1/coverageeligibility/check with the same JWEPayload body and response set; only the operationId differs.
-
-        ### Business purpose
-
-        The coverage eligibility service publishes its check operation twice, once at /v1 and once at /internal/v1. Both let a provider validate a beneficiary's coverage with a payer before preauthorisation. The internal path exists in the OpenAPI document as an operationally distinct route for the same business function; the published material does not describe a separate business purpose for it.
-
-        ### When to use
-
-        Documented as the internal variant of the eligibility check (operationId coverageeligibilityCheckPostInternal), served by coverageeligibilityhcxservice and tagged V1.0 APIs-Payer side like its public twin. The same purposes (discovery, validation, auth-requirements, benefits) and the same x-hcx-status request.initiated apply. The OpenAPI specs expose this operation twice, at /v1/... and at /internal/v1/..., with identical descriptions, request bodies and response sets; only the operationId differs (an Internal suffix). The specs do not document what makes the internal variant different beyond that suffix, so treat it as a mirror of the public path and integrate against the public /v1 path unless NHCX onboarding tells you otherwise.
-
-        ### Preconditions
-
-        Identical to the public path: an onboarded provider with a valid Bearer token, the payer certificate fetched and cached, a CoverageEligibilityRequest bundle encrypted with RSA-OAEP-256 and A256GCM, a fresh correlation UUID, the processingID as recipient code, and the full x-hcx-* protected header set. Nothing additional is documented for the internal route.
-
-        ### Postconditions
-
-        Same as /v1/coverageeligibility/check: HTTP 202 Accepted with a StatusSuccessResponse acknowledgement, then asynchronous forwarding to the payer and an answer on the on_check callback (the internal twin /internal/v1/coverageeligibility/on_check exists with the same body). 400, 404 and 500 carry the same schema.
-
-        ### Common mistakes
-
-        - Assuming the internal path has different semantics or a different body; the specs give it the same JWEPayload body and the same responses.
-        - Integrating against the internal path without confirmation from NHCX onboarding, then hitting a 404 on the gateway host; when a path 404s, the endpoint index recommends trying the alternate host and prefix shape.
-        - All the mistakes listed for the public check (202 treated as an answer, wrong recipient code, reused correlation ID, wrong status string) apply unchanged.
-
-        ### Best practices
-
-        - Default to /v1/coverageeligibility/check; use the internal path only where NHCX instructs you to.
-        - Keep one client implementation for both paths, parameterised only on the URL, so header hygiene and correlation handling stay identical.
-        - Log which variant was used with each correlation ID for troubleshooting.
-
-        ### Related scenario
-
-        A hospital integration team exploring the coverageeligibilityhcxservice Swagger sees two check operations. They build one client against /v1/coverageeligibility/check and confirm with NHCX support whether the internal twin is meant for their deployment. In production traffic the eligibility request still starts from get/policies, goes out as a JWE to the check path, receives a 202, and the payer's answer arrives on the on_check callback before the preauth is raised.
-
-        ### Specification
-
-        Chapter [Coverage eligibility request](/docs/nhcx/v1/reference/fhir/coverage-eligibility-request) of the NHCX integration specification.
-      parameters:
-        - $ref: "#/components/parameters/BearerAuth"
-        - $ref: "#/components/parameters/XHcxSenderCode"
-        - $ref: "#/components/parameters/XHcxRecipientCode"
-        - $ref: "#/components/parameters/XHcxApiCallId"
-        - $ref: "#/components/parameters/XHcxRequestId"
-        - $ref: "#/components/parameters/XHcxCorrelationId"
-        - $ref: "#/components/parameters/XHcxWorkflowId"
-        - $ref: "#/components/parameters/XHcxTimestamp"
-        - $ref: "#/components/parameters/XHcxStatus"
-        - $ref: "#/components/parameters/XHcxBenAbhaId"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                payload:
-                  type: string
-            example:
-              payload: eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2R0NNIiwieC1oY3gtc2VuZGVyX2NvZGUiOi4uLn0.encrypted_key.iv.ciphertext.tag
-      responses:
-        "202":
-          description: "Same as /v1/coverageeligibility/check: HTTP 202 Accepted with a StatusSuccessResponse acknowledgement, then asynchronous forwarding to the payer and an answer on the on_check callback (the internal twin /internal/v1/coverageeligibility/on_check exists with the same body)."
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  timestamp:
-                    type: string
-                  api_call_id:
-                    type: string
-                  correlation_id:
-                    type: string
-                  result:
-                    type: object
-                    properties:
-                      sender_code:
-                        type: string
-                      recipient_code:
-                        type: string
-                      entity_type:
-                        type: string
-                      protocol_status:
-                        type: string
-                  error:
-                    type: object
-                    properties:
-                      code:
-                        type: string
-                      message:
-                        type: string
-              example:
-                timestamp: 19/03/2026 11:46:35:120
-                api_call_id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
-                correlation_id: 11223344-5566-7788-99aa-bbccddeeff00
-                result:
-                  sender_code: 1000004446@hcx
-                  recipient_code: 1518@hcx
-                  entity_type: coverageeligibility
-                  protocol_status: request.queued
-                error:
-                  code: ""
-                  message: ""
-  /internal/v1/coverageeligibility/on_check:
-    post:
-      operationId: eligibility_internal_v1_coverageeligibility_on_check
-      x-abdm-use-case: Adapter
-      tags:
-        - Adapter
-      summary: Coverage eligibility callback (internal) (adapter)
-      description: |-
-        Internal twin of /v1/coverageeligibility/on_check taking the same bare object body; only the operationId differs.
-
-        ### Business purpose
-
-        Mirror of the public eligibility callback: the payer or TPA returns the CoverageEligibilityResponseBundle, or a protocol error, to the provider through NHCX. It serves the same settlement purpose, letting the hospital know before treatment whether the policy is in force and which documents the preauth will need. No separate business role is documented for the internal route.
-
-        ### When to use
-
-        Documented as the internal variant of the eligibility callback (operationId coverageeligibilityOnCheckPostInternal), tagged V1.0 APIs-Provider side. Called after processing a check request, with the request's correlation ID and x-hcx-status response.complete, response.partial or response.error. The OpenAPI specs expose this operation twice, at /v1/... and at /internal/v1/..., with identical descriptions, request bodies and response sets; only the operationId differs (an Internal suffix). The specs do not document what makes the internal variant different beyond that suffix, so treat it as a mirror of the public path and integrate against the public /v1 path unless NHCX onboarding tells you otherwise.
-
-        ### Preconditions
-
-        Identical to the public callback: an in-flight check request with this correlation ID, the provider's certificate for encryption, a new api_call_id, swapped sender and recipient codes, a valid responder status, and business errors embedded inside the encrypted resource rather than the header.
-
-        ### Postconditions
-
-        Same as /v1/coverageeligibility/on_check: HTTP 202 Accepted with the StatusSuccessResponse acknowledgement, asynchronous delivery to the provider's callback URL with the 30-second acknowledgement rule, five retries then deletion on failure, and closure of the eligibility conversation on success.
-
-        ### Common mistakes
-
-        - Treating the internal callback as a different contract; the spec gives it the same object body and response set as the public path.
-        - Every public on_check pitfall applies: returning 200 instead of the 202 acceptance body, minting a new correlation ID, sending a JWEPayloadResponse instead of a ProtocolResponse on error (PAYR-1517), and leaking business errors into x-hcx-error_details.
-
-        ### Best practices
-
-        - Route both callback variants to the same handler keyed on x-hcx-correlation_id so behaviour cannot diverge.
-        - Acknowledge with 202 inside 30 seconds and process asynchronously; be idempotent under redelivery.
-        - Use the public /v1 path unless NHCX onboarding specifies the internal one.
-
-        ### Related scenario
-
-        A TPA bridge that processes eligibility checks on behalf of an insurer sees both on_check operations in the service spec. It implements a single response builder that populates inforce, excluded and authorizationRequired, echoes the correlation ID and posts to /v1/coverageeligibility/on_check by default, with the internal path configurable if NHCX requires it. The hospital's callback acknowledges with 202 and the desk moves on to the preauth.
-
-        ### Specification
-
-        Chapter [Coverage eligibility response](/docs/nhcx/v1/reference/fhir/coverage-eligibility-response) of the NHCX integration specification.
-      parameters:
-        - $ref: "#/components/parameters/BearerAuth"
-        - name: x-hcx-sender_code
-          in: header
-          required: true
-          description: Your participant code. Mandatory on the envelope.
-          schema:
-            type: string
-          example: 1518@hcx
-        - name: x-hcx-recipient_code
-          in: header
-          required: true
-          description: The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
-          schema:
-            type: string
-          example: 1000004446@hcx
-        - $ref: "#/components/parameters/XHcxApiCallId"
-        - $ref: "#/components/parameters/XHcxRequestId"
-        - $ref: "#/components/parameters/XHcxCorrelationId"
-        - $ref: "#/components/parameters/XHcxWorkflowId"
-        - $ref: "#/components/parameters/XHcxTimestamp"
-        - name: x-hcx-status
-          in: header
-          required: true
-          description: Where this message stands. Values below. Mandatory on the envelope.
-          schema:
-            type: string
-          example: response.complete
-        - $ref: "#/components/parameters/XHcxBenAbhaId"
-        - $ref: "#/components/parameters/XHcxDebugFlag"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                payload:
-                  type: string
-            example:
-              payload: eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2R0NNIiwieC1oY3gtc2VuZGVyX2NvZGUiOi4uLn0.encrypted_key.iv.ciphertext.tag
-      responses:
-        "202":
-          description: "Same as /v1/coverageeligibility/on_check: HTTP 202 Accepted with the StatusSuccessResponse acknowledgement, asynchronous delivery to the provider's callback URL with the 30-second acknowledgement rule, five retries then deletion on failure, and closure of the eligibility conversation on success."
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  timestamp:
-                    type: string
-                  api_call_id:
-                    type: string
-                  correlation_id:
-                    type: string
-                  result:
-                    type: object
-                    properties:
-                      sender_code:
-                        type: string
-                      recipient_code:
-                        type: string
-                      entity_type:
-                        type: string
-                      protocol_status:
-                        type: string
-                  error:
-                    type: object
-                    properties:
-                      code:
-                        type: string
-                      message:
-                        type: string
-              example:
-                timestamp: 19/03/2026 11:46:35:120
-                api_call_id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
-                correlation_id: 11223344-5566-7788-99aa-bbccddeeff00
-                result:
-                  sender_code: 1518@hcx
-                  recipient_code: 1000004446@hcx
-                  entity_type: coverageeligibility
-                  protocol_status: request.dispatched
-                error:
-                  code: ""
-                  message: ""
 webhooks:
-  v1_coverageeligibility_check:
+  /v1/coverageeligibility/check:
     post:
       operationId: eligibility_webhook_v1_coverageeligibility_check
       x-abdm-atom: nhcx.callback.coverageeligibility-check
@@ -639,7 +393,7 @@ webhooks:
                 error:
                   code: ""
                   message: ""
-  v1_coverageeligibility_on_check:
+  /v1/coverageeligibility/on_check:
     post:
       operationId: eligibility_webhook_v1_coverageeligibility_on_check
       x-abdm-atom: nhcx.callback.coverageeligibility-on-check

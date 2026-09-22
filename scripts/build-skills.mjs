@@ -41,12 +41,9 @@ const catalogueVersion = readFileSync(join(root, 'catalogue', 'VERSION'), 'utf8'
 // catalogue itself was cut, so it is stable input, not a clock, and it
 // doubles as the date site/static/skills/** (gitignored) prints too.
 const buildDate = catalogueVersion.replace(/\./g, '-');
-// The site build exports DOCUSAURUS_URL; without it (a local dev run, or the
-// frozen render below) the header falls back to naming the path, which is
-// still enough to act on.
-const siteUrl = process.env.DOCUSAURUS_URL
-  ? `${process.env.DOCUSAURUS_URL}${process.env.DOCUSAURUS_BASE_URL ?? '/'}`.replace(/\/+$/, '')
-  : null;
+// The portal's published address, the same default site/docusaurus.config.ts
+// uses. A deployment elsewhere sets DOCUSAURUS_URL (and DOCUSAURUS_BASE_URL).
+const siteUrl = `${process.env.DOCUSAURUS_URL ?? 'https://docs.abdm.gov.in'}${process.env.DOCUSAURUS_BASE_URL ?? '/'}`.replace(/\/+$/, '');
 // A skill is a folder: this router plus the sections under references/ that it
 // links to. Naming the router's own URL here invited a reader to re-fetch one
 // file and leave every link in it pointing at a file they no longer have, so
@@ -979,29 +976,29 @@ const abdmSlugs = Object.keys(manifest);
 // because its SKILL.md points into stages, templates and scripts beside it and
 // a SKILL.md served alone would send an agent to files it cannot reach.
 const NHCX = {
+  'nhcx-full': {
+    title: 'NHCX, end to end',
+    example: 'Build the whole provider-side NHCX integration into this hospital system',
+  },
   'nhcx-coverage': {
     title: 'NHCX coverage',
     example: 'Add NHCX policy search and coverage eligibility to this hospital system',
   },
-  'nhcx-insurance': {
-    title: 'NHCX insurance plan',
-    example: "Fetch the payer's NHCX package master and quote treatment lines from it",
-  },
   'nhcx-preauth': {
     title: 'NHCX pre-authorisation',
-    example: 'Add NHCX pre-authorisation to this claims desk',
+    example: "Add NHCX pre-authorisation, with the payer's plan and its authorisation requirements, to this system",
   },
   'nhcx-claim': {
     title: 'NHCX claim',
     example: 'File the NHCX claim at discharge from this system',
   },
+  'nhcx-communication': {
+    title: 'NHCX communication',
+    example: "Handle the payer's NHCX queries and notifications in this system",
+  },
   'nhcx-payment': {
     title: 'NHCX payment',
     example: 'Record and acknowledge NHCX payment notices',
-  },
-  'nhcx-communication': {
-    title: 'NHCX communication',
-    example: "Handle the payer's NHCX communication requests in this system",
   },
   'nhcx-reprocess': {
     title: 'NHCX reprocess',
@@ -1016,70 +1013,31 @@ const countFiles = (dir) =>
   );
 
 // An NHCX skill is counted from its own files, so its install panel shows what
-// it holds the way a module skill's does:
-//   Integrate  the calls its Wire row names, each with its reverse leg when a
-//              published specification carries one
-//   Test       its test-case matrix rows for the use cases it names, leaving out
-//              rows that make no call
-//   Debug      the distinct error codes its errors reference carries
-const specPaths = readdirSync(dataDir)
-  .filter((file) => file.endsWith('.json'))
-  .map((file) => String(JSON.parse(readFileSync(join(dataDir, file), 'utf8')).path ?? ''));
-const published = (path) => specPaths.some((p) => p.endsWith(`/${path}`));
-
-const cellOf = (text, label) => new RegExp(`^\\| ${label} \\| (.+) \\|$`, 'm').exec(text)?.[1] ?? '';
+// it holds the way a module skill's does. A skill holds one spec file per call
+// it builds, under apis/, and one per callback it hosts, under callbacks/;
+// its end-to-end tests are the rows of the table in steps/L8-e2e-tests.md.
+// The skills carry no error table of their own: codes come from the knowledge
+// source (the nhcx-docs MCP server's decode_error, or the NHCX package), so
+// the panel promises no Debug row for them.
+const specFiles = (dir) =>
+  existsSync(dir) ? readdirSync(dir).filter((f) => /^[A-Z]\d+-.+\.md$/.test(f)).length : 0;
 function useCaseCounts(dir) {
-  const testingFile = join(dir, 'references', 'testing-knowledge.md');
-  const errorsFile = join(dir, 'references', 'errors-and-debugging.md');
-  const skill = readFileSync(join(dir, 'SKILL.md'), 'utf8');
-  const wire = cellOf(skill, 'Wire');
-  const uses = cellOf(skill, 'Use cases');
-  if (!wire || !uses || !existsSync(testingFile) || !existsSync(errorsFile)) {
-    return {operations: 0, codes: 0, tests: 0};
-  }
-
-  const calls = new Set();
-  let resource = '';
-  for (const [, token] of wire.matchAll(/`((?:v1\/)?[a-z]+(?:\/[a-z_]+)+|on_[a-z_]+)`/g)) {
-    // A bare `on_check` belongs to the resource named just before it.
-    const path = token.startsWith('on_') && resource ? `${resource}/${token}` : token;
-    if (path.startsWith('v1/')) resource = path.split('/').slice(0, 2).join('/');
-    calls.add(path);
-    if (!path.startsWith('v1/')) continue;
-    const last = path.split('/').pop();
-    const reverse = path.replace(/[^/]+$/, last.startsWith('on_') ? last.slice(3) : `on_${last}`);
-    if (published(reverse)) calls.add(reverse);
-  }
-
-  const wanted = [];
-  for (const part of uses.replace(/\(.*?\)/g, '').split(/[;,]| and /)) {
-    const range = /\b([A-E])(\d+) to \1?(\d+)\b/.exec(part);
-    if (range) {
-      for (let i = Number(range[2]); i <= Number(range[3]); i += 1) wanted.push({code: `${range[1]}${i}`});
-      continue;
-    }
-    const one = /\b([A-E]\d+)\b(?:\s+(cancel|reprocess))?/i.exec(part);
-    if (one) wanted.push({code: one[1], qualifier: one[2]?.toLowerCase()});
-  }
-  const matrix = (readFileSync(testingFile, 'utf8').split('## 3. The test-case matrix')[1] ?? '').split('Cross-cutting rows')[0];
-  const tests = [...matrix.matchAll(/^\| ([A-E]\d+)([^|]*) \|[^|]*\|[^|]*\| ([^|]*) \|/gm)].filter(
-    ([, code, rest, callCell]) =>
-      callCell.trim() !== 'none' &&
-      wanted.some((w) => w.code === code && (!w.qualifier || rest.toLowerCase().includes(w.qualifier))),
-  ).length;
-
-  const codes = new Set(
-    readFileSync(errorsFile, 'utf8').match(/\b(?:NHCX-\d{3,4}|PAYR-\d{4}|ERR-[A-Z]+-[A-Z]+-\d+)\b/g) ?? [],
-  ).size;
-  return {operations: calls.size, codes, tests};
+  const e2e = join(dir, 'steps', 'L8-e2e-tests.md');
+  const tests = existsSync(e2e)
+    ? (readFileSync(e2e, 'utf8').match(/^\| X\d+ \|/gm) ?? []).length
+    : 0;
+  return {
+    operations: specFiles(join(dir, 'apis')) + specFiles(join(dir, 'callbacks')),
+    codes: 0,
+    tests,
+  };
 }
 
 /** The install panel's rows for an NHCX skill, and the file behind each. */
 const NHCX_SECTION_FILES = {
-  scaffold: 'references/scaffold.md',
-  integrate: 'references/api-knowledge.md',
-  debug: 'references/errors-and-debugging.md',
-  test: 'references/testing-knowledge.md',
+  scaffold: 'references/SCAFFOLDING.md',
+  integrate: 'apis/INDEX.md',
+  test: 'steps/L8-e2e-tests.md',
 };
 
 const nhcxDir = join(root, 'plugins', 'nhcx', 'skills');
@@ -1165,7 +1123,7 @@ const promptSkills = abdmSlugs.map((slug) => [
   slug,
   `${manifest[slug].title}. Sections: ${manifest[slug].sections.join(', ')}.`,
 ]);
-const mcpUrl = process.env.MCP_URL ?? null;
+const mcpUrl = process.env.MCP_URL ?? 'https://docs.abdm.gov.in/mcp';
 // The Claude Code plugin marketplace: this repository itself, named by the
 // environment rather than written down here. Actions sets GITHUB_REPOSITORY on
 // whichever fork is building, so a fork's prompt carries its own install
@@ -1300,11 +1258,11 @@ const nhcxPromptLines = [
   '',
   '## 1. Establish scope',
   '',
-  'There is one skill per NHCX use case, in episode order. Ask the user which use cases this project builds, and install only those:',
+  'There is one skill for the whole provider-side integration, `nhcx-full`, and one per NHCX use case. Ask the user which this project builds, and install only those:',
   '',
   ...nhcxSlugs.map((slug) => `- \`${slug}\`: ${manifest[slug].title}. ${manifest[slug].example}.`),
   '',
-  'Each skill checks what the project already has and builds only what is missing, and each installs and runs alone. A claims integration usually starts with `nhcx-coverage`.',
+  'Each skill finds what the project already has and builds only what is missing, and each installs and runs alone. `nhcx-full` builds the whole integration; a system that needs one use case at a time usually starts with `nhcx-coverage`.',
   '',
   '## 2. Install the skills',
   '',
@@ -1340,7 +1298,7 @@ const nhcxPromptLines = [
   '',
   ...nhcxSlugs.map((slug) => `- \`${nhcxRepo}/plugins/nhcx/skills/${slug}\``),
   '',
-  `\`${promptRef('/skills/nhcx-index.json')}\` lists every NHCX skill, its archive and the exact files it is made of. A skill is 59 files across eight directories, so take the archive rather than fetching files one at a time.`,
+  `\`${promptRef('/skills/nhcx-index.json')}\` lists every NHCX skill, its archive and the exact files it is made of. A skill is ${Math.min(...nhcxSlugs.map((slug) => manifest[slug].files))} to ${Math.max(...nhcxSlugs.map((slug) => manifest[slug].files))} files across its folders, so take the archive rather than fetching files one at a time.`,
   '',
   '## 3. Connect the Docs MCP server',
   '',

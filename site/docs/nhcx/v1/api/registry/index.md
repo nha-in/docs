@@ -9,7 +9,13 @@ generated: true
 
 # Participant registry
 
-Every NHCX API call, whether a registry lookup, a certificate fetch or a claim submission, is rejected unless it carries a valid Bearer token, so this is the first call any integration makes and...
+The participant service holds the registry: who is on the exchange, their certificates and callback addresses, and the policies linked to a beneficiary.
+
+## Two things to know before you call
+
+**`/get/session` is not the gateway sessions call.** The participant service publishes its own token call under the same name other documents use for the ABDM gateway session. The two differ in address, headers, body encoding and response field names. Use the gateway call by default. The differences are set out in [Session token](/docs/nhcx/v1/getting-started/session-token#the-other-call-named-session).
+
+**Three paths carry an uppercase `/V2/`.** The policy lookup, link and de-link variants are published as `/V2/participant/...`, while every other versioned path uses lowercase `/v2/`. The participant service's specification prints them that way, and it does not state whether paths are case-sensitive. Send each path exactly as printed here.
 
 ## Calls
 

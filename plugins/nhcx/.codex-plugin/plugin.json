@@ -1,7 +1,7 @@
 {
   "name": "nhcx",
-  "version": "0.2.0",
-  "description": "Agent skills for building on the National Health Claims Exchange (NHCX), one per use case in episode order: nhcx-coverage, nhcx-insurance, nhcx-preauth, nhcx-claim, nhcx-payment, nhcx-communication and nhcx-reprocess. Each builds its use case into a hospital information system or a claims desk, held to the NHCX package's pinned FHIR bundles, and installs and runs alone. Also carries /nhcx-decode-error, /nhcx-preflight and /nhcx-prove-seal, and the nhcx-call-debugger agent.",
+  "version": "1.0.0",
+  "description": "Agent skills for building the provider side of the National Health Claims Exchange (NHCX) into a hospital information system: nhcx-full for the whole integration, and one skill per use case, nhcx-coverage, nhcx-preauth, nhcx-claim, nhcx-communication, nhcx-payment and nhcx-reprocess. Each works through eight logged steps from discovery to sandbox tests, takes its NHCX facts from the nhcx-docs MCP server or the NHCX package, and installs and runs alone. Connects the nhcx-docs MCP server, and carries /nhcx-decode-error, /nhcx-preflight and /nhcx-prove-seal, and the nhcx-call-debugger agent.",
   "author": {
     "name": "ABDM Developer Portal",
     "url": "https://github.com/nha-in/docs"
@@ -19,6 +19,7 @@
     "india-health"
   ],
   "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "NHCX",
     "shortDescription": "Build an NHCX claims integration, one use case at a time.",

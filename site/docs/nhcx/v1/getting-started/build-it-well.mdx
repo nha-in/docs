@@ -7,7 +7,6 @@ sidebar_position: 1.4
 sidebar_class_name: sidebar-icon sidebar-icon--hard-hat
 ---
 
-import SkillInstall from '@site/src/components/docs/SkillInstall';
 
 # Build it well
 
@@ -105,14 +104,6 @@ Replace your `send` with a stub and replay one case: an acknowledgement, the
 same acknowledgement again, then the decision. The case must end decided, with
 one row per message and no second send offered. Then fail a send after the
 write, deliver its answer, and check the leg revives.
-
-## Let an agent hold these rules
-
-Every NHCX skill carries these rules with the runs behind them, in
-`references/errors-and-debugging.md`. The claim skill is the one most
-integrations reach for first after coverage.
-
-<SkillInstall slug="nhcx-claim" note="The discharge and the claim, the claim query answer, and the decision." />
 
 ## Where to go next
 

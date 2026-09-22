@@ -139,7 +139,7 @@ const TARGETS: Record<AgentId, Target> = {
 const DETAIL: Record<string, (entry: Entry) => string> = {
   scaffold: (entry) =>
     entry.folder
-      ? 'The loop that builds the use case stage by stage, ending when a gate closes on evidence rather than on the work looking right.'
+      ? 'The eight steps that build the use case into your system, from discovery and mapping through code to tests on the sandbox, each logged as it goes.'
       : 'The loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.',
   test: (entry) =>
     (entry.tests ?? 0) > 0

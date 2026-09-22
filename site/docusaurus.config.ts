@@ -150,10 +150,10 @@ function scalarOnReferencePagesOnly() {
 // The folders a version root does not render in its overview sidebar, because
 // another tab owns them and composes a sidebar of its own: api/, reference/
 // and troubleshooting/ belong to API references, resources/ to Developer
-// resources. This is not the same list as the API references tab's own three,
+// resources, and a gateway's own whats-new/ and support/ to those tabs. This is not the same list as the API references tab's own three,
 // which isApiRoute in src/config/navigation.ts holds, so the two are kept
 // apart. Every entry here has to have a sidebar in sidebars.ts to show.
-const OTHER_TABS = ['api', 'reference', 'troubleshooting', 'resources'];
+const OTHER_TABS = ['api', 'reference', 'troubleshooting', 'resources', 'whats-new', 'support'];
 
 function firstDocId(item: any): string | undefined {
   if (item.type === 'doc') return item.id;
@@ -170,8 +170,12 @@ function firstDocId(item: any): string | undefined {
 /** The use-case groups build-api-reference.mjs recorded for one module. */
 function useCaseGroups(moduleDir: string): any[] {
   const module = (apiTree as any[]).find((entry) => entry.moduleDir === moduleDir);
-  return (module?.groups ?? []).map((group: any) =>
-    group.children
+  // A module with no journeys has one group, marked flat: its operations are
+  // listed under the module itself, where a module with journeys lists those.
+  return (module?.groups ?? []).flatMap((group: any) =>
+    group.flat
+      ? group.items
+      : group.children
       ? {
           type: 'category',
           label: group.label,
@@ -224,13 +228,25 @@ async function sidebarItemsGenerator({defaultSidebarItemsGenerator, ...args}: an
   if (/^[^/]+\/[^/]+$/.test(dirName)) {
     // A version root is the overview sidebar; the folders another tab owns
     // render there instead.
-    return items.filter((item: any) => {
+    const own = items.filter((item: any) => {
       const id = firstDocId(item);
       return !(
         id &&
         OTHER_TABS.some((folder) => id.startsWith(`${dirName}/${folder}/`))
       );
     });
+    // A folder whose _category_.json sets customProps.unwrap groups pages on
+    // disk only: its sections take its place at the top level, so the URLs
+    // keep the folder while the sidebar loses a layer. NHCX's roles/ uses it
+    // to show Building for provider and Building for payer directly.
+    // NHCX shows Go live inside its Reference section (site/sidebars.ts), so
+    // the version root leaves it out.
+    const placed = dirName.startsWith('nhcx/')
+      ? own.filter((item: any) => !(firstDocId(item) ?? '').startsWith(`${dirName}/go-live/`))
+      : own;
+    return placed.flatMap((item: any) =>
+      item.type === 'category' && item.customProps?.unwrap ? item.items : [item],
+    );
   }
   // The index is the section header's own link (see site/sidebars.ts), so
   // listing it again beneath itself is the extra click this removes.
@@ -239,8 +255,17 @@ async function sidebarItemsGenerator({defaultSidebarItemsGenerator, ...args}: an
   if (dirName.endsWith('/api')) {
     return spliceEndpoints(withoutIndex());
   }
-  if (dirName.endsWith('/troubleshooting')) {
+  if (dirName.endsWith('/troubleshooting') || dirName.endsWith('/go-live')) {
     return withoutIndex();
+  }
+  // NHCX's reference folder feeds three tabs. In the Docs sidebar it lists
+  // only what is neither FHIR reference nor error codes: those two tabs own
+  // theirs (see SPLIT_REFERENCE in site/sidebars.ts).
+  if (/^nhcx\/[^/]+\/reference$/.test(dirName)) {
+    return items.filter((item: any) => {
+      const id = firstDocId(item) ?? '';
+      return !id.includes('/reference/fhir/') && !/\/reference\/(error-codes|error-code-guide|pmjay-error-codes)$/.test(id);
+    });
   }
   return items;
 }
@@ -333,9 +358,9 @@ const config: Config = {
     v4: true,
   },
 
-  // The Pages workflow overrides these for the github.io deployment; a
-  // custom domain later sets DOCUSAURUS_URL and drops the base path.
-  url: process.env.DOCUSAURUS_URL ?? 'https://abdm-docs.example.com',
+  // The portal's published address. A deployment elsewhere, such as the
+  // github.io Pages build, overrides both through the environment.
+  url: process.env.DOCUSAURUS_URL ?? 'https://docs.abdm.gov.in',
   baseUrl: process.env.DOCUSAURUS_BASE_URL ?? '/',
 
   onBrokenLinks: 'throw',
@@ -351,7 +376,8 @@ const config: Config = {
     // The Docs MCP server's public address. Null until it has one: the install
     // panel on the MCP page renders locked, and every button on it goes live
     // the moment this resolves. Nothing else has to change.
-    mcpUrl: process.env.MCP_URL ?? null,
+    // The Docs MCP server the portal publishes beside itself.
+    mcpUrl: process.env.MCP_URL ?? 'https://docs.abdm.gov.in/mcp',
     // The chat backend's origin. Null keeps the Ask AI panel a labeled mock,
     // so Pages and preview builds never ship a dead composer.
     chatUrl: process.env.CHAT_URL ?? null,
@@ -434,6 +460,11 @@ const config: Config = {
           {from: '/docs/uhi/v1/glossary', to: '/docs/uhi/v1/getting-started/glossary'},
           {from: '/docs/uhi/v1/network-and-protocol', to: '/docs/uhi/v1/concepts/network-and-protocol'},
           {from: '/docs/nhcx/v1/glossary', to: '/docs/nhcx/v1/getting-started/glossary'},
+          // The PMJAY scheme rules page was merged: the plain rules into PMJAY on
+          // NHCX, the codes and fields into PMJAY use cases.
+          {from: '/docs/nhcx/v1/concepts/pmjay-scheme-rules', to: '/docs/nhcx/v1/concepts/pmjay-on-nhcx'},
+          // Payer flexibility was removed; its readers land on the use cases.
+          {from: '/docs/nhcx/v1/concepts/payer-flexibility', to: '/docs/nhcx/v1/concepts/nhcx-use-cases'},
           // The milestones page moved out of Get started into its own section,
           // and each module's user journey moved with it.
           {from: '/docs/hiecm/v3/getting-started/milestones', to: '/docs/hiecm/v3/milestones'},
@@ -608,7 +639,7 @@ const config: Config = {
     prism: {
       theme: prismThemes.oneLight,
       darkTheme: prismThemes.oneDark,
-      additionalLanguages: ['bash', 'json', 'yaml', 'java', 'python'],
+      additionalLanguages: ['bash', 'json', 'yaml', 'java', 'python', 'markup-templating', 'php', 'go', 'csharp', 'ruby'],
     },
   } satisfies Preset.ThemeConfig,
 

@@ -36,7 +36,7 @@ Three notices can arrive for one claim, and each is a fresh delivery to acknowle
 A collection bundle: a `Task` with code `deliver` wrapping a `PaymentNotice` and a `PaymentReconciliation`, plus the two `Organization`s.
 
 - `PaymentNotice.amount` is the net paid; `paymentStatus` is `paid` or `cleared`.
-- `PaymentReconciliation.paymentIdentifier.value` is the UTR.
+- `PaymentReconciliation.paymentIdentifier.value` is the UTR on the settled notice, 33. On 30 and 31 the same field can carry a scheme reference, so reconcile against the bank only on 33.
 - `PaymentReconciliation.detail[]` itemises the money: one line with type `TDS`, one with type `Payment`, and any others the payer uses (approved amount, service tax, advance, recovered, penalty). Net plus deductions should equal the approved amount; if it does not, flag it.
 
 ### The acknowledgement

@@ -61,6 +61,36 @@
      paragraphs on a blank line, which is what the wrapping meant. */
 }
 
+/* A description that is a short document: the NHCX specifications write
+   `###` sections with lists under them. The heading sits close to the text it
+   names and far from the text before it, and a sentence that introduces a
+   list stays with the list. */
+.api-page .api-md__heading {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--text-heading);
+  margin: 0 0 0.5rem;
+}
+
+.api-page .api-md__list {
+  padding-left: 1.25rem;
+  list-style: disc outside;
+}
+
+.api-page ol.api-md__list {
+  list-style-type: decimal;
+}
+
+.api-page .api-md__list > li + li {
+  margin-top: 0.375rem;
+}
+
+.api-page p.api-page__body:has(+ .api-md__list) {
+  margin-bottom: 0.75rem;
+}
+
 /* The field name is a name, not an inline code chip: typography.css tints
    every `code` inside prose, and that tint reads as emphasis here. */
 .api-page .api-field__name,
@@ -317,6 +347,20 @@
   font-family: var(--font-mono);
   font-size: 0.75rem;
   color: var(--text-faint);
+}
+
+/* The request panel's language list: it takes the head's slack, so the copy
+   button sits at the far end. */
+.api-panel__head select.api-panel__lang {
+  flex: 0 1 auto;
+  margin-right: auto;
+  padding: 0.25rem 1.75rem 0.25rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background-color: transparent;
+  color: var(--text-body);
+  font-size: 0.8125rem;
+  cursor: pointer;
 }
 
 .api-panel__tabs {

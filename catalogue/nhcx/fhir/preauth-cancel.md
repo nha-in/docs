@@ -81,11 +81,9 @@ The payer answers on `/v1/task/on_submit`. Its bundle holds a completed `Task` t
 | `Task.intent` | `order` |
 | `Task.code` | `cancel` from `http://terminology.hl7.org/CodeSystem/financialtaskcode` |
 | `Task.reasonCode` | A code from `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-reason-code`, such as `treatmentplanchanged` |
-| `Task.input` | `claimNumber` and `initimationNumber`, both from `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-input-type-code`, both carrying the preauthorisation number |
+| `Task.input` | `claimNumber` and `intimationNumber`, both from `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-input-type-code`, both carrying the preauthorisation number |
 | `Task.requester` | Your provider Organization |
 | `Task.owner` | The payer Organization |
-
-The input code is spelled `initimationNumber`. Send it with that spelling.
 
 ```json
 {
@@ -155,7 +153,7 @@ The input code is spelled `initimationNumber`. Send it with that spelling.
               "coding": [
                 {
                   "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-input-type-code",
-                  "code": "initimationNumber"
+                  "code": "intimationNumber"
                 }
               ]
             },
@@ -269,5 +267,5 @@ Then `/v1/task/on_submit` arrives. Its `Task` has `status` `completed`, and the 
 
 - **[PAYR-1252](../errors/payr-1252.md): case not in an active preauthorisation state.** Only submitted or approved cases can be cancelled. The case cannot be cancelled from its current state.
 - **"Invalid input, code and reason code received."** The combination of task code, reason code and inputs is not one the payer accepts. Use `cancel` with a reason from `ndhm-reason-code` and both inputs.
-- **"Invalid case number received."** Send the preauthorisation number in both `claimNumber` and `initimationNumber`.
+- **"Invalid case number received."** Send the preauthorisation number in both `claimNumber` and `intimationNumber`.
 - **[PAYR-1017](../errors/payr-1017.md) or [PAYR-1018](../errors/payr-1018.md).** The task code or the task reason code is missing.

@@ -68,26 +68,26 @@ paths:
 
         ### When to use
 
-        Before a planned admission, with a payer that has confirmed it supports predetermination. The exchange is specified but seldom used, so confirm support with the payer before building it. Send `x-hcx-status` `request.initiated` with a new correlation ID. The payer's answer, use case C11, arrives on `/v1/predetermination/on_submit`.
+        Use it before a planned admission to ask what the payer would approve for a treatment. Few payers support it, so confirm with the payer first.
 
         ### Preconditions
 
-        - The payer has confirmed that it answers predetermination requests.
-        - The bundle carries `Claim`, `Patient`, the provider and payer `Organization`, `Coverage`, `Practitioner` and `Procedure`, shaped as in the pre-authorisation chapters.
-        - `Claim.use` is `predetermination`, and `Claim.identifier[0].value` carries your predetermination reference.
-        - A valid session token, the recipient's certificate, and the bundle sealed as a JWE in `payload`, with the protected headers mirrored onto the wire.
-        - A fresh `x-hcx-api_call_id` and a new `x-hcx-correlation_id` for the cycle.
+        - The payer has confirmed it answers predetermination requests.
+        - You have a valid access token and the payer's certificate.
+        - The bundle is a FHIR `Claim` with `use` set to `predetermination`, encrypted for the payer.
+        - The correlation ID is new for this request.
 
         ### Postconditions
 
-        NHCX returns HTTP 202 with the acknowledgement and forwards the request asynchronously. The payer answers on `/v1/predetermination/on_submit` with a `ClaimResponse` whose `use` is `predetermination`, carrying the estimated approved benefit in `ClaimResponse.total` under category `benefit`. Nothing is reserved against the policy.
+        - NHCX answers `202` at once and forwards the request.
+        - The payer's estimate arrives later on `/v1/predetermination/on_submit`. Nothing is reserved against the policy.
 
         ### Common mistakes
 
-        - Building the exchange before the payer has confirmed it supports it.
-        - Leaving `Claim.use` as `preauthorization` when reusing the pre-authorisation builder.
-        - Treating the estimate as an approval and skipping the pre-authorisation at admission.
-        - Reusing a correlation ID from an earlier cycle, which NHCX refuses as a duplicate (`NHCX-1006`).
+        - Building the exchange before the payer confirms support.
+        - Leaving `use` as `preauthorization` when reusing the pre-authorisation code.
+        - Treating the estimate as an approval and skipping the pre-authorisation.
+        - Reusing a correlation ID from an earlier request.
 
         ### Best practices
 
@@ -166,25 +166,25 @@ paths:
 
         ### When to use
 
-        Called by the payer after it has assessed a request received on `/v1/predetermination/submit`, echoing that request's correlation ID with `x-hcx-status` `response.complete`. Only payers that have agreed to support predetermination send it.
+        The payer calls it after assessing a predetermination request, with the same correlation ID and `x-hcx-status` `response.complete`. Only payers that support predetermination send it.
 
         ### Preconditions
 
-        - A predetermination request with this correlation ID exists in NHCX. A callback for an unknown one is refused with `NHCX-1010`.
-        - The bundle carries `ClaimResponse`, `Patient`, the payer and provider `Organization` and `Coverage`.
-        - `ClaimResponse.use` is `predetermination`, and the estimated approved benefit is in `ClaimResponse.total` under category `benefit`.
-        - The payer holds a valid session token and the provider's certificate, and seals the bundle for the provider.
-        - `x-hcx-correlation_id` echoes the request, `x-hcx-api_call_id` is new, and the sender and recipient codes are swapped.
+        - A predetermination request with this correlation ID exists in NHCX.
+        - The payer has a valid access token and the provider's certificate, and encrypts the answer for the provider.
+        - The bundle is a `ClaimResponse` with `use` set to `predetermination`, carrying the estimated benefit.
+        - The correlation ID matches the request, and the call ID is new.
 
         ### Postconditions
 
-        NHCX returns HTTP 202 with the acknowledgement and delivers the callback to the provider, which must answer 202 with a receipt within 30 seconds. A delivery that is not acknowledged is retried five times, after which the exchange retires the correlation ID and reports the failure on `/v1/error`. The estimate reserves nothing against the policy.
+        - NHCX answers `202` and forwards the estimate to the provider, who must reply `202` within 30 seconds.
+        - The estimate reserves nothing against the policy.
 
         ### Common mistakes
 
-        - Minting a new correlation ID instead of echoing the request's.
-        - Reading the estimate as an approval on the provider side.
-        - The provider answering with anything other than 202 and the receipt, which triggers retries.
+        - Creating a new correlation ID instead of reusing the request's.
+        - Provider side: reading the estimate as an approval.
+        - Provider side: replying with anything other than `202`, which triggers retries.
 
         ### Best practices
 
@@ -253,7 +253,7 @@ paths:
                   code: ""
                   message: ""
 webhooks:
-  v1_predetermination_submit:
+  /v1/predetermination/submit:
     post:
       operationId: predetermination_webhook_v1_predetermination_submit
       x-abdm-atom: nhcx.callback.predetermination-submit
@@ -329,7 +329,7 @@ webhooks:
                 error:
                   code: ""
                   message: ""
-  v1_predetermination_on_submit:
+  /v1/predetermination/on_submit:
     post:
       operationId: predetermination_webhook_v1_predetermination_on_submit
       x-abdm-atom: nhcx.callback.predetermination-on-submit

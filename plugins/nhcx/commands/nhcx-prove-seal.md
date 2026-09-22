@@ -29,4 +29,4 @@ Prove that the seal in `$ARGUMENTS` produces a JWE the recipient can open, offli
 
 Each step, its command and its output. Then one line: proven, or the first step that failed and what it names.
 
-Step 6 is the one that makes the rest mean something. A round trip that cannot fail proves nothing about the key. The sealing contract is in any NHCX skill's `references/transport-knowledge.md`, section 3.
+Step 6 is the one that makes the rest mean something. A round trip that cannot fail proves nothing about the key. The sealing contract is in any NHCX skill's `gateway/G6-encryption.md`.
