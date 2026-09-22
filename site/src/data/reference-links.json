@@ -24,7 +24,7 @@
     "to": "/reference/hiecm-p1"
   },
   {
-    "label": "P2 Management",
+    "label": "P2 Consents Management",
     "to": "/reference/hiecm-p2"
   },
   {
@@ -34,10 +34,6 @@
   {
     "label": "P4 Locker",
     "to": "/reference/hiecm-p4"
-  },
-  {
-    "label": "Subscriptions",
-    "to": "/reference/hiecm-subscription"
   },
   {
     "label": "Scan and Register",

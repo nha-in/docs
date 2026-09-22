@@ -21,7 +21,7 @@ sources:
       Creating an ABHA is voluntary under ABDM. No specification states the
       consequence for a facility's journey, which is why this is recorded as
       a policy rule rather than a call.
-  - file: site/docs/hiecm/v3/concepts/phr.md
+  - file: site/docs/hiecm/v3/concepts/participants/phr.md
     status: docs-only
     note: >
       ABDM registers a patient at a facility who has no ABHA address and

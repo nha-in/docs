@@ -13,7 +13,7 @@ The HIE-CM module skills do not compile from atoms. No HIE-CM atom exists since 
 
 1. `node scripts/build-api-reference.mjs` writes one data file per operation and per journey step from `catalogue/openapi/hiecm/v3/*.yaml` and `journeys/*.yaml`.
 2. `node scripts/compile-skills.mjs` writes the guided loops under `skills-src/`: `hiecm-<module>-build` for a module with journeys, and `hiecm-<module>-debug` for a module whose specification's response examples return error codes.
-3. `node scripts/build-skills.mjs` writes one folder per module, `abdm-gateway`, `abdm-m1` to `abdm-m4`, `abdm-p1` to `abdm-p4`, `abdm-subscription` and `abdm-scan-and-pay`, plus `abdm-fhir`, to `site/static/skills/` and to the integrators plugin. It folds the loops in as `references/scaffold.md` and `references/debug.md`, writes `references/integrate.md` from the specifications and `references/design.md` from atoms, adds the module's call facts held in the script, and injects the practices from `shared.concept.integration-practices`.
+3. `node scripts/build-skills.mjs` writes one folder per module, `abdm-gateway`, `abdm-m1` to `abdm-m4`, `abdm-p1` to `abdm-p4` and `abdm-scan-and-pay`, plus `abdm-fhir`, to `site/static/skills/` and to the integrators plugin. It folds the loops in as `references/scaffold.md` and `references/debug.md`, writes `references/integrate.md` from the specifications and `references/design.md` from atoms, adds the module's call facts held in the script, and injects the practices from `shared.concept.integration-practices`.
 
 `npm run validate:skills` checks the output. The selector, templates, prose pass and identifier diff described below are the design for atom-fed skills, and the parts of it that run today are the three below.
 

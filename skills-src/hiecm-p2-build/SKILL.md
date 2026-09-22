@@ -14,71 +14,6 @@ Loop limit: 8 passes per step. Hitting the limit is an escalation: state what wa
 
 ## Journeys
 
-### PHR profile, update email (`p2-update-email`)
-
-**Act: the calls in this journey, in order**
-
-#### 1. Request profile OTP (`p2_post_v3_phr_app_login_profile_request_otp`)
-
-```bash
-curl --request POST \
-  --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/request/otp \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'X-token: Bearer <JWT TOKEN>' \
-  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "scope": [
-    "abha-address-profile",
-    "email-verify"
-  ],
-  "loginHint": "email",
-  "loginId": "{{encryptedData}}",
-  "otpSystem": "abdm"
-}'
-```
-
-#### 2. Login profile verify (`p2_post_v3_phr_app_login_profile_verify`)
-
-```bash
-curl --request POST \
-  --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/verify \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'X-token: Bearer <JWT TOKEN>' \
-  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "scope": [
-    "abha-address-profile",
-    "email-verify"
-  ],
-  "authData": {
-    "authMethods": [
-      "otp"
-    ],
-    "otp": {
-      "txnId": "37d8d312-35a0-41e7-a6e4-1074eb18a5fa",
-      "otpValue": "{{encryptedData}}"
-    }
-  }
-}'
-```
-
-**Exit condition (Observe until this is true)**
-
-A 200 whose body matches:
-
-```json
-{
-  "txnId": "e10ca603-97f5-4cf2-8191-d51ea7db3845",
-  "message": "Entered OTP is incorrect. Kindly re-enter valid OTP.",
-  "authResult": "failed",
-  "users": []
-}
-```
-
 ### PHR profile, update mobile (`p2-update-mobile`)
 
 **Act: the calls in this journey, in order**
@@ -493,15 +428,15 @@ A 200 whose body matches:
 }
 ```
 
-### Patient share (`p2-abdm-hiecm-patient-share-phr`)
+### Quick OPD Registration (`p2-abdm-hiecm-patient-share-phr`)
 
 **Act: the calls in this journey, in order**
 
-#### 1. Share patient share (`p2_post_patient_share_v3_share`)
+#### 1. OPD token generation (`p2_post_patient_share_v3_share`)
 
 ```bash
 curl --request POST \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/patient-share/v3/share \
+  --url https://dev.abdm.gov.in/api/hiecm/patient-share/v3/share \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -543,11 +478,11 @@ curl --request POST \
 
 Inbound to your bridge at `/api/v3/hiu/patient/on-share`. Acknowledge it and continue.
 
-#### 3. Get the historical token numbers of the patient (`p2_get_patient_share_v3_profile_gettokendetails`)
+#### 3. OPD Token History (`p2_get_patient_share_v3_profile_gettokendetails`)
 
 ```bash
 curl --request GET \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/patient-share/v3/profile/getTokenDetails \
+  --url "https://dev.abdm.gov.in/api/hiecm/patient-share/v3/profile/getTokenDetails?limit=<LIMIT>" \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -560,14 +495,27 @@ curl --request GET \
 A 200 whose body matches:
 
 ```json
-"<VALUE>"
+[
+  {
+    "id": 1,
+    "patientId": "<ABHA_ADDRESS>",
+    "tokenNumber": "1",
+    "hipId": "ABDM_HIP",
+    "hipName": "Health Information Provider Name",
+    "hipAddress": "sample address",
+    "expiresIn": 1800,
+    "clientId": "ABDM",
+    "dateCreated": "2024-09-11T07:31:02.357Z",
+    "counterCode": "Counter 1"
+  }
+]
 ```
 
 ### User initiated linking (`p2-abdm-user-initiated-linking-phr`)
 
 **Act: the calls in this journey, in order**
 
-#### 1. Fetch the list of providers filtered by name (`gateway_get_gateway_v3_providers`)
+#### 1. Fetch the list of providers filtered by name (`p2_get_gateway_v3_providers`)
 
 ```bash
 curl --request GET \
@@ -578,7 +526,7 @@ curl --request GET \
   --header 'X-CM-ID: sbx'
 ```
 
-#### 2. Fetch the record for provider details for requested provider ID (`gateway_get_gateway_v3_providers_provider_id`)
+#### 2. Fetch the record for provider details for requested provider ID (`p2_get_gateway_v3_providers_provider_id`)
 
 ```bash
 curl --request GET \
@@ -593,7 +541,7 @@ curl --request GET \
 
 ```bash
 curl --request POST \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/user-initiated-linking/v3/patient/care-context/discover \
+  --url https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/patient/care-context/discover \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -622,7 +570,7 @@ Inbound to your bridge at `/api/v3/hiu/patient/care-context/on-discover`. Acknow
 
 ```bash
 curl --request POST \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/init \
+  --url https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/init \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -657,7 +605,7 @@ Inbound to your bridge at `/api/v3/hiu/patient/care-context/on-init`. Acknowledg
 
 ```bash
 curl --request POST \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/confirm \
+  --url https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/confirm \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -675,9 +623,35 @@ curl --request POST \
 
 Inbound to your bridge at `/api/v3/hiu/patient/care-context/on-confirm`. Acknowledge it and continue.
 
+#### 9. Fetch the list of govt programmes (optional) (`p2_get_gateway_v3_govt_programs`)
+
+```bash
+curl --request GET \
+  --url https://dev.abdm.gov.in/api/hiecm/gateway/v3/govt-programs \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
+  --header 'X-CM-ID: sbx'
+```
+
 **Exit condition (Observe until this is true)**
 
-A 200 response. The specification gives no body for it, so read what comes back.
+A 200 whose body matches:
+
+```json
+[
+  {
+    "identifier": {
+      "name": "AB - PMJAY",
+      "id": "PMJAY"
+    },
+    "facilityType": [
+      "HIP"
+    ],
+    "isHIP": true
+  }
+]
+```
 
 ### Consent manager, HIU and HIP (`p2-consent-manager-hiu-hip`)
 
@@ -687,7 +661,7 @@ A 200 response. The specification gives no body for it, so read what comes back.
 
 ```bash
 curl --request GET \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/hip/v3/link/patient/links \
+  --url "https://dev.abdm.gov.in/api/hiecm/hip/v3/link/patient/links?limit=<LIMIT>" \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -845,7 +819,7 @@ A 202 response. The specification gives no body for it, so read what comes back.
 
 ```bash
 curl --request POST \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/consent/v3/auto/approve \
+  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/auto/approve \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -908,7 +882,7 @@ curl --request POST \
 
 ```bash
 curl --request POST \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/consent/v3/auto/approve/{auto-approval-id}/disable \
+  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/auto/approve/{auto-approval-id}/disable \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -920,7 +894,7 @@ curl --request POST \
 
 ```bash
 curl --request POST \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/consent/v3/auto/approve/{auto-approval-id}/enable \
+  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/auto/approve/{auto-approval-id}/enable \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -932,7 +906,7 @@ curl --request POST \
 
 ```bash
 curl --request GET \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/consent/v3/request \
+  --url "https://dev.abdm.gov.in/api/hiecm/consent/v3/request?limit=<LIMIT>" \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -944,7 +918,7 @@ curl --request GET \
 
 ```bash
 curl --request GET \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/consent/v3/request/{request-id} \
+  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/request/{request-id} \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -956,7 +930,7 @@ curl --request GET \
 
 ```bash
 curl --request POST \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/consent/v3/request/{request-id}/approve \
+  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/request/{request-id}/approve \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -1002,7 +976,7 @@ curl --request POST \
 
 ```bash
 curl --request POST \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/consent/v3/request/{request-id}/deny \
+  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/request/{request-id}/deny \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -1018,7 +992,7 @@ curl --request POST \
 
 ```bash
 curl --request POST \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/consent/v3/revoke \
+  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/revoke \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -1036,7 +1010,7 @@ curl --request POST \
 
 ```bash
 curl --request GET \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/consent/v3/artefact/request/{request-id} \
+  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/artefact/request/{request-id} \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -1048,7 +1022,7 @@ curl --request GET \
 
 ```bash
 curl --request GET \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/consent/v3/artefact/{artefact-id} \
+  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/artefact/{artefact-id} \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -1060,7 +1034,7 @@ curl --request GET \
 
 ```bash
 curl --request GET \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/consent/v3/artefact \
+  --url "https://dev.abdm.gov.in/api/hiecm/consent/v3/artefact?limit=<LIMIT>" \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \

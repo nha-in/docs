@@ -91,13 +91,29 @@ function deref(spec, node, depth = 0) {
 // response is never in this set.
 const ENCRYPTED_FIELDS = new Set(['loginId', 'aadhaar', 'otpValue', 'password']);
 
+// A body declared as oneOf or anyOf, as NHA's callbacks are (the success
+// shape, then the error shape), is read as its first branch: the one an
+// integrator sends when the call goes right.
+const firstBranch = (schema) => schema?.oneOf?.[0] ?? schema?.anyOf?.[0] ?? schema;
+
+// The one value a field can take, where the schema allows only one: a one
+// value enum, or an array that must carry exactly its listed items, as the M1
+// use case scopes do. Try it fills these in and locks them.
+function fixedValue(property) {
+  if (property.enum?.length === 1) return property.enum[0];
+  const items = property.items?.enum;
+  if (property.type === 'array' && items?.length && property.minItems === items.length && property.maxItems === items.length) return items;
+  return undefined;
+}
+
 /** Flatten a JSON schema into rows a table can render, two levels deep. */
 function fields(schema, prefix = '', depth = 0) {
+  schema = firstBranch(schema);
   if (!schema || depth > 3) return [];
   const required = new Set(schema.required ?? []);
   const rows = [];
   for (const [name, raw] of Object.entries(schema.properties ?? {})) {
-    const property = raw ?? {};
+    const property = firstBranch(raw ?? {});
     const type = property.type === 'array'
       ? `${property.items?.type ?? 'object'}[]`
       : property.type ?? 'object';
@@ -109,6 +125,7 @@ function fields(schema, prefix = '', depth = 0) {
       enum: property.enum,
       format: property.format,
       encrypted: property['x-abdm-encrypted'] === true || ENCRYPTED_FIELDS.has(name),
+      fixed: fixedValue(property),
     });
     const child = property.type === 'array' ? property.items : property;
     if (child?.properties) {
@@ -129,6 +146,7 @@ function fields(schema, prefix = '', depth = 0) {
  * named placeholder, so a reader can see what to substitute.
  */
 function sampleFromSchema(schema, name = '', depth = 0) {
+  schema = firstBranch(schema);
   if (!schema || depth > 6) return undefined;
   if (schema.example !== undefined) return schema.example;
   if (Array.isArray(schema.enum) && schema.enum.length > 0) return schema.enum[0];
@@ -250,9 +268,17 @@ function requestFor(operation) {
   if (operation.requestExample !== undefined) {
     headers.push({name: 'Content-Type', value: 'application/json'});
   }
+  // A required query parameter is part of the call, so the samples carry it;
+  // a list call sent without its limit is refused.
+  const query = (operation.queryParams ?? [])
+    .filter((p) => p.required)
+    // An example that is itself a placeholder ("<transaction id>") would put a
+    // space in the URL, which curl refuses, so it becomes one of our own.
+    .map((p) => `${p.name}=${/^[^\s<>]+$/.test(String(p.example ?? '')) ? p.example : `<${p.name.toUpperCase()}>`}`)
+    .join('&');
   return {
     method: operation.method,
-    url: `${operation.server}${operation.path}`,
+    url: `${operation.server}${operation.path}${query ? `?${query}` : ''}`,
     headers,
     body: operation.requestExample,
   };
@@ -260,7 +286,10 @@ function requestFor(operation) {
 
 function curlFor(operation) {
   const {method, url, headers, body} = requestFor(operation);
-  const lines = [`curl --request ${method} \\`, `  --url ${url} \\`];
+  // Quoted when it carries a query, or the shell reads each & as a new job.
+  // Double quotes: validate-skills reads a single quoted URL as one an atom
+  // recorded, and these come from the specification.
+  const lines = [`curl --request ${method} \\`, `  --url ${url.includes('?') ? `"${url}"` : url} \\`];
   for (const header of headers) {
     lines.push(`  --header '${header.name}: ${header.value}' \\`);
   }
@@ -624,7 +653,7 @@ for (const {platform, version, files} of tree) {
     const entries = [];
     for (const [path, item] of Object.entries(spec.paths ?? {})) {
       for (const method of METHODS) {
-        if (item?.[method]) entries.push({path, method, kind: 'operation', op: item[method], shared: item.parameters});
+        if (item?.[method]) entries.push({path, method, kind: 'operation', op: item[method], shared: item.parameters, servers: item[method].servers ?? item.servers});
       }
     }
     for (const [name, item] of Object.entries(spec.webhooks ?? {})) {
@@ -680,8 +709,10 @@ for (const {platform, version, files} of tree) {
         // A callback is ABDM calling you. Its examples run against the URL
         // registered for your bridge, never against the gateway host, which
         // is what a curl against dev.abdm.gov.in wrongly suggested.
-        server: entry.kind === 'callback' ? '{bridgeUrl}' : (servers[0]?.url ?? ''),
-        servers,
+        // An operation or path may name its own server, as P2's gateway calls
+        // do inside a file whose first server is the ABHA service.
+        server: entry.kind === 'callback' ? '{bridgeUrl}' : (entry.servers?.[0]?.url ?? servers[0]?.url ?? ''),
+        servers: entry.servers?.map((s) => ({url: s.url, description: s.description ?? ''})) ?? servers,
         summary: caseTerms(fixProse(op.summary ?? id)),
         // What a heading, a sidebar row and a table cell show. NHA's summary
         // is a sentence of documentation, so it stays as the description and
@@ -710,7 +741,7 @@ for (const {platform, version, files} of tree) {
           .map((p) => ({name: p.name, required: true, description: htmlToMarkdown(p.description), type: p.schema?.type ?? 'string'})),
         queryParams: parameters
           .filter((p) => p.in === 'query')
-          .map((p) => ({name: p.name, required: Boolean(p.required), description: htmlToMarkdown(p.description), type: p.schema?.type ?? 'string'})),
+          .map((p) => ({name: p.name, required: Boolean(p.required), description: htmlToMarkdown(p.description), type: p.schema?.type ?? 'string', example: p.example ?? p.schema?.example})),
         body: fields(requestSchema),
         // An explicit example wins; otherwise the schema supplies one, so the
         // panel and the curl are never blank for an operation that takes a body.

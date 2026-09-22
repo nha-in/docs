@@ -121,7 +121,7 @@ Read every code with the message the gateway returns. The error table lists `ABD
 
 ## Consent without a person tapping approve
 
-An auto approval policy works like this: the patient authorises the app once, the app registers the policy with the HIE-CM, and later requests under that policy are granted immediately. The patient can disable it, after which each record needs its own request again. This changes who taps the button, not the model. An artefact is still created, still carries an expiry, and can still be revoked. Detail is on [PHR applications](/docs/hiecm/v3/concepts/phr).
+An auto approval policy works like this: the patient authorises the app once, the app registers the policy with the HIE-CM, and later requests under that policy are granted immediately. The patient can disable it, after which each record needs its own request again. This changes who taps the button, not the model. An artefact is still created, still carries an expiry, and can still be revoked. Detail is on [PHR applications](/docs/hiecm/v3/concepts/participants/phr).
 
 ## Where this is implemented
 

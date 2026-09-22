@@ -247,7 +247,16 @@ export default function TryIt({operation}: {operation: Operation}) {
   const [queryValues, setQueryValues] = useState<Record<string, string>>(() =>
     Object.fromEntries(operation.queryParams.map((q) => [q.name, ''])),
   );
-  const [values, setValues] = useState<Record<string, string>>({});
+  // A value the schema fixes is filled in and locked: the reader only types
+  // what varies per request.
+  const [values, setValues] = useState<Record<string, string>>(() =>
+    Object.fromEntries(
+      (operation.body ?? [])
+        .filter((field) => field.fixed !== undefined)
+        .map((field) => [field.name, [field.fixed].flat().join(', ')]),
+    ),
+  );
+  const [expanded, setExpanded] = useState(false);
   const ghosts = useMemo(
     () => seed(operation.body, operation.requestExample),
     [operation],
@@ -517,7 +526,8 @@ export default function TryIt({operation}: {operation: Operation}) {
         id={`try-${operation.id}-body-${node.field.name}`}
         field={{...node.field, name: node.leaf}}
         value={values[node.field.name] ?? ''}
-        badge={isEncrypted ? 'encrypted on send' : undefined}
+        readOnly={node.field.fixed !== undefined}
+        badge={isEncrypted ? 'encrypted on send' : node.field.fixed !== undefined ? 'fixed' : undefined}
         placeholder={
           isEncrypted ? `enter ${node.leaf} raw, it is encrypted on send` : ghosts[node.field.name]
         }
@@ -618,14 +628,14 @@ export default function TryIt({operation}: {operation: Operation}) {
     <form
       ref={frame}
       tabIndex={-1}
-      className="api-console__frame"
+      className={`api-console__frame${expanded ? ' api-console__frame--expanded' : ''}`}
       onSubmit={send}
       aria-busy={result.state === 'sending'}>
       <header className="api-console__head">
         <span className={`api-chip api-chip--${operation.method.toLowerCase()}`}>
           {operation.method}
         </span>
-        <DialogTitle className="api-console__title">{operation.summary}</DialogTitle>
+        <DialogTitle className="api-console__title">{operation.title || operation.summary}</DialogTitle>
 
         <code className="api-console__url">
           {environment ? (
@@ -1029,6 +1039,13 @@ export default function TryIt({operation}: {operation: Operation}) {
                   </button>
                 ))}
               </div>
+              <button
+                type="button"
+                className="api-console__expand"
+                aria-pressed={expanded}
+                onClick={() => setExpanded((current) => !current)}>
+                {expanded ? 'Collapse' : 'Expand'}
+              </button>
               {copyable ? <CopyButton value={copyable} /> : null}
             </div>
 

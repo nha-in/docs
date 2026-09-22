@@ -29,6 +29,19 @@
   min-width: 0;
 }
 
+/* The request and the response share one view. A long request body used to
+   fill the sticky column and push the response example below the fold, so
+   each panel's code scrolls inside its own box instead. */
+.api-page__aside > .api-panel:first-child pre {
+  max-height: 42vh;
+  overflow: auto;
+}
+
+.api-page__aside > .api-panel:nth-child(2) pre {
+  max-height: 32vh;
+  overflow: auto;
+}
+
 /* ---------- heading ---------- */
 
 .api-page .api-page__eyebrow {
@@ -583,12 +596,49 @@
 
 .api-console__lede {
   flex: 0 0 auto;
-  margin: 0;
-  padding: 0.625rem 0.875rem;
-  border-bottom: 1px solid var(--border);
+  /* Margin, not padding: a clamped line would show through bottom padding.
+     The divider below is the body's top border for the same reason. */
+  margin: 0.625rem 0.875rem;
   font-size: 0.8125rem;
   line-height: 1.4;
   color: var(--text-body);
+  /* Two lines at most: on a 768px screen a long description left the
+     response a few lines tall. The page carries the full text. */
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/* Expand gives the response the whole console: the fields, the cURL and the
+   description step aside until the reader collapses it again. */
+.api-console__frame--expanded .api-console__lede,
+.api-console__frame--expanded .api-console__body > .api-console__col:not(.api-console__col--right),
+.api-console__frame--expanded .api-console__col--right > .api-console__panel:not(.api-console__panel--grow) {
+  display: none;
+}
+
+.api-console__frame--expanded .api-console__body {
+  grid-template-columns: minmax(0, 1fr);
+  border-top: 0;
+}
+
+.api-console__expand {
+  margin-left: auto;
+  padding: 0.125rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-body);
+  font: inherit;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.api-console__expand:hover,
+.api-console__expand[aria-pressed='true'] {
+  color: var(--text-heading);
+  border-color: currentColor;
 }
 
 /* min-height: 0 is the load bearing line. A flex child defaults to
@@ -596,6 +646,7 @@
    hands the scroll back to the frame. */
 .api-console__body {
   display: grid;
+  border-top: 1px solid var(--border);
   flex: 1 1 auto;
   min-height: 0;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -912,6 +963,14 @@ label.api-console__ident {
 
 .api-console__pane--curl {
   max-height: 14rem;
+}
+
+.api-console__panel--grow .api-console__pane pre,
+.api-console__panel--grow .api-console__pane code {
+  /* A response line longer than the panel wraps rather than running out of
+     sight past the edge. */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .api-console__panel--grow .api-console__pane {

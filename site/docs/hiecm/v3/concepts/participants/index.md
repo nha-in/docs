@@ -3,7 +3,7 @@ title: Ecosystem participants
 sidebar_label: Ecosystem participants
 sidebar_position: 0
 description: The eight participants on India's health data network, the identifier each one holds, and what each can do.
-source: site/docs/hiecm/v3/concepts/how-it-fits.md, site/docs/hiecm/v3/concepts/hip-hiu.md, site/docs/hiecm/v3/concepts/phr.md, site/docs/hiecm/v3/registries/index.md
+source: site/docs/hiecm/v3/concepts/how-it-fits.md, site/docs/hiecm/v3/concepts/hip-hiu.md, site/docs/hiecm/v3/concepts/participants/phr.md, site/docs/hiecm/v3/registries/index.md
 ---
 
 # Ecosystem participants
