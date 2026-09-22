@@ -37,3 +37,7 @@ test('a value the schema fixes is marked, and nothing else is', () => {
   const otp = page('m1-post-v3-enrollment-request-otp-aadhaar-otp');
   assert.deepEqual(otp.body.find((f) => f.name === 'scope').fixed, ['abha-enrol']);
 });
+
+test('no sample URL carries a space, which curl refuses', () => {
+  assert.match(page('onboarding-validate').curl, /\?transactionId=<TRANSACTIONID>&passcode=<PASSCODE>"/);
+});

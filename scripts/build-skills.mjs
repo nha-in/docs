@@ -271,7 +271,7 @@ const MODULES = [
   {
     id: 'p2',
     slug: 'abdm-p2',
-    title: 'P2, PHR management',
+    title: 'P2, Consents Management',
     docs: '/docs/hiecm/v3/api/p2',
     spec: 'hiecm-p2.yaml',
     journey: null,

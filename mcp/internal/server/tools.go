@@ -75,7 +75,7 @@ type emptyIn struct{}
 
 type listOpsIn struct {
 	Tag    string `json:"tag,omitempty" jsonschema:"optional exact tag filter"`
-	Module string `json:"module,omitempty" jsonschema:"optional exact module filter, one of gateway, m1, m2, m3, m4, p1, p2, p3, p4, subscription, scan-and-pay, record-share"`
+	Module string `json:"module,omitempty" jsonschema:"optional exact module filter, one of gateway, m1, m2, m3, m4, p1, p2, p3, p4, scan-and-register, scan-and-pay, record-share"`
 	Q      string `json:"q,omitempty" jsonschema:"optional case-insensitive substring filter over operation_id, summary and path"`
 }
 

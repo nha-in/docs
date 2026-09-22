@@ -5313,7 +5313,7 @@
     "moduleDir": "p2",
     "method": "GET",
     "path": "/api/hiecm/patient-share/v3/profile/getTokenDetails",
-    "summary": "This API will be invoked to get the historical token numbers of the patient",
+    "summary": "OPD Token History",
     "route": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-hiecm-patient-share-phr/03-p2-get-patient-share-v3-profile-gettokendetails",
     "callbacks": []
   },
@@ -5521,7 +5521,7 @@
     "moduleDir": "p2",
     "method": "POST",
     "path": "/api/hiecm/patient-share/v3/share",
-    "summary": "This API will be invoked from the PHR-HIU application for sharing the patient/user profile with the HMIS/LIMS.",
+    "summary": "OPD token generation",
     "route": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-hiecm-patient-share-phr/01-p2-post-patient-share-v3-share",
     "callbacks": [
       {
@@ -5697,7 +5697,7 @@
     "moduleDir": "p2",
     "method": "POST",
     "path": "/abha/api/v3/phr/app/login/profile/request/otp",
-    "summary": "4 flows: Send Otp - Update Email, Send Otp - Update Mobile, Send ABHA Otp - Link-DeLink, Send AADHAAR Otp - Link-DeLink",
+    "summary": "3 flows: Send Otp - Update Mobile, Send ABHA Otp - Link-DeLink, Send AADHAAR Otp - Link-DeLink",
     "route": "/docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/01-p2-post-v3-phr-app-login-profile-request-otp",
     "callbacks": []
   },
@@ -5729,7 +5729,7 @@
     "moduleDir": "p2",
     "method": "POST",
     "path": "/abha/api/v3/phr/app/login/profile/verify",
-    "summary": "5 flows: Verify Otp - Update Email, Verify Otp - Update Mobile, Verify Password - Update Password, Verify ABHA Otp - Link-DeLink, Verify AADHAAR Otp - Link-DeLink",
+    "summary": "4 flows: Verify Otp - Update Mobile, Verify Password - Update Password, Verify ABHA Otp - Link-DeLink, Verify AADHAAR Otp - Link-DeLink",
     "route": "/docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/02-p2-post-v3-phr-app-login-profile-verify",
     "callbacks": []
   },

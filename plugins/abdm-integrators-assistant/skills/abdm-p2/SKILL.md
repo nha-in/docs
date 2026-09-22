@@ -3,7 +3,7 @@ name: abdm-p2
 description: Use when building, debugging or testing ABDM P2 in a PHR app: the PHR profile, linking an ABHA number, switching profiles, and linking, sharing and consent for the patient.
 ---
 
-# ABDM P2, PHR management
+# ABDM P2, Consents Management
 
 Generated from the ABDM Developer Portal on 2026-09-16, catalogue version 2026.09.16. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.
 

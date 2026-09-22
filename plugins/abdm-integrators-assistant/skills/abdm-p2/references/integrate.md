@@ -1,4 +1,4 @@
-# Integrate P2, PHR management
+# Integrate P2, Consents Management
 
 The calls themselves: where they live, what they need in their headers, and one request written out in full.
 
@@ -20,11 +20,11 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `GET` | `/abha/api/v3/phr/app/login/profile/phrCard` | Get PHR Card |
 | `GET` | `/abha/api/v3/phr/app/login/profile/qrCode` | Get QR Code |
 | `GET` | `/abha/api/v3/phr/app/login/profile/request/logout` | Logout |
-| `POST` | `/abha/api/v3/phr/app/login/profile/request/otp` | 4 flows: Send OTP - Update Email, Send OTP - Update Mobile, Send ABHA OTP - Lin… |
+| `POST` | `/abha/api/v3/phr/app/login/profile/request/otp` | 3 flows: Send OTP - Update Mobile, Send ABHA OTP - Link-DeLink, Send Aadhaar OT… |
 | `GET` | `/abha/api/v3/phr/app/login/profile/request/token` | Refresh Token |
 | `GET` | `/abha/api/v3/phr/app/login/profile/switch-profile` | Switch Profile |
 | `POST` | `/abha/api/v3/phr/app/login/profile/updateProfile` | Update Profile |
-| `POST` | `/abha/api/v3/phr/app/login/profile/verify` | 5 flows: Verify OTP - Update Email, Verify OTP - Update Mobile, Verify Password… |
+| `POST` | `/abha/api/v3/phr/app/login/profile/verify` | 4 flows: Verify OTP - Update Mobile, Verify Password - Update Password, Verify … |
 | `POST` | `/abha/api/v3/phr/app/login/profile/verify/switch-profile/user` | Verify User Switch Profile |
 | `GET` | `/api/hiecm/consent/v3/artefact` | Fetch all the consent artefact details of a patient. |
 | `GET` | `/api/hiecm/consent/v3/artefact/{artefact-id}` | Fetch the consent artefact details associated with the artefact-ID. |
@@ -45,8 +45,8 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `GET` | `/api/hiecm/gateway/v3/providers/{provider-id}` | Fetch the record for provider details for requested provider ID. |
 | `POST` | `/api/hiecm/gateway/v3/sessions` | Generate access token. |
 | `GET` | `/api/hiecm/hip/v3/link/patient/links` | This is the PHR APP API, this API will used to fetch all link care-context for … |
-| `GET` | `/api/hiecm/patient-share/v3/profile/getTokenDetails` | Get the historical token numbers of the patient |
-| `POST` | `/api/hiecm/patient-share/v3/share` | Be invoked from the PHR-HIU application for sharing the patient/user profile wi… |
+| `GET` | `/api/hiecm/patient-share/v3/profile/getTokenDetails` | OPD Token History |
+| `POST` | `/api/hiecm/patient-share/v3/share` | OPD token generation |
 | `POST` | `/api/hiecm/user-initiated-linking/v3/link/care-context/confirm` | Confirm his/her health records. |
 | `POST` | `/api/hiecm/user-initiated-linking/v3/link/care-context/init` | Link his/her health records. |
 | `POST` | `/api/hiecm/user-initiated-linking/v3/patient/care-context/discover` | Discover his/her health records. |

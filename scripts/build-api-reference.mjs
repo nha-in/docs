@@ -272,7 +272,9 @@ function requestFor(operation) {
   // a list call sent without its limit is refused.
   const query = (operation.queryParams ?? [])
     .filter((p) => p.required)
-    .map((p) => `${p.name}=${p.example ?? `<${p.name.toUpperCase()}>`}`)
+    // An example that is itself a placeholder ("<transaction id>") would put a
+    // space in the URL, which curl refuses, so it becomes one of our own.
+    .map((p) => `${p.name}=${/^[^\s<>]+$/.test(String(p.example ?? '')) ? p.example : `<${p.name.toUpperCase()}>`}`)
     .join('&');
   return {
     method: operation.method,

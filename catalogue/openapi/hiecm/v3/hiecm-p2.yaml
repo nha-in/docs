@@ -5,7 +5,7 @@ info:
     label: P2 Consents Management
     position: 7
     icon: files
-  title: ABDM P2, PHR management
+  title: ABDM P2, Consents Management
   summary: Manage the PHR profile, link an ABHA number, switch profiles, and handle linking, sharing and consent for the patient.
   version: abdm-v3
   license:
@@ -63,11 +63,11 @@ tags:
   - name: consent-management-data-flow-phr
     description: ""
   - name: P2 -PHR Profile
-    description: P2-Management / P2 -PHR Profile / P2 - Update Email (optional)
+    description: P2-Consents Management / P2 -PHR Profile
   - name: P2 - Link ABHA Number
-    description: P2-Management / P2 -PHR Profile / P2 - Link ABHA Number / P2 - via ABHA OTP
+    description: P2-Consents Management / P2 -PHR Profile / P2 - Link ABHA Number / P2 - via ABHA OTP
   - name: P2 - Switch Profile
-    description: P2-Management / P2 -PHR Profile / P2 - Switch Profile
+    description: P2-Consents Management / P2 -PHR Profile / P2 - Switch Profile
 paths:
   /api/hiecm/gateway/v3/providers:
     get:
@@ -1429,7 +1429,7 @@ paths:
       tags:
         - abdm-hiecm-patient-share-phr
       operationId: p2_post_patient_share_v3_share
-      summary: This API will be invoked from the PHR-HIU application for sharing the patient/user profile with the HMIS/LIMS.
+      summary: OPD token generation
       description: "This is a API will be invoked from the <b>PHR-HIU</b> to share the user/patient profile with HMIS/LIMS. <ol type='1'> <li> <b>Header</b>  <ol type='a'> <br/> <li>Authorization will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: <TOKEN> ]</li> <li>REQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]</li> <li>TIMESTAMP  actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]</li> <li>X-AUTH-TOKEN JWT Authentication token which was issued by ABDM after successful validation of username and password[ Example: <TOKEN> ]</li> <li>X-CM-ID  consent manager ID[ Example: sbx ]</li> <li>X-HIU-ID  HIU ID[ Example: HIU ]</li> </ol> </li> <br/> <li> <b>Request Body</b> <ol type='a'><br/> <li>intent This is a key value pair  which contains the purpose [ Example: {purpose: PROFILE_SHARE } ]</li> <li>metaData This is a key value pair which contains the location longitude and latitude[ Example: {hip_id: ABDM_HIP, context: 123, lat: 20.5937 long: 78.9629} ]</li> <li>profile which contains user details.</li> </ol> </ol>"
       security:
         - bearerAuth: []
@@ -1783,7 +1783,7 @@ paths:
       tags:
         - abdm-hiecm-patient-share-phr
       operationId: p2_get_patient_share_v3_profile_gettokendetails
-      summary: This API will be invoked to get the historical token numbers of the patient
+      summary: OPD Token History
       description: "This is a API will be invoked get the historical token numbers of the patient. <ol type='1'> <li> <b>Header</b>  <ol type='a'> <br/> <li>AUTHORIZATION will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: <TOKEN> ]</li> <li>REQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]</li> <li>TIMESTAMP  actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]</li> </ol> </li> <br/> </ol>"
       security:
         - bearerAuth: []
@@ -5945,8 +5945,8 @@ paths:
       summary: "2 flows: Link Request"
       description: |-
         Flows in the Postman collection:
-        - P2-Management › P2 -PHR Profile › P2 - Link ABHA Number › P2 - via ABHA OTP › Link Request
-        - P2-Management › P2 -PHR Profile › P2 - Link ABHA Number › P2 - via Aadhaar OTP › Link Request
+        - P2-Consents Management › P2 -PHR Profile › P2 - Link ABHA Number › P2 - via ABHA OTP › Link Request
+        - P2-Consents Management › P2 -PHR Profile › P2 - Link ABHA Number › P2 - via Aadhaar OTP › Link Request
       operationId: p2_post_v3_phr_app_login_profile_link
       security:
         - bearerAuth: []
@@ -6290,13 +6290,12 @@ paths:
     post:
       tags:
         - P2 -PHR Profile
-      summary: "4 flows: Send Otp - Update Email, Send Otp - Update Mobile, Send ABHA Otp - Link-DeLink, Send AADHAAR Otp - Link-DeLink"
+      summary: "3 flows: Send Otp - Update Mobile, Send ABHA Otp - Link-DeLink, Send AADHAAR Otp - Link-DeLink"
       description: |-
         Flows in the Postman collection:
-        - P2-Management › P2 -PHR Profile › P2 - Update Email (optional) › Send Otp - Update Email
-        - P2-Management › P2 -PHR Profile › P2 - Update Mobile › Send Otp - Update Mobile
-        - P2-Management › P2 -PHR Profile › P2 - Link ABHA Number › P2 - via ABHA OTP › Send ABHA Otp - Link-DeLink
-        - P2-Management › P2 -PHR Profile › P2 - Link ABHA Number › P2 - via Aadhaar OTP › Send AADHAAR Otp - Link-DeLink
+        - P2-Consents Management › P2 -PHR Profile › P2 - Update Mobile › Send Otp - Update Mobile
+        - P2-Consents Management › P2 -PHR Profile › P2 - Link ABHA Number › P2 - via ABHA OTP › Send ABHA Otp - Link-DeLink
+        - P2-Consents Management › P2 -PHR Profile › P2 - Link ABHA Number › P2 - via Aadhaar OTP › Send AADHAAR Otp - Link-DeLink
       operationId: p2_post_v3_phr_app_login_profile_request_otp
       security:
         - bearerAuth: []
@@ -6347,15 +6346,6 @@ paths:
                 - loginId
                 - otpSystem
             examples:
-              Send Otp - Update Email:
-                summary: P2 - Update Email (optional) › Send Otp - Update Email
-                value:
-                  scope:
-                    - abha-address-profile
-                    - email-verify
-                  loginHint: email
-                  loginId: "{{encryptedData}}"
-                  otpSystem: abdm
               Send Otp - Update Mobile:
                 summary: P2 - Update Mobile › Send Otp - Update Mobile
                 value:
@@ -6425,26 +6415,6 @@ paths:
                       message:
                         type: string
               examples:
-                Send Otp - Update Email-Invalid Login Hint:
-                  value:
-                    - code: "ABDM-9999: "
-                      message: Invalid Login Hint
-                Send Otp - Update Email-Invalid Scope:
-                  value:
-                    - code: "ABDM-1006: "
-                      message: Invalid Scope
-                Send Otp - Update Email-No Auth:
-                  value:
-                    - code: "ABDM-1006: "
-                      message: Invalid Scope
-                Send Otp - Update Email-Invalid Otp System:
-                  value:
-                    - code: "ABDM-1006: "
-                      message: Invalid Otp System
-                Send Otp - Update Email-Invalid Email Id:
-                  value:
-                    - code: "ABDM-1006: "
-                      message: Invalid Email Id
                 Send Otp - Update Mobile-Invalid Scope:
                   value:
                     - code: "ABDM-1006: "
@@ -6965,14 +6935,13 @@ paths:
     post:
       tags:
         - P2 -PHR Profile
-      summary: "5 flows: Verify Otp - Update Email, Verify Otp - Update Mobile, Verify Password - Update Password, Verify ABHA Otp - Link-DeLink, Verify AADHAAR Otp - Link-DeLink"
+      summary: "4 flows: Verify Otp - Update Mobile, Verify Password - Update Password, Verify ABHA Otp - Link-DeLink, Verify AADHAAR Otp - Link-DeLink"
       description: |-
         Flows in the Postman collection:
-        - P2-Management › P2 -PHR Profile › P2 - Update Email (optional) › Verify Otp - Update Email
-        - P2-Management › P2 -PHR Profile › P2 - Update Mobile › Verify Otp - Update Mobile
-        - P2-Management › P2 -PHR Profile › P2 - Update Password › Verify Password - Update Password
-        - P2-Management › P2 -PHR Profile › P2 - Link ABHA Number › P2 - via ABHA OTP › Verify ABHA Otp - Link-DeLink
-        - P2-Management › P2 -PHR Profile › P2 - Link ABHA Number › P2 - via Aadhaar OTP › Verify AADHAAR Otp - Link-DeLink
+        - P2-Consents Management › P2 -PHR Profile › P2 - Update Mobile › Verify Otp - Update Mobile
+        - P2-Consents Management › P2 -PHR Profile › P2 - Update Password › Verify Password - Update Password
+        - P2-Consents Management › P2 -PHR Profile › P2 - Link ABHA Number › P2 - via ABHA OTP › Verify ABHA Otp - Link-DeLink
+        - P2-Consents Management › P2 -PHR Profile › P2 - Link ABHA Number › P2 - via Aadhaar OTP › Verify AADHAAR Otp - Link-DeLink
       operationId: p2_post_v3_phr_app_login_profile_verify
       security:
         - bearerAuth: []
@@ -7036,18 +7005,6 @@ paths:
                 - scope
                 - authData
             examples:
-              Verify Otp - Update Email:
-                summary: P2 - Update Email (optional) › Verify Otp - Update Email
-                value:
-                  scope:
-                    - abha-address-profile
-                    - email-verify
-                  authData:
-                    authMethods:
-                      - otp
-                    otp:
-                      txnId: 37d8d312-35a0-41e7-a6e4-1074eb18a5fa
-                      otpValue: "{{encryptedData}}"
               Verify Otp - Update Mobile:
                 summary: P2 - Update Mobile › Verify Otp - Update Mobile
                 value:
@@ -7215,12 +7172,6 @@ paths:
                       refreshExpiresIn:
                         type: integer
               examples:
-                Verify Otp - Update Email-Invalid OTP:
-                  value:
-                    txnId: e10ca603-97f5-4cf2-8191-d51ea7db3845
-                    message: Entered OTP is incorrect. Kindly re-enter valid OTP.
-                    authResult: failed
-                    users: []
                 Verify Otp - Update Mobile-Invalid OTP:
                   value:
                     txnId: e10ca603-97f5-4cf2-8191-d51ea7db3845
@@ -7387,20 +7338,6 @@ paths:
                       message:
                         type: string
               examples:
-                Verify Otp - Update Email-Invalid Auth Methods:
-                  value:
-                    - code: "ABDM-1006: "
-                      message: Invalid Auth Methods
-                    - code: "ABDM-1006: "
-                      message: Invalid Password Request, Please enter valid ABHA Address or valid password
-                Verify Otp - Update Email-Invalid Scope:
-                  value:
-                    - code: "ABDM-1006: "
-                      message: Invalid Scope
-                Verify Otp - Update Email-Invalid Transaction Id:
-                  value:
-                    - code: "ABDM-9999: "
-                      message: Invalid Transaction Id
                 Verify Otp - Update Mobile-Invalid Transaction Id:
                   value:
                     - code: "ABDM-9999: "
@@ -7479,11 +7416,6 @@ paths:
                   description:
                     type: string
               examples:
-                Verify Otp - Update Email-No Auth:
-                  value:
-                    code: "900902"
-                    message: Missing Credentials
-                    description: <JWT TOKEN>
                 Verify Otp - Update Mobile-No Auth:
                   value:
                     code: "900902"

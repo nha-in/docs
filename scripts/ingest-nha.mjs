@@ -25,7 +25,7 @@ const MODULES = {
   m3: {label: 'M3 Health Information User', position: 4, icon: 'file-check', roles: ['his'], title: 'ABDM M3, health information user services as an HIU', summary: 'Raise a consent request, fetch its artefacts, and receive records.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 12},
   m4: {label: 'M4 Registry Integration', position: 5, icon: 'building-2', roles: ['his'], title: 'ABDM M4, professional and facility registries', summary: 'Register healthcare professionals and facilities on the NHPR.', servers: [{url: 'https://apihspsbx.abdm.gov.in/v4/int', description: 'NHPR, sandbox'}], expected: 100},
   p1: {label: 'P1 Registration and login', position: 6, icon: 'user-round', roles: ['phr'], title: 'ABDM P1, PHR registration and login', summary: 'Create an ABHA address in a PHR app and log in to it.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}], expected: 11},
-  p2: {label: 'P2 Consents Management', position: 7, icon: 'files', roles: ['phr'], title: 'ABDM P2, PHR management', summary: 'Manage the PHR profile, link an ABHA number, switch profiles, and handle linking, sharing and consent for the patient.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}, {url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}], expected: 35},
+  p2: {label: 'P2 Consents Management', position: 7, icon: 'files', roles: ['phr'], title: 'ABDM P2, Consents Management', summary: 'Manage the PHR profile, link an ABHA number, switch profiles, and handle linking, sharing and consent for the patient.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}, {url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}], expected: 35},
   p3: {label: 'P3 Subscription', position: 8, icon: 'bell', roles: ['phr'], title: 'ABDM P3, PHR subscriptions', summary: 'Read, approve, deny, enable, disable and update the patient\'s subscriptions and subscription requests, and the subscription request and notifications they answer.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}], expected: 14},
   p4: {label: 'P4 Locker', position: 9, icon: 'lock', roles: ['phr'], title: 'ABDM P4, health lockers', summary: 'Set up a health locker and list the lockers and requests on an ABHA address.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}], expected: 5},
   'scan-and-register': {label: 'Scan and Register', position: 11, icon: 'contact-round', section: 'use-cases', roles: ['his'], title: 'ABDM Scan and Register', summary: 'Receive the profile a patient shares by scanning the counter QR code, and hand back a queue token.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 2},
@@ -37,7 +37,7 @@ const MODULES = {
 const PHR_TAGS = {
   'ABHA enrolment via Aadhaar': 'p1', 'P1 - Create ABHA Address Flow': 'p1', 'P1 - Login via ABHA Address - Password': 'p1', 'P1 - PHR Login': 'p1', 'P1-Registration-login': 'p1',
   'P2 - Link ABHA Number': 'p2', 'P2 - Switch Profile': 'p2', 'P2 -PHR Profile': 'p2', 'abdm-hiecm-patient-share-phr': 'p2', 'abdm-hip-initiated-linking-phr': 'p2', 'abdm-user-initiated-linking-phr': 'p2', 'consent-management-data-flow-phr': 'p2',
-  'subscription-phr': 'p3', 'abdm-hiecm-scan-pay-phr': 'scan-and-pay', 
+  'subscription-phr': 'p3', 'abdm-hiecm-scan-pay-phr': 'scan-and-pay',
 };
 const LOCKER = /\/subscription-requests\/v3\/(patients\/lockers(\/\{[^}]+\})?|patients\/requests|setup-locker)$/;
 // undefined: no mapping; only allowed for a call an earlier file already declared.
@@ -639,6 +639,41 @@ specs.m1['x-abdm-sources'].push({file: 'catalogue/openapi/.raw/nha-2026-09-16/ab
   if (grantType && !grantType.enum) {
     grantType.enum = ['client_credentials'];
     note('gateway', 'POST /api/hiecm/gateway/v3/sessions', 'grantType takes client_credentials only, as the PHR V3 document (3.0) sends it; the raw file gave it as an example');
+  }
+  // NHA's sandbox observations of 23 September 2026 deprecate updating the
+  // email on a PHR profile, and name the P2 folder Consents Management. The
+  // email flow shares its calls with the mobile flow, so it is taken out of
+  // their examples, flow lists and descriptions rather than the calls going.
+  const EMAIL = /Update Email/;
+  const rename = (text) => text.replace(/P2-Management/g, 'P2-Consents Management');
+  specs.p2.tags = (specs.p2.tags ?? []).filter((t) => !EMAIL.test(t.name)).map((t) => (t.description ? {...t, description: rename(t.description).replace(/ \/ P2 - Update Email \(optional\)/, '')} : t));
+  let emailDropped = 0;
+  const dropEmail = (examples) => {
+    for (const key of Object.keys(examples ?? {})) if (EMAIL.test(key)) { delete examples[key]; emailDropped++; }
+  };
+  for (const item of Object.values(specs.p2.paths)) {
+    for (const method of METHODS) {
+      const op = item[method];
+      if (!op) continue;
+      if (op.tags) op.tags = op.tags.filter((t) => !EMAIL.test(t));
+      for (const media of Object.values(op.requestBody?.content ?? {})) dropEmail(media.examples);
+      for (const response of Object.values(op.responses ?? {})) for (const media of Object.values(response.content ?? {})) dropEmail(media.examples);
+      if (op.description) op.description = rename(op.description.split('\n').filter((line) => !EMAIL.test(line)).join('\n'));
+      const flows = /^(\d+) flows: (.*)$/.exec(op.summary ?? '');
+      if (flows && EMAIL.test(flows[2])) {
+        const kept = flows[2].split(', ').filter((f) => !EMAIL.test(f));
+        op.summary = `${kept.length} flows: ${kept.join(', ')}`;
+      }
+    }
+  }
+  if (emailDropped) note('p2', 'update email', `${emailDropped} update email examples, their flow names and the Update Email (optional) tag left out; NHA's sandbox observations of 23 September 2026 deprecate the flow. P2-Management in the collection paths reads P2-Consents Management`);
+  // The two patient share calls carry the names NHA gave them. The summary is
+  // what the Scalar reference shows as the name, so it changes with the title.
+  for (const [path, name] of [['/api/hiecm/patient-share/v3/share', 'OPD token generation'], ['/api/hiecm/patient-share/v3/profile/getTokenDetails', 'OPD Token History']]) {
+    const op = specs.p2.paths[path]?.post ?? specs.p2.paths[path]?.get;
+    if (!op || op.summary === name) continue;
+    op.summary = name;
+    note('p2', path, `named ${name}, as NHA's sandbox observations of 23 September 2026 ask; NHA's sentence stays as the description`);
   }
 }
 
