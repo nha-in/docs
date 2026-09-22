@@ -4,19 +4,19 @@
     "to": "/reference/hiecm-gateway"
   },
   {
-    "label": "M1 ABHA identity",
+    "label": "M1 Identity",
     "to": "/reference/hiecm-m1"
   },
   {
-    "label": "M2 Linking and sharing",
+    "label": "M2 Health Information Provider",
     "to": "/reference/hiecm-m2"
   },
   {
-    "label": "M3 Consent and fetching",
+    "label": "M3 Health Information User",
     "to": "/reference/hiecm-m3"
   },
   {
-    "label": "M4 HPR and HFR",
+    "label": "M4 Registry Integration",
     "to": "/reference/hiecm-m4"
   },
   {
@@ -38,6 +38,14 @@
   {
     "label": "Subscriptions",
     "to": "/reference/hiecm-subscription"
+  },
+  {
+    "label": "Scan and Register",
+    "to": "/reference/hiecm-scan-and-register"
+  },
+  {
+    "label": "Patient scan and record share",
+    "to": "/reference/hiecm-record-share"
   },
   {
     "label": "Scan and Pay",

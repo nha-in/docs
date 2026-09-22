@@ -33,7 +33,11 @@ const siteBase = process.env.DOCUSAURUS_BASE_URL ?? '/';
 function listSpecFiles(dir: string): string[] {
   return readdirSync(dir, {withFileTypes: true}).flatMap((entry) => {
     if (entry.isDirectory()) {
-      return entry.name.startsWith('.') ? [] : listSpecFiles(join(dir, entry.name));
+      // journeys/ holds step lists and errors/ holds NHA's per-module error
+      // code lists. Neither is an OpenAPI document, so neither gets a reference.
+      return entry.name.startsWith('.') || entry.name === 'journeys' || entry.name === 'errors'
+        ? []
+        : listSpecFiles(join(dir, entry.name));
     }
     return /\.(yaml|json)$/.test(entry.name) ? [entry.name] : [];
   });
@@ -222,6 +226,33 @@ function spliceEndpoints(items: any[]): any[] {
   return out;
 }
 
+/**
+ * Modules whose specification says `x-portal.section: use-cases` (Scan and
+ * Pay today) sit under one Use cases group, at the place of the first of
+ * them, so the API tab separates milestones from use cases the way the Docs
+ * tab does. Everything else keeps its order.
+ */
+function groupUseCases(items: any[]): any[] {
+  const isUseCase = (item: any) =>
+    item.type === 'category' && item.customProps?.section === 'use-cases';
+  const useCases = items.filter(isUseCase);
+  if (useCases.length === 0) return items;
+  const group = {
+    type: 'category',
+    label: 'Use cases',
+    className: 'sidebar-icon sidebar-icon--briefcase',
+    collapsed: true,
+    items: useCases,
+  };
+  const out: any[] = [];
+  let placed = false;
+  for (const item of items) {
+    if (!isUseCase(item)) out.push(item);
+    else if (!placed) { out.push(group); placed = true; }
+  }
+  return out;
+}
+
 async function sidebarItemsGenerator({defaultSidebarItemsGenerator, ...args}: any) {
   const items = await defaultSidebarItemsGenerator(args);
   const dirName: string = args.item.dirName;
@@ -253,7 +284,7 @@ async function sidebarItemsGenerator({defaultSidebarItemsGenerator, ...args}: an
   const withoutIndex = () =>
     items.filter((item: any) => !(item.type === 'doc' && item.id === `${dirName}/index`));
   if (dirName.endsWith('/api')) {
-    return spliceEndpoints(withoutIndex());
+    return groupUseCases(spliceEndpoints(withoutIndex()));
   }
   if (dirName.endsWith('/troubleshooting') || dirName.endsWith('/go-live')) {
     return withoutIndex();
@@ -381,6 +412,12 @@ const config: Config = {
     // The chat backend's origin. Null keeps the Ask AI panel a labeled mock,
     // so Pages and preview builds never ship a dead composer.
     chatUrl: process.env.CHAT_URL ?? null,
+    // The repository the plugin marketplace is served from, which is what the
+    // install commands on Build with AI name. The portal is NHA's, so the
+    // default is NHA's repository; a deployment serving the plugin from
+    // somewhere else sets MARKETPLACE_REPO, and scripts/build-skills.mjs reads
+    // the same variable so the page and agent-setup/prompt.md agree.
+    marketplaceRepo: process.env.MARKETPLACE_REPO ?? 'nha-in/docs',
   },
 
   i18n: {
@@ -452,6 +489,20 @@ const config: Config = {
           {from: '/docs/abdm/v3/sandbox', to: '/docs/hiecm/v3/getting-started/sandbox'},
           {from: '/docs/abdm/v3/what-you-can-build', to: '/docs/hiecm/v3/milestones'},
           {from: '/docs/hiecm/v3/getting-started/what-you-can-build', to: '/docs/hiecm/v3/milestones'},
+          {from: '/docs/hiecm/v3/milestones/scan-and-register', to: '/docs/hiecm/v3/use-cases/scan-and-register'},
+          {from: '/docs/hiecm/v3/api/m2/endpoints/m2-abdm-patient-share-hip/01-m2-post-v3-hip-patient-share', to: '/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/01-scan-and-register-post-v3-hip-patient-share'},
+          {from: '/docs/hiecm/v3/api/m2/endpoints/m2-abdm-patient-share-hip/02-m2-post-patient-share-v3-on-share', to: '/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/02-scan-and-register-post-patient-share-v3-on-share'},
+          // The endpoint pages NHA's API review of 15 September 2026 links to, at
+          // the slugs the pages had then.
+          {from: '/docs/hiecm/v3/api/m2/endpoints/m2-link-care-context-notify', to: '/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/02-m2-post-hip-v3-link-context-notify'},
+          {from: '/docs/hiecm/v3/api/m2/endpoints/m2-on-discover-care-contexts', to: '/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/01-m2-post-user-initiated-linking-v3-patient-care-context-on-8c9340'},
+          {from: '/docs/hiecm/v3/api/m2/endpoints/m2-receive-link-confirm', to: '/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/03-m2-post-user-initiated-linking-v3-link-care-context-on-confirm'},
+          {from: '/docs/hiecm/v3/api/m2/endpoints/m2-consent-hip-on-notify', to: '/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/01-m2-post-consent-v3-request-hip-on-notify'},
+          {from: '/docs/hiecm/v3/api/m2/endpoints/m2-hip-health-information-on-request', to: '/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request'},
+          {from: '/docs/hiecm/v3/api/m2/endpoints/m2-on-discovery-request', to: '/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/05-m2-post-v3-hip-patient-care-context-discover'},
+          {from: '/docs/hiecm/v3/api/m3/endpoints/m3-consent-request-init', to: '/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/01-m3-post-consent-v3-request-init'},
+          {from: '/docs/hiecm/v3/api/m3/endpoints/m3-consent-hiu-on-notify', to: '/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/03-m3-post-consent-v3-request-hiu-on-notify'},
+          {from: '/docs/hiecm/v3/api/m3/endpoints/m3-hiu-health-information-request', to: '/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/05-m3-post-data-flow-v3-health-information-request'},
           {from: '/docs/abdm/v3/glossary', to: '/docs/hiecm/v3/getting-started/glossary'},
           {from: '/docs/abdm/v3/phr', to: '/docs/hiecm/v3/concepts/phr'},
           {from: '/docs/abdm/v3/registries/hpr', to: '/docs/hiecm/v3/registries/nhpr/hpr'},
@@ -519,6 +570,35 @@ const config: Config = {
   ],
 
   themeConfig: {
+    // Diagrams take the site's type and sizes here, and its colours from
+    // mdx.css, where the tokens already switch with the theme. Flowchart
+    // labels are SVG text rather than HTML, so the page's font size and line
+    // height cannot make a label outgrow the box Mermaid measured for it.
+    mermaid: {
+      theme: {light: 'base', dark: 'base'},
+      options: {
+        fontFamily: 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
+        fontSize: 14,
+        sequence: {
+          wrap: true,
+          wrapPadding: 10,
+          width: 250,
+          height: 44,
+          actorMargin: 36,
+          boxMargin: 12,
+          messageMargin: 36,
+          noteMargin: 12,
+          actorFontSize: 14,
+          actorFontWeight: 600,
+          messageFontSize: 13,
+          noteFontSize: 12,
+          mirrorActors: false,
+          useMaxWidth: true,
+        },
+        flowchart: {htmlLabels: false, curve: 'basis', padding: 16, nodeSpacing: 40, rankSpacing: 44, useMaxWidth: true},
+        themeVariables: {sequenceNumberColor: '#ffffff', fontSize: '14px'},
+      },
+    },
     image: 'img/social-card.jpg',
     /**
      * What a link to this site unfurls into, beyond the four tags Docusaurus

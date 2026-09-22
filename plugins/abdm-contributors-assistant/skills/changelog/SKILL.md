@@ -41,7 +41,7 @@ entries below was published on this portal and every one was removed:
 
 | Removed entry | Why it failed the test |
 |---|---|
-| Milestones spell CARE, and each one has its own page | Naming and navigation |
+| Each milestone has its own page | Naming and navigation |
 | Methods are colour coded | Visual |
 | Install tools opens in place | Interface behaviour |
 | The landing page asks what you are building | Interface behaviour |

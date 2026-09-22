@@ -18,15 +18,15 @@
 # is a claim about what the operation does, so it is written from the
 # operation's own description, and it starts with a verb like every other title.
 
-# M2, linking and sharing
+# M2, health information provider services
 m2_post_consent_v3_request_hip_on_notify: Acknowledge the consent notification
 m2_post_health_information_transfer: Receive the transferred health information
 m2_post_hip_v3_link_context_notify: Notify a change to a linked care context
-m2_post_patient_share_v3_on_share: Answer the patient share request
+scan-and-register_post_patient_share_v3_on_share: Answer the patient share request
 m2_post_user_initiated_linking_v3_patient_care_context_on_8c9340: Answer the care context discovery
 m2_post_v3_consent_request_hip_notify: Receive the consent decision
 
-# M3, consent and fetching
+# M3, health information user services
 m3_post_consent_v3_request_hiu_on_notify: Acknowledge the consent notification
 
 # M4, HPR and HFR

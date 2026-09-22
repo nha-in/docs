@@ -68,9 +68,7 @@ as the fuller source:
 4. **A second demonstration.** NHA's FAQ says that once the earlier steps are complete, the
    ABDM team schedules a demo for the Health Tech Committee (HTC). This is a different
    demonstration from step 1, to a different audience. The committee's decision is recorded
-   in four review stages, each with its own reviewer, comment and date: the `sd_status`
-   table in the [sandbox data dictionary](/docs/hiecm/v3/reference/data-dictionary) carries
-   `htc1_status` through `htc4_status`.
+   in four review stages, each with its own reviewer, comment and date.
 
 NHA's FAQ does not say how long any of these four steps take, individually or together.
 NHA's documents do not say what the functional testing report or the undertaking document have
@@ -95,9 +93,9 @@ not describe their shape beyond that they differ from sandbox values.
 ## When it goes wrong
 
 Questions about the exit process itself, including where to submit the exit form or what
-counts as a valid supporting document, go to
-[NHA's developer forum](https://devforum.abdm.gov.in) or `integration.support@nha.gov.in`, both
-named in NHA's FAQ. See [Support](/docs/support) for the report format.
+counts as a valid supporting document, go to the
+[support ticketing platform](https://sandboxsupport.abdm.gov.in/) or
+`integration.support@nha.gov.in`. See [Support](/docs/support) for the report format.
 
 If a call that worked in the sandbox fails in production, check the base URL and the `X-CM-ID`
 header first: see [Everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401),

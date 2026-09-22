@@ -3,7 +3,7 @@ name: abdm-m2
 description: Use when building, debugging or testing ABDM Milestone 2: care contexts, HIP initiated linking, discovery, and pushing encrypted health records to a requester. Carries the endpoints and the encryption parameters. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.
 ---
 
-# ABDM M2, linking and sharing
+# ABDM M2, health information provider services
 
 Generated from the ABDM Developer Portal on 2026-09-16, catalogue version 2026.09.16. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.
 
@@ -23,8 +23,8 @@ What it cannot do yet matters as much. Read **Before anything else** below befor
 
 - **Scaffold.** Survey the codebase first when one exists, then build it flow by flow against the sandbox, as a loop that ends when the step's exit condition holds rather than on a call returning 200. [references/scaffold.md](references/scaffold.md)
 - **Design.** What the journey around the calls has to do, and what a screen is forbidden to claim. [references/design.md](references/design.md)
-- **Integrate.** 32 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
-- **Debug.** The specification's examples return no error code for this module. [references/debug.md](references/debug.md)
+- **Integrate.** 31 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
+- **Debug.** The loop from a failed call to a named fix, and 120 error codes from the specification's examples. [references/debug.md](references/debug.md)
 
 This file is the map. Each line above is a file beside it, opened one at a time rather than read through.
 

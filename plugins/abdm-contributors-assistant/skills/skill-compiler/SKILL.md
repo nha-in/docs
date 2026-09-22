@@ -13,9 +13,25 @@ The HIE-CM module skills do not compile from atoms. No HIE-CM atom exists since 
 
 1. `node scripts/build-api-reference.mjs` writes one data file per operation and per journey step from `catalogue/openapi/hiecm/v3/*.yaml` and `journeys/*.yaml`.
 2. `node scripts/compile-skills.mjs` writes the guided loops under `skills-src/`: `hiecm-<module>-build` for a module with journeys, and `hiecm-<module>-debug` for a module whose specification's response examples return error codes.
-3. `node scripts/build-skills.mjs` writes one folder per module, `abdm-gateway`, `abdm-m1` to `abdm-m4`, `abdm-p1` to `abdm-p4`, `abdm-subscription` and `abdm-scan-and-pay`, plus `abdm-fhir`, to `site/static/skills/` and to the integrators plugin. It folds the loops in as `references/scaffold.md` and `references/debug.md`, adds the module rules held in the script, and injects the practices from `shared.concept.integration-practices`.
+3. `node scripts/build-skills.mjs` writes one folder per module, `abdm-gateway`, `abdm-m1` to `abdm-m4`, `abdm-p1` to `abdm-p4`, `abdm-subscription` and `abdm-scan-and-pay`, plus `abdm-fhir`, to `site/static/skills/` and to the integrators plugin. It folds the loops in as `references/scaffold.md` and `references/debug.md`, writes `references/integrate.md` from the specifications and `references/design.md` from atoms, adds the module's call facts held in the script, and injects the practices from `shared.concept.integration-practices`.
 
-`npm run validate:skills` checks the output. The selector, templates, prose pass and identifier diff described below are the design for atom-fed skills, and none of them runs today.
+`npm run validate:skills` checks the output. The selector, templates, prose pass and identifier diff described below are the design for atom-fed skills, and the parts of it that run today are the three below.
+
+## What atoms already feed
+
+Three paths from an atom into a compiled skill exist and run on every build. They are not the selector described further down; they read atoms directly and are keyed on frontmatter rather than on a `skills` list.
+
+| Path | Selector | Where it lands |
+|---|---|---|
+| Practices | the single atom `shared.concept.integration-practices` | a bullet list in every module router |
+| Design section | `gateway: hiecm`, `type: concept`, grouped by `milestone`, ordered by `order` | `references/design.md`, one section per atom, cited by id at the end |
+| Router line | any design atom carrying `router` | one line in the always-loaded router, after the line naming the design section as observed |
+
+The FHIR skill works the same way from a named list, `FHIR_DESIGN_ATOMS`, because its atoms are `gateway: shared` and carry no milestone to group on. A fourth constant, `FHIR_ROUTER_EXTRA`, names atoms whose router line that skill carries without their body joining the design section.
+
+Every scaffold also folds in `shared.concept.survey-an-existing-codebase`, ahead of the first journey, as the loop that reads an existing codebase and writes an integration plan before any call is made.
+
+A design rule belongs in an atom and never in `build-skills.mjs`. Holding one in the script makes it the only content no lint can see, no reader of the docs site meets, and no skill can cite. The same reasoning put the practices in an atom first.
 
 ## Two inputs, one pipeline
 

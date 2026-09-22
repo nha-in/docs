@@ -1,5 +1,8 @@
 {
   "label": "Scan and Pay",
-  "position": 12,
-  "className": "sidebar-icon sidebar-icon--qr-code"
+  "position": 14,
+  "className": "sidebar-icon sidebar-icon--qr-code",
+  "customProps": {
+    "section": "use-cases"
+  }
 }

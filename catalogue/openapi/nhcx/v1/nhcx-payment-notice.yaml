@@ -1,6 +1,6 @@
 # NHCX payment notice, from the NHCX package's Bruno folder apis/06-payment-notice.
 #
-# Written by the package's system/build-ekadocs.mjs (make ekadocs); change the .bru
+# Written by the package's own documentation build; change the .bru
 # requests there and port again rather than editing this file.
 #
 # Rules this file follows: catalogue/openapi/CONVENTIONS.md

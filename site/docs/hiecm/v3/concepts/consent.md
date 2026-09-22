@@ -68,7 +68,7 @@ give access they cannot inspect, change or withdraw.
    duration, the record date range, the categories shared, and the validity
    period. This is the one most often left out, and the one that turns a
    consent screen into a negotiation rather than a demand.
-3. **Allow or refuse it.** NHA's own flow names three outcomes, not two:
+3. **Allow or refuse it.** The consent flow has three outcomes, not two:
    approve, reject and ignore. An ignored request expires on the requester's
    window, and the interface has to show that state.
 4. **See what is already allowed**, so the person can tell which
@@ -127,6 +127,6 @@ An auto approval policy works like this: the patient authorises the app once, th
 
 - [Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu), the facility taking each role.
 - [The ABDM gateway](/docs/hiecm/v3/concepts/gateway), which holds every artefact here.
-- [M3 Retrieve, Health Information User Services](/docs/hiecm/v3/api/m3), the requesting side.
-- [M2 Attach, Health Information Provider Services](/docs/hiecm/v3/api/m2), what a record holder validates.
+- [M3 Health Information User, Health Information User Services](/docs/hiecm/v3/api/m3), the requesting side.
+- [M2 Health Information Provider, Health Information Provider Services](/docs/hiecm/v3/api/m2), what a record holder validates.
 - [How a record travels](/docs/hiecm/v3/concepts/data-flow), what happens next.

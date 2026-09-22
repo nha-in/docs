@@ -1,6 +1,6 @@
 # NHCX V1
 
-Ported from the NHCX package by its `make ekadocs` target (`system/build-ekadocs.mjs`).
+Ported from the NHCX package by its own documentation build.
 Everything in this folder is replaced on every port, so change the package and port again
 rather than editing a page here.
 

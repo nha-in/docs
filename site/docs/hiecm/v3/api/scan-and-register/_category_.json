@@ -1,0 +1,8 @@
+{
+  "label": "Scan and Register",
+  "position": 12,
+  "className": "sidebar-icon sidebar-icon--contact-round",
+  "customProps": {
+    "section": "use-cases"
+  }
+}

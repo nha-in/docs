@@ -219,6 +219,13 @@ export default function ApiEndpoint({operation}: {operation: Operation}) {
   const [opening, rest] = splitLede(operation.description);
   // A lede that only repeats the heading is noise between the title and the call.
   const lede = isRestatement(opening, heading) ? '' : opening;
+  // Where NHA's description carries its own header and body tables, those
+  // tables are the reference and the sections built from the schema stay
+  // out, so nothing on the page is said twice. NHA's header table names the
+  // Authorization header too, so it stands in for Authorizations as well.
+  const text = operation.description ?? '';
+  const nhaHeaders = /\*\*Headers\*\*/.test(text);
+  const nhaBody = /\*\*Request body/i.test(text);
 
   return (
     <div className="api-page">
@@ -257,7 +264,7 @@ export default function ApiEndpoint({operation}: {operation: Operation}) {
 
         {rest ? <Markdown text={rest} className="api-page__body" /> : null}
 
-        {operation.security.length ? (
+        {operation.security.length && !nhaHeaders ? (
           <Section title="Authorizations">
             {operation.security.map((scheme) => (
               <FieldRow
@@ -296,7 +303,7 @@ export default function ApiEndpoint({operation}: {operation: Operation}) {
           </Section>
         ) : null}
 
-        {operation.headers.length ? (
+        {operation.headers.length && !nhaHeaders ? (
           <Section title="Headers">
             {operation.headers.map((field) => (
               <FieldRow key={field.name} field={field} />
@@ -304,7 +311,7 @@ export default function ApiEndpoint({operation}: {operation: Operation}) {
           </Section>
         ) : null}
 
-        {operation.body.length ? (
+        {operation.body.length && !nhaBody ? (
           <Section title="Body">
             {operation.body.map((field) => (
               <FieldRow key={field.name} field={field} />

@@ -14,7 +14,7 @@ Loop limit: 8 passes per step. Hitting the limit is an escalation: state what wa
 
 ## Journeys
 
-### Consent-management-data-flow (`m3-consent-management-data-flow-hiu`)
+### Consent and data flow (`m3-consent-management-data-flow-hiu`)
 
 **Act: the calls in this journey, in order**
 
@@ -38,15 +38,9 @@ curl --request POST \
     "patient": {
       "id": "<ABHA_ADDRESS>"
     },
-    "hip": {
-      "id": "cowin_hip_01",
-      "name": "Cowin",
-      "type": "HIP"
-    },
+    "hip": null,
     "hiu": {
-      "id": "cowin_hiu_01",
-      "name": "Cowin",
-      "type": "HIU"
+      "id": "cowin_hiu_01"
     },
     "careContexts": [
       {
@@ -82,11 +76,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. Receive the consent request for patient HIU (`m3_post_v3_hiu_consent_request_on_init`)
-
-Inbound to your bridge at `/api/v3/hiu/consent/request/on-init`. Acknowledge it and continue.
-
-#### 3. Get consent request status (`m3_post_consent_v3_request_status`)
+#### 2. Get consent request status (`m3_post_consent_v3_request_status`)
 
 ```bash
 curl --request POST \
@@ -102,15 +92,7 @@ curl --request POST \
 }'
 ```
 
-#### 4. Receive the consent status request (`m3_post_v3_hiu_consent_request_on_status`)
-
-Inbound to your bridge at `/api/v3/hiu/consent/request/on-status`. Acknowledge it and continue.
-
-#### 5. Notify HIU when consent is APPROVED, DENIED or REVOKED (`m3_post_v3_hiu_consent_request_notify`)
-
-Inbound to your bridge at `/api/v3/hiu/consent/request/notify`. Acknowledge it and continue.
-
-#### 6. Acknowledge the consent notification (`m3_post_consent_v3_request_hiu_on_notify`)
+#### 3. Acknowledge the consent notification (`m3_post_consent_v3_request_hiu_on_notify`)
 
 ```bash
 curl --request POST \
@@ -137,7 +119,7 @@ curl --request POST \
 }'
 ```
 
-#### 7. Fetch the consent details (`m3_post_consent_v3_fetch`)
+#### 4. Fetch the consent details (`m3_post_consent_v3_fetch`)
 
 ```bash
 curl --request POST \
@@ -153,11 +135,7 @@ curl --request POST \
 }'
 ```
 
-#### 8. Receive the provide fetched consent artefact details to HIU (`m3_post_v3_hiu_consent_on_fetch`)
-
-Inbound to your bridge at `/api/v3/hiu/consent/on-fetch`. Acknowledge it and continue.
-
-#### 9. Submit the health information data request from HIU (`m3_post_data_flow_v3_health_information_request`)
+#### 5. Submit the health information data request from HIU (`m3_post_data_flow_v3_health_information_request`)
 
 ```bash
 curl --request POST \
@@ -192,11 +170,7 @@ curl --request POST \
 }'
 ```
 
-#### 10. Receive the health information data request acknowledgement to HIU (`m3_post_v3_hiu_health_information_on_request`)
-
-Inbound to your bridge at `/api/v3/hiu/health-information/on-request`. Acknowledge it and continue.
-
-#### 11. Submit the notifications corresponding to events during data flow (`m3_post_data_flow_v3_health_information_notify`)
+#### 6. Submit the notifications corresponding to events during data flow (`m3_post_data_flow_v3_health_information_notify`)
 
 ```bash
 curl --request POST \
@@ -230,7 +204,7 @@ curl --request POST \
 }'
 ```
 
-#### 12. Get the current status of the health information request (`m3_get_data_flow_v3_health_information_request_status_tra_550104`)
+#### 7. Get the current status of the health information request (`m3_get_data_flow_v3_health_information_request_status_tra_550104`)
 
 ```bash
 curl --request GET \
@@ -251,6 +225,34 @@ A 200 whose body matches:
   "status": "TRANSFERRED"
 }
 ```
+
+### Callbacks (`m3-callbacks`)
+
+**Act: the calls in this journey, in order**
+
+#### 1. Receive the consent request for patient HIU (`m3_post_v3_hiu_consent_request_on_init`)
+
+Inbound to your bridge at `/api/v3/hiu/consent/request/on-init`. Acknowledge it and continue.
+
+#### 2. Receive the consent status request (`m3_post_v3_hiu_consent_request_on_status`)
+
+Inbound to your bridge at `/api/v3/hiu/consent/request/on-status`. Acknowledge it and continue.
+
+#### 3. Notify HIU when consent is APPROVED, DENIED or REVOKED (`m3_post_v3_hiu_consent_request_notify`)
+
+Inbound to your bridge at `/api/v3/hiu/consent/request/notify`. Acknowledge it and continue.
+
+#### 4. Receive the provide fetched consent artefact details to HIU (`m3_post_v3_hiu_consent_on_fetch`)
+
+Inbound to your bridge at `/api/v3/hiu/consent/on-fetch`. Acknowledge it and continue.
+
+#### 5. Receive the health information data request acknowledgement to HIU (`m3_post_v3_hiu_health_information_on_request`)
+
+Inbound to your bridge at `/api/v3/hiu/health-information/on-request`. Acknowledge it and continue.
+
+**Exit condition (Observe until this is true)**
+
+A 200 response. The specification gives no body for it, so read what comes back.
 
 ## Where the detail is
 

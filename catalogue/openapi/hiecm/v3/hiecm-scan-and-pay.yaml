@@ -3,8 +3,9 @@ info:
   x-portal:
     module: scan-and-pay
     label: Scan and Pay
-    position: 11
+    position: 13
     icon: qr-code
+    section: use-cases
   title: ABDM Scan and Pay
   summary: Open orders, patient selection and payment status between a facility and a PHR app.
   version: abdm-v3
@@ -2873,6 +2874,7 @@ webhooks:
                     nullable: false
                     example: Service Unavailable
       x-abdm-nha-operation-id: patient-share 1
+      x-abdm-answered-by: scan-and-pay_post_scan_gateway_v3_patient_on_share_open_order
   /v3/patient/selection:
     post:
       tags:
@@ -3088,6 +3090,7 @@ webhooks:
                     nullable: false
                     example: Service Unavailable
       x-abdm-nha-operation-id: patient-share 1 (2)
+      x-abdm-answered-by: scan-and-pay_post_scan_gateway_v3_patient_on_selection
   /v3/patient/scan-pay/on-notify:
     post:
       tags:
@@ -3289,6 +3292,7 @@ webhooks:
                     nullable: false
                     example: Service Unavailable
       x-abdm-nha-operation-id: patient-share 2
+      x-abdm-triggered-by: scan-and-pay_post_scan_gateway_v3_patient_scan_pay_notify
   /v3/patient/scan-pay/order-status:
     post:
       tags:
@@ -3454,6 +3458,7 @@ webhooks:
                     nullable: false
                     example: Service Unavailable
       x-abdm-nha-operation-id: patient-share 2 (2)
+      x-abdm-answered-by: scan-and-pay_post_scan_gateway_v3_patient_scan_pay_on_ord_21f376
   /v3/patient/on-share/open-order:
     post:
       tags:
@@ -3687,6 +3692,7 @@ webhooks:
                     nullable: false
                     example: Service Unavailable
       x-abdm-nha-operation-id: patient-share 2 (3)
+      x-abdm-triggered-by: scan-and-pay_post_scan_gateway_v3_patient_share_open_order
   /v3/patient/on-selection:
     post:
       tags:
@@ -3957,6 +3963,7 @@ webhooks:
                     nullable: false
                     example: Service Unavailable
       x-abdm-nha-operation-id: patient-share 2 (4)
+      x-abdm-triggered-by: scan-and-pay_post_scan_gateway_v3_patient_selection
   /v3/patient/scan-pay/notify:
     post:
       tags:
@@ -4148,6 +4155,7 @@ webhooks:
                     nullable: false
                     example: Service Unavailable
       x-abdm-nha-operation-id: patient-share 2 (5)
+      x-abdm-answered-by: scan-and-pay_post_scan_gateway_v3_patient_scan_pay_on_notify
   /v3/patient/scan-pay/on-order-status:
     post:
       tags:
@@ -4351,9 +4359,11 @@ webhooks:
                     nullable: false
                     example: Service Unavailable
       x-abdm-nha-operation-id: patient-share 2 (6)
+      x-abdm-triggered-by: scan-and-pay_post_scan_gateway_v3_patient_scan_pay_order_status
 components:
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
+      description: The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.

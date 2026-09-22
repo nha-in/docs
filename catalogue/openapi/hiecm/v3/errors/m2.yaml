@@ -1,0 +1,251 @@
+# The error codes NHA lists for M2, as one list rather than per call.
+# Source: "Sandbox2.0 M2 and M3 API review v2", NHA, 21 September 2026, the section
+# "Error code put in one place for M2". NHA gives the code and the message
+# only, not the HTTP status or the call that returns it. Rows that repeated
+# an earlier row exactly are listed once; a code NHA lists with more than
+# one message keeps every message.
+intro: During ABDM integration, systems may encounter issues across discovery, linking, consent, encryption, and data exchange workflows. This section outlines common errors, their causes, and recommended resolutions to help ensure smooth implementation.
+source: Sandbox2.0 M2 and M3 API review v2, NHA, 21 September 2026
+source_file: catalogue/openapi/.raw/nha-2026-09-21-review/Sandbox2.0 M2 and M3 API review v2.docx
+source_hash: sha256:cde013bb3f894156a97fe568f1bf5b8f99fc44a764cdfa021f436cdd6d3a8d86
+codes:
+  - code: ABDM-1000
+    message: "Unable to connect the database"
+  - code: ABDM-1001
+    message: "No data found"
+  - code: ABDM-1004
+    message: "SMS Gateway is unavailable"
+  - code: ABDM-1006
+    message: "Bad Request, invalid request Body"
+  - code: ABDM-1007
+    message: "Connection failed due to timeout"
+  - code: ABDM-1008
+    message: "SMS service currently disabled"
+  - code: ABDM-1010
+    message: "Validation failed"
+  - code: ABDM-1011
+    message: "Gateway database unavailable"
+  - code: ABDM-1012
+    message: "No records found against the ABHA Address"
+  - code: ABDM-1013
+    message: "Invalid ABHA Number"
+  - code: ABDM-1015
+    message: "Invalid Response"
+  - code: ABDM-1016
+    message: "Invalid TimeStamp"
+  - code: ABDM-1017
+    message: "Invalid TransactionId"
+  - code: ABDM-1018
+    message: "Share Profile database unavailable"
+  - code: ABDM-1019
+    message: "Dependent Service Unavailable"
+  - code: ABDM-1020
+    message: "Unknown database"
+  - code: ABDM-1022
+    message: "Too many requests"
+  - code: ABDM-1023
+    message: "Invalid User"
+  - code: ABDM-1024
+    message: "Dependent service unavailable"
+  - code: ABDM-1025
+    message: "Invalid ServiceId"
+  - code: ABDM-1026
+    message: "Invalid Link Token"
+  - code: ABDM-1027
+    message: "You are blocked. Please try again after 24 hours."
+  - code: ABDM-1028
+    message: "HIP is unavailable"
+  - code: ABDM-1029
+    message: "Redis server is unavailable"
+  - code: ABDM-1030
+    message: "Invalid request ID"
+  - code: ABDM-1031
+    message: "Invalid request"
+  - code: ABDM-1032
+    message: "Invalid header"
+  - code: ABDM-1033
+    message: "HIU is unavailable"
+  - code: ABDM-1034
+    message: "Notification service unavailable"
+  - code: ABDM-1035
+    message: "Invalid HIP ID"
+  - code: ABDM-1036
+    message: "Data does not matched"
+  - code: ABDM-1037
+    message: "Counter and Care context count mismatch"
+  - code: ABDM-1038
+    message: "ABHA address and Link token mismatch"
+  - code: ABDM-1040
+    message: "Invalid HIU ID"
+  - code: ABDM-1041
+    message: "Invalid Acknowledgement"
+  - code: ABDM-1042
+    message: "Provider Mandatory"
+  - code: ABDM-1043
+    message: "ABHA Address does not match with KYC details."
+  - code: ABDM-1044
+    message: "Broadcast Failed"
+  - code: ABDM-1045
+    message: "Database Access is restricted"
+  - code: ABDM-1046
+    message: "Invalid Purpose"
+  - code: ABDM-1047
+    message: "Purpose does not exist"
+  - code: ABDM-1048
+    message: "Timeout"
+  - code: ABDM-1049
+    message: "Invalid Profile Share Intent Keys"
+  - code: ABDM-1050
+    message: "Invalid Profile Share Metadata Keys"
+  - code: ABDM-1051
+    message: "Invalid ABHA Number or ABHA Address"
+  - code: ABDM-1052
+    message: "Invalid TransactionId or response's requestId"
+  - code: ABDM-1401
+    message: "HIP is not available"
+  - code: ABDM-1061
+    message: "Consent artefact expired"
+  - code: ABDM-1062
+    message: "Consent Not granted"
+  - code: ABDM-1063
+    message: "Date Range given is invalid"
+  - code: ABDM-1064
+    message: "request with this request id already exists"
+  - code: ABDM-1109
+    message: "ABHA DB service unavailable"
+  - code: ABDM-1108
+    message: "Notification DB service unavailable"
+  - code: ABDM-1201
+    message: "IDP Gateway is unavailable"
+  - code: ABDM-9999
+    message: "Unknown exception"
+  - code: ABDM-1006
+    message: "Invalid combinations of scopes"
+  - code: ABDM-1056
+    message: "This care contexts has been already linked"
+  - code: ABDM-1055
+    message: "Invalid HIP Id or PHR Id"
+  - code: ABDM-1056
+    message: "Invalid Link Reference Number"
+  - code: ABDM-1057
+    message: "Invalid Care Contexts"
+  - code: ABDM-1059
+    message: "Invalid Care Contexts count"
+  - code: ABDM-1060
+    message: "Invalid Patient Reference Number"
+  - code: ABDM-1061
+    message: "Invalid Patient Display"
+  - code: ABDM-1062
+    message: "ABHA number mismatch with Link token"
+  - code: ABDM-1063
+    message: "HIP Id mismatch with Link token"
+  - code: ABDM-1064
+    message: "Request body was missing"
+  - code: ABDM-1065
+    message: "Invalid X Auth token"
+  - code: ABDM-1066
+    message: "Invalid JWT token"
+  - code: ABDM-1067
+    message: "Request body not required"
+  - code: ABDM-1170
+    message: "Invalid ABHA address"
+  - code: ABDM-1084
+    message: "ABHA address mismatch with X Auth token"
+  - code: ABDM-1085
+    message: "ABHA number mismatch with X Auth token"
+  - code: ABDM-1086
+    message: "Patient profile mismatch with X Auth token"
+  - code: ABDM-1087
+    message: "Duplicate patient share request"
+  - code: ABDM-1090
+    message: "Duplicate HIP link request"
+  - code: ABDM-1091
+    message: "Duplicate Get links request"
+  - code: ABDM-1092
+    message: "Duplicate Link token request"
+  - code: ABDM-1093
+    message: "Duplicate Bridge request"
+  - code: ABDM-1094
+    message: "Duplicate bridge patch request"
+  - code: ABDM-1095
+    message: "Duplicate Bridge service request"
+  - code: ABDM-1102
+    message: "Profile information cannot be null"
+  - code: ABDM-1103
+    message: "Duplicate Discovery request"
+  - code: ABDM-1104
+    message: "Duplicate Init request"
+  - code: ABDM-1105
+    message: "Duplicate Confirm request"
+  - code: ABDM-1106
+    message: "Duplicate On discovery request"
+  - code: ABDM-1107
+    message: "Duplicate On init request"
+  - code: ABDM-1108
+    message: "Duplicate On confirm request"
+  - code: ABDM-1109
+    message: "Invalid On discovery response"
+  - code: ABDM-1110
+    message: "Invalid On init response"
+  - code: ABDM-1111
+    message: "Invalid On confirm response"
+  - code: ABDM-1112
+    message: "Invalid or already expired consent artefact id"
+  - code: ABDM-1113
+    message: "Duplicate health information provider data flow response"
+  - code: ABDM-1149
+    message: "Intent type is not supported at HIP end"
+  - code: ABDM-1150
+    message: "Bridge API version cannot be null"
+  - code: ABDM-1402
+    message: "Acknowledgement is not received from HIP"
+  - code: ABDM-9999
+    message: "HIP is unable to generate a token at this time. Please try again later."
+  - code: ABDM-9999
+    message: "HIP is unable to process at this time. Please try again later."
+  - code: ABDM-1030
+    message: "Request id not found"
+  - code: ABDM-2500
+    message: "No mapping found for"
+  - code: ABDM-2401
+    message: "The X Auth token is invalid."
+  - code: ABDM-2402
+    message: "Invalid Timestamp"
+  - code: ABDM-2404
+    message: "Invalid Request Id"
+  - code: ABDM-2429
+    message: "Too many requests found"
+  - code: ABDM-2501
+    message: "Payment status should be : SUCCESS,CANCELED,PENDING,FAIL,REFUND_INITIATED,REFUND_SUCCESS"
+  - code: ABDM-2500
+    message: "Authorization header is missing"
+  - code: ABDM-2403
+    message: "Invalid X-CM-ID"
+  - code: ABDM-2406
+    message: "Invalid API sequence flow, please follow logical flow"
+  - code: ABDM-2406
+    message: "The status is invalid. Please follow the logical status flow or transition."
+  - code: ABDM-9999
+    message: "User not found"
+  - code: ABDM-9999
+    message: "Cannot process the request at the moment, please try later."
+  - code: ABDM-9001
+    message: "No open order against ABHA. Please ensure a minimum of one open order"
+  - code: ABDM-9002
+    message: "No registration found at <<hospital name>>. Contact counter support"
+  - code: ABDM-9003
+    message: "Hospital services temporarily unavailable. Please try again after some time."
+  - code: ABDM-9004
+    message: "Services disrupted, please try again."
+  - code: ABDM-9005
+    message: "Bank server not responding. Please try again later"
+  - code: ABDM-9006
+    message: "Service details mismatch. Please ensure original service ID from HMIS"
+  - code: ABDM-9007
+    message: "The Scan and Pay functionality is not enabled at this facility. Kindly contact the hospital administration."
+  - code: ABDM-1006
+    message: "Invalid count, must be 2 digit and ranges between 1 to 20"
+  - code: ABDM-1407
+    message: "The ABHA Number associated with this ABHA Address is currently deactivated. Please reactivate it."
+  - code: ABDM-1006
+    message: "Invalid HIType, it must be in Prescription,DiagnosticReport,OPConsultation,DischargeSummary,ImmunizationRecord,HealthDocumentRecord,WellnessRecord,Invoice"

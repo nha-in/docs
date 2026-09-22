@@ -4221,8 +4221,8 @@
       "atom": "nhcx.flow.pmjay-hospital-migration",
       "type": "flow",
       "route": "/docs/nhcx/v1/concepts/pmjay-on-nhcx",
-      "anchor": "about-the-source",
-      "link": "/docs/nhcx/v1/concepts/pmjay-on-nhcx#about-the-source",
+      "anchor": null,
+      "link": "/docs/nhcx/v1/concepts/pmjay-on-nhcx",
       "rule": "claimed by pmjay-on-nhcx",
       "confidence": "derived"
     },
@@ -4238,10 +4238,10 @@
     {
       "atom": "nhcx.flow.policy-link-and-delink",
       "type": "flow",
-      "route": "/docs/nhcx/v1/registries",
+      "route": "/docs/nhcx/v1/registries/policy",
       "anchor": null,
-      "link": "/docs/nhcx/v1/registries",
-      "rule": "claimed by registries",
+      "link": "/docs/nhcx/v1/registries/policy",
+      "rule": "claimed by policy",
       "confidence": "derived"
     },
     {
@@ -4400,10 +4400,10 @@
     {
       "atom": "nhcx.glossary.correlation-id",
       "type": "glossary",
-      "route": "/docs/hiecm/v3/reference/data-dictionary",
-      "anchor": "tables-at-a-glance",
-      "link": "/docs/hiecm/v3/reference/data-dictionary#tables-at-a-glance",
-      "rule": "term defined on data-dictionary",
+      "route": "/docs/nhcx/v1/getting-started/build-it-well",
+      "anchor": "in-short",
+      "link": "/docs/nhcx/v1/getting-started/build-it-well#in-short",
+      "rule": "term defined on build-it-well",
       "confidence": "derived"
     },
     {

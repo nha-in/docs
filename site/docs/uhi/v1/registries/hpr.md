@@ -40,4 +40,4 @@ catalogue entry has no valid `agent.id` to carry, and there is no UHI call that 
 ## Next
 
 - [HFR on UHI](/docs/uhi/v1/registries/hfr), the facility the practitioner works in
-- [M4 HPR and HFR](/docs/hiecm/v3/api/m4), where both are written
+- [M4 Registry Integration](/docs/hiecm/v3/api/m4), where both are written

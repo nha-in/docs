@@ -14,9 +14,10 @@ import {parse} from 'yaml';
 import {listSpecTree} from './specs.mjs';
 import {joinKey, hostOf} from './lib/api-join.mjs';
 import {loadJourneys, operationIndex, stepDataName} from './lib/journeys.mjs';
-import {errorsFromSpec} from './lib/spec-errors.mjs';
+import {errorsFromSpec, moduleErrorList} from './lib/spec-errors.mjs';
 import {loadAtoms, section} from './lib/atoms.mjs';
 import {cleanTitle, cleanGroupLabel, caseTerms, imperative, cleanDescription} from './lib/titles.mjs';
+import {htmlToMarkdown} from './lib/prose.mjs';
 import {fixProse} from './lib/prose.mjs';
 
 /**
@@ -105,7 +106,7 @@ function fields(schema, prefix = '', depth = 0) {
       name: prefix ? `${prefix}.${name}` : name,
       type,
       required: required.has(name),
-      description: property.description ?? '',
+      description: htmlToMarkdown(property.description),
       enum: property.enum,
       format: property.format,
       encrypted: property['x-abdm-encrypted'] === true || ENCRYPTED_FIELDS.has(name),
@@ -173,6 +174,22 @@ function firstExample(content) {
 }
 
 const UNDOCUMENTED_BODY = /^Response body:\s*not documented\.?$/i;
+
+// NHA's specifications carry an author's note on some 5xx responses,
+// "Internal Server Error -> It is just one example, for every api the path
+// will be changed." That is a note to the next editor of the file, not a
+// description of the response, and it reached the page as one. The status
+// text before the arrow is the description; the note is dropped. Some older
+// ingests also wrote "No response was saved in the Postman collection and no
+// documented definition exists", which tells the reader about our tooling
+// rather than about the response.
+function cleanResponseDescription(text) {
+  const s = String(text ?? '').trim();
+  if (/^No response was saved in the Postman collection/i.test(s)) {
+    return 'The specification does not describe this body. Send the call with Try it to see what comes back.';
+  }
+  return htmlToMarkdown(s.replace(/\s*->\s*It is just one example[^\n]*$/i, '')).trim();
+}
 
 // A specification hard wraps its descriptions near column 72, so the first
 // *line* is usually a fragment. Taking it left a quarter of the endpoint
@@ -472,6 +489,10 @@ for (const {platform, version, files} of tree) {
         // stylesheet gives every other group, so a new specification renders
         // correctly before anyone has picked its icon.
         icon: portal.icon,
+        // Optional. 'use-cases' moves the module under a Use cases group in
+        // the API sidebar (site/docusaurus.config.ts), beside the milestones
+        // rather than among them.
+        section: portal.section,
         dir: portal.module ?? stem,
         file: file.name,
         route: `/reference/${stem}`,
@@ -527,13 +548,16 @@ for (const {platform, version, files} of tree) {
   // silence means, and each module's errors page lists the codes it returns,
   // and none of it was linked from the place the reader meets the failure.
   // Only HIE-CM v3 has those pages, so only it gets the links.
-  const helpFor = (status, moduleDir) => {
+  const SYNCHRONOUS_202 = new Set(['gateway_post_gateway_v3_sessions']);
+  const helpFor = (status, moduleDir, operationId) => {
     if (!isHiecmV3) return undefined;
     const troubleshooting = (name) => `/docs/${platform}/${version}/troubleshooting/${name}`;
     if (status === '401') {
       return {label: 'Everything returns 401', href: troubleshooting('everything-returns-401')};
     }
-    if (status === '202') {
+    // The session API answers its 202 with the token in the body. No callback
+    // follows, so the callback page would mislead (NHA review, September 2026).
+    if (status === '202' && !SYNCHRONOUS_202.has(operationId)) {
       return {label: 'The callback never arrives', href: troubleshooting('callback-never-arrives')};
     }
     // Only a module that gets an errors page (see the error pages below) is
@@ -681,7 +705,7 @@ for (const {platform, version, files} of tree) {
       return [
         '## Where this fits',
         '',
-        `\`${moduleFile}\` declares this callback at module level and names no call against it. Which call produces it is not documented, so this page does not say.`,
+        'This callback arrives in the journey listed above. The call that produces it is not yet published; take the order from the journey.',
         '',
       ];
     }
@@ -722,7 +746,7 @@ for (const {platform, version, files} of tree) {
         scheme: scheme.scheme,
         in: scheme.in,
         headerName: scheme.name,
-        description: scheme.description ?? '',
+        description: htmlToMarkdown(scheme.description),
       }];
     };
     const securityFor = (op) => {
@@ -770,14 +794,14 @@ for (const {platform, version, files} of tree) {
         // that will answer it.
         description: UNDOCUMENTED_BODY.test((response.description ?? '').trim())
           ? 'The specification does not describe this body. Send the call with Try it to see what comes back.'
-          : response.description ?? '',
+          : cleanResponseDescription(response.description ?? ''),
         // An explicit example wins; otherwise the response schema supplies
         // one, same as the request side, so a status with a documented body
         // never renders as prose alone.
         example:
           firstExample(response.content) ??
           sampleFromSchema(response.content?.['application/json']?.schema),
-        help: helpFor(status, module.dir),
+        help: helpFor(status, module.dir, op.operationId),
       }));
 
       const id = op.operationId ?? slug(`${entry.method}-${entry.path}`);
@@ -795,8 +819,14 @@ for (const {platform, version, files} of tree) {
         moduleId: module.id,
         kind: entry.kind,
         method: entry.method.toUpperCase(),
-        path: entry.path,
-        server: servers[0]?.url ?? '',
+        // The M1 swagger keys one operation per use case as <path>#<use-case>.
+        // The suffix is never sent to the server; the real URL is in
+        // x-actual-path, and that is what the page, the curl and the samples show.
+        path: op['x-actual-path'] ?? entry.path.replace(/#.*$/, ''),
+        // A callback is ABDM calling you. Its examples run against the URL
+        // registered for your bridge, never against the gateway host, which
+        // is what a curl against dev.abdm.gov.in wrongly suggested.
+        server: entry.kind === 'callback' ? '{bridgeUrl}' : (servers[0]?.url ?? ''),
         servers,
         summary: caseTerms(fixProse(op.summary ?? id)),
         // What a heading, a sidebar row and a table cell show. NHA's summary
@@ -804,8 +834,8 @@ for (const {platform, version, files} of tree) {
         // this carries the name. Always an instruction starting with a verb.
         // `x-abdm-title` overrides it where NHA's summary names nothing a rule
         // can rescue. See scripts/lib/titles.mjs.
-        title: titleOverrides[id]
-          ? caseTerms(titleOverrides[id])
+        title: (titleOverrides[id] ?? op['x-abdm-title'])
+          ? caseTerms(titleOverrides[id] ?? op['x-abdm-title'])
           : imperative(cleanTitle(op.summary, {path: entry.path, method: entry.method}), {
               method: entry.method,
               kind: entry.kind,
@@ -817,16 +847,16 @@ for (const {platform, version, files} of tree) {
           .map((p) => ({
             name: p.name,
             required: Boolean(p.required),
-            description: p.description ?? '',
+            description: htmlToMarkdown(p.description),
             example: p.example ?? p.schema?.example,
             type: p.schema?.type ?? 'string',
           })),
         pathParams: parameters
           .filter((p) => p.in === 'path')
-          .map((p) => ({name: p.name, required: true, description: p.description ?? '', type: p.schema?.type ?? 'string'})),
+          .map((p) => ({name: p.name, required: true, description: htmlToMarkdown(p.description), type: p.schema?.type ?? 'string'})),
         queryParams: parameters
           .filter((p) => p.in === 'query')
-          .map((p) => ({name: p.name, required: Boolean(p.required), description: p.description ?? '', type: p.schema?.type ?? 'string'})),
+          .map((p) => ({name: p.name, required: Boolean(p.required), description: htmlToMarkdown(p.description), type: p.schema?.type ?? 'string'})),
         body: fields(requestSchema),
         // An explicit example wins; otherwise the schema supplies one, so the
         // panel and the curl are never blank for an operation that takes a body.
@@ -923,7 +953,10 @@ for (const {platform, version, files} of tree) {
         writeFileSync(join(dataDir, `${dataName}.json`), `${JSON.stringify(stepped, null, 2)}\n`);
         const dir = join(docsDir, module.dir, 'endpoints', journey.id);
         mkdirSync(dir, {recursive: true});
-        const title = `${i + 1}. ${stepped.title}${step.optional ? ' (optional)' : ''}`;
+        // NHA's own titles already say "(optional)" where a step is; the
+        // journey flag adds it only where the title does not.
+        const optional = step.optional && !/\(optional\)\s*$/i.test(stepped.title) ? ' (optional)' : '';
+        const title = `${i + 1}. ${stepped.title}${optional}`;
         writeFileSync(join(dir, `${nn}-${slug(step.op)}.mdx`), [
           '---',
           // The step number stays in the id. Docusaurus strips an "NN-" file
@@ -962,6 +995,7 @@ for (const {platform, version, files} of tree) {
           ...(module.icon && {
             className: `sidebar-icon sidebar-icon--${module.icon}`,
           }),
+          ...(module.section && {customProps: {section: module.section}}),
         },
         null,
         2,
@@ -1167,7 +1201,7 @@ for (const {platform, version, files} of tree) {
       for (const [name, scheme] of schemes) {
         lines.push(
           `**${name}**, \`${scheme.type}\`${scheme.scheme ? ` \`${scheme.scheme}\`` : ''}. ${(
-            scheme.description ?? ''
+            htmlToMarkdown(scheme.description)
           )
             .replace(/\s+/g, ' ')
             .trim()}`.trimEnd(),
@@ -1180,7 +1214,7 @@ for (const {platform, version, files} of tree) {
         for (const [, header] of headers) {
           lines.push(
             `| \`${header.name}\` | ${header.required ? 'yes' : 'no'} | ${(
-              header.description ?? ''
+              htmlToMarkdown(header.description)
             )
               .replace(/\s+/g, ' ')
               .trim()} |`,
@@ -1266,6 +1300,10 @@ for (const {platform, version, files} of tree) {
     `| \`${e.code}\` | ${e.meaning.replace(/\|/g, '\\|')} | ${e.paths.map((x) => `\`${x}\``).join(', ')} |`;
 
   // ---- error codes: every code the response examples return ----
+  /** One table row. A code NHA lists without a call has no HTTP status and no operation. */
+  const errorRow = (e) =>
+    `| \`${e.code}\` | ${e.http || ''} | ${e.message.replace(/\|/g, '\\|')} | ${e.operationId ? `\`${e.operationId}\`` : ''} |`;
+
   {
     const lines = [
       frontMatter(
@@ -1316,7 +1354,7 @@ for (const {platform, version, files} of tree) {
       if (!codes.length) continue;
       total += codes.length;
       lines.push(`## ${module.label}`, '', '| Code | HTTP | Message | Returned by |', '| --- | --- | --- | --- |');
-      for (const e of codes) lines.push(`| \`${e.code}\` | ${e.http} | ${e.message.replace(/\|/g, '\\|')} | \`${e.operationId}\` |`);
+      for (const e of codes) lines.push(errorRow(e));
       lines.push('');
     }
     lines.push(
@@ -1368,10 +1406,15 @@ for (const {platform, version, files} of tree) {
         : []),
     ];
 
+    const list = moduleErrorList(spec);
+    if (list?.intro) lines.push(list.intro, '');
     if (codes.length) {
       lines.push('## Codes', '', '| Code | HTTP | Message | Returned by |', '| --- | --- | --- | --- |');
-      for (const e of codes) lines.push(`| \`${e.code}\` | ${e.http} | ${e.message.replace(/\|/g, '\\|')} | \`${e.operationId}\` |`);
+      for (const e of codes) lines.push(errorRow(e));
       lines.push('');
+      if (codes.some((e) => e.listed)) {
+        lines.push(`A row with no HTTP status and no call is one NHA lists for this module (${list.source}) without saying which call returns it.`, '');
+      }
     } else {
       const own = new Set(Object.keys(spec.paths ?? {}).concat(Object.keys(spec.webhooks ?? {})));
       const here = atomCodes.filter((e) => e.paths.some((x) => own.has(x)));

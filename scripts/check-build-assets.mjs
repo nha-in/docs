@@ -122,6 +122,8 @@ for (const prompt of ['prompt.md', 'nhcx.md']) {
   for (const m of text.matchAll(/`(\/(?:skills|agent-setup|docs)\/[^\s`]+)`/g)) paths.add(m[1]);
   for (const path of paths) {
     if (/[<{$]/.test(path)) continue; // a template or a shell variable, not a file
+    // The CDN forwards these to docs-mcp on the site's own host; no build serves them.
+    if (/^\/(mcp|api|healthz)(\/|$)/.test(path)) continue;
     if (!siteFile(path)) fail(`agent-setup/${prompt} names ${path}, which the build does not serve`);
   }
 }

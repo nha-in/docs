@@ -3,7 +3,7 @@ name: abdm-m1
 description: Use when building, debugging or testing ABDM Milestone 1: creating an ABHA number or address, ABHA login, profile management, or the gateway session token. Carries the endpoints, the required headers, the two token rule, the encryption rule and the error codes its specification's examples return. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.
 ---
 
-# ABDM M1, ABHA identity
+# ABDM M1, ABHA creation and verification
 
 Generated from the ABDM Developer Portal on 2026-09-16, catalogue version 2026.09.16. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.
 
@@ -25,8 +25,8 @@ What it cannot do yet matters as much. Read **Before anything else** below befor
 
 - **Scaffold.** Survey the codebase first when one exists, then build it flow by flow against the sandbox, as a loop that ends when the step's exit condition holds rather than on a call returning 200. [references/scaffold.md](references/scaffold.md)
 - **Design.** What the journey around the calls has to do, and what a screen is forbidden to claim. [references/design.md](references/design.md)
-- **Integrate.** 41 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
-- **Debug.** The loop from a failed call to a named fix, and 14 error codes from the specification's examples. [references/debug.md](references/debug.md)
+- **Integrate.** 132 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
+- **Debug.** The loop from a failed call to a named fix, and 17 error codes from the specification's examples. [references/debug.md](references/debug.md)
 
 This file is the map. Each line above is a file beside it, opened one at a time rather than read through.
 

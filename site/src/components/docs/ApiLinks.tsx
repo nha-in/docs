@@ -21,7 +21,7 @@ import CardGroup from '@site/src/components/mdx/CardGroup';
  * same material by two routes, one of which dropped the reader out of the
  * site. The reference is the route that keeps them in it.
  */
-type Module = 'gateway' | 'm1' | 'm2' | 'm3' | 'm4' | 'p1' | 'p2' | 'p3' | 'p4' | 'subscription' | 'scan-and-pay';
+type Module = 'gateway' | 'm1' | 'm2' | 'm3' | 'm4' | 'p1' | 'p2' | 'p3' | 'p4' | 'subscription' | 'scan-and-pay' | 'scan-and-register' | 'record-share';
 
 const NAMES: Record<Module, string> = {
   gateway: 'Gateway',
@@ -35,6 +35,8 @@ const NAMES: Record<Module, string> = {
   p4: 'P4',
   subscription: 'Subscription',
   'scan-and-pay': 'Scan and Pay',
+  'scan-and-register': 'Scan and Register',
+  'record-share': 'Patient record share',
 };
 
 export default function ApiLinks({module}: {module: Module}): ReactNode {

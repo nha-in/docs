@@ -1,0 +1,5 @@
+- id: scan-and-register-abdm-patient-share-hip
+  title: Scan and register
+  steps:
+    - op: scan-and-register_post_v3_hip_patient_share
+    - op: scan-and-register_post_patient_share_v3_on_share

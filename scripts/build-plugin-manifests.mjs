@@ -15,7 +15,7 @@
 //   .codex-plugin/plugin.json  Codex, which points at ./skills/ explicitly
 //
 // plus .agents/plugins/marketplace.json at the repository root, which is what
-// `codex plugin marketplace add eka-care/abdm-docs` reads, mirroring the
+// `codex plugin marketplace add nha-in/docs` reads, mirroring the
 // .claude-plugin/marketplace.json beside it.
 //
 // Three manifests naming the same version is three chances to disagree, so

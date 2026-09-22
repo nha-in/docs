@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from '@docusaurus/Link';
+import {marked} from 'marked';
 import {blocks} from './blocks';
 
 /**
@@ -13,8 +14,11 @@ import {blocks} from './blocks';
  * `###` and as lists run together into one paragraph, so headings, lists and
  * links are blocks and elements here too. Across the catalogue that is 657
  * headings, all `###`, 1,366 list items, none nested, and 102 links, all to
- * this site's own pages. There are no tables, no fenced blocks and no quotes,
- * and anything that rare stays the plain text it already was.
+ * this site's own pages.
+ *
+ * The M1 swagger reissued on 22 September 2026 also writes header and body
+ * tables and blockquoted notes. A description carrying either goes through a
+ * markdown parser with tables on instead, since these blocks cannot draw them.
  *
  * A single newline is a soft wrap, as it is in markdown. Specifications hard
  * wrap their descriptions near column 72, and honouring those breaks left
@@ -23,6 +27,11 @@ import {blocks} from './blocks';
 const TOKEN = /(`[^`\n]+`|\*\*[^*\n]+\*\*|\[[^\]\n]+\]\([^)\s]+\))/g;
 const LINK = /^\[([^\]\n]+)\]\(([^)\s]+)\)$/;
 
+const TABLE_OR_QUOTE = /^\s*(\|.*\||>)/m;
+
+marked.setOptions({gfm: true, breaks: false});
+
+/** Code spans and bold runs in one line of text, for places that take no block markup. */
 export function inline(text: string): React.ReactNode[] {
   return text
     .split(TOKEN)
@@ -55,6 +64,12 @@ export default function Markdown({
   text: string;
   className?: string;
 }) {
+  if (TABLE_OR_QUOTE.test(text)) {
+    const html = marked.parse(text.trim(), {async: false}) as string;
+    // The description is the build's own data, generated from the
+    // specification, never reader input.
+    return <div className={className} dangerouslySetInnerHTML={{__html: html}} />;
+  }
   return (
     <>
       {blocks(text).map((block, index) => {

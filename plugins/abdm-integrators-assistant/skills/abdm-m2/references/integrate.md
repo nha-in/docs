@@ -1,4 +1,4 @@
-# Integrate M2, linking and sharing
+# Integrate M2, health information provider services
 
 The calls themselves: where they live, what they need in their headers, and one request written out in full.
 
@@ -8,7 +8,7 @@ The calls themselves: where they live, what they need in their headers, and one 
 - `https://apis.abdm.gov.in` ABDM gateway, production
 ## Endpoints
 
-32 operations, grouped by the journey they belong to.
+31 operations, grouped by the journey they belong to.
 
 ### Other operations
 
@@ -16,6 +16,7 @@ The calls themselves: where they live, what they need in their headers, and one 
 | --- | --- | --- |
 | `POST` | `/api/hiecm/consent/v3/request/hip/on-notify` | Acknowledge the notification sent when a consent request is approved/revoked/ex… |
 | `POST` | `/api/hiecm/data-flow/v3/health-information/hip/on-request` | Health information data request acknowledgement from HIP. |
+| `POST` | `/api/hiecm/data-flow/v3/health-information/notify` | Notifications corresponding to events during data flow |
 | `GET` | `/api/hiecm/gateway/v3/.well-known/openid-configuration` | Get the open ID configuration. |
 | `PUT` | `/api/hiecm/gateway/v3/bridge-service` | v3/gateway/bridge-service |
 | `GET` | `/api/hiecm/gateway/v3/bridge-service/serviceId/{service-id}` | Fetch the details of a service ID. |
@@ -26,11 +27,10 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `GET` | `/api/hiecm/gateway/v3/health-lockers` | Fetch the record with health locker enabled provider details. |
 | `GET` | `/api/hiecm/gateway/v3/providers` | Fetch the list of providers filtered by name. |
 | `GET` | `/api/hiecm/gateway/v3/providers/{provider-id}` | Fetch the record for provider details for requested provider ID. |
-| `POST` | `/api/hiecm/gateway/v3/sessions` | Generate Keycloak token/access token. |
+| `POST` | `/api/hiecm/gateway/v3/sessions` | Generate access token. |
 | `POST` | `/api/hiecm/hip/v3/link/carecontext` | Perform HIP initiated linking. |
 | `POST` | `/api/hiecm/hip/v3/link/context/notify` | Notify CM about any update on the already linked care context for a patient. |
 | `POST` | `/api/hiecm/hip/v3/link/patient/links/sms/notify2` | Send SMS notification to patient that a care context is linked. |
-| `POST` | `/api/hiecm/patient-share/v3/on-share` | Sharing the response of HIECM's /api/hiecm/patient-share/v3/on-share API |
 | `POST` | `/api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm` | Sharing the response of /api/hiecm/user-initiated-linking/v3/link/care-context/… |
 | `POST` | `/api/hiecm/user-initiated-linking/v3/link/care-context/on-init` | As a result of the initialization, HIP has to generate a unique reference-numbe… |
 | `POST` | `/api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover` | HMIS/LIMS/HIP has to ensure that only unlinked records of the patient has to be… |
@@ -40,7 +40,6 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `POST` | `/api/v3/hip/link/care-context/confirm` | Confirm the linking of care contexts for a patient. It allows healthcare inform… |
 | `POST` | `/api/v3/hip/link/care-context/init` | Initiate the linking of care contexts for a patient. It allows healthcare infor… |
 | `POST` | `/api/v3/hip/patient/care-context/discover` | Discover care contexts associated with a patient. It allows healthcare informat… |
-| `POST` | `/api/v3/hip/patient/share` | This API will be invoked to the HIP for sharing the response of HIECM's /api/hi… |
 | `POST` | `/api/v3/hip/token/on-generate-token` | This is a call back API of [/api/hiecm/v3/token/generate-token]. |
 | `POST` | `/api/v3/link/on_carecontext` | Is a callback API that will be called by HIE-CM. The response will be received … |
 | `POST` | `/api/v3/links/context/on-notify` | This API endpoint is a call back API for /api/hiecm/hip/v3/link/context/notify … |
@@ -69,10 +68,6 @@ curl --request POST \
   "acknowledgement": {
     "status": "OK",
     "consentId": "e3c74829-3f82-4f94-959e-e10f57bcd57b"
-  },
-  "error": {
-    "code": "ABDM-1001",
-    "message": "unable to connect database"
   },
   "response": {
     "requestId": "6f0b4665-a915-4c92-aa36-65afb4a2cd71"

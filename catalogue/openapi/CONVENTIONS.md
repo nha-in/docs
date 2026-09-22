@@ -9,12 +9,13 @@ without three different shapes of truth.
 | File | Module | Gateway host |
 |---|---|---|
 | `hiecm-gateway.yaml` | Session token, used by all modules | `dev.abdm.gov.in` |
-| `hiecm-m1.yaml` | ABHA identity | `abhasbx.abdm.gov.in` |
+| `hiecm-m1.yaml` | ABHA creation and verification | `abhasbx.abdm.gov.in` |
 | `hiecm-m2.yaml` | Care context linking and HIP data sharing | `dev.abdm.gov.in` |
 | `hiecm-m3.yaml` | Consent and HIU data fetch | `dev.abdm.gov.in` |
 | `hiecm-m4.yaml` | HPR and HFR registration. Phase 2, nothing written | `apihspsbx.abdm.gov.in` |
 | `hiecm-p1.yaml`, `hiecm-p2.yaml`, `hiecm-p3.yaml` | The PHR modules P1 to P3 | `phrsbx.abdm.gov.in` |
 | `hiecm-phr-services.yaml` | PHR application services | `phrsbx.abdm.gov.in` |
+| `hiecm-scan-and-register.yaml`, `hiecm-record-share.yaml`, `hiecm-scan-and-pay.yaml` | The three counter QR use cases. `x-portal.section: use-cases` groups them in the API sidebar | `dev.abdm.gov.in` |
 
 The NHCX files under `nhcx/v1/` are one per module of the exchange, and are
 not written in this repository. The NHCX package writes them with
