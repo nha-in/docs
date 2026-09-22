@@ -1,0 +1,35 @@
+---
+title: 23 September 2026
+sidebar_label: 23 September 2026
+sidebar_position: 1
+hide_title: true
+description: What changed in these pages on 23 September 2026.
+source: catalogue/openapi/.raw/nha-2026-09-23, catalogue/openapi/hiecm/v3
+---
+
+import ReleaseGroup from '@site/src/components/docs/ReleaseGroup';
+
+<ReleaseGroup date="2026-09-23" as="h1">
+
+### P2 consent, linking and share calls go to the gateway
+
+The [P2](/reference/hiecm-p2) reference printed 17 calls under `/api/hiecm/` against
+`https://abhasbx.abdm.gov.in`, the ABHA service. They are gateway calls and go to
+`https://dev.abdm.gov.in`: consent requests and artefacts, auto approval, linking, discovery and
+patient share. The `/abha/api/v3/phr/app/` calls stay on the ABHA service. If your app built
+these URLs from the sample, change the host.
+
+### List calls send their required query parameters
+
+The samples on a list call now carry the query parameters the call requires, for example
+`?limit=5&offset=5&status=ALL` on listing subscription requests. Before, the sample sent the
+path alone and the call was refused. Listing subscription requests now requires `limit`,
+`offset` and `status`.
+
+### PHR registration by Aadhaar number, and no email update
+
+[P1](/docs/hiecm/v3/milestones/p1) lists registering an ABHA address from an Aadhaar number
+again, through the ABHA number the Aadhaar OTP creates. Updating the email on a PHR profile is
+deprecated and no longer listed in P2. On approving a subscription request, `hip` is optional.
+
+</ReleaseGroup>
