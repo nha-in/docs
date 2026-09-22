@@ -19,13 +19,13 @@ const journeysMode = process.argv.includes('--journeys');
 const METHODS = ['get', 'post', 'put', 'patch', 'delete'];
 
 const MODULES = {
-  gateway: {label: 'Gateway session', position: 1, icon: 'key-round', roles: ['his', 'phr'], title: 'ABDM gateway, sessions and bridges', summary: 'The access token every call carries, and the bridge registry.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 11},
+  gateway: {label: 'Gateway session', position: 1, icon: 'key-round', roles: ['his', 'phr'], title: 'ABDM gateway, sessions and bridges', summary: 'The access token every call carries, and the bridge registry.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 4},
   m1: {label: 'M1 Identity', position: 2, icon: 'id-card', roles: ['his'], title: 'ABDM M1, ABHA creation and verification', summary: 'Create, find, log into and manage an ABHA.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}], expected: 121},
   m2: {label: 'M2 Health Information Provider', position: 3, icon: 'link', roles: ['his'], title: 'ABDM M2, health information provider services as a HIP', summary: 'Link care contexts to an ABHA address and share records when consent arrives.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 20},
   m3: {label: 'M3 Health Information User', position: 4, icon: 'file-check', roles: ['his'], title: 'ABDM M3, health information user services as an HIU', summary: 'Raise a consent request, fetch its artefacts, and receive records.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 12},
   m4: {label: 'M4 Registry Integration', position: 5, icon: 'building-2', roles: ['his'], title: 'ABDM M4, professional and facility registries', summary: 'Register healthcare professionals and facilities on the NHPR.', servers: [{url: 'https://apihspsbx.abdm.gov.in/v4/int', description: 'NHPR, sandbox'}], expected: 100},
   p1: {label: 'P1 Registration and login', position: 6, icon: 'user-round', roles: ['phr'], title: 'ABDM P1, PHR registration and login', summary: 'Create an ABHA address in a PHR app and log in to it.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}], expected: 11},
-  p2: {label: 'P2 Management', position: 7, icon: 'files', roles: ['phr'], title: 'ABDM P2, PHR management', summary: 'Manage the PHR profile, link an ABHA number, switch profiles, and handle linking, sharing and consent for the patient.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}, {url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}], expected: 32},
+  p2: {label: 'P2 Management', position: 7, icon: 'files', roles: ['phr'], title: 'ABDM P2, PHR management', summary: 'Manage the PHR profile, link an ABHA number, switch profiles, and handle linking, sharing and consent for the patient.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}, {url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}], expected: 34},
   p3: {label: 'P3 Subscription', position: 8, icon: 'bell', roles: ['phr'], title: 'ABDM P3, PHR subscriptions', summary: 'Read, approve, deny, enable, disable and update the patient\'s subscriptions and subscription requests.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}], expected: 8},
   p4: {label: 'P4 Locker', position: 9, icon: 'lock', roles: ['phr'], title: 'ABDM P4, health lockers', summary: 'Set up a health locker and list the lockers and requests on an ABHA address.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}], expected: 4},
   subscription: {label: 'Subscriptions', position: 10, icon: 'bell', roles: ['his'], title: 'ABDM subscriptions', summary: 'Subscribe an HIU to changes on an ABHA address.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 6},
@@ -42,11 +42,26 @@ const PHR_TAGS = {
 };
 const LOCKER = /\/subscription-requests\/v3\/(patients\/lockers(\/\{[^}]+\})?|patients\/requests|setup-locker)$/;
 // undefined: no mapping; only allowed for a call an earlier file already declared.
-const phrPlace = (tag, path) => (LOCKER.test(path) ? 'p4' : PHR_TAGS[tag]);
+const phrPlace = (tag, path) => (LOCKER.test(path) ? 'p4' : tag === 'Gateway' && !GATEWAY_KEPT.has(path) ? null : PHR_TAGS[tag]);
 
+// The two provider lookups leave the gateway module too, but the P2 user
+// initiated linking flow walks them, so they move to P2 rather than go.
+const GATEWAY_TO_P2 = new Set([
+  '/api/hiecm/gateway/v3/providers',
+  '/api/hiecm/gateway/v3/providers/{provider-id}',
+]);
+const GATEWAY_KEPT = new Set([
+  '/api/hiecm/gateway/v3/bridge-services',
+  '/api/hiecm/gateway/v3/bridge-service/serviceId/{service-id}',
+  '/api/hiecm/gateway/v3/bridge/url',
+  '/api/hiecm/gateway/v3/sessions',
+]);
 // Which module an operation lands in. Returns null to drop it.
 const FILES = [
-  {file: 'hiecm/gateway.yaml', place: () => 'gateway'},
+  // NHA's review of 22 September 2026 keeps four gateway calls in the
+  // reference: the three bridge calls an integrator makes first and the
+  // session call. The rest of NHA's gateway file is dropped and logged.
+  {file: 'hiecm/gateway.yaml', place: (tag, path) => (GATEWAY_KEPT.has(path) ? 'gateway' : GATEWAY_TO_P2.has(path) ? 'p2' : null)},
   // NHA reissued the M1 swagger on 22 September 2026 with one operation per
   // use case: the path key carries a #use-case suffix, the real URL sits in
   // x-actual-path, and the tags follow the M1 Postman collection.
@@ -167,6 +182,8 @@ for (const {file, place, set = 'nha-2026-09-16', fetched = '2026-09-16', titlesF
       // one file may declare several use cases of one path.
       const key = `${method.toUpperCase()} ${path.replace(/#.*$/, '').replace(/^\/(abha\/api|api\/hiecm)/, '').replace(/\{[^}]+\}/g, '{}')}`;
       if (seenPath.has(key) && seenPath.get(key).file !== file) { const first = seenPath.get(key); note(first.module, key, `dropped from ${file}: already declared by ${first.file} in the ${first.module} module`); continue; }
+      if (module === 'p2' && file === 'hiecm/gateway.yaml') note('p2', key, 'moved from the gateway module: NHA\'s review of 22 September 2026 removes it from the gateway reference, and the P2 user initiated linking flow walks it');
+      if (module === null) { note('gateway', key, 'removed from the reference: NHA\'s review of 22 September 2026 keeps only the first three bridge calls and the session call'); if (!seenPath.has(key)) seenPath.set(key, {file, module: 'gateway'}); continue; }
       if (!module || !MODULES[module]) throw new Error(`${file}: ${method.toUpperCase()} ${path} has tag "${tag}", which no module takes`);
       if (!seenPath.has(key)) seenPath.set(key, {file, module});
       touched.add(module);

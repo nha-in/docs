@@ -9,7 +9,7 @@ The calls themselves: where they live, what they need in their headers, and one 
 - `https://apis.abdm.gov.in` ABDM gateway, production
 ## Endpoints
 
-43 operations, grouped by the journey they belong to.
+38 operations, grouped by the journey they belong to.
 
 ### Other operations
 
@@ -37,14 +37,9 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `POST` | `/api/hiecm/consent/v3/request/{request-id}/approve` | Approve the consent request raised by HIU from PHR/mobile application. |
 | `POST` | `/api/hiecm/consent/v3/request/{request-id}/deny` | Deny the consent request raised by HIU from PHR/mobile application. |
 | `POST` | `/api/hiecm/consent/v3/revoke` | Revoke the granted consent from PHR/mobile application. |
-| `GET` | `/api/hiecm/gateway/v3/.well-known/openid-configuration` | Get the open ID configuration. |
-| `PUT` | `/api/hiecm/gateway/v3/bridge-service` | v3/gateway/bridge-service |
 | `GET` | `/api/hiecm/gateway/v3/bridge-service/serviceId/{service-id}` | Fetch the details of a service ID. |
 | `GET` | `/api/hiecm/gateway/v3/bridge-services` | Fetch the service ids registered against a bridge. |
 | `PATCH` | `/api/hiecm/gateway/v3/bridge/url` | Update the bridge URL. |
-| `GET` | `/api/hiecm/gateway/v3/certs` | Get the certificate information. |
-| `GET` | `/api/hiecm/gateway/v3/govt-programs` | Fetch the list of govt programmes. |
-| `GET` | `/api/hiecm/gateway/v3/health-lockers` | Fetch the record with health locker enabled provider details. |
 | `GET` | `/api/hiecm/gateway/v3/providers` | Fetch the list of providers filtered by name. |
 | `GET` | `/api/hiecm/gateway/v3/providers/{provider-id}` | Fetch the record for provider details for requested provider ID. |
 | `POST` | `/api/hiecm/gateway/v3/sessions` | Generate access token. |

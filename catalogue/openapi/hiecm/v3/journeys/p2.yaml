@@ -66,8 +66,8 @@
 - id: p2-abdm-user-initiated-linking-phr
   title: User initiated linking
   steps:
-    - {op: gateway_get_gateway_v3_providers}
-    - {op: gateway_get_gateway_v3_providers_provider_id}
+    - {op: p2_get_gateway_v3_providers}
+    - {op: p2_get_gateway_v3_providers_provider_id}
     - {op: p2_post_user_initiated_linking_v3_patient_care_context_discover}
     - {op: p2_post_v3_hiu_patient_care_context_on_discover}
     - {op: p2_post_user_initiated_linking_v3_link_care_context_init}

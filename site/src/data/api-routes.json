@@ -518,102 +518,6 @@
     "callbacks": []
   },
   {
-    "key": "certs",
-    "hosts": [
-      "dev.abdm.gov.in",
-      "apis.abdm.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "gateway_get_gateway_v3_certs",
-    "module": "Gateway session",
-    "moduleDir": "gateway",
-    "method": "GET",
-    "path": "/api/hiecm/gateway/v3/certs",
-    "summary": "This API is invoked to get the certificate information.",
-    "route": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/03-gateway-get-gateway-v3-certs",
-    "callbacks": []
-  },
-  {
-    "key": "govt-programs",
-    "hosts": [
-      "dev.abdm.gov.in",
-      "apis.abdm.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "gateway_get_gateway_v3_govt_programs",
-    "module": "Gateway session",
-    "moduleDir": "gateway",
-    "method": "GET",
-    "path": "/api/hiecm/gateway/v3/govt-programs",
-    "summary": "This API is invoked to fetch the list of govt programs.",
-    "route": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/07-gateway-get-gateway-v3-govt-programs",
-    "callbacks": []
-  },
-  {
-    "key": "health-lockers",
-    "hosts": [
-      "dev.abdm.gov.in",
-      "apis.abdm.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "gateway_get_gateway_v3_health_lockers",
-    "module": "Gateway session",
-    "moduleDir": "gateway",
-    "method": "GET",
-    "path": "/api/hiecm/gateway/v3/health-lockers",
-    "summary": "This API is invoked to fetch the record with health locker enabled provider details.",
-    "route": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/08-gateway-get-gateway-v3-health-lockers",
-    "callbacks": []
-  },
-  {
-    "key": "providers",
-    "hosts": [
-      "dev.abdm.gov.in",
-      "apis.abdm.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "gateway_get_gateway_v3_providers",
-    "module": "Gateway session",
-    "moduleDir": "gateway",
-    "method": "GET",
-    "path": "/api/hiecm/gateway/v3/providers",
-    "summary": "This API is invoked to fetch the list of providers filtered by name.",
-    "route": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/05-gateway-get-gateway-v3-providers",
-    "callbacks": []
-  },
-  {
-    "key": "providers/{provider-id}",
-    "hosts": [
-      "dev.abdm.gov.in",
-      "apis.abdm.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "gateway_get_gateway_v3_providers_provider_id",
-    "module": "Gateway session",
-    "moduleDir": "gateway",
-    "method": "GET",
-    "path": "/api/hiecm/gateway/v3/providers/{provider-id}",
-    "summary": "This API is invoked to fetch the record for provider details for requested provider id.",
-    "route": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/06-gateway-get-gateway-v3-providers-provider-id",
-    "callbacks": []
-  },
-  {
-    "key": ".well-known/openid-configuration",
-    "hosts": [
-      "dev.abdm.gov.in",
-      "apis.abdm.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "gateway_get_gateway_v3_well_known_openid_configuration",
-    "module": "Gateway session",
-    "moduleDir": "gateway",
-    "method": "GET",
-    "path": "/api/hiecm/gateway/v3/.well-known/openid-configuration",
-    "summary": "This API is invoked to get the open id configuration.",
-    "route": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/02-gateway-get-gateway-v3-well-known-openid-configuration",
-    "callbacks": []
-  },
-  {
     "key": "bridge/url",
     "hosts": [
       "dev.abdm.gov.in",
@@ -643,22 +547,6 @@
     "path": "/api/hiecm/gateway/v3/sessions",
     "summary": "This API is invoked to generate access token.",
     "route": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions",
-    "callbacks": []
-  },
-  {
-    "key": "bridge-service",
-    "hosts": [
-      "dev.abdm.gov.in",
-      "apis.abdm.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "gateway_put_gateway_v3_bridge_service",
-    "module": "Gateway session",
-    "moduleDir": "gateway",
-    "method": "PUT",
-    "path": "/api/hiecm/gateway/v3/bridge-service",
-    "summary": "v3/gateway/bridge-service",
-    "route": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/04-gateway-put-gateway-v3-bridge-service",
     "callbacks": []
   },
   {
@@ -5347,6 +5235,38 @@
     "path": "/api/hiecm/consent/v3/request/{request-id}",
     "summary": "This is ABDM HIE-CM API called to get the consent request details by request id.",
     "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/05-p2-get-consent-v3-request-request-id",
+    "callbacks": []
+  },
+  {
+    "key": "providers",
+    "hosts": [
+      "abhasbx.abdm.gov.in",
+      "dev.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "p2_get_gateway_v3_providers",
+    "module": "P2 Management",
+    "moduleDir": "p2",
+    "method": "GET",
+    "path": "/api/hiecm/gateway/v3/providers",
+    "summary": "This API is invoked to fetch the list of providers filtered by name.",
+    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/01-p2-get-gateway-v3-providers",
+    "callbacks": []
+  },
+  {
+    "key": "providers/{provider-id}",
+    "hosts": [
+      "abhasbx.abdm.gov.in",
+      "dev.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "p2_get_gateway_v3_providers_provider_id",
+    "module": "P2 Management",
+    "moduleDir": "p2",
+    "method": "GET",
+    "path": "/api/hiecm/gateway/v3/providers/{provider-id}",
+    "summary": "This API is invoked to fetch the record for provider details for requested provider id.",
+    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/02-p2-get-gateway-v3-providers-provider-id",
     "callbacks": []
   },
   {

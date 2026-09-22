@@ -4,14 +4,7 @@
     - op: gateway_get_gateway_v3_bridge_services
     - op: gateway_get_gateway_v3_bridge_service_serviceid_service_id
     - op: gateway_patch_gateway_v3_bridge_url
-    - op: gateway_put_gateway_v3_bridge_service
-    - op: gateway_get_gateway_v3_providers
-    - op: gateway_get_gateway_v3_providers_provider_id
-    - op: gateway_get_gateway_v3_govt_programs
-    - op: gateway_get_gateway_v3_health_lockers
 - id: gateway-abdm-sessions
-  title: Session and certificates
+  title: Session
   steps:
     - op: gateway_post_gateway_v3_sessions
-    - op: gateway_get_gateway_v3_well_known_openid_configuration
-    - op: gateway_get_gateway_v3_certs

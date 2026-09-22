@@ -676,22 +676,22 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. Fetch the list of providers filtered by name (`gateway_get_gateway_v3_providers`)
+#### 1. Fetch the list of providers filtered by name (`p2_get_gateway_v3_providers`)
 
 ```bash
 curl --request GET \
-  --url https://dev.abdm.gov.in/api/hiecm/gateway/v3/providers \
+  --url https://abhasbx.abdm.gov.in/api/hiecm/gateway/v3/providers \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx'
 ```
 
-#### 2. Fetch the record for provider details for requested provider ID (`gateway_get_gateway_v3_providers_provider_id`)
+#### 2. Fetch the record for provider details for requested provider ID (`p2_get_gateway_v3_providers_provider_id`)
 
 ```bash
 curl --request GET \
-  --url https://dev.abdm.gov.in/api/hiecm/gateway/v3/providers/{provider-id} \
+  --url https://abhasbx.abdm.gov.in/api/hiecm/gateway/v3/providers/{provider-id} \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
