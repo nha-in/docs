@@ -98,7 +98,7 @@ paths:
         - Persist the correlation ID against the patient episode before posting; it is the only key for matching the callback.
         - Refresh the token automatically before the 1200-second expiry and treat a 401 as refresh-and-retry-once.
         - Run discovery first only when get/policies gives no policy code, then validation, then auth-requirements for the chosen package; store the returned MAND codes and STG questionnaire references and attach them to the preauth.
-        - Do not assume the response echoes your request codes: items come back in the payer's numeric master codes (for example 100478 against your MG003B).
+        - Do not assume the response echoes your request codes: items come back in the payer's numeric master codes.
         - Use IST timestamps with the +05:30 offset in the protected header.
         - Log the 202 body (protocol_status, api_call_id) so a missing callback can be traced with /v1/status.
 

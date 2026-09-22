@@ -78,18 +78,6 @@ The Provider UI Guide makes the point the other way round: do not offer a
 refresh or chase control unless you have implemented this exchange behind it,
 because a control that does nothing is worse than no control.
 
-### A note on the path
-
-The Technical Specifications table names the pair `/hcx/status` and
-`/NHCX/on_status`. The sandbox Postman collection uses
-`https://apisbx.abdm.gov.in/hcx/v1/status` and `/hcx/v1/on_status`. Build
-against the Postman form, which is what the sandbox serves, and keep the path
-configurable.
-
-The status service's live specification is at
-`https://hcxsbx.abdm.gov.in/statushcxservice/swagger-ui-custom.html`.
-Environments and Addresses lists it with the others.
-
 ## Search
 
 Two different exchanges share the word. A provider may search, but only its

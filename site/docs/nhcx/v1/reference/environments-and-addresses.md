@@ -145,11 +145,6 @@ Predetermination is listed on the Technical Specifications page among the APIs
 Reference chapter on it can say. No payer in the corpus is recorded as having
 implemented it.
 
-The status pair is named two ways. The Technical Specifications table gives
-`/hcx/status` and `/NHCX/on_status`; the Postman collection uses
-`/hcx/v1/status` and `/hcx/v1/on_status`. Build against the Postman form, which
-is what the sandbox serves, and keep the path configurable.
-
 ## A defect in the published table
 
 The FAQ's own base-URL table gives the payment notice address as
