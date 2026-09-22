@@ -14,7 +14,7 @@ import {parse} from 'yaml';
 import {listSpecTree} from './specs.mjs';
 import {joinKey, hostOf} from './lib/api-join.mjs';
 import {loadJourneys, operationIndex, stepDataName} from './lib/journeys.mjs';
-import {errorsFromSpec} from './lib/spec-errors.mjs';
+import {errorsFromSpec, moduleErrorList} from './lib/spec-errors.mjs';
 import {cleanTitle, cleanGroupLabel, caseTerms, imperative, cleanDescription} from './lib/titles.mjs';
 import {htmlToMarkdown} from './lib/prose.mjs';
 import {fixProse} from './lib/prose.mjs';
@@ -1083,6 +1083,10 @@ for (const {platform, version, files} of tree) {
   }
 
   // ---- error codes: every code the response examples return ----
+  /** One table row. A code NHA lists without a call has no HTTP status and no operation. */
+  const errorRow = (e) =>
+    `| \`${e.code}\` | ${e.http || ''} | ${e.message.replace(/\|/g, '\\|')} | ${e.operationId ? `\`${e.operationId}\`` : ''} |`;
+
   {
     const lines = [
       frontMatter(
@@ -1101,7 +1105,7 @@ for (const {platform, version, files} of tree) {
       ...(isHiecmV3
         ? [`Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/${platform}/${version}/troubleshooting/).`, '']
         : []),
-      'A code is on this page because a response example in a specification returns it.',
+      'A code is on this page because a response example in a specification returns it, or because NHA lists it for the module. A row with no HTTP status and no call is one NHA lists without saying which call returns it.',
       '',
     ];
     let total = 0;
@@ -1110,7 +1114,7 @@ for (const {platform, version, files} of tree) {
       if (!codes.length) continue;
       total += codes.length;
       lines.push(`## ${module.label}`, '', '| Code | HTTP | Message | Returned by |', '| --- | --- | --- | --- |');
-      for (const e of codes) lines.push(`| \`${e.code}\` | ${e.http} | ${e.message.replace(/\|/g, '\\|')} | \`${e.operationId}\` |`);
+      for (const e of codes) lines.push(errorRow(e));
       lines.push('');
     }
     lines.push(
@@ -1154,10 +1158,15 @@ for (const {platform, version, files} of tree) {
         : []),
     ];
 
+    const list = moduleErrorList(spec);
+    if (list?.intro) lines.push(list.intro, '');
     if (codes.length) {
       lines.push('## Codes', '', '| Code | HTTP | Message | Returned by |', '| --- | --- | --- | --- |');
-      for (const e of codes) lines.push(`| \`${e.code}\` | ${e.http} | ${e.message.replace(/\|/g, '\\|')} | \`${e.operationId}\` |`);
+      for (const e of codes) lines.push(errorRow(e));
       lines.push('');
+      if (codes.some((e) => e.listed)) {
+        lines.push(`A row with no HTTP status and no call is one NHA lists for this module (${list.source}) without saying which call returns it.`, '');
+      }
     } else {
       lines.push(
         `The ${module.label} specification records no error code yet. That is a gap in the specification, not a promise that this module cannot fail.`,
@@ -1166,7 +1175,7 @@ for (const {platform, version, files} of tree) {
     }
 
     lines.push(
-      `Every code above is recorded in the specification that owns it. The aggregated list across modules is at [error codes](/docs/${platform}/${version}/reference/error-codes).`,
+      `Every code above is recorded in the specification that owns it or in NHA's list for the module. The aggregated list across modules is at [error codes](/docs/${platform}/${version}/reference/error-codes).`,
     );
     lines.push('');
 

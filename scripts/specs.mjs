@@ -15,9 +15,10 @@ export function listSpecs(dir = specsRoot) {
   return readdirSync(dir, {withFileTypes: true}).flatMap((entry) => {
     const full = join(dir, entry.name);
     if (entry.isDirectory()) {
-      // .raw holds the untouched downloads, and journeys/ holds step lists
-      // read through lib/journeys.mjs. Neither is an OpenAPI document.
-      return entry.name.startsWith('.') || entry.name === 'journeys' ? [] : listSpecs(full);
+      // .raw holds the untouched downloads, journeys/ holds step lists read
+      // through lib/journeys.mjs, and errors/ holds NHA's per-module error
+      // code lists read through lib/spec-errors.mjs. None is an OpenAPI document.
+      return entry.name.startsWith('.') || entry.name === 'journeys' || entry.name === 'errors' ? [] : listSpecs(full);
     }
     return /\.(yaml|json)$/.test(entry.name) ? [{name: entry.name, path: full}] : [];
   });
