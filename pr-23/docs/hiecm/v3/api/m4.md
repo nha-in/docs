@@ -1,0 +1,13 @@
+# Milestone 4 (M4): Register Healthcare Professionals and Facilities
+
+Register a healthcare professional on the HPR, onboard a facility to the HFR, and link the facility to its bridges.
+
+## Base URLs
+
+| Purpose           | Environment | Base URL                                |
+| ----------------- | ----------- | --------------------------------------- |
+| HPR and HFR calls | Sandbox     | `https://apihspsbx.abdm.gov.in/v4/int/` |
+
+The full operation list is in the [M4 API reference](/docs/pr-23/reference/hiecm-m4).
+
+New to this? Start with [M4 Registry Integration](/docs/pr-23/docs/hiecm/v3/milestones/m4).

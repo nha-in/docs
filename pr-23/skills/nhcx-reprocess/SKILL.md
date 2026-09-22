@@ -1,0 +1,99 @@
+---
+name: nhcx-reprocess
+description: Add the NHCX Task exchanges that follow a decision to a hospital information system or a standalone claims desk. Reprocess a rejected or partly paid claim (36), ask for the balance of a short payment (release, 36), and ask where a pre-auth or claim stands (status), reading the payer's answers (37 and the status Task), held to the pinned bundles. Starts by checking whether the app already sends these Tasks, and whether it holds the decided claim they act on, then builds, extends or reuses only what is missing. Self-contained; needs no other skill installed. Use for claim reprocess, arbitration, releasing a shortfall, status enquiries, NHCX use cases A5, B8 reprocess, D11 and D12, flow step F13.
+---
+
+# NHCX reprocess: reopening a decided claim, the balance, and where things stand
+
+This skill sends the small Task exchanges a desk needs once the payer has decided: a reprocess to reopen a rejected or partly paid claim, a release to ask for the balance of a short payment, and a status enquiry to ask where a pre-auth or claim stands. It reads the payer's answers and hands the reopened claim back to its thread.
+
+Read `core/LADDER.md` first. It holds the ladder every NHCX skill walks: the definition of compliant, the stages, the workspace, how to run a stage, and the rules. This folder carries everything it needs and runs on its own; the other six NHCX skills are separate folders, and none of them has to be installed. Paths starting `core/`, `stages/`, `references/`, `fhir/`, `flow/`, `ui/`, `templates/` or `scripts/` are relative to this folder. Paths starting `nhcx-package/` are in the NHCX package, which `scripts/fetch-package.sh` fetches into the target project beside `nhcx-build/`; `references/material.md` names the package file of every pin by its label.
+
+## What this skill covers
+
+| | |
+| --- | --- |
+| Flow step | F13 Status, reprocess, release |
+| Tabs | Claim (tab 7): the reprocess and release cards; "Ask where it stands" on the pre-auth and claim cards |
+| Wire | `v1/task/submit`: Task `reprocess`, workflow 36, reason `claimrejected`, `partialpayment` or `rejectiondisputed`, input `intimationNumber`, documents; Task `release`, workflow 36, reason `partialpayment`, `valueMoney`; Task `status`, workflow = the leg's correlation id, fallback 13. Answers: 37 (a Task `accepted` with a `queued` ClaimResponse), then a fresh verdict on the claim's own thread; the status Task with `claimStatus` |
+| Next actions | "Ask for a reprocess", and the enquiry behind "With the payer; ask where it stands" |
+| Use cases | A5 (the generic and PMJAY rows), B8 reprocess, D11, D12 |
+| Module | 7.9, the reprocess, release and status parts |
+| Pins | `claim/reprocess`, `claim/release`: `nhcx-package/fhir/B5/claim-{reprocess,release}.json` |
+| Payer fixtures | `nhcx-package/fhir/C10/C10-arbitration-wf37.json` and its PMJAY twin (37); the live PMJAY reprocess in `nhcx-package/fhir/D11`. No status-enquiry answer is published; that reader is written from `nhcx-package/docs/05-FHIR Reference/18-Predetermination, Status and Search.md` |
+| Tables | `claim_enquiry`: one row per ask, each on its own thread |
+| FHIR | `fhir/FHIR.md` section 6; `references/fhir-knowledge.md` sections 7 and 8 |
+
+Not here: the cancel Task (PC01). It is a Task too, but it belongs to the pre-auth use case (`nhcx-preauth`).
+
+## Needs and hands on
+
+Needs: a decided claim (a reprocess needs one `rejected` or `partial`); a short payment (a release); a pre-auth or claim with the payer (a status enquiry). Stage 0 checks for them below, whichever way the app got them.
+
+Hands on: after a 37, the claim leg back to `submitting` (sub-stage `requested`), with the new verdict read by the claim's own reader; enquiry rows holding the payer's answers.
+
+## Capability check
+
+Stage 0 (`stages/0-capability-check.md`) gives every capability below a verdict: search for the markers, run the check, record what was observed.
+
+### Own
+
+| Id | What | Look for | Present when (observed) |
+| --- | --- | --- | --- |
+| `reprocess.reprocess` | Task `reprocess`, workflow 36 | `reprocess`, `"36"`, `intimationNumber`, `claimrejected` | The `claim/reprocess` pin passes as it is; the second input is spelled `intimationNumber` everywhere (a search for `initimation` finds nothing); it is offered only on a decided claim not paid in full |
+| `reprocess.release` | Task `release`, workflow 36 | `release`, `valueMoney`, `partialpayment` | The `claim/release` pin passes; `valueMoney` carries `INR`; it is offered once part of an approved claim is paid |
+| `reprocess.status` | Task `status` | `"status"`, `claimStatus`, the fallback `"13"` | The Task goes on `v1/task/submit` with workflow = the leg's correlation id; it is not offered at all for a payer whose adapter refuses it (PMJAY, PAYR-1018); the answer fills the enquiry row and leaves the leg unchanged |
+| `reprocess.task-reader` | Read 37 and the status answer, and refusals | `parse_task_answer`, `accepted`, `37` | `C10-arbitration-wf37.json` (37) reads as the reprocess taken: the enquiry `answered`, the claim leg back to `submitting`; a ProtocolResponse on an enquiry thread sets the enquiry `error` with the payer's words and nothing else changes |
+| `reprocess.screens` | The cards on the Claim tab; "Ask where it stands" | the reprocess form (reason, words, documents), the release form (amount) | Each ask is its own row, shown on its card, newest first, with the payer's answer verbatim |
+
+### Foundation
+
+All six capabilities in `core/FOUNDATION.md`. `foundation.storage` is partial until `claim_enquiry` exists; `foundation.state` until `next_actions` offers "Ask for a reprocess" and hides status for a payer that refuses it.
+
+### Prerequisites
+
+The claim use case (`nhcx-claim`), the payment use case (`nhcx-payment`) and the pre-auth use case (`nhcx-preauth`) own these. The checks are here, so none of those skills need be installed.
+
+| Capability | Why | Look for | Present when (observed) |
+| --- | --- | --- | --- |
+| `claim.send`, `claim.response-reader` | A reprocess reopens a decided claim, and the fresh verdict lands in the claim's reader | a claim leg with `claim_ref` and `correlation_id`; a ClaimResponse reader | A claim sent with a stubbed client on `v1/claim/submit` (workflow 15), then fed `nhcx-package/fhir/C7/C7-rejected-wf291.json` on its correlation id, ends `rejected`; the same reader settles `C7-approved-wf26.json` as `approved` |
+| `payment.record` (only for `reprocess.release`) | A release needs a short payment | a payment table keyed on the notice's correlation id | `nhcx-package/fhir/C9/payment-notice.json` delivered for the claim makes one payment row with its amount |
+| `preauth.send` (only for `reprocess.status` on a pre-auth) | A status enquiry needs a pre-auth with the payer | a pre-auth leg with `correlation_id` | A pre-auth sent with a stubbed client stores its correlation id |
+
+When only some prerequisites are present, the capabilities that depend on the missing ones are marked `later` in stage 1, and the rest go ahead.
+
+### Host facts
+
+The document store, since a reprocess can attach documents.
+
+## The ladder, for this skill
+
+| Stage | What is specific here |
+| --- | --- |
+| 0 | The tables above. |
+| 1 | Confirm the shared page, or write it if this skill runs first on the app. Own rows: A5, B8 reprocess, D11, D12. D12 is commonly `later` (out of reach on the sandbox). Status for PMJAY is in scope as "not offered". |
+| 2 | Risks: `intimationNumber` misspelled (PAYR-1008); status offered to PMJAY (PAYR-1018); a claim resubmit sent on PMJAY instead of a reprocess; the NHCX sandbox refuses `v1/status` (NHCX-1012), which is why status is a Task. |
+| 3 | The host facts above. |
+| 4 | The `claim_enquiry` home; the three Tasks' source maps; the destinations of the 37 and the status answer. If this skill maps first, every table's home too. |
+| 5 | The cards on the Claim tab and the enquiry on the pre-auth card; action F13. |
+| 6 | The parts of 7.9 above; the foundation modules stage 0 found absent or partial. If the app already has 7.9's Task builder for the cancel, extend it. |
+| 7 | The parts of 7.9 above, as far as their verdicts say. |
+| 8 | 7.9 Validate rows 1 (the reprocess and release pins), 2, 3 and 6; the cancel pin again if the Task builder changed. |
+| 9 | Two pin comparisons; the 37 reader and the status reader; matrix rows A5 generic, A5 PMJAY, B8 reprocess, D11, D12; the cross-cutting rows on an enquiry thread. |
+| 10 | Rung 1. Rung 3: B8 reprocess and A5 against a generic payer, which answers 37. Rung 4: D11 (see the rule below); A5 records the refusal. |
+| 11 | This skill's section. |
+
+## Rules for these legs
+
+- Every Task input is spelled `intimationNumber`.
+- A decided PMJAY claim goes back only as a reprocess; there is no 16.
+- Each ask is its own `claim_enquiry` row, on its own thread, shown on the card it belongs to.
+- The payer's 37 reopens the claim. The verdict that follows lands on the claim's own thread and is read by the claim's reader.
+- A refusal changes nothing but the enquiry row, which keeps the payer's words.
+- The sources disagree on D11 at the SHA: `references/flow-knowledge.md` section 6 records a 37 when the input is spelled `intimationNumber`, and the matrix in `references/testing-knowledge.md` section 3 records PAYR-1008. Build for the 37, record a refusal verbatim on the enquiry row, and write what the sandbox did in `NOTES.md`.
+
+## Done when
+
+- Every gate in this skill's block of `nhcx-build/STATE.md` is closed with evidence.
+- The reprocess and release pins pass; status is not offered to a payer that refuses it.
+- The compliance points in `core/LADDER.md` hold for F13.
