@@ -91,13 +91,29 @@ function deref(spec, node, depth = 0) {
 // response is never in this set.
 const ENCRYPTED_FIELDS = new Set(['loginId', 'aadhaar', 'otpValue', 'password']);
 
+// A body declared as oneOf or anyOf, as NHA's callbacks are (the success
+// shape, then the error shape), is read as its first branch: the one an
+// integrator sends when the call goes right.
+const firstBranch = (schema) => schema?.oneOf?.[0] ?? schema?.anyOf?.[0] ?? schema;
+
+// The one value a field can take, where the schema allows only one: a one
+// value enum, or an array that must carry exactly its listed items, as the M1
+// use case scopes do. Try it fills these in and locks them.
+function fixedValue(property) {
+  if (property.enum?.length === 1) return property.enum[0];
+  const items = property.items?.enum;
+  if (property.type === 'array' && items?.length && property.minItems === items.length && property.maxItems === items.length) return items;
+  return undefined;
+}
+
 /** Flatten a JSON schema into rows a table can render, two levels deep. */
 function fields(schema, prefix = '', depth = 0) {
+  schema = firstBranch(schema);
   if (!schema || depth > 3) return [];
   const required = new Set(schema.required ?? []);
   const rows = [];
   for (const [name, raw] of Object.entries(schema.properties ?? {})) {
-    const property = raw ?? {};
+    const property = firstBranch(raw ?? {});
     const type = property.type === 'array'
       ? `${property.items?.type ?? 'object'}[]`
       : property.type ?? 'object';
@@ -109,6 +125,7 @@ function fields(schema, prefix = '', depth = 0) {
       enum: property.enum,
       format: property.format,
       encrypted: property['x-abdm-encrypted'] === true || ENCRYPTED_FIELDS.has(name),
+      fixed: fixedValue(property),
     });
     const child = property.type === 'array' ? property.items : property;
     if (child?.properties) {
@@ -129,6 +146,7 @@ function fields(schema, prefix = '', depth = 0) {
  * named placeholder, so a reader can see what to substitute.
  */
 function sampleFromSchema(schema, name = '', depth = 0) {
+  schema = firstBranch(schema);
   if (!schema || depth > 6) return undefined;
   if (schema.example !== undefined) return schema.example;
   if (Array.isArray(schema.enum) && schema.enum.length > 0) return schema.enum[0];

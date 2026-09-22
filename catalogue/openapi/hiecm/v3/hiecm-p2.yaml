@@ -20,6 +20,10 @@ info:
   x-abdm-roles:
     - phr
 x-abdm-sources:
+  - file: catalogue/openapi/.raw/nha-2026-09-16/hiecm/gateway.yaml
+    role: upstream
+    hash: sha256:d3bc599054c2570a50818ca54906c44cf652ad6f813473e8ac243667da4e9300
+    fetched: "2026-09-16"
   - file: catalogue/openapi/.raw/nha-2026-09-16/hiecm/hip-initiated-linking.yaml
     role: upstream
     hash: sha256:8c4036b49028e243d0687d5ddcde6fa025d21d63fdaf90826eb8159f8485382b
@@ -48,6 +52,8 @@ servers:
 security:
   - bearerAuth: []
 tags:
+  - name: abdm-gateway
+    description: ""
   - name: abdm-hip-initiated-linking-phr
     description: ""
   - name: abdm-user-initiated-linking-phr
@@ -63,6 +69,623 @@ tags:
   - name: P2 - Switch Profile
     description: P2-Management / P2 -PHR Profile / P2 - Switch Profile
 paths:
+  /api/hiecm/gateway/v3/providers:
+    get:
+      tags:
+        - abdm-gateway
+      operationId: p2_get_gateway_v3_providers
+      summary: This API is invoked to fetch the list of providers filtered by name.
+      description: This API is designed to retrieve a list of providers, filtered by their names. When invoked, it queries the system to fetch providers that match the specified name criteria. This functionality is particularly useful for narrowing down provider options based on specific naming conventions or patterns. By using this API, users can efficiently locate and manage providers within the network, ensuring they have access to the relevant provider information needed for various operational tasks.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: REQUEST-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: 18235d89-cb13-479d-ad71-7a57d5f669a8
+          description: Unique UUID for track the end to end request transaction
+        - name: TIMESTAMP
+          in: header
+          required: true
+          schema:
+            type: string
+          example: "2022-10-06T15:10:00.587Z"
+          description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
+        - name: X-CM-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: sbx
+          description: Suffix of the consent manager to which the request was intended
+        - name: name
+          in: query
+          required: false
+          schema:
+            type: string
+          example: ABC Hospital
+          description: Name of the provider
+        - name: stateCode
+          in: query
+          required: false
+          schema:
+            type: string
+            example: "-1"
+          description: Filter by state code; -1 for all.
+        - name: districtCode
+          in: query
+          required: false
+          schema:
+            type: string
+            example: "-1"
+          description: Filter by district code; -1 for all.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    identifier:
+                      type: object
+                      nullable: false
+                      required:
+                        - name
+                        - id
+                      properties:
+                        name:
+                          type: string
+                          nullable: false
+                          example: AB - PMJAY
+                        id:
+                          type: string
+                          nullable: false
+                          example: PMJAY
+                    facilityType:
+                      type: array
+                      nullable: false
+                      items:
+                        type: string
+                        enum:
+                          - HIP
+                          - HIU
+                          - HEALTH_LOCKER
+                        example: HIP
+                    isHIP:
+                      type: boolean
+                      nullable: false
+                      example: true
+                    isHiu:
+                      type: boolean
+                      nullable: false
+                      example: false
+                    isHealthLocker:
+                      type: boolean
+                      nullable: false
+                      example: true
+                    isPhr:
+                      type: boolean
+                      nullable: false
+                      example: true
+                    isGovtEntity:
+                      type: boolean
+                      nullable: true
+                      example: false
+                    endpoints:
+                      type: object
+                      properties:
+                        healthLockerEndpoints:
+                          type: array
+                          nullable: false
+                          items:
+                            type: object
+                            required:
+                              - use
+                              - id
+                            properties:
+                              use:
+                                type: string
+                                nullable: false
+                                example: registration
+                              connectionType:
+                                type: string
+                                nullable: false
+                                example: HTTPS
+                              address:
+                                type: string
+                                format: uri
+                                nullable: false
+                                example: https://abc.com/register
+        "204":
+          description: No Content
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: The error code and message, if any occurred.
+                    required:
+                      - code
+                      - message
+                    properties:
+                      code:
+                        type: string
+                        pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                        description: 'ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing ": " separator (`ABDM-1001: `); match on the code itself and tolerate the separator.'
+                        example: ABDM-1001
+                      message:
+                        type: string
+                        example: No data found
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: The error code and message, if any occurred.
+                    required:
+                      - code
+                      - message
+                    properties:
+                      code:
+                        type: string
+                        pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                        description: 'ABDM-1015 - Invalid Response. May be returned either bare (`ABDM-1015`) or with a trailing ": " separator (`ABDM-1015: `); match on the code itself and tolerate the separator.'
+                        example: ABDM-1015
+                      message:
+                        type: string
+                        example: Bad Request, invalid response
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: '900901 - Invalid Credentials. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                    example: "900901"
+                  message:
+                    type: string
+                    example: Invalid Credentials
+                  description:
+                    type: string
+                    example: Invalid Credentials. Make sure you have provided the correct security credentials
+        "403":
+          description: Forbidden. The caller is authenticated but is not permitted to perform this operation on this resource.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Forbidden
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: The error code and message, if any occurred.
+                    required:
+                      - code
+                      - message
+                    properties:
+                      code:
+                        type: string
+                        pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                        description: 'ABDM-9999 - Unknown exception. May be returned either bare (`ABDM-9999`) or with a trailing ": " separator (`ABDM-9999: `); match on the code itself and tolerate the separator.'
+                        example: ABDM-9999
+                      message:
+                        type: string
+                        example: Unknown exception
+        "503":
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: 'ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.'
+                    nullable: false
+                    example: ABDM-1024
+                  message:
+                    type: string
+                    nullable: false
+                    example: Dependent service unavailable
+      x-abdm-nha-operation-id: abdm-gateway4
+    servers: &a1
+      - url: https://dev.abdm.gov.in
+        description: ABDM gateway, sandbox
+  /api/hiecm/gateway/v3/providers/{provider-id}:
+    get:
+      tags:
+        - abdm-gateway
+      operationId: p2_get_gateway_v3_providers_provider_id
+      summary: This API is invoked to fetch the record for provider details for requested provider id.
+      description: This API is designed to retrieve the details of a specific provider based on the provided provider ID. When invoked, it queries the system to fetch comprehensive information about the provider identified by the given ID.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: REQUEST-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: 18235d89-cb13-479d-ad71-7a57d5f669a8
+          description: Unique UUID for track the end to end request transaction
+        - name: TIMESTAMP
+          in: header
+          required: true
+          schema:
+            type: string
+          example: "2022-10-06T15:10:00.587Z"
+          description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
+        - name: X-CM-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: sbx
+          description: Suffix of the consent manager to which the request was intended
+        - name: provider-id
+          in: path
+          required: true
+          schema:
+            type: string
+            description: The provider id
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  identifier:
+                    type: object
+                    nullable: false
+                    required:
+                      - name
+                      - id
+                    properties:
+                      name:
+                        type: string
+                        nullable: false
+                        example: AB - PMJAY
+                      id:
+                        type: string
+                        nullable: false
+                        example: PMJAY
+                  facilityType:
+                    type: array
+                    nullable: false
+                    items:
+                      type: string
+                      enum:
+                        - HIP
+                        - HIU
+                        - HEALTH_LOCKER
+                      example: HIP
+                  isHIP:
+                    type: boolean
+                    nullable: false
+                    example: true
+        "204":
+          description: No Content
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: The error code and message, if any occurred.
+                    required:
+                      - code
+                      - message
+                    properties:
+                      code:
+                        type: string
+                        pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                        description: 'ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing ": " separator (`ABDM-1001: `); match on the code itself and tolerate the separator.'
+                        example: ABDM-1001
+                      message:
+                        type: string
+                        example: No data found
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: The error code and message, if any occurred.
+                    required:
+                      - code
+                      - message
+                    properties:
+                      code:
+                        type: string
+                        pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                        description: 'ABDM-1015 - Invalid Response. May be returned either bare (`ABDM-1015`) or with a trailing ": " separator (`ABDM-1015: `); match on the code itself and tolerate the separator.'
+                        example: ABDM-1015
+                      message:
+                        type: string
+                        example: Bad Request, invalid response
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: '900901 - Invalid Credentials. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                    example: "900901"
+                  message:
+                    type: string
+                    example: Invalid Credentials
+                  description:
+                    type: string
+                    example: Invalid Credentials. Make sure you have provided the correct security credentials
+        "403":
+          description: Forbidden. The caller is authenticated but is not permitted to perform this operation on this resource.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Forbidden
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: The error code and message, if any occurred.
+                    required:
+                      - code
+                      - message
+                    properties:
+                      code:
+                        type: string
+                        pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                        description: 'ABDM-9999 - Unknown exception. May be returned either bare (`ABDM-9999`) or with a trailing ": " separator (`ABDM-9999: `); match on the code itself and tolerate the separator.'
+                        example: ABDM-9999
+                      message:
+                        type: string
+                        example: Unknown exception
+        "503":
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: 'ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.'
+                    nullable: false
+                    example: ABDM-1024
+                  message:
+                    type: string
+                    nullable: false
+                    example: Dependent service unavailable
+      x-abdm-nha-operation-id: abdm-gateway5
+    servers: *a1
+  /api/hiecm/gateway/v3/govt-programs:
+    get:
+      tags:
+        - abdm-gateway
+      operationId: p2_get_gateway_v3_govt_programs
+      summary: This API is invoked to fetch the list of govt programs.
+      description: This API is designed to retrieve a list of government programs. When invoked, it queries the system to fetch comprehensive information about various government programs available. This functionality is particularly useful for users who need to access detailed information about different programs.<br></br> <b>Note:</b><p>This api will retrive the list of govt-programs in the form of list.</p>
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: REQUEST-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: 18235d89-cb13-479d-ad71-7a57d5f669a8
+          description: Unique UUID for track the end to end request transaction
+        - name: TIMESTAMP
+          in: header
+          required: true
+          schema:
+            type: string
+          example: "2022-10-06T15:10:00.587Z"
+          description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
+        - name: X-CM-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: sbx
+          description: Suffix of the consent manager to which the request was intended
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    identifier:
+                      type: object
+                      nullable: false
+                      required:
+                        - name
+                        - id
+                      properties:
+                        name:
+                          type: string
+                          nullable: false
+                          example: AB - PMJAY
+                        id:
+                          type: string
+                          nullable: false
+                          example: PMJAY
+                    facilityType:
+                      type: array
+                      nullable: false
+                      items:
+                        type: string
+                        enum:
+                          - HIP
+                          - HIU
+                          - HEALTH_LOCKER
+                        example: HIP
+                    isHIP:
+                      type: boolean
+                      nullable: false
+                      example: true
+        "204":
+          description: No Content
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: The error code and message, if any occurred.
+                    required:
+                      - code
+                      - message
+                    properties:
+                      code:
+                        type: string
+                        pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                        description: 'ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing ": " separator (`ABDM-1001: `); match on the code itself and tolerate the separator.'
+                        example: ABDM-1001
+                      message:
+                        type: string
+                        example: No data found
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: The error code and message, if any occurred.
+                    required:
+                      - code
+                      - message
+                    properties:
+                      code:
+                        type: string
+                        pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                        description: 'ABDM-1015 - Invalid Response. May be returned either bare (`ABDM-1015`) or with a trailing ": " separator (`ABDM-1015: `); match on the code itself and tolerate the separator.'
+                        example: ABDM-1015
+                      message:
+                        type: string
+                        example: Bad Request, invalid response
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: '900901 - Invalid Credentials. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                    example: "900901"
+                  message:
+                    type: string
+                    example: Invalid Credentials
+                  description:
+                    type: string
+                    example: Invalid Credentials. Make sure you have provided the correct security credentials
+        "403":
+          description: Forbidden. The caller is authenticated but is not permitted to perform this operation on this resource.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Forbidden
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: The error code and message, if any occurred.
+                    required:
+                      - code
+                      - message
+                    properties:
+                      code:
+                        type: string
+                        pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                        description: 'ABDM-9999 - Unknown exception. May be returned either bare (`ABDM-9999`) or with a trailing ": " separator (`ABDM-9999: `); match on the code itself and tolerate the separator.'
+                        example: ABDM-9999
+                      message:
+                        type: string
+                        example: Unknown exception
+        "503":
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: 'ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.'
+                    nullable: false
+                    example: ABDM-1024
+                  message:
+                    type: string
+                    nullable: false
+                    example: Dependent service unavailable
+      x-abdm-nha-operation-id: abdm-gateway6
+    servers: *a1
   /api/hiecm/hip/v3/link/patient/links:
     get:
       tags:
@@ -269,9 +892,7 @@ paths:
                     type: string
                     example: Unknown exception
       x-abdm-nha-operation-id: abdm-hip-initiated-linking-hip 2
-    servers: &a1
-      - url: https://dev.abdm.gov.in
-        description: ABDM gateway, sandbox
+    servers: *a1
   /api/hiecm/user-initiated-linking/v3/patient/care-context/discover:
     post:
       tags:

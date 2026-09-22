@@ -604,14 +604,27 @@ curl --request GET \
 A 200 whose body matches:
 
 ```json
-"<VALUE>"
+[
+  {
+    "id": 1,
+    "patientId": "<ABHA_ADDRESS>",
+    "tokenNumber": "1",
+    "hipId": "ABDM_HIP",
+    "hipName": "Health Information Provider Name",
+    "hipAddress": "sample address",
+    "expiresIn": 1800,
+    "clientId": "ABDM",
+    "dateCreated": "2024-09-11T07:31:02.357Z",
+    "counterCode": "Counter 1"
+  }
+]
 ```
 
 ### User initiated linking (`p2-abdm-user-initiated-linking-phr`)
 
 **Act: the calls in this journey, in order**
 
-#### 1. Fetch the list of providers filtered by name (`gateway_get_gateway_v3_providers`)
+#### 1. Fetch the list of providers filtered by name (`p2_get_gateway_v3_providers`)
 
 ```bash
 curl --request GET \
@@ -622,7 +635,7 @@ curl --request GET \
   --header 'X-CM-ID: sbx'
 ```
 
-#### 2. Fetch the record for provider details for requested provider ID (`gateway_get_gateway_v3_providers_provider_id`)
+#### 2. Fetch the record for provider details for requested provider ID (`p2_get_gateway_v3_providers_provider_id`)
 
 ```bash
 curl --request GET \
@@ -719,9 +732,35 @@ curl --request POST \
 
 Inbound to your bridge at `/api/v3/hiu/patient/care-context/on-confirm`. Acknowledge it and continue.
 
+#### 9. Fetch the list of govt programmes (optional) (`p2_get_gateway_v3_govt_programs`)
+
+```bash
+curl --request GET \
+  --url https://dev.abdm.gov.in/api/hiecm/gateway/v3/govt-programs \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
+  --header 'X-CM-ID: sbx'
+```
+
 **Exit condition (Observe until this is true)**
 
-A 200 response. The specification gives no body for it, so read what comes back.
+A 200 whose body matches:
+
+```json
+[
+  {
+    "identifier": {
+      "name": "AB - PMJAY",
+      "id": "PMJAY"
+    },
+    "facilityType": [
+      "HIP"
+    ],
+    "isHIP": true
+  }
+]
+```
 
 ### Consent manager, HIU and HIP (`p2-consent-manager-hiu-hip`)
 

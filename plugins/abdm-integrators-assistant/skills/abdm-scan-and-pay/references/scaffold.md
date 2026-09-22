@@ -141,7 +141,60 @@ curl --request POST \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
   --header 'Content-Type: application/json' \
-  --data '"<VALUE>"'
+  --data '{
+  "intent": "OPEN_PAYMENT_ORDER",
+  "abhaAddress": "<ABHA_ADDRESS>",
+  "patientUid": "string",
+  "procedures": [
+    {
+      "category": "OPD consultation",
+      "services": [
+        {
+          "name": "consultation",
+          "serviceId": "service-12345",
+          "description": "Albumin 24 hrs Urine",
+          "amount": 629.12
+        }
+      ]
+    },
+    {
+      "category": "Laboratory and Diagnostics",
+      "services": [
+        {
+          "name": "Diagnostics",
+          "serviceId": "service-12345",
+          "description": "Albumin 24 hrs Urine",
+          "amount": 629.12
+        }
+      ]
+    },
+    {
+      "category": "Pharmacy",
+      "services": [
+        {
+          "name": "Pharmacy",
+          "serviceId": "service-12345",
+          "description": "Albumin 24 hrs Urine",
+          "amount": 629.12
+        }
+      ]
+    },
+    {
+      "category": "Miscellaneous/Other",
+      "services": [
+        {
+          "name": "Miscellaneous",
+          "serviceId": "service-12345",
+          "description": "Albumin 24 hrs Urine",
+          "amount": 629.12
+        }
+      ]
+    }
+  ],
+  "response": {
+    "requestId": "6c3d4e5c-09d1-****-817b-a0c82d130c53"
+  }
+}'
 ```
 
 #### 3. Receive the patient selection (`scan-and-pay_post_v3_patient_selection`)
@@ -158,7 +211,57 @@ curl --request POST \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
   --header 'Content-Type: application/json' \
-  --data '"<VALUE>"'
+  --data '{
+  "intent": "PAYMENT_ORDER",
+  "openOrderRequestId": "b767614f-153a-4aa3-946f-1622596f0fab",
+  "abhaAddress": "<ABHA_ADDRESS>",
+  "procedures": [
+    {
+      "category": "OPD consultation",
+      "services": [
+        {
+          "name": "consultation",
+          "serviceId": "service-12345",
+          "description": "Albumin 24 hrs Urine",
+          "amount": 629.12
+        }
+      ]
+    },
+    {
+      "category": "Laboratory and Diagnostics",
+      "services": [
+        {
+          "name": "Diagnostics",
+          "serviceId": "service-12345",
+          "description": "Albumin 24 hrs Urine",
+          "amount": 629.12
+        }
+      ]
+    },
+    {
+      "category": "Pharmacy",
+      "services": [
+        {
+          "name": "Pharmacy",
+          "serviceId": "service-12345",
+          "description": "Albumin 24 hrs Urine",
+          "amount": 629.12
+        }
+      ]
+    }
+  ],
+  "paymentBundle": {
+    "paymentMode": "GATEWAY",
+    "paymentUrl": "string",
+    "orderNumber": "string",
+    "amount": 1250.55,
+    "merchantId": "123465",
+    "description": "Testing"
+  },
+  "response": {
+    "requestId": "6c3d4e5c-09d1-***-817b-a0c82d130c53"
+  }
+}'
 ```
 
 #### 5. Send the payment status to HIU (`scan-and-pay_post_scan_gateway_v3_patient_scan_pay_notify`)
@@ -203,7 +306,20 @@ curl --request POST \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
   --header 'Content-Type: application/json' \
-  --data '"<VALUE>"'
+  --data '{
+  "acknowledgement": {
+    "status": "SUCCESS/ CANCELED/ PENDING/ FAIL/ REFUND_INITIATED/ REFUND_SUCCESS",
+    "abhaAddress": "<username>@sbx",
+    "transactionId": "string",
+    "orderNumber": "string",
+    "openOrderRequestId": "Queried Request id",
+    "paymentDate": "Transaction Date UTC",
+    "paymentRecipetLink": "PDF URL LINK of RECIPT"
+  },
+  "response": {
+    "requestId": "b767614f-153a-***-946f-1622596f0fab"
+  }
+}'
 ```
 
 **Exit condition (Observe until this is true)**
@@ -269,7 +385,46 @@ curl --request POST \
   --header 'X-AUTH-TOKEN: <TOKEN>' \
   --header 'X-HIU-ID: IN2810014366' \
   --header 'Content-Type: application/json' \
-  --data '"<VALUE>"'
+  --data '{
+  "intent": "PAYMENT_ORDER",
+  "openOrderRequestId": "b767614f-153a-***-946f-1622596f0fab",
+  "abhaAddress": "<ABHA_ADDRESS>",
+  "procedures": [
+    {
+      "category": "OPD consultation",
+      "services": [
+        {
+          "name": "consultation",
+          "serviceId": "service-12345",
+          "description": "Albumin 24 hrs Urine",
+          "amount": 629.12
+        }
+      ]
+    },
+    {
+      "category": "Laboratory and Diagnostics",
+      "services": [
+        {
+          "name": "Diagnostics",
+          "serviceId": "service-12345",
+          "description": "Albumin 24 hrs Urine",
+          "amount": 629.12
+        }
+      ]
+    },
+    {
+      "category": "Pharmacy",
+      "services": [
+        {
+          "name": "Pharmacy",
+          "serviceId": "service-12345",
+          "description": "Albumin 24 hrs Urine",
+          "amount": 629.12
+        }
+      ]
+    }
+  ]
+}'
 ```
 
 #### 4. Receive the patient on selection (`scan-and-pay_post_v3_patient_on_selection`)
@@ -290,7 +445,20 @@ curl --request POST \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
   --header 'Content-Type: application/json' \
-  --data '"<VALUE>"'
+  --data '{
+  "acknowledgement": {
+    "status": "SUCCESS/ CANCELED/ PENDING/ FAIL/ REFUND_INITIATED/ REFUND_SUCCESS",
+    "abhaAddress": "<username>@sbx",
+    "transactionId": "string",
+    "orderNumber": "string",
+    "openOrderRequestId": "b767614f-153a-4aa3-946f-1622596f0fab",
+    "paymentDate": "2025-01-20T07:47:49.102Z",
+    "paymentRecipetLink": "PDF URL LINK of RECIPT"
+  },
+  "response": {
+    "requestId": "b767614f-153a-***-946f-1622596f0fab"
+  }
+}'
 ```
 
 #### 7. Check the status of reports (`scan-and-pay_post_scan_gateway_v3_patient_scan_pay_order_status`)

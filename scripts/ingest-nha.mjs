@@ -19,15 +19,15 @@ const journeysMode = process.argv.includes('--journeys');
 const METHODS = ['get', 'post', 'put', 'patch', 'delete'];
 
 const MODULES = {
-  gateway: {label: 'Gateway session', position: 1, icon: 'key-round', roles: ['his', 'phr'], title: 'ABDM gateway, sessions and bridges', summary: 'The access token every call carries, and the bridge registry.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 11},
+  gateway: {label: 'Gateway session', position: 1, icon: 'key-round', roles: ['his', 'phr'], title: 'ABDM gateway, sessions and bridges', summary: 'The access token every call carries, and the bridge registry.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 4},
   m1: {label: 'M1 Identity', position: 2, icon: 'id-card', roles: ['his'], title: 'ABDM M1, ABHA creation and verification', summary: 'Create, find, log into and manage an ABHA.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}], expected: 121},
   m2: {label: 'M2 Health Information Provider', position: 3, icon: 'link', roles: ['his'], title: 'ABDM M2, health information provider services as a HIP', summary: 'Link care contexts to an ABHA address and share records when consent arrives.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 20},
   m3: {label: 'M3 Health Information User', position: 4, icon: 'file-check', roles: ['his'], title: 'ABDM M3, health information user services as an HIU', summary: 'Raise a consent request, fetch its artefacts, and receive records.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 12},
   m4: {label: 'M4 Registry Integration', position: 5, icon: 'building-2', roles: ['his'], title: 'ABDM M4, professional and facility registries', summary: 'Register healthcare professionals and facilities on the NHPR.', servers: [{url: 'https://apihspsbx.abdm.gov.in/v4/int', description: 'NHPR, sandbox'}], expected: 100},
   p1: {label: 'P1 Registration and login', position: 6, icon: 'user-round', roles: ['phr'], title: 'ABDM P1, PHR registration and login', summary: 'Create an ABHA address in a PHR app and log in to it.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}], expected: 11},
-  p2: {label: 'P2 Consents Management', position: 7, icon: 'files', roles: ['phr'], title: 'ABDM P2, PHR management', summary: 'Manage the PHR profile, link an ABHA number, switch profiles, and handle linking, sharing and consent for the patient.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}, {url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}], expected: 32},
+  p2: {label: 'P2 Consents Management', position: 7, icon: 'files', roles: ['phr'], title: 'ABDM P2, PHR management', summary: 'Manage the PHR profile, link an ABHA number, switch profiles, and handle linking, sharing and consent for the patient.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}, {url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}], expected: 35},
   p3: {label: 'P3 Subscription', position: 8, icon: 'bell', roles: ['phr'], title: 'ABDM P3, PHR subscriptions', summary: 'Read, approve, deny, enable, disable and update the patient\'s subscriptions and subscription requests, and the subscription request and notifications they answer.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}], expected: 14},
-  p4: {label: 'P4 Locker', position: 9, icon: 'lock', roles: ['phr'], title: 'ABDM P4, health lockers', summary: 'Set up a health locker and list the lockers and requests on an ABHA address.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}], expected: 4},
+  p4: {label: 'P4 Locker', position: 9, icon: 'lock', roles: ['phr'], title: 'ABDM P4, health lockers', summary: 'Set up a health locker and list the lockers and requests on an ABHA address.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}], expected: 5},
   'scan-and-register': {label: 'Scan and Register', position: 11, icon: 'contact-round', section: 'use-cases', roles: ['his'], title: 'ABDM Scan and Register', summary: 'Receive the profile a patient shares by scanning the counter QR code, and hand back a queue token.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 2},
   'scan-and-pay': {label: 'Scan and Pay', position: 13, icon: 'qr-code', section: 'use-cases', roles: ['his'], title: 'ABDM Scan and Pay', summary: 'Open orders, patient selection and payment status between a facility and a PHR app.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 18},
 };
@@ -37,15 +37,21 @@ const MODULES = {
 const PHR_TAGS = {
   'ABHA enrolment via Aadhaar': 'p1', 'P1 - Create ABHA Address Flow': 'p1', 'P1 - Login via ABHA Address - Password': 'p1', 'P1 - PHR Login': 'p1', 'P1-Registration-login': 'p1',
   'P2 - Link ABHA Number': 'p2', 'P2 - Switch Profile': 'p2', 'P2 -PHR Profile': 'p2', 'abdm-hiecm-patient-share-phr': 'p2', 'abdm-hip-initiated-linking-phr': 'p2', 'abdm-user-initiated-linking-phr': 'p2', 'consent-management-data-flow-phr': 'p2',
-  'subscription-phr': 'p3', 'abdm-hiecm-scan-pay-phr': 'scan-and-pay', Gateway: 'gateway',
+  'subscription-phr': 'p3', 'abdm-hiecm-scan-pay-phr': 'scan-and-pay', 
 };
 const LOCKER = /\/subscription-requests\/v3\/(patients\/lockers(\/\{[^}]+\})?|patients\/requests|setup-locker)$/;
 // undefined: no mapping; only allowed for a call an earlier file already declared.
-const phrPlace = (tag, path) => (LOCKER.test(path) ? 'p4' : PHR_TAGS[tag]);
+// NHA's sandbox observations of 23 September 2026: the gateway lists the
+// bridge calls and the session call only. Providers and government
+// programmes are what a PHR app searches before discovery, so they sit in P2
+// beside it, and the health locker list in P4. Updating a bridge service, the
+// OpenID configuration and the key set are left out (null).
+const gatewayPlace = (path) => (/\/(providers|govt-programs)/.test(path) ? 'p2' : /\/health-lockers$/.test(path) ? 'p4' : /\/(bridge-service|\.well-known\/openid-configuration|certs)$/.test(path) ? null : 'gateway');
+const phrPlace = (tag, path) => (tag === 'Gateway' ? gatewayPlace(path) : LOCKER.test(path) ? 'p4' : PHR_TAGS[tag]);
 
 // Which module an operation lands in. Returns null to drop it.
 const FILES = [
-  {file: 'hiecm/gateway.yaml', place: () => 'gateway'},
+  {file: 'hiecm/gateway.yaml', place: (tag, path) => gatewayPlace(path)},
   // NHA reissued the M1 swagger on 22 September 2026 with one operation per
   // use case: the path key carries a #use-case suffix, the real URL sits in
   // x-actual-path, and the tags follow the M1 Postman collection.
@@ -168,6 +174,11 @@ for (const {file, place, set = 'nha-2026-09-16', fetched = '2026-09-16', titlesF
       // one file may declare several use cases of one path.
       const key = `${method.toUpperCase()} ${path.replace(/#.*$/, '').replace(/^\/(abha\/api|api\/hiecm)/, '').replace(/\{[^}]+\}/g, '{}')}`;
       if (seenPath.has(key) && seenPath.get(key).file !== file) { const first = seenPath.get(key); note(first.module, key, `dropped from ${file}: already declared by ${first.file} in the ${first.module} module`); continue; }
+      if (module === null) {
+        seenPath.set(key, {file, module: 'gateway'});
+        note('gateway', key, 'left out of the reference, as NHA\'s sandbox observations of 23 September 2026 ask');
+        continue;
+      }
       if (!module || !MODULES[module]) throw new Error(`${file}: ${method.toUpperCase()} ${path} has tag "${tag}", which no module takes`);
       if (!seenPath.has(key)) seenPath.set(key, {file, module});
       touched.add(module);
@@ -608,13 +619,13 @@ specs.m1['x-abdm-sources'].push({file: 'catalogue/openapi/.raw/nha-2026-09-16/ab
   // Where the PHR swagger and the HIE-CM swagger both declare a call, the
   // HIE-CM one was kept. Two of the PHR swagger's parameters, which the PHR
   // V3 document also carries, were lost that way.
-  const providers = specs.gateway.paths['/api/hiecm/gateway/v3/providers']?.get;
+  const providers = specs.p2.paths['/api/hiecm/gateway/v3/providers']?.get;
   if (providers) {
     providers.parameters ??= [];
     for (const name of ['stateCode', 'districtCode']) {
       if (providers.parameters.some((x) => x.name === name)) continue;
       providers.parameters.push({name, in: 'query', required: false, schema: {type: 'string', example: '-1'}, description: `Filter by ${name === 'stateCode' ? 'state' : 'district'} code; -1 for all.`});
-      note('gateway', 'GET /api/hiecm/gateway/v3/providers', `query ${name} added, as the PHR swagger and the PHR V3 document (10.3.13) declare it; the HIE-CM gateway swagger does not`);
+      note('p2', 'GET /api/hiecm/gateway/v3/providers', `query ${name} added, as the PHR swagger and the PHR V3 document (10.3.13) declare it; the HIE-CM gateway swagger does not`);
     }
   }
   const onDiscover = specs.m2.paths['/api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover']?.post;
@@ -622,11 +633,18 @@ specs.m1['x-abdm-sources'].push({file: 'catalogue/openapi/.raw/nha-2026-09-16/ab
     (onDiscover.parameters ??= []).push({name: 'X-HIU-ID', in: 'header', required: true, schema: {type: 'string'}, example: 'IN2810014366', description: 'Identifier of the health information user to which the request was intended'});
     note('m2', 'POST /api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover', 'X-HIU-ID header added, required, as the PHR swagger and the PHR V3 document (10.3.3) declare it; the HIE-CM swagger does not');
   }
+  // The session call takes one grant type. Stated as a one value enum, Try it
+  // fills it in and locks it, as NHA's sandbox observations ask for fixed values.
+  const grantType = specs.gateway.paths['/api/hiecm/gateway/v3/sessions']?.post?.requestBody?.content?.['application/json']?.schema?.properties?.grantType;
+  if (grantType && !grantType.enum) {
+    grantType.enum = ['client_credentials'];
+    note('gateway', 'POST /api/hiecm/gateway/v3/sessions', 'grantType takes client_credentials only, as the PHR V3 document (3.0) sends it; the raw file gave it as an example');
+  }
 }
 
 for (const [id, m] of Object.entries(MODULES)) {
   const count = Object.values(specs[id].paths).reduce((n, i) => n + METHODS.filter((x) => i[x]).length, 0) + Object.values(specs[id].webhooks).reduce((n, i) => n + METHODS.filter((x) => i[x]).length, 0);
-  if (count !== m.expected) throw new Error(`${id}: ${count} operations, expected ${m.expected}`);
+  if (count !== m.expected) throw new Error(`${id}: ${count} operations, expected ${m.expected}: ${Object.keys(specs[id].paths).join(' ')}`);
   if (!Object.keys(specs[id].webhooks).length) delete specs[id].webhooks;
 }
 
