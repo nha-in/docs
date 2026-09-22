@@ -583,7 +583,7 @@ curl --request POST \
 
 ```bash
 curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/v1.5/facility/get-master-data \
+  --url "https://apihspsbx.abdm.gov.in/v4/int/v1.5/facility/get-master-data?type=<TYPE>" \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 
@@ -624,7 +624,7 @@ curl --request POST \
 
 ```bash
 curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/v1.5/facility/lgd/districts \
+  --url "https://apihspsbx.abdm.gov.in/v4/int/v1.5/facility/lgd/districts?stateCode=<STATECODE>" \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 
@@ -640,7 +640,7 @@ curl --request GET \
 
 ```bash
 curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/v1.5/facility/lgd/subdistricts \
+  --url "https://apihspsbx.abdm.gov.in/v4/int/v1.5/facility/lgd/subdistricts?districtCode=<DISTRICTCODE>" \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 
@@ -822,7 +822,7 @@ curl --request POST \
 
 ```bash
 curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/api/v1/auth/cert \
+  --url "https://apihspsbx.abdm.gov.in/v4/int/api/v1/auth/cert?publicCertificateRequestDto=<PUBLICCERTIFICATEREQUESTDTO>" \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 
@@ -1902,7 +1902,7 @@ curl --request GET \
 
 ```bash
 curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/medical-councils/name \
+  --url "https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/medical-councils/name?medicineName=<MEDICINENAME>" \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 

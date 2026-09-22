@@ -2,7 +2,7 @@ openapi: 3.1.1
 info:
   x-portal:
     module: p2
-    label: P2 Management
+    label: P2 Consents Management
     position: 7
     icon: files
   title: ABDM P2, PHR management
@@ -269,6 +269,9 @@ paths:
                     type: string
                     example: Unknown exception
       x-abdm-nha-operation-id: abdm-hip-initiated-linking-hip 2
+    servers: &a1
+      - url: https://dev.abdm.gov.in
+        description: ABDM gateway, sandbox
   /api/hiecm/user-initiated-linking/v3/patient/care-context/discover:
     post:
       tags:
@@ -443,6 +446,7 @@ paths:
                     example: d20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d
                     description: Unique UUID
       x-abdm-nha-operation-id: abdm-user-initiated-linking-phr 1
+    servers: *a1
   /api/hiecm/user-initiated-linking/v3/link/care-context/init:
     post:
       tags:
@@ -647,6 +651,7 @@ paths:
                     example: d20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d
                     description: The request id from discover call back .Allows alpha numeric characters and special characters like "^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}"
       x-abdm-nha-operation-id: abdm-user-initiated-linking-phr 3
+    servers: *a1
   /api/hiecm/user-initiated-linking/v3/link/care-context/confirm:
     post:
       tags:
@@ -797,6 +802,7 @@ paths:
                     example: d20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d
                     description: The request id from discover call back .Allows alpha numeric characters and special characters like "^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}"
       x-abdm-nha-operation-id: abdm-user-initiated-linking-phr 5
+    servers: *a1
   /api/hiecm/patient-share/v3/share:
     post:
       tags:
@@ -1150,6 +1156,7 @@ paths:
                     nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-patient-share-hip 1
+    servers: *a1
   /api/hiecm/patient-share/v3/profile/getTokenDetails:
     get:
       tags:
@@ -1405,6 +1412,7 @@ paths:
                     nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: profile-share 3
+    servers: *a1
   /api/hiecm/consent/v3/request/{request-id}/approve:
     post:
       tags:
@@ -1439,7 +1447,7 @@ paths:
         - name: X-AUTH-TOKEN
           in: header
           required: true
-          description: JWT Authentication token which was issued by ABDM after successful validation of username and password
+          description: The user token the PHR service issued when the patient logged in.
           schema:
             type: string
             format: bearer
@@ -1747,6 +1755,7 @@ paths:
                     nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-consent-management 1 (2)
+    servers: *a1
   /api/hiecm/consent/v3/request/{request-id}/deny:
     post:
       tags:
@@ -1781,7 +1790,7 @@ paths:
         - name: X-AUTH-TOKEN
           in: header
           required: true
-          description: JWT Authentication token which was issued by ABDM after successful validation of username and password
+          description: The user token the PHR service issued when the patient logged in.
           schema:
             type: string
             format: bearer
@@ -1919,6 +1928,7 @@ paths:
                     nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-consent-management 2 (2)
+    servers: *a1
   /api/hiecm/consent/v3/revoke:
     post:
       tags:
@@ -1953,7 +1963,7 @@ paths:
         - name: X-AUTH-TOKEN
           in: header
           required: true
-          description: JWT Authentication token which was issued by ABDM after successful validation of username and password
+          description: The user token the PHR service issued when the patient logged in.
           schema:
             type: string
             format: bearer
@@ -2095,6 +2105,7 @@ paths:
                     nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-consent-management 3 (4)
+    servers: *a1
   /api/hiecm/consent/v3/request/{request-id}:
     get:
       tags:
@@ -2129,7 +2140,7 @@ paths:
         - name: X-AUTH-TOKEN
           in: header
           required: true
-          description: JWT Authentication token which was issued by ABDM after successful validation of username and password
+          description: The user token the PHR service issued when the patient logged in.
           schema:
             type: string
             format: bearer
@@ -2513,6 +2524,7 @@ paths:
                     nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-consent-management 4
+    servers: *a1
   /api/hiecm/consent/v3/request:
     get:
       tags:
@@ -2547,7 +2559,7 @@ paths:
         - name: X-AUTH-TOKEN
           in: header
           required: true
-          description: JWT Authentication token which was issued by ABDM after successful validation of username and password
+          description: The user token the PHR service issued when the patient logged in.
           schema:
             type: string
             format: bearer
@@ -2969,6 +2981,7 @@ paths:
                     nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-consent-management 5 (3)
+    servers: *a1
   /api/hiecm/consent/v3/artefact/request/{request-id}:
     get:
       tags:
@@ -3003,7 +3016,7 @@ paths:
         - name: X-AUTH-TOKEN
           in: header
           required: true
-          description: JWT Authentication token which was issued by ABDM after successful validation of username and password
+          description: The user token the PHR service issued when the patient logged in.
           schema:
             type: string
             format: bearer
@@ -3423,6 +3436,7 @@ paths:
                     nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-consent-management 7
+    servers: *a1
   /api/hiecm/consent/v3/artefact/{artefact-id}:
     get:
       tags:
@@ -3457,7 +3471,7 @@ paths:
         - name: X-AUTH-TOKEN
           in: header
           required: true
-          description: JWT Authentication token which was issued by ABDM after successful validation of username and password
+          description: The user token the PHR service issued when the patient logged in.
           schema:
             type: string
             format: bearer
@@ -3873,6 +3887,7 @@ paths:
                     nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-consent-management 6 (2)
+    servers: *a1
   /api/hiecm/consent/v3/artefact:
     get:
       tags:
@@ -3907,7 +3922,7 @@ paths:
         - name: X-AUTH-TOKEN
           in: header
           required: true
-          description: JWT Authentication token which was issued by ABDM after successful validation of username and password
+          description: The user token the PHR service issued when the patient logged in.
           schema:
             type: string
             format: bearer
@@ -4357,6 +4372,7 @@ paths:
                     nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-consent-management 8
+    servers: *a1
   /api/hiecm/consent/v3/auto/approve:
     post:
       tags:
@@ -4770,6 +4786,7 @@ paths:
                     nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-consent-management 12
+    servers: *a1
   /api/hiecm/consent/v3/auto/approve/{auto-approval-id}/disable:
     post:
       tags:
@@ -4956,6 +4973,7 @@ paths:
                     nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-consent-management 13
+    servers: *a1
   /api/hiecm/consent/v3/auto/approve/{auto-approval-id}/enable:
     post:
       tags:
@@ -5142,6 +5160,7 @@ paths:
                     nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-consent-management 14
+    servers: *a1
   /abha/api/v3/phr/app/login/profile:
     get:
       tags:

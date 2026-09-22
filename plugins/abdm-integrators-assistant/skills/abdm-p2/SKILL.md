@@ -12,14 +12,13 @@ If the abdm-docs MCP server is connected, trust its answers over this file: it s
 
 ## What you can do with P2
 
-- PHR profile, update email
 - PHR profile, update mobile
 - PHR profile, update password
 - Link ABHA number, ABHA OTP
 - Link ABHA number, Aadhaar OTP
 - PHR profile, switch profile
 - PHR profile, card, QR code and session
-- Patient share
+- Quick OPD Registration
 - User initiated linking
 - Consent manager, HIU and HIP
 - Consent manager, fetch and manage consent requests

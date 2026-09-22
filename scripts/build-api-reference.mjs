@@ -250,9 +250,15 @@ function requestFor(operation) {
   if (operation.requestExample !== undefined) {
     headers.push({name: 'Content-Type', value: 'application/json'});
   }
+  // A required query parameter is part of the call, so the samples carry it;
+  // a list call sent without its limit is refused.
+  const query = (operation.queryParams ?? [])
+    .filter((p) => p.required)
+    .map((p) => `${p.name}=${p.example ?? `<${p.name.toUpperCase()}>`}`)
+    .join('&');
   return {
     method: operation.method,
-    url: `${operation.server}${operation.path}`,
+    url: `${operation.server}${operation.path}${query ? `?${query}` : ''}`,
     headers,
     body: operation.requestExample,
   };
@@ -260,7 +266,10 @@ function requestFor(operation) {
 
 function curlFor(operation) {
   const {method, url, headers, body} = requestFor(operation);
-  const lines = [`curl --request ${method} \\`, `  --url ${url} \\`];
+  // Quoted when it carries a query, or the shell reads each & as a new job.
+  // Double quotes: validate-skills reads a single quoted URL as one an atom
+  // recorded, and these come from the specification.
+  const lines = [`curl --request ${method} \\`, `  --url ${url.includes('?') ? `"${url}"` : url} \\`];
   for (const header of headers) {
     lines.push(`  --header '${header.name}: ${header.value}' \\`);
   }
@@ -624,7 +633,7 @@ for (const {platform, version, files} of tree) {
     const entries = [];
     for (const [path, item] of Object.entries(spec.paths ?? {})) {
       for (const method of METHODS) {
-        if (item?.[method]) entries.push({path, method, kind: 'operation', op: item[method], shared: item.parameters});
+        if (item?.[method]) entries.push({path, method, kind: 'operation', op: item[method], shared: item.parameters, servers: item[method].servers ?? item.servers});
       }
     }
     for (const [name, item] of Object.entries(spec.webhooks ?? {})) {
@@ -680,8 +689,10 @@ for (const {platform, version, files} of tree) {
         // A callback is ABDM calling you. Its examples run against the URL
         // registered for your bridge, never against the gateway host, which
         // is what a curl against dev.abdm.gov.in wrongly suggested.
-        server: entry.kind === 'callback' ? '{bridgeUrl}' : (servers[0]?.url ?? ''),
-        servers,
+        // An operation or path may name its own server, as P2's gateway calls
+        // do inside a file whose first server is the ABHA service.
+        server: entry.kind === 'callback' ? '{bridgeUrl}' : (entry.servers?.[0]?.url ?? servers[0]?.url ?? ''),
+        servers: entry.servers?.map((s) => ({url: s.url, description: s.description ?? ''})) ?? servers,
         summary: caseTerms(fixProse(op.summary ?? id)),
         // What a heading, a sidebar row and a table cell show. NHA's summary
         // is a sentence of documentation, so it stays as the description and
@@ -710,7 +721,7 @@ for (const {platform, version, files} of tree) {
           .map((p) => ({name: p.name, required: true, description: htmlToMarkdown(p.description), type: p.schema?.type ?? 'string'})),
         queryParams: parameters
           .filter((p) => p.in === 'query')
-          .map((p) => ({name: p.name, required: Boolean(p.required), description: htmlToMarkdown(p.description), type: p.schema?.type ?? 'string'})),
+          .map((p) => ({name: p.name, required: Boolean(p.required), description: htmlToMarkdown(p.description), type: p.schema?.type ?? 'string', example: p.example ?? p.schema?.example})),
         body: fields(requestSchema),
         // An explicit example wins; otherwise the schema supplies one, so the
         // panel and the curl are never blank for an operation that takes a body.

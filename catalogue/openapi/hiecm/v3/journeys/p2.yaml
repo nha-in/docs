@@ -7,14 +7,10 @@
 # - Patient share and user initiated linking walk the on-share, on-discover,
 #   on-init and on-confirm replies as the callbacks the PHR receives, where
 #   the collection posts them to the gateway in the HIP's place.
+# - Update email is left out: NHA's sandbox observations of 23 September 2026
+#   deprecate it.
 # - The Initiated Linking and Data Flow folders call only M2 and M3
 #   operations and have no journey here; the M2 and M3 journeys walk them.
-- id: p2-update-email
-  title: PHR profile, update email
-  steps:
-    - {op: p2_post_v3_phr_app_login_profile_request_otp, example: Send Otp - Update Email}
-    - {op: p2_post_v3_phr_app_login_profile_verify, example: Verify Otp - Update Email}
-
 - id: p2-update-mobile
   title: PHR profile, update mobile
   steps:
@@ -57,7 +53,7 @@
     - {op: p2_get_v3_phr_app_login_profile_request_logout}
 
 - id: p2-abdm-hiecm-patient-share-phr
-  title: Patient share
+  title: Quick OPD Registration
   steps:
     - {op: p2_post_patient_share_v3_share}
     - {op: p2_post_v3_hiu_patient_on_share}

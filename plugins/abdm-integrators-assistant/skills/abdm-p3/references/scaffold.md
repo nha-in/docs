@@ -139,55 +139,35 @@ curl --request POST \
   --header 'X-AUTH-TOKEN: <TOKEN>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "isApplicableForAllHIPs": false,
+  "isApplicableForAllHIPs": true,
   "includedSources": [
     {
       "hiTypes": [
-        "Prescription"
+        "Prescription",
+        "DiagnosticReport",
+        "OPConsultation",
+        "DischargeSummary",
+        "ImmunizationRecord",
+        "HealthDocumentRecord",
+        "WellnessRecord",
+        "Invoice"
       ],
       "purpose": {
         "text": "Care Management",
         "code": "CAREMGT",
-        "refUri": "https://abc.def.in"
-      },
-      "hip": {
-        "id": "INDIA_HIP",
-        "name": "INDIA HIP",
-        "type": "HIP"
+        "refUri": "www.abdm.gov.in"
       },
       "categories": [
-        "LINK"
+        "LINK",
+        "DATA"
       ],
       "period": {
-        "from": "2024-05-09T10:34:00.389Z",
-        "to": "2024-05-09T10:34:00.389Z"
+        "from": "2025-01-09T09:00:00.000Z",
+        "to": "2124-12-31T09:00:00.000Z"
       }
     }
   ],
-  "excludedSources": [
-    {
-      "hiTypes": [
-        "Prescription"
-      ],
-      "purpose": {
-        "text": "Care Management",
-        "code": "CAREMGT",
-        "refUri": "https://abc.def.in"
-      },
-      "hip": {
-        "id": "INDIA_HIP",
-        "name": "INDIA HIP",
-        "type": "HIP"
-      },
-      "categories": [
-        "LINK"
-      ],
-      "period": {
-        "from": "2024-05-09T10:34:00.389Z",
-        "to": "2024-05-09T10:34:00.389Z"
-      }
-    }
-  ]
+  "excludedSources": []
 }'
 ```
 
@@ -211,7 +191,7 @@ curl --request POST \
 
 ```bash
 curl --request GET \
-  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/requests \
+  --url "https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/requests?limit=5&offset=5&status=ALL" \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \

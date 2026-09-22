@@ -13,6 +13,7 @@ If the abdm-docs MCP server is connected, trust its answers over this file: it s
 ## What you can do with P1
 
 - PHR certificate and session token
+- Create ABHA number, Aadhaar OTP
 - Create ABHA address, mobile number
 - Create ABHA address, ABHA number with ABHA OTP
 - Create ABHA address, ABHA number with Aadhaar OTP

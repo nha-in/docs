@@ -25,7 +25,7 @@ const MODULES = {
   m3: {label: 'M3 Health Information User', position: 4, icon: 'file-check', roles: ['his'], title: 'ABDM M3, health information user services as an HIU', summary: 'Raise a consent request, fetch its artefacts, and receive records.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 12},
   m4: {label: 'M4 Registry Integration', position: 5, icon: 'building-2', roles: ['his'], title: 'ABDM M4, professional and facility registries', summary: 'Register healthcare professionals and facilities on the NHPR.', servers: [{url: 'https://apihspsbx.abdm.gov.in/v4/int', description: 'NHPR, sandbox'}], expected: 100},
   p1: {label: 'P1 Registration and login', position: 6, icon: 'user-round', roles: ['phr'], title: 'ABDM P1, PHR registration and login', summary: 'Create an ABHA address in a PHR app and log in to it.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}], expected: 11},
-  p2: {label: 'P2 Management', position: 7, icon: 'files', roles: ['phr'], title: 'ABDM P2, PHR management', summary: 'Manage the PHR profile, link an ABHA number, switch profiles, and handle linking, sharing and consent for the patient.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}, {url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}], expected: 32},
+  p2: {label: 'P2 Consents Management', position: 7, icon: 'files', roles: ['phr'], title: 'ABDM P2, PHR management', summary: 'Manage the PHR profile, link an ABHA number, switch profiles, and handle linking, sharing and consent for the patient.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}, {url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}], expected: 32},
   p3: {label: 'P3 Subscription', position: 8, icon: 'bell', roles: ['phr'], title: 'ABDM P3, PHR subscriptions', summary: 'Read, approve, deny, enable, disable and update the patient\'s subscriptions and subscription requests.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}], expected: 8},
   p4: {label: 'P4 Locker', position: 9, icon: 'lock', roles: ['phr'], title: 'ABDM P4, health lockers', summary: 'Set up a health locker and list the lockers and requests on an ABHA address.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}], expected: 4},
   subscription: {label: 'Subscriptions', position: 10, icon: 'bell', roles: ['his'], title: 'ABDM subscriptions', summary: 'Subscribe an HIU to changes on an ABHA address.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 6},
@@ -550,6 +550,60 @@ specs.m1['x-abdm-sources'].push({file: 'catalogue/openapi/.raw/nha-2026-09-16/ab
     walkRequired(schema.items);
   };
   walkRequired(approve);
+
+  // NHA's AI sandbox observations of 23 September 2026 (PHR web sheet).
+  // P2 carries ABHA service and gateway calls in one file, and a page takes
+  // the file's first server, so every /api/hiecm call rendered against the
+  // ABHA host. Those paths carry the gateway server of their own.
+  const GATEWAY = [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}];
+  let rehosted = 0;
+  for (const [path, item] of Object.entries(specs.p2.paths)) {
+    if (!path.startsWith('/api/hiecm/')) continue;
+    item.servers = GATEWAY;
+    rehosted++;
+  }
+  if (rehosted) note('p2', 'servers', `${rehosted} /api/hiecm paths carry the gateway server; they rendered against the ABHA service host, the file's first server. NHA sandbox observations, 23 September 2026`);
+  // The PHR V3 document, 6.16 to 6.22, names the X-AUTH-TOKEN on the
+  // patient's consent calls as the PHR login token, not an ABDM one.
+  for (const [path, item] of Object.entries(specs.p2.paths)) {
+    if (!/^\/api\/hiecm\/consent\/v3\/(request|artefact|revoke)/.test(path)) continue;
+    for (const method of METHODS) {
+      const header = item[method]?.parameters?.find((x) => x.name === 'X-AUTH-TOKEN');
+      if (!header) continue;
+      header.description = 'The user token the PHR service issued when the patient logged in.';
+      note('p2', `${method.toUpperCase()} ${path}`, 'X-AUTH-TOKEN is the PHR login token, as the PHR V3 document says in 6.16 to 6.22; the raw file described an ABDM username and password token');
+    }
+  }
+  // Approving a subscription: the document (8.3.4) marks hip optional, and
+  // the raw example both included and excluded the same HIP. The example is
+  // the one in NHA's PHR and locker collection, which applies to every HIP.
+  const approveMedia = specs.p3.paths['/api/hiecm/subscription-requests/v3/{request-id}/approve']?.post?.requestBody?.content?.['application/json'];
+  const source = approveMedia?.schema?.properties?.includedSources?.items;
+  if (source?.required?.includes('hip')) {
+    source.required = source.required.filter((k) => k !== 'hip');
+    note('p3', 'POST /api/hiecm/subscription-requests/v3/{request-id}/approve', 'includedSources hip is optional, as the PHR V3 document (8.3.4) marks it; the raw file required it');
+  }
+  if (approveMedia) {
+    delete approveMedia.examples;
+    approveMedia.example = {
+      isApplicableForAllHIPs: true,
+      includedSources: [{
+        hiTypes: ['Prescription', 'DiagnosticReport', 'OPConsultation', 'DischargeSummary', 'ImmunizationRecord', 'HealthDocumentRecord', 'WellnessRecord', 'Invoice'],
+        purpose: {text: 'Care Management', code: 'CAREMGT', refUri: 'www.abdm.gov.in'},
+        categories: ['LINK', 'DATA'],
+        period: {from: '2025-01-09T09:00:00.000Z', to: '2124-12-31T09:00:00.000Z'},
+      }],
+      excludedSources: [],
+    };
+    note('p3', 'POST /api/hiecm/subscription-requests/v3/{request-id}/approve', 'example is the PHR and locker collection\'s; the raw example included and excluded the same HIP');
+  }
+  // Listing subscription requests: the document (8.3.1) marks limit, offset
+  // and the status filter mandatory; the raw file marked them optional.
+  for (const p of specs.p3.paths['/api/hiecm/subscription-requests/v3/requests']?.get?.parameters ?? []) {
+    if (p.in !== 'query' || p.required) continue;
+    p.required = true;
+    note('p3', 'GET /api/hiecm/subscription-requests/v3/requests', `query ${p.name} is required, as the PHR V3 document (8.3.1) marks it`);
+  }
 }
 
 for (const [id, m] of Object.entries(MODULES)) {

@@ -3,9 +3,10 @@
 # collection of 16 September. Content from the PHR and Locker swagger of the
 # same set. Each collection subfolder is its own journey, in collection order,
 # so a shared call appears under every method with that method's example.
-# The collection's ABHA enrolment via Aadhaar folder is left out: it names the
-# M1 ABHA number operations, which M1 documents, and NHA's PHR V3 document
-# registers an ABHA address by mobile or ABHA number only. The PHR V3 document
+# The collection's ABHA enrolment via Aadhaar folder is its own journey,
+# because NHA's sandbox observations of 23 September 2026 ask for the Aadhaar
+# number route in PHR registration. Its steps name the M1 operations, which M1
+# also documents. The PHR V3 document
 # puts the PHR certificate first, so the PHR public key is never confused with
 # the ABHA service's, and it registers an ABHA address without the verify user
 # call, which belongs to login. The two email OTP routes are optional in that
@@ -15,6 +16,19 @@
   steps:
     - {op: p1_get_v3_phr_app_login_public_certificate}
     - {op: gateway_post_gateway_v3_sessions}
+
+- id: p1-create-abha-number-aadhaar-otp
+  title: Create ABHA number, Aadhaar OTP
+  steps:
+    - {op: m1_post_v3_enrollment_request_otp_aadhaar_otp}
+    - {op: m1_post_v3_enrollment_enrol_byaadhaar_otp}
+    - {op: m1_post_v3_enrollment_request_otp_mobile_verify_create_ab_1b66bb, optional: true}
+    - {op: m1_post_v3_enrollment_auth_byabdm_mobile_verify_create_ab_091285, optional: true}
+    - {op: p1_post_v3_profile_account_request_emailverificationlink, example: Email Verification Link}
+    - {op: m1_get_v3_enrollment_enrol_suggestion_create_abha_aadhaar_otp}
+    - {op: m1_post_v3_enrollment_enrol_abha_address_create_abha_aadhaar_otp}
+    - {op: m1_get_v3_profile_account}
+    - {op: m1_get_v3_profile_account_abha_card}
 
 - id: p1-create-abha-address-mobile
   title: Create ABHA address, mobile number

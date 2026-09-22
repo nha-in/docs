@@ -167,6 +167,179 @@ A 202 whose body matches:
 }
 ```
 
+### Create ABHA number, Aadhaar OTP (`p1-create-abha-number-aadhaar-otp`)
+
+**Act: the calls in this journey, in order**
+
+#### 1. Send Aadhaar OTP for ABHA enrolment (`m1_post_v3_enrollment_request_otp_aadhaar_otp`)
+
+```bash
+curl --request POST \
+  --url https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/request/otp \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "txnId": "{{txnId}}",
+  "scope": [
+    "abha-enrol"
+  ],
+  "loginHint": "aadhaar",
+  "loginId": "{{encrypted aadhaar number}}",
+  "otpSystem": "aadhaar"
+}'
+```
+
+#### 2. Create ABHA - verify Aadhaar OTP (`m1_post_v3_enrollment_enrol_byaadhaar_otp`)
+
+```bash
+curl --request POST \
+  --url https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
+  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'BENEFIT_NAME: {{Benefit Name}}' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "authData": {
+    "authMethods": [
+      "otp"
+    ],
+    "otp": {
+      "txnId": "{{txnId}}",
+      "otpValue": "{{encrypted otp}}",
+      "mobile": "{{mobile number}}"
+    }
+  },
+  "consent": {
+    "code": "abha-enrollment",
+    "version": "1.4"
+  }
+}'
+```
+
+#### 3. After ABHA creation - send OTP to verify mobile (optional) (optional) (`m1_post_v3_enrollment_request_otp_mobile_verify_create_ab_1b66bb`)
+
+```bash
+curl --request POST \
+  --url https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/request/otp \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "txnId": "{{txnId}}",
+  "scope": [
+    "abha-enrol",
+    "mobile-verify"
+  ],
+  "loginHint": "mobile",
+  "loginId": "{{encrypted mobileNumber}}",
+  "otpSystem": "abdm"
+}'
+```
+
+#### 4. After ABHA creation - verify mobile OTP (optional) (optional) (`m1_post_v3_enrollment_auth_byabdm_mobile_verify_create_ab_091285`)
+
+```bash
+curl --request POST \
+  --url https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/auth/byAbdm \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "scope": [
+    "abha-enrol",
+    "mobile-verify"
+  ],
+  "authData": {
+    "authMethods": [
+      "otp"
+    ],
+    "otp": {
+      "txnId": "{{txnId}}",
+      "otpValue": "{{encrypted otp}}"
+    }
+  }
+}'
+```
+
+#### 5. Submit the email verification link (`p1_post_v3_profile_account_request_emailverificationlink`)
+
+```bash
+curl --request POST \
+  --url https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/request/emailVerificationLink \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
+  --header 'X-token: Bearer <JWT TOKEN>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "scope": [
+    "abha-profile",
+    "email-link-verify"
+  ],
+  "loginHint": "email",
+  "loginId": "{{encrypted email}}",
+  "otpSystem": "abdm"
+}'
+```
+
+#### 6. After ABHA creation - get ABHA address suggestions (`m1_get_v3_enrollment_enrol_suggestion_create_abha_aadhaar_otp`)
+
+```bash
+curl --request GET \
+  --url https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/suggestion \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'TRANSACTION_ID: {{txnId}}' \
+  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
+```
+
+#### 7. After ABHA creation - create ABHA address (`m1_post_v3_enrollment_enrol_abha_address_create_abha_aadhaar_otp`)
+
+```bash
+curl --request POST \
+  --url https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/abha-address \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "txnId": "{{txnId}}",
+  "abhaAddress": "{{ABHA Address}}",
+  "preferred": 1
+}'
+```
+
+#### 8. Get ABHA profile (`m1_get_v3_profile_account`)
+
+```bash
+curl --request GET \
+  --url https://abhasbx.abdm.gov.in/abha/api/v3/profile/account \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'X-token: Bearer {{X-token}}' \
+  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
+```
+
+#### 9. Retrieve ABHA card image (`m1_get_v3_profile_account_abha_card`)
+
+```bash
+curl --request GET \
+  --url https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'X-token: Bearer {{X-token}}' \
+  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
+```
+
+**Exit condition (Observe until this is true)**
+
+A 200 response. The specification gives no body for it, so read what comes back.
+
 ### Create ABHA address, mobile number (`p1-create-abha-address-mobile`)
 
 **Act: the calls in this journey, in order**

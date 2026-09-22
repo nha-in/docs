@@ -76,7 +76,7 @@ paths:
             example: <TOKEN>
         - name: limit
           in: query
-          required: false
+          required: true
           description: How many items to return at one time
           schema:
             type: integer
@@ -86,7 +86,7 @@ paths:
             example: 5
         - name: offset
           in: query
-          required: false
+          required: true
           description: How many items out of line
           schema:
             type: integer
@@ -96,7 +96,7 @@ paths:
             example: 5
         - name: status
           in: query
-          required: false
+          required: true
           description: Query string parameter restricts the data returned from your request
           schema:
             type: string
@@ -473,7 +473,6 @@ paths:
                     required:
                       - hiTypes
                       - purpose
-                      - hip
                       - categories
                       - period
                     properties:
@@ -699,6 +698,29 @@ paths:
                             nullable: false
                             example: "2024-05-09T10:34:00.389Z"
                             description: UTC date time in ISO format.Allows alpha numeric character and special characters like  "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
+            example:
+              isApplicableForAllHIPs: true
+              includedSources:
+                - hiTypes:
+                    - Prescription
+                    - DiagnosticReport
+                    - OPConsultation
+                    - DischargeSummary
+                    - ImmunizationRecord
+                    - HealthDocumentRecord
+                    - WellnessRecord
+                    - Invoice
+                  purpose:
+                    text: Care Management
+                    code: CAREMGT
+                    refUri: www.abdm.gov.in
+                  categories:
+                    - LINK
+                    - DATA
+                  period:
+                    from: "2025-01-09T09:00:00.000Z"
+                    to: "2124-12-31T09:00:00.000Z"
+              excludedSources: []
       responses:
         "202":
           description: Accepted
