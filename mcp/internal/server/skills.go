@@ -3,6 +3,8 @@ package server
 import (
 	"context"
 	"fmt"
+	"log/slog"
+	"sort"
 	"strings"
 
 	"github.com/eka-care/abdm-docs/mcp/internal/index"
@@ -141,4 +143,36 @@ func namedSections(secs []string) []string {
 // whether it is stale.
 func withVersion(body string, r *index.Reader) string {
 	return body + fmt.Sprintf("\n\n---\ncatalogue_version: %s\n", r.CatalogueVersion())
+}
+
+// ChatSkills gives the chat loop what a command needs: one section of one
+// compiled module skill, and the names of the module skills this index has.
+// Both read the same rows the MCP serves as skill:// resources, so the panel
+// and an agent never see two versions of a skill.
+func ChatSkills(r *index.Reader) (get func(name, section string) (string, bool), modules func() []string) {
+	get = func(name, section string) (string, bool) {
+		sk, err := r.GetSkill(name, section)
+		if err != nil {
+			return "", false
+		}
+		return sk.Body, true
+	}
+	modules = func() []string {
+		all, err := r.ListSkills()
+		if err != nil {
+			slog.Warn("list skills for chat commands", "err", err)
+			return nil
+		}
+		seen := map[string]bool{}
+		var out []string
+		for _, sk := range all {
+			if strings.HasPrefix(sk.Name, "abdm-") && !seen[sk.Name] {
+				seen[sk.Name] = true
+				out = append(out, sk.Name)
+			}
+		}
+		sort.Strings(out)
+		return out
+	}
+	return get, modules
 }

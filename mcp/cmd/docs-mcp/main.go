@@ -183,13 +183,16 @@ func main() {
 		}
 		chatTools := server.NewTools(r, emb)
 		lookup, toolsFor := server.ChatHooks(chatTools)
+		skill, skillModules := server.ChatSkills(r)
 		chatSvc = &chat.Service{
-			Model:     model,
-			Tools:     server.ChatTools(chatTools.Defs()),
-			MaxTokens: *chatMaxTokens,
-			MCPURL:    *mcpURL,
-			Lookup:    lookup,
-			ToolsFor:  toolsFor,
+			Model:        model,
+			Tools:        server.ChatTools(chatTools.Defs()),
+			MaxTokens:    *chatMaxTokens,
+			MCPURL:       *mcpURL,
+			Lookup:       lookup,
+			ToolsFor:     toolsFor,
+			Skill:        skill,
+			SkillModules: skillModules,
 		}
 		limiter = chat.NewLimiter(*chatPerMin, *chatPerDay)
 		slog.Info("chat enabled", "model", *chatModel)

@@ -110,6 +110,11 @@ func Handler(r *index.Reader, emb embed.Embedder, allowOrigin string, chatSvc *c
 			// Optional: the page the reader had open. Absent from an older
 			// client, and from any request opened from the top bar.
 			Page *chat.Page `json:"page"`
+			// Optional: the command the reader picked under the composer, and
+			// the module they chose when asked which one. Names only; the
+			// skill text is the server's own.
+			Command string `json:"command"`
+			Module  string `json:"module"`
 		}
 		if err := json.NewDecoder(io.LimitReader(req.Body, chatBodyLimit)).Decode(&in); err != nil {
 			writeJSON(w, 400, map[string]string{"error": "bad request body"})
@@ -125,6 +130,11 @@ func Handler(r *index.Reader, emb embed.Embedder, allowOrigin string, chatSvc *c
 			writeJSON(w, 400, map[string]string{"error": err.Error()})
 			return
 		}
+		cmd := chat.Command{Name: in.Command, Module: in.Module}
+		if err := chat.ValidateCommand(cmd); err != nil {
+			writeJSON(w, 400, map[string]string{"error": err.Error()})
+			return
+		}
 		ctx, cancel := context.WithTimeout(req.Context(), 90*time.Second)
 		defer cancel()
 		sw, err := chat.NewSSEWriter(w)
@@ -134,7 +144,7 @@ func Handler(r *index.Reader, emb embed.Embedder, allowOrigin string, chatSvc *c
 			return
 		}
 		start := time.Now()
-		if err := chatSvc.Respond(ctx, in.Turns, in.Page, sw.Event); err != nil {
+		if err := chatSvc.RespondCommand(ctx, in.Turns, in.Page, cmd, sw.Event); err != nil {
 			_ = sw.Event("error", map[string]string{"message": "the assistant hit a problem, try again shortly"})
 			slog.Error("chat failed", "err", err)
 			return

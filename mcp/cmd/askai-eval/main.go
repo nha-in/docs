@@ -126,9 +126,11 @@ func runCmd(args []string) error {
 		return err
 	}
 	chatTools := server.NewTools(r, emb)
+	skill, skillModules := server.ChatSkills(r)
 	n, runErr := eval.Run(context.Background(), eval.RunConfig{
 		OutDir: filepath.Join(*out, "transcripts"), Model: model, ModelID: *modelID,
 		Temperature: *temp, Tools: server.ChatTools(chatTools.Defs()), RoutedTools: chatTools, MaxTokens: 1500,
+		Skill: skill, SkillModules: skillModules,
 		PromptVersion: chat.PromptVersion, CatalogueVersion: r.CatalogueVersion(),
 		EmbedProvider: *provider, DBPath: *db,
 	}, cases)
