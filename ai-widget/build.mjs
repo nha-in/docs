@@ -22,6 +22,13 @@ await build({
   sourcemap: dev,
   jsx: 'automatic',
   jsxImportSource: 'preact',
+  // The orb's shader library is written against React. Preact's compat layer
+  // stands in for it, so the widget ships one small runtime rather than two.
+  alias: {
+    react: 'preact/compat',
+    'react-dom': 'preact/compat',
+    'react/jsx-runtime': 'preact/jsx-runtime',
+  },
   loader: {'.css': 'text'},
   // Relative to the caller, so the docs site can drop it straight into its
   // static tree without knowing where this package lives.

@@ -1,7 +1,7 @@
 import {render} from 'preact';
 import {useEffect, useRef, useState} from 'preact/hooks';
 import ChatMarkdown, {CopyButton, absolute, headings} from './markdown';
-import {ArrowUp, Paperclip, PenLine, Sparkles, Square, X} from './icons';
+import {ArrowUp, Paperclip, Plus, Sparkles, X} from './icons';
 import {readStream, UNREACHABLE, type Source} from './sse';
 import {
   AGENTS,
@@ -15,8 +15,31 @@ import {
   type Step,
 } from './install';
 import {revealStep} from './pacing';
+import {
+  forget,
+  forgetOne,
+  load as loadHistory,
+  remember,
+  save as saveHistory,
+  titleOf,
+  type Session,
+} from './history';
+import {Composer, type Menu} from './Composer';
+import {HistoryList} from './HistoryList';
+import {Welcome} from './Welcome';
+import {ThinkingOrb} from './orb/frosted-orb';
+import {startersFrom, type Starter} from './starters';
+import {forModel} from './transcript';
+import {isHtmlDocument, markdownUrl, pageUrl, type PageEntry} from './pages';
+import {moduleLabel, skillNote, type CommandId, type SkillUse} from './commands';
+import type {Attached, PageAttachment} from './types';
+
+export type {PageAttachment} from './types';
 import {ASSET_BASE, loadScript} from './assets';
 import css from './styles.css';
+
+/** Enough to tell one conversation from another in this browser's list. */
+const newId = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 
 type Turn = {
   from: 'you' | 'assistant';
@@ -30,16 +53,14 @@ type Turn = {
    * not part of the conversation the model is shown.
    */
   install?: Step;
+  /** Which skill section a command used for this answer, when one did. */
+  skill?: SkillUse;
+  /**
+   * The panel's own turn, never shown to the model: the question asking
+   * which module a command is about.
+   */
+  local?: boolean;
 };
-
-/**
- * A file the reader attached, read in the browser and never uploaded.
- *
- * kind says how the text was got, because it changes how far it can be
- * trusted: a PDF's own text layer is exact, an image's is a machine's reading
- * of a picture and comes with the mistakes that implies.
- */
-type Attached = {name: string; text: string; kind?: 'pdf' | 'image'};
 
 /**
  * What may be attached, and how much of it.
@@ -119,16 +140,6 @@ async function textFromImage(
 }
 
 /**
- * A page the host has attached as context for the conversation, through the
- * element's `attachPage` method. The widget knows nothing about where it
- * came from: the host fetches it and hands over the text.
- *
- * An empty `markdown` is the honest failure: the host tried to attach the
- * page and could not, and the panel says so rather than pretending.
- */
-export type PageAttachment = {title: string; url: string; markdown: string};
-
-/**
  * The chat API caps an attached page, so the panel cuts to the same length
  * rather than having the request rejected. The note goes to the model, not
  * to the reader: it is the model that has to know its copy stops early.
@@ -146,47 +157,6 @@ function pageBody(markdown: string): string {
 const CANNED =
   'This panel is a mock. No assistant is connected here yet, so nothing in ' +
   'it can answer that. The support page lists the channels a human reads.';
-
-const MOCK_OPENING: Turn = {
-  from: 'assistant',
-  text:
-    'This is a preview of the assistant, not a working one. Ask anything to ' +
-    'see the shape of the answer; the reply below is fixed.',
-};
-
-const LIVE_OPENING: Turn = {
-  from: 'assistant',
-  // Said the way a person would open, not as a notice about itself. What it
-  // can do is shown by the questions below it; where the answer came from is
-  // shown under the answer.
-  text: 'What are you building? Ask me anything about ABDM.',
-};
-
-/**
- * The empty state's openers. A blank chat box is the hardest question a
- * reader answers, and these also teach the panel's range in one glance: a
- * header detail, an error code, a flow, and a concept. They are questions the
- * catalogue genuinely answers, so a first try does not miss.
- */
-const STARTERS = [
-  'What format does the TIMESTAMP header need?',
-  'What does ABDM-1016 mean and how do I fix it?',
-  'How do I create an ABHA with an Aadhaar OTP?',
-  'What is a care context?',
-];
-
-/**
- * The openers a host page asked for, one per line in the `starters`
- * attribute, falling back to the four above. A page that knows what its
- * reader came to do offers that rather than the general set.
- */
-function startersFrom(given: string): string[] {
-  const lines = given
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean);
-  return lines.length ? lines.slice(0, 4) : STARTERS;
-}
 
 type Setter = (update: (prior: Turn[]) => Turn[]) => void;
 
@@ -235,10 +205,14 @@ type PanelProps = {
   onClose: () => void;
   question: string;
   send: boolean;
-  starters: string[];
+  starters: Starter[];
+  /** False where the host asked not to keep conversations in its origin. */
+  keepHistory: boolean;
   supportUrl: string;
   page: PageAttachment | null;
   onDetach: () => void;
+  /** Puts a page the reader found in the page search on the conversation. */
+  onAttach: (page: PageAttachment) => void;
 };
 
 /**
@@ -365,19 +339,23 @@ function Panel({
   onClose,
   page,
   onDetach,
+  onAttach,
   question,
   send,
   starters,
+  keepHistory,
   supportUrl,
 }: PanelProps) {
-  const [turns, setTurns] = useState<Turn[]>([
-    apiBase ? LIVE_OPENING : MOCK_OPENING,
-  ]);
+  // Empty until the reader asks something: the welcome stands in for an
+  // opening line, so no turn is spent saying hello.
+  const [turns, setTurns] = useState<Turn[]>([]);
   // An attached page names its own sections, and a section heading is a
   // better opener than a guess. Where there is no page, or the page carries
   // no headings, the host's own openers stand.
   const pageOpeners = page ? headings(page.markdown).slice(0, 4) : [];
-  const openers = pageOpeners.length ? pageOpeners : starters;
+  const openers: Starter[] = pageOpeners.length
+    ? pageOpeners.map((heading) => ({label: heading, prompt: heading}))
+    : starters;
   const [draft, setDraft] = useState('');
   const [chosen, setChosen] = useState<Attached | null>(null);
   const [attachError, setAttachError] = useState<string | null>(null);
@@ -389,6 +367,17 @@ function Panel({
   // because only the newest step is ever interactive.
   const [naming, setNaming] = useState('');
   const [asking, setAsking] = useState(false);
+  // Past conversations, read from this browser once the panel is built, and
+  // the list of them that the head can drop down.
+  const [history, setHistory] = useState<Session<Turn>[]>([]);
+  // Which of the two views is showing: the conversation, or the list of
+  // past ones. The command the reader has on, the add menu, and the title of
+  // a page on its way in from the page search.
+  const [view, setView] = useState<'chat' | 'history'>('chat');
+  const [command, setCommand] = useState<CommandId | null>(null);
+  const [menu, setMenu] = useState<Menu>('closed');
+  const [attaching, setAttaching] = useState<string | null>(null);
+  const conversation = useRef(newId());
   const autoAsked = useRef<string | null>(null);
   const dialog = useRef<HTMLDialogElement>(null);
   const thread = useRef<HTMLDivElement>(null);
@@ -466,15 +455,6 @@ function Panel({
     netDone.current = true;
   };
 
-  // An embedder can set api-base after the element is already on the page.
-  // While nothing has been asked, the opening line follows it, rather than
-  // introducing a mock that is no longer one.
-  useEffect(() => {
-    setTurns((prior) =>
-      prior.length === 1 ? [apiBase ? LIVE_OPENING : MOCK_OPENING] : prior,
-    );
-  }, [apiBase]);
-
   // A host that already knows what the reader was typing, the docs site's
   // search box being the one that does, hands it over in `question`. It
   // seeds the composer and is never sent: the reader still decides whether
@@ -523,11 +503,13 @@ function Panel({
       if (event.key !== 'Escape') return;
       event.preventDefault();
       event.stopPropagation();
-      onClose();
+      // An open menu is the nearer thing to put away.
+      if (menu !== 'closed') setMenu('closed');
+      else onClose();
     };
     document.addEventListener('keydown', onKey, true);
     return () => document.removeEventListener('keydown', onKey, true);
-  }, [open, onClose]);
+  }, [open, onClose, menu]);
 
   // Follow the answer as it streams, and stop the moment the reader scrolls
   // away to re-read something earlier. Yanking them back down mid-sentence is
@@ -577,11 +559,71 @@ function Panel({
     [],
   );
 
-  const reset = () => {
+  /**
+   * Writes the conversation on screen into this browser's history, once it
+   * has a question and an answer in it and the answer has finished.
+   *
+   * An attachment's text is dropped on the way in. It can be twenty thousand
+   * characters, ten of those would not fit the quota, and the point of the
+   * list is finding the question again rather than replaying the file with
+   * it. A restored conversation keeps the file's name and loses its body.
+   */
+  const keep = (said: Turn[]) => {
+    if (!keepHistory) return;
+    // A question is enough. An answer abandoned in its first second leaves
+    // an assistant turn with nothing in it, and the thread already draws
+    // nothing for those, so what comes back is the question on its own.
+    if (!said.some((turn) => turn.from === 'you')) return;
+    setHistory((held) => {
+      const next = remember(held, {
+        id: conversation.current,
+        at: Date.now(),
+        title: titleOf(said),
+        turns: said.map((turn) =>
+          turn.file ? {...turn, file: {...turn.file, text: ''}} : turn,
+        ),
+      });
+      saveHistory(next);
+      return next;
+    });
+  };
+
+  useEffect(() => {
+    if (phase === 'idle') keep(turns);
+  }, [phase, turns]);
+
+  useEffect(() => {
+    if (keepHistory) setHistory(loadHistory<Turn>());
+  }, [keepHistory]);
+
+  /** Puts a past conversation back on screen, where it can be carried on. */
+  const resume = (session: Session<Turn>) => {
+    keep(turns);
     abort.current?.abort();
     stopDrain();
     stick.current = true;
-    setTurns([apiBase ? LIVE_OPENING : MOCK_OPENING]);
+    conversation.current = session.id;
+    setTurns(session.turns);
+    setView('chat');
+    setDraft('');
+    setChosen(null);
+    setAttachError(null);
+    setReading(null);
+    setActivity(null);
+    setPhase('idle');
+  };
+
+  const reset = () => {
+    // A half finished answer is still a question somebody asked, so the
+    // conversation being left goes into the list before it is cleared.
+    keep(turns);
+    conversation.current = newId();
+    setView('chat');
+    setMenu('closed');
+    abort.current?.abort();
+    stopDrain();
+    stick.current = true;
+    setTurns([]);
     setDraft('');
     setChosen(null);
     setAttachError(null);
@@ -690,23 +732,34 @@ function Panel({
     ]);
   };
 
-  const ask = async (asked: string) => {
+  /**
+   * Asks a question. `module` answers the server's "which module is this
+   * about?" for a command; `base` and `file` let that re-ask stand in for
+   * the exchange it replaces rather than follow it.
+   */
+  const ask = async (
+    asked: string,
+    opts: {module?: string; base?: Turn[]; file?: Attached | null} = {},
+  ) => {
     if (!asked || busy) return;
-    const file = chosen;
+    const file = opts.file !== undefined ? opts.file : chosen;
+    const base = opts.base ?? turns;
     setDraft('');
     setChosen(null);
     setAttachError(null);
+    setMenu('closed');
+    setView('chat');
 
-    // The install flow's turns are the panel talking to itself. They are in
-    // the thread because the reader had the exchange, but sending them would
-    // put three screens of commands in front of the model on every round
-    // after, and it did not say any of them.
-    const history = [
-      ...turns.slice(1).filter((turn) => !turn.install),
+    // The panel's own exchanges, the install flow and the module question,
+    // are in the thread because the reader had them, but the model did not
+    // say them and would only be confused by them. forModel drops each with
+    // the turn it answered, so what is sent still alternates.
+    const history = forModel([
+      ...base,
       {from: 'you' as const, text: asked, file: file ?? undefined},
-    ];
+    ]);
     setTurns((prior) => [
-      ...prior,
+      ...(opts.base ?? prior),
       {from: 'you', text: asked, file: file ?? undefined},
       {from: 'assistant', text: ''},
     ]);
@@ -767,6 +820,11 @@ function Panel({
                 },
               }
             : {}),
+          // The command names a section of the module's agent skill; the
+          // server has the skill and works out the module. Only the name
+          // travels, never skill text.
+          ...(command ? {command} : {}),
+          ...(opts.module ? {module: opts.module} : {}),
         }),
       });
       if (!res.ok || !res.body) throw new Error(`status ${res.status}`);
@@ -777,6 +835,19 @@ function Panel({
         // while the text is still revealing would sit them under half a reply.
         onSources: (sources) => queueSources(sources),
         onError: emit,
+        // Before any text: which section the answer draws on. When the
+        // server could not tell which module the question is about, it asks
+        // instead of answering, and the panel shows that question with the
+        // modules to pick from.
+        onSkill: (use) =>
+          setTurns((prior) => {
+            const last = prior[prior.length - 1];
+            const asked =
+              use.status === 'unresolved'
+                ? {...last, text: skillNote(use), skill: use, local: true}
+                : {...last, skill: use};
+            return [...prior.slice(0, -1), asked];
+          }),
       });
     } catch (err) {
       // A stop is the reader's own doing: keep whatever arrived, say nothing.
@@ -788,6 +859,37 @@ function Panel({
       netDone.current = true;
       setActivity(null);
     }
+  };
+
+  /** Asks the question the module chips answered, again, with the module. */
+  const reask = (module: string) => {
+    const at = turns.length - 2;
+    const question = turns[at];
+    if (!question || question.from !== 'you') return;
+    void ask(question.text, {module, base: turns.slice(0, at), file: question.file ?? null});
+  };
+
+  /** Attaches a page found in the page search, the same way the host would. */
+  const attachFromSearch = async (entry: PageEntry) => {
+    setAttaching(entry.title);
+    const markdown = await fetch(markdownUrl(docsOrigin, entry.path))
+      .then((res) => (res.ok ? res.text() : ''))
+      .catch(() => '');
+    setAttaching(null);
+    onAttach({title: entry.title, url: pageUrl(docsOrigin, entry.path), markdown});
+    composer.current?.focus();
+  };
+
+  const forgetSession = (id: string) =>
+    setHistory((held) => {
+      const next = forgetOne(held, id);
+      saveHistory(next);
+      return next;
+    });
+
+  const clearHistory = () => {
+    forget();
+    setHistory([]);
   };
 
   // The indicator stands until the first word is actually shown, not until
@@ -809,45 +911,52 @@ function Panel({
       }}>
       <ResizeGrip dialog={dialog} />
       <div class="ask-ai__head">
-        <h2 class="ask-ai__title">
-          Ask AI
-          {!apiBase && <span class="ask-ai__badge">Mock</span>}
-          <span class="ask-ai__grow" />
-          {turns.length > 1 && (
-            <button
-              type="button"
-              class="ask-ai__reset"
-              onClick={reset}
-              aria-label="Start a new conversation">
-              <PenLine />
-              New
-            </button>
-          )}
+        {/* New always starts a new conversation, the way Claude's "New chat"
+            does; the one being left is saved first. History lists them all,
+            and picking one there is how the reader goes back to it. */}
+        <div class="ask-ai__tabs" role="group" aria-label="Conversations">
           <button
             type="button"
-            class="ask-ai__close"
-            onClick={onClose}
-            aria-label="Close">
-            <X />
+            class="ask-ai__tab"
+            aria-pressed={view === 'chat'}
+            aria-label="New conversation"
+            title="Start a new conversation"
+            onClick={reset}>
+            <Plus />
+            New
           </button>
-        </h2>
-        {/* Nothing under the title while the assistant works. What it draws
-            on shows under each answer as sources, which says the same thing
-            where it can be checked; how questions are handled is on the
-            support page, in the reader's own words rather than as a notice
-            over every conversation. The mock still announces itself, because
-            a panel that cannot answer has to say so. */}
-        {!apiBase && (
-          <p class="ask-ai__blurb">
-            Not connected to anything. For a real answer, use{' '}
-            <a href={supportUrl} target="_blank" rel="noopener noreferrer">
-              support
-            </a>
-            .
-          </p>
-        )}
+          <button
+            type="button"
+            class="ask-ai__tab"
+            aria-pressed={view === 'history'}
+            onClick={() => {
+              setMenu('closed');
+              setView('history');
+            }}>
+            History
+          </button>
+        </div>
+        {!apiBase && <span class="ask-ai__badge">Mock</span>}
+        <span class="ask-ai__grow" />
+        <button
+          type="button"
+          class="ask-ai__close"
+          onClick={onClose}
+          aria-label="Close">
+          <X />
+        </button>
       </div>
 
+      {view === 'history' ? (
+        <HistoryList
+          sessions={history}
+          currentId={conversation.current}
+          onOpen={resume}
+          onForget={forgetSession}
+          onClearAll={clearHistory}
+        />
+      ) : (
+      <>
       {/* A log rather than a live region per turn: the reader's screen reader
           holds the announcement while aria-busy is set and reads the answer
           once, when it has finished arriving, instead of word by word. */}
@@ -858,6 +967,14 @@ function Panel({
         aria-live="polite"
         aria-busy={busy}
         onScroll={onThreadScroll}>
+        {turns.length === 0 && (
+          <Welcome
+            starters={openers}
+            mock={!apiBase}
+            supportUrl={supportUrl}
+            onPick={(prompt) => void ask(prompt)}
+          />
+        )}
         {turns.map((turn, index) =>
           // An answer with nothing in it yet is not a bubble. The thinking
           // indicator below stands in its place until the first word.
@@ -869,6 +986,20 @@ function Panel({
                 ? ' ask-ai__turn--streaming'
                 : ''
             }`}>
+            {turn.skill && turn.skill.status !== 'unresolved' && (
+              <p class={`ask-ai__skill ask-ai__skill--${turn.skill.status}`}>
+                {turn.skill.status === 'used' && turn.skill.href ? (
+                  <a
+                    href={absolute(turn.skill.href, docsOrigin) ?? turn.skill.href}
+                    target="_blank"
+                    rel="noopener noreferrer">
+                    {skillNote(turn.skill)}
+                  </a>
+                ) : (
+                  skillNote(turn.skill)
+                )}
+              </p>
+            )}
             {turn.from === 'assistant' ? (
               <ChatMarkdown text={turn.text} docsOrigin={docsOrigin} />
             ) : (
@@ -1014,11 +1145,41 @@ function Panel({
                 ) : null;
               })()}
 
+            {turn.skill?.status === 'unresolved' && index === turns.length - 1 && (
+              <div class="ask-ai__choices">
+                {(turn.skill.candidates ?? []).map((module) => (
+                  <button
+                    key={module}
+                    type="button"
+                    class="ask-ai__choice"
+                    onClick={() => reask(module)}>
+                    {moduleLabel(module)}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* A scaffold answer is a build plan; building it is the coding
+                agent's job, so the next step is getting the skill into one. */}
+            {turn.skill?.status === 'used' &&
+              turn.skill.section === 'scaffold' &&
+              !(busy && index === turns.length - 1) && (
+                <button
+                  type="button"
+                  class="ask-ai__install-cta"
+                  onClick={() => walk({at: 'tools'}, 'Install AI tools')}>
+                  <Sparkles />
+                  Build it with your coding agent
+                </button>
+              )}
+
             {/* The tools, offered where they would actually help. See
                 offerIndex: under the newest answer, and only to a question
                 that sounded like somebody doing the work. A reader who asked
                 what a care context is gets the sentence and nothing else. */}
-            {index === offer && !(busy && index === turns.length - 1) && (
+            {index === offer &&
+              turn.skill?.section !== 'scaffold' &&
+              !(busy && index === turns.length - 1) && (
               <button
                 type="button"
                 class="ask-ai__install-cta"
@@ -1032,159 +1193,38 @@ function Panel({
         )}
         {showActivity && (
           <p class="ask-ai__activity">
-            <span class="ask-ai__pulse" aria-hidden="true" />
+            <ThinkingOrb />
             {activity ?? 'Thinking'}
           </p>
         )}
 
-        {/* The empty state carries the openers, and they go the moment the
-            reader has asked anything of their own. A reader with a page
-            attached gets that page's own sections instead of the host's four,
-            because those are the questions this page actually answers. */}
-        {turns.length === 1 && (
-          <div class="ask-ai__starters">
-            {openers.map((q) => (
-              <button
-                key={q}
-                type="button"
-                class="ask-ai__starter"
-                onClick={() => void ask(q)}>
-                {q}
-              </button>
-            ))}
-          </div>
-        )}
       </div>
 
-      {(chosen || attachError || reading) && (
-        <div class="ask-ai__attachment">
-          {reading ? (
-            <>
-              <span class="ask-ai__pulse" aria-hidden="true" />
-              <span class="ask-ai__attachment-note">{reading}</span>
-            </>
-          ) : chosen ? (
-            <>
-              <Paperclip />
-              <span class="ask-ai__attachment-name">{chosen.name}</span>
-              <span class="ask-ai__attachment-size">
-                {chosen.kind === 'image'
-                  ? `${chosen.text.length.toLocaleString()} characters read`
-                  : `${chosen.text.length.toLocaleString()} characters`}
-              </span>
-              <button
-                type="button"
-                class="ask-ai__attachment-remove"
-                aria-label={`Remove ${chosen.name}`}
-                onClick={() => setChosen(null)}>
-                <X />
-              </button>
-            </>
-          ) : (
-            <span class="ask-ai__attachment-error">{attachError}</span>
-          )}
-        </div>
+      <Composer
+        draft={draft}
+        onDraft={setDraft}
+        field={composer}
+        busy={busy}
+        onSend={() => void ask(draft.trim())}
+        onStop={stop}
+        menu={menu}
+        onMenu={setMenu}
+        accept={ATTACH_TYPES}
+        onFile={(file) => void takeFile(file)}
+        file={chosen}
+        fileNote={reading}
+        fileError={attachError}
+        onRemoveFile={() => setChosen(null)}
+        docsOrigin={docsOrigin}
+        page={page}
+        attaching={attaching}
+        onPage={(entry) => void attachFromSearch(entry)}
+        onRemovePage={onDetach}
+        command={command}
+        onCommand={setCommand}
+      />
+      </>
       )}
-      {/* Identifiers are masked on the way out, but a person's name written
-          in prose is not something any pattern finds, and a screenshot is
-          where one usually is. Said once, next to the file it applies to. */}
-      {chosen?.kind && !reading && (
-        <p class="ask-ai__attachment-note">
-          Read here in your browser; the file itself is not sent. Names in it
-          are yours to check before you send.
-        </p>
-      )}
-      <form
-        class="ask-ai__composer"
-        onSubmit={(event) => {
-          event.preventDefault();
-          void ask(draft.trim());
-        }}>
-        {/* What is going with the question, said before it is sent rather
-            than after. An attachment the reader cannot see is an answer they
-            cannot account for, so it is named here and it comes off from
-            here. */}
-        {page && (
-          <div
-            class={`ask-ai__attached${attached ? '' : ' ask-ai__attached--failed'}`}>
-            <span class="ask-ai__attached-text">
-              {attached
-                ? `Using this page: ${page.title}`
-                : `Could not attach ${page.title}. The answer will not use it.`}
-            </span>
-            <button
-              type="button"
-              class="ask-ai__attached-remove"
-              onClick={onDetach}
-              aria-label={
-                attached
-                  ? `Do not use ${page.title}`
-                  : `Dismiss the attachment notice for ${page.title}`
-              }>
-              <X />
-            </button>
-          </div>
-        )}
-        {/* The file never leaves the browser as a file: it is read here and
-            its text goes with the question, so there is nothing to upload
-            and nothing stored. */}
-        <input
-          ref={picker}
-          type="file"
-          class="ask-ai__picker"
-          accept={ATTACH_TYPES}
-          onChange={(event) => {
-            const input = event.currentTarget;
-            void takeFile(input.files?.[0]);
-            // Cleared so choosing the same file twice still fires a change.
-            input.value = '';
-          }}
-        />
-        <button
-          type="button"
-          class="ask-ai__attach"
-          aria-label="Attach a text or JSON file"
-          title="Attach a text or JSON file"
-          disabled={busy}
-          onClick={() => picker.current?.click()}>
-          <Paperclip />
-        </button>
-        {/* A textarea, not an input: an error body pasted in should be
-            readable before it is sent. Enter still sends, because that is
-            what every chat box does; shift and enter takes a new line. */}
-        <textarea
-          ref={composer}
-          class="ask-ai__input"
-          value={draft}
-          rows={1}
-          onInput={(event) => setDraft(event.currentTarget.value)}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter' && !event.shiftKey) {
-              event.preventDefault();
-              void ask(draft.trim());
-            }
-          }}
-          placeholder="Ask about ABDM"
-          aria-label="Ask the assistant"
-        />
-        {busy ? (
-          <button
-            class="ask-ai__send ask-ai__send--stop"
-            type="button"
-            aria-label="Stop"
-            onClick={stop}>
-            <Square />
-          </button>
-        ) : (
-          <button
-            class="ask-ai__send"
-            type="submit"
-            aria-label="Send"
-            disabled={draft.trim() === ''}>
-            <ArrowUp />
-          </button>
-        )}
-      </form>
     </dialog>
   );
 }
@@ -1201,9 +1241,11 @@ function Widget({
   open,
   page,
   onDetach,
+  onAttach,
   question,
   send,
   starters,
+  keepHistory,
 }: {
   host: HTMLElement;
   apiBase: string;
@@ -1216,9 +1258,12 @@ function Widget({
   open: boolean;
   page: PageAttachment | null;
   onDetach: () => void;
+  onAttach: (page: PageAttachment) => void;
   question: string;
   send: boolean;
-  starters: string[];
+  starters: Starter[];
+  /** False where the host asked not to keep conversations in its origin. */
+  keepHistory: boolean;
 }) {
   const close = () => {
     host.removeAttribute('open');
@@ -1258,9 +1303,11 @@ function Widget({
         question={question}
         send={send}
         starters={starters}
+        keepHistory={keepHistory}
         onClose={close}
         page={page}
         onDetach={onDetach}
+        onAttach={onAttach}
       />
     </>
   );
@@ -1288,6 +1335,10 @@ function Widget({
  *                leave it in the composer for the reader to press
  *   starters     the empty state's opening questions, one per line, for a
  *                page that knows what its reader came to do
+ *   history      "off" stops past conversations being kept. They are kept in
+ *                localStorage, which belongs to the page doing the embedding
+ *                and not to this element, so a host whose origin should not
+ *                hold what readers type turns the list off here
  *
  * One thing is set by method rather than attribute: attachPage({title, url,
  * markdown}) gives the conversation the page the reader is looking at, and
@@ -1297,8 +1348,10 @@ function Widget({
  *
  * Everything renders in a shadow root, so the host page's styles cannot reach
  * in and the widget's cannot leak out. Colour is taken from the host's own
- * tokens where it defines them (see styles.css), and nothing about a
- * conversation is written to the host page's storage.
+ * tokens where it defines them (see styles.css). One thing does reach the
+ * host page's storage: the recent conversations list, and the panel width
+ * with it. Both are localStorage on the embedding origin, which is why
+ * history="off" exists.
  */
 /**
  * Which way the host page's ground runs, read from the first ancestor that
@@ -1333,6 +1386,7 @@ class SupportAgentElement extends HTMLElement {
     'question',
     'send',
     'starters',
+    'history',
     'ground',
   ];
 
@@ -1375,7 +1429,10 @@ class SupportAgentElement extends HTMLElement {
    * has no business being reflected into the DOM as a string.
    */
   attachPage(page: PageAttachment | null) {
-    this.page = page;
+    // Every attachment comes through here, the host's and the page search's
+    // alike, so this is the one place a host's app shell served in place of
+    // a missing page is turned back into the failure it is.
+    this.page = page && isHtmlDocument(page.markdown) ? {...page, markdown: ''} : page;
     if (this.root) this.paint();
   }
 
@@ -1398,9 +1455,11 @@ class SupportAgentElement extends HTMLElement {
         open={this.hasAttribute('open')}
         page={this.page}
         onDetach={() => this.attachPage(null)}
+        onAttach={(found) => this.attachPage(found)}
         question={this.getAttribute('question') ?? ''}
         send={this.hasAttribute('send')}
         starters={startersFrom(this.getAttribute('starters') ?? '')}
+        keepHistory={this.getAttribute('history') !== 'off'}
       />,
       this.root!,
     );
