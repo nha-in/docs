@@ -36,10 +36,6 @@
     "to": "/reference/hiecm-p4"
   },
   {
-    "label": "Subscriptions",
-    "to": "/reference/hiecm-subscription"
-  },
-  {
     "label": "Scan and Register",
     "to": "/reference/hiecm-scan-and-register"
   },

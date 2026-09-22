@@ -26,9 +26,8 @@ const MODULES = {
   m4: {label: 'M4 Registry Integration', position: 5, icon: 'building-2', roles: ['his'], title: 'ABDM M4, professional and facility registries', summary: 'Register healthcare professionals and facilities on the NHPR.', servers: [{url: 'https://apihspsbx.abdm.gov.in/v4/int', description: 'NHPR, sandbox'}], expected: 100},
   p1: {label: 'P1 Registration and login', position: 6, icon: 'user-round', roles: ['phr'], title: 'ABDM P1, PHR registration and login', summary: 'Create an ABHA address in a PHR app and log in to it.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}], expected: 11},
   p2: {label: 'P2 Consents Management', position: 7, icon: 'files', roles: ['phr'], title: 'ABDM P2, PHR management', summary: 'Manage the PHR profile, link an ABHA number, switch profiles, and handle linking, sharing and consent for the patient.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}, {url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}], expected: 32},
-  p3: {label: 'P3 Subscription', position: 8, icon: 'bell', roles: ['phr'], title: 'ABDM P3, PHR subscriptions', summary: 'Read, approve, deny, enable, disable and update the patient\'s subscriptions and subscription requests.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}], expected: 8},
+  p3: {label: 'P3 Subscription', position: 8, icon: 'bell', roles: ['phr'], title: 'ABDM P3, PHR subscriptions', summary: 'Read, approve, deny, enable, disable and update the patient\'s subscriptions and subscription requests, and the subscription request and notifications they answer.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}], expected: 14},
   p4: {label: 'P4 Locker', position: 9, icon: 'lock', roles: ['phr'], title: 'ABDM P4, health lockers', summary: 'Set up a health locker and list the lockers and requests on an ABHA address.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}], expected: 4},
-  subscription: {label: 'Subscriptions', position: 10, icon: 'bell', roles: ['his'], title: 'ABDM subscriptions', summary: 'Subscribe an HIU to changes on an ABHA address.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 6},
   'scan-and-register': {label: 'Scan and Register', position: 11, icon: 'contact-round', section: 'use-cases', roles: ['his'], title: 'ABDM Scan and Register', summary: 'Receive the profile a patient shares by scanning the counter QR code, and hand back a queue token.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 2},
   'scan-and-pay': {label: 'Scan and Pay', position: 13, icon: 'qr-code', section: 'use-cases', roles: ['his'], title: 'ABDM Scan and Pay', summary: 'Open orders, patient selection and payment status between a facility and a PHR app.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 18},
 };
@@ -56,7 +55,9 @@ const FILES = [
   {file: 'hiecm/link-token.yaml', place: byRole('m2')},
   {file: 'hiecm/patient-share.yaml', place: byRole('scan-and-register')},
   {file: 'hiecm/consent-management-data-flow.yaml', place: (tag, path) => (tag.endsWith('-phr') ? phrPlace(tag, path) : tag.endsWith('-hiu') ? 'm3' : 'm2')},
-  {file: 'hiecm/subscription.yaml', place: (tag, path) => (tag === 'subscription-phr' || LOCKER.test(path) ? phrPlace(tag, path) : 'subscription')},
+  // The subscription request and its notifications are the other half of
+  // P3's approve and deny, so they sit in P3 rather than a module of their own.
+  {file: 'hiecm/subscription.yaml', place: (tag, path) => (tag === 'subscription-phr' || LOCKER.test(path) ? phrPlace(tag, path) : 'p3')},
   {file: 'hiecm/scan-and-pay.yaml', place: (tag, path) => (tag.endsWith('-phr') ? phrPlace(tag, path) : 'scan-and-pay')},
   {file: 'M4/M4-HFR.json', place: () => 'm4'},
   {file: 'M4/M4-HPID.json', place: () => 'm4'},
@@ -449,10 +450,10 @@ specs.m1['x-abdm-sources'].push({file: 'catalogue/openapi/.raw/nha-2026-09-16/ab
     'scan-and-register': {
       '/api/v3/hip/patient/share': ['x-abdm-answered-by', 'scan-and-register_post_patient_share_v3_on_share'],
     },
-    subscription: {
-      '/api/v3/hiu/hiecm/subscription-requests/on-init': ['x-abdm-triggered-by', 'subscription_post_subscription_requests_v3_init'],
-      '/api/v3/hiu/subscription-requests/hiu/notify': ['x-abdm-answered-by', 'subscription_post_subscription_requests_v3_hiu_on_notify'],
-      '/api/v3/hiu/subscription/notify': ['x-abdm-answered-by', 'subscription_post_subscription_requests_v3_hiu_care_conte_96bc45'],
+    p3: {
+      '/api/v3/hiu/hiecm/subscription-requests/on-init': ['x-abdm-triggered-by', 'p3_post_subscription_requests_v3_init'],
+      '/api/v3/hiu/subscription-requests/hiu/notify': ['x-abdm-answered-by', 'p3_post_subscription_requests_v3_hiu_on_notify'],
+      '/api/v3/hiu/subscription/notify': ['x-abdm-answered-by', 'p3_post_subscription_requests_v3_hiu_care_context_on_notify'],
     },
     'scan-and-pay': {
       '/v3/patient/share/open-order': ['x-abdm-answered-by', 'scan-and-pay_post_scan_gateway_v3_patient_on_share_open_order'],
@@ -603,6 +604,23 @@ specs.m1['x-abdm-sources'].push({file: 'catalogue/openapi/.raw/nha-2026-09-16/ab
     if (p.in !== 'query' || p.required) continue;
     p.required = true;
     note('p3', 'GET /api/hiecm/subscription-requests/v3/requests', `query ${p.name} is required, as the PHR V3 document (8.3.1) marks it`);
+  }
+  // Where the PHR swagger and the HIE-CM swagger both declare a call, the
+  // HIE-CM one was kept. Two of the PHR swagger's parameters, which the PHR
+  // V3 document also carries, were lost that way.
+  const providers = specs.gateway.paths['/api/hiecm/gateway/v3/providers']?.get;
+  if (providers) {
+    providers.parameters ??= [];
+    for (const name of ['stateCode', 'districtCode']) {
+      if (providers.parameters.some((x) => x.name === name)) continue;
+      providers.parameters.push({name, in: 'query', required: false, schema: {type: 'string', example: '-1'}, description: `Filter by ${name === 'stateCode' ? 'state' : 'district'} code; -1 for all.`});
+      note('gateway', 'GET /api/hiecm/gateway/v3/providers', `query ${name} added, as the PHR swagger and the PHR V3 document (10.3.13) declare it; the HIE-CM gateway swagger does not`);
+    }
+  }
+  const onDiscover = specs.m2.paths['/api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover']?.post;
+  if (onDiscover && !onDiscover.parameters?.some((x) => x.name === 'X-HIU-ID')) {
+    (onDiscover.parameters ??= []).push({name: 'X-HIU-ID', in: 'header', required: true, schema: {type: 'string'}, example: 'IN2810014366', description: 'Identifier of the health information user to which the request was intended'});
+    note('m2', 'POST /api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover', 'X-HIU-ID header added, required, as the PHR swagger and the PHR V3 document (10.3.3) declare it; the HIE-CM swagger does not');
   }
 }
 

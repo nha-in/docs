@@ -1,6 +1,6 @@
 {
   "label": "Patient scan and record share",
-  "position": 13,
+  "position": 12,
   "className": "sidebar-icon sidebar-icon--share-2",
   "customProps": {
     "section": "use-cases"

@@ -42,6 +42,6 @@ p1_post_v3_phr_app_enrollment_verify: Verify the enrolment OTP
 p2_post_patient_share_v3_share: OPD token generation
 p2_get_patient_share_v3_profile_gettokendetails: OPD Token History
 
-# Subscriptions
-subscription_post_subscription_requests_v3_hiu_care_conte_96bc45: Answer the care context subscription notification
-subscription_post_subscription_requests_v3_hiu_on_notify: Answer the subscription request notification
+# P3, the subscription request side
+p3_post_subscription_requests_v3_hiu_care_context_on_notify: Answer the care context subscription notification
+p3_post_subscription_requests_v3_hiu_on_notify: Answer the subscription request notification

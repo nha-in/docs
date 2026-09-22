@@ -716,6 +716,20 @@ paths:
             type: string
           example: ABC Hospital
           description: Name of the provider
+        - name: stateCode
+          in: query
+          required: false
+          schema:
+            type: string
+            example: "-1"
+          description: Filter by state code; -1 for all.
+        - name: districtCode
+          in: query
+          required: false
+          schema:
+            type: string
+            example: "-1"
+          description: Filter by district code; -1 for all.
       responses:
         "200":
           description: OK

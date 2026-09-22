@@ -1,9 +1,19 @@
 # catalogue/openapi/hiecm/v3/journeys/p3.yaml
 # Order of calls from the P3-Subscription folder of the PHR and locker
 # collection of 16 September. Content from the PHR and Locker swagger of the
-# same set. The folder's init, on-notify and care context on-notify calls are
-# Subscription module operations, published after P3, so the Subscription
-# journeys walk them and this journey leaves them out.
+# same set. The folder's init, on-notify and care context on-notify calls,
+# with the callbacks they pair with, are the first journey: a health locker
+# raises the request that the PHR side then approves or denies.
+- id: p3-subscription-hiu
+  title: Subscription request and notifications, HIU side
+  steps:
+    - {op: p3_post_subscription_requests_v3_init}
+    - {op: p3_post_v3_hiu_hiecm_subscription_requests_on_init}
+    - {op: p3_post_v3_hiu_subscription_requests_hiu_notify}
+    - {op: p3_post_subscription_requests_v3_hiu_on_notify}
+    - {op: p3_post_v3_hiu_subscription_notify}
+    - {op: p3_post_subscription_requests_v3_hiu_care_context_on_notify}
+
 - id: p3-subscription-phr
   title: Subscription approval and management, PHR side
   steps:

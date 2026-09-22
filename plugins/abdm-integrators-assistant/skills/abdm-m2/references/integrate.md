@@ -54,6 +54,7 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `X-CM-ID` | Suffix of the consent manager to which the request was intended |
 | `X-HIP-ID` | Identifier of the health information provider to which the request was intended |
 | `X-LINK-TOKEN` | JWT Authentication token which was issued by ABDM after successful validation of username and password |
+| `X-HIU-ID` | Identifier of the health information user to which the request was intended |
 ## A request, in full
 
 ```bash
