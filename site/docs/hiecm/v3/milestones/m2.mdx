@@ -39,7 +39,7 @@ Linking or User-Initiated Linking.
 <LegacyAnchor id="what-m2-gives-you" />
 <LegacyAnchor id="capabilities-under-m2" />
 
-**Care Context:** A Care Context represents a patient's visit to a healthcare
+**Care Context:** A [Care Context](/docs/hiecm/v3/concepts/care-context) represents a patient's visit to a healthcare
 facility and contains the health records generated during that visit. The
 healthcare facility links the Care Context with the patient's ABHA Address.
 
@@ -49,13 +49,13 @@ User-Initiated Linking.
 **HIP-Initiated Linking:** In this workflow, an ABDM-enabled healthcare
 facility generates a link token to authenticate the patient and links the care
 contexts with the patient's ABHA Address. The linked care contexts are
-subsequently made available in the patient's PHR application.
+subsequently made available in the patient's [PHR application](/docs/hiecm/v3/concepts/phr).
 
 **User-Initiated Linking:** This flow allows a patient to find and link health
 records created earlier without an ABHA Address. The records are stored in the
 [HMIS](/docs/hiecm/v3/getting-started/glossary#hmis) using the patient's
-registered details. When the patient selects the fetch option in the PHR
-application, the healthcare facility matches the respective demographic details
+registered details. When the patient selects the fetch option in the
+[PHR application](/docs/hiecm/v3/concepts/phr), the healthcare facility matches the respective demographic details
 and shows the available records for linking with the patient's ABHA Address.
 
 **Data Transfer:** In this flow, each health record is converted into the
