@@ -52,7 +52,7 @@ Chapter [Notifications and patient apps](/docs/nhcx/v1/reference/notifications-a
 
 ```bash
 curl --request POST \
-  --url https://apisbx.abdm.gov.in/hcx/v1/notification/subscribe \
+  --url https://hcxsbx.abdm.gov.in/v1/notification/subscribe \
   --header 'x-hcx-sender_code: phr-app-xyz@bsp' \
   --header 'x-hcx-recipient_code: nhcx-gateway@hcx' \
   --header 'x-hcx-timestamp: <iso timestamp>' \

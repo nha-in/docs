@@ -12,10 +12,9 @@ Ask the user which of these this project needs, and install only what they name:
 - `abdm-m3`: M3, health information user services. Sections: scaffold, design, integrate, debug.
 - `abdm-m4`: M4, facility and professional registries. Sections: scaffold, integrate, debug.
 - `abdm-p1`: P1, PHR registration and login. Sections: scaffold, integrate, debug.
-- `abdm-p2`: P2, PHR management. Sections: scaffold, integrate, debug.
+- `abdm-p2`: P2, Consents Management. Sections: scaffold, integrate, debug.
 - `abdm-p3`: P3, PHR subscriptions. Sections: scaffold, integrate, debug.
 - `abdm-p4`: P4, health lockers. Sections: scaffold, integrate, debug.
-- `abdm-subscription`: Subscriptions. Sections: scaffold, integrate, debug.
 - `abdm-scan-and-register`: Scan and register. Sections: scaffold, integrate, debug.
 - `abdm-scan-and-pay`: Scan and pay. Sections: scaffold, integrate, debug.
 - `abdm-record-share`: Patient scan and record share. Sections: scaffold, integrate, debug.
@@ -70,7 +69,6 @@ for f in scaffold integrate debug; do curl -fsSL https://nha-in.github.io/docs/m
 - https://nha-in.github.io/docs/main/skills/abdm-p2/
 - https://nha-in.github.io/docs/main/skills/abdm-p3/
 - https://nha-in.github.io/docs/main/skills/abdm-p4/
-- https://nha-in.github.io/docs/main/skills/abdm-subscription/
 - https://nha-in.github.io/docs/main/skills/abdm-scan-and-register/
 - https://nha-in.github.io/docs/main/skills/abdm-scan-and-pay/
 - https://nha-in.github.io/docs/main/skills/abdm-record-share/

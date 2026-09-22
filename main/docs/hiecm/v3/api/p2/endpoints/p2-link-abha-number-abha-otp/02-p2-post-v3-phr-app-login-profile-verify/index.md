@@ -3,11 +3,10 @@
 `POST /abha/api/v3/phr/app/login/profile/verify`
 
 Flows:
-- P2-Management › P2 -PHR Profile › P2 - Update Email (optional) › Verify OTP - Update Email
-- P2-Management › P2 -PHR Profile › P2 - Update Mobile › Verify OTP - Update Mobile
-- P2-Management › P2 -PHR Profile › P2 - Update Password › Verify Password - Update Password
-- P2-Management › P2 -PHR Profile › P2 - Link ABHA Number › P2 - via ABHA OTP › Verify ABHA OTP - Link-DeLink
-- P2-Management › P2 -PHR Profile › P2 - Link ABHA Number › P2 - via Aadhaar OTP › Verify Aadhaar OTP - Link-DeLink
+- P2-Consents Management › P2 -PHR Profile › P2 - Update Mobile › Verify OTP - Update Mobile
+- P2-Consents Management › P2 -PHR Profile › P2 - Update Password › Verify Password - Update Password
+- P2-Consents Management › P2 -PHR Profile › P2 - Link ABHA Number › P2 - via ABHA OTP › Verify ABHA OTP - Link-DeLink
+- P2-Consents Management › P2 -PHR Profile › P2 - Link ABHA Number › P2 - via Aadhaar OTP › Verify Aadhaar OTP - Link-DeLink
 
 ```bash
 curl --request POST \

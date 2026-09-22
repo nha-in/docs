@@ -8,7 +8,7 @@ In M2 and M3 a call is acknowledged now and answered later. The answer arrives a
 
 ## Gateway session
 
-11 endpoints across 2 use cases: Bridge and providers, Session and certificates. Each endpoint has its own page in the sidebar.
+4 endpoints across 2 use cases: Bridge, Session. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/docs/main/reference/hiecm-gateway)
 
@@ -38,33 +38,27 @@ In M2 and M3 a call is acknowledged now and answered later. The answer arrives a
 
 ## P1 Registration and login
 
-39 endpoints across 4 use cases: PHR certificate and session token, Create ABHA address, PHR login, Other operations. Each endpoint has its own page in the sidebar.
+47 endpoints across 4 use cases: PHR certificate and session token, Create ABHA number, Aadhaar OTP, Create ABHA address, PHR login. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/docs/main/reference/hiecm-p1)
 
-## P2 Management
+## P2 Consents Management
 
-47 endpoints across 5 use cases: PHR profile, Link ABHA number, Patient share, User initiated linking, Consent manager. Each endpoint has its own page in the sidebar.
+46 endpoints across 5 use cases: PHR profile, Link ABHA number, Quick OPD Registration, User initiated linking, Consent manager. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/docs/main/reference/hiecm-p2)
 
 ## P3 Subscription
 
-8 endpoints across 1 use case: Subscription approval and management, PHR side. Each endpoint has its own page in the sidebar.
+14 endpoints across 2 use cases: Subscription request and notifications, HIU side, Subscription approval and management, PHR side. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/docs/main/reference/hiecm-p3)
 
 ## P4 Locker
 
-4 endpoints across 1 use case: Locker. Each endpoint has its own page in the sidebar.
+5 endpoints across 1 use case: Locker. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/docs/main/reference/hiecm-p4)
-
-## Subscriptions
-
-6 endpoints across 1 use case: Subscription request and notifications, HIU side. Each endpoint has its own page in the sidebar.
-
-[Read the whole specification](/docs/main/reference/hiecm-subscription)
 
 ## Scan and Register
 

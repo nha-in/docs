@@ -4,7 +4,7 @@
 
 ```bash
 curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/v1.5/facility/get-master-data \
+  --url "https://apihspsbx.abdm.gov.in/v4/int/v1.5/facility/get-master-data?type=<TYPE>" \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 

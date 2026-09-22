@@ -6,7 +6,7 @@ Be invoked by the patient or user through the Personal Health Record (PHR) appli
 
 ```bash
 curl --request GET \
-  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/requests \
+  --url "https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/requests?limit=5&offset=5&status=ALL" \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -27,20 +27,25 @@ curl --request GET \
 
 ## Query parameters
 
-- `limit` (integer): How many items to return at one time
-- `offset` (integer): How many items out of line
-- `status` (string): Query string parameter restricts the data returned from your request
+- `limit` (integer, required): How many items to return at one time
+- `offset` (integer, required): How many items out of line
+- `status` (string, required): Query string parameter restricts the data returned from your request
 
 ## Responses
 
 - `200`: OK
 - `400`: Bad Request
+  See Error codes for this module: /docs/hiecm/v3/api/p3/errors
 - `401`: Unauthorized
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
 - `403`: Forbidden
+  See Error codes for this module: /docs/hiecm/v3/api/p3/errors
 - `404`: server cannot find the requested resource
+  See Error codes for this module: /docs/hiecm/v3/api/p3/errors
 - `500`: Internal Server Error
+  See Error codes for this module: /docs/hiecm/v3/api/p3/errors
 - `503`: Service Unavailable
+  See Error codes for this module: /docs/hiecm/v3/api/p3/errors
 
 Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 

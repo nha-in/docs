@@ -68,7 +68,7 @@ One Time Password: a short code sent to a mobile number or an email address to p
 
 ### PHR
 
-A Personal Health Record (PHR) application enables an individual to discover, link, view and manage personal health records and to provide or withdraw consent for sharing those records through the ABDM ecosystem. See [PHR applications](/docs/main/docs/hiecm/v3/concepts/phr).
+A Personal Health Record (PHR) application enables an individual to discover, link, view and manage personal health records and to provide or withdraw consent for sharing those records through the ABDM ecosystem. See [PHR applications](/docs/main/docs/hiecm/v3/concepts/participants/phr).
 
 ### Safe to Host certificate
 

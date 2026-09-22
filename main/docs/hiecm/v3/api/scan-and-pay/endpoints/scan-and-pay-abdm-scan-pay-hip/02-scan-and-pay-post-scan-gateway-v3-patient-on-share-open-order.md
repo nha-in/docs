@@ -36,7 +36,60 @@ curl --request POST \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
   --header 'Content-Type: application/json' \
-  --data '"<VALUE>"'
+  --data '{
+  "intent": "OPEN_PAYMENT_ORDER",
+  "abhaAddress": "<ABHA_ADDRESS>",
+  "patientUid": "string",
+  "procedures": [
+    {
+      "category": "OPD consultation",
+      "services": [
+        {
+          "name": "consultation",
+          "serviceId": "service-12345",
+          "description": "Albumin 24 hrs Urine",
+          "amount": 629.12
+        }
+      ]
+    },
+    {
+      "category": "Laboratory and Diagnostics",
+      "services": [
+        {
+          "name": "Diagnostics",
+          "serviceId": "service-12345",
+          "description": "Albumin 24 hrs Urine",
+          "amount": 629.12
+        }
+      ]
+    },
+    {
+      "category": "Pharmacy",
+      "services": [
+        {
+          "name": "Pharmacy",
+          "serviceId": "service-12345",
+          "description": "Albumin 24 hrs Urine",
+          "amount": 629.12
+        }
+      ]
+    },
+    {
+      "category": "Miscellaneous/Other",
+      "services": [
+        {
+          "name": "Miscellaneous",
+          "serviceId": "service-12345",
+          "description": "Albumin 24 hrs Urine",
+          "amount": 629.12
+        }
+      ]
+    }
+  ],
+  "response": {
+    "requestId": "6c3d4e5c-09d1-****-817b-a0c82d130c53"
+  }
+}'
 ```
 
 ## Authorization
@@ -48,6 +101,21 @@ curl --request POST \
 - `REQUEST-ID` (string, required): Unique UUID for track the end to end request transaction
 - `TIMESTAMP` (string, required): Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds.
 - `X-CM-ID` (string, required): Suffix of the consent manager to which the request was intended
+
+## Body
+
+- `intent` (string, required): The intention of share API call
+- `abhaAddress` (string, required): The abha address of the patient. Should start with Alphanumeric . and _ in the middle and must be ending with @abdm or @sbx
+- `patientUid` (string, required): Patient UId(unique ID).
+- `procedures` (object[], required)
+- `procedures.category` (string, required): The category of the procedure
+- `procedures.services` (object[], required)
+- `procedures.services.serviceId` (string): Unique identifier for the service
+- `procedures.services.name` (string, required): Name of the service
+- `procedures.services.description` (string): Description of the service
+- `procedures.services.amount` (number, required): Amount for the service
+- `response` (object, required): This is the response request-id which is generated from the share API
+- `response.requestId` (string, required)
 
 ## Responses
 

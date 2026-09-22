@@ -6,7 +6,7 @@ Revoke a previously approved consent from the Personal Health Record (PHR) or mo
 
 ```bash
 curl --request POST \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/consent/v3/revoke \
+  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/revoke \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -29,7 +29,7 @@ curl --request POST \
 - `REQUEST-ID` (string, required): Unique UUID for track the end to end request transaction
 - `TIMESTAMP` (string, required): Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
 - `X-CM-ID` (string, required): Suffix of the consent manager to which the request was intended
-- `X-AUTH-TOKEN` (string, required): JWT Authentication token which was issued by ABDM after successful validation of username and password
+- `X-AUTH-TOKEN` (string, required): The user token the PHR service issued when the patient logged in.
 
 ## Body
 

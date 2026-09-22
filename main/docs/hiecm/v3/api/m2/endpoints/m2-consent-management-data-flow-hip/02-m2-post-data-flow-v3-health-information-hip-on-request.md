@@ -33,6 +33,14 @@ curl --request POST \
 - `TIMESTAMP` (string, required): Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
 - `X-CM-ID` (string, required): Suffix of the consent manager to which the request was intended
 
+## Body
+
+- `hiRequest` (object, required)
+- `hiRequest.transactionId` (string, required): The UUID generated when the health information request was initiated.Allows alpha numeric character and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
+- `hiRequest.sessionStatus` (string, required): The status of the health information request that was initiated.Allows alpha numeric character and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
+- `response` (object, required): The request id from the /hip/health-information/request callback. Allows alpha numeric character and special characters like "^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}"
+- `response.requestId` (string, required): The requestId that was passed
+
 ## Responses
 
 - `202`: Accepted

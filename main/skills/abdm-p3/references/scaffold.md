@@ -1,6 +1,6 @@
 # HIE-CM p3 build
 
-Scaffolds an ABDM p3 integration one journey at a time. It covers reading, approving, denying, enabling, disabling and updating the patient's subscriptions and subscription requests.
+Scaffolds an ABDM p3 integration one journey at a time. It covers reading, approving, denying, enabling, disabling and updating the patient's subscriptions and subscription requests, and the subscription request and notifications on the health locker side.
 
 ## How this skill runs
 
@@ -123,6 +123,119 @@ From `shared.concept.survey-an-existing-codebase`.
 
 ## Journeys
 
+### Subscription request and notifications, HIU side (`p3-subscription-hiu`)
+
+**Act: the calls in this journey, in order**
+
+#### 1. Initiate subscription request (`p3_post_subscription_requests_v3_init`)
+
+```bash
+curl --request POST \
+  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/init \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
+  --header 'X-CM-ID: sbx' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "subscription": {
+    "purpose": {
+      "text": "Care Management",
+      "code": "CAREMGT",
+      "refUri": "https://abc.def.in"
+    },
+    "patient": {
+      "id": "<ABHA_ADDRESS>"
+    },
+    "hiu": {
+      "id": "INDIA_HIU",
+      "name": "INDIA HIU",
+      "type": "HIU"
+    },
+    "hips": [
+      {
+        "id": "INDIA_HIP",
+        "name": "INDIA HIP",
+        "type": "HIP"
+      }
+    ],
+    "categories": [
+      "LINK"
+    ],
+    "period": {
+      "from": "2024-05-09T10:34:00.389Z",
+      "to": "2024-05-09T10:34:00.389Z"
+    }
+  }
+}'
+```
+
+#### 2. Receive the HIU subscription requests on init (`p3_post_v3_hiu_hiecm_subscription_requests_on_init`)
+
+Inbound to your bridge at `/api/v3/hiu/hiecm/subscription-requests/on-init`. Acknowledge it and continue.
+
+#### 3. Notify subscription requests HIU (`p3_post_v3_hiu_subscription_requests_hiu_notify`)
+
+Inbound to your bridge at `/api/v3/hiu/subscription-requests/hiu/notify`. Acknowledge it and continue.
+
+#### 4. Answer the subscription request notification (`p3_post_subscription_requests_v3_hiu_on_notify`)
+
+```bash
+curl --request POST \
+  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/hiu/on-notify \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
+  --header 'X-CM-ID: sbx' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "acknowledgement": {
+    "status": "OK",
+    "subscriptionRequestId": "f29f0e59-8388-4698-9fe6-05db67aeac46"
+  },
+  "error": {
+    "code": "ABDM-1001",
+    "message": "No data found"
+  },
+  "response": {
+    "requestId": "f29f0e59-8388-4698-9fe6-05db67aeac46"
+  }
+}'
+```
+
+#### 5. Notify HIU subscription (`p3_post_v3_hiu_subscription_notify`)
+
+Inbound to your bridge at `/api/v3/hiu/subscription/notify`. Acknowledge it and continue.
+
+#### 6. Answer the care context subscription notification (`p3_post_subscription_requests_v3_hiu_care_context_on_notify`)
+
+```bash
+curl --request POST \
+  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/hiu/care-context/on-notify \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
+  --header 'X-CM-ID: sbx' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "acknowledgement": {
+    "status": "OK",
+    "eventId": "3c2f0e59-8388-4698-9fe6-05db67aeac46"
+  },
+  "error": {
+    "code": "ABDM-1001",
+    "message": "No data found"
+  },
+  "response": {
+    "requestId": "f29f0e59-8388-4698-9fe6-05db67aeac46"
+  }
+}'
+```
+
+**Exit condition (Observe until this is true)**
+
+A 202 response. The specification gives no body for it, so read what comes back.
+
 ### Subscription approval and management, PHR side (`p3-subscription-phr`)
 
 **Act: the calls in this journey, in order**
@@ -139,55 +252,35 @@ curl --request POST \
   --header 'X-AUTH-TOKEN: <TOKEN>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "isApplicableForAllHIPs": false,
+  "isApplicableForAllHIPs": true,
   "includedSources": [
     {
       "hiTypes": [
-        "Prescription"
+        "Prescription",
+        "DiagnosticReport",
+        "OPConsultation",
+        "DischargeSummary",
+        "ImmunizationRecord",
+        "HealthDocumentRecord",
+        "WellnessRecord",
+        "Invoice"
       ],
       "purpose": {
         "text": "Care Management",
         "code": "CAREMGT",
-        "refUri": "https://abc.def.in"
-      },
-      "hip": {
-        "id": "INDIA_HIP",
-        "name": "INDIA HIP",
-        "type": "HIP"
+        "refUri": "www.abdm.gov.in"
       },
       "categories": [
-        "LINK"
+        "LINK",
+        "DATA"
       ],
       "period": {
-        "from": "2024-05-09T10:34:00.389Z",
-        "to": "2024-05-09T10:34:00.389Z"
+        "from": "2025-01-09T09:00:00.000Z",
+        "to": "2124-12-31T09:00:00.000Z"
       }
     }
   ],
-  "excludedSources": [
-    {
-      "hiTypes": [
-        "Prescription"
-      ],
-      "purpose": {
-        "text": "Care Management",
-        "code": "CAREMGT",
-        "refUri": "https://abc.def.in"
-      },
-      "hip": {
-        "id": "INDIA_HIP",
-        "name": "INDIA HIP",
-        "type": "HIP"
-      },
-      "categories": [
-        "LINK"
-      ],
-      "period": {
-        "from": "2024-05-09T10:34:00.389Z",
-        "to": "2024-05-09T10:34:00.389Z"
-      }
-    }
-  ]
+  "excludedSources": []
 }'
 ```
 
@@ -211,7 +304,7 @@ curl --request POST \
 
 ```bash
 curl --request GET \
-  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/requests \
+  --url "https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/requests?limit=5&offset=5&status=ALL" \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -385,3 +478,4 @@ A 200 whose body matches:
 ## Where the detail is
 
 - Every operation, with its body fields and responses: /docs/hiecm/v3/api/p3
+- Error codes: /docs/hiecm/v3/api/p3/errors

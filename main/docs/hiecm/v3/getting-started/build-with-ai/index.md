@@ -141,10 +141,10 @@ The whole of M1: the calls, the loop that builds them, every error code and the 
 
 [SKILL.md](/docs/main/skills/abdm-m1/SKILL.md "The router. Use the command below to take the references with it.")
 
-- ScaffoldThe loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.
-- Design
-- Integrate132 operations, with their hosts, headers and the rules that hold across them.
-- Debug17 recorded error codes, each with its message and what to do about it.
+- ScaffoldBuilds the module flow by flow against the sandbox.
+- DesignWhat the journey around the calls has to do, and what a screen may not claim.
+- Integrate125 operations, with their hosts and headers.
+- Debug17 error codes, each with what to do about it.
 
 `mkdir -p .claude/skills/abdm-m1/references && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m1/SKILL.md -o .claude/skills/abdm-m1/SKILL.md && for f in scaffold design integrate debug; do curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m1/references/$f.md -o .claude/skills/abdm-m1/references/$f.md; done`
 
@@ -166,7 +166,7 @@ Download all skills
 - [Health Information User Services (M3)](https://nha-in.github.io/docs/main/skills/abdm-m3/SKILL.md)
 - [National Healthcare Providers Registry (M4)](https://nha-in.github.io/docs/main/skills/abdm-m4/SKILL.md)
 - [PHR registration and login (P1)](https://nha-in.github.io/docs/main/skills/abdm-p1/SKILL.md)
-- [PHR management (P2)](https://nha-in.github.io/docs/main/skills/abdm-p2/SKILL.md)
+- [Consents Management (P2)](https://nha-in.github.io/docs/main/skills/abdm-p2/SKILL.md)
 - [PHR subscriptions (P3)](https://nha-in.github.io/docs/main/skills/abdm-p3/SKILL.md)
 - [Health lockers (P4)](https://nha-in.github.io/docs/main/skills/abdm-p4/SKILL.md)
 - [FHIR bundles](https://nha-in.github.io/docs/main/skills/abdm-fhir/SKILL.md)

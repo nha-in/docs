@@ -67,7 +67,7 @@
     },
     {
       "name": "abdm-p2",
-      "title": "P2, PHR management",
+      "title": "P2, Consents Management",
       "files": [
         "SKILL.md",
         "references/scaffold.md",
@@ -88,16 +88,6 @@
     {
       "name": "abdm-p4",
       "title": "P4, health lockers",
-      "files": [
-        "SKILL.md",
-        "references/scaffold.md",
-        "references/integrate.md",
-        "references/debug.md"
-      ]
-    },
-    {
-      "name": "abdm-subscription",
-      "title": "Subscriptions",
       "files": [
         "SKILL.md",
         "references/scaffold.md",

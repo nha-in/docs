@@ -8,13 +8,13 @@ Health Information Provider (HIP) links a patient's health records with the pati
 
 ## M2 functionalities
 
-**Care Context:** A Care Context represents a patient's visit to a healthcare facility and contains the health records generated during that visit. The healthcare facility links the Care Context with the patient's ABHA Address.
+**Care Context:** A [Care Context](/docs/main/docs/hiecm/v3/concepts/care-context) represents a patient's visit to a healthcare facility and contains the health records generated during that visit. The healthcare facility links the Care Context with the patient's ABHA Address.
 
 The records may be linked through either HIP-Initiated Linking or User-Initiated Linking.
 
-**HIP-Initiated Linking:** In this workflow, an ABDM-enabled healthcare facility generates a link token to authenticate the patient and links the care contexts with the patient's ABHA Address. The linked care contexts are subsequently made available in the patient's PHR application.
+**HIP-Initiated Linking:** In this workflow, an ABDM-enabled healthcare facility generates a link token to authenticate the patient and links the care contexts with the patient's ABHA Address. The linked care contexts are subsequently made available in the patient's [PHR application](/docs/main/docs/hiecm/v3/concepts/participants/phr).
 
-**User-Initiated Linking:** This flow allows a patient to find and link health records created earlier without an ABHA Address. The records are stored in the [HMIS](/docs/main/docs/hiecm/v3/getting-started/glossary#hmis) using the patient's registered details. When the patient selects the fetch option in the PHR application, the healthcare facility matches the respective demographic details and shows the available records for linking with the patient's ABHA Address.
+**User-Initiated Linking:** This flow allows a patient to find and link health records created earlier without an ABHA Address. The records are stored in the [HMIS](/docs/main/docs/hiecm/v3/getting-started/glossary#hmis) using the patient's registered details. When the patient selects the fetch option in the [PHR application](/docs/main/docs/hiecm/v3/concepts/participants/phr), the healthcare facility matches the respective demographic details and shows the available records for linking with the patient's ABHA Address.
 
 **Data Transfer:** In this flow, each health record is converted into the prescribed [FHIR](/docs/main/docs/hiecm/v3/getting-started/glossary#fhir) format, packaged as a FHIR bundle, encrypted, and securely transmitted through the ABDM ecosystem.
 
@@ -61,10 +61,10 @@ Every M2 call and callback, its error codes and its certification cases in one f
 
 [SKILL.md](/docs/main/skills/abdm-m2/SKILL.md "The router. Use the command below to take the references with it.")
 
-- ScaffoldThe loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.
-- Design
-- Integrate31 operations, with their hosts, headers and the rules that hold across them.
-- Debug120 recorded error codes, each with its message and what to do about it.
+- ScaffoldBuilds the module flow by flow against the sandbox.
+- DesignWhat the journey around the calls has to do, and what a screen may not claim.
+- Integrate24 operations, with their hosts and headers.
+- Debug120 error codes, each with what to do about it.
 
 `mkdir -p .claude/skills/abdm-m2/references && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m2/SKILL.md -o .claude/skills/abdm-m2/SKILL.md && for f in scaffold design integrate debug; do curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m2/references/$f.md -o .claude/skills/abdm-m2/references/$f.md; done`
 

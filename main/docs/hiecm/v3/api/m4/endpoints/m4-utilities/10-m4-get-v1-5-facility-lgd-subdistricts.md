@@ -4,7 +4,7 @@
 
 ```bash
 curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/v1.5/facility/lgd/subdistricts \
+  --url "https://apihspsbx.abdm.gov.in/v4/int/v1.5/facility/lgd/subdistricts?districtCode=<DISTRICTCODE>" \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 

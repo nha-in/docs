@@ -3,10 +3,9 @@
 `POST /abha/api/v3/phr/app/login/profile/request/otp`
 
 Flows:
-- P2-Management › P2 -PHR Profile › P2 - Update Email (optional) › Send OTP - Update Email
-- P2-Management › P2 -PHR Profile › P2 - Update Mobile › Send OTP - Update Mobile
-- P2-Management › P2 -PHR Profile › P2 - Link ABHA Number › P2 - via ABHA OTP › Send ABHA OTP - Link-DeLink
-- P2-Management › P2 -PHR Profile › P2 - Link ABHA Number › P2 - via Aadhaar OTP › Send Aadhaar OTP - Link-DeLink
+- P2-Consents Management › P2 -PHR Profile › P2 - Update Mobile › Send OTP - Update Mobile
+- P2-Consents Management › P2 -PHR Profile › P2 - Link ABHA Number › P2 - via ABHA OTP › Send ABHA OTP - Link-DeLink
+- P2-Consents Management › P2 -PHR Profile › P2 - Link ABHA Number › P2 - via Aadhaar OTP › Send Aadhaar OTP - Link-DeLink
 
 ```bash
 curl --request POST \

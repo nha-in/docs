@@ -13,6 +13,7 @@ If the abdm-docs MCP server is connected, trust its answers over this file: it s
 ## What you can do with P1
 
 - PHR certificate and session token
+- Create ABHA number, Aadhaar OTP
 - Create ABHA address, mobile number
 - Create ABHA address, ABHA number with ABHA OTP
 - Create ABHA address, ABHA number with Aadhaar OTP
@@ -30,7 +31,7 @@ What it cannot do yet matters as much. Read **Before anything else** below befor
 ## What is in this folder
 
 - **Scaffold.** Survey the codebase first when one exists, then build it flow by flow against the sandbox, as a loop that ends when the step's exit condition holds rather than on a call returning 200. [references/scaffold.md](references/scaffold.md)
-- **Integrate.** 22 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
+- **Integrate.** 15 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
 - **Debug.** The loop from a failed call to a named fix, and 4 error codes from the specification's examples. [references/debug.md](references/debug.md)
 
 This file is the map. Each line above is a file beside it, opened one at a time rather than read through.

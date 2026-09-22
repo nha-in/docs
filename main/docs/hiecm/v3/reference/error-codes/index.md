@@ -160,7 +160,7 @@ A code is on this page because a response example in a specification returns it,
 | `ABDM-1211` | 400  | User not found.                | `p1_post_v3_phr_app_login_search`           |
 | `ABDM-9999` | 400  | Invalid LoginId                | `p1_post_v3_phr_app_enrollment_request_otp` |
 
-## P2 Management
+## P2 Consents Management
 
 | Code        | HTTP | Message             | Returned by                                    |
 | ----------- | ---- | ------------------- | ---------------------------------------------- |

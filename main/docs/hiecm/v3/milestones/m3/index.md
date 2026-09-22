@@ -1,18 +1,16 @@
 # M3 Health Information User: Fetch data with consent
 
-Milestone 3 enables a participating entity, acting as a [Health Information User](/docs/main/docs/hiecm/v3/getting-started/glossary#hiu) (HIU), to request and retrieve a patient's health information through the ABDM consent-management framework. The HIU initiates a consent request with the prescribed parameters. Upon the patient's approval, the [HIE-CM](/docs/main/docs/hiecm/v3/getting-started/glossary#hie-cm) provides the applicable [consent artefact](/docs/main/docs/hiecm/v3/getting-started/glossary#consent-artefact) details. These enable the HIU to request and retrieve authorised health information from the concerned Health Information Provider(s).
+Milestone 3 (M3) enables a [Health Information User](/docs/main/docs/hiecm/v3/getting-started/glossary#hiu) (HIU) to request, receive and view a patient's health records from [Health Information Providers](/docs/main/docs/hiecm/v3/getting-started/glossary#hip) (HIPs) in a secure and consent-based manner. The HIU initiates a consent request, and upon approval by the patient, the requested health records are securely transferred in the prescribed [FHIR](/docs/main/docs/hiecm/v3/getting-started/glossary#fhir) format for access by the authorised healthcare professional.
 
 ## In short
 
-The HIU initiates a consent request using the patient's [ABHA Address](/docs/main/docs/hiecm/v3/getting-started/glossary#abha-address). The HIE-CM notifies the patient and communicates the consent status through the ABDM Gateway. Upon approval, the HIU fetches the generated consent artefact(s) and requests the authorised health information. The concerned [HIP](/docs/main/docs/hiecm/v3/getting-started/glossary#hip) encrypts and transfers the information to the HIU's specified data-push URL.
+The HIU initiates a consent request using the patient's [ABHA Address](/docs/main/docs/hiecm/v3/getting-started/glossary#abha-address). The [HIE-CM](/docs/main/docs/hiecm/v3/getting-started/glossary#hie-cm) notifies the patient and communicates the consent status to the HIU through the ABDM Gateway. Upon approval, the HIU fetches the generated [consent artefact](/docs/main/docs/hiecm/v3/getting-started/glossary#consent-artefact)(s) and initiates a request for the authorised health information. The concerned HIP validates the request, encrypts the authorised health information and transfers it to the data-push URL specified by the HIU. The HIU receives and decrypts the information and submits the prescribed receipt-status notification.
 
 ## M3 functionality
 
-1. Initiate a consent request using the patient's ABHA Address, specified health-information types and defined date range.
-2. Track the consent status as Granted, Revoked, Expired or Denied.
-3. Receive and fetch all consent artefacts generated upon approval.
-4. Request health information under a valid consent artefact.
-5. Receive and decrypt the information through the specified data-push URL and submit the prescribed receipt-status notification.
+- **Consent Request:** Enables the HIU to initiate a consent request using the patient's ABHA Address. The patient may approve or deny the request through the [PHR](/docs/main/docs/hiecm/v3/getting-started/glossary#phr) application.
+- **Status of Consent:** Enables the HIU to track the consent status as Requested, Granted, Denied, Revoked or Expired and fetch the consent artefact(s) generated upon approval.
+- **Request Data:** Enables the HIU to request health information against a valid consent artefact, receive and decrypt the FHIR bundle, and display the authorised records in a readable format.
 
 ## Use cases
 
@@ -30,14 +28,37 @@ Milestone 3 applies to entities or applications performing the Health Informatio
 
 Before implementing Milestone 3, the healthcare facility must complete [Milestone 1](/docs/main/docs/hiecm/v3/milestones/m1) requirements and should be registered as an HIU.
 
-## Consent management
+## Consent management flow
 
-- Initiate the consent request and receive its identifier through the prescribed callback.
-- Track the consent status as Granted, Revoked, Expired or Denied.
-- Fetch all consent artefacts generated against the approved request.
-- Initiate the health-information request against the relevant valid consent artefact.
-- Receive and decrypt the information through the specified data-push URL and submit the prescribed receipt-status notification.
-- Discontinue access upon consent expiry or revocation.
+```mermaid
+sequenceDiagram
+    autonumber
+    participant H as HIU
+    participant CM as HIE-CM (consent manager and gateway)
+    actor P as Patient (PHR app)
+    participant HIP as HIP (one per artefact)
+    H->>CM: Requests the patient's data
+    CM-)P: Notifies the patient of the consent request,<br/>creates the consent request id
+    P->>CM: Grants consent
+    CM-)H: Generates the consent artefact id(s),<br/>one per HIP when data is requested from several
+    H->>CM: Data push URL where the information can be shared
+    CM-)HIP: Forwards the request against a transaction id
+    HIP->>HIP: Checks the artefact is not expired, paused or revoked,<br/>the date-time range, and the encryption parameters
+    HIP-)H: Transfers the data against the transaction id
+    HIP->>CM: Notifies that the requested information is transmitted
+    H->>CM: Notifies that the information is received, or that the request failed
+```
+
+The Consent Management Flow facilitates the secure and consent-based exchange of a patient's health information between the HIU and the concerned HIP through the HIE-CM.
+
+- **Health-Information Request:** The HIU initiates a request for the patient's health information through the HIE-CM.
+- **Patient Notification:** The HIE-CM generates a Consent Request ID and notifies the patient regarding the consent request through the PHR application.
+- **Consent Approval:** The patient grants consent through the PHR application.
+- **Consent Artefact Generation:** The HIE-CM generates the consent artefact ID(s) and communicates them to the HIU. Separate consent artefacts are generated where data is requested from multiple HIPs.
+- **Data-Push URL:** A data-push URL is generated for receiving the requested health information.
+- **Request Validation:** The concerned HIP validates the consent status, applicable date-time range and encryption parameters.
+- **Data Transfer:** The requested health information is transferred to the HIU against the Transaction ID assigned by the HIE-CM.
+- **Transfer and Receipt Notification:** Upon completion of the transfer, the HIP notifies the HIE-CM that the requested information has been transmitted, and the HIU notifies the HIE-CM regarding successful receipt or failure of the request.
 
 ## Build M3 with an AI coding assistant
 
@@ -49,10 +70,10 @@ Every M3 call and callback with its error codes in one file: 25 operations, 95 c
 
 [SKILL.md](/docs/main/skills/abdm-m3/SKILL.md "The router. Use the command below to take the references with it.")
 
-- ScaffoldThe loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.
-- Design
-- Integrate23 operations, with their hosts, headers and the rules that hold across them.
-- DebugNo error code is recorded for this module yet.
+- ScaffoldBuilds the module flow by flow against the sandbox.
+- DesignWhat the journey around the calls has to do, and what a screen may not claim.
+- Integrate16 operations, with their hosts and headers.
+- DebugNo error code is recorded yet.
 
 `mkdir -p .claude/skills/abdm-m3/references && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m3/SKILL.md -o .claude/skills/abdm-m3/SKILL.md && for f in scaffold design integrate debug; do curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m3/references/$f.md -o .claude/skills/abdm-m3/references/$f.md; done`
 
@@ -66,18 +87,6 @@ How to use it
 2. Ask your agent for the job in your own words. "Raise a consent request and fetch the records it covers". The skill loads when the task matches it.
 3. Check what it writes against these pages. The skill carries the facts, not the sandbox: nothing in it has been run against ABDM.
 4. Open in Claude needs that app installed. It fills the composer and waits: nothing runs until you read it and press Enter.
-
-## Workflow overview
-
-Milestone 3 covers the consent-management and health-information exchange workflow of a Health Information User (HIU). The HIU initiates a consent request for specified health information. Upon the patient's approval, the HIU fetches the applicable consent artefact and initiates the health-information request. The following diagrams illustrate this workflow and shall be read with the applicable [M3 API specifications](/docs/main/docs/hiecm/v3/api/m3).
-
-| In the diagram     | Description                                                                                                                           |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
-| Patient            | The individual whose health records are requested, acting through the PHR application.                                                |
-| Application/System | The organisation's software application through which the request is initiated.                                                       |
-| HIE-CM Gateway     | The ABDM [gateway](/docs/main/docs/hiecm/v3/getting-started/glossary#gateway) responsible for routing all API requests and callbacks. |
-| HIE-CM             | The consent manager responsible for managing consent and notifying the patient.                                                       |
-| HIP                | The healthcare facility holding the records and acting as the Health Information Provider.                                            |
 
 ## Journey 1: raising a consent request
 

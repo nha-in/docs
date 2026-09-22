@@ -85,4 +85,4 @@ Codes that cover its failures: `ABDM-1038` ABHA address and link token mismatch,
 - [M2 overview](/docs/main/docs/hiecm/v3/api/m2) and the [M2 API reference](/docs/main/reference/hiecm-m2).
 - [M2 errors](/docs/main/docs/hiecm/v3/api/m2/errors), the full ABDM error code list.
 - [M2 steps and calls](/docs/main/reference/hiecm-m2), what sandbox exit asks you to demonstrate.
-- [PHR applications](/docs/main/docs/hiecm/v3/concepts/phr), the other side of every flow here.
+- [PHR applications](/docs/main/docs/hiecm/v3/concepts/participants/phr), the other side of every flow here.

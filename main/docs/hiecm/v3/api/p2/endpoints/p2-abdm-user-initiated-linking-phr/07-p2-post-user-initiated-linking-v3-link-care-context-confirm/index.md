@@ -6,7 +6,7 @@ Be invoked by the patient or user to confirm their health records. By using this
 
 ```bash
 curl --request POST \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/confirm \
+  --url https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/confirm \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \

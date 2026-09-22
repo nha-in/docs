@@ -31,7 +31,20 @@ curl --request POST \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-HIP-ID: IN2810014366' \
   --header 'Content-Type: application/json' \
-  --data '"<VALUE>"'
+  --data '{
+  "acknowledgement": {
+    "status": "SUCCESS/ CANCELED/ PENDING/ FAIL/ REFUND_INITIATED/ REFUND_SUCCESS",
+    "abhaAddress": "<username>@sbx",
+    "transactionId": "string",
+    "orderNumber": "string",
+    "openOrderRequestId": "b767614f-153a-4aa3-946f-1622596f0fab",
+    "paymentDate": "2025-01-20T07:47:49.102Z",
+    "paymentRecipetLink": "PDF URL LINK of RECIPT"
+  },
+  "response": {
+    "requestId": "b767614f-153a-4aa3-946f-1622596f0fab"
+  }
+}'
 ```
 
 ## Authorization
@@ -43,6 +56,19 @@ curl --request POST \
 - `REQUEST-ID` (string, required): Unique UUID for track the end to end request transaction
 - `TIMESTAMP` (string, required): Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds.
 - `X-HIP-ID` (string, required): Identifier of the health information provider to which the request was intended
+
+## Body
+
+- `acknowledgement` (object, required)
+- `acknowledgement.status` (string, required): Indicates the outcome of the transaction. Possible values are: SUCCESS: The transaction was completed successfully. FAIL: The transaction failed. CANCELED: The transaction was cancelled. PENDING: The transaction in pending. REFUND_INITIATED: refund initiated. REFUND_SUCCESS: refunded successfully
+- `acknowledgement.abhaAddress` (string, required): The abha addresss of the user, formatted as . This is a unique identifier for the user in the health system.
+- `acknowledgement.transactionId` (string, required): A unique identifier for the transaction. This helps in tracking and referencing the specific transaction.
+- `acknowledgement.orderNumber` (string, required): A unique identifier for the order associated with the transaction. This helps in tracking and referencing the specific order.
+- `acknowledgement.openOrderRequestId` (object, required): This is the response request-id which is generated from the share/openOrder api
+- `acknowledgement.paymentDate` (string, required): ISO Timestamp.
+- `acknowledgement.paymentRecipetLink` (string, required): This attribute holds the URL link to the payment receipt. It is a string that provides a direct link to a PDF document or other format of the receipt for the transaction.
+- `response` (object, required): This is the response request-id which is generated from the share api
+- `response.requestId` (string, required)
 
 ## Responses
 

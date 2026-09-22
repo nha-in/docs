@@ -14,55 +14,35 @@ curl --request POST \
   --header 'X-AUTH-TOKEN: <TOKEN>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "isApplicableForAllHIPs": false,
+  "isApplicableForAllHIPs": true,
   "includedSources": [
     {
       "hiTypes": [
-        "Prescription"
+        "Prescription",
+        "DiagnosticReport",
+        "OPConsultation",
+        "DischargeSummary",
+        "ImmunizationRecord",
+        "HealthDocumentRecord",
+        "WellnessRecord",
+        "Invoice"
       ],
       "purpose": {
         "text": "Care Management",
         "code": "CAREMGT",
-        "refUri": "https://abc.def.in"
-      },
-      "hip": {
-        "id": "INDIA_HIP",
-        "name": "INDIA HIP",
-        "type": "HIP"
+        "refUri": "www.abdm.gov.in"
       },
       "categories": [
-        "LINK"
+        "LINK",
+        "DATA"
       ],
       "period": {
-        "from": "2024-05-09T10:34:00.389Z",
-        "to": "2024-05-09T10:34:00.389Z"
+        "from": "2025-01-09T09:00:00.000Z",
+        "to": "2124-12-31T09:00:00.000Z"
       }
     }
   ],
-  "excludedSources": [
-    {
-      "hiTypes": [
-        "Prescription"
-      ],
-      "purpose": {
-        "text": "Care Management",
-        "code": "CAREMGT",
-        "refUri": "https://abc.def.in"
-      },
-      "hip": {
-        "id": "INDIA_HIP",
-        "name": "INDIA HIP",
-        "type": "HIP"
-      },
-      "categories": [
-        "LINK"
-      ],
-      "period": {
-        "from": "2024-05-09T10:34:00.389Z",
-        "to": "2024-05-09T10:34:00.389Z"
-      }
-    }
-  ]
+  "excludedSources": []
 }'
 ```
 
@@ -90,7 +70,7 @@ curl --request POST \
 - `includedSources.purpose.text` (string, required) One of: Care Management, Break the Glass, Public Health, Healthcare Payment, Disease Specific Healthcare Research, Self Requested.
 - `includedSources.purpose.code` (string, required) One of: CAREMGT, BTG, PUBHLTH, HPAYMT, DSRCH, PATRQT.
 - `includedSources.purpose.refUri` (string, required): The reference URL.Allows alpha numeric character and special characters like "^[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&//=]*)$"
-- `includedSources.hip` (object, required): Identifier and name of the health information provider.
+- `includedSources.hip` (object): Identifier and name of the health information provider.
 - `includedSources.hip.id` (string, required): The service ID of the health information provider. Allows alpha numeric character and special characters like [A-Z a-z 0-9]+[A-Z a-z 0-9 //_//-]*[A-Z a-z 0-9]$
 - `includedSources.hip.name` (string, required): The name of the health information provider. Allows alphanumeric characters and special characters like "^[a-zA-Z0-9_\\-@,. \":]{0,255}$"
 - `includedSources.hip.type` (string): The type of the health information provider. Allows alphanumeric characters and special characters like "^[a-zA-Z0-9_\\-@,. \":]{0,255}$"
@@ -118,12 +98,17 @@ curl --request POST \
 - `202`: Accepted
   See The callback never arrives: /docs/hiecm/v3/troubleshooting/callback-never-arrives
 - `400`: Bad Request
+  See Error codes for this module: /docs/hiecm/v3/api/p3/errors
 - `401`: Unauthorized
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
 - `403`: Forbidden
+  See Error codes for this module: /docs/hiecm/v3/api/p3/errors
 - `404`: server cannot find the requested resource
+  See Error codes for this module: /docs/hiecm/v3/api/p3/errors
 - `500`: Internal Server Error
+  See Error codes for this module: /docs/hiecm/v3/api/p3/errors
 - `503`: Service Unavailable
+  See Error codes for this module: /docs/hiecm/v3/api/p3/errors
 
 Shape of the 202 response, generated from the schema. The values are placeholders, not a captured response:
 

@@ -18,11 +18,13 @@ Registration and login. The profile the patient reads and edits is [P2](/docs/ma
 
 ```mermaid
 flowchart TD
-    A["User picks a path"] --> B{"Mobile number, or 14 digit ABHA number?"}
+    A["User picks a path"] --> B{"Mobile number, ABHA number or Aadhaar number?"}
     B -- "Mobile number" --> C["Verify by mobile OTP"]
     C --> D["User types first name, year of birth, gender, address, state, district, pin code"]
     B -- "ABHA number" --> E["Verify by Aadhaar OTP or ABHA OTP"]
     E --> F["Profile details come back from the ABHA system"]
+    B -- "Aadhaar number" --> K["Create an ABHA number by Aadhaar OTP"]
+    K --> F
     D --> G["Show the ABHA addresses already linked to this mobile or number"]
     F --> G
     G --> H{"An address already exists?"}
@@ -32,12 +34,13 @@ flowchart TD
 
 A person does not need an [ABHA number](/docs/main/docs/hiecm/v3/getting-started/glossary#abha-number), and does not need Aadhaar, to get an ABHA address here. A mobile number and the OTP sent to it are enough. What that buys is a Self-Declared profile: an address the network can route to, with no [KYC](/docs/main/docs/hiecm/v3/getting-started/glossary#kyc) behind it and no ABHA number until the person links one later.
 
-| Path                 | Validated by                                                        | Profile details             | Result                                                                         |
-| -------------------- | ------------------------------------------------------------------- | --------------------------- | ------------------------------------------------------------------------------ |
-| Mobile number        | Mobile [OTP](/docs/main/docs/hiecm/v3/getting-started/glossary#otp) | The user types them         | Self-Declared, no [KYC](/docs/main/docs/hiecm/v3/getting-started/glossary#kyc) |
-| 14 digit ABHA number | Aadhaar OTP or ABHA OTP                                             | Returned by the ABHA system | KYC Verified                                                                   |
+| Path                                    | Validated by                                                        | Profile details             | Result                                                                         |
+| --------------------------------------- | ------------------------------------------------------------------- | --------------------------- | ------------------------------------------------------------------------------ |
+| Mobile number                           | Mobile [OTP](/docs/main/docs/hiecm/v3/getting-started/glossary#otp) | The user types them         | Self-Declared, no [KYC](/docs/main/docs/hiecm/v3/getting-started/glossary#kyc) |
+| 14 digit ABHA number                    | Aadhaar OTP or ABHA OTP                                             | Returned by the ABHA system | KYC Verified                                                                   |
+| Aadhaar number, with no ABHA number yet | Aadhaar OTP, which creates the ABHA number first                    | Returned by the ABHA system | KYC Verified                                                                   |
 
-After validation on either path, show the ABHA addresses already linked to that mobile number or ABHA number. The user then picks one instead of creating a duplicate.
+After validation on any path, show the ABHA addresses already linked to that mobile number or ABHA number. The user then picks one instead of creating a duplicate.
 
 A Self-Declared profile needs a "Link ABHA number" action. The user enters the 14 digit number and validates by Aadhaar OTP or ABHA OTP. Profile details then follow the ABHA number, and the status changes to KYC Verified.
 

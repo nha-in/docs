@@ -2,6 +2,17 @@
 
 Changes that affect what you can build against, newest first. Each entry links to what you can now read, run or consume.
 
+## 23 September 2026
+
+6 changes
+
+- [P2 consent, linking and share calls go to the gateway](/docs/main/docs/whats-new/2026-09-23#p2-consent-linking-and-share-calls-go-to-the-gateway)
+- [List calls send their required query parameters](/docs/main/docs/whats-new/2026-09-23#list-calls-send-their-required-query-parameters)
+- [PHR registration by Aadhaar number, and no email update](/docs/main/docs/whats-new/2026-09-23#phr-registration-by-aadhaar-number-and-no-email-update)
+- [Subscriptions are part of P3, and gateway calls gain two fields](/docs/main/docs/whats-new/2026-09-23#subscriptions-are-part-of-p3-and-gateway-calls-gain-two-fields)
+- [Try it fills in fixed values, and the gateway lists what it owns](/docs/main/docs/whats-new/2026-09-23#try-it-fills-in-fixed-values-and-the-gateway-lists-what-it-owns)
+- [P2 is Consents Management, and the patient share calls are named for the OPD](/docs/main/docs/whats-new/2026-09-23#p2-is-consents-management-and-the-patient-share-calls-are-named-for-the-opd)
+
 ## 22 September 2026
 
 3 changes

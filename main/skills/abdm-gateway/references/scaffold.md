@@ -123,7 +123,7 @@ From `shared.concept.survey-an-existing-codebase`.
 
 ## Journeys
 
-### Bridge and providers (`gateway-abdm-gateway`)
+### Bridge (`gateway-abdm-gateway`)
 
 **Act: the calls in this journey, in order**
 
@@ -164,104 +164,11 @@ curl --request PATCH \
 }'
 ```
 
-#### 4. Update the bridge service (`gateway_put_gateway_v3_bridge_service`)
-
-```bash
-curl --request PUT \
-  --url https://dev.abdm.gov.in/api/hiecm/gateway/v3/bridge-service \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
-  --header 'X-CM-ID: sbx' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "bridgeId": "{{bridgeId}}",
-  "serviceId": "{{serviceId}}",
-  "name": "TEST Gateway",
-  "isHip": true,
-  "isHiu": true,
-  "isHealthLocker": null,
-  "isPhr": false,
-  "endpoints": {},
-  "attributes": null,
-  "active": true
-}'
-```
-
-#### 5. Fetch the list of providers filtered by name (`gateway_get_gateway_v3_providers`)
-
-```bash
-curl --request GET \
-  --url https://dev.abdm.gov.in/api/hiecm/gateway/v3/providers \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
-  --header 'X-CM-ID: sbx'
-```
-
-#### 6. Fetch the record for provider details for requested provider ID (`gateway_get_gateway_v3_providers_provider_id`)
-
-```bash
-curl --request GET \
-  --url https://dev.abdm.gov.in/api/hiecm/gateway/v3/providers/{provider-id} \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
-  --header 'X-CM-ID: sbx'
-```
-
-#### 7. Fetch the list of govt programmes (`gateway_get_gateway_v3_govt_programs`)
-
-```bash
-curl --request GET \
-  --url https://dev.abdm.gov.in/api/hiecm/gateway/v3/govt-programs \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
-  --header 'X-CM-ID: sbx'
-```
-
-#### 8. Fetch the record with health locker enabled provider details (`gateway_get_gateway_v3_health_lockers`)
-
-```bash
-curl --request GET \
-  --url https://dev.abdm.gov.in/api/hiecm/gateway/v3/health-lockers \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
-  --header 'X-CM-ID: sbx'
-```
-
 **Exit condition (Observe until this is true)**
 
-A 200 whose body matches:
+A 202 response. The specification gives no body for it, so read what comes back.
 
-```json
-[
-  {
-    "identifier": {
-      "name": "AB - PMJAY",
-      "id": "PMJAY"
-    },
-    "facilityType": [
-      "HIP"
-    ],
-    "isHip": true,
-    "isGovtEntity": false,
-    "endpoints": {
-      "healthLockerEndpoints": [
-        {
-          "use": "registration",
-          "connectionType": "HTTPS",
-          "address": "https://abc.com/register"
-        }
-      ]
-    }
-  }
-]
-```
-
-### Session and certificates (`gateway-abdm-sessions`)
+### Session (`gateway-abdm-sessions`)
 
 **Act: the calls in this journey, in order**
 
@@ -281,48 +188,17 @@ curl --request POST \
 }'
 ```
 
-#### 2. Get the open ID configuration (`gateway_get_gateway_v3_well_known_openid_configuration`)
-
-```bash
-curl --request GET \
-  --url https://dev.abdm.gov.in/api/hiecm/gateway/v3/.well-known/openid-configuration \
-  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
-  --header 'X-CM-ID: sbx'
-```
-
-#### 3. Get the certificate information (`gateway_get_gateway_v3_certs`)
-
-```bash
-curl --request GET \
-  --url https://dev.abdm.gov.in/api/hiecm/gateway/v3/certs \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
-  --header 'X-CM-ID: sbx'
-```
-
 **Exit condition (Observe until this is true)**
 
-A 200 whose body matches:
+A 202 whose body matches:
 
 ```json
 {
-  "keys": [
-    {
-      "e": "AQAB",
-      "kid": "AlRb5WCm8Tm9EJ_IfO9z06j9oCv51pKK",
-      "kty": "RSA",
-      "n": "mgmW7W5ZGF_G5cJevwYi8HiPcI-6qS_psnZxa4v3bkwAkyOoOd8-6ketrOI-ZA2PbRbGnxFfZHiI94rdFXJ4Q9ampscsz9NocTIPMPmWydJ8A50pZaYWyikYDSJiDltq7i3WspPKSOuQHr",
-      "use": "sig",
-      "x5c": [
-        "MIICrzCCAZcCBgFy/3WZBjANBgkqhkiG9w0BAQsFADAbMRkwFwYDVQQDDBBjZW50cmFsLXJlZ2lzdHJ5MB4XDTIwMDYyOTA5NDEzNloXDTMwMDYyOTA5NDMxNlowGzEZMBcGA1UEAwwQY2VudHJhbC1yZWdpc3RyeTCCASIwDQYJK"
-      ],
-      "x5t": "EaMhYGUIvMkp8tvS",
-      "x5t2": "vGer6Pt8AhZn8RlbHhAFksOCcGf3u1UWU7Qq",
-      "alg": "RS256"
-    }
-  ]
+  "accessToken": "<TOKEN>",
+  "expiresIn": 1200,
+  "refreshExpiresIn": 1800,
+  "refreshToken": "<TOKEN>",
+  "tokenType": "bearer"
 }
 ```
 

@@ -3,7 +3,7 @@ name: abdm-p2
 description: Use when building, debugging or testing ABDM P2 in a PHR app: the PHR profile, linking an ABHA number, switching profiles, and linking, sharing and consent for the patient.
 ---
 
-# ABDM P2, PHR management
+# ABDM P2, Consents Management
 
 Generated from the ABDM Developer Portal on 2026-09-16, catalogue version 2026.09.16. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.
 
@@ -12,14 +12,13 @@ If the abdm-docs MCP server is connected, trust its answers over this file: it s
 
 ## What you can do with P2
 
-- PHR profile, update email
 - PHR profile, update mobile
 - PHR profile, update password
 - Link ABHA number, ABHA OTP
 - Link ABHA number, Aadhaar OTP
 - PHR profile, switch profile
 - PHR profile, card, QR code and session
-- Patient share
+- Quick OPD Registration
 - User initiated linking
 - Consent manager, HIU and HIP
 - Consent manager, fetch and manage consent requests
@@ -29,7 +28,7 @@ What it cannot do yet matters as much. Read **Before anything else** below befor
 ## What is in this folder
 
 - **Scaffold.** Survey the codebase first when one exists, then build it flow by flow against the sandbox, as a loop that ends when the step's exit condition holds rather than on a call returning 200. [references/scaffold.md](references/scaffold.md)
-- **Integrate.** 43 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
+- **Integrate.** 39 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
 - **Debug.** The loop from a failed call to a named fix, and 2 error codes from the specification's examples. [references/debug.md](references/debug.md)
 
 This file is the map. Each line above is a file beside it, opened one at a time rather than read through.

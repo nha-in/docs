@@ -28,7 +28,7 @@ curl --request POST \
 
 - `clientId` (string, required): The client ID issued to the integrator by ABDM at registration.
 - `clientSecret` (string, required): The client secret issued to the integrator by ABDM along with the client ID.
-- `grantType` (string, required): The method used by the client to obtain an access token, e.g. client_credentials.
+- `grantType` (string, required): The method used by the client to obtain an access token, e.g. client_credentials. One of: client_credentials.
 
 ## Responses
 

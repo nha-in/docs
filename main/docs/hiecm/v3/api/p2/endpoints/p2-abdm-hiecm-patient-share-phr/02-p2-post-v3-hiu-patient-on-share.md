@@ -31,7 +31,24 @@ curl --request POST \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-HIU-ID: HIU_ID' \
   --header 'Content-Type: application/json' \
-  --data '"<VALUE>"'
+  --data '{
+  "acknowledgement": {
+    "status": "SUCCESS",
+    "abhaAddress": "<ABHA_ADDRESS>",
+    "profile": {
+      "context": "43",
+      "tokenNumber": "3",
+      "expiry": 180
+    }
+  },
+  "error": {
+    "code": "ABDM-9999",
+    "message": "Unknown exception"
+  },
+  "response": {
+    "requestId": "6f0b4665-a915-4c92-aa36-65afb4a2cd71"
+  }
+}'
 ```
 
 ## Authorization
@@ -43,6 +60,21 @@ curl --request POST \
 - `REQUEST-ID` (string, required): Unique UUID for track the end to end request transaction
 - `TIMESTAMP` (string, required): Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
 - `X-HIU-ID` (string, required): Identifier of the health information user to which the request was intended
+
+## Body
+
+- `acknowledgement` (object, required)
+- `acknowledgement.status` (string, required): The status of the transaction.Allows like (SUCCESS|FAILED)
+- `acknowledgement.abhaAddress` (string, required): The abha address of the patient. Should start with Alphanumeric . and  _  in the middle and must be ending with @abdm or @sbx and Allows alpha numeric character and special characters like ^[a-zA-Z0-9][a-zA-Z0-9_.\-!]+[a-zA-Z0-9]@(abdm|sbx)$
+- `acknowledgement.profile` (object, required): Should be populated only if this is a response for PROFILE_SHARE request
+- `acknowledgement.profile.context` (string, required): This is a counter Id. Allows alpha numeric character and special characters like ^(?:[a-zA-Z0-9 ]|[a-zA-Z0-9 ][a-zA-Z0-9.\\-_ ]*[a-zA-Z0-9 ]){1,250}$
+- `acknowledgement.profile.tokenNumber` (string, required): The token number generated at HIP for the request
+- `acknowledgement.profile.expiry` (number, required): The expiry time and should be only numeric value.Allows alpha numeric character and special characters like [\d]*$
+- `error` (object, required): error is optional object in case of Sucess response.
+- `error.code` (string, required): ABDM-9999 - Unknown exception. May be returned either bare (`ABDM-9999`) or with a trailing ": " separator (`ABDM-9999: `); match on the code itself and tolerate the separator.
+- `error.message` (string, required)
+- `response` (object, required)
+- `response.requestId` (string, required): The requestId that was passed.Allows alpha numeric character and special characters like [0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}
 
 ## Responses
 

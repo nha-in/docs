@@ -1,4 +1,4 @@
-# P2 Management errors
+# P2 Consents Management errors
 
 Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/main/docs/hiecm/v3/troubleshooting/).
 

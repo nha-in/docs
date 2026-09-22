@@ -38,7 +38,46 @@ curl --request POST \
   --header 'X-AUTH-TOKEN: <TOKEN>' \
   --header 'X-HIU-ID: IN2810014366' \
   --header 'Content-Type: application/json' \
-  --data '"<VALUE>"'
+  --data '{
+  "intent": "PAYMENT_ORDER",
+  "openOrderRequestId": "b767614f-153a-***-946f-1622596f0fab",
+  "abhaAddress": "<ABHA_ADDRESS>",
+  "procedures": [
+    {
+      "category": "OPD consultation",
+      "services": [
+        {
+          "name": "consultation",
+          "serviceId": "service-12345",
+          "description": "Albumin 24 hrs Urine",
+          "amount": 629.12
+        }
+      ]
+    },
+    {
+      "category": "Laboratory and Diagnostics",
+      "services": [
+        {
+          "name": "Diagnostics",
+          "serviceId": "service-12345",
+          "description": "Albumin 24 hrs Urine",
+          "amount": 629.12
+        }
+      ]
+    },
+    {
+      "category": "Pharmacy",
+      "services": [
+        {
+          "name": "Pharmacy",
+          "serviceId": "service-12345",
+          "description": "Albumin 24 hrs Urine",
+          "amount": 629.12
+        }
+      ]
+    }
+  ]
+}'
 ```
 
 ## Authorization
@@ -52,6 +91,19 @@ curl --request POST \
 - `X-CM-ID` (string, required): Suffix of the consent manager to which the request was intended
 - `X-AUTH-TOKEN` (string, required): JWT Authentication token which was issued by ABDM after successful validation of username and password
 - `X-HIU-ID` (string, required): Identifier of the health information user to which the request was intended
+
+## Body
+
+- `intent` (string, required): The intention of share API call
+- `openOrderRequestId` (object, required): This is the response request-id which is generated from the share/openOrder api
+- `abhaAddress` (string, required): abha address of the user/patient.
+- `procedures` (object[], required)
+- `procedures.category` (string, required): The category of the procedure
+- `procedures.services` (object[], required)
+- `procedures.services.serviceId` (string): Unique identifier for the service
+- `procedures.services.name` (string, required): Name of the service
+- `procedures.services.description` (string): Description of the service
+- `procedures.services.amount` (number, required): Amount for the service
 
 ## Responses
 

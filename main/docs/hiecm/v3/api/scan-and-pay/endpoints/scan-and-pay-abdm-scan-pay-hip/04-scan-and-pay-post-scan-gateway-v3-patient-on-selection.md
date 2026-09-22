@@ -38,7 +38,57 @@ curl --request POST \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
   --header 'Content-Type: application/json' \
-  --data '"<VALUE>"'
+  --data '{
+  "intent": "PAYMENT_ORDER",
+  "openOrderRequestId": "b767614f-153a-4aa3-946f-1622596f0fab",
+  "abhaAddress": "<ABHA_ADDRESS>",
+  "procedures": [
+    {
+      "category": "OPD consultation",
+      "services": [
+        {
+          "name": "consultation",
+          "serviceId": "service-12345",
+          "description": "Albumin 24 hrs Urine",
+          "amount": 629.12
+        }
+      ]
+    },
+    {
+      "category": "Laboratory and Diagnostics",
+      "services": [
+        {
+          "name": "Diagnostics",
+          "serviceId": "service-12345",
+          "description": "Albumin 24 hrs Urine",
+          "amount": 629.12
+        }
+      ]
+    },
+    {
+      "category": "Pharmacy",
+      "services": [
+        {
+          "name": "Pharmacy",
+          "serviceId": "service-12345",
+          "description": "Albumin 24 hrs Urine",
+          "amount": 629.12
+        }
+      ]
+    }
+  ],
+  "paymentBundle": {
+    "paymentMode": "GATEWAY",
+    "paymentUrl": "string",
+    "orderNumber": "string",
+    "amount": 1250.55,
+    "merchantId": "123465",
+    "description": "Testing"
+  },
+  "response": {
+    "requestId": "6c3d4e5c-09d1-***-817b-a0c82d130c53"
+  }
+}'
 ```
 
 ## Authorization
@@ -50,6 +100,28 @@ curl --request POST \
 - `REQUEST-ID` (string, required): Unique UUID for track the end to end request transaction
 - `TIMESTAMP` (string, required): Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds.
 - `X-CM-ID` (string, required): Suffix of the consent manager to which the request was intended
+
+## Body
+
+- `intent` (string, required): The intention of share API call
+- `openOrderRequestId` (object, required): This is the request-id which is generated from the share/Open Order Request id api
+- `abhaAddress` (string, required): abha address of the user/patient.
+- `procedures` (object[], required)
+- `procedures.category` (string, required): The category of the procedure
+- `procedures.services` (object[], required)
+- `procedures.services.serviceId` (string): Unique identifier for the service
+- `procedures.services.name` (string, required): Name of the service
+- `procedures.services.description` (string): Description of the service
+- `procedures.services.amount` (number, required): Amount for the service
+- `paymentBundle` (object, required): This should be populated for payments
+- `paymentBundle.paymentMode` (string, required): Specifies the mode of payment. For example, “GATEWAY” indicates that the payment is processed through a payment gateway
+- `paymentBundle.paymentUrl` (string, required): A URL provided by the payment gateway for processing the payment. This is typically a link where the user can complete the payment transaction.
+- `paymentBundle.orderNumber` (string, required): A unique identifier for the order associated with the payment. This helps in tracking and referencing the specific transaction.
+- `paymentBundle.amount` (number, required): The total amount to be paid. This is usually a numeric value representing the cost of the transaction.
+- `paymentBundle.merchantId` (string, required): A unique identifier for the merchant receiving the payment. This ID is used to identify the merchant in the payment system.
+- `paymentBundle.description` (string, required): A brief description of the payment or the transaction. This can include details about what the payment is for or any other relevant information.
+- `response` (object, required): This is the response request-id which is generated randomly.
+- `response.requestId` (string, required)
 
 ## Responses
 

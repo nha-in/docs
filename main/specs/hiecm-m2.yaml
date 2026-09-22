@@ -660,6 +660,13 @@ paths:
             type: string
           example: sbx
           description: Suffix of the consent manager to which the request was intended
+        - name: X-HIU-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: IN2810014366
+          description: Identifier of the health information user to which the request was intended
       requestBody:
         required: true
         content:

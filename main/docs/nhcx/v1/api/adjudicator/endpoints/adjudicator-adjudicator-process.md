@@ -57,7 +57,7 @@ Chapter [PMJAY adjudication APIs](/docs/nhcx/v1/roles/provider/pmjay-adjudicatio
 
 ```bash
 curl --request POST \
-  --url https://apisbx.abdm.gov.in/pmjay/sbxhcx/dummyhcxpayer/pmjay/hcx/nhcxpayerservice/wrapper/process/case \
+  --url https://apisbeta.nha.gov.in/pmjay/hcx/nhcxpayerservice/wrapper/process/case \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'bearer_auth: Bearer <access token>' \
   --header 'Content-Type: application/json' \

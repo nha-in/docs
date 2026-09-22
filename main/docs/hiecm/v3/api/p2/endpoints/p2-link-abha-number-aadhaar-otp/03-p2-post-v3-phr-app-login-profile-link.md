@@ -3,8 +3,8 @@
 `POST /abha/api/v3/phr/app/login/profile/link`
 
 Flows:
-- P2-Management › P2 -PHR Profile › P2 - Link ABHA Number › P2 - via ABHA OTP › Link Request
-- P2-Management › P2 -PHR Profile › P2 - Link ABHA Number › P2 - via Aadhaar OTP › Link Request
+- P2-Consents Management › P2 -PHR Profile › P2 - Link ABHA Number › P2 - via ABHA OTP › Link Request
+- P2-Consents Management › P2 -PHR Profile › P2 - Link ABHA Number › P2 - via Aadhaar OTP › Link Request
 
 ```bash
 curl --request POST \

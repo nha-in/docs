@@ -13,7 +13,13 @@ curl --request POST \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-HIP-ID: IN2810014366' \
   --header 'Content-Type: application/json' \
-  --data '"<VALUE>"'
+  --data '{
+  "abhaAddress": "<ABHA_ADDRESS>",
+  "linkToken": "<TOKEN>",
+  "response": {
+    "requestId": "6f0b4665-a915-4c92-aa36-65afb4a2cd71"
+  }
+}'
 ```
 
 ## Authorization
@@ -25,6 +31,13 @@ curl --request POST \
 - `REQUEST-ID` (string, required): Unique UUID for track the end to end request transaction
 - `TIMESTAMP` (string, required): Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
 - `X-HIP-ID` (string, required): Identifier of the health information provider to which the request was intended
+
+## Body
+
+- `abhaAddress` (string, required)
+- `linkToken` (string)
+- `response` (object, required)
+- `response.requestId` (string, required): The requestId that was passed
 
 ## Responses
 

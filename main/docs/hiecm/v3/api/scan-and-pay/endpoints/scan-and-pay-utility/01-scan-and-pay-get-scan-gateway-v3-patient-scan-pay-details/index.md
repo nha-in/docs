@@ -28,7 +28,7 @@ offset [ Example: 0]
 
 ```bash
 curl --request GET \
-  --url https://dev.abdm.gov.in/api/hiecm/scan-gateway/v3/patient/scan-pay/details \
+  --url "https://dev.abdm.gov.in/api/hiecm/scan-gateway/v3/patient/scan-pay/details?status=SUCCESS&limit=10&startDate=2024-07-13T07:30:10.186Z&endDate=2025-02-18T08:30:50.189Z&offset=0" \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \

@@ -4,7 +4,7 @@
 
 ```bash
 curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/medical-councils/name \
+  --url "https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/medical-councils/name?medicineName=<MEDICINENAME>" \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 

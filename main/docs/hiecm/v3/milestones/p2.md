@@ -55,14 +55,14 @@ Set the health information type from the contents or from user input. Use `Healt
 
 The signed in user manages their own profile from your app. Every call takes the user token from login as `X-token`.
 
-| Element                  | What it holds                                                                                                                                                 |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Profile screen           | Editable demographics, marked KYC Verified or Self-Declared                                                                                                   |
-| ABHA number              | Visible only on a KYC Verified profile                                                                                                                        |
-| ABHA address card, a PDF | Photo, full name, ABHA number, ABHA address, QR code, date of birth, gender, mobile number                                                                    |
-| Editable, KYC Verified   | Mobile number, with an OTP to the new number, and address                                                                                                     |
-| Editable, Self-Declared  | The same, plus photo, full name, gender and date of birth                                                                                                     |
-| Also on the profile      | Update the email and the password, link an ABHA number by mobile OTP or Aadhaar OTP, switch between the profiles on one login, refresh the token, and log out |
+| Element                  | What it holds                                                                                                                                   |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Profile screen           | Editable demographics, marked KYC Verified or Self-Declared                                                                                     |
+| ABHA number              | Visible only on a KYC Verified profile                                                                                                          |
+| ABHA address card, a PDF | Photo, full name, ABHA number, ABHA address, QR code, date of birth, gender, mobile number                                                      |
+| Editable, KYC Verified   | Mobile number, with an OTP to the new number, and address                                                                                       |
+| Editable, Self-Declared  | The same, plus photo, full name, gender and date of birth                                                                                       |
+| Also on the profile      | Update the password, link an ABHA number by mobile OTP or Aadhaar OTP, switch between the profiles on one login, refresh the token, and log out |
 
 ## Next
 

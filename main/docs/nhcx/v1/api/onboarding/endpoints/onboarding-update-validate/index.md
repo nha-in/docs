@@ -48,7 +48,7 @@ Chapter [Your certificate](/docs/nhcx/v1/getting-started/your-certificate) of th
 
 ```bash
 curl --request GET \
-  --url https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/update/validate \
+  --url "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/update/validate?transactionId=<TRANSACTIONID>&passcode=<PASSCODE>" \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'bearer_auth: Bearer <access token>'
 ```

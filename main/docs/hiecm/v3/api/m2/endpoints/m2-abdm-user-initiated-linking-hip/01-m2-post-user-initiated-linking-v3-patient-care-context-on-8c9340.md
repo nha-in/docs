@@ -11,6 +11,7 @@ curl --request POST \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
+  --header 'X-HIU-ID: IN2810014366' \
   --header 'Content-Type: application/json' \
   --data '{
   "transactionId": "f901b782-bfdf-4224-9f8d-da2cadc20c0d",
@@ -46,6 +47,7 @@ curl --request POST \
 - `REQUEST-ID` (string, required): Unique UUID for track the end to end request transaction
 - `TIMESTAMP` (string, required): Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
 - `X-CM-ID` (string, required): Suffix of the consent manager to which the request was intended
+- `X-HIU-ID` (string, required): Identifier of the health information user to which the request was intended
 
 ## Body
 
