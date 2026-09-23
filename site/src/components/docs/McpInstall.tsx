@@ -44,11 +44,6 @@ const CAPABILITIES = [
   },
 ];
 
-/** The `mcpServers` block every client that reads one takes as is. */
-function mcpServersJson(url: string) {
-  return JSON.stringify({mcpServers: {[MCP_NAME]: {url}}}, null, 2);
-}
-
 type Surface = {
   /** What the copy button yields for this agent. */
   command: (url: string) => string;
@@ -73,7 +68,16 @@ type Surface = {
  * for a streamable HTTP server and stores it under `[mcp_servers.<name>]` in
  * ~/.codex/config.toml (learn.chatgpt.com/docs/extend/mcp).
  */
-const SURFACES: Record<AgentId, Surface> = {
+/**
+ * The commands for one gateway's server: its name as agents register it, and
+ * the gateway named in the prompt. ABDM's is abdm-docs, NHCX's nhcx-docs; the
+ * endpoint is the same Docs MCP server.
+ */
+function surfacesFor(MCP_NAME: string, LABEL: string): Record<AgentId, Surface> {
+  /** The `mcpServers` block every client that reads one takes as is. */
+  const mcpServersJson = (url: string) =>
+    JSON.stringify({mcpServers: {[MCP_NAME]: {url}}}, null, 2);
+  return {
   claude: {
     command: (url) => `claude mcp add --transport http ${MCP_NAME} ${url} -s user`,
     // Neither Claude scheme has an MCP install action, so this opens a Code
@@ -82,7 +86,7 @@ const SURFACES: Record<AgentId, Surface> = {
       `claude://code/new?q=${encodeURIComponent(
         guarded(
           [
-            'Add the ABDM documentation MCP server, then use it to answer my ABDM questions.',
+            `Add the ${LABEL} documentation MCP server, then use it to answer my ${LABEL} questions.`,
             '',
             'Run this:',
             `claude mcp add --transport http ${MCP_NAME} ${url} -s user`,
@@ -123,7 +127,9 @@ const SURFACES: Record<AgentId, Surface> = {
     link: null,
     note: 'Any MCP client that reads an mcpServers config, Claude Desktop included, takes this block as is.',
   },
-};
+
+  };
+}
 
 function CopyLine({value, block}: {value: string; block?: boolean}) {
   const [copied, setCopied] = useState(false);
@@ -149,8 +155,9 @@ function CopyLine({value, block}: {value: string; block?: boolean}) {
   );
 }
 
-export default function McpInstall(): React.ReactNode {
+export default function McpInstall({set = 'abdm'}: {set?: 'abdm' | 'nhcx'}): React.ReactNode {
   const {siteConfig} = useDocusaurusContext();
+  const SURFACES = set === 'nhcx' ? surfacesFor('nhcx-docs', 'NHCX') : surfacesFor(MCP_NAME, 'ABDM');
   const url = (siteConfig.customFields?.mcpUrl as string | null) ?? null;
   const [active, setActive] = useState<AgentId>(AGENTS[0].id);
 

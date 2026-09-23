@@ -97,6 +97,12 @@ Each policy in the answer carries the fields that every later message depends on
 
 **Send to the processor.** When an insurer handles its own claims, `payerid` and `processingid` are the same code. When a TPA processes for it, `processingid` is the TPA and every request goes there. Pointing at `payerid` is the portal's seventh most common mistake; the request goes nowhere useful. If no `processingid` comes back, stop; nothing can be addressed.
 
+**When no identifier returns a policy**, the order of calls matters, and it is fixed:
+
+1. The policy lookup, with all three identifiers tried.
+2. [Coverage eligibility](/docs/nhcx/v1/roles/provider/registration-and-eligibility) with purpose `discovery`, to learn the active policy code from the payer.
+3. Coverage eligibility with purpose `validation`, carrying that policy code.
+
 Cache the result against the patient. Their policies do not change between one screen and the next, and re-fetching on every step is wasted traffic. Provide a way to force a refresh when something has genuinely changed.
 
 ## Linking a policy to a beneficiary

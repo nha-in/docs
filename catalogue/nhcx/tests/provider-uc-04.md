@@ -78,9 +78,9 @@ It is one of the thirteen provider use cases for [sandbox exit](../glossary/sand
 client_id=<YOUR_CLIENT_ID>&client_secret=<YOUR_CLIENT_SECRET>&grant_type=client_credentials
 ```
 
-2. Read `access_token` and `expires_in` from the response.
+2. Read `access_token` and `expires_in` from the response. `expires_in` is `1200`: the token lasts 20 minutes.
 3. Send the token on every later call. Participant service calls take it as `bearer_auth: Bearer <ACCESS_TOKEN_FROM_GET_SESSION>`. Exchange calls take the same value on both `bearer_auth` and `Authorization`.
-4. Schedule a refresh before `expires_in` runs out. Do not wait for a 401.
+4. Schedule a refresh before the 20 minutes run out. Do not wait for a 401.
 5. Prove the token works: run [use case 1](provider-uc-01.md) with it.
 
 ### Demonstrate it
@@ -102,7 +102,7 @@ The pass criterion for this case:
 
 What you observe:
 
-- You receive HTTP 200 with `access_token`, `expires_in` and `token_type` `Bearer`.
+- You receive HTTP 200 with `access_token`, `expires_in` `1200` and `token_type` `Bearer`.
 - A call to `/fetch/participants/list` with the token returns HTTP 200, not 401.
 - Your system replaces the token before it expires, with no manual step.
 

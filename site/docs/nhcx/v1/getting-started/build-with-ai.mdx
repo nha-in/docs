@@ -17,6 +17,14 @@ import {FileText, Sparkles} from 'lucide-react';
 
 # Build with AI
 
+Use NHCX documentation with AI-assisted development tools. Developers may use
+supported AI-assisted tools to search NHCX integration guides, API references
+and use case documentation while building their solution.
+
+:::note
+Review all AI-generated code against the official NHCX documentation and test it in the Sandbox.
+:::
+
 Every fact on this site is a public URL. There are three ways to put it in front of your agent, and they combine. From lightest to fullest:
 
 - Copy one skill into your project.
@@ -35,6 +43,31 @@ Every fact on this site is a public URL. There are three ways to put it in front
   </Card>
 </CardGroup>
 
+## Learn how to use AI
+
+Never built with a coding assistant before? Start here. Three things have to be
+in place before anything else on this page works.
+
+| What you need | Why |
+| --- | --- |
+| A coding assistant | Claude, Cursor, VS Code with GitHub Copilot, Codex and ChatGPT are the ones set up below. Any of them is enough. Pick one and stay on it. |
+| A paid plan on it | Free tiers stop partway through a long task. The cheapest paid plan on any of these carries a use case. |
+| Your own project open in it | The assistant reads and writes the folder it is opened in. Open the repository you are integrating NHCX into first. |
+
+Then work down the page in order.
+
+1. Connect the Docs MCP server, so the assistant looks NHCX up here instead of recalling an older version of it.
+2. Install the plugin, which is one command or one pasted line.
+3. Install the skill for the use case you are on, `nhcx-coverage` first if you are starting.
+4. Ask for what you want in plain language, one use case at a time. "Add coverage eligibility to this project, using the nhcx-coverage skill" is a good first prompt.
+
+You do not need to know what MCP, a plugin or a skill is to use them. They are
+three ways of handing the same documentation to the assistant: live lookup,
+one install for everything, and one folder for one use case.
+
+Read what it writes before you run it. An assistant is fast and confident, and
+it is wrong in ways only the Sandbox will show you.
+
 ## Connect the Docs MCP server
 
 A skill is a snapshot. The Docs MCP server is the same documentation live, queried a paragraph at a time instead of loaded whole. The agent searches it, decodes error codes and checks request bodies as it works, alongside a skill or on its own. Add it as `nhcx-docs` at `https://docs.abdm.gov.in/mcp`.
@@ -43,25 +76,25 @@ A skill is a snapshot. The Docs MCP server is the same documentation live, queri
 
 ## Install the plugin
 
-All seven skills in one install, updated in place. Add the `nha-in/docs` marketplace once, then install the `nhcx` plugin into your agent. Claude Code and Codex install it directly. Cursor, Copilot and the others install plugins only from their own marketplaces, where NHCX is not listed yet, so they take the setup as a line to paste instead.
+All seven skills in one install, updated in place, and the nhcx-docs MCP server connected with them. Add the `nha-in/docs` marketplace once, then install the `nhcx` plugin into your agent. Claude Code and Codex install it directly. Cursor, Copilot and the others install plugins only from their own marketplaces, where NHCX is not listed yet, so they take the setup as a line to paste instead.
 
 <AgentSetup set="nhcx" />
 
 ## Install a skill
 
-There is one skill per NHCX use case, in episode order. Each builds its use case into a hospital information system or a standalone claims desk. It checks what your system already has and builds only what is missing. The bundles it sends are held to the pinned samples in the NHCX package.
+There is one skill for the whole provider-side integration, `nhcx-full`, and one per NHCX use case. Each builds into an existing hospital information system through eight logged steps, from discovery and mapping to tests on the sandbox. It finds what your system already has and builds only what is missing. It takes its NHCX facts from the nhcx-docs MCP server when it is connected, and from a release of the NHCX package otherwise.
 
 Each skill is self-contained, so install only the ones your integration needs. `npx skills` finds every coding agent in the project and sets the skill up for each. With git alone, the command fetches just the skill's folder into the directory your agent reads skills from.
 
 | Skill | What it builds | [Use cases](/docs/nhcx/v1/concepts/nhcx-use-cases) |
 | --- | --- | --- |
-| `nhcx-coverage` | Policy search and coverage eligibility: discovery, validation and benefits | A2, B1, D3 |
-| `nhcx-insurance` | The payer's package master: requested once per facility and policy, reused, and quoted from | B2, D1 |
-| `nhcx-preauth` | Pre-authorisation, its query answers, enhancement, cancellation and predetermination | B3, B8 cancel, B9, D2, D4 to D8 |
-| `nhcx-claim` | The discharge and the claim, the claim query answer, and the decision | B5, D9, D10 |
-| `nhcx-payment` | Payment notices, each recorded once and acknowledged at once | B7, D13 |
-| `nhcx-communication` | Payer queries and notifications: notifications acknowledged, queries answered | B4 |
-| `nhcx-reprocess` | Reprocessing a decided claim, the balance of a short payment, and status enquiries | A5, B8 reprocess, D11, D12 |
+| `nhcx-full` | The whole provider-side integration, every exchange end to end, with the NHCX gateway embedded in the application | All provider use cases |
+| `nhcx-coverage` | Beneficiary policy search and coverage eligibility: validation, benefits and discovery | A2, B1, D3 |
+| `nhcx-preauth` | The payer's insurance plan, line items, authorisation requirements, the pre-authorisation, predetermination, enhancement, query answers, cancellation and status | B2, B3, B8 cancel, B9, D1, D2, D4 to D8 |
+| `nhcx-claim` | Discharge details, claim documents and forms, the claim and its query answers, the payer's verdict and status enquiries | A5, B5, D9, D10 |
+| `nhcx-communication` | Payer queries, notifications and notes on a case, replies with text and documents, and acknowledgements | B4 |
+| `nhcx-payment` | The payer's payment notice and its breakdown, matched to the claim and acknowledged | B7, D13 |
+| `nhcx-reprocess` | Asking the payer to look again at a decided claim, and asking for the unpaid balance of a partly paid claim | B8 reprocess, D11, D12 |
 
 <SkillPicker set="nhcx" />
 
@@ -82,7 +115,9 @@ cannot infer. Tell it these, and check its output against them.
 | Do not invent an error code or a workflow code | Both exist here in full. See [workflow codes](/docs/nhcx/v1/concepts/workflow-codes) and [error codes](/docs/nhcx/v1/reference/error-code-guide) |
 | Patient identifiers and bundle contents never reach a log, a fixture or a test | An agent writing test data will otherwise put a real looking beneficiary in your repository |
 
-Point it at the [provider checklist](/docs/nhcx/v1/roles/provider/provider-checklist)
+Point it at [Build it well](/docs/nhcx/v1/getting-started/build-it-well) for the
+handling rules themselves: who refused a message, what is safe to send again,
+and what to do when no answer comes. Then point it at the [provider checklist](/docs/nhcx/v1/roles/provider/provider-checklist)
 or the [payer checklist](/docs/nhcx/v1/roles/payer/payer-checklist) for what your
 side has to have in place before go live.
 
@@ -137,6 +172,41 @@ export const AskAiButton = () => (
 <AskAiButton />
 
 The same assistant sits in the search box at the top of every page, labelled "Search or ask AI".
+
+### Attaching a file
+
+Ask AI takes a file with your question: a failing request body, a FHIR bundle,
+a log, a CSV, a PDF, or a screenshot. The paperclip is on the left of the box.
+At most 20,000 characters of text, 256KB for a text file and 8MB for a PDF or
+an image.
+
+What happens to it is worth knowing before you attach one.
+
+- The file is read in your own browser and only the text it gives up travels
+  with your question. A PDF gives up the text it already carries. A screenshot
+  is read by a text recognition engine your browser downloads once, from this
+  site, and runs on your own machine. The picture itself is never sent, so
+  nothing is uploaded and nothing is stored: the conversation lives in the
+  panel and is gone when you close it.
+- A PDF that is only pictures of text, a scan, gives up nothing. Screenshot
+  the part you mean instead and that will be read.
+- Text read from a picture carries reading mistakes. The assistant is told
+  where the text came from, so it can say when an answer turns on a character
+  it cannot trust.
+- Personal data is removed before the file reaches the model. A file that
+  parses as JSON is masked by its field names, so `name`, `telecom`,
+  `address`, `birthDate` and identifier values in a FHIR bundle are replaced
+  with placeholders such as `<MASKED_NAME>`. Aadhaar, ABHA, PAN, passport,
+  voter, mobile, email and bearer tokens are matched by pattern anywhere in
+  the file, JSON or not.
+- A file with no field names, a log or the text read from a screenshot, gets
+  the same pattern masking, and a name on a labelled line goes too:
+  `patient: Rakesh Sharma` leaves as `patient: <MASKED_NAME>`.
+- What none of that catches is a name written in running prose, with nothing
+  marking it as a name. Redact those yourself, the same way you would in a
+  support request. The panel says so next to any file it read for you.
+- Your question is logged, masked, to improve the answers. The file is not
+  logged.
 
 ## Next steps
 

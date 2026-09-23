@@ -157,7 +157,7 @@ curl --location --request POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/dummyhcx
   }'
 ```
 
-[Dummy payer, act on a request in the API reference](/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-dummy-payer-process-request)
+[Dummy payer, act on a request in the API reference](/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-process-request)
 
 `action` is `Approve`, `Reject` or `Query`; `method` is `Preauth` or `Claim`. Your `/v1/preauth/on_submit` then receives the answer, either a sealed `ClaimResponse` or a `ProtocolResponse` carrying the refusal, with the correlation ID you sent. A `Query` action makes the dummy payer raise a communication request instead, which you answer on `/v1/communication/on_request` before the decision arrives.
 
@@ -167,4 +167,4 @@ Whichever comes back, that message proves the whole framework. Your token works,
 
 - A **provider** goes to the B-series in the Overview's NHCX Use Cases chapter, starting with Check Coverage Eligibility, and to the sample bundles on the portal for a real Claim to put inside.
 - A **payer** goes to the C-series, and hosts the `submit` and `check` endpoints this chapter described for the other side.
-- Both should read JWE, Status and Errors in the Overview before writing a second use case; it is where the status words and the retry rules live.
+- Both should read [The JWE message format](/docs/nhcx/v1/getting-started/jwe-message-format) before writing a second use case; it is where the status words and the retry rules live.

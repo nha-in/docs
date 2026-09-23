@@ -102,3 +102,30 @@ func TestExtractErrorCodesCoversRegistryAndPHRSeries(t *testing.T) {
 		t.Errorf("expected no codes, got %v", got)
 	}
 }
+
+// The claims exchange answers in three shapes and none was in the pattern: the
+// exchange's own NHCX codes, the payer's PAYR codes, and the one ERR-PYR code
+// the scheme's payer sends. A refusal arrives as a ProtocolResponse carrying
+// x-hcx-error_details, which is what an integrator pastes.
+func TestExtractErrorCodesCoversTheClaimsExchange(t *testing.T) {
+	for _, tc := range []struct {
+		in   string
+		want string
+	}{
+		{"PAYR-1238", "PAYR-1238"},
+		{`{"type":"ProtocolResponse","x-hcx-error_details":{"code":"PAYR-1008","message":"Invalid content type"}}`, "PAYR-1008"},
+		{"NHCX-1006 the correlation id was already used", "NHCX-1006"},
+		{"ERR-PYR-CLM-007 No prior preauthorization or claim record found", "ERR-PYR-CLM-007"},
+	} {
+		got := ExtractErrorCodes(tc.in)
+		if len(got) != 1 || got[0] != tc.want {
+			t.Errorf("ExtractErrorCodes(%q) = %v, want [%s]", tc.in, got, tc.want)
+		}
+	}
+	// A workflow id or a participant code is not an error code.
+	for _, in := range []string{"workflow 161 on PMJAY", "1518@hcx", "ERR-PYR"} {
+		if got := ExtractErrorCodes(in); len(got) != 0 {
+			t.Errorf("ExtractErrorCodes(%q) = %v, want none", in, got)
+		}
+	}
+}

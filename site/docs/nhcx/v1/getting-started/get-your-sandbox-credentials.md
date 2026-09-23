@@ -73,8 +73,8 @@ A provider needs a payer to send requests to. The sandbox has one: the dummy pay
 | :---- | :---- |
 | Coverage eligibility | Send the check. It answers on its own. |
 | Insurance plan | Send the request with provider id `32722` and policy number `100217` in the bundle. It answers on its own. |
-| Preauthorisation or claim | Send the submit, then choose its answer with the [dummy payer action call](/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-dummy-payer-process-request): `Approve`, `Reject` or `Query`. |
-| Payment notice | Start it with the [payment notice trigger](/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-dummy-payer-paymentnotice-init). |
+| Preauthorisation or claim | Send the submit, then choose its answer with the [dummy payer action call](/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-process-request): `Approve`, `Reject` or `Query`. |
+| Payment notice | Start it with the [payment notice trigger](/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-paymentnotice-init). |
 
 The provider id and policy number apply to the dummy payer only. Codes such as `100001@sbx` and `1000002090@hcx` in examples show the format. Before you address any other code, look it up in [the participant list](/docs/nhcx/v1/api/registry/endpoints/registry-fetch-participants-list).
 

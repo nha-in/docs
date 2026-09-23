@@ -55,7 +55,7 @@ related:
 
 ## In plain words
 
-`/get/session` returns an access token for [NHCX](../../shared/glossary/nhcx.md) calls. You post your client id and client secret as a form. The response carries `access_token` and its lifetime in `expires_in`.
+`/get/session` returns an access token for [NHCX](../../shared/glossary/nhcx.md) calls. You post your client id and client secret as a form. The response carries `access_token` and `expires_in`, which is 1200 seconds (20 minutes).
 
 Get the auth token is use case 4 of the provider [sandbox exit](../glossary/sandbox-exit.md) and use case 6 of the payer sandbox exit. Both use cases name this call. The ABDM [session call](session-token.md) also issues NHCX tokens. [Choosing a session endpoint](../decisions/session-endpoint.md) compares the two. Use one of them across your whole integration.
 
@@ -85,22 +85,22 @@ The response body has this shape:
 ```json
 {
   "access_token": "<JWT_ACCESS_TOKEN>",
-  "expires_in": <LIFETIME_IN_SECONDS>,
+  "expires_in": 1200,
   "token_type": "Bearer"
 }
 ```
 
-Send `access_token` on every NHCX call as `bearer_auth: Bearer <access_token>`. Read `expires_in` from each response and renew the token before it runs out.
+Send `access_token` on every NHCX call as `bearer_auth: Bearer <access_token>`. The token lasts 1200 seconds (20 minutes). Renew it before it runs out, for example after about 18 minutes.
 
 **Idempotency.** Each call mints a new token. Repeating it is safe. Keep the newest token.
 
 ## How you know it worked
 
-You receive HTTP 200 with a non-empty `access_token`, `token_type` set to `Bearer` and an integer `expires_in`.
+You receive HTTP 200 with a non-empty `access_token`, `token_type` set to `Bearer` and `expires_in` set to `1200`.
 
 A participant service call such as [`/fetch/certs`](fetch-certs.md) then returns 200 when it carries the token in `bearer_auth`.
 
-The token is valid for `expires_in` seconds from the moment it arrived.
+The token is valid for 1200 seconds (20 minutes) from the moment it arrived.
 
 ## When it goes wrong
 

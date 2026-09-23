@@ -1,0 +1,182 @@
+{
+	"info": {
+		"_postman_id": "527a2bb5-126d-46b3-b7a1-1deb2e864363",
+		"name": "ABHA-Proxy Copy",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "https://apisbx.abdm.gov.in/hcx/abha/biometric/auth/init",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "*/*"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{Auth}}",
+						"type": "text"
+					},
+					{
+						"key": "process",
+						"value": "Preauth|Discharge",
+						"type": "text"
+					},
+					{
+						"key": "payerid",
+						"value": "123@hcx",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"scope\": [\"abha-login\", \"aadhaar-bio-verify\"],//[\"abha-login\", \"aadhaar-bio-verify\"] or [\"abha-login\", \"aadhaar-face-verify\"] or [\"abha-login\", \"aadhaar-iris-verify\"]\n  \"loginHint\": \"abha-number\",\n  \"loginId\": \"91-XXXX-XXXX-0302\",\n  \"otpSystem\": \"aadhaar\",\n  \"authMode\": \"FINGERPRINT\"//FINGERPRINT,IRIS, FACE_AUTH,\n}"
+				},
+				"url": {
+					"raw": "https://apisbx.abdm.gov.in/hcx/abha/biometric/auth/init",
+					"protocol": "https",
+					"host": [
+						"apisbx",
+						"abdm",
+						"gov",
+						"in"
+					],
+					"path": [
+						"hcx",
+						"abha",
+						"biometric",
+						"auth",
+						"init"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://apisbx.abdm.gov.in/hcx/abha/biometric/auth/verify",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "*/*"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{Auth}}",
+						"type": "text"
+					},
+					{
+						"key": "process",
+						"value": "Preauth|Discharge",
+						"type": "text"
+					},
+					{
+						"key": "payerid",
+						"value": "123@hcx",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"scope\":  [\"abha-login\", \"aadhaar-bio-verify\"],//[\"abha-login\", \"aadhaar-bio-verify\"] or [\"abha-login\", \"aadhaar-face-verify\"] or [\"abha-login\", \"aadhaar-iris-verify\"]\n  \"authData\": {\n    \"authMethods\": [\n      \"bio\"//bio | iris |face\n    ],\n     \"bio\": {\n      \"txnId\": \"d21b3db9-xxxx-xxxx-8eed-8f75e7f86b9f\",\n      \"fingerPrintAuthPid\": \"string\"\n    },\n    \"face\": {\n      \"txnId\": \"d21b3db9-xxxx-xxxx-8eed-8f75e7f86b9f\",\n      \"faceAuthPid\": \"string\"\n    },\n    \"iris\": {\n      \"txnId\": \"d21b3db9-xxxx-xxxx-8eed-8f75e7f86b9f\",\n      \"irisAuthPid\": \"string\"\n    },\n    \"otp\": {\n      \"txnId\": \"d21b3db9-xxxx-xxxx-8eed-8f75e7f86b9f\",\n      \"otpValue\": \"123456\"\n    }\n  },\n  \"authMode\": \"FINGERPRINT\"//FINGERPRINT,IRIS, FACE_AUTH\n}"
+				},
+				"url": {
+					"raw": "https://apisbx.abdm.gov.in/hcx/abha/biometric/auth/verify",
+					"protocol": "https",
+					"host": [
+						"apisbx",
+						"abdm",
+						"gov",
+						"in"
+					],
+					"path": [
+						"hcx",
+						"abha",
+						"biometric",
+						"auth",
+						"verify"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://apisbx.abdm.gov.in/hcx/abha/biometric/auth/refresh/token Copy",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "R-token",
+						"value": "Bearer {{RefreshToken}}"
+					},
+					{
+						"key": "TIMESTAMP",
+						"value": "2025-12-01T09:02:06.985Z",
+						"disabled": true
+					},
+					{
+						"key": "REQUEST-ID",
+						"value": "b8f26cdd-984b-429d-ba25-b588c4a5b10d",
+						"disabled": true
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{Auth}}"
+					},
+					{
+						"key": "payerid",
+						"value": "123@hcx",
+						"type": "text"
+					},
+					{
+						"key": "process",
+						"value": "Preauth|Discharge",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://apisbx.abdm.gov.in/hcx/abha/biometric/auth/refresh/token",
+					"protocol": "https",
+					"host": [
+						"apisbx",
+						"abdm",
+						"gov",
+						"in"
+					],
+					"path": [
+						"hcx",
+						"abha",
+						"biometric",
+						"auth",
+						"refresh",
+						"token"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

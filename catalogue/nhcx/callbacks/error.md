@@ -44,7 +44,7 @@ related:
   - nhcx.error.nhcx-1001
   - nhcx.error.nhcx-1006
   - nhcx.error.nhcx-1014
-  - nhcx.error.nhcx-1015
+  - nhcx.error.nhcx-1017
   concepts:
   - nhcx.concept.synchronous-acknowledgement
   - nhcx.concept.retries-and-expiry
@@ -212,4 +212,4 @@ NHCX expects your 202 and receipt within 30 seconds, as for every delivery. If t
 - **It never arrives.** The most common cause is that you do not host `/v1/error` at all, so failures pass unseen. Host it before any other asynchronous path. Then check the registration. The `endpoint_url` uses a domain name with no IP address or port. The server is in India, and your firewall accepts the addresses in [callback URL rules](../sandbox/callback-url-requirements.md). NHCX names a failure to deliver a protocol response to you as [NHCX-1014](../errors/nhcx-1014.md): unable to send protocol response to sender. If a case goes quiet with no report, ask with [`/v1/status`](../endpoints/status.md). `request.stopped` means the request is dead.
 - **Your handler refuses the report.** It parsed the body against a fixed schema and returned an error. Store the body whole, return 202 with the receipt, and parse afterwards.
 - **Your retry is refused as a duplicate.** You resent the request on its retired correlation id. That is [NHCX-1006](../errors/nhcx-1006.md). Send it again under a new correlation id.
-- **The same recipient keeps failing.** Its endpoint is down or rejects deliveries. [NHCX-1001](../errors/nhcx-1001.md) and [NHCX-1015](../errors/nhcx-1015.md) name these conditions. Contact the recipient, or [NHCX support](../sandbox/support-contacts.md).
+- **The same recipient keeps failing.** Its endpoint is down or rejects deliveries. [NHCX-1001](../errors/nhcx-1001.md) and [NHCX-1017](../errors/nhcx-1017.md) name these conditions. Contact the recipient, or [NHCX support](../sandbox/support-contacts.md).

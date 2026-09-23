@@ -83,7 +83,7 @@ related:
   - nhcx.error.nhcx-1001
   - nhcx.error.nhcx-1010
   - nhcx.error.nhcx-1011
-  - nhcx.error.nhcx-1015
+  - nhcx.error.nhcx-1017
   - nhcx.error.nhcx-1016
   - nhcx.error.payr-1001
   concepts:
@@ -277,7 +277,7 @@ Process the message, then answer on [`/v1/preauth/on_submit`](../endpoints/preau
   4. Your application routes the path to the handler: load balancer rules, service routes and endpoint versions.
   5. The provider addressed the message to your participant code. Providers address the processor code from their policy lookup, so check that code is yours.
   When NHCX cannot reach you, the sender is told [NHCX-1001](../errors/nhcx-1001.md), "Receiver system is not reachable." See [your callback URL is rejected or never called](../troubleshooting/callback-url-rejected.md).
-- **The same message arrives again and again.** NHCX did not accept your receipt. It was later than 30 seconds, used another status code, or had another shape. Fix the receipt, and keep processing each `x-hcx-api_call_id` once. An invalid answer from a receiver is reported as [NHCX-1015](../errors/nhcx-1015.md), "Invalid response received from receiver."
+- **The same message arrives again and again.** NHCX did not accept your receipt. It was later than 30 seconds, used another status code, or had another shape. Fix the receipt, and keep processing each `x-hcx-api_call_id` once. An invalid answer from a receiver is reported as [NHCX-1017](../errors/nhcx-1017.md), "Invalid response received from receiver."
 - **You cannot decrypt it.** The sender sealed it to an old certificate, or your registry certificate does not match your private key. Still return 202 with the receipt. Then answer on `/v1/preauth/on_submit` with a protocol response. [PAYR-1001](../errors/payr-1001.md) names a decryption failure. See [the recipient cannot decrypt your message](../troubleshooting/recipient-cannot-decrypt.md).
 - **Your answer is refused.** [NHCX-1010](../errors/nhcx-1010.md) means NHCX holds no exchange with that correlation id. [NHCX-1016](../errors/nhcx-1016.md) means the action does not fit that correlation id. [NHCX-1011](../errors/nhcx-1011.md) means the `x-hcx-status` value is invalid. Copy the correlation id from this message, answer on the paired path, and use a documented status. See [responses arrive against the wrong request](../troubleshooting/duplicate-or-mismatched-correlation.md).
 - **The request fails your business rules.** That is not a protocol error. Answer with a sealed ClaimResponse that carries the decision and the reason. Keep protocol responses for messages you cannot open or validate.

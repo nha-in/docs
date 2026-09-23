@@ -40,9 +40,24 @@ const fixed = () => ({
   FRESH_UUID: randomUUID(),
   ISO_8601_TIMESTAMP: new Date().toISOString(),
   UTC_ISO_8601_WITH_MILLISECONDS_AND_Z: new Date().toISOString(),
+  // The NHCX atoms name the same three things in their own words. Without
+  // these, every one of the 50 NHCX endpoint atoms was skipped as "needs
+  // ACCESS_TOKEN_FROM_SESSION_TOKEN" however many credentials were supplied.
+  FRESH_UUID_FOR_THIS_REQUEST: randomUUID(),
+  FRESH_UUID_FOR_THIS_CALL: randomUUID(),
+  NEW_UUID_FOR_THIS_CALL: randomUUID(),
+  CURRENT_UTC_TIME_ISO_8601_WITH_MILLIS_AND_Z: new Date().toISOString(),
 });
 const fill = (curl, token) => {
-  const vals = { ...fixed(), ACCESS_TOKEN: token };
+  const vals = {
+    ...fixed(),
+    ACCESS_TOKEN: token,
+    ACCESS_TOKEN_FROM_SESSION_TOKEN: token,
+    // The session token atom asks for the client's own id and secret, which
+    // are the two values this script is already run with.
+    ...(process.env.ABDM_CLIENT_ID ? { YOUR_CLIENT_ID: process.env.ABDM_CLIENT_ID } : {}),
+    ...(process.env.ABDM_CLIENT_SECRET ? { YOUR_CLIENT_SECRET: process.env.ABDM_CLIENT_SECRET } : {}),
+  };
   const missing = [];
   const out = curl.replace(/<([A-Z_0-9]+)>/g, (_, k) => {
     const v = vals[k] ?? process.env[k];
@@ -73,7 +88,14 @@ const token = session.accessToken;
 
 // Scrub every secret and every value the caller supplied before anything is written.
 const secrets = [token, secret, id, ...Object.keys(process.env).filter((k) => /^[A-Z_0-9]+$/.test(k) && k !== "ABDM_GATEWAY" && endpoints.some((a) => curlOf(a).includes(`<${k}>`))).map((k) => process.env[k])].filter((s) => s && s.length > 3);
-const scrub = (s) => secrets.reduce((t, v) => t.split(v).join("<scrubbed>"), s);
+// A token the sandbox hands back is a secret this script never held, so the
+// list above cannot name it. The session atom succeeding would otherwise write
+// a live access token into a committed evidence file. Any JWT, and the value
+// of any field named as a token, goes before the known secrets do.
+const scrubTokens = (s) => s
+  .replace(/\beyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{6,}\b/g, "<scrubbed-token>")
+  .replace(/("(?:access|refresh)_?[Tt]oken"\s*:\s*")[^"]+(")/g, "$1<scrubbed-token>$2");
+const scrub = (s) => secrets.reduce((t, v) => t.split(v).join("<scrubbed>"), scrubTokens(s));
 
 const rows = [];
 for (const a of endpoints) {
@@ -96,6 +118,10 @@ for (const a of endpoints) {
   // An error code coming back is evidence for its error atom too, so note it.
   for (const m of new Set(body.match(/ABDM-\d{4}/g) || [])) {
     const e = atoms.get(`hiecm.error.${m.toLowerCase()}`);
+    if (e && !rows.some((r) => r[0] === e.fm.id)) rows.push([e.fm.id, "observed", `in ${a.fm.id}`]);
+  }
+  for (const m of new Set(body.match(/\b(?:NHCX|PAYR)-\d{3,5}\b|\bERR-PYR-[A-Z]{2,5}-\d{3}\b/g) || [])) {
+    const e = atoms.get(`nhcx.error.${m.toLowerCase()}`);
     if (e && !rows.some((r) => r[0] === e.fm.id)) rows.push([e.fm.id, "observed", `in ${a.fm.id}`]);
   }
   execFileSync("sleep", ["0.5"]);

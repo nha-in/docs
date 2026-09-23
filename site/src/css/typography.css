@@ -71,15 +71,19 @@
   padding-left: 1.25rem;
 }
 
-/* A bundled base-layer reset sets list-style: none on every ol and ul, so a
-   numbered list in a page rendered without its numbers. These unlayered rules
-   win over the layer and give markdown lists their markers back. */
-.markdown ul {
-  list-style: disc;
+/* Tailwind's preflight sets `list-style: none` on every list. Lists written
+   in markdown carry no class, so give those their markers back and leave
+   component lists (tabs, steps, cards) alone. */
+.markdown ul:not([class]) {
+  list-style: disc outside;
 }
 
-.markdown ol {
-  list-style: decimal;
+.markdown ol:not([class]) {
+  list-style: decimal outside;
+}
+
+.markdown ul:not([class]) ul:not([class]) {
+  list-style-type: circle;
 }
 
 .markdown li + li {

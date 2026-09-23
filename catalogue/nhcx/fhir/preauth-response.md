@@ -45,7 +45,6 @@ related:
   - nhcx.fhir.claim-response
   - nhcx.fhir.collection-bundle
   errors:
-  - nhcx.error.nhcx-1015
   - nhcx.error.nhcx-1017
   tests:
   - nhcx.test.payer-uc-09
@@ -95,7 +94,7 @@ It carries one of four decisions: approved, partially approved, queried or rejec
 | `total[]` | `benefit` total, and an `eligible` total with id `PMJAY-T` |
 | `processNote[]` | Explanation of a reduction, linked from `item.noteNumber` |
 
-The `reason` adjudication carries a pipe-separated history. Each part reads `USER~date and time~type~comment~trust`. Parse it as plain text.
+The `reason` adjudication carries a pipe-separated history. Each part reads `USER~date and time~type~comment~actor`, where `actor` is whoever wrote the entry: `PPD-Trust` on a preauthorisation, `CPD-Trust` on a claim, or the hospital's name. Treat it as display text and never parse a timestamp from it, because the date formats vary.
 
 ### Minimal response resource
 

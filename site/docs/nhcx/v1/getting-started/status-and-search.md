@@ -43,7 +43,7 @@ why a status check costs nothing to answer.
 | `x-hcx-correlation_id` | **The `api_call_id` of the message whose status you are asking about** |
 | `x-hcx-api_call_id` | A fresh UUID, as always |
 | `x-hcx-sender_code`, `x-hcx-recipient_code` | You, and the exchange |
-| `x-hcx-ben-abha-id` | Mandatory |
+| `x-hcx-ben-abha-id` | Optional |
 | `x-hcx-workflow_id` | Optional |
 | `x-hcx-use_case` | Optional. `New`, `Enhancement` or `Resubmit` on the status sheet |
 
@@ -78,18 +78,6 @@ The Provider UI Guide makes the point the other way round: do not offer a
 refresh or chase control unless you have implemented this exchange behind it,
 because a control that does nothing is worse than no control.
 
-### A note on the path
-
-The Technical Specifications table names the pair `/hcx/status` and
-`/NHCX/on_status`. The sandbox Postman collection uses
-`https://apisbx.abdm.gov.in/hcx/v1/status` and `/hcx/v1/on_status`. Build
-against the Postman form, which is what the sandbox serves, and keep the path
-configurable.
-
-The status service's live specification is at
-`https://hcxsbx.abdm.gov.in/statushcxservice/swagger-ui-custom.html`.
-Environments and Addresses lists it with the others.
-
 ## Search
 
 Two different exchanges share the word. A provider may search, but only its
@@ -116,7 +104,7 @@ source confirms which of the two endpoints the sandbox accepts from a provider.
 Treat it as open: confirm with NHA before the demo, and keep the endpoint
 configurable. Access Control and Roles sets out the same rule.
 
-The search service's live specification is at
+The search service's sandbox specification is at
 `https://hcxsbx.abdm.gov.in/searchhcxservice/swagger-ui-custom.html`.
 
 ### The request bundle

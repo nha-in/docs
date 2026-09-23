@@ -28,7 +28,10 @@ for (const t of tasks) {
   const missing = t.needs.filter((k) => !process.env[k]);
   if (missing.length) { rows.push({ id: t.id, title: t.title, result: "BLOCKED", blockers: [`unset: ${missing.join(", ")}`] }); continue; }
   const cwd = mkdtempSync(join(tmpdir(), `abdm-eval-${t.id}-`));
-  const prompt = `${t.prompt}\n\nExit condition: ${t.exit}\n\n${footer}`;
+  // A task may carry its own footer. The default names the ABDM plugin as the
+  // only permitted source, which is the wrong instruction for an NHCX task:
+  // an agent told to use only ABDM skills would be right to refuse the work.
+  const prompt = `${t.prompt}\n\nExit condition: ${t.exit}\n\n${t.footer ?? footer}`;
   let text = "";
   try {
     text = execFileSync("claude", ["-p", prompt, "--model", model, "--output-format", "text",

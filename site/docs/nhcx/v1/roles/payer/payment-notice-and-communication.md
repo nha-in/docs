@@ -85,9 +85,9 @@ The case number as identifier, `status = completed`, a `category` (reminder, not
 
 #### The two Organizations
 
-Payer first, then the provider.
+Both organisations, each typed by `Organization.type` (`pay` and `prov`). Entry order carries no meaning: read each party's role from its type, never from its position in the bundle.
 
-The acknowledgement comes back as the same shape with the provider `Organization` first and the same correlation ID. It means received, not resolved; track resolution in the case, not in the exchange.
+The acknowledgement comes back as the same shape with the same correlation ID; you know it is the answer because it arrives from the provider's sender code on that correlation ID with `Task.status = completed`, not because of where the `Organization` entries sit. It means received, not resolved; track resolution in the case, not in the exchange.
 
 ## What a provider does with each notice
 

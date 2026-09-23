@@ -13,7 +13,7 @@ info:
   title: NHCX communication
   summary: Every other NHCX exchange is provider-initiated and expects a matching response.
   description: |-
-    The Communication calls on the National Health Claims Exchange (NHCX): 4 operations, and 2 callbacks you host.
+    The Communication calls on the National Health Claims Exchange (NHCX): 2 operations, and 2 callbacks you host.
 
     Every other NHCX exchange is provider-initiated and expects a matching response.
 
@@ -48,8 +48,6 @@ servers:
 tags:
   - name: Communication
     description: Every other NHCX exchange is provider-initiated and expects a matching response.
-  - name: Adapter
-    description: Internal twins of the exchange calls, for the NHCX adapter deployment.
 security:
   - bearerAuth: []
 paths:
@@ -70,28 +68,25 @@ paths:
 
         ### When to use
 
-        Call it whenever the payer needs to communicate outside the direct request-response lifecycle of a preauth or claim. It does not replace the in-band query path (ClaimResponse outcome=partial with a DOC_MISSING processNote); both can be in flight for the same case. The scenario is identified by Task.reasonCode: tatquery, grievance, walletupdate, policychange, additionalinfo and the arbitration code (spelt claimArbitration in one handbook table and claimArbitartion in another). Send x-hcx-status request.initiated; the x-hcx-workflow_id must be the workflow of the associated claim or preauth and is validated at the gateway.
+        The payer uses it to send the provider a message outside the pre-authorisation or claim flow, such as a delay notice, a grievance or a request for more information. The workflow code in the header must match the related claim or pre-authorisation.
 
         ### Preconditions
 
-        - Payer and provider both registered on NHCX; a valid Bearer token from the client-credentials session call (1200 s expiry).
-        - The provider's public certificate fetched via /fetch/certs (cache up to 24 h) and used to JWE-encrypt with RSA-OAEP-256 and A256GCM.
-        - A collection Bundle containing a Task (status completed, intent proposal, code poll, input type include) that references a Communication or CommunicationRequest carrying category, priority and topic; the identifiers key off the claim or preauth reference.
-        - Protected header with x-hcx-sender_code, x-hcx-recipient_code, x-hcx-api_call_id, x-hcx-correlation_id, x-hcx-workflow_id, x-hcx-timestamp (IST +05:30) and x-hcx-status request.initiated. A fresh UUID correlation id opens the conversation.
-        - HTTP headers Accept, Content-Type and bearer_auth.
+        - A valid access token and the provider's certificate.
+        - The bundle is encrypted for the provider.
+        - The header carries `x-hcx-status` `request.initiated` and a fresh correlation ID.
 
         ### Postconditions
 
-        The gateway validates the JWE headers, workflow id and NIIP and returns HTTP 202 with a StatusSuccessResponse (timestamp, api_call_id, correlation_id, result with sender_code, recipient_code, entity_type and protocol_status, and an error object). Nothing is decided synchronously; the gateway forwards the bundle to the provider's registered callback. The provider must acknowledge with 202 within 30 seconds, then close the loop by posting an acknowledgement Task bundle to /v1/communication/on_request under the same x-hcx-correlation_id. Errors are 400 (validation failed), 404 and 500, all in the same envelope. Communication.status completed describes the event, not the resolution of the underlying issue.
+        - NHCX answers `202` at once. That only means the message was accepted.
+        - The provider's acknowledgement arrives later on `/v1/communication/on_request`, with the same correlation ID.
 
         ### Common mistakes
 
-        - Treating the 202 as delivery or as the provider's answer; the acknowledgement comes later on on_request.
-        - Sending a workflow id that does not match the associated claim or preauth, which fails gateway validation (PAYR-1003 Invalid workflow requested).
-        - Wrong x-hcx-status spelling (request.initiate instead of request.initiated) producing NHCX-1011.
-        - Reusing a correlation id from an earlier cycle (NHCX-1006 Duplicate request) or from a failed cycle, which NHCX has made inactive.
-        - Copying the sandbox sample's swapped Organization identifier types (NIIP versus NPI), a known data-quality defect.
-        - Using Communication as a substitute for the in-band ClaimResponse query mechanism.
+        - Treating the `202` as the provider's answer.
+        - Sending a workflow code that does not match the related claim or pre-authorisation.
+        - Reusing a correlation ID from an earlier or failed cycle.
+        - Using it in place of the query inside a `ClaimResponse`.
 
         ### Best practices
 
@@ -192,28 +187,23 @@ paths:
 
         ### When to use
 
-        Call it after receiving and persisting a /v1/communication/request bundle. The gateway has already been given a 202 within 30 seconds; this call is the separate business acknowledgement. Echo the same Task.reasonCode (tatquery, grievance, walletupdate, policychange, additionalinfo or the arbitration code) and Task.code poll, keep Task.intent proposal, and use the same x-hcx-correlation_id as the incoming request. x-hcx-workflow_id is validated at the gateway for the acknowledgement as well as the request. Responder status values are response.complete, response.partial or response.error.
+        The provider calls it to acknowledge a `/v1/communication/request`. It comes after the quick `202` reply and reuses the request's correlation ID and reason.
 
         ### Preconditions
 
-        - The inbound JWE was extracted from the payload field, validated as a five-part string, decrypted with your PKCS8 private key and its protected header parsed for correlation id, status and workflow id.
-        - The provider is a registered NHCX participant and holds a valid Bearer token.
-        - The payer's certificate is available to encrypt the acknowledgement bundle.
-        - The acknowledgement bundle mirrors the request (Task completed, intent proposal, code poll, reasonCode echoed) with the provider Organization listed before the payer Organization and Bundle.timestamp updated to the acknowledgement time.
-        - Protected header reuses the request's x-hcx-correlation_id, carries a fresh x-hcx-api_call_id and a responder x-hcx-status.
+        - You decrypted the incoming request and answered it `202` within 30 seconds.
+        - A valid access token and the payer's certificate.
+        - The acknowledgement mirrors the request and reuses its `x-hcx-correlation_id`.
 
         ### Postconditions
 
-        The gateway returns HTTP 202 with the StatusSuccessResponse envelope (timestamp, api_call_id, correlation_id, result, error) and forwards the bundle to the payer. The payer's system can link the acknowledgement to the original notification by correlation id and by the shared claim or preauth reference in Task.identifier and Communication.id. The underlying issue is not resolved by this call: a TAT breach or grievance may still be open, and any documents requested via additionalinfo are supplied through the relevant preauth or claim resubmission path. Validation failures come back as 400, unknown resources as 404, downstream faults as 500.
+        NHCX answers `202` and forwards the acknowledgement to the payer. It only confirms receipt, so the issue itself may still be open.
 
         ### Common mistakes
 
-        - Minting a new correlation id on the acknowledgement instead of echoing the request's; the payer can no longer link it (NHCX-1010 No Data with given Correlation id for call back request).
-        - Sending the acknowledgement before, or instead of, the synchronous 202; the gateway treats a missing or malformed 202 as an error and retries up to five times.
-        - Holding the socket open while a human reviews the message, breaching the 30-second window.
-        - Closing the hospital case on acknowledgement because Communication.status reads completed.
-        - Deriving sender and receiver roles from Organization identifier types, which are swapped in the sandbox sample.
-        - Building the reason-code switch on a single spelling of the arbitration code.
+        - Using a new correlation ID, so the payer cannot link the acknowledgement.
+        - Keeping the connection open while someone reads the message, missing the 30-second limit.
+        - Closing the hospital case because the Communication says `completed`.
 
         ### Best practices
 
@@ -315,261 +305,8 @@ paths:
                 error:
                   code: ""
                   message: ""
-  /internal/v1/communication/request:
-    post:
-      operationId: communication_internal_v1_communication_request
-      x-abdm-use-case: Adapter
-      tags:
-        - Adapter
-      summary: Communication request (internal variant) (adapter)
-      description: |-
-        Internal twin of /v1/communication/request: same JWEPayload body, description and 202 envelope, operationId communicationRequestPostInternal.
-
-        ### Business purpose
-
-        Six NHCX services expose each operation twice, once at /v1/... and once at /internal/v1/..., with identical descriptions and request bodies and only the operationId suffix differing. This entry is the internal twin of the payer-initiated communication request: the channel through which a payer pushes TAT alerts, grievances, wallet or policy updates and additional-information requests to a provider. It exists so the exchange can route the same operation over an internal path; the specifications do not document any further difference from the public endpoint.
-
-        ### When to use
-
-        The published OpenAPI documents give this path the same semantics as /v1/communication/request: a payer submits a Task plus Communication bundle for a provider during the claim lifecycle, identified by Task.reasonCode (tatquery, grievance, walletupdate, policychange, additionalinfo, claim arbitration). The specs do not state when an integrator should prefer the internal path over the public one, so integrators should code against /v1/communication/request unless onboarding instructions direct otherwise. Header rules are unchanged: request.initiated status and a workflow id validated against the associated case.
-
-        ### Preconditions
-
-        - Identical to the public endpoint: registered sender and recipient, valid Bearer token, recipient certificate for JWE encryption (RSA-OAEP-256, A256GCM).
-        - Request body is a JWEPayload, { "payload": "<compact JWE>" }, whose plaintext is the Task plus Communication collection Bundle.
-        - Protected header carries sender_code, recipient_code, api_call_id, correlation_id, workflow_id, timestamp in IST and status request.initiated.
-        - Whether the internal prefix is reachable from a participant's network is not documented; confirm with the environment index and your onboarding contact.
-
-        ### Postconditions
-
-        Returns the same response set as the public endpoint: 202 Accepted with a StatusSuccessResponse (timestamp, api_call_id, correlation_id, result, error), or 400 Request Validation failed, 404 Requested resource was not found and 500 Downstream systems down/unhandled exceptions in the same envelope. The bundle is forwarded to the provider's registered callback, which must acknowledge with 202 within 30 seconds and then answer on the communication on_request path under the same correlation id. No additional state change is documented for the internal variant.
-
-        ### Common mistakes
-
-        - Assuming the internal path behaves differently or bypasses header validation; the specs describe it as identical apart from the operationId.
-        - Hard-coding the internal prefix in a participant integration without confirmation that it is the route you were onboarded to.
-        - The same envelope errors as the public path: wrong status spelling (NHCX-1011), invalid header (NHCX-1005), duplicate correlation id (NHCX-1006), invalid workflow (PAYR-1003).
-        - Mixing the hcxsbx.abdm.gov.in/<service> spec host and the apisbx.abdm.gov.in/pmjay/sbxhcx gateway base; a 404 is the first sign.
-
-        ### Best practices
-
-        - Treat this path exactly as /v1/communication/request in your client: same bundle builder, same header hygiene, same correlation-id persistence.
-        - Keep the path prefix configurable so you can switch between public and internal forms without a code change.
-        - Use fresh UUIDs for api_call_id per call and correlation_id per cycle; use IST timestamps.
-        - Implement v1/error and idempotent callback handling regardless of which path you post to.
-
-        ### Related scenario
-
-        An insurer's integration team exploring the communicationhcxservice Swagger on the sandbox host sees both communicationRequestPost and communicationRequestPostInternal listed with the same description. They wire their TAT-alert sender to the public /v1/communication/request path as documented in the handbook, keep the internal variant as a configurable alternative, and confirm with NHCX onboarding which form their gateway route expects. The rest of the flow is unchanged: 202 acknowledgement, provider callback within 30 seconds, and the acknowledgement Task on the on_request path.
-
-        ### Specification
-
-        Chapter [Communication](/docs/nhcx/v1/reference/fhir/communication) of the NHCX integration specification.
-      parameters:
-        - $ref: "#/components/parameters/BearerAuth"
-        - $ref: "#/components/parameters/XHcxSenderCode"
-        - $ref: "#/components/parameters/XHcxRecipientCode"
-        - $ref: "#/components/parameters/XHcxApiCallId"
-        - $ref: "#/components/parameters/XHcxRequestId"
-        - $ref: "#/components/parameters/XHcxCorrelationId"
-        - $ref: "#/components/parameters/XHcxWorkflowId"
-        - $ref: "#/components/parameters/XHcxTimestamp"
-        - $ref: "#/components/parameters/XHcxStatus"
-        - $ref: "#/components/parameters/XHcxBenAbhaId"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                payload:
-                  type: string
-            example:
-              payload: eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2R0NNIiwieC1oY3gtc2VuZGVyX2NvZGUiOiIxNTE4QGhjeCJ9.encrypted_key.iv.ciphertext.tag
-      responses:
-        "200":
-          description: "Returns the same response set as the public endpoint: 202 Accepted with a StatusSuccessResponse (timestamp, api_call_id, correlation_id, result, error), or 400 Request Validation failed, 404 Requested resource was not found and 500 Downstream systems down/unhandled exceptions in the same envelope."
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  timestamp:
-                    type: string
-                  api_call_id:
-                    type: string
-                  correlation_id:
-                    type: string
-                  result:
-                    type: object
-                    properties:
-                      sender_code:
-                        type: string
-                      recipient_code:
-                        type: string
-                      entity_type:
-                        type: string
-                      protocol_status:
-                        type: string
-                  error:
-                    type: object
-                    properties:
-                      code:
-                        type: string
-                      message:
-                        type: string
-              example:
-                timestamp: 25/08/2026 12:05:00:412
-                api_call_id: c3d4e5f6-a7b8-9012-cdef-123456789012
-                correlation_id: 22334455-6677-8899-aabb-ccddeeff0011
-                result:
-                  sender_code: 1518@hcx
-                  recipient_code: 1000004446@hcx
-                  entity_type: task
-                  protocol_status: request.queued
-                error:
-                  code: ""
-                  message: ""
-  /internal/v1/communication/on_request:
-    post:
-      operationId: communication_internal_v1_communication_on_request
-      x-abdm-use-case: Adapter
-      tags:
-        - Adapter
-      summary: Communication acknowledgement callback (internal variant) (adapter)
-      description: |-
-        Internal twin of /v1/communication/on_request: the provider acknowledgement Task bundle, operationId communicationOnRequestPostInternal.
-
-        ### Business purpose
-
-        This is the internal-path form of the provider acknowledgement that closes a payer communication. The OpenAPI document lists it with the same description and bare object request body as the public callback and distinguishes it only by the operationId suffix. Its business role is unchanged: give the payer auditable confirmation that a TAT alert, grievance, wallet or policy update or additional-information request reached the hospital, so adjudication and SLA tracking can proceed inside NHCX rather than over phone or email.
-
-        ### When to use
-
-        Use it in the same circumstances as the public on_request callback: after receiving, acknowledging with a synchronous 202, and persisting a communication request, the provider posts a mirror-image Task bundle with the same reasonCode, Task.code poll, Task.intent proposal, Task.status completed and the same x-hcx-correlation_id. The responder status is response.complete, response.partial or response.error. The specs do not say when the internal path is used instead of the public one; follow your onboarding instructions.
-
-        ### Preconditions
-
-        - The inbound communication was decrypted and its correlation id, status and workflow id captured.
-        - A valid Bearer token and the payer's certificate for encrypting the acknowledgement.
-        - The acknowledgement bundle mirrors the request, provider Organization first, timestamps updated.
-        - Protected header echoes the request's x-hcx-correlation_id, carries a fresh x-hcx-api_call_id, an IST timestamp and a responder status; x-hcx-workflow_id is validated at the gateway.
-        - Confirm the internal prefix is the route you were onboarded to before using it.
-
-        ### Postconditions
-
-        Same as the public callback: HTTP 202 with the StatusSuccessResponse envelope, or 400, 404 or 500 in the same shape; the bundle is forwarded to the payer, who links it to the original notification by correlation id and by the shared claim or preauth reference. The underlying issue remains open until resolved through the preauth or claim path. No additional behaviour is documented for the internal variant.
-
-        ### Common mistakes
-
-        - Expecting the internal path to relax any rule; it carries the same validation and the same errors (NHCX-1010 for an unknown correlation id, NHCX-1011 for a bad status value).
-        - Minting a new correlation id on the acknowledgement.
-        - Sending this call in place of the synchronous 202, which triggers the five-attempt retry loop and deletion of the request.
-        - Closing the case because Communication.status is completed.
-        - Using an unconfigurable path prefix that cannot switch between public and internal forms.
-
-        ### Best practices
-
-        - Share one acknowledgement builder with the public callback; only the path differs.
-        - Return 202 within 30 seconds first, then post the acknowledgement asynchronously.
-        - Be idempotent on correlation id; expect redeliveries.
-        - Route on Task.reasonCode and log reason, category, priority and correlation id.
-        - Keep IST timestamps and a fresh api_call_id on every call.
-
-        ### Related scenario
-
-        A hospital integrator generating client code from the communicationhcxservice Swagger finds two acknowledgement operations, communicationOnRequestPost and communicationOnRequestPostInternal, with identical descriptions. The team implements one handler for inbound communications, answers 202 immediately, and posts the acknowledgement Task to the public /v1/communication/on_request path as the handbook documents, leaving the internal form selectable by configuration. When a walletupdate arrives for a patient mid-admission, the same handler refreshes the benefit cache before the enhancement request goes out on /v1/preauth/submit.
-
-        ### Specification
-
-        Chapter [Communication](/docs/nhcx/v1/reference/fhir/communication) of the NHCX integration specification.
-      parameters:
-        - $ref: "#/components/parameters/BearerAuth"
-        - name: x-hcx-sender_code
-          in: header
-          required: true
-          description: Your participant code. Mandatory on the envelope.
-          schema:
-            type: string
-          example: 1000004446@hcx
-        - name: x-hcx-recipient_code
-          in: header
-          required: true
-          description: The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
-          schema:
-            type: string
-          example: 1518@hcx
-        - $ref: "#/components/parameters/XHcxApiCallId"
-        - $ref: "#/components/parameters/XHcxRequestId"
-        - $ref: "#/components/parameters/XHcxCorrelationId"
-        - $ref: "#/components/parameters/XHcxWorkflowId"
-        - $ref: "#/components/parameters/XHcxTimestamp"
-        - name: x-hcx-status
-          in: header
-          required: true
-          description: Where this message stands. Values below. Mandatory on the envelope.
-          schema:
-            type: string
-          example: response.complete
-        - $ref: "#/components/parameters/XHcxBenAbhaId"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                payload:
-                  type: string
-            example:
-              payload: eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2R0NNIiwieC1oY3gtc2VuZGVyX2NvZGUiOiIxMDAwMDA0NDQ2QGhjeCJ9.encrypted_key.iv.ciphertext.tag
-      responses:
-        "202":
-          description: "Same as the public callback: HTTP 202 with the StatusSuccessResponse envelope, or 400, 404 or 500 in the same shape; the bundle is forwarded to the payer, who links it to the original notification by correlation id and by the shared claim or preauth reference."
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  timestamp:
-                    type: string
-                  api_call_id:
-                    type: string
-                  correlation_id:
-                    type: string
-                  result:
-                    type: object
-                    properties:
-                      sender_code:
-                        type: string
-                      recipient_code:
-                        type: string
-                      entity_type:
-                        type: string
-                      protocol_status:
-                        type: string
-                  error:
-                    type: object
-                    properties:
-                      code:
-                        type: string
-                      message:
-                        type: string
-              example:
-                timestamp: 25/08/2026 12:15:00:377
-                api_call_id: d4e5f6a7-b8c9-0123-def0-234567890123
-                correlation_id: 22334455-6677-8899-aabb-ccddeeff0011
-                result:
-                  sender_code: 1000004446@hcx
-                  recipient_code: 1518@hcx
-                  entity_type: task
-                  protocol_status: request.queued
-                error:
-                  code: ""
-                  message: ""
 webhooks:
-  v1_communication_request:
+  /v1/communication/request:
     post:
       operationId: communication_webhook_v1_communication_request
       x-abdm-atom: nhcx.callback.communication-request
@@ -648,7 +385,7 @@ webhooks:
                 error:
                   code: ""
                   message: ""
-  v1_communication_on_request:
+  /v1/communication/on_request:
     post:
       operationId: communication_webhook_v1_communication_on_request
       x-abdm-atom: nhcx.callback.communication-on-request
@@ -788,7 +525,7 @@ components:
       name: x-hcx-request_id
       in: header
       required: false
-      description: One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope.
+      description: "One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope. Send it anyway, as a fresh UUID per originating request: it is cheap and satisfies both readings until NHA rules."
       schema:
         type: string
       example: <uuid>
@@ -827,8 +564,8 @@ components:
     XHcxBenAbhaId:
       name: x-hcx-ben-abha-id
       in: header
-      required: true
-      description: The beneficiary's ABHA number. Mandatory on every exchange, including those with no beneficiary in the payload. Mandatory on the envelope.
+      required: false
+      description: "The beneficiary's ABHA number. Optional: send it when the beneficiary has an ABHA number. Optional on the envelope."
       schema:
         type: string
       example: "91711234567890"

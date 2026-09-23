@@ -147,7 +147,7 @@ sequenceDiagram
 
 1. Build the [CoverageEligibilityRequest bundle](../fhir/coverage-eligibility-request.md). Include the patient, the active coverage, your hospital and the payer as organisations, and the person running the check as `enterer`.
 2. Set `purpose`. For `auth-requirements`, add one `item` per package, with its category code, package code and quantity.
-3. Seal the bundle as a [JWE](../glossary/jwe.md) and set the protected headers, as in [send a sealed request](send-a-sealed-request.md). Set `x-hcx-status` to `request.initiated` and send `x-hcx-ben-abha-id`.
+3. Seal the bundle as a [JWE](../glossary/jwe.md) and set the protected headers, as in [send a sealed request](send-a-sealed-request.md). Set `x-hcx-status` to `request.initiated` and send `x-hcx-ben-abha-id` if the beneficiary has an ABHA number. It is optional.
 4. Start a new correlation. Set `x-hcx-correlation_id` to the value of this call's `x-hcx-api_call_id`.
 5. Call [POST /v1/coverageeligibility/check](../endpoints/coverageeligibility-check.md). NHCX answers `202 Accepted`. The envelope passed validation and is on its way to the payer. It is not the answer.
 6. Wait for the callback. The payer answers once it has checked the policy. A payer may instead ask NHCX to forward the same request to another payer.

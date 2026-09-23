@@ -104,7 +104,7 @@ You send it on `/v1/coverageeligibility/check`.
 | `Organization` (provider) | Your facility | Identifier typed `NPI` carrying your HFR ID, system `https://facility.abdm.gov.in`; type `prov` |
 | `Organization` (payer) | The insurer | Identifier typed `NIIP`; type `pay` |
 | `Coverage` | The policy | Identifier typed `NH` carrying the policy number; `beneficiary`, `payor` |
-| `Practitioner` | Who entered the request | Identifier on `https://hpr.abdm.gov.in` |
+| `PractitionerRole` | Who entered the request, referenced from `enterer` | Points to the `Practitioner`, whose identifier is on `https://hpr.abdm.gov.in` |
 
 Every resource declares `https://nrces.in/ndhm/fhir/r4/StructureDefinition/<ResourceType>` in `meta.profile`.
 

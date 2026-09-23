@@ -17,8 +17,6 @@ Coverage eligibility is the pre-check a hospital desk runs before committing a p
 | --- | --- | --- |
 | [Coverage eligibility check](/docs/nhcx/v1/api/eligibility/endpoints/eligibility-v1-coverageeligibility-check) | `POST /v1/coverageeligibility/check` | Provider asks the payer, via NHCX, whether a beneficiary's policy is in force, what it covers and which documents a preauth will need. |
 | [Coverage eligibility callback](/docs/nhcx/v1/api/eligibility/endpoints/eligibility-v1-coverageeligibility-on-check) | `POST /v1/coverageeligibility/on_check` | Payer returns the CoverageEligibilityResponse (policy in force, benefits, auth requirements) or an error to the provider through NHCX. |
-| [Coverage eligibility check (internal) (adapter)](/docs/nhcx/v1/api/eligibility/endpoints/eligibility-internal-v1-coverageeligibility-check) | `POST /internal/v1/coverageeligibility/check` | Internal twin of /v1/coverageeligibility/check with the same JWEPayload body and response set; only the operationId differs. |
-| [Coverage eligibility callback (internal) (adapter)](/docs/nhcx/v1/api/eligibility/endpoints/eligibility-internal-v1-coverageeligibility-on-check) | `POST /internal/v1/coverageeligibility/on_check` | Internal twin of /v1/coverageeligibility/on_check taking the same bare object body; only the operationId differs. |
 
 ## Callbacks you host
 

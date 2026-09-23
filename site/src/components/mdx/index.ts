@@ -4,3 +4,5 @@ export {default as Steps, Step, type StepsProps, type StepProps} from './Steps';
 export {default as Expandable, type ExpandableProps} from './Expandable';
 export {default as ParamField, type ParamFieldProps} from './ParamField';
 export {default as LegacyAnchor, type LegacyAnchorProps} from './LegacyAnchor';
+export {default as WorkflowCodeExplorer} from './WorkflowCodeExplorer';
+export {default as UseCase, type UseCaseProps} from './UseCase';

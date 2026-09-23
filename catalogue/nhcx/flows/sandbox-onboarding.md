@@ -99,7 +99,7 @@ sequenceDiagram
     participant GW as ABDM session gateway
     participant PS as NHCX participant service
     You->>GW: POST /api/hiecm/gateway/v3/sessions
-    GW-->>You: accessToken and expiresIn
+    GW-->>You: accessToken, expiresIn 1200
     You->>PS: POST /participant/create
     PS-->>You: participant_code, for example 100001@sbx
     opt Create answers with a transactionid instead
@@ -119,7 +119,7 @@ Every call in this flow answers in its own response. Two waits sit outside the c
 
 ### 1. Get a session token
 
-Call the session endpoint with your client ID and secret. [Which session token endpoint to call](../decisions/session-endpoint.md) settles the address. Read the token's lifetime from `expiresIn` in the answer. Get a new token before it lapses, and after any `401`.
+Call the session endpoint with your client ID and secret. [Which session token endpoint to call](../decisions/session-endpoint.md) settles the address. The token lasts 1200 seconds (20 minutes), which the answer states as `expiresIn`. Get a new token before it lapses, and after any `401`.
 
 Every participant service call below carries this token. The [session token endpoint](../endpoints/session-token.md) shows the header.
 

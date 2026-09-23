@@ -17,6 +17,7 @@ import {
 import {
   activePlatform,
   activeTab,
+  isApiSideTab,
   isLanding,
   platforms,
   useRoutePath,
@@ -123,7 +124,7 @@ function GatewayMenu() {
   const current = activePlatform(pathname) ?? platforms[0];
   // Send an API reader to the next gateway's contract, everyone else to its
   // overview, so switching keeps the reader where they already were.
-  const inApiTab = activeTab(pathname)?.id === 'api';
+  const inApiTab = isApiSideTab(activeTab(pathname)?.id);
 
   return (
     <DropdownMenu>
