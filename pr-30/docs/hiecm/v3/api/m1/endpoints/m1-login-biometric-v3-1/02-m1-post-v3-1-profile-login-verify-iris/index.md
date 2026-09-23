@@ -19,11 +19,11 @@ v3.1 IRIS login in a single call. Send the encrypted Aadhaar number and the IRIS
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["abha-login", "aadhaar-iris-login-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["ABHA-login", "Aadhaar-iris-login-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
 | `authData.authMethods` | `["iris_login"]` | yes | Authentication method used in this step. |
 | `authData.iris_login` | object | yes | IRIS login block (v3.1). |
-| `authData.iris_login.aadhaar` | string | yes | Aadhaar number, RSA-encrypted. |
+| `authData.iris_login.Aadhaar` | string | yes | Aadhaar number, RSA-encrypted. |
 | `authData.iris_login.irisAuthPid` | string | yes | Base64 PID block captured from a registered IRIS RD device. |
 
 > **Note:** This API is only in the Postman collection (v3.1). The request/response is taken from there, and the success response shape reuses the v3 biometric verify example.

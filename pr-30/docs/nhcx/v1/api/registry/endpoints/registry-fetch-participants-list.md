@@ -10,26 +10,23 @@ A patient is not cashless merely by having insurance. The hospital must first di
 
 ### When to use
 
-Call it at the very start of the handbook's fixed operational order: payer search, payer selection, policy discovery, policy cache normalisation, effective payer resolution, InsurancePlan and benefit retrieval, optional eligibility verification, then preauth submission. Refresh the list periodically rather than per patient. Sandbox URL https://apisbx.ABDM.gov.in/pmjay/sbxhcx/participanthcxservice/fetch/participants/list. Synchronous JSON; no workflow or x-hcx-status codes.
+Use it first, to find the payers you can send to. Refresh the list from time to time, not for every patient.
 
 ### Preconditions
 
-- Bearer token in bearer_auth with the Bearer prefix; Accept and Content-Type: application/json.
-- FetchParticipantRequest: role (PAYER, PROVIDER or TPA), fromdate and todate in dd/MM/yyyy format only, all required; entitytype optional (for example Gov).
-- A date window wide enough to cover the registration dates of the participants you expect; the handbook example spans 01/04/2021 to 20/03/2026.
+- You have a valid access token in the `bearer_auth` header.
+- You send a role and a date range, with dates in `dd/MM/yyyy` format.
+- The date range covers when the participants you expect were registered.
 
 ### Postconditions
 
-HTTP 200 with ParticipantListResponse: a participantdetails array of ParticipantDetails with participantcode, participantname, address and state. The handbook notes the response shape is not stable and the documented search logic normalises participantdetails, participants or a raw array. No state changes and no callback. 400, 404 and 500 carry the ErrorResponse envelope. In the sandbox, the dummy payer 1000003538@hcx is the counterparty you will find and use.
+You get a list of participants with their codes and names. The shape of the list can vary, so read it defensively.
 
 ### Common mistakes
 
-- Supplying dates in ISO or any format other than dd/MM/yyyy.
-- Using a date window that is too narrow, which silently drops payers that registered outside it.
-- Expecting a name filter; there is none, so text search and GOVT versus PRIVATE classification (from entitytype) must be done client-side.
-- Being misled by the OpenAPI description, which is copy-pasted from the update API; the request schema defines the real behaviour.
-- Parsing only participantdetails and breaking when the instance returns participants or a raw array.
-- Missing Accept header or Bearer prefix.
+- Sending dates in any format other than `dd/MM/yyyy`.
+- Using a date range so narrow that some payers are missing.
+- Expecting to filter by name. Filter the list yourself.
 
 ### Best practices
 

@@ -21,12 +21,12 @@ Completes login through the face-auth QR / ABHA-app flow. First call *Face auth 
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["abha-login", "aadhaar-face-login-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["ABHA-login", "Aadhaar-face-login-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
 | `authData.authMethods` | `["face_auth"]` | yes | Authentication method used in this step. |
 | `authData.face_login` | object | yes | Face login block (v3.1). |
 | `authData.face_login.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
-| `authData.face_login.aadhaar` | string | yes | Aadhaar number, RSA-encrypted. |
+| `authData.face_login.Aadhaar` | string | yes | Aadhaar number, RSA-encrypted. |
 
 > **Note:** This API is only in the Postman collection (v3.1).
 

@@ -10,30 +10,30 @@ The callback carries the payer's view of what it would pay for a proposed treatm
 
 ### When to use
 
-Called by the payer after it has assessed a request received on `/v1/predetermination/submit`, echoing that request's correlation ID with `x-hcx-status` `response.complete`. Only payers that have agreed to support predetermination send it.
+The payer calls it after assessing a predetermination request, with the same correlation ID and `x-hcx-status` `response.complete`. Only payers that support predetermination send it.
 
 ### Preconditions
 
-- A predetermination request with this correlation ID exists in NHCX. A callback for an unknown one is refused with `NHCX-1010`.
-- The bundle carries `ClaimResponse`, `Patient`, the payer and provider `Organization` and `Coverage`.
-- `ClaimResponse.use` is `predetermination`, and the estimated approved benefit is in `ClaimResponse.total` under category `benefit`.
-- The payer holds a valid session token and the provider's certificate, and seals the bundle for the provider.
-- `x-hcx-correlation_id` echoes the request, `x-hcx-api_call_id` is new, and the sender and recipient codes are swapped.
+- A predetermination request with this correlation ID exists in NHCX.
+- The payer has a valid access token and the provider's certificate, and encrypts the answer for the provider.
+- The bundle is a `ClaimResponse` with `use` set to `predetermination`, carrying the estimated benefit.
+- The correlation ID matches the request, and the call ID is new.
 
 ### Postconditions
 
-NHCX returns HTTP 202 with the acknowledgement and delivers the callback to the provider, which must answer 202 with a receipt within 30 seconds. A delivery that is not acknowledged is retried five times, after which the exchange retires the correlation ID and reports the failure on `/v1/error`. The estimate reserves nothing against the policy.
+- NHCX answers `202` and forwards the estimate to the provider, who must reply `202` within 30 seconds.
+- The estimate reserves nothing against the policy.
 
 ### Common mistakes
 
-- Minting a new correlation ID instead of echoing the request's.
-- Reading the estimate as an approval on the provider side.
-- The provider answering with anything other than 202 and the receipt, which triggers retries.
+- Creating a new correlation ID instead of reusing the request's.
+- Provider side: reading the estimate as an approval.
+- Provider side: replying with anything other than `202`, which triggers retries.
 
 ### Best practices
 
 - Provider: acknowledge first, then decrypt, then store the estimate against the planned case.
-- Provider: make the handler idempotent, since a missed receipt means the same message arrives again with the same `x-hcx-api_call_id`.
+- Provider: make the handler idempotent, since a missed receipt means the same message arrives again with the same `x-hcx-API_call_ID`.
 - Payer: explain the estimate in `ClaimResponse.disposition`, as the reference sample does.
 
 ### Related scenario

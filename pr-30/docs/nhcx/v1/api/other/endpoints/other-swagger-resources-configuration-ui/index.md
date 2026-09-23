@@ -10,24 +10,22 @@ Swagger UI reads this endpoint to learn how the service wants its documentation 
 
 ### When to use
 
-Use it only in the context of a Swagger UI session against the status service; ordinary integrations never call it. The endpoint index lists it as endpoint 22. It is not part of any transaction workflow and does not appear in the sandbox exit checklists.
+Use it only in a Swagger UI session against the status service. Integrations never call it.
 
 ### Preconditions
 
-- A GET request to the status service host; the OpenAPI documents in this corpus were captured from https://hcxsbx.ABDM.gov.in//api-docs, and the status service declares the server prefix /statushcxservice.
-- No JWE envelope, no x-hcx-* protocol headers and no correlation ID; the docs do not state that a Bearer token is required for these discovery endpoints.
-- No request body.
+- A plain `GET` to the status service host, under `/statushcxservice`.
+- No encryption, no `x-hcx-*` headers and no request body.
 
 ### Postconditions
 
-The service returns HTTP 200 with a small JSON object of UI settings. Nothing changes on NHCX and no callback follows. The documentation does not enumerate the settings, so the example below is illustrative; read the live response if you need specific values.
+The service returns `200` with a small set of UI settings. Nothing changes and no callback follows.
 
 ### Common mistakes
 
-- Pointing at the gateway base https://apisbx.ABDM.gov.in/pmjay/sbxhcx and expecting the per-service spec host; the docs advise swapping between the two URL shapes when a path 404s.
-- Treating the served document as the integration contract for gateway traffic; the handbook's gateway base and header conventions take precedence where the two disagree.
-- Sending a POST or a JSON body to a GET discovery endpoint.
-- Wrapping the call in JWE or adding x-hcx-* headers, which only apply to protocol APIs such as /v1/status.
+- Calling the gateway address instead of the status service host.
+- Treating this document as the contract for gateway traffic.
+- Sending a `POST`, a request body or `x-hcx-*` headers.
 
 ### Best practices
 

@@ -1,14 +1,14 @@
 # Receive error report (callback)
 
-`POST v1_error`
+`POST /v1/error`
 
-Hosted by every participant. The exchange posts this message to the `endpoint_url` you registered, at `/v1/error`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+Hosted by every participant. The exchange posts this message to the `endpoint_URL` you registered, at `/v1/error`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
 
 Where the exchange tells a sender that a request could not be delivered after five attempts. Received by every participant under its registered address. There is no outbound form.
 
 ```bash
 curl --request POST \
-  --url {bridgeUrl}v1_error \
+  --url {bridgeUrl}/v1/error \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'bearer_auth: Bearer <access token>' \
   --header 'x-hcx-sender_code: nhcx-gateway@hcx' \

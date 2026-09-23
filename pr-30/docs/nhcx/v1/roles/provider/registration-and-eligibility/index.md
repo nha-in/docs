@@ -69,16 +69,16 @@ One `CoverageEligibilityRequest` carries four different questions, and `purpose`
 
 ## What goes in the bundle
 
-A `CoverageEligibilityRequest` in a collection bundle, alongside the `Patient`, the provider and insurer `Organization`s, the `Coverage`, and the `Practitioner` who made the check.
+A `CoverageEligibilityRequest` in a collection bundle, alongside the `Patient`, the provider and insurer `Organization`s, the `Coverage`, and the `PractitionerRole` of the desk user who made the check.
 
-| Element               | Set it to                                                                                                                                                                   |
-| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `purpose`             | `validation` at registration; `discovery` as the fallback                                                                                                                   |
-| `patient`             | Reference to the Patient, who carries the member ID and ABHA number as identifiers                                                                                          |
-| `insurer`, `provider` | References to the two Organizations                                                                                                                                         |
-| `insurance.coverage`  | Reference to the Coverage carrying the policy code                                                                                                                          |
-| `servicedDate`        | Today                                                                                                                                                                       |
-| `enterer`             | The desk user. The samples send a `Practitioner`; the handbook asks for a `PractitionerRole`. FHIR allows either and the published bundles use `Practitioner`, so send that |
+| Element               | Set it to                                                                                                                                                                                                                                                                          |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `purpose`             | `validation` at registration; `discovery` as the fallback                                                                                                                                                                                                                          |
+| `patient`             | Reference to the Patient, who carries the member ID and ABHA number as identifiers                                                                                                                                                                                                 |
+| `insurer`, `provider` | References to the two Organizations                                                                                                                                                                                                                                                |
+| `insurance.coverage`  | Reference to the Coverage carrying the policy code                                                                                                                                                                                                                                 |
+| `servicedDate`        | Today                                                                                                                                                                                                                                                                              |
+| `enterer`             | The desk user, as a `PractitionerRole` entry, which is what the handbook asks for and what the reference bundles carry. NHA's older sample bundles reference a bare `Practitioner`; FHIR allows either, but send the `PractitionerRole` so every page of this documentation agrees |
 
 Element tables and a worked example are in the FHIR Reference. Two details from the samples save a day each. The `Patient` carries a `PI` identifier that is the hospital's own MRN, and a hospital with none yet sends the literal string `NA`. And `servicedDate` is the date of service, not the date of asking.
 

@@ -21,14 +21,14 @@ Completes fingerprint login with an ABHA address. Send the `txnId` and the finge
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["abha-login", "aadhaar-bio-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["ABHA-login", "Aadhaar-bio-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
 | `authData.authMethods` | `["bio"]` | yes | Authentication method used in this step. |
 | `authData.bio` | object | yes | Fingerprint authentication block. |
 | `authData.bio.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 | `authData.bio.fingerPrintAuthPid` | string | yes | Base64 PID block captured from a registered fingerprint RD device. |
 
-> **Note:** Biometric ABHA-address login uses scope `abha-login`, not `abha-address-login` (the same in Swagger and Postman).
+> **Note:** Biometric ABHA-address login uses scope `ABHA-login`, not `ABHA-address-login` (the same in Swagger and Postman).
 
 ```bash
 curl --request POST \

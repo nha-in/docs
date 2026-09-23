@@ -114,11 +114,11 @@ NRCeS profile: [Communication](https://nrces.in/ndhm/fhir/r4/StructureDefinition
 | `payload[].contentAttachment` | contentType `application/pdf`, title `Proof of Identity (Aadhaar / Passport / Voter ID)`, creation `2026-09-10T23:51:40+05:30` |
 |                               | contentType `application/pdf`, title `Medical Certificate / Doctor Referral`, creation `2026-09-10T23:51:40+05:30`             |
 |                               | contentType `application/pdf`, title `Radiology / X-Ray / CT / MRI Scan Reports`, creation `2026-09-10T23:51:40+05:30`         |
-|                               | and 6 more                                                                                                                     |
+|                               | and 5 more                                                                                                                     |
 | `payload[].extension[]`       | url `<participant-defined>`, valueString `POI`                                                                                 |
 |                               | url `<participant-defined>`, valueString `CER`                                                                                 |
 |                               | url `<participant-defined>`, valueString `RAD`                                                                                 |
-|                               | and 6 more                                                                                                                     |
+|                               | and 5 more                                                                                                                     |
 
 The `CommunicationRequest`, `Claim`, `Patient`, `Organization`, `Practitioner`, `Coverage` entries are shaped as in the chapters that introduce them.
 

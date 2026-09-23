@@ -56,7 +56,7 @@ Every M4 call in one file: 100 operations.
 
 [SKILL.md](/docs/pr-30/skills/abdm-m4/SKILL.md "The router. Use the command below to take the references with it.")
 
-- ScaffoldBuilds the module flow by flow against the sandbox.
+- ScaffoldThe loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.
 - Integrate104 operations, with their hosts and headers.
 - DebugNo error code is recorded yet.
 

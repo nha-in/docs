@@ -10,27 +10,25 @@ Government scheme empanelment needs far more than a name and a certificate: a ho
 
 ### When to use
 
-Use during scheme-specific hospital onboarding when the operator directs you to the HEM-entity form rather than the registry-linked /v2/participant/create. It shares the create description with the other two create endpoints, but the OpenAPI schemas differ materially, so it is not a drop-in alternative. It is a synchronous registry call with no workflow or x-hcx-status codes. The docs do not state whether a passcode confirmation via /validate follows; the response carries no transactionid, so plan the approval step with your onboarding contact.
+Use it for scheme hospital onboarding, such as PMJAY, when the operator asks for this form. It is not a drop-in swap for `/v2/participant/create`.
 
 ### Preconditions
 
-- Bearer token with the Bearer prefix in bearer_auth, plus Accept and Content-Type: application/json.
-- Required ParticipantCreateBodyV2 fields: participant_name, scheme_code, state, district, entityid, bankdetails, participantcode, hospitaltype, incentiveCode, hospitalbedstrength, lab_yn, roles, specialityList, primaryEmail, primaryMobile, encryption_cert, endpoint_URL.
-- BankDetails requires facilitybankaccountname, authorizedsignatoryname, bankaccountnumber, ifsccode, bankname, bankbranchname, bankaddress, micrcode and accounttype; upiid, paymenttype and mailid are optional.
-- If taxdetails is supplied, pannumber, tannumber and gstnumber are all required within it.
-- A Base64-encoded self-signed X.509 encryption certificate and a domain-name callback URL.
+- You have a valid access token.
+- The body has every required field, including the bank details.
+- If you send tax details, include the PAN, TAN and GST numbers together.
+- You have a Base64-encoded certificate and a callback URL that uses a domain name.
 
 ### Postconditions
 
-HTTP 200 with ParticipantCreateResponseV2 containing status and hospitalid. Unlike the other two create calls, the response does not return a participant code, despite the shared description; the participantcode you supplied in the body is the identifier the record is keyed on. There is no asynchronous callback. Errors follow the registry envelope of 400 Client Error, 404 Resource not found and 500 Downstream systems down, each with ErrorResponse (timestamp, error code, message, trace).
+The registry returns `status` and `hospitalid`. It does not return a participant code, so keep the `participantcode` you sent.
 
 ### Common mistakes
 
-- Expecting a participant_code in the response and failing to persist the hospitalid that is actually returned.
-- Leaving out nested required fields, especially inside bankdetails, or supplying taxdetails with only some of pannumber, tannumber and gstnumber.
-- Mixing field naming: this schema uses snake_case for participant_name, scheme_code and encryption_cert but flattened lowercase for participantcode and hospitalbedstrength; copy names exactly from the schema.
-- Sending the PEM certificate without Base64 encoding.
-- Registering an endpoint_URL with an IP address or port, which fails the go-live reachability checks.
+- Expecting a participant code back and not saving `hospitalid`.
+- Leaving out required fields inside the bank details.
+- Guessing field names. Copy them exactly from the schema.
+- Sending the certificate without Base64 encoding.
 
 ### Best practices
 

@@ -21,7 +21,7 @@ Completes fingerprint login. Send the `txnId` from *Login via Biometric (Fingerp
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["abha-login", "aadhaar-bio-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["ABHA-login", "Aadhaar-bio-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
 | `authData.authMethods` | `["bio"]` | yes | Authentication method used in this step. |
 | `authData.bio` | object | yes | Fingerprint authentication block. |

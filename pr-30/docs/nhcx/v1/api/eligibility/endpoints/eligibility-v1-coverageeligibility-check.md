@@ -10,36 +10,33 @@ Coverage eligibility is the pre-check a hospital desk runs before committing a p
 
 ### When to use
 
-Call it at registration or admission, before /v1/preauth/submit. The CoverageEligibilityRequest.purpose field (1..*) decides what the payer computes: discovery is the fallback when /participant/get/policies does not yield a policy code; validation retrieves used amount, available balance and wallet liability; auth-requirements checks whether a chosen procedure is covered at this hospital and returns the STG questionnaires and MAND document codes the preauth must carry; benefits is also listed. Send x-hcx-status request.initiated. No eligibility-specific workflow code is published in the workflow tables; the workbook sample shows x-hcx-workflow_ID 11 (PATIENT_ADMITTED). For PMJAY an unspecified procedure still requires an auth-requirements check.
+Call it at registration or admission, before you submit a pre-authorisation. The `purpose` field says what you want back, such as whether the policy is active or whether a procedure needs approval.
 
 ### Preconditions
 
-- The provider is an onboarded NHCX participant (otherwise NHCX-1002) holding a valid Bearer token from the client-credentials session call; tokens expire after 1200 seconds.
-- The payer's public certificate has been fetched via /fetch/certs (cache 24 hours) and the bundle is JWE-encrypted with RSA-OAEP-256 and A256GCM.
-- x-hcx-recipient_code is the processingID from the get/policies response, not the PayerID.
-- x-hcx-correlation_ID is a fresh UUID for this request cycle; x-hcx-API_call_ID is unique per call.
-- The bundle contains the Patient (PMJAY Member ID and/or ABHA number), the Coverage record, both Organisations (provider and insurer) and a PractitionerRole for the enterer; items are included when purpose is auth-requirements.
-- HTTP headers Accept: application/json, Content-Type: application/json and bearer_auth are all present.
+- You have a valid access token and the payer's certificate.
+- `x-hcx-recipient_code` is the processing ID from the policy lookup, not the payer ID.
+- `x-hcx-correlation_ID` is a new UUID for this check.
+- The bundle names the patient, the coverage, the hospital and the insurer, encrypted for the payer.
 
 ### Postconditions
 
-NHCX replies synchronously with HTTP 202 Accepted and a StatusSuccessResponse acknowledgement (timestamp, API_call_ID, correlation_ID, result with sender_code, recipient_code, entity_type coverageeligibility and protocol_status such as request.queued or request.dispatched, plus an empty error object). The 202 means only that the JWE structure and open protocol headers validated; the gateway then forwards the request to the payer asynchronously. The eligibility answer arrives later on the provider's /v1/coverageeligibility/on_check endpoint as a CoverageEligibilityResponseBundle, or as a ProtocolResponse carrying x-hcx-error_details, or as a redirect or forward instruction to try another payer. Other documented statuses are 400 request validation failed, 404 resource not found and 500 downstream systems down.
+- NHCX answers `202` at once. That only means the message was accepted.
+- The payer's answer arrives later on `/v1/coverageeligibility/on_check`.
 
 ### Common mistakes
 
-- Treating the 202 as the eligibility answer instead of waiting for the on_check callback; NHCX never returns a synchronous FHIR decision.
-- Using the PayerID from get/policies as x-hcx-recipient_code instead of the processingID (NHCX-1003 receiver not registered).
-- Reusing a correlation ID from an earlier cycle (NHCX-1006 duplicate request) or retrying a failed cycle under the same ID, which NHCX has already marked inactive.
-- Sending the wrong status string; only request.initiated is accepted on an initiating request (NHCX-1011).
-- Payer-side business rejections such as PAYR-1113 invalid item code, PAYR-1115 quantity not greater than 1, PAYR-1116 hospital not authorised for the policy, PAYR-1117 or PAYR-1122 no policy details, PAYR-1123 beneficiary not a covered member, and PAYR-1014 date of birth after date of service.
-- Omitting the Accept header on the HTTP call.
+- Treating the `202` as the eligibility answer.
+- Using the payer ID as the recipient code instead of the processing ID.
+- Reusing a correlation ID from an earlier check.
+- Sending a status other than `request.initiated`.
 
 ### Best practices
 
 - Persist the correlation ID against the patient episode before posting; it is the only key for matching the callback.
 - Refresh the token automatically before the 1200-second expiry and treat a 401 as refresh-and-retry-once.
 - Run discovery first only when get/policies gives no policy code, then validation, then auth-requirements for the chosen package; store the returned MAND codes and STG questionnaire references and attach them to the preauth.
-- Do not assume the response echoes your request codes: items come back in the payer's numeric master codes (for example 100478 against your MG003B).
+- "Match response items to your request by `productOrService` code: the payer answers in the package codes you sent, for example `MG004A`, as NHA's published PMJAY bundles show. The numbers in the handbook's response table (100005, 100478, 100063, 100012) are not item codes; in the published bundles they are questionnaire, document-requirement and question identifiers."
 - Use IST timestamps with the +05:30 offset in the protected header.
 - Log the 202 body (protocol_status, API_call_ID) so a missing callback can be traced with /v1/status.
 
@@ -81,12 +78,12 @@ curl --request POST \
 - `x-hcx-sender_code` (string, required): Your participant code. Mandatory on the envelope.
 - `x-hcx-recipient_code` (string, required): The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
 - `x-hcx-api_call_id` (string, required): Fresh on every message, including responses. Mandatory on the envelope.
-- `x-hcx-request_id` (string): One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope.
+- `x-hcx-request_id` (string): One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope. Send it anyway, as a fresh UUID per originating request: it is cheap and satisfies both readings until NHA rules.
 - `x-hcx-correlation_id` (string, required): The thread. See the rule below. Mandatory on the envelope.
 - `x-hcx-workflow_id` (string): Which step, or which case. See the two readings below. Optional on the envelope.
 - `x-hcx-timestamp` (string, required): See the format note below. Mandatory on the envelope.
 - `x-hcx-status` (string, required): Where this message stands. Values below. Mandatory on the envelope.
-- `x-hcx-ben-abha-id` (string, required): The beneficiary's ABHA number. Mandatory on every exchange, including those with no beneficiary in the payload. Mandatory on the envelope.
+- `x-hcx-ben-abha-id` (string): The beneficiary's ABHA number. Optional: send it when the beneficiary has an ABHA number. Optional on the envelope.
 
 ## Body
 

@@ -6,6 +6,7 @@ Add `.md` to any link below to get that page as markdown. Individual API operati
 
 ## docs/hiecm
 
+- [Get started](https://nha-in.github.io/docs/pr-30/docs/hiecm/v3): Connect your application to India's Interoperable Digital Health Infrastructure, from sandbox credentials to your first call to going live.
 - [API references](https://nha-in.github.io/docs/pr-30/docs/hiecm/v3/api): Every operation published for this gateway, module by module.
 - [Gateway session](https://nha-in.github.io/docs/pr-30/docs/hiecm/v3/api/gateway): Every ABDM call carries a bearer token from one endpoint. This is that endpoint, plus the certificate and bridge registration calls that sit beside it.
 - [1. Fetch the service ids registered against a bridge](https://nha-in.github.io/docs/pr-30/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/01-gateway-get-gateway-v3-bridge-services): Retrieve the unique identifiers, known as service IDs, that are associated with a specific bridge. In this context, a bridge acts as an intermediary...
@@ -38,7 +39,7 @@ Add `.md` to any link below to get that page as markdown. Individual API operati
 - [1. Get ABHA QR code](https://nha-in.github.io/docs/pr-30/docs/hiecm/v3/api/m1/endpoints/m1-abha-card-profile/01-m1-get-v3-profile-account-qrcode): Endpoint: GET /abha/api/v3/profile/account/qrCode
 - [2. Retrieve ABHA card image](https://nha-in.github.io/docs/pr-30/docs/hiecm/v3/api/m1/endpoints/m1-abha-card-profile/02-m1-get-v3-profile-account-abha-card): Endpoint: GET /abha/api/v3/profile/account/abha-card
 - [3. Get ABHA profile](https://nha-in.github.io/docs/pr-30/docs/hiecm/v3/api/m1/endpoints/m1-abha-card-profile/03-m1-get-v3-profile-account): Endpoint: GET /abha/api/v3/profile/account
-- [4. Download ABHA card](https://nha-in.github.io/docs/pr-30/docs/hiecm/v3/api/m1/endpoints/m1-abha-card-profile/04-m1-get-v3-profile-account-download-abha-card): Endpoint: GET /abha/api/v3/profile/account/download-abha-card
+- [4. Download ABHA card](https://nha-in.github.io/docs/pr-30/docs/hiecm/v3/api/m1/endpoints/m1-abha-card-profile/04-m1-get-v3-profile-account-download-abha-card): Endpoint: GET /abha/api/v3/profile/account/download-ABHA-card
 - [5. Refresh user token](https://nha-in.github.io/docs/pr-30/docs/hiecm/v3/api/m1/endpoints/m1-abha-card-profile/05-m1-get-v3-profile-account-request-token): Endpoint: GET /abha/api/v3/profile/account/request/token
 - [1. Generate access token](https://nha-in.github.io/docs/pr-30/docs/hiecm/v3/api/m1/endpoints/m1-access-tokens-encryption/01-gateway-post-gateway-v3-sessions): Generate an access token. When invoked, it facilitates the authentication process by providing a secure token that can be used to access various services...
 - [2. Get public certificate (RSA encryption key)](https://nha-in.github.io/docs/pr-30/docs/hiecm/v3/api/m1/endpoints/m1-access-tokens-encryption/02-m1-get-v3-profile-public-certificate): Fetch the public key used for encryption of Aadhaar, OTP, mobile and other fields which require encryption.
@@ -442,7 +443,6 @@ Add `.md` to any link below to get that page as markdown. Individual API operati
 - [NHA](https://nha-in.github.io/docs/pr-30/docs/hiecm/v3/concepts/participants/nha): The National Health Authority runs ABDM. What it operates, what it issues, and what that gives the systems on the network.
 - [Pharmacy](https://nha-in.github.io/docs/pr-30/docs/hiecm/v3/concepts/participants/pharmacy): A pharmacy takes the same roles as a hospital, with a narrower record surface. What differs, and what runs on another gateway.
 - [Personal Health Record (PHR) Application](https://nha-in.github.io/docs/pr-30/docs/hiecm/v3/concepts/participants/phr): The citizen facing application: its role in ABDM, the capabilities each phase adds, and why it is where consent is managed.
-- [Get started](https://nha-in.github.io/docs/pr-30/docs/hiecm/v3/getting-started): Connect your application to India's Interoperable Digital Health Infrastructure, from sandbox credentials to your first call to going live.
 - [Build it well](https://nha-in.github.io/docs/pr-30/docs/hiecm/v3/getting-started/build-it-well): What to validate before you call, what to do with each error, what is safe to retry, and what the person at the counter sees while it happens.
 - [Build with AI](https://nha-in.github.io/docs/pr-30/docs/hiecm/v3/getting-started/build-with-ai): Set a coding agent up to build your ABDM integration, from a one-file skill to live retrieval over MCP.
 - [Quickstart](https://nha-in.github.io/docs/pr-30/docs/hiecm/v3/getting-started/first-fifteen-minutes): Create a gateway session and then create your first ABHA, live from this page, with your own sandbox credentials.
@@ -479,6 +479,7 @@ Add `.md` to any link below to get that page as markdown. Individual API operati
 
 ## docs/nhcx
 
+- [Claim Settlement](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1): End-to-end claim journey in plain language
 - [API references](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/api): Every operation published for this gateway, module by module.
 - [PMJAY adjudicator](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/api/adjudicator): The PMJAY adjudicator calls on NHCX: what each one does, the hosts they go to, and the guides that use them.
 - [ABHA biometric authentication](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/api/biometric): The ABHA biometric authentication calls on NHCX: what each one does, the hosts they go to, and the guides that use them.
@@ -503,16 +504,16 @@ Add `.md` to any link below to get that page as markdown. Individual API operati
 - [Session](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/api/session): The Session calls on NHCX: what each one does, the hosts they go to, and the guides that use them.
 - [Status and search](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/api/status): The Status and search calls on NHCX: what each one does, the hosts they go to, and the guides that use them.
 - [Status and search errors](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/api/status/errors): What Status and search returns when a call fails, and what to do about it.
+- [Reprocess, cancel and shortfall](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/api/task): The reprocess, cancel and shortfall calls on NHCX: what each one does, the hosts they go to, and the guides that use them.
+- [Reprocess, cancel and shortfall errors](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/api/task/errors): What Reprocess, cancel and shortfall returns when a call fails, and what to do about it.
 - [Introduction](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/concepts): What NHCX is, objectives, participants, machine-readable specifications
-- [How claims move on NHCX](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/concepts/how-claims-move-on-nhcx): End-to-end claim journey in plain language
-- [JWE, status and errors](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/concepts/jwe-status-and-errors): Envelope/letter model, cross-gateway relay, unified correlation ID, status lifecycle (`request.stopped`)
+- [JWE Secure Messaging](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/concepts/jwe-status-and-errors): How an NHCX message is sealed for one recipient, carried unread by the exchange, opened at the other end, and refused when something is wrong.
 - [NHCX Use Cases](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/concepts/nhcx-use-cases): Catalog of all 40 NHA use cases across A, B, C, D, E series
-- [Payer flexibility](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/concepts/payer-flexibility): How each payer configures queries, answers and case numbers
-- [PMJAY on NHCX](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/concepts/pmjay-on-nhcx): What the Ayushman Bharat scheme changes on the network
-- [PMJAY Scheme Rules and HMIS Integration](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/concepts/pmjay-scheme-rules): Package-based tariffs, LM100 LAMA/DAMA arithmetic and `los` bounding
+- [PMJAY on NHCX](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/concepts/pmjay-on-nhcx): What the Ayushman Bharat scheme changes on the network, and the scheme rules a hospital system must follow.
 - [PMJAY use cases](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/concepts/pmjay-use-cases): PMJAY-specific use cases D1 to D13
 - [Workflow Codes](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/concepts/workflow-codes): The 74 workflow IDs and their message directions
 - [Base URLs](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/getting-started/base-urls): Every service's base in the sandbox and in production, from `baseurl.yaml`
+- [Build it well](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/getting-started/build-it-well): Who refused your message, which sends are safe to repeat, how to match an answer to its request, and what to do when no answer comes.
 - [Build with AI](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/getting-started/build-with-ai): Set a coding agent up to build your NHCX integration, from one use case skill to live retrieval over MCP.
 - [Building and sending a JWE](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/getting-started/building-and-sending-a-jwe): RSA-OAEP-256 + A256GCM compact serialisation
 - [Creating and updating a participant](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/getting-started/creating-and-updating-a-participant): Registry onboarding and participant updates
@@ -520,6 +521,7 @@ Add `.md` to any link below to get that page as markdown. Individual API operati
 - [Finding participants and policies](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/getting-started/finding-participants-and-policies): Search endpoints and policy resolution
 - [Get your sandbox credentials](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/getting-started/get-your-sandbox-credentials): Register the organisation, get an ABDM client ID and secret, take NHCX sandbox roles, and meet the dummy payer
 - [Glossary](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/getting-started/glossary): Definitive glossary of protocol, healthcare, and scheme terms
+- [The JWE message format](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/getting-started/jwe-message-format): The five parts of an NHCX JWE, the algorithms, every protected header field, status values, the receipt, error responses and correlation rules.
 - [NHCX adapter (Optional)](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/getting-started/nhcx-adapter): Turnkey protocol adapter implementation, optional
 - [Quickstart](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/getting-started/quickstart): Three calls with only your credentials: a session token, the dummy payer's registry record, and its certificate
 - [Receiving a callback](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/getting-started/receiving-a-callback): Asynchronous callback listener and 202 receipt handling
@@ -532,8 +534,8 @@ Add `.md` to any link below to get that page as markdown. Individual API operati
 - [Access control and roles](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/reference/access-control-and-roles): Role permissions, search rights, consent headers, and registry attributes (`payment_details`)
 - [Authentication](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/reference/authentication): The credentials every ABDM call carries, and the headers that go with them.
 - [Envelope fields](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/reference/envelope-fields): Full JWE header table, obligations, and correlation rules
-- [Environments and addresses](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/reference/environments-and-addresses): Sandbox/production URLs, firewall IPs, token headers, and 12 live Swagger specifications
-- [Error codes](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/reference/error-code-guide): Directory of 309 error codes, the three code spaces, and collisions
+- [Environments and addresses](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/reference/environments-and-addresses): Sandbox/production URLs, firewall IPs, token headers, and 12 sandbox Swagger specifications
+- [Reading error codes](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/reference/error-code-guide): Start here for errors. The four code spaces, the 18 PAYR codes that mean two things, and all 309 codes.
 - [Error codes](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/reference/error-codes): Every error code the specifications carry, with its message and what to do.
 - [Bundles and conventions](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/reference/fhir): Universal bundle rules, profiles, IDs, base64 encoding, and size limits
 - [Cancel, reprocess and shortfall](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/reference/fhir/cancel-reprocess-and-shortfall): Task-based cancel (`cancel`), reprocess (`reprocess`), balance release (`release`) and `nullify`
@@ -556,8 +558,11 @@ Add `.md` to any link below to get that page as markdown. Individual API operati
 - [Predetermination, status and search](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/reference/fhir/predetermination-status-and-search): Specification and schemas for predetermination, status, and search
 - [Governance and audit](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/reference/governance-and-audit): Security layers, dual JWTs, log retention, grievance redressal, and onboarding checklist
 - [Notifications and patient apps](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/reference/notifications-and-patient-apps): Beneficiary service provider integration, subscription model, and push events
-- [Troubleshooting](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/reference/troubleshooting): Five-layer fault isolation model and symptom-first diagnostic playbook
-- [Participants and policies](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/registries): Registry records, identifiers, policy lookups
+- [PMJAY error codes](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/reference/pmjay-error-codes): Every NHCX and PMJAY error code in one searchable table, with the message as sent, what it means and the path it arrives on.
+- [Troubleshooting by layer and code](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/reference/troubleshooting): Five-layer fault isolation model and symptom-first diagnostic playbook
+- [Registries](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/registries): The two registries every NHCX call depends on: participants, and the policies linked to a beneficiary.
+- [Participant registry](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/registries/participant): How a participant joins NHCX, registers its key and callback address, authenticates, and finds other participants.
+- [Policy registry](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/registries/policy): How a beneficiary's policy is found by ABHA, member ID or mobile, which code to address, and how a payer links a policy to ABHA.
 - [Payer overview](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/roles/payer): Insurer and TPA ingestion architecture
 - [Adjudicating claims](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/roles/payer/adjudicating-claims): Adjudicating claims, deductions, dispute handling, and rejection bundles
 - [Adjudicating preauthorisation](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/roles/payer/adjudicating-preauthorisation): Evaluating medical necessity, raising queries, approval, and rejection
@@ -578,6 +583,7 @@ Add `.md` to any link below to get that page as markdown. Individual API operati
 - [Provider checklist](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/roles/provider/provider-checklist): Sandbox exit list, 29 test cases by family (T-ML1, T-PLN, T-ELG, T-PRE, T-CLM, T-PAY, T-COM, T-CBK, T-SES), first-week failures
 - [Registration and eligibility](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/roles/provider/registration-and-eligibility): Patient intake, Aadhaar eKYC and biometrics, and the coverage check
 - [Provider UI guide](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/roles/provider/ui-guide): Provider desk wireframes and UX recommendations
+- [NHCX support](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/support): Who to write to about NHCX integration, certification, FHIR bundles and credentials, and what to include so the call can be traced.
 - [When something breaks](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/troubleshooting): Find the symptom you see, not the error code, and open the chapter that walks its checks
 - [Accepted with 202, and no callback arrives](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/troubleshooting/accepted-then-no-callback): The exchange answered 202 and no callback followed: the six checks in order
 - [Every NHCX call returns 401](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/troubleshooting/every-call-returns-401): Every endpoint fails the same way: the token, its prefix, its header or its environment
@@ -585,6 +591,9 @@ Add `.md` to any link below to get that page as markdown. Individual API operati
 - [The payer rejects your FHIR bundle](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/troubleshooting/the-payer-rejects-your-bundle): `PAYR-1004`, `PAYR-1008` and the missing identifier codes: validate, then check shape, identifiers and attachments
 - [The recipient cannot decrypt your message](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/troubleshooting/the-recipient-cannot-decrypt): A `PAYR-1001` protocol response: the certificate, its cache, the algorithms and the compact form
 - [Your callback URL is rejected or never called](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/troubleshooting/your-callback-url-is-rejected): The endpoint update is refused, or nothing ever reaches your server
+- [What's new in NHCX](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/whats-new): Dated changes to what you can build against on NHCX, newest first.
+- [21 September 2026](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/whats-new/2026-09-21): What changed in the NHCX documentation on 21 September 2026.
+- [23 September 2026](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/whats-new/2026-09-23): What changed in the NHCX documentation on 23 September 2026.
 
 ## docs/support
 
@@ -614,6 +623,7 @@ Add `.md` to any link below to get that page as markdown. Individual API operati
 - [What's new](https://nha-in.github.io/docs/pr-30/docs/whats-new): Dated changes to what you can build against, newest first.
 - [15 September 2026](https://nha-in.github.io/docs/pr-30/docs/whats-new/2026-09-15): What changed in these pages on 15 September 2026.
 - [16 September 2026](https://nha-in.github.io/docs/pr-30/docs/whats-new/2026-09-16): What changed in these pages on 16 September 2026.
+- [21 September 2026](https://nha-in.github.io/docs/pr-30/docs/whats-new/2026-09-21): What changed in these pages on 21 September 2026.
 - [22 September 2026](https://nha-in.github.io/docs/pr-30/docs/whats-new/2026-09-22): What changed in these pages on 22 September 2026.
 - [23 September 2026](https://nha-in.github.io/docs/pr-30/docs/whats-new/2026-09-23): What changed in these pages on 23 September 2026.
 
@@ -646,3 +656,4 @@ Add `.md` to any link below to get that page as markdown. Individual API operati
 - [NHCX Participant registry module index](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/api/registry/llms.txt): per-page links for the NHCX Participant registry module.
 - [NHCX Session module index](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/api/session/llms.txt): per-page links for the NHCX Session module.
 - [NHCX Status and search module index](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/api/status/llms.txt): per-page links for the NHCX Status and search module.
+- [NHCX Reprocess, cancel and shortfall module index](https://nha-in.github.io/docs/pr-30/docs/nhcx/v1/api/task/llms.txt): per-page links for the NHCX Reprocess, cancel and shortfall module.

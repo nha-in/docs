@@ -48,7 +48,7 @@ First ask who holds the case:
 curl --location --request POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/nhcxpayerservice/v1/get/user-role' \  --header 'Accept: application/json' \  --header 'Content-Type: application/json' \  --header 'bearer_auth: Bearer <access token>' \  --data-raw '{    "caseid": "<case number>",    "payerid": "<payer code>"  }'
 ```
 
-[Adjudicator: role for a case in the API reference](/docs/pr-30/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-adjudicator-role)
+[Adjudicator: role for a case in the API reference](/docs/pr-30/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-pmjay-sbxhcx-nhcxpayerservice-v1-get-user-role)
 
 ```json
 { "currentuserrole": "PPD-Trust", "errormessage": null }
@@ -62,7 +62,7 @@ Then act, with the action spelled as the role that holds the case expects:
 curl --location --request POST 'https://apisbeta.nha.gov.in/pmjay/hcx/nhcxpayerservice/wrapper/process/case' \  --header 'Accept: application/json' \  --header 'Content-Type: application/json' \  --header 'bearer_auth: Bearer <access token>' \  --data-raw '{    "casenumber": "<case number>",    "action": "Approve",    "receivercode": "<payer code>",    "usecase": "PREAUTH",    "correlationid": "<correlation id>",    "sendercode": "<participant code>",    "memberid": "<member id>",    "remarks": "ok"  }'
 ```
 
-[Adjudicator: act on a case in the API reference](/docs/pr-30/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-adjudicator-process)
+[Adjudicator: act on a case in the API reference](/docs/pr-30/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-pmjay-hcx-nhcxpayerservice-wrapper-process-case)
 
 The roles a case may pass through, and the actions each takes:
 

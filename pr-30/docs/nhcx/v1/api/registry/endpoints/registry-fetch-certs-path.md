@@ -10,24 +10,21 @@ The registry stores a participant's encryption certificate as a URI or file path
 
 ### When to use
 
-Use it only if your HCX instance or onboarding contact tells you to; the chapter's guidance is to treat /fetch/certs as the one to use for encryption. Both endpoints are POST, both carry the Registry APIs tag, both take ParticipantCertRequest and both declare a string 200 response with 400, 404 and 500 ErrorResponse outcomes. It is a synchronous JSON registry call with no workflow or x-hcx-status codes.
+Use it only if your NHCX instance tells you to. For encryption, use `/fetch/certs`.
 
 ### Preconditions
 
-- Bearer token from /get/session in bearer_auth with the Bearer prefix; Accept and Content-Type: application/json.
-- ParticipantCertRequest with participantid (required), the target's participant code in `@hcx form.
-- The target participant has completed onboarding with an encryption certificate registered.
+- You have a valid access token in the `bearer_auth` header.
+- You send the target's code as `participantid`.
 
 ### Postconditions
 
-HTTP 200 with a string body. The spec describes the operation (fetchCertsPath) with the same text as /fetch/certs, so the precise content of the string beyond being a certificate path is not documented. No registry state changes and no callback. Errors use the ErrorResponse envelope on 400, 404 and 500.
+You get a string back. What it contains beyond a certificate path is not documented.
 
 ### Common mistakes
 
-- Assuming this returns the same PEM as /fetch/certs and feeding a path string into a key-import routine.
-- Choosing it over /fetch/certs for encryption without instance-specific guidance; the handbook names /fetch/certs.
-- Passing participant_code instead of participantid.
-- Omitting Accept or the Bearer prefix on the token.
+- Treating the answer as the certificate that `/fetch/certs` returns.
+- Using this instead of `/fetch/certs` without instructions from your instance.
 
 ### Best practices
 

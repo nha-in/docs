@@ -22,10 +22,10 @@ Starts ABHA creation with Aadhaar OTP. UIDAI sends an OTP to the mobile number l
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
 | `txnId` | string | no | Transaction ID returned by the previous step of this flow. |
-| `scope` | `["abha-enrol"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
-| `loginHint` | `"aadhaar"` | yes | Type of identifier sent in `loginId`. |
+| `scope` | `["ABHA-enrol"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `loginHint` | `"Aadhaar"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"aadhaar"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
+| `otpSystem` | `"Aadhaar"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
 
 > **Note:** `txnId` is optional here. Leave it empty on the first call, or send a previous `txnId` to resend the OTP.
 

@@ -8,7 +8,7 @@ Every call carries a bearer token. The token does not come from NHCX. It comes f
 curl --location --request POST 'https://dev.abdm.gov.in/api/hiecm/gateway/v3/sessions' \  --header 'Content-Type: application/json' \  --header 'REQUEST-ID: <uuid>' \  --header 'TIMESTAMP: <iso timestamp>' \  --header 'X-CM-ID: sbx' \  --data-raw '{    "clientId": "<client id>",    "clientSecret": "<client secret>",    "grantType": "client_credentials"  }'
 ```
 
-[Session token in the API reference](/docs/pr-30/docs/nhcx/v1/api/session/endpoints/session-session-token)
+[Session token in the API reference](/docs/pr-30/docs/nhcx/v1/api/session/endpoints/session-api-hiecm-gateway-v3-sessions)
 
 Three headers matter here, and none of them is optional.
 
@@ -21,7 +21,7 @@ Three headers matter here, and none of them is optional.
 The response:
 
 ```json
-{  "accessToken": "eyJhbGciOiJSUzI1NiIs...",  "expiresIn": 300,  "refreshTokenIn": 300,  "refreshToken": "eyJhbGciOiJSUzI1NiIs...",  "tokenType": "bearer"}
+{  "accessToken": "eyJhbGciOiJSUzI1NiIs...",  "expiresIn": 1200,  "refreshTokenIn": 300,  "refreshToken": "eyJhbGciOiJSUzI1NiIs...",  "tokenType": "bearer"}
 ```
 
 ## Using it
@@ -36,14 +36,27 @@ Leaving out the `Bearer` prefix is the portal's own example of how to get a `401
 
 ## Keeping it fresh
 
-The token is short-lived. The portal's documents put its life at 300 seconds in the authentication note, 1200 in the handbook and 6000 in the notification guide, so do not rely on any of them. Build it like this:
+The token lasts 1200 seconds (20 minutes) from the moment it arrives. Build it like this:
 
 - Keep the token and the time you got it.
-- Before each call, if it is older than a few minutes, get a new one first.
+- Before each call, if the token is more than about 18 minutes old, get a new one first.
 - If any call answers `401`, get a new token and retry that call once. Do not retry with the same token; it will fail the same way.
 - Never write the token or the secret to a log.
 
 One token serves every call: the participant service, the use-case endpoints, and the status check.
+
+## The other call named session
+
+The participant service publishes its own [`POST /get/session`](/docs/pr-30/docs/nhcx/v1/api/registry/endpoints/registry-get-session). It is a different call from the gateway sessions call above, and a request built for one fails on the other.
+
+|             | Gateway sessions call                              | Participant service `/get/session`                            |
+| ----------- | -------------------------------------------------- | ------------------------------------------------------------- |
+| Address     | `dev.abdm.gov.in/api/hiecm/gateway/v3/sessions`    | `/get/session` on the participant service base                |
+| Headers     | `REQUEST-ID`, `TIMESTAMP`, `X-CM-ID`               | None of the three                                             |
+| Body        | JSON, with `clientId`, `clientSecret`, `grantType` | Form encoded, with `client_id`, `client_secret`, `grant_type` |
+| Token field | `accessToken`                                      | `access_token`                                                |
+
+Use the gateway sessions call by default. The sandbox exit test cases name `/get/session` as the token call, so point your token client there when you demonstrate them. Keep the address, the body format and the field names in configuration, so switching is not a code change.
 
 ## What can go wrong
 

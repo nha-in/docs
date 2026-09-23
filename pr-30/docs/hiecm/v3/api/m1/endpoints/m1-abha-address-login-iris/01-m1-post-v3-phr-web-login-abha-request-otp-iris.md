@@ -21,12 +21,12 @@ Starts IRIS login with an ABHA address. `loginId` is the RSA-encrypted ABHA addr
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["abha-login", "aadhaar-iris-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
-| `loginHint` | `"abha-address"` | yes | Type of identifier sent in `loginId`. |
+| `scope` | `["ABHA-login", "Aadhaar-iris-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `loginHint` | `"ABHA-address"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"aadhaar"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
+| `otpSystem` | `"Aadhaar"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
 
-> **Note:** Biometric ABHA-address login uses scope `abha-login`, not `abha-address-login` (the same in Swagger and Postman).
+> **Note:** Biometric ABHA-address login uses scope `ABHA-login`, not `ABHA-address-login` (the same in Swagger and Postman).
 
 ```bash
 curl --request POST \

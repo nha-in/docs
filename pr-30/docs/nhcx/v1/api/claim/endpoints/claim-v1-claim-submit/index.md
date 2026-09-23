@@ -10,29 +10,27 @@ The claim is where money actually moves. After treatment the provider assembles 
 
 ### When to use
 
-Called after discharge, once an approved preauth exists (PAYR-1302 otherwise). x-hcx-workflow_ID distinguishes the step: 15 CLAIM_REQUEST_INITIATED for the final claim (in PMJAY the discharge and claim steps are merged into this one submission); 151 CLAIM_QUERY_RESPONSE_SUBMITTED to answer a payer query received under 27; the optional x-hcx-use_case header takes New or Resubmit. The NHA sheet also lists R15 and R151 for the reimbursement mirror and 36 CLAIM_ARBITRATION_REQUEST_SUBMITTED for reprocess or erroneous-claim requests, which the FAQ routes through /v1/task/submit rather than this endpoint. Send x-hcx-status request.initiated. PMJAY LAMA or DAMA discharges before or during surgery must carry only procedure LM100 (PAYR-1362).
+Use it after discharge to claim payment for a case with an approved pre-authorisation. The same call answers a payer query on the claim: the workflow code in the header says which. A reprocess goes through `/v1/task/submit` instead.
 
 ### Preconditions
 
-- An approved preauth exists for the case and no claim has already been raised for it (PAYR-1301, PAYR-1302).
-- Claim.use is claim; the bundle reuses the preauth's identifier or references preAuthRef, with estimated amounts replaced by final bill amounts.
-- Patient carries PMJAY Member ID and ABHA number; diagnosis, procedure, care team, supportingInfo and an active Coverage are present; discharge summary, operative notes, diagnostics and itemised billing are attached.
-- Discharge information is in supportingInfo (category DIS, code DTH, DTM, LAMA or DAMA, value Before Surgery or After Surgery); for PMJAY either discharge biometric authentication or the Authentication Consent questionnaire response is included (PAYR-1363, PAYR-1364).
-- Admission, registration and discharge dates are valid and ordered (PAYR-1357, PAYR-1358, PAYR-1325 to PAYR-1330).
-- Valid Bearer token, payer certificate, JWE encryption, fresh correlation ID for a new cycle, processingID as recipient code.
+- An approved pre-authorisation exists, and no claim has been raised for the case yet.
+- The bundle is an FHIR `Claim` with `use` set to `claim` and the final bill amounts.
+- Discharge details and the required documents are attached. For PMJAY, so is proof of presence at discharge.
+- A valid access token, the payer's certificate and a fresh correlation ID.
 
 ### Postconditions
 
-NHCX returns HTTP 202 Accepted with a StatusSuccessResponse acknowledgement (entity_type claim) and forwards the request asynchronously. The payer may respond several times on /v1/claim/on_submit: 25 received, 28 in process and 29 forwarded as response.partial, 27 queried, then 26 approved or a rejection as response.complete. A response.complete closes the claim identifier permanently; no further submissions or responses are permitted against it. An approved final claim triggers the payment sequence 30, 31 and 33 on /v1/paymentnotice/request. Protocol failures arrive as a ProtocolResponse with x-hcx-error_details.
+- NHCX answers `202` at once. That only means the message was accepted.
+- The payer's answers arrive later on `/v1/claim/on_submit`, possibly several times.
+- A `response.complete` closes the claim. Nothing more can be sent on it.
 
 ### Common mistakes
 
-- Submitting a claim without an approved preauth (PAYR-1302), or a second claim for the same case (PAYR-1301, PAYR-1016 duplicate by service codes and dates).
-- Claiming more than the preauth approved amount (PAYR-1012) or items that were not in the preauth or were rejected there (PAYR-1306, PAYR-1315).
-- Answering a claim query (27) with a fresh 15 instead of 151, or sending an invalid workflow ID (PAYR-1321).
-- Wrong or missing discharge stage (PAYR-1324) and, for PMJAY LAMA or DAMA cases, omitting LM100 or including other approved items alongside it (PAYR-1362).
-- Missing the mandatory documents named by the InsurancePlan or eligibility response, which produces a query rather than a rejection and delays settlement.
-- Reusing a correlation ID from the preauth cycle for a new claim cycle (NHCX-1006), or retrying a failed cycle with the same ID.
+- Claiming more than the pre-authorisation approved, or items it did not include.
+- Answering a claim query as a new claim instead of a query reply.
+- Missing documents the payer asked for, which causes a query and delays payment.
+- Reusing the pre-authorisation's correlation ID for the claim.
 
 ### Best practices
 
@@ -82,12 +80,12 @@ curl --request POST \
 - `x-hcx-sender_code` (string, required): Your participant code. Mandatory on the envelope.
 - `x-hcx-recipient_code` (string, required): The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
 - `x-hcx-api_call_id` (string, required): Fresh on every message, including responses. Mandatory on the envelope.
-- `x-hcx-request_id` (string): One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope.
+- `x-hcx-request_id` (string): One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope. Send it anyway, as a fresh UUID per originating request: it is cheap and satisfies both readings until NHA rules.
 - `x-hcx-correlation_id` (string, required): The thread. See the rule below. Mandatory on the envelope.
 - `x-hcx-workflow_id` (string): Which step, or which case. See the two readings below. Optional on the envelope.
 - `x-hcx-timestamp` (string, required): See the format note below. Mandatory on the envelope.
 - `x-hcx-status` (string, required): Where this message stands. Values below. Mandatory on the envelope.
-- `x-hcx-ben-abha-id` (string, required): The beneficiary's ABHA number. Mandatory on every exchange, including those with no beneficiary in the payload. Mandatory on the envelope.
+- `x-hcx-ben-abha-id` (string): The beneficiary's ABHA number. Optional: send it when the beneficiary has an ABHA number. Optional on the envelope.
 - `x-hcx-use_case` (string): Values differ by exchange, see below. Optional on the envelope.
 
 ## Body

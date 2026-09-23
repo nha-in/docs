@@ -10,22 +10,22 @@ When the exchange cannot deliver a request, it tries five times, retires the cor
 
 ### When to use
 
-Hosted, never called. Implement it before anything else that is asynchronous. Providers and payers both host it.
+You host this path and never call it. Providers and payers both need it, so build it first.
 
 ### Preconditions
 
-- Your callback address is registered: a domain name over HTTPS with TLS 1.2 or newer, hosted in India, reachable from the exchange's outbound addresses and answering within 30 seconds.
-- The handler accepts a body it does not recognise. What arrives is a plain JSON report of the request the exchange gave up on, with the rejection details, not a sealed `JWEPayload`. Its field names are not published, so the body in this request is an illustration rather than a schema.
+- Your callback URL is registered: a domain name over HTTPS, hosted in India, answering within 30 seconds.
+- Your handler accepts a body it does not know. The report is plain JSON, not encrypted.
 
 ### Postconditions
 
-Answer 202 with the receipt, like every other delivery, filling in whatever identifiers the report carries and leaving the rest empty. The original request is dead: its correlation ID has been retired, so a retry needs a fresh one.
+Answer `202`. The original request is dead, so a retry needs a new correlation ID.
 
 ### Common mistakes
 
-- Not hosting it, so failed deliveries are never seen.
-- Parsing the report against a fixed schema and answering `4xx` when it does not match.
-- Retrying the failed request on the retired correlation ID.
+- Not hosting it, so failed deliveries go unseen.
+- Rejecting the report because it does not match a fixed schema.
+- Retrying the failed request on the old correlation ID.
 
 ### Best practices
 
@@ -39,7 +39,7 @@ A hospital posts a pre-authorisation and gets its receipt, but the payer's endpo
 
 ### Specification
 
-Chapter [Building and sending a JWE](/docs/nhcx/v1/getting-started/building-and-sending-a-JWE) of the NHCX integration specification.
+Chapter [Building and sending a JWE](/docs/nhcx/v1/getting-started/building-and-sending-a-jwe) of the NHCX integration specification.
 
 ```bash
 curl --request POST \

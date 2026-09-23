@@ -10,23 +10,20 @@ The participant registry can be extended from or linked to external registries s
 
 ### When to use
 
-Do not call it from an integration. The Participant Registry chapter names it, together with /get/session in its OpenAPI form, as one of two internal-use endpoints that should not be called by integrators. If you need registry linkage information for a participant, read linked_registry_codes from /participant/search or /participant/details, and use the Valid Registry Enums (HFR 10001, NIN 10002, ROHINI 10003, PAYER 10004) documented for onboarding. No workflow or x-hcx-status codes apply.
+Do not call it. It is for NHCX internal use. To see a participant's linked registries, read them from `/participant/search`.
 
 ### Preconditions
 
-- Served under the participanthcxservice prefix with the Registry APIs tag, so the usual bearer_auth Bearer token and Accept: application/json headers would apply.
-- The OpenAPI entry documents no request body and no parameters.
-- Access to internal operations is controlled by the NHCX instance provider; the chapter states integrators should not call it.
+- It is internal. Integrators should not call it.
 
 ### Postconditions
 
-The OpenAPI declares a 200 response of type string, with 400 Client Error, 404 Resource not found and 500 Downstream systems down each returning the ErrorResponse envelope (timestamp plus error code, message and trace). No state change is described and no callback follows. The content of the returned string is not documented.
+It returns a string whose content is not documented. Nothing changes.
 
 ### Common mistakes
 
-- Treating it as a public registry lookup and building a dependency on an operation the platform reserves for internal use.
-- Confusing it with linked_registry_codes on a participant record, which is the documented way to see a participant's external registry identifiers.
-- Confusing the registry master with the Valid Registry Enums used in registrytype during onboarding.
+- Building your integration on an internal operation.
+- Confusing it with the linked registry codes on a participant record.
 
 ### Best practices
 

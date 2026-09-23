@@ -10,28 +10,26 @@ Every other flow exchanges decisions; the payment notice is the only one that te
 
 ### When to use
 
-Payer-initiated, after the final claim is approved (workflow 26). The same bundle shape is sent up to three times as the money progresses: 30 PAYMENT_INITIATED, 31 PAYMENT_PROCESSED and 33 PAYMENT_SETTLED, when the UTR becomes available in PaymentReconciliation.paymentIdentifier.value. The NHA status sheet frames these as x-hcx-status request.initiated because the payer is authoring a new request to the provider; the workbook sample shows x-hcx-workflow_ID 11 as a placeholder. The bundle is a Task with code deliver and status requested, plus PaymentNotice (paymentStatus paid), PaymentReconciliation and both Organisations.
+The payer calls it after the final claim is approved, to tell the hospital about the payment. It can be sent up to three times, as the payment is initiated, processed and settled: the workflow code in the header says which.
 
 ### Preconditions
 
-- The claim has received a response.complete approval and a payment has been initiated in the payer's banking system.
-- The payer holds a valid Bearer token and has fetched the provider's certificate; the bundle is JWE-encrypted for the provider.
-- Protected header carries request.initiated, a fresh correlation UUID for this notice cycle (the workbook says same as the API caller ID), the payer as sender and the provider as recipient, and an IST timestamp.
-- PaymentNotice.amount and PaymentReconciliation.paymentAmount carry the net amount; detail lines itemise TDS and Payment; the claim number is carried as identifier type CLN.
-- Valid provider bank details exist on the payer side (PAYR-1020 otherwise).
+- The claim has been approved and the payment has started on the payer's side.
+- The payer has a valid access token and the provider's certificate, and encrypts the notice for the provider.
+- The notice carries the net amount, the tax deducted and the claim number.
+- The payer holds valid bank details for the hospital.
 
 ### Postconditions
 
-NHCX returns HTTP 202 Accepted with a StatusSuccessResponse acknowledgement (entity_type payment) and forwards the bundle asynchronously to the provider's registered callback endpoint, which must acknowledge with 202 within 30 seconds. The provider then sends its own acknowledgement Task (status completed, output paymentack, workflow 17) on /v1/paymentnotice/on_request; only after that acknowledgement is the payment lifecycle considered closed. Protocol failures at the provider come back as a ProtocolResponse with x-hcx-error_details. Statuses 400, 404 and 500 carry the same schema.
+- NHCX answers `202` and forwards the notice to the provider, who must reply `202` within 30 seconds.
+- The payment is closed only after the provider acknowledges on `/v1/paymentnotice/on_request`.
 
 ### Common mistakes
 
-- Provider side: expecting a Claim or ClaimResponse; the payment notice is a Task bundle and the money fields live in PaymentReconciliation.
-- Provider side: reading the UTR before workflow 33, or parsing the scroll-style UTR (for example UTR000000000001) as a bank RRN.
-- Provider side: relying on Task.description text for logic; the published sample contains a typo (Recived the payment).
-- Provider side: returning 200 or a malformed body on receipt, which triggers five retries and deletion.
-- Payer side: sending the notice before the claim is closed by response.complete, or without valid provider bank details (PAYR-1020).
-- Both sides: the FAQ's sandbox base URL for payment notice is printed without a slash between host and path; cross-check against the endpoint index.
+- Provider side: expecting a `Claim` or `ClaimResponse`. The notice is a `Task` bundle, with the amounts in `PaymentReconciliation`.
+- Provider side: looking for the bank reference (UTR) before the settled notice.
+- Provider side: replying with `200` or a bad body, which triggers retries.
+- Payer side: sending the notice before the claim is approved.
 
 ### Best practices
 
@@ -79,12 +77,12 @@ curl --request POST \
 - `x-hcx-sender_code` (string, required): Your participant code. Mandatory on the envelope.
 - `x-hcx-recipient_code` (string, required): The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
 - `x-hcx-api_call_id` (string, required): Fresh on every message, including responses. Mandatory on the envelope.
-- `x-hcx-request_id` (string): One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope.
+- `x-hcx-request_id` (string): One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope. Send it anyway, as a fresh UUID per originating request: it is cheap and satisfies both readings until NHA rules.
 - `x-hcx-correlation_id` (string, required): The thread. See the rule below. Mandatory on the envelope.
 - `x-hcx-workflow_id` (string): Which step, or which case. See the two readings below. Optional on the envelope.
 - `x-hcx-timestamp` (string, required): See the format note below. Mandatory on the envelope.
 - `x-hcx-status` (string, required): Where this message stands. Values below. Mandatory on the envelope.
-- `x-hcx-ben-abha-id` (string, required): The beneficiary's ABHA number. Mandatory on every exchange, including those with no beneficiary in the payload. Mandatory on the envelope.
+- `x-hcx-ben-abha-id` (string): The beneficiary's ABHA number. Optional: send it when the beneficiary has an ABHA number. Optional on the envelope.
 
 ## Body
 

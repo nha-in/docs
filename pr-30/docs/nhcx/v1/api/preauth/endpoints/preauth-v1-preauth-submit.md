@@ -10,29 +10,24 @@ Pre-authorisation is the provider's formal request for the payer's approval to d
 
 ### When to use
 
-Called after eligibility has confirmed cover and the mandatory documents are in hand. The same endpoint carries several business steps; the x-hcx-workflow_ID header (and the optional x-hcx-use_case header with values New, Enhancement or Resubmit) is the discriminator: 12 PREAUTH_REQUEST_INITIATED for a new preauth; 121 PREAUTH_REQUEST_RESUBMITTED after a query or rejection; 19 PREAUTH_QUERY_RESPONSE_SUBMITTED to answer a payer query received under 24; 13 ENHANCEMENT_REQUEST_INITIATED for an additional amount on an already approved preauth, with 131 answering an enhancement query (241); and 14 DISCHARGE_SUBMITTED for the provisional pre-discharge submission that the claim chapter describes for non-PMJAY schemes (answered by 261, 262 or 263), with 141 answering a discharge query. Send x-hcx-status request.initiated on every one of these. Cancellation is not sent here; it goes to /v1/task/submit (PC01 or 122).
+Use it to ask the payer to approve a treatment before it starts. The same call also sends a resubmission, an enhancement or an answer to a payer query: the workflow code in the header says which.
 
 ### Preconditions
 
-- Provider is an active NHCX participant with a valid NPI facility code and a current Bearer token.
-- Patient resource carries the PMJAY Member ID and ABHA number; an active Coverage resource with a valid policy identifier is included.
-- Diagnosis (ICD-10), procedure (NRCes ndhm-procedure-code), care team and supportingInfo are present, and the mandatory documents named by the InsurancePlan or the eligibility auth-requirements response are attached.
-- For a new PMJAY preauth, either biometric authentication or the Authentication Consent questionnaire response is included (PAYR-1256, PAYR-1271).
-- For 13, 19, 121 or 131 a prior preauth in the right state exists (PAYR-1212, PAYR-1214, PAYR-1218, PAYR-1219 otherwise) and the message reuses the episode's correlation identity.
-- Payer certificate fetched, bundle JWE-encrypted, recipient code taken from processingID, timestamp in IST.
+- You have a valid access token and the payer's certificate.
+- Coverage is confirmed and the documents the payer asks for are ready.
+- The bundle is an FHIR `Claim` with `use` set to `preauthorization`, encrypted for the payer.
 
 ### Postconditions
 
-NHCX returns HTTP 202 Accepted with a StatusSuccessResponse acknowledgement (entity_type preauth, protocol_status request.queued or request.dispatched). This is not an adjudication; the gateway validates structure and open headers, then forwards asynchronously. The payer may first acknowledge under workflow 20, then answer on /v1/preauth/on_submit with a ClaimResponseBundle: 21 approved (preAuthRef issued), 23 rejected, 24 queried, 22 enhancement approved or 241 enhancement queried, 261, 262 or 263 for discharge. Protocol failures return a ProtocolResponse with x-hcx-error_details. Errors marked 400, 404 and 500 carry the same schema.
+- NHCX answers `202` at once. That only means the message was accepted, not approved.
+- The payer's decision arrives later on `/v1/preauth/on_submit`.
 
 ### Common mistakes
 
-- Answering a query (24) with a fresh 12 instead of 19, or answering an enhancement query (241) with 19 instead of 131; both arrive on the same callback and are easily crossed.
-- Sending an enhancement (13) against a preauth that is not yet approved (PAYR-1212) or while another case is in progress (PAYR-1213), or a new 12 when an approved preauth already exists (PAYR-1217).
-- Reusing a correlation ID across cycles (NHCX-1006) or after a failure, when NHCX has marked it inactive.
-- Leaving out x-hcx-workflow_ID and x-hcx-use_case because the spec marks them Optional; without them the payer cannot tell an enhancement from a duplicate.
-- Item and amount errors: PAYR-1017 incorrect calculations, PAYR-1209 net amount not greater than zero, PAYR-1248 invalid item code, PAYR-1254 missing STG questionnaire response, PAYR-1270 sending LM100 at preauth stage.
-- Branching on ClaimResponse.outcome alone when the callback arrives; complete means approved or rejected depending on adjudication reason.
+- Sending to the insurer's code instead of the claims processor's.
+- Treating the `202` as an approval.
+- Reusing a correlation ID after a failed request.
 
 ### Best practices
 
@@ -88,12 +83,12 @@ curl --request POST \
 - `x-hcx-sender_code` (string, required): Your participant code. Mandatory on the envelope.
 - `x-hcx-recipient_code` (string, required): The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
 - `x-hcx-api_call_id` (string, required): Fresh on every message, including responses. Mandatory on the envelope.
-- `x-hcx-request_id` (string): One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope.
+- `x-hcx-request_id` (string): One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope. Send it anyway, as a fresh UUID per originating request: it is cheap and satisfies both readings until NHA rules.
 - `x-hcx-correlation_id` (string, required): The thread. See the rule below. Mandatory on the envelope.
 - `x-hcx-workflow_id` (string): Which step, or which case. See the two readings below. Optional on the envelope.
 - `x-hcx-timestamp` (string, required): See the format note below. Mandatory on the envelope.
 - `x-hcx-status` (string, required): Where this message stands. Values below. Mandatory on the envelope.
-- `x-hcx-ben-abha-id` (string, required): The beneficiary's ABHA number. Mandatory on every exchange, including those with no beneficiary in the payload. Mandatory on the envelope.
+- `x-hcx-ben-abha-id` (string): The beneficiary's ABHA number. Optional: send it when the beneficiary has an ABHA number. Optional on the envelope.
 - `x-hcx-use_case` (string): Values differ by exchange, see below. Optional on the envelope.
 
 ## Body

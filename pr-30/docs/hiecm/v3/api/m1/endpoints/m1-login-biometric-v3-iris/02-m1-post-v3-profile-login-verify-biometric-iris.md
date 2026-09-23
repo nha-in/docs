@@ -21,7 +21,7 @@ Completes IRIS login. Send the `txnId` from *Login via Biometric (Iris) - send a
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["abha-login", "aadhaar-iris-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["ABHA-login", "Aadhaar-iris-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
 | `authData.authMethods` | `["iris"]` | yes | Authentication method used in this step. |
 | `authData.iris` | object | yes | IRIS authentication block. |

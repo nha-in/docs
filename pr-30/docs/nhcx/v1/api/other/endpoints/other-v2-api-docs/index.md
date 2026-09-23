@@ -10,24 +10,22 @@ Some tooling still consumes Swagger 2 rather than OpenAPI 3. This endpoint serve
 
 ### When to use
 
-Use it when your client generator or API tooling requires Swagger 2 input, or when comparing the Swagger 2 and OpenAPI 3 renderings of the status service during a troubleshooting session. The endpoint index lists it as endpoint 20 with an optional group query parameter. It plays no part in any transaction workflow.
+Use it when your tools need the older Swagger 2 format. It describes the same service as `/v3/api-docs`.
 
 ### Preconditions
 
-- A GET request to the status service host; the OpenAPI documents in this corpus were captured from https://hcxsbx.ABDM.gov.in//api-docs, and the status service declares the server prefix /statushcxservice.
-- No JWE envelope, no x-hcx-* protocol headers and no correlation ID; the docs do not state that a Bearer token is required for these discovery endpoints.
-- No request body.
+- A plain `GET` to the status service host, under `/statushcxservice`.
+- No encryption, no `x-hcx-*` headers and no request body.
 
 ### Postconditions
 
-The service returns HTTP 200 with a JSON Swagger 2 document (swagger: 2.0) describing the status service, its base path and the /v1/status operation. Nothing changes on NHCX and no callback follows. Where the served document and the handbook disagree on URL shape, the docs advise treating the per-service spec host as the exploration surface and the handbook's gateway base as the integration surface.
+The service returns `200` with its Swagger 2 document. Nothing changes and no callback follows.
 
 ### Common mistakes
 
-- Pointing at the gateway base https://apisbx.ABDM.gov.in/pmjay/sbxhcx and expecting the per-service spec host; the docs advise swapping between the two URL shapes when a path 404s.
-- Treating the served document as the integration contract for gateway traffic; the handbook's gateway base and header conventions take precedence where the two disagree.
-- Sending a POST or a JSON body to a GET discovery endpoint.
-- Wrapping the call in JWE or adding x-hcx-* headers, which only apply to protocol APIs such as /v1/status.
+- Calling the gateway address instead of the status service host.
+- Treating this document as the contract for gateway traffic.
+- Sending a `POST`, a request body or `x-hcx-*` headers.
 
 ### Best practices
 

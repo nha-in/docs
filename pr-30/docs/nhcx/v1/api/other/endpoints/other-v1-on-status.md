@@ -10,33 +10,32 @@ It separates "did my message arrive" from "what did the payer decide". A sender 
 
 ### When to use
 
-Hosted by every participant that sends `/v1/status`. It arrives in answer to a status request you sent.
+Every participant that sends `/v1/status` hosts this path. It carries the answer to your status request.
 
 ### Preconditions
 
-- You sent `/v1/status` with `x-hcx-correlation_id` set to the `api_call_id` of the message you were asking about, and you kept that mapping.
-- Your callback address is registered and answers 202 within 30 seconds.
+- You sent `/v1/status` and kept track of which request it asked about.
+- Your callback URL is registered and answers `202` within 30 seconds.
 
 ### Postconditions
 
-Read `x-hcx-status` from the protected header. `request.dispatched` means the message reached the recipient, and `request.queued` that the exchange still holds it. `request.stopped` means redelivery was exhausted and the correlation ID retired, so the original request is dead and a retry needs a fresh correlation ID. `x-hcx-error_details`, with `code`, `message` and `trace`, is present where the original failed. Answer 202 with the receipt.
+Read `x-hcx-status` in the header. `request.dispatched` means the message reached the recipient, and `request.queued` means NHCX still holds it. `request.stopped` means the request is dead, so a retry needs a new correlation ID. Answer `202`.
 
 ### Common mistakes
 
-- Expecting a bundle. The payload is an empty string and everything travels in the header.
-- Matching the answer on the original request's correlation ID. It carries the correlation of your status request.
-- Retrying a `request.stopped` message on its old correlation ID.
-- Offering a refresh or chase control in the user interface with no status exchange behind it.
+- Expecting a bundle. The payload is an empty string.
+- Matching on the original request's correlation ID instead of your status request's.
+- Retrying a stopped request on its old correlation ID.
 
 ### Best practices
 
-- Keep every `api_call_id` you send. Without it you cannot ask the question at all.
+- Keep every `API_call_ID` you send. Without it you cannot ask the question at all.
 - Act on `request.stopped` at once, and treat `request.dispatched` as a reason to wait for the payer.
 - Ask from a support screen when a case has gone quiet for longer than the payer's expected turnaround, not on a timer.
 
 ### Related scenario
 
-A pre-authorisation has had no answer for longer than the payer's usual turnaround. The support screen sends `/v1/status` with that request's `api_call_id` as the correlation ID. The answer arrives here with an empty payload and `x-hcx-status` `request.stopped`, so the desk knows the request is dead rather than slow, and resubmits it with a fresh correlation ID.
+A pre-authorisation has had no answer for longer than the payer's usual turnaround. The support screen sends `/v1/status` with that request's `API_call_ID` as the correlation ID. The answer arrives here with an empty payload and `x-hcx-status` `request.stopped`, so the desk knows the request is dead rather than slow, and resubmits it with a fresh correlation ID.
 
 ### Specification
 

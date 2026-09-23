@@ -10,29 +10,24 @@ This endpoint serves the same business need as /participant/link/abha/policy: it
 
 ### When to use
 
-Use it in exactly the situations where the v1 link call applies: policy issue, renewal, member addition, or re-linking after a de-link when a payer changes TPA. It belongs to the member-layer setup that precedes every claim-side workflow (coverage eligibility, preauthorisation with workflow code 12, enhancement with code 13, claim). Choose this path or the v1 path consistently across your integration; the docs give no reason to mix them.
+Use it in the same cases as the v1 link call. Pick the v1 or V2 path and use it throughout your integration.
 
 ### Preconditions
 
-- A valid Bearer token from the client-credentials call (POST /get/session, form-urlencoded client_ID, client_secret, grant_type=client_credentials); tokens last 1200 seconds, so refresh before expiry.
-- HTTP headers Accept: application/json, Content-Type: application/json and bearer_auth: Bearer (the participant service uses bearer_auth, not Authorisation).
-- Base path for the participant service: https://apisbx.ABDM.gov.in/pmjay/sbxhcx/participanthcxservice (sandbox) or https://apisprod.NHA.gov.in/pmjay/hcx/participanthcxservice (production).
-- This is a synchronous plain-JSON registry call: no JWE envelope, no x-hcx-* protocol headers and no correlation ID are involved.
-- The token must belong to the participant named as payerid or processingid, generated with the client_ID used at participant creation.
-- Note the capital V in the path (/V2/participant/...), which differs from the lower-case /v2/ used by the init and validate variants.
+- You have a valid access token in the `bearer_auth` header.
+- You are the payer or its TPA, using the credentials that participant was created with.
+- The path starts with a capital `V2`.
 
 ### Postconditions
 
-A successful call returns HTTP 200 with ParticipantLinkAbhaResponse (optional result string and optional errormessage with errorcode and errordescription). No asynchronous callback follows; the beneficiary's products are immediately discoverable through /participant/get/policies or /V2/participant/get/policies. Errors come back as 400, 404 or 500 with the registry ErrorResponse envelope. The link can later be reversed only through the de-link endpoints, which check that the caller is the payerid or processingid participant.
+The member's policies are linked at once and providers can find them. Only the de-link calls reverse it.
 
 ### Common mistakes
 
-- Calling with a token minted from a client_ID other than the one used at participant creation for the payer or TPA; NHA lists this as common mistake 10 and the call is refused even though the token itself is valid.
-- Confusing payerid and processingid: payerid is always the insurance company's own participant code; processingid is only the TPA code when the payer is mapped under a TPA.
-- Trying to move a payer to a new TPA by re-linking in place; the documented path is de-link, then link again with the new TPA's code as processingid.
-- Omitting one of the required fields (requestid, abhanumber, memberid, payerid, policies with productid and productname) or reusing a non-UUID requestid, which returns 400 with the ErrorResponse envelope.
-- Sending the token without the Bearer prefix, or omitting the Accept header, both of which reject the call before business logic (401 or 400).
-- Lower-casing the path to /v2/participant/link/abha/policy, which is not the same route; the lower-case /v2/ prefix belongs to the init and validate pair.
+- Using a token from different credentials than the payer or TPA was created with.
+- Mixing up `payerid` and `processingid`.
+- Writing the path with a lower-case `v2`, which is a different route.
+- Leaving out a required field.
 
 ### Best practices
 

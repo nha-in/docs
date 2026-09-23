@@ -21,12 +21,12 @@ Verifies the Aadhaar OTP for ABHA-address login. Returns the linked ABHA address
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["abha-address-login", "aadhaar-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["ABHA-address-login", "Aadhaar-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
-| `authData.authMethods` | `["otp"]` | yes | Authentication method used in this step. |
-| `authData.otp` | object | yes | OTP authentication block. |
-| `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
-| `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
+| `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
+| `authData.OTP` | object | yes | OTP authentication block. |
+| `authData.OTP.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
+| `authData.OTP.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
 
 ```bash
 curl --request POST \

@@ -2,7 +2,7 @@
 
 Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/pr-30/docs/hiecm/v3/troubleshooting/).
 
-A code is on this page because a response example in a specification returns it, or because NHA lists it for the module. A row with no HTTP status and no call is one NHA lists without saying which call returns it.
+A code is on this page because a response example in a specification returns it.
 
 ## M1 Identity
 

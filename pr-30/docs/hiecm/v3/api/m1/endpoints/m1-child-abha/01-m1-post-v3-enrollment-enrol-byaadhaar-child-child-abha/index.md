@@ -35,7 +35,7 @@ Creates a Child ABHA linked to the parent's ABHA. Send the **parent's** `X-token
 | `authData.child.profilePhoto` | string | no | Base64 encoded profile photo. |
 | `authData.child.parentConsent` | string | no | Parent consent flag for creating a child ABHA. |
 | `consent` | object | yes | Consent captured from the user for ABHA enrolment. |
-| `consent.code` | string | yes | Consent code. Use `abha-enrollment`. |
+| `consent.code` | string | yes | Consent code. Use `ABHA-enrollment`. |
 | `consent.version` | string | yes | Consent version. Use `1.4`. |
 
 ```bash

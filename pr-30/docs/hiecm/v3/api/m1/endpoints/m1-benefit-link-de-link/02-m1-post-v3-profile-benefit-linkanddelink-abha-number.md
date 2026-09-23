@@ -21,7 +21,7 @@ Links (`scope: ["link"]`) or de-links (`scope: ["de-link"]`) the benefit named i
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
 | `scope` | `["link"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
-| `loginHint` | `"abha-number"` | yes | Type of identifier sent in `loginId`. |
+| `loginHint` | `"ABHA-number"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
 
 ```bash

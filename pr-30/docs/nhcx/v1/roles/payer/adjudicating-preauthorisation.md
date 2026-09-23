@@ -74,7 +74,7 @@ Note what the published PMJAY responses do **not** carry: no `ClaimResponse.requ
 
 ## Writing a query
 
-Under PMJAY the query travels in `item.adjudication.reason.coding.display` as a pipe-delimited audit trail, `USER~datetime~type~comment~trust`, with multiple entries separated by `|`. The provider shows the comment. Keep it specific: name the document or the clarification, and the package it concerns. A vague query costs a full round trip and a day of TAT.
+Under PMJAY the query travels in `item.adjudication.reason.coding.display` as a pipe-delimited audit trail, `USER~datetime~type~comment~actor`, where `actor` is whoever wrote the entry: `PPD-Trust` on a preauthorisation, `CPD-Trust` on a claim, or the hospital's name, with multiple entries separated by `|`. The provider shows the comment. Keep it specific: name the document or the clarification, and the package it concerns. A vague query costs a full round trip and a day of TAT.
 
 Under PMJAY the provider answers on the same endpoint with code 19. On the general network a payer may instead raise a Communication with reason `additionalinfo`; the provider answers on the communication endpoint. Do not use both for the same question.
 

@@ -140,6 +140,6 @@ That last one is the substantive difference between this role and the others. A 
 
 ## What this chapter cannot tell you
 
-The integration document is written against an older reading of the protocol than the rest of the corpus. It gives `alg` as `RSA-OAEP` rather than `RSA-OAEP-256`, and a token life of 6,000 seconds where other sources say 300 or 1,200. Follow the current protocol as Envelope Fields and Session Token give it, and treat the document's payload shapes as the part that is specific to notifications.
+The integration document is written against an older reading of the protocol than the rest of the corpus. It gives `alg` as `RSA-OAEP` rather than `RSA-OAEP-256`, and a token life of 6,000 seconds. That figure is wrong: the token lasts 1,200 seconds (20 minutes). Follow the current protocol as Envelope Fields and Session Token give it, and treat the document's payload shapes as the part that is specific to notifications.
 
 No sample notification bundle exists in the corpus, and no participant is recorded as having exercised this exchange.

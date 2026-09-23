@@ -10,27 +10,26 @@ This is the answer leg of the eligibility check. The payer (or a TPA acting for 
 
 ### When to use
 
-The payer calls it after it has processed a /v1/coverageeligibility/check request, using the same x-hcx-correlation_ID. The protected header carries x-hcx-status response.complete for a final answer (the coverage-eligibility workbook sheets spell this response.completed; the preauth and claim sheets use response.complete), response.partial for a partial answer, or response.error for a protocol-level rejection with x-hcx-error_details populated. The plaintext is a CoverageEligibilityResponseBundle with outcome complete, insurance[*].inforce, item[*].excluded, item[*].authorizationRequired and item[*].authorizationSupporting. A redirect or forward instruction to another payer is an alternate documented outcome.
+The payer calls it after processing an eligibility check, with the same correlation ID. It says whether the policy is active, what is covered and whether a pre-authorisation is needed.
 
 ### Preconditions
 
-- A /v1/coverageeligibility/check request with this correlation ID must exist in NHCX; a callback against an unknown or already deleted correlation ID fails with NHCX-1010.
-- The payer has a valid Bearer token and has fetched the provider's certificate to encrypt the response bundle for the provider's private key.
-- x-hcx-correlation_ID echoes the request's value; x-hcx-API_call_ID is a new UUID; sender and recipient codes are swapped relative to the request.
-- x-hcx-status is one of response.complete, response.partial or response.error (NHCX-1011 otherwise).
-- Business or clinical errors are embedded inside the encrypted CoverageEligibilityResponse, never in the clear header; only protocol errors go in x-hcx-error_details.
+- A check with this correlation ID exists in NHCX.
+- The payer has a valid access token and the provider's certificate, and encrypts the answer for the provider.
+- `x-hcx-status` is `response.complete`, `response.partial` or `response.error`.
+- Business errors go inside the encrypted answer. Only protocol errors go in `x-hcx-error_details`.
 
 ### Postconditions
 
-The gateway (and, when the callback reaches it, the provider system) returns HTTP 202 Accepted with the StatusSuccessResponse acknowledgement echoing correlation_ID and API_call_ID, entity_type coverageeligibility and a protocol_status. NHCX forwards the encrypted response to the provider's registered callback URL; the provider must acknowledge with 202 within 30 seconds or NHCX retries, and after five failed attempts the request under that correlation ID is deleted and the sender is notified via v1/error. On success the eligibility conversation is closed and the provider can decide whether to proceed to preauth.
+- NHCX answers `202` and forwards the answer to the provider.
+- The provider must reply `202` within 30 seconds, or NHCX retries up to five times.
+- On success the check is closed and the provider can move on to pre-authorisation.
 
 ### Common mistakes
 
-- Returning HTTP 200 or an ad-hoc body instead of the 202 acceptance shape on the receiving side, which NHCX treats as an error and retries up to five times.
-- Minting a new correlation ID on the callback instead of echoing the request's (NHCX-1010 no data with given correlation ID).
-- Sending a JWEPayloadResponse where a ProtocolResponse is expected on error (PAYR-1517), or using the superseded status spelling response.fail versus response.error; the sources disagree, so check which your gateway build accepts.
-- Placing patient or clinical error detail in x-hcx-error_details, which the gateway stores for audit.
-- Provider side: expecting the response codes to match the request codes verbatim; the payer answers in its own master codes.
+- Replying with `200` or a custom body on the receiving side, which makes NHCX retry.
+- Creating a new correlation ID instead of reusing the request's.
+- Putting patient or clinical details in `x-hcx-error_details`.
 
 ### Best practices
 
@@ -79,12 +78,12 @@ curl --request POST \
 - `x-hcx-sender_code` (string, required): Your participant code. Mandatory on the envelope.
 - `x-hcx-recipient_code` (string, required): The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
 - `x-hcx-api_call_id` (string, required): Fresh on every message, including responses. Mandatory on the envelope.
-- `x-hcx-request_id` (string): One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope.
+- `x-hcx-request_id` (string): One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope. Send it anyway, as a fresh UUID per originating request: it is cheap and satisfies both readings until NHA rules.
 - `x-hcx-correlation_id` (string, required): The thread. See the rule below. Mandatory on the envelope.
 - `x-hcx-workflow_id` (string): Which step, or which case. See the two readings below. Optional on the envelope.
 - `x-hcx-timestamp` (string, required): See the format note below. Mandatory on the envelope.
 - `x-hcx-status` (string, required): Where this message stands. Values below. Mandatory on the envelope.
-- `x-hcx-ben-abha-id` (string, required): The beneficiary's ABHA number. Mandatory on every exchange, including those with no beneficiary in the payload. Mandatory on the envelope.
+- `x-hcx-ben-abha-id` (string): The beneficiary's ABHA number. Optional: send it when the beneficiary has an ABHA number. Optional on the envelope.
 - `x-hcx-debug_flag` (string): `Error`, `Info` or `Debug`. A server may ignore it. Optional on the envelope.
 
 ## Body

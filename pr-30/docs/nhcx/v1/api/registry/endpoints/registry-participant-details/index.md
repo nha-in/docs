@@ -10,25 +10,23 @@ This is the second of two endpoints that read a single participant by code. It e
 
 ### When to use
 
-Use it wherever /participant/search would be used: after payer discovery via /fetch/participants/list, before the first JWE to a new recipient, or to verify your own record after an update. The OpenAPI gives both endpoints the identical description and the same ParticipantSearchReq and ParticipantSearchResponse schemas, and documents no behavioural difference beyond the operationId; the chapter advises treating them as interchangeable unless your HCX instance says otherwise. Synchronous JSON, no workflow or x-hcx-status codes.
+Use it wherever you would use `/participant/search`. It takes the same request and returns the same response.
 
 ### Preconditions
 
-- Bearer token from /get/session in bearer_auth with the Bearer prefix; Accept and Content-Type: application/json.
-- Body per ParticipantSearchReq: participant_code (string, required) in xxxxx@hcx or @sbx form.
-- Served under the participanthcxservice prefix on the environment gateway base.
+- You have a valid access token in the `bearer_auth` header.
+- You have the target's `participant_code`.
 
 ### Postconditions
 
-HTTP 200 with ParticipantSearchResponse: timestamp and a participants array of full participant records (participant_code, linked_registry_codes, participant_name, scheme_code, roles, address, contact fields, status, signing_cert_path, encryption_cert, endpoint_URL, payment_details). Read-only; nothing changes and no callback follows. 400, 404 and 500 return the ErrorResponse envelope with timestamp and error code, message and trace.
+You get the participant's full registry record. Nothing changes.
 
 ### Common mistakes
 
-- Expecting a different or richer response than /participant/search; the documented schemas are identical.
-- Using participantcode or participantid instead of participant_code.
-- Treating encryption_cert (a URI or file path in the schema) as the PEM itself instead of calling /fetch/certs.
-- Omitting the Accept header or the Bearer prefix.
-- Hard-coding one of the two lookup paths without a fallback when the instance serves only the other.
+- Expecting a richer answer than `/participant/search` gives.
+- Sending the code under a field name other than `participant_code`.
+- Reading `encryption_cert` as the certificate itself instead of calling `/fetch/certs`.
+- Leaving out the `Accept` header.
 
 ### Best practices
 

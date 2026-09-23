@@ -1,4 +1,4 @@
-# Troubleshooting
+# Troubleshooting by layer and code
 
 A symptom-first chapter. Everything else in this documentation is organised by what you are building; this one is organised by what has gone wrong, because that is the only thing you know at the moment you need it.
 
@@ -18,46 +18,46 @@ The layers are strictly ordered. Reaching a layer means every layer before it pa
 
 ## The symptom table
 
-| What you see                                            | Layer | Most likely cause                                                                | What to do                                                                                                  |
-| ------------------------------------------------------- | ----- | -------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `401` on the sessions call                              | 1     | Wrong client ID or secret, or Milestone 1 incomplete                             | Check the credentials against onboarding                                                                    |
-| `401` naming a header on the sessions call              | 1     | `REQUEST-ID` reused or absent, `TIMESTAMP` stale or malformed, `X-CM-ID` missing | Generate a fresh UUID per call; take the time from the system clock                                         |
-| `401 Sender is not authorized to execute the operation` | 1     | Token expired                                                                    | Fetch a new token and retry once. Never retry with the same token                                           |
-| `401` immediately after a fresh token                   | 1     | `Bearer `prefix missing, or the token sent on the wrong header name              | Send `bearer_auth: Bearer <token>`, and `Authorization` alongside it                                        |
-| `401` on policy link or de-link only                    | 1     | The client ID calling is not the one that created the participant                | Run the linking job under the credentials that created the record                                           |
-| `400` on a use-case call                                | 2     | Envelope failed validation                                                       | Check every `x-hcx-` field against Envelope Fields                                                          |
-| `NHCX-1005` invalid request header                      | 2     | A header missing, malformed or of the wrong type                                 | As above                                                                                                    |
-| `NHCX-1006` duplicate request                           | 2     | A correlation ID reused, usually on a retry after a failure                      | Mint a fresh correlation ID. A failed correlation is retired                                                |
-| `NHCX-1011` invalid status                              | 2     | The status word does not match the leg of the message                            | Requests send `request.initiated`; responses send `response.partial`, `complete` or `error`                 |
-| `NHCX-1018` invalid ABHA number                         | 2     | ABHA sent in the wrong shape                                                     | The gateway wants `XX-XXXX-XXXX-XXXX` on this field, though the bundle carries it without hyphens           |
-| `NHCX-1010` no data with given correlation id           | 2     | You answered a request whose correlation the exchange had already retired        | Acknowledge every submission immediately, then send the decision on the same thread                         |
-| `NHCX-1002` or `NHCX-1003` not registered               | 2     | Sender or recipient is not active on the exchange                                | Check the participant record's status. Only `Active` can send or receive                                    |
-| Nothing at all arrives on your callback                 | 2     | Address, firewall, routing, or no receipt sent                                   | See the callback checklist below                                                                            |
-| `PAYR-1001` decryption failed                           | 3     | You encrypted with a certificate that is not the one on the recipient's record   | Re-fetch the recipient's certificate and resend. Clear your cache                                           |
-| `PAYR-1002` encryption failed                           | 3     | The payer cannot encrypt for you: your registered certificate is stale or absent | Update your `encryption_cert` on your participant record                                                    |
-| `PAYR-1097` no payload                                  | 3     | The ciphertext part of the JWE is empty                                          | Check you are serialising all five parts, compact                                                           |
-| `PAYR-1005` time limit exceeded                         | 3     | `x-hcx-timestamp` is more than 24 hours behind the current time                  | Send the current time. This is the only numeric tolerance the sources state                                 |
-| `PAYR-1004` or `PAYR-1008` malformed or invalid bundle  | 4     | The bundle does not parse or fails profile validation                            | Run it through the NRCeS validator before anything else                                                     |
-| `PAYR-1009` to `PAYR-1016` no identifier or type found  | 4     | A resource is missing its `identifier`, or an identifier is missing its `type`   | Every resource that names a party needs both                                                                |
-| `PAYR-1019` invalid sequence in supporting info         | 4     | A `supportingInfo` entry has no `sequence`                                       | Number the whole list once it is assembled, from 1, with no gaps                                            |
-| `PAYR-1027` invalid item id                             | 4     | `Claim.item` has no FHIR element `id`. Nothing to do with the package code       | Give each item `Item/n`, each procedure `Procedure/n`, each supporting-info entry `SupportingInformation/n` |
-| `PAYR-1028`, `PAYR-1029`                                | 4     | The same fault on the item sequence and the bundle id                            | As above                                                                                                    |
-| `PAYR-1083` no HPR details                              | 4     | The `Practitioner` carries no identifier typed `HPIN`                            | Send the HPR id as `HPIN` as well as `HPID`                                                                 |
-| `PAYR-1093`, `PAYR-1094` composition faults             | 4     | An embedded clinical document does not follow the NRCeS profile                  | Check the `Encounter` structure definition                                                                  |
-| `PAYR-1095` invalid discharge information               | 4     | A claim with no discharge status                                                 | Send category `DIS` with a code among `DTH`, `DTM`, `LAMA`, `DAMA`                                          |
-| `PAYR-1096` invalid death date                          | 4     | Discharge type is death and no death date was sent                               | Send category `ONS`, code `DTM`                                                                             |
-| `PAYR-1008` invalid content type                        | 4     | A document outside PDF, JPG, JPEG, PNG and FHIR JSON                             | Convert it. `text/plain` is refused                                                                         |
-| `PAYR-1114`, `PAYR-1202` invalid speciality code        | 5     | `item.category` is not the master's category code for that package               | Read the specialty off the plan, not off your own list                                                      |
-| `PAYR-1238` active preauthorisation exists              | 5     | The scheme allows one live preauthorisation per beneficiary per hospital         | Cancel the existing one, or raise its claim. The reference number names it                                  |
-| `PAYR-1245` one conservative procedure                  | 5     | A second package typed `Conservative` on one case                                | An enhancement must add a `Medical` package or an allowed add-on                                            |
-| `PAYR-1256`, `PAYR-1363` consent questionnaire missing  | 5     | No biometric token and no authentication-consent response                        | Answer the plan's questionnaire, found by title in the master                                               |
-| `PAYR-1301` claim already raised                        | 5     | One case, one claim                                                              | Nothing to resubmit. Use a Task                                                                             |
-| `PAYR-1302` no approved preauthorisation                | 5     | The claim went out under a number of its own                                     | Send the claim under the pre-authorisation's number                                                         |
-| `PAYR-1321`                                             | 5     | A claim query answered under the wrong workflow id                               | Answer on 161, not 151, 19 or 16                                                                            |
-| `PAYR-1322` active instance found                       | 5     | Another request is already open on that case                                     | The scheme takes one at a time. Wait                                                                        |
-| `PAYR-1401` policy not allowed for the hospital         | 5     | The plan was asked for under a policy the hospital is not empanelled under       | Ask under the beneficiary's own policy from the eligibility answer                                          |
-| `PAYR-1406` existing request in progress                | 5     | A second plan request before the first was answered                              | Wait 15 to 60 minutes. Past 60, raise it with support                                                       |
-| `ERR-PYR-CLM-007` no prior record for case number       | 5     | As `PAYR-1302`                                                                   | As above                                                                                                    |
+| What you see                                            | Layer | Most likely cause                                                                | What to do                                                                                                            |
+| ------------------------------------------------------- | ----- | -------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `401` on the sessions call                              | 1     | Wrong client ID or secret, or Milestone 1 incomplete                             | Check the credentials against onboarding                                                                              |
+| `401` naming a header on the sessions call              | 1     | `REQUEST-ID` reused or absent, `TIMESTAMP` stale or malformed, `X-CM-ID` missing | Generate a fresh UUID per call; take the time from the system clock                                                   |
+| `401 Sender is not authorized to execute the operation` | 1     | Token expired                                                                    | Fetch a new token and retry once. Never retry with the same token                                                     |
+| `401` immediately after a fresh token                   | 1     | `Bearer `prefix missing, or the token sent on the wrong header name              | Send `bearer_auth: Bearer <token>`, and `Authorization` alongside it                                                  |
+| `401` on policy link or de-link only                    | 1     | The client ID calling is not the one that created the participant                | Run the linking job under the credentials that created the record                                                     |
+| `400` on a use-case call                                | 2     | Envelope failed validation                                                       | Check every `x-hcx-` field against Envelope Fields                                                                    |
+| `NHCX-1005` invalid request header                      | 2     | A header missing, malformed or of the wrong type                                 | As above                                                                                                              |
+| `NHCX-1006` duplicate request                           | 2     | A correlation ID reused, usually on a retry after a failure                      | Mint a fresh correlation ID. A failed correlation is retired                                                          |
+| `NHCX-1011` invalid status                              | 2     | The status word does not match the leg of the message                            | Requests send `request.initiated`; responses send `response.partial`, `complete` or `error`                           |
+| `NHCX-1018` invalid ABHA number                         | 2     | ABHA sent in the wrong shape                                                     | The gateway wants `XX-XXXX-XXXX-XXXX` on the `x-hcx-ben-abha-id` header, though the bundle carries it without hyphens |
+| `NHCX-1010` no data with given correlation id           | 2     | You answered a request whose correlation the exchange had already retired        | Acknowledge every submission immediately, then send the decision on the same thread                                   |
+| `NHCX-1002` or `NHCX-1003` not registered               | 2     | Sender or recipient is not active on the exchange                                | Check the participant record's status. Only `Active` can send or receive                                              |
+| Nothing at all arrives on your callback                 | 2     | Address, firewall, routing, or no receipt sent                                   | See the callback checklist below                                                                                      |
+| `PAYR-1001` decryption failed                           | 3     | You encrypted with a certificate that is not the one on the recipient's record   | Re-fetch the recipient's certificate and resend. Clear your cache                                                     |
+| `PAYR-1002` encryption failed                           | 3     | The payer cannot encrypt for you: your registered certificate is stale or absent | Update your `encryption_cert` on your participant record                                                              |
+| `PAYR-1097` no payload                                  | 3     | The ciphertext part of the JWE is empty                                          | Check you are serialising all five parts, compact                                                                     |
+| `PAYR-1005` time limit exceeded                         | 3     | `x-hcx-timestamp` is more than 24 hours behind the current time                  | Send the current time. This is the only numeric tolerance the sources state                                           |
+| `PAYR-1004` or `PAYR-1008` malformed or invalid bundle  | 4     | The bundle does not parse or fails profile validation                            | Run it through the NRCeS validator before anything else                                                               |
+| `PAYR-1009` to `PAYR-1016` no identifier or type found  | 4     | A resource is missing its `identifier`, or an identifier is missing its `type`   | Every resource that names a party needs both                                                                          |
+| `PAYR-1019` invalid sequence in supporting info         | 4     | A `supportingInfo` entry has no `sequence`                                       | Number the whole list once it is assembled, from 1, with no gaps                                                      |
+| `PAYR-1027` invalid item id                             | 4     | `Claim.item` has no FHIR element `id`. Nothing to do with the package code       | Give each item `Item/n`, each procedure `Procedure/n`, each supporting-info entry `SupportingInformation/n`           |
+| `PAYR-1028`, `PAYR-1029`                                | 4     | The same fault on the item sequence and the bundle id                            | As above                                                                                                              |
+| `PAYR-1083` no HPR details                              | 4     | The `Practitioner` carries no identifier typed `HPIN`                            | Send the HPR id as `HPIN` as well as `HPID`                                                                           |
+| `PAYR-1093`, `PAYR-1094` composition faults             | 4     | An embedded clinical document does not follow the NRCeS profile                  | Check the `Encounter` structure definition                                                                            |
+| `PAYR-1095` invalid discharge information               | 4     | A claim with no discharge status                                                 | Send category `DIS` with a code among `DTH`, `DTM`, `LAMA`, `DAMA`                                                    |
+| `PAYR-1096` invalid death date                          | 4     | Discharge type is death and no death date was sent                               | Send category `ONS`, code `DTM`                                                                                       |
+| `PAYR-1008` invalid content type                        | 4     | A document outside PDF, JPG, JPEG, PNG and FHIR JSON                             | Convert it. `text/plain` is refused                                                                                   |
+| `PAYR-1114`, `PAYR-1202` invalid speciality code        | 5     | `item.category` is not the master's category code for that package               | Read the specialty off the plan, not off your own list                                                                |
+| `PAYR-1238` active preauthorisation exists              | 5     | The scheme allows one live preauthorisation per beneficiary per hospital         | Cancel the existing one, or raise its claim. The reference number names it                                            |
+| `PAYR-1245` one conservative procedure                  | 5     | A second package typed `Conservative` on one case                                | An enhancement must add a `Medical` package or an allowed add-on                                                      |
+| `PAYR-1256`, `PAYR-1363` consent questionnaire missing  | 5     | No biometric token and no authentication-consent response                        | Answer the plan's questionnaire, found by title in the master                                                         |
+| `PAYR-1301` claim already raised                        | 5     | One case, one claim                                                              | Nothing to resubmit. Use a Task                                                                                       |
+| `PAYR-1302` no approved preauthorisation                | 5     | The claim went out under a number of its own                                     | Send the claim under the pre-authorisation's number                                                                   |
+| `PAYR-1321`                                             | 5     | A claim query answered under the wrong workflow id                               | Answer on 161, not 151, 19 or 16                                                                                      |
+| `PAYR-1322` active instance found                       | 5     | Another request is already open on that case                                     | The scheme takes one at a time. Wait                                                                                  |
+| `PAYR-1401` policy not allowed for the hospital         | 5     | The plan was asked for under a policy the hospital is not empanelled under       | Ask under the beneficiary's own policy from the eligibility answer                                                    |
+| `PAYR-1406` existing request in progress                | 5     | A second plan request before the first was answered                              | Wait 15 to 60 minutes. Past 60, raise it with support                                                                 |
+| `ERR-PYR-CLM-007` no prior record for case number       | 5     | As `PAYR-1302`                                                                   | As above                                                                                                              |
 
 ## When nothing arrives on your callback
 
@@ -91,6 +91,29 @@ In order, and stop at the first that explains it.
 - **A base rate of zero in the plan.** Some packages are priced entirely by the bed category chosen.
 - **`PAYR-1238` on a preauthorisation.** It arrives only after the bundle has passed validation, so it is the first evidence the bundle is right.
 - **A `SUBSETTED` meta tag.** Every payer-generated bundle carries it. It marks a projection of the payer's record, not an error.
+
+## Service names in logs and URLs
+
+A name in a log line, a Swagger address or a stack trace does not always match the exchange you think you are calling. Reprocess is served by `taskhcxservice`, notifications by `subscriptionhcxservice`, payment by `servicehcxpayment`. Read the name off this table before you look for a fault in the wrong service.
+
+| Service name in a log or URL    | Exchange it serves                                            |
+| ------------------------------- | ------------------------------------------------------------- |
+| `coverageeligibilityhcxservice` | Coverage eligibility                                          |
+| `insuranceplanhcxservice`       | Insurance plan                                                |
+| `preauthhcxservice`             | Preauthorisation                                              |
+| `claimhcxservice`               | Claim                                                         |
+| `communicationhcxservice`       | Communication, including a request for additional attachments |
+| `servicehcxpayment`             | Payment notice                                                |
+| `statushcxservice`              | Status check                                                  |
+| `taskhcxservice`                | Task: reprocess and cancel                                    |
+| `searchhcxservice`              | Search                                                        |
+| `participanthcxservice`         | Participant service: registry, certificates and policies      |
+| `subscriptionhcxservice`        | Notifications                                                 |
+| `abdmproxy`                     | Face authentication for PMJAY biometrics                      |
+| `nhcxpayerservice`              | PMJAY payer service: the role lookup and acting on a case     |
+| `dummyhcxpayer`                 | The sandbox dummy payer's test hooks                          |
+
+Environments and Addresses has the full address of each.
 
 ## Before you raise it with support
 

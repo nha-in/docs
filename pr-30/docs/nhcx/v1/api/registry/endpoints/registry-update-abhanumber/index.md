@@ -10,28 +10,22 @@ Beneficiaries are sometimes onboarded before their real ABHA is known, using a p
 
 ### When to use
 
-Use it once the beneficiary's genuine ABHA number becomes available after an onboarding that used a dummy value, and before relying on ABHA-keyed policy lookups or building Patient identifiers for coverage-eligibility, preauth (workflow code 12) or claim bundles. The documentation does not restrict which participant role calls it, so treat it as a member-data correction step rather than part of any transaction workflow.
+Use it when a member's real ABHA number becomes available after they were set up with a placeholder. Do it before you rely on ABHA-based lookups.
 
 ### Preconditions
 
-- A valid Bearer token from the client-credentials call (POST /get/session, form-urlencoded client_ID, client_secret, grant_type=client_credentials); tokens last 1200 seconds, so refresh before expiry.
-- HTTP headers Accept: application/json, Content-Type: application/json and bearer_auth: Bearer (the participant service uses bearer_auth, not Authorisation).
-- Base path for the participant service: https://apisbx.ABDM.gov.in/pmjay/sbxhcx/participanthcxservice (sandbox) or https://apisprod.NHA.gov.in/pmjay/hcx/participanthcxservice (production).
-- This is a synchronous plain-JSON registry call: no JWE envelope, no x-hcx-* protocol headers and no correlation ID are involved.
-- Both the placeholder and the real ABHA must be known; the body is UpdateAbhaRequest with two optional strings, dummyAbha and realAbha.
-- The gateway's error catalogue expects ABHA numbers in XX-XXXX-XXXX-XXXX form (NHCX-1018), while the member layer stores them without hyphens; the docs do not state which form this endpoint expects, so follow your instance's guidance.
+- You have a valid access token in the `bearer_auth` header.
+- You know both the placeholder and the real ABHA number.
 
 ### Postconditions
 
-A successful call returns HTTP 200 with UpdateAbhaResponse, which carries optional successMessage and errorMessage strings. Unusually for this service, the 400, 404 and 500 responses also use UpdateAbhaResponse rather than the registry ErrorResponse envelope, so clients must read errorMessage rather than Error.code on failure. No callback follows. After the update, policy lookups and Patient identifiers should use the real ABHA; any provider-side policy cache built on the placeholder needs a forced refresh.
+The member's ABHA number is updated. Errors come back in the same response shape as success, so read `errorMessage`.
 
 ### Common mistakes
 
-- Parsing failures as ErrorResponse; this endpoint returns UpdateAbhaResponse for 400, 404 and 500 as well as for success.
-- Sending an empty body; both fields are optional in the schema, but the operation is meaningless without dummyAbha and realAbha.
-- Inconsistent ABHA formatting between systems: NHCX-1018 requires XX-XXXX-XXXX-XXXX at the gateway, while x-hcx-ben-ABHA-ID and the member-layer lookups take the number without hyphens.
-- Forgetting to refresh cached policies and stored Patient identifiers that still carry the placeholder.
-- Omitting the Accept header or the Bearer prefix on bearer_auth.
+- Reading errors as the usual registry error format.
+- Sending an empty body.
+- Forgetting to refresh cached policies that still use the placeholder.
 
 ### Best practices
 

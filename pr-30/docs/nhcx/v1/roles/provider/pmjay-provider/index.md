@@ -60,19 +60,19 @@ Package-based, and large: the reference response is 21 MB with over two thousand
 | `LamaDamaProcedure`                | Offer only on a LAMA or DAMA discharge                                                                |
 | `DischargeStagesLamaDamaProcedure` | Offer only at the discharge stages it lists                                                           |
 | `IsDayCare`                        | Day-care handling                                                                                     |
-| `Procedure Type`                   | Medical and surgical packages cannot be combined, and one medical package per episode                 |
-| `los`                              | Maximum length of stay for the package; bounds the days claimed, including the `LM100` day count      |
-| `gst_applicable`                   | Whether tax applies to the package                                                                    |
-| `gst_percentage`                   | The tax rate when it does                                                                             |
-| `incentive_applicable`             | Whether a hospital incentive applies                                                                  |
-| `ip_op_flag`                       | In-patient or out-patient                                                                             |
-| `rules_yn`                         | Whether further rules attach to the package                                                           |
+| `ProcedureType`                    | Medical and surgical packages cannot be combined, and one medical package per episode                 |
+| `LengthOfStay`                     | Maximum length of stay for the package; bounds the days claimed, including the `LM100` day count      |
+| `GstApplicable`                    | Whether tax applies to the package                                                                    |
+| `GstPercentage`                    | The tax rate when it does                                                                             |
+| `IncentiveApplicable`              | Whether a hospital incentive applies                                                                  |
+| `IpOpFlag`                         | In-patient or out-patient                                                                             |
+| `RulesApplicable`                  | Whether further rules attach to the package                                                           |
 
-That table is the specification. The one published plan payload carries sixteen of these flags and not the rest: `Standalone`, `Unspecified`, `LamaDamaProcedure`, `los`, the tax pair, `incentive_applicable`, `ip_op_flag` and `rules_yn` appear nowhere in it. Do not read that as proof they are unused, because the sample is one scheme's plan at one moment. Read it as a warning to code defensively:
+That table is the specification. The one published plan payload carries sixteen of these flags and not the rest: `Standalone`, `Unspecified`, `LamaDamaProcedure`, `LengthOfStay`, the tax pair, `IncentiveApplicable`, `IpOpFlag` and `RulesApplicable` appear nowhere in it. Do not read that as proof they are unused, because the sample is one scheme's plan at one moment. Read it as a warning to code defensively:
 
-- **`gst_applicable` and `gst_percentage`**: The handbook describes the first as whether GST is applicable for the benefit and the second as the "GST % applicable for the given benefit". No published source gives a rate or says which packages carry tax. In the handbook's worked claim response the tax is a claim-level total, `ClaimResponse.total` with category `tax`: 100 on a claim of 13,700.
-- **`incentive_applicable`**: Described only as whether an incentive to the hospital is applicable for the benefit. No published source gives the criteria or the rate. The same worked response carries a claim-level total with category `incentive` of 137 on 13,700, and the handbook's approved reprocess example repeats both figures.
-- **`los` (Maximum Length of Stay)**: Specifies the ceiling on inpatient days for the procedure. Stays extending beyond `los` require clinical justification or an approved enhancement request (workflow 13); for LAMA/DAMA discharges, procedure `LM100` daily quantity cannot exceed `los`.
+- **`GstApplicable` and `GstPercentage`**: The handbook describes the first as whether GST is applicable for the benefit and the second as the "GST % applicable for the given benefit". No published source gives a rate or says which packages carry tax. In the handbook's worked claim response the tax is a claim-level total, `ClaimResponse.total` with category `tax`: 100 on a claim of 13,700.
+- **`IncentiveApplicable`**: Described only as whether an incentive to the hospital is applicable for the benefit. No published source gives the criteria or the rate. The same worked response carries a claim-level total with category `incentive` of 137 on 13,700, and the handbook's approved reprocess example repeats both figures.
+- **`LengthOfStay` (Maximum Length of Stay)**: Specifies the ceiling on inpatient days for the procedure. Stays extending beyond `LengthOfStay` require clinical justification or an approved enhancement request (workflow 13); for LAMA/DAMA discharges, procedure `LM100` daily quantity cannot exceed `LengthOfStay`.
 
 There is a second trap in the same payload, and it will cost a day if you meet it unprepared. The flags and the money live in two different places. The claim-condition flags, the document requirements and the rate limits hang off the plan's coverage benefits, while the costs hang off the plan's own cost list. Both structures carry the same package codes, and neither is complete on its own, so building the treatment screen means joining them on the package code. The Insurance Plan Response chapter in the FHIR Reference sets out both shapes.
 
@@ -102,7 +102,7 @@ The four sections of the generic form, with these additions:
 
 **Auto-approval** applies when this is the first preauthorisation for the case and every package carries `ApprovalNotRequired`, or when the policy allows turnaround-time approval and the payer has not acted in its window. Show the user which rule applied.
 
-**Queries arrive inside the response.** A queried `ClaimResponse`, workflow 24, carries the query text in `item.adjudication.reason.coding.display` as a pipe-delimited audit trail, `USER~datetime~type~comment~trust`. Parse it as a string and show the comment. The answer is the same preauthorisation bundle, new correlation ID, original reference, workflow 19, on `/v1/preauth/submit`. Not a communication response, and not a resubmission.
+**Queries arrive inside the response.** A queried `ClaimResponse`, workflow 24, carries the query text in `item.adjudication.reason.coding.display` as a pipe-delimited audit trail, `USER~datetime~type~comment~actor`, where `actor` is whoever wrote the entry: `PPD-Trust` on a preauthorisation, `CPD-Trust` on a claim, or the hospital's name. Treat it as display text: split it on `|` and `~` to show each entry and its comment, but never parse a timestamp from it, because the date formats vary. The answer is the same preauthorisation bundle, new correlation ID, original reference, workflow 19, on `/v1/preauth/submit`. Not a communication response, and not a resubmission.
 
 **Enhancement** (13): only against an approved case, only after the previous request has closed, only for packages flagged enhanceable, unlimited until discharge within the wallet. **Resubmission** (121): revises an approved or rejected case for a different amount or package, and voids everything before it. **Cancel** (PC01): allowed until the claim is raised and refused once payment has started.
 

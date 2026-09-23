@@ -10,28 +10,24 @@ This is the provider's window into the member layer that payers populate through
 
 ### When to use
 
-Call it after patient registration or admission, when the desk needs to confirm that the patient is linked to a scheme or policy, and again (with a forced refresh) whenever a payer-side change is suspected. It precedes /v1/insuranceplan/request, /v1/coverageeligibility/check and /v1/preauth/submit (workflow code 12). If no payer ID can be derived from the result, the backend must refuse preauth with "Unable to resolve payerId from policy bundle. Please fetch eligibility/policies before pre-auth submission." It is use case 2 in both the provider and payer sandbox exit checklists.
+Call it after registering or admitting a patient, to find their policy and payer. It comes before eligibility and pre-authorisation.
 
 ### Preconditions
 
-- A valid Bearer token from the client-credentials call (POST /get/session, form-urlencoded client_ID, client_secret, grant_type=client_credentials); tokens last 1200 seconds, so refresh before expiry.
-- HTTP headers Accept: application/json, Content-Type: application/json and bearer_auth: Bearer (the participant service uses bearer_auth, not Authorisation).
-- Base path for the participant service: https://apisbx.ABDM.gov.in/pmjay/sbxhcx/participanthcxservice (sandbox) or https://apisprod.NHA.gov.in/pmjay/hcx/participanthcxservice (production).
-- This is a synchronous plain-JSON registry call: no JWE envelope, no x-hcx-* protocol headers and no correlation ID are involved.
-- The beneficiary must already have been linked by the payer or TPA; if no link exists the lookup returns nothing regardless of the hospital's own records.
-- Body is FetchParticipantPoliciesRequest with two required strings: identifiertype (AbhaNumber, MemberId or MobileNo) and identifiervalue; ABHA must be supplied without hyphens.
+- You have a valid access token in the `bearer_auth` header.
+- The payer or TPA has already linked the member.
+- You search by ABHA number, member ID or mobile number. Send the ABHA number without hyphens.
 
 ### Postconditions
 
-The service answers synchronously with HTTP 200 and ParticipantListResponse: an optional participantdetails array whose entries carry optional participantcode, participantname, address and state. No callback follows. Integrators cache the normalised result keyed by patient (the handbook documents this cache as permanent, with forceRefresh: true as the only bypass) and resolve payerId, memberId, productId, productName and policyNumber from it. NHA guidance stresses that the processingID in the response, not the PayerID, is what goes into x-hcx-recipient_code. Failures return 400, 404 or 500 with the ErrorResponse envelope.
+You get the member's linked policies. Cache them, and force a refresh when something changes on the payer side.
 
 ### Common mistakes
 
-- Sending the ABHA number with hyphens; the identifier table specifies ABHA without hyphens for this lookup and a hyphenated value is a common cause of an empty result.
-- Using the PayerID from the response as x-hcx-recipient_code; NHA's common mistake 7 says providers must use the processingID from the get/Policies response as the receiver code, otherwise NHCX-1003 (receiver not registered) or PAYR-1331 follows.
-- Trying only one identifier type; the handbook prescribes a cascade of AbhaNumber, then MemberId, then MobileNo.
-- Dereferencing fields blindly; every field of ParticipantDetails is optional and the response shape may arrive as participantdetails, participants or a raw array.
-- Trusting a permanent policy cache after a payer-side change instead of passing forceRefresh: true.
+- Using the payer ID as `x-hcx-recipient_code`. Use the processing ID from this response.
+- Sending the ABHA number with hyphens.
+- Trying only one identifier. Try ABHA number, then member ID, then mobile number.
+- Trusting an old cached result after the payer changed something.
 
 ### Best practices
 

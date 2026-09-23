@@ -21,7 +21,7 @@ Three notices can arrive for one claim, and each is a fresh delivery to acknowle
 A collection bundle: a `Task` with code `deliver` wrapping a `PaymentNotice` and a `PaymentReconciliation`, plus the two `Organization`s.
 
 - `PaymentNotice.amount` is the net paid; `paymentStatus` is `paid` or `cleared`.
-- `PaymentReconciliation.paymentIdentifier.value` is the UTR.
+- `PaymentReconciliation.paymentIdentifier.value` is the UTR on the settled notice, 33. On 30 and 31 the same field can carry a scheme reference, so reconcile against the bank only on 33.
 - `PaymentReconciliation.detail[]` itemises the money: one line with type `TDS`, one with type `Payment`, and any others the payer uses (approved amount, service tax, advance, recovered, penalty). Net plus deductions should equal the approved amount; if it does not, flag it.
 
 ### The acknowledgement
@@ -48,7 +48,7 @@ Switch on `Task.reasonCode`: `additionalinfo`, `tatquery`, `grievance`, `walletu
 
 A collection bundle: a `Task` with code `poll` and an input of type `include` pointing at a `Communication`, plus the `Organization`s. On the `Communication`: `category` (reminder, notification, instruction or questionnaire), `priority` (routine, urgent, asap, stat), `topic` (usually progress-update), and the case reference as its identifier.
 
-The answer is the same bundle shape sent back with the same correlation ID, the provider `Organization` first, and `Task.status = completed`. For a plain acknowledgement, send it within the 30-second window regardless of whether the underlying issue is resolved. For an `additionalinfo` request, the answer carries the requested documents as well.
+The answer is the same bundle shape sent back with the same correlation ID and `Task.status = completed`. Keep both `Organization` entries, typed `prov` and `pay`; their order in the bundle carries no meaning, and the payer tells the answer from the request by your sender code, the correlation ID and the Task status. For a plain acknowledgement, send it within the 30-second window regardless of whether the underlying issue is resolved. For an `additionalinfo` request, the answer carries the requested documents as well.
 
 ## What to reconcile
 

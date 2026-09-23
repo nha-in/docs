@@ -21,10 +21,10 @@ Starts recovery of a forgotten ABHA number. ABDM sends an OTP to the mobile numb
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["abha-login", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["ABHA-login", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `loginHint` | `"mobile"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"abdm"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
+| `otpSystem` | `"ABDM"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
 
 ```bash
 curl --request POST \

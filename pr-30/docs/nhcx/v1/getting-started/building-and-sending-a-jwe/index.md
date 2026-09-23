@@ -6,16 +6,27 @@ A message on the exchange is a JSON Web Encryption token: a readable protected h
 
 Every field the exchange needs to route and log the message. All the `x-hcx-` names are fixed.
 
+Every field, its obligation and its allowed values are in [The JWE message format](/docs/pr-30/docs/nhcx/v1/getting-started/jwe-message-format).
+
 ```json
 {  "alg": "RSA-OAEP-256",  "enc": "A256GCM",  "x-hcx-sender_code": "1000004446@hcx",  "x-hcx-recipient_code": "1000003538@hcx",  "x-hcx-api_call_id": "a1b2c3d4-e5f6-4890-abcd-ef1234567890",  "x-hcx-request_id": "f0e1d2c3-b4a5-4978-8fed-cba987654321",  "x-hcx-correlation_id": "11223344-5566-4788-99aa-bbccddeeff00",  "x-hcx-workflow_id": "12",  "x-hcx-timestamp": "2026-09-04T11:46:34+05:30",  "x-hcx-status": "request.initiated",  "x-hcx-ben-abha-id": "91123456781234"}
 ```
 
 - `alg` and `enc` are the encryption. The protocol page says `RSA-OAEP`; the handbook, the code samples and every Postman body on the portal say `RSA-OAEP-256`. Use `-256`.
+
 - The three IDs are fresh UUIDs. `api_call_id` is new per call, `request_id` per request, `correlation_id` per conversation and reused on the answer.
+
 - `workflow_id` says which step this is. `12` is a new preauthorisation.
+
 - `timestamp` is ISO 8601. Which zone is contested: the handbook says Indian time and that UTC will fail validation, the FAQ says UTC with a trailing `Z`. The sample bundles use `+05:30`. Confirm before building; it is a validated field.
+
 - `status` is always `request.initiated` on something you initiate.
-- `ben-abha-id` is the beneficiary's ABHA number without hyphens.
+
+- `ben-abha-id` is the beneficiary's ABHA number. Its form depends on where it travels:
+
+  - Inside the bundle, the ABHA identifier is 14 digits without hyphens.
+  - On this header, the published sample also sends 14 digits without hyphens. The gateway's own refusal, `NHCX-1018`, asks for `XX-XXXX-XXXX-XXXX`.
+  - Store the 14 digits once and format them where you build the header. If the gateway answers `NHCX-1018`, send the hyphenated form on the header and leave the bundle alone.
 
 ## The smallest possible bundle
 

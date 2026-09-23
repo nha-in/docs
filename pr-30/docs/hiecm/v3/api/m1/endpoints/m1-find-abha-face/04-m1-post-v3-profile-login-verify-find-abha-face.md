@@ -21,7 +21,7 @@ Completes face authentication for the chosen account. Once *Face auth - capture 
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["abha-login", "aadhaar-face-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["ABHA-login", "Aadhaar-face-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
 | `authData.authMethods` | `["face_auth"]` | yes | Authentication method used in this step. |
 | `authData.face` | object | yes | Face authentication block. |

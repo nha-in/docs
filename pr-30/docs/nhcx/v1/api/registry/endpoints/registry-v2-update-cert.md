@@ -10,26 +10,24 @@ Encryption keys are recommended to be rotated once a year, and a compromised key
 
 ### When to use
 
-Use it for scheduled annual rotation or emergency replacement of the certificate when passcode validation is not wanted. The production URL is https://apisprod.NHA.gov.in/pmjay/hcx/participanthcxservice/v2/update/cert. To change the callback URL as well, use /v2/participant/update instead. It is the last item of the certificates checklist alongside the v2 participant update. Synchronous JSON; no workflow or x-hcx-status codes.
+Use it to replace your certificate, on schedule or in an emergency, without a passcode step. To change your callback URL too, use `/v2/participant/update`.
 
 ### Preconditions
 
-- Bearer token from /get/session in bearer_auth with the Bearer prefix; Accept and Content-Type: application/json.
-- UpdateCertV2 body: participantId and certificate, both mandatory; the certificate must be Base64-encoded (the NHA steps produce a self-signed X.509 RSA certificate, then Base64-encode the whole PEM text).
-- The matching new private key, in PKCS8 form, is already deployed on the callback host.
-- Note the camelCase field participantId, unlike participant_code (v1) and participantcode (v2 update).
+- You have a valid access token in the `bearer_auth` header.
+- You send `participantId` and the new certificate, Base64-encoded.
+- The matching new private key is already on your callback server.
 
 ### Postconditions
 
-HTTP 200 with the UpdateCertV2 schema echoed back (participantId and certificate). The registry's encryption certificate for that participant is replaced, so /fetch/certs returns the new one from the next call; counterparties may serve a cached copy for up to 24 hours. No transactionid is issued and no /update/validate step follows. No callback. 400, 404 and 500 use the ErrorResponse envelope.
+Your certificate is replaced at once, with no validation step. Some participants may keep the old one cached for up to 24 hours.
 
 ### Common mistakes
 
-- Sending the raw PEM rather than the Base64-encoded certificate, which the validation explicitly requires.
-- Using participant_code, participantcode or encryptioncert; this schema is participantId and certificate.
-- Publishing the new certificate before the new private key is live on the callback host, so inbound callbacks fail to decrypt (PAYR-1001 on the counterparty side, undecryptable payloads on yours).
-- Discarding the old private key immediately, even though counterparties can hold the old certificate for 24 hours.
-- Trying to change the endpoint URL here; only the certificate is accepted.
+- Sending the raw certificate instead of the Base64-encoded one.
+- Publishing the certificate before its private key is live.
+- Deleting the old private key straight away. Keep it for 24 hours.
+- Trying to change the callback URL here.
 
 ### Best practices
 

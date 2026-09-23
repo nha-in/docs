@@ -6,23 +6,23 @@ The authority here is the Technical Specifications page on the portal, which car
 
 ## The fields
 
-| Field                  | Type        | Obligation    | What it carries                                                                                                             |
-| ---------------------- | ----------- | ------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `alg`                  | String      | Mandatory     | Key wrapping. `RSA-OAEP-256`                                                                                                |
-| `enc`                  | String      | Mandatory     | Content encryption. `A256GCM`                                                                                               |
-| `x-hcx-sender_code`    | String      | Mandatory     | Your participant code                                                                                                       |
-| `x-hcx-recipient_code` | String      | Mandatory     | The recipient's. For a provider, the processor code from the policy lookup                                                  |
-| `x-hcx-api_call_id`    | UUID        | Mandatory     | Fresh on every message, including responses                                                                                 |
-| `x-hcx-request_id`     | UUID        | **Optional**  | One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional |
-| `x-hcx-correlation_id` | UUID        | Mandatory     | The thread. See the rule below                                                                                              |
-| `x-hcx-workflow_id`    | String      | **Optional**  | Which step, or which case. See the two readings below                                                                       |
-| `x-hcx-timestamp`      | datetime    | Mandatory     | See the format note below                                                                                                   |
-| `x-hcx-status`         | String      | Mandatory     | Where this message stands. Values below                                                                                     |
-| `x-hcx-ben-abha-id`    | String      | **Mandatory** | The beneficiary's ABHA number. Mandatory on every exchange, including those with no beneficiary in the payload              |
-| `x-hcx-use_case`       | String      | Optional      | Values differ by exchange, see below                                                                                        |
-| `x-hcx-error_details`  | JSON object | Optional      | `code`, `message`, `trace`. Mandatory on a protocol response                                                                |
-| `x-hcx-debug_details`  | JSON object | Optional      | The same shape, for debugging                                                                                               |
-| `x-hcx-debug_flag`     | Enum        | Optional      | `Error`, `Info` or `Debug`. A server may ignore it                                                                          |
+| Field                  | Type        | Obligation   | What it carries                                                                                                                                                                                                                                                                                          |
+| ---------------------- | ----------- | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `alg`                  | String      | Mandatory    | Key wrapping. `RSA-OAEP-256`                                                                                                                                                                                                                                                                             |
+| `enc`                  | String      | Mandatory    | Content encryption. `A256GCM`                                                                                                                                                                                                                                                                            |
+| `x-hcx-sender_code`    | String      | Mandatory    | Your participant code                                                                                                                                                                                                                                                                                    |
+| `x-hcx-recipient_code` | String      | Mandatory    | The recipient's. For a provider, the processor code from the policy lookup                                                                                                                                                                                                                               |
+| `x-hcx-api_call_id`    | UUID        | Mandatory    | Fresh on every message, including responses                                                                                                                                                                                                                                                              |
+| `x-hcx-request_id`     | UUID        | **Optional** | One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Send it anyway, as a fresh UUID per originating request                                                                                                                     |
+| `x-hcx-correlation_id` | UUID        | Mandatory    | The thread. See the rule below                                                                                                                                                                                                                                                                           |
+| `x-hcx-workflow_id`    | String      | **Optional** | Which step, or which case. See the two readings below                                                                                                                                                                                                                                                    |
+| `x-hcx-timestamp`      | datetime    | Mandatory    | See the format note below                                                                                                                                                                                                                                                                                |
+| `x-hcx-status`         | String      | Mandatory    | Where this message stands. Values below                                                                                                                                                                                                                                                                  |
+| `x-hcx-ben-abha-id`    | String      | **Optional** | The beneficiary's ABHA number. Send it when the beneficiary has one; exchanges with no beneficiary in the payload, such as the insurance plan poll, can leave it out. The format is per field: the bundle carries 14 digits without hyphens, and `NHCX-1018` asks for `XX-XXXX-XXXX-XXXX` on this header |
+| `x-hcx-use_case`       | String      | Optional     | Values differ by exchange, see below                                                                                                                                                                                                                                                                     |
+| `x-hcx-error_details`  | JSON object | Optional     | `code`, `message`, `trace`. Mandatory on a protocol response                                                                                                                                                                                                                                             |
+| `x-hcx-debug_details`  | JSON object | Optional     | The same shape, for debugging                                                                                                                                                                                                                                                                            |
+| `x-hcx-debug_flag`     | Enum        | Optional     | `Error`, `Info` or `Debug`. A server may ignore it                                                                                                                                                                                                                                                       |
 
 **The `x-hcx-use_case` values are not one enum.** The workbook states them on three sheets and they are not the same on all three.
 
@@ -36,7 +36,9 @@ A claim cannot be enhanced, which is why `Enhancement` is absent from that row. 
 
 **`x-hcx-debug_flag` is typed two ways.** The Technical Specifications page gives the enum as `Error`, `Info` or `Debug`. The NHCX Requests and Responses workbook types it as Enum with the single value `INFO`, on its response headers, and every header table in the FHIR Reference and every sample in the API collection that carries the field sends `INFO`. The field is optional and a server may ignore it. Where you send it, send `INFO`, as the samples do. No source says whether a server checks the case of the value.
 
-Three of those obligations are not stated anywhere else in this documentation and are worth reading twice. `x-hcx-request_id` is optional. `x-hcx-workflow_id` is optional. `x-hcx-ben-abha-id` is mandatory.
+Three of those obligations are not stated anywhere else in this documentation and are worth reading twice. `x-hcx-request_id` is optional. `x-hcx-workflow_id` is optional. `x-hcx-ben-abha-id` is optional.
+
+Optional does not mean leave it out. Send `x-hcx-request_id` on every message, as a fresh UUID per originating request. It is cheap, and it satisfies both readings until NHA rules on which one stands.
 
 ## The correlation ID rule, in full
 
@@ -89,7 +91,7 @@ The Technical Specifications page defines all seven.
 
 ## Timestamp
 
-Contested in format and in zone, and the chapter on JWE, Status and Errors sets out the disagreement. Two facts settle part of it.
+Contested in format and in zone, and [The JWE message format](/docs/pr-30/docs/nhcx/v1/getting-started/jwe-message-format) sets out the disagreement. Two facts settle part of it.
 
 - **The workbook types the field as a Unix timestamp** and gives `1706308383` as its example on every sheet. The handbook and the FAQ use ISO 8601. Every sample bundle uses ISO 8601 with `+05:30`.
 - **There is one numeric tolerance.** The reference payer refuses a message whose timestamp is more than **24 hours** behind the current time, with `PAYR-1005`. That is the only bound any source states.

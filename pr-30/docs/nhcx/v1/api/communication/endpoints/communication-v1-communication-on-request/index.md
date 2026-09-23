@@ -10,28 +10,23 @@ A payer that has pushed a TAT alert, grievance, wallet update, policy change or 
 
 ### When to use
 
-Call it after receiving and persisting a /v1/communication/request bundle. The gateway has already been given a 202 within 30 seconds; this call is the separate business acknowledgement. Echo the same Task.reasonCode (tatquery, grievance, walletupdate, policychange, additionalinfo or the arbitration code) and Task.code poll, keep Task.intent proposal, and use the same x-hcx-correlation_ID as the incoming request. x-hcx-workflow_ID is validated at the gateway for the acknowledgement as well as the request. Responder status values are response.complete, response.partial or response.error.
+The provider calls it to acknowledge a `/v1/communication/request`. It comes after the quick `202` reply and reuses the request's correlation ID and reason.
 
 ### Preconditions
 
-- The inbound JWE was extracted from the payload field, validated as a five-part string, decrypted with your PKCS8 private key and its protected header parsed for correlation ID, status and workflow ID.
-- The provider is a registered NHCX participant and holds a valid Bearer token.
-- The payer's certificate is available to encrypt the acknowledgement bundle.
-- The acknowledgement bundle mirrors the request (Task completed, intent proposal, code poll, reasonCode echoed) with the provider Organisation listed before the payer Organisation and Bundle.timestamp updated to the acknowledgement time.
-- Protected header reuses the request's x-hcx-correlation_ID, carries a fresh x-hcx-API_call_ID and a responder x-hcx-status.
+- You decrypted the incoming request and answered it `202` within 30 seconds.
+- A valid access token and the payer's certificate.
+- The acknowledgement mirrors the request and reuses its `x-hcx-correlation_ID`.
 
 ### Postconditions
 
-The gateway returns HTTP 202 with the StatusSuccessResponse envelope (timestamp, API_call_ID, correlation_ID, result, error) and forwards the bundle to the payer. The payer's system can link the acknowledgement to the original notification by correlation ID and by the shared claim or preauth reference in Task.identifier and Communication.ID. The underlying issue is not resolved by this call: a TAT breach or grievance may still be open, and any documents requested via additionalinfo are supplied through the relevant preauth or claim resubmission path. Validation failures come back as 400, unknown resources as 404, downstream faults as 500.
+NHCX answers `202` and forwards the acknowledgement to the payer. It only confirms receipt, so the issue itself may still be open.
 
 ### Common mistakes
 
-- Minting a new correlation ID on the acknowledgement instead of echoing the request's; the payer can no longer link it (NHCX-1010 No Data with given Correlation ID for call back request).
-- Sending the acknowledgement before, or instead of, the synchronous 202; the gateway treats a missing or malformed 202 as an error and retries up to five times.
-- Holding the socket open while a human reviews the message, breaching the 30-second window.
-- Closing the hospital case on acknowledgement because Communication.status reads completed.
-- Deriving sender and receiver roles from Organisation identifier types, which are swapped in the sandbox sample.
-- Building the reason-code switch on a single spelling of the arbitration code.
+- Using a new correlation ID, so the payer cannot link the acknowledgement.
+- Keeping the connection open while someone reads the message, missing the 30-second limit.
+- Closing the hospital case because the Communication says `completed`.
 
 ### Best practices
 
@@ -80,12 +75,12 @@ curl --request POST \
 - `x-hcx-sender_code` (string, required): Your participant code. Mandatory on the envelope.
 - `x-hcx-recipient_code` (string, required): The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
 - `x-hcx-api_call_id` (string, required): Fresh on every message, including responses. Mandatory on the envelope.
-- `x-hcx-request_id` (string): One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope.
+- `x-hcx-request_id` (string): One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope. Send it anyway, as a fresh UUID per originating request: it is cheap and satisfies both readings until NHA rules.
 - `x-hcx-correlation_id` (string, required): The thread. See the rule below. Mandatory on the envelope.
 - `x-hcx-workflow_id` (string): Which step, or which case. See the two readings below. Optional on the envelope.
 - `x-hcx-timestamp` (string, required): See the format note below. Mandatory on the envelope.
 - `x-hcx-status` (string, required): Where this message stands. Values below. Mandatory on the envelope.
-- `x-hcx-ben-abha-id` (string, required): The beneficiary's ABHA number. Mandatory on every exchange, including those with no beneficiary in the payload. Mandatory on the envelope.
+- `x-hcx-ben-abha-id` (string): The beneficiary's ABHA number. Optional: send it when the beneficiary has an ABHA number. Optional on the envelope.
 
 ## Body
 

@@ -10,28 +10,22 @@ The OpenAPI document describes this endpoint with the same sentence as /product/
 
 ### When to use
 
-Use it only where your NHCX instance documents a concrete contract for it, typically when you need product identity resolved from a string key held by the participant service. It plays no part in claim-side workflows and is not listed in either sandbox exit checklist. For resolving a product to its owning payer, /product/getowner has the clearer request schema; for discovering a member's products, use /participant/get/policies.
+Use it only if your NHCX instance documents how. To find a product's payer, use `/product/getowner`. To find a member's products, use `/participant/get/policies`.
 
 ### Preconditions
 
-- A valid Bearer token from the client-credentials call (POST /get/session, form-urlencoded client_ID, client_secret, grant_type=client_credentials); tokens last 1200 seconds, so refresh before expiry.
-- HTTP headers Accept: application/json, Content-Type: application/json and bearer_auth: Bearer (the participant service uses bearer_auth, not Authorisation).
-- Base path for the participant service: https://apisbx.ABDM.gov.in/pmjay/sbxhcx/participanthcxservice (sandbox) or https://apisprod.NHA.gov.in/pmjay/hcx/participanthcxservice (production).
-- This is a synchronous plain-JSON registry call: no JWE envelope, no x-hcx-* protocol headers and no correlation ID are involved.
-- The request body is declared in the OpenAPI document as a bare JSON string rather than an object; the docs do not say what the string should contain.
-- The product concerned should have been registered by its payer through /product/link.
+- You have a valid access token in the `bearer_auth` header.
+- The body is a plain string, not a JSON object. What it should hold is not documented.
 
 ### Postconditions
 
-Returns HTTP 200 with ParticipantCreateResponse, whose only field, participant_code, is optional. No callback follows and no state change is documented. Failures return 400, 404 or 500 with the ErrorResponse envelope. Because the description promises a product ID and name while the schema returns a participant code, verify the actual body returned by your instance before depending on either interpretation.
+The documented response holds only a participant code. Check what your instance really returns before you depend on it.
 
 ### Common mistakes
 
-- Posting a JSON object when the schema declares a bare string body, or the reverse, and getting a 400.
-- Expecting productid and productname fields in the response; the declared response carries only participant_code.
-- Confusing it with /product/getowner because both carry the same description.
-- Matching on operationId participantCreatePost in generated clients, which collides with the participant-creation operations.
-- Omitting the Accept header or the Bearer prefix on bearer_auth.
+- Sending a JSON object instead of a string.
+- Expecting a product ID and name in the answer.
+- Confusing it with `/product/getowner`.
 
 ### Best practices
 

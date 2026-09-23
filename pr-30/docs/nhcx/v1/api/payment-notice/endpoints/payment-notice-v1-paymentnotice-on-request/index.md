@@ -10,28 +10,26 @@ The acknowledgement confirms to the payer that the provider has received and rec
 
 ### When to use
 
-Called by the provider after processing a /v1/paymentnotice/request message, using the same correlation ID, with x-hcx-workflow_ID 17 PAYMENT_RECEIVED and x-hcx-status response.complete (the NHA sheet lists 17 Payment Notice Received as response.complete). The plaintext is a Task with status completed, intent order, code status from the HL7 financialtaskcode system, output[0] paymentack (Payment is acknowledged) and output[1] claimNumber carrying the acknowledged claim number; Task.requester is the provider and Task.owner the payer, the reverse of the notice. The handbook narrative alternatively places this acknowledgement on /v1/task/submit; the OpenAPI contract and the Payment use-case document support this endpoint.
+The provider calls it after receiving a payment notice, with the same correlation ID and `x-hcx-status` `response.complete`. It tells the payer the payment was received and recorded.
 
 ### Preconditions
 
-- A payment notice with this correlation ID has been received and acknowledged with 202 (NHCX-1010 if NHCX has no record of it).
-- The provider holds a valid Bearer token and the payer's certificate, and encrypts the acknowledgement Task for the payer.
-- x-hcx-correlation_ID echoes the notice; x-hcx-API_call_ID is new; the provider is sender and the payer is recipient.
-- Task.output[0].valueCodeableConcept.coding.code is paymentack and Task.output[1].valueString is the claim number from the notice; Task.status is completed.
-- x-hcx-status is response.complete, or response.error with x-hcx-error_details for a protocol-level problem.
+- A payment notice with this correlation ID has been received and answered with `202`.
+- The provider has a valid access token and the payer's certificate, and encrypts the reply for the payer.
+- The `Task` is `completed` and carries `paymentack` and the claim number from the notice.
+- The provider is now the sender and requester. The payer is the recipient and owner.
 
 ### Postconditions
 
-NHCX returns HTTP 202 Accepted with a StatusSuccessResponse acknowledgement (entity_type payment) and forwards the Task to the payer asynchronously; the payer's endpoint must acknowledge with 202 within 30 seconds or NHCX retries up to five times. If the payer cannot process the acknowledgement (invalid provider, decryption failure, missing mandatory protocol attributes) it returns a protocol response with x-hcx-error_details populated. On success the payment lifecycle for that claim is closed on both sides.
+- NHCX answers `202` and forwards the acknowledgement to the payer.
+- On success the payment for that claim is closed on both sides.
 
 ### Common mistakes
 
-- Sending the acknowledgement as a JWEPayload of a different resource type or with the workbook's alternative output text (ACKNOWLEDGED, RECEIVED) instead of paymentack.
-- Keeping the notice's Task direction; on the acknowledgement requester must be the provider and owner the payer.
-- Minting a new correlation ID instead of echoing the notice's, or reusing a correlation ID that NHCX has deleted after failed deliveries.
-- Using the wrong status; the response leg carries response.complete, not request.initiated.
-- Skipping the acknowledgement altogether because the payer is not blocked by it, which leaves the lifecycle open in NHCX tracking.
-- Payer side: returning 200 or a non-conforming body on receipt, which is treated as an error and retried.
+- Using other text such as `ACKNOWLEDGED` instead of `paymentack`.
+- Keeping the notice's direction, with the payer still as requester.
+- Creating a new correlation ID instead of reusing the notice's.
+- Skipping the acknowledgement, which leaves the payment open.
 
 ### Best practices
 
@@ -80,12 +78,12 @@ curl --request POST \
 - `x-hcx-sender_code` (string, required): Your participant code. Mandatory on the envelope.
 - `x-hcx-recipient_code` (string, required): The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
 - `x-hcx-api_call_id` (string, required): Fresh on every message, including responses. Mandatory on the envelope.
-- `x-hcx-request_id` (string): One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope.
+- `x-hcx-request_id` (string): One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope. Send it anyway, as a fresh UUID per originating request: it is cheap and satisfies both readings until NHA rules.
 - `x-hcx-correlation_id` (string, required): The thread. See the rule below. Mandatory on the envelope.
 - `x-hcx-workflow_id` (string): Which step, or which case. See the two readings below. Optional on the envelope.
 - `x-hcx-timestamp` (string, required): See the format note below. Mandatory on the envelope.
 - `x-hcx-status` (string, required): Where this message stands. Values below. Mandatory on the envelope.
-- `x-hcx-ben-abha-id` (string, required): The beneficiary's ABHA number. Mandatory on every exchange, including those with no beneficiary in the payload. Mandatory on the envelope.
+- `x-hcx-ben-abha-id` (string): The beneficiary's ABHA number. Optional: send it when the beneficiary has an ABHA number. Optional on the envelope.
 - `x-hcx-debug_flag` (string): `Error`, `Info` or `Debug`. A server may ignore it. Optional on the envelope.
 
 ## Body

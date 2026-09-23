@@ -10,33 +10,31 @@ This callback carries the payer's adjudication of the final claim, possibly in s
 
 ### When to use
 
-Called by the payer or TPA after each adjudication step on a /v1/claim/submit message, with the same correlation ID. Workflow IDs: 25 CLAIM_REQUEST_RECEIVED, 28 CLAIM_REQUEST_IN_PROCESS and 29 CLAIM_FORWARDED with x-hcx-status response.partial; 27 CLAIM_REQUEST_QUERIED (framed as request.initiated in the NHA sheet, answered by the provider under 151); 26 CLAIM_REQUEST_APPROVED with response.complete; rejection with outcome complete and adjudication reason cancelled. ClaimResponse.outcome complete plus reason approved is approval, complete plus cancelled is rejection, partial plus approved is partial approval, partial plus queried is a query with totals at zero.
+The payer calls it after each step of reviewing a claim, on the claim's correlation ID. It may come several times: progress updates, a query, then approval or rejection.
 
 ### Preconditions
 
-- A claim request with this correlation ID exists in NHCX (NHCX-1010 otherwise) and has not been closed by an earlier response.complete.
-- The payer has a valid Bearer token and the provider's certificate, and encrypts the ClaimResponseBundle for the provider.
-- x-hcx-correlation_ID echoes the request; x-hcx-API_call_ID is new; sender and recipient codes are swapped; x-hcx-status is response.partial, response.complete or response.error.
-- Adjudication categories (submitted, eligible, copay, benefit) and total[].category codes are populated; processNote explains reductions; query text is carried in the adjudication reason display.
-- Protocol errors are a ProtocolResponse with x-hcx-error_details; business errors are inside the encrypted resource.
+- A claim with this correlation ID exists and is still open.
+- A valid access token and the provider's certificate.
+- The header echoes the claim's `x-hcx-correlation_ID`, with a new `x-hcx-API_call_ID`.
 
 ### Postconditions
 
-HTTP 202 Accepted with the StatusSuccessResponse acknowledgement (entity_type claim) from NHCX, then asynchronous delivery to the provider's callback, which must acknowledge with 202 within 30 seconds or NHCX retries up to five times before deleting the request. After a response.partial the claim remains open and further callbacks on the same correlation ID are expected. After a response.complete no further provider submissions or payer responses are permitted against that claim identifier; an approval starts the payment notices 30, 31 and 33, and a rejection leaves the provider the option of a reprocess request (workflow 36) via /v1/task/submit.
+- NHCX answers `202` and forwards the response. The provider must answer `202` within 30 seconds.
+- After `response.partial` the claim stays open. After `response.complete` it is closed.
+- An approval leads to payment notices. After a rejection, the provider may ask for a reprocess.
 
 ### Common mistakes
 
-- Provider side: treating outcome complete as approval without checking adjudication[0].reason.coding.code; a rejection is also complete.
-- Provider side: stopping monitoring after the first callback; multiple partial responses may precede the complete one.
-- Provider side: reading a carried-over benefit total on a rejected response as payable, or keying totals by array index instead of category code.
-- Provider side: returning anything other than 202 with the acceptance body, which triggers retries and eventual deletion.
-- Payer side: sending a further response after response.complete on the same claim identifier, or minting a new correlation ID.
-- Payer side: using JWEPayloadResponse instead of ProtocolResponse for protocol rejections (PAYR-1517).
+- Treating outcome `complete` as approval. A rejection is also `complete`.
+- Stopping after the first callback. More may follow.
+- Sending another response after `response.complete`, or using a new correlation ID.
+- Replying `202` too slowly, which makes NHCX retry.
 
 ### Best practices
 
 - Provider: acknowledge first, then decrypt, then update case state; be idempotent on correlation ID and API_call_ID.
-- Provider: parse the PMJAY query audit trail (USER~datetime~type~comment~trust, entries separated by |) as a plain string.
+- "Provider: treat the PMJAY query audit trail (USER~datetime~type~comment~actor, entries separated by |; actor is PPD-Trust, CPD-Trust or the hospital name) as display text. Show each entry's comment and never parse a timestamp from it."
 - Provider: on complete plus approved, trigger settlement tracking and await 30, 31 and 33; the claim is only closed when 33 arrives and the UTR is persisted.
 - Payer: emit 25 on receipt and 28 during processing so the desk sees progress, and put reduction reasons in processNote linked by noteNumber.
 - Both: keep x-hcx-status and x-hcx-workflow_ID consistent with the NHA status sheet, since the pair identifies the message.
@@ -80,12 +78,12 @@ curl --request POST \
 - `x-hcx-sender_code` (string, required): Your participant code. Mandatory on the envelope.
 - `x-hcx-recipient_code` (string, required): The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
 - `x-hcx-api_call_id` (string, required): Fresh on every message, including responses. Mandatory on the envelope.
-- `x-hcx-request_id` (string): One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope.
+- `x-hcx-request_id` (string): One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope. Send it anyway, as a fresh UUID per originating request: it is cheap and satisfies both readings until NHA rules.
 - `x-hcx-correlation_id` (string, required): The thread. See the rule below. Mandatory on the envelope.
 - `x-hcx-workflow_id` (string): Which step, or which case. See the two readings below. Optional on the envelope.
 - `x-hcx-timestamp` (string, required): See the format note below. Mandatory on the envelope.
 - `x-hcx-status` (string, required): Where this message stands. Values below. Mandatory on the envelope.
-- `x-hcx-ben-abha-id` (string, required): The beneficiary's ABHA number. Mandatory on every exchange, including those with no beneficiary in the payload. Mandatory on the envelope.
+- `x-hcx-ben-abha-id` (string): The beneficiary's ABHA number. Optional: send it when the beneficiary has an ABHA number. Optional on the envelope.
 - `x-hcx-debug_flag` (string): `Error`, `Info` or `Debug`. A server may ignore it. Optional on the envelope.
 
 ## Body

@@ -59,7 +59,7 @@ A two-call pair. Initiate, capture on the device, verify.
 curl --location --request POST 'https://apisbx.abdm.gov.in/hcx/abha/biometric/auth/init' \  --header 'Accept: */*' \  --header 'Content-Type: application/json' \  --header 'Authorization: Bearer <access token>' \  --header 'process: Preauth' \  --header 'payerid: <payer code>' \  --data-raw '{    "scope": [      "abha-login",      "aadhaar-bio-verify"    ],    "loginHint": "abha-number",    "loginId": "91-XXXX-XXXX-1234",    "otpSystem": "aadhaar",    "authMode": "FINGERPRINT"  }'
 ```
 
-[Biometric auth init in the API reference](/docs/pr-30/docs/nhcx/v1/api/biometric/endpoints/biometric-auth-init)
+[Biometric auth init in the API reference](/docs/pr-30/docs/nhcx/v1/api/biometric/endpoints/biometric-hcx-abha-biometric-auth-init)
 
 | Field                               | Fingerprint                            | Iris                                    | Face                                    |
 | ----------------------------------- | -------------------------------------- | --------------------------------------- | --------------------------------------- |
@@ -84,7 +84,7 @@ The response carries the transaction ID the verify call quotes:
 curl --location --request POST 'https://apisbx.abdm.gov.in/hcx/abha/biometric/auth/verify' \  --header 'Accept: */*' \  --header 'Content-Type: application/json' \  --header 'Authorization: Bearer <access token>' \  --header 'process: Preauth' \  --header 'payerid: <payer code>' \  --data-raw '{    "scope": [      "abha-login",      "aadhaar-bio-verify"    ],    "authData": {      "authMethods": [        "bio"      ],      "bio": {        "txnId": "<txn id>",        "fingerPrintAuthPid": "<pid block>"      }    },    "authMode": "FINGERPRINT"  }'
 ```
 
-[Biometric auth verify in the API reference](/docs/pr-30/docs/nhcx/v1/api/biometric/endpoints/biometric-auth-verify)
+[Biometric auth verify in the API reference](/docs/pr-30/docs/nhcx/v1/api/biometric/endpoints/biometric-hcx-abha-biometric-auth-verify)
 
 `authMethods` and the key the capture goes under follow the method, as the table above gives them.
 
@@ -114,7 +114,7 @@ A four-step flow on the other host, because the capture happens on the patient's
 curl --location --request POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/abdmproxy/abha/biometric/faceauth/init' \  --header 'Accept: application/json' \  --header 'Content-Type: application/json' \  --header 'Authorization: Bearer <access token>' \  --header 'REQUEST-ID: <uuid>' \  --header 'TIMESTAMP: <iso timestamp>' \  --data-raw '{    "scope": [      "abha-enrol",      "face-auth"    ]  }'
 ```
 
-[Face auth init in the API reference](/docs/pr-30/docs/nhcx/v1/api/biometric/endpoints/biometric-faceauth-init)
+[Face auth init in the API reference](/docs/pr-30/docs/nhcx/v1/api/biometric/endpoints/biometric-pmjay-sbxhcx-abdmproxy-abha-biometric-faceauth-init)
 
 Returns a `txnId`.
 
@@ -126,7 +126,7 @@ Returns a `txnId`.
 curl --location --request POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/abdmproxy/abha/biometric/capture/pid' \  --header 'Accept: application/json' \  --header 'Content-Type: application/json' \  --header 'Authorization: Bearer <access token>' \  --header 'REQUEST-ID: <uuid>' \  --header 'TIMESTAMP: <iso timestamp>' \  --data-raw '{    "txnId": "<txn id>"  }'
 ```
 
-[Face auth capture PID in the API reference](/docs/pr-30/docs/nhcx/v1/api/biometric/endpoints/biometric-faceauth-capture-pid)
+[Face auth capture PID in the API reference](/docs/pr-30/docs/nhcx/v1/api/biometric/endpoints/biometric-pmjay-sbxhcx-abdmproxy-abha-biometric-capture-pid)
 
 Answers `{"status": "PENDING", "message": "Awaiting PID capture"}` until the patient finishes, then `{"status": "COMPLETE", "message": "PID capture successful"}`. Poll this; there is no callback.
 
@@ -136,7 +136,7 @@ Answers `{"status": "PENDING", "message": "Awaiting PID capture"}` until the pat
 curl --location --request POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/abdmproxy/abha/biometric/v2/auth/verify' \  --header 'Accept: application/json' \  --header 'Content-Type: application/json' \  --header 'Authorization: Bearer <access token>' \  --header 'REQUEST-ID: <uuid>' \  --header 'TIMESTAMP: <iso timestamp>' \  --header 'payerid: <payer code>' \  --header 'process: Preauth' \  --data-raw '{    "authData": {      "authMethods": [        "face_auth"      ],      "face": {        "txnId": "<txn id>",        "aadhaar": "<encrypted aadhaar>",        "mobile": "<aadhaar mobile>"      }    },    "authMode": "FACE_AUTH"  }'
 ```
 
-[Face auth verify in the API reference](/docs/pr-30/docs/nhcx/v1/api/biometric/endpoints/biometric-faceauth-v2-auth-verify)
+[Face auth verify in the API reference](/docs/pr-30/docs/nhcx/v1/api/biometric/endpoints/biometric-pmjay-sbxhcx-abdmproxy-abha-biometric-v2-auth-verify)
 
 **The Aadhaar number is encrypted, not sent in the clear.** Use the X.509 public key the portal publishes with the transformation `RSA/ECB/OAEPWithSHA-1AndMGF1Padding`. The ciphertext is roughly 680 base64 characters for a 4096-bit key. Never log it, never store it, and never attempt to validate it as a twelve-digit number.
 
@@ -153,7 +153,7 @@ The response carries the same token pair plus a full ABHA profile: name, date of
 curl --location --request GET 'https://apisbx.abdm.gov.in/hcx/abha/biometric/auth/refresh/token' \  --header 'R-token: Bearer <refresh token>' \  --header 'Authorization: Bearer <access token>' \  --header 'payerid: <payer code>' \  --header 'process: Preauth'
 ```
 
-[Biometric auth refresh token in the API reference](/docs/pr-30/docs/nhcx/v1/api/biometric/endpoints/biometric-auth-refresh-token)
+[Biometric auth refresh token in the API reference](/docs/pr-30/docs/nhcx/v1/api/biometric/endpoints/biometric-hcx-abha-biometric-auth-refresh-token)
 
 Refreshing returns a **new refresh token** whose 15 days run from that moment. The portal's advice is to call the refresh endpoint once within every ten days and store the new token, which keeps a chain alive indefinitely.
 

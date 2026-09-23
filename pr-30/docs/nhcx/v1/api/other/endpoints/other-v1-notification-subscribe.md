@@ -10,33 +10,29 @@ Every other flow is a two-party exchange between hospital and payer. Notificatio
 
 ### When to use
 
-Call it on every beneficiary login (Subscribe-on-Login): the user authenticates with the ABHA address, the app checks its NHCX token, refreshes via the sessions endpoint if expired, then subscribes the ABHA ID and stores the returned subscription_ID. Because Last-Linked-Wins replaces any earlier app's subscription, resubscribe on each login rather than trusting a stored ID. Most PHR apps need only topic_code workflow_events; network_events and participant_events are also defined. The call is synchronous and sits outside the workflow-code sequence; a fresh x-hcx-correlation_ID is required per attempt.
+Call it every time a beneficiary logs in to your app. The last app to subscribe an ABHA ID wins, so do not trust a stored subscription.
 
 ### Preconditions
 
-- ABDM M1 integration completed; BSP sandbox testing on hcxsbx.ABDM.gov.in, certification and production registry onboarding.
-- An HTTPS callback endpoint with TLS 1.2 or higher registered as on_notification_URL, and JWT capability.
-- Access token from the ABDM session token call (01-session/session-token.bru); sent as Authorisation: Bearer with Content-Type application/json.
-- Body is a JWEPayload whose compact JWE carries protected headers alg RSA-OAEP, enc A256GCM, x-hcx-sender_code (your BSP code), x-hcx-recipient_code (NHCX gateway code), x-hcx-timestamp (ISO 8601) and a unique x-hcx-correlation_ID, plus the subscribe JSON: subscription_ID, topic_code array, recipient_code, subscriber.ID (ABHA ID), on_notification_URL and optional expiry.
-- Explicit user consent obtained before subscribing.
+- You have a valid access token, sent in the `Authorization` header.
+- Your callback URL is registered over HTTPS, with TLS 1.2 or higher.
+- The user has agreed to receive notifications.
+- The body is encrypted and carries a new `x-hcx-correlation_ID`.
 
 ### Postconditions
 
-NHCX decrypts the request with its private key, validates headers and payload, persists the subscription with Last-Linked-Wins per ABHA ID and returns the subscription state synchronously: HTTP 200 with a SubscribeResponse carrying timestamp, API_call_ID, correlation_ID, subscription_ID, subscription_status (active, replaced or expired), expiry and message. Thereafter, when a hospital submits a preauth or claim with that ABHA ID and the payer responds, NHCX pushes a notification (notification_ID, topic_code, timestamp, subscriber.ID, a displayable message and optional domain_values) to the registered callback. Errors: 400 validation, 401 sender not authorised, 403 sender not permitted, 409 duplicate correlation ID, 500 decryption or persistence failure.
+NHCX saves the subscription and answers `200` with a `subscription_ID` and its status. From then on, claim events for that ABHA ID are pushed to your callback.
 
 ### Common mistakes
 
-- Reusing x-hcx-correlation_ID across attempts or retries, which returns 409 (the API reference defines 409 as replay detection, not an existing-subscription conflict).
-- Subscribing once and trusting the stored subscription_ID; another app's login silently replaces it (subscription_status replaced).
-- Sending it to the exchange host, https://apisbx.ABDM.gov.in/hcx, where the other /v1 calls go. The notification integration guide gives the portal host: https://hcxsbx.ABDM.gov.in/v1/notification/subscribe.
-- Sending the token on bearer_auth. This call reads it from Authorisation: Bearer.
-- Sending protocol headers in the clear rather than inside the JWE protected header.
-- Using the NHCX client-credentials token endpoint instead of the ABDM gateway sessions endpoint.
-- Subscribing silently without consent or without showing subscription status in settings.
+- Reusing a correlation ID on a retry, which returns `409`.
+- Subscribing once and assuming it still holds after another app logs in.
+- Sending it to the exchange host instead of `https://hcxsbx.ABDM.gov.in/v1/notification/subscribe`.
+- Sending the token on `bearer_auth` instead of `Authorization`.
 
 ### Best practices
 
-- Subscribe on every login and refresh the token before its 100-minute expiry; store access_token encrypted and never log the secret.
+- Subscribe on every login and refresh the token before its 20-minute (1200-second) expiry; store access_token encrypted and never log the secret.
 - Generate a fresh UUID correlation ID per subscribe attempt, including retries; retry 500s with backoff, regenerate the token on 401, check the registry on 403.
 - Subscribe only to the topics you need, typically workflow_events.
 - Secure the callback: HTTPS with TLS 1.2 or higher, validate the JWT from NHCX, verify sender_code, rate-limit.

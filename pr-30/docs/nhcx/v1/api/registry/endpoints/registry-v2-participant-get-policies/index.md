@@ -10,30 +10,24 @@ This endpoint answers the same question as /participant/get/policies: which paye
 
 ### When to use
 
-Use it at the same point in the journey as the v1 lookup: after registration, before InsurancePlan retrieval, coverage eligibility and preauthorisation (workflow code 12), and whenever a cached policy needs to be re-validated with forceRefresh. Payers and TPAs use it to confirm a link or de-link they have just written. Pick one of the two get-policies paths and use it consistently.
+Use it at the same point as the v1 lookup, before eligibility and pre-authorisation. Payers also use it to check a link they just made.
 
 ### Preconditions
 
-- A valid Bearer token from the client-credentials call (POST /get/session, form-urlencoded client_ID, client_secret, grant_type=client_credentials); tokens last 1200 seconds, so refresh before expiry.
-- HTTP headers Accept: application/json, Content-Type: application/json and bearer_auth: Bearer (the participant service uses bearer_auth, not Authorisation).
-- Base path for the participant service: https://apisbx.ABDM.gov.in/pmjay/sbxhcx/participanthcxservice (sandbox) or https://apisprod.NHA.gov.in/pmjay/hcx/participanthcxservice (production).
-- This is a synchronous plain-JSON registry call: no JWE envelope, no x-hcx-* protocol headers and no correlation ID are involved.
-- A payer or TPA must already have linked the beneficiary.
-- Body: identifiertype (AbhaNumber, MemberId or MobileNo) and identifiervalue, both required; ABHA without hyphens.
-- Note the capital V in /V2/.
+- You have a valid access token in the `bearer_auth` header.
+- The payer or TPA has already linked the member.
+- Send the ABHA number without hyphens. The path starts with a capital `V2`.
 
 ### Postconditions
 
-Returns HTTP 200 with ParticipantListResponse (optional participantdetails array of participantcode, participantname, address, state). No callback follows. The result is normalised and cached by the caller; the handbook documents that cache as permanent until forceRefresh: true is passed. The processingID from the response is the receiver code for NHCX routing, and payerId, memberId, productId, productName and policyNumber are resolved from the cached policies for the preauth. Errors return 400, 404 or 500 with the ErrorResponse envelope.
+You get the member's linked policies. Cache them, and force a refresh when something changes on the payer side.
 
 ### Common mistakes
 
-- Sending the ABHA number with hyphens; the identifier table specifies ABHA without hyphens for this lookup and a hyphenated value is a common cause of an empty result.
-- Using the PayerID from the response as x-hcx-recipient_code; NHA's common mistake 7 says providers must use the processingID from the get/Policies response as the receiver code, otherwise NHCX-1003 (receiver not registered) or PAYR-1331 follows.
-- Trying only one identifier type; the handbook prescribes a cascade of AbhaNumber, then MemberId, then MobileNo.
-- Dereferencing fields blindly; every field of ParticipantDetails is optional and the response shape may arrive as participantdetails, participants or a raw array.
-- Trusting a permanent policy cache after a payer-side change instead of passing forceRefresh: true.
-- Lower-casing the path to /v2/participant/get/policies, which is not a documented route.
+- Using the payer ID as `x-hcx-recipient_code`. Use the processing ID from this response.
+- Sending the ABHA number with hyphens.
+- Trying only one identifier type.
+- Writing the path with a lower-case `v2`.
 
 ### Best practices
 
