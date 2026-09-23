@@ -1,0 +1,96 @@
+# After ABHA creation - verify email OTP (optional)
+
+`POST /abha/api/v3/enrollment/auth/byAbdm`
+
+Verifies the OTP sent by *After ABHA creation - send OTP to verify email (optional)* and links the email address to the newly created ABHA.
+
+**Endpoint:** `POST /abha/api/v3/enrollment/auth/byAbdm`
+
+**Flow:** **Create ABHA - IRIS** - step 5 of 7
+- Previous: *After ABHA creation - send OTP to verify email (optional)*
+- Next: *After ABHA creation - get ABHA address suggestions*
+
+**Headers** (plus `Authorization: Bearer <gateway token>`):
+
+| Header | Required | Description |
+|---|---|---|
+| REQUEST-ID | yes | Unique UUID for every request. |
+| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |
+
+**Request body for this use case:**
+
+| Field | Value / Type | Required | Description |
+|---|---|---|---|
+| `scope` | `["ABHA-enrol", "email-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `authData` | object | yes | Authentication payload for this use case. |
+| `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
+| `authData.OTP` | object | yes | OTP authentication block. |
+| `authData.OTP.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
+| `authData.OTP.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
+
+```bash
+curl --request POST \
+  --url https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/auth/byAbdm \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "scope": [
+    "abha-enrol",
+    "email-verify"
+  ],
+  "authData": {
+    "authMethods": [
+      "otp"
+    ],
+    "otp": {
+      "txnId": "{{txnId}}",
+      "otpValue": "{{encrypted otp}}"
+    }
+  }
+}'
+```
+
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
+
+## Headers
+
+- `REQUEST-ID` (string, required): Unique UUID for every request.
+- `TIMESTAMP` (string, required): Current UTC timestamp in ISO-8601 format.
+
+## Body
+
+- `scope` (string[], required): Scope that selects this use case. Send exactly the values listed for this API.
+- `authData` (object, required): Authentication payload for this use case.
+- `authData.authMethods` (string[], required): Authentication method used in this step.
+- `authData.otp` (object, required): OTP authentication block.
+- `authData.otp.txnId` (string, required): Transaction ID returned by the previous step of this flow.
+- `authData.otp.otpValue` (string, required): OTP received by the user, RSA-encrypted.
+
+## Responses
+
+- `200`: Success: Email Update - Verify OTP-positive flow; Email Update - Verify OTP-OTP EXPIRED
+- `400`: Bad Request (request validation failed): Invalid Transaction Id; Invalid Scope; Invalid AuthMethod
+  See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+- `401`: Unauthorized (invalid / expired gateway token, X-token or benefit access): Invalid access token
+  See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+- `500`: Internal Server Error: Unclassified Authentication Failure (generic)
+  See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+{
+  "txnId": "23acf181-339d-4771-b532-5c5df4a28d19",
+  "authResult": "success",
+  "message": "Email address is now successfully linked to your Account",
+  "accounts": [
+    {
+      "ABHANumber": "<ABHA_NUMBER>"
+    }
+  ]
+}
+```

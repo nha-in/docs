@@ -1,0 +1,478 @@
+# NHCX predetermination, from the NHCX package's Bruno folder apis/04-predetermination.
+#
+# Written by the package's own documentation build; change the .bru
+# requests there and port again rather than editing this file.
+#
+# Rules this file follows: catalogue/openapi/CONVENTIONS.md
+openapi: 3.1.1
+info:
+  x-portal:
+    module: predetermination
+    label: Predetermination
+    position: 4
+  title: NHCX predetermination
+  summary: A hospital planning a treatment can learn the benefit a payer would approve for it before the patient is admitted, and plan the admission and the patient's share of the cost around the answer.
+  description: |-
+    The Predetermination calls on the National Health Claims Exchange (NHCX): 2 operations, and 2 callbacks you host.
+
+    A hospital planning a treatment can learn the benefit a payer would approve for it before the patient is admitted, and plan the admission and the patient's share of the cost around the answer.
+
+    Guides that use these calls: [Predetermination, status and search](/docs/nhcx/v1/reference/fhir/predetermination-status-and-search).
+  version: nhcx-v1
+  license:
+    name: MIT
+    identifier: MIT
+  contact:
+    name: NHCX sandbox
+    url: https://hcxsbx.abdm.gov.in
+  x-abdm-gateway: nhcx
+  x-abdm-module: predetermination
+  x-abdm-phase: 1
+  x-abdm-roles:
+    - provider
+    - payer
+x-abdm-sources:
+  - file: nhcx-package/apis/04-predetermination
+    role: upstream
+    hash: sha256:da5c7e0c3ac3d14b8cc2d9fec234a206902baec3deda955354e07fd1172554ad
+    note: The package's Bruno collection, one request per operation.
+  - file: nhcx-package/baseurl.yaml
+    role: upstream
+    hash: sha256:88515b7b29c6b349a131e016c80774436ea16a29738db743b4cc3a24cbd42453
+    note: The sandbox and production hosts.
+servers:
+  - url: https://apisbx.abdm.gov.in/hcx
+    description: Sandbox, NHCX exchange.
+  - url: https://apisprod.nha.gov.in/hcx
+    description: Production.
+tags:
+  - name: Predetermination
+    description: A hospital planning a treatment can learn the benefit a payer would approve for it before the patient is admitted, and plan the admission and the patient's share of the cost around the answer.
+security:
+  - bearerAuth: []
+paths:
+  /v1/predetermination/submit:
+    post:
+      operationId: predetermination_v1_predetermination_submit
+      x-abdm-atom: nhcx.endpoint.predetermination-submit
+      x-abdm-use-case: Predetermination
+      tags:
+        - Predetermination
+      summary: Predetermination request
+      description: |-
+        Provider asks the payer what it would approve for a proposed treatment before committing to a pre-authorisation. The bundle has the pre-authorisation's shape with `Claim.use` `predetermination`. This is use case B9.
+
+        ### Business purpose
+
+        A hospital planning a treatment can learn the benefit a payer would approve for it before the patient is admitted, and plan the admission and the patient's share of the cost around the answer. The payer gives an estimate only. Nothing is reserved, and the treatment still needs a pre-authorisation when it happens.
+
+        ### When to use
+
+        Use it before a planned admission to ask what the payer would approve for a treatment. Few payers support it, so confirm with the payer first.
+
+        ### Preconditions
+
+        - The payer has confirmed it answers predetermination requests.
+        - You have a valid access token and the payer's certificate.
+        - The bundle is a FHIR `Claim` with `use` set to `predetermination`, encrypted for the payer.
+        - The correlation ID is new for this request.
+
+        ### Postconditions
+
+        - NHCX answers `202` at once and forwards the request.
+        - The payer's estimate arrives later on `/v1/predetermination/on_submit`. Nothing is reserved against the policy.
+
+        ### Common mistakes
+
+        - Building the exchange before the payer confirms support.
+        - Leaving `use` as `preauthorization` when reusing the pre-authorisation code.
+        - Treating the estimate as an approval and skipping the pre-authorisation.
+        - Reusing a correlation ID from an earlier request.
+
+        ### Best practices
+
+        - Reuse the pre-authorisation bundle builder and change only `Claim.use` and the reference.
+        - Store the answer against the planned case, labelled as an estimate.
+        - Key the request on its correlation ID, and host `/v1/error` so an undelivered request does not look like one still under review.
+
+        ### Related scenario
+
+        A hospital planning an elective admission asks the payer what it would approve for procedure `MG004A`. It builds the pre-authorisation bundle with `Claim.use` `predetermination` and reference `PD0000000001`, posts it here with a new correlation ID, and gets 202 back. The payer's `ClaimResponse` arrives later on `/v1/predetermination/on_submit` with an estimated benefit of 15500.00. The desk records it as an estimate, and raises a pre-authorisation when the patient is admitted.
+
+        ### Specification
+
+        Chapter [Predetermination, status and search](/docs/nhcx/v1/reference/fhir/predetermination-status-and-search) of the NHCX integration specification.
+      parameters:
+        - $ref: "#/components/parameters/BearerAuth"
+        - $ref: "#/components/parameters/XHcxSenderCode"
+        - $ref: "#/components/parameters/XHcxRecipientCode"
+        - $ref: "#/components/parameters/XHcxApiCallId"
+        - $ref: "#/components/parameters/XHcxCorrelationId"
+        - $ref: "#/components/parameters/XHcxTimestamp"
+        - $ref: "#/components/parameters/XHcxStatus"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payload:
+                  type: string
+            example:
+              payload: <compact JWE>
+      responses:
+        "202":
+          description: NHCX returns HTTP 202 with the acknowledgement and forwards the request asynchronously.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  timestamp:
+                    type: string
+                  api_call_id:
+                    type: string
+                  correlation_id:
+                    type: string
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+              example:
+                timestamp: 19/03/2026 11:46:35:120
+                api_call_id: "{{$guid}}"
+                correlation_id: "{{correlationId}}"
+                error:
+                  code: ""
+                  message: ""
+  /v1/predetermination/on_submit:
+    post:
+      operationId: predetermination_v1_predetermination_on_submit
+      x-abdm-atom: nhcx.endpoint.predetermination-on-submit
+      x-abdm-use-case: Predetermination
+      tags:
+        - Predetermination
+      summary: Predetermination callback
+      description: |-
+        Payer returns its estimate for a predetermination request to the provider: a `ClaimResponse` with `use` `predetermination` and the benefit it would approve. This is use case C11.
+
+        ### Business purpose
+
+        The callback carries the payer's view of what it would pay for a proposed treatment, so the hospital can plan the admission and counsel the patient before any money is committed. For the payer it is the record of the estimate it gave.
+
+        ### When to use
+
+        The payer calls it after assessing a predetermination request, with the same correlation ID and `x-hcx-status` `response.complete`. Only payers that support predetermination send it.
+
+        ### Preconditions
+
+        - A predetermination request with this correlation ID exists in NHCX.
+        - The payer has a valid access token and the provider's certificate, and encrypts the answer for the provider.
+        - The bundle is a `ClaimResponse` with `use` set to `predetermination`, carrying the estimated benefit.
+        - The correlation ID matches the request, and the call ID is new.
+
+        ### Postconditions
+
+        - NHCX answers `202` and forwards the estimate to the provider, who must reply `202` within 30 seconds.
+        - The estimate reserves nothing against the policy.
+
+        ### Common mistakes
+
+        - Creating a new correlation ID instead of reusing the request's.
+        - Provider side: reading the estimate as an approval.
+        - Provider side: replying with anything other than `202`, which triggers retries.
+
+        ### Best practices
+
+        - Provider: acknowledge first, then decrypt, then store the estimate against the planned case.
+        - Provider: make the handler idempotent, since a missed receipt means the same message arrives again with the same `x-hcx-api_call_id`.
+        - Payer: explain the estimate in `ClaimResponse.disposition`, as the reference sample does.
+
+        ### Related scenario
+
+        A payer receives a predetermination request for procedure `MG004A` under reference `PD0000000001`. Its adjudicator assesses the proposed treatment, and the payer posts a `ClaimResponse` with `use` `predetermination`, outcome `complete` and a benefit total of 15500.00 to this endpoint on the request's correlation ID. The hospital's callback answers 202 within 30 seconds and files the figure as an estimate for the planned admission.
+
+        ### Specification
+
+        Chapter [Predetermination, status and search](/docs/nhcx/v1/reference/fhir/predetermination-status-and-search) of the NHCX integration specification.
+      parameters:
+        - $ref: "#/components/parameters/BearerAuth"
+        - $ref: "#/components/parameters/XHcxSenderCode"
+        - $ref: "#/components/parameters/XHcxRecipientCode"
+        - $ref: "#/components/parameters/XHcxApiCallId"
+        - $ref: "#/components/parameters/XHcxCorrelationId"
+        - $ref: "#/components/parameters/XHcxTimestamp"
+        - name: x-hcx-status
+          in: header
+          required: true
+          description: Where this message stands. Values below. Mandatory on the envelope.
+          schema:
+            type: string
+          example: response.complete
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payload:
+                  type: string
+            example:
+              payload: <compact JWE>
+      responses:
+        "202":
+          description: NHCX returns HTTP 202 with the acknowledgement and delivers the callback to the provider, which must answer 202 with a receipt within 30 seconds.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  timestamp:
+                    type: string
+                  api_call_id:
+                    type: string
+                  correlation_id:
+                    type: string
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+              example:
+                timestamp: 19/03/2026 11:46:35:120
+                api_call_id: "{{$guid}}"
+                correlation_id: "{{correlationId}}"
+                error:
+                  code: ""
+                  message: ""
+webhooks:
+  /v1/predetermination/submit:
+    post:
+      operationId: predetermination_webhook_v1_predetermination_submit
+      x-abdm-atom: nhcx.callback.predetermination-submit
+      x-abdm-triggered-by: predetermination_v1_predetermination_submit
+      x-abdm-use-case: Webhooks
+      tags:
+        - Predetermination
+      summary: Receive predetermination request
+      description: |-
+        Hosted by the payer. The exchange posts this message to the `endpoint_url` you registered, at `/v1/predetermination/submit`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+
+        Provider asks the payer what it would approve for a proposed treatment before committing to a pre-authorisation. The bundle has the pre-authorisation's shape with `Claim.use` `predetermination`. This is use case B9.
+      parameters:
+        - $ref: "#/components/parameters/BearerAuth"
+        - $ref: "#/components/parameters/XHcxSenderCode"
+        - $ref: "#/components/parameters/XHcxRecipientCode"
+        - $ref: "#/components/parameters/XHcxApiCallId"
+        - $ref: "#/components/parameters/XHcxCorrelationId"
+        - $ref: "#/components/parameters/XHcxTimestamp"
+        - $ref: "#/components/parameters/XHcxStatus"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payload:
+                  type: string
+            example:
+              payload: <compact JWE>
+      responses:
+        "202":
+          description: Received. The receipt names the message it answers; the answer itself follows as a call of your own.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  timestamp:
+                    type: string
+                  api_call_id:
+                    type: string
+                  correlation_id:
+                    type: string
+                  result:
+                    type: object
+                    properties:
+                      sender_code:
+                        type: string
+                      recipient_code:
+                        type: string
+                      entity_type:
+                        type: string
+                      protocol_status:
+                        type: string
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+              example:
+                timestamp: 04/09/2026 11:46:41:305
+                api_call_id: <from the incoming header>
+                correlation_id: <from the incoming header>
+                result:
+                  sender_code: 1000003538@hcx
+                  recipient_code: 1000004446@hcx
+                  entity_type: preauth
+                  protocol_status: request.queued
+                error:
+                  code: ""
+                  message: ""
+  /v1/predetermination/on_submit:
+    post:
+      operationId: predetermination_webhook_v1_predetermination_on_submit
+      x-abdm-atom: nhcx.callback.predetermination-on-submit
+      x-abdm-triggered-by: predetermination_v1_predetermination_on_submit
+      x-abdm-use-case: Webhooks
+      tags:
+        - Predetermination
+      summary: Receive predetermination callback
+      description: |-
+        Hosted by the provider. The exchange posts this message to the `endpoint_url` you registered, at `/v1/predetermination/on_submit`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+
+        Payer returns its estimate for a predetermination request to the provider: a `ClaimResponse` with `use` `predetermination` and the benefit it would approve. This is use case C11.
+      parameters:
+        - $ref: "#/components/parameters/BearerAuth"
+        - $ref: "#/components/parameters/XHcxSenderCode"
+        - $ref: "#/components/parameters/XHcxRecipientCode"
+        - $ref: "#/components/parameters/XHcxApiCallId"
+        - $ref: "#/components/parameters/XHcxCorrelationId"
+        - $ref: "#/components/parameters/XHcxTimestamp"
+        - name: x-hcx-status
+          in: header
+          required: true
+          description: Where this message stands. Values below. Mandatory on the envelope.
+          schema:
+            type: string
+          example: response.complete
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payload:
+                  type: string
+            example:
+              payload: <compact JWE>
+      responses:
+        "202":
+          description: Received. The receipt names the message it answers; the answer itself follows as a call of your own.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  timestamp:
+                    type: string
+                  api_call_id:
+                    type: string
+                  correlation_id:
+                    type: string
+                  result:
+                    type: object
+                    properties:
+                      sender_code:
+                        type: string
+                      recipient_code:
+                        type: string
+                      entity_type:
+                        type: string
+                      protocol_status:
+                        type: string
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+              example:
+                timestamp: 04/09/2026 11:46:41:305
+                api_call_id: <from the incoming header>
+                correlation_id: <from the incoming header>
+                result:
+                  sender_code: 1000003538@hcx
+                  recipient_code: 1000004446@hcx
+                  entity_type: preauth
+                  protocol_status: request.queued
+                error:
+                  code: ""
+                  message: ""
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: "On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value."
+  parameters:
+    BearerAuth:
+      name: bearer_auth
+      in: header
+      required: true
+      description: It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.
+      schema:
+        type: string
+      example: Bearer <access token>
+    XHcxSenderCode:
+      name: x-hcx-sender_code
+      in: header
+      required: true
+      description: Your participant code. Mandatory on the envelope.
+      schema:
+        type: string
+      example: <participant code>
+    XHcxRecipientCode:
+      name: x-hcx-recipient_code
+      in: header
+      required: true
+      description: The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
+      schema:
+        type: string
+      example: <recipient code>
+    XHcxApiCallId:
+      name: x-hcx-api_call_id
+      in: header
+      required: true
+      description: Fresh on every message, including responses. Mandatory on the envelope.
+      schema:
+        type: string
+      example: <uuid>
+    XHcxCorrelationId:
+      name: x-hcx-correlation_id
+      in: header
+      required: true
+      description: The thread. See the rule below. Mandatory on the envelope.
+      schema:
+        type: string
+      example: <correlation id>
+    XHcxTimestamp:
+      name: x-hcx-timestamp
+      in: header
+      required: true
+      description: See the format note below. Mandatory on the envelope.
+      schema:
+        type: string
+      example: <iso timestamp>
+    XHcxStatus:
+      name: x-hcx-status
+      in: header
+      required: true
+      description: Where this message stands. Values below. Mandatory on the envelope.
+      schema:
+        type: string
+      example: request.initiated
+x-abdm-errors:
+  notes: "Codes any exchange call can meet are recorded once, in the [Other](/docs/nhcx/v1/api/other) specification: the gateway's NHCX- codes, the standard payer codes, and the reference payer's structure and transport codes. The reference payer's other codes sit with the exchange they reject: coverage eligibility, preauthorisation, claim and insurance plan. [Reading error codes](/docs/nhcx/v1/reference/error-code-guide) explains the code spaces."
