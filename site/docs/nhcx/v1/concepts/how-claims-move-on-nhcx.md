@@ -13,15 +13,15 @@ generated: false
 Claim settlement is the end-to-end process by which an insurer or State Health Agency (SHA) evaluates, approves, and pays a request for medical expenses raised by a policyholder or treating hospital. Three participants are involved. The Provider is the treating hospital and its HMIS. The Payer is the insurance company, SHA, or TPA that adjudicates and settles the claim. 
 
 ### What is Health Insurance?
-Health insurance or an Insurance Policy is a contract between an individual and a promisor where the latter pledges to pay her/ his medical bills up to a set limit in case of any ailments of the individual. The individual is commonly known as a policyholder or beneficiary whereas the promisor can be an insurance company acting by itself or on behalf of Government or any organisation or Corporate entity. It protects one’s personal savings from being drained by unexpected hospital stays, surgeries, and medicines.
+Health insurance, or an Insurance Policy, is a contract between an individual and a promisor. The promisor pledges to pay the individual's medical bills, up to a set limit, in case of any ailments. The individual is commonly known as a policyholder or beneficiary whereas the promisor can be an insurance company acting by itself or on behalf of Government or any organisation or Corporate entity. It protects one’s personal savings from being drained by unexpected hospital stays, surgeries, and medicines.
 
 ### What is an Insurance Claim?
 
-A health insurance claim is a formal request by a policyholder or by the treating hospital to an insurance company acting by itself or on behalf of Government or any organisation or Corporate entity, asking to pay or refund money for medical care.
+A health insurance claim is a formal request, by a policyholder or by the treating hospital, asking an insurance company to pay or refund money for medical care. The insurance company may act by itself or on behalf of Government or any organisation or Corporate entity.
 
 ### Types of Health Insurance Claim
 
-* **Cashless** - A patient who is a beneficiary of a policy can avail treatment in a hospital without having to pay any amount out of one’s pocket if the hospital is under a “Preferred Network” for the Insurance Company with some existing agreement executed between them or “Empaneled” under a specific scheme governing the policy. However, the amount of expenses incurred during treatment is capped either by “Sum Assured” under the policy or some mutually agreed upon “Package Rates” earmarked for a specific medical or surgical procedure.  
+* **Cashless** - A patient who is a beneficiary of a policy can avail treatment in a hospital without paying any amount out of one’s pocket. This applies when the hospital is in a “Preferred Network” for the Insurance Company, under an existing agreement between them. It also applies when the hospital is “Empaneled” under a specific scheme governing the policy. However, the amount of expenses incurred during treatment is capped either by “Sum Assured” under the policy or some mutually agreed upon “Package Rates” earmarked for a specific medical or surgical procedure.  
 * **Reimbursement** - Here a patient is required to pay the bills directly to the treating hospital and later get such an amount reimbursed by Insurance Company upon submission of all relevant documents. This is a common practice if the treating hospital is not a part of “Preferred Network” for that Insurance Company, but this model is not considered in the current scope.
 
 ### Who is a Provider?
@@ -34,7 +34,7 @@ A Payer is the Insurance Company who has issued the policy and is liable to make
 
 ### Claim Settlement Process
 
-This is a two-way communication between the Hospital and the Insurance Company, that is, between the Provider and the Payer, concerning the policy, the treatment rendered to the policyholder patient, and finally the payment of hospital bills after proper scrutiny of all relevant documents. It starts with the treating hospital informing the Insurance Company of an imminent claim for a patient who is to be admitted for treatment, and it ends with the realisation of payment from the Insurance Company for all expenses incurred while treating the patient. The entire journey of claim settlement can be broken down into the following distinct flows or use cases.
+This is a two-way communication between the Hospital and the Insurance Company, that is, between the Provider and the Payer. It concerns the policy, the treatment rendered to the policyholder patient, and finally the payment of hospital bills after proper scrutiny of all relevant documents. It starts with the treating hospital informing the Insurance Company of an imminent claim for a patient who is to be admitted for treatment. It ends with the realisation of payment from the Insurance Company for all expenses incurred while treating the patient. The entire journey of claim settlement can be broken down into the following distinct flows or use cases.
 
 ## The 10 Steps of Claim Settlement on NHCX
 
@@ -108,15 +108,15 @@ flowchart TD
 
 ### What is NHCX?
 
-In order to iron out the challenges depicted above the National Health Claims Exchange (NHCX) is developed under the Ayushman Bharat Digital Mission (ABDM) by the National Health Authority (NHA) in consultation with Insurance Regulatory and Development Authority of India (IRDAI). The idea is to introduce a platform of exchange to the Providers and Payers so that both can transfer digitised health records and other pertinent information directly in a machine readable format to its counterpart.
+The National Health Claims Exchange (NHCX) irons out the challenges depicted above. It is developed under the Ayushman Bharat Digital Mission (ABDM) by the National Health Authority (NHA), in consultation with the Insurance Regulatory and Development Authority of India (IRDAI). The idea is to introduce a platform of exchange to the Providers and Payers so that both can transfer digitised health records and other pertinent information directly in a machine readable format to its counterpart.
 
 ### What NHCX aims to achieve?
 
-The primary objective of NHCX is to streamline and standardise the processing of health insurance claims across the country, ensuring absolute interoperability across diverse systems. This implies in spite of Provider and Payer applications operating on completely different technology stacks one system can seamlessly remit health information to the other in a comprehensive digitised machine readable format to the other and still have the very exact interpretation at both ends. It is achieved by leveraging the Fast Healthcare Interoperability Resources (FHIR) standard protocols and using international coding practices, wiping out even the slightest ambiguity in the understanding.
+The primary objective of NHCX is to streamline and standardise the processing of health insurance claims across the country, ensuring absolute interoperability across diverse systems. Provider and Payer applications may operate on completely different technology stacks. Even so, one system can seamlessly remit health information to the other in a comprehensive, digitised, machine readable format, with the very exact interpretation at both ends. It is achieved by leveraging the Fast Healthcare Interoperability Resources (FHIR) standard protocols and using international coding practices, wiping out even the slightest ambiguity in the understanding.
 
 ### NHCX Operating Framework
 
-Just like we have exchanges like NSE & BSE for trading in securities where anyone can buy or sell independently by merely getting connected to the platform, the entire idea of NHCX is to connect Providers and Payers on either side. Once Providers and Payers become compliant to the NHCX protocols like using prescribed FHIR bundles and implementing universally accepted coding practices they can independently connect to one another using NHCX as a medium of exchange. The protocols and standards ensure that a health information does not lose any of its essence during the transfer.
+On securities exchanges like NSE & BSE, anyone can buy or sell independently by merely getting connected to the platform. In the same way, the entire idea of NHCX is to connect Providers and Payers on either side. Once Providers and Payers become compliant to the NHCX protocols like using prescribed FHIR bundles and implementing universally accepted coding practices they can independently connect to one another using NHCX as a medium of exchange. The protocols and standards ensure that a health information does not lose any of its essence during the transfer.
 
 ### Benefits of using NHCX
 * It is imperative that in the present day context almost every healthcare provider or hospital is generating digitised health records. But there is no point if the hospital has to convert that data into a “pdf” or a “jpg” file and transmit the same to the insurance company in a human readable format. NHCX is the only solution to this widespread problem  
@@ -124,7 +124,7 @@ Just like we have exchanges like NSE & BSE for trading in securities where anyon
 * Since any standard hospital HMIS already captures data pertaining to a patient like medical history, allergies, medication, line of treatment, etc. it would be apt to convey those same details to the insurance company instead of taking a printout and scanning them again for email attachments or uploads, thereby ensuring chastity of data  
 * Data precision is also safeguarded as the intervention of data entry operators is only limited to the first level entry into HMIS, rendering this to be the only source of truth. Eventually this translates to lesser queries and rejection of claims on flimsy grounds  
 * NHCX enables maximum data transfer in the digitised format, thus allowing a Payer run AI tools and conduct automated adjudication to the maximum possible extent  
-* With Government social security schemes like Ayushman Bharat gaining momentum and IRDAI advocating “Cashless Everywhere” more and more healthcare providers are entering the arena and adoption of such universal model like NHCX can only support this extent of scalability
+* Government social security schemes like Ayushman Bharat are gaining momentum, and IRDAI is advocating “Cashless Everywhere”. More and more healthcare providers are entering the arena, and only a universal model like NHCX can support this extent of scalability
 
 
 ### The Asynchronous Request and Callback Pattern
