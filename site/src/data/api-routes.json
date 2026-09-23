@@ -4852,7 +4852,7 @@
     "moduleDir": "p1",
     "method": "POST",
     "path": "/abha/api/v3/phr/app/login/request/otp",
-    "summary": "7 flows: OTP Request - Mobile, OTP Request - Email, OTP Request -  ABHAADDRES Mobile, OTP Request - AADHAR OTP, OTP Request - ABHA OTP, OTP Request -  ABHAADDRES Email, new OTP Request- AADHAAR",
+    "summary": "5 flows: OTP Request - Mobile, OTP Request -  ABHAADDRES Mobile, OTP Request - AADHAR OTP, OTP Request - ABHA OTP, new OTP Request- AADHAAR",
     "route": "/docs/hiecm/v3/api/p1/endpoints/p1-login-mobile/01-p1-post-v3-phr-app-login-request-otp",
     "callbacks": []
   },
@@ -4882,7 +4882,7 @@
     "moduleDir": "p1",
     "method": "POST",
     "path": "/abha/api/v3/phr/app/login/verify",
-    "summary": "8 flows: Login OTP Verify - Mobile, Login OTP Verify - Email, Login OTP Verify - ABHAADDRES Mobile, Login OTP Verify - AADHAR, Login OTP Verify - ABHA, Login Verify - Password, Login OTP Verify - ABHAADDRESS Email, new OTP verify- AADHAAR",
+    "summary": "6 flows: Login OTP Verify - Mobile, Login OTP Verify - ABHAADDRES Mobile, Login OTP Verify - AADHAR, Login OTP Verify - ABHA, Login Verify - Password, new OTP verify- AADHAAR",
     "route": "/docs/hiecm/v3/api/p1/endpoints/p1-login-mobile/02-p1-post-v3-phr-app-login-verify",
     "callbacks": []
   },
@@ -4897,7 +4897,7 @@
     "moduleDir": "p1",
     "method": "POST",
     "path": "/abha/api/v3/phr/app/login/verify/user",
-    "summary": "6 flows: Verify User, Verify - User",
+    "summary": "5 flows: Verify User, Verify - User",
     "route": "/docs/hiecm/v3/api/p1/endpoints/p1-login-mobile/03-p1-post-v3-phr-app-login-verify-user",
     "callbacks": []
   },

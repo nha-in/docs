@@ -667,6 +667,33 @@ specs.m1['x-abdm-sources'].push({file: 'catalogue/openapi/.raw/nha-2026-09-16/ab
     }
   }
   if (emailDropped) note('p2', 'update email', `${emailDropped} update email examples, their flow names and the Update Email (optional) tag left out; NHA's sandbox observations of 23 September 2026 deprecate the flow. P2-Management in the collection paths reads P2-Consents Management`);
+  // Email login goes the same way: the review of 23 September 2026 leaves
+  // PHR login without its two email OTP routes. The calls stay, since every
+  // other login route shares them; the email examples, their flow names and
+  // their collection paths go. The email route's verify user example is the
+  // collection's second, "Verify - User (2)", as journeys/p1.yaml records.
+  const LOGIN_EMAIL = /Email(?! Verification Link)|Login via Email|Verify - User(?: -[^(]*)?\(2\)|Verify - User[^(]*\(2\)/;
+  let loginEmailDropped = 0;
+  const dropLoginEmail = (examples) => {
+    for (const key of Object.keys(examples ?? {})) if (LOGIN_EMAIL.test(key)) { delete examples[key]; loginEmailDropped++; }
+  };
+  for (const [path, item] of Object.entries(specs.p1.paths)) {
+    if (!/\/phr\/app\/login\//.test(path)) continue;
+    for (const method of METHODS) {
+      const op = item[method];
+      if (!op) continue;
+      for (const media of Object.values(op.requestBody?.content ?? {})) dropLoginEmail(media.examples);
+      for (const response of Object.values(op.responses ?? {})) for (const media of Object.values(response.content ?? {})) dropLoginEmail(media.examples);
+      if (op.description) op.description = op.description.split('\n').filter((line) => !/Login via Email|Email OTP/.test(line)).join('\n');
+      const flows = /^(\d+) flows: (.*)$/.exec(op.summary ?? '');
+      if (flows) {
+        const kept = flows[2].split(', ').filter((f) => !/Email/.test(f));
+        const count = Number(flows[1]) - (flows[2].split(', ').length - kept.length) - (/verify\/user$/.test(path) ? 1 : 0);
+        op.summary = `${count} flows: ${kept.join(', ')}`;
+      }
+    }
+  }
+  if (loginEmailDropped) note('p1', 'login email', `${loginEmailDropped} email login examples, their flow names and collection paths left out; NHA's sandbox observations of 23 September 2026 deprecate email in the PHR application`);
   // The two patient share calls carry the names NHA gave them. The summary is
   // what the Scalar reference shows as the name, so it changes with the title.
   for (const [path, name] of [['/api/hiecm/patient-share/v3/share', 'OPD token generation'], ['/api/hiecm/patient-share/v3/profile/getTokenDetails', 'OPD Token History']]) {
