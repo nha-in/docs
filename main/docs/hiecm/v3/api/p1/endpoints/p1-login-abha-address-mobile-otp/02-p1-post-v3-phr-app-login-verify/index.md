@@ -4,12 +4,10 @@
 
 Flows:
 - P1-Registration-login › P1 - PHR Login › P1 - Login via Mobile Number › Login OTP Verify - Mobile
-- P1-Registration-login › P1 - PHR Login › P1 - Login via Email (optional) › Login OTP Verify - Email
 - P1-Registration-login › P1 - PHR Login › P1 - Login via ABHA Address - Mobile OTP › Login OTP Verify - ABHAADDRES Mobile
 - P1-Registration-login › P1 - PHR Login › P1 - Login via ABHA Number-Aadhaar OTP › Login OTP Verify - AADHAR
 - P1-Registration-login › P1 - PHR Login › P1 - Login via ABHA Number-ABHA OTP › Login OTP Verify - ABHA
 - P1-Registration-login › P1 - PHR Login › P1 - Login via ABHA Address - Password › Login Verify - Password
-- P1-Registration-login › P1 - PHR Login › P1 - Login via ABHA Address - Email OTP › Login OTP Verify - ABHAADDRESS Email
 - P1-Registration-login › P1 - PHR Login › P1 - Login via Aadhaar- OTP › new OTP verify- Aadhaar
 
 ```bash

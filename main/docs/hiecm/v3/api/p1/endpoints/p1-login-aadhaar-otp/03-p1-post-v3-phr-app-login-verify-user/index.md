@@ -5,7 +5,6 @@
 Flows:
 - P1-Registration-login › P1 - Create ABHA Address Flow › Enrolment via ABHA Number-ABHA OTP › Verify User
 - P1-Registration-login › P1 - PHR Login › P1 - Login via Mobile Number › Verify - User
-- P1-Registration-login › P1 - PHR Login › P1 - Login via Email (optional) › Verify - User
 - P1-Registration-login › P1 - PHR Login › P1 - Login via ABHA Number-Aadhaar OTP › Verify - User
 - P1-Registration-login › P1 - PHR Login › P1 - Login via ABHA Number-ABHA OTP › Verify - User
 - P1-Registration-login › P1 - PHR Login › P1 - Login via Aadhaar- OTP › Verify - User

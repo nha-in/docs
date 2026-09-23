@@ -6,7 +6,7 @@ P1 is the patient side of [M1 Identity](/docs/main/docs/hiecm/v3/milestones/m1).
 
 - Every user needs an ABHA address, `username@abdm`. Consent, notifications and record sharing all hang off it.
 - Build both creation paths: by mobile number, and by an existing 14 digit ABHA number.
-- Every login route is mandatory except the two email OTP routes, which are optional.
+- Every login route is mandatory.
 - Fetch the PHR public key first. It is not the ABHA service's key.
 - A user can hold several ABHA addresses but only one ABHA number.
 
@@ -46,14 +46,14 @@ A Self-Declared profile needs a "Link ABHA number" action. The user enters the 1
 
 ## Login
 
-Sign a user in to a PHR application by any of these routes. Every route is mandatory except the two email OTP routes, which are optional.
+Sign a user in to a PHR application by any of these routes. Every route is mandatory.
 
-| Route                          | Validated by                                                                           |
-| ------------------------------ | -------------------------------------------------------------------------------------- |
-| Mobile number                  | Mobile OTP                                                                             |
-| An address such as `name@abdm` | Password, mobile OTP or email OTP (optional), by the auth methods the address supports |
-| The 14 digit ABHA number       | ABHA OTP or Aadhaar OTP                                                                |
-| The Aadhaar number             | Aadhaar OTP                                                                            |
+| Route                          | Validated by                                                     |
+| ------------------------------ | ---------------------------------------------------------------- |
+| Mobile number                  | Mobile OTP                                                       |
+| An address such as `name@abdm` | Password or mobile OTP, by the auth methods the address supports |
+| The 14 digit ABHA number       | ABHA OTP or Aadhaar OTP                                          |
+| The Aadhaar number             | Aadhaar OTP                                                      |
 
 Every OTP route returns the ABHA addresses linked to that identifier. The user picks the one to sign in as, and you confirm the choice with the verify user call.
 

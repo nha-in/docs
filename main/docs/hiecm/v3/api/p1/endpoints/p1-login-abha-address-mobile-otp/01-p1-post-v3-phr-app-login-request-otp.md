@@ -4,11 +4,9 @@
 
 Flows:
 - P1-Registration-login › P1 - PHR Login › P1 - Login via Mobile Number › OTP Request - Mobile
-- P1-Registration-login › P1 - PHR Login › P1 - Login via Email (optional) › OTP Request - Email
 - P1-Registration-login › P1 - PHR Login › P1 - Login via ABHA Address - Mobile OTP › OTP Request - ABHAADDRES Mobile
 - P1-Registration-login › P1 - PHR Login › P1 - Login via ABHA Number-Aadhaar OTP › OTP Request - AADHAR OTP
 - P1-Registration-login › P1 - PHR Login › P1 - Login via ABHA Number-ABHA OTP › OTP Request - ABHA OTP
-- P1-Registration-login › P1 - PHR Login › P1 - Login via ABHA Address - Email OTP › OTP Request - ABHAADDRES Email
 - P1-Registration-login › P1 - PHR Login › P1 - Login via Aadhaar- OTP › new OTP Request- Aadhaar
 
 ```bash

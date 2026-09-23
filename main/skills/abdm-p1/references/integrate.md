@@ -21,10 +21,10 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `POST` | `/abha/api/v3/phr/app/enrollment/suggestion` | 3 flows: Suggestion API |
 | `POST` | `/abha/api/v3/phr/app/enrollment/verify` | 3 flows: OTP Verify - Mobile, OTP Verify - ABHA OTP, OTP Verify - AADHAR OTP |
 | `GET` | `/abha/api/v3/phr/app/login/public/certificate` | PHR Certificate |
-| `POST` | `/abha/api/v3/phr/app/login/request/otp` | 7 flows: OTP Request - Mobile, OTP Request - Email, OTP Request - ABHAADDRES Mo… |
+| `POST` | `/abha/api/v3/phr/app/login/request/otp` | 5 flows: OTP Request - Mobile, OTP Request - ABHAADDRES Mobile, OTP Request - A… |
 | `POST` | `/abha/api/v3/phr/app/login/search` | Search Auth Methods - ABHAAddress |
-| `POST` | `/abha/api/v3/phr/app/login/verify` | 8 flows: Login OTP Verify - Mobile, Login OTP Verify - Email, Login OTP Verify … |
-| `POST` | `/abha/api/v3/phr/app/login/verify/user` | 6 flows: Verify User, Verify - User |
+| `POST` | `/abha/api/v3/phr/app/login/verify` | 6 flows: Login OTP Verify - Mobile, Login OTP Verify - ABHAADDRES Mobile, Login… |
+| `POST` | `/abha/api/v3/phr/app/login/verify/user` | 5 flows: Verify User, Verify - User |
 | `POST` | `/abha/api/v3/profile/account/request/emailVerificationLink` | Email Verification Link |
 | `GET` | `/api/hiecm/gateway/v3/bridge-service/serviceId/{service-id}` | Fetch the details of a service ID. |
 | `GET` | `/api/hiecm/gateway/v3/bridge-services` | Fetch the service ids registered against a bridge. |
