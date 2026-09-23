@@ -1,12 +1,12 @@
 # Fetch the record for provider details for requested provider ID
 
-`GET /api/hiecm/gateway/v3/providers/{provider-id}`
+`GET /api/hiecm/gateway/v3/providers/{hip-id}`
 
 Retrieve the details of a specific provider based on the provided provider ID. When invoked, it queries the system to fetch comprehensive information about the provider identified by the given ID.
 
 ```bash
 curl --request GET \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/gateway/v3/providers/{provider-id} \
+  --url https://dev.abdm.gov.in/api/hiecm/gateway/v3/providers/{hip-id} \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -25,7 +25,7 @@ curl --request GET \
 
 ## Path parameters
 
-- `provider-id` (string, required)
+- `hip-id` (string, required)
 
 ## Responses
 

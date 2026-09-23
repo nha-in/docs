@@ -1,12 +1,12 @@
 # Approve the consent request raised by HIU from PHR/mobile application
 
-`POST /api/hiecm/consent/v3/request/{request-id}/approve`
+`POST /api/hiecm/consent/v3/request/{consentRequestId}/approve`
 
 Approve a consent request, specifying their preferred data access parameters. By invoking this API, the user grants permission for the Health Information User (HIU) to access their health data under the defined conditions. This approval process is essential for ensuring that patient data is shared securely and in accordance with the user’s preferences, supporting a transparent and compliant health information exchange. The API facilitates the establishment of trust and adherence to privacy regulations, enabling ethical and efficient access to health information.
 
 ```bash
 curl --request POST \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/consent/v3/request/{request-id}/approve \
+  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/request/{consentRequestId}/approve \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -61,7 +61,7 @@ curl --request POST \
 
 ## Path parameters
 
-- `request-id` (string, required): The consent request id
+- `consentRequestId` (string, required): The consent request id
 
 ## Body
 

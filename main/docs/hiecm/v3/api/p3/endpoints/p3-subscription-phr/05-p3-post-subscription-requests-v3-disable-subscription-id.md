@@ -1,12 +1,12 @@
 # Disable the subscription by subscription ID
 
-`POST /api/hiecm/subscription-requests/v3/disable/{subscription-id}`
+`POST /api/hiecm/subscription-requests/v3/disable/{subscriptionID}`
 
 Disable an existing subscription identified by the subscription ID. By invoking this API, users can deactivate the subscription, ensuring that the associated health information services or updates are no longer delivered.
 
 ```bash
 curl --request POST \
-  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/disable/{subscription-id} \
+  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/disable/{subscriptionID} \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -27,7 +27,7 @@ curl --request POST \
 
 ## Path parameters
 
-- `subscription-id` (string, required): The subscription id
+- `subscriptionID` (string, required): The subscription id
 
 ## Responses
 

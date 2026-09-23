@@ -1,12 +1,12 @@
 # Disable the auto-approval policy
 
-`POST /api/hiecm/consent/v3/auto/approve/{auto-approval-id}/disable`
+`POST /api/hiecm/consent/v3/auto/approve/{consentId}/disable`
 
 Disable an existing auto-approval policy. By invoking this API, users can deactivate the automatic approval of consent requests for the specified Health Information User (HIU). This functionality is essential for maintaining control over consent management, allowing users to modify or revoke auto-approval settings as needed.
 
 ```bash
 curl --request POST \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/consent/v3/auto/approve/{auto-approval-id}/disable \
+  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/auto/approve/{consentId}/disable \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -27,7 +27,7 @@ curl --request POST \
 
 ## Path parameters
 
-- `auto-approval-id` (string, required): The auto approval id
+- `consentId` (string, required): The auto approval id
 
 ## Responses
 

@@ -9,7 +9,7 @@ This API will retrive the list of govt-programmes in the form of list.
 
 ```bash
 curl --request GET \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/gateway/v3/govt-programs \
+  --url https://dev.abdm.gov.in/api/hiecm/gateway/v3/govt-programs \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \

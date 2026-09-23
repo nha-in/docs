@@ -1,12 +1,12 @@
 # Fetch his/her subscription details by subscription REQUEST-ID
 
-`GET /api/hiecm/subscription-requests/v3/request/{request-id}`
+`GET /api/hiecm/subscription-requests/v3/request/{subscriptionRequestId}`
 
 Be invoked by the patient or user through the Personal Health Record (PHR) application to fetch their subscription details using the subscription REQUEST-ID. By using this API, individuals can retrieve comprehensive information about a specific subscription request, including its status, scope, and any associated conditions. This functionality is essential for enabling users to manage their health data subscriptions effectively, ensuring they have access to accurate and up-to-date subscription information.
 
 ```bash
 curl --request GET \
-  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/request/{request-id} \
+  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/request/{subscriptionRequestId} \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -27,7 +27,7 @@ curl --request GET \
 
 ## Path parameters
 
-- `request-id` (string, required): The subscription request id
+- `subscriptionRequestId` (string, required): The subscription request id
 
 ## Responses
 

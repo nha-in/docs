@@ -1,12 +1,12 @@
 # Enable the subscription by subscription ID
 
-`POST /api/hiecm/subscription-requests/v3/enable/{subscription-id}`
+`POST /api/hiecm/subscription-requests/v3/enable/{subscriptionID}`
 
 Enable an existing subscription identified by the subscription ID. By invoking this API, users can activate the subscription, ensuring that the associated health information services or updates are delivered as requested. This functionality is essential for managing subscriptions effectively, allowing users to control the activation status of their health data subscriptions. The API supports secure and efficient enablement of subscriptions, enhancing the overall user experience within the healthcare ecosystem.
 
 ```bash
 curl --request POST \
-  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/enable/{subscription-id} \
+  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/enable/{subscriptionID} \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -27,7 +27,7 @@ curl --request POST \
 
 ## Path parameters
 
-- `subscription-id` (string, required): The subscription id
+- `subscriptionID` (string, required): The subscription id
 
 ## Responses
 

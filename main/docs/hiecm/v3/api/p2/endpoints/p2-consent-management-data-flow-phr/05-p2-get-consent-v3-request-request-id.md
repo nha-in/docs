@@ -1,12 +1,12 @@
 # Get the consent request details by REQUEST-ID
 
-`GET /api/hiecm/consent/v3/request/{request-id}`
+`GET /api/hiecm/consent/v3/request/{consentRequestId}`
 
 Retrieve the details of a consent request using the REQUEST-ID. By invoking this API, users can obtain comprehensive information about a specific consent request, including its status, scope, and any associated conditions. This functionality is essential for ensuring that users have access to accurate and up-to-date consent information, supporting secure and compliant health information exchange. The API facilitates efficient management and verification of consent requests, enhancing the overall integrity of the consent management process.
 
 ```bash
 curl --request GET \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/consent/v3/request/{request-id} \
+  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/request/{consentRequestId} \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -27,7 +27,7 @@ curl --request GET \
 
 ## Path parameters
 
-- `request-id` (string, required): The consent request id
+- `consentRequestId` (string, required): The consent request id
 
 ## Responses
 

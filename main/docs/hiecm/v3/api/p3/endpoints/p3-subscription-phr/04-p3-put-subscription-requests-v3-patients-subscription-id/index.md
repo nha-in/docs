@@ -1,12 +1,12 @@
 # Edit the subscription details
 
-`PUT /api/hiecm/subscription-requests/v3/patients/{subscription-id}`
+`PUT /api/hiecm/subscription-requests/v3/patients/{subscriptionID}`
 
 Edit the details of an existing subscription. By invoking this API, users can update the parameters and preferences associated with a specific subscription identified by the subscription ID.
 
 ```bash
 curl --request PUT \
-  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/patients/{subscription-id} \
+  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/patients/{subscriptionID} \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -84,7 +84,7 @@ curl --request PUT \
 
 ## Path parameters
 
-- `subscription-id` (string, required): The subscription id
+- `subscriptionID` (string, required): The subscription id
 
 ## Body
 

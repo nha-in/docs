@@ -1,12 +1,12 @@
 # Deny subscription request
 
-`POST /api/hiecm/subscription-requests/v3/{request-id}/deny`
+`POST /api/hiecm/subscription-requests/v3/{subscriptionRequestId}/deny`
 
 Be invoked by the patient or user through the Personal Health Record (PHR) application to deny a subscription request. By using this API, individuals can reject the requested subscription, ensuring that they do not receive unwanted health information services or updates. This functionality is essential for enabling users to manage their health data subscriptions effectively, maintaining control over the information they receive. The API supports secure and efficient denial of subscription requests, enhancing the overall user experience within the healthcare ecosystem.
 
 ```bash
 curl --request POST \
-  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/{request-id}/deny \
+  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/{subscriptionRequestId}/deny \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -31,7 +31,7 @@ curl --request POST \
 
 ## Path parameters
 
-- `request-id` (string, required): The subscription request id
+- `subscriptionRequestId` (string, required): The subscription request id
 
 ## Body
 

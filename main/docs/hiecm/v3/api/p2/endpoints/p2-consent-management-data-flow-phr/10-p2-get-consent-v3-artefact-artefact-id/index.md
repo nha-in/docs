@@ -1,12 +1,12 @@
 # Fetch the consent artefact details associated with the artefact-ID
 
-`GET /api/hiecm/consent/v3/artefact/{artefact-id}`
+`GET /api/hiecm/consent/v3/artefact/{consentId}`
 
 Fetch the details of a consent artefact associated with a specific artefact ID. By invoking this API, users can retrieve comprehensive information about the consent artefact, including its status, scope, and any associated conditions. This functionality is essential for ensuring that users have access to accurate and up-to-date consent artefact information, supporting secure and compliant health information exchange. The API facilitates efficient management and verification of consent artefacts, enhancing the overall integrity of the consent management process.
 
 ```bash
 curl --request GET \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/consent/v3/artefact/{artefact-id} \
+  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/artefact/{consentId} \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -27,7 +27,7 @@ curl --request GET \
 
 ## Path parameters
 
-- `artefact-id` (string, required): Consent artefact id
+- `consentId` (string, required): Consent artefact id
 
 ## Responses
 

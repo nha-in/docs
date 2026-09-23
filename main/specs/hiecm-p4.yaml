@@ -922,7 +922,7 @@ paths:
                     nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: subscription-phr 9
-  /api/hiecm/subscription-requests/v3/patients/lockers/{lockerId}:
+  /api/hiecm/subscription-requests/v3/patients/lockers/{locker-id}:
     get:
       tags:
         - subscription-phr
@@ -963,7 +963,7 @@ paths:
             maximum: 100
           example: <TOKEN>
           description: JWT Authentication token issued by ABDM after successful validation of username and password
-        - name: lockerId
+        - name: locker-id
           in: path
           required: true
           schema:

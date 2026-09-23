@@ -6,7 +6,7 @@ Retrieve all linked care contexts for a patient from various Health Information 
 
 ```bash
 curl --request GET \
-  --url "https://abhasbx.abdm.gov.in/api/hiecm/hip/v3/link/patient/links?limit=<LIMIT>" \
+  --url "https://dev.abdm.gov.in/api/hiecm/hip/v3/link/patient/links?limit=<LIMIT>" \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \

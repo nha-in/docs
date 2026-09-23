@@ -1,12 +1,12 @@
 # Get health locker settings of a patient by locker ID
 
-`GET /api/hiecm/subscription-requests/v3/patients/lockers/{lockerId}`
+`GET /api/hiecm/subscription-requests/v3/patients/lockers/{locker-id}`
 
 Retrieve the health locker settings of a patient using the locker ID. By invoking this API, users can access detailed information about the configuration and preferences of the patient’s health locker. This functionality is essential for managing and customizing the storage and access settings of health records, ensuring that patients have control over their health information. The API supports secure and efficient retrieval of health locker settings, enhancing the overall management of health data within the healthcare ecosystem.
 
 ```bash
 curl --request GET \
-  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/patients/lockers/{lockerId} \
+  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/patients/lockers/{locker-id} \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -27,7 +27,7 @@ curl --request GET \
 
 ## Path parameters
 
-- `lockerId` (string, required): The locker id
+- `locker-id` (string, required): The locker id
 
 ## Responses
 

@@ -22097,7 +22097,7 @@ profile which contains user details.
 
 ```bash
 curl --request POST \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/patient-share/v3/share \
+  --url https://dev.abdm.gov.in/api/hiecm/patient-share/v3/share \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -22309,7 +22309,7 @@ TIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:
 
 ```bash
 curl --request GET \
-  --url "https://abhasbx.abdm.gov.in/api/hiecm/patient-share/v3/profile/getTokenDetails?limit=<LIMIT>" \
+  --url "https://dev.abdm.gov.in/api/hiecm/patient-share/v3/profile/getTokenDetails?limit=<LIMIT>" \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -22382,7 +22382,7 @@ Retrieve a list of providers, filtered by their names. When invoked, it queries 
 
 ```bash
 curl --request GET \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/gateway/v3/providers \
+  --url https://dev.abdm.gov.in/api/hiecm/gateway/v3/providers \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -22455,13 +22455,13 @@ Shape of the 200 response, generated from the schema. The values are placeholder
 
 # Fetch the record for provider details for requested provider ID
 
-`GET /api/hiecm/gateway/v3/providers/{provider-id}`
+`GET /api/hiecm/gateway/v3/providers/{hip-id}`
 
 Retrieve the details of a specific provider based on the provided provider ID. When invoked, it queries the system to fetch comprehensive information about the provider identified by the given ID.
 
 ```bash
 curl --request GET \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/gateway/v3/providers/{provider-id} \
+  --url https://dev.abdm.gov.in/api/hiecm/gateway/v3/providers/{hip-id} \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -22480,7 +22480,7 @@ curl --request GET \
 
 ## Path parameters
 
-- `provider-id` (string, required)
+- `hip-id` (string, required)
 
 ## Responses
 
@@ -22523,7 +22523,7 @@ Be invoked by the patient or user through the Personal Health Record (PHR) appli
 
 ```bash
 curl --request POST \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/user-initiated-linking/v3/patient/care-context/discover \
+  --url https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/patient/care-context/discover \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -22707,7 +22707,7 @@ Be invoked by the patient or user to link their health records. By using this AP
 
 ```bash
 curl --request POST \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/init \
+  --url https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/init \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -22859,7 +22859,7 @@ Be invoked by the patient or user to confirm their health records. By using this
 
 ```bash
 curl --request POST \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/confirm \
+  --url https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/confirm \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -23004,7 +23004,7 @@ This API will retrive the list of govt-programmes in the form of list.
 
 ```bash
 curl --request GET \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/gateway/v3/govt-programs \
+  --url https://dev.abdm.gov.in/api/hiecm/gateway/v3/govt-programs \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -23064,7 +23064,7 @@ Set up an auto-approval policy for a specified Health Information User (HIU). By
 
 ```bash
 curl --request POST \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/consent/v3/auto/approve \
+  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/auto/approve \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -23190,13 +23190,13 @@ curl --request POST \
 
 # Disable the auto-approval policy
 
-`POST /api/hiecm/consent/v3/auto/approve/{auto-approval-id}/disable`
+`POST /api/hiecm/consent/v3/auto/approve/{consentId}/disable`
 
 Disable an existing auto-approval policy. By invoking this API, users can deactivate the automatic approval of consent requests for the specified Health Information User (HIU). This functionality is essential for maintaining control over consent management, allowing users to modify or revoke auto-approval settings as needed.
 
 ```bash
 curl --request POST \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/consent/v3/auto/approve/{auto-approval-id}/disable \
+  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/auto/approve/{consentId}/disable \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -23217,7 +23217,7 @@ curl --request POST \
 
 ## Path parameters
 
-- `auto-approval-id` (string, required): The auto approval id
+- `consentId` (string, required): The auto approval id
 
 ## Responses
 
@@ -23253,13 +23253,13 @@ Shape of the 202 response, generated from the schema. The values are placeholder
 
 # Enable the auto-approval policy
 
-`POST /api/hiecm/consent/v3/auto/approve/{auto-approval-id}/enable`
+`POST /api/hiecm/consent/v3/auto/approve/{consentId}/enable`
 
 Enable an existing auto-approval policy. By invoking this API, users can activate the automatic approval of consent requests for the specified Health Information User (HIU). This functionality is essential for streamlining the consent management process, allowing consent requests to be automatically approved without manual intervention. The API supports secure and compliant health information exchange, ensuring that auto-approval policies are implemented in accordance with user preferences and regulatory requirements.
 
 ```bash
 curl --request POST \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/consent/v3/auto/approve/{auto-approval-id}/enable \
+  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/auto/approve/{consentId}/enable \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -23280,7 +23280,7 @@ curl --request POST \
 
 ## Path parameters
 
-- `auto-approval-id` (string, required): The auto approval id
+- `consentId` (string, required): The auto approval id
 
 ## Responses
 
@@ -23322,7 +23322,7 @@ Fetch all consent request details for a patient. By invoking this API, users can
 
 ```bash
 curl --request GET \
-  --url "https://abhasbx.abdm.gov.in/api/hiecm/consent/v3/request?limit=<LIMIT>" \
+  --url "https://dev.abdm.gov.in/api/hiecm/consent/v3/request?limit=<LIMIT>" \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -23434,13 +23434,13 @@ Shape of the 200 response, generated from the schema. The values are placeholder
 
 # Get the consent request details by REQUEST-ID
 
-`GET /api/hiecm/consent/v3/request/{request-id}`
+`GET /api/hiecm/consent/v3/request/{consentRequestId}`
 
 Retrieve the details of a consent request using the REQUEST-ID. By invoking this API, users can obtain comprehensive information about a specific consent request, including its status, scope, and any associated conditions. This functionality is essential for ensuring that users have access to accurate and up-to-date consent information, supporting secure and compliant health information exchange. The API facilitates efficient management and verification of consent requests, enhancing the overall integrity of the consent management process.
 
 ```bash
 curl --request GET \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/consent/v3/request/{request-id} \
+  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/request/{consentRequestId} \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -23461,7 +23461,7 @@ curl --request GET \
 
 ## Path parameters
 
-- `request-id` (string, required): The consent request id
+- `consentRequestId` (string, required): The consent request id
 
 ## Responses
 
@@ -23543,13 +23543,13 @@ Shape of the 200 response, generated from the schema. The values are placeholder
 
 # Approve the consent request raised by HIU from PHR/mobile application
 
-`POST /api/hiecm/consent/v3/request/{request-id}/approve`
+`POST /api/hiecm/consent/v3/request/{consentRequestId}/approve`
 
 Approve a consent request, specifying their preferred data access parameters. By invoking this API, the user grants permission for the Health Information User (HIU) to access their health data under the defined conditions. This approval process is essential for ensuring that patient data is shared securely and in accordance with the user’s preferences, supporting a transparent and compliant health information exchange. The API facilitates the establishment of trust and adherence to privacy regulations, enabling ethical and efficient access to health information.
 
 ```bash
 curl --request POST \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/consent/v3/request/{request-id}/approve \
+  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/request/{consentRequestId}/approve \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -23604,7 +23604,7 @@ curl --request POST \
 
 ## Path parameters
 
-- `request-id` (string, required): The consent request id
+- `consentRequestId` (string, required): The consent request id
 
 ## Body
 
@@ -23663,13 +23663,13 @@ Shape of the 202 response, generated from the schema. The values are placeholder
 
 # Deny the consent request raised by HIU from PHR/mobile application
 
-`POST /api/hiecm/consent/v3/request/{request-id}/deny`
+`POST /api/hiecm/consent/v3/request/{consentRequestId}/deny`
 
 Deny a consent request from the Personal Health Record (PHR) or mobile application. By invoking this API, users can reject a consent request, preventing the Health Information User (HIU) from accessing their health data. This functionality is essential for maintaining user control over their health information, ensuring that consents are managed according to the user’s preferences. The API supports secure and compliant health information exchange, enabling users to deny consent requests as needed.
 
 ```bash
 curl --request POST \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/consent/v3/request/{request-id}/deny \
+  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/request/{consentRequestId}/deny \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -23694,7 +23694,7 @@ curl --request POST \
 
 ## Path parameters
 
-- `request-id` (string, required): The consent request id
+- `consentRequestId` (string, required): The consent request id
 
 ## Body
 
@@ -23728,7 +23728,7 @@ Revoke a previously approved consent from the Personal Health Record (PHR) or mo
 
 ```bash
 curl --request POST \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/consent/v3/revoke \
+  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/revoke \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -23785,15 +23785,15 @@ Shape of the 202 response, generated from the schema. The values are placeholder
 
 ---
 
-# Request artefact by REQUEST-ID
+# Request artefact by consent REQUEST-ID
 
-`GET /api/hiecm/consent/v3/artefact/request/{request-id}`
+`GET /api/hiecm/consent/v3/artefact/request/{consentRequestId}`
 
 Fetch all consent artefact details associated with a specific consent REQUEST-ID. By invoking this API, users can retrieve comprehensive information about all consent artefacts linked to the given REQUEST-ID, including their status, scope, and any associated conditions. This functionality is essential for ensuring that users have access to accurate and up-to-date consent artefact information, supporting secure and compliant health information exchange. The API facilitates efficient management and verification of consent artefacts, enhancing the overall integrity of the consent management process.
 
 ```bash
 curl --request GET \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/consent/v3/artefact/request/{request-id} \
+  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/artefact/request/{consentRequestId} \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -23814,7 +23814,7 @@ curl --request GET \
 
 ## Path parameters
 
-- `request-id` (string, required): Consent request id
+- `consentRequestId` (string, required): Consent request id
 
 ## Responses
 
@@ -23905,13 +23905,13 @@ Shape of the 200 response, generated from the schema. The values are placeholder
 
 # Fetch the consent artefact details associated with the artefact-ID
 
-`GET /api/hiecm/consent/v3/artefact/{artefact-id}`
+`GET /api/hiecm/consent/v3/artefact/{consentId}`
 
 Fetch the details of a consent artefact associated with a specific artefact ID. By invoking this API, users can retrieve comprehensive information about the consent artefact, including its status, scope, and any associated conditions. This functionality is essential for ensuring that users have access to accurate and up-to-date consent artefact information, supporting secure and compliant health information exchange. The API facilitates efficient management and verification of consent artefacts, enhancing the overall integrity of the consent management process.
 
 ```bash
 curl --request GET \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/consent/v3/artefact/{artefact-id} \
+  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/artefact/{consentId} \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -23932,7 +23932,7 @@ curl --request GET \
 
 ## Path parameters
 
-- `artefact-id` (string, required): Consent artefact id
+- `consentId` (string, required): Consent artefact id
 
 ## Responses
 
@@ -24027,7 +24027,7 @@ Fetch all consent artefact details for a patient. By invoking this API, users ca
 
 ```bash
 curl --request GET \
-  --url "https://abhasbx.abdm.gov.in/api/hiecm/consent/v3/artefact?limit=<LIMIT>" \
+  --url "https://dev.abdm.gov.in/api/hiecm/consent/v3/artefact?limit=<LIMIT>" \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -24152,7 +24152,7 @@ Retrieve all linked care contexts for a patient from various Health Information 
 
 ```bash
 curl --request GET \
-  --url "https://abhasbx.abdm.gov.in/api/hiecm/hip/v3/link/patient/links?limit=<LIMIT>" \
+  --url "https://dev.abdm.gov.in/api/hiecm/hip/v3/link/patient/links?limit=<LIMIT>" \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -26221,13 +26221,13 @@ curl --request POST \
 
 # Approve subscription request
 
-`POST /api/hiecm/subscription-requests/v3/{request-id}/approve`
+`POST /api/hiecm/subscription-requests/v3/{subscriptionRequestId}/approve`
 
 Be invoked by the patient or user through the Personal Health Record (PHR) application to approve a subscription request. By using this API, individuals can grant permission for the requested subscription, ensuring that they receive the desired health information services or updates. This functionality is essential for enabling users to manage their health data subscriptions effectively, ensuring they have control over the information they receive. The API supports secure and efficient approval of subscription requests, enhancing the overall user experience within the healthcare ecosystem.
 
 ```bash
 curl --request POST \
-  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/{request-id}/approve \
+  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/{subscriptionRequestId}/approve \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -26280,7 +26280,7 @@ curl --request POST \
 
 ## Path parameters
 
-- `request-id` (string, required): The subscription request id
+- `subscriptionRequestId` (string, required): The subscription request id
 
 ## Body
 
@@ -26345,13 +26345,13 @@ Shape of the 202 response, generated from the schema. The values are placeholder
 
 # Deny subscription request
 
-`POST /api/hiecm/subscription-requests/v3/{request-id}/deny`
+`POST /api/hiecm/subscription-requests/v3/{subscriptionRequestId}/deny`
 
 Be invoked by the patient or user through the Personal Health Record (PHR) application to deny a subscription request. By using this API, individuals can reject the requested subscription, ensuring that they do not receive unwanted health information services or updates. This functionality is essential for enabling users to manage their health data subscriptions effectively, maintaining control over the information they receive. The API supports secure and efficient denial of subscription requests, enhancing the overall user experience within the healthcare ecosystem.
 
 ```bash
 curl --request POST \
-  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/{request-id}/deny \
+  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/{subscriptionRequestId}/deny \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -26376,7 +26376,7 @@ curl --request POST \
 
 ## Path parameters
 
-- `request-id` (string, required): The subscription request id
+- `subscriptionRequestId` (string, required): The subscription request id
 
 ## Body
 
@@ -26511,13 +26511,13 @@ Shape of the 200 response, generated from the schema. The values are placeholder
 
 # Edit the subscription details
 
-`PUT /api/hiecm/subscription-requests/v3/patients/{subscription-id}`
+`PUT /api/hiecm/subscription-requests/v3/patients/{subscriptionID}`
 
 Edit the details of an existing subscription. By invoking this API, users can update the parameters and preferences associated with a specific subscription identified by the subscription ID.
 
 ```bash
 curl --request PUT \
-  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/patients/{subscription-id} \
+  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/patients/{subscriptionID} \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -26595,7 +26595,7 @@ curl --request PUT \
 
 ## Path parameters
 
-- `subscription-id` (string, required): The subscription id
+- `subscriptionID` (string, required): The subscription id
 
 ## Body
 
@@ -26664,13 +26664,13 @@ Shape of the 202 response, generated from the schema. The values are placeholder
 
 # Disable the subscription by subscription ID
 
-`POST /api/hiecm/subscription-requests/v3/disable/{subscription-id}`
+`POST /api/hiecm/subscription-requests/v3/disable/{subscriptionID}`
 
 Disable an existing subscription identified by the subscription ID. By invoking this API, users can deactivate the subscription, ensuring that the associated health information services or updates are no longer delivered.
 
 ```bash
 curl --request POST \
-  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/disable/{subscription-id} \
+  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/disable/{subscriptionID} \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -26691,7 +26691,7 @@ curl --request POST \
 
 ## Path parameters
 
-- `subscription-id` (string, required): The subscription id
+- `subscriptionID` (string, required): The subscription id
 
 ## Responses
 
@@ -26722,13 +26722,13 @@ Shape of the 200 response, generated from the schema. The values are placeholder
 
 # Enable the subscription by subscription ID
 
-`POST /api/hiecm/subscription-requests/v3/enable/{subscription-id}`
+`POST /api/hiecm/subscription-requests/v3/enable/{subscriptionID}`
 
 Enable an existing subscription identified by the subscription ID. By invoking this API, users can activate the subscription, ensuring that the associated health information services or updates are delivered as requested. This functionality is essential for managing subscriptions effectively, allowing users to control the activation status of their health data subscriptions. The API supports secure and efficient enablement of subscriptions, enhancing the overall user experience within the healthcare ecosystem.
 
 ```bash
 curl --request POST \
-  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/enable/{subscription-id} \
+  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/enable/{subscriptionID} \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -26749,7 +26749,7 @@ curl --request POST \
 
 ## Path parameters
 
-- `subscription-id` (string, required): The subscription id
+- `subscriptionID` (string, required): The subscription id
 
 ## Responses
 
@@ -26780,13 +26780,13 @@ Shape of the 200 response, generated from the schema. The values are placeholder
 
 # Fetch his/her subscription details by subscription REQUEST-ID
 
-`GET /api/hiecm/subscription-requests/v3/request/{request-id}`
+`GET /api/hiecm/subscription-requests/v3/request/{subscriptionRequestId}`
 
 Be invoked by the patient or user through the Personal Health Record (PHR) application to fetch their subscription details using the subscription REQUEST-ID. By using this API, individuals can retrieve comprehensive information about a specific subscription request, including its status, scope, and any associated conditions. This functionality is essential for enabling users to manage their health data subscriptions effectively, ensuring they have access to accurate and up-to-date subscription information.
 
 ```bash
 curl --request GET \
-  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/request/{request-id} \
+  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/request/{subscriptionRequestId} \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -26807,7 +26807,7 @@ curl --request GET \
 
 ## Path parameters
 
-- `request-id` (string, required): The subscription request id
+- `subscriptionRequestId` (string, required): The subscription request id
 
 ## Responses
 
@@ -26876,13 +26876,13 @@ Shape of the 200 response, generated from the schema. The values are placeholder
 
 # Fetch his/her subscription details by subscription ID
 
-`GET /api/hiecm/subscription-requests/v3/{subscription-id}`
+`GET /api/hiecm/subscription-requests/v3/{subscriptionID}`
 
 Be invoked by the patient or user through the Personal Health Record (PHR) application to fetch their subscription details using the subscription ID. By using this API, individuals can retrieve comprehensive information about a specific subscription, including its status, scope, and any associated conditions. This functionality is essential for enabling users to manage their health data subscriptions effectively, ensuring they have access to accurate and up-to-date subscription information.
 
 ```bash
 curl --request GET \
-  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/{subscription-id} \
+  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/{subscriptionID} \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -26903,7 +26903,7 @@ curl --request GET \
 
 ## Path parameters
 
-- `subscription-id` (string, required): The subscription id
+- `subscriptionID` (string, required): The subscription id
 
 ## Responses
 
@@ -27092,13 +27092,13 @@ Shape of the 200 response, generated from the schema. The values are placeholder
 
 # Get health locker settings of a patient by locker ID
 
-`GET /api/hiecm/subscription-requests/v3/patients/lockers/{lockerId}`
+`GET /api/hiecm/subscription-requests/v3/patients/lockers/{locker-id}`
 
 Retrieve the health locker settings of a patient using the locker ID. By invoking this API, users can access detailed information about the configuration and preferences of the patient’s health locker. This functionality is essential for managing and customizing the storage and access settings of health records, ensuring that patients have control over their health information. The API supports secure and efficient retrieval of health locker settings, enhancing the overall management of health data within the healthcare ecosystem.
 
 ```bash
 curl --request GET \
-  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/patients/lockers/{lockerId} \
+  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/patients/lockers/{locker-id} \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -27119,7 +27119,7 @@ curl --request GET \
 
 ## Path parameters
 
-- `lockerId` (string, required): The locker id
+- `locker-id` (string, required): The locker id
 
 ## Responses
 

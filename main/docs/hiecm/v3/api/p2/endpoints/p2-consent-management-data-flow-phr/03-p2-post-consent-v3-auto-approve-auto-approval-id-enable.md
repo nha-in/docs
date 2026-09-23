@@ -1,12 +1,12 @@
 # Enable the auto-approval policy
 
-`POST /api/hiecm/consent/v3/auto/approve/{auto-approval-id}/enable`
+`POST /api/hiecm/consent/v3/auto/approve/{consentId}/enable`
 
 Enable an existing auto-approval policy. By invoking this API, users can activate the automatic approval of consent requests for the specified Health Information User (HIU). This functionality is essential for streamlining the consent management process, allowing consent requests to be automatically approved without manual intervention. The API supports secure and compliant health information exchange, ensuring that auto-approval policies are implemented in accordance with user preferences and regulatory requirements.
 
 ```bash
 curl --request POST \
-  --url https://abhasbx.abdm.gov.in/api/hiecm/consent/v3/auto/approve/{auto-approval-id}/enable \
+  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/auto/approve/{consentId}/enable \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -27,7 +27,7 @@ curl --request POST \
 
 ## Path parameters
 
-- `auto-approval-id` (string, required): The auto approval id
+- `consentId` (string, required): The auto approval id
 
 ## Responses
 
