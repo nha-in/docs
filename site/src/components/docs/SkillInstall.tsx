@@ -155,15 +155,15 @@ function capabilities(entry: Entry) {
       label: 'Integrate',
       detail:
         (entry.operations ?? 0) > 0
-          ? `${entry.operations} operations, with their hosts, headers and the rules that hold across them.`
-          : 'No operation is recorded for this module yet.',
+          ? `${entry.operations} operations, with their hosts and headers.`
+          : 'No operation is recorded yet.',
     },
     {
       label: 'Debug',
       detail:
         (entry.codes ?? 0) > 0
-          ? `${entry.codes} recorded error codes, each with its message and what to do about it.`
-          : 'No error code is recorded for this module yet.',
+          ? `${entry.codes} error codes, each with what to do about it.`
+          : 'No error code is recorded yet.',
     },
   ];
   const named = new Map(counted.map((row) => [row.label.toLowerCase(), row]));

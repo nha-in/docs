@@ -25,9 +25,11 @@ function agent(): SupportAgent | null {
  *
  * The Markdown is the `index.md` a postbuild step writes beside every route
  * (see scripts/emit-page-markdown.mjs), which is also what Copy for LLM
- * reads. It does not exist in `npm start`, so the fetch 404s there: the
- * panel is told so with an empty `markdown` and says the page could not be
- * attached, rather than answering as though it had it.
+ * reads. It does not exist in `npm start`, where the dev server answers the
+ * fetch with its own app shell and a 200 rather than a 404. The widget
+ * refuses an HTML document as page text (isHtmlDocument in the widget's
+ * pages.ts), so the panel still says the page could not be attached rather
+ * than answering from the site's HTML.
  *
  * The site fetches rather than the widget, because the widget is a
  * standalone element that any host embeds and it has no business knowing

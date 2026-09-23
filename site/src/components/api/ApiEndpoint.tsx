@@ -22,6 +22,9 @@ export type Field = {
   /** True for identifiers ABDM takes RSA encrypted: the console encrypts the
       raw value in the browser before sending. Set by the reference generator. */
   encrypted?: boolean;
+  /** The only value the schema allows: a one value enum, or an array that must
+      carry exactly its listed values. Try it fills it in and locks it. */
+  fixed?: string | number | (string | number)[];
 };
 
 export type Operation = {

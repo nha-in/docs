@@ -31,21 +31,26 @@ type Turn struct {
 }
 
 type Case struct {
-	ID                string      `json:"id"`
-	Slice             string      `json:"slice"`
-	Class             string      `json:"class"`
-	Turns             []Turn      `json:"turns"`
-	Attachment        *Attachment `json:"attachment"`
-	Page              *Page       `json:"page"`
-	MustContain       []string    `json:"must_contain"`
-	MustNotContain    []string    `json:"must_not_contain"`
-	ExpectedSources   []string    `json:"expected_sources"`
-	ExpectedShape     string      `json:"expected_shape"`
-	ExpectedBehaviour string      `json:"expected_behaviour"`
-	DerivedFrom       *string     `json:"derived_from"`
-	SourceRow         string      `json:"source_row"`
-	CatalogueVersion  string      `json:"catalogue_version"`
-	Notes             string      `json:"notes"`
+	ID         string      `json:"id"`
+	Slice      string      `json:"slice"`
+	Class      string      `json:"class"`
+	Turns      []Turn      `json:"turns"`
+	Attachment *Attachment `json:"attachment"`
+	Page       *Page       `json:"page"`
+	// Command and Module are the command pill the reader had on and the
+	// module they chose when asked, as the panel sends them. Empty for a
+	// case asked with no command, which is every case written before them.
+	Command           string   `json:"command,omitempty"`
+	Module            string   `json:"module,omitempty"`
+	MustContain       []string `json:"must_contain"`
+	MustNotContain    []string `json:"must_not_contain"`
+	ExpectedSources   []string `json:"expected_sources"`
+	ExpectedShape     string   `json:"expected_shape"`
+	ExpectedBehaviour string   `json:"expected_behaviour"`
+	DerivedFrom       *string  `json:"derived_from"`
+	SourceRow         string   `json:"source_row"`
+	CatalogueVersion  string   `json:"catalogue_version"`
+	Notes             string   `json:"notes"`
 }
 
 var (

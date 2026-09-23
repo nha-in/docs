@@ -268,7 +268,7 @@ const MODULES = [
   {
     id: 'p2',
     slug: 'abdm-p2',
-    title: 'P2, PHR management',
+    title: 'P2, Consents Management',
     docs: '/docs/hiecm/v3/api/p2',
     spec: 'hiecm-p2.yaml',
     journey: null,
@@ -286,7 +286,7 @@ const MODULES = [
     journey: null,
     example: 'Let this user approve or deny a subscription request',
     description:
-      'Use when building, debugging or testing ABDM P3 in a PHR app: reading, approving, denying, enabling, disabling and updating the patient\'s subscriptions and subscription requests.',
+      'Use when building, debugging or testing ABDM P3 in a PHR app: reading, approving, denying, enabling, disabling and updating the patient\'s subscriptions and subscription requests, and the subscription request and notifications on the health locker side.',
     rules: [UNVERIFIED],
   },
   {
@@ -299,18 +299,6 @@ const MODULES = [
     example: 'Set up a health locker for this user',
     description:
       'Use when building, debugging or testing ABDM P4, health lockers: setting up a locker and listing the lockers and requests on an ABHA address.',
-    rules: [UNVERIFIED],
-  },
-  {
-    id: 'subscription',
-    slug: 'abdm-subscription',
-    title: 'Subscriptions',
-    docs: '/docs/hiecm/v3/api/subscription',
-    spec: 'hiecm-subscription.yaml',
-    journey: null,
-    example: 'Subscribe this HIU to changes on an ABHA address',
-    description:
-      'Use when building, debugging or testing ABDM subscriptions: subscribing an HIU to changes on an ABHA address.',
     rules: [UNVERIFIED],
   },
   {

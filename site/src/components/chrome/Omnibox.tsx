@@ -22,15 +22,17 @@ import {activePlatform, useRoutePath} from '@site/src/config/navigation';
  */
 /**
  * The openers the assistant shows on a gateway's own pages, in place of its
- * general four. A reader on HIE-CM came to do one of these two things, and
- * naming them is a better first question than any we could guess.
+ * general four. A reader on HIE-CM came to do one of these things, and naming
+ * them is a better first question than any we could guess. Each is a short
+ * pill label and the question it asks, `label | question`.
  */
 const STARTERS: Record<string, string> = {
   hiecm: [
-    'I want to create an ABHA',
-    'I want to share health records',
-    'What format does the TIMESTAMP header need?',
-    'What does ABDM-1016 mean and how do I fix it?',
+    'Create an ABHA | I want to create an ABHA',
+    'Share health records | I want to share health records',
+    'Timestamp format | What format does the TIMESTAMP header need?',
+    'Decode an error | What does ABDM-1016 mean and how do I fix it?',
+    'Learn about Ask AI | What can the Ask AI assistant do?',
   ].join('\n'),
 };
 
@@ -46,6 +48,13 @@ export default function Omnibox() {
   const mcpUrl = siteConfig.customFields?.mcpUrl as string | null;
   const pluginRepo = siteConfig.customFields?.pluginRepo as string;
   const support = useBaseUrl('/docs/support');
+  // Where the panel finds this site's pages: the origin the reader actually
+  // has open. The configured url is right in production and wrong on a
+  // preview or a local run, where it points at a site that is not this one,
+  // so it only stands in for the server render, which has no window.
+  const base = siteConfig.baseUrl.replace(/\/$/, '');
+  const [docsOrigin, setDocsOrigin] = React.useState(siteConfig.url + base);
+  React.useEffect(() => setDocsOrigin(window.location.origin + base), [base]);
   const history = useHistory();
   const box = React.useRef<HTMLDivElement>(null);
   const panel = React.useRef<HTMLDivElement>(null);
@@ -294,7 +303,7 @@ export default function Omnibox() {
       <abdm-support-agent
         {...(windowSize === 'mobile' ? {launcher: 'none'} : {})}
         {...(chatUrl ? {'api-base': chatUrl} : {})}
-        docs-origin={siteConfig.url + siteConfig.baseUrl.replace(/\/$/, '')}
+        docs-origin={docsOrigin}
         {...(mcpUrl ? {'mcp-url': mcpUrl} : {})}
         plugin-repo={pluginRepo}
         {...(starters ? {starters} : {})}

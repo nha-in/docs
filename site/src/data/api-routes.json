@@ -422,102 +422,6 @@
     "callbacks": []
   },
   {
-    "key": "certs",
-    "hosts": [
-      "dev.abdm.gov.in",
-      "apis.abdm.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "gateway_get_gateway_v3_certs",
-    "module": "Gateway session",
-    "moduleDir": "gateway",
-    "method": "GET",
-    "path": "/api/hiecm/gateway/v3/certs",
-    "summary": "This API is invoked to get the certificate information.",
-    "route": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/03-gateway-get-gateway-v3-certs",
-    "callbacks": []
-  },
-  {
-    "key": "govt-programs",
-    "hosts": [
-      "dev.abdm.gov.in",
-      "apis.abdm.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "gateway_get_gateway_v3_govt_programs",
-    "module": "Gateway session",
-    "moduleDir": "gateway",
-    "method": "GET",
-    "path": "/api/hiecm/gateway/v3/govt-programs",
-    "summary": "This API is invoked to fetch the list of govt programs.",
-    "route": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/07-gateway-get-gateway-v3-govt-programs",
-    "callbacks": []
-  },
-  {
-    "key": "health-lockers",
-    "hosts": [
-      "dev.abdm.gov.in",
-      "apis.abdm.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "gateway_get_gateway_v3_health_lockers",
-    "module": "Gateway session",
-    "moduleDir": "gateway",
-    "method": "GET",
-    "path": "/api/hiecm/gateway/v3/health-lockers",
-    "summary": "This API is invoked to fetch the record with health locker enabled provider details.",
-    "route": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/08-gateway-get-gateway-v3-health-lockers",
-    "callbacks": []
-  },
-  {
-    "key": "providers",
-    "hosts": [
-      "dev.abdm.gov.in",
-      "apis.abdm.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "gateway_get_gateway_v3_providers",
-    "module": "Gateway session",
-    "moduleDir": "gateway",
-    "method": "GET",
-    "path": "/api/hiecm/gateway/v3/providers",
-    "summary": "This API is invoked to fetch the list of providers filtered by name.",
-    "route": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/05-gateway-get-gateway-v3-providers",
-    "callbacks": []
-  },
-  {
-    "key": "providers/{provider-id}",
-    "hosts": [
-      "dev.abdm.gov.in",
-      "apis.abdm.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "gateway_get_gateway_v3_providers_provider_id",
-    "module": "Gateway session",
-    "moduleDir": "gateway",
-    "method": "GET",
-    "path": "/api/hiecm/gateway/v3/providers/{provider-id}",
-    "summary": "This API is invoked to fetch the record for provider details for requested provider id.",
-    "route": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/06-gateway-get-gateway-v3-providers-provider-id",
-    "callbacks": []
-  },
-  {
-    "key": ".well-known/openid-configuration",
-    "hosts": [
-      "dev.abdm.gov.in",
-      "apis.abdm.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "gateway_get_gateway_v3_well_known_openid_configuration",
-    "module": "Gateway session",
-    "moduleDir": "gateway",
-    "method": "GET",
-    "path": "/api/hiecm/gateway/v3/.well-known/openid-configuration",
-    "summary": "This API is invoked to get the open id configuration.",
-    "route": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/02-gateway-get-gateway-v3-well-known-openid-configuration",
-    "callbacks": []
-  },
-  {
     "key": "bridge/url",
     "hosts": [
       "dev.abdm.gov.in",
@@ -547,22 +451,6 @@
     "path": "/api/hiecm/gateway/v3/sessions",
     "summary": "This API is invoked to generate access token.",
     "route": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions",
-    "callbacks": []
-  },
-  {
-    "key": "bridge-service",
-    "hosts": [
-      "dev.abdm.gov.in",
-      "apis.abdm.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "gateway_put_gateway_v3_bridge_service",
-    "module": "Gateway session",
-    "moduleDir": "gateway",
-    "method": "PUT",
-    "path": "/api/hiecm/gateway/v3/bridge-service",
-    "summary": "v3/gateway/bridge-service",
-    "route": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/04-gateway-put-gateway-v3-bridge-service",
     "callbacks": []
   },
   {
@@ -5025,7 +4913,7 @@
     "method": "POST",
     "path": "/abha/api/v3/profile/account/request/emailVerificationLink",
     "summary": "Email Verification Link",
-    "route": "/docs/hiecm/v3/api/p1/endpoints/p1-post-v3-profile-account-request-emailverificationlink",
+    "route": "/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-number-aadhaar-otp/05-p1-post-v3-profile-account-request-emailverificationlink",
     "callbacks": []
   },
   {
@@ -5036,7 +4924,7 @@
     ],
     "kind": "operation",
     "operationId": "p2_get_consent_v3_artefact",
-    "module": "P2 Management",
+    "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "GET",
     "path": "/api/hiecm/consent/v3/artefact",
@@ -5052,7 +4940,7 @@
     ],
     "kind": "operation",
     "operationId": "p2_get_consent_v3_artefact_artefact_id",
-    "module": "P2 Management",
+    "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "GET",
     "path": "/api/hiecm/consent/v3/artefact/{artefact-id}",
@@ -5068,7 +4956,7 @@
     ],
     "kind": "operation",
     "operationId": "p2_get_consent_v3_artefact_request_request_id",
-    "module": "P2 Management",
+    "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "GET",
     "path": "/api/hiecm/consent/v3/artefact/request/{request-id}",
@@ -5084,7 +4972,7 @@
     ],
     "kind": "operation",
     "operationId": "p2_get_consent_v3_request",
-    "module": "P2 Management",
+    "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "GET",
     "path": "/api/hiecm/consent/v3/request",
@@ -5100,12 +4988,60 @@
     ],
     "kind": "operation",
     "operationId": "p2_get_consent_v3_request_request_id",
-    "module": "P2 Management",
+    "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "GET",
     "path": "/api/hiecm/consent/v3/request/{request-id}",
     "summary": "This is ABDM HIE-CM API called to get the consent request details by request id.",
     "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/05-p2-get-consent-v3-request-request-id",
+    "callbacks": []
+  },
+  {
+    "key": "govt-programs",
+    "hosts": [
+      "abhasbx.abdm.gov.in",
+      "dev.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "p2_get_gateway_v3_govt_programs",
+    "module": "P2 Consents Management",
+    "moduleDir": "p2",
+    "method": "GET",
+    "path": "/api/hiecm/gateway/v3/govt-programs",
+    "summary": "This API is invoked to fetch the list of govt programs.",
+    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/09-p2-get-gateway-v3-govt-programs",
+    "callbacks": []
+  },
+  {
+    "key": "providers",
+    "hosts": [
+      "abhasbx.abdm.gov.in",
+      "dev.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "p2_get_gateway_v3_providers",
+    "module": "P2 Consents Management",
+    "moduleDir": "p2",
+    "method": "GET",
+    "path": "/api/hiecm/gateway/v3/providers",
+    "summary": "This API is invoked to fetch the list of providers filtered by name.",
+    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/01-p2-get-gateway-v3-providers",
+    "callbacks": []
+  },
+  {
+    "key": "providers/{provider-id}",
+    "hosts": [
+      "abhasbx.abdm.gov.in",
+      "dev.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "p2_get_gateway_v3_providers_provider_id",
+    "module": "P2 Consents Management",
+    "moduleDir": "p2",
+    "method": "GET",
+    "path": "/api/hiecm/gateway/v3/providers/{provider-id}",
+    "summary": "This API is invoked to fetch the record for provider details for requested provider id.",
+    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/02-p2-get-gateway-v3-providers-provider-id",
     "callbacks": []
   },
   {
@@ -5116,7 +5052,7 @@
     ],
     "kind": "operation",
     "operationId": "p2_get_hip_v3_link_patient_links",
-    "module": "P2 Management",
+    "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "GET",
     "path": "/api/hiecm/hip/v3/link/patient/links",
@@ -5132,11 +5068,11 @@
     ],
     "kind": "operation",
     "operationId": "p2_get_patient_share_v3_profile_gettokendetails",
-    "module": "P2 Management",
+    "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "GET",
     "path": "/api/hiecm/patient-share/v3/profile/getTokenDetails",
-    "summary": "This API will be invoked to get the historical token numbers of the patient",
+    "summary": "OPD Token History",
     "route": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-hiecm-patient-share-phr/03-p2-get-patient-share-v3-profile-gettokendetails",
     "callbacks": []
   },
@@ -5148,7 +5084,7 @@
     ],
     "kind": "operation",
     "operationId": "p2_get_v3_phr_app_login_profile",
-    "module": "P2 Management",
+    "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "GET",
     "path": "/abha/api/v3/phr/app/login/profile",
@@ -5164,7 +5100,7 @@
     ],
     "kind": "operation",
     "operationId": "p2_get_v3_phr_app_login_profile_phrcard",
-    "module": "P2 Management",
+    "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "GET",
     "path": "/abha/api/v3/phr/app/login/profile/phrCard",
@@ -5180,7 +5116,7 @@
     ],
     "kind": "operation",
     "operationId": "p2_get_v3_phr_app_login_profile_qrcode",
-    "module": "P2 Management",
+    "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "GET",
     "path": "/abha/api/v3/phr/app/login/profile/qrCode",
@@ -5196,7 +5132,7 @@
     ],
     "kind": "operation",
     "operationId": "p2_get_v3_phr_app_login_profile_request_logout",
-    "module": "P2 Management",
+    "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "GET",
     "path": "/abha/api/v3/phr/app/login/profile/request/logout",
@@ -5212,7 +5148,7 @@
     ],
     "kind": "operation",
     "operationId": "p2_get_v3_phr_app_login_profile_request_token",
-    "module": "P2 Management",
+    "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "GET",
     "path": "/abha/api/v3/phr/app/login/profile/request/token",
@@ -5228,7 +5164,7 @@
     ],
     "kind": "operation",
     "operationId": "p2_get_v3_phr_app_login_profile_switch_profile",
-    "module": "P2 Management",
+    "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "GET",
     "path": "/abha/api/v3/phr/app/login/profile/switch-profile",
@@ -5244,7 +5180,7 @@
     ],
     "kind": "operation",
     "operationId": "p2_post_consent_v3_auto_approve",
-    "module": "P2 Management",
+    "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "POST",
     "path": "/api/hiecm/consent/v3/auto/approve",
@@ -5260,7 +5196,7 @@
     ],
     "kind": "operation",
     "operationId": "p2_post_consent_v3_auto_approve_auto_approval_id_disable",
-    "module": "P2 Management",
+    "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "POST",
     "path": "/api/hiecm/consent/v3/auto/approve/{auto-approval-id}/disable",
@@ -5276,7 +5212,7 @@
     ],
     "kind": "operation",
     "operationId": "p2_post_consent_v3_auto_approve_auto_approval_id_enable",
-    "module": "P2 Management",
+    "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "POST",
     "path": "/api/hiecm/consent/v3/auto/approve/{auto-approval-id}/enable",
@@ -5292,7 +5228,7 @@
     ],
     "kind": "operation",
     "operationId": "p2_post_consent_v3_request_request_id_approve",
-    "module": "P2 Management",
+    "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "POST",
     "path": "/api/hiecm/consent/v3/request/{request-id}/approve",
@@ -5308,7 +5244,7 @@
     ],
     "kind": "operation",
     "operationId": "p2_post_consent_v3_request_request_id_deny",
-    "module": "P2 Management",
+    "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "POST",
     "path": "/api/hiecm/consent/v3/request/{request-id}/deny",
@@ -5324,7 +5260,7 @@
     ],
     "kind": "operation",
     "operationId": "p2_post_consent_v3_revoke",
-    "module": "P2 Management",
+    "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "POST",
     "path": "/api/hiecm/consent/v3/revoke",
@@ -5340,11 +5276,11 @@
     ],
     "kind": "operation",
     "operationId": "p2_post_patient_share_v3_share",
-    "module": "P2 Management",
+    "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "POST",
     "path": "/api/hiecm/patient-share/v3/share",
-    "summary": "This API will be invoked from the PHR-HIU application for sharing the patient/user profile with the HMIS/LIMS.",
+    "summary": "OPD token generation",
     "route": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-hiecm-patient-share-phr/01-p2-post-patient-share-v3-share",
     "callbacks": [
       {
@@ -5364,7 +5300,7 @@
     ],
     "kind": "operation",
     "operationId": "p2_post_user_initiated_linking_v3_link_care_context_confirm",
-    "module": "P2 Management",
+    "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "POST",
     "path": "/api/hiecm/user-initiated-linking/v3/link/care-context/confirm",
@@ -5388,7 +5324,7 @@
     ],
     "kind": "operation",
     "operationId": "p2_post_user_initiated_linking_v3_link_care_context_init",
-    "module": "P2 Management",
+    "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "POST",
     "path": "/api/hiecm/user-initiated-linking/v3/link/care-context/init",
@@ -5412,7 +5348,7 @@
     ],
     "kind": "operation",
     "operationId": "p2_post_user_initiated_linking_v3_patient_care_context_discover",
-    "module": "P2 Management",
+    "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "POST",
     "path": "/api/hiecm/user-initiated-linking/v3/patient/care-context/discover",
@@ -5436,7 +5372,7 @@
     ],
     "kind": "callback",
     "operationId": "p2_post_v3_hiu_patient_care_context_on_confirm",
-    "module": "P2 Management",
+    "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "POST",
     "path": "/api/v3/hiu/patient/care-context/on-confirm",
@@ -5452,7 +5388,7 @@
     ],
     "kind": "callback",
     "operationId": "p2_post_v3_hiu_patient_care_context_on_discover",
-    "module": "P2 Management",
+    "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "POST",
     "path": "/api/v3/hiu/patient/care-context/on-discover",
@@ -5468,7 +5404,7 @@
     ],
     "kind": "callback",
     "operationId": "p2_post_v3_hiu_patient_care_context_on_init",
-    "module": "P2 Management",
+    "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "POST",
     "path": "/api/v3/hiu/patient/care-context/on-init",
@@ -5484,7 +5420,7 @@
     ],
     "kind": "callback",
     "operationId": "p2_post_v3_hiu_patient_on_share",
-    "module": "P2 Management",
+    "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "POST",
     "path": "/api/v3/hiu/patient/on-share",
@@ -5500,7 +5436,7 @@
     ],
     "kind": "operation",
     "operationId": "p2_post_v3_phr_app_login_profile_link",
-    "module": "P2 Management",
+    "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "POST",
     "path": "/abha/api/v3/phr/app/login/profile/link",
@@ -5516,12 +5452,12 @@
     ],
     "kind": "operation",
     "operationId": "p2_post_v3_phr_app_login_profile_request_otp",
-    "module": "P2 Management",
+    "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "POST",
     "path": "/abha/api/v3/phr/app/login/profile/request/otp",
-    "summary": "4 flows: Send Otp - Update Email, Send Otp - Update Mobile, Send ABHA Otp - Link-DeLink, Send AADHAAR Otp - Link-DeLink",
-    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-update-email/01-p2-post-v3-phr-app-login-profile-request-otp",
+    "summary": "3 flows: Send Otp - Update Mobile, Send ABHA Otp - Link-DeLink, Send AADHAAR Otp - Link-DeLink",
+    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/01-p2-post-v3-phr-app-login-profile-request-otp",
     "callbacks": []
   },
   {
@@ -5532,7 +5468,7 @@
     ],
     "kind": "operation",
     "operationId": "p2_post_v3_phr_app_login_profile_updateprofile",
-    "module": "P2 Management",
+    "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "POST",
     "path": "/abha/api/v3/phr/app/login/profile/updateProfile",
@@ -5548,12 +5484,12 @@
     ],
     "kind": "operation",
     "operationId": "p2_post_v3_phr_app_login_profile_verify",
-    "module": "P2 Management",
+    "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "POST",
     "path": "/abha/api/v3/phr/app/login/profile/verify",
-    "summary": "5 flows: Verify Otp - Update Email, Verify Otp - Update Mobile, Verify Password - Update Password, Verify ABHA Otp - Link-DeLink, Verify AADHAAR Otp - Link-DeLink",
-    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-update-email/02-p2-post-v3-phr-app-login-profile-verify",
+    "summary": "4 flows: Verify Otp - Update Mobile, Verify Password - Update Password, Verify ABHA Otp - Link-DeLink, Verify AADHAAR Otp - Link-DeLink",
+    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/02-p2-post-v3-phr-app-login-profile-verify",
     "callbacks": []
   },
   {
@@ -5564,7 +5500,7 @@
     ],
     "kind": "operation",
     "operationId": "p2_post_v3_phr_app_login_profile_verify_switch_profile_user",
-    "module": "P2 Management",
+    "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "POST",
     "path": "/abha/api/v3/phr/app/login/profile/verify/switch-profile/user",
@@ -5648,6 +5584,75 @@
     "callbacks": []
   },
   {
+    "key": "subscription-requests/hiu/care-context/on-notify",
+    "hosts": [
+      "dev.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "p3_post_subscription_requests_v3_hiu_care_context_on_notify",
+    "module": "P3 Subscription",
+    "moduleDir": "p3",
+    "method": "POST",
+    "path": "/api/hiecm/subscription-requests/v3/hiu/care-context/on-notify",
+    "summary": "This API will be invoked by the HIU to respond to /api/v3/hiu/subscription/notify.",
+    "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/06-p3-post-subscription-requests-v3-hiu-care-context-on-notify",
+    "callbacks": [
+      {
+        "method": "POST",
+        "path": "/api/v3/hiu/subscription/notify",
+        "summary": "This is a callback api to notify the subscribed HIU when a care context is linked or updated for a patient.",
+        "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/05-p3-post-v3-hiu-subscription-notify",
+        "relation": "answered-by"
+      }
+    ]
+  },
+  {
+    "key": "subscription-requests/hiu/on-notify",
+    "hosts": [
+      "dev.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "p3_post_subscription_requests_v3_hiu_on_notify",
+    "module": "P3 Subscription",
+    "moduleDir": "p3",
+    "method": "POST",
+    "path": "/api/hiecm/subscription-requests/v3/hiu/on-notify",
+    "summary": "This API will be invoked by the HIU to respond to /subscription-requests/hiu/notify.",
+    "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/04-p3-post-subscription-requests-v3-hiu-on-notify",
+    "callbacks": [
+      {
+        "method": "POST",
+        "path": "/api/v3/hiu/subscription-requests/hiu/notify",
+        "summary": "This is a callback api when a subscription request is approved or denied.",
+        "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/03-p3-post-v3-hiu-subscription-requests-hiu-notify",
+        "relation": "answered-by"
+      }
+    ]
+  },
+  {
+    "key": "subscription-requests/init",
+    "hosts": [
+      "dev.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "p3_post_subscription_requests_v3_init",
+    "module": "P3 Subscription",
+    "moduleDir": "p3",
+    "method": "POST",
+    "path": "/api/hiecm/subscription-requests/v3/init",
+    "summary": "This API will be invoked by the HIU/patient/user to initiate subscription request.",
+    "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/01-p3-post-subscription-requests-v3-init",
+    "callbacks": [
+      {
+        "method": "POST",
+        "path": "/api/v3/hiu/hiecm/subscription-requests/on-init",
+        "summary": "This is a callback api for /api/hiecm/subscription-requests/v3/init.",
+        "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/02-p3-post-v3-hiu-hiecm-subscription-requests-on-init",
+        "relation": "triggered-by"
+      }
+    ]
+  },
+  {
     "key": "subscription-requests/{request-id}/approve",
     "hosts": [
       "dev.abdm.gov.in"
@@ -5678,6 +5683,51 @@
     "callbacks": []
   },
   {
+    "key": "hiu/subscription-requests/on-init",
+    "hosts": [
+      "dev.abdm.gov.in"
+    ],
+    "kind": "callback",
+    "operationId": "p3_post_v3_hiu_hiecm_subscription_requests_on_init",
+    "module": "P3 Subscription",
+    "moduleDir": "p3",
+    "method": "POST",
+    "path": "/api/v3/hiu/hiecm/subscription-requests/on-init",
+    "summary": "This is a callback api for /api/hiecm/subscription-requests/v3/init.",
+    "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/02-p3-post-v3-hiu-hiecm-subscription-requests-on-init",
+    "callbacks": []
+  },
+  {
+    "key": "hiu/subscription/notify",
+    "hosts": [
+      "dev.abdm.gov.in"
+    ],
+    "kind": "callback",
+    "operationId": "p3_post_v3_hiu_subscription_notify",
+    "module": "P3 Subscription",
+    "moduleDir": "p3",
+    "method": "POST",
+    "path": "/api/v3/hiu/subscription/notify",
+    "summary": "This is a callback api to notify the subscribed HIU when a care context is linked or updated for a patient.",
+    "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/05-p3-post-v3-hiu-subscription-notify",
+    "callbacks": []
+  },
+  {
+    "key": "hiu/subscription-requests/hiu/notify",
+    "hosts": [
+      "dev.abdm.gov.in"
+    ],
+    "kind": "callback",
+    "operationId": "p3_post_v3_hiu_subscription_requests_hiu_notify",
+    "module": "P3 Subscription",
+    "moduleDir": "p3",
+    "method": "POST",
+    "path": "/api/v3/hiu/subscription-requests/hiu/notify",
+    "summary": "This is a callback api when a subscription request is approved or denied.",
+    "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/03-p3-post-v3-hiu-subscription-requests-hiu-notify",
+    "callbacks": []
+  },
+  {
     "key": "subscription-requests/patients/{subscription-id}",
     "hosts": [
       "dev.abdm.gov.in"
@@ -5690,6 +5740,21 @@
     "path": "/api/hiecm/subscription-requests/v3/patients/{subscription-id}",
     "summary": "This API will be invoked to edit the subscription details.",
     "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/04-p3-put-subscription-requests-v3-patients-subscription-id",
+    "callbacks": []
+  },
+  {
+    "key": "health-lockers",
+    "hosts": [
+      "dev.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "p4_get_gateway_v3_health_lockers",
+    "module": "P4 Locker",
+    "moduleDir": "p4",
+    "method": "GET",
+    "path": "/api/hiecm/gateway/v3/health-lockers",
+    "summary": "This API is invoked to fetch the record with health locker enabled provider details.",
+    "route": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/05-p4-get-gateway-v3-health-lockers",
     "callbacks": []
   },
   {
@@ -7045,126 +7110,6 @@
     "path": "/v1/status",
     "summary": "Receive status check",
     "route": "/docs/nhcx/v1/api/status/endpoints/status-webhook-v1-status",
-    "callbacks": []
-  },
-  {
-    "key": "subscription-requests/hiu/care-context/on-notify",
-    "hosts": [
-      "dev.abdm.gov.in",
-      "apis.abdm.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "subscription_post_subscription_requests_v3_hiu_care_conte_96bc45",
-    "module": "Subscriptions",
-    "moduleDir": "subscription",
-    "method": "POST",
-    "path": "/api/hiecm/subscription-requests/v3/hiu/care-context/on-notify",
-    "summary": "This API will be invoked by the HIU to respond to /api/v3/hiu/subscription/notify.",
-    "route": "/docs/hiecm/v3/api/subscription/endpoints/subscription-subscription-hiu/06-subscription-post-subscription-requests-v3-hiu-care-conte-96bc45",
-    "callbacks": [
-      {
-        "method": "POST",
-        "path": "/api/v3/hiu/subscription/notify",
-        "summary": "This is a callback api to notify the subscribed HIU when a care context is linked or updated for a patient.",
-        "route": "/docs/hiecm/v3/api/subscription/endpoints/subscription-subscription-hiu/05-subscription-post-v3-hiu-subscription-notify",
-        "relation": "answered-by"
-      }
-    ]
-  },
-  {
-    "key": "subscription-requests/hiu/on-notify",
-    "hosts": [
-      "dev.abdm.gov.in",
-      "apis.abdm.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "subscription_post_subscription_requests_v3_hiu_on_notify",
-    "module": "Subscriptions",
-    "moduleDir": "subscription",
-    "method": "POST",
-    "path": "/api/hiecm/subscription-requests/v3/hiu/on-notify",
-    "summary": "This API will be invoked by the HIU to respond to /subscription-requests/hiu/notify.",
-    "route": "/docs/hiecm/v3/api/subscription/endpoints/subscription-subscription-hiu/04-subscription-post-subscription-requests-v3-hiu-on-notify",
-    "callbacks": [
-      {
-        "method": "POST",
-        "path": "/api/v3/hiu/subscription-requests/hiu/notify",
-        "summary": "This is a callback api when a subscription request is approved or denied.",
-        "route": "/docs/hiecm/v3/api/subscription/endpoints/subscription-subscription-hiu/03-subscription-post-v3-hiu-subscription-requests-hiu-notify",
-        "relation": "answered-by"
-      }
-    ]
-  },
-  {
-    "key": "subscription-requests/init",
-    "hosts": [
-      "dev.abdm.gov.in",
-      "apis.abdm.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "subscription_post_subscription_requests_v3_init",
-    "module": "Subscriptions",
-    "moduleDir": "subscription",
-    "method": "POST",
-    "path": "/api/hiecm/subscription-requests/v3/init",
-    "summary": "This API will be invoked by the HIU/patient/user to initiate subscription request.",
-    "route": "/docs/hiecm/v3/api/subscription/endpoints/subscription-subscription-hiu/01-subscription-post-subscription-requests-v3-init",
-    "callbacks": [
-      {
-        "method": "POST",
-        "path": "/api/v3/hiu/hiecm/subscription-requests/on-init",
-        "summary": "This is a callback api for /api/hiecm/subscription-requests/v3/init.",
-        "route": "/docs/hiecm/v3/api/subscription/endpoints/subscription-subscription-hiu/02-subscription-post-v3-hiu-hiecm-subscription-requests-on-init",
-        "relation": "triggered-by"
-      }
-    ]
-  },
-  {
-    "key": "hiu/subscription-requests/on-init",
-    "hosts": [
-      "dev.abdm.gov.in",
-      "apis.abdm.gov.in"
-    ],
-    "kind": "callback",
-    "operationId": "subscription_post_v3_hiu_hiecm_subscription_requests_on_init",
-    "module": "Subscriptions",
-    "moduleDir": "subscription",
-    "method": "POST",
-    "path": "/api/v3/hiu/hiecm/subscription-requests/on-init",
-    "summary": "This is a callback api for /api/hiecm/subscription-requests/v3/init.",
-    "route": "/docs/hiecm/v3/api/subscription/endpoints/subscription-subscription-hiu/02-subscription-post-v3-hiu-hiecm-subscription-requests-on-init",
-    "callbacks": []
-  },
-  {
-    "key": "hiu/subscription/notify",
-    "hosts": [
-      "dev.abdm.gov.in",
-      "apis.abdm.gov.in"
-    ],
-    "kind": "callback",
-    "operationId": "subscription_post_v3_hiu_subscription_notify",
-    "module": "Subscriptions",
-    "moduleDir": "subscription",
-    "method": "POST",
-    "path": "/api/v3/hiu/subscription/notify",
-    "summary": "This is a callback api to notify the subscribed HIU when a care context is linked or updated for a patient.",
-    "route": "/docs/hiecm/v3/api/subscription/endpoints/subscription-subscription-hiu/05-subscription-post-v3-hiu-subscription-notify",
-    "callbacks": []
-  },
-  {
-    "key": "hiu/subscription-requests/hiu/notify",
-    "hosts": [
-      "dev.abdm.gov.in",
-      "apis.abdm.gov.in"
-    ],
-    "kind": "callback",
-    "operationId": "subscription_post_v3_hiu_subscription_requests_hiu_notify",
-    "module": "Subscriptions",
-    "moduleDir": "subscription",
-    "method": "POST",
-    "path": "/api/v3/hiu/subscription-requests/hiu/notify",
-    "summary": "This is a callback api when a subscription request is approved or denied.",
-    "route": "/docs/hiecm/v3/api/subscription/endpoints/subscription-subscription-hiu/03-subscription-post-v3-hiu-subscription-requests-hiu-notify",
     "callbacks": []
   },
   {

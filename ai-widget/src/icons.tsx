@@ -1,5 +1,5 @@
 /**
- * The eight marks the panel uses, inlined from Lucide (ISC) rather than
+ * The marks the panel uses, inlined from Lucide (ISC) rather than
  * pulled in as a dependency: an icon package in a script that embeds on other
  * people's pages is 1500 icons shipped to draw seven.
  */
@@ -18,6 +18,13 @@ export const ArrowUp = () => (
   <svg {...base} width="16" height="16">
     <path d="m5 12 7-7 7 7" />
     <path d="M12 19V5" />
+  </svg>
+);
+
+export const Clock = () => (
+  <svg {...base} width="14" height="14">
+    <circle cx="12" cy="12" r="10" />
+    <path d="M12 6v6l4 2" />
   </svg>
 );
 
@@ -67,5 +74,50 @@ export const Paperclip = () => (
   <svg {...base} width="16" height="16">
     <path d="M13.234 20.252 21 12.3" />
     <path d="m16 6-8.414 8.586a2 2 0 0 0 0 2.828 2 2 0 0 0 2.828 0l8.414-8.586a4 4 0 0 0 0-5.656 4 4 0 0 0-5.656 0l-8.415 8.585a6 6 0 1 0 8.486 8.486" />
+  </svg>
+);
+
+export const Plus = () => (
+  <svg {...base} width="16" height="16">
+    <path d="M5 12h14" />
+    <path d="M12 5v14" />
+  </svg>
+);
+
+export const FileText = () => (
+  <svg {...base} width="14" height="14">
+    <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
+    <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+    <path d="M16 13H8" />
+    <path d="M16 17H8" />
+  </svg>
+);
+
+export const Upload = () => (
+  <svg {...base} width="14" height="14">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+    <path d="m17 8-5-5-5 5" />
+    <path d="M12 3v12" />
+  </svg>
+);
+
+export const Search = () => (
+  <svg {...base} width="14" height="14">
+    <circle cx="11" cy="11" r="8" />
+    <path d="m21 21-4.3-4.3" />
+  </svg>
+);
+
+export const Trash = () => (
+  <svg {...base} width="14" height="14">
+    <path d="M3 6h18" />
+    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+    <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+  </svg>
+);
+
+export const ChevronLeft = () => (
+  <svg {...base} width="14" height="14">
+    <path d="m15 18-6-6 6-6" />
   </svg>
 );

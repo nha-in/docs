@@ -25,7 +25,7 @@ What it cannot do yet matters as much. Read **Before anything else** below befor
 
 - **Scaffold.** Survey the codebase first when one exists, then build it flow by flow against the sandbox, as a loop that ends when the step's exit condition holds rather than on a call returning 200. [references/scaffold.md](references/scaffold.md)
 - **Design.** What the journey around the calls has to do, and what a screen is forbidden to claim. [references/design.md](references/design.md)
-- **Integrate.** 132 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
+- **Integrate.** 125 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
 - **Debug.** The loop from a failed call to a named fix, and 17 error codes from the specification's examples. [references/debug.md](references/debug.md)
 
 This file is the map. Each line above is a file beside it, opened one at a time rather than read through.

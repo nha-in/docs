@@ -8,7 +8,7 @@ The calls themselves: where they live, what they need in their headers, and one 
 - `https://apis.abdm.gov.in` ABDM gateway, production
 ## Endpoints
 
-31 operations, grouped by the journey they belong to.
+24 operations, grouped by the journey they belong to.
 
 ### Other operations
 
@@ -17,16 +17,9 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `POST` | `/api/hiecm/consent/v3/request/hip/on-notify` | Acknowledge the notification sent when a consent request is approved/revoked/ex… |
 | `POST` | `/api/hiecm/data-flow/v3/health-information/hip/on-request` | Health information data request acknowledgement from HIP. |
 | `POST` | `/api/hiecm/data-flow/v3/health-information/notify` | Notifications corresponding to events during data flow |
-| `GET` | `/api/hiecm/gateway/v3/.well-known/openid-configuration` | Get the open ID configuration. |
-| `PUT` | `/api/hiecm/gateway/v3/bridge-service` | v3/gateway/bridge-service |
 | `GET` | `/api/hiecm/gateway/v3/bridge-service/serviceId/{service-id}` | Fetch the details of a service ID. |
 | `GET` | `/api/hiecm/gateway/v3/bridge-services` | Fetch the service ids registered against a bridge. |
 | `PATCH` | `/api/hiecm/gateway/v3/bridge/url` | Update the bridge URL. |
-| `GET` | `/api/hiecm/gateway/v3/certs` | Get the certificate information. |
-| `GET` | `/api/hiecm/gateway/v3/govt-programs` | Fetch the list of govt programmes. |
-| `GET` | `/api/hiecm/gateway/v3/health-lockers` | Fetch the record with health locker enabled provider details. |
-| `GET` | `/api/hiecm/gateway/v3/providers` | Fetch the list of providers filtered by name. |
-| `GET` | `/api/hiecm/gateway/v3/providers/{provider-id}` | Fetch the record for provider details for requested provider ID. |
 | `POST` | `/api/hiecm/gateway/v3/sessions` | Generate access token. |
 | `POST` | `/api/hiecm/hip/v3/link/carecontext` | Perform HIP initiated linking. |
 | `POST` | `/api/hiecm/hip/v3/link/context/notify` | Notify CM about any update on the already linked care context for a patient. |
@@ -54,6 +47,7 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `X-CM-ID` | Suffix of the consent manager to which the request was intended |
 | `X-HIP-ID` | Identifier of the health information provider to which the request was intended |
 | `X-LINK-TOKEN` | JWT Authentication token which was issued by ABDM after successful validation of username and password |
+| `X-HIU-ID` | Identifier of the health information user to which the request was intended |
 ## A request, in full
 
 ```bash

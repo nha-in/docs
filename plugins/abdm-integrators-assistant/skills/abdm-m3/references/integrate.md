@@ -8,7 +8,7 @@ The calls themselves: where they live, what they need in their headers, and one 
 - `https://apis.abdm.gov.in` ABDM gateway, production
 ## Endpoints
 
-23 operations, grouped by the journey they belong to.
+16 operations, grouped by the journey they belong to.
 
 ### Other operations
 
@@ -21,16 +21,9 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `POST` | `/api/hiecm/data-flow/v3/health-information/notify` | Notifications corresponding to events during data flow |
 | `POST` | `/api/hiecm/data-flow/v3/health-information/request` | Health information data request from HIU. |
 | `GET` | `/api/hiecm/data-flow/v3/health-information/request/status/{transaction-id}` | Get the current status of the Health Information Request. |
-| `GET` | `/api/hiecm/gateway/v3/.well-known/openid-configuration` | Get the open ID configuration. |
-| `PUT` | `/api/hiecm/gateway/v3/bridge-service` | v3/gateway/bridge-service |
 | `GET` | `/api/hiecm/gateway/v3/bridge-service/serviceId/{service-id}` | Fetch the details of a service ID. |
 | `GET` | `/api/hiecm/gateway/v3/bridge-services` | Fetch the service ids registered against a bridge. |
 | `PATCH` | `/api/hiecm/gateway/v3/bridge/url` | Update the bridge URL. |
-| `GET` | `/api/hiecm/gateway/v3/certs` | Get the certificate information. |
-| `GET` | `/api/hiecm/gateway/v3/govt-programs` | Fetch the list of govt programmes. |
-| `GET` | `/api/hiecm/gateway/v3/health-lockers` | Fetch the record with health locker enabled provider details. |
-| `GET` | `/api/hiecm/gateway/v3/providers` | Fetch the list of providers filtered by name. |
-| `GET` | `/api/hiecm/gateway/v3/providers/{provider-id}` | Fetch the record for provider details for requested provider ID. |
 | `POST` | `/api/hiecm/gateway/v3/sessions` | Generate access token. |
 | `POST` | `/api/v3/hiu/consent/on-fetch` | This is a callback API called by CM to provide fetched consent artefact details… |
 | `POST` | `/api/v3/hiu/consent/request/notify` | This is a callback API to notify HIU when consent is APPROVED, DENIED or REVOKE… |

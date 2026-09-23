@@ -36,7 +36,7 @@ Generated from the specifications. Every scheme and header below is declared in 
 
 **bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
 
-## P2 Management
+## P2 Consents Management
 
 **bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
 
@@ -45,10 +45,6 @@ Generated from the specifications. Every scheme and header below is declared in 
 **bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
 
 ## P4 Locker
-
-**bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
-
-## Subscriptions
 
 **bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
 

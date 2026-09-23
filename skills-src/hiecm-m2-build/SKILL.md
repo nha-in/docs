@@ -147,6 +147,7 @@ curl --request POST \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
+  --header 'X-HIU-ID: IN2810014366' \
   --header 'Content-Type: application/json' \
   --data '{
   "transactionId": "f901b782-bfdf-4224-9f8d-da2cadc20c0d",

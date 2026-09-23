@@ -52,7 +52,7 @@ Within one sidebar, two rows sharing a mark is a defect: it is the one thing a r
 
 The tightest case is siblings in one folder, which sit adjacent. `scripts/build-sidebar-icons.mjs` does not check this, because a shared mark is sometimes correct and a script cannot tell. Check it yourself by opening the section.
 
-When two pages in one sidebar genuinely have the same subject, one of them is usually the wrong page rather than the wrong icon. `concepts/phr.md` and `concepts/participants/phr.md` are both about PHR apps and carry `app-window` and `smartphone` to keep them apart, which is a sign the two pages should probably be one.
+When two pages in one sidebar genuinely have the same subject, one of them is usually the wrong page rather than the wrong icon. `concepts/phr.md` and `concepts/participants/phr.md` were both about PHR apps and carried `app-window` and `smartphone` to keep them apart; they are now one page, `concepts/participants/phr.md`.
 
 ## Where the name goes
 

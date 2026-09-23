@@ -31,8 +31,14 @@ configuration.
 | `launcher`    | `none` supplies your own trigger instead of the built-in chip.            |
 | `ground`      | `light` or `dark`. The element reads the host page's background and sets this itself; set it to override that reading. |
 | `question`    | Seeds the composer when the panel opens on an empty box. Nothing is sent; the reader still presses send. The docs site fills it from whatever is in the search field. |
-| `starters`    | The empty state's opening questions, one per line, at most four. Absent keeps the widget's own general set. |
+| `starters`    | The empty state's openers, one per line, at most five, shown as pills under the greeting. A line may be `label \| question`, so the pill stays two or three words while the question it asks is whole; a line with no bar is its own label. Absent keeps the widget's own general set. |
+| `history`     | `off` stops past conversations being kept. They are kept in `localStorage` on the embedding page's origin, which is yours, not the widget's; turn it off if your origin should not hold what readers type. |
 | `open`        | Present while the panel is showing. Set it to open the panel, and the element removes it when the reader closes one. |
+
+`attachPage({title, url, markdown})` puts a page on the conversation as a pill
+above the chat bar, and `attachPage(null)` takes it off. An HTML document passed
+as `markdown`, which is what a static host's app shell looks like when it
+answers for a missing page, is refused as a failed attachment rather than sent.
 
 `show()` and `hide()` on the element do the same as setting and removing
 `open`, for a host that prefers a method call.
@@ -97,10 +103,40 @@ on the element.
 The panel is a native modal dialog, so it sits in the browser's top layer above
 whatever the host page stacks, without either side knowing about the other.
 
-### What it does not do
+### Pages
 
-Nothing about a conversation is written to the host page's storage. State lives
-in memory for the session and goes when the tab does.
+The add button's menu can attach any page on the docs site mid-conversation.
+The list is `<docs-origin>/llms.txt`, fetched once, searched in the browser,
+and a page's text is `<path>.md` beside it. Nothing else is needed from the
+host: an embed that sets `docs-origin` has page search.
+
+### Commands
+
+Four pills under the chat bar, Scaffold, Design, Integrate and Debug, point a
+question at that section of the module's agent skill. Only the name travels:
+the request gains `command` and, when the reader has answered "which module?",
+`module`. The server resolves the module, puts the section in front of the
+model, and says which in a `skill` event before the answer. A scaffold answer
+is a build plan with curl only; the panel then offers the Install AI tools
+flow, because building it is the coding agent's job. A server that predates
+commands ignores both fields.
+
+### The orb
+
+The greeting's orb is the Plasma Orb (Apache-2.0, on
+`@paper-design/shaders-react`) behind a frosted glass shell, one WebGL context
+per orb. The shader library is written for React; `build.mjs` aliases `react`
+to `preact/compat`, so the bundle carries one small runtime rather than two.
+Without WebGL it draws a CSS gradient of the same colours, and with reduced
+motion it holds a still frame.
+
+### What it keeps
+
+Past conversations, for the History tab: up to fifty, in `localStorage` on the
+embedding page's origin, each dropped after thirty days, with any attached
+file's text stripped before saving. A reader can delete one or clear them all
+from the History tab, and `history="off"` keeps nothing. Nothing about a
+conversation leaves the browser except the question being asked.
 
 ## Working on it
 

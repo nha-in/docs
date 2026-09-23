@@ -753,62 +753,6 @@
   height: 60vh;
 }
 
-/* ---------- leaving ----------
-   The handoff is a scroll, not a fade: pressing Get started runs the page
-   down and the route changes when it arrives, so the button does visibly what
-   a scroll does. Nothing here dims the hero on the way out; the movement is
-   the transition. index.tsx drives it with a smooth scrollTo.
-
-   Coming back the other way, from the top of the API references, is still a
-   fade: there is nothing above the top of that page to scroll through, so a
-   movement would have nowhere to go. The class is set on the document element
-   because the page being left is a docs page, which knows nothing about
-   this. */
-:root[data-leaving-back='true'] .main-wrapper {
-  opacity: 0;
-  transform: translateY(1.5rem);
-  transition: opacity 200ms ease, transform 200ms ease;
-}
-
-/* Motion is decoration here, and the handoff must still work without it: the
-   timeout in index.tsx does not depend on the transition firing. */
-@media (prefers-reduced-motion: reduce) {
-  :root[data-leaving-back='true'] .main-wrapper {
-    transition: none;
-  }
-
-}
-
-
-/* Pulling back to the landing page from the top of the references. The page
-   follows the pull a little, and the further it is pulled the less it gives:
-   the rubber band is what tells the reader the gesture exists and that it is
-   not finished yet. */
-.pull-home {
-  transform: translateY(calc(var(--pull, 0) * 1px));
-  transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.pull-home[data-pulling='true'] {
-  transition: none;
-}
-
-/* The theme parks its skip link just above the top edge and brings it back on
-   focus. Just above the top edge is exactly where the pull opens its strip,
-   so pulling back to the landing page put "Skip to main content" in it: a bar
-   of chrome nobody asked for, in the one gesture that is meant to show an
-   empty edge. Parked further than the pull can reach. Focus still brings it,
-   which is the only time it is meant to appear. */
-.pull-home a[class*='skipToContent']:not(:focus) {
-  transform: translateY(-200px);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .pull-home {
-    transform: none;
-  }
-}
-
 /* ---------- the curtain ----------
    The landing page over the references, lifted by the gesture rather than
    swapped for them. `--lift` runs 0 to 1 and is written from the wheel, so the

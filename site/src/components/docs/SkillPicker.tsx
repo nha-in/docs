@@ -49,7 +49,7 @@ const CHOICES: Choice[] = [
   },
   {
     slug: 'abdm-p2',
-    label: 'PHR management (P2)',
+    label: 'Consents Management (P2)',
     note: 'The PHR profile, linking an ABHA number, switching profiles, and linking, sharing and consent for the patient.',
   },
   {

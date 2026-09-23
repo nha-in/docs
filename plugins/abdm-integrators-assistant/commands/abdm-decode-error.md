@@ -20,7 +20,7 @@ Read `error.code` first and fall back to a top level `code`. A numeric code with
 
 ## Then match it
 
-Load the module's skill. Each module skill's `references/debug.md` lists the codes its specification's examples return, with message, status and operation. The module skills are `abdm-gateway`, `abdm-m1` through `abdm-m4`, `abdm-p1` through `abdm-p4`, `abdm-subscription` and `abdm-scan-and-pay`.
+Load the module's skill. Each module skill's `references/debug.md` lists the codes its specification's examples return, with message, status and operation. The module skills are `abdm-gateway`, `abdm-m1` through `abdm-m4`, `abdm-p1` through `abdm-p4` and `abdm-scan-and-pay`.
 
 ## What a field validation body does not tell you
 
