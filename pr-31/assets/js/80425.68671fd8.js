@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["80425"],{50800(e,s,c){c.r(s),c.d(s,{__iconNode:()=>r,default:()=>u});var l=c(34438);let r=[["ellipse",{cx:"12",cy:"11",rx:"3",ry:"2",key:"1b2qxu"}],["ellipse",{cx:"12",cy:"12.5",rx:"10",ry:"8.5",key:"h8emeu"}]],u=(0,l.A)("torus",r)}}]);
