@@ -340,6 +340,9 @@ const config: Config = {
   // The support agent is a standalone custom element, loaded like any
   // third-party embed would load it. Nothing in the site imports it, which is
   // what keeps it usable on pages that are not this site.
+  // Reference pages carry the Scalar bundle only on a full load; this
+  // reloads them when a client side link lands on one.
+  clientModules: [require.resolve('./src/clientModules/reference-reload.ts')],
   scripts: [
     {src: `${siteBase}agent/abdm-support-agent.js`, defer: true},
   ],
