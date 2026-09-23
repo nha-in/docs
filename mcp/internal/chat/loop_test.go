@@ -9,7 +9,7 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"github.com/eka-care/abdm-docs/mcp/internal/guard"
+	"github.com/nha-in/docs/mcp/internal/guard"
 )
 
 // fakeModel scripts a sequence of replies, one per call, in order. texts[i],

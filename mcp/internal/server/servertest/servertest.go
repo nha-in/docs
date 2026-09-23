@@ -11,8 +11,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/eka-care/abdm-docs/mcp/internal/catalogue"
-	"github.com/eka-care/abdm-docs/mcp/internal/index"
+	"github.com/nha-in/docs/mcp/internal/catalogue"
+	"github.com/nha-in/docs/mcp/internal/index"
 )
 
 // Reader builds a fresh one-atom, one-operation snapshot in a temp dir and

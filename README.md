@@ -110,11 +110,9 @@ endpoint, is in [mcp/README.md](mcp/README.md).
 
 ## Deploying
 
-Kubernetes manifests, the IAM policy, and the CI workflow templates for
-running this on AWS live in [deploy/nha/](deploy/nha/). A full
-[architecture diagram](deploy/nha/architecture/aws-deployment-architecture.drawio)
-covers the site's CDN, the MCP server's cluster, and how Bedrock and CI/CD
-credentials flow through IAM without a single stored secret.
+The NHA deployment is described in [deploy/nha/](deploy/nha/): one script
+publishes the site to S3 and the MCP server's image to ECR, and the
+infrastructure it runs on is defined in the `nha-in/sandbox-tofu` repository.
 
 ## Rules
 

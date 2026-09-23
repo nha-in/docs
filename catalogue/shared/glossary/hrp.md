@@ -9,7 +9,7 @@ summary: >
   Whoever holds the records. It describes custody, which is why it is
   neither a position nor a direction.
 sources:
-  - url: https://github.com/eka-care/abdm-docs/blob/main/site/docs/_glossary/_hiecm.mdx
+  - url: https://github.com/nha-in/docs/blob/main/site/docs/_glossary/_hiecm.mdx
     status: reference
     note: >
       This portal's own published glossary, where the definition was

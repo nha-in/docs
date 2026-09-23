@@ -8,8 +8,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/eka-care/abdm-docs/mcp/internal/catalogue"
-	"github.com/eka-care/abdm-docs/mcp/internal/fhir"
+	"github.com/nha-in/docs/mcp/internal/catalogue"
+	"github.com/nha-in/docs/mcp/internal/fhir"
 	_ "modernc.org/sqlite"
 )
 

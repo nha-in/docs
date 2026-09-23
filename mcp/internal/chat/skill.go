@@ -8,7 +8,7 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/eka-care/abdm-docs/mcp/internal/catalogue"
+	"github.com/nha-in/docs/mcp/internal/catalogue"
 )
 
 // Commands are the sections of a module's agent skill a reader can point a

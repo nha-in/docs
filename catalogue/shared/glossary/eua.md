@@ -9,7 +9,7 @@ summary: >
   In UHI, the consumer facing side: the app a patient uses to search
   for a service and book it.
 sources:
-  - url: https://github.com/eka-care/abdm-docs/blob/main/site/docs/_glossary/_uhi.mdx
+  - url: https://github.com/nha-in/docs/blob/main/site/docs/_glossary/_uhi.mdx
     status: reference
     note: >
       This portal's own published glossary, where the definition was

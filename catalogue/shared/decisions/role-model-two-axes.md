@@ -15,7 +15,7 @@ sources:
     note: >
       NHA's PHR Framework page, which defines HIP, HIU, HRP and the PHR
       app, and which is the page that lists them as one set.
-  - url: https://github.com/eka-care/abdm-docs/blob/main/site/src/config/roles.ts
+  - url: https://github.com/nha-in/docs/blob/main/site/src/config/roles.ts
     status: reference
     note: >
       This repository's own role switcher, which already separates the

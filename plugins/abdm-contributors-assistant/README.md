@@ -9,7 +9,7 @@ This plugin does not integrate anyone with ABDM. It builds the thing that does. 
 This repo is itself a marketplace, so this is two commands:
 
 ```sh
-claude plugin marketplace add eka-care/abdm-docs
+claude plugin marketplace add nha-in/docs
 claude plugin install abdm-contributors-assistant@abdm-portal
 ```
 
@@ -75,7 +75,7 @@ Commands in `commands/` are the day-to-day verbs: create an atom, verify one, li
 
 ## Keeping up with the plan
 
-The architecture and execution plan lives at [`abdm-v1-phase1-architecture-and-plan.md`](https://github.com/eka-care/abdm-docs/blob/main/plan/abdm-v1-phase1-architecture-and-plan.md) under `plan/` in this repo. Four skills compile from it and are stamped with the `plan_version` they were built from. `plan/manifest.json` carries the current version and hash, so an installed plugin can notice it is older than the published plan and say so, without fetching instructions at runtime.
+The architecture and execution plan lives at [`abdm-v1-phase1-architecture-and-plan.md`](https://github.com/nha-in/docs/blob/main/plan/abdm-v1-phase1-architecture-and-plan.md) under `plan/` in this repo. Four skills compile from it and are stamped with the `plan_version` they were built from. `plan/manifest.json` carries the current version and hash, so an installed plugin can notice it is older than the published plan and say so, without fetching instructions at runtime.
 
 A plan change is not finished until the four skills are rebuilt and restamped. `scripts/plan-check.sh` enforces it: it hashes the plan, compares against the manifest, and fails if the manifest, any compiled skill or the gantt generator is behind. Run `/plan-check` to see where an installed plugin stands, or the script in a checkout.
 

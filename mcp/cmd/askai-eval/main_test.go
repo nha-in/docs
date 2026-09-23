@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/eka-care/abdm-docs/mcp/internal/chat"
-	"github.com/eka-care/abdm-docs/mcp/internal/eval"
+	"github.com/nha-in/docs/mcp/internal/chat"
+	"github.com/nha-in/docs/mcp/internal/eval"
 )
 
 // TestRunRequiresEmbedProviderExplicitly covers I7: the deployment being

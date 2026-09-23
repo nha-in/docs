@@ -20,9 +20,9 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/eka-care/abdm-docs/mcp/internal/chat"
-	"github.com/eka-care/abdm-docs/mcp/internal/server"
-	"github.com/eka-care/abdm-docs/mcp/internal/server/servertest"
+	"github.com/nha-in/docs/mcp/internal/chat"
+	"github.com/nha-in/docs/mcp/internal/server"
+	"github.com/nha-in/docs/mcp/internal/server/servertest"
 )
 
 // fakeModel is a copy of chat's own unexported fakeModel (loop_test.go),

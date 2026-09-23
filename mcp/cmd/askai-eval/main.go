@@ -22,11 +22,11 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/eka-care/abdm-docs/mcp/internal/chat"
-	"github.com/eka-care/abdm-docs/mcp/internal/embed"
-	"github.com/eka-care/abdm-docs/mcp/internal/eval"
-	"github.com/eka-care/abdm-docs/mcp/internal/index"
-	"github.com/eka-care/abdm-docs/mcp/internal/server"
+	"github.com/nha-in/docs/mcp/internal/chat"
+	"github.com/nha-in/docs/mcp/internal/embed"
+	"github.com/nha-in/docs/mcp/internal/eval"
+	"github.com/nha-in/docs/mcp/internal/index"
+	"github.com/nha-in/docs/mcp/internal/server"
 )
 
 // runsLatestPath names the run every command but run defaults to when -run

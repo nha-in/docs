@@ -266,7 +266,7 @@ func CheckCodeRoute(question, answer string) []Violation {
 // a quality problem, but a model that invents a header name is a defect that
 // looks exactly like a fact.
 var (
-	groundedCodeRe   = regexp.MustCompile(`\b(?:ABDM|GATEWAY|MIS|EKA)-\d{3,5}\b`)
+	groundedCodeRe   = regexp.MustCompile(`\b(?:ABDM|GATEWAY|MIS)-\d{3,5}\b`)
 	groundedHeaderRe = regexp.MustCompile(`\bX-[A-Z][A-Za-z0-9-]{2,}\b`)
 	groundedPathRe   = regexp.MustCompile(`/(?:api|v\d[\d.]*)/[A-Za-z0-9/_{}.-]{3,}`)
 	// Portal navigation, not an API path. The prompt allows /docs/support.

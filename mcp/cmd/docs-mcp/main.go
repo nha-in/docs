@@ -10,10 +10,10 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/eka-care/abdm-docs/mcp/internal/chat"
-	"github.com/eka-care/abdm-docs/mcp/internal/embed"
-	"github.com/eka-care/abdm-docs/mcp/internal/index"
-	"github.com/eka-care/abdm-docs/mcp/internal/server"
+	"github.com/nha-in/docs/mcp/internal/chat"
+	"github.com/nha-in/docs/mcp/internal/embed"
+	"github.com/nha-in/docs/mcp/internal/index"
+	"github.com/nha-in/docs/mcp/internal/server"
 )
 
 // envOr lets the environment set every default while the flags stay as local

@@ -6,7 +6,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/eka-care/abdm-docs/mcp/internal/guard"
+	"github.com/nha-in/docs/mcp/internal/guard"
 )
 
 type CheckResult struct {
