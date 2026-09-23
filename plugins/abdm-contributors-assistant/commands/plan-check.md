@@ -19,7 +19,7 @@ Answers one question: are these skills built from the current plan?
 ## What it does
 
 1. Reads `plan_version` from the frontmatter of the loaded plan-derived skills
-2. Fetches `https://raw.githubusercontent.com/eka-care/abdm-docs/main/plan/manifest.json`
+2. Fetches `https://raw.githubusercontent.com/nha-in/docs/main/plan/manifest.json`
 3. Compares, and reports
 
 In a checkout of this repo, run `./scripts/plan-check.sh` instead. It is the same comparison done locally and offline, plus a hash of the plan file itself, so it also catches the case this command cannot see: the plan edited in the working tree without the manifest bumped or the skills restamped. That script is what CI runs and what gates a release.
