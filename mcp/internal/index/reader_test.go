@@ -6,7 +6,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/eka-care/abdm-docs/mcp/internal/fhir"
+	"github.com/nha-in/docs/mcp/internal/fhir"
 )
 
 func openFixture(t *testing.T, withVectors bool) *Reader {

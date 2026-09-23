@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/eka-care/abdm-docs/mcp/internal/chat"
-	"github.com/eka-care/abdm-docs/mcp/internal/server"
-	"github.com/eka-care/abdm-docs/mcp/internal/server/servertest"
+	"github.com/nha-in/docs/mcp/internal/chat"
+	"github.com/nha-in/docs/mcp/internal/server"
+	"github.com/nha-in/docs/mcp/internal/server/servertest"
 )
 
 // toolThenAnswer searches once, then answers, which is the shape of every

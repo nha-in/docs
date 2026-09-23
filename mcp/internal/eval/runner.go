@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/eka-care/abdm-docs/mcp/internal/chat"
-	"github.com/eka-care/abdm-docs/mcp/internal/route"
-	"github.com/eka-care/abdm-docs/mcp/internal/server"
+	"github.com/nha-in/docs/mcp/internal/chat"
+	"github.com/nha-in/docs/mcp/internal/route"
+	"github.com/nha-in/docs/mcp/internal/server"
 )
 
 type RunConfig struct {

@@ -11,8 +11,8 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"github.com/eka-care/abdm-docs/mcp/internal/guard"
-	"github.com/eka-care/abdm-docs/mcp/internal/route"
+	"github.com/nha-in/docs/mcp/internal/guard"
+	"github.com/nha-in/docs/mcp/internal/route"
 )
 
 // Turn is one message in a conversation as the HTTP layer (Task 6) decodes
@@ -148,7 +148,7 @@ const budgetExhaustedNotice = "Tool budget exhausted. Answer now from what you h
 // prompt names it so the assistant can hand it to a reader who asks; a
 // deployment on another hostname overrides it with MCP_URL rather than a
 // code change.
-const DefaultMCPURL = "https://abdm-docs-mcp.dev.eka.care/mcp"
+const DefaultMCPURL = "https://mcp.docs.abdm.gov.in/mcp"
 
 // PromptVersion names the system prompt an eval run answered with. It
 // covers both systemPromptTemplate and the shape blocks in shapes.go, since

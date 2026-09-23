@@ -7,8 +7,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/eka-care/abdm-docs/mcp/internal/index"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
+	"github.com/nha-in/docs/mcp/internal/index"
 )
 
 // The tools answer a question an agent already knows how to ask. The skills

@@ -9,8 +9,8 @@ import (
 	"sync/atomic"
 	"testing"
 
-	"github.com/eka-care/abdm-docs/mcp/internal/embed"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
+	"github.com/nha-in/docs/mcp/internal/embed"
 )
 
 // alternating sends each request to the next server in turn, the way a load
