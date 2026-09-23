@@ -26,7 +26,12 @@ type RunConfig struct {
 	// pre-retrieves a passage pack and is offered only the tools its
 	// question routes to, through server.ChatHooks. nil keeps Tools as the
 	// fixed set above, matching a run built before this existed.
-	RoutedTools      *server.Tools
+	RoutedTools *server.Tools
+	// Skill and SkillModules let a case asked with a command draw on the
+	// module skills, the same hooks the server wires. nil answers every case
+	// as if no command had been picked.
+	Skill            func(name, section string) (string, bool)
+	SkillModules     func() []string
 	PromptVersion    string
 	CatalogueVersion string
 	// EmbedProvider and DBPath name the retrieval stack this run answered
@@ -102,6 +107,7 @@ func Run(ctx context.Context, cfg RunConfig, cases []Case) (int, error) {
 		if cfg.RoutedTools != nil {
 			svc.Lookup, svc.ToolsFor = server.ChatHooks(cfg.RoutedTools)
 		}
+		svc.Skill, svc.SkillModules = cfg.Skill, cfg.SkillModules
 		// Class mirrors the shape route.Route assigns the last user turn in
 		// the chat loop (see loop.go's own route.Route call), so a check can
 		// budget on what the loop actually routed to.
@@ -151,7 +157,7 @@ func Run(ctx context.Context, cfg RunConfig, cases []Case) (int, error) {
 			return nil
 		}
 		turns, page := toTurns(c)
-		if err := svc.Respond(ctx, turns, page, emit); err != nil {
+		if err := svc.RespondCommand(ctx, turns, page, chat.Command{Name: c.Command, Module: c.Module}, emit); err != nil {
 			tr.Flags = append(tr.Flags, "error: "+err.Error())
 			if first == nil {
 				first = fmt.Errorf("%s: %w", c.ID, err)

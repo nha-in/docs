@@ -11,7 +11,12 @@ await build({
     contents: `export {toBlocks, absolute, headings} from './src/markdown';
                export {readStream} from './src/sse';
                export {revealStep, THINKING_HOLD, THINKING_BURST} from './src/pacing';
-               export {say, answer, wantsTools, needsAgent, TOOLS, AGENTS} from './src/install';`,
+               export {say, answer, wantsTools, needsAgent, TOOLS, AGENTS} from './src/install';
+               export {titleOf, remember, whenSaid, forgetOne} from './src/history';
+               export {startersFrom, DEFAULT_STARTERS} from './src/starters';
+               export {forModel} from './src/transcript';
+               export {parseLlms, searchPages, pageUrl, markdownUrl, isHtmlDocument} from './src/pages';
+               export {moduleLabel, skillNote, COMMANDS} from './src/commands';`,
     resolveDir: import.meta.dirname,
     loader: 'ts',
   },
@@ -19,13 +24,100 @@ await build({
   format: 'esm',
   jsx: 'automatic',
   jsxImportSource: 'preact',
+  // The orb's shader library is written against React. Preact's compat layer
+  // stands in for it, so the widget ships one small runtime rather than two.
+  alias: {
+    react: 'preact/compat',
+    'react-dom': 'preact/compat',
+    'react/jsx-runtime': 'preact/jsx-runtime',
+  },
   loader: {'.css': 'text'},
   outfile: out,
 });
 const {
   toBlocks, absolute, headings, readStream, revealStep, THINKING_HOLD, THINKING_BURST,
   say, answer, wantsTools, needsAgent, TOOLS, AGENTS,
+  titleOf, remember, whenSaid, forgetOne,
+  startersFrom, DEFAULT_STARTERS, forModel, parseLlms, searchPages, pageUrl, markdownUrl, isHtmlDocument,
+  moduleLabel, skillNote, COMMANDS,
 } = await import(out);
+
+// History: one conversation comes out, the rest stay in order.
+assert.deepEqual(forgetOne([{id: 'a'}, {id: 'b'}, {id: 'c'}], 'b').map((s) => s.id), ['a', 'c']);
+
+// Starters: a pill's label and the question it asks; old hosts still work.
+assert.equal(startersFrom(''), DEFAULT_STARTERS);
+assert.deepEqual(startersFrom('Create an ABHA | How do I create an ABHA?'),
+  [{label: 'Create an ABHA', prompt: 'How do I create an ABHA?'}]);
+assert.deepEqual(startersFrom('What is a care context?'),
+  [{label: 'What is a care context?', prompt: 'What is a care context?'}]);
+assert.equal(startersFrom('a\nb\nc\nd\ne\nf').length, 5, 'at most five');
+assert.ok(DEFAULT_STARTERS.some((s) => s.prompt === 'What can the Ask AI assistant do?'), 'the assistant can be asked about itself');
+assert.ok(DEFAULT_STARTERS.every((s) => s.label.split(' ').length <= 4), 'pills stay short');
+
+// Transcript: the panel's own exchanges go in pairs, so roles still alternate.
+const said = (from, text, extra = {}) => ({from, text, ...extra});
+const shown = forModel([
+  said('you', 'q1'), said('assistant', 'a1'),
+  said('you', 'Install AI tools'), said('assistant', 'Which tool?', {install: {at: 'tools'}}),
+  said('you', 'q2'),
+]);
+assert.deepEqual(shown.map((t) => t.text), ['q1', 'a1', 'q2'], 'the install pair is dropped whole');
+assert.deepEqual(forModel([said('you', 'q'), said('assistant', 'Which module?', {local: true}), said('you', 'q again')])
+  .map((t) => t.text), ['q again'], 'an unresolved command pair is dropped whole');
+for (let i = 1; i < shown.length; i += 1) assert.notEqual(shown[i].from, shown[i - 1].from);
+
+// Pages: llms.txt parsed to paths, re-rooted on the widget's own docs origin.
+const llms = [
+  '# ABDM Developer Portal', '',
+  '- [Gateway session](https://abdm-docs.example.com/docs/hiecm/v3/api/gateway): Every call carries a token.',
+  '- [M2 Health Information Provider](https://abdm-docs.example.com/docs/hiecm/v3/milestones/m2/): Link records.',
+  '- [Care context](https://abdm-docs.example.com/docs/hiecm/v3/concepts/care-context): A visit or episode.',
+  '- [Duplicate](https://abdm-docs.example.com/docs/hiecm/v3/api/gateway): again',
+  '- [Module list](https://abdm-docs.example.com/llms/m2.txt): not a page',
+].join('\n');
+const entries = parseLlms(llms);
+assert.deepEqual(entries.map((e) => e.path), [
+  '/docs/hiecm/v3/api/gateway', '/docs/hiecm/v3/milestones/m2', '/docs/hiecm/v3/concepts/care-context',
+], 'docs pages only, no trailing slash, no duplicates');
+assert.equal(entries[1].description, 'Link records.');
+assert.equal(searchPages(entries, 'care')[0].title, 'Care context', 'a word starting the title wins');
+assert.equal(searchPages(entries, 'records')[0].title, 'M2 Health Information Provider', 'the description counts too');
+assert.deepEqual(searchPages(entries, 'care gateway'), [], 'every word must match');
+assert.deepEqual(searchPages(entries, '   '), []);
+assert.doesNotThrow(() => searchPages(entries, '(m2 [ *'), 'regex characters are safe');
+assert.equal(pageUrl('https://docs.example.org/', '/docs/a'), 'https://docs.example.org/docs/a');
+assert.equal(markdownUrl('https://docs.example.org', '/docs/a'), 'https://docs.example.org/docs/a.md');
+// An app shell served in place of a missing page is not the page.
+assert.ok(isHtmlDocument('<!DOCTYPE html>\n<html lang="en">'));
+assert.ok(isHtmlDocument('  <html>'));
+assert.ok(!isHtmlDocument('# Care contexts\n\nA care context is <b>one</b> visit.'));
+assert.ok(!isHtmlDocument('<details> in markdown'));
+
+// Commands: four of them, and the lines the panel shows for a skill event.
+assert.deepEqual(COMMANDS.map((c) => c.id), ['scaffold', 'design', 'integrate', 'debug']);
+assert.equal(moduleLabel('abdm-m2'), 'M2');
+assert.equal(moduleLabel('abdm-scan-and-pay'), 'Scan and pay');
+assert.equal(skillNote({module: 'abdm-m2', section: 'debug', status: 'used'}), 'Using M2 · Debug');
+assert.equal(skillNote({module: 'abdm-p2', section: 'design', status: 'missing'}),
+  'No design guide for P2 yet. Answering from the docs.');
+assert.equal(skillNote({section: 'debug', status: 'unresolved'}), 'Which module is this about?');
+for (const c of COMMANDS) assert.ok(!/\u2014/.test(skillNote({module: 'abdm-m1', section: c.id, status: 'used'})), 'no em dash');
+
+// History: named after the first question, one entry per conversation, fifty kept.
+assert.equal(titleOf([{from: 'assistant', text: 'Hello'}, {from: 'you', text: '  ABDM\n1016  '}]), 'ABDM 1016');
+assert.equal(titleOf([{from: 'assistant', text: 'Hello'}]), '');
+assert.equal(titleOf([{from: 'you', text: 'x'.repeat(200)}]).length, 72);
+const one = {id: 'a', at: 1, title: 'a', turns: []};
+assert.deepEqual(remember([one], {...one, title: 'a2'}).length, 1, 'the same conversation replaces itself');
+assert.equal(remember([one], {...one, title: 'a2'})[0].title, 'a2');
+assert.equal(remember([one], {id: 'b', at: 2, title: 'b', turns: []})[0].id, 'b', 'newest first');
+const many = Array.from({length: 60}, (_, i) => ({id: String(i), at: i, title: String(i), turns: []}));
+assert.equal(many.reduce((list, s) => remember(list, s), []).length, 50, 'capped');
+assert.equal(whenSaid(0, 30_000), 'just now');
+assert.equal(whenSaid(0, 7 * 60_000), '7m ago');
+assert.equal(whenSaid(0, 3 * 3600_000), '3h ago');
+assert.equal(whenSaid(0, 2 * 86400_000), '2d ago');
 
 // Headings: the second level only, fenced code left alone, markers stripped.
 assert.deepEqual(headings('# Page\n## One\n### Deeper\n## `Two`'), ['One', 'Two']);

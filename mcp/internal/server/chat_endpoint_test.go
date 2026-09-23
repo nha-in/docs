@@ -232,3 +232,36 @@ func TestChatLogsTheQuestionMasked(t *testing.T) {
 		t.Errorf("the raw question reached the log:\n%s", got)
 	}
 }
+
+func TestChatEndpointRejectsABadCommand(t *testing.T) {
+	svc := &chat.Service{Model: &scriptedModel{}, MaxTokens: 100}
+	h := testHandler(t, svc, chat.NewLimiter(100, 1000))
+	for _, body := range []string{
+		`{"turns":[{"role":"user","text":"hi"}],"command":"deploy"}`,
+		`{"turns":[{"role":"user","text":"hi"}],"module":"abdm-m2"}`,
+		`{"turns":[{"role":"user","text":"hi"}],"command":"debug","module":"../../etc"}`,
+	} {
+		rec := httptest.NewRecorder()
+		h.ServeHTTP(rec, httptest.NewRequest("POST", "/api/chat", strings.NewReader(body)))
+		if rec.Code != 400 || !strings.Contains(rec.Header().Get("Content-Type"), "json") {
+			t.Errorf("%s: status %d, content type %q; want a JSON 400 before any stream opens",
+				body, rec.Code, rec.Header().Get("Content-Type"))
+		}
+	}
+}
+
+func TestChatSkillsReadsTheIndex(t *testing.T) {
+	get, modules := server.ChatSkills(servertest.Reader(t))
+	for _, m := range modules() {
+		if !strings.HasPrefix(m, "abdm-") {
+			t.Errorf("module %q is not a module skill", m)
+		}
+		// Every module listed has a router at least; its sections may vary.
+		if _, ok := get(m, ""); !ok {
+			t.Errorf("module %q is listed but its router cannot be read", m)
+		}
+	}
+	if _, ok := get("abdm-no-such-module", "debug"); ok {
+		t.Error("a skill that does not exist was found")
+	}
+}

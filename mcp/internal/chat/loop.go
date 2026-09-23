@@ -97,6 +97,12 @@ type Service struct {
 	// ToolsFor returns the tools to expose for this question. nil means
 	// s.Tools unchanged.
 	ToolsFor func(question string, hasAttachment bool) []ToolDef
+	// Skill returns one section of one compiled module skill, and false when
+	// the skill has no such section. SkillModules names the module skills
+	// this deployment carries. With either nil, commands are ignored and the
+	// question is answered as if none had been picked.
+	Skill        func(name, section string) (string, bool)
+	SkillModules func() []string
 }
 
 const (
@@ -149,7 +155,7 @@ const DefaultMCPURL = "https://abdm-docs-mcp.dev.eka.care/mcp"
 // an answer's shape is as much a part of what was asked of the model as the
 // system prompt is. Bump it whenever either changes, and record the change
 // in the pull request's scorecard.
-const PromptVersion = "v3"
+const PromptVersion = "v4"
 
 // SystemPrompt renders the assistant's system prompt with the MCP server
 // address this deployment serves. An empty mcpURL keeps the default.
@@ -229,7 +235,9 @@ Do not invent portal URLs.
 
 HOW A QUESTION ARRIVES
 
-The user turn may open with a <passages> block: the documentation already retrieved for this question, with ids and page links. Answer from it first. It is followed by an <answer_shape> block naming the shape and word budget your answer must take. Call search_docs only when the passages do not carry the answer.`
+The user turn may open with a <passages> block: the documentation already retrieved for this question, with ids and page links. Answer from it first. It is followed by an <answer_shape> block naming the shape and word budget your answer must take. Call search_docs only when the passages do not carry the answer.
+
+A <skill> block is the skill section the reader chose: follow it, and name what it omits.`
 
 // ValidateTurns checks the shape the HTTP layer (Task 6) must also enforce
 // before it even opens the SSE stream: 1..MaxTurns turns, roles alternating
@@ -480,6 +488,15 @@ func collectSources(sources *[]Source, name string, result map[string]any) {
 // citations gathered along the way (only if any were gathered), then
 // "done". The "error" event is the HTTP layer's job, not this loop's.
 func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit func(event string, data any) error) error {
+	return s.RespondCommand(ctx, turns, page, Command{}, emit)
+}
+
+// RespondCommand is Respond with the command the reader picked, if any. A
+// command puts the matching section of the module's agent skill in front of
+// the model for this question, and says which in a skill event first. When
+// the module cannot be worked out, the reader is asked instead: the skill
+// event carries the modules to choose from, and the model is not called.
+func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, cmd Command, emit func(event string, data any) error) error {
 	if err := s.ValidateTurns(turns); err != nil {
 		return err
 	}
@@ -537,6 +554,46 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 		g.corpus.WriteString(masked)
 	}
 	onText := g.write
+
+	// The skill a command asked for, resolved and fetched before anything is
+	// retrieved: a command that cannot say which module it is about stops
+	// here and asks, rather than spending a lookup and a model call on an
+	// answer that would ignore the command.
+	var skillPrefix string
+	if cmd.Name != "" && s.Skill != nil && s.SkillModules != nil {
+		known := s.SkillModules()
+		use := SkillUse{Section: cmd.Name}
+		module, by := ResolveModule(cmd, page, question, known)
+		if module == "" {
+			use.Status = "unresolved"
+			for _, m := range known {
+				if _, ok := s.Skill(m, cmd.Name); ok {
+					use.Candidates = append(use.Candidates, m)
+				}
+			}
+			if err := emit("skill", use); err != nil {
+				return err
+			}
+			return s.finish(nil, emit)
+		}
+		use.Module, use.ResolvedBy = module, by
+		if body, ok := s.Skill(module, cmd.Name); ok {
+			cut, truncated := CutSection(body, question, MaxPageChars)
+			use.Status, use.Truncated = "used", truncated
+			use.URI = "skill://" + module + "/" + cmd.Name
+			use.Href = "/skills/" + module + "/references/" + cmd.Name + ".md"
+			skillPrefix = skillBlock(module, cmd.Name, cut) + "\n\n"
+			// The section grounds the literals the answer quotes from it,
+			// the same way a retrieved passage does.
+			g.corpus.WriteString(cut)
+			addSource(&sources, Source{ID: use.URI, Title: module + " " + cmd.Name, URL: use.Href})
+		} else {
+			use.Status = "missing"
+		}
+		if err := emit("skill", use); err != nil {
+			return err
+		}
+	}
 
 	// looked tracks whether a lookup has happened this turn, so the
 	// answered-without-looking retry below never fires after a
@@ -596,7 +653,7 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 	shape := string(route.Route(route.Input{
 		Question: question, HasAttachment: lastUserAttachment(turns) != nil,
 	}).Shape)
-	prefix := passagesPrefix
+	prefix := passagesPrefix + skillPrefix
 	if page.attached() {
 		// The page is not run through MaskPII the way the reader's own text
 		// is (see line 305): it is a page this site published, not

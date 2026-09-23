@@ -1,3 +1,5 @@
+import type {SkillUse} from './commands';
+
 /** One catalogue atom an answer drew on, surfaced as a citation chip. */
 export type Source = {id: string; title: string; status: string; url: string};
 
@@ -10,13 +12,16 @@ type StreamHandlers = {
   onTool: (detail: string) => void;
   onSources: (sources: Source[]) => void;
   onError: (message: string) => void;
+  /** Which skill section a command used, sent once before the answer. */
+  onSkill?: (use: SkillUse) => void;
 };
 
 /**
  * A minimal SSE reader over a fetch body. The backend sends four event types,
  * one JSON payload each: "tool" while the model is consulting the catalogue,
  * "text" for streamed answer deltas, "sources" at most once with the
- * citations for the reply, and "done" when the turn is over. "error" carries
+ * citations for the reply, and "done" when the turn is over. A question
+ * asked with a command also gets "skill", once, before any text. "error" carries
  * a message when the loop cannot continue.
  */
 export async function readStream(
@@ -55,6 +60,9 @@ export async function readStream(
       }
       case 'sources':
         handlers.onSources(payload as Source[]);
+        break;
+      case 'skill':
+        handlers.onSkill?.(payload as SkillUse);
         break;
       case 'error':
         handlers.onError((payload as {message: string}).message || UNREACHABLE);

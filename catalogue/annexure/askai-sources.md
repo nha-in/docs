@@ -19,6 +19,7 @@ One row per NHA document. `id` is stable and is what an eval case or an atom cit
 | abdm-faq-hfr | https://abdm.gov.in/FAQ | abdm.gov.in FAQ, the Health Facility Registry category | 2026-09-03 | page | 0 | 0 |
 | abdm-faq-general | https://abdm.gov.in/FAQ | abdm.gov.in FAQ, the General category | 2026-09-03 | page | 0 | 21 |
 | glossary | site/docs/_glossary/_hiecm.mdx | This portal's glossary, from which the shared glossary atoms were moved | 2026-09-17 | sha256:0f8b53081bee4c0e | 0 | 18 |
+| ask-ai-panel | ai-widget/README.md | This portal's Ask AI panel: what the assistant does, what a reader can give it, what it keeps and what it will not do | 2026-09-23 | sha256:969f1a400a866759 | 1 | 1 |
 | final-m4-m4-hfr-json | catalogue/openapi/.raw/nha-2026-09-16/M4/M4-HFR.json | NHA's final M4 HFR swagger, 16 September 2026 | 2026-09-16 | sha256:25291734dd378285 | 0 | 0 |
 | final-m4-m4-hpid-json | catalogue/openapi/.raw/nha-2026-09-16/M4/M4-HPID.json | NHA's final M4 HPID swagger, 16 September 2026 | 2026-09-16 | sha256:7e2eb837caa110f8 | 0 | 0 |
 | final-m4-m4-hpr-json | catalogue/openapi/.raw/nha-2026-09-16/M4/M4-HPR.json | NHA's final M4 HPR swagger, 16 September 2026 | 2026-09-16 | sha256:fe3e5b211cf9f1c0 | 0 | 0 |
