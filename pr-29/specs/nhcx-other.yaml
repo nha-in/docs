@@ -1,0 +1,1905 @@
+# NHCX other, from the NHCX package's Bruno folder apis/13-other.
+#
+# Written by the package's own documentation build; change the .bru
+# requests there and port again rather than editing this file.
+#
+# Rules this file follows: catalogue/openapi/CONVENTIONS.md
+openapi: 3.1.1
+info:
+  x-portal:
+    module: other
+    label: Other
+    position: 13
+  title: NHCX other
+  summary: "Calls that belong to no single use case: notification subscription, deletion, the status callback, the protocol error report and the service's own Swagger documents."
+  description: |-
+    The Other calls on the National Health Claims Exchange (NHCX): 10 operations, and 2 callbacks you host.
+
+    Calls that belong to no single use case: notification subscription, deletion, the status callback, the protocol error report and the service's own Swagger documents.
+
+    Guides that use these calls: [Predetermination, status and search](/docs/nhcx/v1/reference/fhir/predetermination-status-and-search), [Notifications and patient apps](/docs/nhcx/v1/reference/notifications-and-patient-apps), [Accepted with 202, and no callback arrives](/docs/nhcx/v1/troubleshooting/accepted-then-no-callback).
+
+    Production address for the NHCX portal: not published.
+  version: nhcx-v1
+  license:
+    name: MIT
+    identifier: MIT
+  contact:
+    name: NHCX sandbox
+    url: https://hcxsbx.abdm.gov.in
+  x-abdm-gateway: nhcx
+  x-abdm-module: other
+  x-abdm-phase: 1
+  x-abdm-roles:
+    - provider
+    - payer
+x-abdm-sources:
+  - file: nhcx-package/apis/13-other
+    role: upstream
+    hash: sha256:d65315e2042e17c77dd9400fc36380a58195496d693f53bb5102e805d7231de2
+    note: The package's Bruno collection, one request per operation.
+  - file: nhcx-package/baseurl.yaml
+    role: upstream
+    hash: sha256:88515b7b29c6b349a131e016c80774436ea16a29738db743b4cc3a24cbd42453
+    note: The sandbox and production hosts.
+  - file: nhcx-package/nhcx-error.yaml
+    role: upstream
+    hash: sha256:d24ac927ed4dd722e60d7bd1d6fed15de370cc29f750d68999ee56fac93c941b
+    note: The error codes.
+servers:
+  - url: https://apisbx.abdm.gov.in/hcx
+    description: Sandbox, NHCX exchange.
+  - url: https://apisprod.nha.gov.in/hcx
+    description: Production.
+tags:
+  - name: Other
+    description: "Calls that belong to no single use case: notification subscription, deletion, the status callback, the protocol error report and the service's own Swagger documents."
+security:
+  - bearerAuth: []
+paths:
+  /v1/notification/subscribe:
+    post:
+      operationId: other_v1_notification_subscribe
+      x-abdm-atom: nhcx.endpoint.notification-subscribe
+      x-abdm-use-case: Other
+      tags:
+        - Other
+      summary: Notification subscribe
+      description: |-
+        A Beneficiary Service Provider (PHR app) subscribes an ABHA id to notification topics; NHCX persists it synchronously, Last-Linked-Wins per ABHA id.
+
+        ### Business purpose
+
+        Every other flow is a two-party exchange between hospital and payer. Notifications let a third party, the beneficiary through a PHR app, watch a claim move without being a sender or recipient on the underlying preauth or claim. The caller is a Beneficiary Service Provider (BSP), not a hospital or insurer; the persona label here is the nearest available. The subscription is what routes human-readable messages such as a preauth approval with amount and validity to the patient's app, giving beneficiaries transparency and reducing calls to the hospital desk.
+
+        ### When to use
+
+        Call it every time a beneficiary logs in to your app. The last app to subscribe an ABHA ID wins, so do not trust a stored subscription.
+
+        ### Preconditions
+
+        - You have a valid access token, sent in the `Authorization` header.
+        - Your callback URL is registered over HTTPS, with TLS 1.2 or higher.
+        - The user has agreed to receive notifications.
+        - The body is encrypted and carries a new `x-hcx-correlation_id`.
+
+        ### Postconditions
+
+        NHCX saves the subscription and answers `200` with a `subscription_id` and its status. From then on, claim events for that ABHA ID are pushed to your callback.
+
+        ### Common mistakes
+
+        - Reusing a correlation ID on a retry, which returns `409`.
+        - Subscribing once and assuming it still holds after another app logs in.
+        - Sending it to the exchange host instead of `https://hcxsbx.abdm.gov.in/v1/notification/subscribe`.
+        - Sending the token on `bearer_auth` instead of `Authorization`.
+
+        ### Best practices
+
+        - Subscribe on every login and refresh the token before its 20-minute (1200-second) expiry; store access_token encrypted and never log the secret.
+        - Generate a fresh UUID correlation id per subscribe attempt, including retries; retry 500s with backoff, regenerate the token on 401, check the registry on 403.
+        - Subscribe only to the topics you need, typically workflow_events.
+        - Secure the callback: HTTPS with TLS 1.2 or higher, validate the JWT from NHCX, verify sender_code, rate-limit.
+        - Display the message field directly to users; treat domain_values as optional audit data and read status from x-hcx-status, not the workflow id description.
+
+        ### Related scenario
+
+        A beneficiary opens a PHR app and logs in with the ABHA address ravi@abdm. The app confirms its NHCX token is valid, then posts /v1/notification/subscribe with subscription_id sub_ravi_001, topic_code workflow_events, its BSP code and its on_notification_url, under a fresh correlation id. NHCX replies 200 with subscription_status active. Later that day a hospital submits a preauth for the same ABHA id on /v1/preauth/submit and the payer approves it on /v1/preauth/on_submit; NHCX pushes a notification to the app's callback reading that the preauthorisation was approved for Rs. 50,000 with its validity dates, which the app displays as-is.
+
+        ### Specification
+
+        Chapter [Notifications and patient apps](/docs/nhcx/v1/reference/notifications-and-patient-apps) of the NHCX integration specification.
+      security: []
+      servers:
+        - url: https://hcxsbx.abdm.gov.in
+          description: Sandbox, NHCX portal.
+      parameters:
+        - name: x-hcx-sender_code
+          in: header
+          required: true
+          description: Your participant code. Mandatory on the envelope.
+          schema:
+            type: string
+          example: phr-app-xyz@bsp
+        - name: x-hcx-recipient_code
+          in: header
+          required: true
+          description: The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
+          schema:
+            type: string
+          example: nhcx-gateway@hcx
+        - $ref: "#/components/parameters/XHcxTimestamp"
+        - $ref: "#/components/parameters/XHcxCorrelationId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payload:
+                  type: string
+                _payload_plaintext:
+                  type: object
+                  properties:
+                    subscription_id:
+                      type: string
+                    topic_code:
+                      type: array
+                      items:
+                        type: string
+                    recipient_code:
+                      type: string
+                    subscriber:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                    on_notification_url:
+                      type: string
+            example:
+              payload: eyJhbGciOiJSU0EtT0FFUCIsImVuYyI6IkEyNTZHQ00iLCJ4LWhjeC1zZW5kZXJfY29kZSI6InBoci1hcHAteHl6QGJzcCJ9.encrypted_key.iv.ciphertext.tag
+              _payload_plaintext:
+                subscription_id: sub_ravi_001
+                topic_code:
+                  - workflow_events
+                recipient_code: phr-app-xyz@bsp
+                subscriber:
+                  id: ravi@abdm
+                on_notification_url: https://api.phrapp.com/v1/hcx/notification/on_subscribe
+      responses:
+        "200":
+          description: "NHCX decrypts the request with its private key, validates headers and payload, persists the subscription with Last-Linked-Wins per ABHA id and returns the subscription state synchronously: HTTP 200 with a SubscribeResponse carrying timestamp, api_call_id, correlation_id, subscription_id, subscription_status (active, replaced or expired), expiry and message."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  timestamp:
+                    type: string
+                  api_call_id:
+                    type: string
+                  correlation_id:
+                    type: string
+                  subscription_id:
+                    type: string
+                  subscription_status:
+                    type: string
+                  expiry:
+                    type: string
+                  message:
+                    type: string
+              example:
+                timestamp: 2026-08-25T08:30:00+05:30
+                api_call_id: d6e7f8a9-b0c1-2345-9012-456789012345
+                correlation_id: 8899aabb-ccdd-eeff-0011-223344556677
+                subscription_id: sub_ravi_001
+                subscription_status: active
+                expiry: ""
+                message: Subscription accepted
+  /v1/notification/on_subscribe:
+    post:
+      operationId: other_v1_notification_on_subscribe
+      x-abdm-use-case: Other
+      tags:
+        - Other
+      summary: Notification on_subscribe
+      description: |-
+        BSP-side subscription acknowledgement; the same name denotes the callback where NHCX pushes claim-event notifications for a subscribed ABHA id.
+
+        ### Business purpose
+
+        Two things share this name. The API reference defines an NHCX-side operation (operationId onSubscribe) that takes a NotificationOnSubscribePayload with the beneficiary's abhaid, optional domain_values and plain header values, and returns a SubscribeResponse; it is described as the BSP-side subscription persistence acknowledgement. The integration guide uses the same path on the BSP's own host as the callback where NHCX delivers notifications. Together they complete the beneficiary-facing loop: the patient's app learns, in plain language, that a preauth was approved, a claim adjudicated, a payment made or information requested. The caller is a Beneficiary Service Provider; the persona label is the nearest available.
+
+        ### When to use
+
+        A beneficiary app hosts this path to receive notifications for the ABHA IDs it subscribed. NHCX calls it when a pre-authorisation, claim, payment or query event happens.
+
+        ### Preconditions
+
+        - An active subscription exists for the ABHA ID, made through `/v1/notification/subscribe`.
+        - Your callback runs over HTTPS with TLS 1.2 or higher, at the registered `on_notification_url`.
+        - You check the token NHCX sends and its sender code.
+
+        ### Postconditions
+
+        Each notification carries a `message` you can show the user as it is. Nothing changes in the exchange between hospital and payer.
+
+        ### Common mistakes
+
+        - Building the user message from `domain_values`, which may be missing, instead of showing `message`.
+        - Reading the status from `x-hcx-workflow_id`. It lives in `x-hcx-status`.
+        - Assuming the subscription is still yours after it shows `replaced`.
+        - Accepting calls without checking the token or the sender code.
+
+        ### Best practices
+
+        - Display message verbatim; keep domain_values for audit logging or advanced formatting only.
+        - Validate the JWT and sender_code on every inbound push, enforce TLS 1.2 or higher and rate limiting.
+        - Map event types (preauth_response, claim_response, payment_notice, communication) to in-app timelines using x-hcx-action and x-hcx-status.
+        - Show subscription status in settings so a replaced subscription is visible to the user; resubscribe on next login.
+        - Keep the endpoint fast and idempotent on notification_id.
+
+        ### Related scenario
+
+        A PHR app has subscribed ravi@abdm to workflow_events. A hospital submits a claim on /v1/claim/submit for that beneficiary and the payer adjudicates it on /v1/claim/on_submit. NHCX forks the outcome to the app's registered on_subscribe callback with topic_code workflow_events, a message stating the claim was approved with the amount, and domain_values including x-hcx-action claim_response and x-hcx-status response.complete. The app validates the JWT and sender_code, shows the message on the patient's timeline, and when the payer later sends a payment notice on /v1/paymentnotice/request the next push reads paid.
+
+        ### Specification
+
+        Chapter [Notifications and patient apps](/docs/nhcx/v1/reference/notifications-and-patient-apps) of the NHCX integration specification.
+      parameters:
+        - $ref: "#/components/parameters/BearerAuth"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                request:
+                  type: object
+                  properties:
+                    abhaid:
+                      type: string
+                    domain_values:
+                      type: object
+                      properties:
+                        x-hcx-workflow_id:
+                          type: string
+                        x-hcx-correlation_id:
+                          type: string
+                        x-hcx-timestamp:
+                          type: string
+                        x-hcx-sender_code:
+                          type: string
+                        x-hcx-recipient_code:
+                          type: string
+                        x-hcx-status:
+                          type: string
+                        x-hcx-action:
+                          type: string
+                        x-hcx-amount_submitted:
+                          type: string
+                hvalues:
+                  type: object
+                  properties:
+                    senderid:
+                      type: string
+                    receiverid:
+                      type: string
+                    correlationid:
+                      type: string
+                    status:
+                      type: string
+                    workflowid:
+                      type: string
+            example:
+              request:
+                abhaid: ravi@abdm
+                domain_values:
+                  x-hcx-workflow_id: wf_20260825_001
+                  x-hcx-correlation_id: corr_20260825_12345
+                  x-hcx-timestamp: 2026-08-25T14:30:00+05:30
+                  x-hcx-sender_code: payor.icici@nhcx
+                  x-hcx-recipient_code: bsp.phrapp@nhcx
+                  x-hcx-status: response.complete
+                  x-hcx-action: preauth_response
+                  x-hcx-amount_submitted: "75000.00"
+              hvalues:
+                senderid: payor.icici@nhcx
+                receiverid: bsp.phrapp@nhcx
+                correlationid: corr_20260825_12345
+                status: response.complete
+                workflowid: wf_20260825_001
+      responses:
+        "200":
+          description: The NHCX-side operation returns HTTP 200 with a SubscribeResponse (timestamp, api_call_id, correlation_id, subscription_id, subscription_status active, replaced or expired, expiry, message); 400, 401, 403, 409 and 500 return a StatusSuccessResponse with the same descriptions as the subscribe table.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  timestamp:
+                    type: string
+                  api_call_id:
+                    type: string
+                  correlation_id:
+                    type: string
+                  subscription_id:
+                    type: string
+                  subscription_status:
+                    type: string
+                  expiry:
+                    type: string
+                  message:
+                    type: string
+              example:
+                timestamp: 2026-08-25T14:30:01+05:30
+                api_call_id: e7f8a9b0-c1d2-3456-0123-567890123456
+                correlation_id: corr_20260825_12345
+                subscription_id: sub_ravi_001
+                subscription_status: active
+                expiry: ""
+                message: "Preauthorization approved for Rs. 50,000. Valid from 2026-08-25 to 2026-09-01. Reference: PA-2026-004567"
+  /v1/delete:
+    post:
+      operationId: other_v1_delete
+      x-abdm-use-case: Other
+      tags:
+        - Other
+      summary: Delete records (troubleshooting)
+      description: |-
+        Internal troubleshooting operation on the claim service that deletes records by correlationid and action; not part of the business transaction flows.
+
+        ### Business purpose
+
+        The claim service OpenAPI lists /v1/delete as an internal troubleshooting operation for deleting records identified by a correlationid and an action. It exists to clear stuck or erroneous records during integration testing and support, not to move a claim through its lifecycle. The published documentation gives no further business context and does not state which participant roles may call it.
+
+        ### When to use
+
+        Only for troubleshooting, and only when NHCX support asks you to. It is not part of any claim flow.
+
+        ### Preconditions
+
+        - You have a valid access token.
+        - You know the correlation ID and the action of the record to remove.
+        - NHCX support agrees that deleting it is the right fix.
+
+        ### Postconditions
+
+        The record is removed. To carry on, start a new request with a new correlation ID.
+
+        ### Common mistakes
+
+        - Using it to cancel a pre-authorisation. Cancel with a `Task` on `/v1/task/submit`, workflow `PC01`.
+        - Reusing the old correlation ID after a delete.
+        - Calling it in production without NHCX support.
+
+        ### Best practices
+
+        - Reserve this call for sandbox troubleshooting and only on NHCX support's instruction.
+        - Record the correlation ID, action and reason for every deletion in your own audit log, since the docs describe no NHCX-side confirmation beyond the HTTP status.
+        - Prefer /v1/status to inspect a stuck correlation ID before deleting anything.
+        - Mint a new correlation UUID for any re-submission after a deletion.
+
+        ### Related scenario
+
+        During sandbox testing a hospital's integrator submits a claim whose callback keeps failing because their endpoint returned 200 instead of 202. NHCX support asks them to fix the acknowledgement and then clears the stuck record by correlation ID and action using /v1/delete so the test case can be rerun cleanly. The integrator resubmits the claim to /v1/claim/submit under a new correlation UUID, receives a 202, and this time the on_submit callback is acknowledged correctly.
+
+        ### Specification
+
+        No chapter of the current documentation covers this operation. It appears only in the claim service's OpenAPI.
+      parameters:
+        - $ref: "#/components/parameters/BearerAuth"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                correlationid:
+                  type: string
+                action:
+                  type: string
+            example:
+              correlationid: 5d4c3b2a-1f0e-4d9c-8b7a-6f5e4d3c2b1a
+              action: /v1/claim/submit
+      responses:
+        "200":
+          description: The endpoint sits in the claim service, whose domain operations all return 202 Accepted, 400 Request Validation failed, 404 Requested resource was not found and 500 Downstream systems down, each carrying StatusSuccessResponse.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  httpStatus:
+                    type: integer
+                  schema:
+                    type: string
+                  note:
+                    type: string
+              example:
+                httpStatus: 202
+                schema: StatusSuccessResponse
+                note: The claim service spec lists 202, 400, 404 and 500, all carrying StatusSuccessResponse; no worked response body is published for /v1/delete.
+  /v3/api-docs:
+    get:
+      operationId: other_v3_api_docs
+      x-abdm-use-case: Other
+      tags:
+        - Other
+      summary: OpenAPI 3 document (status service)
+      description: |-
+        Serves the status service's OpenAPI 3 document, optionally filtered by a group query parameter; a discovery endpoint, not a protocol API.
+
+        ### Business purpose
+
+        Integrators need a machine-readable contract for the Status API in order to generate clients, validate their requests and confirm the server prefix. This endpoint serves that contract in OpenAPI 3 form for the status service (statushcxservice, OpenAPI 3.0.1, service version 1.0.0). It carries no claim-settlement data and involves no payer or provider business logic; its value is purely in making the /v1/status operation discoverable and verifiable during integration and troubleshooting.
+
+        ### When to use
+
+        Use it when you set up an integration or generate a client, to read the status service's contract. It is not part of any claim flow.
+
+        ### Preconditions
+
+        - A plain `GET` to the status service host, under `/statushcxservice`.
+        - No encryption, no `x-hcx-*` headers and no request body.
+
+        ### Postconditions
+
+        The service returns `200` with its OpenAPI 3 document. Nothing changes and no callback follows.
+
+        ### Common mistakes
+
+        - Calling the gateway address instead of the status service host.
+        - Treating this document as the contract for gateway traffic.
+        - Sending a `POST`, a request body or `x-hcx-*` headers.
+
+        ### Best practices
+
+        - Use these endpoints for exploration and client generation in the sandbox, and cache the document rather than fetching it on every run.
+        - Diff the served document against the corpus (Status service: OpenAPI 3.0.1, version 1.0.0) when behaviour changes unexpectedly.
+        - Never let production traffic depend on the availability of the documentation endpoints.
+        - Keep the /v1/status protocol rules in mind when reading the spec: x-hcx-correlation_id must carry the original request's correlation id.
+
+        ### Related scenario
+
+        A hospital's integration team is building status polling for stalled preauthorisations. Before wiring /v1/status, an engineer fetches /v3/api-docs from the status service host, confirms the server prefix and the response schema, and generates a typed client. The team then implements the status request with the original correlation id in x-hcx-correlation_id, handles the synchronous request.queued and request.dispatched outcomes, and receives the payer's answer on the status callback.
+
+        ### Specification
+
+        Chapter [Environments and addresses](/docs/nhcx/v1/reference/environments-and-addresses) of the NHCX integration specification.
+      parameters:
+        - $ref: "#/components/parameters/BearerAuth"
+      responses:
+        "200":
+          description: "The service returns HTTP 200 with a JSON OpenAPI 3 document describing the status service: its info block, the /statushcxservice server entry and the /v1/status operation with its StatusSuccessResponse responses."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  openapi:
+                    type: string
+                  info:
+                    type: object
+                    properties:
+                      title:
+                        type: string
+                      version:
+                        type: string
+                  servers:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        url:
+                          type: string
+                  paths:
+                    type: object
+                    properties:
+                      /v1/status:
+                        type: object
+                        properties:
+                          post:
+                            type: object
+                            properties:
+                              operationId:
+                                type: string
+                              responses:
+                                type: object
+                                properties:
+                                  "202":
+                                    type: object
+                                    properties:
+                                      description:
+                                        type: string
+              example:
+                openapi: 3.0.1
+                info:
+                  title: Status service
+                  version: 1.0.0
+                servers:
+                  - url: /statushcxservice
+                paths:
+                  /v1/status:
+                    post:
+                      operationId: status
+                      responses:
+                        "202":
+                          description: Accepted
+  /v2/api-docs:
+    get:
+      operationId: other_v2_api_docs
+      x-abdm-use-case: Other
+      tags:
+        - Other
+      summary: Swagger 2 document (status service)
+      description: |-
+        Serves the status service's Swagger 2 document, optionally filtered by a group query parameter; a discovery endpoint, not a protocol API.
+
+        ### Business purpose
+
+        Some tooling still consumes Swagger 2 rather than OpenAPI 3. This endpoint serves the status service's contract in that older format so that such tools can generate clients and validate requests against /v1/status. It exists alongside /v3/api-docs and describes the same service; it carries no claim-settlement data and involves no business logic. Its value is limited to integration setup and troubleshooting.
+
+        ### When to use
+
+        Use it when your tools need the older Swagger 2 format. It describes the same service as `/v3/api-docs`.
+
+        ### Preconditions
+
+        - A plain `GET` to the status service host, under `/statushcxservice`.
+        - No encryption, no `x-hcx-*` headers and no request body.
+
+        ### Postconditions
+
+        The service returns `200` with its Swagger 2 document. Nothing changes and no callback follows.
+
+        ### Common mistakes
+
+        - Calling the gateway address instead of the status service host.
+        - Treating this document as the contract for gateway traffic.
+        - Sending a `POST`, a request body or `x-hcx-*` headers.
+
+        ### Best practices
+
+        - Use these endpoints for exploration and client generation in the sandbox, and cache the document rather than fetching it on every run.
+        - Diff the served document against the corpus (Status service: OpenAPI 3.0.1, version 1.0.0) when behaviour changes unexpectedly.
+        - Never let production traffic depend on the availability of the documentation endpoints.
+        - Keep the /v1/status protocol rules in mind when reading the spec: x-hcx-correlation_id must carry the original request's correlation id.
+
+        ### Related scenario
+
+        A TPA's legacy integration platform only imports Swagger 2 definitions. During onboarding to the status flow the team fetches /v2/api-docs from the status service, imports it, and confirms that the /v1/status operation and its StatusSuccessResponse are represented. They then implement the JWE-wrapped status request for preauthorisations that have not received an on_submit callback, and respond to providers' status requests on the status callback.
+
+        ### Specification
+
+        Chapter [Environments and addresses](/docs/nhcx/v1/reference/environments-and-addresses) of the NHCX integration specification.
+      parameters:
+        - $ref: "#/components/parameters/BearerAuth"
+      responses:
+        "200":
+          description: "The service returns HTTP 200 with a JSON Swagger 2 document (swagger: 2.0) describing the status service, its base path and the /v1/status operation."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  swagger:
+                    type: string
+                  info:
+                    type: object
+                    properties:
+                      title:
+                        type: string
+                      version:
+                        type: string
+                  basePath:
+                    type: string
+                  paths:
+                    type: object
+                    properties:
+                      /v1/status:
+                        type: object
+                        properties:
+                          post:
+                            type: object
+                            properties:
+                              operationId:
+                                type: string
+                              responses:
+                                type: object
+                                properties:
+                                  "202":
+                                    type: object
+                                    properties:
+                                      description:
+                                        type: string
+              example:
+                swagger: "2.0"
+                info:
+                  title: Status service
+                  version: 1.0.0
+                basePath: /statushcxservice
+                paths:
+                  /v1/status:
+                    post:
+                      operationId: status
+                      responses:
+                        "202":
+                          description: Accepted
+  /swagger-resources:
+    get:
+      operationId: other_swagger_resources
+      x-abdm-use-case: Other
+      tags:
+        - Other
+      summary: Swagger resources list
+      description: |-
+        Lists the Swagger resources (API document locations) exposed by the status service; used by Swagger UI, not by integrations.
+
+        ### Business purpose
+
+        Swagger UI discovers which API documents a service offers by reading this list. On the status service it points the UI at the /v2/api-docs and /v3/api-docs documents so that an engineer can browse the /v1/status operation interactively. It carries no claim-settlement data and involves no business logic; the endpoint index describes it simply as the list of Swagger resources.
+
+        ### When to use
+
+        Use it only with Swagger UI, or when a tool needs to find the service's API documents. Integrations never call it.
+
+        ### Preconditions
+
+        - A plain `GET` to the status service host, under `/statushcxservice`.
+        - No encryption, no `x-hcx-*` headers and no request body.
+
+        ### Postconditions
+
+        The service returns `200` with a list of where its API documents live. Nothing changes and no callback follows.
+
+        ### Common mistakes
+
+        - Calling the gateway address instead of the status service host.
+        - Treating this document as the contract for gateway traffic.
+        - Sending a `POST`, a request body or `x-hcx-*` headers.
+
+        ### Best practices
+
+        - Use these endpoints for exploration and client generation in the sandbox, and cache the document rather than fetching it on every run.
+        - Diff the served document against the corpus (Status service: OpenAPI 3.0.1, version 1.0.0) when behaviour changes unexpectedly.
+        - Never let production traffic depend on the availability of the documentation endpoints.
+        - Keep the /v1/status protocol rules in mind when reading the spec: x-hcx-correlation_id must carry the original request's correlation id.
+
+        ### Related scenario
+
+        An integration engineer opens Swagger UI against the status service in the sandbox to reproduce a colleague's failing status call. The UI first requests /swagger-resources to learn where the API documents live, then loads /v3/api-docs. The engineer inspects the /v1/status operation, notices the colleague had minted a fresh correlation id instead of reusing the original preauth correlation id, and fixes the client before retrying the status request.
+
+        ### Specification
+
+        Chapter [Environments and addresses](/docs/nhcx/v1/reference/environments-and-addresses) of the NHCX integration specification.
+      parameters:
+        - $ref: "#/components/parameters/BearerAuth"
+      responses:
+        "200":
+          description: The service returns HTTP 200 with a JSON list of resource descriptors that locate the service's API documents.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _note:
+                    type: string
+                  resources:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        url:
+                          type: string
+                        swaggerVersion:
+                          type: string
+              example:
+                _note: The service returns a JSON array of resource descriptors; wrapped here for display.
+                resources:
+                  - name: default
+                    url: /v3/api-docs
+                    swaggerVersion: "3.0"
+  /swagger-resources/configuration/ui:
+    get:
+      operationId: other_swagger_resources_configuration_ui
+      x-abdm-use-case: Other
+      tags:
+        - Other
+      summary: Swagger UI configuration
+      description: |-
+        Returns the Swagger UI display configuration for the status service; consumed by Swagger UI, not by integrations.
+
+        ### Business purpose
+
+        Swagger UI reads this endpoint to learn how the service wants its documentation rendered (for example, expansion and deep-linking settings). It supports the interactive exploration of the status service's /v1/status operation and has no role in claim settlement, routing or security. The endpoint index describes it as the Swagger UI configuration.
+
+        ### When to use
+
+        Use it only in a Swagger UI session against the status service. Integrations never call it.
+
+        ### Preconditions
+
+        - A plain `GET` to the status service host, under `/statushcxservice`.
+        - No encryption, no `x-hcx-*` headers and no request body.
+
+        ### Postconditions
+
+        The service returns `200` with a small set of UI settings. Nothing changes and no callback follows.
+
+        ### Common mistakes
+
+        - Calling the gateway address instead of the status service host.
+        - Treating this document as the contract for gateway traffic.
+        - Sending a `POST`, a request body or `x-hcx-*` headers.
+
+        ### Best practices
+
+        - Use these endpoints for exploration and client generation in the sandbox, and cache the document rather than fetching it on every run.
+        - Diff the served document against the corpus (Status service: OpenAPI 3.0.1, version 1.0.0) when behaviour changes unexpectedly.
+        - Never let production traffic depend on the availability of the documentation endpoints.
+        - Keep the /v1/status protocol rules in mind when reading the spec: x-hcx-correlation_id must carry the original request's correlation id.
+
+        ### Related scenario
+
+        While preparing sandbox exit evidence, a payer's engineer captures screenshots of the status service's Swagger UI. The browser loads /swagger-resources/configuration/ui to decide how to render the page, then the resources list and the OpenAPI document. The engineer uses the rendered /v1/status operation to explain to the certification reviewer how the payer responds on the status callback when a provider asks about a dispatched preauthorisation.
+
+        ### Specification
+
+        Chapter [Environments and addresses](/docs/nhcx/v1/reference/environments-and-addresses) of the NHCX integration specification.
+      parameters:
+        - $ref: "#/components/parameters/BearerAuth"
+      responses:
+        "200":
+          description: The service returns HTTP 200 with a small JSON object of UI settings.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deepLinking:
+                    type: boolean
+                  docExpansion:
+                    type: string
+                  displayRequestDuration:
+                    type: boolean
+              example:
+                deepLinking: true
+                docExpansion: none
+                displayRequestDuration: false
+  /swagger-resources/configuration/security:
+    get:
+      operationId: other_swagger_resources_configuration_security
+      x-abdm-use-case: Other
+      tags:
+        - Other
+      summary: Swagger security configuration
+      description: |-
+        Returns the Swagger UI security configuration for the status service; consumed by Swagger UI, not by integrations.
+
+        ### Business purpose
+
+        Swagger UI reads this endpoint to learn how to present authorisation inputs (such as a bearer token field) when a user tries operations from the browser. It describes UI behaviour only; it does not issue tokens, and it is unrelated to the client-credentials flow at /get/session or to the JWE encryption that protects protocol payloads. The endpoint index describes it as the Swagger security configuration.
+
+        ### When to use
+
+        Use it only in a Swagger UI session against the status service. It does not issue tokens, and integrations never call it.
+
+        ### Preconditions
+
+        - A plain `GET` to the status service host, under `/statushcxservice`.
+        - No encryption, no `x-hcx-*` headers and no request body.
+
+        ### Postconditions
+
+        The service returns `200` with the UI's security settings. No token is issued and no callback follows.
+
+        ### Common mistakes
+
+        - Calling the gateway address instead of the status service host.
+        - Treating this document as the contract for gateway traffic.
+        - Sending a `POST`, a request body or `x-hcx-*` headers.
+        - Mistaking it for a way to get a token.
+
+        ### Best practices
+
+        - Use these endpoints for exploration and client generation in the sandbox, and cache the document rather than fetching it on every run.
+        - Diff the served document against the corpus (Status service: OpenAPI 3.0.1, version 1.0.0) when behaviour changes unexpectedly.
+        - Never let production traffic depend on the availability of the documentation endpoints.
+        - Keep the /v1/status protocol rules in mind when reading the spec: x-hcx-correlation_id must carry the original request's correlation id.
+
+        ### Related scenario
+
+        A provider's engineer wants to try /v1/status from Swagger UI in the sandbox. The UI fetches /swagger-resources/configuration/security to decide how to show the authorisation dialog, and the engineer pastes a Bearer token obtained separately from the client-credentials call. Because the status request body must be a JWE built with the payer's certificate, the engineer ultimately uses the UI only to confirm the schema and runs the real status request from the integration code, which reuses the original preauth correlation id.
+
+        ### Specification
+
+        Chapter [Environments and addresses](/docs/nhcx/v1/reference/environments-and-addresses) of the NHCX integration specification.
+      parameters:
+        - $ref: "#/components/parameters/BearerAuth"
+      responses:
+        "200":
+          description: The service returns HTTP 200 with a small JSON object describing how Swagger UI should handle security inputs.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  apiKeyVehicle:
+                    type: string
+                  apiKeyName:
+                    type: string
+                  scopeSeparator:
+                    type: string
+              example:
+                apiKeyVehicle: header
+                apiKeyName: bearer_auth
+                scopeSeparator: ","
+  /v1/on_status:
+    post:
+      operationId: other_v1_on_status
+      x-abdm-atom: nhcx.endpoint.on-status
+      x-abdm-use-case: Other
+      tags:
+        - Other
+      summary: Status callback
+      description: |-
+        The answer to a status request, delivered to the sender that asked. The `x-hcx-status` in the protected header says where the message you asked about got to. The payload is an empty string.
+
+        ### Business purpose
+
+        It separates "did my message arrive" from "what did the payer decide". A sender learns whether a quiet case is still held by the exchange, has reached the recipient, or is dead, without resubmitting it and creating a duplicate.
+
+        ### When to use
+
+        Every participant that sends `/v1/status` hosts this path. It carries the answer to your status request.
+
+        ### Preconditions
+
+        - You sent `/v1/status` and kept track of which request it asked about.
+        - Your callback URL is registered and answers `202` within 30 seconds.
+
+        ### Postconditions
+
+        Read `x-hcx-status` in the header. `request.dispatched` means the message reached the recipient, and `request.queued` means NHCX still holds it. `request.stopped` means the request is dead, so a retry needs a new correlation ID. Answer `202`.
+
+        ### Common mistakes
+
+        - Expecting a bundle. The payload is an empty string.
+        - Matching on the original request's correlation ID instead of your status request's.
+        - Retrying a stopped request on its old correlation ID.
+
+        ### Best practices
+
+        - Keep every `api_call_id` you send. Without it you cannot ask the question at all.
+        - Act on `request.stopped` at once, and treat `request.dispatched` as a reason to wait for the payer.
+        - Ask from a support screen when a case has gone quiet for longer than the payer's expected turnaround, not on a timer.
+
+        ### Related scenario
+
+        A pre-authorisation has had no answer for longer than the payer's usual turnaround. The support screen sends `/v1/status` with that request's `api_call_id` as the correlation ID. The answer arrives here with an empty payload and `x-hcx-status` `request.stopped`, so the desk knows the request is dead rather than slow, and resubmits it with a fresh correlation ID.
+
+        ### Specification
+
+        Chapter [NHCX adapter (Optional)](/docs/nhcx/v1/getting-started/nhcx-adapter) of the NHCX integration specification.
+      parameters:
+        - $ref: "#/components/parameters/BearerAuth"
+        - name: x-hcx-sender_code
+          in: header
+          required: true
+          description: Your participant code. Mandatory on the envelope.
+          schema:
+            type: string
+          example: <participant code>
+        - name: x-hcx-recipient_code
+          in: header
+          required: true
+          description: The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
+          schema:
+            type: string
+          example: <recipient code>
+        - $ref: "#/components/parameters/XHcxApiCallId"
+        - name: x-hcx-correlation_id
+          in: header
+          required: true
+          description: The thread. See the rule below. Mandatory on the envelope.
+          schema:
+            type: string
+          example: <correlation id>
+        - $ref: "#/components/parameters/XHcxTimestamp"
+        - name: x-hcx-status
+          in: header
+          required: true
+          description: Where this message stands. Values below. Mandatory on the envelope.
+          schema:
+            type: string
+          example: response.complete
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payload:
+                  type: string
+            example:
+              payload: <compact JWE>
+      responses:
+        "200":
+          description: Read `x-hcx-status` from the protected header.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  timestamp:
+                    type: string
+                  api_call_id:
+                    type: string
+                  correlation_id:
+                    type: string
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+              example:
+                timestamp: 19/03/2026 11:46:35:120
+                api_call_id: "{{$guid}}"
+                correlation_id: "{{correlationId}}"
+                error:
+                  code: ""
+                  message: ""
+  /v1/error:
+    post:
+      operationId: other_v1_error
+      x-abdm-use-case: Other
+      tags:
+        - Other
+      summary: Error report (callback)
+      description: |-
+        Where the exchange tells a sender that a request could not be delivered after five attempts. Received by every participant under its registered address. There is no outbound form.
+
+        ### Business purpose
+
+        When the exchange cannot deliver a request, it tries five times, retires the correlation ID and tells the original sender here. A system without this endpoint never learns that its request died, and a dead request looks exactly like a case still under review. Every participant must host it.
+
+        ### When to use
+
+        You host this path and never call it. Providers and payers both need it, so build it first.
+
+        ### Preconditions
+
+        - Your callback URL is registered: a domain name over HTTPS, hosted in India, answering within 30 seconds.
+        - Your handler accepts a body it does not know. The report is plain JSON, not encrypted.
+
+        ### Postconditions
+
+        Answer `202`. The original request is dead, so a retry needs a new correlation ID.
+
+        ### Common mistakes
+
+        - Not hosting it, so failed deliveries go unseen.
+        - Rejecting the report because it does not match a fixed schema.
+        - Retrying the failed request on the old correlation ID.
+
+        ### Best practices
+
+        - Store the report whole before doing anything with it.
+        - Mark the case it names as undelivered, so the desk does not wait for a decision that will not come.
+        - Check it first when a case goes quiet, before asking the exchange with `/v1/status`.
+
+        ### Related scenario
+
+        A hospital posts a pre-authorisation and gets its receipt, but the payer's endpoint is down. The exchange tries five times, retires the correlation ID and posts a report to the hospital's `/v1/error`. The handler stores the report whole, answers 202 with the receipt, and marks the pre-authorisation undelivered. The desk resubmits it with a fresh correlation ID once the payer is reachable.
+
+        ### Specification
+
+        Chapter [Building and sending a JWE](/docs/nhcx/v1/getting-started/building-and-sending-a-jwe) of the NHCX integration specification.
+      parameters:
+        - $ref: "#/components/parameters/BearerAuth"
+        - name: x-hcx-sender_code
+          in: header
+          required: true
+          description: Your participant code. Mandatory on the envelope.
+          schema:
+            type: string
+          example: nhcx-gateway@hcx
+        - name: x-hcx-recipient_code
+          in: header
+          required: true
+          description: The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
+          schema:
+            type: string
+          example: 1000004446@hcx
+        - $ref: "#/components/parameters/XHcxApiCallId"
+        - name: x-hcx-correlation_id
+          in: header
+          required: true
+          description: The thread. See the rule below. Mandatory on the envelope.
+          schema:
+            type: string
+          example: <correlation id>
+        - $ref: "#/components/parameters/XHcxTimestamp"
+        - name: x-hcx-status
+          in: header
+          required: true
+          description: Where this message stands. Values below. Mandatory on the envelope.
+          schema:
+            type: string
+          example: response.error
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                x-hcx-sender_code:
+                  type: string
+                x-hcx-recipient_code:
+                  type: string
+                x-hcx-api_call_id:
+                  type: string
+                x-hcx-correlation_id:
+                  type: string
+                x-hcx-workflow_id:
+                  type: string
+                x-hcx-timestamp:
+                  type: string
+                x-hcx-status:
+                  type: string
+                x-hcx-error_details:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                    message:
+                      type: string
+                    trace:
+                      type: string
+                x-hcx-entity-type:
+                  type: string
+            example:
+              type: ProtocolResponse
+              x-hcx-sender_code: nhcx-gateway@hcx
+              x-hcx-recipient_code: 1000004446@hcx
+              x-hcx-api_call_id: <uuid>
+              x-hcx-correlation_id: <correlation id>
+              x-hcx-workflow_id: "12"
+              x-hcx-timestamp: <iso timestamp>
+              x-hcx-status: response.error
+              x-hcx-error_details:
+                code: ERR_DELIVERY_FAILED
+                message: Recipient endpoint unreachable after five attempts
+                trace: ""
+              x-hcx-entity-type: preauth
+      responses:
+        "200":
+          description: Answer 202 with the receipt, like every other delivery, filling in whatever identifiers the report carries and leaving the rest empty.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  timestamp:
+                    type: string
+                  api_call_id:
+                    type: string
+                  correlation_id:
+                    type: string
+                  result:
+                    type: object
+                    properties:
+                      sender_code:
+                        type: string
+                      recipient_code:
+                        type: string
+                      entity_type:
+                        type: string
+                      protocol_status:
+                        type: string
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+              example:
+                timestamp: 04/09/2026 11:46:41:305
+                api_call_id: <from the incoming header>
+                correlation_id: <from the incoming header>
+                result:
+                  sender_code: 1000003538@hcx
+                  recipient_code: 1000004446@hcx
+                  entity_type: preauth
+                  protocol_status: request.queued
+                error:
+                  code: ""
+                  message: ""
+webhooks:
+  /v1/on_status:
+    post:
+      operationId: other_webhook_v1_on_status
+      x-abdm-atom: nhcx.callback.on-status
+      x-abdm-triggered-by: other_v1_on_status
+      x-abdm-use-case: Webhooks
+      tags:
+        - Other
+      summary: Receive status callback
+      description: |-
+        Hosted by the provider. The exchange posts this message to the `endpoint_url` you registered, at `/v1/on_status`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+
+        The answer to a status request, delivered to the sender that asked. The `x-hcx-status` in the protected header says where the message you asked about got to. The payload is an empty string.
+      parameters:
+        - $ref: "#/components/parameters/BearerAuth"
+        - name: x-hcx-sender_code
+          in: header
+          required: true
+          description: Your participant code. Mandatory on the envelope.
+          schema:
+            type: string
+          example: <participant code>
+        - name: x-hcx-recipient_code
+          in: header
+          required: true
+          description: The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
+          schema:
+            type: string
+          example: <recipient code>
+        - $ref: "#/components/parameters/XHcxApiCallId"
+        - name: x-hcx-correlation_id
+          in: header
+          required: true
+          description: The thread. See the rule below. Mandatory on the envelope.
+          schema:
+            type: string
+          example: <correlation id>
+        - $ref: "#/components/parameters/XHcxTimestamp"
+        - name: x-hcx-status
+          in: header
+          required: true
+          description: Where this message stands. Values below. Mandatory on the envelope.
+          schema:
+            type: string
+          example: response.complete
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payload:
+                  type: string
+            example:
+              payload: <compact JWE>
+      responses:
+        "202":
+          description: Received. The receipt names the message it answers; the answer itself follows as a call of your own.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  timestamp:
+                    type: string
+                  api_call_id:
+                    type: string
+                  correlation_id:
+                    type: string
+                  result:
+                    type: object
+                    properties:
+                      sender_code:
+                        type: string
+                      recipient_code:
+                        type: string
+                      entity_type:
+                        type: string
+                      protocol_status:
+                        type: string
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+              example:
+                timestamp: 04/09/2026 11:46:41:305
+                api_call_id: <from the incoming header>
+                correlation_id: <from the incoming header>
+                result:
+                  sender_code: 1000003538@hcx
+                  recipient_code: 1000004446@hcx
+                  entity_type: preauth
+                  protocol_status: request.queued
+                error:
+                  code: ""
+                  message: ""
+  /v1/error:
+    post:
+      operationId: other_webhook_v1_error
+      x-abdm-atom: nhcx.callback.error
+      x-abdm-triggered-by: other_v1_error
+      x-abdm-use-case: Webhooks
+      tags:
+        - Other
+      summary: Receive error report (callback)
+      description: |-
+        Hosted by every participant. The exchange posts this message to the `endpoint_url` you registered, at `/v1/error`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+
+        Where the exchange tells a sender that a request could not be delivered after five attempts. Received by every participant under its registered address. There is no outbound form.
+      parameters:
+        - $ref: "#/components/parameters/BearerAuth"
+        - name: x-hcx-sender_code
+          in: header
+          required: true
+          description: Your participant code. Mandatory on the envelope.
+          schema:
+            type: string
+          example: nhcx-gateway@hcx
+        - name: x-hcx-recipient_code
+          in: header
+          required: true
+          description: The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
+          schema:
+            type: string
+          example: 1000004446@hcx
+        - $ref: "#/components/parameters/XHcxApiCallId"
+        - name: x-hcx-correlation_id
+          in: header
+          required: true
+          description: The thread. See the rule below. Mandatory on the envelope.
+          schema:
+            type: string
+          example: <correlation id>
+        - $ref: "#/components/parameters/XHcxTimestamp"
+        - name: x-hcx-status
+          in: header
+          required: true
+          description: Where this message stands. Values below. Mandatory on the envelope.
+          schema:
+            type: string
+          example: response.error
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                x-hcx-sender_code:
+                  type: string
+                x-hcx-recipient_code:
+                  type: string
+                x-hcx-api_call_id:
+                  type: string
+                x-hcx-correlation_id:
+                  type: string
+                x-hcx-workflow_id:
+                  type: string
+                x-hcx-timestamp:
+                  type: string
+                x-hcx-status:
+                  type: string
+                x-hcx-error_details:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                    message:
+                      type: string
+                    trace:
+                      type: string
+                x-hcx-entity-type:
+                  type: string
+            example:
+              type: ProtocolResponse
+              x-hcx-sender_code: nhcx-gateway@hcx
+              x-hcx-recipient_code: 1000004446@hcx
+              x-hcx-api_call_id: <uuid>
+              x-hcx-correlation_id: <correlation id>
+              x-hcx-workflow_id: "12"
+              x-hcx-timestamp: <iso timestamp>
+              x-hcx-status: response.error
+              x-hcx-error_details:
+                code: ERR_DELIVERY_FAILED
+                message: Recipient endpoint unreachable after five attempts
+                trace: ""
+              x-hcx-entity-type: preauth
+      responses:
+        "202":
+          description: Received. The receipt names the message it answers; the answer itself follows as a call of your own.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  timestamp:
+                    type: string
+                  api_call_id:
+                    type: string
+                  correlation_id:
+                    type: string
+                  result:
+                    type: object
+                    properties:
+                      sender_code:
+                        type: string
+                      recipient_code:
+                        type: string
+                      entity_type:
+                        type: string
+                      protocol_status:
+                        type: string
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+              example:
+                timestamp: 04/09/2026 11:46:41:305
+                api_call_id: <from the incoming header>
+                correlation_id: <from the incoming header>
+                result:
+                  sender_code: 1000003538@hcx
+                  recipient_code: 1000004446@hcx
+                  entity_type: preauth
+                  protocol_status: request.queued
+                error:
+                  code: ""
+                  message: ""
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: "On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value."
+  parameters:
+    BearerAuth:
+      name: bearer_auth
+      in: header
+      required: true
+      description: It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.
+      schema:
+        type: string
+      example: Bearer <access token>
+    XHcxSenderCode:
+      name: x-hcx-sender_code
+      in: header
+      required: true
+      description: Your participant code. Mandatory on the envelope.
+      schema:
+        type: string
+      example: 1000004446@hcx
+    XHcxRecipientCode:
+      name: x-hcx-recipient_code
+      in: header
+      required: true
+      description: The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
+      schema:
+        type: string
+      example: 1518@hcx
+    XHcxApiCallId:
+      name: x-hcx-api_call_id
+      in: header
+      required: true
+      description: Fresh on every message, including responses. Mandatory on the envelope.
+      schema:
+        type: string
+      example: <uuid>
+    XHcxRequestId:
+      name: x-hcx-request_id
+      in: header
+      required: false
+      description: "One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope. Send it anyway, as a fresh UUID per originating request: it is cheap and satisfies both readings until NHA rules."
+      schema:
+        type: string
+      example: <uuid>
+    XHcxCorrelationId:
+      name: x-hcx-correlation_id
+      in: header
+      required: true
+      description: The thread. See the rule below. Mandatory on the envelope.
+      schema:
+        type: string
+      example: <uuid>
+    XHcxWorkflowId:
+      name: x-hcx-workflow_id
+      in: header
+      required: false
+      description: Which step, or which case. See the two readings below. Optional on the envelope.
+      schema:
+        type: string
+      example: "18"
+    XHcxTimestamp:
+      name: x-hcx-timestamp
+      in: header
+      required: true
+      description: See the format note below. Mandatory on the envelope.
+      schema:
+        type: string
+      example: <iso timestamp>
+    XHcxStatus:
+      name: x-hcx-status
+      in: header
+      required: true
+      description: Where this message stands. Values below. Mandatory on the envelope.
+      schema:
+        type: string
+      example: request.initiated
+    XHcxBenAbhaId:
+      name: x-hcx-ben-abha-id
+      in: header
+      required: false
+      description: "The beneficiary's ABHA number. Optional: send it when the beneficiary has an ABHA number. Optional on the envelope."
+      schema:
+        type: string
+      example: "91711234567890"
+x-abdm-errors:
+  notes: |-
+    Codes any exchange call can meet are recorded once, in the [Other](/docs/nhcx/v1/api/other) specification: the gateway's NHCX- codes, the standard payer codes, and the reference payer's structure and transport codes. The reference payer's other codes sit with the exchange they reject: coverage eligibility, preauthorisation, claim and insurance plan. [Reading error codes](/docs/nhcx/v1/reference/error-code-guide) explains the code spaces.
+
+    18 codes from PAYR-1003 to PAYR-1020 mean one thing on the standard payer sheet and another on the reference payer's sheet. Read the code together with its message.
+  ranges:
+    - range: NHCX-1xxx
+      covers: The exchange, on the envelope. The message never reached the payer.
+      examples: "`NHCX-1001`, `NHCX-1002`"
+    - range: PAYR-10xx
+      covers: Transport and bundle structure. An element, id, sequence or type is missing. Not a value problem.
+      examples: "`PAYR-1001`, `PAYR-1002`"
+    - range: PAYR-11xx
+      covers: Coverage eligibility. The policy, the beneficiary or the hospital configuration.
+      examples: "`PAYR-1101`, `PAYR-1102`"
+    - range: PAYR-12xx
+      covers: Preauthorisation. Codes, amounts, dates, sequencing and scheme rules.
+      examples: "`PAYR-1201`, `PAYR-1202`"
+    - range: PAYR-13xx
+      covers: Claim. The same, against the approved preauthorisation.
+      examples: "`PAYR-1301`, `PAYR-1302`"
+    - range: PAYR-14xx
+      covers: Insurance plan, and the scheme's outer rules. Empanelment, policy association, plan configuration.
+      examples: "`PAYR-1401`, `PAYR-1402`"
+x-abdm-errors-gateway:
+  source: Gateway codes, NHCX-. Sent by the exchange; they arrive synchronously on your own call, or on /v1/error.
+  codes:
+    - code: NHCX-401
+      message: User Unauthorized
+      action: ""
+    - code: NHCX-1001
+      message: Receiver system is not reachable.
+      action: ""
+    - code: NHCX-1002
+      message: Sender not registered in NHCX. Please register in NHCX portal and try again.
+      action: ""
+    - code: NHCX-1003
+      message: Receiver not registered in NHCX. Please try again with valid receiver details.
+      action: ""
+    - code: NHCX-1004
+      message: No receiver registered in NHCX for the requested scheme. Please try again with valid receiver details for the scheme.
+      action: ""
+    - code: NHCX-1005
+      message: Invalid request header. Please try again with valid headers.
+      action: ""
+    - code: NHCX-1006
+      message: Duplicate request. Request with same correlation id already exist in the system.
+      action: ""
+    - code: NHCX-1007
+      message: Something went wrong while processing the request. Please check the request structure and values and try again.
+      action: ""
+    - code: NHCX-1008
+      message: Something went wrong while processing the request. Please try again after sometime.
+      action: ""
+    - code: NHCX-1009
+      message: Something went wrong while processing the request. Please check log for more details.
+      action: ""
+    - code: NHCX-1010
+      message: No Data with given Correlation id for call back request, please check status for more details
+      action: ""
+    - code: NHCX-1011
+      message: Invalid Status, please check x-hcx-status value from the protected header
+      action: ""
+    - code: NHCX-1012
+      message: No records found with the requested api caller id. Please try again with a valid api caller id.
+      action: ""
+    - code: NHCX-1013
+      message: Invalid or blank request found.
+      action: ""
+    - code: NHCX-1014
+      message: Unable to send protocol response to sender.
+      action: ""
+    - code: NHCX-1015
+      message: Invalid response received from receiver.
+      action: ""
+    - code: NHCX-1016
+      message: Invalid Api Action, please check the request action for this correlationId before trying again
+      action: ""
+    - code: NHCX-1017
+      message: Invalid response received from receiver
+      action: ""
+    - code: NHCX-1018
+      message: Invalid ABHA number received. ABHA number should be sent in the format XX-XXXX-XXXX-XXXX
+      action: ""
+x-abdm-errors-standard-payer:
+  source: Standard payer codes, PAYR-1001 to PAYR-1020. Sent by A payer implementing the published standard; they arrive inside the sealed response.
+  codes:
+    - code: PAYR-1001
+      message: Error while decrypting request. Please reprocess the request encrypting with valid certificate of the payer.
+      action: ""
+    - code: PAYR-1002
+      message: Error while encrypting request. Please update encryption certificate in NHCX.
+      action: ""
+    - code: PAYR-1003
+      message: Error while connecting to NHCX. System will try to resend the message to NHCX after some time.
+      action: ""
+    - code: PAYR-1004
+      message: Provider is not registered with the payer for requested policy.
+      action: ""
+    - code: PAYR-1005
+      message: Beneficiary is not a covered member for requested policy. Please enroll beneficiary for the policy and try again.
+      action: ""
+    - code: PAYR-1006
+      message: Policy does not exist. Please try with a valid policy.
+      action: ""
+    - code: PAYR-1007
+      message: Requested policy is expired. Please try with a valid policy.
+      action: ""
+    - code: PAYR-1008
+      message: Eligible coverage amount of the beneficiary for the requested policy is insufficient to process the request.
+      action: ""
+    - code: PAYR-1009
+      message: Requested items are not valid or not covered. Please try again with valid or covered items.
+      action: ""
+    - code: PAYR-1010
+      message: Preauthorization is required to process the request but was not obtained.
+      action: ""
+    - code: PAYR-1011
+      message: Enhancement request can not be processed as the prior approved package/procedure does not support enhancement.
+      action: ""
+    - code: PAYR-1012
+      message: Claim amount requested is more than the preauthorization approved amount.
+      action: ""
+    - code: PAYR-1013
+      message: No prior approval for the requested procedures/packages obtained.
+      action: ""
+    - code: PAYR-1014
+      message: Date of birth of the beneficiary can not be after date of service.
+      action: ""
+    - code: PAYR-1015
+      message: Date of service cannot be after date of death.
+      action: ""
+    - code: PAYR-1016
+      message: Duplicate claim submitted based on service codes and dates.
+      action: ""
+    - code: PAYR-1017
+      message: Amount calculations are not correct. Please verify calculated amount.
+      action: ""
+    - code: PAYR-1018
+      message: Time limit for submission expired.
+      action: ""
+    - code: PAYR-1019
+      message: Requested additional information was not received or was not received within time limit
+      action: ""
+    - code: PAYR-1020
+      message: Unable to process payment as no valid bank details found for the provider.
+      action: ""
+x-abdm-errors-reference-payer:
+  source: Reference payer codes, PAYR-1001 to PAYR-1520. Sent by the PMJAY reference implementation; they arrive inside the sealed response.
+  codes:
+    - code: PAYR-1001
+      message: Error occurred while decrypting payload for receiver code <receiver_code> with correlation id <sender_correlation_id>.
+      action: ""
+    - code: PAYR-1002
+      message: Error occurred while encrypting payload for receiver code <receiver_code> with correlation id <sender_correlation_id>.
+      action: ""
+    - code: PAYR-1003
+      message: Invalid workflow requested. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1004
+      message: Received FHIR bundle is malformed. Please correct the bundle and try again. <Error details>
+      action: ""
+    - code: PAYR-1005
+      message: Maximum time limit exceeded in receiving the request. Please try again.
+      action: ""
+    - code: PAYR-1006
+      message: Invalid name in request. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1007
+      message: Invalid gender in request. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1008
+      message: Invalid FHIR bundle received. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1009
+      message: No identifier found for patient component. Hence request will not be processed further. https://www.nrces.in/ndhm/fhir/r4/StructureDefinition-Patient.html
+      action: ""
+    - code: PAYR-1010
+      message: No type found for patient component identifier. Hence request will not be processed further. https://www.nrces.in/ndhm/fhir/r4/StructureDefinition-Patient.html
+      action: ""
+    - code: PAYR-1011
+      message: No identifier found for claim component. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1012
+      message: No type found for claim component identifier. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1013
+      message: No identifier found for organization component for provider. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1014
+      message: No type found for organization component identifier for provider. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1015
+      message: No identifier found for organization component for payer. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1016
+      message: No type found for organization component identifier for payer. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1017
+      message: No task code received. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1018
+      message: No task reason code received. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1019
+      message: Invalid sequence received in supporting info element. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1020
+      message: Invalid category received in supporting info element for sequence %s. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1021
+      message: Invalid code received in supporting info element for sequence %s. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1023
+      message: Invalid procedure category received for procedure component. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1024
+      message: Invalid procedure status received for procedure component. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1025
+      message: Invalid procedure sequence received for procedure component. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1026
+      message: No procedure component found for reference in claim component. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1027
+      message: Invalid item id found for item in claim component. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1028
+      message: Invalid item sequence received for item in claim component. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1029
+      message: Invalid bundle id received for FHIR bundle. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1030
+      message: Invalid questionnaire id received in FHIR bundle for questionnaire component. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1031
+      message: Invalid url received for bundle entry in FHIR bundle. Hence request will not be processed further. Please reach out to technical team.
+      action: ""
+    - code: PAYR-1032
+      message: Invalid purpose received for coverage eligibility request. Hence request will not be processed further. Please try again with valid purpose details.
+      action: ""
+    - code: PAYR-1033
+      message: No items received for coverage eligibility purpose. Since items are mandatory for the requested purpose, hence request will not be processed further. Please try again with valid item details.
+      action: ""
+    - code: PAYR-1034
+      message: Invalid procedure code received. Please try again with valid procedure details.
+      action: ""
+    - code: PAYR-1035
+      message: Invalid policy code received. Please try again with valid policy details.
+      action: ""
+    - code: PAYR-1036
+      message: Invalid attachment received in supporting info with sequence number %s. Please try again with valid attachment details as attachment value is expected. If issue is not resolved, please reach out to technical team.
+      action: ""
+    - code: PAYR-1037
+      message: No identifier found for communication component. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1038
+      message: No type found for communication component identifier. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1039
+      message: No payload found for communication component. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1040
+      message: No component found for given reference. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1041
+      message: No identifier found for procedure component. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1042
+      message: No type found for procedure component identifier. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1043
+      message: Date received in the request does not adhere to the NRCES date datatype format. Hence request will not be processed further. Please refere to the date format in NRCES portal.
+      action: ""
+    - code: PAYR-1044
+      message: Date and time received in the request does not adhere to the NRCES date datatype format. Hence request will not be processed further. Please refere to the date time format in NRCES portal.
+      action: ""
+    - code: PAYR-1045
+      message: Invalid quantity received for item. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1046
+      message: No value or timing details received for supporting info for sequence %s. Hence request will not be processed further. Please reach out to technical team.
+      action: ""
+    - code: PAYR-1047
+      message: Invalid reference received in supporting info with sequence number %s. Please try again with valid resource as reference value.
+      action: ""
+    - code: PAYR-1048
+      message: No reference resource received for supporting info with sequence number %s. Please try again with valid resource for reference value.
+      action: ""
+    - code: PAYR-1049
+      message: Invalid FHIR bundle received. Hence request will not be processed further. please reach out to technical team.
+      action: ""
+    - code: PAYR-1050
+      message: No type found for practitioner component identifier. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1051
+      message: No section found for composition component. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1052
+      message: No references found in composition section. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1053
+      message: Invalid reference found in child sections of composition section. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1054
+      message: No section content found for composition component. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1055
+      message: Invalid subject type found for composition component. This should be of type Patient. Hence request will not be processed further. Please try again with valid subject type for the composition.
+      action: ""
+    - code: PAYR-1056
+      message: Invalid contact organization found for subject in composition component. This should be of type Organization. Hence request will not be processed further. Please try again with valid data.
+      action: ""
+    - code: PAYR-1057
+      message: Invalid general practioner type found for subject in composition component. This should be of type Organization/Practitioner/PractitionerRole. Hence request will not be processed further. Please refer to https://www.nrces.in/ndhm/fhir/r4/StructureDefinition-Patient.html
+      action: ""
+    - code: PAYR-1058
+      message: Invalid managing organization type found for subject in composition component. This should be of type Organization. Hence request will not be processed further. Please refer to https://www.nrces.in/ndhm/fhir/r4/StructureDefinition-Patient.html
+      action: ""
+    - code: PAYR-1059
+      message: Invalid encounter type found for composition/observation component. This should be of type Encounter. Hence request will not be processed further. Please refer to https://www.nrces.in/ndhm/fhir/r4/StructureDefinition-DiagnosticReportRecord.html
+      action: ""
+    - code: PAYR-1060
+      message: No subject found for encounter in composition component. Hence request will not be processed further. Please refer to https://www.nrces.in/ndhm/fhir/r4/StructureDefinition-Encounter.html
+      action: ""
+    - code: PAYR-1061
+      message: Invalid subject type found for encounter in composition/observation component. Hence request will not be processed further. Please refer to https://www.nrces.in/ndhm/fhir/r4/StructureDefinition-Encounter.html
+      action: ""
+    - code: PAYR-1062
+      message: No episode of care found for encounter in composition/observation component. Hence request will not be processed further. Please refer to https://www.nrces.in/ndhm/fhir/r4/StructureDefinition-Encounter.html
+      action: ""
+    - code: PAYR-1063
+      message: Invalid episode of care type found for encounter in composition/observation component. Hence request will not be processed further. Please refer to https://www.nrces.in/ndhm/fhir/r4/StructureDefinition-Encounter.html
+      action: ""
+    - code: PAYR-1064
+      message: No based on found for encounter in composition/observation component. Hence request will not be processed further. Please refer to https://www.nrces.in/ndhm/fhir/r4/StructureDefinition-Encounter.html
+      action: ""
+    - code: PAYR-1065
+      message: Invalid based on type found for encounter in composition/observation component. Hence request will not be processed further. Please refer to https://www.nrces.in/ndhm/fhir/r4/StructureDefinition-Encounter.html
+      action: ""
+    - code: PAYR-1066
+      message: No appointment found for encounter in composition/observation component. Hence request will not be processed further. Please refer to https://www.nrces.in/ndhm/fhir/r4/StructureDefinition-Encounter.html
+      action: ""
+    - code: PAYR-1067
+      message: Invalid appointment type found for encounter in composition/observation component. Hence request will not be processed further. Please refer to https://www.nrces.in/ndhm/fhir/r4/StructureDefinition-Encounter.html
+      action: ""
+    - code: PAYR-1068
+      message: No reason reference found for encounter in composition/observation component. Hence request will not be processed further. Please refer to https://www.nrces.in/ndhm/fhir/r4/StructureDefinition-Encounter.html
+      action: ""
+    - code: PAYR-1069
+      message: Invalid reason reference type found for encounter in composition/observation component. Hence request will not be processed further. Please refer to https://www.nrces.in/ndhm/fhir/r4/StructureDefinition-Encounter.html
+      action: ""
+    - code: PAYR-1070
+      message: No author found for composition component. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1071
+      message: Invalid author type found for composition component. This should be of type Practitioner / PractitionerRole / Organization / Patient / Device / RelatedPerson. Hence request will not be processed further. Please try again with valid author type for the composition.
+      action: ""
+    - code: PAYR-1072
+      message: No procedure reference received for procedure element in claim resource. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1073
+      message: No based on found for observation component. Hence request will not be processed further. Please refer to https://www.nrces.in/ndhm/fhir/r4/StructureDefinition-Observation.html
+      action: ""
+    - code: PAYR-1074
+      message: Invalid based on type found for observation component. Hence request will not be processed further. Please refer to https://www.nrces.in/ndhm/fhir/r4/StructureDefinition-Observation.html
+      action: ""
+    - code: PAYR-1075
+      message: No part of found for observation component. Hence request will not be processed further. Please refer to https://www.nrces.in/ndhm/fhir/r4/StructureDefinition-Observation.html
+      action: ""
+    - code: PAYR-1076
+      message: Invalid part of type found for observation component. Hence request will not be processed further. Please refer to https://www.nrces.in/ndhm/fhir/r4/StructureDefinition-Observation.html
+      action: ""
+    - code: PAYR-1077
+      message: No subject found for observation component. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1078
+      message: Invalid subject type found for observation component. This should be of type Patient. Hence request will not be processed further. Please try again with valid subject type for the observation.
+      action: ""
+    - code: PAYR-1079
+      message: No care team details received. Hence request will not be processed further. Please add the care team details and try again.
+      action: ""
+    - code: PAYR-1080
+      message: Invalid HPR details received for practioner resource with url %s. Hence request will not be processed further. Please try again with valid HPR id.
+      action: ""
+    - code: PAYR-1081
+      message: Invalid service date received for item with sequence %s in claim resource. Hence request will not be processed further. Please try again with valid item service date.
+      action: ""
+    - code: PAYR-1082
+      message: Invalid title received for composition for supporting info with sequence %s in claim resource. Hence request will not be processed further. Please try again with valid composition title.
+      action: ""
+    - code: PAYR-1083
+      message: No HPR details found for the practitioner for resource %s. Hence request will not be processed further. Please send the details in the identifier for Practitioner resource with category code as HPIN.
+      action: ""
+    - code: PAYR-1084
+      message: No questionnaire response resource found for url %s. Hence request will not be processed further. Please add the resources for all the references given in the FHIR bundle and try again.
+      action: ""
+    - code: PAYR-1085
+      message: Invalid questionnaire response resource type found in the FHIR bundle for url %s. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1086
+      message: No procedure resource found for url %s. Hence request will not be processed further. Please add the resources for all the references given in the FHIR bundle and try again.
+      action: ""
+    - code: PAYR-1087
+      message: Invalid procedure resource type found in the FHIR bundle for url %s. Hence request will not be processed further. Procedure resource type is expected.
+      action: ""
+    - code: PAYR-1088
+      message: Invalid composition details.
+      action: ""
+    - code: PAYR-1089
+      message: No billing items found. Hence request will not be processed further. Please try again with valid billing items.
+      action: ""
+    - code: PAYR-1090
+      message: No identifier found for coverage component. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1091
+      message: No type found for coverage component identifier. Hence request will not be processed further.
+      action: ""
+    - code: PAYR-1092
+      message: Something went wrong while processing request, kindly intiate new request
+      action: ""
+    - code: PAYR-1093
+      message: No subject found for encounter in composition component. Hence request will not be processed further. Please refer to https://www.nrces.in/ndhm/fhir/r4/StructureDefinition-Encounter.html
+      action: ""
+    - code: PAYR-1094
+      message: Invalid subject type found for encounter in composition/observation component. Hence request will not be processed further. Please refer to https://www.nrces.in/ndhm/fhir/r4/StructureDefinition-Encounter.html
+      action: ""
+    - code: PAYR-1095
+      message: Invalid discharge information received for claim request. Hence request will not be processed further. Please send the discharge information in supporting info in claim resource, with category as DIS (refer - https://www.nrces.in/ndhm/fhir/r4/ValueSet-ndhm-supportinginfo-category.html), and codes in LAMA/DAMA/DTH/DTM (refer - https://www.nrces.in/ndhm/fhir/r4/ValueSet-ndhm-supportinginfo-code.html).
+      action: ""
+    - code: PAYR-1096
+      message: Invalid death date received for claim request. Hence request will not be processed further. Please send the death date information in supporting info in claim resource, with category as ONS (refer - https://www.nrces.in/ndhm/fhir/r4/ValueSet-ndhm-supportinginfo-category.html), and code as DTM (refer - https://www.nrces.in/ndhm/fhir/r4/ValueSet-ndhm-supportinginfo-code.html).
+      action: ""
+    - code: PAYR-1097
+      message: No payload found in the request. Please ensure that the request that is being sent, contains encrypted payload within the mandatory payload properties.
+      action: ""
+    - code: PAYR-1098
+      message: Value type received as %s for category - OTH and code - EDT for item with sequence %s in supporting info in claim resource. In supporting info list, item with category - OTH and code - EDT combination is used to get the registration date. So the registration date should be sent as timing (date or period) or as a string value, adhering to the NRCES standards, with the category - OTH and code - EDT.
+      action: ""
+    - code: PAYR-1099
+      message: Value type received as %s for category - ONS and code - DSDE for item with sequence %s in supporting info in claim resource. In supporting info list, item with category - ONS and code - DSDE combination is used to get the discharge date. So the discharge date should be sent as timing (date or period) or as a string value, adhering to the NRCES standards, with the category - ONS and code - DSDE.
+      action: ""
+x-abdm-errors-observed:
+  source: Observed live codes, ERR-PYR-. Sent by the PMJAY reference implementation, on none of its published sheets; they arrive inside the sealed response.
+  codes:
+    - code: ERR-PYR-CLM-007
+      message: No prior preauthorization or claim record found for case number
+      action: On none of the seven sheets. The SHA HP sandbox sent it for a claim raised under a number of its own rather than the preauthorisation's.

@@ -1,0 +1,1943 @@
+openapi: 3.1.1
+info:
+  x-portal:
+    module: p4
+    label: P4 Locker
+    position: 9
+    icon: lock
+  title: ABDM P4, health lockers
+  summary: Set up a health locker and list the lockers and requests on an ABHA address.
+  version: abdm-v3
+  license:
+    name: MIT
+    identifier: MIT
+  contact:
+    name: ABDM sandbox support
+    url: https://sandboxsupport.abdm.gov.in/
+  x-abdm-gateway: hiecm
+  x-abdm-module: P4
+  x-abdm-phase: 1
+  x-abdm-roles:
+    - phr
+x-abdm-sources:
+  - file: catalogue/openapi/.raw/nha-2026-09-16/hiecm/gateway.yaml
+    role: upstream
+    hash: sha256:d3bc599054c2570a50818ca54906c44cf652ad6f813473e8ac243667da4e9300
+    fetched: "2026-09-16"
+  - file: catalogue/openapi/.raw/nha-2026-09-16/hiecm/subscription.yaml
+    role: upstream
+    hash: sha256:19e2be6557790fecf8f9b5e2374ee25bb5e432b6aa11a9f673d93a0228eb61b0
+    fetched: "2026-09-16"
+servers:
+  - url: https://dev.abdm.gov.in
+    description: ABDM gateway, sandbox
+security:
+  - bearerAuth: []
+tags:
+  - name: abdm-gateway
+    description: ""
+  - name: subscription-phr
+    description: ""
+  - name: health-locker
+    description: ""
+paths:
+  /api/hiecm/gateway/v3/health-lockers:
+    get:
+      tags:
+        - abdm-gateway
+      operationId: p4_get_gateway_v3_health_lockers
+      summary: This API is invoked to fetch the record with health locker enabled provider details.
+      description: This API is designed to retrieve records of providers that have health locker functionality enabled. When invoked, it queries the system to fetch detailed information about these specific providers. This functionality is particularly useful for users who need to identify and manage providers offering health locker services, which may include secure storage of health records, easy access to medical information, and other related features. By using this API, users can efficiently gather and manage data about health locker-enabled providers, ensuring they have access to all necessary details for effective service utilization and operational management.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: REQUEST-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: 18235d89-cb13-479d-ad71-7a57d5f669a8
+          description: Unique UUID for track the end to end request transaction
+        - name: TIMESTAMP
+          in: header
+          required: true
+          schema:
+            type: string
+          example: "2022-10-06T15:10:00.587Z"
+          description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
+        - name: X-CM-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: sbx
+          description: Suffix of the consent manager to which the request was intended
+        - name: name
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Name of the Locker
+          example: ABC locker
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    identifier:
+                      type: object
+                      nullable: false
+                      required:
+                        - name
+                        - id
+                      properties:
+                        name:
+                          type: string
+                          nullable: false
+                          example: AB - PMJAY
+                        id:
+                          type: string
+                          nullable: false
+                          example: PMJAY
+                    facilityType:
+                      type: array
+                      nullable: false
+                      items:
+                        type: string
+                        enum:
+                          - HIP
+                          - HIU
+                          - HEALTH_LOCKER
+                        example: HIP
+                    isHip:
+                      type: boolean
+                      nullable: false
+                      example: true
+                    isGovtEntity:
+                      type: boolean
+                      nullable: true
+                      example: false
+                    endpoints:
+                      type: object
+                      properties:
+                        healthLockerEndpoints:
+                          type: array
+                          nullable: false
+                          items:
+                            type: object
+                            required:
+                              - use
+                              - id
+                            properties:
+                              use:
+                                type: string
+                                nullable: false
+                                example: registration
+                              connectionType:
+                                type: string
+                                nullable: false
+                                example: HTTPS
+                              address:
+                                type: string
+                                format: uri
+                                nullable: false
+                                example: https://abc.com/register
+        "204":
+          description: No Content
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: The error code and message, if any occurred.
+                    required:
+                      - code
+                      - message
+                    properties:
+                      code:
+                        type: string
+                        pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                        description: 'ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing ": " separator (`ABDM-1001: `); match on the code itself and tolerate the separator.'
+                        example: ABDM-1001
+                      message:
+                        type: string
+                        example: No data found
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: The error code and message, if any occurred.
+                    required:
+                      - code
+                      - message
+                    properties:
+                      code:
+                        type: string
+                        pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                        description: 'ABDM-1015 - Invalid Response. May be returned either bare (`ABDM-1015`) or with a trailing ": " separator (`ABDM-1015: `); match on the code itself and tolerate the separator.'
+                        example: ABDM-1015
+                      message:
+                        type: string
+                        example: Bad Request, invalid response
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: '900901 - Invalid Credentials. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                    example: "900901"
+                  message:
+                    type: string
+                    example: Invalid Credentials
+                  description:
+                    type: string
+                    example: Invalid Credentials. Make sure you have provided the correct security credentials
+        "403":
+          description: Forbidden. The caller is authenticated but is not permitted to perform this operation on this resource.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Forbidden
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: The error code and message, if any occurred.
+                    required:
+                      - code
+                      - message
+                    properties:
+                      code:
+                        type: string
+                        pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                        description: 'ABDM-9999 - Unknown exception. May be returned either bare (`ABDM-9999`) or with a trailing ": " separator (`ABDM-9999: `); match on the code itself and tolerate the separator.'
+                        example: ABDM-9999
+                      message:
+                        type: string
+                        example: Unknown exception
+        "503":
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: 'ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.'
+                    nullable: false
+                    example: ABDM-1024
+                  message:
+                    type: string
+                    nullable: false
+                    example: Dependent service unavailable
+      x-abdm-nha-operation-id: abdm-gateway7
+  /api/hiecm/subscription-requests/v3/patients/requests:
+    get:
+      tags:
+        - subscription-phr
+      operationId: p4_get_subscription_requests_v3_patients_requests
+      summary: This API will be invoked to get all the consent and subscription requests with given filters.
+      description: This API endpoint is used to retrieve all consent and subscription requests based on specified filters. By invoking this API, users can obtain a comprehensive list of requests that match the given criteria, including details about their status, scope, and any associated conditions. This functionality is essential for managing and tracking consent and subscription requests efficiently, ensuring that users have access to accurate and up-to-date information.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: REQUEST-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: 18235d89-cb13-479d-ad71-7a57d5f669a8
+          description: Unique UUID for tracking the end-to-end request transaction
+        - name: TIMESTAMP
+          in: header
+          required: true
+          schema:
+            type: string
+          example: "2022-10-06T15:10:00.587Z"
+          description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds, and milliseconds
+        - name: X-CM-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: sbx
+          description: Suffix of the consent manager to which the request was intended
+        - name: X-AUTH-TOKEN
+          in: header
+          required: true
+          description: JWT Authentication token which was issued by ABDM after successful validation of username and password
+          schema:
+            type: string
+            format: bearer
+            minimum: 1
+            maximum: 100
+            example: <TOKEN>
+        - name: consentLimit
+          in: query
+          required: true
+          schema:
+            type: string
+            default: "-1"
+          description: The consent limit - to limit records being fetched
+        - name: consentOffset
+          in: query
+          required: true
+          schema:
+            type: string
+            default: "0"
+          description: The consent offset - to skip the records before fetching the first record
+        - name: subscriptionLimit
+          in: query
+          required: true
+          schema:
+            type: string
+            default: "-1"
+          description: The subscription limit - to limit records being fetched
+        - name: subscriptionOffset
+          in: query
+          required: true
+          schema:
+            type: string
+            default: "0"
+          description: The subscription offset - to skip the records before fetching the first record
+        - name: status
+          in: query
+          required: true
+          schema:
+            type: string
+            default: ALL
+            enum:
+              - ALL
+              - REQUESTED
+              - DENIED
+              - GRANTED
+              - REVOKED
+              - EXPIRED
+            example: ALL
+          description: The status of the subscription and consent
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  consents:
+                    type: object
+                    properties:
+                      size:
+                        type: integer
+                        nullable: false
+                        example: 10
+                      limit:
+                        type: integer
+                        nullable: false
+                        example: 10
+                      offset:
+                        type: integer
+                        nullable: false
+                        example: 0
+                      requests:
+                        type: array
+                        items:
+                          type: object
+                          nullable: true
+                          properties:
+                            requestId:
+                              type: string
+                              nullable: false
+                              example: e5ec415f-c098-40f6-a0db-faa162fc5295
+                            createdAt:
+                              type: string
+                              format: date-time
+                              nullable: false
+                              example: "2021-09-28T12:30:08.573Z"
+                            lastUpdated:
+                              type: string
+                              format: date-time
+                              nullable: false
+                              example: "2021-09-28T12:30:08.573Z"
+                            status:
+                              type: string
+                              nullable: false
+                              enum:
+                                - REQUESTED
+                                - EXPIRED
+                                - DENIED
+                                - GRANTED
+                                - REVOKED
+                              example: GRANTED
+                            purpose:
+                              type: object
+                              nullable: false
+                              required:
+                                - text
+                                - code
+                                - refUri
+                              properties:
+                                text:
+                                  type: string
+                                  nullable: false
+                                  enum:
+                                    - Care Management
+                                    - Break the Glass
+                                    - Public Health
+                                    - Healthcare Payment
+                                    - Disease Specific Healthcare Research
+                                    - Self Requested
+                                code:
+                                  type: string
+                                  nullable: false
+                                  enum:
+                                    - CAREMGT
+                                    - BTG
+                                    - PUBHLTH
+                                    - HPAYMT
+                                    - DSRCH
+                                    - PATRQT
+                                refUri:
+                                  type: string
+                                  nullable: false
+                                  example: www.abc.com
+                                  description: The reference URL.Allows alpha numeric character and special characters like "^[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&//=]*)$"
+                            patient:
+                              type: object
+                              nullable: false
+                              required:
+                                - id
+                              properties:
+                                id:
+                                  type: string
+                                  nullable: false
+                                  example: <ABHA_ADDRESS>
+                                  description: The abha address of the patient
+                            hip:
+                              type: object
+                              description: Identifier and name of the health information provider.
+                              nullable: true
+                              required:
+                                - id
+                                - name
+                              properties:
+                                id:
+                                  type: string
+                                  nullable: false
+                                  example: cowin_hip_01
+                                  description: The service ID of the health information provider. Allows alpha numeric and _ or - in middle
+                                name:
+                                  type: string
+                                  nullable: true
+                                  example: Cowin
+                                  description: The name of the health information provider. Allows alphanumeric characters and special characters like "^[a-zA-Z0-9_\\-@,. \":]{0,255}$"
+                                type:
+                                  type: string
+                                  nullable: true
+                                  example: HIP
+                                  description: The type of the health information provider. Allows alphanumeric characters and special characters like "^[a-zA-Z0-9_\\-@,. \":]{0,255}$"
+                            hiu:
+                              type: object
+                              nullable: false
+                              required:
+                                - id
+                                - name
+                              properties:
+                                id:
+                                  type: string
+                                  nullable: false
+                                  example: cowin_hiu_01
+                                  description: The service ID of the health information user.  Allows alpha numeric and _ or - in middle
+                                name:
+                                  type: string
+                                  nullable: true
+                                  example: Cowin
+                                  description: The name of the health information user. Allows alphanumeric characters and special characters like "^[a-zA-Z0-9_\\-@,. \":]{0,255}$"
+                                type:
+                                  type: string
+                                  nullable: true
+                                  example: HIU
+                                  description: The type of the health information user. Allows alphanumeric characters and special characters like "^[a-zA-Z0-9_\\-@,. \":]{0,255}$"
+                            requester:
+                              type: object
+                              nullable: false
+                              required:
+                                - name
+                                - identifier
+                              properties:
+                                name:
+                                  type: string
+                                  nullable: false
+                                  example: <ABHA_ADDRESS>
+                                  description: The name of the requester
+                                identifier:
+                                  type: object
+                                  nullable: false
+                                  required:
+                                    - value
+                                    - type
+                                    - system
+                                  properties:
+                                    value:
+                                      type: string
+                                      nullable: false
+                                      example: REG1
+                                      description: The type of the identification. Allows alpha numeric character and special characters like _\-@,. ":/
+                                    type:
+                                      type: string
+                                      nullable: false
+                                      example: MH1001
+                                      description: The identification value. Allows alpha numeric character and special characters like _\-@,. ":/
+                                    system:
+                                      type: string
+                                      nullable: false
+                                      example: https://www.sample.com
+                                      description: Allows alpha numeric character and special characters like _\-@,. ":/
+                            hiTypes:
+                              type: array
+                              description: Types of health information document.
+                              items:
+                                type: string
+                                enum:
+                                  - DiagnosticReport
+                                  - DischargeSummary
+                                  - HealthDocumentRecord
+                                  - ImmunizationRecord
+                                  - OPConsultation
+                                  - Prescription
+                                  - WellnessRecord
+                                  - Invoice
+                                nullable: false
+                                example: Prescription
+                            careContexts:
+                              type: array
+                              description: List of care contexts linked at the HIP end for the identified patient.
+                              items:
+                                type: object
+                                nullable: true
+                                required:
+                                  - patientReference
+                                  - careContextReference
+                                properties:
+                                  patientReference:
+                                    type: string
+                                    nullable: false
+                                    example: batman@tmh
+                                    description: A patient identifier with which patient is registered in the facility/hospital
+                                  careContextReference:
+                                    type: string
+                                    nullable: false
+                                    example: Episode1
+                                    description: An identifier of patient's care context created in HIP. A care context is a group of patient's health data (Not the actual health data)
+                            permission:
+                              type: object
+                              nullable: false
+                              required:
+                                - accessMode
+                                - dateRange
+                                - dataEraseAt
+                                - frequency
+                              properties:
+                                accessMode:
+                                  type: string
+                                  nullable: false
+                                  enum:
+                                    - VIEW
+                                    - STORE
+                                    - STREAM
+                                    - QUERY
+                                  example: VIEW
+                                dateRange:
+                                  type: object
+                                  nullable: false
+                                  required:
+                                    - from
+                                    - to
+                                  properties:
+                                    from:
+                                      type: string
+                                      format: date-time
+                                      nullable: false
+                                      example: "2021-09-28T12:30:08.573Z"
+                                      description: Should be UTC date time in ISO format
+                                    to:
+                                      type: string
+                                      format: date-time
+                                      nullable: false
+                                      example: "2021-09-28T12:30:08.573Z"
+                                      description: Should be UTC date time in ISO format
+                                dataEraseAt:
+                                  type: string
+                                  format: date-time
+                                  nullable: false
+                                  example: "2021-09-28T12:30:08.573Z"
+                                  description: The date at which the consent expire. Should be UTC date time in ISO format
+                                frequency:
+                                  type: object
+                                  nullable: false
+                                  required:
+                                    - unit
+                                    - value
+                                    - repeats
+                                  properties:
+                                    unit:
+                                      type: string
+                                      nullable: false
+                                      enum:
+                                        - HOUR
+                                        - DAY
+                                        - WEEK
+                                        - MONTH
+                                        - YEAR
+                                    value:
+                                      type: number
+                                      format: int32
+                                      nullable: false
+                                      example: 1
+                                      description: The frequency unit value. Should be be a integer
+                                    repeats:
+                                      type: number
+                                      format: int32
+                                      nullable: true
+                                      example: 0
+                                      description: Should be be a integer
+                  subscriptions:
+                    type: object
+                    required:
+                      - limit
+                      - size
+                      - offset
+                      - requests
+                    properties:
+                      limit:
+                        type: integer
+                        format: integer
+                        nullable: true
+                        example: 5
+                      size:
+                        type: integer
+                        format: integer
+                        nullable: true
+                        example: 0
+                      offset:
+                        type: integer
+                        format: integer
+                        nullable: true
+                        example: 5
+                      requests:
+                        type: array
+                        items:
+                          type: object
+                          required:
+                            - requestId
+                          properties:
+                            id:
+                              type: string
+                              format: int64
+                              nullable: false
+                              example: "1234"
+                            requestId:
+                              type: string
+                              format: uuid
+                              nullable: false
+                              minimum: 36
+                              maximum: 50
+                              example: f29f0e59-8388-4698-9fe6-05db67aeac46
+                            subscriptionId:
+                              type: string
+                              format: uuid
+                              nullable: false
+                              minimum: 36
+                              maximum: 50
+                              example: f29f0e59-8388-4698-9fe6-05db67aeac46
+                            patient:
+                              type: object
+                              nullable: false
+                              required:
+                                - id
+                              properties:
+                                id:
+                                  type: string
+                                  nullable: false
+                                  example: <ABHA_ADDRESS>
+                                  description: The abha address of the patient. Must start with Alphanumeric . and  _  in the middle and must be ending with @abdm or @sbx
+                            purpose:
+                              type: object
+                              nullable: false
+                              required:
+                                - text
+                                - code
+                                - refUri
+                              properties:
+                                text:
+                                  type: string
+                                  nullable: false
+                                  enum:
+                                    - Care Management
+                                    - Break the Glass
+                                    - Public Health
+                                    - Healthcare Payment
+                                    - Disease Specific Healthcare Research
+                                    - Self Requested
+                                  example: Care Management
+                                code:
+                                  type: string
+                                  nullable: false
+                                  enum:
+                                    - CAREMGT
+                                    - BTG
+                                    - PUBHLTH
+                                    - HPAYMT
+                                    - DSRCH
+                                    - PATRQT
+                                  example: CAREMGT
+                                refUri:
+                                  type: string
+                                  format: uri
+                                  nullable: false
+                                  example: https://abc.def.in
+                                  description: The reference URL. Allows alpha numeric character and special characters like "^[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&//=]*)$"
+                            hiu:
+                              type: object
+                              nullable: false
+                              required:
+                                - id
+                              properties:
+                                id:
+                                  type: string
+                                  nullable: false
+                                  example: INDIA_HIU
+                                  description: The service ID of the health information user. Must be Alpha numeric and _ or - in middle
+                                name:
+                                  type: string
+                                  nullable: true
+                                  example: INDIA HIU
+                                  description: 'The name of the health information user. Allows alphanumeric characters and special characters like _\-@,. ":'
+                                type:
+                                  type: string
+                                  nullable: true
+                                  example: HIU
+                                  description: 'The type of the health information user. Allows alphanumeric characters and special characters like _\-@,. ":'
+                            hips:
+                              type: array
+                              items:
+                                type: object
+                                required:
+                                  - id
+                                properties:
+                                  id:
+                                    type: string
+                                    nullable: false
+                                    example: INDIA_HIP
+                                    description: The service ID of the health information provider. Must be Alpha numeric and _ or - in middle
+                                  name:
+                                    type: string
+                                    nullable: true
+                                    example: INDIA HIP
+                                    description: 'The name of the health information provider. Allows alphanumeric characters and special characters like _\-@,. ":'
+                                  type:
+                                    type: string
+                                    nullable: true
+                                    example: HIP
+                                    description: 'The type of the health information provider. Allows alphanumeric characters and special characters like _\-@,. ":'
+                            categories:
+                              type: array
+                              items:
+                                type: string
+                                enum:
+                                  - LINK
+                                  - DATA
+                                nullable: false
+                                example: LINK
+                            period:
+                              type: object
+                              nullable: false
+                              required:
+                                - from
+                                - to
+                              properties:
+                                from:
+                                  type: string
+                                  format: date-time
+                                  nullable: false
+                                  example: "2024-05-09T10:34:00.389Z"
+                                  description: UTC date time in ISO format
+                                to:
+                                  type: string
+                                  format: date-time
+                                  nullable: false
+                                  example: "2024-05-09T10:34:00.389Z"
+                                  description: UTC date time in ISO format
+                            createdAt:
+                              type: string
+                              format: date time
+                              nullable: false
+                              example: "2024-05-09T10:34:00.389Z"
+                            lastUpdated:
+                              type: string
+                              format: date time
+                              nullable: false
+                              example: "2024-05-09T10:34:00.389Z"
+                            status:
+                              type: string
+                              enum:
+                                - REQUESTED
+                                - GRANTED
+                                - DENIED
+                                - EXPIRED
+                                - REVOKED
+                              nullable: false
+                              example: GRANTED
+                            requestType:
+                              type: string
+                              enum:
+                                - HEALTH_LOCKER
+                                - HIU
+                                - HIP
+                              nullable: false
+                              example: HEALTH_LOCKER
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: The error code and message, if any occurred.
+                    required:
+                      - code
+                      - message
+                    properties:
+                      code:
+                        type: string
+                        pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                        description: 'ABDM-1066 - Invalid JWT token. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                        example: ABDM-1066
+                      message:
+                        type: string
+                        example: Invalid JWT token
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: '900901 - Invalid Credentials. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                    example: "900901"
+                  message:
+                    type: string
+                    example: Invalid Credentials
+                  description:
+                    type: string
+                    example: Invalid Credentials. Make sure you have provided the correct security credentials
+        "403":
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Access Denied
+        "404":
+          description: server cannot find the requested resource
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - timestamp
+                  - path
+                  - status
+                  - error
+                  - requestId
+                properties:
+                  timestamp:
+                    type: number
+                    example: 1731557446506
+                  path:
+                    type: string
+                    example: /hiecm/api/v3/subscription-requests/init
+                  status:
+                    type: integer
+                    example: 500
+                  error:
+                    type: string
+                    description: The error code and message, if any occurred.
+                    example: Internal Server Error
+                  requestId:
+                    type: string
+                    example: d20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d
+        "503":
+          description: Internal Server Error -> It is just one example, for every api the path will be changed.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: 'ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.'
+                    nullable: false
+                    example: ABDM-1024
+                  message:
+                    type: string
+                    nullable: false
+                    example: Dependent service unavailable
+      x-abdm-nha-operation-id: subscription-phr 9
+  /api/hiecm/subscription-requests/v3/patients/lockers/{lockerId}:
+    get:
+      tags:
+        - subscription-phr
+      operationId: p4_get_subscription_requests_v3_patients_lockers_lockerid
+      summary: This API will be invoked to get health locker settings of a patient by locker id.
+      description: This API endpoint is used to retrieve the health locker settings of a patient using the locker ID. By invoking this API, users can access detailed information about the configuration and preferences of the patient’s health locker. This functionality is essential for managing and customizing the storage and access settings of health records, ensuring that patients have control over their health information. The API supports secure and efficient retrieval of health locker settings, enhancing the overall management of health data within the healthcare ecosystem.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: REQUEST-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: 18235d89-cb13-479d-ad71-7a57d5f669a8
+          description: Unique UUID for tracking the end-to-end request transaction
+        - name: TIMESTAMP
+          in: header
+          required: true
+          schema:
+            type: string
+          example: "2022-10-06T15:10:00.587Z"
+          description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds, and milliseconds
+        - name: X-CM-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: sbx
+          description: Suffix of the consent manager to which the request was intended
+        - name: X-AUTH-TOKEN
+          in: header
+          required: true
+          schema:
+            type: string
+            format: bearer
+            minimum: 1
+            maximum: 100
+          example: <TOKEN>
+          description: JWT Authentication token issued by ABDM after successful validation of username and password
+        - name: lockerId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The locker id
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  lockerId:
+                    type: string
+                    nullable: false
+                    example: "1234"
+                  lockerName:
+                    type: string
+                    nullable: false
+                    example: Locker 1
+                  active:
+                    type: boolean
+                    nullable: false
+                    example: true
+                  dateCreated:
+                    type: string
+                    format: date-time
+                    nullable: false
+                    example: "2021-09-28T12:30:08.573Z"
+                  subscriptions:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - subscriptionId
+                        - purpose
+                        - status
+                        - dateCreated
+                        - dateGranted
+                        - patient
+                        - requester
+                        - includedSources
+                      properties:
+                        subscriptionId:
+                          type: string
+                          format: uuid
+                          nullable: false
+                          minimum: 36
+                          maximum: 50
+                          example: f29f0e59-8388-4698-9fe6-05db67aeac46
+                        purpose:
+                          type: object
+                          nullable: false
+                          required:
+                            - text
+                            - code
+                            - refUri
+                          properties:
+                            text:
+                              type: string
+                              nullable: false
+                              enum:
+                                - Care Management
+                                - Break the Glass
+                                - Public Health
+                                - Healthcare Payment
+                                - Disease Specific Healthcare Research
+                                - Self Requested
+                              example: Care Management
+                            code:
+                              type: string
+                              nullable: false
+                              enum:
+                                - CAREMGT
+                                - BTG
+                                - PUBHLTH
+                                - HPAYMT
+                                - DSRCH
+                                - PATRQT
+                              example: CAREMGT
+                            refUri:
+                              type: string
+                              format: uri
+                              nullable: false
+                              example: https://abc.def.in
+                              description: The reference URL. Allows alpha numeric character and special characters like "^[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&//=]*)$"
+                        status:
+                          type: string
+                          enum:
+                            - REQUESTED
+                            - GRANTED
+                            - DENIED
+                            - EXPIRED
+                            - REVOKED
+                          nullable: false
+                          example: GRANTED
+                        dateCreated:
+                          type: string
+                          format: date-time
+                          nullable: false
+                          example: "2021-09-28T12:30:08.573Z"
+                        dateGranted:
+                          type: string
+                          format: date-time
+                          nullable: false
+                          example: "2021-09-28T12:30:08.573Z"
+                        patient:
+                          type: object
+                          nullable: false
+                          required:
+                            - id
+                          properties:
+                            id:
+                              type: string
+                              nullable: false
+                              example: <ABHA_ADDRESS>
+                              description: The abha address of the patient. Must start with Alphanumeric . and  _  in the middle and must be ending with @abdm or @sbx
+                        requester:
+                          type: object
+                          nullable: false
+                          required:
+                            - id
+                            - name
+                            - type
+                          properties:
+                            id:
+                              type: string
+                              nullable: false
+                              example: <ABHA_ADDRESS>
+                            name:
+                              type: string
+                              nullable: false
+                              example: ABDM_HIU
+                            type:
+                              type: string
+                              nullable: false
+                              example: HIU
+                        includedSources:
+                          type: array
+                          description: Included sources, carrying the list of hi types.
+                          items:
+                            type: object
+                            required:
+                              - hiTypes
+                              - purpose
+                              - hip
+                              - categories
+                              - period
+                            properties:
+                              hiTypes:
+                                type: array
+                                description: Types of health information document.
+                                items:
+                                  type: string
+                                  enum:
+                                    - DiagnosticReport
+                                    - DischargeSummary
+                                    - HealthDocumentRecord
+                                    - ImmunizationRecord
+                                    - OPConsultation
+                                    - Prescription
+                                    - WellnessRecord
+                                    - Invoice
+                                  nullable: false
+                                  example: Prescription
+                              purpose:
+                                type: object
+                                nullable: false
+                                required:
+                                  - text
+                                  - code
+                                  - refUri
+                                properties:
+                                  text:
+                                    type: string
+                                    nullable: false
+                                    enum:
+                                      - Care Management
+                                      - Break the Glass
+                                      - Public Health
+                                      - Healthcare Payment
+                                      - Disease Specific Healthcare Research
+                                      - Self Requested
+                                    example: Care Management
+                                  code:
+                                    type: string
+                                    nullable: false
+                                    enum:
+                                      - CAREMGT
+                                      - BTG
+                                      - PUBHLTH
+                                      - HPAYMT
+                                      - DSRCH
+                                      - PATRQT
+                                    example: CAREMGT
+                                  refUri:
+                                    type: string
+                                    format: uri
+                                    nullable: false
+                                    example: https://abc.def.in
+                                    description: The reference URL. Allows alpha numeric character and special characters like "^[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&//=]*)$"
+                              hip:
+                                type: object
+                                description: Identifier and name of the health information provider.
+                                nullable: false
+                                required:
+                                  - id
+                                  - name
+                                properties:
+                                  id:
+                                    type: string
+                                    nullable: false
+                                    example: INDIA_HIP
+                                    description: The service ID of the health information provider. Must be Alpha numeric and _ or - in middle
+                                  name:
+                                    type: string
+                                    nullable: true
+                                    example: INDIA HIP
+                                    description: 'The name of the health information provider. Allows alphanumeric characters and special characters like _\-@,. ":'
+                                  type:
+                                    type: string
+                                    nullable: true
+                                    example: HIP
+                                    description: 'The type of the health information provider. Allows alphanumeric characters and special characters like _\-@,. ":'
+                              categories:
+                                type: array
+                                items:
+                                  type: string
+                                  enum:
+                                    - LINK
+                                    - DATA
+                                  nullable: false
+                                  example: LINK
+                                  description: The subscription category. Should be either LINK or DATA
+                              period:
+                                type: object
+                                nullable: false
+                                description: The date range between when the subscription will be active
+                                required:
+                                  - from
+                                  - to
+                                properties:
+                                  from:
+                                    type: string
+                                    format: date-time
+                                    nullable: false
+                                    example: "2024-05-09T10:34:00.389Z"
+                                    description: UTC date time in ISO format
+                                  to:
+                                    type: string
+                                    format: date-time
+                                    nullable: false
+                                    example: "2024-05-09T10:34:00.389Z"
+                                    description: UTC date time in ISO format
+                              status:
+                                type: string
+                                nullable: true
+                                example: SUCCESS
+                                description: The status of the subscription approval
+                  autoApprovals:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: number
+                          format: int64
+                          nullable: false
+                          example: 1234
+                        autoApprovalId:
+                          type: string
+                          nullable: false
+                          example: e5ec415f-c098-40f6-a0db-faa162fc5295
+                        hiuId:
+                          type: string
+                          description: Identifier of the health information user that raised the request.
+                          nullable: false
+                          example: India_HIU
+                        patientId:
+                          type: string
+                          nullable: false
+                          example: <ABHA_ADDRESS>
+                        isActive:
+                          type: boolean
+                          nullable: false
+                          example: false
+                        dateCreated:
+                          type: string
+                          format: date-time
+                          nullable: false
+                          example: "2021-09-28T12:30:08.573Z"
+                        dateModified:
+                          type: string
+                          format: date-time
+                          nullable: false
+                          example: "2021-09-28T12:30:08.573Z"
+                        policy:
+                          type: object
+                          required:
+                            - isApplicableForAllHIPs
+                            - hiu
+                            - includedSources
+                            - excludedSources
+                          properties:
+                            isApplicableForAllHIPs:
+                              type: boolean
+                              nullable: false
+                              example: true
+                            hiu:
+                              type: object
+                              required:
+                                - id
+                              properties:
+                                id:
+                                  type: string
+                                  nullable: false
+                                  example: INDIA_HIU
+                                  description: The service ID of the health information user. Must be Alpha numeric and _ or - in middle
+                                name:
+                                  type: string
+                                  nullable: true
+                                  example: INDIA HIU
+                                  description: 'The name of the health information user. Allows alphanumeric characters and special characters like _\-@,. ":'
+                                type:
+                                  type: string
+                                  nullable: true
+                                  example: HIU
+                                  description: 'The type of the health information user. Allows alphanumeric characters and special characters like _\-@,. ":'
+                            includedSources:
+                              type: array
+                              description: Included sources, carrying the list of hi types.
+                              items:
+                                type: object
+                                required:
+                                  - hiTypes
+                                  - purpose
+                                  - hip
+                                  - categories
+                                  - period
+                                properties:
+                                  hiTypes:
+                                    type: array
+                                    description: Types of health information document.
+                                    items:
+                                      type: string
+                                      enum:
+                                        - DiagnosticReport
+                                        - DischargeSummary
+                                        - HealthDocumentRecord
+                                        - ImmunizationRecord
+                                        - OPConsultation
+                                        - Prescription
+                                        - WellnessRecord
+                                        - Invoice
+                                      nullable: false
+                                      example: Prescription
+                                  purpose:
+                                    type: object
+                                    nullable: false
+                                    required:
+                                      - text
+                                      - code
+                                      - refUri
+                                    properties:
+                                      text:
+                                        type: string
+                                        nullable: false
+                                        enum:
+                                          - Care Management
+                                          - Break the Glass
+                                          - Public Health
+                                          - Healthcare Payment
+                                          - Disease Specific Healthcare Research
+                                          - Self Requested
+                                        example: Care Management
+                                      code:
+                                        type: string
+                                        nullable: false
+                                        enum:
+                                          - CAREMGT
+                                          - BTG
+                                          - PUBHLTH
+                                          - HPAYMT
+                                          - DSRCH
+                                          - PATRQT
+                                        example: CAREMGT
+                                      refUri:
+                                        type: string
+                                        format: uri
+                                        nullable: false
+                                        example: https://abc.def.in
+                                        description: The reference URL.Allows alpha numeric character and special characters like "^[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&//=]*)$"
+                                  hip:
+                                    type: object
+                                    description: Identifier and name of the health information provider.
+                                    nullable: false
+                                    required:
+                                      - id
+                                      - name
+                                    properties:
+                                      id:
+                                        type: string
+                                        nullable: false
+                                        example: INDIA_HIP
+                                        description: The service ID of the health information provider. Must be Alpha numeric and _ or - in middle
+                                      name:
+                                        type: string
+                                        nullable: true
+                                        example: INDIA HIP
+                                        description: 'The name of the health information provider. Allows alphanumeric characters and special characters like _\-@,. ":'
+                                      type:
+                                        type: string
+                                        nullable: true
+                                        example: HIP
+                                        description: 'The type of the health information provider. Allows alphanumeric characters and special characters like _\-@,. ":'
+                                  categories:
+                                    type: array
+                                    items:
+                                      type: string
+                                      enum:
+                                        - LINK
+                                        - DATA
+                                      nullable: false
+                                      example: LINK
+                                      description: The subscription category. Should be either LINK or DATA
+                                  period:
+                                    type: object
+                                    nullable: false
+                                    description: The date range between when the subscription will be active
+                                    required:
+                                      - from
+                                      - to
+                                    properties:
+                                      from:
+                                        type: string
+                                        format: date-time
+                                        nullable: false
+                                        example: "2024-05-09T10:34:00.389Z"
+                                        description: UTC date time in ISO format
+                                      to:
+                                        type: string
+                                        format: date-time
+                                        nullable: false
+                                        example: "2024-05-09T10:34:00.389Z"
+                                        description: UTC date time in ISO format
+                                  status:
+                                    type: string
+                                    nullable: true
+                                    example: SUCCESS
+                                    description: The status of the subscription approval
+                            excludedSources:
+                              type: array
+                              description: Excluded sources, carrying the list of hi types.
+                              items:
+                                type: object
+                                required:
+                                  - hiTypes
+                                  - purpose
+                                  - hip
+                                  - categories
+                                  - period
+                                properties:
+                                  hiTypes:
+                                    type: array
+                                    description: Types of health information document.
+                                    items:
+                                      type: string
+                                      enum:
+                                        - DiagnosticReport
+                                        - DischargeSummary
+                                        - HealthDocumentRecord
+                                        - ImmunizationRecord
+                                        - OPConsultation
+                                        - Prescription
+                                        - WellnessRecord
+                                        - Invoice
+                                      nullable: false
+                                      example: Prescription
+                                  purpose:
+                                    type: object
+                                    nullable: false
+                                    required:
+                                      - text
+                                      - code
+                                      - refUri
+                                    properties:
+                                      text:
+                                        type: string
+                                        nullable: false
+                                        enum:
+                                          - Care Management
+                                          - Break the Glass
+                                          - Public Health
+                                          - Healthcare Payment
+                                          - Disease Specific Healthcare Research
+                                          - Self Requested
+                                        example: Care Management
+                                      code:
+                                        type: string
+                                        nullable: false
+                                        enum:
+                                          - CAREMGT
+                                          - BTG
+                                          - PUBHLTH
+                                          - HPAYMT
+                                          - DSRCH
+                                          - PATRQT
+                                        example: CAREMGT
+                                      refUri:
+                                        type: string
+                                        format: uri
+                                        nullable: false
+                                        example: https://abc.def.in
+                                        description: The reference URL. Allows alpha numeric character and special characters like "^[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&//=]*)$"
+                                  hip:
+                                    type: object
+                                    description: Identifier and name of the health information provider.
+                                    nullable: false
+                                    required:
+                                      - id
+                                      - name
+                                    properties:
+                                      id:
+                                        type: string
+                                        nullable: false
+                                        example: INDIA_HIP
+                                        description: The service ID of the health information provider. Must be Alpha numeric and _ or - in middle
+                                      name:
+                                        type: string
+                                        nullable: true
+                                        example: INDIA HIP
+                                        description: 'The name of the health information provider. Allows alphanumeric characters and special characters like _\-@,. ":'
+                                      type:
+                                        type: string
+                                        nullable: true
+                                        example: HIP
+                                        description: 'The type of the health information provider. Allows alphanumeric characters and special characters like _\-@,. ":'
+                                  categories:
+                                    type: array
+                                    items:
+                                      type: string
+                                      enum:
+                                        - LINK
+                                        - DATA
+                                      nullable: false
+                                      example: LINK
+                                      description: The subscription category. Should be either LINK or DATA
+                                  period:
+                                    type: object
+                                    nullable: false
+                                    description: The date range between when the subscription will be active
+                                    required:
+                                      - from
+                                      - to
+                                    properties:
+                                      from:
+                                        type: string
+                                        format: date-time
+                                        nullable: false
+                                        example: "2024-05-09T10:34:00.389Z"
+                                        description: UTC date time in ISO format
+                                      to:
+                                        type: string
+                                        format: date-time
+                                        nullable: false
+                                        example: "2024-05-09T10:34:00.389Z"
+                                        description: UTC date time in ISO format
+                                  status:
+                                    type: string
+                                    nullable: true
+                                    example: SUCCESS
+                                    description: The status of the subscription approval
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: The error code and message, if any occurred.
+                    required:
+                      - code
+                      - message
+                    properties:
+                      code:
+                        type: string
+                        pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                        description: 'ABDM-1066 - Invalid JWT token. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                        example: ABDM-1066
+                      message:
+                        type: string
+                        example: Invalid JWT token
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: '900901 - Invalid Credentials. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                    example: "900901"
+                  message:
+                    type: string
+                    example: Invalid Credentials
+                  description:
+                    type: string
+                    example: Invalid Credentials. Make sure you have provided the correct security credentials
+        "403":
+          description: Forbidden
+          content:
+            text/plai:
+              schema:
+                type: string
+                example: Access Denied
+        "404":
+          description: server cannot find the requested resource
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - timestamp
+                  - path
+                  - status
+                  - error
+                  - requestId
+                properties:
+                  timestamp:
+                    type: number
+                    example: 1731557446506
+                  path:
+                    type: string
+                    example: /hiecm/api/v3/subscription-requests/init
+                  status:
+                    type: integer
+                    example: 500
+                  error:
+                    type: string
+                    description: The error code and message, if any occurred.
+                    example: Internal Server Error
+                  requestId:
+                    type: string
+                    example: d20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d
+        "503":
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: 'ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.'
+                    nullable: false
+                    example: ABDM-1024
+                  message:
+                    type: string
+                    nullable: false
+                    example: Dependent service unavailable
+      x-abdm-nha-operation-id: subscription-phr 11
+  /api/hiecm/subscription-requests/v3/patients/lockers:
+    get:
+      tags:
+        - subscription-phr
+      operationId: p4_get_subscription_requests_v3_patients_lockers
+      summary: The API provides the list of health locker that the ABHA address is subscribed to.
+      description: This endpoint retrieves a list of health lockers associated with a given ABHA address.  It includes both active and inactive subscriptions based on the `includeInactive` parameter.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: REQUEST-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: 18235d89-cb13-479d-ad71-7a57d5f669a8
+          description: Unique UUID for tracking the end-to-end request transaction
+        - name: TIMESTAMP
+          in: header
+          required: true
+          schema:
+            type: string
+          example: "2022-10-06T15:10:00.587Z"
+          description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds, and milliseconds
+        - name: X-CM-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: sbx
+          description: Suffix of the consent manager to which the request was intended
+        - name: X-AUTH-TOKEN
+          in: header
+          required: true
+          schema:
+            type: string
+            format: bearer
+            minimum: 1
+            maximum: 100
+          example: <TOKEN>
+          description: JWT Authentication token issued by ABDM after successful validation of username and password
+        - name: includeInactive
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "true"
+          description: Indicates whether to include inactive records
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      nullable: false
+                      example: 212
+                    lockerId:
+                      type: string
+                      nullable: false
+                      example: HIU_V3
+                    lockerName:
+                      type: string
+                      nullable: false
+                      example: HIU_V3
+                    patientId:
+                      type: string
+                      nullable: false
+                      example: <ABHA_ADDRESS>
+                      description: abha address of the patient.Allows alpha numeric character and special characters like ^[a-zA-Z0-9][a-zA-Z0-9_.\\-!]+[a-zA-Z0-9]@(abdm|sbx)$
+                    dateCreated:
+                      type: string
+                      nullable: false
+                      example: "2024-03-15T01:49:16.316Z"
+                      description: Should be UTC date time in ISO format. Allows alpha numeric character and special characters like "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
+                    dateModified:
+                      type: string
+                      nullable: false
+                      example: 2024-03-120T01:49:16.316Z
+                      description: Should be UTC date time in ISO format. Allows alpha numeric character and special characters like "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
+                    isActive:
+                      type: boolean
+                      nullable: false
+                      example: true
+        "400":
+          description: Bad Request. The request could not be processed because it was malformed or failed validation - a missing mandatory field, a value in the wrong format, or a header that did not match the body.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: The error code and message, if any occurred.
+                    required:
+                      - code
+                      - message
+                    properties:
+                      code:
+                        type: string
+                        pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                        description: 'ABDM-1006 - Bad Request, invalid request Body. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                        example: ABDM-1006
+                      message:
+                        type: string
+                        description: Short description of the failure.
+                        example: Bad Request, invalid request Body
+        "401":
+          description: Unauthorized. The request carried no valid credentials, or the access token has expired. Obtain a fresh token from the session API and retry.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: '900901 - Invalid Credentials. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                    example: "900901"
+                  message:
+                    type: string
+                    description: Short description of the failure.
+                    example: Invalid Credentials
+                  description:
+                    type: string
+                    description: Detailed description of the failure.
+                    example: "Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'"
+        "403":
+          description: Forbidden. The caller is authenticated but is not permitted to perform this operation on this resource.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Forbidden
+      x-abdm-nha-operation-id: subscription-phr 12
+  /api/hiecm/subscription-requests/v3/setup-locker:
+    post:
+      tags:
+        - health-locker
+      operationId: p4_post_subscription_requests_v3_setup_locker
+      summary: This API will be invoked to setup health locker for a patient.
+      description: This API endpoint is used to set up a health locker for a patient. By invoking this API, users can configure a secure storage space for the patient’s health records, ensuring that all health information is organized and easily accessible. This functionality is essential for managing and safeguarding health data, providing patients with a centralized location for their medical documents.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: REQUEST-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: 18235d89-cb13-479d-ad71-7a57d5f669a8
+          description: Unique UUID for tracking the end-to-end request transaction
+        - name: TIMESTAMP
+          in: header
+          required: true
+          schema:
+            type: string
+          example: "2022-10-06T15:10:00.587Z"
+          description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds, and milliseconds
+        - name: X-CM-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: sbx
+          description: Suffix of the consent manager to which the request was intended
+        - name: X-AUTH-TOKEN
+          in: header
+          required: true
+          schema:
+            type: string
+            format: bearer
+            minimum: 1
+            maximum: 100
+          example: <TOKEN>
+          description: JWT Authentication token issued by ABDM after successful validation of username and password
+        - name: X-LOCKER-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          description: The locker id
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  consentAutoApprovalId:
+                    type: string
+                    nullable: false
+                    example: e5ec415f-c098-40f6-a0db-faa162fc5295
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: The error code and message, if any occurred.
+                    required:
+                      - code
+                      - message
+                    properties:
+                      code:
+                        type: string
+                        pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                        description: 'ABDM-1066 - Invalid JWT token. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                        example: ABDM-1066
+                      message:
+                        type: string
+                        example: Invalid JWT token
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: '900901 - Invalid Credentials. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                    example: "900901"
+                  message:
+                    type: string
+                    example: Invalid Credentials
+                  description:
+                    type: string
+                    example: Invalid Credentials. Make sure you have provided the correct security credentials
+        "403":
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Access Denied
+        "404":
+          description: server cannot find the requested resource
+        "500":
+          description: Internal Server Error -> It is just one example, for every api the path will be changed.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - timestamp
+                  - path
+                  - status
+                  - error
+                  - requestId
+                properties:
+                  timestamp:
+                    type: number
+                    example: 1731557446506
+                  path:
+                    type: string
+                    example: /hiecm/api/v3/subscription-requests/init
+                  status:
+                    type: integer
+                    example: 500
+                  error:
+                    type: string
+                    description: The error code and message, if any occurred.
+                    example: Internal Server Error
+                  requestId:
+                    type: string
+                    example: d20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d
+        "503":
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: 'ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.'
+                    nullable: false
+                    example: ABDM-1024
+                  message:
+                    type: string
+                    nullable: false
+                    example: Dependent service unavailable
+      x-abdm-nha-operation-id: health-locker 1
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.

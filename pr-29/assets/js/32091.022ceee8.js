@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["32091"],{86550(e,d,s){s.r(d),s.d(d,{__iconNode:()=>c,default:()=>t});var a=s(34438);let c=[["path",{d:"m7 6 5 5 5-5",key:"1lc07p"}],["path",{d:"m7 13 5 5 5-5",key:"1d48rs"}]],t=(0,a.A)("chevrons-down",c)}}]);
