@@ -6,8 +6,8 @@ milestone: n/a
 version: nhcx-v1
 title: POST /api/hiecm/gateway/v3/sessions
 summary: >-
-  Trade your client id and client secret for the short-lived access token that every
-  claims exchange call carries.
+  Trade your client id and client secret for the access token, valid for 1200 seconds
+  (20 minutes), that every claims exchange call carries.
 sources:
 - url: https://hcxsbx.abdm.gov.in/images/ff9eae6e99c1aee8a9fd.pdf
   file: catalogue/openapi/.raw/nhcx-site-2026-09-14/documents/FAQs.pdf
@@ -52,7 +52,7 @@ related:
 
 This call gives you an access token. Every call you make to the National Health Claims Exchange ([NHCX](../../shared/glossary/nhcx.md)) carries it.
 
-You send the client id and client secret issued to you for [ABDM](../../shared/glossary/abdm.md) [Milestone 1](../../shared/glossary/m1.md). The ABDM [gateway](../../shared/glossary/gateway.md) returns a bearer token and its lifetime in seconds. The token is short lived, so you renew it on a timer. See [the session token](../concepts/session-token.md) for how one token serves every NHCX call.
+You send the client id and client secret issued to you for [ABDM](../../shared/glossary/abdm.md) [Milestone 1](../../shared/glossary/m1.md). The ABDM [gateway](../../shared/glossary/gateway.md) returns a bearer token that lasts 1200 seconds (20 minutes). You renew it on a timer before the 20 minutes run out. See [the session token](../concepts/session-token.md) for how one token serves every NHCX call.
 
 ## Before you start
 
@@ -95,24 +95,24 @@ The response body has this shape:
 ```json
 {
   "accessToken": "<JWT_ACCESS_TOKEN>",
-  "expiresIn": <LIFETIME_IN_SECONDS>,
+  "expiresIn": 1200,
   "refreshTokenIn": <REFRESH_LIFETIME_IN_SECONDS>,
   "refreshToken": "<JWT_REFRESH_TOKEN>",
   "tokenType": "bearer"
 }
 ```
 
-Send `accessToken` on every NHCX call as `bearer_auth: Bearer <accessToken>`. Do not hard code a lifetime. Read `expiresIn` from each response and mint a new token before it runs out.
+Send `accessToken` on every NHCX call as `bearer_auth: Bearer <accessToken>`. The token lasts 1200 seconds (20 minutes). Mint a new token before it runs out, for example after about 18 minutes.
 
 **Idempotency.** Every call mints a new token. Repeating the call is safe. Keep the newest token and drop the old one.
 
 ## How you know it worked
 
-You receive HTTP 200 with a non-empty `accessToken` and an integer `expiresIn`.
+You receive HTTP 200 with a non-empty `accessToken` and `expiresIn` set to `1200`.
 
 Your next participant service call, for example [`/fetch/participants/list`](fetch-participants-list.md), returns 200 rather than 401 when it carries the token in `bearer_auth`.
 
-Record the time the token arrived. It is valid until that time plus `expiresIn` seconds.
+Record the time the token arrived. It is valid until that time plus 1200 seconds (20 minutes).
 
 ## When it goes wrong
 

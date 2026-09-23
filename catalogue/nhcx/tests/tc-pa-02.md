@@ -96,7 +96,7 @@ action: If the user token has expired, authenticate the beneficiary again by fin
 
 | Test case field | Value |
 |---|---|
-| API / FHIR Resource | /preauth/submit (Claim) |
+| API / FHIR Resource | /v1/preauth/submit (Claim) |
 | Input Parameters | Additional Documents |
 
 1. Build the Claim bundle with `use` `preauthorization` again. Keep the claim identifier of the original preauthorisation. Add the additional documents. See [query update bundles](../fhir/query-update.md).

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="114.08" height="113.08" viewBox="0 0 114.08 113.08">
+  <g id="successfully_integrators" data-name="successfully integrators" transform="translate(0.54 0.541)">
+    <ellipse id="Ellipse_126" data-name="Ellipse 126" cx="49.5" cy="49" rx="49.5" ry="49" transform="translate(7 6.999)" fill="#fff"/>
+    <ellipse id="Ellipse_116" data-name="Ellipse 116" cx="56.5" cy="56" rx="56.5" ry="56" transform="translate(0 -0.001)" fill="none" stroke="#fff" stroke-width="1.08"/>
+    <circle id="Ellipse_1782" data-name="Ellipse 1782" cx="27" cy="27" r="27" transform="translate(30 28.999)" fill="#e8705a"/>
+    <g id="Group_29522" data-name="Group 29522" transform="translate(25.666 25.272)">
+      <path id="Path_3283" data-name="Path 3283" d="M397.568,337.3A30.336,30.336,0,1,0,427.9,367.638,30.364,30.364,0,0,0,397.568,337.3Zm0,3.614a26.722,26.722,0,1,1-26.72,26.724A26.7,26.7,0,0,1,397.568,340.914Z" transform="translate(-367.234 -337.3)" fill="#264488" stroke="#264488" stroke-width="1"/>
+      <path id="Path_3284" data-name="Path 3284" d="M417.68,410.845l6.6,6.6,2.641,2.641,19.808-19.808-2.641-2.64-17.167,17.166-6.6-6.6Z" transform="translate(-401.346 -378.971)" fill="#264488" stroke="#264488" stroke-width="1" fill-rule="evenodd"/>
+    </g>
+  </g>
+</svg>

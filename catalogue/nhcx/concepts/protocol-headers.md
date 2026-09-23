@@ -81,7 +81,7 @@ Send all of these. Together they satisfy every published header list.
 | `x-hcx-workflow_id` | The stage of the case. See [workflow codes](./workflow-codes.md) |
 | `x-hcx-timestamp` | When you sent it, from a synchronised clock |
 | `x-hcx-status` | The message state. See below |
-| `x-hcx-ben-abha-id` | The beneficiary's [ABHA number](../../shared/glossary/abha-number.md) |
+| `x-hcx-ben-abha-id` | The beneficiary's [ABHA number](../../shared/glossary/abha-number.md). Optional |
 
 Each UUID is a random 36 character universally unique identifier.
 

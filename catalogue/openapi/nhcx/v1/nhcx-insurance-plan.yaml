@@ -13,7 +13,7 @@ info:
   title: NHCX insurance plan
   summary: Policies have traditionally been PDFs that hospital desks interpret by hand, producing ambiguity about benefits, claim conditions and documents, and rework and rejections downstream.
   description: |-
-    The Insurance plan calls on the National Health Claims Exchange (NHCX): 4 operations, and 2 callbacks you host.
+    The Insurance plan calls on the National Health Claims Exchange (NHCX): 2 operations, and 2 callbacks you host.
 
     Policies have traditionally been PDFs that hospital desks interpret by hand, producing ambiguity about benefits, claim conditions and documents, and rework and rejections downstream.
 
@@ -52,8 +52,6 @@ servers:
 tags:
   - name: Insurance plan
     description: Policies have traditionally been PDFs that hospital desks interpret by hand, producing ambiguity about benefits, claim conditions and documents, and rework and rejections downstream.
-  - name: Adapter
-    description: Internal twins of the exchange calls, for the NHCX adapter deployment.
 security:
   - bearerAuth: []
 paths:
@@ -66,7 +64,7 @@ paths:
         - Insurance plan
       summary: Insurance plan request
       description: |-
-        Provider sends a Task with code poll naming a policy number and/or its HFR id to fetch the payer's machine-readable InsurancePlan for that pairing.
+        Provider sends a Task with code poll naming both a policy number and its HFR id to fetch the payer's machine-readable InsurancePlan for that pairing.
 
         ### Business purpose
 
@@ -74,29 +72,25 @@ paths:
 
         ### When to use
 
-        Call it before any preauth or claim for a given payer and policy, ideally at patient registration or admission and before treatment planning and cost estimation, alongside coverage eligibility. The request carries no clinical content: a Task with status requested, intent order, code poll (system https://nhcx.abdm.gov.in/api) and at least one input, policyNumber or providerId (the HFR id). Send x-hcx-status request.initiated. No dedicated workflow code for InsurancePlan appears in the workflow tables; the Services reference marks x-hcx-workflow_id optional. The plan arrives asynchronously on /v1/insuranceplan/on_request.
+        Call it before any pre-authorisation or claim for a payer and policy, ideally at registration. It fetches the plan: covered treatments, rates and required documents.
 
         ### Preconditions
 
-        - Both provider and payer registered on NHCX; valid Bearer token from the client-credentials session call.
-        - Payer certificate fetched via /fetch/certs and verified before encryption; JWE with RSA-OAEP-256 and A256GCM.
-        - Task bundle with at least one of policyNumber or providerId in Task.input; both may be supplied for precision.
-        - Protected header with sender_code, recipient_code, fresh api_call_id, a fresh UUID correlation_id for this discovery cycle, IST timestamp and status request.initiated.
-        - Recipient code taken from processingID in the get/Policies response, not PayerID.
-        - HTTP headers Accept, Content-Type and bearer_auth.
+        - You have a valid access token and the payer's certificate.
+        - The request is a FHIR `Task` with both the policy number and the hospital's HFR ID.
+        - `x-hcx-recipient_code` is the processing ID, not the payer ID, and the correlation ID is new.
 
         ### Postconditions
 
-        The gateway returns HTTP 202 with a StatusSuccessResponse whose result carries sender_code, recipient_code, entity_type insuranceplan and protocol_status; 400, 404 and 500 use the same envelope. The 202 is a receipt, never the plan. The payer later posts an InsurancePlan collection Bundle (InsurancePlan, Organization, optional Questionnaire) to /v1/insuranceplan/on_request under the same correlation id, and the provider must acknowledge that with 202 within 30 seconds. The payer may return an empty plan or an error if no coverage matches the policy-provider combination; an empty plan is a business outcome, not a transport failure. Plans may be cached but should be refreshed periodically or when treatment changes.
+        - NHCX answers `202` at once. That is a receipt, not the plan.
+        - The plan arrives later on `/v1/insuranceplan/on_request`. It may be empty if nothing matches.
 
         ### Common mistakes
 
-        - Sending a Task with no input at all; at least one of policyNumber or providerId is mandatory.
-        - Expecting the plan in the synchronous response.
-        - Resubmitting while a previous request is still with the payer: PAYR-1406 rejects a new request until the earlier correlation id completes (wait 15 to 60 minutes).
-        - Requesting a policy the hospital is not allowed to use (PAYR-1401), a policy with no payer (PAYR-1402), a renewal not linked to the policy (PAYR-1403), or from an HFR id or sender id with no enrolled hospital (PAYR-1405).
-        - Using the wrong registry id in production; providers must use the HFR id.
-        - Treating an empty plan (PAYR-1404, no treatment under any speciality) as a gateway fault.
+        - Sending a `Task` without both the policy number and the HFR ID.
+        - Expecting the plan in the `202` response.
+        - Sending a new request while an earlier one is still with the payer.
+        - Treating an empty plan as a gateway fault.
 
         ### Best practices
 
@@ -197,27 +191,26 @@ paths:
 
         ### When to use
 
-        The payer calls it after receiving a /v1/insuranceplan/request Task (code poll), acknowledging it with 202 and assembling the plan for the policyNumber and/or providerId supplied. The bundle is of type collection and follows one of two structures: plan, specificCost, category, benefit, cost, qualifiers (the PMJAY package-master shape) or coverage, benefit, limit. Carry the same x-hcx-correlation_id as the request and a responder x-hcx-status (response.complete, or response.error with x-hcx-error_details when no plan can be produced). The plan may legitimately be empty when no coverage matches.
+        The payer calls it after receiving a plan request, with the same correlation ID. It sends the plan for that policy and hospital, or an error if no plan can be produced.
 
         ### Preconditions
 
-        - The inbound Task was decrypted, its correlation id captured and the 202 acceptance body already returned.
-        - Payer registered on NHCX with a valid Bearer token and the provider's certificate for JWE encryption.
-        - A collection Bundle containing InsurancePlan (with plan.generalCost for the overall sum insured, specificCost per speciality, benefit per package with cost and qualifiers, and the claim-exclusion, claimCondition and claimSupportingInfoRequirement extensions), Organization entries and any Questionnaire resources.
-        - Protected header echoing the request's correlation id with a fresh api_call_id, IST timestamp and responder status; request body declared as a bare object in the OpenAPI but still a JWE per RFC-7516.
+        - The payer has already replied `202` to the incoming request.
+        - The payer has a valid access token and the provider's certificate, and encrypts the plan for the provider.
+        - The bundle holds the `InsurancePlan`, the organisations and any questionnaires.
+        - The correlation ID matches the request, and the call ID is new.
 
         ### Postconditions
 
-        The gateway returns HTTP 202 with the StatusSuccessResponse envelope (400, 404 and 500 in the same shape) and forwards the bundle to the provider's registered endpoint, which must acknowledge with 202 within 30 seconds. After decryption the provider holds the plan, may cache it, and must enforce its claim conditions and document requirements before preauth. Codes carried in the plan, such as specificCost.category as the speciality code and benefit.type as the procedure code, are what later PAYR-1114, PAYR-1202 and PAYR-1204 validations are checked against. Errors returned instead of a plan use PAYR-1401 to PAYR-1406.
+        - NHCX answers `202` and forwards the plan to the provider, who must reply `202` within 30 seconds.
+        - The provider may cache the plan and checks later pre-authorisations and claims against it.
 
         ### Common mistakes
 
-        - Returning the plan in the synchronous 202 to the request, or before acknowledging the inbound Task within 30 seconds.
-        - Minting a new correlation id rather than echoing the request's (NHCX-1010).
-        - Encoding cost.value as the package rate; the IG defines it as the extra amount paid over and above the procedure cost.
-        - Synthesising codes for claim conditions listed as NA (rules_yn, los, ip_op_flag, incentive_applicable, gst_applicable, gst_percentage).
-        - Shipping the full package master unfiltered; the response must be provider-specific and contextually filtered per the MoU.
-        - Provider side: treating an empty plan as a transport failure, or failing to parse both structuring approaches.
+        - Returning the plan in the `202` reply to the request.
+        - Creating a new correlation ID instead of reusing the request's.
+        - Sending the full package list instead of the part that applies to this hospital.
+        - Provider side: treating an empty plan as a transport failure.
 
         ### Best practices
 
@@ -318,261 +311,8 @@ paths:
                 error:
                   code: ""
                   message: ""
-  /internal/v1/insuranceplan/request:
-    post:
-      operationId: insurance_plan_internal_v1_insuranceplan_request
-      x-abdm-use-case: Adapter
-      tags:
-        - Adapter
-      summary: Insurance plan request (internal variant) (adapter)
-      description: |-
-        Internal twin of /v1/insuranceplan/request on the insuranceplanhcxservice: same TaskBundle payload, same 202 envelope, distinct operationId.
-
-        ### Business purpose
-
-        The insuranceplanhcxservice is one of six NHCX services that expose every operation at both /v1/... and /internal/v1/... with identical descriptions and bodies, differing only in the operationId suffix. This entry is the internal form of the provider's plan discovery request, whose purpose is to retrieve the payer's structured, provider-specific digital policy before treatment. The documentation states the internal variant has the same semantics as /v1/insuranceplan/request and does not describe any behavioural difference.
-
-        ### When to use
-
-        Same circumstances as the public request: before any preauth or claim for a payer and policy, at registration or admission, and before cost estimation. The payload is the Task poll bundle with at least one of policyNumber or providerId; the header carries request.initiated. The specifications do not say when the internal path applies instead of the public one, so integrators should default to /v1/insuranceplan/request unless onboarding guidance names the internal route.
-
-        ### Preconditions
-
-        - As for the public endpoint: registered provider and payer, Bearer token, payer certificate verified and used for JWE encryption.
-        - Body is a JWEPayload, { "payload": "<compact JWE>" }, whose plaintext is the TaskBundle.
-        - Protected header with sender_code, recipient_code, fresh api_call_id and correlation_id, IST timestamp, status request.initiated.
-        - Confirmation that the internal prefix is reachable and intended for your integration; the specs are silent on this.
-
-        ### Postconditions
-
-        Returns 202 Accepted with StatusSuccessResponse (timestamp, api_call_id, correlation_id, result with sender_code, recipient_code, entity_type and protocol_status, error), or 400, 404 or 500 in the same envelope. The payer's plan arrives later on the insurance plan on_request callback under the same correlation id; the provider must acknowledge that within 30 seconds. An empty plan or a PAYR-1401 to PAYR-1406 error is a documented business outcome. No additional behaviour is documented for the internal variant.
-
-        ### Common mistakes
-
-        - Assuming the internal route bypasses validation or returns the plan synchronously; it is documented as identical to the public request.
-        - Omitting both Task inputs; at least one of policyNumber or providerId is required.
-        - Resubmitting while a previous request is in progress (PAYR-1406).
-        - Hard-coding the internal prefix without confirming it is your onboarded route; a 404 may simply mean the wrong host or prefix shape.
-
-        ### Best practices
-
-        - Reuse the public request's bundle builder and header hygiene; make only the path prefix configurable.
-        - Mint a fresh UUID correlation id per discovery cycle and a fresh api_call_id per call; use IST timestamps.
-        - Cache and periodically refresh the returned plan; enforce its claim conditions before preauth.
-        - Have the on_request receiver and v1/error in place before sending.
-
-        ### Related scenario
-
-        A hospital information system vendor generating clients from the insuranceplanhcxservice Swagger finds both insuranceplanRequestPost-style operations and their Internal twins. The vendor implements one plan-discovery module that posts to /v1/insuranceplan/request by default, with the internal path selectable per deployment after confirmation from NHCX onboarding. Either way the flow is the same: 202 receipt, the package master arriving on the on_request callback, then coverage eligibility and preauth built against the cached plan.
-
-        ### Specification
-
-        Chapter [Insurance plan request](/docs/nhcx/v1/reference/fhir/insurance-plan-request) of the NHCX integration specification.
-      parameters:
-        - $ref: "#/components/parameters/BearerAuth"
-        - $ref: "#/components/parameters/XHcxSenderCode"
-        - $ref: "#/components/parameters/XHcxRecipientCode"
-        - $ref: "#/components/parameters/XHcxApiCallId"
-        - $ref: "#/components/parameters/XHcxRequestId"
-        - $ref: "#/components/parameters/XHcxCorrelationId"
-        - $ref: "#/components/parameters/XHcxWorkflowId"
-        - $ref: "#/components/parameters/XHcxTimestamp"
-        - $ref: "#/components/parameters/XHcxStatus"
-        - $ref: "#/components/parameters/XHcxBenAbhaId"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                payload:
-                  type: string
-            example:
-              payload: eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2R0NNIiwieC1oY3gtc2VuZGVyX2NvZGUiOiIxMDAwMDA0NDQ2QGhjeCJ9.encrypted_key.iv.ciphertext.tag
-      responses:
-        "200":
-          description: Returns 202 Accepted with StatusSuccessResponse (timestamp, api_call_id, correlation_id, result with sender_code, recipient_code, entity_type and protocol_status, error), or 400, 404 or 500 in the same envelope.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  timestamp:
-                    type: string
-                  api_call_id:
-                    type: string
-                  correlation_id:
-                    type: string
-                  result:
-                    type: object
-                    properties:
-                      sender_code:
-                        type: string
-                      recipient_code:
-                        type: string
-                      entity_type:
-                        type: string
-                      protocol_status:
-                        type: string
-                  error:
-                    type: object
-                    properties:
-                      code:
-                        type: string
-                      message:
-                        type: string
-              example:
-                timestamp: 25/08/2026 09:30:00:077
-                api_call_id: d0e1f2a3-b4c5-6789-3456-890123456789
-                correlation_id: 55667788-99aa-bbcc-ddee-ff0011223344
-                result:
-                  sender_code: 1000004446@hcx
-                  recipient_code: 1518@hcx
-                  entity_type: insuranceplan
-                  protocol_status: request.queued
-                error:
-                  code: ""
-                  message: ""
-  /internal/v1/insuranceplan/on_request:
-    post:
-      operationId: insurance_plan_internal_v1_insuranceplan_on_request
-      x-abdm-use-case: Adapter
-      tags:
-        - Adapter
-      summary: Insurance plan callback (internal variant) (adapter)
-      description: |-
-        Internal twin of /v1/insuranceplan/on_request: the payer InsuranceplanBundle callback with identical semantics, distinct operationId.
-
-        ### Business purpose
-
-        This is the internal-path form of the callback through which a payer delivers the digital policy: the InsurancePlan collection Bundle with packages, rates, qualifiers, claim conditions, mandatory documents and questionnaires for one policy and one hospital. The documentation lists it as an internal variant of the callback API with the same semantics as /v1/insuranceplan/on_request and does not describe any difference beyond the operationId. Its business value is unchanged: a machine-readable contract view that reduces rework and rejections.
-
-        ### When to use
-
-        Same as the public callback: after receiving and acknowledging an insurance plan request Task, the payer posts the plan bundle under the request's correlation id with a responder status (response.complete, or response.error with x-hcx-error_details). The bundle may follow either documented structure and may be empty when no coverage matches. The specifications do not indicate when the internal path is used in preference to the public one.
-
-        ### Preconditions
-
-        - Inbound request decrypted, correlation id captured, 202 acceptance already returned.
-        - Registered payer with a valid Bearer token and the provider's certificate for encryption.
-        - Collection Bundle containing InsurancePlan, Organization and any Questionnaire resources, filtered to the requesting provider per the MoU.
-        - Protected header echoing the request's correlation id with a fresh api_call_id, IST timestamp and responder status.
-        - Confirmation that the internal route is the one intended for your gateway integration.
-
-        ### Postconditions
-
-        Returns 202 Accepted with the StatusSuccessResponse envelope, or 400, 404 or 500 in the same shape; the bundle is forwarded to the provider, which must acknowledge within 30 seconds and may then cache the plan and enforce its conditions before preauth. Insurance plan business errors are PAYR-1401 to PAYR-1406. No additional behaviour is documented for the internal variant.
-
-        ### Common mistakes
-
-        - Expecting different validation or routing from the public callback; none is documented.
-        - Minting a new correlation id instead of echoing the request's (NHCX-1010).
-        - Populating cost.value with the package rate rather than the extra amount over the procedure cost.
-        - Returning an unfiltered package master rather than the provider-specific view.
-        - Provider side: failing to handle both structuring approaches or treating an empty plan as a fault.
-
-        ### Best practices
-
-        - Share one bundle builder with the public callback; only the path differs.
-        - Acknowledge the inbound Task first, assemble the plan asynchronously, then post.
-        - Use the documented claim-condition codes and include Questionnaire resources for mandatory documents.
-        - Fresh api_call_id, IST timestamp, response.complete or response.error with error details.
-        - Provider side: cache, refresh periodically or on treatment change, validate preauth items against the plan.
-
-        ### Related scenario
-
-        A payer platform team reviewing the insuranceplanhcxservice specification notices the callback appears twice, publicly and under /internal/v1. They implement a single plan-publication service that emits the InsurancePlan bundle under the request's correlation id, configured to the public /v1/insuranceplan/on_request path unless NHCX onboarding specifies the internal one. When a hospital's discovery Task arrives, the service returns 202, builds the filtered package master and posts it; the hospital acknowledges within 30 seconds and proceeds to eligibility and preauth.
-
-        ### Specification
-
-        Chapter [Insurance plan response](/docs/nhcx/v1/reference/fhir/insurance-plan-response-overview) of the NHCX integration specification.
-      parameters:
-        - $ref: "#/components/parameters/BearerAuth"
-        - name: x-hcx-sender_code
-          in: header
-          required: true
-          description: Your participant code. Mandatory on the envelope.
-          schema:
-            type: string
-          example: 1518@hcx
-        - name: x-hcx-recipient_code
-          in: header
-          required: true
-          description: The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
-          schema:
-            type: string
-          example: 1000004446@hcx
-        - $ref: "#/components/parameters/XHcxApiCallId"
-        - $ref: "#/components/parameters/XHcxRequestId"
-        - $ref: "#/components/parameters/XHcxCorrelationId"
-        - $ref: "#/components/parameters/XHcxWorkflowId"
-        - $ref: "#/components/parameters/XHcxTimestamp"
-        - name: x-hcx-status
-          in: header
-          required: true
-          description: Where this message stands. Values below. Mandatory on the envelope.
-          schema:
-            type: string
-          example: response.complete
-        - $ref: "#/components/parameters/XHcxBenAbhaId"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                payload:
-                  type: string
-            example:
-              payload: eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2R0NNIiwieC1oY3gtc2VuZGVyX2NvZGUiOiIxNTE4QGhjeCJ9.encrypted_key.iv.ciphertext.tag
-      responses:
-        "200":
-          description: Returns 202 Accepted with the StatusSuccessResponse envelope, or 400, 404 or 500 in the same shape; the bundle is forwarded to the provider, which must acknowledge within 30 seconds and may then cache the plan and enforce its conditions before preauth.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  timestamp:
-                    type: string
-                  api_call_id:
-                    type: string
-                  correlation_id:
-                    type: string
-                  result:
-                    type: object
-                    properties:
-                      sender_code:
-                        type: string
-                      recipient_code:
-                        type: string
-                      entity_type:
-                        type: string
-                      protocol_status:
-                        type: string
-                  error:
-                    type: object
-                    properties:
-                      code:
-                        type: string
-                      message:
-                        type: string
-              example:
-                timestamp: 25/08/2026 09:37:00:263
-                api_call_id: e1f2a3b4-c5d6-7890-4567-901234567890
-                correlation_id: 55667788-99aa-bbcc-ddee-ff0011223344
-                result:
-                  sender_code: 1518@hcx
-                  recipient_code: 1000004446@hcx
-                  entity_type: insuranceplan
-                  protocol_status: request.queued
-                error:
-                  code: ""
-                  message: ""
 webhooks:
-  v1_insuranceplan_request:
+  /v1/insuranceplan/request:
     post:
       operationId: insurance_plan_webhook_v1_insuranceplan_request
       x-abdm-atom: nhcx.callback.insuranceplan-request
@@ -584,7 +324,7 @@ webhooks:
       description: |-
         Hosted by the payer. The exchange posts this message to the `endpoint_url` you registered, at `/v1/insuranceplan/request`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
 
-        Provider sends a Task with code poll naming a policy number and/or its HFR id to fetch the payer's machine-readable InsurancePlan for that pairing.
+        Provider sends a Task with code poll naming both a policy number and its HFR id to fetch the payer's machine-readable InsurancePlan for that pairing.
       parameters:
         - $ref: "#/components/parameters/BearerAuth"
         - $ref: "#/components/parameters/XHcxSenderCode"
@@ -651,7 +391,7 @@ webhooks:
                 error:
                   code: ""
                   message: ""
-  v1_insuranceplan_on_request:
+  /v1/insuranceplan/on_request:
     post:
       operationId: insurance_plan_webhook_v1_insuranceplan_on_request
       x-abdm-atom: nhcx.callback.insuranceplan-on-request
@@ -791,7 +531,7 @@ components:
       name: x-hcx-request_id
       in: header
       required: false
-      description: One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope.
+      description: "One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope. Send it anyway, as a fresh UUID per originating request: it is cheap and satisfies both readings until NHA rules."
       schema:
         type: string
       example: <uuid>
@@ -830,8 +570,8 @@ components:
     XHcxBenAbhaId:
       name: x-hcx-ben-abha-id
       in: header
-      required: true
-      description: The beneficiary's ABHA number. Mandatory on every exchange, including those with no beneficiary in the payload. Mandatory on the envelope.
+      required: false
+      description: "The beneficiary's ABHA number. Optional: send it when the beneficiary has an ABHA number. Optional on the envelope."
       schema:
         type: string
       example: ""

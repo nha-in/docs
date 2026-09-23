@@ -51,5 +51,5 @@ If one case's answers keep landing elsewhere, compare the correlation ID in the 
 ## Next steps
 
 - [Envelope Fields](/docs/nhcx/v1/reference/envelope-fields): every identifier on the envelope, and when each one changes.
-- [JWE, Status and Errors](/docs/nhcx/v1/concepts/jwe-status-and-errors): how a cycle threads from request to answer.
+- [The JWE message format](/docs/nhcx/v1/getting-started/jwe-message-format): how a cycle threads from request to answer.
 - [When something breaks](/docs/nhcx/v1/troubleshooting): the other symptoms.

@@ -128,7 +128,7 @@ sequenceDiagram
 ```
 
 1. Build a Task bundle, as in [the insurance plan bundles](../fhir/insurance-plan-bundle.md). Set Task `status` to `requested`, `intent` to `order` and `code` to `poll`.
-2. Add two Task inputs: the policy number, and your HFR ID as the provider id. Send both, so the payer returns the view contracted for your hospital.
+2. Add two Task inputs: the policy number, and your HFR ID as the provider id. Both are required. Together they make the payer return the view contracted for your hospital.
 3. Seal the bundle and set the headers, as in [send a sealed request](send-a-sealed-request.md). Set `x-hcx-status` to `request.initiated`. Set `x-hcx-correlation_id` to the value of this call's `x-hcx-api_call_id`.
 4. Call [POST /v1/insuranceplan/request](../endpoints/insuranceplan-request.md). NHCX answers `202 Accepted` and forwards the request.
 5. Wait. Do not send a second plan request for the same hospital and policy until this one completes.

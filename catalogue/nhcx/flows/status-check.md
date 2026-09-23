@@ -104,7 +104,7 @@ sequenceDiagram
 
 1. Find the `x-hcx-api_call_id` of the request you are checking.
 2. Build the protected header. Set `x-hcx-correlation_id` to that earlier `x-hcx-api_call_id`. Use a fresh `x-hcx-api_call_id` for the status call itself.
-3. Set `x-hcx-status` to `request.initiated`. Use the same sender and recipient codes as the earlier request, and send `x-hcx-ben-abha-id`.
+3. Set `x-hcx-status` to `request.initiated`. Use the same sender and recipient codes as the earlier request, and send `x-hcx-ben-abha-id` if the beneficiary has an ABHA number. It is optional.
 4. Seal the body as `{"payload": "<JWE_COMPACT_STRING>"}`, as for every call. See [send a sealed request](send-a-sealed-request.md).
 5. Call [POST /v1/status](../endpoints/status.md). NHCX answers `202 Accepted`. The body's `result.protocol_status` names where the request stands.
 6. Receive [POST /v1/on_status](../callbacks/on-status.md). Its protected header carries the request's attributes, including `x-hcx-status`. Answer `202 Accepted`.

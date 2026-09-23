@@ -106,7 +106,7 @@ NRCeS profile: [InsurancePlan](https://nrces.in/ndhm/fhir/r4/StructureDefinition
 | `Unspecified` | `N`, `Y` | Free-text name and free-entry amount, validated against the wallet |
 | `LamaDamaProcedure` | `Y` | Offer only on a LAMA or DAMA discharge |
 | `DischargeStagesLamaDamaProcedure` | `Before Surgery, During Surgery` | The discharge stages at which a LAMA or DAMA package may be billed, before or during surgery |
-| `los` | not carried | Maximum length of stay; bounds the days claimed, the `LM100` count included |
+| `LengthOfStay` | not carried | Maximum length of stay; bounds the days claimed, the `LM100` count included |
 
 ## Supporting-information requirements
 

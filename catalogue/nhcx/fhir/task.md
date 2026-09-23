@@ -101,7 +101,7 @@ Under [PMJAY](../glossary/pmjay.md), a reprocess request goes to the Claim Revie
 | `Task.intent` | `order` |
 | `Task.code` | `reprocess` |
 | `Task.reasonCode` | `claimrejected` or `partialpayment`, from `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-reason-code` |
-| `Task.input` | `claimNumber` and `initimationNumber` carrying the original claim number, and a `document` input with the supporting file as `valueAttachment`, all from `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-input-type-code` |
+| `Task.input` | `claimNumber` and `intimationNumber` carrying the original claim number, and a `document` input with the supporting file as `valueAttachment`, all from `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-input-type-code` |
 | `Task.requester`, `Task.owner` | Your Organization and the payer's |
 
 The request carries the original claim number. It does not create a new case number.
@@ -174,7 +174,7 @@ The request carries the original claim number. It does not create a new case num
               "coding": [
                 {
                   "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-input-type-code",
-                  "code": "initimationNumber"
+                  "code": "intimationNumber"
                 }
               ]
             },
@@ -299,7 +299,7 @@ Then `/v1/task/on_submit` arrives with a completed `Task`. Its output resolves t
 ## When it goes wrong
 
 - **"Invalid input, code and reason code received."** The task code, reason code and inputs are not an accepted combination. Pair `reprocess` with `claimrejected` for a rejection, or with `partialpayment` for an erroneous claim.
-- **"Invalid case number received."** Send the original claim number in `claimNumber` and `initimationNumber`.
+- **"Invalid case number received."** Send the original claim number in `claimNumber` and `intimationNumber`.
 - **[PAYR-1017](../errors/payr-1017.md) or [PAYR-1018](../errors/payr-1018.md).** The task code or the reason code is missing.
 - **[PAYR-1332](../errors/payr-1332.md): invalid CRC request.** Check that the claim was rejected or partially paid, and that no request was already raised for it. Each claim allows one request under PMJAY.
 - **An erroneous claim is refused.** Raise it only after the payment cleared notice, and keep the amount within the shortfall.

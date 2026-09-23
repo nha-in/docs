@@ -8,6 +8,8 @@ import {
   ParamField,
   Step,
   Steps,
+  UseCase,
+  WorkflowCodeExplorer,
 } from '@site/src/components/mdx';
 
 /**
@@ -39,4 +41,6 @@ export default {
   Expandable,
   ParamField,
   LegacyAnchor,
+  UseCase,
+  WorkflowCodeExplorer,
 };

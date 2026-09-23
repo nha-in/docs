@@ -1,13 +1,13 @@
 ---
-title: Troubleshooting
-sidebar_label: Troubleshooting
+title: Troubleshooting by layer and code
+sidebar_label: Troubleshooting by layer and code
 sidebar_position: 12
 description: Five-layer fault isolation model and symptom-first diagnostic playbook
 source: nhcx-package/docs/06-Reference/02-Troubleshooting.md
 generated: true
 ---
 
-# Troubleshooting
+# Troubleshooting by layer and code
 
 A symptom-first chapter. Everything else in this documentation is organised by
 what you are building; this one is organised by what has gone wrong, because
@@ -43,7 +43,7 @@ passed, which is why a scheme-rule refusal is good news about your bundle.
 | `NHCX-1005` invalid request header | 2 | A header missing, malformed or of the wrong type | As above |
 | `NHCX-1006` duplicate request | 2 | A correlation ID reused, usually on a retry after a failure | Mint a fresh correlation ID. A failed correlation is retired |
 | `NHCX-1011` invalid status | 2 | The status word does not match the leg of the message | Requests send `request.initiated`; responses send `response.partial`, `complete` or `error` |
-| `NHCX-1018` invalid ABHA number | 2 | ABHA sent in the wrong shape | The gateway wants `XX-XXXX-XXXX-XXXX` on this field, though the bundle carries it without hyphens |
+| `NHCX-1018` invalid ABHA number | 2 | ABHA sent in the wrong shape | The gateway wants `XX-XXXX-XXXX-XXXX` on the `x-hcx-ben-abha-id` header, though the bundle carries it without hyphens |
 | `NHCX-1010` no data with given correlation id | 2 | You answered a request whose correlation the exchange had already retired | Acknowledge every submission immediately, then send the decision on the same thread |
 | `NHCX-1002` or `NHCX-1003` not registered | 2 | Sender or recipient is not active on the exchange | Check the participant record's status. Only `Active` can send or receive |
 | Nothing at all arrives on your callback | 2 | Address, firewall, routing, or no receipt sent | See the callback checklist below |
@@ -131,6 +131,33 @@ In order, and stop at the first that explains it.
   passed validation, so it is the first evidence the bundle is right.
 - **A `SUBSETTED` meta tag.** Every payer-generated bundle carries it. It marks
   a projection of the payer's record, not an error.
+
+## Service names in logs and URLs
+
+A name in a log line, a Swagger address or a stack trace does not always match
+the exchange you think you are calling. Reprocess is served by
+`taskhcxservice`, notifications by `subscriptionhcxservice`, payment by
+`servicehcxpayment`. Read the name off this table before you look for a fault
+in the wrong service.
+
+| Service name in a log or URL | Exchange it serves |
+| :---- | :---- |
+| `coverageeligibilityhcxservice` | Coverage eligibility |
+| `insuranceplanhcxservice` | Insurance plan |
+| `preauthhcxservice` | Preauthorisation |
+| `claimhcxservice` | Claim |
+| `communicationhcxservice` | Communication, including a request for additional attachments |
+| `servicehcxpayment` | Payment notice |
+| `statushcxservice` | Status check |
+| `taskhcxservice` | Task: reprocess and cancel |
+| `searchhcxservice` | Search |
+| `participanthcxservice` | Participant service: registry, certificates and policies |
+| `subscriptionhcxservice` | Notifications |
+| `abdmproxy` | Face authentication for PMJAY biometrics |
+| `nhcxpayerservice` | PMJAY payer service: the role lookup and acting on a case |
+| `dummyhcxpayer` | The sandbox dummy payer's test hooks |
+
+Environments and Addresses has the full address of each.
 
 ## Before you raise it with support
 

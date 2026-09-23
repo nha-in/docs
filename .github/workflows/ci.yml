@@ -92,6 +92,11 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run validate:skills
+      # The NHCX skills are copied in rather than compiled, so the check that
+      # they match a source cannot exist. This is the one that can: the
+      # provenance block has to be current against the counts in this
+      # repository, or an agent reads a stale folder as a live one.
+      - run: npm run check:nhcx-stamp
       # Rebuilding here does two jobs. It fails when the compiled skills changed
       # without a version bump, which otherwise ships silently and leaves every
       # existing install on the old skills. And it fails when the committed
@@ -252,6 +257,9 @@ jobs:
           # broken manifest or a malformed skill would have reached them
           # rather than this job.
           claude plugin validate ./plugins/abdm-integrators-assistant --strict
+          # In the marketplace since 21 September 2026, and carrying commands
+          # and an agent of its own, so it is validated like the other two.
+          claude plugin validate ./plugins/nhcx --strict
       - name: agent frontmatter parses
         run: python3 scripts/check-agent-frontmatter.py
       - name: no skill shares a name with a command

@@ -111,7 +111,7 @@ fallback: Send the Authentication Consent questionnaire response in the claim in
 
 | Test case field | Value |
 |---|---|
-| API / FHIR Resource | /claim/submit (Claim) |
+| API / FHIR Resource | /v1/claim/submit (Claim) |
 | Input Parameters | ApprovedAmount: `23000`, Docs attached |
 
 1. Build a Claim bundle with `use` `claim`. See [the claim request bundle](../fhir/claim-request.md). Reuse the preauthorisation's claim identifier, or reference its `preAuthRef`. Keep the claimed amount within the approved `23000`. Put the discharge details in `supportingInfo` with category `DIS`, and attach the documents.

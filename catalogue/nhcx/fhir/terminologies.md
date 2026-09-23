@@ -84,7 +84,7 @@ In India, SNOMED CT is free to use. ICD codes classify diseases. Laboratories us
 | `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-supportinginfo-category` | `Claim.supportingInfo.category` | `INV`, `DIA`, `DIS`, `ONS`, `OTH`, `NMI`, `INF`, `POI`, `DOB` |
 | `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-supportinginfo-code` | `Claim.supportingInfo.code` | `DTH`, `DTM`, `LAMA`, `DAMA`, `ADDD`, `DSDE`, `PSP`, `EDT`, `CQD`, `BCF`, `DCB` |
 | `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-reason-code` | `Task.reasonCode` | `treatmentplanchanged`, `claimrejected`, `partialpayment` |
-| `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-input-type-code` | `Task.input.type` | `policyNumber`, `providerId`, `claimNumber`, `initimationNumber` |
+| `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-input-type-code` | `Task.input.type` | `policyNumber`, `providerId`, `claimNumber`, `intimationNumber` |
 | `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-output-type` | `Task.output.type` | `status`, `include` |
 | `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-output-value` | `Task.output.value` | `paymentack` |
 | `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-codes` | `Task.code` for payment notices | `deliver` |

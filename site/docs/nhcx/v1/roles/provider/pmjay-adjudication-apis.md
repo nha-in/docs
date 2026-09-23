@@ -48,6 +48,11 @@ secret at the sessions endpoint. In the sandbox it lives 1,200 seconds.
 Note that the two endpoints sit on different hosts. That is not a
 documentation error; it is how the service is deployed.
 
+Both addresses are sandbox addresses. `apisbeta.nha.gov.in` is the only
+published address for acting on a case, and no production host is published
+for either call. Ask for both production hosts at onboarding and keep them
+configurable, as Base URLs advises for every other service.
+
 ## Who holds the case
 
 ```bash
@@ -61,7 +66,7 @@ curl --location --request POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/nhcxpaye
   }'
 ```
 
-[Adjudicator: role for a case in the API reference](/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-adjudicator-role)
+[Adjudicator: role for a case in the API reference](/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-pmjay-sbxhcx-nhcxpayerservice-v1-get-user-role)
 
 ```json
 { "currentuserrole": "PPD-Trust", "errormessage": null }
@@ -109,7 +114,7 @@ curl --location --request POST 'https://apisbeta.nha.gov.in/pmjay/hcx/nhcxpayers
   }'
 ```
 
-[Adjudicator: act on a case in the API reference](/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-adjudicator-process)
+[Adjudicator: act on a case in the API reference](/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-pmjay-hcx-nhcxpayerservice-wrapper-process-case)
 
 | Field | What it carries |
 | :---- | :---- |

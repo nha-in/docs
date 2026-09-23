@@ -58,6 +58,17 @@ const STOREFRONT = {
     ],
     capabilities: ['Read', 'Write'],
   },
+  nhcx: {
+    shortDescription: 'Build an NHCX claims integration, one use case at a time.',
+    longDescription:
+      "India's health claims exchange, written as skills an agent reads before it writes code. One skill per use case, from coverage to reprocess. Each checks what the system already has, builds only what is missing, and holds every bundle to the NHCX package's pinned samples.",
+    defaultPrompt: [
+      'Add NHCX policy search and coverage eligibility to this hospital system.',
+      'File the NHCX claim at discharge from this system.',
+      'This NHCX call was refused. Find out why.',
+    ],
+    capabilities: ['Read', 'Write'],
+  },
 };
 
 const files = [];
@@ -131,6 +142,9 @@ const market = JSON.parse(
  */
 const CLAUDE_ONLY = {
   'abdm-integrators-assistant': ['commands', 'agents'],
+  // The same case as the integrators' assistant: NHCX is its seven skills, and
+  // the commands and the call debugger are entry points into them.
+  nhcx: ['commands', 'agents'],
 };
 
 const COMPONENTS = ['commands', 'agents', 'hooks'];
@@ -193,10 +207,10 @@ for (const entry of market.plugins) {
   }));
 
   // Codex reads its own manifest and wants the component paths spelled out
-  // rather than discovered. No mcpServers line: the Docs MCP server's address
-  // is set at deploy and is not in this repository, so pointing at a file that
-  // does not exist would be worse than leaving the field out. When the address
-  // is published, add ./.mcp.json here and beside it.
+  // rather than discovered. A plugin that carries ./.mcp.json, the Docs MCP
+  // server at its published address, names it; Claude Code finds the same
+  // file on its own.
+  const mcp = existsSync(join(dir, '.mcp.json')) ? {mcpServers: './.mcp.json'} : {};
   record(join(dir, '.codex-plugin', 'plugin.json'), {
     name: claude.name,
     version: claude.version,
@@ -207,6 +221,7 @@ for (const entry of market.plugins) {
     license: claude.license,
     keywords: claude.keywords,
     skills: './skills/',
+    ...mcp,
     interface: {
       displayName: claude.displayName ?? claude.name,
       shortDescription: storefront.shortDescription,

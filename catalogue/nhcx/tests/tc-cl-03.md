@@ -90,7 +90,7 @@ Both go as a Task bundle on `/v1/task/submit`. This test case checks your system
 
 | Test case field | Value |
 |---|---|
-| API / FHIR Resource | /task/submit (Task) |
+| API / FHIR Resource | /v1/task/submit (Task) |
 | Input Parameters | Not published for TC-CL-03 |
 
 Use these values for the request:

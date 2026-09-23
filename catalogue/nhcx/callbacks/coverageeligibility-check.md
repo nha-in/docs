@@ -66,7 +66,7 @@ related:
   - nhcx.error.nhcx-1001
   - nhcx.error.nhcx-1010
   - nhcx.error.nhcx-1011
-  - nhcx.error.nhcx-1015
+  - nhcx.error.nhcx-1017
   - nhcx.error.nhcx-1016
   - nhcx.error.payr-1001
   - nhcx.error.payr-1004

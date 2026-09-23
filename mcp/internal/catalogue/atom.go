@@ -55,7 +55,12 @@ type frontmatter struct {
 // HIS is M4's registry series and AS is the PHR series NHA records once
 // against P1. Both were missing, so decode_error answered "no error codes
 // found" for 572 codes the catalogue holds.
-var errCodeRe = regexp.MustCompile(`\b(?:ABDM|GATEWAY|MIS|HIS|AS)-\d{3,5}\b`)
+//
+// NHCX and PAYR are the claims exchange's two families, the exchange's own
+// codes and the payer's, and ERR-PYR-CLM-007 is the one the scheme's payer
+// sends in a third shape. None of the three was here, so decode_error answered
+// "no error codes found" for all 310 codes the catalogue holds for NHCX.
+var errCodeRe = regexp.MustCompile(`\b(?:(?:ABDM|GATEWAY|MIS|HIS|AS|NHCX|PAYR)-\d{3,5}|ERR-PYR-[A-Z]{2,5}-\d{3})\b`)
 
 // gatewayCodeRe matches the gateway's numeric authentication codes (900900,
 // 900901, 900902) only as a JSON "code" value, so a bare six-digit number

@@ -204,10 +204,10 @@ The plan as a benefit structure. Under PMJAY this is the scheme configuration fo
 | `x-hcx-api_call_id` | `{{$guid}}` |
 | `x-hcx-request_id` | `{{$guid}}` |
 | `x-hcx-correlation_id` | `{{$guid}}` |
-| `x-hcx-workflow_id` | `` |
+| `x-hcx-workflow_id` | empty |
 | `x-hcx-timestamp` | `{{$isoTimestamp}}` |
 | `x-hcx-status` | `response.complete` |
-| `x-hcx-ben-abha-id` | `` |
+| `x-hcx-ben-abha-id` | empty |
 
 **Data elements**
 

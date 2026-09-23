@@ -2,7 +2,7 @@ import React from 'react';
 import {useHistory} from '@docusaurus/router';
 import {Sparkles} from 'lucide-react';
 import {cn} from '@site/src/lib/utils';
-import {tabHref, tabs, useRoutePath} from '@site/src/config/navigation';
+import {tabHref, useRoutePath, visibleTabs} from '@site/src/config/navigation';
 
 /**
  * What the search field offers before anything is typed.
@@ -64,7 +64,7 @@ export function useRows() {
         );
       },
     },
-    ...tabs.map((tab) => ({
+    ...visibleTabs(pathname).map((tab) => ({
       id: tab.id,
       label: tab.label,
       hint: 'Go',

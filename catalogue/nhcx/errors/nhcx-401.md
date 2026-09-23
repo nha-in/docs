@@ -52,7 +52,7 @@ The `/v1/error` report is a plain `ProtocolResponse` body, not a sealed payload.
 
 The exchange refuses the call when:
 
-- The session token in `bearer_auth` has expired. Tokens are short lived, so a token that worked earlier can fail now.
+- The session token in `bearer_auth` has expired. A token lasts 1200 seconds (20 minutes), so a token that worked earlier can fail now.
 - The token is not a valid token from the session call.
 - The token was generated with a client id other than the one your participant was created with. Policy linking and de-linking accept only the participants named on the policy.
 

@@ -58,7 +58,7 @@ related:
   - nhcx.error.nhcx-1001
   - nhcx.error.nhcx-1006
   - nhcx.error.nhcx-1012
-  - nhcx.error.nhcx-1015
+  - nhcx.error.nhcx-1017
   concepts:
   - nhcx.concept.synchronous-acknowledgement
   - nhcx.concept.retries-and-expiry

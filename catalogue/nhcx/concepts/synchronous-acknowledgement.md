@@ -112,6 +112,6 @@ You have understood this when you can answer both of these.
 
 **Replying late.** If NHCX gets no 202 within 30 seconds, it treats the delivery as failed and retries. See [retries and expiry](./retries-and-expiry.md).
 
-**Replying with the wrong body or status.** A reply that does not follow the acceptance format counts as an error, and NHCX retries the same request. [NHCX-1015](../errors/nhcx-1015.md) and [NHCX-1017](../errors/nhcx-1017.md) report an invalid response from the receiver.
+**Replying with the wrong body or status.** A reply that does not follow the acceptance format counts as an error, and NHCX retries the same request. [NHCX-1017](../errors/nhcx-1017.md) reports an invalid response from the receiver. The error sheet prints the same text for [NHCX-1015](../errors/nhcx-1015.md), but on the live exchange that code is a registry refusal, not a receipt fault.
 
 **Endpoint unreachable.** NHCX reports [NHCX-1001](../errors/nhcx-1001.md) to the sender. See [accepted, then no callback](../troubleshooting/accepted-then-no-callback.md).

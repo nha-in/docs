@@ -1,6 +1,9 @@
 {
-  "label": "Choose your path",
+  "label": "Building for provider and payer",
   "position": 4,
   "collapsed": false,
-  "className": "sidebar-icon sidebar-icon--signpost"
+  "className": "sidebar-icon sidebar-icon--signpost",
+  "customProps": {
+    "unwrap": true
+  }
 }

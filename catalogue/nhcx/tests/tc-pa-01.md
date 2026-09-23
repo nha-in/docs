@@ -108,7 +108,7 @@ fallback: Where biometric authentication is not feasible, record an Aadhaar exem
 
 | Test case field | Value |
 |---|---|
-| API / FHIR Resource | /preauth/submit (Claim) |
+| API / FHIR Resource | /v1/preauth/submit (Claim) |
 | Input Parameters | Diagnosis: `I10`, Treatment Plan, Support Documents. Doctor Details |
 
 1. Build a Claim bundle with `use` `preauthorization`. See [the preauthorisation request bundle](../fhir/preauth-request.md). Set the diagnosis to `I10`. Add every billable item of the treatment plan and a claim identifier. Add the supporting documents as diagnostic report (`DIA`) and clinical document (`CD`). Name the practitioner by HPR ID.

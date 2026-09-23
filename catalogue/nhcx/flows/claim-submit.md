@@ -135,7 +135,7 @@ sequenceDiagram
 1. Start from the preauthorisation bundle. Change `Claim.use` to `claim`. Keep `Claim.identifier`, and reference the approved `preAuthRef`.
 2. Replace the estimates with final amounts. Keep the diagnoses and procedures unless the treatment changed. Add the discharge documents to `supportingInfo`. See [the claim request bundle](../fhir/claim-request.md).
 3. For PMJAY, record the discharge in `supportingInfo` with category `DIS`. Its code is `DTH`, `DTM`, `LAMA` or `DAMA`, and its value is `Before Surgery` or `After Surgery`.
-4. Seal and set the headers, as in [send a sealed request](send-a-sealed-request.md). Set `x-hcx-workflow_id` to `15` and `x-hcx-status` to `request.initiated`. Send `x-hcx-ben-abha-id`.
+4. Seal and set the headers, as in [send a sealed request](send-a-sealed-request.md). Set `x-hcx-workflow_id` to `15` and `x-hcx-status` to `request.initiated`. Send `x-hcx-ben-abha-id` if the beneficiary has an ABHA number. It is optional.
 5. Start a new correlation. Set `x-hcx-correlation_id` to the value of this call's `x-hcx-api_call_id`. Store it against the case.
 6. Call [POST /v1/claim/submit](../endpoints/claim-submit.md). NHCX answers `202 Accepted`. It is not the adjudication.
 7. Wait. Interim callbacks may arrive on `/v1/claim/on_submit` with `x-hcx-status` `response.partial`: workflow `25` received, `28` in process, `29` forwarded. Answer each with `202` and keep waiting.

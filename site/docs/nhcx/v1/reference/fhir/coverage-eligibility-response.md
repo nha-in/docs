@@ -128,23 +128,27 @@ NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-
 
 Use `CoverageEligibilityResponse.request.reference`, never a resource id, to join the answer to what you sent.
 
-### 3. Index entries by fullUrl
+### 3. Items come back in your own codes
+
+`insurance[].item[].productOrService` carries the package code you sent, for example `MG004A`, as NHA's published PMJAY bundles show. Match items by that code. The numbers in the handbook's response table (100005, 100478, 100063, 100012) are not item codes; in the published bundles they are questionnaire, document-requirement and question identifiers.
+
+### 4. Index entries by fullUrl
 
 A response can carry more than one `Patient` or `Organization`. Index by `fullUrl`, not by resource type.
 
-### 4. Money
+### 5. Money
 
 `allowedMoney` is the balance remaining and `usedMoney` the amount used, not the sum insured. There is one benefit per wallet; read them all.
 
-### 5. Build for the fuller form
+### 6. Build for the fuller form
 
 `benefit[]` with `Procedure`, `Investigation` and `Stratification` types for benefits, and `authorizationSupporting[]` with the mandatory document codes for auth-requirements. Tolerate a leaner answer.
 
-### 6. Documents by stage
+### 7. Documents by stage
 
 `authorizationSupporting[]` lists the documents the next request must carry. Its `text` names the stage: pre for the preauthorisation, post for the claim.
 
-### 7. The identifier is not a correlation key
+### 8. The identifier is not a correlation key
 
 `CoverageEligibilityResponse.identifier` identifies the beneficiary at the hospital. Correlate on the protocol headers.
 

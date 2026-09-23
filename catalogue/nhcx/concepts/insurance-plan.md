@@ -87,7 +87,7 @@ You send a FHIR `Task` to `/v1/insuranceplan/request`:
 | `Task.status` | `requested` |
 | `Task.intent` | `order` |
 | `Task.code` | `poll`, system `https://nhcx.abdm.gov.in/api` |
-| `Task.input` | `policyNumber` and `providerId`; at least one is required |
+| `Task.input` | `policyNumber` and `providerId`; both are required |
 
 The plan arrives later on `/v1/insuranceplan/on_request` as a `collection` bundle of `InsurancePlan`, `Organization` and `Questionnaire` resources.
 

@@ -16,7 +16,7 @@ import {
 import {
   activeTab,
   tabHref,
-  tabs,
+  visibleTabs,
   useRoutePath,
 } from '@site/src/config/navigation';
 import SidebarPickers from './SidebarPickers';
@@ -72,7 +72,7 @@ export default function MobileNav() {
           <nav aria-label="Sections">
             <p className="mobile-nav-section">Sections</p>
             <ul className="mobile-nav-tabs">
-              {tabs.map((tab) => {
+              {visibleTabs(pathname).map((tab) => {
                 const isActive = tab === current;
                 return (
                   <li key={tab.to}>

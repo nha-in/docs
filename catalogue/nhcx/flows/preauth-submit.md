@@ -158,7 +158,7 @@ sequenceDiagram
 2. Add the diagnoses, coded in ICD-10, and the care team. Add one `item` per package, with its category and package code.
 3. Add a `supportingInfo` entry for every document the eligibility check or the plan named. Set `total` to the amount you request.
 4. Give the Claim an identifier and keep it for the whole case. The claim after discharge carries the same identifier.
-5. Seal the bundle and set the headers, as in [send a sealed request](send-a-sealed-request.md). Set `x-hcx-workflow_id` to `12` and `x-hcx-status` to `request.initiated`. Send `x-hcx-ben-abha-id`.
+5. Seal the bundle and set the headers, as in [send a sealed request](send-a-sealed-request.md). Set `x-hcx-workflow_id` to `12` and `x-hcx-status` to `request.initiated`. Send `x-hcx-ben-abha-id` if the beneficiary has an ABHA number. It is optional.
 6. Start a new correlation. Set `x-hcx-correlation_id` to the value of this call's `x-hcx-api_call_id`. Store it against the case.
 7. Call [POST /v1/preauth/submit](../endpoints/preauth-submit.md). NHCX answers `202 Accepted`. The request is on its way to the payer. It is not the decision.
 8. Wait. The payer may first acknowledge receipt on `/v1/preauth/on_submit` with workflow `20` and `x-hcx-status` `response.partial`. Answer `202` and keep waiting.

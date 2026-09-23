@@ -93,7 +93,7 @@ The patient logs in with their ABHA address. Your app reads their ABHA ID and as
 
 ### 2. Hold a valid token
 
-If your token has expired, get a new one. [Which session token endpoint to call](../decisions/session-endpoint.md) settles the address. Read the token's lifetime from the answer, and refresh before it lapses.
+If your token has expired, get a new one. [Which session token endpoint to call](../decisions/session-endpoint.md) settles the address. The token lasts 1200 seconds (20 minutes), so refresh before it lapses.
 
 ### 3. Build the subscription
 

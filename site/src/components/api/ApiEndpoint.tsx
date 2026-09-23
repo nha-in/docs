@@ -147,24 +147,19 @@ function RequestPanel({operation}: {operation: Operation}) {
   return (
     <div className="api-panel">
       <div className="api-panel__head">
-        <span className="api-panel__label">{operation.title || operation.summary}</span>
-        <div className="api-panel__tabs" role="tablist" aria-label="Request">
+        {/* Eight languages do not fit as tabs in a side panel, so they are a
+            list; the choice is the panel's only label. */}
+        <select
+          className="api-panel__lang"
+          value={current.id}
+          onChange={(event) => setActive(event.target.value)}
+          aria-label="Language">
           {samples.map((sample) => (
-            <button
-              key={sample.id}
-              type="button"
-              role="tab"
-              aria-selected={sample.id === current.id}
-              className={
-                sample.id === current.id
-                  ? 'api-panel__tab api-panel__tab--active'
-                  : 'api-panel__tab'
-              }
-              onClick={() => setActive(sample.id)}>
+            <option key={sample.id} value={sample.id}>
               {sample.label}
-            </button>
+            </option>
           ))}
-        </div>
+        </select>
         <CopyButton value={current.code} />
       </div>
       <CodeBlock language={current.language}>{current.code}</CodeBlock>

@@ -14,6 +14,17 @@
         "installation": "AVAILABLE"
       },
       "category": "Documentation"
+    },
+    {
+      "name": "nhcx",
+      "source": {
+        "source": "local",
+        "path": "./plugins/nhcx"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Documentation"
     }
   ]
 }

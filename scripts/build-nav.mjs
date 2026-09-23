@@ -88,9 +88,9 @@ writeFileSync(
     process.exit(1);
   }
   if (!process.env.DOCUSAURUS_URL) {
-    console.warn('build-nav: DOCUSAURUS_URL unset, llms.txt will use the example.com placeholder (local build only).');
+    console.warn('build-nav: DOCUSAURUS_URL unset, llms.txt will use https://docs.abdm.gov.in.');
   }
-  const siteUrl = (process.env.DOCUSAURUS_URL ?? 'https://abdm-docs.example.com').replace(/\/+$/, '');
+  const siteUrl = (process.env.DOCUSAURUS_URL ?? 'https://docs.abdm.gov.in').replace(/\/+$/, '');
   const base = (process.env.DOCUSAURUS_BASE_URL ?? '/').replace(/\/+$/, '');
 
   const pages = [];
@@ -116,7 +116,8 @@ writeFileSync(
         fm.match(new RegExp(`^${name}:\\s*(.+)$`, 'm'))?.[1].trim().replace(/^['"]|['"]$/g, '');
       const slug = entry.name.replace(/\.mdx?$/, '');
       pages.push({
-        route: slug === 'index' ? route : `${route}/${slug}`,
+        // A page that sets its own slug is served there, so list it there.
+        route: field('slug') ? `/docs${field('slug')}` : slug === 'index' ? route : `${route}/${slug}`,
         title: field('title') ?? raw.match(/^#\s+(.+)$/m)?.[1] ?? slug,
         description: field('description') ?? '',
         // The top folder under docs is the section an agent scans by.

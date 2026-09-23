@@ -108,7 +108,7 @@ The plan arrives later on your callback, sealed. A `ProtocolResponse` arrives in
 
 ### Send the request
 
-1. Build a Task bundle whose Task has `code` `poll` and a policy number input, with your provider id as an optional input. See [insurance plan bundles](../fhir/insurance-plan-bundle.md). Validate it against the [NRCeS](../../shared/glossary/nrces.md) profiles, as [validating a bundle](../fhir/validation.md) describes.
+1. Build a Task bundle whose Task has `code` `poll` and two required inputs: the policy number and your provider id. See [insurance plan bundles](../fhir/insurance-plan-bundle.md). Validate it against the [NRCeS](../../shared/glossary/nrces.md) profiles, as [validating a bundle](../fhir/validation.md) describes.
 2. Seal it as a [JWE](../glossary/jwe.md) with the recipient's public key. [Send a sealed request](../flows/send-a-sealed-request.md) walks through the envelope.
 3. Set the protected headers. `x-hcx-sender_code` is your participant code. `x-hcx-recipient_code` is the payer's processing ID, or `1000003538@hcx` for the dummy payer. `x-hcx-status` is `request.initiated`. Use a new `x-hcx-api_call_id` and a `x-hcx-correlation_id` unique to this request cycle. `x-hcx-ben-abha-id` carries the beneficiary's [ABHA](../../shared/glossary/abha.md) number.
 4. Send the sealed payload.
