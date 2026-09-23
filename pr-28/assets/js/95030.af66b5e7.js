@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["95030"],{97973(e,t,d){d.r(t),d.d(t,{__iconNode:()=>_,default:()=>a});var s=d(34438);let _=[["rect",{width:"16",height:"20",x:"4",y:"2",rx:"2",ry:"2",key:"76otgf"}],["line",{x1:"12",x2:"12.01",y1:"18",y2:"18",key:"1dp563"}]],a=(0,s.A)("tablet",_)}}]);
