@@ -83,7 +83,7 @@ What matters downstream is the chosen payer's participant code, because it is on
 
 Every call carries a bearer token. The token comes from the ABDM gateway's sessions endpoint, not from NHCX itself, using the Milestone 1 client ID and secret.
 
-Tokens are short-lived. The portal's documents disagree on exactly how short, with five minutes, twenty minutes and a hundred minutes all appearing. Build for the strictest: refresh automatically, and treat a `401` as "get a new token and retry" rather than as a failure.
+A token lasts 1200 seconds (20 minutes). Refresh it automatically before the 20 minutes run out, and treat a `401` as "get a new token and retry" rather than as a failure.
 
 Sandbox addresses:
 

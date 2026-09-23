@@ -49,7 +49,6 @@ related:
   - nhcx.fhir.preauth-request
   - nhcx.fhir.terminologies
   errors:
-  - nhcx.error.nhcx-1015
   - nhcx.error.nhcx-1017
   tests:
   - nhcx.test.payer-uc-07

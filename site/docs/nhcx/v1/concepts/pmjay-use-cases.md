@@ -329,7 +329,7 @@ flowchart TD
 #### 1. Before or During Surgery
 - **Nullification**: Submitting a LAMA/DAMA claim before or during surgery immediately **nullifies all prior approved surgical pre-authorisation packages**.
 - **Item Code `LM100`**: The claim replaces all surgical line items with a single item: procedure code `LM100` (Conservative / Per Diem Inpatient Care).
-- **Daily Quantity Multiplier & `los` Bound**: The quantity on `LM100` is set to the exact number of days the patient was admitted (`Discharge Date - Admission Date`). This quantity is strictly bounded by the `los` (Maximum Length of Stay) attribute declared in the scheme package master (`InsurancePlan`). Admitted days billed cannot exceed `los` without prior clinical justification; stays extending beyond standard procedure limits in ordinary admissions require an approved pre-authorisation enhancement request (workflow 13).
+- **Daily Quantity Multiplier & `LengthOfStay` Bound**: The quantity on `LM100` is set to the exact number of days the patient was admitted (`Discharge Date - Admission Date`). This quantity is strictly bounded by the `LengthOfStay` (Maximum Length of Stay) attribute declared in the scheme package master (`InsurancePlan`). Admitted days billed cannot exceed `LengthOfStay` without prior clinical justification; stays extending beyond standard procedure limits in ordinary admissions require an approved pre-authorisation enhancement request (workflow 13).
 - **Stratification Tariffs**: Procedure `LM100` is stratified by bed tier in the PMJAY master: Routine Ward (₹1,800/day, `STRAT006a`), High Dependency Unit HDU (₹2,700/day, `STRAT006b`), ICU Without Ventilator (₹3,600/day, `STRAT006c`), and ICU With Ventilator (₹4,500/day, `STRAT006d`).
 - **Error Safeguard**: Submitting a surgical package code alongside LAMA/DAMA before or during surgery triggers automated rejection with error `PAYR-1362`.
 - **Pre-Auth Prohibition**: `LM100` is strictly a claim-time adjudication code. Submitting `LM100` in a pre-authorisation request triggers error `PAYR-1270`.
@@ -355,7 +355,7 @@ If a patient expires during hospitalisation:
 ### 5. Cyclic Procedures (Dialysis, Chemotherapy)
 
 Cyclic treatments represent recurring therapy requiring multiple sessions under a single overarching pre-authorisation:
-- **Plan Identification**: Packages flag cyclic eligibility with `cyclic_proc_yn = Y` and `no_of_cycles` in the `InsurancePlan`.
+- **Plan Identification**: Packages flag cyclic eligibility with `CyclicProcedure = Y` and `MaximumCyclesAllowed` in the `InsurancePlan`.
 - **Pre-Auth Booking**: Pre-authorisation is requested and approved for the entire block of sessions (e.g., 10 cycles).
 - **The Rolling 24-Hour Rule**: Two cycles of the same procedure cannot occur within a **rolling 24-hour window** (measured strictly from biometric timestamp to biometric timestamp, not calendar days). Submitting cycles within 24 hours triggers rejection with error `PAYR-1369`.
 - **Biometric Enforcement**: Live biometric capture is mandatory at pre-auth, at **every individual treatment visit**, and at final discharge.

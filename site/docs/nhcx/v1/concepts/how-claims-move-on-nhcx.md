@@ -1,7 +1,8 @@
 ---
 title: Claim Settlement
 sidebar_label: Claim Settlement
-sidebar_position: 2
+slug: /nhcx/v1
+sidebar_position: 0
 description: End-to-end claim journey in plain language
 sidebar_class_name: sidebar-icon sidebar-icon--route
 generated: false

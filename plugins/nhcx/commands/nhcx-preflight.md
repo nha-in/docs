@@ -23,7 +23,7 @@ Every row is answered with the file, the line or the command output that proves 
 | The seal is `RSA-OAEP-256` with `A256GCM`, never `RSA-OAEP` | the protected header in code |
 | The bundle is sealed with the recipient's certificate, not your own | where the recipient key is fetched |
 | The recipient is the policy's `processingid`, kept as `recipient_code` | the policy lookup |
-| Every message carries the beneficiary's ABHA in `x-hcx-ben-abha-id` | the header map |
+| `x-hcx-ben-abha-id` is optional: set it when the beneficiary has an ABHA number, and never block a send because it is absent | the header map |
 | `txn_id`, `correlation_id` and `api_call_id` are stored before the POST | a failed POST can still have landed, and these are the only handle on it |
 
 ## The receiving end

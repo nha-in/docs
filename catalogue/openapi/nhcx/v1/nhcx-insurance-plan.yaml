@@ -64,7 +64,7 @@ paths:
         - Insurance plan
       summary: Insurance plan request
       description: |-
-        Provider sends a Task with code poll naming a policy number and/or its HFR id to fetch the payer's machine-readable InsurancePlan for that pairing.
+        Provider sends a Task with code poll naming both a policy number and its HFR id to fetch the payer's machine-readable InsurancePlan for that pairing.
 
         ### Business purpose
 
@@ -77,7 +77,7 @@ paths:
         ### Preconditions
 
         - You have a valid access token and the payer's certificate.
-        - The request is a FHIR `Task` with the policy number, the hospital's HFR ID, or both.
+        - The request is a FHIR `Task` with both the policy number and the hospital's HFR ID.
         - `x-hcx-recipient_code` is the processing ID, not the payer ID, and the correlation ID is new.
 
         ### Postconditions
@@ -87,7 +87,7 @@ paths:
 
         ### Common mistakes
 
-        - Sending a `Task` with neither a policy number nor an HFR ID.
+        - Sending a `Task` without both the policy number and the HFR ID.
         - Expecting the plan in the `202` response.
         - Sending a new request while an earlier one is still with the payer.
         - Treating an empty plan as a gateway fault.
@@ -324,7 +324,7 @@ webhooks:
       description: |-
         Hosted by the payer. The exchange posts this message to the `endpoint_url` you registered, at `/v1/insuranceplan/request`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
 
-        Provider sends a Task with code poll naming a policy number and/or its HFR id to fetch the payer's machine-readable InsurancePlan for that pairing.
+        Provider sends a Task with code poll naming both a policy number and its HFR id to fetch the payer's machine-readable InsurancePlan for that pairing.
       parameters:
         - $ref: "#/components/parameters/BearerAuth"
         - $ref: "#/components/parameters/XHcxSenderCode"
@@ -531,7 +531,7 @@ components:
       name: x-hcx-request_id
       in: header
       required: false
-      description: One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope.
+      description: "One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope. Send it anyway, as a fresh UUID per originating request: it is cheap and satisfies both readings until NHA rules."
       schema:
         type: string
       example: <uuid>
@@ -570,8 +570,8 @@ components:
     XHcxBenAbhaId:
       name: x-hcx-ben-abha-id
       in: header
-      required: true
-      description: The beneficiary's ABHA number. Mandatory on every exchange, including those with no beneficiary in the payload. Mandatory on the envelope.
+      required: false
+      description: "The beneficiary's ABHA number. Optional: send it when the beneficiary has an ABHA number. Optional on the envelope."
       schema:
         type: string
       example: ""

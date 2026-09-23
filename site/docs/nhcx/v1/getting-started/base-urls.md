@@ -37,7 +37,7 @@ What each one serves:
 - **NHCX exchange**: Every use-case call under /v1, fingerprint and iris authentication under /abha.
 - **Participant service**: Creating and updating a participant, the registry search, certificates and policies.
 - **ABDM proxy**: Face authentication for PMJAY biometrics.
-- **NHCX portal**: The portal, the live Swagger specifications it publishes, and notification subscribe.
+- **NHCX portal**: The portal, the sandbox Swagger specifications it publishes, and notification subscribe.
 - **Face authentication page**: The QR page a patient opens to complete face authentication, with ?txnId=&lt;txnId>.
 
 The ABDM gateway also reads `X-CM-ID` on the session call: `sbx` in the sandbox, `abdm` in production.

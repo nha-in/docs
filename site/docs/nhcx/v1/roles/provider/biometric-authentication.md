@@ -113,7 +113,7 @@ curl --location --request POST 'https://apisbx.abdm.gov.in/hcx/abha/biometric/au
   }'
 ```
 
-[Biometric auth init in the API reference](/docs/nhcx/v1/api/biometric/endpoints/biometric-auth-init)
+[Biometric auth init in the API reference](/docs/nhcx/v1/api/biometric/endpoints/biometric-hcx-abha-biometric-auth-init)
 
 | Field | Fingerprint | Iris | Face |
 | :---- | :---- | :---- | :---- |
@@ -172,7 +172,7 @@ curl --location --request POST 'https://apisbx.abdm.gov.in/hcx/abha/biometric/au
   }'
 ```
 
-[Biometric auth verify in the API reference](/docs/nhcx/v1/api/biometric/endpoints/biometric-auth-verify)
+[Biometric auth verify in the API reference](/docs/nhcx/v1/api/biometric/endpoints/biometric-hcx-abha-biometric-auth-verify)
 
 `authMethods` and the key the capture goes under follow the method, as the
 table above gives them.
@@ -234,7 +234,7 @@ curl --location --request POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/abdmprox
   }'
 ```
 
-[Face auth init in the API reference](/docs/nhcx/v1/api/biometric/endpoints/biometric-faceauth-init)
+[Face auth init in the API reference](/docs/nhcx/v1/api/biometric/endpoints/biometric-pmjay-sbxhcx-abdmproxy-abha-biometric-faceauth-init)
 
 Returns a `txnId`.
 
@@ -256,7 +256,7 @@ curl --location --request POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/abdmprox
   }'
 ```
 
-[Face auth capture PID in the API reference](/docs/nhcx/v1/api/biometric/endpoints/biometric-faceauth-capture-pid)
+[Face auth capture PID in the API reference](/docs/nhcx/v1/api/biometric/endpoints/biometric-pmjay-sbxhcx-abdmproxy-abha-biometric-capture-pid)
 
 Answers `{"status": "PENDING", "message": "Awaiting PID capture"}` until the
 patient finishes, then `{"status": "COMPLETE", "message": "PID capture successful"}`.
@@ -288,7 +288,7 @@ curl --location --request POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/abdmprox
   }'
 ```
 
-[Face auth verify in the API reference](/docs/nhcx/v1/api/biometric/endpoints/biometric-faceauth-v2-auth-verify)
+[Face auth verify in the API reference](/docs/nhcx/v1/api/biometric/endpoints/biometric-pmjay-sbxhcx-abdmproxy-abha-biometric-v2-auth-verify)
 
 **The Aadhaar number is encrypted, not sent in the clear.** Use the X.509
 public key the portal publishes with the transformation
@@ -315,7 +315,7 @@ curl --location --request GET 'https://apisbx.abdm.gov.in/hcx/abha/biometric/aut
   --header 'process: Preauth'
 ```
 
-[Biometric auth refresh token in the API reference](/docs/nhcx/v1/api/biometric/endpoints/biometric-auth-refresh-token)
+[Biometric auth refresh token in the API reference](/docs/nhcx/v1/api/biometric/endpoints/biometric-hcx-abha-biometric-auth-refresh-token)
 
 Refreshing returns a **new refresh token** whose 15 days run from that moment.
 The portal's advice is to call the refresh endpoint once within every ten days

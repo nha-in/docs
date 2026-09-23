@@ -92,19 +92,20 @@ Every NHCX header name starts with `x-hcx-`. A full header for a new preauthoris
 | `x-hcx-sender_code` | String | Mandatory | Your participant code |
 | `x-hcx-recipient_code` | String | Mandatory | The recipient's code. For a provider, the processor code from the policy lookup, not the insurer's |
 | `x-hcx-api_call_id` | UUID | Mandatory | Fresh on every message, including responses |
-| `x-hcx-request_id` | UUID | Optional | One per originating request |
+| `x-hcx-request_id` | UUID | Optional | One per originating request. Send it anyway, as a fresh UUID per originating request |
 | `x-hcx-correlation_id` | UUID | Mandatory | The conversation thread. See the rule below |
 | `x-hcx-workflow_id` | String | Optional | The step code, for example `12` for a new preauthorisation. See [Workflow codes](/docs/nhcx/v1/concepts/workflow-codes) |
 | `x-hcx-timestamp` | datetime | Mandatory | When the message was sent. See the format below |
 | `x-hcx-status` | String | Mandatory | Where this message stands. Values below |
-| `x-hcx-ben-abha-id` | String | Mandatory | The beneficiary's ABHA number, on every exchange |
+| `x-hcx-ben-abha-id` | String | Optional | The beneficiary's ABHA number, when the beneficiary has one |
 | `x-hcx-use_case` | String | Optional | `New`, `Enhancement` or `Resubmit` on preauth and status. `New` or `Resubmit` on claim |
 | `x-hcx-error_details` | JSON object | Optional | `code`, `message`, `trace`. Mandatory on a protocol response |
 | `x-hcx-debug_details` | JSON object | Optional | The same shape, for debugging |
 | `x-hcx-debug_flag` | Enum | Optional | Send `INFO`, as the samples do. A server may ignore it |
 
-Two field rules catch people out.
+Three field rules catch people out.
 
+- **Request ID.** `x-hcx-request_id` is optional here and mandatory on the Open Protocol page. Send it on every message, as a fresh UUID per originating request: it is cheap and satisfies both readings until NHA rules on which one stands.
 - **ABHA number format.** Inside the bundle it is 14 digits without hyphens. The published header sample also sends 14 digits, but the gateway's refusal `NHCX-1018` asks for `XX-XXXX-XXXX-XXXX`. Store the digits once and format them where you build the header.
 - **Workflow code.** Send the step code where the Workflow Status Sheet gives one. Leave it out where it does not, for example on eligibility, insurance plan, search, predetermination and status.
 
@@ -239,7 +240,7 @@ Several payer codes mean something other than their message suggests. From the S
 | `PAYR-1401` | Policy not allowed for the hospital | The plan was asked for under a policy the hospital is not empanelled under; ask under the beneficiary's own |
 | `PAYR-1019` | Invalid sequence received in supporting info element | A `supportingInfo` entry with no `sequence`; number the whole list once it is assembled |
 | `PAYR-1256`, `PAYR-1363` | Response for Authentication Consent Questionnaire is missing | The plan's consent questionnaire, unanswered, where no biometric token was taken |
-| `PAYR-1008` | Invalid content type … / Invalid input, code and reason code | Two faults on one code: a document outside pdf, jpg, jpeg, png and fhir+json; or a Task code paired with a reason the scheme does not accept |
+| `PAYR-1008` | Invalid content type … / Invalid input, code and reason code … | Two of the fifteen texts the sheet prints without a code, all sent as `PAYR-1008`: here a document outside pdf, jpg, jpeg, png and fhir+json, or a Task code paired with a reason the scheme does not accept. [Reading error codes](/docs/nhcx/v1/reference/error-code-guide) lists all fifteen |
 | `PAYR-1245` | Only one conservative procedure can be booked for a case | The master's `ProcedureType`; an enhancement on a conservative case must add a medical package |
 | `ERR-PYR-CLM-007` | No prior preauthorization or claim record found for case number | The claim was sent under a number of its own instead of the preauthorisation's |
 | `PAYR-1322` | Active instance found for case number | A request is already open on that case; the scheme takes one at a time |

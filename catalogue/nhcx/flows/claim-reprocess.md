@@ -133,7 +133,7 @@ sequenceDiagram
 | `x-hcx-workflow_id` | Meaning | What to do |
 |---|---|---|
 | `252` | Reprocess approved | Wait for [payment notices](payment-notice.md), workflows `30`, `31` and `33` |
-| `254` | Reprocess queried | Send the information the payer asks for, with workflow `19` |
+| `254` | Reprocess queried | Send the information the payer asks for. NHCX publishes no workflow code for this answer; the handbook's `19` is the preauthorisation query response code, so confirm the code with the payer |
 | `253` | Reprocess rejected | The original decision stands. The case is closed |
 
 ## How you know it worked

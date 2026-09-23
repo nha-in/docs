@@ -52,7 +52,7 @@ security:
 paths:
   /hcx/abha/biometric/auth/init:
     post:
-      operationId: biometric_auth_init
+      operationId: biometric_hcx_abha_biometric_auth_init
       x-abdm-atom: nhcx.endpoint.abha-biometric-auth-init
       x-abdm-use-case: ABHA biometric authentication
       tags:
@@ -152,7 +152,7 @@ paths:
                 status: null
   /hcx/abha/biometric/auth/verify:
     post:
-      operationId: biometric_auth_verify
+      operationId: biometric_hcx_abha_biometric_auth_verify
       x-abdm-atom: nhcx.endpoint.abha-biometric-auth-verify
       x-abdm-use-case: ABHA biometric authentication
       tags:
@@ -287,7 +287,7 @@ paths:
                     status: ACTIVE
   /hcx/abha/biometric/auth/refresh/token:
     get:
-      operationId: biometric_auth_refresh_token
+      operationId: biometric_hcx_abha_biometric_auth_refresh_token
       x-abdm-atom: nhcx.endpoint.abha-biometric-auth-refresh-token
       x-abdm-use-case: ABHA biometric authentication
       tags:
@@ -341,7 +341,7 @@ paths:
           description: Returns a new user token and a new refresh token.
   /pmjay/sbxhcx/abdmproxy/abha/biometric/faceauth/init:
     post:
-      operationId: biometric_faceauth_init
+      operationId: biometric_pmjay_sbxhcx_abdmproxy_abha_biometric_faceauth_init
       x-abdm-atom: nhcx.endpoint.abha-biometric-faceauth-init
       x-abdm-use-case: ABHA biometric authentication
       tags:
@@ -410,7 +410,7 @@ paths:
           description: Returns a `txnId`.
   /pmjay/sbxhcx/abdmproxy/abha/biometric/capture/pid:
     post:
-      operationId: biometric_faceauth_capture_pid
+      operationId: biometric_pmjay_sbxhcx_abdmproxy_abha_biometric_capture_pid
       x-abdm-atom: nhcx.endpoint.abha-biometric-capture-pid
       x-abdm-use-case: ABHA biometric authentication
       tags:
@@ -487,7 +487,7 @@ paths:
                 message: PID capture successful
   /pmjay/sbxhcx/abdmproxy/abha/biometric/v2/auth/verify:
     post:
-      operationId: biometric_faceauth_v2_auth_verify
+      operationId: biometric_pmjay_sbxhcx_abdmproxy_abha_biometric_v2_auth_verify
       x-abdm-atom: nhcx.endpoint.abha-biometric-v2-auth-verify
       x-abdm-use-case: ABHA biometric authentication
       tags:

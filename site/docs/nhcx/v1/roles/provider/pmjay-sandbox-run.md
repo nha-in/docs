@@ -68,7 +68,7 @@ curl --location --request POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/nhcxpaye
   }'
 ```
 
-[Adjudicator: role for a case in the API reference](/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-adjudicator-role)
+[Adjudicator: role for a case in the API reference](/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-pmjay-sbxhcx-nhcxpayerservice-v1-get-user-role)
 
 ```json
 { "currentuserrole": "PPD-Trust", "errormessage": null }
@@ -95,7 +95,7 @@ curl --location --request POST 'https://apisbeta.nha.gov.in/pmjay/hcx/nhcxpayers
   }'
 ```
 
-[Adjudicator: act on a case in the API reference](/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-adjudicator-process)
+[Adjudicator: act on a case in the API reference](/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-pmjay-hcx-nhcxpayerservice-wrapper-process-case)
 
 The roles a case may pass through, and the actions each takes:
 

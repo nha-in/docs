@@ -525,7 +525,7 @@ components:
       name: x-hcx-request_id
       in: header
       required: false
-      description: One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope.
+      description: "One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope. Send it anyway, as a fresh UUID per originating request: it is cheap and satisfies both readings until NHA rules."
       schema:
         type: string
       example: <uuid>
@@ -564,8 +564,8 @@ components:
     XHcxBenAbhaId:
       name: x-hcx-ben-abha-id
       in: header
-      required: true
-      description: The beneficiary's ABHA number. Mandatory on every exchange, including those with no beneficiary in the payload. Mandatory on the envelope.
+      required: false
+      description: "The beneficiary's ABHA number. Optional: send it when the beneficiary has an ABHA number. Optional on the envelope."
       schema:
         type: string
       example: "91711234567890"

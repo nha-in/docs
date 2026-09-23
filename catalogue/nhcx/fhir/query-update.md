@@ -89,7 +89,7 @@ You answer by resending the same `Claim`, with the same claim number, carrying t
 | `item[].adjudication[]` with category `reason` | the query history in `reason.coding[0].display` |
 | `total[]` | `0` while the query is open |
 
-The history is pipe-separated. Each part reads `USER~date and time~type~comment~trust`. The latest part is the payer's current question.
+The history is pipe-separated. Each part reads `USER~date and time~type~comment~actor`, where `actor` is whoever wrote the entry: `PPD-Trust` on a preauthorisation, `CPD-Trust` on a claim, or the hospital's name. The latest part is the payer's current question.
 
 ### Building the update
 

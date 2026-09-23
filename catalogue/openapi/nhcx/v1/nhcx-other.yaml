@@ -96,7 +96,7 @@ paths:
 
         ### Best practices
 
-        - Subscribe on every login and refresh the token before its 100-minute expiry; store access_token encrypted and never log the secret.
+        - Subscribe on every login and refresh the token before its 20-minute (1200-second) expiry; store access_token encrypted and never log the secret.
         - Generate a fresh UUID correlation id per subscribe attempt, including retries; retry 500s with backoff, regenerate the token on 401, check the registry on 403.
         - Subscribe only to the topics you need, typically workflow_events.
         - Secure the callback: HTTPS with TLS 1.2 or higher, validate the JWT from NHCX, verify sender_code, rate-limit.
@@ -1409,7 +1409,7 @@ components:
       name: x-hcx-request_id
       in: header
       required: false
-      description: One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope.
+      description: "One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope. Send it anyway, as a fresh UUID per originating request: it is cheap and satisfies both readings until NHA rules."
       schema:
         type: string
       example: <uuid>
@@ -1448,8 +1448,8 @@ components:
     XHcxBenAbhaId:
       name: x-hcx-ben-abha-id
       in: header
-      required: true
-      description: The beneficiary's ABHA number. Mandatory on every exchange, including those with no beneficiary in the payload. Mandatory on the envelope.
+      required: false
+      description: "The beneficiary's ABHA number. Optional: send it when the beneficiary has an ABHA number. Optional on the envelope."
       schema:
         type: string
       example: "91711234567890"

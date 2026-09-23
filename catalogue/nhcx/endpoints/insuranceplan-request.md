@@ -105,7 +105,7 @@ Call it before cost estimation and before any pre-authorisation for that payer a
 - Your own [participant code](../glossary/participant-code.md), with your callback address registered, reachable from NHCX and answering 202 within 30 seconds. See [callback URL rules](../sandbox/callback-url-requirements.md).
 - The payer's participant code. Take it from `processingID` in the [`/participant/get/policies`](participant-get-policies.md) response, not from `PayerID`.
 - The recipient's encryption certificate, fetched with [`/fetch/certs`](fetch-certs.md). You seal the message with its public key.
-- A Task bundle in [FHIR](../../shared/glossary/fhir.md) with `code` `poll` and at least one input: the policy number, your provider id, or both. See [the InsurancePlan request bundle](../fhir/insurance-plan-bundle.md).
+- A Task bundle in [FHIR](../../shared/glossary/fhir.md) with `code` `poll` and two inputs, both required: the policy number and your provider id. See [the InsurancePlan request bundle](../fhir/insurance-plan-bundle.md).
 - A handler for [`/v1/error`](../callbacks/error.md), so a request NHCX cannot deliver does not look like one still under review.
 - A handler for [`/v1/insuranceplan/on_request`](../callbacks/insuranceplan-on-request.md).
 - In the sandbox you can address the [dummy payer](../sandbox/dummy-payer.md), participant `1000003538@hcx`, which answers without a real insurer. With the dummy payer, use provider id `32722` inside the bundle and policy number `100217`.

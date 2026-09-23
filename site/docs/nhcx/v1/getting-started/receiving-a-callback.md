@@ -157,7 +157,7 @@ curl --location --request POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/dummyhcx
   }'
 ```
 
-[Dummy payer, act on a request in the API reference](/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-dummy-payer-process-request)
+[Dummy payer, act on a request in the API reference](/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-process-request)
 
 `action` is `Approve`, `Reject` or `Query`; `method` is `Preauth` or `Claim`. Your `/v1/preauth/on_submit` then receives the answer, either a sealed `ClaimResponse` or a `ProtocolResponse` carrying the refusal, with the correlation ID you sent. A `Query` action makes the dummy payer raise a communication request instead, which you answer on `/v1/communication/on_request` before the decision arrives.
 

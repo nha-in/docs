@@ -230,7 +230,7 @@ The generic bundle above is what every payer takes, IRDAI-regulated insurers and
 
 - Dates ride as supporting information: the stay under category `ONS`, code `ADDD`, the encounter under `OTH`, code `EDT`, and the surgery under code `PSP`, each as a `valueString` in `+05:30`.
 - Discharge types `DTH`, `DTM`, `LAMA` and `DAMA` under category `DIS`, with the stage, before, during or after surgery, as the `valueString`.
-- LAMA or DAMA before or during surgery voids the approved packages: one item `LM100`, quantity the days admitted, capped by the package's `los`. After surgery the package stays billable.
+- LAMA or DAMA before or during surgery voids the approved packages: one item `LM100`, quantity the days admitted, capped by the package's `LengthOfStay`. After surgery the package stays billable.
 - A death records its date under category `ONS`, code `DTM`.
 - The discharge consent and the other policy questionnaires ride as `QuestionnaireResponse` resources, each referenced from a `supportingInfo` entry.
 

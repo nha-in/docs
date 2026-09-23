@@ -17,7 +17,7 @@ Refused before any call:
 - "Claim not found."
 - "Set the facility's HFR ID under Settings before fetching a package master."
 - "Set the facility's NHCX participant code under Settings before fetching a package master."
-- with neither a policy code nor an HFR ID: "A plan request needs a policy code or the facility's HFR ID."
+- without a policy code on the case: "A plan request needs both the case's policy code and the facility's HFR ID."
 
 #### A3Q. REQUEST
 
@@ -28,7 +28,7 @@ The envelope's fields are the arguments passed to G7 Send.
 | `jwe_headers.x-hcx-sender_code` | string | yes | facility participant code |
 | `jwe_headers.x-hcx-recipient_code` | string | yes | payer participant code |
 | `jwe_headers.x-hcx-workflow_id` | string | yes | case number [REF](../references/PAYERS.md#markers) |
-| `fhir` | object | yes | a Task bundle naming the policy number (when the case has one) and the facility HFR ID |
+| `fhir` | object | yes | a Task bundle naming the policy number and the facility HFR ID, both required |
 
 FHIR: [F1. Bundle](../fhir/F1-bundle.md), [F4. Task (InsurancePlan discovery)](../fhir/F4-task-insuranceplan.md)
 
@@ -86,10 +86,10 @@ function request_plan(case_id, refresh = false):
 
     provider_id = org.identifier_value
     policy_code = trim(case.policy_code)
-    if policy_code empty and provider_id empty:
-        refuse "A plan request needs a policy code or the facility's HFR ID."
-    bundle = F1 Bundle carrying F4 Task with input policyNumber (when policy_code)
-             and input providerId (provider_id)
+    if policy_code empty or provider_id empty:
+        refuse "A plan request needs both the case's policy code and the facility's HFR ID."
+    bundle = F1 Bundle carrying F4 Task with input policyNumber (policy_code)
+             and input providerId (provider_id), both required
 
     ack, failed = SEND("v1/insuranceplan/request", {
         jwe_headers: {x-hcx-sender_code: org.participant_code,
@@ -99,7 +99,7 @@ function request_plan(case_id, refresh = false):
 
     values = {status: fetching, txn_id: ack.txn_id, correlation_id: ack.correlation_id,
               requested_at: now, fetched_at: null, error_message: null,
-              policy_code: policy_code or null, provider_id,
+              policy_code, provider_id,
               plan_identifier: null, plan_title: null, plan_type: null,
               sum_insured: null, response_json: null}
     if failed: values.status = error; values.error_message = failed.message

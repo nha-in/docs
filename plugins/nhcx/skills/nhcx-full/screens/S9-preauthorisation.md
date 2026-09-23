@@ -90,12 +90,11 @@ API: [A4. Pre-auth Submit](../apis/A4-preauth-submit.md) (answered forms)
 
 *Everything attached.* Table columns: File (opens inline in a new tab), Filed as (label, with the code as a sub-line), Type (PDF, JPEG image, PNG image, WebP image), Size ("x.x MB", or whole KB with a 1 KB minimum), Uploaded, and a "Remove" button that confirms "Remove this document from the claim?" and flashes "Document removed." Empty text: "No documents attached yet. The payer expects the admission note and the beneficiary's ID as a minimum." [PAYER](../references/PAYERS.md#markers)
 
-*Upload row.* "Files (PDF or image)" (multiple, required), "Filed as", "Label", and the button "Attach". The "Filed as" select lists the codes the ruling named first, then the common codes below [PAYER](../references/PAYERS.md#markers). Each option reads as the code, a dash, and the label. `CD` is selected by default.
+*Upload row.* "Files (PDF or image)" (multiple, required), "Filed as", "Label", and the button "Attach". The "Filed as" select lists the codes the ruling named first, then the common codes below [PAYER](../references/PAYERS.md#markers). `HDS` (hospital discharge summary) is not offered here: the patient has not been discharged, so a pre-authorisation never carries a discharge summary. Each option reads as the code, a dash, and the label. `CD` is selected by default.
 
 | Code | Label |
 |---|---|
 | CD | Clinical document (case sheet, notes) |
-| HDS | Hospital discharge summary |
 | DIA | Diagnostic & laboratory reports |
 | RAD | Radiology / scan reports |
 | PRE | Doctor's prescription notes |

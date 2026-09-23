@@ -92,7 +92,7 @@ paths:
 
         ### Best practices
 
-        - Cache the token in memory keyed by environment and refresh proactively at roughly 80 to 90 percent of the lifetime computed from the expires_in actually received.
+        - Cache the token in memory keyed by environment and refresh proactively at roughly 80 to 90 percent of the 1200-second (20-minute) lifetime, that is after 16 to 18 minutes.
         - Serialise refresh behind a lock so concurrent workers do not fire simultaneous token requests.
         - On any 401, discard the cached token, mint a new one and replay the original request exactly once; if the second attempt also fails, stop and alert, since the credentials are wrong or revoked.
         - Never log the access_token or client_secret; log the expiry timestamp instead.

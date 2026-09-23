@@ -43,7 +43,7 @@ why a status check costs nothing to answer.
 | `x-hcx-correlation_id` | **The `api_call_id` of the message whose status you are asking about** |
 | `x-hcx-api_call_id` | A fresh UUID, as always |
 | `x-hcx-sender_code`, `x-hcx-recipient_code` | You, and the exchange |
-| `x-hcx-ben-abha-id` | Mandatory |
+| `x-hcx-ben-abha-id` | Optional |
 | `x-hcx-workflow_id` | Optional |
 | `x-hcx-use_case` | Optional. `New`, `Enhancement` or `Resubmit` on the status sheet |
 
@@ -104,7 +104,7 @@ source confirms which of the two endpoints the sandbox accepts from a provider.
 Treat it as open: confirm with NHA before the demo, and keep the endpoint
 configurable. Access Control and Roles sets out the same rule.
 
-The search service's live specification is at
+The search service's sandbox specification is at
 `https://hcxsbx.abdm.gov.in/searchhcxservice/swagger-ui-custom.html`.
 
 ### The request bundle

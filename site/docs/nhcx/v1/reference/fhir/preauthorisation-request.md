@@ -52,7 +52,7 @@ NRCeS profile: [Claim](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Claim.h
 | `supportingInfo[]` | id `SupportingInformation/1`, sequence `1` |
 |  | id `SupportingInformation/2`, sequence `2` |
 |  | id `SupportingInformation/3`, sequence `3` |
-| | and 9 more |
+| | and 8 more |
 | `supportingInfo[].category.coding[]` | `INV` Document Type - Investigation in `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-supportinginfo-category` |
 |  | `ONS` Period, start or end dates of aspects of the Condition. (e.g. admission, discha… in `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-supportinginfo-category` |
 |  | `OTH` Other in `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-supportinginfo-category` |
@@ -60,11 +60,11 @@ NRCeS profile: [Claim](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Claim.h
 | `supportingInfo[].code.coding[]` | `POI` Proof of Identity (Aadhaar / Passport / Voter ID) in `https://nhcx.abdm.gov.in/document-code` |
 |  | `CER` Medical Certificate / Doctor Referral in `https://nhcx.abdm.gov.in/document-code` |
 |  | `RAD` Radiology / X-Ray / CT / MRI Scan Reports in `https://nhcx.abdm.gov.in/document-code` |
-| | and 9 more |
+| | and 8 more |
 | `supportingInfo[].valueAttachment` | contentType `application/pdf`, title `Proof of Identity (Aadhaar / Passport / Voter ID)` |
 |  | contentType `application/pdf`, title `Medical Certificate / Doctor Referral` |
 |  | contentType `application/pdf`, title `Radiology / X-Ray / CT / MRI Scan Reports` |
-| | and 6 more |
+| | and 5 more |
 | `supportingInfo[].valueReference` | reference `https://nhcx.abdm.gov.in/questionnaireresponse/1`, display `Total Knee Replacement (Unilateral), Standard Treatment Guidelines` |
 | `diagnosis[]` | sequence `1` |
 | `diagnosis[].diagnosisCodeableConcept.coding[]` | `E11.9` Type 2 diabetes mellitus without complications in `http://hl7.org/fhir/sid/icd-10` |
@@ -75,7 +75,7 @@ NRCeS profile: [Claim](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Claim.h
 | `procedure[].procedureReference` | reference `https://nhcx.abdm.gov.in/procedure/1`, display `Total Knee Replacement (Unilateral)` |
 | `insurance[]` | sequence `1`, focal `true` |
 | `insurance[].coverage` | reference `https://nhcx.abdm.gov.in/coverage` |
-| `item[]` | id `Item/1`, sequence `1`, factor `1`, careTeamSequence `1`, diagnosisSequence `1`, procedureSequence `1`, informationSequence `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12` |
+| `item[]` | id `Item/1`, sequence `1`, factor `1`, careTeamSequence `1`, diagnosisSequence `1`, procedureSequence `1`, informationSequence `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11` |
 | `item[].productOrService.coding[]` | `PROC-KNEE-01` Total Knee Replacement (Unilateral) in `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-procedure-code` |
 | `item[].servicedPeriod` | start `2026-09-10`, end `2026-09-10` |
 | `item[].quantity` | value `1` |
@@ -109,7 +109,7 @@ NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-
 | `identifier[]` | system `https://nhcx.abdm.gov.in`, value `IN1910000151` |
 | `identifier[].type.coding[]` | `NPI` National provider identifier in `http://terminology.hl7.org/CodeSystem/v2-0203` |
 | `type[].coding[]` | `prov` Healthcare Provider in `http://terminology.hl7.org/CodeSystem/organization-type` |
-| `name` | `XYZ Multispeciality Hospital` |
+| `name` | `KyroCare Multispeciality Hospital` |
 
 ### 4. Organization (pay)
 

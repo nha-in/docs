@@ -1,8 +1,7 @@
 ---
 title: Introduction
 sidebar_label: Introduction
-slug: /nhcx/v1
-sidebar_position: 0
+sidebar_position: 1
 description: What NHCX is, objectives, participants, machine-readable specifications
 sidebar_class_name: sidebar-icon sidebar-icon--info
 source: nhcx-package/docs/01-Overview/01-Introduction.md
@@ -46,7 +45,7 @@ It helps to think of NHCX as three rulebooks and one referee.
 - **The operational guidelines** say who may join, how they are checked, what they may do, and how they can be removed.
 - **NHA is the referee.** It publishes the rules, runs the exchange, and works with NRCeS and IRDAI to change them.
 
-The portal also publishes a live Swagger specification for each of the exchange's services, and Environments and Addresses in the Reference section lists them.
+The portal also publishes a sandbox Swagger specification for each of the exchange's services, and Environments and Addresses in the Reference section lists them.
 
 Five principles run through all of it. The rules are **open**, published under a permissive licence so anyone can build against them. They are **evolvable**, so a scheme can add what it needs without breaking everyone else. They are **minimal**, so they are easy to understand and do not hold back innovation. They protect **privacy and security**, with sealed contents and tamper-proof records. And they are **unbundled**, so a participant can adopt one part without adopting all of it.
 

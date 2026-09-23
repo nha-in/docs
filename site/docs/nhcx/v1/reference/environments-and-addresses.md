@@ -2,14 +2,14 @@
 title: Environments and addresses
 sidebar_label: Environments and addresses
 sidebar_position: 16
-description: Sandbox/production URLs, firewall IPs, token headers, and 12 live Swagger specifications
+description: Sandbox/production URLs, firewall IPs, token headers, and 12 sandbox Swagger specifications
 source: nhcx-package/docs/06-Reference/06-Environments and Addresses.md
 generated: true
 ---
 
 # Environments and addresses
 
-Every address this documentation uses, together with the live specifications
+Every address this documentation uses, together with the sandbox specifications
 the portal publishes. Addresses are scattered through the chapters that need
 them; this is where you check one.
 
@@ -33,7 +33,7 @@ What each one serves:
 - **NHCX exchange**: Every use-case call under /v1, fingerprint and iris authentication under /abha.
 - **Participant service**: Creating and updating a participant, the registry search, certificates and policies.
 - **ABDM proxy**: Face authentication for PMJAY biometrics.
-- **NHCX portal**: The portal, the live Swagger specifications it publishes, and notification subscribe.
+- **NHCX portal**: The portal, the sandbox Swagger specifications it publishes, and notification subscribe.
 - **Face authentication page**: The QR page a patient opens to complete face authentication, with ?txnId=&lt;txnId>.
 
 The ABDM gateway also reads `X-CM-ID` on the session call: `sbx` in the sandbox, `abdm` in production.
@@ -93,12 +93,18 @@ allowed inbound.
 Your callback address itself must be a domain name over HTTPS with TLS 1.2 or
 newer, hosted in India, not an IP address and not carrying a port number.
 
-## Live API specifications
+## Sandbox API specifications
 
 The portal publishes a Swagger document per service. These are the
 authoritative API surface and they cover three exchanges for which no sample
 bundle exists anywhere, so they are the only concrete description of those
 available.
+
+No production specification is published. The sandbox specifications below are
+the only published contract. The paths are the same in production; only the
+base changes, to the production base in the base-URL table above where one is
+published. Ask for the production Swagger at onboarding, and check it against
+these before you switch.
 
 | Service | Specification |
 | :---- | :---- |

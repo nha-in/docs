@@ -92,10 +92,10 @@ The answer lists the covered packages, their rates, the claim conditions, the do
 | `Task.status` | `requested` |
 | `Task.intent` | `order` |
 | `Task.code` | `poll` from `http://terminology.hl7.org/CodeSystem/financialtaskcode` |
-| `Task.input[].type` | `policyNumber` or `providerId` from `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-input-type-code` |
-| `Task.input[].valueString` | The policy number or the provider id |
+| `Task.input[].type` | `policyNumber` and `providerId` from `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-input-type-code` |
+| `Task.input[].valueString` | The policy number in one input, the provider id in the other |
 
-Send at least one input.
+Send both inputs, one of each type. Both are required.
 
 ```json
 {

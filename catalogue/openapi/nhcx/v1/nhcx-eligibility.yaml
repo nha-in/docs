@@ -98,7 +98,7 @@ paths:
         - Persist the correlation ID against the patient episode before posting; it is the only key for matching the callback.
         - Refresh the token automatically before the 1200-second expiry and treat a 401 as refresh-and-retry-once.
         - Run discovery first only when get/policies gives no policy code, then validation, then auth-requirements for the chosen package; store the returned MAND codes and STG questionnaire references and attach them to the preauth.
-        - Do not assume the response echoes your request codes: items come back in the payer's numeric master codes.
+        - "Match response items to your request by `productOrService` code: the payer answers in the package codes you sent, for example `MG004A`, as NHA's published PMJAY bundles show. The numbers in the handbook's response table (100005, 100478, 100063, 100012) are not item codes; in the published bundles they are questionnaire, document-requirement and question identifiers."
         - Use IST timestamps with the +05:30 offset in the protected header.
         - Log the 202 body (protocol_status, api_call_id) so a missing callback can be traced with /v1/status.
 
@@ -534,7 +534,7 @@ components:
       name: x-hcx-request_id
       in: header
       required: false
-      description: One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope.
+      description: "One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope. Send it anyway, as a fresh UUID per originating request: it is cheap and satisfies both readings until NHA rules."
       schema:
         type: string
       example: <uuid>
@@ -573,8 +573,8 @@ components:
     XHcxBenAbhaId:
       name: x-hcx-ben-abha-id
       in: header
-      required: true
-      description: The beneficiary's ABHA number. Mandatory on every exchange, including those with no beneficiary in the payload. Mandatory on the envelope.
+      required: false
+      description: "The beneficiary's ABHA number. Optional: send it when the beneficiary has an ABHA number. Optional on the envelope."
       schema:
         type: string
       example: "91711234567890"

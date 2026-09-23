@@ -47,7 +47,7 @@ NRCeS profile: [Task](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Task.htm
 
 ### 3. Inputs
 
-`valueString`, typed `policyNumber` and `providerId` under `ndhm-task-input-type-code`. At least one; both narrow the answer to the packages this hospital is empanelled for.
+`valueString`, typed `policyNumber` and `providerId` under `ndhm-task-input-type-code`. Both are required, one of each: the policy number and the hospital's HFR ID (`facilityId` in the data elements below). Together they narrow the answer to the packages this hospital is empanelled for.
 
 ### 4. No case yet
 
@@ -101,10 +101,10 @@ A Task with code poll, keyed on policy number and provider id. The answer is the
 | `x-hcx-api_call_id` | `{{$guid}}` |
 | `x-hcx-request_id` | `{{$guid}}` |
 | `x-hcx-correlation_id` | `{{$guid}}` |
-| `x-hcx-workflow_id` | `` |
+| `x-hcx-workflow_id` | empty |
 | `x-hcx-timestamp` | `{{$isoTimestamp}}` |
 | `x-hcx-status` | `request.initiated` |
-| `x-hcx-ben-abha-id` | `` |
+| `x-hcx-ben-abha-id` | empty |
 
 **Data elements**
 
@@ -136,10 +136,10 @@ Keyed on provider id, policy code and participant id. The answer is the scheme c
 | `x-hcx-api_call_id` | `{{$guid}}` |
 | `x-hcx-request_id` | `{{$guid}}` |
 | `x-hcx-correlation_id` | `{{$guid}}` |
-| `x-hcx-workflow_id` | `` |
+| `x-hcx-workflow_id` | empty |
 | `x-hcx-timestamp` | `{{$isoTimestamp}}` |
 | `x-hcx-status` | `request.initiated` |
-| `x-hcx-ben-abha-id` | `` |
+| `x-hcx-ben-abha-id` | empty |
 
 **Data elements**
 

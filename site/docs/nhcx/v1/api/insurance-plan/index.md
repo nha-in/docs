@@ -15,7 +15,7 @@ Policies have traditionally been PDFs that hospital desks interpret by hand, pro
 
 | Call | Method and path | What it does |
 | --- | --- | --- |
-| [Insurance plan request](/docs/nhcx/v1/api/insurance-plan/endpoints/insurance-plan-v1-insuranceplan-request) | `POST /v1/insuranceplan/request` | Provider sends a Task with code poll naming a policy number and/or its HFR id to fetch the payer's machine-readable InsurancePlan for that pairing. |
+| [Insurance plan request](/docs/nhcx/v1/api/insurance-plan/endpoints/insurance-plan-v1-insuranceplan-request) | `POST /v1/insuranceplan/request` | Provider sends a Task with code poll naming both a policy number and its HFR id to fetch the payer's machine-readable InsurancePlan for that pairing. |
 | [Insurance plan callback](/docs/nhcx/v1/api/insurance-plan/endpoints/insurance-plan-v1-insuranceplan-on-request) | `POST /v1/insuranceplan/on_request` | Payer returns the InsurancePlan collection Bundle (InsurancePlan, Organization, optional Questionnaire) under the request correlation id. |
 
 ## Callbacks you host

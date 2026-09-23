@@ -132,6 +132,33 @@ In order, and stop at the first that explains it.
 - **A `SUBSETTED` meta tag.** Every payer-generated bundle carries it. It marks
   a projection of the payer's record, not an error.
 
+## Service names in logs and URLs
+
+A name in a log line, a Swagger address or a stack trace does not always match
+the exchange you think you are calling. Reprocess is served by
+`taskhcxservice`, notifications by `subscriptionhcxservice`, payment by
+`servicehcxpayment`. Read the name off this table before you look for a fault
+in the wrong service.
+
+| Service name in a log or URL | Exchange it serves |
+| :---- | :---- |
+| `coverageeligibilityhcxservice` | Coverage eligibility |
+| `insuranceplanhcxservice` | Insurance plan |
+| `preauthhcxservice` | Preauthorisation |
+| `claimhcxservice` | Claim |
+| `communicationhcxservice` | Communication, including a request for additional attachments |
+| `servicehcxpayment` | Payment notice |
+| `statushcxservice` | Status check |
+| `taskhcxservice` | Task: reprocess and cancel |
+| `searchhcxservice` | Search |
+| `participanthcxservice` | Participant service: registry, certificates and policies |
+| `subscriptionhcxservice` | Notifications |
+| `abdmproxy` | Face authentication for PMJAY biometrics |
+| `nhcxpayerservice` | PMJAY payer service: the role lookup and acting on a case |
+| `dummyhcxpayer` | The sandbox dummy payer's test hooks |
+
+Environments and Addresses has the full address of each.
+
 ## Before you raise it with support
 
 Have these to hand. Every one of them is something the exchange or the payer

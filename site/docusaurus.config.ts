@@ -511,11 +511,27 @@ const config: Config = {
           {from: '/docs/uhi/v1/glossary', to: '/docs/uhi/v1/getting-started/glossary'},
           {from: '/docs/uhi/v1/network-and-protocol', to: '/docs/uhi/v1/concepts/network-and-protocol'},
           {from: '/docs/nhcx/v1/glossary', to: '/docs/nhcx/v1/getting-started/glossary'},
+          // The NHCX landing page is the claim journey; its old address still works.
+          {from: '/docs/nhcx/v1/concepts/how-claims-move-on-nhcx', to: '/docs/nhcx/v1'},
           // The PMJAY scheme rules page was merged: the plain rules into PMJAY on
           // NHCX, the codes and fields into PMJAY use cases.
           {from: '/docs/nhcx/v1/concepts/pmjay-scheme-rules', to: '/docs/nhcx/v1/concepts/pmjay-on-nhcx'},
           // Payer flexibility was removed; its readers land on the use cases.
           {from: '/docs/nhcx/v1/concepts/payer-flexibility', to: '/docs/nhcx/v1/concepts/nhcx-use-cases'},
+          // Eleven NHCX endpoint pages were renamed so every slug is derived
+          // from the operation's path, as the other pages are. The old slugs
+          // came from the Bruno request names.
+          {from: '/docs/nhcx/v1/api/session/endpoints/session-session-token', to: '/docs/nhcx/v1/api/session/endpoints/session-api-hiecm-gateway-v3-sessions'},
+          {from: '/docs/nhcx/v1/api/biometric/endpoints/biometric-auth-init', to: '/docs/nhcx/v1/api/biometric/endpoints/biometric-hcx-abha-biometric-auth-init'},
+          {from: '/docs/nhcx/v1/api/biometric/endpoints/biometric-auth-verify', to: '/docs/nhcx/v1/api/biometric/endpoints/biometric-hcx-abha-biometric-auth-verify'},
+          {from: '/docs/nhcx/v1/api/biometric/endpoints/biometric-auth-refresh-token', to: '/docs/nhcx/v1/api/biometric/endpoints/biometric-hcx-abha-biometric-auth-refresh-token'},
+          {from: '/docs/nhcx/v1/api/biometric/endpoints/biometric-faceauth-init', to: '/docs/nhcx/v1/api/biometric/endpoints/biometric-pmjay-sbxhcx-abdmproxy-abha-biometric-faceauth-init'},
+          {from: '/docs/nhcx/v1/api/biometric/endpoints/biometric-faceauth-capture-pid', to: '/docs/nhcx/v1/api/biometric/endpoints/biometric-pmjay-sbxhcx-abdmproxy-abha-biometric-capture-pid'},
+          {from: '/docs/nhcx/v1/api/biometric/endpoints/biometric-faceauth-v2-auth-verify', to: '/docs/nhcx/v1/api/biometric/endpoints/biometric-pmjay-sbxhcx-abdmproxy-abha-biometric-v2-auth-verify'},
+          {from: '/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-adjudicator-role', to: '/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-pmjay-sbxhcx-nhcxpayerservice-v1-get-user-role'},
+          {from: '/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-adjudicator-process', to: '/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-pmjay-hcx-nhcxpayerservice-wrapper-process-case'},
+          {from: '/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-dummy-payer-process-request', to: '/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-process-request'},
+          {from: '/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-dummy-payer-paymentnotice-init', to: '/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-paymentnotice-init'},
           // The milestones page moved out of Get started into its own section,
           // and each module's user journey moved with it.
           {from: '/docs/hiecm/v3/getting-started/milestones', to: '/docs/hiecm/v3/milestones'},

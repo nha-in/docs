@@ -29,12 +29,12 @@ still published and still read.
 | `x-hcx-sender_code` | String | Mandatory | Your participant code |
 | `x-hcx-recipient_code` | String | Mandatory | The recipient's. For a provider, the processor code from the policy lookup |
 | `x-hcx-api_call_id` | UUID | Mandatory | Fresh on every message, including responses |
-| `x-hcx-request_id` | UUID | **Optional** | One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional |
+| `x-hcx-request_id` | UUID | **Optional** | One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Send it anyway, as a fresh UUID per originating request |
 | `x-hcx-correlation_id` | UUID | Mandatory | The thread. See the rule below |
 | `x-hcx-workflow_id` | String | **Optional** | Which step, or which case. See the two readings below |
 | `x-hcx-timestamp` | datetime | Mandatory | See the format note below |
 | `x-hcx-status` | String | Mandatory | Where this message stands. Values below |
-| `x-hcx-ben-abha-id` | String | **Mandatory** | The beneficiary's ABHA number. Mandatory on every exchange, including those with no beneficiary in the payload. The format is per field: the bundle carries 14 digits without hyphens, and `NHCX-1018` asks for `XX-XXXX-XXXX-XXXX` on this header |
+| `x-hcx-ben-abha-id` | String | **Optional** | The beneficiary's ABHA number. Send it when the beneficiary has one; exchanges with no beneficiary in the payload, such as the insurance plan poll, can leave it out. The format is per field: the bundle carries 14 digits without hyphens, and `NHCX-1018` asks for `XX-XXXX-XXXX-XXXX` on this header |
 | `x-hcx-use_case` | String | Optional | Values differ by exchange, see below |
 | `x-hcx-error_details` | JSON object | Optional | `code`, `message`, `trace`. Mandatory on a protocol response |
 | `x-hcx-debug_details` | JSON object | Optional | The same shape, for debugging |
@@ -62,7 +62,11 @@ source says whether a server checks the case of the value.
 
 Three of those obligations are not stated anywhere else in this documentation
 and are worth reading twice. `x-hcx-request_id` is optional. `x-hcx-workflow_id`
-is optional. `x-hcx-ben-abha-id` is mandatory.
+is optional. `x-hcx-ben-abha-id` is optional.
+
+Optional does not mean leave it out. Send `x-hcx-request_id` on every message,
+as a fresh UUID per originating request. It is cheap, and it satisfies both
+readings until NHA rules on which one stands.
 
 ## The correlation ID rule, in full
 

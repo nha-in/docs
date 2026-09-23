@@ -53,7 +53,7 @@ security:
 paths:
   /api/hiecm/gateway/v3/sessions:
     post:
-      operationId: session_session_token
+      operationId: session_api_hiecm_gateway_v3_sessions
       x-abdm-atom: nhcx.endpoint.session-token
       x-abdm-use-case: Session
       tags:
@@ -68,7 +68,7 @@ paths:
 
         ### When to use
 
-        Call it before your first NHCX call. Call it again when your token is more than a few minutes old, or when any call answers `401`.
+        Call it before your first NHCX call. Call it again when your token is more than about 18 minutes old, ahead of its 20-minute (1200-second) expiry, or when any call answers `401`.
 
         ### Preconditions
 
@@ -79,7 +79,7 @@ paths:
 
         ### Postconditions
 
-        The gateway returns an access token in `accessToken`. Send it on every NHCX call as `Bearer <token>`, in both `bearer_auth` and `Authorization`. Do not rely on a fixed token lifetime.
+        The gateway returns an access token in `accessToken`. Send it on every NHCX call as `Bearer <token>`, in both `bearer_auth` and `Authorization`. The token lasts 1200 seconds (20 minutes), stated in `expiresIn`.
 
         ### Common mistakes
 
@@ -90,7 +90,7 @@ paths:
 
         ### Best practices
 
-        - Keep the token together with the time you got it, and fetch a new one before a call if it is more than a few minutes old.
+        - Keep the token together with the time you got it, and fetch a new one before a call if it is more than about 18 minutes old, ahead of the 20-minute expiry.
         - On any `401`, get a new token and retry that call once.
         - Send the token on both `bearer_auth` and `Authorization`.
         - Keep the clock synchronised with NTP and let a date library format the timestamp.
@@ -126,7 +126,7 @@ paths:
               grantType: client_credentials
       responses:
         "200":
-          description: The gateway returns `accessToken`, `expiresIn`, `refreshToken` and `tokenType` `bearer`.
+          description: The gateway returns `accessToken`, `expiresIn` `1200` (20 minutes), `refreshToken` and `tokenType` `bearer`.
           content:
             application/json:
               schema:
@@ -144,7 +144,7 @@ paths:
                     type: string
               example:
                 accessToken: eyJhbGciOiJSUzI1NiIs...
-                expiresIn: 300
+                expiresIn: 1200
                 refreshTokenIn: 300
                 refreshToken: eyJhbGciOiJSUzI1NiIs...
                 tokenType: bearer

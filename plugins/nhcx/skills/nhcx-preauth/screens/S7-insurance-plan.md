@@ -23,7 +23,7 @@ Reuse before asking: on the first fetch (not on "Fetch again"), if another case 
 
 API: [A3. Insurance Plan Request](../apis/A3-insurance-plan-request.md)
 
-With neither a policy code nor an HFR ID the request is refused: "A plan request needs a policy code or the facility's HFR ID." Flash: "Insurance plan requested from the payer." A refetch clears the case's packages before the new answer lands, so a stale package cannot survive it.
+Without a policy code on the case the request is refused: "A plan request needs both the case's policy code and the facility's HFR ID." Flash: "Insurance plan requested from the payer." A refetch clears the case's packages before the new answer lands, so a stale package cannot survive it.
 
 **Waiting for the answer.** There is no timer: every load of the claim screen polls once while the plan is `fetching`. A failure of the poll itself shows as a muted line "Could not poll the gateway: <error>" on the waiting card.
 

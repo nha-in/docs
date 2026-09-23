@@ -643,13 +643,19 @@ for (const {platform, version, files} of tree) {
   // callback that call produces, where the specification pairs them with
   // x-abdm-triggered-by or x-abdm-answered-by.
   for (const module of modules) {
-    const hosts = (module.spec.servers ?? []).map((server) => hostOf(server.url));
+    const moduleHosts = (module.spec.servers ?? []).map((server) => hostOf(server.url));
     const collect = (kind, section) => {
       for (const [path, item] of Object.entries(section ?? {})) {
         for (const method of METHODS) {
           const op = item?.[method];
           if (!op) continue;
           const id = op.operationId ?? slug(`${method}-${path}`);
+          // An operation's own `servers` override the specification's, as
+          // OpenAPI says they do. The PMJAY payer service reaches each of its
+          // calls on a different host from the module's dummy payer.
+          const hosts = op.servers?.length
+            ? op.servers.map((server) => hostOf(server.url))
+            : moduleHosts;
           apiRoutes.push({
             key: joinKey(path),
             // Kept as a list because a specification can serve one path on
@@ -806,6 +812,14 @@ for (const {platform, version, files} of tree) {
 
       const id = op.operationId ?? slug(`${entry.method}-${entry.path}`);
       const name = slug(id);
+      // An operation's own `servers` override the specification's, as OpenAPI
+      // says they do. Without this the page joined the module's first server
+      // to a path served elsewhere and printed an address that does not exist.
+      const opServers = (op.servers ?? []).map((s) => ({
+        url: s.url,
+        description: s.description ?? '',
+      }));
+      const served = opServers.length ? opServers : servers;
       // The reader picks a journey. Everything the journeys do not name falls
       // into one group at the end rather than into tags of its own; an
       // operation a journey names is read through that journey, so it carries
@@ -826,8 +840,8 @@ for (const {platform, version, files} of tree) {
         // A callback is ABDM calling you. Its examples run against the URL
         // registered for your bridge, never against the gateway host, which
         // is what a curl against dev.abdm.gov.in wrongly suggested.
-        server: entry.kind === 'callback' ? '{bridgeUrl}' : (servers[0]?.url ?? ''),
-        servers,
+        server: entry.kind === 'callback' ? '{bridgeUrl}' : (served[0]?.url ?? ''),
+        servers: served,
         summary: caseTerms(fixProse(op.summary ?? id)),
         // What a heading, a sidebar row and a table cell show. NHA's summary
         // is a sentence of documentation, so it stays as the description and

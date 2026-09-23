@@ -1,17 +1,32 @@
 [
   {
-    "key": "pmjay/hcx/nhcxpayerservice/wrapper/process/case",
+    "key": "paymentnotice/init",
     "hosts": [
       "apisbx.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "adjudicator_adjudicator_process",
+    "operationId": "adjudicator_paymentnotice_init",
+    "module": "PMJAY adjudicator",
+    "moduleDir": "adjudicator",
+    "method": "POST",
+    "path": "/paymentNotice/init",
+    "summary": "Dummy payer, send a payment notice",
+    "route": "/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-paymentnotice-init",
+    "callbacks": []
+  },
+  {
+    "key": "pmjay/hcx/nhcxpayerservice/wrapper/process/case",
+    "hosts": [
+      "apisbeta.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "adjudicator_pmjay_hcx_nhcxpayerservice_wrapper_process_case",
     "module": "PMJAY adjudicator",
     "moduleDir": "adjudicator",
     "method": "POST",
     "path": "/pmjay/hcx/nhcxpayerservice/wrapper/process/case",
     "summary": "Adjudicator: act on a case",
-    "route": "/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-adjudicator-process",
+    "route": "/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-pmjay-hcx-nhcxpayerservice-wrapper-process-case",
     "callbacks": []
   },
   {
@@ -20,28 +35,13 @@
       "apisbx.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "adjudicator_adjudicator_role",
+    "operationId": "adjudicator_pmjay_sbxhcx_nhcxpayerservice_v1_get_user_role",
     "module": "PMJAY adjudicator",
     "moduleDir": "adjudicator",
     "method": "POST",
     "path": "/pmjay/sbxhcx/nhcxpayerservice/v1/get/user-role",
     "summary": "Adjudicator: role for a case",
-    "route": "/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-adjudicator-role",
-    "callbacks": []
-  },
-  {
-    "key": "paymentnotice/init",
-    "hosts": [
-      "apisbx.abdm.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "adjudicator_dummy_payer_paymentnotice_init",
-    "module": "PMJAY adjudicator",
-    "moduleDir": "adjudicator",
-    "method": "POST",
-    "path": "/paymentNotice/init",
-    "summary": "Dummy payer, send a payment notice",
-    "route": "/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-dummy-payer-paymentnotice-init",
+    "route": "/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-pmjay-sbxhcx-nhcxpayerservice-v1-get-user-role",
     "callbacks": []
   },
   {
@@ -50,13 +50,13 @@
       "apisbx.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "adjudicator_dummy_payer_process_request",
+    "operationId": "adjudicator_process_request",
     "module": "PMJAY adjudicator",
     "moduleDir": "adjudicator",
     "method": "POST",
     "path": "/process/request",
     "summary": "Dummy payer, act on a request",
-    "route": "/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-dummy-payer-process-request",
+    "route": "/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-process-request",
     "callbacks": []
   },
   {
@@ -65,13 +65,13 @@
       "apisbx.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "biometric_auth_init",
+    "operationId": "biometric_hcx_abha_biometric_auth_init",
     "module": "ABHA biometric authentication",
     "moduleDir": "biometric",
     "method": "POST",
     "path": "/hcx/abha/biometric/auth/init",
     "summary": "Biometric auth init",
-    "route": "/docs/nhcx/v1/api/biometric/endpoints/biometric-auth-init",
+    "route": "/docs/nhcx/v1/api/biometric/endpoints/biometric-hcx-abha-biometric-auth-init",
     "callbacks": []
   },
   {
@@ -80,13 +80,13 @@
       "apisbx.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "biometric_auth_refresh_token",
+    "operationId": "biometric_hcx_abha_biometric_auth_refresh_token",
     "module": "ABHA biometric authentication",
     "moduleDir": "biometric",
     "method": "GET",
     "path": "/hcx/abha/biometric/auth/refresh/token",
     "summary": "Biometric auth refresh token",
-    "route": "/docs/nhcx/v1/api/biometric/endpoints/biometric-auth-refresh-token",
+    "route": "/docs/nhcx/v1/api/biometric/endpoints/biometric-hcx-abha-biometric-auth-refresh-token",
     "callbacks": []
   },
   {
@@ -95,13 +95,13 @@
       "apisbx.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "biometric_auth_verify",
+    "operationId": "biometric_hcx_abha_biometric_auth_verify",
     "module": "ABHA biometric authentication",
     "moduleDir": "biometric",
     "method": "POST",
     "path": "/hcx/abha/biometric/auth/verify",
     "summary": "Biometric auth verify",
-    "route": "/docs/nhcx/v1/api/biometric/endpoints/biometric-auth-verify",
+    "route": "/docs/nhcx/v1/api/biometric/endpoints/biometric-hcx-abha-biometric-auth-verify",
     "callbacks": []
   },
   {
@@ -110,13 +110,13 @@
       "apisbx.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "biometric_faceauth_capture_pid",
+    "operationId": "biometric_pmjay_sbxhcx_abdmproxy_abha_biometric_capture_pid",
     "module": "ABHA biometric authentication",
     "moduleDir": "biometric",
     "method": "POST",
     "path": "/pmjay/sbxhcx/abdmproxy/abha/biometric/capture/pid",
     "summary": "Face auth capture PID",
-    "route": "/docs/nhcx/v1/api/biometric/endpoints/biometric-faceauth-capture-pid",
+    "route": "/docs/nhcx/v1/api/biometric/endpoints/biometric-pmjay-sbxhcx-abdmproxy-abha-biometric-capture-pid",
     "callbacks": []
   },
   {
@@ -125,13 +125,13 @@
       "apisbx.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "biometric_faceauth_init",
+    "operationId": "biometric_pmjay_sbxhcx_abdmproxy_abha_biometric_faceauth_init",
     "module": "ABHA biometric authentication",
     "moduleDir": "biometric",
     "method": "POST",
     "path": "/pmjay/sbxhcx/abdmproxy/abha/biometric/faceauth/init",
     "summary": "Face auth init",
-    "route": "/docs/nhcx/v1/api/biometric/endpoints/biometric-faceauth-init",
+    "route": "/docs/nhcx/v1/api/biometric/endpoints/biometric-pmjay-sbxhcx-abdmproxy-abha-biometric-faceauth-init",
     "callbacks": []
   },
   {
@@ -140,13 +140,13 @@
       "apisbx.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "biometric_faceauth_v2_auth_verify",
+    "operationId": "biometric_pmjay_sbxhcx_abdmproxy_abha_biometric_v2_auth_verify",
     "module": "ABHA biometric authentication",
     "moduleDir": "biometric",
     "method": "POST",
     "path": "/pmjay/sbxhcx/abdmproxy/abha/biometric/v2/auth/verify",
     "summary": "Face auth verify",
-    "route": "/docs/nhcx/v1/api/biometric/endpoints/biometric-faceauth-v2-auth-verify",
+    "route": "/docs/nhcx/v1/api/biometric/endpoints/biometric-pmjay-sbxhcx-abdmproxy-abha-biometric-v2-auth-verify",
     "callbacks": []
   },
   {
@@ -4763,8 +4763,7 @@
   {
     "key": "notification/subscribe",
     "hosts": [
-      "apisbx.abdm.gov.in",
-      "apisprod.nha.gov.in"
+      "hcxsbx.abdm.gov.in"
     ],
     "kind": "operation",
     "operationId": "other_v1_notification_subscribe",
@@ -6919,13 +6918,13 @@
       "apis.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "session_session_token",
+    "operationId": "session_api_hiecm_gateway_v3_sessions",
     "module": "Session",
     "moduleDir": "session",
     "method": "POST",
     "path": "/api/hiecm/gateway/v3/sessions",
     "summary": "Session token",
-    "route": "/docs/nhcx/v1/api/session/endpoints/session-session-token",
+    "route": "/docs/nhcx/v1/api/session/endpoints/session-api-hiecm-gateway-v3-sessions",
     "callbacks": []
   },
   {

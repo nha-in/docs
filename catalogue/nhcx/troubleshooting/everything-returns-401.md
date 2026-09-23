@@ -66,7 +66,7 @@ Every call to [NHCX](../../shared/glossary/nhcx.md) fails with `401`, often with
 
 Work through these in order.
 
-1. **Has the token expired?** This message appears when the session token has expired. Read the lifetime from the token response, `expiresIn` or `expires_in`, instead of assuming one. Fetch a new token and retry the failing call once. Retrying with the old token fails the same way. See [the session token every NHCX call carries](../concepts/session-token.md).
+1. **Has the token expired?** This message appears when the session token has expired. A session token lasts 1200 seconds (20 minutes) from the moment it arrives, so a token older than that has expired. Fetch a new token and retry the failing call once. Retrying with the old token fails the same way. See [the session token every NHCX call carries](../concepts/session-token.md).
 2. **Does the value start with `Bearer `?** The header value is the word `Bearer`, a space, then the token. A bare token gives `401`.
 3. **Is the token in the header the call reads?** Send the same value in both `bearer_auth` and `Authorization`: `Bearer <ACCESS_TOKEN_FROM_SESSION_TOKEN>`.
 4. **Are the token and the host from the same environment?** A sandbox token does not work against a production host, or the reverse. Compare the host you minted the token on with the host of the failing call. See [environments and base URLs](../sandbox/environments-and-base-urls.md).
@@ -74,7 +74,7 @@ Work through these in order.
 
 ## How you know it worked
 
-A call that was returning `401` now returns its normal response, and keeps doing so across several calls over more than one token lifetime. One success after several failures can be a token that happened to be fresh; confirm again after the next refresh.
+A call that was returning `401` now returns its normal response, and keeps doing so across several calls over more than 20 minutes, which is longer than one token lasts. One success after several failures can be a token that happened to be fresh; confirm again after the next refresh.
 
 ## When it goes wrong
 

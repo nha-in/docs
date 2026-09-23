@@ -24,7 +24,7 @@ The paths that create rows:
 
 A requirement must be one the payer named for that leg, from the auth-requirements ruling (D15) when there is one, else the package master (D11). The replace step deletes by `claim_id` and `code` only, whatever the stage.
 
-Common codes offered on every upload: `CD` Clinical document (the default), `HDS` Hospital discharge summary, `DIA` Diagnostic and laboratory reports, `RAD` Radiology / scan reports, `PRE` Doctor's prescription notes, `CER` Medical certificate / referral, `EST` Cost estimate, `MB` Medical and pharmacy bills, `INV` Final hospital invoice, `OTR` Operation theatre notes, `ICU` ICU chart, `IMP` Implant invoice and sticker, `POI` Proof of identity, `KYC` KYC / bank proof, `FCF` Filled claim form, `PAU` Pre-authorisation approval letter, `ODN` Other document [PAYER](../references/PAYERS.md#markers).
+Common codes offered on every upload: `CD` Clinical document (the default), `DIA` Diagnostic and laboratory reports, `RAD` Radiology / scan reports, `PRE` Doctor's prescription notes, `CER` Medical certificate / referral, `EST` Cost estimate, `MB` Medical and pharmacy bills, `INV` Final hospital invoice, `OTR` Operation theatre notes, `ICU` ICU chart, `IMP` Implant invoice and sticker, `POI` Proof of identity, `KYC` KYC / bank proof, `FCF` Filled claim form, `PAU` Pre-authorisation approval letter, `ODN` Other document [PAYER](../references/PAYERS.md#markers). `HDS` Hospital discharge summary is offered on claim uploads only, never on a pre-authorisation.
 
 **Read.**
 

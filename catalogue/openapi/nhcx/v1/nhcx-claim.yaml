@@ -218,7 +218,7 @@ paths:
         ### Best practices
 
         - Provider: acknowledge first, then decrypt, then update case state; be idempotent on correlation ID and api_call_id.
-        - Provider: parse the PMJAY query audit trail (USER~datetime~type~comment~trust, entries separated by |) as a plain string.
+        - "Provider: treat the PMJAY query audit trail (USER~datetime~type~comment~actor, entries separated by |; actor is PPD-Trust, CPD-Trust or the hospital name) as display text. Show each entry's comment and never parse a timestamp from it."
         - Provider: on complete plus approved, trigger settlement tracking and await 30, 31 and 33; the claim is only closed when 33 arrives and the UTR is persisted.
         - Payer: emit 25 on receipt and 28 during processing so the desk sees progress, and put reduction reasons in processNote linked by noteNumber.
         - Both: keep x-hcx-status and x-hcx-workflow_id consistent with the NHA status sheet, since the pair identifies the message.
@@ -549,7 +549,7 @@ components:
       name: x-hcx-request_id
       in: header
       required: false
-      description: One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope.
+      description: "One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope. Send it anyway, as a fresh UUID per originating request: it is cheap and satisfies both readings until NHA rules."
       schema:
         type: string
       example: <uuid>
@@ -588,8 +588,8 @@ components:
     XHcxBenAbhaId:
       name: x-hcx-ben-abha-id
       in: header
-      required: true
-      description: The beneficiary's ABHA number. Mandatory on every exchange, including those with no beneficiary in the payload. Mandatory on the envelope.
+      required: false
+      description: "The beneficiary's ABHA number. Optional: send it when the beneficiary has an ABHA number. Optional on the envelope."
       schema:
         type: string
       example: "91711234567890"

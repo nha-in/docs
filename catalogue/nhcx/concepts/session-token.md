@@ -6,9 +6,9 @@ milestone: n/a
 version: nhcx-v1
 title: The session token every NHCX call carries
 summary: >-
-  Your system trades its client credentials for a short-lived bearer token and sends
-  it on every call, while the exchange proves itself to you with a token of its
-  own.
+  Your system trades its client credentials for a bearer token that lasts 1200 seconds
+  (20 minutes) and sends it on every call, while the exchange proves itself to you
+  with a token of its own.
 sources:
 - url: https://hcxsbx.abdm.gov.in/#/technical-specifications/open-protocol/data-security-and-privacy/api-security
   file: catalogue/openapi/.raw/nhcx-site-2026-09-14/pages/technical-specifications__open-protocol__data-security-and-privacy__api-security.md
@@ -57,7 +57,7 @@ related:
 
 Every call your system makes to NHCX carries a session token. The token tells NHCX which participant is calling.
 
-You get the token by sending your client ID and client secret to a session endpoint. The token expires after a short time, so your system fetches a new one before it lapses.
+You get the token by sending your client ID and client secret to a session endpoint. The token expires after 1200 seconds (20 minutes), so your system fetches a new one before it lapses.
 
 ## Before you start
 
@@ -74,7 +74,7 @@ Two tokens are in play, one in each direction.
 
 ```mermaid
 graph LR
-  C["Client ID + secret"] -->|session endpoint| T["Bearer token<br/>short lifetime"]
+  C["Client ID + secret"] -->|session endpoint| T["Bearer token<br/>1200 s (20 min)"]
   T -->|header on every call| X["NHCX"]
   X -->|its own signed token<br/>on every delivery| E["Your endpoint"]
 ```
@@ -82,7 +82,7 @@ graph LR
 ### Getting and keeping a token
 
 - Call the session endpoint with your credentials. Which endpoint to call is covered in [choosing the session endpoint](../decisions/session-endpoint.md).
-- Read the lifetime from the response, `expiresIn` or `expires_in` depending on the endpoint.
+- The token lasts 1200 seconds (20 minutes). The response states it as `expiresIn` or `expires_in`, depending on the endpoint.
 - Renew the token before it lapses, from a background task, so no request goes out with an expired token.
 - Send it as `Bearer <ACCESS_TOKEN_FROM_SESSION_CALL>`. Each endpoint atom names the request header that carries it.
 

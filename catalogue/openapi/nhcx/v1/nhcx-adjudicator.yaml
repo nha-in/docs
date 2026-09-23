@@ -56,7 +56,7 @@ security:
 paths:
   /pmjay/sbxhcx/nhcxpayerservice/v1/get/user-role:
     post:
-      operationId: adjudicator_adjudicator_role
+      operationId: adjudicator_pmjay_sbxhcx_nhcxpayerservice_v1_get_user_role
       x-abdm-atom: nhcx.endpoint.payer-service-get-user-role
       x-abdm-use-case: PMJAY adjudicator
       tags:
@@ -137,7 +137,7 @@ paths:
                 errormessage: null
   /pmjay/hcx/nhcxpayerservice/wrapper/process/case:
     post:
-      operationId: adjudicator_adjudicator_process
+      operationId: adjudicator_pmjay_hcx_nhcxpayerservice_wrapper_process_case
       x-abdm-atom: nhcx.endpoint.payer-service-process-case
       x-abdm-use-case: PMJAY adjudicator
       tags:
@@ -145,6 +145,8 @@ paths:
       summary: "Adjudicator: act on a case"
       description: |-
         Approves, rejects, queries or forwards a PMJAY case in the State Health Agency's Transaction Management System, as the role that currently holds it.
+
+        In the sandbox this call is reached on `https://apisbeta.nha.gov.in`, a different host from the role lookup, which sits on `https://apisbx.abdm.gov.in`. That is the only published address for it. No production host is published for this call, so obtain it at onboarding and keep it configurable rather than deriving it from the sandbox one.
 
         ### Business purpose
 
@@ -188,7 +190,7 @@ paths:
         Chapter [PMJAY adjudication APIs](/docs/nhcx/v1/roles/provider/pmjay-adjudication-apis) of the NHCX integration specification.
       servers:
         - url: https://apisbeta.nha.gov.in
-          description: Sandbox, PMJAY payer service, act on a case.
+          description: Sandbox, PMJAY payer service, act on a case. The only published address; no production host is published.
       parameters:
         - $ref: "#/components/parameters/BearerAuth"
       requestBody:
@@ -240,7 +242,7 @@ paths:
                 message: Case processed
   /process/request:
     post:
-      operationId: adjudicator_dummy_payer_process_request
+      operationId: adjudicator_process_request
       x-abdm-atom: nhcx.endpoint.dummy-payer-process-request
       x-abdm-use-case: PMJAY adjudicator
       tags:
@@ -310,7 +312,7 @@ paths:
           description: The answer arrives on your callback for the request's family, `/v1/preauth/on_submit` for a pre-authorisation, as a sealed `ClaimResponse` or as a `ProtocolResponse` carrying a refusal, on the correlation ID you sent.
   /paymentNotice/init:
     post:
-      operationId: adjudicator_dummy_payer_paymentnotice_init
+      operationId: adjudicator_paymentnotice_init
       x-abdm-atom: nhcx.endpoint.dummy-payer-paymentnotice-init
       x-abdm-use-case: PMJAY adjudicator
       tags:

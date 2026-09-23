@@ -139,7 +139,7 @@ sequenceDiagram
 ### The query arrives as a ClaimResponse
 
 1. Receive [POST /v1/claim/on_submit](../callbacks/claim-on-submit.md) with workflow `27`. Answer `202` within 30 seconds, then decrypt.
-2. Read what the payer asked. For [PMJAY](../glossary/pmjay.md), `ClaimResponse.item[].adjudication[].reason.coding.display` carries a trail of entries in the form `USER~datetime~type~comment~trust`, separated by `|`. Parse it as plain text. The comment is the question.
+2. Read what the payer asked. For [PMJAY](../glossary/pmjay.md), `ClaimResponse.item[].adjudication[].reason.coding.display` carries a trail of entries in the form `USER~datetime~type~comment~actor`, separated by `|`, where `actor` is whoever wrote the entry: `PPD-Trust` on a preauthorisation, `CPD-Trust` on a claim, or the hospital's name. Treat it as display text and never parse a timestamp from it. The comment is the question.
 3. Add the requested documents to `supportingInfo` in the same Claim. Keep `Claim.identifier` and `use` `claim`.
 4. Set `x-hcx-workflow_id` to `151`, Claim Query Response Submitted. Set `x-hcx-status` to `request.initiated`.
 5. Start a new correlation: set `x-hcx-correlation_id` to the value of this call's `x-hcx-api_call_id`. The claim identifier ties the answer to the case.
