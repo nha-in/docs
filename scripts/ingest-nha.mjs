@@ -25,7 +25,7 @@ const MODULES = {
   m3: {label: 'M3 Health Information User', position: 4, icon: 'file-check', roles: ['his'], title: 'ABDM M3, health information user services as an HIU', summary: 'Raise a consent request, fetch its artefacts, and receive records.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 12},
   m4: {label: 'M4 Registry Integration', position: 5, icon: 'building-2', roles: ['his'], title: 'ABDM M4, professional and facility registries', summary: 'Register healthcare professionals and facilities on the NHPR.', servers: [{url: 'https://apihspsbx.abdm.gov.in/v4/int', description: 'NHPR, sandbox'}], expected: 100},
   p1: {label: 'P1 Registration and login', position: 6, icon: 'user-round', roles: ['phr'], title: 'ABDM P1, PHR registration and login', summary: 'Create an ABHA address in a PHR app and log in to it.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}], expected: 11},
-  p2: {label: 'P2 Consents Management', position: 7, icon: 'files', roles: ['phr'], title: 'ABDM P2, Consents Management', summary: 'Manage the PHR profile, link an ABHA number, switch profiles, and handle linking, sharing and consent for the patient.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}, {url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}], expected: 35},
+  p2: {label: 'P2 Consents Management', position: 7, icon: 'files', roles: ['phr'], title: 'ABDM P2, Consents Management', summary: 'Manage the PHR profile, link an ABHA number, switch profiles, and handle linking, sharing and consent for the patient.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://abhasbx.abdm.gov.in', description: 'PHR application service, sandbox'}], expected: 35},
   p3: {label: 'P3 Subscription', position: 8, icon: 'bell', roles: ['phr'], title: 'ABDM P3, PHR subscriptions', summary: 'Read, approve, deny, enable, disable and update the patient\'s subscriptions and subscription requests, and the subscription request and notifications they answer.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}], expected: 14},
   p4: {label: 'P4 Locker', position: 9, icon: 'lock', roles: ['phr'], title: 'ABDM P4, health lockers', summary: 'Set up a health locker and list the lockers and requests on an ABHA address.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}], expected: 5},
   'scan-and-register': {label: 'Scan and Register', position: 11, icon: 'contact-round', section: 'use-cases', roles: ['his'], title: 'ABDM Scan and Register', summary: 'Receive the profile a patient shares by scanning the counter QR code, and hand back a queue token.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 2},
@@ -702,6 +702,49 @@ specs.m1['x-abdm-sources'].push({file: 'catalogue/openapi/.raw/nha-2026-09-16/ab
     op.summary = name;
     note('p2', path, `named ${name}, as NHA's sandbox observations of 23 September 2026 ask; NHA's sentence stays as the description`);
   }
+}
+
+// NHA's feedback of 23 September 2026. P2, P3 and P4 go to the gateway at
+// https://dev.abdm.gov.in, as NHA stated; P1 stays on the ABHA service under
+// /abha/api/v3/phr/app, and the Aadhaar flow calls under /abha/api/v3/.
+// A path slot named {request-id} reads
+// like the REQUEST-ID header every call carries. Every PHR path parameter now
+// takes the name NHA's PHR Postman collection gives the variable that fills
+// it. Only the documented name changes; the URL on the wire does not.
+{
+  const PHR_PATH_NAMES = [
+    [/^\/api\/hiecm\/consent\/v3\/(request|artefact\/request)\/\{request-id\}/, 'request-id', 'consentRequestId'],
+    [/^\/api\/hiecm\/consent\/v3\/artefact\/\{artefact-id\}/, 'artefact-id', 'consentId'],
+    [/^\/api\/hiecm\/consent\/v3\/auto\/approve\/\{auto-approval-id\}/, 'auto-approval-id', 'consentId'],
+    [/^\/api\/hiecm\/subscription-requests\/v3\/(request\/)?\{request-id\}/, 'request-id', 'subscriptionRequestId'],
+    [/\{subscription-id\}/, 'subscription-id', 'subscriptionID'],
+    [/\{lockerId\}/, 'lockerId', 'locker-id'],
+    [/^\/api\/hiecm\/gateway\/v3\/providers\/\{provider-id\}/, 'provider-id', 'hip-id'],
+  ];
+  for (const module of ['p2', 'p3', 'p4']) {
+    const renamed = {};
+    for (const [path, item] of Object.entries(specs[module].paths)) {
+      let next = path;
+      for (const [match, from, to] of PHR_PATH_NAMES) {
+        if (!match.test(next)) continue;
+        next = next.replace(`{${from}}`, `{${to}}`);
+        for (const method of METHODS) for (const param of item[method]?.parameters ?? []) if (param.in === 'path' && param.name === from) param.name = to;
+        for (const param of item.parameters ?? []) if (param.in === 'path' && param.name === from) param.name = to;
+        note(module, `${Object.keys(item).find((k) => METHODS.includes(k))?.toUpperCase()} ${path}`, `path parameter {${from}} named {${to}}, the variable NHA's PHR Postman collection fills it with; NHA's feedback of 23 September 2026`);
+      }
+      renamed[next] = item;
+    }
+    specs[module].paths = renamed;
+  }
+  // P2 mixes the two: its profile and link calls live on the PHR application
+  // service, like P1, so each of those carries that server on the call.
+  let phrAppCalls = 0;
+  for (const [path, item] of Object.entries(specs.p2.paths)) {
+    if (!path.startsWith('/abha/api/')) continue;
+    for (const method of METHODS) if (item[method]) { item[method].servers = [{url: 'https://abhasbx.abdm.gov.in', description: 'PHR application service, sandbox'}]; phrAppCalls++; }
+  }
+  note('p2', 'servers', `${phrAppCalls} PHR application calls under /abha/api/v3/phr/app carry https://abhasbx.abdm.gov.in on the call, as P1's do; the gateway calls take https://dev.abdm.gov.in`);
+  note('p2, p3, p4', 'servers', 'https://dev.abdm.gov.in only, the base URL NHA gave for P2, P3 and P4 on 23 September 2026; the PHR swagger declares https://abhasbx.abdm.gov.in, and P2 had rendered its gateway calls on it');
 }
 
 for (const [id, m] of Object.entries(MODULES)) {

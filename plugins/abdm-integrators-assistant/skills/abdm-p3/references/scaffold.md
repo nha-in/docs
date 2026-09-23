@@ -244,7 +244,7 @@ A 202 response. The specification gives no body for it, so read what comes back.
 
 ```bash
 curl --request POST \
-  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/{request-id}/approve \
+  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/{subscriptionRequestId}/approve \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -288,7 +288,7 @@ curl --request POST \
 
 ```bash
 curl --request POST \
-  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/{request-id}/deny \
+  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/{subscriptionRequestId}/deny \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -316,7 +316,7 @@ curl --request GET \
 
 ```bash
 curl --request PUT \
-  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/patients/{subscription-id} \
+  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/patients/{subscriptionID} \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -385,7 +385,7 @@ curl --request PUT \
 
 ```bash
 curl --request POST \
-  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/disable/{subscription-id} \
+  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/disable/{subscriptionID} \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -397,7 +397,7 @@ curl --request POST \
 
 ```bash
 curl --request POST \
-  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/enable/{subscription-id} \
+  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/enable/{subscriptionID} \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -409,7 +409,7 @@ curl --request POST \
 
 ```bash
 curl --request GET \
-  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/request/{request-id} \
+  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/request/{subscriptionRequestId} \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -421,7 +421,7 @@ curl --request GET \
 
 ```bash
 curl --request GET \
-  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/{subscription-id} \
+  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/{subscriptionID} \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \

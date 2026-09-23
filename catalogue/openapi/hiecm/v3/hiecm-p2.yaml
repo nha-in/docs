@@ -45,10 +45,10 @@ x-abdm-sources:
     hash: sha256:a7e1b7e0b56b75297623057678cf307f21ecdbfbc9ebdb022dc67df78540f6d5
     fetched: "2026-09-16"
 servers:
-  - url: https://abhasbx.abdm.gov.in
-    description: ABHA service, sandbox
   - url: https://dev.abdm.gov.in
     description: ABDM gateway, sandbox
+  - url: https://abhasbx.abdm.gov.in
+    description: PHR application service, sandbox
 security:
   - bearerAuth: []
 tags:
@@ -316,7 +316,7 @@ paths:
     servers: &a1
       - url: https://dev.abdm.gov.in
         description: ABDM gateway, sandbox
-  /api/hiecm/gateway/v3/providers/{provider-id}:
+  /api/hiecm/gateway/v3/providers/{hip-id}:
     get:
       tags:
         - abdm-gateway
@@ -347,7 +347,7 @@ paths:
             type: string
           example: sbx
           description: Suffix of the consent manager to which the request was intended
-        - name: provider-id
+        - name: hip-id
           in: path
           required: true
           schema:
@@ -2034,7 +2034,7 @@ paths:
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: profile-share 3
     servers: *a1
-  /api/hiecm/consent/v3/request/{request-id}/approve:
+  /api/hiecm/consent/v3/request/{consentRequestId}/approve:
     post:
       tags:
         - consent-management-data-flow-phr
@@ -2075,7 +2075,7 @@ paths:
             minimum: 1
             maximum: 100
             example: <TOKEN>
-        - name: request-id
+        - name: consentRequestId
           in: path
           required: true
           schema:
@@ -2377,7 +2377,7 @@ paths:
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-consent-management 1 (2)
     servers: *a1
-  /api/hiecm/consent/v3/request/{request-id}/deny:
+  /api/hiecm/consent/v3/request/{consentRequestId}/deny:
     post:
       tags:
         - consent-management-data-flow-phr
@@ -2418,7 +2418,7 @@ paths:
             minimum: 1
             maximum: 100
             example: <TOKEN>
-        - name: request-id
+        - name: consentRequestId
           in: path
           required: true
           schema:
@@ -2727,7 +2727,7 @@ paths:
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-consent-management 3 (4)
     servers: *a1
-  /api/hiecm/consent/v3/request/{request-id}:
+  /api/hiecm/consent/v3/request/{consentRequestId}:
     get:
       tags:
         - consent-management-data-flow-phr
@@ -2768,7 +2768,7 @@ paths:
             minimum: 1
             maximum: 100
             example: <TOKEN>
-        - name: request-id
+        - name: consentRequestId
           in: path
           required: true
           schema:
@@ -3603,7 +3603,7 @@ paths:
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-consent-management 5 (3)
     servers: *a1
-  /api/hiecm/consent/v3/artefact/request/{request-id}:
+  /api/hiecm/consent/v3/artefact/request/{consentRequestId}:
     get:
       tags:
         - consent-management-data-flow-phr
@@ -3644,7 +3644,7 @@ paths:
             minimum: 1
             maximum: 100
             example: <TOKEN>
-        - name: request-id
+        - name: consentRequestId
           in: path
           required: true
           schema:
@@ -4058,7 +4058,7 @@ paths:
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-consent-management 7
     servers: *a1
-  /api/hiecm/consent/v3/artefact/{artefact-id}:
+  /api/hiecm/consent/v3/artefact/{consentId}:
     get:
       tags:
         - consent-management-data-flow-phr
@@ -4099,7 +4099,7 @@ paths:
             minimum: 1
             maximum: 100
             example: <TOKEN>
-        - name: artefact-id
+        - name: consentId
           in: path
           required: true
           schema:
@@ -5408,7 +5408,7 @@ paths:
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-consent-management 12
     servers: *a1
-  /api/hiecm/consent/v3/auto/approve/{auto-approval-id}/disable:
+  /api/hiecm/consent/v3/auto/approve/{consentId}/disable:
     post:
       tags:
         - consent-management-data-flow-phr
@@ -5449,7 +5449,7 @@ paths:
             minimum: 1
             maximum: 100
             example: <TOKEN>
-        - name: auto-approval-id
+        - name: consentId
           in: path
           required: true
           schema:
@@ -5595,7 +5595,7 @@ paths:
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-consent-management 13
     servers: *a1
-  /api/hiecm/consent/v3/auto/approve/{auto-approval-id}/enable:
+  /api/hiecm/consent/v3/auto/approve/{consentId}/enable:
     post:
       tags:
         - consent-management-data-flow-phr
@@ -5636,7 +5636,7 @@ paths:
             minimum: 1
             maximum: 100
             example: <TOKEN>
-        - name: auto-approval-id
+        - name: consentId
           in: path
           required: true
           schema:
@@ -5938,6 +5938,9 @@ paths:
                 type: string
               example: Access Denied
       x-abdm-nha-operation-id: getLoginProfile
+      servers:
+        - url: https://abhasbx.abdm.gov.in
+          description: PHR application service, sandbox
   /abha/api/v3/phr/app/login/profile/link:
     post:
       tags:
@@ -6073,6 +6076,9 @@ paths:
                 type: string
               example: Access Denied
       x-abdm-nha-operation-id: postLoginProfileLink
+      servers:
+        - url: https://abhasbx.abdm.gov.in
+          description: PHR application service, sandbox
   /abha/api/v3/phr/app/login/profile/phrCard:
     get:
       tags:
@@ -6141,6 +6147,9 @@ paths:
                 type: string
               example: Access Denied
       x-abdm-nha-operation-id: getLoginProfilePhrCard
+      servers:
+        - url: https://abhasbx.abdm.gov.in
+          description: PHR application service, sandbox
   /abha/api/v3/phr/app/login/profile/qrCode:
     get:
       tags:
@@ -6209,6 +6218,9 @@ paths:
                 type: string
               example: Access Denied
       x-abdm-nha-operation-id: getLoginProfileQrCode
+      servers:
+        - url: https://abhasbx.abdm.gov.in
+          description: PHR application service, sandbox
   /abha/api/v3/phr/app/login/profile/request/logout:
     get:
       tags:
@@ -6286,6 +6298,9 @@ paths:
                 type: string
               example: Access Denied
       x-abdm-nha-operation-id: getLoginProfileRequestLogout
+      servers:
+        - url: https://abhasbx.abdm.gov.in
+          description: PHR application service, sandbox
   /abha/api/v3/phr/app/login/profile/request/otp:
     post:
       tags:
@@ -6490,6 +6505,9 @@ paths:
                 type: string
               example: Access Denied
       x-abdm-nha-operation-id: postLoginProfileRequestOtp
+      servers:
+        - url: https://abhasbx.abdm.gov.in
+          description: PHR application service, sandbox
   /abha/api/v3/phr/app/login/profile/request/token:
     get:
       tags:
@@ -6576,6 +6594,9 @@ paths:
                 type: string
               example: Access Denied
       x-abdm-nha-operation-id: getLoginProfileRequestToken
+      servers:
+        - url: https://abhasbx.abdm.gov.in
+          description: PHR application service, sandbox
   /abha/api/v3/phr/app/login/profile/switch-profile:
     get:
       tags:
@@ -6672,6 +6693,9 @@ paths:
                 type: string
               example: Access Denied
       x-abdm-nha-operation-id: getLoginProfileSwitchProfile
+      servers:
+        - url: https://abhasbx.abdm.gov.in
+          description: PHR application service, sandbox
   /abha/api/v3/phr/app/login/profile/updateProfile:
     post:
       tags:
@@ -6931,6 +6955,9 @@ paths:
                 type: string
               example: Access Denied
       x-abdm-nha-operation-id: postLoginProfileUpdateProfile
+      servers:
+        - url: https://abhasbx.abdm.gov.in
+          description: PHR application service, sandbox
   /abha/api/v3/phr/app/login/profile/verify:
     post:
       tags:
@@ -7434,6 +7461,9 @@ paths:
                 type: string
               example: Access Denied
       x-abdm-nha-operation-id: postLoginProfileVerify
+      servers:
+        - url: https://abhasbx.abdm.gov.in
+          description: PHR application service, sandbox
   /abha/api/v3/phr/app/login/profile/verify/switch-profile/user:
     post:
       tags:
@@ -7546,6 +7576,9 @@ paths:
                 type: string
               example: Access Denied
       x-abdm-nha-operation-id: postLoginProfileVerifySwitchProfileUser
+      servers:
+        - url: https://abhasbx.abdm.gov.in
+          description: PHR application service, sandbox
 webhooks:
   /api/v3/hiu/patient/care-context/on-discover:
     post:

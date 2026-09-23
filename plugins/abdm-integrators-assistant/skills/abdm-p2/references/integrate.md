@@ -4,7 +4,7 @@ The calls themselves: where they live, what they need in their headers, and one 
 
 ## Hosts
 
-- `https://abhasbx.abdm.gov.in` ABHA service, sandbox
+- `https://abhasbx.abdm.gov.in` PHR application service, sandbox
 - `https://dev.abdm.gov.in` ABDM gateway, sandbox
 - `https://apis.abdm.gov.in` ABDM gateway, production
 ## Endpoints
@@ -27,22 +27,22 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `POST` | `/abha/api/v3/phr/app/login/profile/verify` | 4 flows: Verify OTP - Update Mobile, Verify Password - Update Password, Verify … |
 | `POST` | `/abha/api/v3/phr/app/login/profile/verify/switch-profile/user` | Verify User Switch Profile |
 | `GET` | `/api/hiecm/consent/v3/artefact` | Fetch all the consent artefact details of a patient. |
-| `GET` | `/api/hiecm/consent/v3/artefact/{artefact-id}` | Fetch the consent artefact details associated with the artefact-ID. |
-| `GET` | `/api/hiecm/consent/v3/artefact/request/{request-id}` | Fetch all the consent artefact details associated with a consent request REQUES… |
+| `GET` | `/api/hiecm/consent/v3/artefact/{consentId}` | Fetch the consent artefact details associated with the artefact-ID. |
+| `GET` | `/api/hiecm/consent/v3/artefact/request/{consentRequestId}` | Fetch all the consent artefact details associated with a consent request REQUES… |
 | `POST` | `/api/hiecm/consent/v3/auto/approve` | Setup an auto-approval policy for given HIU. |
-| `POST` | `/api/hiecm/consent/v3/auto/approve/{auto-approval-id}/disable` | Disable the auto-approval policy. |
-| `POST` | `/api/hiecm/consent/v3/auto/approve/{auto-approval-id}/enable` | Enable the auto-approval policy. |
+| `POST` | `/api/hiecm/consent/v3/auto/approve/{consentId}/disable` | Disable the auto-approval policy. |
+| `POST` | `/api/hiecm/consent/v3/auto/approve/{consentId}/enable` | Enable the auto-approval policy. |
 | `GET` | `/api/hiecm/consent/v3/request` | Fetch all the consent request details of a patient. |
-| `GET` | `/api/hiecm/consent/v3/request/{request-id}` | Get the consent request details by REQUEST-ID. |
-| `POST` | `/api/hiecm/consent/v3/request/{request-id}/approve` | Approve the consent request raised by HIU from PHR/mobile application. |
-| `POST` | `/api/hiecm/consent/v3/request/{request-id}/deny` | Deny the consent request raised by HIU from PHR/mobile application. |
+| `GET` | `/api/hiecm/consent/v3/request/{consentRequestId}` | Get the consent request details by REQUEST-ID. |
+| `POST` | `/api/hiecm/consent/v3/request/{consentRequestId}/approve` | Approve the consent request raised by HIU from PHR/mobile application. |
+| `POST` | `/api/hiecm/consent/v3/request/{consentRequestId}/deny` | Deny the consent request raised by HIU from PHR/mobile application. |
 | `POST` | `/api/hiecm/consent/v3/revoke` | Revoke the granted consent from PHR/mobile application. |
 | `GET` | `/api/hiecm/gateway/v3/bridge-service/serviceId/{service-id}` | Fetch the details of a service ID. |
 | `GET` | `/api/hiecm/gateway/v3/bridge-services` | Fetch the service ids registered against a bridge. |
 | `PATCH` | `/api/hiecm/gateway/v3/bridge/url` | Update the bridge URL. |
 | `GET` | `/api/hiecm/gateway/v3/govt-programs` | Fetch the list of govt programmes. |
 | `GET` | `/api/hiecm/gateway/v3/providers` | Fetch the list of providers filtered by name. |
-| `GET` | `/api/hiecm/gateway/v3/providers/{provider-id}` | Fetch the record for provider details for requested provider ID. |
+| `GET` | `/api/hiecm/gateway/v3/providers/{hip-id}` | Fetch the record for provider details for requested provider ID. |
 | `POST` | `/api/hiecm/gateway/v3/sessions` | Generate access token. |
 | `GET` | `/api/hiecm/hip/v3/link/patient/links` | This is the PHR APP API, this API will used to fetch all link care-context for … |
 | `GET` | `/api/hiecm/patient-share/v3/profile/getTokenDetails` | OPD Token History |
