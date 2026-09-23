@@ -25,11 +25,11 @@ Creates an ABHA number by authenticating the Aadhaar holder's IRIS. The PID bloc
 | `authData` | object | yes | Authentication payload for this use case. |
 | `authData.authMethods` | `["iris"]` | yes | Authentication method used in this step. |
 | `authData.iris` | object | yes | IRIS authentication block. |
-| `authData.iris.aadhaar` | string | yes | Aadhaar number, RSA-encrypted. |
-| `authData.iris.pid` | string | yes | Base64 PID block captured from a registered IRIS RD device. |
+| `authData.iris.Aadhaar` | string | yes | Aadhaar number, RSA-encrypted. |
+| `authData.iris.PID` | string | yes | Base64 PID block captured from a registered IRIS RD device. |
 | `authData.iris.mobile` | string | no | Mobile number to be linked with the ABHA (plain, 10 digits). |
 | `consent` | object | yes | Consent captured from the user for ABHA enrolment. |
-| `consent.code` | string | yes | Consent code. Use `abha-enrollment`. |
+| `consent.code` | string | yes | Consent code. Use `ABHA-enrollment`. |
 | `consent.version` | string | yes | Consent version. Use `1.4`. |
 
 ```bash

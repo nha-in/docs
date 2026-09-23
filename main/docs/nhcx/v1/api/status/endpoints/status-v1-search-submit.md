@@ -10,28 +10,24 @@ Regulators and scheme authorities need to see what was actually claimed and deci
 
 ### When to use
 
-Use it when an authorised entity needs the claim documents for a known case number, for example during a regulatory audit or a dispute. It is a pull, not a lifecycle step, and sits outside the workflow-code sequence. The protected header's x-hcx-correlation_ID carries the correlation ID of the request being queried, and x-hcx-status is request.initiated. The result arrives asynchronously on /v1/search/on_submit with task type code=poll; if the search is for a claim document, the callback payload is the ClaimResponse for the reference number.
+Use it when an authorised body such as NHA or IRDAI needs the claim documents for a known case, for example during an audit. The result arrives later on `/v1/search/on_submit`.
 
 ### Preconditions
 
-- The caller is an entity authorised to search claim information (the source names NHA and IRDAI) and is registered on NHCX with a valid Bearer token.
-- Request body is a JWE per RFC-7516 with protocol headers per the ProtocolHeader schema.
-- Domain payload is an encrypted Task built per the TaskBundle, with the entity being queried referenced in the about element using the sender's reference ID.
-- Protected header carries sender_code, recipient_code, a fresh API_call_ID, the correlation ID of the request being queried, an IST timestamp and status request.initiated.
-- HTTP headers Accept, Content-Type and bearer_auth.
+- You are an entity allowed to search, registered on NHCX, with a valid access token.
+- The payload is an encrypted FHIR `Task` that points to the case being queried.
+- `x-hcx-correlation_ID` carries the correlation ID of the request being queried.
 
 ### Postconditions
 
-The gateway returns HTTP 202 with a StatusSuccessResponse (timestamp, API_call_ID, correlation_ID, result with sender_code, recipient_code, entity_type and protocol_status, and error), or 400, 404 or 500 in the same envelope. It forwards the Task to the payer, who responds later on /v1/search/on_submit with the claim document: a ClaimResponse whose basedOn carries the sender's reference ID and whose about carries the recipient's reference ID and the current status of the response entity. No case state changes; Search only reads.
+NHCX answers `202` at once. The payer sends the documents later on `/v1/search/on_submit`. Search only reads, so nothing about the case changes.
 
 ### Common mistakes
 
-- Using Search as a general status lookup; Status answers where a request is, Search returns documents.
-- Sending a CommunicationRequest as the domain payload; Search uses a Task (Status is the one that uses CommunicationRequest).
-- Forgetting the about reference with the sender's reference ID, leaving the payer with nothing to search for (PAYR-1102 Invalid search parameter requested).
-- Minting a new correlation ID rather than carrying the one for the request being queried.
-- Calling it from a participant that is not an authorised entity; the description scopes it explicitly.
-- Expecting the documents in the synchronous 202.
+- Using search to ask where a request is. Use `/v1/status` for that.
+- Sending a `CommunicationRequest` instead of a `Task`.
+- Making a new correlation ID instead of carrying the one being queried.
+- Expecting the documents in the `202`.
 
 ### Best practices
 
@@ -78,11 +74,11 @@ curl --request POST \
 - `x-hcx-sender_code` (string, required): Your participant code. Mandatory on the envelope.
 - `x-hcx-recipient_code` (string, required): The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
 - `x-hcx-api_call_id` (string, required): Fresh on every message, including responses. Mandatory on the envelope.
-- `x-hcx-request_id` (string): One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope.
+- `x-hcx-request_id` (string): One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope. Send it anyway, as a fresh UUID per originating request: it is cheap and satisfies both readings until NHA rules.
 - `x-hcx-correlation_id` (string, required): The thread. See the rule below. Mandatory on the envelope.
 - `x-hcx-timestamp` (string, required): See the format note below. Mandatory on the envelope.
 - `x-hcx-status` (string, required): Where this message stands. Values below. Mandatory on the envelope.
-- `x-hcx-ben-abha-id` (string, required): The beneficiary's ABHA number. Mandatory on every exchange, including those with no beneficiary in the payload. Mandatory on the envelope.
+- `x-hcx-ben-abha-id` (string): The beneficiary's ABHA number. Optional: send it when the beneficiary has an ABHA number. Optional on the envelope.
 
 ## Body
 

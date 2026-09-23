@@ -68,26 +68,25 @@ paths:
 
         ### When to use
 
-        Call it once, at onboarding time, before any transaction API is attempted. The FAQ base-URL table lists this path (not the v2 form) as the sandbox Create Participant API at https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/participant/create, whereas production onboarding is documented against /v2/participant/create followed by GET /validate. It is a plain synchronous registry call; no NHCX workflow or x-hcx-status codes are involved. If the organisation later rotates its certificate or moves its callback URL, use /participant/update or /v2/update/cert rather than creating again.
+        Call it once, when you first register, before any other NHCX call. The sandbox uses this path. To change a certificate or callback URL later, use an update call.
 
         ### Preconditions
 
-        - Sandbox or production access has been granted through the semi-manual registration review, so you hold a client_id and client_secret.
-        - A valid Bearer token from POST /get/session, sent with the Bearer prefix in the bearer_auth (Authorization) header, plus Accept: application/json and Content-Type: application/json.
-        - Required body fields of ParticipantCreateBody: linked_registry_codes, participant_name, registryid, roles, primaryEmail, primaryMobile, encryption_cert and endpoint_url. The certificate is mandatory at creation, so generate the 2048-bit RSA key pair and self-signed X.509 certificate first and Base64-encode it.
-        - Correct registry ID for your type: HFR ID for providers, IRDAI-issued ID for payers and TPAs.
+        - Your registration was approved and you hold a client ID and secret.
+        - You have a valid access token.
+        - You have made your key pair and certificate, and Base64-encoded the certificate.
+        - You have the right registry ID: HFR ID for providers, IRDAI ID for payers and TPAs.
 
         ### Postconditions
 
-        On success the registry returns HTTP 200 with ParticipantCreateResponse containing only participant_code, described as the machine-generated unique identifier of the participant on the HCX instance; sandbox codes look like 100001@sbx and production codes like XXXXX7583@hcx. There is no asynchronous callback. The new record carries a status (Created, Active, Inactive or Blocked in the architecture description) that the gateway checks on every routing leg, so the code is not usable for transactions until the instance activates it. Failures return 400 Client Error, 404 Resource not found or 500 with the ErrorResponse envelope (timestamp plus error code, message and trace).
+        The registry returns your `participant_code`. You cannot send transactions with it until NHCX activates the record.
 
         ### Common mistakes
 
-        - Passing the wrong registry ID: providers must send the HFR ID, payers the IRDAI ID with leading zeros stripped (0123 becomes 123).
-        - Mixing field casing across generations: this v1 body is snake_case (participant_code, encryption_cert, endpoint_url); copying v2 names such as endpointurl yields a 400.
-        - Omitting the Accept header or the Bearer prefix on the token, which surfaces as a rejection before business logic or a flat 401.
-        - Registering an endpoint_url that is an IP address or carries a port; the callback URL must be a domain name on an India-based server with the NHCX NAT IPs whitelisted.
-        - Submitting the raw PEM instead of the Base64-encoded certificate.
+        - Sending the wrong registry ID, or an IRDAI ID with leading zeros.
+        - Using v2 field names such as `endpointurl` in this v1 body.
+        - Registering a callback URL with an IP address or a port.
+        - Sending the raw PEM certificate instead of the Base64 form.
 
         ### Best practices
 
@@ -192,29 +191,25 @@ paths:
 
         ### When to use
 
-        Use at production onboarding after sandbox certification has been reviewed and credentials issued; the documented URL is https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice/v2/participant/create. It is always followed by GET /validate with the returned transactionid and the SMS passcode, which must happen within 24 hours. In the sandbox the FAQ lists the unversioned /participant/create instead. No NHCX workflow codes or x-hcx-status values apply; this is a synchronous JSON call outside the JWE protocol.
+        Use it for production onboarding, after sandbox certification. Follow it with `GET /validate` within 24 hours, using the returned `transactionid` and the SMS passcode.
 
         ### Preconditions
 
-        - Production (or sandbox) credentials and a fresh Bearer token in bearer_auth with the Bearer prefix; Accept and Content-Type set to application/json.
-        - registrytype from the Valid Registry Enums: HFR 10001, NIN 10002, ROHINI 10003, PAYER 10004 (HFR/EUA use 10001, PAYER/TPA use 10004).
-        - role as an array from the Valid Role Enums: PROVIDER 10001, PAYER 10002, AGENCY_TPA 10003, EUA 10009, among others.
-        - registryid formatted correctly: HFR ID for providers; IRDAI ID with leading zeros stripped for payers.
-        - mobilenumber already registered with HFR (providers) or NHCX payer details (payers); both must match for the call to succeed.
-        - Required fields: registrytype, registryid, role, endpointurl, mobilenumber, email; scheme_code is optional.
+        - You have a valid access token.
+        - `registrytype` and `role` use the codes from the valid enum lists.
+        - The registry ID is right, with leading zeros removed from an IRDAI ID.
+        - The mobile number matches the one held in HFR or the NHCX payer details.
 
         ### Postconditions
 
-        HTTP 200 with ParticipantCreateV2Resp: participantid, facilityname, facilitycontact and facilityemail echoed from the linked registry, a transactionid such as 1vouv8tlz2tnl-1fpspjhwj07c6, and an error object (code, message, trace). A passcode is sent by SMS to the registered mobile number. The participant is not confirmed until GET /validate?transactionId=&passcode= succeeds; the transaction id and passcode are valid for 24 hours and each re-trigger generates a new pair. Only after creation confirmation can /v2/participant/update be used to upload the certificate and endpoint. Failures use the standard 400/404/500 ErrorResponse envelope.
+        The registry returns `participantid` and a `transactionid`, and sends a passcode by SMS. You are not registered until `/validate` succeeds.
 
         ### Common mistakes
 
-        - Confusing the two 10001 enums: 10001 is PROVIDER as a role and HFR/EUA as a registry type; they are different fields.
-        - Sending the IRDAI registry ID with leading zeros (0123 instead of 123), which the NHA lists as a frequent production failure.
-        - Using a mobile number that does not match the one on record in HFR or the NHCX payer details; the validation requires an exact match.
-        - Losing the transactionid: if it is forgotten, the only recovery is to create the request again, which issues a new passcode.
-        - Letting the 24-hour validity lapse before calling /validate.
-        - Sending the v1 snake_case body or expecting a participant_code key; this response uses participantid.
+        - Mixing up role codes and registry type codes, which share numbers.
+        - Using a mobile number that does not match the one on record.
+        - Losing the `transactionid`, or letting 24 hours pass before `/validate`.
+        - Sending the v1 body, or expecting `participant_code` back.
 
         ### Best practices
 
@@ -315,27 +310,25 @@ paths:
 
         ### When to use
 
-        Use during scheme-specific hospital onboarding when the operator directs you to the HEM-entity form rather than the registry-linked /v2/participant/create. It shares the create description with the other two create endpoints, but the OpenAPI schemas differ materially, so it is not a drop-in alternative. It is a synchronous registry call with no workflow or x-hcx-status codes. The docs do not state whether a passcode confirmation via /validate follows; the response carries no transactionid, so plan the approval step with your onboarding contact.
+        Use it for scheme hospital onboarding, such as PMJAY, when the operator asks for this form. It is not a drop-in swap for `/v2/participant/create`.
 
         ### Preconditions
 
-        - Bearer token with the Bearer prefix in bearer_auth, plus Accept and Content-Type: application/json.
-        - Required ParticipantCreateBodyV2 fields: participant_name, scheme_code, state, district, entityid, bankdetails, participantcode, hospitaltype, incentiveCode, hospitalbedstrength, lab_yn, roles, specialityList, primaryEmail, primaryMobile, encryption_cert, endpoint_url.
-        - BankDetails requires facilitybankaccountname, authorizedsignatoryname, bankaccountnumber, ifsccode, bankname, bankbranchname, bankaddress, micrcode and accounttype; upiid, paymenttype and mailid are optional.
-        - If taxdetails is supplied, pannumber, tannumber and gstnumber are all required within it.
-        - A Base64-encoded self-signed X.509 encryption certificate and a domain-name callback URL.
+        - You have a valid access token.
+        - The body has every required field, including the bank details.
+        - If you send tax details, include the PAN, TAN and GST numbers together.
+        - You have a Base64-encoded certificate and a callback URL that uses a domain name.
 
         ### Postconditions
 
-        HTTP 200 with ParticipantCreateResponseV2 containing status and hospitalid. Unlike the other two create calls, the response does not return a participant code, despite the shared description; the participantcode you supplied in the body is the identifier the record is keyed on. There is no asynchronous callback. Errors follow the registry envelope of 400 Client Error, 404 Resource not found and 500 Downstream systems down, each with ErrorResponse (timestamp, error code, message, trace).
+        The registry returns `status` and `hospitalid`. It does not return a participant code, so keep the `participantcode` you sent.
 
         ### Common mistakes
 
-        - Expecting a participant_code in the response and failing to persist the hospitalid that is actually returned.
-        - Leaving out nested required fields, especially inside bankdetails, or supplying taxdetails with only some of pannumber, tannumber and gstnumber.
-        - Mixing field naming: this schema uses snake_case for participant_name, scheme_code and encryption_cert but flattened lowercase for participantcode and hospitalbedstrength; copy names exactly from the schema.
-        - Sending the PEM certificate without Base64 encoding.
-        - Registering an endpoint_url with an IP address or port, which fails the go-live reachability checks.
+        - Expecting a participant code back and not saving `hospitalid`.
+        - Leaving out required fields inside the bank details.
+        - Guessing field names. Copy them exactly from the schema.
+        - Sending the certificate without Base64 encoding.
 
         ### Best practices
 
@@ -493,26 +486,23 @@ paths:
 
         ### When to use
 
-        Call it after /v2/participant/create has returned a transactionid and the passcode has arrived by SMS, and before attempting /v2/participant/update, whose validations require that creation confirmation is already completed. The production URL is https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice/validate?transactionId=""&passcode="". The pair is valid for 24 hours. It is one of only three GET operations in the participant service and carries no workflow or x-hcx-status codes.
+        Call it after `/v2/participant/create` returns a `transactionid` and the passcode arrives by SMS. Do it within 24 hours, and before any `/v2/participant/update`.
 
         ### Preconditions
 
-        - A completed /v2/participant/create whose response supplied the transactionid.
-        - The passcode delivered to the registered mobile number for that specific transaction; passcodes are bound to a transaction id and cannot be reused across attempts.
-        - Both values presented as query parameters passcode and transactionId within 24 hours of the create call.
-        - A Bearer token in bearer_auth with the Bearer prefix and Accept: application/json, as for every registry call.
+        - You have the `transactionid` from the create call.
+        - You have the SMS passcode for that same transaction.
+        - You have a valid access token.
 
         ### Postconditions
 
-        HTTP 200 with a bare string body; the OpenAPI declares the 200 response type as string and the operation (particiapntValidate) as validating approval from the participant for participant creation. The participant is now confirmed in the registry and satisfies the precondition for /v2/participant/update, which uploads the encryption certificate and callback endpoint. There is no asynchronous callback. A wrong or expired passcode, or an unknown transaction id, returns the registry ErrorResponse envelope on 400 or 404.
+        The participant is confirmed in the registry. You can now upload the certificate and callback URL with `/v2/participant/update`.
 
         ### Common mistakes
 
-        - Waiting more than 24 hours; both the transaction id and the passcode expire and the create call must be repeated.
-        - Re-triggering /v2/participant/create while a passcode is pending, which issues a new transaction id and passcode and orphans the earlier pair.
-        - Using a passcode from a different transaction id; passcodes are specific to the transaction that generated them.
-        - Calling /update/validate by mistake; that endpoint confirms updates, not creation.
-        - Losing the transaction id: the documented recovery is to create the request again.
+        - Waiting more than 24 hours, so both values expire.
+        - Calling create again while a passcode is pending, which replaces the earlier pair.
+        - Calling `/update/validate` instead. That one confirms updates.
 
         ### Best practices
 
@@ -574,26 +564,23 @@ paths:
 
         ### When to use
 
-        Call it after /v2/participant/update returns a transactionid and the passcode arrives by SMS, within the 24-hour validity window. The production URL is https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice/update/validate?transactionId=""&passcode="". It is also the closing step of the annual key-rotation checklist when rotation is done via /v2/participant/update. The passcode-free alternative for certificate-only changes is /v2/update/cert. No workflow or x-hcx-status codes apply.
+        Call it after `/v2/participant/update` returns a `transactionid` and the passcode arrives by SMS, within 24 hours. It makes the new certificate and callback URL live.
 
         ### Preconditions
 
-        - The participant is already registered and its creation was confirmed via /validate.
-        - A completed /v2/participant/update that returned a transactionid, with the matching passcode received on the registered mobile number.
-        - The call is made within 24 hours; each new update trigger generates a new transaction id and passcode.
-        - Bearer token with the Bearer prefix in bearer_auth and Accept: application/json; parameters go in the query string.
+        - The participant was created and confirmed through `/validate`.
+        - You have the `transactionid` from the update call and its SMS passcode.
+        - You have a valid access token.
 
         ### Postconditions
 
-        HTTP 200 with a bare string body (operation particiapntUpdateValidate, response type string). The staged certificate and endpoint URL become the participant's live registry values, which is what counterparties will receive from /fetch/certs and what the gateway will use for callback delivery. There is no asynchronous callback. Errors return the registry ErrorResponse envelope with 400, 404 or 500.
+        The new certificate and callback URL become live. Other participants now fetch the new certificate.
 
         ### Common mistakes
 
-        - Assuming the update is live as soon as /v2/participant/update returns; until this call succeeds counterparties may still fetch the old certificate.
-        - Presenting a passcode from a previous update attempt after a new one was triggered.
-        - Letting the 24-hour window lapse and then retrying validation instead of re-issuing the update.
-        - Calling /validate (creation) instead of /update/validate.
-        - Losing the transaction id, which requires repeating the update request.
+        - Assuming the update is live before this call succeeds.
+        - Using a passcode from an earlier update attempt.
+        - Calling `/validate` instead. That one confirms creation.
 
         ### Best practices
 

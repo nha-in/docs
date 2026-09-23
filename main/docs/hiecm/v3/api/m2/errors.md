@@ -131,6 +131,6 @@ During ABDM integration, systems may encounter issues across discovery, linking,
 
 A row with no HTTP status and no call is one NHA lists for this module (Sandbox2.0 M2 and M3 API review v2, NHA, 21 September 2026) without saying which call returns it.
 
-Every code above is recorded in the specification that owns it or in NHA's list for the module. The aggregated list across modules is at [error codes](/docs/main/docs/hiecm/v3/reference/error-codes).
+Every code above is recorded in the specification that owns it. The aggregated list across modules is at [error codes](/docs/main/docs/hiecm/v3/reference/error-codes).
 
 [Next Still stuck? Ask for help Where to file what you hit, so the answer lands back in these pages.](/docs/main/docs/support)

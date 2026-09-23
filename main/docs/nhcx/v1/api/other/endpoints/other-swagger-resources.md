@@ -10,24 +10,22 @@ Swagger UI discovers which API documents a service offers by reading this list. 
 
 ### When to use
 
-Use it only when hosting or debugging a Swagger UI session against the status service, or when a tool needs to discover the available document URLs before fetching them. The endpoint index lists it as endpoint 21. It is not part of any transaction workflow and is not referenced by the sandbox exit checklists.
+Use it only with Swagger UI, or when a tool needs to find the service's API documents. Integrations never call it.
 
 ### Preconditions
 
-- A GET request to the status service host; the OpenAPI documents in this corpus were captured from https://hcxsbx.ABDM.gov.in//api-docs, and the status service declares the server prefix /statushcxservice.
-- No JWE envelope, no x-hcx-* protocol headers and no correlation ID; the docs do not state that a Bearer token is required for these discovery endpoints.
-- No request body.
+- A plain `GET` to the status service host, under `/statushcxservice`.
+- No encryption, no `x-hcx-*` headers and no request body.
 
 ### Postconditions
 
-The service returns HTTP 200 with a JSON list of resource descriptors that locate the service's API documents. Nothing changes on NHCX and no callback follows. The documentation does not detail the descriptor fields beyond the purpose line, so treat the shape shown here as illustrative and read the live response.
+The service returns `200` with a list of where its API documents live. Nothing changes and no callback follows.
 
 ### Common mistakes
 
-- Pointing at the gateway base https://apisbx.ABDM.gov.in/pmjay/sbxhcx and expecting the per-service spec host; the docs advise swapping between the two URL shapes when a path 404s.
-- Treating the served document as the integration contract for gateway traffic; the handbook's gateway base and header conventions take precedence where the two disagree.
-- Sending a POST or a JSON body to a GET discovery endpoint.
-- Wrapping the call in JWE or adding x-hcx-* headers, which only apply to protocol APIs such as /v1/status.
+- Calling the gateway address instead of the status service host.
+- Treating this document as the contract for gateway traffic.
+- Sending a `POST`, a request body or `x-hcx-*` headers.
 
 ### Best practices
 

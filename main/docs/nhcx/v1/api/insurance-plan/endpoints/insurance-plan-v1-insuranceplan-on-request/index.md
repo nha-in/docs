@@ -10,27 +10,26 @@ This callback delivers the digital policy that every later preauth and claim is 
 
 ### When to use
 
-The payer calls it after receiving a /v1/insuranceplan/request Task (code poll), acknowledging it with 202 and assembling the plan for the policyNumber and/or providerId supplied. The bundle is of type collection and follows one of two structures: plan, specificCost, category, benefit, cost, qualifiers (the PMJAY package-master shape) or coverage, benefit, limit. Carry the same x-hcx-correlation_ID as the request and a responder x-hcx-status (response.complete, or response.error with x-hcx-error_details when no plan can be produced). The plan may legitimately be empty when no coverage matches.
+The payer calls it after receiving a plan request, with the same correlation ID. It sends the plan for that policy and hospital, or an error if no plan can be produced.
 
 ### Preconditions
 
-- The inbound Task was decrypted, its correlation ID captured and the 202 acceptance body already returned.
-- Payer registered on NHCX with a valid Bearer token and the provider's certificate for JWE encryption.
-- A collection Bundle containing InsurancePlan (with plan.generalCost for the overall sum insured, specificCost per speciality, benefit per package with cost and qualifiers, and the claim-exclusion, claimCondition and claimSupportingInfoRequirement extensions), Organisation entries and any Questionnaire resources.
-- Protected header echoing the request's correlation ID with a fresh API_call_ID, IST timestamp and responder status; request body declared as a bare object in the OpenAPI but still a JWE per RFC-7516.
+- The payer has already replied `202` to the incoming request.
+- The payer has a valid access token and the provider's certificate, and encrypts the plan for the provider.
+- The bundle holds the `InsurancePlan`, the organisations and any questionnaires.
+- The correlation ID matches the request, and the call ID is new.
 
 ### Postconditions
 
-The gateway returns HTTP 202 with the StatusSuccessResponse envelope (400, 404 and 500 in the same shape) and forwards the bundle to the provider's registered endpoint, which must acknowledge with 202 within 30 seconds. After decryption the provider holds the plan, may cache it, and must enforce its claim conditions and document requirements before preauth. Codes carried in the plan, such as specificCost.category as the speciality code and benefit.type as the procedure code, are what later PAYR-1114, PAYR-1202 and PAYR-1204 validations are checked against. Errors returned instead of a plan use PAYR-1401 to PAYR-1406.
+- NHCX answers `202` and forwards the plan to the provider, who must reply `202` within 30 seconds.
+- The provider may cache the plan and checks later pre-authorisations and claims against it.
 
 ### Common mistakes
 
-- Returning the plan in the synchronous 202 to the request, or before acknowledging the inbound Task within 30 seconds.
-- Minting a new correlation ID rather than echoing the request's (NHCX-1010).
-- Encoding cost.value as the package rate; the IG defines it as the extra amount paid over and above the procedure cost.
-- Synthesising codes for claim conditions listed as NA (rules_yn, los, ip_op_flag, incentive_applicable, gst_applicable, gst_percentage).
-- Shipping the full package master unfiltered; the response must be provider-specific and contextually filtered per the MoU.
-- Provider side: treating an empty plan as a transport failure, or failing to parse both structuring approaches.
+- Returning the plan in the `202` reply to the request.
+- Creating a new correlation ID instead of reusing the request's.
+- Sending the full package list instead of the part that applies to this hospital.
+- Provider side: treating an empty plan as a transport failure.
 
 ### Best practices
 
@@ -78,12 +77,12 @@ curl --request POST \
 - `x-hcx-sender_code` (string, required): Your participant code. Mandatory on the envelope.
 - `x-hcx-recipient_code` (string, required): The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
 - `x-hcx-api_call_id` (string, required): Fresh on every message, including responses. Mandatory on the envelope.
-- `x-hcx-request_id` (string): One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope.
+- `x-hcx-request_id` (string): One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope. Send it anyway, as a fresh UUID per originating request: it is cheap and satisfies both readings until NHA rules.
 - `x-hcx-correlation_id` (string, required): The thread. See the rule below. Mandatory on the envelope.
 - `x-hcx-workflow_id` (string): Which step, or which case. See the two readings below. Optional on the envelope.
 - `x-hcx-timestamp` (string, required): See the format note below. Mandatory on the envelope.
 - `x-hcx-status` (string, required): Where this message stands. Values below. Mandatory on the envelope.
-- `x-hcx-ben-abha-id` (string, required): The beneficiary's ABHA number. Mandatory on every exchange, including those with no beneficiary in the payload. Mandatory on the envelope.
+- `x-hcx-ben-abha-id` (string): The beneficiary's ABHA number. Optional: send it when the beneficiary has an ABHA number. Optional on the envelope.
 
 ## Body
 

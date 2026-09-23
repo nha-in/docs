@@ -61,8 +61,8 @@ Every M2 call and callback, its error codes and its certification cases in one f
 
 [SKILL.md](/docs/main/skills/abdm-m2/SKILL.md "The router. Use the command below to take the references with it.")
 
-- ScaffoldBuilds the module flow by flow against the sandbox.
-- DesignWhat the journey around the calls has to do, and what a screen may not claim.
+- ScaffoldThe loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.
+- Design
 - Integrate24 operations, with their hosts and headers.
 - Debug120 error codes, each with what to do about it.
 

@@ -21,6 +21,15 @@ Changes that affect what you can build against, newest first. Each entry links t
 - [The PHR public key is not the ABHA service's key](/docs/main/docs/whats-new/2026-09-22#the-phr-public-key-is-not-the-abha-services-key)
 - [Consent request init and context notify take an id only](/docs/main/docs/whats-new/2026-09-22#consent-request-init-and-context-notify-take-an-id-only)
 
+## 21 September 2026
+
+4 changes
+
+- [NHCX error pages list their codes](/docs/main/docs/whats-new/2026-09-21#nhcx-error-pages-list-their-codes)
+- [The NHCX plugin installs](/docs/main/docs/whats-new/2026-09-21#the-nhcx-plugin-installs)
+- [NHCX skills install as a folder](/docs/main/docs/whats-new/2026-09-21#nhcx-skills-install-as-a-folder)
+- [Build it well, for NHCX](/docs/main/docs/whats-new/2026-09-21#build-it-well-for-nhcx)
+
 ## 16 September 2026
 
 3 changes

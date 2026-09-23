@@ -40,19 +40,45 @@ Worth knowing before you plan around it.
 - **It has no business logic.** No adjudication, no policy modelling, no screens for claims work. The participant and policy calls are passed straight through.
 - **It does not verify who sent an inbound message** beyond the fact that it decrypts with your key.
 
+## Download
+
+Take a prebuilt release rather than building it. Pick your operating system and architecture; the list comes from the latest release on GitHub. Each archive holds the binary, the README, a sample configuration and start, stop and update scripts for that platform.
+
+Reading the latest release…
+
+Check the archive against `SHA256SUMS` before you run it. Once it is installed, `nhcx-adapter update` moves between releases, forward or back, and verifies each one the same way.
+
+### Run it with Docker
+
+The adapter is also published as a container image, `ghcr.io/nha-in/nhcx-adapter`, for Linux on amd64, arm64, arm, 386, ppc64le, s390x and riscv64. It reads its settings from the environment and keeps its key, certificate and ledger in the `/data` volume.
+
+Put your settings in a file called `.env`:
+
+```bash
+NHCX_ENV=sandboxNHCX_PARTICIPANT_ID=1000003463@hcxNHCX_CLIENT_ID=your-client-idNHCX_CLIENT_SECRET=your-client-secretNHCX_CALLBACK_URL=https://your-hmis.example.org/nhcx/callback
+```
+
+Create the key and certificate once, then start it:
+
+```bash
+mkdir -p datadocker run --rm --env-file .env -v "$PWD/data:/data" ghcr.io/nha-in/nhcx-adapter:main cert generatedocker run -d --name nhcx-adapter --env-file .env -v "$PWD/data:/data" -p 8090:8090 ghcr.io/nha-in/nhcx-adapter:maindocker logs -f nhcx-adapter
+```
+
+The image runs as user 10001, so on Linux the `data` folder must be writable by it: `sudo chown -R 10001:10001 data`. The registry currently carries the `:main` tag, built from every push to the main branch, and a `:sha-<commit>` tag for each build. Pin a `:sha-` tag in production so an update is a deliberate change. Inside a container, `nhcx-adapter update` does not apply: pull a newer tag instead.
+
 ## Onboarding
 
 ### Before you start
 
 You need what Milestone 1 gave you: a participant code such as `1000003463@hcx`, a client ID and a client secret. If you want to receive callbacks, you also need a public HTTPS address that reaches the machine you will run this on.
 
-### Build it
+### Build it from source
 
 ```bash
 make build     # produces ./nhcx-adaptermake check     # what the project's own CI runs: vet plus tests with the race detector
 ```
 
-It is a Go program with no C dependencies, so the binary is self-contained. Released archives exist for Linux, macOS, Windows and FreeBSD if you would rather not build.
+It is a Go program with no C dependencies, so the binary is self-contained. To skip building, take a release from [Download](#download) above.
 
 ### Make a key and a certificate
 

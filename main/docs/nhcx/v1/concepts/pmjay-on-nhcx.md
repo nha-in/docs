@@ -50,7 +50,23 @@ Set against the flows in the NHCX Use Cases chapter, the picture is:
 
 - **Get Insurance Plan, Get Policy, Coverage Eligibility Check, Claim Submission, Payment Notice and Status Check** behave the same as on any NHCX integration.
 - **Preauthorisation** behaves the same, except that mandatory biometric authentication of the beneficiary must be completed before it is submitted.
-- **Communication Request** is not used for document queries, which travel on the preauthorisation and claim endpoints instead. It is used for turnaround-time alerts, grievances, wallet and policy updates, and arbitration acknowledgements. A private insurer does the opposite: its query is the Communication Request itself. Payer flexibility, later in this section, sets the two query modes side by side.
+- **Communication Request** is not used for document queries, which travel on the preauthorisation and claim endpoints instead. It is used for turnaround-time alerts, grievances, wallet and policy updates, and arbitration acknowledgements. A private insurer does the opposite: its query is the Communication Request itself.
+
+## PMJAY scheme rules
+
+PMJAY runs on strict clinical and financial rules that a commercial insurer does not use. A hospital system has to follow them when it builds each request. In plain words:
+
+- **Packages, not line items.** Every admission is paid as a fixed package covering the bed, nursing, consultations, procedures, medicines and standard follow-up.
+- **Fully cashless.** A hospital may not charge the patient anything for a covered treatment.
+- **Approval first.** Surgery in secondary and tertiary care needs a preauthorisation, and the claim must point to the approval.
+- **Biometric checks.** The patient's fingerprint, iris or face is checked at registration, at preauthorisation, at every visit of a repeating treatment, and at discharge. These checks use ABDM's biometric service, not NHCX.
+- **Every stay ends one of four ways.** The patient goes home, dies in hospital, leaves against medical advice, or is discharged against medical advice. The claim also records whether they left before, during or after surgery.
+- **Leaving before surgery is finished.** If the patient leaves against advice before or during surgery, the surgical package is cancelled. The hospital is paid a daily rate for the days of the stay instead, set by the type of bed. If the patient leaves after surgery, the surgical package is paid.
+- **Death in hospital.** The claim keeps the package for the care given, and must carry the time of death and a death summary.
+- **Repeating treatments.** Dialysis and chemotherapy are approved as a block of sessions. Sessions must be at least 24 hours apart, each needs a biometric check, and only checked sessions are paid.
+- **Procedures not on the list.** A surgery missing from the package list can be booked only for a planned admission, under the patient's specialty, on its own, and within the patient's remaining cover.
+
+[Scheme rules the HMIS must implement](/docs/main/docs/nhcx/v1/concepts/pmjay-use-cases#scheme-rules-the-hmis-must-implement), in PMJAY use cases, gives the codes, fields, tariffs and error codes behind each rule.
 
 ## The integrator journey
 
@@ -67,12 +83,3 @@ The route to a PMJAY integration runs in five stages.
 5. **Go live by mapping.** After the participant is created and configured in production, the hospital raises a ticket. It carries the existing PMJAY hospital ID, the HEM ID used in TMS, and the new NHCX participant ID. NHA's operations team maps the two by hand. That mapping is the switch: preauthorisations and claims raised before it finish their life in TMS, and everything raised after it goes through the HMIS. For a while a hospital is running both, so this step is planned rather than flipped.
 
 Two practical notes. To begin the integration, the integrator shares the Participant ID, Client ID and Registry ID with the NHCX team for onboarding onto the PMJAY staging environment. The Registry ID is then used as the Provider ID on sandbox. On successful completion, the integrator receives production keys for NHCX, which also serve for processing private insurer claims.
-
-## About the source
-
-This chapter and the next are drawn from four documents:
-
-- The PMJAY Hospital Migration to HMIS via NHCX guide.
-- The NHCX-PMJAY-HMIS Integration Overview.
-- The Functional Requirement Document for NHCX-PMJAY-HMIS Integration, version 1.0, dated March 2026, prepared by the NHCX team at NHA.
-- The NHCX Integration Handbook, version 1.0, which is the source for the workflow codes, the supporting info category and code combinations, and the gateway validation behaviour. Where the Handbook's gateway validation messages contradict the FRD, the next chapter follows the validation messages and says so. The FRD carries a disclaimer that it is work in progress and subject to revision, and the integrator journey above is marked tentative and not final. Nothing here has been verified against a running sandbox.

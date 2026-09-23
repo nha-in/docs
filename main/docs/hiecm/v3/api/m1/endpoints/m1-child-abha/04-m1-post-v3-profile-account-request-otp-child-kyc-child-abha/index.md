@@ -22,10 +22,10 @@ Starts KYC of a non-KYC Child ABHA. UIDAI sends an OTP to the mobile linked with
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["abha-profile", "re-kyc"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
-| `loginHint` | `"aadhaar"` | yes | Type of identifier sent in `loginId`. |
+| `scope` | `["ABHA-profile", "re-KYC"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `loginHint` | `"Aadhaar"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"aadhaar"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
+| `otpSystem` | `"Aadhaar"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
 
 ```bash
 curl --request POST \

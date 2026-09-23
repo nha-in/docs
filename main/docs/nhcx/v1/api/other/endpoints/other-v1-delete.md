@@ -10,24 +10,23 @@ The claim service OpenAPI lists /v1/delete as an internal troubleshooting operat
 
 ### When to use
 
-Only in troubleshooting, and only as directed by NHCX support. The endpoint index describes it as internal troubleshooting, deleting records by correlationid plus action. It does not appear in any transaction flow, sample bundle or workflow-code table, and it carries no x-hcx-workflow_ID semantics. It is unrelated to the platform behaviour in which NHCX itself deletes a request after five failed delivery attempts; that deletion is automatic and needs no call.
+Only for troubleshooting, and only when NHCX support asks you to. It is not part of any claim flow.
 
 ### Preconditions
 
-- A valid Bearer token and the HTTP headers Accept: application/json, Content-Type: application/json and bearer_auth.
-- The correlation ID of the record to be removed and the action it was recorded under; the docs name these two inputs (correlationid and action) but do not publish a schema, sample body or authorisation rule.
-- Agreement from NHCX support that deletion is the right remedy; the documentation does not describe any business validation performed by the endpoint.
+- You have a valid access token.
+- You know the correlation ID and the action of the record to remove.
+- NHCX support agrees that deleting it is the right fix.
 
 ### Postconditions
 
-The endpoint sits in the claim service, whose domain operations all return 202 Accepted, 400 Request Validation failed, 404 Requested resource was not found and 500 Downstream systems down, each carrying StatusSuccessResponse. No worked response body, callback or state change is documented for /v1/delete beyond the removal of the record identified by correlationid and action. After deletion a fresh request cycle with a new correlation UUID is the documented way to proceed, since a deleted or inactive correlation ID cannot be resumed.
+The record is removed. To carry on, start a new request with a new correlation ID.
 
 ### Common mistakes
 
-- Treating /v1/delete as a way to cancel a preauth or claim; cancellation is a Task on /v1/task/submit (code cancel, workflow PC01 or 122) and reprocess is workflow 36 on the same endpoint.
-- Calling it to recover from a failed delivery and then reusing the same correlation ID; NHCX marks failed correlation IDs inactive and a new cycle is required.
-- Assuming the input names or authorisation are documented; only correlationid and action are named, and the specs do not say who may call it.
-- Using it in production without NHCX support involvement; it is described as internal troubleshooting.
+- Using it to cancel a pre-authorisation. Cancel with a `Task` on `/v1/task/submit`, workflow `PC01`.
+- Reusing the old correlation ID after a delete.
+- Calling it in production without NHCX support.
 
 ### Best practices
 

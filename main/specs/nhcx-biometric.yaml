@@ -52,7 +52,7 @@ security:
 paths:
   /hcx/abha/biometric/auth/init:
     post:
-      operationId: biometric_auth_init
+      operationId: biometric_hcx_abha_biometric_auth_init
       x-abdm-atom: nhcx.endpoint.abha-biometric-auth-init
       x-abdm-use-case: ABHA biometric authentication
       tags:
@@ -67,25 +67,25 @@ paths:
 
         ### When to use
 
-        At the desk with the beneficiary present: at admission with `process` `Preauth`, and at discharge, and at every visit of a cyclic case, with `process` `Discharge`. `scope` selects the modality, `aadhaar-bio-verify` for fingerprint and `aadhaar-iris-verify` for iris. `authMode` is `FINGERPRINT` or `IRIS`. The NHCX-PMJAY-HMIS Integration Guide and the Biometric Authentication APIs Postman collection also list face on this call, `aadhaar-face-verify` with `FACE_AUTH`, but show no face request made this way; the face path documented end to end is `Face auth init` on the ABDM proxy host. `payerid` names the scheme payer the authentication is performed for.
+        Use it at the desk while the beneficiary is present: at admission, at discharge and at every visit of a cyclic case. `scope` picks fingerprint or iris. Face has its own calls, starting with `Face auth init`.
 
         ### Preconditions
 
-        - The beneficiary's ABHA is linked to their PMJAY card. Where it is not, biometric authentication does not apply and the scheme's existing KYC protocols are followed.
-        - The ABDM session token on `Authorization: Bearer`, not on `bearer_auth`.
-        - `loginId` is the ABHA number with hyphens, the opposite of the envelope convention.
-        - A capture device, whose capture needs the wrapped Aadhaar data hash built with `lr` set to `Y`.
+        - The beneficiary's ABHA is linked to their PMJAY card.
+        - The ABDM session token is on `Authorization: Bearer`.
+        - `loginId` is the ABHA number with its hyphens.
+        - A capture device is ready.
 
         ### Postconditions
 
-        Returns the `txnId` that `Biometric auth verify` quotes, with a message saying the authentication request was sent.
+        Returns a `txnId`. Send it with the capture to `Biometric auth verify`.
 
         ### Common mistakes
 
-        - Sending the token on `bearer_auth` only, which gets a `401` that looks like an expired token.
-        - Calling it on the face-authentication host. Fingerprint and iris sit under `/hcx/abha/biometric/`, face under `/pmjay/sbxhcx/abdmproxy/abha/biometric/`.
+        - Sending the token on `bearer_auth` only, which gets a `401`.
+        - Calling the face host instead of `/hcx/abha/biometric/`.
         - Stripping the hyphens from `loginId`.
-        - Building the wrapped Aadhaar data hash with `lr` as `N`, which the biometric APIs answer with `K-547`.
+        - Setting `lr` to `N` when building the capture.
 
         ### Best practices
 
@@ -152,7 +152,7 @@ paths:
                 status: null
   /hcx/abha/biometric/auth/verify:
     post:
-      operationId: biometric_auth_verify
+      operationId: biometric_hcx_abha_biometric_auth_verify
       x-abdm-atom: nhcx.endpoint.abha-biometric-auth-verify
       x-abdm-use-case: ABHA biometric authentication
       tags:
@@ -167,23 +167,23 @@ paths:
 
         ### When to use
 
-        Immediately after the capture. `authMethods` is `bio` for fingerprint and `iris` for iris, and the matching object carries the `txnId` from init and the device's PID block, in `fingerPrintAuthPid` or `irisAuthPid` accordingly. The same two sources that list a face mode on `Biometric auth init` give it here as `authMethods` `face`, with the capture in `authData.face.faceAuthPid`.
+        Call it right after the capture, with the `txnId` from init and the PID block from the device.
 
         ### Preconditions
 
-        - A `txnId` from `Biometric auth init` for the same modality.
+        - A `txnId` from `Biometric auth init` for the same method.
         - The PID block from the capture device.
-        - The same headers as init: `Authorization: Bearer <session token>`, `process` and `payerid`.
+        - The same headers as init.
 
         ### Postconditions
 
-        On success it returns `authResult` `success`, a user `token` with `expiresIn` 1800 seconds, a `refreshToken` with `refreshExpiresIn` 1296000 seconds, fifteen days, and the ABHA `accounts` matched.
+        Returns a user token valid for thirty minutes and a refresh token valid for fifteen days. The user token goes on the eligibility check, the pre-authorisation and the claim.
 
         ### Common mistakes
 
-        - Putting the PID block under the wrong key for the modality.
-        - Holding the token against the session rather than the case. If it lapses mid-case and cannot be refreshed, a fresh authentication is needed.
-        - Standing a refreshed token in for a capture at a cyclic visit. Every visit needs a real capture.
+        - Putting the PID block under the wrong key for the method.
+        - Storing the token against the session instead of the case.
+        - Using a refreshed token where a cyclic visit needs a new capture.
 
         ### Best practices
 
@@ -287,7 +287,7 @@ paths:
                     status: ACTIVE
   /hcx/abha/biometric/auth/refresh/token:
     get:
-      operationId: biometric_auth_refresh_token
+      operationId: biometric_hcx_abha_biometric_auth_refresh_token
       x-abdm-atom: nhcx.endpoint.abha-biometric-auth-refresh-token
       x-abdm-use-case: ABHA biometric authentication
       tags:
@@ -302,11 +302,11 @@ paths:
 
         ### When to use
 
-        When the user token has lapsed during a transaction cycle. Refresh automatically for the duration of the cycle. Each refresh returns a new refresh token whose fifteen days run from that moment, and the portal's advice is to refresh once within every ten days and store the new token, which keeps a chain alive indefinitely.
+        Use it when the user token lapses while a case is still open. Refresh at least once every ten days and keep the new refresh token.
 
         ### Preconditions
 
-        - A refresh token from `Biometric auth verify` or an earlier refresh, less than fifteen days old, sent on `R-token` as `Bearer <refresh token>`.
+        - A refresh token less than fifteen days old, sent on `R-token`.
         - The ABDM session token on `Authorization`, with `payerid` and `process`.
 
         ### Postconditions
@@ -317,7 +317,7 @@ paths:
 
         - Sending the refresh token on `Authorization` instead of `R-token`.
         - Keeping the old refresh token after a refresh.
-        - Using a refresh where a capture is required. On a cyclic procedure the payer pays only for cycles with a live biometric, and a refresh token is accepted only at the final claim. Every visit needs a real capture with `process` `Discharge`.
+        - Refreshing where a live capture is required, such as each visit of a cyclic case.
 
         ### Best practices
 
@@ -341,7 +341,7 @@ paths:
           description: Returns a new user token and a new refresh token.
   /pmjay/sbxhcx/abdmproxy/abha/biometric/faceauth/init:
     post:
-      operationId: biometric_faceauth_init
+      operationId: biometric_pmjay_sbxhcx_abdmproxy_abha_biometric_faceauth_init
       x-abdm-atom: nhcx.endpoint.abha-biometric-faceauth-init
       x-abdm-use-case: ABHA biometric authentication
       tags:
@@ -356,24 +356,23 @@ paths:
 
         ### When to use
 
-        When fingerprint and iris are not possible for the patient. Face authentication runs on a different host from the other two modalities and takes three calls and a QR code: this call, a QR code the patient scans, polling `Face auth capture PID`, then `Face auth verify`.
+        Use it when fingerprint and iris do not work for the patient. The patient completes the face scan on their own phone, in the ABHA app.
 
         ### Preconditions
 
-        - The ABDM session token on `Authorization`, with a fresh `REQUEST-ID` and the current `TIMESTAMP`.
-        - The request sent to the ABDM proxy host, under `/pmjay/sbxhcx/abdmproxy/abha/biometric/`.
-        - `scope` is `["abha-enrol", "face-auth"]`.
+        - The ABDM session token on `Authorization`, with a fresh `REQUEST-ID` and `TIMESTAMP`.
+        - The request goes to the ABDM proxy host, not the fingerprint host.
         - The patient has the ABHA app on a phone.
 
         ### Postconditions
 
-        Returns a `txnId`. Render `https://phrsbx.abdm.gov.in/face-auth?txnId=<txnId>` as a QR code. The patient scans it with the ABHA app and completes the face scan there.
+        Returns a `txnId`. Show `https://phrsbx.abdm.gov.in/face-auth?txnId=<txnId>` as a QR code for the patient to scan with the ABHA app.
 
         ### Common mistakes
 
-        - Sending it to the fingerprint host, which fails in a way that looks like a routing problem rather than a configuration one.
-        - Waiting for a callback. There is none, and the capture is polled.
-        - Treating face as optional. All three methods are mandatory to implement.
+        - Sending it to the fingerprint host.
+        - Waiting for a callback. There is none, so you poll.
+        - Treating face as optional. All three methods must be built.
 
         ### Best practices
 
@@ -411,7 +410,7 @@ paths:
           description: Returns a `txnId`.
   /pmjay/sbxhcx/abdmproxy/abha/biometric/capture/pid:
     post:
-      operationId: biometric_faceauth_capture_pid
+      operationId: biometric_pmjay_sbxhcx_abdmproxy_abha_biometric_capture_pid
       x-abdm-atom: nhcx.endpoint.abha-biometric-capture-pid
       x-abdm-use-case: ABHA biometric authentication
       tags:
@@ -426,18 +425,17 @@ paths:
 
         ### When to use
 
-        After showing the QR code and before `Face auth verify`, repeatedly until the capture is complete. There is no callback.
+        Call it repeatedly after showing the QR code, until the capture is complete. There is no callback.
 
         ### Preconditions
 
         - A `txnId` from `Face auth init`.
-        - The patient has scanned the QR code built from it.
-        - The ABDM session token on `Authorization`, with a fresh `REQUEST-ID` and the current `TIMESTAMP`. No source sends `process` or `payerid` on this call.
-        - The request sent to the ABDM proxy host.
+        - The patient has scanned the QR code.
+        - The ABDM session token, a fresh `REQUEST-ID` and `TIMESTAMP`, sent to the ABDM proxy host.
 
         ### Postconditions
 
-        Answers `PENDING` with `Awaiting PID capture` until the patient finishes, then `COMPLETE` with `PID capture successful`. On `COMPLETE`, move on to `Face auth verify`.
+        It answers `PENDING` until the patient finishes, then `COMPLETE`. Then call `Face auth verify`.
 
         ### Common mistakes
 
@@ -489,7 +487,7 @@ paths:
                 message: PID capture successful
   /pmjay/sbxhcx/abdmproxy/abha/biometric/v2/auth/verify:
     post:
-      operationId: biometric_faceauth_v2_auth_verify
+      operationId: biometric_pmjay_sbxhcx_abdmproxy_abha_biometric_v2_auth_verify
       x-abdm-atom: nhcx.endpoint.abha-biometric-v2-auth-verify
       x-abdm-use-case: ABHA biometric authentication
       tags:
@@ -504,24 +502,23 @@ paths:
 
         ### When to use
 
-        After `Face auth capture PID` answers `COMPLETE`.
+        Call it once `Face auth capture PID` answers `COMPLETE`.
 
         ### Preconditions
 
-        - The `txnId` from `Face auth init`, with the capture reported `COMPLETE`.
-        - `aadhaar` is the Aadhaar number encrypted with the X.509 public key the portal publishes, using the transformation `RSA/ECB/OAEPWithSHA-1AndMGF1Padding`. The ciphertext is roughly 680 base64 characters for a 4096-bit key.
-        - `mobile` is the Aadhaar-linked mobile number.
-        - `authMethods` is `["face_auth"]` and `authMode` is `FACE_AUTH`.
-        - The ABDM session token on `Authorization`, with a fresh `REQUEST-ID`, the current `TIMESTAMP`, `payerid` and `process`, sent to the ABDM proxy host.
+        - The `txnId` from `Face auth init`.
+        - The Aadhaar number, encrypted with the public key the portal publishes.
+        - The Aadhaar-linked mobile number.
+        - The session token and headers, including `payerid` and `process`, sent to the ABDM proxy host.
 
         ### Postconditions
 
-        Returns the same token pair as `Biometric auth verify`, a thirty-minute user token and a fifteen-day refresh token, plus a full ABHA profile: name, date of birth, gender, photo, address, state and district.
+        Returns the same tokens as `Biometric auth verify`, plus the patient's ABHA profile.
 
         ### Common mistakes
 
-        - Sending the Aadhaar number in the clear.
-        - Validating the ciphertext as a twelve-digit number.
+        - Sending the Aadhaar number unencrypted.
+        - Checking the encrypted value as if it were a twelve-digit number.
         - Logging or storing the encrypted Aadhaar value.
         - Sending it to the fingerprint host.
 

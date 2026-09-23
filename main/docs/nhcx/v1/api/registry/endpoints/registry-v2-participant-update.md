@@ -10,28 +10,26 @@ Exactly two operational values rotate over a participant's life: the public encr
 
 ### When to use
 
-Use it immediately after creation confirmation (/validate) to upload encryptioncert and endpointurl, and again whenever either value changes; always follow with GET /update/validate within 24 hours. The production URL is https://apisprod.NHA.gov.in/pmjay/hcx/participanthcxservice/v2/participant/update. If only the certificate changes and passcode validation is not wanted, /v2/update/cert is the documented alternative. This is a synchronous JSON registry call with no workflow or x-hcx-status codes.
+Use it right after your participant is confirmed, to upload your certificate and callback URL. Use it again whenever either changes, then confirm with `/update/validate` within 24 hours.
 
 ### Preconditions
 
-- participantcode is a valid code already registered in NHCX and its creation confirmation has been completed.
-- The certificate (public key) is Base64-encoded; the update validation explicitly requires this.
-- Bearer token in bearer_auth with the Bearer prefix, Accept and Content-Type: application/json.
-- ParticipantCertUpdateRequest: participantcode required; encryptioncert and endpointurl optional (the base URL).
-- The new private key is already deployed on the callback host so decryption works the moment the change goes live.
+- Your participant code exists and creation has been confirmed.
+- The certificate is Base64-encoded.
+- You have a valid access token in the `bearer_auth` header.
+- The new private key is already on your callback server.
 
 ### Postconditions
 
-HTTP 200 with ParticipantCertUpdateResp: participant_code, status and transactionid. A passcode is sent to the registered mobile number; the pair is valid for 24 hours and each new trigger replaces it. The change is not live until GET /update/validate succeeds, after which /fetch/certs returns the new certificate and callbacks go to the new endpoint. Counterparties may serve a cached copy for up to 24 hours. Errors use the 400/404/500 ErrorResponse envelope.
+- You get a transaction ID, and a passcode goes to your registered mobile number.
+- Nothing changes until `/update/validate` succeeds with that passcode.
 
 ### Common mistakes
 
-- Calling it before creation has been confirmed with /validate; the validations require a confirmed participant code.
-- Sending the raw PEM instead of the Base64-encoded certificate.
-- Using v1 field names (participant_code, encryption_cert, endpoint_URL) in this flattened lowercase body.
-- Treating the 200 as completion and skipping /update/validate, so the old certificate stays live.
-- Re-triggering the update while a passcode is pending, invalidating the earlier transaction ID.
-- Losing the transaction ID, which forces the update to be issued again.
+- Treating the `200` as done and skipping `/update/validate`.
+- Sending the raw certificate instead of the Base64-encoded one.
+- Using the v1 field names in this body.
+- Starting a new update while a passcode is pending, which cancels the earlier one.
 
 ### Best practices
 

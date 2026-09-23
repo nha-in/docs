@@ -10,26 +10,23 @@ Changing a participant's encryption certificate or callback endpoint changes whe
 
 ### When to use
 
-Call it after /v2/participant/update returns a transactionid and the passcode arrives by SMS, within the 24-hour validity window. The production URL is https://apisprod.NHA.gov.in/pmjay/hcx/participanthcxservice/update/validate?transactionId=""&passcode="". It is also the closing step of the annual key-rotation checklist when rotation is done via /v2/participant/update. The passcode-free alternative for certificate-only changes is /v2/update/cert. No workflow or x-hcx-status codes apply.
+Call it after `/v2/participant/update` returns a `transactionid` and the passcode arrives by SMS, within 24 hours. It makes the new certificate and callback URL live.
 
 ### Preconditions
 
-- The participant is already registered and its creation was confirmed via /validate.
-- A completed /v2/participant/update that returned a transactionid, with the matching passcode received on the registered mobile number.
-- The call is made within 24 hours; each new update trigger generates a new transaction ID and passcode.
-- Bearer token with the Bearer prefix in bearer_auth and Accept: application/json; parameters go in the query string.
+- The participant was created and confirmed through `/validate`.
+- You have the `transactionid` from the update call and its SMS passcode.
+- You have a valid access token.
 
 ### Postconditions
 
-HTTP 200 with a bare string body (operation particiapntUpdateValidate, response type string). The staged certificate and endpoint URL become the participant's live registry values, which is what counterparties will receive from /fetch/certs and what the gateway will use for callback delivery. There is no asynchronous callback. Errors return the registry ErrorResponse envelope with 400, 404 or 500.
+The new certificate and callback URL become live. Other participants now fetch the new certificate.
 
 ### Common mistakes
 
-- Assuming the update is live as soon as /v2/participant/update returns; until this call succeeds counterparties may still fetch the old certificate.
-- Presenting a passcode from a previous update attempt after a new one was triggered.
-- Letting the 24-hour window lapse and then retrying validation instead of re-issuing the update.
-- Calling /validate (creation) instead of /update/validate.
-- Losing the transaction ID, which requires repeating the update request.
+- Assuming the update is live before this call succeeds.
+- Using a passcode from an earlier update attempt.
+- Calling `/validate` instead. That one confirms creation.
 
 ### Best practices
 

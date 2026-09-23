@@ -10,28 +10,25 @@ This callback carries the payer's decision on a preauth. For the hospital it is 
 
 ### When to use
 
-Called by the payer or its TPA after adjudicating a /v1/preauth/submit message, using the same correlation ID. The x-hcx-workflow_ID identifies the outcome: 20 received, 21 approved, 23 rejected, 24 queried, 22 enhancement approved, 241 enhancement queried, 231 enhancement denied, 261, 262 and 263 for discharge. The NHA status sheet frames approvals and rejections as response.complete and queries (24, 241) as request.initiated because the payer is authoring a new request to the provider. ClaimResponse.outcome is complete for approved and rejected, partial for partially approved and queried; adjudication[0].reason.coding.code (approved, queried, cancelled) is the real discriminator.
+The payer calls it after deciding on a pre-authorisation, with the same correlation ID. It carries an approval, a partial approval, a query or a rejection: the workflow code in the header says which.
 
 ### Preconditions
 
-- A preauth request with this correlation ID exists in NHCX and has not been deleted after failed deliveries (NHCX-1010 otherwise).
-- The payer holds a valid Bearer token and the provider's certificate, and encrypts the ClaimResponseBundle for the provider.
-- x-hcx-correlation_ID is echoed from the request; x-hcx-API_call_ID is new; sender and recipient codes are swapped.
-- x-hcx-status is response.complete, response.partial or response.error; on error the body is a ProtocolResponse with x-hcx-error_details mandatory.
-- preAuthRef is populated on approval and partial approval; processNote explains any reduction; clinical or business error detail stays inside the encrypted resource.
+- A pre-authorisation with this correlation ID exists in NHCX.
+- The payer has a valid access token and the provider's certificate, and encrypts the decision for the provider.
+- The correlation ID matches the request, the call ID is new, and sender and recipient are swapped.
+- An approval carries the `preAuthRef`, and any cut in the amount is explained.
 
 ### Postconditions
 
-HTTP 202 Accepted with the StatusSuccessResponse acknowledgement (entity_type preauth) from NHCX, then asynchronous delivery to the provider's registered /v1/preauth/on_submit. The provider must acknowledge with 202 within 30 seconds; otherwise NHCX retries, and after five failures the request is deleted and the sender is notified via v1/error. On an approved or partially approved response the provider persists preAuthRef and may treat; on a query the conversation stays open awaiting 19, 131 or 121; on a rejection the preauth is closed and a new case number is needed to proceed.
+- NHCX answers `202` and forwards the decision to the provider, who must reply `202` within 30 seconds.
+- On approval the provider stores the `preAuthRef` and may treat. A query keeps the request open. A rejection closes it.
 
 ### Common mistakes
 
-- Provider side: branching on outcome alone; complete plus reason cancelled is a rejection, complete plus approved is an approval.
-- Provider side: treating the pipe-delimited query audit trail (USER~datetime~type~comment~trust) as an FHIR coding and failing to parse it.
-- Provider side: returning 200 or a bare body instead of the 202 acceptance shape, which triggers retries and eventual deletion.
-- Payer side: minting a new correlation ID, or sending a JWEPayloadResponse where a ProtocolResponse is expected (PAYR-1517).
-- Payer side: using the superseded status spelling; the sources show both response.fail and response.error for failures, and the technical specification vocabulary is response.error.
-- Both sides: relying on the position of ClaimResponse.total[] entries rather than total[].category.coding.code.
+- Provider side: deciding on `outcome` alone. The adjudication reason says whether it was approved or rejected.
+- Provider side: replying with `200` or a bare body, which triggers retries.
+- Payer side: creating a new correlation ID instead of reusing the request's.
 
 ### Best practices
 
@@ -81,12 +78,12 @@ curl --request POST \
 - `x-hcx-sender_code` (string, required): Your participant code. Mandatory on the envelope.
 - `x-hcx-recipient_code` (string, required): The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
 - `x-hcx-api_call_id` (string, required): Fresh on every message, including responses. Mandatory on the envelope.
-- `x-hcx-request_id` (string): One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope.
+- `x-hcx-request_id` (string): One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope. Send it anyway, as a fresh UUID per originating request: it is cheap and satisfies both readings until NHA rules.
 - `x-hcx-correlation_id` (string, required): The thread. See the rule below. Mandatory on the envelope.
 - `x-hcx-workflow_id` (string): Which step, or which case. See the two readings below. Optional on the envelope.
 - `x-hcx-timestamp` (string, required): See the format note below. Mandatory on the envelope.
 - `x-hcx-status` (string, required): Where this message stands. Values below. Mandatory on the envelope.
-- `x-hcx-ben-abha-id` (string, required): The beneficiary's ABHA number. Mandatory on every exchange, including those with no beneficiary in the payload. Mandatory on the envelope.
+- `x-hcx-ben-abha-id` (string): The beneficiary's ABHA number. Optional: send it when the beneficiary has an ABHA number. Optional on the envelope.
 - `x-hcx-debug_flag` (string): `Error`, `Info` or `Debug`. A server may ignore it. Optional on the envelope.
 
 ## Body

@@ -70,8 +70,8 @@ Every M3 call and callback with its error codes in one file: 25 operations, 95 c
 
 [SKILL.md](/docs/main/skills/abdm-m3/SKILL.md "The router. Use the command below to take the references with it.")
 
-- ScaffoldBuilds the module flow by flow against the sandbox.
-- DesignWhat the journey around the calls has to do, and what a screen may not claim.
+- ScaffoldThe loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.
+- Design
 - Integrate16 operations, with their hosts and headers.
 - DebugNo error code is recorded yet.
 

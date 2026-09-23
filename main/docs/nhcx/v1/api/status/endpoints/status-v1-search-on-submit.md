@@ -10,27 +10,24 @@ This is how a payer answers an authorised entity's search. It completes the over
 
 ### When to use
 
-The payer calls it after receiving a /v1/search/submit Task, acknowledging it with 202 within 30 seconds and locating the requested documents. The task type code=poll is the discriminator that tells the recipient this is a search poll and not another Task-driven flow. For a claim document the domain payload is the ClaimResponse for the reference number, with basedOn holding the sender's reference ID and about holding the recipient's reference ID and the current status. Carry the same x-hcx-correlation_ID as the search and a responder status such as response.complete.
+The payer calls it to answer a `/v1/search/submit` request. For a claim document search, the payload is the `ClaimResponse` for the case.
 
 ### Preconditions
 
-- The inbound search Task was decrypted and its correlation ID, status and workflow ID captured; the 202 acceptance body was already returned.
-- The payer is a registered participant with a valid Bearer token and the requester's certificate for encryption.
-- The response is a JWE whose plaintext carries the ClaimResponse (for claim-document searches) with basedOn and about populated as documented; the loosely typed HcxOnSearchBody requires only a type property.
-- Protected header echoes the search's x-hcx-correlation_ID, carries a fresh API_call_ID, an IST timestamp and a responder status.
+- You received and decrypted the search `Task`, and answered it with `202`.
+- You have a valid access token and the requester's certificate.
+- The header repeats the search's `x-hcx-correlation_ID`.
 
 ### Postconditions
 
-The gateway returns HTTP 202 with the StatusSuccessResponse envelope (or 400, 404, 500 in the same shape) and delivers the result to the requester's registered endpoint, which must acknowledge with 202 within 30 seconds. The requester reads the recipient's reference ID and the current status of the response entity from the about element. Nothing about the underlying claim changes; the search is read-only. The endpoint is tagged V1.0 APIs-Provider side because the callback is delivered to the provider side of the exchange, with operationId hcxOnSearchPost.
+NHCX answers `202` and passes the result to the requester. The claim itself does not change.
 
 ### Common mistakes
 
-- Returning the search result in the synchronous 202 instead of on this callback.
-- Minting a new correlation ID on the response so the requester cannot match it (NHCX-1010).
-- Omitting basedOn or about, or swapping them: basedOn carries the sender's ID, about the recipient's ID and current status.
-- Sending a Task or bare Bundle where the claim-document search expects the ClaimResponse resource.
-- Reading the ClaimResponse outcome as approval without checking adjudication; a rejected claim still carries outcome complete.
-- Missing the 30-second window on the inbound search, which causes redeliveries.
+- Returning the result in the `202` instead of on this callback.
+- Making a new correlation ID, so the requester cannot match the answer.
+- Sending a `Task` or a bare bundle instead of the `ClaimResponse`.
+- Missing the 30-second window on the incoming search, which causes redeliveries.
 
 ### Best practices
 
@@ -77,11 +74,11 @@ curl --request POST \
 - `x-hcx-sender_code` (string, required): Your participant code. Mandatory on the envelope.
 - `x-hcx-recipient_code` (string, required): The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
 - `x-hcx-api_call_id` (string, required): Fresh on every message, including responses. Mandatory on the envelope.
-- `x-hcx-request_id` (string): One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope.
+- `x-hcx-request_id` (string): One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope. Send it anyway, as a fresh UUID per originating request: it is cheap and satisfies both readings until NHA rules.
 - `x-hcx-correlation_id` (string, required): The thread. See the rule below. Mandatory on the envelope.
 - `x-hcx-timestamp` (string, required): See the format note below. Mandatory on the envelope.
 - `x-hcx-status` (string, required): Where this message stands. Values below. Mandatory on the envelope.
-- `x-hcx-ben-abha-id` (string, required): The beneficiary's ABHA number. Mandatory on every exchange, including those with no beneficiary in the payload. Mandatory on the envelope.
+- `x-hcx-ben-abha-id` (string): The beneficiary's ABHA number. Optional: send it when the beneficiary has an ABHA number. Optional on the envelope.
 
 ## Body
 

@@ -11,6 +11,29 @@ Find the symptom you are seeing, not the error code. Each chapter here walks the
 
 If you already hold an error code, [Troubleshooting](/docs/main/docs/nhcx/v1/reference/troubleshooting) in the Reference is organised the other way, by layer and by code. [Error Codes](/docs/main/docs/nhcx/v1/reference/error-code-guide) lists every code either side can send.
 
+## A service name you do not recognise
+
+The name in a log line or a URL does not always match the exchange. Reprocess is served by `taskhcxservice`, notifications by `subscriptionhcxservice`, payment by `servicehcxpayment`.
+
+| Service name in a log or URL    | Exchange it serves                                            |
+| ------------------------------- | ------------------------------------------------------------- |
+| `coverageeligibilityhcxservice` | Coverage eligibility                                          |
+| `insuranceplanhcxservice`       | Insurance plan                                                |
+| `preauthhcxservice`             | Preauthorisation                                              |
+| `claimhcxservice`               | Claim                                                         |
+| `communicationhcxservice`       | Communication, including a request for additional attachments |
+| `servicehcxpayment`             | Payment notice                                                |
+| `statushcxservice`              | Status check                                                  |
+| `taskhcxservice`                | Task: reprocess and cancel                                    |
+| `searchhcxservice`              | Search                                                        |
+| `participanthcxservice`         | Participant service: registry, certificates and policies      |
+| `subscriptionhcxservice`        | Notifications                                                 |
+| `abdmproxy`                     | Face authentication for PMJAY biometrics                      |
+| `nhcxpayerservice`              | PMJAY payer service: the role lookup and acting on a case     |
+| `dummyhcxpayer`                 | The sandbox dummy payer's test hooks                          |
+
+[Environments and addresses](/docs/main/docs/nhcx/v1/reference/environments-and-addresses) has the full address of each.
+
 ## Next steps
 
 - [Troubleshooting](/docs/main/docs/nhcx/v1/reference/troubleshooting): the five layers and the symptom table.

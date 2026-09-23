@@ -88,7 +88,7 @@ All reuse this screen's bundle with a new correlation ID, the original reference
 
 - **Enhancement** (13). Against an approved case, for additional procedures or days. The bundle lists the already-approved items and the new ones.
 - **Resubmission** (121). Revises a request after a query or rejection.
-- **Cancel** (PC01). A Task, not a Claim: code `cancel`, the case number as input, a reason from the list (treatment plan changed, patient request, financial constraints, alternative treatment, duplicate, administrative error, other). Allowed until the claim is raised. The workflow sheet gives PC01 for this and PC02 for the answer; the handbook gives 122 in two places, including the heading of its cancellation-reason appendix. Confirm which the payer accepts.
+- **Cancel** (PC01). A Task, not a Claim: code `cancel`, the case number as input, a reason from the list (treatment plan changed, patient request, financial constraints, alternative treatment, duplicate, administrative error, other). Allowed until the claim is raised. Send it on PC01; the payer's answer comes on PC02, as the Workflow Status Sheet gives. Do not use 122, which the handbook mentions: it clashes with R122, the reimbursement claim reprocess.
 
 The Task resource carries more codes than these two. The provider exit checklist names `reprocess`, `cancel`, `release` and `nullify`, and the value set adds `approve`, `search`, `poll` and `suspend`. `nullify` is described in Cancel, Reprocess and Shortfall in the FHIR Reference. `suspend` is not described in any source beyond its place in the value set.
 

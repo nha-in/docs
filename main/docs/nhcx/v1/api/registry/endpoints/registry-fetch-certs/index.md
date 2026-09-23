@@ -10,26 +10,24 @@ Every NHCX payload is encrypted end-to-end for exactly one recipient so that eve
 
 ### When to use
 
-Call it before encrypting the first message to a recipient and whenever the 24-hour cache entry for that participantid expires or is evicted after a decrypt or encrypt failure. Providers fetch the payer's certificate before /v1/coverageeligibility/check, /v1/preauth/submit and /v1/claim/submit; payers fetch the provider's certificate before encrypting on_* callbacks. Handbook call: POST /fetch/certs on host apisbx.ABDM.gov.in/pmjay/sbxhcx with bearer_auth Bearer. Synchronous; no workflow or x-hcx-status codes.
+Call it before you encrypt the first message to a recipient, then cache the certificate for 24 hours. Fetch it again if encryption or decryption with that recipient fails.
 
 ### Preconditions
 
-- Bearer token from /get/session in bearer_auth with the Bearer prefix; Content-Type: application/json (add Accept: application/json per the common-mistakes guidance).
-- ParticipantCertRequest with the single required field participantid, the recipient's participant code in `@hcx form, identical to the value you will place in x-hcx-recipient_code.
-- The recipient has completed onboarding with a certificate registered (mandatory at creation).
+- You have a valid access token in the `bearer_auth` header.
+- You send the recipient's code as `participantid`.
+- The recipient has registered a certificate.
 
 ### Postconditions
 
-HTTP 200 with a string body containing a PEM-encoded X.509 certificate or an SPKI public key, as uploaded by that participant. Import X.509 first and fall back to SPKI (keys under roughly 400 bytes are typically SPKI), then use the key with RSA-OAEP-256 for alg and A256GCM for enc. Nothing changes in the registry and no callback follows. 400, 404 and 500 return the ErrorResponse envelope; an unregistered code is a 404 here and NHCX-1003 at the gateway.
+You get the recipient's certificate or public key. Use it to encrypt messages to that recipient.
 
 ### Common mistakes
 
-- Fetching the certificate before every request instead of caching for 24 hours, adding a round trip to the critical path of every claim.
-- Assuming the response is always a full X.509 certificate and failing when a participant uploaded a bare SPKI key.
-- Encrypting with the sender's own certificate instead of the recipient's; the recipient's private key then cannot open it, surfacing as PAYR-1001 decrypt errors.
-- Passing participant_code or participantcode instead of participantid.
-- Serving a stale cached certificate after the counterparty rotated its key; PAYR-1001 or PAYR-1002 is the signal to evict and re-fetch.
-- Sending the token without the Bearer prefix or omitting Accept.
+- Fetching the certificate before every request instead of caching it.
+- Encrypting with your own certificate instead of the recipient's.
+- Assuming the answer is always a full certificate. It may be a bare public key.
+- Keeping a cached certificate after the recipient changed it.
 
 ### Best practices
 

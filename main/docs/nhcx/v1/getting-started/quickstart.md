@@ -21,13 +21,13 @@ Make your first three National Health Claims Exchange (NHCX) calls with nothing 
 curl --location --request POST 'https://dev.abdm.gov.in/api/hiecm/gateway/v3/sessions' \  --header 'Content-Type: application/json' \  --header 'REQUEST-ID: <uuid>' \  --header 'TIMESTAMP: <iso timestamp>' \  --header 'X-CM-ID: sbx' \  --data-raw '{    "clientId": "<client id>",    "clientSecret": "<client secret>",    "grantType": "client_credentials"  }'
 ```
 
-[Session token in the API reference](/docs/main/docs/nhcx/v1/api/session/endpoints/session-session-token)
+[Session token in the API reference](/docs/main/docs/nhcx/v1/api/session/endpoints/session-api-hiecm-gateway-v3-sessions)
 
 - `<client id>` and `<client secret>`: your ABDM sandbox client ID and client secret.
 - `<uuid>` in `REQUEST-ID`: a fresh UUID you generate for this call. Generate a new one on every call.
 - `<iso timestamp>` in `TIMESTAMP`: the current UTC time with milliseconds and a trailing `Z`, such as `2026-09-04T06:15:51.975Z`.
 
-You receive HTTP `200` with a non-empty `accessToken` and an integer `expiresIn`. The token lasts `expiresIn` seconds from the moment it arrives. Keep it for the next two steps.
+You receive HTTP `200` with a non-empty `accessToken` and `expiresIn` set to `1200`. The token lasts 1200 seconds (20 minutes) from the moment it arrives. Keep it for the next two steps.
 
 ## 2. Look up the dummy payer
 

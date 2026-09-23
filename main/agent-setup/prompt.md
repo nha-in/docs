@@ -76,7 +76,13 @@ for f in scaffold integrate debug; do curl -fsSL https://nha-in.github.io/docs/m
 
 ## 3. Connect the Docs MCP server
 
-The portal's Docs MCP server is not publicly reachable yet. Skip this step; https://nha-in.github.io/docs/main/docs/hiecm/v3/getting-started/mcp has the current status and the connect instructions for when it opens.
+The portal serves its catalogue live over MCP (streamable HTTP). Register it with your agent:
+
+```
+claude mcp add --transport http abdm-docs https://docs.abdm.gov.in/mcp
+```
+
+For other agents, add an HTTP MCP server named `abdm-docs` at `https://docs.abdm.gov.in/mcp` using their config format.
 
 ## 4. Report back
 

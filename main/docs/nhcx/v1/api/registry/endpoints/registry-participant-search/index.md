@@ -10,25 +10,23 @@ Before addressing a transaction to a counterparty, an integrator needs to know t
 
 ### When to use
 
-Call it once a participant_code is known, typically after /fetch/participants/list has produced candidates, or before building the first JWE for a new recipient. It is also the natural post-update check after /participant/update, /v2/participant/update or /v2/update/cert. It is a synchronous JSON registry call with no workflow or x-hcx-status codes. /participant/details takes the same body and returns the same response; the OpenAPI identifies it only as the v2 variant.
+Use it to check a participant's record once you know its code. Call it before you send the first message to a new recipient, or to confirm your own record after an update.
 
 ### Preconditions
 
-- A Bearer token from /get/session in bearer_auth with the Bearer prefix; Accept and Content-Type: application/json.
-- The target's participant_code in xxxxx@hcx (or @sbx) form, exactly the value later placed in x-hcx-recipient_code.
-- Sandbox base https://apisbx.ABDM.gov.in/pmjay/sbxhcx/participanthcxservice/participant/search; production under https://apis.ABDM.gov.in/pmjay/hcx.
+- You have a valid access token in the `bearer_auth` header.
+- You have the target's `participant_code`, the same value you will put in `x-hcx-recipient_code`.
 
 ### Postconditions
 
-HTTP 200 with ParticipantSearchResponse: timestamp (Unix timestamp when the request is sent) and participants, an array of full participant records with participant_code, linked_registry_codes, participant_name, scheme_code, roles, address, primaryEmail, additionalEmail, phone, primaryMobile, additionalMobile, status, signing_cert_path, encryption_cert, endpoint_URL and payment_details. No state changes and no callback. An unknown code returns 404 with the ErrorResponse envelope; 400 and 500 are the other documented outcomes.
+You get the participant's full registry record. Nothing changes, and an unknown code returns `404`.
 
 ### Common mistakes
 
-- Passing participantid or participantcode instead of the snake_case participant_code this body requires.
-- Assuming a record in the registry means the participant can transact; status must be Active, and NHCX-1003 (receiver not registered) still results if the code is wrong or inactive.
-- Reading encryption_cert as the certificate content when it is documented as a URI or file path to the certificate; use /fetch/certs to obtain the key material.
-- Forgetting the Accept header, which causes rejection before business logic.
-- Sending an expired token and misreading the flat 401.
+- Sending the code under a field name other than `participant_code`.
+- Assuming a record means the participant can transact: its status must be active.
+- Reading `encryption_cert` as the certificate itself. Use `/fetch/certs` for that.
+- Leaving out the `Accept` header.
 
 ### Best practices
 

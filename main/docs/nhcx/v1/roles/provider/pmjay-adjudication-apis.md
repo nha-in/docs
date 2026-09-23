@@ -19,13 +19,15 @@ Both take an ordinary ABDM session token on `bearer_auth`, with `Content-Type: a
 
 Note that the two endpoints sit on different hosts. That is not a documentation error; it is how the service is deployed.
 
+Both addresses are sandbox addresses. `apisbeta.nha.gov.in` is the only published address for acting on a case, and no production host is published for either call. Ask for both production hosts at onboarding and keep them configurable, as Base URLs advises for every other service.
+
 ## Who holds the case
 
 ```bash
 curl --location --request POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/nhcxpayerservice/v1/get/user-role' \  --header 'Accept: application/json' \  --header 'Content-Type: application/json' \  --header 'bearer_auth: Bearer <access token>' \  --data-raw '{    "caseid": "<case number>",    "payerid": "<payer code>"  }'
 ```
 
-[Adjudicator: role for a case in the API reference](/docs/main/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-adjudicator-role)
+[Adjudicator: role for a case in the API reference](/docs/main/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-pmjay-sbxhcx-nhcxpayerservice-v1-get-user-role)
 
 ```json
 { "currentuserrole": "PPD-Trust", "errormessage": null }
@@ -47,7 +49,7 @@ One endpoint, one body shape, with the action spelled exactly as the table gives
 curl --location --request POST 'https://apisbeta.nha.gov.in/pmjay/hcx/nhcxpayerservice/wrapper/process/case' \  --header 'Accept: application/json' \  --header 'Content-Type: application/json' \  --header 'bearer_auth: Bearer <access token>' \  --data-raw '{    "casenumber": "<case number>",    "action": "Approve",    "receivercode": "<payer code>",    "usecase": "PREAUTH",    "correlationid": "<correlation id>",    "sendercode": "<participant code>",    "memberid": "<member id>",    "remarks": "ok"  }'
 ```
 
-[Adjudicator: act on a case in the API reference](/docs/main/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-adjudicator-process)
+[Adjudicator: act on a case in the API reference](/docs/main/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-pmjay-hcx-nhcxpayerservice-wrapper-process-case)
 
 | Field           | What it carries                                     |
 | --------------- | --------------------------------------------------- |

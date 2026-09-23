@@ -10,28 +10,23 @@ Products are the payer's catalogue entries that policies[].productid and product
 
 ### When to use
 
-Use it when a payer introduces a new product, and before any /participant/link/abha/policy call that references that product. It is part of payer-side catalogue setup, ahead of member linking and well ahead of any claim-side workflow. When a product is retired, the counterpart /product/delink removes it. The documentation does not describe versioning or renaming of products; treat a rename as de-link and re-link.
+Use it when a payer launches a new product, before any member is linked to it.
 
 ### Preconditions
 
-- A valid Bearer token from the client-credentials call (POST /get/session, form-urlencoded client_ID, client_secret, grant_type=client_credentials); tokens last 1200 seconds, so refresh before expiry.
-- HTTP headers Accept: application/json, Content-Type: application/json and bearer_auth: Bearer (the participant service uses bearer_auth, not Authorisation).
-- Base path for the participant service: https://apisbx.ABDM.gov.in/pmjay/sbxhcx/participanthcxservice (sandbox) or https://apisprod.NHA.gov.in/pmjay/hcx/participanthcxservice (production).
-- This is a synchronous plain-JSON registry call: no JWE envelope, no x-hcx-* protocol headers and no correlation ID are involved.
-- The payer or insurance company must already be a registered participant with its own participant code.
-- Body is ProductLinkRequest with all three fields required: productid, productname and participantcode.
+- You have a valid access token in the `bearer_auth` header.
+- The payer is already registered.
+- You send `productid`, `productname` and `participantcode`. All three are required.
 
 ### Postconditions
 
-On success the endpoint returns HTTP 200 with ParticipantCreateResponse, whose single optional field participant_code is the machine-generated participant identifier on the HCX instance. No callback follows. The product becomes the value that /product/getowner resolves back to the owning participant and that policy links refer to. Failures return 400, 404 or 500 with the ErrorResponse envelope (timestamp plus Error with code, message and trace).
+The product is registered to the payer, and policy links can now refer to it.
 
 ### Common mistakes
 
-- Omitting one of the three required fields; productid, productname and participantcode are all mandatory.
-- Using a participantcode in the wrong casing or from the wrong environment (sandbox codes look like 100001@sbx, production codes end in @hcx).
-- Referencing a product in a policy link before it has been linked here, so provider-side product matching later fails.
-- Expecting product details in the response; only participant_code is returned.
-- Missing the Accept header or the Bearer prefix on bearer_auth.
+- Leaving out one of the three fields.
+- Using a participant code from the wrong environment.
+- Linking members to a product before registering it here.
 
 ### Best practices
 

@@ -10,28 +10,23 @@ Asynchronous exchanges lose messages, stall in queues and outlive the shift of t
 
 ### When to use
 
-Call it after a submission whose callback has not arrived within your operational tolerance, for example a preauth (workflow 12) or claim (workflow 15) still awaiting its on_submit. It is only for requests you originated; x-hcx-correlation_ID carries the x-hcx-API_call_ID of the request being checked (the Status sheet: "same as API caller ID of the request that requires a status check"). Send x-hcx-status request.initiated. x-hcx-workflow_ID and x-hcx-use_case (New, Enhancement or Resubmit) are optional on this call; x-hcx-ben-ABHA-ID is mandatory. If the reply is request.queued, the payer has never seen the request and no callback will come; if request.dispatched, the payer holds it and will answer on the status callback.
+Use it when the callback for a request you sent has not arrived. Set `x-hcx-correlation_ID` to the `x-hcx-API_call_ID` of that request. You can only check requests you sent yourself.
 
 ### Preconditions
 
-- You are the original sender of the request being queried and have its API_call_ID persisted.
-- Valid Bearer token; the request body is a JWE per RFC-7516 like every protocol API.
-- The payload inside the JWE is an empty string: no bundle, no Task, no resource. The Status sheet of the requests-and-responses workbook says "Payload should be empty string". The sandbox exit checklists word it as the "encrypted payload of request for which the status is seeking for" and describe no bundle for it.
-- Protected header with sender_code, recipient_code, a fresh API_call_ID, the original request's API_call_ID as correlation_ID, an IST timestamp and status request.initiated.
-- HTTP headers Accept, Content-Type and bearer_auth.
+- You sent the original request and kept its `API_call_ID`.
+- You have a valid access token.
+- The encrypted payload is an empty string, and the header status is `request.initiated`.
 
 ### Postconditions
 
-The gateway validates the request and returns the protocol status synchronously in the HTTP response: HTTP 202 with a StatusSuccessResponse whose result carries sender_code, recipient_code, entity_type and protocol_status of request.queued or request.dispatched. On request.queued nothing further happens; the original request is still inside NHCX. On request.dispatched the gateway forwards the status request to the recipient, who responds asynchronously on the status callback (named /v1/on_status and /hcx/on_status in different sentences of the source). A 404 against a correlation ID you believe you sent strongly suggests the original submission never landed; NHCX-1012 reports no records for the API caller ID.
+NHCX answers at once with `request.queued` or `request.dispatched`. Queued means the payer has not seen the request, and no callback follows. Dispatched means the payer has it and will answer on the status callback.
 
 ### Common mistakes
 
-- Minting a fresh correlation ID for the status call itself instead of setting it to the original request's API_call_ID; this is the single most common status-integration error and yields NHCX-1012 or 404.
-- Polling in a tight loop; a request.queued answer means the gateway is still working and there is no callback for that branch.
-- Resubmitting the original request after a request.queued response, which duplicates it (NHCX-1006).
-- Reading the Appendix C lifecycle statuses (request.acknowledged, request.queried, request.complete) as Status API outcomes; the API returns only the two gateway values.
-- Querying a correlation ID after NHCX deleted it following five failed deliveries; it is gone.
-- Querying a request another participant originated; senders may only query their own.
+- Making a new correlation ID instead of using the original request's `API_call_ID`.
+- Polling in a tight loop.
+- Resubmitting the original request after `request.queued`, which creates a duplicate.
 
 ### Best practices
 
@@ -79,11 +74,11 @@ curl --request POST \
 - `x-hcx-sender_code` (string, required): Your participant code. Mandatory on the envelope.
 - `x-hcx-recipient_code` (string, required): The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
 - `x-hcx-api_call_id` (string, required): Fresh on every message, including responses. Mandatory on the envelope.
-- `x-hcx-request_id` (string): One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope.
+- `x-hcx-request_id` (string): One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope. Send it anyway, as a fresh UUID per originating request: it is cheap and satisfies both readings until NHA rules.
 - `x-hcx-correlation_id` (string, required): The thread. See the rule below. Mandatory on the envelope.
 - `x-hcx-timestamp` (string, required): See the format note below. Mandatory on the envelope.
 - `x-hcx-status` (string, required): Where this message stands. Values below. Mandatory on the envelope.
-- `x-hcx-ben-abha-id` (string, required): The beneficiary's ABHA number. Mandatory on every exchange, including those with no beneficiary in the payload. Mandatory on the envelope.
+- `x-hcx-ben-abha-id` (string): The beneficiary's ABHA number. Optional: send it when the beneficiary has an ABHA number. Optional on the envelope.
 
 ## Body
 

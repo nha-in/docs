@@ -16,7 +16,7 @@ Every call fails with `401`, often with the message `Sender is not authorized to
 
 ## Work through these in order
 
-1. **Has the token expired?** An expired token returns this message. Read the lifetime from the token response, `expiresIn` or `expires_in`, instead of assuming one. Fetch a new token and retry the failing call once. A retry with the old token fails the same way.
+1. **Has the token expired?** An expired token returns this message. A token lasts 1200 seconds (20 minutes) from the moment it arrives, so a token older than that has expired. Fetch a new token and retry the failing call once. A retry with the old token fails the same way.
 2. **Does the value start with `Bearer `?** The header value is the word `Bearer`, a space, then the token. A bare token returns `401`.
 3. **Is the token in the header the call reads?** Send the same value in both `bearer_auth` and `Authorization`.
 4. **Are the token and the host from the same environment?** A sandbox token does not work against a production host, or the reverse. Compare the host that issued the token with the host of the failing call. [Base URLs](/docs/main/docs/nhcx/v1/getting-started/base-urls) lists both.
@@ -24,7 +24,7 @@ Every call fails with `401`, often with the message `Sender is not authorized to
 
 ## What you see when it works
 
-A call that returned `401` now returns its normal response. It keeps doing so across several calls, over more than one token lifetime. One success can be a token that happened to be fresh, so confirm again after the next refresh.
+A call that returned `401` now returns its normal response. It keeps doing so across several calls, over more than 20 minutes, which is longer than one token lasts. One success can be a token that happened to be fresh, so confirm again after the next refresh.
 
 ## When it goes wrong
 

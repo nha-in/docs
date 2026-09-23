@@ -21,10 +21,10 @@ Starts login with an ABHA address. ABDM sends an OTP to the mobile linked with t
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["abha-address-login", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
-| `loginHint` | `"abha-address"` | yes | Type of identifier sent in `loginId`. |
+| `scope` | `["ABHA-address-login", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `loginHint` | `"ABHA-address"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"abdm"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
+| `otpSystem` | `"ABDM"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
 
 ```bash
 curl --request POST \

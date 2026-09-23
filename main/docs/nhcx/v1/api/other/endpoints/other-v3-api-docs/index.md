@@ -10,24 +10,22 @@ Integrators need a machine-readable contract for the Status API in order to gene
 
 ### When to use
 
-Use it during integration setup, when generating or refreshing an API client, and when a status call is failing and you want to confirm the exact schema and server prefix the service advertises. The endpoint index lists it as endpoint 19 with an optional group query parameter. It is not part of any transaction workflow and is not referenced by the sandbox exit checklists.
+Use it when you set up an integration or generate a client, to read the status service's contract. It is not part of any claim flow.
 
 ### Preconditions
 
-- A GET request to the status service host; the OpenAPI documents in this corpus were captured from https://hcxsbx.ABDM.gov.in//api-docs, and the status service declares the server prefix /statushcxservice.
-- No JWE envelope, no x-hcx-* protocol headers and no correlation ID; the docs do not state that a Bearer token is required for these discovery endpoints.
-- No request body.
+- A plain `GET` to the status service host, under `/statushcxservice`.
+- No encryption, no `x-hcx-*` headers and no request body.
 
 ### Postconditions
 
-The service returns HTTP 200 with a JSON OpenAPI 3 document describing the status service: its info block, the /statushcxservice server entry and the /v1/status operation with its StatusSuccessResponse responses. Nothing changes on NHCX and no callback follows. The document is a description of the service as deployed and may differ from the handbook's gateway-side conventions, which the docs flag as an unresolved conflict.
+The service returns `200` with its OpenAPI 3 document. Nothing changes and no callback follows.
 
 ### Common mistakes
 
-- Pointing at the gateway base https://apisbx.ABDM.gov.in/pmjay/sbxhcx and expecting the per-service spec host; the docs advise swapping between the two URL shapes when a path 404s.
-- Treating the served document as the integration contract for gateway traffic; the handbook's gateway base and header conventions take precedence where the two disagree.
-- Sending a POST or a JSON body to a GET discovery endpoint.
-- Wrapping the call in JWE or adding x-hcx-* headers, which only apply to protocol APIs such as /v1/status.
+- Calling the gateway address instead of the status service host.
+- Treating this document as the contract for gateway traffic.
+- Sending a `POST`, a request body or `x-hcx-*` headers.
 
 ### Best practices
 

@@ -6,84 +6,99 @@ This page lists every module, including any that the role you have chosen does n
 
 ## Session
 
-1 endpoint across 1 use case: Other operations. Each endpoint has its own page in the sidebar.
+1 endpoint, with its own page in the sidebar.
 
 [Read the whole specification](/docs/main/reference/nhcx-session)
 
 ## Coverage eligibility
 
-6 endpoints across 1 use case: Other operations. Each endpoint has its own page in the sidebar.
+4 endpoints, each with its own page in the sidebar.
 
 [Read the whole specification](/docs/main/reference/nhcx-eligibility)
 
 ## Pre-authorisation
 
-6 endpoints across 1 use case: Other operations. Each endpoint has its own page in the sidebar.
+4 endpoints, each with its own page in the sidebar.
 
 [Read the whole specification](/docs/main/reference/nhcx-preauth)
 
 ## Predetermination
 
-4 endpoints across 1 use case: Other operations. Each endpoint has its own page in the sidebar.
+4 endpoints, each with its own page in the sidebar.
 
 [Read the whole specification](/docs/main/reference/nhcx-predetermination)
 
 ## Claim
 
-6 endpoints across 1 use case: Other operations. Each endpoint has its own page in the sidebar.
+4 endpoints, each with its own page in the sidebar.
 
 [Read the whole specification](/docs/main/reference/nhcx-claim)
 
+## Reprocess, cancel and shortfall
+
+4 endpoints, each with its own page in the sidebar.
+
+[Read the whole specification](/docs/main/reference/nhcx-task)
+
 ## Payment notice
 
-6 endpoints across 1 use case: Other operations. Each endpoint has its own page in the sidebar.
+4 endpoints, each with its own page in the sidebar.
 
 [Read the whole specification](/docs/main/reference/nhcx-payment-notice)
 
 ## Communication
 
-6 endpoints across 1 use case: Other operations. Each endpoint has its own page in the sidebar.
+4 endpoints, each with its own page in the sidebar.
 
 [Read the whole specification](/docs/main/reference/nhcx-communication)
 
 ## Status and search
 
-6 endpoints across 1 use case: Other operations. Each endpoint has its own page in the sidebar.
+6 endpoints, each with its own page in the sidebar.
 
 [Read the whole specification](/docs/main/reference/nhcx-status)
 
 ## Insurance plan
 
-6 endpoints across 1 use case: Other operations. Each endpoint has its own page in the sidebar.
+4 endpoints, each with its own page in the sidebar.
 
 [Read the whole specification](/docs/main/reference/nhcx-insurance-plan)
 
 ## Participant registry
 
-23 endpoints across 1 use case: Other operations. Each endpoint has its own page in the sidebar.
+23 endpoints, each with its own page in the sidebar.
 
 [Read the whole specification](/docs/main/reference/nhcx-registry)
 
 ## Onboarding
 
-5 endpoints across 1 use case: Other operations. Each endpoint has its own page in the sidebar.
+5 endpoints, each with its own page in the sidebar.
 
 [Read the whole specification](/docs/main/reference/nhcx-onboarding)
 
 ## PMJAY adjudicator
 
-4 endpoints across 1 use case: Other operations. Each endpoint has its own page in the sidebar.
+4 endpoints, each with its own page in the sidebar.
 
 [Read the whole specification](/docs/main/reference/nhcx-adjudicator)
 
 ## Other
 
-18 endpoints across 1 use case: Other operations. Each endpoint has its own page in the sidebar.
+12 endpoints, each with its own page in the sidebar.
 
 [Read the whole specification](/docs/main/reference/nhcx-other)
 
 ## ABHA biometric authentication
 
-6 endpoints across 1 use case: Other operations. Each endpoint has its own page in the sidebar.
+6 endpoints, each with its own page in the sidebar.
 
 [Read the whole specification](/docs/main/reference/nhcx-biometric)
+
+## Callbacks with no documented trigger
+
+2 callbacks are declared at module level with no call named against them. Which call produces each one is not documented, so this page does not say.
+
+| Module                          | Method | Arrives at                                                                                        | What it carries                                     |
+| ------------------------------- | ------ | ------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| Reprocess, cancel and shortfall | POST   | [`/v1/task/submit`](/docs/main/docs/nhcx/v1/api/task/endpoints/task-webhook-v1-task-submit)       | Receive task submit (reprocess or cancel)           |
+| Reprocess, cancel and shortfall | POST   | [`/v1/task/on_submit`](/docs/main/docs/nhcx/v1/api/task/endpoints/task-webhook-v1-task-on-submit) | Receive task callback (reprocess or cancel outcome) |

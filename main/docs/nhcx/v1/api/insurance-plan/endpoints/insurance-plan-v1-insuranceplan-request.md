@@ -2,7 +2,7 @@
 
 `POST /v1/insuranceplan/request`
 
-Provider sends a Task with code poll naming a policy number and/or its HFR ID to fetch the payer's machine-readable InsurancePlan for that pairing.
+Provider sends a Task with code poll naming both a policy number and its HFR ID to fetch the payer's machine-readable InsurancePlan for that pairing.
 
 ### Business purpose
 
@@ -10,29 +10,25 @@ Policies have traditionally been PDFs that hospital desks interpret by hand, pro
 
 ### When to use
 
-Call it before any preauth or claim for a given payer and policy, ideally at patient registration or admission and before treatment planning and cost estimation, alongside coverage eligibility. The request carries no clinical content: a Task with status requested, intent order, code poll (system https://nhcx.ABDM.gov.in/api) and at least one input, policyNumber or providerId (the HFR ID). Send x-hcx-status request.initiated. No dedicated workflow code for InsurancePlan appears in the workflow tables; the Services reference marks x-hcx-workflow_ID optional. The plan arrives asynchronously on /v1/insuranceplan/on_request.
+Call it before any pre-authorisation or claim for a payer and policy, ideally at registration. It fetches the plan: covered treatments, rates and required documents.
 
 ### Preconditions
 
-- Both provider and payer registered on NHCX; valid Bearer token from the client-credentials session call.
-- Payer certificate fetched via /fetch/certs and verified before encryption; JWE with RSA-OAEP-256 and A256GCM.
-- Task bundle with at least one of policyNumber or providerId in Task.input; both may be supplied for precision.
-- Protected header with sender_code, recipient_code, fresh API_call_ID, a fresh UUID correlation_ID for this discovery cycle, IST timestamp and status request.initiated.
-- Recipient code taken from processingID in the get/Policies response, not PayerID.
-- HTTP headers Accept, Content-Type and bearer_auth.
+- You have a valid access token and the payer's certificate.
+- The request is an FHIR `Task` with both the policy number and the hospital's HFR ID.
+- `x-hcx-recipient_code` is the processing ID, not the payer ID, and the correlation ID is new.
 
 ### Postconditions
 
-The gateway returns HTTP 202 with a StatusSuccessResponse whose result carries sender_code, recipient_code, entity_type insuranceplan and protocol_status; 400, 404 and 500 use the same envelope. The 202 is a receipt, never the plan. The payer later posts an InsurancePlan collection Bundle (InsurancePlan, Organisation, optional Questionnaire) to /v1/insuranceplan/on_request under the same correlation ID, and the provider must acknowledge that with 202 within 30 seconds. The payer may return an empty plan or an error if no coverage matches the policy-provider combination; an empty plan is a business outcome, not a transport failure. Plans may be cached but should be refreshed periodically or when treatment changes.
+- NHCX answers `202` at once. That is a receipt, not the plan.
+- The plan arrives later on `/v1/insuranceplan/on_request`. It may be empty if nothing matches.
 
 ### Common mistakes
 
-- Sending a Task with no input at all; at least one of policyNumber or providerId is mandatory.
-- Expecting the plan in the synchronous response.
-- Resubmitting while a previous request is still with the payer: PAYR-1406 rejects a new request until the earlier correlation ID completes (wait 15 to 60 minutes).
-- Requesting a policy the hospital is not allowed to use (PAYR-1401), a policy with no payer (PAYR-1402), a renewal not linked to the policy (PAYR-1403), or from an HFR ID or sender ID with no enrolled hospital (PAYR-1405).
-- Using the wrong registry ID in production; providers must use the HFR ID.
-- Treating an empty plan (PAYR-1404, no treatment under any speciality) as a gateway fault.
+- Sending a `Task` without both the policy number and the HFR ID.
+- Expecting the plan in the `202` response.
+- Sending a new request while an earlier one is still with the payer.
+- Treating an empty plan as a gateway fault.
 
 ### Best practices
 
@@ -81,12 +77,12 @@ curl --request POST \
 - `x-hcx-sender_code` (string, required): Your participant code. Mandatory on the envelope.
 - `x-hcx-recipient_code` (string, required): The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
 - `x-hcx-api_call_id` (string, required): Fresh on every message, including responses. Mandatory on the envelope.
-- `x-hcx-request_id` (string): One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope.
+- `x-hcx-request_id` (string): One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope. Send it anyway, as a fresh UUID per originating request: it is cheap and satisfies both readings until NHA rules.
 - `x-hcx-correlation_id` (string, required): The thread. See the rule below. Mandatory on the envelope.
 - `x-hcx-workflow_id` (string): Which step, or which case. See the two readings below. Optional on the envelope.
 - `x-hcx-timestamp` (string, required): See the format note below. Mandatory on the envelope.
 - `x-hcx-status` (string, required): Where this message stands. Values below. Mandatory on the envelope.
-- `x-hcx-ben-abha-id` (string, required): The beneficiary's ABHA number. Mandatory on every exchange, including those with no beneficiary in the payload. Mandatory on the envelope.
+- `x-hcx-ben-abha-id` (string): The beneficiary's ABHA number. Optional: send it when the beneficiary has an ABHA number. Optional on the envelope.
 
 ## Body
 

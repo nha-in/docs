@@ -10,28 +10,23 @@ When a payer withdraws a product from the market or replaces it, the registry en
 
 ### When to use
 
-Use it when a product is discontinued or renamed (the docs give no rename operation, so de-link and re-link), after the member links that reference it have been handled through /participant/delink/abha/policy. It is a payer-side catalogue maintenance step and is not tied to any claim workflow code. The documentation does not state whether de-linking a product that still has member links is refused, so remove member links first.
+Use it when a product is withdrawn. Remove the member links to it first.
 
 ### Preconditions
 
-- A valid Bearer token from the client-credentials call (POST /get/session, form-urlencoded client_ID, client_secret, grant_type=client_credentials); tokens last 1200 seconds, so refresh before expiry.
-- HTTP headers Accept: application/json, Content-Type: application/json and bearer_auth: Bearer (the participant service uses bearer_auth, not Authorisation).
-- Base path for the participant service: https://apisbx.ABDM.gov.in/pmjay/sbxhcx/participanthcxservice (sandbox) or https://apisprod.NHA.gov.in/pmjay/hcx/participanthcxservice (production).
-- This is a synchronous plain-JSON registry call: no JWE envelope, no x-hcx-* protocol headers and no correlation ID are involved.
-- The payer or insurance company must already be a registered participant with its own participant code.
-- Body is ProductLinkRequest with all three fields required: productid, productname and participantcode.
+- You have a valid access token in the `bearer_auth` header.
+- Member links to the product are already removed.
+- You send `productid`, `productname` and `participantcode`.
 
 ### Postconditions
 
-On success the endpoint returns HTTP 200 with ParticipantCreateResponse containing the optional participant_code. No callback follows. The product should no longer resolve to the payer through /product/getowner. Failures return 400, 404 or 500 with the ErrorResponse envelope. Provider-side policy caches are documented as permanent, so a product that hospitals have already cached will still appear there until they pass forceRefresh: true.
+The product no longer belongs to the payer in the registry. Providers that cached it keep seeing it until they force a refresh.
 
 ### Common mistakes
 
-- Sending only productid; ProductLinkRequest requires productid, productname and participantcode for de-link as well.
-- De-linking a product while members are still linked to it, then finding those member links inconsistent; de-link members first.
-- Using a participantcode from the wrong environment or with wrong casing.
-- Assuming providers see the change immediately; their cached policies persist without TTL.
-- Missing the Accept header or sending the token without the Bearer prefix.
+- Sending only `productid`. All three fields are required.
+- Removing a product while members are still linked to it.
+- Expecting providers to see the change at once.
 
 ### Best practices
 

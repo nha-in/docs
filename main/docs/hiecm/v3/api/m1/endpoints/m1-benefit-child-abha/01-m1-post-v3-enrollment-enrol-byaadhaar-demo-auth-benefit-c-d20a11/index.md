@@ -36,7 +36,7 @@ Creates an ABHA number from Aadhaar demographic details (name, DOB, gender, stat
 | `authData.demo_auth.pinCode` | string | no | PIN code of the address. |
 | `authData.demo_auth.address` | string | no | Address as per Aadhaar. |
 | `consent` | object | yes | Consent captured from the user for ABHA enrolment. |
-| `consent.code` | string | yes | Consent code. Use `abha-enrollment`. |
+| `consent.code` | string | yes | Consent code. Use `ABHA-enrollment`. |
 | `consent.version` | string | yes | Consent version. Use `1.4`. |
 
 ```bash

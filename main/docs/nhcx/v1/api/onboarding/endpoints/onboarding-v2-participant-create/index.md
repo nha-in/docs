@@ -10,29 +10,25 @@ Production onboarding needs to prove that the organisation registering on NHCX i
 
 ### When to use
 
-Use at production onboarding after sandbox certification has been reviewed and credentials issued; the documented URL is https://apisprod.NHA.gov.in/pmjay/hcx/participanthcxservice/v2/participant/create. It is always followed by GET /validate with the returned transactionid and the SMS passcode, which must happen within 24 hours. In the sandbox the FAQ lists the unversioned /participant/create instead. No NHCX workflow codes or x-hcx-status values apply; this is a synchronous JSON call outside the JWE protocol.
+Use it for production onboarding, after sandbox certification. Follow it with `GET /validate` within 24 hours, using the returned `transactionid` and the SMS passcode.
 
 ### Preconditions
 
-- Production (or sandbox) credentials and a fresh Bearer token in bearer_auth with the Bearer prefix; Accept and Content-Type set to application/json.
-- registrytype from the Valid Registry Enums: HFR 10001, NIN 10002, ROHINI 10003, PAYER 10004 (HFR/EUA use 10001, PAYER/TPA use 10004).
-- role as an array from the Valid Role Enums: PROVIDER 10001, PAYER 10002, AGENCY_TPA 10003, EUA 10009, among others.
-- registryid formatted correctly: HFR ID for providers; IRDAI ID with leading zeros stripped for payers.
-- mobilenumber already registered with HFR (providers) or NHCX payer details (payers); both must match for the call to succeed.
-- Required fields: registrytype, registryid, role, endpointurl, mobilenumber, email; scheme_code is optional.
+- You have a valid access token.
+- `registrytype` and `role` use the codes from the valid enum lists.
+- The registry ID is right, with leading zeros removed from an IRDAI ID.
+- The mobile number matches the one held in HFR or the NHCX payer details.
 
 ### Postconditions
 
-HTTP 200 with ParticipantCreateV2Resp: participantid, facilityname, facilitycontact and facilityemail echoed from the linked registry, a transactionid such as 1vouv8tlz2tnl-1fpspjhwj07c6, and an error object (code, message, trace). A passcode is sent by SMS to the registered mobile number. The participant is not confirmed until GET /validate?transactionId=&passcode= succeeds; the transaction ID and passcode are valid for 24 hours and each re-trigger generates a new pair. Only after creation confirmation can /v2/participant/update be used to upload the certificate and endpoint. Failures use the standard 400/404/500 ErrorResponse envelope.
+The registry returns `participantid` and a `transactionid`, and sends a passcode by SMS. You are not registered until `/validate` succeeds.
 
 ### Common mistakes
 
-- Confusing the two 10001 enums: 10001 is PROVIDER as a role and HFR/EUA as a registry type; they are different fields.
-- Sending the IRDAI registry ID with leading zeros (0123 instead of 123), which the NHA lists as a frequent production failure.
-- Using a mobile number that does not match the one on record in HFR or the NHCX payer details; the validation requires an exact match.
-- Losing the transactionid: if it is forgotten, the only recovery is to create the request again, which issues a new passcode.
-- Letting the 24-hour validity lapse before calling /validate.
-- Sending the v1 snake_case body or expecting a participant_code key; this response uses participantid.
+- Mixing up role codes and registry type codes, which share numbers.
+- Using a mobile number that does not match the one on record.
+- Losing the `transactionid`, or letting 24 hours pass before `/validate`.
+- Sending the v1 body, or expecting `participant_code` back.
 
 ### Best practices
 

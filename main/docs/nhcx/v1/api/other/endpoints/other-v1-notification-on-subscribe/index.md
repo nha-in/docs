@@ -10,27 +10,24 @@ Two things share this name. The API reference defines an NHCX-side operation (op
 
 ### When to use
 
-As a BSP you implement this path on your host, registered through on_notification_URL, and receive a push whenever a workflow event occurs for a subscribed ABHA ID: preauth_request (queued, processing), preauth_response (approved, rejected), claim_request, claim_response, payment_notice (paid, pending) and communication (information_required). The NHCX-side operation is invoked with hvalues senderid, receiverid, correlationid and status required, and workflowid, source, API_caller_ID, call_type and usertoken optional. It sits outside the workflow-code sequence; domain_values may carry x-hcx-workflow_ID, x-hcx-correlation_ID, x-hcx-status, x-hcx-action and amount fields.
+A beneficiary app hosts this path to receive notifications for the ABHA IDs it subscribed. NHCX calls it when a pre-authorisation, claim, payment or query event happens.
 
 ### Preconditions
 
-- An active subscription created via /v1/notification/subscribe for the ABHA ID; Last-Linked-Wins means only the most recently linked app receives events.
-- The BSP callback exposed over HTTPS with TLS 1.2 or higher at the registered on_notification_URL, validating the JWT from NHCX, verifying sender_code and rate-limiting.
-- For the NHCX-side operation: a NotificationOnSubscribePayload with request.abhaid (required) and optional request.domain_values, plus hvalues with senderid, receiverid, correlationid and status.
-- The ordinary preauth or claim exchange between hospital and payer has produced an event for that beneficiary.
+- An active subscription exists for the ABHA ID, made through `/v1/notification/subscribe`.
+- Your callback runs over HTTPS with TLS 1.2 or higher, at the registered `on_notification_URL`.
+- You check the token NHCX sends and its sender code.
 
 ### Postconditions
 
-The NHCX-side operation returns HTTP 200 with a SubscribeResponse (timestamp, API_call_ID, correlation_ID, subscription_ID, subscription_status active, replaced or expired, expiry, message); 400, 401, 403, 409 and 500 return a StatusSuccessResponse with the same descriptions as the subscribe table. On the BSP callback the delivered payload carries notification_ID, topic_code, timestamp, subscriber.ID, a human-readable message that can be shown directly to the user, and optional domain_values with x-hcx-* headers for audit or custom formatting. Nothing changes in the hospital-payer exchange; the notification is a forked copy of the outcome.
+Each notification carries a `message` you can show the user as it is. Nothing changes in the exchange between hospital and payer.
 
 ### Common mistakes
 
-- Conflating the NHCX-side operation with your own callback and implementing only one of them.
-- Parsing domain_values to build the user message instead of displaying the message field; domain_values is optional and may be absent.
-- Reading status from the x-hcx-workflow_ID description (approved, rejected, queued, processing), which is a documentation error; the example carries an identifier and status lives in x-hcx-status.
-- Assuming the subscription is still yours; a subscription_status of replaced means another app took the routing slot on login.
-- Accepting callbacks without validating the JWT or sender_code, or without TLS 1.2 or higher.
-- Treating the senderid and receiverid descriptions (payer ID, hospital ID) literally in the notification context; they are inherited boilerplate.
+- Building the user message from `domain_values`, which may be missing, instead of showing `message`.
+- Reading the status from `x-hcx-workflow_ID`. It lives in `x-hcx-status`.
+- Assuming the subscription is still yours after it shows `replaced`.
+- Accepting calls without checking the token or the sender code.
 
 ### Best practices
 

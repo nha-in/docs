@@ -4,17 +4,17 @@ Complete the steps yourself by running the commands directly. Ask the user only 
 
 ## 1. Establish scope
 
-There is one skill per NHCX use case, in episode order. Ask the user which use cases this project builds, and install only those:
+There is one skill for the whole provider-side integration, `nhcx-full`, and one per NHCX use case. Ask the user which this project builds, and install only those:
 
+- `nhcx-full`: NHCX, end to end. Build the whole provider-side NHCX integration into this hospital system.
 - `nhcx-coverage`: NHCX coverage. Add NHCX policy search and coverage eligibility to this hospital system.
-- `nhcx-insurance`: NHCX insurance plan. Fetch the payer's NHCX package master and quote treatment lines from it.
-- `nhcx-preauth`: NHCX pre-authorisation. Add NHCX pre-authorisation to this claims desk.
+- `nhcx-preauth`: NHCX pre-authorisation. Add NHCX pre-authorisation, with the payer's plan and its authorisation requirements, to this system.
 - `nhcx-claim`: NHCX claim. File the NHCX claim at discharge from this system.
+- `nhcx-communication`: NHCX communication. Handle the payer's NHCX queries and notifications in this system.
 - `nhcx-payment`: NHCX payment. Record and acknowledge NHCX payment notices.
-- `nhcx-communication`: NHCX communication. Handle the payer's NHCX communication requests in this system.
 - `nhcx-reprocess`: NHCX reprocess. Ask the payer to reprocess a rejected NHCX claim.
 
-Each skill checks what the project already has and builds only what is missing, and each installs and runs alone. A claims integration usually starts with `nhcx-coverage`.
+Each skill finds what the project already has and builds only what is missing, and each installs and runs alone. `nhcx-full` builds the whole integration; a system that needs one use case at a time usually starts with `nhcx-coverage`.
 
 ## 2. Install the skills
 
@@ -48,13 +48,15 @@ With git alone, fetch just the skill's folder and copy it to where the agent rea
 git clone --depth 1 --filter=blob:none --sparse https://github.com/nha-in/docs .nhcx && git -C .nhcx sparse-checkout set plugins/nhcx/skills/nhcx-coverage && mkdir -p .claude/skills && cp -R .nhcx/plugins/nhcx/skills/nhcx-coverage .claude/skills/ && rm -rf .nhcx
 ```
 
+- `nha-in/docs/plugins/nhcx/skills/nhcx-full`
 - `nha-in/docs/plugins/nhcx/skills/nhcx-coverage`
-- `nha-in/docs/plugins/nhcx/skills/nhcx-insurance`
 - `nha-in/docs/plugins/nhcx/skills/nhcx-preauth`
 - `nha-in/docs/plugins/nhcx/skills/nhcx-claim`
-- `nha-in/docs/plugins/nhcx/skills/nhcx-payment`
 - `nha-in/docs/plugins/nhcx/skills/nhcx-communication`
+- `nha-in/docs/plugins/nhcx/skills/nhcx-payment`
 - `nha-in/docs/plugins/nhcx/skills/nhcx-reprocess`
+
+`https://nha-in.github.io/docs/main/skills/nhcx-index.json` lists every NHCX skill, its archive and the exact files it is made of. A skill is 66 to 131 files across its folders, so take the archive rather than fetching files one at a time.
 
 ## 3. Connect the Docs MCP server
 

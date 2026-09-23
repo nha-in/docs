@@ -1,81 +1,152 @@
-# Introduction
+# Claim Settlement
 
-## What it is
+Claim settlement is the end-to-end process by which an insurer or State Health Agency (SHA) evaluates, approves, and pays a request for medical expenses raised by a policyholder or treating hospital. Three participants are involved. The Provider is the treating hospital and its HMIS. The Payer is the insurance company, SHA, or TPA that adjudicates and settles the claim.
 
-The National Health Claims Exchange is a single road between hospitals and insurers. A hospital asks whether a patient is covered, asks permission to treat, sends the bill, and gets paid. Today each of those steps runs differently for every insurer. On the exchange they run the same way for all of them.
+### What is Health Insurance?
 
-It carries the whole journey: checking cover before admission, getting treatment approved, submitting the claim at discharge, being paid, and arguing when the answer is wrong. Every step is a message out and an answer back later, so nothing is left hanging and there is a record of both halves.
+Health insurance, or an Insurance Policy, is a contract between an individual and a promisor. The promisor pledges to pay the individual's medical bills, up to a set limit, in case of any ailments. The individual is commonly known as a policyholder or beneficiary whereas the promisor can be an insurance company acting by itself or on behalf of Government or any organisation or Corporate entity. It protects one’s personal savings from being drained by unexpected hospital stays, surgeries, and medicines.
 
-Hospitals, insurers, patients, regulators and observers all connect to it the same way.
+### What is an Insurance Claim?
 
-NHCX is developed under the Ayushman Bharat Digital Mission (ABDM) by the National Health Authority (NHA), in consultation with the Insurance Regulatory and Development Authority of India (IRDAI). The idea is to introduce a platform of exchange to Providers and Payers so that both can transfer digitised health records and other pertinent information directly, in a machine readable format, to their counterpart.
+A health insurance claim is a formal request, by a policyholder or by the treating hospital, asking an insurance company to pay or refund money for medical care. The insurance company may act by itself or on behalf of Government or any organisation or Corporate entity.
 
-## What NHCX aims to achieve
+### Types of Health Insurance Claim
 
-NHA states five objectives for the exchange.
+- **Cashless** - A patient who is a beneficiary of a policy can avail treatment in a hospital without paying any amount out of one’s pocket. This applies when the hospital is in a “Preferred Network” for the Insurance Company, under an existing agreement between them. It also applies when the hospital is “Empaneled” under a specific scheme governing the policy. However, the amount of expenses incurred during treatment is capped either by “Sum Assured” under the policy or some mutually agreed upon “Package Rates” earmarked for a specific medical or surgical procedure.
+- **Reimbursement** - Here a patient is required to pay the bills directly to the treating hospital and later get such an amount reimbursed by Insurance Company upon submission of all relevant documents. This is a common practice if the treating hospital is not a part of “Preferred Network” for that Insurance Company, but this model is not considered in the current scope.
 
-- **Wider cover.** Bring new kinds of claim onto the network, including outpatient (OPD) visits and pharmacy bills, so insurance is not only about hospital stays.
-- **Faster money.** Shorten the time between treatment and payment, and make cashless treatment workable even in small hospitals.
-- **Room to innovate.** Give insurers the structured data they need to automate decisions and to spot fraud.
-- **One way of doing things.** A single, rule-based process that both sides trust, instead of every insurer running its own.
-- **A better patient experience.** Fewer forms, fewer delays, fewer surprises at discharge.
+### Who is a Provider?
 
-Underneath all five sits one requirement. A hospital's software and an insurer's software are built by different people on different technology, and a message has to mean exactly the same thing at both ends. That is why everything on the exchange is written in one agreed format, with agreed words for diagnoses, procedures and test results. How Claims Move on NHCX introduces that format, and Bundles and Conventions in the FHIR Reference sets out its rules.
+A Provider is the treating hospital “providing” the healthcare services to a patient, who is a beneficiary under a policy. And the HMIS software that the Provider hospital is using is known as the Provider Application. In common parlance this Provider Application is called just the “Provider”.
 
-## NHCX operating framework
+### Who is a Payer?
 
-A stock exchange works because a buyer and a seller each connect to the exchange rather than to each other. NHCX works the same way. A hospital connects once, an insurer connects once, and from then on either can reach the other without having built anything specific to them.
+A Payer is the Insurance Company who has issued the policy and is liable to make payments for medical expenses incurred for treatment of the policyholder. In some cases independent TPAs act on behalf of an Insurance Company to settle such medical bills and thereby assume the role of a Payer. On a similar note as above the software used by a Payer is called the Payer Application or simply “Payer”.
 
-## What NHCX is made of
+### Claim Settlement Process
 
-It helps to think of NHCX as three rulebooks and one referee.
+This is a two-way communication between the Hospital and the Insurance Company, that is, between the Provider and the Payer. It concerns the policy, the treatment rendered to the policyholder patient, and finally the payment of hospital bills after proper scrutiny of all relevant documents. It starts with the treating hospital informing the Insurance Company of an imminent claim for a patient who is to be admitted for treatment. It ends with the realisation of payment from the Insurance Company for all expenses incurred while treating the patient. The entire journey of claim settlement can be broken down into the following distinct flows or use cases.
 
-- **The protocol** says how a message travels: how it is addressed, sealed, acknowledged and answered. It is deliberately like email: a message goes to the exchange, the exchange passes it on, and the reply comes back the same way.
-- **The data specifications** say what goes inside a message. Claims, policies, payments and the rest are written as FHIR records, using profiles published by NRCeS, so that both sides read the same thing.
-- **The operational guidelines** say who may join, how they are checked, what they may do, and how they can be removed.
-- **NHA is the referee.** It publishes the rules, runs the exchange, and works with NRCeS and IRDAI to change them.
+## The 10 Steps of Claim Settlement on NHCX
 
-The portal also publishes a live Swagger specification for each of the exchange's services, and Environments and Addresses in the Reference section lists them.
+The traditional ten stages of claim settlement map directly onto NHCX exchanges.
 
-Five principles run through all of it. The rules are **open**, published under a permissive licence so anyone can build against them. They are **evolvable**, so a scheme can add what it needs without breaking everyone else. They are **minimal**, so they are easy to understand and do not hold back innovation. They protect **privacy and security**, with sealed contents and tamper-proof records. And they are **unbundled**, so a participant can adopt one part without adopting all of it.
+#### Step 1: Intimation
 
-## Who is on the network
+The hospital informs the insurance company that a patient holding one of its policies is going to be treated for the diagnosed ailments.
+
+#### Step 2: Policy verification by the hospital
+
+The hospital checks that the patient to be treated holds a valid policy from that insurance company and that the ailments to be treated are covered under the policy.
+
+#### Step 3: Beneficiary and tie-up verification by the payer
+
+The insurance company checks that a bona fide policyholder has come for treatment and that a proper tie-up is in place with the hospital for providing such cashless treatment.
+
+#### Step 4: Treatment plan intimation
+
+The hospital sends the insurance company an initial intimation of the treatment plan, any procedures to be carried out, and the expected length of stay needed for treatment.
+
+#### Step 5: Preauthorisation
+
+Once satisfied with the genuineness of the case, the insurance company sends a preliminary approval, commonly known as Preauthorisation or "PreAuth". This authorises the hospital to go ahead with treatment for the policyholder patient, and the patient is then admitted.
+
+#### Step 6: Enhancement
+
+During the course of treatment, the hospital may approach the insurance company again to notify it that additional procedures may be required or that an extension of stay is needed. This is commonly known as "Enhancement".
+
+#### Step 7: Discharge and document submission
+
+The patient is discharged, and the hospital submits all necessary documents to the insurance company, including consultation and clinical notes, diagnostic reports, medication details, the discharge summary and all bills.
+
+#### Step 8: Payer query and resolution
+
+At this stage, the insurance company may ask for further explanation or for documents it considers necessary to substantiate the claim and support its adjudication. Such a communication from the insurance company to the hospital is called a "Query".
+
+#### Step 9: Claim adjudication
+
+The insurance company carries out the final adjudication and conveys the outcome to the hospital, stating whether the claimed amount is "Granted", "Denied" or "Partially Granted", along with the reasons.
+
+#### Step 10: Payment and reconciliation
+
+The insurance company pays the hospital the granted amount for the claim. It also notifies the hospital of the bank transaction details along with other details such as applicable tax or deductions.
+
+#### End-to-End Claim Lifecycle Flow
 
 ```mermaid
-flowchart LR
-  H1[Hospital] --- X((NHCX))
-  H2[Clinic] --- X
-  A[Patient app] --- X
-  X --- P1[Insurer]
-  X --- P2[Government scheme]
-  X --- T[TPA]
-  X --- R[Regulator]
-  X --- N[Another exchange]
+flowchart TD
+
+  A[Patient Arrives at Hospital] --> B[Coverage Eligibility Check]
+  B --> C[Fetch Insurance Plan & Tariff Master]
+  C --> D[Submit Preauthorisation Request]
+  D --> Q1{Payer Adjudication}
+  Q1 -- Query Raised --> D3[Answer Query with Documents] --> Q1
+  Q1 -- Approved --> E[Inpatient Admission & Treatment]
+  E --> E2{Case Requires Extension?}
+  E2 -- Yes --> F[Submit Enhancement Request] --> Q1
+  E2 -- No --> G[Discharge Patient & Submit Claim]
+  G --> Q2{Payer Adjudication}
+  Q2 -- Query Raised --> G3[Submit Additional Documents] --> Q2
+  Q2 -- Decided --> H[Claim Adjudication Decision]
+  H --> I[Payer Issues Payment Notice with UTR]
+  I --> J[Hospital Acknowledges Settlement]
+  H -. Rejected or Partial Shortfall .-> K["Task: Reprocess or Arbitration"]
+  D -. Voluntary Withdrawal .-> L["Task: Cancel Preauth"]
 ```
 
-Most of this documentation talks about two parties, the hospital and the insurer. The network recognises more.
+## NHCX Platform
 
-- **Providers.** Hospitals and clinics, identified by their Health Facility Registry entry.
-- **Payers.** Insurance companies, and the government agencies that pay for schemes.
-- **TPAs.** Third-party administrators who process claims on an insurer's behalf. On the network a TPA behaves like a payer.
-- **Regulators.** IRDAI and bodies like it, who can search claims across every payer.
-- **Scheme sponsors.** The owner of a programme, for example NHA for Ayushman Bharat, with payer-level access.
-- **Researchers and insurance marketplaces.** Given aggregated or consented data only.
-- **Patient apps.** Personal health record apps that receive notifications on a beneficiary's behalf.
-- **Other exchanges.** NHCX is designed so that more than one instance can exist and relay to each other.
+### What is NHCX?
 
-Each role comes with a fixed list of what it may send and receive. A hospital can ask about eligibility and submit claims; it cannot search another hospital's claims. A regulator can search; it cannot submit.
+The National Health Claims Exchange (NHCX) irons out the challenges depicted above. It is developed under the Ayushman Bharat Digital Mission (ABDM) by the National Health Authority (NHA), in consultation with the Insurance Regulatory and Development Authority of India (IRDAI). The idea is to introduce a platform of exchange to the Providers and Payers so that both can transfer digitised health records and other pertinent information directly in a machine readable format to its counterpart.
 
-## What changes in practice
+### What NHCX aims to achieve?
 
-Four things are different once a hospital is on the exchange, and the rest of this documentation is about making them work.
+The primary objective of NHCX is to streamline and standardise the processing of health insurance claims across the country, ensuring absolute interoperability across diverse systems. Provider and Payer applications may operate on completely different technology stacks. Even so, one system can seamlessly remit health information to the other in a comprehensive, digitised, machine readable format, with the very exact interpretation at both ends. It is achieved by leveraging the Fast Healthcare Interoperability Resources (FHIR) standard protocols and using international coding practices, wiping out even the slightest ambiguity in the understanding.
 
-**Records go across as records.** A hospital's software already holds the diagnosis, the test results and the treatment as data. Today most of it is printed or turned into a picture before it is sent, and the insurer's software cannot read a picture. On the exchange it goes across as data and stays readable.
+### NHCX Operating Framework
 
-**That makes automatic decisions possible.** An insurer can only decide a claim by machine if it can read the values. A blood test sent as ten separate results can be checked automatically; the same test sent as a scan cannot.
+On securities exchanges like NSE & BSE, anyone can buy or sell independently by merely getting connected to the platform. In the same way, the entire idea of NHCX is to connect Providers and Payers on either side. Once Providers and Payers become compliant to the NHCX protocols like using prescribed FHIR bundles and implementing universally accepted coding practices they can independently connect to one another using NHCX as a medium of exchange. The protocols and standards ensure that a health information does not lose any of its essence during the transfer.
 
-**One place to type things.** The hospital's own system becomes the single place the information is entered, rather than being re-keyed into an insurer's portal afterwards. Most rejections on technical grounds come from that second typing.
+### Benefits of using NHCX
 
-**Any hospital can reach any insurer.** A small hospital that could never afford to integrate with thirty insurers separately can integrate once.
+- It is imperative that in the present day context almost every healthcare provider or hospital is generating digitised health records. But there is no point if the hospital has to convert that data into a “pdf” or a “jpg” file and transmit the same to the insurance company in a human readable format. NHCX is the only solution to this widespread problem
+- Let us consider a diagnostic report of a patient like “Lipid Profile” that has some 10 parameter values, all very important to understand the criticality of the case. It would be very helpful for the insurance company to have those 10 different values for the individual parameters of Lipid Profile in adjudication of the case. Using NHCX such values for each of these parameters under Lipid Profile can be passed on from Provider to Payer
+- Since any standard hospital HMIS already captures data pertaining to a patient like medical history, allergies, medication, line of treatment, etc. it would be apt to convey those same details to the insurance company instead of taking a printout and scanning them again for email attachments or uploads, thereby ensuring chastity of data
+- Data precision is also safeguarded as the intervention of data entry operators is only limited to the first level entry into HMIS, rendering this to be the only source of truth. Eventually this translates to lesser queries and rejection of claims on flimsy grounds
+- NHCX enables maximum data transfer in the digitised format, thus allowing a Payer run AI tools and conduct automated adjudication to the maximum possible extent
+- Government social security schemes like Ayushman Bharat are gaining momentum, and IRDAI is advocating “Cashless Everywhere”. More and more healthcare providers are entering the arena, and only a universal model like NHCX can support this extent of scalability
 
-How Claims Move on NHCX follows a claim from admission to payment, in the ordinary language of the people who do it, before any of this becomes technical.
+### The Asynchronous Request and Callback Pattern
+
+Claim decisions can't be made instantly. A pre-authorisation review may take minutes to hours, and a complex claim review may take days. So NHCX handles every major action in two separate steps.
+
+#### Request
+
+The sender calls an action endpoint, such as `preauth/submit`. NHCX checks the message headers, confirms who sent it, and immediately replies with an HTTP 202 Accepted receipt. This receipt only confirms that the message was received. It is not a decision on the case.
+
+#### Response
+
+```mermaid
+sequenceDiagram
+  box Provider side
+    participant P as Hospital (Provider)
+  end
+  box Exchange
+    participant X as NHCX Gateway
+  end
+  box Payer side
+    participant Y as Insurer / SHA (Payer)
+  end
+  P->>X: POST preauth/submit
+  X-->>P: 202 Accepted (Receipt: queued & routed)
+  X->>Y: Delivers encrypted payload
+  Y-->>X: 202 Accepted
+  Note over Y: Clinical & financial adjudication
+  Y->>X: POST preauth/on_submit (Decision)
+  X-->>Y: 202 Accepted
+  X->>P: Delivers decision to Provider callback
+  P-->>X: 202 Accepted
+```
+
+The receiver opens the message, makes its decision, and sends the result later to the matching callback endpoint, such as `preauth/on_submit`. NHCX forwards this response to the sender's registered webhook, which replies with its own HTTP 202 receipt.

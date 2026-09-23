@@ -10,27 +10,24 @@ The init variant exists so that a policy link can be confirmed out of band befor
 
 ### When to use
 
-Use it when your NHCX instance requires the confirmed (init then validate) form of linking rather than the single-call form. It is part of member-layer setup and precedes any claim-side workflow. Call init with the full link request, keep the transaction identifier the flow returns, and then complete the link with the validate call carrying passcode and transactionId. If the confirmation is never completed, the link should not be assumed to exist; verify with /participant/get/policies.
+Use it when your NHCX instance needs linking confirmed with a passcode. Start the link here, then finish it with the validate call.
 
 ### Preconditions
 
-- A valid Bearer token from the client-credentials call (POST /get/session, form-urlencoded client_ID, client_secret, grant_type=client_credentials); tokens last 1200 seconds, so refresh before expiry.
-- HTTP headers Accept: application/json, Content-Type: application/json and bearer_auth: Bearer (the participant service uses bearer_auth, not Authorisation).
-- Base path for the participant service: https://apisbx.ABDM.gov.in/pmjay/sbxhcx/participanthcxservice (sandbox) or https://apisprod.NHA.gov.in/pmjay/hcx/participanthcxservice (production).
-- This is a synchronous plain-JSON registry call: no JWE envelope, no x-hcx-* protocol headers and no correlation ID are involved.
-- The caller must be the participant named as payerid or processingid, with a token minted from the client_ID used at participant creation.
-- The request body is ParticipantLinkAbhaRequest: requestid (UUID), abhanumber, memberid, payerid and policies (productid, productname) are required; mobilenumber and processingid are optional.
+- You have a valid access token in the `bearer_auth` header.
+- You are the payer or its TPA, using the credentials that participant was created with.
+- The body carries the member, the payer and the policies to link.
 
 ### Postconditions
 
-The service answers synchronously with HTTP 200 and ParticipantLinkAbhaResponse (optional result and errormessage). Per the documented pattern, the link is then confirmed by GET /v2/participant/link/abha/policy/validate with the passcode and transactionId; the docs do not state that the link is visible in policy lookups before that confirmation. There is no NHCX callback. Errors return 400, 404 or 500 with the ErrorResponse envelope. For the sibling participant flows the transaction ID and passcode are valid for 24 hours; the docs do not state a separate validity for the policy link pair.
+The link is started but not confirmed. Do not rely on it until the validate call succeeds.
 
 ### Common mistakes
 
-- Treating init as the complete link and never calling /v2/participant/link/abha/policy/validate, then reporting that get/policies returns nothing.
-- Using a token from a client_ID other than the one used at participant creation for the payer or TPA (common mistake 10 in the NHA list); linking is refused for unauthorised parties.
-- Mixing the case of the path: init and validate live under lower-case /v2/, while the direct V2 link uses /V2/.
-- Swapping payerid and processingid, or omitting required fields such as requestid, memberid or the policies array.
+- Stopping here and never calling the validate step.
+- Using a token from different credentials than the payer or TPA was created with.
+- Mixing up the path case: this uses a lower-case `v2`.
+- Mixing up `payerid` and `processingid`.
 
 ### Best practices
 

@@ -10,28 +10,23 @@ Given only a product identifier, an integrator often needs to know which payer s
 
 ### When to use
 
-Use it when you hold a product ID but not the payer participant code, for example while normalising a policy lookup or verifying a newly linked product. It is a synchronous helper in the member layer, used before InsurancePlan retrieval, coverage eligibility or preauthorisation rather than during them. Payers use it after /product/link or /product/delink to confirm the registry state.
+Use it when you have a product ID and need the payer that owns it.
 
 ### Preconditions
 
-- A valid Bearer token from the client-credentials call (POST /get/session, form-urlencoded client_ID, client_secret, grant_type=client_credentials); tokens last 1200 seconds, so refresh before expiry.
-- HTTP headers Accept: application/json, Content-Type: application/json and bearer_auth: Bearer (the participant service uses bearer_auth, not Authorisation).
-- Base path for the participant service: https://apisbx.ABDM.gov.in/pmjay/sbxhcx/participanthcxservice (sandbox) or https://apisprod.NHA.gov.in/pmjay/hcx/participanthcxservice (production).
-- This is a synchronous plain-JSON registry call: no JWE envelope, no x-hcx-* protocol headers and no correlation ID are involved.
-- Body is ProductOwnerRequest with a single optional string, productid; supply it, since the lookup has no other input.
-- The product must have been registered by its payer through /product/link.
+- You have a valid access token in the `bearer_auth` header.
+- You send the `productid`.
+- The payer has registered the product.
 
 ### Postconditions
 
-Returns HTTP 200 with ParticipantCreateResponse containing the optional participant_code of the owning participant. No callback follows and no state changes. Failures return 400, 404 or 500 with the ErrorResponse envelope. The returned code identifies the payer (the payerid used in policy links); remember that for NHCX routing the receiver code should come from the processingID given by the get-policies response, which may be a TPA rather than this owner.
+You get the owning payer's participant code. Nothing changes.
 
 ### Common mistakes
 
-- Using the returned participant_code directly as x-hcx-recipient_code when the payer is processed by a TPA; NHA's common mistake 7 says the receiver code is the processingID from get/Policies.
-- Expecting product name or other product details in the response; only participant_code is returned.
-- Sending an empty body; productid is optional in the schema but the lookup needs it.
-- Confusing this endpoint with /participant/getProductIdName, which carries the same description but a different request shape.
-- Omitting the Accept header or the Bearer prefix.
+- Using this code as `x-hcx-recipient_code` when a TPA processes the payer's claims. Use the processing ID from get-policies.
+- Expecting product details in the answer.
+- Sending an empty body.
 
 ### Best practices
 

@@ -47,9 +47,9 @@ Read what it writes before you run it. An assistant is fast and confident, and i
 
 A skill is a snapshot. The Docs MCP server is the same catalogue live, queried a paragraph at a time instead of loaded whole.
 
-Docs MCP serverAddress not in this build
+Docs MCP server
 
-Your agent will query this catalogue as it works, instead of loading it. The server is live; this build just does not carry its address. The endpoint is set at deploy, and every control here works the moment it resolves.
+Your agent queries this catalogue as it works, instead of loading it.
 
 - SearchHybrid keyword and semantic search over every page here, so an agent retrieves the paragraph it needs instead of loading the site.`search_docs, get_atom, related_atoms, list_atoms`
 - DecodeTurn an error code you just received into what it means and what to do, without you finding the right table.`decode_error`
@@ -57,31 +57,37 @@ Your agent will query this catalogue as it works, instead of loading it. The ser
 
 **Claude**
 
-`claude mcp add --transport http abdm-docs <mcp-url, set at deploy> -s user`
+[Add to Claude](claude://code/new?q=Add%20the%20ABDM%20documentation%20MCP%20server%2C%20then%20use%20it%20to%20answer%20my%20ABDM%20questions.%0A%0ARun%20this%3A%0Aclaude%20mcp%20add%20--transport%20http%20abdm-docs%20https%3A%2F%2Fdocs.abdm.gov.in%2Fmcp%20-s%20user%0A%0AUser%20scope%2C%20so%20it%20is%20available%20in%20every%20project%20rather%20than%20only%20this%20directory.%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
+
+`claude mcp add --transport http abdm-docs https://docs.abdm.gov.in/mcp -s user`
 
 User scope, so it is there in every project rather than only this directory. Claude Desktop takes the generic block under "Any agent" instead.
 
 **Cursor**
 
-`{ "mcpServers": { "abdm-docs": { "url": "<mcp-url, set at deploy>" } } }`
+[Add to Cursor](cursor://anysphere.cursor-deeplink/mcp/install?name=abdm-docs\&config=eyJ1cmwiOiJodHRwczovL2RvY3MuYWJkbS5nb3YuaW4vbWNwIn0%3D)
+
+`{ "mcpServers": { "abdm-docs": { "url": "https://docs.abdm.gov.in/mcp" } } }`
 
 The link opens Cursor on a confirmation dialog. The block goes in .cursor/mcp.json if you would rather add it by hand.
 
 **VS Code**
 
-`code --add-mcp '{"name":"abdm-docs","type":"http","url":"<mcp-url, set at deploy>"}'`
+[Add to VS Code](vscode:mcp/install?%7B%22name%22%3A%22abdm-docs%22%2C%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fdocs.abdm.gov.in%2Fmcp%22%7D)
+
+`code --add-mcp '{"name":"abdm-docs","type":"http","url":"https://docs.abdm.gov.in/mcp"}'`
 
 The link opens VS Code on a confirmation dialog. The command does the same from a terminal.
 
 **Codex**
 
-`codex mcp add abdm-docs --url <mcp-url, set at deploy>`
+`codex mcp add abdm-docs --url https://docs.abdm.gov.in/mcp`
 
 Writes it to \~/.codex/config.toml, which the Codex CLI, the IDE extension and the desktop app all read. Run /mcp in a session to confirm it connected.
 
 **Any agent**
 
-`{ "mcpServers": { "abdm-docs": { "url": "<mcp-url, set at deploy>" } } }`
+`{ "mcpServers": { "abdm-docs": { "url": "https://docs.abdm.gov.in/mcp" } } }`
 
 Any MCP client that reads an mcpServers config, Claude Desktop included, takes this block as is.
 
@@ -141,8 +147,8 @@ The whole of M1: the calls, the loop that builds them, every error code and the 
 
 [SKILL.md](/docs/main/skills/abdm-m1/SKILL.md "The router. Use the command below to take the references with it.")
 
-- ScaffoldBuilds the module flow by flow against the sandbox.
-- DesignWhat the journey around the calls has to do, and what a screen may not claim.
+- ScaffoldThe loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.
+- Design
 - Integrate125 operations, with their hosts and headers.
 - Debug17 error codes, each with what to do about it.
 

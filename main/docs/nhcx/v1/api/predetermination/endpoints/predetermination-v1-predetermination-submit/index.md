@@ -10,26 +10,26 @@ A hospital planning a treatment can learn the benefit a payer would approve for 
 
 ### When to use
 
-Before a planned admission, with a payer that has confirmed it supports predetermination. The exchange is specified but seldom used, so confirm support with the payer before building it. Send `x-hcx-status` `request.initiated` with a new correlation ID. The payer's answer, use case C11, arrives on `/v1/predetermination/on_submit`.
+Use it before a planned admission to ask what the payer would approve for a treatment. Few payers support it, so confirm with the payer first.
 
 ### Preconditions
 
-- The payer has confirmed that it answers predetermination requests.
-- The bundle carries `Claim`, `Patient`, the provider and payer `Organization`, `Coverage`, `Practitioner` and `Procedure`, shaped as in the pre-authorisation chapters.
-- `Claim.use` is `predetermination`, and `Claim.identifier[0].value` carries your predetermination reference.
-- A valid session token, the recipient's certificate, and the bundle sealed as a JWE in `payload`, with the protected headers mirrored onto the wire.
-- A fresh `x-hcx-api_call_id` and a new `x-hcx-correlation_id` for the cycle.
+- The payer has confirmed it answers predetermination requests.
+- You have a valid access token and the payer's certificate.
+- The bundle is an FHIR `Claim` with `use` set to `predetermination`, encrypted for the payer.
+- The correlation ID is new for this request.
 
 ### Postconditions
 
-NHCX returns HTTP 202 with the acknowledgement and forwards the request asynchronously. The payer answers on `/v1/predetermination/on_submit` with a `ClaimResponse` whose `use` is `predetermination`, carrying the estimated approved benefit in `ClaimResponse.total` under category `benefit`. Nothing is reserved against the policy.
+- NHCX answers `202` at once and forwards the request.
+- The payer's estimate arrives later on `/v1/predetermination/on_submit`. Nothing is reserved against the policy.
 
 ### Common mistakes
 
-- Building the exchange before the payer has confirmed it supports it.
-- Leaving `Claim.use` as `preauthorization` when reusing the pre-authorisation builder.
-- Treating the estimate as an approval and skipping the pre-authorisation at admission.
-- Reusing a correlation ID from an earlier cycle, which NHCX refuses as a duplicate (`NHCX-1006`).
+- Building the exchange before the payer confirms support.
+- Leaving `use` as `preauthorization` when reusing the pre-authorisation code.
+- Treating the estimate as an approval and skipping the pre-authorisation.
+- Reusing a correlation ID from an earlier request.
 
 ### Best practices
 

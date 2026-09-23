@@ -6,7 +6,7 @@ Retrieve the details of a specific provider based on the provided provider ID. W
 
 ```bash
 curl --request GET \
-  --url https://dev.abdm.gov.in/api/hiecm/gateway/v3/providers/{provider-id} \
+  --url https://abhasbx.abdm.gov.in/api/hiecm/gateway/v3/providers/{provider-id} \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \

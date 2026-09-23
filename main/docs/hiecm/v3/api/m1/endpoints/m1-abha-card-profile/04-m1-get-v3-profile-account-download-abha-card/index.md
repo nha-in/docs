@@ -2,7 +2,7 @@
 
 `GET /abha/api/v3/profile/account/download-abha-card`
 
-**Endpoint:** `GET /abha/api/v3/profile/account/download-abha-card`
+**Endpoint:** `GET /abha/api/v3/profile/account/download-ABHA-card`
 
 **Flow:** **ABHA Card & Profile** - independent API; call the one that fits your identifier / modality.
 

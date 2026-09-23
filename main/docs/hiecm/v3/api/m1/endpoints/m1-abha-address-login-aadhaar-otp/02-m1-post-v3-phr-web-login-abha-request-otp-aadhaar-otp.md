@@ -2,7 +2,7 @@
 
 `POST /abha/api/v3/phr/web/login/abha/request/otp`
 
-Starts login with an ABHA address. UIDAI sends an OTP to the Aadhaar-linked mobile. `loginId` is the RSA-encrypted ABHA address. Use *Search ABHA address (auth methods)* first to check that `AADHAAR_OTP` is allowed.
+Starts login with an ABHA address. UIDAI sends an OTP to the Aadhaar-linked mobile. `loginId` is the RSA-encrypted ABHA address. Use *Search ABHA address (auth methods)* first to check that `Aadhaar_OTP` is allowed.
 
 **Endpoint:** `POST /abha/api/v3/phr/web/login/abha/request/otp`
 
@@ -21,10 +21,10 @@ Starts login with an ABHA address. UIDAI sends an OTP to the Aadhaar-linked mobi
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["abha-address-login", "aadhaar-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
-| `loginHint` | `"abha-address"` | yes | Type of identifier sent in `loginId`. |
+| `scope` | `["ABHA-address-login", "Aadhaar-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `loginHint` | `"ABHA-address"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"aadhaar"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
+| `otpSystem` | `"Aadhaar"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
 
 ```bash
 curl --request POST \

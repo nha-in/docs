@@ -10,26 +10,23 @@ This GET endpoint closes the approval loop opened by /v2/participant/link/abha/p
 
 ### When to use
 
-Call it after a successful init call, once the passcode is available, passing both required query parameters: passcode (string) and transactionId (string). It is the last step of the confirmed link flow and must be completed before the link is relied on. It has no role in claim-side workflows (eligibility, preauthorisation, claim) beyond making the member discoverable so that those flows can start.
+Call it after the init call, once you have the passcode. It confirms the link.
 
 ### Preconditions
 
-- A prior POST /v2/participant/link/abha/policy/init that returned a transaction identifier.
-- The passcode associated with that transaction; the documentation for the sibling participant flows says the passcode is specific to each transaction ID and valid for 24 hours.
-- A valid Bearer token in bearer_auth: Bearer, plus Accept: application/json; there is no request body, and no JWE or x-hcx-* headers are involved.
-- The participant service base path, sandbox https://apisbx.ABDM.gov.in/pmjay/sbxhcx/participanthcxservice.
+- An init call has returned a transaction ID.
+- You have the passcode for that transaction.
+- You have a valid access token in the `bearer_auth` header.
 
 ### Postconditions
 
-On success the endpoint returns HTTP 200 with ParticipantLinkAbhaResponse (optional result and errormessage). The initiated link is confirmed and the beneficiary's products become discoverable through the policy lookup endpoints. No asynchronous callback follows. Errors return 400, 404 or 500 with the ErrorResponse envelope. If the transaction cannot be found or the passcode is wrong, the documented remedy for the sibling participant flows is to trigger the init request again, which generates a new transaction ID and passcode.
+The link is confirmed and providers can find the member's policies. If the passcode or transaction is wrong, start again with init.
 
 ### Common mistakes
 
-- Sending passcode and transactionId in a JSON body instead of as query parameters; this is a GET with two required query parameters.
-- Using a transactionId from a different init call or from a participant create/update flow.
-- Letting the passcode age out; the sibling flows document a 24-hour validity for transaction ID and passcode.
-- Calling with a token from a client_ID other than the one used at participant creation, which fails the link authorisation check.
-- Omitting the Accept header or the Bearer prefix on bearer_auth.
+- Sending `passcode` and `transactionId` in a body. They go in the query string.
+- Using a transaction ID from a different call.
+- Waiting until the passcode expires.
 
 ### Best practices
 

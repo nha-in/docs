@@ -22,10 +22,10 @@ Optional. Sends an ABDM OTP to an email address so it can be linked to the newly
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
 | `txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
-| `scope` | `["abha-enrol", "email-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["ABHA-enrol", "email-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `loginHint` | `"email"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"abdm"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
+| `otpSystem` | `"ABDM"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
 
 ```bash
 curl --request POST \

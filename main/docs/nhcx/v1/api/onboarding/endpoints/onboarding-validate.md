@@ -10,26 +10,23 @@ Registering an organisation on a national claims exchange must be authorised by 
 
 ### When to use
 
-Call it after /v2/participant/create has returned a transactionid and the passcode has arrived by SMS, and before attempting /v2/participant/update, whose validations require that creation confirmation is already completed. The production URL is https://apisprod.NHA.gov.in/pmjay/hcx/participanthcxservice/validate?transactionId=""&passcode="". The pair is valid for 24 hours. It is one of only three GET operations in the participant service and carries no workflow or x-hcx-status codes.
+Call it after `/v2/participant/create` returns a `transactionid` and the passcode arrives by SMS. Do it within 24 hours, and before any `/v2/participant/update`.
 
 ### Preconditions
 
-- A completed /v2/participant/create whose response supplied the transactionid.
-- The passcode delivered to the registered mobile number for that specific transaction; passcodes are bound to a transaction ID and cannot be reused across attempts.
-- Both values presented as query parameters passcode and transactionId within 24 hours of the create call.
-- A Bearer token in bearer_auth with the Bearer prefix and Accept: application/json, as for every registry call.
+- You have the `transactionid` from the create call.
+- You have the SMS passcode for that same transaction.
+- You have a valid access token.
 
 ### Postconditions
 
-HTTP 200 with a bare string body; the OpenAPI declares the 200 response type as string and the operation (particiapntValidate) as validating approval from the participant for participant creation. The participant is now confirmed in the registry and satisfies the precondition for /v2/participant/update, which uploads the encryption certificate and callback endpoint. There is no asynchronous callback. A wrong or expired passcode, or an unknown transaction ID, returns the registry ErrorResponse envelope on 400 or 404.
+The participant is confirmed in the registry. You can now upload the certificate and callback URL with `/v2/participant/update`.
 
 ### Common mistakes
 
-- Waiting more than 24 hours; both the transaction ID and the passcode expire and the create call must be repeated.
-- Re-triggering /v2/participant/create while a passcode is pending, which issues a new transaction ID and passcode and orphans the earlier pair.
-- Using a passcode from a different transaction ID; passcodes are specific to the transaction that generated them.
-- Calling /update/validate by mistake; that endpoint confirms updates, not creation.
-- Losing the transaction ID: the documented recovery is to create the request again.
+- Waiting more than 24 hours, so both values expire.
+- Calling create again while a passcode is pending, which replaces the earlier pair.
+- Calling `/update/validate` instead. That one confirms updates.
 
 ### Best practices
 
