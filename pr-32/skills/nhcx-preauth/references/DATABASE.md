@@ -1,0 +1,71 @@
+# Database
+
+Every table behind the claim, patient and practitioner flows, in one list. Each row links to its full spec in [../database/](../database/INDEX.md), which gives the columns, keys and indexes. D1 to D8 are tables most HMIS already have (extended where NHCX needs a field); D9 to D30 are new for claims.
+
+## Master and clinical data
+
+| # | Table | What one row is | Screens | APIs | Callbacks | FHIR |
+|---|---|---|---|---|---|---|
+| [D1](../database/D1-organization.md) | organization | The healthcare facility this installation represents. | none | [A12](../apis/A12-txn-fhir.md), [A14](../apis/A14-adjudicator-user-role.md), [A15](../apis/A15-adjudicator-process-case.md), [A16](../apis/A16-gateway-token.md) | none | [F2](../fhir/F2-coverage-eligibility-request.md), [F4](../fhir/F4-task-insuranceplan.md), [F17](../fhir/F17-organization.md), [F19](../fhir/F19-other-resources.md) |
+| [D2](../database/D2-practitioner.md) | practitioner | Doctor or staff member of the facility. | [S4](../screens/S4-claim-creation-form.md), [S16](../screens/S16-practitioner-master.md) | none | none | [F8](../fhir/F8-claim.md), [F16](../fhir/F16-practitioner.md) |
+| [D3](../database/D3-patient.md) | patient | Registered patient. | [S4](../screens/S4-claim-creation-form.md), [S13](../screens/S13-patient-list.md), [S14](../screens/S14-patient-registration-form.md), [S15](../screens/S15-patient-detail.md) | none | none | [F15](../fhir/F15-patient.md) |
+| [D4](../database/D4-encounter.md) | encounter | One OPD visit or IPD admission of a patient. | [S4](../screens/S4-claim-creation-form.md), [S15](../screens/S15-patient-detail.md) | [A17](../apis/A17-claim-state.md) | none | none |
+| [D5](../database/D5-condition.md) | condition | Chief complaint, diagnosis or medical-history problem of a patient. | [S4](../screens/S4-claim-creation-form.md), [S15](../screens/S15-patient-detail.md) | none | none | none |
+| [D6](../database/D6-observation.md) | observation | Measured or coded finding (a vital sign reading, a lab analyte, a wellness or dialysis reading). | [S15](../screens/S15-patient-detail.md) | none | none | none |
+| [D7](../database/D7-allergy.md) | allergy | Allergy or intolerance of a patient. | [S15](../screens/S15-patient-detail.md) | none | none | none |
+| [D8](../database/D8-terminology.md) | terminology | Concept in one code list (a picker), for example one ICD-10/SNOMED diagnosis, one department or one payer adapter mapping. | [S4](../screens/S4-claim-creation-form.md), [S15](../screens/S15-patient-detail.md), [S16](../screens/S16-practitioner-master.md) | none | none | none |
+
+## Claim
+
+| # | Table | What one row is | Screens | APIs | Callbacks | FHIR |
+|---|---|---|---|---|---|---|
+| [D9](../database/D9-claim.md) | claim | Claim episode (case) around one selected policy, from eligibility to payment. | [S4](../screens/S4-claim-creation-form.md), [S5](../screens/S5-claim-master.md), [S6](../screens/S6-claim-detail.md), [S9](../screens/S9-preauthorisation.md) | [A2](../apis/A2-coverage-eligibility-check.md), [A4](../apis/A4-preauth-submit.md), [A6](../apis/A6-task-submit.md), [A10](../apis/A10-txn-related.md), [A11](../apis/A11-txn-dispatch.md), [A13](../apis/A13-txn-list.md), [A14](../apis/A14-adjudicator-user-role.md), [A15](../apis/A15-adjudicator-process-case.md), [A17](../apis/A17-claim-state.md) | [C1](../callbacks/C1-callback-door.md), [C3](../callbacks/C3-auth-requirements-on-check.md), [C5](../callbacks/C5-preauth-on-submit.md), [C7](../callbacks/C7-cancel-on-submit.md), [C8](../callbacks/C8-enquiry-on-submit.md) | [F2](../fhir/F2-coverage-eligibility-request.md), [F4](../fhir/F4-task-insuranceplan.md), [F8](../fhir/F8-claim.md), [F10](../fhir/F10-task-claim-actions.md), [F15](../fhir/F15-patient.md), [F17](../fhir/F17-organization.md), [F18](../fhir/F18-coverage.md), [F19](../fhir/F19-other-resources.md) |
+
+## Package master and ruling
+
+| # | Table | What one row is | Screens | APIs | Callbacks | FHIR |
+|---|---|---|---|---|---|---|
+| [D10](../database/D10-claim-plan.md) | claim_plan | The payer's package master (InsurancePlan) for one claim's policy and provider pair. | [S6](../screens/S6-claim-detail.md), [S7](../screens/S7-insurance-plan.md), [S8](../screens/S8-line-items.md) | [A3](../apis/A3-insurance-plan-request.md), [A10](../apis/A10-txn-related.md), [A11](../apis/A11-txn-dispatch.md), [A13](../apis/A13-txn-list.md), [A17](../apis/A17-claim-state.md) | [C1](../callbacks/C1-callback-door.md), [C4](../callbacks/C4-insuranceplan-on-request.md) | [F4](../fhir/F4-task-insuranceplan.md), [F5](../fhir/F5-insuranceplan.md) |
+| [D11](../database/D11-claim-plan-benefit.md) | claim_plan_benefit | Package (or covered benefit) in a claim's package master. | [S7](../screens/S7-insurance-plan.md), [S8](../screens/S8-line-items.md), [S9](../screens/S9-preauthorisation.md) | [A3](../apis/A3-insurance-plan-request.md), [A17](../apis/A17-claim-state.md) | [C4](../callbacks/C4-insuranceplan-on-request.md) | [F5](../fhir/F5-insuranceplan.md), [F8](../fhir/F8-claim.md) |
+| [D12](../database/D12-claim-plan-form.md) | claim_plan_form | Payer questionnaire (dynamic form) shipped with a claim's package master. | [S7](../screens/S7-insurance-plan.md), [S9](../screens/S9-preauthorisation.md) | [A3](../apis/A3-insurance-plan-request.md), [A17](../apis/A17-claim-state.md) | [C4](../callbacks/C4-insuranceplan-on-request.md) | [F5](../fhir/F5-insuranceplan.md), [F6](../fhir/F6-questionnaire.md), [F7](../fhir/F7-questionnaireresponse.md) |
+| [D13](../database/D13-claim-auth.md) | claim_auth | The payer's authorisation-requirements ruling on a claim's procedure set. | [S6](../screens/S6-claim-detail.md), [S8](../screens/S8-line-items.md) | [A2](../apis/A2-coverage-eligibility-check.md), [A10](../apis/A10-txn-related.md), [A11](../apis/A11-txn-dispatch.md), [A13](../apis/A13-txn-list.md), [A17](../apis/A17-claim-state.md) | [C1](../callbacks/C1-callback-door.md), [C3](../callbacks/C3-auth-requirements-on-check.md) | none |
+| [D14](../database/D14-claim-auth-item.md) | claim_auth_item | The payer's ruling on one line of the procedure set. | [S8](../screens/S8-line-items.md) | [A2](../apis/A2-coverage-eligibility-check.md) | [C3](../callbacks/C3-auth-requirements-on-check.md) | none |
+| [D15](../database/D15-claim-auth-requirement.md) | claim_auth_requirement | Document or form the payer's ruling says the procedure set must be accompanied by. | [S8](../screens/S8-line-items.md), [S9](../screens/S9-preauthorisation.md) | [A2](../apis/A2-coverage-eligibility-check.md), [A17](../apis/A17-claim-state.md) | [C3](../callbacks/C3-auth-requirements-on-check.md) | none |
+
+## Pre-authorisation draft
+
+| # | Table | What one row is | Screens | APIs | Callbacks | FHIR |
+|---|---|---|---|---|---|---|
+| [D16](../database/D16-claim-line.md) | claim_line | Line the pre-authorisation quotes from the payer's package master: a procedure, an implant or a ward / ICU stratification tier. Primary key `id`. Parent table: `claim` (D9). | [S4](../screens/S4-claim-creation-form.md), [S8](../screens/S8-line-items.md), [S9](../screens/S9-preauthorisation.md) | [A17](../apis/A17-claim-state.md) | none | [F2](../fhir/F2-coverage-eligibility-request.md), [F5](../fhir/F5-insuranceplan.md), [F8](../fhir/F8-claim.md), [F19](../fhir/F19-other-resources.md) |
+| [D17](../database/D17-claim-form-answer.md) | claim_form_answer | The answer to one question of one payer form (questionnaire) on one claim. Primary key `id`. Parent table: `claim` (D9); the form itself is a `claim_plan_form` row (D12) matched by `form_url`, not by a foreign key. | [S9](../screens/S9-preauthorisation.md) | none | none | [F6](../fhir/F6-questionnaire.md), [F7](../fhir/F7-questionnaireresponse.md) |
+
+## Legs and verdicts
+
+| # | Table | What one row is | Screens | APIs | Callbacks | FHIR |
+|---|---|---|---|---|---|---|
+| [D18](../database/D18-claim-preauth.md) | claim_preauth | The pre-authorisation leg of one claim: the last send (first request, query answer, enhancement), the payer's verdict on it and any cancellation. Primary key `id`. Parent table: `claim` (D9), one row per claim. | [S5](../screens/S5-claim-master.md), [S6](../screens/S6-claim-detail.md), [S9](../screens/S9-preauthorisation.md) | [A4](../apis/A4-preauth-submit.md), [A6](../apis/A6-task-submit.md), [A10](../apis/A10-txn-related.md), [A11](../apis/A11-txn-dispatch.md), [A12](../apis/A12-txn-fhir.md), [A13](../apis/A13-txn-list.md), [A14](../apis/A14-adjudicator-user-role.md), [A15](../apis/A15-adjudicator-process-case.md), [A17](../apis/A17-claim-state.md) | [C1](../callbacks/C1-callback-door.md), [C5](../callbacks/C5-preauth-on-submit.md), [C7](../callbacks/C7-cancel-on-submit.md) | [F8](../fhir/F8-claim.md), [F9](../fhir/F9-claimresponse.md), [F10](../fhir/F10-task-claim-actions.md) |
+| [D19](../database/D19-claim-predetermination.md) | claim_predetermination | Predetermination ask on a claim: the pre-authorisation bundle sent with `use: predetermination` and the payer's non-binding quote. Primary key `id`. Parent table: `claim` (D9), many rows per claim. | [S6](../screens/S6-claim-detail.md), [S9](../screens/S9-preauthorisation.md) | [A4](../apis/A4-preauth-submit.md), [A10](../apis/A10-txn-related.md), [A11](../apis/A11-txn-dispatch.md), [A13](../apis/A13-txn-list.md), [A17](../apis/A17-claim-state.md) | [C1](../callbacks/C1-callback-door.md), [C5](../callbacks/C5-preauth-on-submit.md) | [F9](../fhir/F9-claimresponse.md) |
+| [D20](../database/D20-claim-submission.md) | claim_submission | The claim leg of one claim episode: how the stay ended, the last claim send and the payer's verdict on it. Primary key `id`. Parent table: `claim` (D9), one row per claim. | [S5](../screens/S5-claim-master.md), [S6](../screens/S6-claim-detail.md) | [A10](../apis/A10-txn-related.md), [A11](../apis/A11-txn-dispatch.md), [A12](../apis/A12-txn-fhir.md), [A13](../apis/A13-txn-list.md), [A14](../apis/A14-adjudicator-user-role.md), [A15](../apis/A15-adjudicator-process-case.md), [A17](../apis/A17-claim-state.md) | [C1](../callbacks/C1-callback-door.md), [C8](../callbacks/C8-enquiry-on-submit.md) | [F8](../fhir/F8-claim.md), [F9](../fhir/F9-claimresponse.md), [F10](../fhir/F10-task-claim-actions.md), [F19](../fhir/F19-other-resources.md) |
+
+## Payer messages and payments
+
+| # | Table | What one row is | Screens | APIs | Callbacks | FHIR |
+|---|---|---|---|---|---|---|
+| [D23](../database/D23-claim-query.md) | claim_query | Message the payer started on a claim over the communication route: a query for the desk to answer, a notification to acknowledge, or a note to read. Primary key `id`. Parent table: `claim` (D9), many rows per claim. | [S5](../screens/S5-claim-master.md), [S6](../screens/S6-claim-detail.md), [S9](../screens/S9-preauthorisation.md) | [A17](../apis/A17-claim-state.md) | [C1](../callbacks/C1-callback-door.md) | none |
+| [D24](../database/D24-claim-adjudication.md) | claim_adjudication | Decision step taken from the application's adjudicator desk on a case this application raised: one role, one action, one call to the payer's desk. Primary key `id`. Parent table: `claim` (D9), many rows per claim. | none | [A15](../apis/A15-adjudicator-process-case.md) | [C1](../callbacks/C1-callback-door.md) | none |
+
+## Draft details, documents and enquiries
+
+| # | Table | What one row is | Screens | APIs | Callbacks | FHIR |
+|---|---|---|---|---|---|---|
+| [D25](../database/D25-claim-diagnosis.md) | claim_diagnosis | Diagnosis quoted on a claim's pre-authorisation draft, held in both SNOMED and ICD-10. Primary key `id`. Parent table: `claim` (D9). | [S4](../screens/S4-claim-creation-form.md) | none | none | [F8](../fhir/F8-claim.md) |
+| [D26](../database/D26-claim-care-team.md) | claim_care_team | Doctor on the treating team quoted on a claim's pre-authorisation draft, with the role they play. Primary key `id`. Parent tables: `claim` (D9) and `practitioner` (D2). | [S4](../screens/S4-claim-creation-form.md), [S16](../screens/S16-practitioner-master.md) | none | none | [F8](../fhir/F8-claim.md), [F16](../fhir/F16-practitioner.md) |
+| [D27](../database/D27-claim-item.md) | claim_item | Charge-master item on a non-package pre-authorisation draft: a fixed-price item and the quantity chosen. Primary key `id`. Parent table: `claim` (D9). | [S4](../screens/S4-claim-creation-form.md) | none | none | none |
+| [D28](../database/D28-claim-document.md) | claim_document | Supporting file (PDF or image) attached to a claim for one leg, stored inline with the payer requirement it answers. Primary key `id`. Parent table: `claim` (D9). | [S9](../screens/S9-preauthorisation.md) | [A17](../apis/A17-claim-state.md) | none | [F7](../fhir/F7-questionnaireresponse.md), [F8](../fhir/F8-claim.md), [F10](../fhir/F10-task-claim-actions.md) |
+| [D29](../database/D29-claim-enquiry.md) | claim_enquiry | Small Task exchange a claim starts beside its main legs: a status enquiry, a reprocess request or a balance release request. Primary key `id`. Parent table: `claim` (D9), many rows per claim. | [S6](../screens/S6-claim-detail.md), [S9](../screens/S9-preauthorisation.md) | [A6](../apis/A6-task-submit.md), [A10](../apis/A10-txn-related.md), [A11](../apis/A11-txn-dispatch.md), [A13](../apis/A13-txn-list.md), [A17](../apis/A17-claim-state.md) | [C1](../callbacks/C1-callback-door.md), [C8](../callbacks/C8-enquiry-on-submit.md) | [F10](../fhir/F10-task-claim-actions.md) |
+
+## Numbering
+
+| # | Table | What one row is | Screens | APIs | Callbacks | FHIR |
+|---|---|---|---|---|---|---|
+| [D30](../database/D30-counter.md) | counter | Named number series and the last value handed out from it. Primary key `name`. No parent table. | [S9](../screens/S9-preauthorisation.md) | none | [C7](../callbacks/C7-cancel-on-submit.md) | none |
