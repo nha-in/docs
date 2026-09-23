@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["80937"],{21488(e,c,s){s.r(c),s.d(c,{__iconNode:()=>i,default:()=>l});var a=s(34438);let i=[["circle",{cx:"6",cy:"12",r:"4",key:"1ehtga"}],["circle",{cx:"18",cy:"12",r:"4",key:"4vafl8"}],["line",{x1:"6",x2:"18",y1:"16",y2:"16",key:"pmt8us"}]],l=(0,a.A)("voicemail",i)}}]);
