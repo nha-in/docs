@@ -201,7 +201,6 @@ type PanelProps = {
   /** The Docs MCP server's address, where this build carries one. */
   mcpUrl: string | null;
   pluginRepo: string;
-  pluginMarketplace: string;
   open: boolean;
   onClose: () => void;
   question: string;
@@ -336,7 +335,6 @@ function Panel({
   docsOrigin,
   mcpUrl,
   pluginRepo,
-  pluginMarketplace,
   open,
   onClose,
   page,
@@ -728,7 +726,7 @@ function Panel({
       ...(chose ? [{from: 'you' as const, text: chose}] : []),
       {
         from: 'assistant' as const,
-        text: say(next, {docsOrigin, mcpUrl, pluginRepo, pluginMarketplace}),
+        text: say(next, {docsOrigin, mcpUrl, pluginRepo}),
         install: next,
       },
     ]);
@@ -1134,7 +1132,7 @@ function Panel({
                 same fenced block every other answer here uses. */}
             {turn.install?.at === 'answer' &&
               (() => {
-                const {link} = scripted(turn.install, {docsOrigin, mcpUrl, pluginRepo, pluginMarketplace});
+                const {link} = scripted(turn.install, {docsOrigin, mcpUrl, pluginRepo});
                 return link ? (
                   <a
                     class="ask-ai__install-cta"
@@ -1237,7 +1235,6 @@ function Widget({
   docsOrigin,
   mcpUrl,
   pluginRepo,
-  pluginMarketplace,
   supportUrl,
   launcher,
   shortcut,
@@ -1255,7 +1252,6 @@ function Widget({
   docsOrigin: string;
   mcpUrl: string | null;
   pluginRepo: string;
-  pluginMarketplace: string;
   supportUrl: string;
   launcher: boolean;
   shortcut: string;
@@ -1302,7 +1298,6 @@ function Widget({
         docsOrigin={docsOrigin}
         mcpUrl={mcpUrl}
         pluginRepo={pluginRepo}
-        pluginMarketplace={pluginMarketplace}
         supportUrl={supportUrl}
         open={open}
         question={question}
@@ -1327,7 +1322,6 @@ function Widget({
  *                every host except the docs site itself
  *   plugin-repo  the repository serving the plugin marketplace, so the
  *                install flow names the fork this site is published from
- *   plugin-marketplace  that marketplace's name, for the install command
  *   mcp-url      the Docs MCP server's address, for the install flow to hand
  *                out; absent and the flow says so rather than inventing one
  *   launcher     "none" to supply your own trigger and drive `open`
@@ -1385,7 +1379,6 @@ class SupportAgentElement extends HTMLElement {
     'docs-origin',
     'mcp-url',
     'plugin-repo',
-    'plugin-marketplace',
     'support-url',
     'launcher',
     'shortcut',
@@ -1452,8 +1445,7 @@ class SupportAgentElement extends HTMLElement {
         apiBase={this.getAttribute('api-base') ?? ''}
         docsOrigin={docsOrigin}
         mcpUrl={this.getAttribute('mcp-url')}
-        pluginRepo={this.getAttribute('plugin-repo') ?? 'nha-in/agent-plugins'}
-        pluginMarketplace={this.getAttribute('plugin-marketplace') ?? 'nha'}
+        pluginRepo={this.getAttribute('plugin-repo') ?? 'nha-in/docs'}
         supportUrl={
           this.getAttribute('support-url') ??
           `${docsOrigin.replace(/\/$/, '')}/docs/support`
