@@ -1051,3 +1051,75 @@ li.docs-step:last-child {
 [data-theme='dark'] .err-code--gateway { color: oklch(82.8% 0.111 230.318); }
 [data-theme='dark'] .err-code--payer { color: oklch(87.9% 0.169 91.605); }
 [data-theme='dark'] .err-code--live { color: oklch(81.1% 0.111 293.571); }
+
+/* ---------- Get started: What is ABDM? ----------
+
+   The ABHA card drawing floats right of NHA's two paragraphs. Two grid
+   columns squeezed the text under 400px beside the on-this-page rail, so the
+   section read taller, not lighter. Floated, the first paragraph wraps
+   beside the drawing and the second runs the full measure under it. Below
+   768px the drawing sits above the text, centred. */
+
+.intro-split {
+  display: flow-root;
+}
+
+@media (min-width: 768px) {
+  .intro-split > .abha-art {
+    float: right;
+    width: min(46%, 19rem);
+    margin: 0.25rem 0 1rem 2rem;
+  }
+}
+
+.abha-art {
+  width: 100%;
+  max-width: 19rem;
+  margin: 0 auto 1.25rem;
+  color: var(--text-heading);
+}
+
+.abha-art svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.abha-art .abha-art__paper {
+  fill: var(--background);
+}
+
+.abha-art .abha-art__ink {
+  fill: currentColor;
+}
+
+.abha-art .abha-art__faint {
+  opacity: 0.3;
+}
+
+.abha-art text {
+  stroke: none;
+  fill: currentColor;
+  font-family: var(--font-sans);
+}
+
+.abha-art .abha-art__brand {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.abha-art .abha-art__name {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.abha-art .abha-art__label {
+  font-size: 8.5px;
+  opacity: 0.6;
+}
+
+.abha-art .abha-art__value {
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
