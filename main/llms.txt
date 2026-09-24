@@ -616,6 +616,7 @@ Add `.md` to any link below to get that page as markdown. Individual API operati
 - [ABHA on UHI](https://nha-in.github.io/docs/main/docs/uhi/v1/registries/abha): Where a patient's ABHA address appears in UHI messages, in which services it is mandatory, and what UHI does not do with it.
 - [HFR on UHI](https://nha-in.github.io/docs/main/docs/uhi/v1/registries/hfr): The one UHI service that carries an HFR ID, the tag it travels in, and what is issued at onboarding.
 - [HPR on UHI](https://nha-in.github.io/docs/main/docs/uhi/v1/registries/hpr): Where a practitioner's HPR ID appears in a UHI catalogue and a UHI order, and the two forms it takes.
+- [Developer resources](https://nha-in.github.io/docs/main/docs/uhi/v1/resources): What is published for UHI developers beyond the guides and the API reference today.
 
 ## docs/whats-new
 
