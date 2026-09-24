@@ -38,7 +38,7 @@
     "check:routes": "node scripts/build-atom-routes.mjs --check",
     "build:widget": "npm run build --workspace ai-widget",
     "test:widget": "npm test --workspace ai-widget",
-    "test:postman": "node --test scripts/postman.test.mjs",
+    "test:postman": "node --test scripts/postman.test.mjs site/src/components/api/carry.test.mjs",
     "eval:askai:run": "cd mcp && go run ./cmd/askai-eval run -cases ../evals/askai/cases -out ../evals/askai/runs/$(date +%Y-%m-%d)-$(cat ../catalogue/VERSION)",
     "eval:askai:check": "cd mcp && go run ./cmd/askai-eval check -cases ../evals/askai/cases",
     "eval:askai:judge": "cd mcp && go run ./cmd/askai-eval judge -cases ../evals/askai/cases",
