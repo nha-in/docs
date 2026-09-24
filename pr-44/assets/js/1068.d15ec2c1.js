@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["1068"],{68295(e,t,d){d.r(t),d.d(t,{__iconNode:()=>s,default:()=>c});var a=d(34438);let s=[["path",{d:"M17 5H3",key:"1cn7zz"}],["path",{d:"M21 12H8",key:"scolzb"}],["path",{d:"M21 19H8",key:"13qgcb"}],["path",{d:"M3 12v7",key:"1ri8j3"}]],c=(0,a.A)("text-quote",s)}}]);
