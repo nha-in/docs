@@ -5,9 +5,9 @@ import Link from '@docusaurus/Link';
 import {
   Check,
   ChevronDown,
+  CodeXml,
   Copy,
   PanelRightClose,
-  PanelRightOpen,
   Play,
   Sparkles,
 } from 'lucide-react';
@@ -267,12 +267,15 @@ const PANELS_KEY = 'abdm:api-panels';
 
 /**
  * Whether a side panel is open, remembered in this browser across pages.
- * Open until the reader closes it, and open whenever storage is blocked or
- * holds something unreadable: a panel that will not show is worse than one
- * that will not stay shut.
+ * `initial` until the reader chooses, and whenever storage is blocked or
+ * holds something unreadable. The panels start open; the examples column
+ * starts folded, with its button a click away.
  */
-function usePanelOpen(name: string): [boolean, (open: boolean) => void] {
-  const [open, setOpen] = useState(true);
+function usePanelOpen(
+  name: string,
+  initial = true,
+): [boolean, (open: boolean) => void] {
+  const [open, setOpen] = useState(initial);
   const read = () => JSON.parse(window.localStorage.getItem(PANELS_KEY) ?? '{}');
 
   useEffect(() => {
@@ -280,7 +283,7 @@ function usePanelOpen(name: string): [boolean, (open: boolean) => void] {
       const saved = read()?.[name];
       if (typeof saved === 'boolean') setOpen(saved);
     } catch {
-      // Stays open.
+      // Keeps `initial`.
     }
   }, [name]);
 
@@ -600,10 +603,7 @@ export default function ApiEndpoint({operation}: {operation: Operation}) {
   const [tab, setTab] = useTab(panels.map((panel) => panel.id));
   // The whole examples column, folded to a button the way the sidebar folds,
   // so the reference can take the width.
-  const [examples, setExamples] = usePanelOpen('column');
-  const examplesLabel = examples
-    ? 'Hide the request and response'
-    : 'Show the request and response';
+  const [examples, setExamples] = usePanelOpen('column', false);
 
   return (
     <div className={examples ? 'api-page' : 'api-page api-page--wide'}>
@@ -678,20 +678,36 @@ export default function ApiEndpoint({operation}: {operation: Operation}) {
         ) : null}
       </div>
 
-      <aside className="api-page__aside">
-        <button
-          type="button"
-          className="sidebar-fold api-aside-fold"
-          aria-expanded={examples}
-          aria-label={examplesLabel}
-          title={examplesLabel}
-          onClick={() => setExamples(!examples)}>
-          {examples ? (
-            <PanelRightClose className="size-4" aria-hidden="true" />
-          ) : (
-            <PanelRightOpen className="size-4" aria-hidden="true" />
-          )}
-        </button>
+      <aside className="api-page__aside" aria-label="Examples">
+        {/* The column is named Examples: the request in each language and
+            the response for each status. Folded, it is one button with that
+            name; open, the name heads it and the fold control sits beside. */}
+        {examples ? (
+          <div className="api-aside__head">
+            <span className="api-aside__title">
+              <CodeXml className="size-4" aria-hidden="true" />
+              Examples
+            </span>
+            <button
+              type="button"
+              className="sidebar-fold"
+              aria-expanded
+              aria-label="Hide examples"
+              title="Hide examples"
+              onClick={() => setExamples(false)}>
+              <PanelRightClose className="size-4" aria-hidden="true" />
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            className="api-aside__open"
+            aria-expanded={false}
+            onClick={() => setExamples(true)}>
+            <CodeXml className="size-4" aria-hidden="true" />
+            Examples
+          </button>
+        )}
         <RequestPanel operation={operation} />
         <ResponsePanel operation={operation} />
       </aside>
