@@ -2,7 +2,15 @@ import React, {useEffect, useState} from 'react';
 import CodeBlock from '@theme/CodeBlock';
 import Heading from '@theme/Heading';
 import Link from '@docusaurus/Link';
-import {Check, ChevronDown, Copy, Play, Sparkles} from 'lucide-react';
+import {
+  Check,
+  ChevronDown,
+  Copy,
+  PanelRightClose,
+  PanelRightOpen,
+  Play,
+  Sparkles,
+} from 'lucide-react';
 import {Tabs} from 'radix-ui';
 import {
   Collapsible,
@@ -590,9 +598,15 @@ export default function ApiEndpoint({operation}: {operation: Operation}) {
     },
   ].filter((panel) => panel.content);
   const [tab, setTab] = useTab(panels.map((panel) => panel.id));
+  // The whole examples column, folded to a button the way the sidebar folds,
+  // so the reference can take the width.
+  const [examples, setExamples] = usePanelOpen('column');
+  const examplesLabel = examples
+    ? 'Hide the request and response'
+    : 'Show the request and response';
 
   return (
-    <div className="api-page">
+    <div className={examples ? 'api-page' : 'api-page api-page--wide'}>
       <div className="api-page__main">
         {operation.tag ? (
           <p className="api-page__eyebrow">{operation.tag.replace(/-/g, ' ')}</p>
@@ -665,6 +679,19 @@ export default function ApiEndpoint({operation}: {operation: Operation}) {
       </div>
 
       <aside className="api-page__aside">
+        <button
+          type="button"
+          className="sidebar-fold api-aside-fold"
+          aria-expanded={examples}
+          aria-label={examplesLabel}
+          title={examplesLabel}
+          onClick={() => setExamples(!examples)}>
+          {examples ? (
+            <PanelRightClose className="size-4" aria-hidden="true" />
+          ) : (
+            <PanelRightOpen className="size-4" aria-hidden="true" />
+          )}
+        </button>
         <RequestPanel operation={operation} />
         <ResponsePanel operation={operation} />
       </aside>

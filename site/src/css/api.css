@@ -32,14 +32,41 @@
 /* The request and the response share one view. A long request body used to
    fill the sticky column and push the response example below the fold, so
    each panel's code scrolls inside its own box instead. */
-.api-page__aside > .api-panel:first-child pre {
+/* Counted by type: the fold button sits before the two panels. */
+.api-page__aside > .api-panel:nth-of-type(1) pre {
   max-height: 42vh;
   overflow: auto;
 }
 
-.api-page__aside > .api-panel:nth-child(2) pre {
+.api-page__aside > .api-panel:nth-of-type(2) pre {
   max-height: 32vh;
   overflow: auto;
+}
+
+/* The examples column folds away as the sidebar does, to one button at its
+   top, and the reference takes the width: NHA's body tables stop scrolling
+   sideways. Only where the column sits beside the reference; below 1280px
+   the panels stack under it and fold one at a time. */
+.api-aside-fold {
+  align-self: flex-end;
+  margin-bottom: -0.75rem;
+}
+
+@media (min-width: 1280px) {
+  .api-page--wide {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1.5rem;
+  }
+
+  .api-page--wide .api-page__aside > .api-panel {
+    display: none;
+  }
+}
+
+@media (max-width: 1279px) {
+  .api-aside-fold {
+    display: none;
+  }
 }
 
 /* ---------- reference tabs ----------
