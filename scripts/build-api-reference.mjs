@@ -1182,7 +1182,9 @@ for (const {platform, version, files} of tree) {
         // NHA's own titles already say "(optional)" where a step is; the
         // journey flag adds it only where the title does not.
         const optional = step.optional && !/\(optional\)\s*$/i.test(stepped.title) ? ' (optional)' : '';
-        const title = `${i + 1}. ${stepped.title}${optional}`;
+        // No step number in the title. The sidebar already lists a journey's
+        // calls in order, and the Flow line on the page says "step 2 of 5".
+        const title = `${stepped.title}${optional}`;
         writeFileSync(join(dir, `${nn}-${slug(step.op)}.mdx`), [
           '---',
           // The step number stays in the id. Docusaurus strips an "NN-" file

@@ -43,6 +43,43 @@ export function subscribeToken(onChange: (token: string) => void): () => void {
   return () => window.removeEventListener(EVENT, handler);
 }
 
+const CARRIED_KEY = 'abdm-docs.carried';
+const CARRIED_EVENT = 'abdm-docs:carried';
+
+/**
+ * The values earlier responses handed on (carry.ts): a txnId, an X-token.
+ * Held beside the access token and for the same reason, so the next step's
+ * panel, on its own page, opens with them filled in.
+ */
+export function readCarried(): Record<string, string> {
+  if (typeof window === 'undefined') return {};
+  try {
+    return JSON.parse(window.sessionStorage.getItem(CARRIED_KEY) ?? '{}');
+  } catch {
+    return {};
+  }
+}
+
+/** Add what a response carried, newest winning, and tell every mounted panel. */
+export function writeCarried(values: Record<string, string>): void {
+  if (typeof window === 'undefined' || !Object.keys(values).length) return;
+  const merged = {...readCarried(), ...values};
+  try {
+    window.sessionStorage.setItem(CARRIED_KEY, JSON.stringify(merged));
+  } catch {
+    // Storage refused. The event still reaches panels on this page.
+  }
+  window.dispatchEvent(new CustomEvent(CARRIED_EVENT, {detail: merged}));
+}
+
+/** Run `onChange` whenever any panel in this tab carries a value on. */
+export function subscribeCarried(onChange: (values: Record<string, string>) => void): () => void {
+  if (typeof window === 'undefined') return () => {};
+  const handler = (event: Event) => onChange((event as CustomEvent<Record<string, string>>).detail);
+  window.addEventListener(CARRIED_EVENT, handler);
+  return () => window.removeEventListener(CARRIED_EVENT, handler);
+}
+
 /**
  * Pull an access token out of a response body.
  *

@@ -15,6 +15,11 @@ site/static/vendor/
 site/static/skills/
 site/static/agent-setup/prompt.md
 
+# Generated: one Postman collection per module, and the manifest the milestone
+# pages read, by scripts/build-postman.mjs
+site/static/postman/
+site/src/data/postman.json
+
 # Generated: the support agent widget, bundled from ai-widget/ on every build
 site/static/agent/
 ai-widget/dist/

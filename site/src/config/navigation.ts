@@ -52,56 +52,46 @@ export type Platform = {
 // entry here; this file never lists platforms by hand.
 export const platforms: Platform[] = generatedPlatforms;
 
-export type TabId = 'overview' | 'api' | 'fhir' | 'errors' | 'whats-new' | 'support';
+export type TabId = 'overview' | 'api' | 'resources' | 'whats-new' | 'support';
 
 // The default platform is the picker's first entry; a tab opened with no
 // gateway chosen lands there.
 /**
- * The gateways that publish each per-gateway reference tab, and the page the
- * tab opens. A gateway without the section gets no tab, so the strip never
- * links to a page that does not exist.
+ * The page each per-gateway section tab opens, for the gateways that have one.
+ *
+ * Developer resources is on every gateway, and what it holds changes with the
+ * gateway: HIE-CM's test scenarios, NHCX's FHIR reference and error codes, and
+ * whatever a gateway publishes next (site/sidebars.ts composes it). A gateway
+ * with a resources/ folder opens there; one without opens its first page.
+ *
+ * A gateway listed under What's new or Support publishes its own; every other
+ * gateway, and every page outside one, uses the site-wide page.
  *
  * Listed here because platforms.json carries no section fields. Move them into
  * scripts/build-nav.mjs when the list grows.
  */
-const SECTION_PAGES: Record<'fhir' | 'errors' | 'whats-new' | 'support', Record<string, string>> = {
-  fhir: {nhcx: 'reference/fhir'},
-  errors: {nhcx: 'reference/pmjay-error-codes', hiecm: 'reference/error-codes'},
-  // A gateway listed here publishes its own What's new or Support; every
-  // other gateway, and every page outside one, uses the site-wide page.
+const SECTION_PAGES: Record<'resources' | 'whats-new' | 'support', Record<string, string>> = {
+  resources: {hiecm: 'resources', nhcx: 'reference/fhir', uhi: 'resources'},
   'whats-new': {nhcx: 'whats-new'},
   support: {nhcx: 'support'},
 };
 
-/** The first gateway that has a section, for a page outside any gateway. */
-function sectionDefault(section: 'fhir' | 'errors'): string {
-  const platform = platforms.find((p) => SECTION_PAGES[section][p.id]);
-  return platform ? `${platform.to}/${SECTION_PAGES[section][platform.id]}` : platforms[0].to;
-}
+/** Developer resources for the first gateway, for a page outside any gateway. */
+const resourcesDefault = `${platforms[0].to}/${SECTION_PAGES.resources[platforms[0].id] ?? 'resources'}`;
 
+// The same five tabs on every gateway. What sits under Developer resources is
+// what changes between them.
 export const tabs: Tab[] = [
   {id: 'overview', label: 'Docs', to: platforms[0].to, match: '/docs/'},
   {id: 'api', label: 'API reference', to: platforms[0].apiTo, match: '/api'},
-  {id: 'fhir', label: 'FHIR reference', to: sectionDefault('fhir'), match: '/reference/fhir'},
-  {id: 'errors', label: 'Error codes', to: sectionDefault('errors'), match: '/reference/error-code'},
+  {id: 'resources', label: 'Developer resources', to: resourcesDefault, match: '/resources'},
   {id: 'whats-new', label: "What's new", to: '/docs/whats-new', match: '/docs/whats-new'},
   {id: 'support', label: 'Support', to: '/docs/support', match: '/docs/support'},
 ];
 
-/**
- * The tabs to show on a route. Inside a gateway, a section tab appears only
- * when that gateway publishes the section; outside one, every tab shows and
- * the section tabs open the first gateway that has them.
- */
-export function visibleTabs(pathname: string): Tab[] {
-  const platform = activePlatform(pathname);
-  if (!platform) {
-    return tabs;
-  }
-  return tabs.filter(
-    (tab) =>
-      (tab.id !== 'fhir' && tab.id !== 'errors') || Boolean(SECTION_PAGES[tab.id][platform.id]),
-  );
+/** The tabs to show on a route: the same five everywhere. */
+export function visibleTabs(_pathname: string): Tab[] {
+  return tabs;
 }
 
 /** The href for a tab, keeping the gateway the reader already chose. */
@@ -116,7 +106,10 @@ export function tabHref(tab: Tab, pathname: string): string {
   if (tab.id === 'api') {
     return `${platform.to}/api`;
   }
-  if (tab.id === 'fhir' || tab.id === 'errors' || tab.id === 'whats-new' || tab.id === 'support') {
+  if (tab.id === 'resources') {
+    return `${platform.to}/${SECTION_PAGES.resources[platform.id] ?? 'resources'}`;
+  }
+  if (tab.id === 'whats-new' || tab.id === 'support') {
     const page = SECTION_PAGES[tab.id][platform.id];
     return page ? `${platform.to}/${page}` : tab.to;
   }
@@ -169,25 +162,30 @@ export function isErrorCodesRoute(pathname: string): boolean {
 }
 
 /**
+ * True for a Developer resources page: the resources/ folder, and the FHIR
+ * reference and error code pages, which keep their reference/ URLs but sit in
+ * the Developer resources sidebar (site/sidebars.ts).
+ */
+export function isResourcesRoute(pathname: string): boolean {
+  return /\/resources(\/|$)/.test(pathname) || isFhirRoute(pathname) || isErrorCodesRoute(pathname);
+}
+
+/**
  * Gateways whose API reference tab holds only api/: their other reference
  * pages and troubleshooting belong to Docs (SPLIT_REFERENCE in
  * site/sidebars.ts).
  */
 const SPLIT_REFERENCE = new Set(['nhcx']);
 
-/**
- * True for any tab on the API side: API reference, FHIR reference and Error
- * codes all live under a gateway's api/ and reference/ folders and share its
- * API sidebar.
- */
+/** True for the API reference tab, the one whose gateway switch keeps the reader on the APIs. */
 export function isApiSideTab(id: TabId | undefined): boolean {
-  return id === 'api' || id === 'fhir' || id === 'errors';
+  return id === 'api';
 }
 
 /**
  * Which tab a route belongs to. The two short tabs own their own prefixes.
- * Everything else under a gateway is its FHIR reference, its error codes, its
- * API section, or its overview.
+ * Everything else under a gateway is its Developer resources (which include
+ * its FHIR reference and error codes), its API section, or its overview.
  */
 export function activeTab(pathname: string): Tab | undefined {
   const short = tabs.find(
@@ -207,13 +205,7 @@ export function activeTab(pathname: string): Tab | undefined {
     const apiSide = SPLIT_REFERENCE.has(platform.id)
       ? /\/api(\/|$)/.test(pathname)
       : isApiRoute(pathname);
-    const id: TabId = isFhirRoute(pathname)
-      ? 'fhir'
-      : isErrorCodesRoute(pathname)
-        ? 'errors'
-        : apiSide
-          ? 'api'
-          : 'overview';
+    const id: TabId = isResourcesRoute(pathname) ? 'resources' : apiSide ? 'api' : 'overview';
     return tabs.find((tab) => tab.id === id);
   }
   return undefined;

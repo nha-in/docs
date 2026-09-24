@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # Publish abdm-docs: the documentation site to S3 (served by a CDN on SITE_URL), docs-mcp to ECR
-# for the ECS service to run, and the integrator plugins to the public nha-in/agent-plugins
-# repository (see publish-agent-plugins.sh).
+# for the ECS service to run.
 #
 #   deploy/nha/deploy.sh <version>        e.g. deploy/nha/deploy.sh v1.0.0
 #
@@ -55,10 +54,6 @@ echo "==> site: building for $site_url"
 # docs-mcp on the site's own hostname. Without it the panel ships as a labelled mock.
 (cd "$repo" && npm ci && DOCUSAURUS_URL="$site_url" DOCUSAURUS_BASE_URL=/ MCP_URL="$mcp_url" CHAT_URL="$site_url" npm run build)
 
-# The public plugin marketplace, before the site: the site's install commands name it, so it
-# carries this build's plugins before any page points at them, and a failed publish stops here.
-"$here/publish-agent-plugins.sh" "$VERSION"
-
 # The CDN serves main/ (its origin path). Fingerprinted assets go first, cached for a year,
 # so every file a page references is in the bucket before the page is; pages and the spec
 # files fetched at runtime must revalidate, which is what makes a deploy visible without an
@@ -67,7 +62,15 @@ aws s3 sync "$repo/site/build/" "s3://$SITE_BUCKET/main/" --delete --only-show-e
   --exclude "*.html" --exclude "*.xml" --exclude "*.yaml" --exclude "*.json" --exclude "*.txt" --exclude "*.md" \
   --cache-control "public,max-age=31536000,immutable"
 aws s3 sync "$repo/site/build/" "s3://$SITE_BUCKET/main/" --delete --only-show-errors \
-  --exclude "*" --include "*.html" --include "*.xml" --include "*.yaml" --include "*.json" --include "*.txt" --include "*.md" \
+  --exclude "*" --include "*.html" --include "*.xml" --include "*.yaml" --include "*.json" --include "*.txt" \
+  --cache-control "public,max-age=0,must-revalidate"
+# Page markdown in a pass of its own, with its type named. View as Markdown opens
+# <route>.md in a new tab, and a guessed type carries no charset, so the browser
+# either downloaded the file or showed its curly quotes garbled. This is the
+# header docs.stripe.com sends for its own .md pages.
+aws s3 sync "$repo/site/build/" "s3://$SITE_BUCKET/main/" --delete --only-show-errors \
+  --exclude "*" --include "*.md" \
+  --content-type "text/markdown; charset=utf-8" \
   --cache-control "public,max-age=0,must-revalidate"
 
 # The same build under <version>/, which the CDN never serves and later deploys never

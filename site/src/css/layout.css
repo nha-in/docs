@@ -183,6 +183,16 @@
   border-left: 1px solid var(--border);
 }
 
+/* Below the second level the parents carry no icon, so there is no centre to
+   line the thread up with, and a full 36px step per level left an endpoint
+   under M1 Identity, Create ABHA, Aadhaar OTP 12px for its title in a 256px
+   sidebar. These levels step 20px, and the thread runs just left of the
+   parent's text. */
+.menu__list .menu__list .menu__list .menu__list {
+  margin-left: calc(0.75rem - 0.5px);
+  padding-left: calc(0.5rem + 0.5px);
+}
+
 .menu__list-item:not(:first-child) {
   margin-top: 0.0625rem;
 }
