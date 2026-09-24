@@ -1,62 +1,121 @@
 import React from 'react';
 
 /**
- * A hand holding an ABHA card, drawn as one continuous line, for the "What is
- * ABDM?" section of Get started.
+ * A hand holding an ABHA card, for the "What is ABDM?" section of Get started.
  *
- * The pen starts at the wrist, rounds the card and its header, runs through a
- * code block, a signature and two lines of detail, circles the photo, draws
- * the thumb over the card and leaves by the palm. It draws itself once when
- * the page loads (mdx.css); a reader who asks for reduced motion gets it
- * finished. `currentColor` and no fill, so it follows light and dark mode.
+ * The hand and the card's outline are one continuous line, in the manner of a
+ * one-line drawing: in along a baseline, up the palm, the curled fingers,
+ * round the card from the corner the hand pinches, the thumb over that
+ * corner, down the back of the hand and out along a second baseline. The
+ * card's contents, the photo, the name and numbers and the QR pattern, are
+ * drawn precisely inside it. The line draws itself once when the page loads
+ * and the contents settle in after (mdx.css); reduced motion gets it finished.
  *
- * Every mark on the card is a placeholder. It carries no emblem and no NHA
- * mark: the emblem's use is restricted by law, and a drawing of an ID card
- * must not pass for one.
+ * The card is turned 12 degrees about (175, 110); its corners in LINE are
+ * that rotation worked out, and its contents sit in a group with the same
+ * rotation. `currentColor` and no fill colour, so it follows light and dark
+ * mode. Every value is a placeholder, the QR pattern encodes nothing, and
+ * there is no emblem or NHA mark: the emblem's use is restricted by law, and
+ * a drawing of an ID card must not pass for one.
  */
 const LINE = [
-  // Up the back of the hand, and the index finger in behind the card.
-  'M 6 296 C 24 244 52 190 84 150 C 96 134 110 112 126 100 C 136 94 146 92 156 92',
-  // The card, all the way round, back to just under the finger.
-  'L 153 52 Q 152 38 166 37 L 388 25 Q 402 24 403 38 L 411 158 Q 412 172 398 173',
-  'L 176 187 Q 162 188 161 176 L 157 104',
-  // Out under the finger, down the knuckles, to the thumb's root.
-  'C 146 106 134 108 128 114 C 116 118 114 130 126 134 C 118 138 116 150 128 154',
-  'C 122 160 120 170 128 176',
-  // The thumb over the card, and from its tip out into the photo.
-  'C 150 168 176 160 200 156 C 212 150 226 136 240 128',
-  'A 22 22 0 0 0 240 84 A 22 22 0 0 0 221 117',
-  'C 225 112 230 110 234 112 C 235 110 236 108 236 106 A 7 7 0 1 1 244 106',
-  'C 244 108 245 110 246 112 C 250 110 256 112 259 117',
-  // A signature for the name, then the code block.
-  'C 266 112 270 96 276 90',
-  'c 6 0 8 -10 4 -10 c -4 0 -2 10 6 10 c 6 0 8 -10 4 -10 c -4 0 -2 10 6 10',
-  'c 6 0 8 -10 4 -10 c -4 0 -2 10 6 10 c 6 0 8 -10 4 -10 c -4 0 -2 10 6 10',
-  'C 324 90 326 78 330 78 L 330 118 L 338 118 L 338 86 L 346 86 L 346 110',
-  'L 354 110 L 354 78 L 362 78 L 362 122 L 370 122 L 370 94',
-  // Back along a line of detail, under the photo, to the thumb's tip.
-  'C 372 136 364 140 352 140 c -8 3 -16 -3 -24 0 c -8 3 -16 -3 -24 0 c -8 3 -16 -3 -24 0',
-  'C 266 142 252 150 236 150 C 224 150 214 148 208 150 C 214 152 214 162 206 164',
-  // Back along the thumb, down the palm and away by the wrist.
-  'C 186 170 160 180 140 188 C 124 196 110 226 100 260 C 96 274 94 286 92 296',
+  // In along the baseline and up the heel of the palm.
+  'M -4 316 L 318 316 C 326 316 330 308 326 300',
+  // Four curled fingers, little finger first, each out to its tip and back.
+  'C 308 306 286 310 272 310 C 260 310 258 298 270 297 C 290 295 306 292 320 287',
+  'C 300 287 274 290 252 292 C 238 293 237 280 250 278 C 276 275 300 270 320 265',
+  'C 298 265 264 268 244 270 C 230 271 229 258 242 256 C 270 252 300 248 318 243',
+  // The index finger, its tip at the card's corner.
+  'C 302 240 282 238 268 234 C 254 230 256 214 270.5 209',
+  // Round the card from that corner and back to it.
+  'L 47.5 161.6 Q 36.7 159.3 39 148.5 L 66.4 19.5 Q 68.7 8.7 79.5 11',
+  'L 302.5 58.4 Q 313.3 60.7 311 71.5 L 283.6 200.5',
+  // The thumb over the corner, the back of the hand, out along the baseline.
+  'C 280 192 266 186 258 192 C 250 199 258 212 272 211',
+  'C 292 210 318 216 342 230 C 370 246 404 272 430 290 C 438 295 446 298 458 298 L 494 298',
 ].join(' ');
+
+// Filled cells of a 10 by 10 grid, outside the three finder squares. Chosen by
+// hand to read as a QR code at a glance, not generated from any payload.
+const QR_CELLS: [number, number][] = [
+  [4, 0], [5, 1], [4, 2], [6, 2], [5, 3], [4, 4], [6, 4], [8, 4], [0, 4],
+  [2, 4], [1, 5], [3, 5], [5, 5], [7, 5], [9, 5], [4, 6], [6, 6], [9, 6],
+  [4, 7], [5, 8], [7, 7], [8, 8], [6, 9], [9, 9], [4, 9], [7, 9],
+];
+
+const QR = {x: 250, y: 84, cell: 5};
+
+function Finder({col, row}: {col: number; row: number}) {
+  const x = QR.x + col * QR.cell;
+  const y = QR.y + row * QR.cell;
+  return (
+    <>
+      <rect x={x + 0.75} y={y + 0.75} width={13.5} height={13.5} rx="1.5" />
+      <rect x={x + 4.5} y={y + 4.5} width={6} height={6} className="abha-art__ink" stroke="none" />
+    </>
+  );
+}
 
 export default function AbhaCardArt(): React.ReactNode {
   return (
     <figure className="abha-art">
       <svg
-        viewBox="0 14 420 272"
+        viewBox="-2 2 494 320"
         role="img"
-        aria-label="A single line drawing of a hand holding an ABHA card, with a photo, a signature, two lines of detail and a code block."
+        aria-label="Line drawing of a hand holding an ABHA card, showing a photo, a name, an ABHA number, an ABHA address and a QR code, all placeholders."
         fill="none"
         stroke="currentColor"
-        strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round">
-        <path className="abha-art__line" pathLength={1} d={LINE} />
-        <text x="176" y="62" className="abha-art__brand">
-          ABHA
-        </text>
+        <defs>
+          <clipPath id="abha-art-photo">
+            <circle cx="104" cy="112" r="22" />
+          </clipPath>
+        </defs>
+
+        <path className="abha-art__line" pathLength={1} strokeWidth="1.75" d={LINE} />
+
+        {/* The card's contents, laid out in a frame of x 65 to 315, y 35 to
+            189, moved onto the card (x 50 to 300, y 33 to 187) and turned
+            with it. */}
+        <g
+          className="abha-art__details"
+          strokeWidth="1.25"
+          transform="rotate(12 175 110) translate(-15 -2)">
+          <line x1="65" y1="64" x2="315" y2="64" />
+          <path className="abha-art__faint" d="M 172 35 L 188 64 L 204 35 L 220 64 L 236 35 L 252 64 L 268 35" />
+          <text x="80" y="55" className="abha-art__brand">ABHA</text>
+
+          <circle cx="104" cy="112" r="22" />
+          <g clipPath="url(#abha-art-photo)">
+            <path d="M 76 138 C 80 124 91 119 104 119 C 117 119 128 124 132 138" />
+          </g>
+          <circle cx="104" cy="104" r="8" />
+          <circle cx="100.4" cy="105" r="2.6" strokeWidth="1" />
+          <circle cx="107.6" cy="105" r="2.6" strokeWidth="1" />
+          <line x1="103" y1="105" x2="105" y2="105" strokeWidth="1" />
+
+          <text x="140" y="104" className="abha-art__name">Full Name</text>
+          <text x="140" y="120" className="abha-art__label">ABHA Number</text>
+          <text x="140" y="131" className="abha-art__value">91-XXXX-XXXX-XXXX</text>
+          <text x="140" y="146" className="abha-art__label">ABHA Address</text>
+          <text x="140" y="157" className="abha-art__value">name@abdm</text>
+
+          <Finder col={0} row={0} />
+          <Finder col={7} row={0} />
+          <Finder col={0} row={7} />
+          {QR_CELLS.map(([col, row]) => (
+            <rect
+              key={`${col}-${row}`}
+              x={QR.x + col * QR.cell + 0.6}
+              y={QR.y + row * QR.cell + 0.6}
+              width={QR.cell - 1.2}
+              height={QR.cell - 1.2}
+              stroke="none"
+              className="abha-art__ink"
+            />
+          ))}
+        </g>
       </svg>
     </figure>
   );
