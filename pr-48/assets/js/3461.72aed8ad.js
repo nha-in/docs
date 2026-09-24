@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["3461"],{85732(e,a,c){c.r(a),c.d(a,{__iconNode:()=>s,default:()=>t});var d=c(34438);let s=[["path",{d:"M5 21V3",key:"clc1r8"}],["path",{d:"M12 21V9",key:"uvy0l4"}],["path",{d:"M19 21v-6",key:"tkawy9"}]],t=(0,d.A)("chart-no-axes-column-decreasing",s)}}]);
