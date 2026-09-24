@@ -18,17 +18,17 @@ curl --request POST \
     "transactionId": "18235d89-cb13-479d-ad71-7a57d5f669a8",
     "doneAt": "2023-01-24T06:35:44.167Z",
     "notifier": {
-      "type": "HIU",
-      "id": "100005"
+      "type": "HIP",
+      "id": "IN2810014366"
     },
     "statusNotification": {
-      "sessionStatus": "RECEIVED",
+      "sessionStatus": "TRANSFERRED",
       "hipId": "IN2810014366",
       "statusResponses": [
         {
           "careContextReference": "10004-20200001768-1",
-          "hiStatus": "OK",
-          "description": "Data received successfully"
+          "hiStatus": "DELIVERED",
+          "description": "Data sent successfully"
         }
       ]
     }

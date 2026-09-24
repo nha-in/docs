@@ -31,7 +31,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -57,4 +61,63 @@ curl --request POST \
 ## Responses
 
 - `200`: OK
+  - `token` (string)
+  - `hprIdNumber` (string)
+  - `name` (string)
+  - `gender` (string)
+  - `yearOfBirth` (string)
+  - `monthOfBirth` (string)
+  - `dayOfBirth` (string)
+  - `firstName` (string)
+  - `hprId` (string)
+  - `lastName` (string)
+  - `middleName` (string)
+  - `stateCode` (string)
+  - `districtCode` (string)
+  - `subDistrictCode` (string)
+  - `subDistrictName` (string)
+  - `stateName` (string)
+  - `districtName` (string)
+  - `email` (string)
+  - `kycPhoto` (string)
+  - `mobile` (string)
+  - `categoryId` (integer)
+  - `subCategoryId` (integer)
+  - `role` (integer)
+  - `authMethods` (string[])
+  - `new` (boolean)
 - `404`: Not Found
+
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+{
+  "token": "<TOKEN>",
+  "hprIdNumber": "<HPR_ID_NUMBER>",
+  "name": "<NAME>",
+  "gender": "<GENDER>",
+  "yearOfBirth": "<YEAR_OF_BIRTH>",
+  "monthOfBirth": "<MONTH_OF_BIRTH>",
+  "dayOfBirth": "<DAY_OF_BIRTH>",
+  "firstName": "<FIRST_NAME>",
+  "hprId": "<HPR_ID>",
+  "lastName": "<LAST_NAME>",
+  "middleName": "<MIDDLE_NAME>",
+  "stateCode": "<STATE_CODE>",
+  "districtCode": "<DISTRICT_CODE>",
+  "subDistrictCode": "<SUB_DISTRICT_CODE>",
+  "subDistrictName": "<SUB_DISTRICT_NAME>",
+  "stateName": "<STATE_NAME>",
+  "districtName": "<DISTRICT_NAME>",
+  "email": "<EMAIL>",
+  "kycPhoto": "<KYC_PHOTO>",
+  "mobile": "<MOBILE>",
+  "categoryId": 0,
+  "subCategoryId": 0,
+  "role": 0,
+  "authMethods": [
+    "AADHAAR_OTP"
+  ],
+  "new": false
+}
+```

@@ -14,7 +14,7 @@
     },
     {
       "name": "abdm-m1",
-      "title": "M1, ABHA creation and verification",
+      "title": "M1, create and verify ABHA",
       "files": [
         "SKILL.md",
         "references/scaffold.md",
@@ -25,7 +25,7 @@
     },
     {
       "name": "abdm-m2",
-      "title": "M2, health information provider services",
+      "title": "M2, create and link records",
       "files": [
         "SKILL.md",
         "references/scaffold.md",
@@ -36,7 +36,7 @@
     },
     {
       "name": "abdm-m3",
-      "title": "M3, health information user services",
+      "title": "M3, fetch data with consent",
       "files": [
         "SKILL.md",
         "references/scaffold.md",
@@ -47,7 +47,7 @@
     },
     {
       "name": "abdm-m4",
-      "title": "M4, facility and professional registries",
+      "title": "M4, register facilities and professionals",
       "files": [
         "SKILL.md",
         "references/scaffold.md",

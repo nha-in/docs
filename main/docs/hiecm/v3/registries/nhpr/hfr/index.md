@@ -89,5 +89,5 @@ Two paths are fixed here:
 
 - [HPR](/docs/main/docs/hiecm/v3/registries/nhpr/hpr), which issues the token these calls need.
 - [NHPR](/docs/main/docs/hiecm/v3/registries/nhpr), the parent page.
-- [the HPR and HFR call list](/docs/main/docs/hiecm/v3/api/m4), parameter tables and `HIS-` error codes.
-- [M2 Health Information Provider, Health Information Provider Services](/docs/main/docs/hiecm/v3/api/m2), which needs this facility ID.
+- [the HPR and HFR call list](/docs/main/docs/hiecm/v3/api/m4), with parameter tables.
+- [M2 Health Information Provider: Create and link records](/docs/main/docs/hiecm/v3/api/m2), which needs this facility ID.

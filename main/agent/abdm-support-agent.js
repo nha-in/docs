@@ -688,10 +688,11 @@ void main() {
   color: var(--aa-body);
 }
 
+/* Tinted like the launcher chip that opened the panel. */
 .ask-ai__turn--you {
   align-self: flex-end;
-  background: var(--aa-accent);
-  color: var(--aa-accent-contrast);
+  background: var(--aa-accent-soft);
+  color: var(--aa-accent);
 }
 
 /* The assistant writes markdown; these keep its blocks at chat scale.
@@ -1451,9 +1452,8 @@ void main() {
 }
 
 /* The file named under the question it went with. It sits inside the
-   reader's own bubble, which is the accent colour, so it takes that
-   bubble's ink at slightly less weight rather than the page's muted grey:
-   grey on green is the one combination here that cannot be read. */
+   reader's own bubble, which is accent tinted, so it takes that bubble's
+   ink at slightly less weight rather than the page's muted grey. */
 .ask-ai__turn-file {
   display: flex;
   align-items: center;

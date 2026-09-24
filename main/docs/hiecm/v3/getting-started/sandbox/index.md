@@ -55,7 +55,7 @@ Two things about that URL decide whether your integration works:
 | The gateway, including the session call                                    | `https://dev.abdm.gov.in`, with the header `X-CM-ID: sbx` |
 | The [ABHA](/docs/main/docs/hiecm/v3/getting-started/glossary#abha) service | `https://abhasbx.abdm.gov.in/abha/api/v3/`                |
 
-More than one sandbox host appears across our published documents. [The ABDM gateway](/docs/main/docs/hiecm/v3/concepts/gateway) lists every host and where each one is written down.
+[The ABDM gateway](/docs/main/docs/hiecm/v3/concepts/gateway#which-host) gives the gateway host for sandbox and for production side by side.
 
 ## What you see when it works
 

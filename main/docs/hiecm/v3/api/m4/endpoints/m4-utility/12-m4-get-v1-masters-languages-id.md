@@ -10,7 +10,11 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Path parameters
 
@@ -19,4 +23,23 @@ curl --request GET \
 ## Responses
 
 - `200`: OK
+  - `id` (integer)
+  - `name` (string)
+  - `culture` (string)
+  - `status` (boolean)
+  - `createdAt` (string)
+  - `modifiedAt` (string)
 - `404`: Not Found
+
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+{
+  "id": 0,
+  "name": "<NAME>",
+  "culture": "<CULTURE>",
+  "status": false,
+  "createdAt": "2026-08-24T10:15:30.000Z",
+  "modifiedAt": "2026-08-24T10:15:30.000Z"
+}
+```

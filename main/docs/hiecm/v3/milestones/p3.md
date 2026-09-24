@@ -1,4 +1,4 @@
-# P3 Consent and notifications
+# P3 Subscription
 
 P3 is the other side of [M3 Health Information User](/docs/main/docs/hiecm/v3/milestones/m3). M3 is a requester asking for records. P3 is the patient deciding, and being told each time.
 
@@ -50,5 +50,6 @@ Once a care context is linked to the user's ABHA address:
 ## Next
 
 - The calls and base URLs: [P3 API reference](/docs/main/reference/hiecm-p3).
+- Keeping the records for the long term: [P4 Locker](/docs/main/docs/hiecm/v3/milestones/p4).
 - Back to the four provider milestones: [Milestones](/docs/main/docs/hiecm/v3/milestones).
 - Take your integration to production: [Go live](/docs/main/docs/hiecm/v3/getting-started/going-live).

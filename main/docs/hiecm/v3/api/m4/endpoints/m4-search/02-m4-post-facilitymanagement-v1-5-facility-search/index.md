@@ -1,4 +1,4 @@
-# Search facility
+# Search facility 1
 
 `POST /FacilityManagement/v1.5/facility/search`
 
@@ -22,7 +22,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -45,37 +49,15 @@ curl --request POST \
   - `numberOfPages` (integer)
 - `404`: Not Found
 
-Example 200 response. The values are placeholders:
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 
 ```json
 {
   "facilities": [
-    {
-      "ownership": "GOVERNMENT",
-      "systemOfMedicineCode": "P,M",
-      "systemOfMedicine": "Physiotherapy,Modern Medicine(Allopathy)",
-      "facilityType": "Hospital",
-      "stateName": "Bihar",
-      "stateLGDCode": "10",
-      "districtName": "<ADDRESS>",
-      "districtLGDCode": "212",
-      "subDistrictName": "<ADDRESS>",
-      "subDistrictLGDCode": "1400",
-      "villageCityTownName": null,
-      "villageCityTownLGDCode": null,
-      "address": "<ADDRESS>",
-      "pincode": "<PINCODE>",
-      "latitude": "25.635802000000098",
-      "longitude": "85.10391099999993",
-      "facilityId": "",
-      "facilityName": "Asian City Hospital",
-      "facilityStatus": "Submitted",
-      "ownershipCode": "G",
-      "facilityTypeCode": "H"
-    }
+    "<FACILITIES>"
   ],
-  "message": "Request processed successfully",
-  "totalFacilities": 1,
-  "numberOfPages": 1
+  "message": "<MESSAGE>",
+  "totalFacilities": 0,
+  "numberOfPages": 0
 }
 ```

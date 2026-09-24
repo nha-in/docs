@@ -667,7 +667,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"notification\": {\n    \"consentId\": \"18235d89-cb13-479d-ad71-7a57d5f669a8\",\n    \"transactionId\": \"18235d89-cb13-479d-ad71-7a57d5f669a8\",\n    \"doneAt\": \"2023-01-24T06:35:44.167Z\",\n    \"notifier\": {\n      \"type\": \"HIU\",\n      \"id\": \"100005\"\n    },\n    \"statusNotification\": {\n      \"sessionStatus\": \"RECEIVED\",\n      \"hipId\": \"IN2810014366\",\n      \"statusResponses\": [\n        {\n          \"careContextReference\": \"10004-20200001768-1\",\n          \"hiStatus\": \"OK\",\n          \"description\": \"Data received successfully\"\n        }\n      ]\n    }\n  }\n}",
+              "raw": "{\n  \"notification\": {\n    \"consentId\": \"18235d89-cb13-479d-ad71-7a57d5f669a8\",\n    \"transactionId\": \"18235d89-cb13-479d-ad71-7a57d5f669a8\",\n    \"doneAt\": \"2023-01-24T06:35:44.167Z\",\n    \"notifier\": {\n      \"type\": \"HIP\",\n      \"id\": \"IN2810014366\"\n    },\n    \"statusNotification\": {\n      \"sessionStatus\": \"TRANSFERRED\",\n      \"hipId\": \"IN2810014366\",\n      \"statusResponses\": [\n        {\n          \"careContextReference\": \"10004-20200001768-1\",\n          \"hiStatus\": \"DELIVERED\",\n          \"description\": \"Data sent successfully\"\n        }\n      ]\n    }\n  }\n}",
               "options": {
                 "raw": {
                   "language": "json"

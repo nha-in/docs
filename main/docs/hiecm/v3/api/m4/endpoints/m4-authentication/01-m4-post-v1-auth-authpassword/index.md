@@ -17,7 +17,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -35,13 +39,13 @@ curl --request POST \
   - `refreshExpiresIn` (integer)
 - `404`: Not Found
 
-Example 200 response. The values are placeholders:
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 
 ```json
 {
-  "token": "<JWT TOKEN>",
-  "expiresIn": 1733639805,
-  "refreshToken": null,
+  "token": "<TOKEN>",
+  "expiresIn": 0,
+  "refreshToken": "<REFRESH_TOKEN>",
   "refreshExpiresIn": 0
 }
 ```

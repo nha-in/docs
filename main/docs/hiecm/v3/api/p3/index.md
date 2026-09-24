@@ -20,4 +20,4 @@ Postman, Insomnia, Hoppscotch and Bruno take this through Import, as a link or a
 
 The full operation list is in the [P3 Subscription API reference](/docs/main/reference/hiecm-p3).
 
-New to this? Start with [P3 Consent and notifications](/docs/main/docs/hiecm/v3/milestones/p3).
+New to this? Start with [P3 Subscription](/docs/main/docs/hiecm/v3/milestones/p3).

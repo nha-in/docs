@@ -66,7 +66,7 @@ The M3 skill gives an AI coding assistant this milestone as one file: every M3 c
 
 M3 agent skill
 
-Every M3 call and callback with its error codes in one file: 25 operations, 95 codes.
+Every M3 call and callback in one file: 16 operations.
 
 [SKILL.md](/docs/main/skills/abdm-m3/SKILL.md "The router. Use the command below to take the references with it.")
 
@@ -96,7 +96,7 @@ sequenceDiagram
     participant S as Application/System
     participant CM as HIE-CM
     actor P as Patient (PHR app)
-    Note over S: Every call carries REQUEST-ID, TIMESTAMP,<br/>X-CM-ID, X-HIU-ID and the gateway access token
+    Note over S: Every call carries REQUEST-ID, TIMESTAMP,<br/>X-CM-ID and the gateway access token.<br/>Status, fetch and the health information request<br/>also carry X-HIU-ID
     S->>CM: POST /api/hiecm/consent/v3/request/init<br/>consent {purpose.code, patient.id (ABHA address),<br/>hiu.id, requester {name, identifier}, hiTypes,<br/>permission {accessMode, dateRange, dataEraseAt,
     CM-->>S: 202 Accepted
     CM-)S: callback POST {bridgeUrl}/api/v3/hiu/consent/request/on-init<br/>consentRequest.id, response.requestId
@@ -159,7 +159,7 @@ sequenceDiagram
     CM->>H: Forwards the request to the HIP on its bridge
     H->>S: POST dataPushUrl<br/>pageNumber, pageCount, transactionId,<br/>entries [content (encrypted FHIR bundle), checksum,<br/>careContextReference],
     S->>S: Derives the shared key from the HIP keyMaterial,<br/>decrypts and verifies each entry
-    S->>CM: POST /api/hiecm/data-flow/v3/health-information/notify<br/>notification {consentId, transactionId,<br/>notifier {type HIU, id},<br/>statusNotification {sessionStatus DELIVERED or ERRORED,
+    S->>CM: POST /api/hiecm/data-flow/v3/health-information/notify<br/>notification {consentId, transactionId,<br/>notifier {type HIU, id},<br/>statusNotification {sessionStatus RECEIVED or FAILED,
     S->>CM: GET /api/hiecm/data-flow/v3/health-information/request/status/{transaction-id}<br/>to check a transfer that has not arrived
 ```
 

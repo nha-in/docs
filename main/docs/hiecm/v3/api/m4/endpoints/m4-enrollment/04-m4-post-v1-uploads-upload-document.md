@@ -8,13 +8,15 @@ curl --request POST \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "hpr_token": "<JWT TOKEN>",
+  "hpr_token": "<HPR_TOKEN>",
   "document": [
     {
-      "document_id": 20931,
-      "document_type": "registrationCertificate",
-      "fileType": "",
-      "data": "JVBERi0xLjMK"
+      "document_id": 0,
+      "document_type": "<DOCUMENT_TYPE>",
+      "fileType": "<FILE_TYPE>",
+      "data": [
+        "<DATA>"
+      ]
     }
   ]
 }'
@@ -22,7 +24,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -31,29 +37,44 @@ curl --request POST \
 - `document.document_id` (integer)
 - `document.document_type` (string)
 - `document.fileType` (string)
-- `document.data` (string)
+- `document.data` (string[])
 
 ## Responses
 
 - `200`: OK
   - `profilePhoto` (object)
+  - `profilePhoto.status` (string)
+  - `profilePhoto.msg` (string)
   - `degreeCertificate` (object)
+  - `degreeCertificate.status` (string)
+  - `degreeCertificate.msg` (string)
   - `registrationCertificate` (object)
   - `registrationCertificate.status` (string)
   - `registrationCertificate.msg` (string)
   - `proofOfWorkCertificate` (object)
+  - `proofOfWorkCertificate.status` (string)
+  - `proofOfWorkCertificate.msg` (string)
 - `404`: Not Found
 
-Example 200 response. The values are placeholders:
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 
 ```json
 {
-  "profilePhoto": null,
-  "degreeCertificate": null,
-  "registrationCertificate": {
-    "status": "pass",
-    "msg": "Registration certificate updated"
+  "profilePhoto": {
+    "status": "<STATUS>",
+    "msg": "<MSG>"
   },
-  "proofOfWorkCertificate": null
+  "degreeCertificate": {
+    "status": "<STATUS>",
+    "msg": "<MSG>"
+  },
+  "registrationCertificate": {
+    "status": "<STATUS>",
+    "msg": "<MSG>"
+  },
+  "proofOfWorkCertificate": {
+    "status": "<STATUS>",
+    "msg": "<MSG>"
+  }
 }
 ```

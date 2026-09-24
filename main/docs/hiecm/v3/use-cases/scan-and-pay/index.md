@@ -66,4 +66,4 @@ Step 2 arrives on your bridge, your step 3 and step 6 return 202, and step 8 com
 
 - The profile-only version of the same scan: [Scan and Register](/docs/main/docs/hiecm/v3/use-cases/scan-and-register).
 - The bridge these callbacks land on: [M2 Health Information Provider](/docs/main/docs/hiecm/v3/milestones/m2).
-- The app's side: [P2 Linking and records](/docs/main/docs/hiecm/v3/milestones/p2).
+- The app's side: [P2 Consents Management](/docs/main/docs/hiecm/v3/milestones/p2).

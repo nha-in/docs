@@ -21,4 +21,4 @@ Postman, Insomnia, Hoppscotch and Bruno take this through Import, as a link or a
 
 The full operation list is in the [P2 Consents Management API reference](/docs/main/reference/hiecm-p2).
 
-New to this? Start with [P2 Linking and records](/docs/main/docs/hiecm/v3/milestones/p2).
+New to this? Start with [P2 Consents Management](/docs/main/docs/hiecm/v3/milestones/p2).

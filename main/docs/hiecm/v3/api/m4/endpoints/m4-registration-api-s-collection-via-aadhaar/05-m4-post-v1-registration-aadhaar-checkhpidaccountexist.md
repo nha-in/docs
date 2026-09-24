@@ -14,7 +14,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -51,32 +55,34 @@ curl --request POST \
   - `new` (boolean)
 - `404`: Not Found
 
-Example 200 response. The values are placeholders:
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 
 ```json
 {
-  "token": "<JWT TOKEN>",
-  "hprIdNumber": "<HPR_ID>",
-  "categoryId": 100,
-  "subCategoryId": 85,
-  "txnId": "79dbf65d-affa-4249-8935-3d01676d8b82",
-  "name": "Ayushman Bharat Mission",
-  "gender": "M",
-  "yearOfBirth": "<DOB>",
-  "monthOfBirth": "<DOB>",
-  "dayOfBirth": "<DOB>",
-  "firstName": "Ayushman",
-  "middleName": "",
-  "lastName": "Mission",
-  "stateCode": "9",
-  "districtCode": "145",
-  "stateName": "Uttar Pradesh",
-  "districtName": "<ADDRESS>",
-  "address": "9th Floor, Tower-l, Jeevan Bharati Building, Connaught Place, New Delhi - 110001",
+  "token": "<TOKEN>",
+  "hprIdNumber": "<HPR_ID_NUMBER>",
+  "categoryId": 0,
+  "categoryName": "<CATEGORY_NAME>",
+  "subCategoryId": 0,
+  "categorySubName": "<CATEGORY_SUB_NAME>",
+  "txnId": "5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11",
+  "name": "<NAME>",
+  "gender": "<GENDER>",
+  "yearOfBirth": "<YEAR_OF_BIRTH>",
+  "monthOfBirth": "<MONTH_OF_BIRTH>",
+  "dayOfBirth": "<DAY_OF_BIRTH>",
+  "firstName": "<FIRST_NAME>",
+  "middleName": "<MIDDLE_NAME>",
+  "lastName": "<LAST_NAME>",
+  "stateCode": "<STATE_CODE>",
+  "districtCode": "<DISTRICT_CODE>",
+  "stateName": "<STATE_NAME>",
+  "districtName": "<DISTRICT_NAME>",
+  "address": "<ADDRESS>",
   "pincode": "<PINCODE>",
-  "profilePhoto": "<BASE64 ENCODED STRING>",
-  "mobile": null,
-  "hprId": "<EMAIL>",
+  "profilePhoto": "<PROFILE_PHOTO>",
+  "mobile": "<MOBILE>",
+  "hprId": "<HPR_ID>",
   "new": false
 }
 ```

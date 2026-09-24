@@ -1,4 +1,4 @@
-# Verify Aadhaar OTP 1
+# Verify Aadhaar OTP
 
 `POST /api/v1/auth/confirmWithAadhaarOtp`
 
@@ -15,7 +15,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -25,4 +29,19 @@ curl --request POST \
 ## Responses
 
 - `200`: OK
+  - `token` (string)
+  - `expiresIn` (integer)
+  - `refreshToken` (string)
+  - `refreshExpiresIn` (integer)
 - `404`: Not Found
+
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+{
+  "token": "<TOKEN>",
+  "expiresIn": 0,
+  "refreshToken": "<REFRESH_TOKEN>",
+  "refreshExpiresIn": 0
+}
+```

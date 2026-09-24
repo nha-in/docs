@@ -23,18 +23,18 @@ One exception. In the health information flow the HIU supplies a data push URL, 
 
 ## What moves through it
 
-| Module                                | What the gateway routes                                                                                                                                                                                       | Reference                                         |
-| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
-| [M1](/docs/main/docs/hiecm/v3/api/m1) | Session tokens, and the calls that create and authenticate an ABHA identity                                                                                                                                   | [M1 API reference](/docs/main/reference/hiecm-m1) |
-| [M2](/docs/main/docs/hiecm/v3/api/m2) | [Discovery](/docs/main/docs/hiecm/v3/getting-started/glossary#discovery), care context linking, health information requests to a HIP                                                                          | [M2 API reference](/docs/main/reference/hiecm-m2) |
-| [M3](/docs/main/docs/hiecm/v3/api/m3) | Consent requests, consent notifications, artefact fetches, data flow requests                                                                                                                                 | [M3 API reference](/docs/main/reference/hiecm-m3) |
-| [M4](/docs/main/docs/hiecm/v3/api/m4) | The [HPR](/docs/main/docs/hiecm/v3/getting-started/glossary#hpr) and [HFR](/docs/main/docs/hiecm/v3/getting-started/glossary#hfr) registry calls, which carry their own token from `POST /getManagementToken` | [M4 API reference](/docs/main/reference/hiecm-m4) |
+| Module                                | What the gateway routes                                                                                                                                                                                              | Reference                                         |
+| ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| [M1](/docs/main/docs/hiecm/v3/api/m1) | Session tokens, and the calls that create and authenticate an ABHA identity                                                                                                                                          | [M1 API reference](/docs/main/reference/hiecm-m1) |
+| [M2](/docs/main/docs/hiecm/v3/api/m2) | [Discovery](/docs/main/docs/hiecm/v3/getting-started/glossary#discovery), care context linking, health information requests to a HIP                                                                                 | [M2 API reference](/docs/main/reference/hiecm-m2) |
+| [M3](/docs/main/docs/hiecm/v3/api/m3) | Consent requests, consent notifications, artefact fetches, data flow requests                                                                                                                                        | [M3 API reference](/docs/main/reference/hiecm-m3) |
+| [M4](/docs/main/docs/hiecm/v3/api/m4) | The [HPR](/docs/main/docs/hiecm/v3/getting-started/glossary#hpr) and [HFR](/docs/main/docs/hiecm/v3/getting-started/glossary#hfr) registry calls, which carry their own bearer token rather than the gateway session | [M4 API reference](/docs/main/reference/hiecm-m4) |
 
 The gateway holds no health record. It routes the permission and the metadata.
 
 ## The session endpoint
 
-One endpoint issues the token every other call carries. It is the call [M1](/docs/main/docs/hiecm/v3/getting-started/glossary#m1) uses. [M4](/docs/main/docs/hiecm/v3/getting-started/glossary#m4) declares bearer authentication, and its HPID calls publish `POST /getManagementToken`.
+One endpoint issues the token every other call carries. It is the call [M1](/docs/main/docs/hiecm/v3/getting-started/glossary#m1) uses. [M4](/docs/main/docs/hiecm/v3/getting-started/glossary#m4) calls carry their own bearer token instead.
 
 **POST** `/api/hiecm/gateway/v3/sessions`
 
