@@ -2,8 +2,13 @@ import React, {useEffect, useState} from 'react';
 import CodeBlock from '@theme/CodeBlock';
 import Heading from '@theme/Heading';
 import Link from '@docusaurus/Link';
-import {Check, Copy, Play} from 'lucide-react';
+import {Check, ChevronDown, Copy, Play} from 'lucide-react';
 import {Tabs} from 'radix-ui';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@site/src/components/ui/collapsible';
 import {
   Dialog,
   DialogContent,
@@ -205,6 +210,66 @@ export function CopyButton({value}: {value: string}) {
 const PLACEHOLDER_NOTE =
   'Participant codes, ABHA numbers, tokens and payloads in these examples are placeholders, never real credentials or patient data.';
 
+const PANELS_KEY = 'abdm:api-panels';
+
+/**
+ * Whether a side panel is open, remembered in this browser across pages.
+ * Open until the reader closes it, and open whenever storage is blocked or
+ * holds something unreadable: a panel that will not show is worse than one
+ * that will not stay shut.
+ */
+function usePanelOpen(name: string): [boolean, (open: boolean) => void] {
+  const [open, setOpen] = useState(true);
+  const read = () => JSON.parse(window.localStorage.getItem(PANELS_KEY) ?? '{}');
+
+  useEffect(() => {
+    try {
+      const saved = read()?.[name];
+      if (typeof saved === 'boolean') setOpen(saved);
+    } catch {
+      // Stays open.
+    }
+  }, [name]);
+
+  const change = (next: boolean) => {
+    setOpen(next);
+    try {
+      window.localStorage.setItem(PANELS_KEY, JSON.stringify({...read(), [name]: next}));
+    } catch {
+      // Toggled for this page, not remembered.
+    }
+  };
+  return [open, change];
+}
+
+/** A request or response panel beside the reference, which the reader can fold away. */
+function SidePanel({
+  open,
+  setOpen,
+  label,
+  tools,
+  children,
+}: {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  label: string;
+  tools: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <Collapsible open={open} onOpenChange={setOpen} className="api-panel">
+      <div className="api-panel__head">
+        <CollapsibleTrigger className="api-panel__toggle">
+          <ChevronDown className="api-panel__chevron size-3.5" aria-hidden="true" />
+          {label}
+        </CollapsibleTrigger>
+        {tools}
+      </div>
+      <CollapsibleContent>{children}</CollapsibleContent>
+    </Collapsible>
+  );
+}
+
 function RequestPanel({operation}: {operation: Operation}) {
   const samples =
     operation.samples?.length
@@ -212,63 +277,81 @@ function RequestPanel({operation}: {operation: Operation}) {
       : [{id: 'curl', label: 'cURL', language: 'bash', code: operation.curl}];
   const [active, setActive] = useState(samples[0].id);
   const current = samples.find((sample) => sample.id === active) ?? samples[0];
+  const [open, setOpen] = usePanelOpen('request');
 
   return (
-    <div className="api-panel">
-      <div className="api-panel__head">
-        {/* Eight languages do not fit as tabs in a side panel, so they are a
-            list; the choice is the panel's only label. */}
-        <select
-          className="api-panel__lang"
-          value={current.id}
-          onChange={(event) => setActive(event.target.value)}
-          aria-label="Language">
-          {samples.map((sample) => (
-            <option key={sample.id} value={sample.id}>
-              {sample.label}
-            </option>
-          ))}
-        </select>
-        <CopyButton value={current.code} />
-      </div>
+    <SidePanel
+      open={open}
+      setOpen={setOpen}
+      label="Request"
+      tools={
+        <>
+          {/* Eight languages do not fit as tabs in a side panel, so they
+              are a list. Picking one opens a folded panel to show it. */}
+          <select
+            className="api-panel__lang"
+            value={current.id}
+            onChange={(event) => {
+              setActive(event.target.value);
+              setOpen(true);
+            }}
+            aria-label="Language">
+            {samples.map((sample) => (
+              <option key={sample.id} value={sample.id}>
+                {sample.label}
+              </option>
+            ))}
+          </select>
+          <CopyButton value={current.code} />
+        </>
+      }>
       <CodeBlock language={current.language}>{current.code}</CodeBlock>
       {operation.gateway === 'nhcx' ? (
         <p className="api-panel__note">{PLACEHOLDER_NOTE}</p>
       ) : null}
-    </div>
+    </SidePanel>
   );
 }
 
 function ResponsePanel({responses}: {responses: Operation['responses']}) {
   const [active, setActive] = useState(0);
+  const [open, setOpen] = usePanelOpen('response');
   const current = responses[active];
   if (!current) {
     return null;
   }
   return (
-    <div className="api-panel">
-      <div className="api-panel__head">
-        <div className="api-panel__tabs" role="tablist" aria-label="Responses">
-          {responses.map((response, index) => (
-            <button
-              key={response.status}
-              type="button"
-              role="tab"
-              aria-selected={index === active}
-              className={
-                index === active
-                  ? 'api-panel__tab api-panel__tab--active'
-                  : 'api-panel__tab'
-              }
-              onClick={() => setActive(index)}>
-              {response.status}
-            </button>
-          ))}
-        </div>
-        {current.example !== undefined ? (
-          <CopyButton value={JSON.stringify(current.example, null, 2)} />
-        ) : null}
-      </div>
+    <SidePanel
+      open={open}
+      setOpen={setOpen}
+      label="Response"
+      tools={
+        <>
+          <div className="api-panel__tabs" role="tablist" aria-label="Responses">
+            {responses.map((response, index) => (
+              <button
+                key={response.status}
+                type="button"
+                role="tab"
+                aria-selected={index === active}
+                className={
+                  index === active
+                    ? 'api-panel__tab api-panel__tab--active'
+                    : 'api-panel__tab'
+                }
+                onClick={() => {
+                  setActive(index);
+                  setOpen(true);
+                }}>
+                {response.status}
+              </button>
+            ))}
+          </div>
+          {current.example !== undefined ? (
+            <CopyButton value={JSON.stringify(current.example, null, 2)} />
+          ) : null}
+        </>
+      }>
       {current.example !== undefined ? (
         <>
           <CodeBlock language="json">
@@ -287,7 +370,7 @@ function ResponsePanel({responses}: {responses: Operation['responses']}) {
       ) : (
         <p className="api-panel__empty">{current.description}</p>
       )}
-    </div>
+    </SidePanel>
   );
 }
 
