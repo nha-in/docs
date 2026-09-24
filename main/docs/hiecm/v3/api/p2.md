@@ -4,9 +4,9 @@ Manage the PHR profile, link an ABHA number, switch profiles, and handle linking
 
 ## Postman collection
 
-42 requests in the order you build them, and a sandbox environment to fill in.
+42 requests in the order you build them, and a sandbox environment to fill in. Each step keeps the txnId and X-token it gets back for the steps after it.
 
-[Collection](/docs/main/postman/hiecm-p2.postman_collection.json)[Environment](/docs/main/postman/hiecm-sandbox.postman_environment.json)
+[Collection](/docs/main/postman/hiecm-p2.postman_collection.json)[Environment](/docs/main/postman/hiecm-sandbox.postman_environment.json)[Run in Postman](https://app.getpostman.com/run-collection/58494529-de92c2ee-a243-4dda-8c32-52d76fe8087d?action=collection%2Ffork\&collection-url=entityId%3D58494529-de92c2ee-a243-4dda-8c32-52d76fe8087d%26entityType%3Dcollection%26workspaceId%3D87d6429f-b4ee-4ec4-ac5d-5e6e5700b974)
 
 `https://nha-in.github.io/docs/main/postman/hiecm-p2.postman_collection.json`
 

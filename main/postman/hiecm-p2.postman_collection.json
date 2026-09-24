@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "ABDM HIE-CM P2 Consents Management",
-    "description": "Generated from the ABDM HIE-CM specifications. Import hiecm-sandbox.postman_environment.json beside it and fill in clientId and clientSecret: the collection fetches a gateway session token before a call when it needs one.\n\nFolders follow the order a journey is built in. Callbacks are not included: ABDM sends those to your bridge URL, so receiving them needs a public endpoint, not Postman.\n\nValues ABDM expects encrypted, such as an Aadhaar number or an OTP, are shown as the specification gives them. Encrypt your own values before sending.",
+    "description": "Generated from the ABDM HIE-CM specifications. Import hiecm-sandbox.postman_environment.json beside it and fill in clientId and clientSecret: the collection fetches a gateway session token before a call when it needs one.\n\nFolders follow the order a journey is built in. Send the steps in order: each response keeps the txnId and the X-token it returns as collection variables, and the steps after it read them. Callbacks are not included: ABDM sends those to your bridge URL, so receiving them needs a public endpoint, not Postman.\n\nValues ABDM expects encrypted, such as an Aadhaar number or an OTP, are shown as the specification gives them. Encrypt your own values before sending.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "event": [
@@ -11,6 +11,7 @@
         "type": "text/javascript",
         "exec": [
           "// Gets a gateway session token when there is none or it has expired.",
+          "(function () {",
           "if (pm.request.url.getPath().endsWith('/api/hiecm/gateway/v3/sessions')) return;",
           "const expiry = Number(pm.environment.get('accessTokenExpiry') || 0);",
           "if (pm.environment.get('accessToken') && Date.now() < expiry) return;",
@@ -40,9 +41,73 @@
           "  pm.environment.set('accessToken', accessToken);",
           "  // A minute early, so a token never expires between this check and the call.",
           "  pm.environment.set('accessTokenExpiry', Date.now() + (expiresIn - 60) * 1000);",
-          "});"
+          "});",
+          "})();"
         ]
       }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Keeps what this response hands to the calls after it, such as the txnId an",
+          "// OTP request returns and the X-token a login returns, as collection variables.",
+          "(function () {",
+          "let body;",
+          "try { body = pm.response.json(); } catch (error) { return; }",
+          "function carriedValues(body) {",
+          "  const list = Array.isArray(body);",
+          "  const first = list ? body[0] : body;",
+          "  if (!first || typeof first !== \"object\") return {};",
+          "  const read = (path) => {",
+          "    let at = first;",
+          "    for (const key of path.split(\".\")) {",
+          "      if (!at || typeof at !== \"object\") return void 0;",
+          "      at = at[key];",
+          "    }",
+          "    return typeof at === \"string\" && at ? at : void 0;",
+          "  };",
+          "  const out = {};",
+          "  const txnId = read(\"txnId\");",
+          "  if (txnId) out[list ? \"searchTxnId\" : \"txnId\"] = txnId;",
+          "  const tokenAt = [\"tokens.token\", \"jwtResponse.token\", \"token\"].find((path) => read(path));",
+          "  if (tokenAt) {",
+          "    const token = read(tokenAt);",
+          "    out[\"X-token\"] = token;",
+          "    out.jwtToken = token;",
+          "    const refresh = read(tokenAt.replace(/token$/, \"refreshToken\"));",
+          "    if (refresh) out[\"R-jwtToken\"] = refresh;",
+          "  }",
+          "  return out;",
+          "}",
+          "const values = carriedValues(body);",
+          "Object.keys(values).forEach(function (key) { pm.collectionVariables.set(key, values[key]); });",
+          "})();"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "txnId",
+      "value": ""
+    },
+    {
+      "key": "searchTxnId",
+      "value": ""
+    },
+    {
+      "key": "X-token",
+      "value": ""
+    },
+    {
+      "key": "jwtToken",
+      "value": ""
+    },
+    {
+      "key": "R-jwtToken",
+      "value": ""
     }
   ],
   "item": [

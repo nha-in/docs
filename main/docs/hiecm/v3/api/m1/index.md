@@ -4,9 +4,9 @@ Create an ABHA, authenticate a holder, and read or update the profile, QR code a
 
 ## Postman collection
 
-122 requests in the order you build them, and a sandbox environment to fill in.
+122 requests in the order you build them, and a sandbox environment to fill in. Each step keeps the txnId and X-token it gets back for the steps after it.
 
-[Collection](/docs/main/postman/hiecm-m1.postman_collection.json)[Environment](/docs/main/postman/hiecm-sandbox.postman_environment.json)
+[Collection](/docs/main/postman/hiecm-m1.postman_collection.json)[Environment](/docs/main/postman/hiecm-sandbox.postman_environment.json)[Run in Postman](https://app.getpostman.com/run-collection/58494529-812374a9-3b91-42a0-8cbc-f86a31e0e688?action=collection%2Ffork\&collection-url=entityId%3D58494529-812374a9-3b91-42a0-8cbc-f86a31e0e688%26entityType%3Dcollection%26workspaceId%3D87d6429f-b4ee-4ec4-ac5d-5e6e5700b974)
 
 `https://nha-in.github.io/docs/main/postman/hiecm-m1.postman_collection.json`
 
