@@ -23,7 +23,7 @@ const MODULES = {
   m1: {label: 'M1 Identity', position: 2, icon: 'id-card', roles: ['his'], title: 'ABDM M1, create and verify ABHA', summary: 'Create, find, log into and manage an ABHA.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}], expected: 121},
   m2: {label: 'M2 Health Information Provider', position: 3, icon: 'link', roles: ['his'], title: 'ABDM M2, create and link records', summary: 'Link care contexts to an ABHA address and share records when consent arrives.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 20},
   m3: {label: 'M3 Health Information User', position: 4, icon: 'file-check', roles: ['his'], title: 'ABDM M3, fetch data with consent', summary: 'Raise a consent request, fetch its artefacts, and receive records.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 12},
-  m4: {label: 'M4 Registry Integration', position: 5, icon: 'building-2', roles: ['his'], title: 'ABDM M4, register facilities and professionals', summary: 'Register healthcare professionals and facilities on the NHPR.', servers: [{url: 'https://apihspsbx.abdm.gov.in/v4/int', description: 'NHPR, sandbox'}], expected: 100},
+  m4: {label: 'M4 Registry Integration', position: 5, icon: 'building-2', roles: ['his'], title: 'ABDM M4, register facilities and professionals', summary: 'Register healthcare professionals and facilities on the NHPR.', servers: [{url: 'https://apihspsbx.abdm.gov.in/v4/int', description: 'NHPR, sandbox'}], expected: 87},
   p1: {label: 'P1 Registration and login', position: 6, icon: 'user-round', roles: ['phr'], title: 'ABDM P1, PHR registration and login', summary: 'Create an ABHA address in a PHR app and log in to it.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}], expected: 11},
   p2: {label: 'P2 Consents Management', position: 7, icon: 'files', roles: ['phr'], title: 'ABDM P2, Consents Management', summary: 'Manage the PHR profile, link an ABHA number, switch profiles, and handle linking, sharing and consent for the patient.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://abhasbx.abdm.gov.in', description: 'PHR application service, sandbox'}], expected: 35},
   p3: {label: 'P3 Subscription', position: 8, icon: 'bell', roles: ['phr'], title: 'ABDM P3, PHR subscriptions', summary: 'Read, approve, deny, enable, disable and update the patient\'s subscriptions and subscription requests, and the subscription request and notifications they answer.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}], expected: 14},
@@ -65,9 +65,14 @@ const FILES = [
   // P3's approve and deny, so they sit in P3 rather than a module of their own.
   {file: 'hiecm/subscription.yaml', place: (tag, path) => (tag === 'subscription-phr' || LOCKER.test(path) ? phrPlace(tag, path) : 'p3')},
   {file: 'hiecm/scan-and-pay.yaml', place: (tag, path) => (tag.endsWith('-phr') ? phrPlace(tag, path) : 'scan-and-pay')},
-  {file: 'M4/M4-HFR.json', place: () => 'm4'},
-  {file: 'M4/M4-HPID.json', place: () => 'm4'},
-  {file: 'M4/M4-HPR.json', place: () => 'm4'},
+  // The M4 source is the three groups the sandbox Swagger page publishes,
+  // downloaded on 24 September 2026. They leave out 15 calls NHA's files of
+  // 16 September carried, which are not for integrators, and they carry no
+  // response examples; carryM4Examples takes those from the 16 September
+  // file wherever the call's schema is unchanged.
+  {file: 'M4/M4-HFR.json', set: 'nha-2026-09-24', fetched: '2026-09-24', place: () => 'm4'},
+  {file: 'M4/M4-HPID.json', set: 'nha-2026-09-24', fetched: '2026-09-24', place: () => 'm4'},
+  {file: 'M4/M4-HPR.json', set: 'nha-2026-09-24', fetched: '2026-09-24', place: () => 'm4'},
   {file: 'phr/PHR and Locker Swagger.yaml', place: phrPlace},
 ];
 function byRole(hipModule) { return (tag, path) => (tag.endsWith('-phr') ? phrPlace(tag, path) : hipModule); }
@@ -104,13 +109,70 @@ function dedupeM4Components(doc, file) {
   }
 }
 
+// The published M4 groups carry almost no examples. Where the same call in
+// NHA's 16 September file carried one, and the schema it illustrates is the
+// same once every $ref is followed, the example is carried over into the
+// same place, under whichever media type the published group declares. Runs
+// before dedupeM4Components, so both files still use NHA's component names.
+function carryM4Examples(doc, file) {
+  const oldDoc = JSON.parse(readFileSync(join(RAW, file), 'utf8'));
+  const resolve = (d, node, seen = new Set()) => JSON.stringify(node, function (k, v) {
+    if (k === 'example' || k === 'examples') return undefined;
+    if (v && typeof v === 'object' && typeof v.$ref === 'string') {
+      if (seen.has(v.$ref)) return {$ref: v.$ref};
+      const target = v.$ref.split('/').slice(1).reduce((o, key) => o?.[key], d);
+      return JSON.parse(resolve(d, target ?? null, new Set([...seen, v.$ref])));
+    }
+    return v;
+  });
+  const media = (content) => content?.['application/json'] ?? content?.['*/*'];
+  for (const [path, item] of Object.entries(oldDoc.paths ?? {})) {
+    for (const method of METHODS) if (item?.[method] && !doc.paths?.[path]?.[method]) note('m4', `${method.toUpperCase()} ${path}`, `left out: nha-2026-09-16/${file} carried it and the published group of 24 September 2026 does not`);
+  }
+  for (const [path, item] of Object.entries(doc.paths ?? {})) {
+    for (const method of METHODS) {
+      const op = item?.[method];
+      const was = oldDoc.paths?.[path]?.[method];
+      if (!op || !was) continue;
+      const pairs = [['request body', op.requestBody?.content, was.requestBody?.content]];
+      for (const [status, r] of Object.entries(op.responses ?? {})) pairs.push([`${status} response`, r.content, was.responses?.[status]?.content]);
+      for (const [where, now, then] of pairs) {
+        const to = media(now), from = media(then);
+        if (!to || !from || to.example !== undefined || to.examples) continue;
+        if (from.example === undefined && !from.examples) continue;
+        if (resolve(doc, to.schema) !== resolve(oldDoc, from.schema)) continue;
+        if (from.example !== undefined) to.example = from.example; else to.examples = from.examples;
+        note('m4', `${method.toUpperCase()} ${path}`, `${where} example carried over from nha-2026-09-16/${file}; the published group of 24 September 2026 has none and the schema is unchanged`);
+      }
+    }
+  }
+}
+
+// The published HFR group writes some enum patterns with Java's inline
+// (?i) flag, which a JSON Schema regex does not accept. Each letter becomes
+// a two-case class, which matches exactly what the service's pattern does.
+function caseInsensitivePatterns(doc, file) {
+  visitPatterns(doc, (schema, where) => {
+    if (!schema.pattern.includes('(?i)')) return;
+    const was = schema.pattern;
+    schema.pattern = was.replace('(?i)', '').replace(/[A-Za-z]/g, (c) => `[${c.toUpperCase()}${c.toLowerCase()}]`);
+    note('m4', where, `pattern \`${was}\` written as \`${schema.pattern}\`; (?i) is a Java flag a JSON Schema regex does not accept (${file})`);
+  });
+}
+function visitPatterns(node, fn, where = '') {
+  if (Array.isArray(node)) { node.forEach((v, i) => visitPatterns(v, fn, `${where}[${i}]`)); return; }
+  if (!node || typeof node !== 'object') return;
+  if (typeof node.pattern === 'string') fn(node, where);
+  for (const [k, v] of Object.entries(node)) visitPatterns(v, fn, where ? `${where}.${k}` : k);
+}
+
 // Where the bearer token comes from, only where a raw file says so. The PHR
 // swagger names the gateway session for its operations (gateway, p1, p2), and
 // the M4 files carry their own token call. The other raw files name no source,
 // so their modules get no description rather than a guessed one.
 const GATEWAY_TOKEN = 'The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.';
 const TOKEN_SOURCE = {
-  m4: 'M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.',
+  m4: 'M4 declares bearer authentication. The published M4 specifications name no call that issues the token.',
 };
 // 10. Header descriptions NHA's files leave blank. One meaning per header,
 // applied only where the file gave none, so NHA's own wording always wins.
@@ -161,7 +223,7 @@ const normHeader = (name) => M1_HEADERS[name.toLowerCase()] ?? name;
 for (const {file, place, set = 'nha-2026-09-16', fetched = '2026-09-16', titlesFromSummary = false} of FILES) {
   const full = join(RAW, '..', set, file);
   const doc = file.endsWith('.json') ? JSON.parse(readFileSync(full, 'utf8')) : parse(readFileSync(full, 'utf8'));
-  if (file.startsWith('M4/')) dedupeM4Components(doc, file);
+  if (file.startsWith('M4/')) { carryM4Examples(doc, file); caseInsensitivePatterns(doc, file); dedupeM4Components(doc, file); }
   const touched = new Set();
   for (const [path, item] of Object.entries(doc.paths ?? {})) {
     for (const method of METHODS) {

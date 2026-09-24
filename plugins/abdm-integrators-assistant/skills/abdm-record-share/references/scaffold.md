@@ -72,8 +72,8 @@ biometric method. The route set is the intersection of what the deployment
 allows and what the code can host.
 
 **Decide.** Order the journeys. The token comes first because every other call
-needs it: the gateway session token, or for M4 the management token from
-`/getManagementToken`. Then the journey whose exit condition can be observed with
+needs it: the gateway session token, or for M4 the bearer token the registry calls
+carry. Then the journey whose exit condition can be observed with
 the least new code, usually a profile read for a patient who already holds an
 ABHA. Creation and linking come after, because each depends on state the earlier
 ones produce. For each journey, name the files it will touch and the test that

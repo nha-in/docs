@@ -243,8 +243,13 @@ function protectedHeaderFor(spec, op, file) {
   });
 }
 
+// A body NHA's M4 groups declare only as */*, which is the service's JSON
+// under a media type Springdoc leaves unset. Read it as JSON rather than
+// render the body as absent.
+const jsonMedia = (content) => content?.['application/json'] ?? content?.['*/*'];
+
 function firstExample(content) {
-  const media = content?.['application/json'];
+  const media = jsonMedia(content);
   if (!media) return undefined;
   if (media.example !== undefined) return media.example;
   const examples = Object.values(media.examples ?? {});
@@ -970,16 +975,16 @@ for (const {platform, version, files} of tree) {
         // never renders as prose alone.
         example:
           firstExample(response.content) ??
-          sampleFromSchema(response.content?.['application/json']?.schema),
+          sampleFromSchema(jsonMedia(response.content)?.schema),
         // True when the example above was built from the schema rather than
         // written in the specification, which is the only case the page says
         // its values are placeholders.
         synthesised:
           firstExample(response.content) === undefined &&
-          response.content?.['application/json']?.schema?.example === undefined &&
-          sampleFromSchema(response.content?.['application/json']?.schema) !== undefined,
+          jsonMedia(response.content)?.schema?.example === undefined &&
+          sampleFromSchema(jsonMedia(response.content)?.schema) !== undefined,
         // The response body's fields, as the request body's are listed.
-        fields: fields(response.content?.['application/json']?.schema).map(
+        fields: fields(jsonMedia(response.content)?.schema).map(
           ({encrypted, fixed, ...field}) => field,
         ),
         help: helpFor(status, module.dir, op.operationId),

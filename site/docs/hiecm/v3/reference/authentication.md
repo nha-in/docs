@@ -30,7 +30,7 @@ Generated from the specifications. Every scheme and header below is declared in 
 
 ## M4 Registry Integration
 
-**bearerAuth**, `http` `bearer`. M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+**bearerAuth**, `http` `bearer`. M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
 
 ## P1 Registration and login
 

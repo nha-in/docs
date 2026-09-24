@@ -9,7 +9,7 @@ The calls themselves: where they live, what they need in their headers, and one 
 - `https://apis.abdm.gov.in` ABDM gateway, production
 ## Endpoints
 
-104 operations, grouped by the journey they belong to.
+91 operations, grouped by the journey they belong to.
 
 ### Other operations
 
@@ -23,7 +23,7 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `POST` | `/api/hiecm/gateway/v3/sessions` | Generate access token. |
 | `POST` | `/api/v1/auth/authPassword` | Login Via Password |
 | `GET` | `/api/v1/auth/cert` | Get Public Certificate |
-| `POST` | `/api/v1/auth/confirmWithAadhaarOtp` | Verify Aadhaar OTP 1 |
+| `POST` | `/api/v1/auth/confirmWithAadhaarOtp` | Verify Aadhaar OTP |
 | `POST` | `/api/v1/auth/init` | Send Via Aadhaar OTP |
 | `POST` | `/api/v2/auth/loginViaMobileSendOTP` | Send Verify OTP |
 | `POST` | `/apis/v1/doctors/fetch-documents-list` | Fetch Documents |
@@ -59,18 +59,11 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `GET` | `/apis/v1/masters/universites` | List All University |
 | `GET` | `/apis/v1/masters/universites/{id}` | Get University By College |
 | `POST` | `/apis/v1/uploads/upload-document` | Upload Documents |
-| `POST` | `/FacilityManagement/v1.5/facility/bygeoLocation/searchFacilityAndInfrastructureWithinRadiusWithFilter` | Get Facility And Infrastructure Within Radius With Filter |
-| `POST` | `/FacilityManagement/v1.5/facility/search` | Search Facility |
-| `POST` | `/fetchProfessionalFacility` | Fetch Professional Facility |
-| `POST` | `/getFacilityCreatedByHprId` | Get Facilities Created By HPR ID |
-| `POST` | `/getFacilityDeclaredByHprId` | Get Facilities Declared By HPR ID |
-| `POST` | `/getManagementToken` | Get Admin Token |
+| `POST` | `/FacilityManagement/v1.5/facility/bygeoLocation/searchWithinRadiusWithFilter` | Get Facility Within Radius With Filter |
+| `POST` | `/FacilityManagement/v1.5/facility/search` | Search Facility 1 |
 | `GET` | `/getPsuDetailsByMinistry` | Get Psu Data |
-| `POST` | `/healdthloginwithmobile` | Healdthloginwithmobile |
 | `GET` | `/hpid/get/categories` | Fetch HPID Categories |
 | `GET` | `/hpid/get/subCategories` | Fetch HPID Sub Categories From Category |
-| `POST` | `/hprFacilitySuggestions` | Create Facility Suggestion |
-| `PUT` | `/hprWorkDetails/status` | Update Status |
 | `POST` | `/password/change/byPassword` | Change Password |
 | `POST` | `/password/recover/byAadhaar` | Recover Password Via Aadhaar |
 | `POST` | `/password/recover/byMobile/sendMobileOTP` | Generate Mobile OTP 1 |
@@ -78,9 +71,8 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `POST` | `/password/recover/confirmByAadhaar` | Recover Password Confirm By Aadhaar |
 | `POST` | `/password/reset/password` | Reset Password And Session |
 | `POST` | `/password/resetPassword` | Reset Password |
-| `POST` | `/profile/updateRole` | Update Role And Category |
-| `POST` | `/relinkOrDelinkProfessionalFromFacility` | Link Delink Existing Facility |
 | `POST` | `/search/address/filter/deduplicate` | Get Filtered Address Post |
+| `POST` | `/v1.0/facility/search-facilities` | Search Facility |
 | `POST` | `/v1.5/facility/additional-information` | V15Facility Additional Information |
 | `POST` | `/v1.5/facility/basic-information` | V15Basic Facility Information |
 | `POST` | `/v1.5/facility/detailed-information` | V15Facility Detailed Information |
@@ -98,9 +90,6 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `POST` | `/v1.5/facility/validateOtp` | Validate OTP |
 | `GET` | `/v1/account/getIdCard` | Get Account Png Card |
 | `GET` | `/v1/account/information` | Get User Profile By JWT |
-| `POST` | `/v1/account/reKYC/generateAadhaarOTP` | Generate Aadhaar OTPFor Re KYC |
-| `POST` | `/v1/account/reKYC/verifyAadhaarOTP` | Verify Aadhaar OTP |
-| `POST` | `/v1/account/reKYC/verifyAadhaarOTPGetDetails` | Verify Aadhaar OTPGet Details |
 | `GET` | `/v1/account/user-details/{hprId}` | Get User Details |
 | `POST` | `/v1/bridges/MutipleHRPAddUpdateServices` | Facility Add And Update |
 | `POST` | `/v1/forgot/hprId/aadhaar` | Retrieval Health ID By Aadhaar |
@@ -113,8 +102,6 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `GET` | `/v1/search/existsByHprId/{hprId}` | Exists By HPR ID |
 | `GET` | `/v1/search/searchByHprId/{hprId}` | Search User By HPR ID |
 | `GET` | `/v1/search/searchByMobile/{mobile}` | Search User By Mobile No |
-| `POST` | `/v1/sendOtpIfDoctorVerified` | Send OTP If Doctor Verified |
-| `POST` | `/v1/verifyDoctorVerificationOtp` | Verify Doctor Verification OTP |
 | `POST` | `/v2/registration/aadhaar/createHprIdWithPreVerified` | Create HPR ID V2 |
 | `POST` | `/v2/registration/aadhaar/demographicAuthViaMobile` | Demographic Auth Via Mobile |
 | `POST` | `/v2/registration/aadhaar/verifyOTP` | Verify OTP |
@@ -123,6 +110,7 @@ The calls themselves: where they live, what they need in their headers, and one 
 
 | Header | What it is |
 | --- | --- |
+| `Authorization` |  |
 | `REQUEST-ID` | Unique UUID for track the end to end request transaction |
 | `TIMESTAMP` | Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, follow… |
 | `X-CM-ID` | Suffix of the consent manager to which the request was intended |
