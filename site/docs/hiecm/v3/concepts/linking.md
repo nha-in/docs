@@ -85,7 +85,7 @@ The full list is on [M2 errors](/docs/hiecm/v3/api/m2/errors).
 ## Where this is implemented
 
 - [Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu), what a facility builds to do the linking.
-- [M2 Health Information Provider, Health Information Provider Services](/docs/hiecm/v3/api/m2), the call order for all three routes.
+- [M2 Health Information Provider: Create and link records](/docs/hiecm/v3/api/m2), the call order for both routes.
 - [Consent](/docs/hiecm/v3/concepts/consent), what happens once somebody asks for a linked care context.
 - [How a record travels](/docs/hiecm/v3/concepts/data-flow), what you do when that request arrives.
 - [PHR applications](/docs/hiecm/v3/concepts/participants/phr), the patient side of discovery and linking.

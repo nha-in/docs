@@ -50,12 +50,12 @@ responsibilities of healthcare establishments.
 
 ## Next steps
 
-- [P1 Identity and login](/docs/hiecm/v3/milestones/p1): creating an ABHA
+- [P1 Registration and login](/docs/hiecm/v3/milestones/p1): creating an ABHA
   address and the login routes, with the [P1 API reference](/reference/hiecm-p1).
-- [P2 Linking and records](/docs/hiecm/v3/milestones/p2): scan and share,
-  discovery, the profile and the card, with the
+- [P2 Consents Management](/docs/hiecm/v3/milestones/p2): scan and register,
+  discovery and linking of records, with the
   [P2 API reference](/reference/hiecm-p2).
-- [P3 Consent and notifications](/docs/hiecm/v3/milestones/p3): subscriptions,
+- [P3 Subscription](/docs/hiecm/v3/milestones/p3): subscriptions,
   auto approval, consent and fetching records. The subscription calls are in the
   [P3 API reference](/reference/hiecm-p3), the auto approval and consent calls in
   the [P2 API reference](/reference/hiecm-p2), and the health locker calls in the

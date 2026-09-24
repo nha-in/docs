@@ -11,7 +11,7 @@
   "attachment": null,
   "page": null,
   "must_contain": [
-    "milestone one is ABHA creation and verification for patient registration",
+    "milestone one is Create and verify ABHA, for patient registration",
     "milestone two builds HIP services so records can be shared through a PHR app",
     "milestone three builds HIU services so authorized users can view a patient's medical history with consent"
   ],

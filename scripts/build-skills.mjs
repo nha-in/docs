@@ -186,7 +186,7 @@ const MODULES = [
   {
     id: 'm1',
     slug: 'abdm-m1',
-    title: 'M1, ABHA creation and verification',
+    title: 'M1, create and verify ABHA',
     docs: '/docs/hiecm/v3/api/m1',
     spec: 'hiecm-m1.yaml',
     example: 'Add ABHA creation by Aadhaar OTP to this codebase',
@@ -205,7 +205,7 @@ const MODULES = [
   {
     id: 'm2',
     slug: 'abdm-m2',
-    title: 'M2, health information provider services',
+    title: 'M2, create and link records',
     docs: '/docs/hiecm/v3/api/m2',
     spec: 'hiecm-m2.yaml',
     example: 'Link a care context for this patient',
@@ -222,7 +222,7 @@ const MODULES = [
   {
     id: 'm3',
     slug: 'abdm-m3',
-    title: 'M3, health information user services',
+    title: 'M3, fetch data with consent',
     docs: '/docs/hiecm/v3/api/m3',
     spec: 'hiecm-m3.yaml',
     example: 'Raise a consent request and fetch the records it covers',
@@ -238,7 +238,7 @@ const MODULES = [
   {
     id: 'm4',
     slug: 'abdm-m4',
-    title: 'M4, facility and professional registries',
+    title: 'M4, register facilities and professionals',
     docs: '/docs/hiecm/v3/api/m4',
     spec: 'hiecm-m4.yaml',
     example: 'Onboard this facility to the HFR and link its HIP bridge',
