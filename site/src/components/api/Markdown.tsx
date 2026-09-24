@@ -24,7 +24,9 @@ import {blocks} from './blocks';
  * wrap their descriptions near column 72, and honouring those breaks left
  * ragged half lines on narrow screens. A blank line still starts a paragraph.
  */
-const TOKEN = /(`[^`\n]+`|\*\*[^*\n]+\*\*|\[[^\]\n]+\]\([^)\s]+\))/g;
+// Italic needs a word character at both inner edges, so a spaced `2 * 3 * 4`
+// stays arithmetic. The build's own Flow block names the next call in italics.
+const TOKEN = /(`[^`\n]+`|\*\*[^*\n]+\*\*|\*(?![\s*])[^*\n]*?[^\s*]\*|\*[^\s*]\*|\[[^\]\n]+\]\([^)\s]+\))/g;
 const LINK = /^\[([^\]\n]+)\]\(([^)\s]+)\)$/;
 
 const TABLE_OR_QUOTE = /^\s*(\|.*\||>)/m;
@@ -42,6 +44,9 @@ export function inline(text: string): React.ReactNode[] {
       }
       if (part.length > 4 && part.startsWith('**') && part.endsWith('**')) {
         return <strong key={index}>{part.slice(2, -2)}</strong>;
+      }
+      if (part.length > 2 && part.startsWith('*') && part.endsWith('*')) {
+        return <em key={index}>{part.slice(1, -1)}</em>;
       }
       const link = LINK.exec(part);
       // Only an address a specification could mean: a page of this site, an

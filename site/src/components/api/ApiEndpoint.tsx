@@ -1,8 +1,9 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import CodeBlock from '@theme/CodeBlock';
 import Heading from '@theme/Heading';
 import Link from '@docusaurus/Link';
 import {Check, Copy, Play} from 'lucide-react';
+import {Tabs} from 'radix-ui';
 import {
   Dialog,
   DialogContent,
@@ -11,6 +12,7 @@ import {
 import TryIt from './TryIt';
 import Markdown from './Markdown';
 import {splitLede, isRestatement} from './lede';
+import {sections} from './sections';
 
 export type Field = {
   name: string;
@@ -111,21 +113,65 @@ function FieldRow({field, showExample}: {field: Field; showExample?: boolean}) {
   );
 }
 
+/** A titled part of a tab. Untitled where the tab's own name already says it. */
 function Section({
   title,
   children,
 }: {
-  title: string;
+  title?: string;
   children: React.ReactNode;
 }) {
   return (
     <section className="api-section">
-      <Heading as="h2" className="api-section__title">
-        {title}
-      </Heading>
+      {title ? (
+        <Heading as="h2" className="api-section__title">
+          {title}
+        </Heading>
+      ) : null}
       {children}
     </section>
   );
+}
+
+/**
+ * The open tab, kept in the URL hash so a link can land on it: `#body` opens
+ * Body. A hash naming something inside a panel opens that panel, so the
+ * element is visible to scroll to. Selecting a tab replaces the hash rather
+ * than pushing it, because a tab is a view of this page, not a step in the
+ * reader's history.
+ */
+function useTab(ids: string[]): [string, (id: string) => void] {
+  const [active, setActive] = useState(ids[0]);
+  const key = ids.join(' ');
+
+  useEffect(() => {
+    const fromHash = () => {
+      const hash = decodeURIComponent(window.location.hash.slice(1));
+      if (!hash) return;
+      if (ids.includes(hash)) {
+        setActive(hash);
+        document.querySelector('.api-tabs')?.scrollIntoView({block: 'start'});
+        return;
+      }
+      const target = document.getElementById(hash);
+      const panel = target?.closest<HTMLElement>('[data-api-tab]')?.dataset.apiTab;
+      if (panel && ids.includes(panel)) {
+        setActive(panel);
+        requestAnimationFrame(() => target?.scrollIntoView());
+      }
+    };
+    fromHash();
+    window.addEventListener('hashchange', fromHash);
+    return () => window.removeEventListener('hashchange', fromHash);
+    // `key` stands in for `ids`, which is a new array on every render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key]);
+
+  const select = (id: string) => {
+    setActive(id);
+    window.history.replaceState(window.history.state, '', `#${id}`);
+  };
+  return [ids.includes(active) ? active : ids[0], select];
 }
 
 export function CopyButton({value}: {value: string}) {
@@ -257,6 +303,142 @@ export default function ApiEndpoint({operation}: {operation: Operation}) {
   const text = operation.description ?? '';
   const nhaHeaders = /\*\*Headers\*\*/.test(text);
   const nhaBody = /\*\*Request body/i.test(text);
+  // NHA's header and body tables go to their own tabs; the rest of the
+  // description is the overview.
+  const parts = sections(rest);
+
+  const headerParts = [
+    parts.headers ? (
+      <Markdown key="nha" text={parts.headers} className="api-page__body" />
+    ) : null,
+    operation.security.length && !nhaHeaders ? (
+      <Section key="auth" title="Authorizations">
+        {operation.security.map((scheme) => (
+          <FieldRow
+            key={scheme.name}
+            field={{
+              // The header a scheme travels in is the scheme's own, not
+              // always Authorization: an apiKey scheme names its header,
+              // and labelling X-Token "Authorization" told the reader to
+              // send the wrong one.
+              name:
+                scheme.type === 'apiKey' && scheme.headerName
+                  ? scheme.headerName
+                  : 'Authorization',
+              type: scheme.scheme === 'bearer' ? 'bearer token' : scheme.type,
+              required: true,
+              description: scheme.description,
+              example: scheme.example,
+            }}
+            showExample
+          />
+        ))}
+      </Section>
+    ) : null,
+    operation.headers.length && !nhaHeaders ? (
+      <Section key="headers" title="Headers">
+        {operation.headers.map((field) => (
+          <FieldRow key={field.name} field={field} />
+        ))}
+      </Section>
+    ) : null,
+    operation.protectedHeader?.length ? (
+      <Section key="protected" title="Protected header">
+        <p className="api-section__lede">
+          These fields go in the JWE protected header of <code>payload</code>,
+          not as HTTP headers.{' '}
+          <Link to="/docs/nhcx/v1/getting-started/building-and-sending-a-jwe">
+            Building and sending a JWE
+          </Link>{' '}
+          shows how to prepare and encrypt the payload, and{' '}
+          <Link to="/docs/nhcx/v1/getting-started/receiving-a-callback">
+            Receiving a callback
+          </Link>{' '}
+          how to decrypt one.
+        </p>
+        {operation.protectedHeader.map((field) => (
+          <FieldRow key={field.name} field={field} showExample />
+        ))}
+      </Section>
+    ) : null,
+  ].filter(Boolean);
+
+  const paramParts = [
+    operation.pathParams.length ? (
+      <Section key="path" title="Path parameters">
+        {operation.pathParams.map((field) => (
+          <FieldRow key={field.name} field={field} />
+        ))}
+      </Section>
+    ) : null,
+    operation.queryParams.length ? (
+      <Section key="query" title="Query parameters">
+        {operation.queryParams.map((field) => (
+          <FieldRow key={field.name} field={field} />
+        ))}
+      </Section>
+    ) : null,
+  ].filter(Boolean);
+
+  const bodyParts = [
+    parts.body ? (
+      <Markdown key="nha" text={parts.body} className="api-page__body" />
+    ) : null,
+    operation.body.length && !nhaBody ? (
+      <Section key="schema">
+        {operation.body.map((field) => (
+          <FieldRow key={field.name} field={field} />
+        ))}
+      </Section>
+    ) : null,
+  ].filter(Boolean);
+
+  const panels = [
+    {
+      id: 'overview',
+      label: 'Overview',
+      content: parts.overview ? (
+        <Markdown text={parts.overview} className="api-page__body" />
+      ) : null,
+    },
+    {id: 'headers', label: 'Headers', content: headerParts.length ? headerParts : null},
+    {id: 'params', label: 'Params', content: paramParts.length ? paramParts : null},
+    {id: 'body', label: 'Body', content: bodyParts.length ? bodyParts : null},
+    {
+      id: 'responses',
+      label: 'Responses',
+      content: operation.responses.length ? (
+        <Section>
+          {operation.responses.map((response) => (
+            <div key={response.status} className="api-field">
+              <div className="api-field__head">
+                <code className="api-field__name">{response.status}</code>
+              </div>
+              {response.description ? (
+                <Markdown
+                  text={response.description}
+                  className="api-field__description"
+                />
+              ) : null}
+              {response.help ? (
+                <p className="api-field__help">
+                  <a href={response.help.href}>{response.help.label}</a>
+                </p>
+              ) : null}
+              {response.fields?.length ? (
+                <div className="api-response-fields">
+                  {response.fields.map((field) => (
+                    <FieldRow key={field.name} field={field} />
+                  ))}
+                </div>
+              ) : null}
+            </div>
+          ))}
+        </Section>
+      ) : null,
+    },
+  ].filter((panel) => panel.content);
+  const [tab, setTab] = useTab(panels.map((panel) => panel.id));
 
   return (
     <div className="api-page">
@@ -293,113 +475,33 @@ export default function ApiEndpoint({operation}: {operation: Operation}) {
           )}
         </div>
 
-        {rest ? <Markdown text={rest} className="api-page__body" /> : null}
-
-        {operation.security.length && !nhaHeaders ? (
-          <Section title="Authorizations">
-            {operation.security.map((scheme) => (
-              <FieldRow
-                key={scheme.name}
-                field={{
-                  // The header a scheme travels in is the scheme's own, not
-                  // always Authorization: an apiKey scheme names its header,
-                  // and labelling X-Token "Authorization" told the reader to
-                  // send the wrong one.
-                  name:
-                    scheme.type === 'apiKey' && scheme.headerName
-                      ? scheme.headerName
-                      : 'Authorization',
-                  type: scheme.scheme === 'bearer' ? 'bearer token' : scheme.type,
-                  required: true,
-                  description: scheme.description,
-                  example: scheme.example,
-                }}
-                showExample
-              />
+        {panels.length ? (
+          <Tabs.Root className="api-tabs" value={tab} onValueChange={setTab}>
+            <Tabs.List className="api-tabs__list" aria-label="Reference">
+              {panels.map((panel) => (
+                <Tabs.Trigger
+                  key={panel.id}
+                  value={panel.id}
+                  className="api-tabs__trigger">
+                  {panel.label}
+                </Tabs.Trigger>
+              ))}
+            </Tabs.List>
+            {/* Every panel stays in the page and CSS hides the inactive ones,
+                so local search, Copy for LLM and the page's .md still carry
+                the whole reference. Radix sets no `hidden` on a force
+                mounted panel, which is what keeps it out of the way here. */}
+            {panels.map((panel) => (
+              <Tabs.Content
+                key={panel.id}
+                value={panel.id}
+                forceMount
+                data-api-tab={panel.id}
+                className="api-tabs__panel">
+                {panel.content}
+              </Tabs.Content>
             ))}
-          </Section>
-        ) : null}
-
-        {operation.pathParams.length ? (
-          <Section title="Path parameters">
-            {operation.pathParams.map((field) => (
-              <FieldRow key={field.name} field={field} />
-            ))}
-          </Section>
-        ) : null}
-
-        {operation.queryParams.length ? (
-          <Section title="Query parameters">
-            {operation.queryParams.map((field) => (
-              <FieldRow key={field.name} field={field} />
-            ))}
-          </Section>
-        ) : null}
-
-        {operation.headers.length && !nhaHeaders ? (
-          <Section title="Headers">
-            {operation.headers.map((field) => (
-              <FieldRow key={field.name} field={field} />
-            ))}
-          </Section>
-        ) : null}
-
-        {operation.protectedHeader?.length ? (
-          <Section title="Protected header">
-            <p className="api-section__lede">
-              These fields go in the JWE protected header of <code>payload</code>,
-              not as HTTP headers.{' '}
-              <Link to="/docs/nhcx/v1/getting-started/building-and-sending-a-jwe">
-                Building and sending a JWE
-              </Link>{' '}
-              shows how to prepare and encrypt the payload, and{' '}
-              <Link to="/docs/nhcx/v1/getting-started/receiving-a-callback">
-                Receiving a callback
-              </Link>{' '}
-              how to decrypt one.
-            </p>
-            {operation.protectedHeader.map((field) => (
-              <FieldRow key={field.name} field={field} showExample />
-            ))}
-          </Section>
-        ) : null}
-
-        {operation.body.length && !nhaBody ? (
-          <Section title="Body">
-            {operation.body.map((field) => (
-              <FieldRow key={field.name} field={field} />
-            ))}
-          </Section>
-        ) : null}
-
-        {operation.responses.length ? (
-          <Section title="Responses">
-            {operation.responses.map((response) => (
-              <div key={response.status} className="api-field">
-                <div className="api-field__head">
-                  <code className="api-field__name">{response.status}</code>
-                </div>
-                {response.description ? (
-                  <Markdown
-                    text={response.description}
-                    className="api-field__description"
-                  />
-                ) : null}
-                {response.help ? (
-                  <p className="api-field__help">
-                    <a href={response.help.href}>{response.help.label}</a>
-                  </p>
-                ) : null}
-                {response.fields?.length ? (
-                  <div className="api-response-fields">
-                    {response.fields.map((field) => (
-                      <FieldRow key={field.name} field={field} />
-                    ))}
-                  </div>
-                ) : null}
-              </div>
-            ))}
-          </Section>
+          </Tabs.Root>
         ) : null}
       </div>
 
