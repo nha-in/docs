@@ -1103,7 +1103,6 @@ li.docs-step:last-child {
   stroke-linejoin: round;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
-  animation: abha-art-pen var(--dur) linear var(--delay) forwards;
 }
 
 /* Once the pen lifts for the last time, the whole frame is let through, so
@@ -1111,7 +1110,29 @@ li.docs-step:last-child {
 .abha-art .abha-art__pen-done {
   fill: #fff;
   opacity: 0;
-  animation: abha-art-settle 0.5s ease var(--delay) forwards;
+}
+
+/* The component decides after load: `play` on a first visit, `still` once
+   this browser has seen it. Hidden until then, so a returning visitor never
+   sees the pen start and jump. */
+.abha-art--pending svg {
+  visibility: hidden;
+}
+
+.abha-art--play .abha-art__pen path {
+  animation: abha-art-pen var(--dur) linear var(--delay) forwards;
+}
+
+.abha-art--play .abha-art__pen-done {
+  animation: abha-art-settle 0.4s ease var(--delay) forwards;
+}
+
+.abha-art--still .abha-art__pen path {
+  stroke-dashoffset: 0;
+}
+
+.abha-art--still .abha-art__pen-done {
+  opacity: 1;
 }
 
 @keyframes abha-art-pen {

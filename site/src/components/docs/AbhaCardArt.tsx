@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import drawing from './abha-card-art.json';
 
 /**
@@ -14,10 +14,16 @@ import drawing from './abha-card-art.json';
  * and walking it as a pen would: in from the right-hand baseline, up the back
  * of the hand, through the fingers and thumb, round the card and down the
  * wrist, then the left baseline, then the card's details nearest first. Each
- * stroke carries when it starts and how long it takes. The strokes are a mask
- * over `art`, so the drawing appears exactly where and when the pen passes
- * (mdx.css): slowly for the line, quicker for the details. Reduced motion
- * gets it finished.
+ * stroke carries when it starts and how long it takes, scaled so the pen is
+ * done at 5.6 seconds. The strokes are a mask over `art`, so the drawing
+ * appears exactly where and when the pen passes (mdx.css): slower for the
+ * line, quicker for the details.
+ *
+ * It plays once per visitor. The first time it finishes, this browser
+ * remembers, and later visits show it finished. The page as served cannot
+ * know that, so the drawing stays hidden until this component has decided:
+ * otherwise a returning visitor would see the pen start and then jump to the
+ * end. Reduced motion always gets it finished.
  *
  * `currentColor`, so it follows light and dark mode. Every value on the card
  * is a placeholder, the QR pattern encodes nothing, and there is no emblem or
@@ -28,9 +34,37 @@ import drawing from './abha-card-art.json';
 // their own, the dot of an i, are shown by a whole-frame reveal at this point.
 const PEN_DONE = Math.max(...drawing.pen.map((stroke) => stroke.delay + stroke.dur));
 
+const SEEN_KEY = 'abdm:abha-art-seen';
+
 export default function AbhaCardArt(): React.ReactNode {
+  const [mode, setMode] = useState<'pending' | 'play' | 'still'>('pending');
+
+  useEffect(() => {
+    let seen = false;
+    try {
+      seen = window.localStorage.getItem(SEEN_KEY) === '1';
+    } catch {
+      // Storage blocked: it plays, and plays again next time.
+    }
+    if (seen) {
+      setMode('still');
+      return undefined;
+    }
+    setMode('play');
+    // Remembered once the pen is done, so a visitor who leaves halfway sees
+    // it again.
+    const timer = window.setTimeout(() => {
+      try {
+        window.localStorage.setItem(SEEN_KEY, '1');
+      } catch {
+        // Not remembered.
+      }
+    }, PEN_DONE * 1000);
+    return () => window.clearTimeout(timer);
+  }, []);
+
   return (
-    <figure className="abha-art">
+    <figure className={`abha-art abha-art--${mode}`}>
       <svg
         viewBox="0 0 1024 814"
         role="img"
