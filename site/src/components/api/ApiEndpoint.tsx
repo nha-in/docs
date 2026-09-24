@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import CodeBlock from '@theme/CodeBlock';
 import Heading from '@theme/Heading';
 import Link from '@docusaurus/Link';
-import {Check, ChevronDown, Copy, Play} from 'lucide-react';
+import {Check, ChevronDown, Copy, Play, Sparkles} from 'lucide-react';
 import {Tabs} from 'radix-ui';
 import {
   Collapsible,
@@ -201,6 +201,51 @@ export function CopyButton({value}: {value: string}) {
 }
 
 /**
+ * Opens Ask AI with one panel attached, so the reader can ask about this
+ * request or this response rather than the whole page. chrome/AskAiBridge.tsx
+ * hands `snippet` to the assistant. Exported for Try it's own panels.
+ */
+export function AskAiButton({
+  label,
+  title,
+  markdown,
+  onClick,
+  ...rest
+}: {
+  label: string;
+  title: string;
+  /** Read when pressed, so it is the panel as it is then. */
+  markdown: () => string;
+} & Omit<React.ComponentProps<'button'>, 'title'>) {
+  return (
+    <button
+      type="button"
+      className="api-copy"
+      aria-label={label}
+      title={label}
+      {...rest}
+      onClick={(event) => {
+        window.dispatchEvent(
+          new CustomEvent('abdm:ask-ai', {
+            detail: {snippet: {title, markdown: markdown()}},
+          }),
+        );
+        // Try it passes its close handler through here (DialogClose asChild).
+        onClick?.(event);
+      }}>
+      <Sparkles className="size-3.5" aria-hidden="true" />
+    </button>
+  );
+}
+
+/** A fenced block, with a fence longer than any backtick run inside it. */
+export function fenced(language: string, code: string): string {
+  const longest = Math.max(2, ...(code.match(/`+/g) ?? []).map((run) => run.length));
+  const fence = '`'.repeat(longest + 1);
+  return `${fence}${language}\n${code}\n${fence}`;
+}
+
+/**
  * The request, in the language the reader works in.
  *
  * An older build carried only `curl`, so a page rendered from a stale JSON
@@ -303,6 +348,13 @@ function RequestPanel({operation}: {operation: Operation}) {
             ))}
           </select>
           <CopyButton value={current.code} />
+          <AskAiButton
+            label="Ask AI about this request"
+            title={`${current.label} request: ${operation.title || operation.summary}`}
+            markdown={() =>
+              `**Endpoint:** \`${operation.method} ${operation.path}\`\n\n${fenced(current.language, current.code)}`
+            }
+          />
         </>
       }>
       <CodeBlock language={current.language}>{current.code}</CodeBlock>
@@ -313,7 +365,8 @@ function RequestPanel({operation}: {operation: Operation}) {
   );
 }
 
-function ResponsePanel({responses}: {responses: Operation['responses']}) {
+function ResponsePanel({operation}: {operation: Operation}) {
+  const {responses} = operation;
   const [active, setActive] = useState(0);
   const [open, setOpen] = usePanelOpen('response');
   const current = responses[active];
@@ -350,6 +403,21 @@ function ResponsePanel({responses}: {responses: Operation['responses']}) {
           {current.example !== undefined ? (
             <CopyButton value={JSON.stringify(current.example, null, 2)} />
           ) : null}
+          <AskAiButton
+            label="Ask AI about this response"
+            title={`${current.status} response: ${operation.title || operation.summary}`}
+            markdown={() =>
+              [
+                `**Endpoint:** \`${operation.method} ${operation.path}\``,
+                `**Response:** ${current.status}${current.description ? `, ${current.description}` : ''}`,
+                current.example !== undefined
+                  ? fenced('json', JSON.stringify(current.example, null, 2))
+                  : '',
+              ]
+                .filter(Boolean)
+                .join('\n\n')
+            }
+          />
         </>
       }>
       {current.example !== undefined ? (
@@ -551,7 +619,15 @@ export default function ApiEndpoint({operation}: {operation: Operation}) {
               </DialogTrigger>
               <DialogContent
                 showCloseButton={false}
-                className="api-console block max-w-none gap-0 p-0 sm:max-w-none">
+                className="api-console block max-w-none gap-0 p-0 sm:max-w-none"
+                // Ask AI in the console closes it and opens the assistant.
+                // Handing focus back to the Try it button would pull it out
+                // of the assistant the reader just opened.
+                onCloseAutoFocus={(event) => {
+                  if (document.querySelector('abdm-support-agent')?.hasAttribute('open')) {
+                    event.preventDefault();
+                  }
+                }}>
                 <TryIt operation={operation} />
               </DialogContent>
             </Dialog>
@@ -590,7 +666,7 @@ export default function ApiEndpoint({operation}: {operation: Operation}) {
 
       <aside className="api-page__aside">
         <RequestPanel operation={operation} />
-        <ResponsePanel responses={operation.responses} />
+        <ResponsePanel operation={operation} />
       </aside>
     </div>
   );
