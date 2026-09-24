@@ -1,0 +1,2959 @@
+openapi: 3.1.1
+info:
+  x-portal:
+    module: m3
+    label: M3 Health Information User
+    position: 4
+    icon: file-check
+  title: ABDM M3, fetch data with consent
+  summary: Raise a consent request, fetch its artefacts, and receive records.
+  version: abdm-v3
+  license:
+    name: MIT
+    identifier: MIT
+  contact:
+    name: ABDM sandbox support
+    url: https://sandboxsupport.abdm.gov.in/
+  x-abdm-gateway: hiecm
+  x-abdm-module: M3
+  x-abdm-phase: 1
+  x-abdm-roles:
+    - his
+x-abdm-sources:
+  - file: catalogue/openapi/.raw/nha-2026-09-16/hiecm/consent-management-data-flow.yaml
+    role: upstream
+    hash: sha256:4b0af51af2e2b5bfbf08f5e8745a940f59c550f8a1e4600c970c526f27bc8718
+    fetched: "2026-09-16"
+servers:
+  - url: https://dev.abdm.gov.in
+    description: ABDM gateway, sandbox
+  - url: https://apis.abdm.gov.in
+    description: ABDM gateway, production
+security:
+  - bearerAuth: []
+tags:
+  - name: consent-management-data-flow-hiu
+    description: ""
+  - name: consent-management-data-flow-hip
+    description: ""
+paths:
+  /api/hiecm/consent/v3/request/init:
+    post:
+      tags:
+        - consent-management-data-flow-hiu
+      operationId: m3_post_consent_v3_request_init
+      summary: This is ABDM HIE-CM API called by HIU to initiate the consent request
+      description: This API endpoint is used to create a consent request by a Health Information User (HIU) to access a patient’s health data. By invoking this API, the HIU initiates the process of obtaining the necessary permissions from the patient to retrieve their health information. This consent request is a critical component of the health information exchange framework, ensuring that patient data is accessed in a secure, authorized, and transparent manner. The API supports the establishment of trust and compliance with privacy regulations, facilitating seamless and ethical health information exchange.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: REQUEST-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: 18235d89-cb13-479d-ad71-7a57d5f669a8
+          description: Unique UUID for track the end to end request transaction
+        - name: TIMESTAMP
+          in: header
+          required: true
+          schema:
+            type: string
+          example: "2022-10-06T15:10:00.587Z"
+          description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
+        - name: X-CM-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: sbx
+          description: Suffix of the consent manager to which the request was intended
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - consent
+              properties:
+                consent:
+                  type: object
+                  nullable: false
+                  required:
+                    - purpose
+                    - patient
+                    - hiu
+                    - requester
+                    - hiTypes
+                    - permission
+                  properties:
+                    purpose:
+                      type: object
+                      nullable: false
+                      required:
+                        - text
+                        - code
+                        - refUri
+                      properties:
+                        text:
+                          type: string
+                          nullable: false
+                          enum:
+                            - Care Management
+                            - Break the Glass
+                            - Public Health
+                            - Healthcare Payment
+                            - Disease Specific Healthcare Research
+                            - Self Requested
+                        code:
+                          type: string
+                          nullable: false
+                          enum:
+                            - CAREMGT
+                            - BTG
+                            - PUBHLTH
+                            - HPAYMT
+                            - DSRCH
+                            - PATRQT
+                        refUri:
+                          type: string
+                          nullable: false
+                          example: www.abc.com
+                          description: The reference URL. Should be a valid URL. Allow alpha numeric characters and special charactes like  "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
+                    patient:
+                      type: object
+                      nullable: false
+                      required:
+                        - id
+                      properties:
+                        id:
+                          type: string
+                          nullable: false
+                          example: <ABHA_ADDRESS>
+                          description: The abha address of the patient. It must start with Alphanumeric . and  _  in the middle and must be ending with @abdm or @sbx. Allows alpha numeric character and special characters like ^[a-zA-Z0-9][a-zA-Z0-9_.\-!]+[a-zA-Z0-9]@(abdm|sbx)$
+                    hip:
+                      type: object
+                      description: Identifier and name of the health information provider.
+                      nullable: true
+                      required:
+                        - id
+                      properties:
+                        id:
+                          type: string
+                          nullable: false
+                          example: cowin_hip_01
+                          description: The service ID of the health information provider. Allows alpha numeric character and special characters like [A-Z a-z 0-9]+[A-Z a-z 0-9 //_//-]*[A-Z a-z 0-9]$
+                        name:
+                          type: string
+                          nullable: true
+                          example: Cowin
+                          description: The name of the health information provider. Allows alpha numeric and special characters like "^[a-zA-Z]+[A-Za-z0-9_\\-@,().\\s\\xa0:/]+"
+                        type:
+                          type: string
+                          nullable: true
+                          example: HIP
+                          description: The type of the health information provider. Allows alpha numeric and special characters like  "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
+                      example: null
+                    hiu:
+                      type: object
+                      nullable: false
+                      required:
+                        - id
+                      properties:
+                        id:
+                          type: string
+                          nullable: false
+                          example: cowin_hiu_01
+                          description: The service ID of the health information user.  Allows alpha numeric character and special characters like [A-Z a-z 0-9]+[A-Z a-z 0-9 //_//-]*[A-Z a-z 0-9]$
+                        name:
+                          type: string
+                          nullable: true
+                          example: Cowin
+                          description: The name of the health information user. Allows alpha numeric and special characters like "^[a-zA-Z]+[A-Za-z0-9_\\-@,().\\s\\xa0:/]+"
+                        type:
+                          type: string
+                          nullable: true
+                          example: HIU
+                          description: The type of the health information user. Allows alpha numeric and special characters like  "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
+                      example:
+                        id: cowin_hiu_01
+                    careContexts:
+                      type: array
+                      description: List of care contexts linked at the HIP end for the identified patient.
+                      items:
+                        type: object
+                        nullable: true
+                        required:
+                          - patientReference
+                          - careContextReference
+                        properties:
+                          patientReference:
+                            type: string
+                            nullable: false
+                            example: batman@tmh
+                            description: 'A patient identifier with which patient is registered in the facility/hospital like abhaAddress @sbx. Allows alpha numeric and special characters like "^[a-zA-Z0-9_\\-@,().\"/: ]{0,255}$"'
+                          careContextReference:
+                            type: string
+                            nullable: false
+                            example: Episode1
+                            description: An identifier of patient's care context created in HIP. A care context is a group of patient's health data (Not the actual health data). Allows alpha numeric and special characters like  "^[a-zA-Z0-9_\\-@,().\"/:| ]{0,255}$"
+                    requester:
+                      type: object
+                      nullable: true
+                      required:
+                        - name
+                        - identifier
+                      properties:
+                        name:
+                          type: string
+                          nullable: false
+                          example: <ABHA_ADDRESS>
+                          description: The name of the requester
+                        identifier:
+                          type: object
+                          nullable: false
+                          required:
+                            - value
+                            - type
+                            - system
+                          properties:
+                            value:
+                              type: string
+                              nullable: false
+                              example: REG1
+                              description: The type of the identification. Allows alpha numeric character and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
+                            type:
+                              type: string
+                              nullable: false
+                              example: MH1001
+                              description: The identification value. Allows alpha numeric character and special characters like  "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
+                            system:
+                              type: string
+                              nullable: false
+                              example: https://www.sample.com
+                              description: Allows alpha numeric character and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
+                    hiTypes:
+                      type: array
+                      description: Types of health information document.
+                      items:
+                        type: string
+                        enum:
+                          - DiagnosticReport
+                          - DischargeSummary
+                          - HealthDocumentRecord
+                          - ImmunizationRecord
+                          - OPConsultation
+                          - Prescription
+                          - WellnessRecord
+                          - Invoice
+                        nullable: false
+                        example: Prescription
+                    permission:
+                      type: object
+                      nullable: false
+                      required:
+                        - accessMode
+                        - dateRange
+                        - dataEraseAt
+                        - frequency
+                      properties:
+                        accessMode:
+                          type: string
+                          nullable: false
+                          enum:
+                            - VIEW
+                            - STORE
+                            - STREAM
+                            - QUERY
+                          example: VIEW
+                        dateRange:
+                          type: object
+                          nullable: false
+                          required:
+                            - from
+                            - to
+                          properties:
+                            from:
+                              type: string
+                              format: date-time
+                              nullable: false
+                              example: "2021-09-28T12:30:08.573Z"
+                              description: Should be UTC date time in ISO format. Allows alpha numeric character and special characters like "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
+                            to:
+                              type: string
+                              format: date-time
+                              nullable: false
+                              example: "2021-09-28T12:30:08.573Z"
+                              description: Should be UTC date time in ISO format. Allows alpha numeric character and special characters like "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
+                        dataEraseAt:
+                          type: string
+                          format: date-time
+                          nullable: false
+                          example: "2021-09-28T12:30:08.573Z"
+                          description: |-
+                            The date at which the consent expire. Should be UTC.  Allows alpha numeric character and special
+                                characters like "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
+                            date time in ISO format
+                        frequency:
+                          type: object
+                          nullable: false
+                          required:
+                            - unit
+                            - value
+                            - repeats
+                          properties:
+                            unit:
+                              type: string
+                              nullable: false
+                              enum:
+                                - HOUR
+                                - DAY
+                                - WEEK
+                                - MONTH
+                                - YEAR
+                            value:
+                              type: number
+                              format: int32
+                              nullable: false
+                              example: 1
+                              description: The frequency unit value. Should be be a integer
+                            repeats:
+                              type: number
+                              format: int32
+                              nullable: true
+                              example: 0
+                              description: Should be be a integer
+      responses:
+        "202":
+          description: Accepted
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    error:
+                      type: object
+                      description: The error code and message, if any occurred.
+                      required:
+                        - code
+                        - message
+                      properties:
+                        code:
+                          type: string
+                          pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                          description: 'The error code. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                        message:
+                          type: string
+                example:
+                  - error:
+                      code: ABDM-9999
+                      message: Invalid purpose text, it must be in Care Management, Break the Glass, Public Health, Healthcare Payment, Disease Specific Healthcare Research, Self Requested
+                  - error:
+                      code: ABDM-9999
+                      message: Invalid consent purpose refURI
+                  - error:
+                      code: ABDM-9999
+                      message: Invalid from/to date. Date must be a present/before date
+                  - error:
+                      code: ABDM-9999
+                      message: Consent purpose code cannot be null
+                  - error:
+                      code: ABDM-9999
+                      message: Invalid Service ID, it must be Alpha numeric and _ or - in middle
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: '900901 - Unauthorized. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                    example: "900901"
+                  message:
+                    type: string
+                    example: Unauthorized
+                  description:
+                    type: string
+                    example: "Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'"
+        "403":
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Access Denied
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: The error code and message, if any occurred.
+                    required:
+                      - code
+                      - message
+                    properties:
+                      code:
+                        type: string
+                        pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                        description: 'ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing ": " separator (`ABDM-1001: `); match on the code itself and tolerate the separator.'
+                        example: ABDM-1001
+                      message:
+                        type: string
+                        example: No data found
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: '900900 - Unclassified Authentication Failure. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                    example: "900900"
+                  message:
+                    type: string
+                    example: Unclassified Authentication Failure
+                  description:
+                    type: string
+                    example: "Access failure for API: /hiecm/api/v3, version: v3 status: (900900) - Unclassified Authentication Failure"
+        "503":
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: 'ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.'
+                    nullable: false
+                    example: ABDM-1024
+                  message:
+                    type: string
+                    nullable: false
+                    example: Dependent service unavailable
+      x-abdm-nha-operation-id: abdm-consent-management 1
+  /api/hiecm/consent/v3/request/status:
+    post:
+      tags:
+        - consent-management-data-flow-hiu
+      operationId: m3_post_consent_v3_request_status
+      summary: This is ABDM HIE-CM API used by HIU to get consent request status
+      description: This API endpoint is used to retrieve the status of a previously initiated consent request. By invoking this API, users can check the current state of their consent request, whether it is pending, approved, denied, or expired. This functionality is essential for maintaining transparency and keeping users informed about the progress of their consent requests. The API supports efficient tracking and management of consent, ensuring that health information exchange processes are conducted in a secure and compliant manner.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: REQUEST-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: 18235d89-cb13-479d-ad71-7a57d5f669a8
+          description: Unique UUID for track the end to end request transaction
+        - name: TIMESTAMP
+          in: header
+          required: true
+          schema:
+            type: string
+          example: "2022-10-06T15:10:00.587Z"
+          description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
+        - name: X-CM-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: sbx
+          description: Suffix of the consent manager to which the request was intended
+        - name: X-HIU-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: IN2810014366
+          description: Identifier of the health information user to which the request was intended
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - consentRequestId
+              properties:
+                consentRequestId:
+                  type: string
+                  format: uuid
+                  nullable: false
+                  example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
+                  description: The consent request id from a consent. Allows alpha numeric character and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
+      responses:
+        "202":
+          description: Accepted
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: The error code and message, if any occurred.
+                    required:
+                      - code
+                      - message
+                    properties:
+                      code:
+                        type: string
+                        pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                        description: 'ABDM-9999 - Unknown exception. May be returned either bare (`ABDM-9999`) or with a trailing ": " separator (`ABDM-9999: `); match on the code itself and tolerate the separator.'
+                        example: ABDM-9999
+                      message:
+                        type: string
+                        example: Invalid Consent request id
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: '900901 - Unauthorized. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                    example: "900901"
+                  message:
+                    type: string
+                    example: Unauthorized
+                  description:
+                    type: string
+                    example: "Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'"
+        "403":
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Access Denied
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: The error code and message, if any occurred.
+                    required:
+                      - code
+                      - message
+                    properties:
+                      code:
+                        type: string
+                        pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                        description: 'ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing ": " separator (`ABDM-1001: `); match on the code itself and tolerate the separator.'
+                        example: ABDM-1001
+                      message:
+                        type: string
+                        example: No data found
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: '900900 - Unclassified Authentication Failure. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                    example: "900900"
+                  message:
+                    type: string
+                    example: Unclassified Authentication Failure
+                  description:
+                    type: string
+                    example: "Access failure for API: /hiecm/api/v3, version: v3 status: (900900) - Unclassified Authentication Failure"
+        "503":
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: 'ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.'
+                    nullable: false
+                    example: ABDM-1024
+                  message:
+                    type: string
+                    nullable: false
+                    example: Dependent service unavailable
+      x-abdm-nha-operation-id: abdm-consent-management 3 (2)
+  /api/hiecm/consent/v3/request/hiu/on-notify:
+    post:
+      tags:
+        - consent-management-data-flow-hiu
+      operationId: m3_post_consent_v3_request_hiu_on_notify
+      summary: This is ABDM HIE-CM API called by HIU to acknowledge the notification sent when a consent request is approved/denied/revoked/expired by the patient.
+      description: This API is called by HIU as acknowledgement to consent notifications, specifically for cases when consent is APPROVED, DENIED, or REVOKED or EXPIRED. Notified by CM earlier via Gateway API - <b> /api/v3/hiu/consent/request/notify </b>
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: REQUEST-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: 18235d89-cb13-479d-ad71-7a57d5f669a8
+          description: Unique UUID for track the end to end request transaction
+        - name: TIMESTAMP
+          in: header
+          required: true
+          schema:
+            type: string
+          example: "2022-10-06T15:10:00.587Z"
+          description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
+        - name: X-CM-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: sbx
+          description: Suffix of the consent manager to which the request was intended
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: In the request body, either ‘acknowledgement’ or ‘error’ must be included.<br> <ol type='a'><br/> <li>Incase of success scenario,acknowledgement is mandatory and error is optional </li> <li>Incase of failure scenario,error is mandatory and acknowledgment is optional</li> <li>response is mandatory object in both the cases</li> </ol>
+              required:
+                - acknowledgement
+                - response
+              properties:
+                acknowledgement:
+                  type: array
+                  items:
+                    type: object
+                    nullable: false
+                    required:
+                      - status
+                      - consentId
+                    properties:
+                      status:
+                        type: string
+                        nullable: false
+                        example: OK
+                        description: The status of the notification. Allows alpha numeric character and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
+                      consentId:
+                        type: string
+                        format: uuid
+                        nullable: false
+                        example: e3c74829-3f82-4f94-959e-e10f57bcd57b
+                        description: The consent artefact id. Should be valid UUID. Allows alpha numeric character and special characters like "^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$"
+                error:
+                  type: object
+                  description: The error code and message, if any occurred.
+                  nullable: true
+                  required:
+                    - code
+                    - message
+                  properties:
+                    code:
+                      type: string
+                      pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                      nullable: false
+                      example: ABDM-1001
+                      description: 'ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing ": " separator (`ABDM-1001: `); match on the code itself and tolerate the separator.'
+                    message:
+                      type: string
+                      nullable: false
+                      example: unable to connect database
+                      description: The appropriate error message
+                response:
+                  type: object
+                  nullable: false
+                  required:
+                    - requestId
+                  properties:
+                    requestId:
+                      type: string
+                      format: uuid
+                      nullable: false
+                      example: 6f0b4665-a915-4c92-aa36-65afb4a2cd71
+                      description: The requestId that was passed. it must be in Alpha numeric and - in middle and Allows alpha numeric character and special characters like "^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}"
+                  description: The request id is from the /hiu/consent/request/notify callback
+      responses:
+        "202":
+          description: Accepted
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    error:
+                      type: object
+                      description: The error code and message, if any occurred.
+                      required:
+                        - code
+                        - message
+                      properties:
+                        code:
+                          type: string
+                          pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                          description: 'The error code. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                        message:
+                          type: string
+                example:
+                  - error:
+                      code: ABDM-9999
+                      message: RequestId cannot be NULL or Blank
+                  - error:
+                      code: ABDM-9999
+                      message: Invalid status, Please provide a valid status
+                  - error:
+                      code: ABDM-9999
+                      message: Invalid ConsentId, Please provide a valid ConsentId
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: '900901 - Unauthorized. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                    example: "900901"
+                  message:
+                    type: string
+                    example: Unauthorized
+                  description:
+                    type: string
+                    example: "Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'"
+        "403":
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Access Denied
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: The error code and message, if any occurred.
+                    required:
+                      - code
+                      - message
+                    properties:
+                      code:
+                        type: string
+                        pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                        description: 'ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing ": " separator (`ABDM-1001: `); match on the code itself and tolerate the separator.'
+                        example: ABDM-1001
+                      message:
+                        type: string
+                        example: No data found
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: '900900 - Unclassified Authentication Failure. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                    example: "900900"
+                  message:
+                    type: string
+                    example: Unclassified Authentication Failure
+                  description:
+                    type: string
+                    example: "Access failure for API: /hiecm/api/v3, version: v3 status: (900900) - Unclassified Authentication Failure"
+        "503":
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: 'ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.'
+                    nullable: false
+                    example: ABDM-1024
+                  message:
+                    type: string
+                    nullable: false
+                    example: Dependent service unavailable
+      x-abdm-nha-operation-id: abdm-consent-management 3 (3)
+  /api/hiecm/consent/v3/fetch:
+    post:
+      tags:
+        - consent-management-data-flow-hiu
+      operationId: m3_post_consent_v3_fetch
+      summary: This is ABDM HIE-CM API called by HIU to fetch the consent details
+      description: This API endpoint is used by Health Information Users (HIUs) to fetch the details of a consent using the consent artefact ID. By invoking this API, HIUs can retrieve comprehensive information about a specific consent, including its status, scope, and any associated conditions. This functionality is essential for ensuring that HIUs have access to accurate and up-to-date consent information, supporting secure and compliant health information exchange. The API facilitates efficient management and verification of consents, enhancing the overall integrity of the consent management process.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: REQUEST-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: 18235d89-cb13-479d-ad71-7a57d5f669a8
+          description: Unique UUID for track the end to end request transaction
+        - name: TIMESTAMP
+          in: header
+          required: true
+          schema:
+            type: string
+          example: "2022-10-06T15:10:00.587Z"
+          description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
+        - name: X-CM-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: sbx
+          description: Suffix of the consent manager to which the request was intended
+        - name: X-HIU-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: IN2810014366
+          description: Identifier of the health information user to which the request was intended
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - consentId
+              properties:
+                consentId:
+                  type: string
+                  format: uuid
+                  nullable: false
+                  example: 5f7a535d-a3fd-416b-b069-c97d021fbacd
+                  description: The id of the consent artefact that needs to be fetched. Allows alpha numeric character and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
+      responses:
+        "202":
+          description: Accepted
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: The error code and message, if any occurred.
+                    required:
+                      - code
+                      - message
+                    properties:
+                      code:
+                        type: string
+                        pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                        description: 'ABDM-9999 - Unknown exception. May be returned either bare (`ABDM-9999`) or with a trailing ": " separator (`ABDM-9999: `); match on the code itself and tolerate the separator.'
+                        example: ABDM-9999
+                      message:
+                        type: string
+                        example: Invalid Consent artefact id
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: '900901 - Unauthorized. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                    example: "900901"
+                  message:
+                    type: string
+                    example: Unauthorized
+                  description:
+                    type: string
+                    example: "Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'"
+        "403":
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Access Denied
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: The error code and message, if any occurred.
+                    required:
+                      - code
+                      - message
+                    properties:
+                      code:
+                        type: string
+                        pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                        description: 'ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing ": " separator (`ABDM-1001: `); match on the code itself and tolerate the separator.'
+                        example: ABDM-1001
+                      message:
+                        type: string
+                        example: No data found
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: '900900 - Unclassified Authentication Failure. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                    example: "900900"
+                  message:
+                    type: string
+                    example: Unclassified Authentication Failure
+                  description:
+                    type: string
+                    example: "Access failure for API: /hiecm/api/v3, version: v3 status: (900900) - Unclassified Authentication Failure"
+        "503":
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: 'ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.'
+                    nullable: false
+                    example: ABDM-1024
+                  message:
+                    type: string
+                    nullable: false
+                    example: Dependent service unavailable
+      x-abdm-nha-operation-id: abdm-consent-management 5 (2)
+  /api/hiecm/data-flow/v3/health-information/request:
+    post:
+      tags:
+        - consent-management-data-flow-hiu
+      operationId: m3_post_data_flow_v3_health_information_request
+      summary: Health information data request from HIU.
+      description: |-
+        This API facilitates the exchange of health data between Health Information Providers (HIP) and Health Information Users (HIU) within the ABDM system. It ensures secure and efficient data transfer, enabling seamless communication and interoperability between different healthcare entities.
+        1. **X-HIU-ID** if the requester is HIU (SERVICE-ID).
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: REQUEST-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: 18235d89-cb13-479d-ad71-7a57d5f669a8
+          description: Unique UUID for track the end to end request transaction
+        - name: TIMESTAMP
+          in: header
+          required: true
+          schema:
+            type: string
+          example: "2022-10-06T15:10:00.587Z"
+          description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
+        - name: X-CM-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: sbx
+          description: Suffix of the consent manager to which the request was intended
+        - name: X-HIU-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: IN2810014366
+          description: Identifier of the health information user to which the request was intended
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - hiRequest
+              properties:
+                hiRequest:
+                  type: object
+                  nullable: false
+                  required:
+                    - consent
+                    - dateRange
+                    - dataPushUrl
+                    - keyMaterial
+                    - nonce
+                  properties:
+                    consent:
+                      type: object
+                      nullable: false
+                      required:
+                        - id
+                      properties:
+                        id:
+                          type: string
+                          nullable: false
+                          example: 18235d89-cb13-479d-ad71-7a57d5f669a8
+                          description: The consent artefact id for health information request. Allows alpha numeric character and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
+                    dateRange:
+                      type: object
+                      nullable: false
+                      description: Health information created between this date range is requested
+                      required:
+                        - from
+                        - to
+                      properties:
+                        from:
+                          type: string
+                          format: date-time
+                          nullable: false
+                          example: "2022-10-06T15:10:00.587Z"
+                          description: Should be a UTC date time in ISO Format.Allows alpha numeric character and special characters like ^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$
+                        to:
+                          type: string
+                          format: date-time
+                          nullable: false
+                          example: "2022-11-06T15:10:00.587Z"
+                          description: Should be a UTC date time in ISO Format.Allows alpha numeric character and special characters like ^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$
+                    dataPushUrl:
+                      type: string
+                      nullable: false
+                      example: https://live.ndhm.gov.in/api-hiu/data/notification
+                      description: The URL to which the Health Information Provider has to send the health information data. Allows alpha numeric character and special characters like "^[a-zA-Z0-9_\\-@,. \":=?/&]{0,255}$"
+                    keyMaterial:
+                      type: object
+                      nullable: false
+                      required:
+                        - cryptoAlg
+                        - curve
+                        - dhPublicKey
+                      properties:
+                        cryptoAlg:
+                          type: string
+                          nullable: false
+                          example: ECDH
+                          description: The key agreement algorithm. Always ECDH.
+                        curve:
+                          type: string
+                          nullable: false
+                          example: curve25519
+                          description: The curve the key pair is generated on. Always Curve25519.
+                        dhPublicKey:
+                          type: object
+                          nullable: false
+                          required:
+                            - expiry
+                            - parameters
+                            - keyValue
+                          properties:
+                            expiry:
+                              type: string
+                              nullable: false
+                              example: "2022-12-28T13:18:20.742Z"
+                              description: When this key stops being valid, as an ISO 8601 timestamp.
+                            parameters:
+                              type: string
+                              nullable: false
+                              example: Ephemeral public key
+                              description: The key parameters. Ephemeral public key.
+                            keyValue:
+                              type: string
+                              nullable: false
+                              example: BFN7KTdOT0jIAExG2A8Jg+01wMPWxptiGqwHRVvtiVEsUq2FR7P2UdqZxJyPJSeR6muai21iQhasNxnhh8I5M+g=
+                              description: The public key, Base64 encoded, in X.509 SubjectPublicKeyInfo form.
+                          description: The public half of the ephemeral key pair generated for this transaction.
+                        nonce:
+                          type: string
+                          format: uuid
+                          nullable: false
+                          example: 28236d89-cb13-479d-ad71-7a57d5f669a9
+                          description: 32 random bytes, Base64 encoded, generated for this transaction. The other side combines it with its own nonce to derive the AES-GCM key and initialisation vector.
+                      description: The requester's half of the ECDH key agreement. The HIP derives the shared key from it and its own key pair, and encrypts every entry it pushes with AES-GCM.
+      responses:
+        "202":
+          description: Accepted
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: The error code and message, if any occurred.
+                    required:
+                      - code
+                      - message
+                    properties:
+                      code:
+                        type: string
+                        pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                        description: 'ABDM-1015 - Invalid Response. May be returned either bare (`ABDM-1015`) or with a trailing ": " separator (`ABDM-1015: `); match on the code itself and tolerate the separator.'
+                        nullable: false
+                        example: ABDM-1015
+                      message:
+                        type: string
+                        nullable: false
+                        example: Invalid Response
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - message
+                  - description
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: '900901 - Invalid Credentials. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                    example: "900901"
+                  message:
+                    type: string
+                    example: Invalid Credentials
+                  description:
+                    type: string
+                    example: Invalid Credentials. Make sure you have provided the correct security credentials
+        "403":
+          description: Access Denied
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Access Denied
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: object
+                required:
+                  - code
+                  - type
+                  - message
+                  - description
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: '404 - Runtime error. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                    example: "404"
+                  type:
+                    type: string
+                    example: status report
+                  message:
+                    type: string
+                    example: Runtime error
+                  description:
+                    type: string
+                    example: No matching resource found for given API Request
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: '900900 - Unclassified Authentication Failure. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                    example: "900900"
+                  message:
+                    type: string
+                    example: Unclassified Authentication Failure
+                  description:
+                    type: string
+                    example: "Access failure for API: /hiecm/api/v3, version: v3 status: (900900) - Unclassified Authentication Failure"
+        "503":
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: 'ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.'
+                    nullable: false
+                    example: ABDM-1024
+                  message:
+                    type: string
+                    nullable: false
+                    example: Dependent service unavailable
+      x-abdm-nha-operation-id: abdm-data-flow 7
+  /api/hiecm/data-flow/v3/health-information/notify:
+    post:
+      tags:
+        - consent-management-data-flow-hiu
+        - consent-management-data-flow-hip
+      operationId: m3_post_data_flow_v3_health_information_notify
+      summary: Notifications corresponding to events during data flow
+      description: API called by HIU and HIP during data transfer. </br></br> HIP on the transfer of data would send sessionStatus - one of [TRANSFERRED, FAILED]</br> HIP would also send hiStatus for each careContextReference - on of [DELIVERED, ERRORED]</br> HIU on receipt of data would send sessionStatus - one of [RECEIVED, FAILED]. For example, FAILED when data was not sent or if invalid data was sent</br> HIU would also send hiStatus for each careContextReference - one of [OK, ERRORED]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: REQUEST-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: 18235d89-cb13-479d-ad71-7a57d5f669a8
+          description: Unique UUID for track the end to end request transaction
+        - name: TIMESTAMP
+          in: header
+          required: true
+          schema:
+            type: string
+          example: "2022-10-06T15:10:00.587Z"
+          description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
+        - name: X-CM-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: sbx
+          description: Suffix of the consent manager to which the request was intended
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - notification
+              properties:
+                notification:
+                  type: object
+                  nullable: false
+                  required:
+                    - consentId
+                    - transactionId
+                    - doneAt
+                    - notifier
+                    - statusNotification
+                  properties:
+                    consentId:
+                      type: string
+                      nullable: false
+                      example: 18235d89-cb13-479d-ad71-7a57d5f669a8
+                      description: The consent artefact id with which health information was requested.Allows alpha numeric character and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
+                    transactionId:
+                      type: string
+                      nullable: false
+                      example: 18235d89-cb13-479d-ad71-7a57d5f669a8
+                      description: The UUID generated when the health information request was initiated.Allows alpha numeric character and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
+                    doneAt:
+                      type: string
+                      nullable: false
+                      example: "2023-01-24T06:35:44.167Z"
+                      description: The date at which the transaction was initiated. Should be a UTC date time in ISO format. Allows alpha numeric character and special characters like "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
+                    notifier:
+                      type: object
+                      nullable: false
+                      required:
+                        - type
+                        - id
+                      properties:
+                        type:
+                          type: string
+                          nullable: false
+                          enum:
+                            - HIU
+                            - HIP
+                          description: The Service ID.Allows alpha numeric characters and special characters like  "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
+                        id:
+                          type: string
+                          nullable: false
+                          example: "100005"
+                          description: The service ID of the notifier. Allows alpha numeric characters and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
+                    statusNotification:
+                      type: object
+                      nullable: false
+                      required:
+                        - sessionStatus
+                        - hipId
+                        - statusResponses
+                      properties:
+                        sessionStatus:
+                          type: string
+                          nullable: false
+                          example: RECEIVED
+                          description: The status of the health information request that was initiated. Allows alpha numeric characters and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
+                        hipId:
+                          type: string
+                          nullable: false
+                          example: IN2810014366
+                          description: The service ID of the health information provider. Allows alpha numeric characters and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
+                        statusResponses:
+                          type: array
+                          nullable: false
+                          items:
+                            type: object
+                            required:
+                              - careContextReference
+                              - hiStatus
+                              - description
+                            properties:
+                              careContextReference:
+                                type: string
+                                nullable: false
+                                example: 10004-20200001768-1
+                                description: The care context reference number.Allows alpha numeric characters and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
+                              hiStatus:
+                                type: string
+                                nullable: false
+                                example: OK
+                                description: The status of the health information transfer. Allows alpha numeric characters and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
+                              description:
+                                type: string
+                                nullable: false
+                                example: Data received successfully
+                                description: The brief description of the status. Allows alpha numeric characters and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
+      responses:
+        "202":
+          description: Accepted
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: 'ABDM-1031 - Invalid request. May be returned either bare (`ABDM-1031`) or with a trailing ": " separator (`ABDM-1031: `); match on the code itself and tolerate the separator.'
+                    nullable: false
+                    example: ABDM-1031
+                  message:
+                    type: string
+                    nullable: false
+                    example: Invalid request
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - message
+                  - description
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: '900901 - Invalid Credentials. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                    example: "900901"
+                  message:
+                    type: string
+                    example: Invalid Credentials
+                  description:
+                    type: string
+                    example: Invalid Credentials. Make sure you have provided the correct security credentials
+        "403":
+          description: Access Denied
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Access Denied
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: object
+                required:
+                  - code
+                  - type
+                  - message
+                  - description
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: '404 - Runtime error. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                    example: "404"
+                  type:
+                    type: string
+                    example: status report
+                  message:
+                    type: string
+                    example: Runtime error
+                  description:
+                    type: string
+                    example: No matching resource found for given API Request
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: '900900 - Unclassified Authentication Failure. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                    example: "900900"
+                  message:
+                    type: string
+                    example: Unclassified Authentication Failure
+                  description:
+                    type: string
+                    example: "Access failure for API: /hiecm/api/v3, version: v3 status: (900900) - Unclassified Authentication Failure"
+        "503":
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: 'ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.'
+                    nullable: false
+                    example: ABDM-1024
+                  message:
+                    type: string
+                    nullable: false
+                    example: Dependent service unavailable
+      x-abdm-nha-operation-id: abdm-data-flow 8
+  /api/hiecm/data-flow/v3/health-information/request/status/{transaction-id}:
+    get:
+      tags:
+        - consent-management-data-flow-hiu
+      operationId: m3_get_data_flow_v3_health_information_request_status_tra_550104
+      summary: API to get the current status of the Health Information Request.
+      description: This API endpoint allows Health Information Users (HIU) and Health Information Providers (HIP) to retrieve the current status of a specific Health Information Request. By providing the unique transaction ID, users can query the system to obtain real-time updates on the processing state of their request. This functionality is crucial for ensuring transparency and efficient communication between stakeholders in the health information exchange ecosystem. The API supports various status checks, including pending, in-progress, completed, and failed states.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: REQUEST-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: 18235d89-cb13-479d-ad71-7a57d5f669a8
+          description: Unique UUID for track the end to end request transaction
+        - name: TIMESTAMP
+          in: header
+          required: true
+          schema:
+            type: string
+          example: "2022-10-06T15:10:00.587Z"
+          description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
+        - name: X-CM-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: sbx
+          description: Suffix of the consent manager to which the request was intended
+        - name: transaction-id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The health information request transaction id
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - transactionId
+                  - status
+                properties:
+                  transactionId:
+                    type: string
+                    format: uuid
+                    nullable: false
+                    example: 18235d89-cb13-479d-ad71-7a57d5f669a8
+                  status:
+                    type: string
+                    nullable: false
+                    example: TRANSFERRED
+        "400":
+          description: Bad Request. The request could not be processed because it was malformed or failed validation - a missing mandatory field, a value in the wrong format, or a header that did not match the body.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: The error code and message, if any occurred.
+                    required:
+                      - code
+                      - message
+                    properties:
+                      code:
+                        type: string
+                        pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                        description: 'ABDM-1006 - Bad Request, invalid request Body. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                        example: ABDM-1006
+                      message:
+                        type: string
+                        description: Short description of the failure.
+                        example: Bad Request, invalid request Body
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - message
+                  - description
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: '900901 - Invalid Credentials. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                    example: "900901"
+                  message:
+                    type: string
+                    example: Invalid Credentials
+                  description:
+                    type: string
+                    example: Invalid Credentials. Make sure you have provided the correct security credentials
+        "403":
+          description: Access Denied
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Access Denied
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: object
+                required:
+                  - code
+                  - type
+                  - message
+                  - description
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: '404 - Runtime error. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                    example: "404"
+                  type:
+                    type: string
+                    example: status report
+                  message:
+                    type: string
+                    example: Runtime error
+                  description:
+                    type: string
+                    example: No matching resource found for given API Request
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: '900900 - Unclassified Authentication Failure. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                    example: "900900"
+                  message:
+                    type: string
+                    example: Unclassified Authentication Failure
+                  description:
+                    type: string
+                    example: "Access failure for API: /hiecm/api/v3, version: v3 status: (900900) - Unclassified Authentication Failure"
+        "503":
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: 'ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.'
+                    nullable: false
+                    example: ABDM-1024
+                  message:
+                    type: string
+                    nullable: false
+                    example: Dependent service unavailable
+      x-abdm-nha-operation-id: abdm-data-flow 9
+webhooks:
+  /api/v3/hiu/consent/request/on-init:
+    post:
+      tags:
+        - consent-management-data-flow-hiu
+      operationId: m3_post_v3_hiu_consent_request_on_init
+      summary: Callback API of consent request for patient HIU.
+      description: |-
+        **Hosted by the HIP/HIU, not by ABDM.** ABDM calls this endpoint at the callback URL registered for your bridge, so the path below is relative to that URL.
+        Result of consent request creation for a patient. <b>consentRequest.id</b> represents the consentrequest id created by CM. The result must contain either <b>consentRequest</b> or the <b>error</b> caused. Reasons for error may be <br><br> Invalid references (e.g patient id, hiu id), purpose, hiTypes, ranges, persmission
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: REQUEST-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: 18235d89-cb13-479d-ad71-7a57d5f669a8
+          description: Unique UUID for track the end to end request transaction
+        - name: TIMESTAMP
+          in: header
+          required: true
+          schema:
+            type: string
+          example: "2022-10-06T15:10:00.587Z"
+          description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
+        - name: X-HIU-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: IN2810014366
+          description: Identifier of the health information user to which the request was intended
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: In the request body, either ‘consentRequest’ or ‘error’ must be included.<br> <ol type='a'><br/> <li>Incase of success scenario,consentRequest is mandatory and error is optional </li> <li>Incase of failure scenario,error is mandatory and consentRequest is optional</li> <li>response is mandatory object in both the cases</li> </ol>
+              required:
+                - consentRequest
+                - error
+                - response
+              properties:
+                consentRequest:
+                  type: object
+                  nullable: false
+                  required:
+                    - id
+                  properties:
+                    id:
+                      type: string
+                      format: uuid
+                      nullable: true
+                      minimum: 36
+                      maximum: 50
+                      example: f29f0e59-8388-4698-9fe6-05db67aeac46
+                      description: The consent request id from a consent. Allows alpha numeric character and special characters like "^[a-zA-Z0-9_\-@,. ":/]{0,255}$"
+                error:
+                  type: object
+                  description: The error code and message, if any occurred.
+                  nullable: true
+                  required:
+                    - code
+                    - message
+                  properties:
+                    code:
+                      type: string
+                      pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                      nullable: false
+                      example: ABDM-1001
+                      description: 'ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing ": " separator (`ABDM-1001: `); match on the code itself and tolerate the separator.'
+                    message:
+                      type: string
+                      nullable: false
+                      example: unable to connect database
+                      description: The appropriate error message
+                response:
+                  type: object
+                  nullable: false
+                  required:
+                    - requestId
+                  properties:
+                    requestId:
+                      type: string
+                      format: uuid
+                      nullable: false
+                      example: 6f0b4665-a915-4c92-aa36-65afb4a2cd71
+                      description: The requestId that was passed. Allows alpha numeric character and special characters like ^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request. The request could not be processed because it was malformed or failed validation - a missing mandatory field, a value in the wrong format, or a header that did not match the body.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: The error code and message, if any occurred.
+                    required:
+                      - code
+                      - message
+                    properties:
+                      code:
+                        type: string
+                        pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                        description: 'ABDM-1006 - Bad Request, invalid request Body. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                        example: ABDM-1006
+                      message:
+                        type: string
+                        description: Short description of the failure.
+                        example: Bad Request, invalid request Body
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: '900901 - Unauthorized. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                    example: "900901"
+                  message:
+                    type: string
+                    example: Unauthorized
+                  description:
+                    type: string
+                    example: "Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'"
+        "403":
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Access Denied
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: The error code and message, if any occurred.
+                    required:
+                      - code
+                      - message
+                    properties:
+                      code:
+                        type: string
+                        pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                        description: 'ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing ": " separator (`ABDM-1001: `); match on the code itself and tolerate the separator.'
+                        example: ABDM-1001
+                      message:
+                        type: string
+                        example: No data found
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: '900900 - Unclassified Authentication Failure. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                    example: "900900"
+                  message:
+                    type: string
+                    example: Unclassified Authentication Failure
+                  description:
+                    type: string
+                    example: "Access failure for API: /hiecm/api/v3, version: v3 status: (900900) - Unclassified Authentication Failure"
+        "503":
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: 'ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.'
+                    nullable: false
+                    example: ABDM-1024
+                  message:
+                    type: string
+                    nullable: false
+                    example: Dependent service unavailable
+      x-abdm-nha-operation-id: consent-management 2
+      x-abdm-triggered-by: m3_post_consent_v3_request_init
+  /api/v3/hiu/consent/request/on-status:
+    post:
+      tags:
+        - consent-management-data-flow-hiu
+      operationId: m3_post_v3_hiu_consent_request_on_status
+      summary: Callback API of consent status request.
+      description: |-
+        **Hosted by the HIP/HIU, not by ABDM.** ABDM calls this endpoint at the callback URL registered for your bridge, so the path below is relative to that URL.
+        This API endpoint is used to provide the result of a previously submitted consent request. The status of the request can be one of the following: REQUESTED, DENIED, or EXPIRED. By invoking this API, the Health Information User (HIU) receives the outcome of their consent request, ensuring that they are informed about the current status. This functionality is essential for maintaining transparency and enabling HIUs to take appropriate actions based on the consent status. The API supports secure and compliant health information exchange, facilitating efficient consent management within the healthcare ecosystem.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: REQUEST-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: 18235d89-cb13-479d-ad71-7a57d5f669a8
+          description: Unique UUID for track the end to end request transaction
+        - name: TIMESTAMP
+          in: header
+          required: true
+          schema:
+            type: string
+          example: "2022-10-06T15:10:00.587Z"
+          description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
+        - name: X-HIU-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: IN2810014366
+          description: Identifier of the health information user to which the request was intended
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: In the request body, either ‘consentRequest’ or ‘error’ must be included.<br> <ol type='a'><br/> <li>Incase of success scenario,consentRequest is mandatory and error is optional </li> <li>Incase of failure scenario,error is mandatory and consentRequest is optional</li> <li>response is mandatory object in both the cases</li> </ol>
+              required:
+                - consentRequest
+                - response
+                - error
+                - resp
+              properties:
+                consentRequest:
+                  type: object
+                  nullable: false
+                  required:
+                    - id
+                    - status
+                  properties:
+                    id:
+                      type: string
+                      format: uuid
+                      nullable: true
+                      example: e5ec415f-c098-40f6-a0db-faa162fc5295
+                      description: The consent request id from a consent. Allows alpha numeric character and special characters like "^[a-zA-Z0-9_\-@,. ":/]{0,255}$"
+                    status:
+                      type: string
+                      enum:
+                        - REQUESTED
+                        - DENIED
+                        - EXPIRED
+                        - REVOKED
+                      nullable: false
+                      example: REQUESTED
+                error:
+                  type: object
+                  description: The error code and message, if any occurred.
+                  nullable: true
+                  required:
+                    - code
+                    - message
+                  properties:
+                    code:
+                      type: string
+                      pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                      nullable: false
+                      example: ABDM-1001
+                      description: 'ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing ": " separator (`ABDM-1001: `); match on the code itself and tolerate the separator.'
+                    message:
+                      type: string
+                      nullable: false
+                      example: unable to connect database
+                      description: The appropriate error message
+                response:
+                  type: object
+                  nullable: false
+                  required:
+                    - requestId
+                  properties:
+                    requestId:
+                      type: string
+                      format: uuid
+                      nullable: false
+                      example: 6f0b4665-a915-4c92-aa36-65afb4a2cd71
+                      description: The requestId that was passed.Allows alpha numeric character and special characters like ^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}
+                resp:
+                  type: string
+                  nullable: false
+                  example: null
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request. The request could not be processed because it was malformed or failed validation - a missing mandatory field, a value in the wrong format, or a header that did not match the body.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: The error code and message, if any occurred.
+                    required:
+                      - code
+                      - message
+                    properties:
+                      code:
+                        type: string
+                        pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                        description: 'ABDM-1006 - Bad Request, invalid request Body. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                        example: ABDM-1006
+                      message:
+                        type: string
+                        description: Short description of the failure.
+                        example: Bad Request, invalid request Body
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: '900901 - Unauthorized. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                    example: "900901"
+                  message:
+                    type: string
+                    example: Unauthorized
+                  description:
+                    type: string
+                    example: "Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'"
+        "403":
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Access Denied
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: The error code and message, if any occurred.
+                    required:
+                      - code
+                      - message
+                    properties:
+                      code:
+                        type: string
+                        pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                        description: 'ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing ": " separator (`ABDM-1001: `); match on the code itself and tolerate the separator.'
+                        example: ABDM-1001
+                      message:
+                        type: string
+                        example: No data found
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: '900900 - Unclassified Authentication Failure. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                    example: "900900"
+                  message:
+                    type: string
+                    example: Unclassified Authentication Failure
+                  description:
+                    type: string
+                    example: "Access failure for API: /hiecm/api/v3, version: v3 status: (900900) - Unclassified Authentication Failure"
+        "503":
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: 'ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.'
+                    nullable: false
+                    example: ABDM-1024
+                  message:
+                    type: string
+                    nullable: false
+                    example: Dependent service unavailable
+      x-abdm-nha-operation-id: consent-management 4
+      x-abdm-triggered-by: m3_post_consent_v3_request_status
+  /api/v3/hiu/consent/request/notify:
+    post:
+      tags:
+        - consent-management-data-flow-hiu
+      operationId: m3_post_v3_hiu_consent_request_notify
+      summary: This is a callback api to notify hiu when consent is APPROVED, DENIED or REVOKED.
+      description: |-
+        **Hosted by the HIP/HIU, not by ABDM.** ABDM calls this endpoint at the callback URL registered for your bridge, so the path below is relative to that URL.
+        Health information user will get notified about the consent request granted or denied, consent revoked, consent expired.
+        For consent request grant, status=GRANTED, consentRequestId=<consent-request-id>, and consentArtefacts is an array of generated consent artefact Ids. For consent request expiry, status=EXPIRED, consentRequestId=<consent-request-id> For consent request denied, status=DENIED, consentRequestId=<consent-request-id> For consent revocation, status=REVOKED, consentArtefacts is an array of revoked consent artefact ids.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: REQUEST-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: 18235d89-cb13-479d-ad71-7a57d5f669a8
+          description: Unique UUID for track the end to end request transaction
+        - name: TIMESTAMP
+          in: header
+          required: true
+          schema:
+            type: string
+          example: "2022-10-06T15:10:00.587Z"
+          description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds.
+        - name: X-HIU-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: IN2810014366
+          description: Identifier of the health information user to which the request was intended
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - notification
+              properties:
+                notification:
+                  type: object
+                  nullable: false
+                  required:
+                    - consentRequestId
+                    - status
+                    - reason
+                    - consentArtefacts
+                  properties:
+                    consentRequestId:
+                      type: string
+                      format: uuid
+                      nullable: false
+                      example: e3c74829-3f82-4f94-959e-e10f57bcd57b
+                      description: The consent request id from a consent. Allows alpha numeric character and special characters like "^[a-zA-Z0-9_\-@,. ":/]{0,255}$"
+                    status:
+                      type: string
+                      nullable: false
+                      enum:
+                        - GRANTED
+                        - EXPIRED
+                        - DENIED
+                        - REQUESTED
+                        - REVOKED
+                    reason:
+                      type: string
+                      nullable: true
+                      example: null
+                    consentArtefacts:
+                      type: array
+                      description: List of consent artefact ids that were created.
+                      items:
+                        type: object
+                        nullable: false
+                        required:
+                          - id
+                        properties:
+                          id:
+                            type: string
+                            nullable: true
+                            example: 6f0b4665-a915-4c92-aa36-65afb4a2cd71
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request. The request could not be processed because it was malformed or failed validation - a missing mandatory field, a value in the wrong format, or a header that did not match the body.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: The error code and message, if any occurred.
+                    required:
+                      - code
+                      - message
+                    properties:
+                      code:
+                        type: string
+                        pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                        description: 'ABDM-1006 - Bad Request, invalid request Body. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                        example: ABDM-1006
+                      message:
+                        type: string
+                        description: Short description of the failure.
+                        example: Bad Request, invalid request Body
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: '900901 - Unauthorized. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                    example: "900901"
+                  message:
+                    type: string
+                    example: Unauthorized
+                  description:
+                    type: string
+                    example: "Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'"
+        "403":
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Access Denied
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: The error code and message, if any occurred.
+                    required:
+                      - code
+                      - message
+                    properties:
+                      code:
+                        type: string
+                        pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                        description: 'ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing ": " separator (`ABDM-1001: `); match on the code itself and tolerate the separator.'
+                        example: ABDM-1001
+                      message:
+                        type: string
+                        example: No data found
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: '900900 - Unclassified Authentication Failure. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                    example: "900900"
+                  message:
+                    type: string
+                    example: Unclassified Authentication Failure
+                  description:
+                    type: string
+                    example: "Access failure for API: /hiecm/api/v3, version: v3 status: (900900) - Unclassified Authentication Failure"
+        "503":
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: 'ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.'
+                    nullable: false
+                    example: ABDM-1024
+                  message:
+                    type: string
+                    nullable: false
+                    example: Dependent service unavailable
+      x-abdm-nha-operation-id: consent-management 6
+      x-abdm-answered-by: m3_post_consent_v3_request_hiu_on_notify
+  /api/v3/hiu/consent/on-fetch:
+    post:
+      tags:
+        - consent-management-data-flow-hiu
+      operationId: m3_post_v3_hiu_consent_on_fetch
+      summary: This is a callback API called by CM to provide fetched consent artefact details to HIU.
+      description: |-
+        **Hosted by the HIP/HIU, not by ABDM.** ABDM calls this endpoint at the callback URL registered for your bridge, so the path below is relative to that URL.
+        This API endpoint is part of the Ayushman Bharat Digital Mission (ABDM) Health Information Exchange - Consent Management (HIE-CM) system. It is called by the Consent Management (CM) system to fetch a consent artefact. By invoking this API, the CM system retrieves the detailed information of a specific consent artefact, ensuring that the consent data is accurately and securely accessed. This functionality is essential for maintaining the integrity and synchronization of consent records, supporting secure and compliant health information exchange within the healthcare ecosystem.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: REQUEST-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: 18235d89-cb13-479d-ad71-7a57d5f669a8
+          description: Unique UUID for track the end to end request transaction
+        - name: TIMESTAMP
+          in: header
+          required: true
+          schema:
+            type: string
+          example: "2022-10-06T15:10:00.587Z"
+          description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
+        - name: X-HIU-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: IN2810014366
+          description: Identifier of the health information user to which the request was intended
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: In the request body, either ‘consent’ or ‘error’ must be included.<br> <ol type='a'><br/> <li>Incase of success scenario,consent is mandatory and error is optional </li> <li>Incase of failure scenario,error is mandatory and consent is optional</li> <li>response is mandatory object in both the cases</li> </ol>
+              required:
+                - consent
+                - response
+                - error
+              properties:
+                consent:
+                  type: object
+                  nullable: false
+                  required:
+                    - status
+                    - consentDetail
+                    - signature
+                  properties:
+                    status:
+                      type: string
+                      enum:
+                        - GRANTED
+                        - DENIED
+                        - EXPIRED
+                        - REVOKED
+                      nullable: false
+                      example: GRANTED
+                    consentDetail:
+                      type: object
+                      nullable: true
+                      required:
+                        - consentId
+                        - purpose
+                        - createdAt
+                        - patient
+                        - hiu
+                        - requester
+                        - hiTypes
+                        - permission
+                        - dataEraseAt
+                        - frequency
+                        - lastUpdated
+                        - careContexts
+                        - schemaVersion
+                        - consentManager
+                      properties:
+                        consentId:
+                          type: string
+                          nullable: true
+                          example: e5ec415f-c098-40f6-a0db-faa162fc5295
+                          description: Allows alpha numeric character and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
+                        hip:
+                          type: object
+                          description: Identifier and name of the health information provider.
+                          nullable: true
+                          required:
+                            - id
+                            - name
+                          properties:
+                            id:
+                              type: string
+                              nullable: false
+                              example: cowin_hip_01
+                              description: The service ID of the health information provider. Allows alpha numeric character and special characters like [A-Z a-z 0-9]+[A-Z a-z 0-9 //_//-]*[A-Z a-z 0-9]$
+                            name:
+                              type: string
+                              nullable: true
+                              example: Cowin
+                              description: The name of the health information provider. Allows alpha numeric and special characters like _\-@,():/
+                            type:
+                              type: string
+                              nullable: true
+                              example: HIP
+                              description: The type of the health information provider. Allows alpha numeric and special characters like _\-@,. ":/
+                        hiu:
+                          type: object
+                          nullable: false
+                          required:
+                            - id
+                            - name
+                          properties:
+                            id:
+                              type: string
+                              nullable: false
+                              example: cowin_hiu_01
+                              description: The service ID of the health information user.  Allows alpha numeric character and special characters like [A-Z a-z 0-9]+[A-Z a-z 0-9 //_//-]*[A-Z a-z 0-9]$
+                            name:
+                              type: string
+                              nullable: true
+                              example: Cowin
+                              description: The name of the health information user. Allows alpha numeric and special characters like _\-@,():/
+                            type:
+                              type: string
+                              nullable: true
+                              example: HIU
+                              description: The type of the health information user. Allows alpha numeric and special characters like _\-@,. ":/
+                        hiTypes:
+                          type: array
+                          description: Types of health information document.
+                          items:
+                            type: string
+                            enum:
+                              - DiagnosticReport
+                              - DischargeSummary
+                              - HealthDocumentRecord
+                              - ImmunizationRecord
+                              - OPConsultation
+                              - Prescription
+                              - WellnessRecord
+                              - Invoice
+                            nullable: false
+                            example: Prescription
+                        patient:
+                          type: object
+                          nullable: false
+                          required:
+                            - id
+                          properties:
+                            id:
+                              type: string
+                              nullable: false
+                              example: <ABHA_ADDRESS>
+                              description: The abha address of the patient. allows alpha numeric character and special characters like ^[a-zA-Z0-9][a-zA-Z0-9_.]+[a-zA-Z0-9]@(abdm|sbx)$
+                        purpose:
+                          type: object
+                          nullable: false
+                          required:
+                            - text
+                            - code
+                            - refUri
+                          properties:
+                            text:
+                              type: string
+                              nullable: false
+                              enum:
+                                - Care Management
+                                - Break the Glass
+                                - Public Health
+                                - Healthcare Payment
+                                - Disease Specific Healthcare Research
+                                - Self Requested
+                            code:
+                              type: string
+                              nullable: false
+                              enum:
+                                - CAREMGT
+                                - BTG
+                                - PUBHLTH
+                                - HPAYMT
+                                - DSRCH
+                                - PATRQT
+                            refUri:
+                              type: string
+                              nullable: false
+                              example: www.abc.com
+                              description: The reference URL. Should be a valid URL.Allows alpha numeric character and special characters like ^[a-zA-Z0-9_\\-@,. \":/]{0,255}$
+                        createdAt:
+                          type: string
+                          format: date-time
+                          nullable: false
+                          example: "2021-09-28T12:30:08.573Z"
+                        requester:
+                          type: object
+                          nullable: true
+                          required:
+                            - name
+                            - identifier
+                          properties:
+                            name:
+                              type: string
+                              nullable: false
+                              example: <ABHA_ADDRESS>
+                              description: The name of the requester
+                            identifier:
+                              type: object
+                              nullable: false
+                              required:
+                                - value
+                                - type
+                                - system
+                              properties:
+                                value:
+                                  type: string
+                                  nullable: false
+                                  example: REG1
+                                  description: The type of the identification. Allows alpha numeric character and special characters like _\-@,. ":/
+                                type:
+                                  type: string
+                                  nullable: false
+                                  example: MH1001
+                                  description: The identification value. Allows alpha numeric character and special characters like _\-@,. ":/
+                                system:
+                                  type: string
+                                  nullable: false
+                                  example: https://www.sample.com
+                                  description: Allows alpha numeric character and special characters like _\-@,. ":/
+                        permission:
+                          type: object
+                          nullable: false
+                          required:
+                            - accessMode
+                            - dateRange
+                            - dataEraseAt
+                            - frequency
+                          properties:
+                            accessMode:
+                              type: string
+                              nullable: false
+                              enum:
+                                - VIEW
+                                - STORE
+                                - STREAM
+                                - QUERY
+                              example: VIEW
+                            dateRange:
+                              type: object
+                              nullable: false
+                              required:
+                                - from
+                                - to
+                              properties:
+                                from:
+                                  type: string
+                                  format: date-time
+                                  nullable: false
+                                  example: "2021-09-28T12:30:08.573Z"
+                                  description: Should be UTC date time in ISO format. Allows alpha numeric character and special characters like ^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$
+                                to:
+                                  type: string
+                                  format: date-time
+                                  nullable: false
+                                  example: "2021-09-28T12:30:08.573Z"
+                                  description: Should be UTC date time in ISO format.Allows alpha numeric character and special characters like ^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$
+                        dataEraseAt:
+                          type: string
+                          format: date-time
+                          nullable: false
+                          example: "2021-09-28T12:30:08.573Z"
+                          description: The date at which the consent expire. Should be UTC date time in ISO format. Allows alpha numeric character and special characters like ^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$
+                        frequency:
+                          type: object
+                          nullable: false
+                          required:
+                            - unit
+                            - value
+                            - repeats
+                          properties:
+                            unit:
+                              type: string
+                              nullable: false
+                              enum:
+                                - HOUR
+                                - DAY
+                                - WEEK
+                                - MONTH
+                                - YEAR
+                            value:
+                              type: number
+                              format: int32
+                              nullable: false
+                              example: 1
+                              description: The frequency unit value. Should be be a integer. Allows numeric character like ^[a-zA-Z0-9_\\-@,. \":/]{0,255}$
+                            repeats:
+                              type: number
+                              format: int32
+                              nullable: true
+                              example: 0
+                              description: Should be be a integer.Allows numeric character like ^[a-zA-Z0-9_\\-@,. \":/]{0,255}$
+                        lastUpdated:
+                          type: string
+                          format: date-time
+                          nullable: false
+                          example: "2021-09-28T12:30:08.573Z"
+                          description: lastUpdated of the consent.  Should be UTC date time in ISO format. Allows alpha numeric character and special characters like ^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$
+                        careContexts:
+                          type: array
+                          description: List of care contexts linked at the HIP end for the identified patient.
+                          items:
+                            type: object
+                            nullable: true
+                            required:
+                              - patientReference
+                              - careContextReference
+                            properties:
+                              patientReference:
+                                type: string
+                                nullable: false
+                                example: batman@tmh
+                                description: A patient identifier with which patient is registered in the facility/hospital. Allows alpha numeric character and special characters like ^[a-zA-Z0-9_\-@,. "':|()/]{0,255}$
+                              careContextReference:
+                                type: string
+                                nullable: false
+                                example: Episode1
+                                description: An identifier of patient's care context created in HIP. A care context is a group of patient's health data (Not the actual health data). Allows alpha numeric character and special characters like ^[a-zA-Z0-9_\-@,. "':|()/]{0,255}$
+                        schemaVersion:
+                          type: string
+                          nullable: false
+                          example: v3
+                        consentManager:
+                          type: object
+                          nullable: false
+                          required:
+                            - id
+                          properties:
+                            id:
+                              type: string
+                              nullable: false
+                              example: abdm
+                    signature:
+                      type: string
+                      nullable: false
+                      example: Signature of CM as defined in W3C standards; Base64 encoded
+                error:
+                  type: object
+                  description: The error code and message, if any occurred.
+                  nullable: true
+                  example: null
+                response:
+                  type: object
+                  nullable: false
+                  required:
+                    - requestId
+                  properties:
+                    requestId:
+                      type: string
+                      format: uuid
+                      nullable: false
+                      example: 6f0b4665-a915-4c92-aa36-65afb4a2cd71
+                      description: The requestId that was passed.Allows alpha numeric character and special characters like ^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}
+                resp:
+                  type: string
+                  nullable: true
+                  example: null
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request. The request could not be processed because it was malformed or failed validation - a missing mandatory field, a value in the wrong format, or a header that did not match the body.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: The error code and message, if any occurred.
+                    required:
+                      - code
+                      - message
+                    properties:
+                      code:
+                        type: string
+                        pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                        description: 'ABDM-1006 - Bad Request, invalid request Body. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                        example: ABDM-1006
+                      message:
+                        type: string
+                        description: Short description of the failure.
+                        example: Bad Request, invalid request Body
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: '900901 - Unauthorized. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                    example: "900901"
+                  message:
+                    type: string
+                    example: Unauthorized
+                  description:
+                    type: string
+                    example: "Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'"
+        "403":
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Access Denied
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: The error code and message, if any occurred.
+                    required:
+                      - code
+                      - message
+                    properties:
+                      code:
+                        type: string
+                        pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                        description: 'ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing ": " separator (`ABDM-1001: `); match on the code itself and tolerate the separator.'
+                        example: ABDM-1001
+                      message:
+                        type: string
+                        example: No data found
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: '900900 - Unclassified Authentication Failure. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                    example: "900900"
+                  message:
+                    type: string
+                    example: Unclassified Authentication Failure
+                  description:
+                    type: string
+                    example: "Access failure for API: /hiecm/api/v3, version: v3 status: (900900) - Unclassified Authentication Failure"
+        "503":
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: 'ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.'
+                    nullable: false
+                    example: ABDM-1024
+                  message:
+                    type: string
+                    nullable: false
+                    example: Dependent service unavailable
+      x-abdm-nha-operation-id: consent-management 6 (2)
+      x-abdm-triggered-by: m3_post_consent_v3_fetch
+  /api/v3/hiu/health-information/on-request:
+    post:
+      tags:
+        - consent-management-data-flow-hiu
+      operationId: m3_post_v3_hiu_health_information_on_request
+      summary: Health information data request acknowledgement to HIU.
+      description: |-
+        **Hosted by the HIP/HIU, not by ABDM.** ABDM calls this endpoint at the callback URL registered for your bridge, so the path below is relative to that URL.
+        Callback API for acknowledgment of Health information request of HIU. CM calls this API when it has validated the Health Information request given the consent id.<br> Either the hiRequest or error would need to be specified. If the health info request was valid, then the hiRequest.transactionId specifies the transaction context against which HIP would send over the data.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: REQUEST-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: 18235d89-cb13-479d-ad71-7a57d5f669a8
+          description: Unique UUID for track the end to end request transaction
+        - name: TIMESTAMP
+          in: header
+          required: true
+          schema:
+            type: string
+          example: "2022-10-06T15:10:00.587Z"
+          description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
+        - name: X-HIU-ID
+          in: header
+          required: true
+          schema:
+            type: string
+          example: IN2810014366
+          description: Identifier of the health information user to which the request was intended
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: In the request body, either ‘hiRequest’ or ‘error’ must be included.<br> <ol type='a'><br/> <li>Incase of success scenario,hiRequest is mandatory and error is optional </li> <li>Incase of failure scenario,error is mandatory and hiRequest is optional</li> <li>response is mandatory object in both the cases</li> </ol>
+              required:
+                - hiRequest
+                - response
+              properties:
+                hiRequest:
+                  type: object
+                  nullable: false
+                  required:
+                    - transactionId
+                    - sessionStatus
+                  properties:
+                    transactionId:
+                      type: string
+                      format: uuid
+                      nullable: false
+                      example: 18235d89-cb13-479d-ad71-7a57d5f669a8
+                      description: The UUID generated when the health information request was initiated.
+                    sessionStatus:
+                      type: string
+                      nullable: false
+                      example: REQUESTED
+                      description: The status of the health information request that was initiated.
+                error:
+                  type: object
+                  description: The error code and message, if any occurred.
+                  nullable: true
+                  required:
+                    - code
+                    - message
+                  properties:
+                    code:
+                      type: string
+                      pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                      nullable: false
+                      example: ABDM-1001
+                      description: 'ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing ": " separator (`ABDM-1001: `); match on the code itself and tolerate the separator.'
+                    message:
+                      type: string
+                      nullable: false
+                      example: unable to connect database
+                      description: The appropriate error message
+                response:
+                  type: object
+                  nullable: false
+                  required:
+                    - requestId
+                  properties:
+                    requestId:
+                      type: string
+                      format: uuid
+                      nullable: false
+                      example: 6f0b4665-a915-4c92-aa36-65afb4a2cd71
+                      description: The requestId that was passed. Allows alpha numeric character and special characters like ^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request. The request could not be processed because it was malformed or failed validation - a missing mandatory field, a value in the wrong format, or a header that did not match the body.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: The error code and message, if any occurred.
+                    required:
+                      - code
+                      - message
+                    properties:
+                      code:
+                        type: string
+                        pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                        description: 'ABDM-1006 - Bad Request, invalid request Body. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                        example: ABDM-1006
+                      message:
+                        type: string
+                        description: Short description of the failure.
+                        example: Bad Request, invalid request Body
+        "401":
+          description: Unauthorized. The request carried no valid credentials, or the access token has expired. Obtain a fresh token from the session API and retry.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: '900901 - Invalid Credentials. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                    example: "900901"
+                  message:
+                    type: string
+                    description: Short description of the failure.
+                    example: Invalid Credentials
+                  description:
+                    type: string
+                    description: Detailed description of the failure.
+                    example: "Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'"
+        "403":
+          description: Forbidden. The caller is authenticated but is not permitted to perform this operation on this resource.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Forbidden
+        "404":
+          description: server cannot find the requested resource
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - type
+                  - message
+                  - description
+                properties:
+                  code:
+                    type: string
+                    pattern: "^(ABDM-\\d{4}|\\d{3,6})(: )?$"
+                    description: '404 - Runtime error. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.'
+                    example: "404"
+                  type:
+                    type: string
+                    example: status report
+                  message:
+                    type: string
+                    example: Runtime error
+                  description:
+                    type: string
+                    example: No matching resource found for given API Request
+      x-abdm-nha-operation-id: data-flow 8
+      x-abdm-triggered-by: m3_post_data_flow_v3_health_information_request
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.

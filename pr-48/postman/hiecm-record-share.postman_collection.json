@@ -1,0 +1,413 @@
+{
+  "info": {
+    "name": "ABDM HIE-CM Patient scan and record share",
+    "description": "Generated from the ABDM HIE-CM specifications. Import hiecm-sandbox.postman_environment.json beside it and fill in clientId and clientSecret: the collection fetches a gateway session token before a call when it needs one.\n\nFolders follow the order a journey is built in. Send the steps in order: each response keeps the txnId and the X-token it returns as collection variables, and the steps after it read them. Callbacks are not included: ABDM sends those to your bridge URL, so receiving them needs a public endpoint, not Postman.\n\nValues ABDM expects encrypted, such as an Aadhaar number or an OTP, are shown as the specification gives them. Encrypt your own values before sending.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Gets a gateway session token when there is none or it has expired.",
+          "(function () {",
+          "if (pm.request.url.getPath().endsWith('/api/hiecm/gateway/v3/sessions')) return;",
+          "const expiry = Number(pm.environment.get('accessTokenExpiry') || 0);",
+          "if (pm.environment.get('accessToken') && Date.now() < expiry) return;",
+          "pm.sendRequest({",
+          "  url: pm.variables.replaceIn('{{gatewayUrl}}/api/hiecm/gateway/v3/sessions'),",
+          "  method: 'POST',",
+          "  header: {",
+          "    'Content-Type': 'application/json',",
+          "    'REQUEST-ID': pm.variables.replaceIn('{{$guid}}'),",
+          "    'TIMESTAMP': new Date().toISOString(),",
+          "    'X-CM-ID': pm.variables.replaceIn('{{cmId}}'),",
+          "  },",
+          "  body: {",
+          "    mode: 'raw',",
+          "    raw: JSON.stringify({",
+          "      clientId: pm.variables.get('clientId'),",
+          "      clientSecret: pm.variables.get('clientSecret'),",
+          "      grantType: 'client_credentials',",
+          "    }),",
+          "  },",
+          "}, (error, response) => {",
+          "  if (error || response.code >= 300) {",
+          "    console.error('Session token request failed', error || response.text());",
+          "    return;",
+          "  }",
+          "  const {accessToken, expiresIn} = response.json();",
+          "  pm.environment.set('accessToken', accessToken);",
+          "  // A minute early, so a token never expires between this check and the call.",
+          "  pm.environment.set('accessTokenExpiry', Date.now() + (expiresIn - 60) * 1000);",
+          "});",
+          "})();"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Keeps what this response hands to the calls after it, such as the txnId an",
+          "// OTP request returns and the X-token a login returns, as collection variables.",
+          "(function () {",
+          "let body;",
+          "try { body = pm.response.json(); } catch (error) { return; }",
+          "function carriedValues(body) {",
+          "  const list = Array.isArray(body);",
+          "  const first = list ? body[0] : body;",
+          "  if (!first || typeof first !== \"object\") return {};",
+          "  const read = (path) => {",
+          "    let at = first;",
+          "    for (const key of path.split(\".\")) {",
+          "      if (!at || typeof at !== \"object\") return void 0;",
+          "      at = at[key];",
+          "    }",
+          "    return typeof at === \"string\" && at ? at : void 0;",
+          "  };",
+          "  const out = {};",
+          "  const txnId = read(\"txnId\");",
+          "  if (txnId) out[list ? \"searchTxnId\" : \"txnId\"] = txnId;",
+          "  const tokenAt = [\"tokens.token\", \"jwtResponse.token\", \"token\"].find((path) => read(path));",
+          "  if (tokenAt) {",
+          "    const token = read(tokenAt);",
+          "    out[\"X-token\"] = token;",
+          "    out.jwtToken = token;",
+          "    const refresh = read(tokenAt.replace(/token$/, \"refreshToken\"));",
+          "    if (refresh) out[\"R-jwtToken\"] = refresh;",
+          "  }",
+          "  return out;",
+          "}",
+          "const values = carriedValues(body);",
+          "Object.keys(values).forEach(function (key) { pm.collectionVariables.set(key, values[key]); });",
+          "})();"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "txnId",
+      "value": ""
+    },
+    {
+      "key": "searchTxnId",
+      "value": ""
+    },
+    {
+      "key": "X-token",
+      "value": ""
+    },
+    {
+      "key": "jwtToken",
+      "value": ""
+    },
+    {
+      "key": "R-jwtToken",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Record share, PHR app side",
+      "item": [
+        {
+          "name": "1. Share a patient's records with the HIU whose QR code was scanned",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "REQUEST-ID",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "TIMESTAMP",
+                "value": "{{$isoTimestamp}}"
+              },
+              {
+                "key": "X-HIU-ID",
+                "value": "{{hiuId}}"
+              },
+              {
+                "key": "X-CM-ID",
+                "value": "{{cmId}}"
+              },
+              {
+                "key": "X-AUTH-TOKEN",
+                "value": "Bearer <USER_TOKEN>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/api/hiecm/patient-record/v3/share",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "api",
+                "hiecm",
+                "patient-record",
+                "v3",
+                "share"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"metaData\": {\n    \"hiuId\": \"MANISH_HIU\",\n    \"counterId\": \"IN081010313\"\n  },\n  \"profile\": {\n    \"patient\": {\n      \"abhaNumber\": null,\n      \"abhaAddress\": \"abhaAddress@sbx\",\n      \"name\": \"String\",\n      \"gender\": \"M\",\n      \"dayOfBirth\": \"18\",\n      \"monthOfBirth\": \"10\",\n      \"yearOfBirth\": \"1991\",\n      \"address\": {\n        \"line\": \"String\",\n        \"district\": \"String\",\n        \"state\": \"String\",\n        \"pincode\": \"XXXXXX\"\n      },\n      \"phoneNumber\": \"989141XXXX\"\n    }\n  },\n  \"sharedRecordCount\": 2,\n  \"consent\": {\n    \"careContexts\": [\n      {\n        \"patientReference\": \"manishk1991@sbx\",\n        \"careContextReference\": \"10004-20200001768-1\"\n      },\n      {\n        \"patientReference\": \"manishk1991@sbx\",\n        \"careContextReference\": \"10004-20200001768-2\"\n      }\n    ],\n    \"permission\": {\n      \"accessMode\": \"VIEW\"\n    },\n    \"dataEraseAt\": \"2025-10-11T08:58:09.738Z\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Is the first step in initiating the health data sharing process. It is invoked by an integrator application (such as any PHR application like ABHA) after scanning the HIU's QR code. The QR code provides the Health Information User (HIU) identifier, which is then used to share the user's profile details and care-context information with the HIE-CM.\n\nThe HIE-CM answers 202 Accepted and forwards the request to the HIU as a POST to /api/v3/patient-record/share on the HIU's bridge. The HIU's reply, with the data push URL and encryption key, arrives on the PHR app's /api/v3/patient-record/on-share callback."
+          }
+        },
+        {
+          "name": "4. Notify patient record",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "REQUEST-ID",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "TIMESTAMP",
+                "value": "{{$isoTimestamp}}"
+              },
+              {
+                "key": "X-HIU-ID",
+                "value": "{{hiuId}}"
+              },
+              {
+                "key": "X-CM-ID",
+                "value": "{{cmId}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/api/hiecm/patient-record/v3/notify",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "api",
+                "hiecm",
+                "patient-record",
+                "v3",
+                "notify"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"notification\": {\n    \"transactionId\": \"a0e7bed4-ef98-4ea8-9077-f4a6192bfe2b\",\n    \"doneAt\": \"2026-03-19T08:01:11.090Z\",\n    \"statusNotification\": {\n      \"sessionStatus\": \"TRANSFERRED\",\n      \"statusResponses\": [\n        {\n          \"careContextReference\": \"COC497647c1-0627-48fa-8131-0dddc1b3e0b4\",\n          \"hiStatus\": \"DELIVERED\",\n          \"description\": \"Data sent successfully\"\n        },\n        {\n          \"careContextReference\": \"COC497647c1-0627-48fa-8131-0dddc1b3e0b5\",\n          \"hiStatus\": \"DELIVERED\",\n          \"description\": \"Data sent successfully\"\n        }\n      ]\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Update the status of the health record transfer process. It is invoked by the PHR application and HIU to notify the HIE-CM about the completion status of the transaction and the individual care-contexts. Each care-context's transfer status is included to provide a detailed update on which records were successfully shared and received.\n\nThe PHR app or health locker, on the transfer of data, sends sessionStatus as one of TRANSFERRED, PARTIAL_TRANSFERRED or FAILED, and an hiStatus for each careContextReference as one of DELIVERED or ERRORED.\n\nThe HIU, on receipt of data, sends sessionStatus as one of RECEIVED, PARTIAL_RECEIVED or FAILED, for example FAILED when data was not received or invalid data was received, and an hiStatus for each careContextReference as one of VALID, CORRUPTED, BLANK or ERRORED.\n\nSend the notification once, after the data transfer has completed. The HIE-CM forwards it to the other side's /api/v3/patient-record/on-notify callback."
+          }
+        },
+        {
+          "name": "6. List the record sharing history of the signed in user",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "REQUEST-ID",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "TIMESTAMP",
+                "value": "{{$isoTimestamp}}"
+              },
+              {
+                "key": "X-CM-ID",
+                "value": "{{cmId}}"
+              },
+              {
+                "key": "X-AUTH-TOKEN",
+                "value": "Bearer <USER_TOKEN>"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/api/hiecm/patient-record/v3/audit-history",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "api",
+                "hiecm",
+                "patient-record",
+                "v3",
+                "audit-history"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "disabled": true
+                },
+                {
+                  "key": "startDate",
+                  "value": "2024-07-13T07:30:10.186Z",
+                  "disabled": true
+                },
+                {
+                  "key": "endDate",
+                  "value": "2025-02-18T08:30:50.189Z",
+                  "disabled": true
+                },
+                {
+                  "key": "offset",
+                  "value": "0",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Retrieve the complete history of record-sharing transactions for a specific user. It provides details of all past and ongoing transactions, including associated care-contexts. The user is the one the X-AUTH-TOKEN was issued to. Filter by date with startDate and endDate, and page with limit and offset."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Record share, HIU side",
+      "item": [
+        {
+          "name": "2. Submit the reply to a share request with the data push URL and the encryption key",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "REQUEST-ID",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "TIMESTAMP",
+                "value": "{{$isoTimestamp}}"
+              },
+              {
+                "key": "X-HIU-ID",
+                "value": "{{hiuId}}"
+              },
+              {
+                "key": "X-CM-ID",
+                "value": "{{cmId}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/api/hiecm/patient-record/v3/on-share",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "api",
+                "hiecm",
+                "patient-record",
+                "v3",
+                "on-share"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hiRequest\": {\n    \"transactionId\": \"18235d89-cb13-479d-ad71-7a57d5f669a8\",\n    \"dataPushUrl\": \"https://webhook.site/a2477c41-2185-47eb-835a/health-information/transfer\",\n    \"keyMaterial\": {\n      \"cryptoAlg\": \"ECDH.\",\n      \"curve\": \"curve25519\",\n      \"dhPublicKey\": {\n        \"expiry\": \"2022-12-28T13:18:20.742Z\",\n        \"parameters\": \"Ephemeral public key.\",\n        \"keyValue\": \"BFN7KTdOT0jIAExG2A8Jg+01wMPWxptiGqwHRVvtiVEsUq2FR7P2UdqZxJyPJSeR6muai21iQhasNxnhh8I5M+g=\"\n      },\n      \"nonce\": \"28236d89-cb13-479d-ad71-7a57d5f669a9\"\n    }\n  },\n  \"response\": {\n    \"requestId\": \"efd6964f-6893-4b66-9e4e-28afc164126b\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Acts as the callback endpoint for the PHR application. After the initial request, the HIU responds to this callback with the data push URL and the encryption key required for securely transferring the user's health records.\n\nThe HIU makes this call after receiving the share request on its /api/v3/patient-record/share bridge endpoint. The transactionId is the one that request carried, and response.requestId is that request's REQUEST-ID. The HIE-CM forwards the body to the PHR app's /api/v3/patient-record/on-share callback."
+          }
+        },
+        {
+          "name": "5. Notify patient record",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "REQUEST-ID",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "TIMESTAMP",
+                "value": "{{$isoTimestamp}}"
+              },
+              {
+                "key": "X-HIU-ID",
+                "value": "{{hiuId}}"
+              },
+              {
+                "key": "X-CM-ID",
+                "value": "{{cmId}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/api/hiecm/patient-record/v3/notify",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "api",
+                "hiecm",
+                "patient-record",
+                "v3",
+                "notify"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"notification\": {\n    \"transactionId\": \"3acbbb52-6de0-441f-b452-3c9488462b25\",\n    \"doneAt\": \"2023-01-24T06:35:44.167Z\",\n    \"statusNotification\": {\n      \"sessionStatus\": \"RECEIVED\",\n      \"statusResponses\": [\n        {\n          \"careContextReference\": \"10004-20200001768-1\",\n          \"hiStatus\": \"VALID\",\n          \"description\": \"Data received successfully\"\n        },\n        {\n          \"careContextReference\": \"10004-20200001768-2\",\n          \"hiStatus\": \"ERRORED\",\n          \"description\": \"Data could not be decrypted\"\n        }\n      ]\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Update the status of the health record transfer process. It is invoked by the PHR application and HIU to notify the HIE-CM about the completion status of the transaction and the individual care-contexts. Each care-context's transfer status is included to provide a detailed update on which records were successfully shared and received.\n\nThe PHR app or health locker, on the transfer of data, sends sessionStatus as one of TRANSFERRED, PARTIAL_TRANSFERRED or FAILED, and an hiStatus for each careContextReference as one of DELIVERED or ERRORED.\n\nThe HIU, on receipt of data, sends sessionStatus as one of RECEIVED, PARTIAL_RECEIVED or FAILED, for example FAILED when data was not received or invalid data was received, and an hiStatus for each careContextReference as one of VALID, CORRUPTED, BLANK or ERRORED.\n\nSend the notification once, after the data transfer has completed. The HIE-CM forwards it to the other side's /api/v3/patient-record/on-notify callback."
+          }
+        }
+      ]
+    }
+  ]
+}
