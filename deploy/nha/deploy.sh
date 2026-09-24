@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # Publish abdm-docs: the documentation site to S3 (served by a CDN on SITE_URL), docs-mcp to ECR
-# for the ECS service to run, and the integrator plugins to the public nha-in/agent-plugins
-# repository (see publish-agent-plugins.sh).
+# for the ECS service to run.
 #
 #   deploy/nha/deploy.sh <version>        e.g. deploy/nha/deploy.sh v1.0.0
 #
@@ -54,10 +53,6 @@ echo "==> site: building for $site_url"
 # CHAT_URL is the origin the Ask AI panel posts /api/chat to; the CDN forwards /api/* to
 # docs-mcp on the site's own hostname. Without it the panel ships as a labelled mock.
 (cd "$repo" && npm ci && DOCUSAURUS_URL="$site_url" DOCUSAURUS_BASE_URL=/ MCP_URL="$mcp_url" CHAT_URL="$site_url" npm run build)
-
-# The public plugin marketplace, before the site: the site's install commands name it, so it
-# carries this build's plugins before any page points at them, and a failed publish stops here.
-"$here/publish-agent-plugins.sh" "$VERSION"
 
 # The CDN serves main/ (its origin path). Fingerprinted assets go first, cached for a year,
 # so every file a page references is in the bucket before the page is; pages and the spec
