@@ -11,12 +11,12 @@ summary: >
   single atom, so they are recorded once and expanded at query time
   rather than repeated across frontmatter.
 sources:
-  - url: https://github.com/eka-care/abdm-docs/blob/main/mcp/internal/index/schema.go
+  - url: https://github.com/nha-in/docs/blob/main/mcp/internal/index/schema.go
     status: reference
     note: >
       The FTS table this decision changes, which indexes title, summary,
       body and error codes and expands nothing.
-  - url: https://github.com/eka-care/abdm-docs/blob/main/catalogue/shared/glossary/abha.md
+  - url: https://github.com/nha-in/docs/blob/main/catalogue/shared/glossary/abha.md
     status: reference
     note: >
       An atom whose subject has three common names in the wild, none of

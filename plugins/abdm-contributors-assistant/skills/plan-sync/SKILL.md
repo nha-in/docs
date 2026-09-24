@@ -21,7 +21,7 @@ scripts/plan-check.sh                          the drift gate
 plugins/abdm-contributors-assistant/           this plugin, built from the plan above
 ```
 
-Repo: `https://github.com/eka-care/abdm-docs`
+Repo: `https://github.com/nha-in/docs`
 
 Published surfaces:
 
@@ -78,7 +78,7 @@ So: compile the content, and check the version cheaply.
 ## The manifest check
 
 One small file at the repo root, fetched once at session start by the index skill from
-`https://raw.githubusercontent.com/eka-care/abdm-docs/main/plan/manifest.json`.
+`https://raw.githubusercontent.com/nha-in/docs/main/plan/manifest.json`.
 
 ```json
 {

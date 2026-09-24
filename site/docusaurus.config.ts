@@ -301,27 +301,19 @@ async function sidebarItemsGenerator({defaultSidebarItemsGenerator, ...args}: an
   return items;
 }
 
-const catalogueVersion = readFileSync(
-  join(__dirname, '../catalogue/VERSION'),
-  'utf8',
-).trim();
-
 /**
- * The repository this copy of the portal is published from. Actions sets
- * GITHUB_REPOSITORY on whichever fork is building, so a fork's install
- * commands and GitHub link name that fork without anyone editing a constant.
- * MARKETPLACE_REPO overrides it where the plugin is served from elsewhere.
+ * The public repository integrators add as a plugin marketplace, and the
+ * marketplace name `claude plugin install <plugin>@<marketplace>` has to name.
+ * This repository is private, so both come from publish/agent-plugins.json,
+ * which scripts/publish-agent-plugins.mjs publishes from.
+ * MARKETPLACE_REPO overrides the repository for a test marketplace.
  * Keep the same chain in scripts/build-skills.mjs.
  */
-const pluginRepo =
-  process.env.MARKETPLACE_REPO ?? process.env.GITHUB_REPOSITORY ?? 'nha-in/docs';
-
-/** What `claude plugin install <plugin>@<marketplace>` has to name. Read from
-    the manifest rather than repeated, so renaming the shelf cannot leave a
-    published command pointing at one that does not exist. */
-const marketplaceName = JSON.parse(
-  readFileSync(join(__dirname, '..', '.claude-plugin', 'marketplace.json'), 'utf8'),
-).name as string;
+const publicMarketplace = JSON.parse(
+  readFileSync(join(__dirname, '..', 'publish', 'agent-plugins.json'), 'utf8'),
+) as {repo: string; name: string};
+const pluginRepo = process.env.MARKETPLACE_REPO ?? publicMarketplace.repo;
+const marketplaceName = publicMarketplace.name;
 
 const config: Config = {
   title: 'ABDM Developer Portal',
@@ -340,14 +332,12 @@ const config: Config = {
   // The support agent is a standalone custom element, loaded like any
   // third-party embed would load it. Nothing in the site imports it, which is
   // what keeps it usable on pages that are not this site.
+  // Reference pages carry the Scalar bundle only on a full load; this
+  // reloads them when a client side link lands on one.
+  clientModules: [require.resolve('./src/clientModules/reference-reload.ts')],
   scripts: [
     {src: `${siteBase}agent/abdm-support-agent.js`, defer: true},
   ],
-
-  // A client-side link to /reference/<spec> reaches a page whose Scalar
-  // bundle scalarOnReferencePagesOnly() removed from the page the reader came
-  // from. This reloads such a page in full so the bundle arrives with it.
-  clientModules: [require.resolve('./src/clientModules/scalarOnNavigation.ts')],
 
   headTags: [
     // The soft keyboard resizes the page rather than sliding it out from under
@@ -422,7 +412,7 @@ const config: Config = {
     // default is NHA's repository; a deployment serving the plugin from
     // somewhere else sets MARKETPLACE_REPO, and scripts/build-skills.mjs reads
     // the same variable so the page and agent-setup/prompt.md agree.
-    marketplaceRepo: process.env.MARKETPLACE_REPO ?? 'nha-in/docs',
+    marketplaceRepo: pluginRepo,
   },
 
   i18n: {
@@ -710,11 +700,6 @@ const config: Config = {
           label: 'ABDM sandbox',
           position: 'right',
         },
-        {
-          href: `https://github.com/${pluginRepo}`,
-          label: 'GitHub',
-          position: 'right',
-        },
       ],
     },
     // NHA's own footer, transcribed from the ABDM sandbox documentation site:
@@ -762,9 +747,7 @@ const config: Config = {
           ],
         },
       ],
-      // The catalogue version stays: it is how a reader tells an agent which
-      // version of the documentation they are looking at.
-      copyright: `This website belongs to the National Health Authority, Ministry of Health and Family Welfare, Government of India · Catalogue ${catalogueVersion}`,
+      copyright: 'This website belongs to the National Health Authority, Ministry of Health and Family Welfare, Government of India',
     },
     prism: {
       theme: prismThemes.oneLight,

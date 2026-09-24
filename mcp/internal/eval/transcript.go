@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/eka-care/abdm-docs/mcp/internal/chat"
+	"github.com/nha-in/docs/mcp/internal/chat"
 )
 
 type ToolTrace struct {

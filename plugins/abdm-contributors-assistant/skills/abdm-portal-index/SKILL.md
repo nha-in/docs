@@ -1,9 +1,9 @@
 ---
 name: abdm-portal-index
 description: Router for all ABDM Developer Portal build work. Use this FIRST whenever anyone asks about building, planning, writing, reviewing, compiling, publishing or testing the ABDM Catalogue, the self-hosted docs site, the agent skills, the Docs MCP server, the update pipeline, or the portal's schedule and scope. Triggers include "write an atom", "review this page", "the catalogue", "lint failed", "compile the skills", "which milestone am I on", "what ships Friday", "is this DPG compliant", "ingest NHA swagger", "the support agent", and any mention of HIE-CM or ABDM documentation work. Route from here rather than guessing which skill applies.
-plan_version: 2026.09.20
+plan_version: 2026.09.23
 plan_source: abdm-v1-phase1-architecture-and-plan.md
-plan_hash: sha256:746e3e24209aa94dc9b25d1b54ac1bad1daba31feee830c61a89ff3794709133
+plan_hash: sha256:0900f96d7600aff9a92db957d6104e5a313ef59d171adea8bb1ad85236b4fee5
 compiled_from_plan: true
 ---
 
@@ -15,7 +15,7 @@ The only skill an agent needs loaded to know what else exists. Read the decision
 
 **Before asserting a claim from any skill, agent or command in this plugin, check `DRIFT-AUDIT-2026-08-27.md` in the plugin root.** It names claims across this plugin found false or misleading against the repository. If the claim you are about to make appears there, say so instead of stating it as fact.
 
-**Once per session, check the plan manifest.** Fetch `https://raw.githubusercontent.com/eka-care/abdm-docs/main/plan/manifest.json` and compare `plan_version` against the `plan_version` stamped in this skill's frontmatter. If the published version is newer, say so once and continue. If it is flagged breaking, say so before answering any planning or architecture question. If the fetch fails, continue on the installed version and say the check failed. Never block on it. Mechanism: `plan-sync`.
+**Once per session, check the plan manifest.** Fetch `https://raw.githubusercontent.com/nha-in/docs/main/plan/manifest.json` and compare `plan_version` against the `plan_version` stamped in this skill's frontmatter. If the published version is newer, say so once and continue. If it is flagged breaking, say so before answering any planning or architecture question. If the fetch fails, continue on the installed version and say the check failed. Never block on it. Mechanism: `plan-sync`.
 
 ## Decision tree
 

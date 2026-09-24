@@ -530,7 +530,7 @@ curl --request GET \
 
 ```bash
 curl --request GET \
-  --url https://dev.abdm.gov.in/api/hiecm/gateway/v3/providers/{provider-id} \
+  --url https://dev.abdm.gov.in/api/hiecm/gateway/v3/providers/{hip-id} \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -882,7 +882,7 @@ curl --request POST \
 
 ```bash
 curl --request POST \
-  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/auto/approve/{auto-approval-id}/disable \
+  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/auto/approve/{consentId}/disable \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -894,7 +894,7 @@ curl --request POST \
 
 ```bash
 curl --request POST \
-  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/auto/approve/{auto-approval-id}/enable \
+  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/auto/approve/{consentId}/enable \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -918,7 +918,7 @@ curl --request GET \
 
 ```bash
 curl --request GET \
-  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/request/{request-id} \
+  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/request/{consentRequestId} \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -930,7 +930,7 @@ curl --request GET \
 
 ```bash
 curl --request POST \
-  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/request/{request-id}/approve \
+  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/request/{consentRequestId}/approve \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -976,7 +976,7 @@ curl --request POST \
 
 ```bash
 curl --request POST \
-  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/request/{request-id}/deny \
+  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/request/{consentRequestId}/deny \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -1006,11 +1006,11 @@ curl --request POST \
 }'
 ```
 
-#### 9. Request artefact by REQUEST-ID (`p2_get_consent_v3_artefact_request_request_id`)
+#### 9. Request artefact by consent REQUEST-ID (`p2_get_consent_v3_artefact_request_request_id`)
 
 ```bash
 curl --request GET \
-  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/artefact/request/{request-id} \
+  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/artefact/request/{consentRequestId} \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -1022,7 +1022,7 @@ curl --request GET \
 
 ```bash
 curl --request GET \
-  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/artefact/{artefact-id} \
+  --url https://dev.abdm.gov.in/api/hiecm/consent/v3/artefact/{consentId} \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \

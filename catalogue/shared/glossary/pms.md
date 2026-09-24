@@ -10,7 +10,7 @@ summary: >
   uses it both to read the prescription it is dispensing against and to
   record what it dispensed.
 sources:
-  - url: https://github.com/eka-care/abdm-docs/blob/main/site/src/components/docs/RoleSelector.tsx
+  - url: https://github.com/nha-in/docs/blob/main/site/src/components/docs/RoleSelector.tsx
     status: reference
     note: >
       The portal's own role selector names this acronym. Written here so

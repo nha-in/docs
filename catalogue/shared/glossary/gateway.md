@@ -10,7 +10,7 @@ summary: >
   call each other directly. It is not the consent manager, and no
   health record passes through it.
 sources:
-  - url: https://github.com/eka-care/abdm-docs/blob/main/site/docs/_glossary/_shared.mdx
+  - url: https://github.com/nha-in/docs/blob/main/site/docs/_glossary/_shared.mdx
     status: reference
     note: >
       This portal's own published glossary, where the definition was

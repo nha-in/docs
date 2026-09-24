@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/eka-care/abdm-docs/mcp/internal/chat"
+	"github.com/nha-in/docs/mcp/internal/chat"
 )
 
 type scripted struct{ reply chat.Reply }

@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/eka-care/abdm-docs/mcp/internal/catalogue"
-	"github.com/eka-care/abdm-docs/mcp/internal/embed"
+	"github.com/nha-in/docs/mcp/internal/catalogue"
+	"github.com/nha-in/docs/mcp/internal/embed"
 )
 
 // failingEmbedder always fails to embed, but reports a model name matching

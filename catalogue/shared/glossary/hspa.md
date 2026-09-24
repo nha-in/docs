@@ -9,7 +9,7 @@ summary: >
   In UHI, the provider facing side: the system that publishes
   services and accepts bookings.
 sources:
-  - url: https://github.com/eka-care/abdm-docs/blob/main/site/docs/_glossary/_uhi.mdx
+  - url: https://github.com/nha-in/docs/blob/main/site/docs/_glossary/_uhi.mdx
     status: reference
     note: >
       This portal's own published glossary, where the definition was

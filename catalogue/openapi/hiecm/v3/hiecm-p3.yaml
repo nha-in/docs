@@ -1058,7 +1058,7 @@ paths:
                     nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: subscription-phr 1
-  /api/hiecm/subscription-requests/v3/{request-id}/approve:
+  /api/hiecm/subscription-requests/v3/{subscriptionRequestId}/approve:
     post:
       tags:
         - subscription-phr
@@ -1099,7 +1099,7 @@ paths:
             minimum: 1
             maximum: 100
             example: <TOKEN>
-        - name: request-id
+        - name: subscriptionRequestId
           in: path
           required: true
           schema:
@@ -1491,7 +1491,7 @@ paths:
                     nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: subscription-phr 2
-  /api/hiecm/subscription-requests/v3/{request-id}/deny:
+  /api/hiecm/subscription-requests/v3/{subscriptionRequestId}/deny:
     post:
       tags:
         - subscription-phr
@@ -1532,7 +1532,7 @@ paths:
             minimum: 1
             maximum: 100
             example: <TOKEN>
-        - name: request-id
+        - name: subscriptionRequestId
           in: path
           required: true
           schema:
@@ -1663,7 +1663,7 @@ paths:
                     nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: subscription-phr 3
-  /api/hiecm/subscription-requests/v3/patients/{subscription-id}:
+  /api/hiecm/subscription-requests/v3/patients/{subscriptionID}:
     put:
       tags:
         - subscription-phr
@@ -1704,7 +1704,7 @@ paths:
             minimum: 1
             maximum: 100
             example: <TOKEN>
-        - name: subscription-id
+        - name: subscriptionID
           in: path
           required: true
           schema:
@@ -2099,7 +2099,7 @@ paths:
                     nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: subscription-phr 6
-  /api/hiecm/subscription-requests/v3/enable/{subscription-id}:
+  /api/hiecm/subscription-requests/v3/enable/{subscriptionID}:
     post:
       tags:
         - subscription-phr
@@ -2140,7 +2140,7 @@ paths:
             minimum: 1
             maximum: 100
             example: <TOKEN>
-        - name: subscription-id
+        - name: subscriptionID
           in: path
           required: true
           schema:
@@ -2257,7 +2257,7 @@ paths:
                     nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: subscription-phr 7
-  /api/hiecm/subscription-requests/v3/disable/{subscription-id}:
+  /api/hiecm/subscription-requests/v3/disable/{subscriptionID}:
     post:
       tags:
         - subscription-phr
@@ -2298,7 +2298,7 @@ paths:
             minimum: 1
             maximum: 100
             example: <TOKEN>
-        - name: subscription-id
+        - name: subscriptionID
           in: path
           required: true
           schema:
@@ -2415,7 +2415,7 @@ paths:
                     nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: subscription-phr 8
-  /api/hiecm/subscription-requests/v3/{subscription-id}:
+  /api/hiecm/subscription-requests/v3/{subscriptionID}:
     get:
       tags:
         - subscription-phr
@@ -2456,7 +2456,7 @@ paths:
             minimum: 1
             maximum: 100
             example: <TOKEN>
-        - name: subscription-id
+        - name: subscriptionID
           in: path
           required: true
           schema:
@@ -2758,7 +2758,7 @@ paths:
                     nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: subscription-phr 6 (2)
-  /api/hiecm/subscription-requests/v3/request/{request-id}:
+  /api/hiecm/subscription-requests/v3/request/{subscriptionRequestId}:
     get:
       tags:
         - subscription-phr
@@ -2799,7 +2799,7 @@ paths:
             minimum: 1
             maximum: 100
             example: <TOKEN>
-        - name: request-id
+        - name: subscriptionRequestId
           in: path
           required: true
           schema:

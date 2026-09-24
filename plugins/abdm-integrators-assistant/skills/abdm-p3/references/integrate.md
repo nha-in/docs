@@ -18,16 +18,16 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `GET` | `/api/hiecm/gateway/v3/bridge-services` | Fetch the service ids registered against a bridge. |
 | `PATCH` | `/api/hiecm/gateway/v3/bridge/url` | Update the bridge URL. |
 | `POST` | `/api/hiecm/gateway/v3/sessions` | Generate access token. |
-| `POST` | `/api/hiecm/subscription-requests/v3/{request-id}/approve` | Approve subscription request. |
-| `POST` | `/api/hiecm/subscription-requests/v3/{request-id}/deny` | Deny subscription request. |
-| `GET` | `/api/hiecm/subscription-requests/v3/{subscription-id}` | Fetch his/her subscription details by subscription ID. |
-| `POST` | `/api/hiecm/subscription-requests/v3/disable/{subscription-id}` | Disable the subscription by subscription ID. |
-| `POST` | `/api/hiecm/subscription-requests/v3/enable/{subscription-id}` | Enable the subscription by subscription ID. |
+| `GET` | `/api/hiecm/subscription-requests/v3/{subscriptionID}` | Fetch his/her subscription details by subscription ID. |
+| `POST` | `/api/hiecm/subscription-requests/v3/{subscriptionRequestId}/approve` | Approve subscription request. |
+| `POST` | `/api/hiecm/subscription-requests/v3/{subscriptionRequestId}/deny` | Deny subscription request. |
+| `POST` | `/api/hiecm/subscription-requests/v3/disable/{subscriptionID}` | Disable the subscription by subscription ID. |
+| `POST` | `/api/hiecm/subscription-requests/v3/enable/{subscriptionID}` | Enable the subscription by subscription ID. |
 | `POST` | `/api/hiecm/subscription-requests/v3/hiu/care-context/on-notify` | Respond to /api/v3/hiu/subscription/notify. |
 | `POST` | `/api/hiecm/subscription-requests/v3/hiu/on-notify` | Respond to /subscription-requests/hiu/notify. |
 | `POST` | `/api/hiecm/subscription-requests/v3/init` | Initiate subscription request. |
-| `PUT` | `/api/hiecm/subscription-requests/v3/patients/{subscription-id}` | Edit the subscription details. |
-| `GET` | `/api/hiecm/subscription-requests/v3/request/{request-id}` | Fetch his/her subscription details by subscription REQUEST-ID. |
+| `PUT` | `/api/hiecm/subscription-requests/v3/patients/{subscriptionID}` | Edit the subscription details. |
+| `GET` | `/api/hiecm/subscription-requests/v3/request/{subscriptionRequestId}` | Fetch his/her subscription details by subscription REQUEST-ID. |
 | `GET` | `/api/hiecm/subscription-requests/v3/requests` | Fetch his/her subscription requests details. |
 | `POST` | `/api/v3/hiu/hiecm/subscription-requests/on-init` | This is a callback API for /api/hiecm/subscription-requests/v3/init. |
 | `POST` | `/api/v3/hiu/subscription-requests/hiu/notify` | This is a callback API when a subscription request is approved or denied. |

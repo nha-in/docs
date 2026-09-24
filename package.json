@@ -44,7 +44,8 @@
     "eval:askai:report": "cd mcp && go run ./cmd/askai-eval report -cases ../evals/askai/cases",
     "eval:askai:calibrate": "cd mcp && go run ./cmd/askai-eval calibrate",
     "eval:agent": "node scripts/eval-agent.mjs",
-    "verify:atoms": "node scripts/verify-atoms.mjs"
+    "verify:atoms": "node scripts/verify-atoms.mjs",
+    "publish:agent-plugins": "node scripts/publish-agent-plugins.mjs"
   },
   "devDependencies": {
     "@docusaurus/faster": "^3.10.2",

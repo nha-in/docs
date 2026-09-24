@@ -27,8 +27,7 @@ and how it maintains the account afterwards.
   record sharing all hang off it.
 - Build both creation paths: by mobile number, and by an existing 14 digit ABHA
   number.
-- Every login route is mandatory except the two email OTP routes, which are
-  optional.
+- Every login route is mandatory.
 - Fetch the PHR public key first. It is not the ABHA service's key.
 - A user can hold several ABHA addresses but only one ABHA number.
 
@@ -79,12 +78,12 @@ then follow the ABHA number, and the status changes to KYC Verified.
 ## Login
 
 Sign a user in to a PHR application by any of these routes. Every route is
-mandatory except the two email OTP routes, which are optional.
+mandatory.
 
 | Route | Validated by |
 | --- | --- |
 | Mobile number | Mobile OTP |
-| An address such as `name@abdm` | Password, mobile OTP or email OTP (optional), by the auth methods the address supports |
+| An address such as `name@abdm` | Password or mobile OTP, by the auth methods the address supports |
 | The 14 digit ABHA number | ABHA OTP or Aadhaar OTP |
 | The Aadhaar number | Aadhaar OTP |
 

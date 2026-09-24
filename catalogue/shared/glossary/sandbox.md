@@ -9,7 +9,7 @@ summary: >
   NHA's test environment, with its own base URLs and credentials,
   separate from production.
 sources:
-  - url: https://github.com/eka-care/abdm-docs/blob/main/site/docs/_glossary/_shared.mdx
+  - url: https://github.com/nha-in/docs/blob/main/site/docs/_glossary/_shared.mdx
     status: reference
     note: >
       This portal's own published glossary, where the definition was

@@ -57,7 +57,7 @@ func TestToolingOfferIsScoped(t *testing.T) {
 // a deployment on another hostname must be able to change what the
 // assistant says without a code edit.
 func TestPromptTakesTheDeploymentsMCPURL(t *testing.T) {
-	custom := "https://mcp.docs.abdm.gov.in/mcp"
+	custom := "https://mcp.example.org/mcp"
 	got := SystemPrompt(custom)
 	if !strings.Contains(got, custom) {
 		t.Errorf("SystemPrompt(%q) does not carry the configured address", custom)

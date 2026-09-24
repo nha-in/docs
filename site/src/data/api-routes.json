@@ -4784,7 +4784,7 @@
     "moduleDir": "p1",
     "method": "POST",
     "path": "/abha/api/v3/phr/app/login/request/otp",
-    "summary": "7 flows: OTP Request - Mobile, OTP Request - Email, OTP Request -  ABHAADDRES Mobile, OTP Request - AADHAR OTP, OTP Request - ABHA OTP, OTP Request -  ABHAADDRES Email, new OTP Request- AADHAAR",
+    "summary": "5 flows: OTP Request - Mobile, OTP Request -  ABHAADDRES Mobile, OTP Request - AADHAR OTP, OTP Request - ABHA OTP, new OTP Request- AADHAAR",
     "route": "/docs/hiecm/v3/api/p1/endpoints/p1-login-mobile/01-p1-post-v3-phr-app-login-request-otp",
     "callbacks": []
   },
@@ -4814,7 +4814,7 @@
     "moduleDir": "p1",
     "method": "POST",
     "path": "/abha/api/v3/phr/app/login/verify",
-    "summary": "8 flows: Login OTP Verify - Mobile, Login OTP Verify - Email, Login OTP Verify - ABHAADDRES Mobile, Login OTP Verify - AADHAR, Login OTP Verify - ABHA, Login Verify - Password, Login OTP Verify - ABHAADDRESS Email, new OTP verify- AADHAAR",
+    "summary": "6 flows: Login OTP Verify - Mobile, Login OTP Verify - ABHAADDRES Mobile, Login OTP Verify - AADHAR, Login OTP Verify - ABHA, Login Verify - Password, new OTP verify- AADHAAR",
     "route": "/docs/hiecm/v3/api/p1/endpoints/p1-login-mobile/02-p1-post-v3-phr-app-login-verify",
     "callbacks": []
   },
@@ -4829,7 +4829,7 @@
     "moduleDir": "p1",
     "method": "POST",
     "path": "/abha/api/v3/phr/app/login/verify/user",
-    "summary": "6 flows: Verify User, Verify - User",
+    "summary": "5 flows: Verify User, Verify - User",
     "route": "/docs/hiecm/v3/api/p1/endpoints/p1-login-mobile/03-p1-post-v3-phr-app-login-verify-user",
     "callbacks": []
   },
@@ -4851,8 +4851,8 @@
   {
     "key": "consent/artefact",
     "hosts": [
-      "abhasbx.abdm.gov.in",
-      "dev.abdm.gov.in"
+      "dev.abdm.gov.in",
+      "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
     "operationId": "p2_get_consent_v3_artefact",
@@ -4865,33 +4865,33 @@
     "callbacks": []
   },
   {
-    "key": "consent/artefact/{artefact-id}",
+    "key": "consent/artefact/{consentid}",
     "hosts": [
-      "abhasbx.abdm.gov.in",
-      "dev.abdm.gov.in"
+      "dev.abdm.gov.in",
+      "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
     "operationId": "p2_get_consent_v3_artefact_artefact_id",
     "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "GET",
-    "path": "/api/hiecm/consent/v3/artefact/{artefact-id}",
+    "path": "/api/hiecm/consent/v3/artefact/{consentId}",
     "summary": "This is ABDM HIE-CM API called to fetch the consent artefact details associated with the artefact-id.",
     "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/10-p2-get-consent-v3-artefact-artefact-id",
     "callbacks": []
   },
   {
-    "key": "consent/artefact/request/{request-id}",
+    "key": "consent/artefact/request/{consentrequestid}",
     "hosts": [
-      "abhasbx.abdm.gov.in",
-      "dev.abdm.gov.in"
+      "dev.abdm.gov.in",
+      "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
     "operationId": "p2_get_consent_v3_artefact_request_request_id",
     "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "GET",
-    "path": "/api/hiecm/consent/v3/artefact/request/{request-id}",
+    "path": "/api/hiecm/consent/v3/artefact/request/{consentRequestId}",
     "summary": "This is ABDM HIE-CM API called to fetch all the consent artefact details associated with a consent request request-id.",
     "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/09-p2-get-consent-v3-artefact-request-request-id",
     "callbacks": []
@@ -4899,8 +4899,8 @@
   {
     "key": "consent/request",
     "hosts": [
-      "abhasbx.abdm.gov.in",
-      "dev.abdm.gov.in"
+      "dev.abdm.gov.in",
+      "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
     "operationId": "p2_get_consent_v3_request",
@@ -4913,17 +4913,17 @@
     "callbacks": []
   },
   {
-    "key": "consent/request/{request-id}",
+    "key": "consent/request/{consentrequestid}",
     "hosts": [
-      "abhasbx.abdm.gov.in",
-      "dev.abdm.gov.in"
+      "dev.abdm.gov.in",
+      "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
     "operationId": "p2_get_consent_v3_request_request_id",
     "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "GET",
-    "path": "/api/hiecm/consent/v3/request/{request-id}",
+    "path": "/api/hiecm/consent/v3/request/{consentRequestId}",
     "summary": "This is ABDM HIE-CM API called to get the consent request details by request id.",
     "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/05-p2-get-consent-v3-request-request-id",
     "callbacks": []
@@ -4931,8 +4931,8 @@
   {
     "key": "govt-programs",
     "hosts": [
-      "abhasbx.abdm.gov.in",
-      "dev.abdm.gov.in"
+      "dev.abdm.gov.in",
+      "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
     "operationId": "p2_get_gateway_v3_govt_programs",
@@ -4947,8 +4947,8 @@
   {
     "key": "providers",
     "hosts": [
-      "abhasbx.abdm.gov.in",
-      "dev.abdm.gov.in"
+      "dev.abdm.gov.in",
+      "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
     "operationId": "p2_get_gateway_v3_providers",
@@ -4961,17 +4961,17 @@
     "callbacks": []
   },
   {
-    "key": "providers/{provider-id}",
+    "key": "providers/{hip-id}",
     "hosts": [
-      "abhasbx.abdm.gov.in",
-      "dev.abdm.gov.in"
+      "dev.abdm.gov.in",
+      "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
     "operationId": "p2_get_gateway_v3_providers_provider_id",
     "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "GET",
-    "path": "/api/hiecm/gateway/v3/providers/{provider-id}",
+    "path": "/api/hiecm/gateway/v3/providers/{hip-id}",
     "summary": "This API is invoked to fetch the record for provider details for requested provider id.",
     "route": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/02-p2-get-gateway-v3-providers-provider-id",
     "callbacks": []
@@ -4979,8 +4979,8 @@
   {
     "key": "hip/link/patient/links",
     "hosts": [
-      "abhasbx.abdm.gov.in",
-      "dev.abdm.gov.in"
+      "dev.abdm.gov.in",
+      "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
     "operationId": "p2_get_hip_v3_link_patient_links",
@@ -4995,8 +4995,8 @@
   {
     "key": "patient-share/profile/gettokendetails",
     "hosts": [
-      "abhasbx.abdm.gov.in",
-      "dev.abdm.gov.in"
+      "dev.abdm.gov.in",
+      "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
     "operationId": "p2_get_patient_share_v3_profile_gettokendetails",
@@ -5011,8 +5011,7 @@
   {
     "key": "phr/app/login/profile",
     "hosts": [
-      "abhasbx.abdm.gov.in",
-      "dev.abdm.gov.in"
+      "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
     "operationId": "p2_get_v3_phr_app_login_profile",
@@ -5027,8 +5026,7 @@
   {
     "key": "phr/app/login/profile/phrcard",
     "hosts": [
-      "abhasbx.abdm.gov.in",
-      "dev.abdm.gov.in"
+      "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
     "operationId": "p2_get_v3_phr_app_login_profile_phrcard",
@@ -5043,8 +5041,7 @@
   {
     "key": "phr/app/login/profile/qrcode",
     "hosts": [
-      "abhasbx.abdm.gov.in",
-      "dev.abdm.gov.in"
+      "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
     "operationId": "p2_get_v3_phr_app_login_profile_qrcode",
@@ -5059,8 +5056,7 @@
   {
     "key": "phr/app/login/profile/request/logout",
     "hosts": [
-      "abhasbx.abdm.gov.in",
-      "dev.abdm.gov.in"
+      "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
     "operationId": "p2_get_v3_phr_app_login_profile_request_logout",
@@ -5075,8 +5071,7 @@
   {
     "key": "phr/app/login/profile/request/token",
     "hosts": [
-      "abhasbx.abdm.gov.in",
-      "dev.abdm.gov.in"
+      "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
     "operationId": "p2_get_v3_phr_app_login_profile_request_token",
@@ -5091,8 +5086,7 @@
   {
     "key": "phr/app/login/profile/switch-profile",
     "hosts": [
-      "abhasbx.abdm.gov.in",
-      "dev.abdm.gov.in"
+      "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
     "operationId": "p2_get_v3_phr_app_login_profile_switch_profile",
@@ -5107,8 +5101,8 @@
   {
     "key": "consent/auto/approve",
     "hosts": [
-      "abhasbx.abdm.gov.in",
-      "dev.abdm.gov.in"
+      "dev.abdm.gov.in",
+      "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
     "operationId": "p2_post_consent_v3_auto_approve",
@@ -5121,65 +5115,65 @@
     "callbacks": []
   },
   {
-    "key": "consent/auto/approve/{auto-approval-id}/disable",
+    "key": "consent/auto/approve/{consentid}/disable",
     "hosts": [
-      "abhasbx.abdm.gov.in",
-      "dev.abdm.gov.in"
+      "dev.abdm.gov.in",
+      "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
     "operationId": "p2_post_consent_v3_auto_approve_auto_approval_id_disable",
     "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "POST",
-    "path": "/api/hiecm/consent/v3/auto/approve/{auto-approval-id}/disable",
+    "path": "/api/hiecm/consent/v3/auto/approve/{consentId}/disable",
     "summary": "This is ABDM HIE-CM API called to disable the auto-approval policy.",
     "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/02-p2-post-consent-v3-auto-approve-auto-approval-id-disable",
     "callbacks": []
   },
   {
-    "key": "consent/auto/approve/{auto-approval-id}/enable",
+    "key": "consent/auto/approve/{consentid}/enable",
     "hosts": [
-      "abhasbx.abdm.gov.in",
-      "dev.abdm.gov.in"
+      "dev.abdm.gov.in",
+      "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
     "operationId": "p2_post_consent_v3_auto_approve_auto_approval_id_enable",
     "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "POST",
-    "path": "/api/hiecm/consent/v3/auto/approve/{auto-approval-id}/enable",
+    "path": "/api/hiecm/consent/v3/auto/approve/{consentId}/enable",
     "summary": "This is ABDM HIE-CM API called to enable the auto-approval policy.",
     "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/03-p2-post-consent-v3-auto-approve-auto-approval-id-enable",
     "callbacks": []
   },
   {
-    "key": "consent/request/{request-id}/approve",
+    "key": "consent/request/{consentrequestid}/approve",
     "hosts": [
-      "abhasbx.abdm.gov.in",
-      "dev.abdm.gov.in"
+      "dev.abdm.gov.in",
+      "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
     "operationId": "p2_post_consent_v3_request_request_id_approve",
     "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "POST",
-    "path": "/api/hiecm/consent/v3/request/{request-id}/approve",
+    "path": "/api/hiecm/consent/v3/request/{consentRequestId}/approve",
     "summary": "This is ABDM HIE-CM API called by patients to approve the consent request raised by HIU from PHR/mobile application.",
     "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/06-p2-post-consent-v3-request-request-id-approve",
     "callbacks": []
   },
   {
-    "key": "consent/request/{request-id}/deny",
+    "key": "consent/request/{consentrequestid}/deny",
     "hosts": [
-      "abhasbx.abdm.gov.in",
-      "dev.abdm.gov.in"
+      "dev.abdm.gov.in",
+      "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
     "operationId": "p2_post_consent_v3_request_request_id_deny",
     "module": "P2 Consents Management",
     "moduleDir": "p2",
     "method": "POST",
-    "path": "/api/hiecm/consent/v3/request/{request-id}/deny",
+    "path": "/api/hiecm/consent/v3/request/{consentRequestId}/deny",
     "summary": "This is ABDM HIE-CM API called by patients to deny the consent request raised by HIU from PHR/mobile application.",
     "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/07-p2-post-consent-v3-request-request-id-deny",
     "callbacks": []
@@ -5187,8 +5181,8 @@
   {
     "key": "consent/revoke",
     "hosts": [
-      "abhasbx.abdm.gov.in",
-      "dev.abdm.gov.in"
+      "dev.abdm.gov.in",
+      "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
     "operationId": "p2_post_consent_v3_revoke",
@@ -5203,8 +5197,8 @@
   {
     "key": "patient-share/share",
     "hosts": [
-      "abhasbx.abdm.gov.in",
-      "dev.abdm.gov.in"
+      "dev.abdm.gov.in",
+      "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
     "operationId": "p2_post_patient_share_v3_share",
@@ -5227,8 +5221,8 @@
   {
     "key": "user-initiated-linking/link/care-context/confirm",
     "hosts": [
-      "abhasbx.abdm.gov.in",
-      "dev.abdm.gov.in"
+      "dev.abdm.gov.in",
+      "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
     "operationId": "p2_post_user_initiated_linking_v3_link_care_context_confirm",
@@ -5251,8 +5245,8 @@
   {
     "key": "user-initiated-linking/link/care-context/init",
     "hosts": [
-      "abhasbx.abdm.gov.in",
-      "dev.abdm.gov.in"
+      "dev.abdm.gov.in",
+      "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
     "operationId": "p2_post_user_initiated_linking_v3_link_care_context_init",
@@ -5275,8 +5269,8 @@
   {
     "key": "user-initiated-linking/patient/care-context/discover",
     "hosts": [
-      "abhasbx.abdm.gov.in",
-      "dev.abdm.gov.in"
+      "dev.abdm.gov.in",
+      "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
     "operationId": "p2_post_user_initiated_linking_v3_patient_care_context_discover",
@@ -5299,8 +5293,8 @@
   {
     "key": "hiu/patient/care-context/on-confirm",
     "hosts": [
-      "abhasbx.abdm.gov.in",
-      "dev.abdm.gov.in"
+      "dev.abdm.gov.in",
+      "abhasbx.abdm.gov.in"
     ],
     "kind": "callback",
     "operationId": "p2_post_v3_hiu_patient_care_context_on_confirm",
@@ -5315,8 +5309,8 @@
   {
     "key": "hiu/patient/care-context/on-discover",
     "hosts": [
-      "abhasbx.abdm.gov.in",
-      "dev.abdm.gov.in"
+      "dev.abdm.gov.in",
+      "abhasbx.abdm.gov.in"
     ],
     "kind": "callback",
     "operationId": "p2_post_v3_hiu_patient_care_context_on_discover",
@@ -5331,8 +5325,8 @@
   {
     "key": "hiu/patient/care-context/on-init",
     "hosts": [
-      "abhasbx.abdm.gov.in",
-      "dev.abdm.gov.in"
+      "dev.abdm.gov.in",
+      "abhasbx.abdm.gov.in"
     ],
     "kind": "callback",
     "operationId": "p2_post_v3_hiu_patient_care_context_on_init",
@@ -5347,8 +5341,8 @@
   {
     "key": "hiu/patient/on-share",
     "hosts": [
-      "abhasbx.abdm.gov.in",
-      "dev.abdm.gov.in"
+      "dev.abdm.gov.in",
+      "abhasbx.abdm.gov.in"
     ],
     "kind": "callback",
     "operationId": "p2_post_v3_hiu_patient_on_share",
@@ -5363,8 +5357,7 @@
   {
     "key": "phr/app/login/profile/link",
     "hosts": [
-      "abhasbx.abdm.gov.in",
-      "dev.abdm.gov.in"
+      "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
     "operationId": "p2_post_v3_phr_app_login_profile_link",
@@ -5379,8 +5372,7 @@
   {
     "key": "phr/app/login/profile/request/otp",
     "hosts": [
-      "abhasbx.abdm.gov.in",
-      "dev.abdm.gov.in"
+      "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
     "operationId": "p2_post_v3_phr_app_login_profile_request_otp",
@@ -5395,8 +5387,7 @@
   {
     "key": "phr/app/login/profile/updateprofile",
     "hosts": [
-      "abhasbx.abdm.gov.in",
-      "dev.abdm.gov.in"
+      "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
     "operationId": "p2_post_v3_phr_app_login_profile_updateprofile",
@@ -5411,8 +5402,7 @@
   {
     "key": "phr/app/login/profile/verify",
     "hosts": [
-      "abhasbx.abdm.gov.in",
-      "dev.abdm.gov.in"
+      "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
     "operationId": "p2_post_v3_phr_app_login_profile_verify",
@@ -5427,8 +5417,7 @@
   {
     "key": "phr/app/login/profile/verify/switch-profile/user",
     "hosts": [
-      "abhasbx.abdm.gov.in",
-      "dev.abdm.gov.in"
+      "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
     "operationId": "p2_post_v3_phr_app_login_profile_verify_switch_profile_user",
@@ -5441,7 +5430,7 @@
     "callbacks": []
   },
   {
-    "key": "subscription-requests/request/{request-id}",
+    "key": "subscription-requests/request/{subscriptionrequestid}",
     "hosts": [
       "dev.abdm.gov.in"
     ],
@@ -5450,7 +5439,7 @@
     "module": "P3 Subscription",
     "moduleDir": "p3",
     "method": "GET",
-    "path": "/api/hiecm/subscription-requests/v3/request/{request-id}",
+    "path": "/api/hiecm/subscription-requests/v3/request/{subscriptionRequestId}",
     "summary": "This API will be invoked by the patient/user from PHR application to fetch his/her subscription details by subscription request id.",
     "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/07-p3-get-subscription-requests-v3-request-request-id",
     "callbacks": []
@@ -5471,7 +5460,7 @@
     "callbacks": []
   },
   {
-    "key": "subscription-requests/{subscription-id}",
+    "key": "subscription-requests/{subscriptionid}",
     "hosts": [
       "dev.abdm.gov.in"
     ],
@@ -5480,13 +5469,13 @@
     "module": "P3 Subscription",
     "moduleDir": "p3",
     "method": "GET",
-    "path": "/api/hiecm/subscription-requests/v3/{subscription-id}",
+    "path": "/api/hiecm/subscription-requests/v3/{subscriptionID}",
     "summary": "This API will be invoked by the patient/user from PHR application to fetch his/her subscription details by subscription id.",
     "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/08-p3-get-subscription-requests-v3-subscription-id",
     "callbacks": []
   },
   {
-    "key": "subscription-requests/disable/{subscription-id}",
+    "key": "subscription-requests/disable/{subscriptionid}",
     "hosts": [
       "dev.abdm.gov.in"
     ],
@@ -5495,13 +5484,13 @@
     "module": "P3 Subscription",
     "moduleDir": "p3",
     "method": "POST",
-    "path": "/api/hiecm/subscription-requests/v3/disable/{subscription-id}",
+    "path": "/api/hiecm/subscription-requests/v3/disable/{subscriptionID}",
     "summary": "This API will be invoked to disable the subscription by subscription id.",
     "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/05-p3-post-subscription-requests-v3-disable-subscription-id",
     "callbacks": []
   },
   {
-    "key": "subscription-requests/enable/{subscription-id}",
+    "key": "subscription-requests/enable/{subscriptionid}",
     "hosts": [
       "dev.abdm.gov.in"
     ],
@@ -5510,7 +5499,7 @@
     "module": "P3 Subscription",
     "moduleDir": "p3",
     "method": "POST",
-    "path": "/api/hiecm/subscription-requests/v3/enable/{subscription-id}",
+    "path": "/api/hiecm/subscription-requests/v3/enable/{subscriptionID}",
     "summary": "This API will be invoked to enable the subscription by subscription id.",
     "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/06-p3-post-subscription-requests-v3-enable-subscription-id",
     "callbacks": []
@@ -5585,7 +5574,7 @@
     ]
   },
   {
-    "key": "subscription-requests/{request-id}/approve",
+    "key": "subscription-requests/{subscriptionrequestid}/approve",
     "hosts": [
       "dev.abdm.gov.in"
     ],
@@ -5594,13 +5583,13 @@
     "module": "P3 Subscription",
     "moduleDir": "p3",
     "method": "POST",
-    "path": "/api/hiecm/subscription-requests/v3/{request-id}/approve",
+    "path": "/api/hiecm/subscription-requests/v3/{subscriptionRequestId}/approve",
     "summary": "This API will be invoked by the patient/user from PHR application to approve subscription request.",
     "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/01-p3-post-subscription-requests-v3-request-id-approve",
     "callbacks": []
   },
   {
-    "key": "subscription-requests/{request-id}/deny",
+    "key": "subscription-requests/{subscriptionrequestid}/deny",
     "hosts": [
       "dev.abdm.gov.in"
     ],
@@ -5609,7 +5598,7 @@
     "module": "P3 Subscription",
     "moduleDir": "p3",
     "method": "POST",
-    "path": "/api/hiecm/subscription-requests/v3/{request-id}/deny",
+    "path": "/api/hiecm/subscription-requests/v3/{subscriptionRequestId}/deny",
     "summary": "This API will be invoked by the patient/user from PHR application to deny subscription request.",
     "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/02-p3-post-subscription-requests-v3-request-id-deny",
     "callbacks": []
@@ -5660,7 +5649,7 @@
     "callbacks": []
   },
   {
-    "key": "subscription-requests/patients/{subscription-id}",
+    "key": "subscription-requests/patients/{subscriptionid}",
     "hosts": [
       "dev.abdm.gov.in"
     ],
@@ -5669,7 +5658,7 @@
     "module": "P3 Subscription",
     "moduleDir": "p3",
     "method": "PUT",
-    "path": "/api/hiecm/subscription-requests/v3/patients/{subscription-id}",
+    "path": "/api/hiecm/subscription-requests/v3/patients/{subscriptionID}",
     "summary": "This API will be invoked to edit the subscription details.",
     "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/04-p3-put-subscription-requests-v3-patients-subscription-id",
     "callbacks": []
@@ -5705,7 +5694,7 @@
     "callbacks": []
   },
   {
-    "key": "subscription-requests/patients/lockers/{lockerid}",
+    "key": "subscription-requests/patients/lockers/{locker-id}",
     "hosts": [
       "dev.abdm.gov.in"
     ],
@@ -5714,7 +5703,7 @@
     "module": "P4 Locker",
     "moduleDir": "p4",
     "method": "GET",
-    "path": "/api/hiecm/subscription-requests/v3/patients/lockers/{lockerId}",
+    "path": "/api/hiecm/subscription-requests/v3/patients/lockers/{locker-id}",
     "summary": "This API will be invoked to get health locker settings of a patient by locker id.",
     "route": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/03-p4-get-subscription-requests-v3-patients-lockers-lockerid",
     "callbacks": []

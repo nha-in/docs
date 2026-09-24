@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/eka-care/abdm-docs/mcp/internal/catalogue"
+	"github.com/nha-in/docs/mcp/internal/catalogue"
 )
 
 // ListSkills returns every compiled integrator skill section in the

@@ -9,15 +9,15 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/eka-care/abdm-docs/mcp/internal/catalogue"
-	"github.com/eka-care/abdm-docs/mcp/internal/chat"
-	"github.com/eka-care/abdm-docs/mcp/internal/embed"
-	"github.com/eka-care/abdm-docs/mcp/internal/fhir"
-	"github.com/eka-care/abdm-docs/mcp/internal/guard"
-	"github.com/eka-care/abdm-docs/mcp/internal/index"
-	"github.com/eka-care/abdm-docs/mcp/internal/route"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/google/jsonschema-go/jsonschema"
+	"github.com/nha-in/docs/mcp/internal/catalogue"
+	"github.com/nha-in/docs/mcp/internal/chat"
+	"github.com/nha-in/docs/mcp/internal/embed"
+	"github.com/nha-in/docs/mcp/internal/fhir"
+	"github.com/nha-in/docs/mcp/internal/guard"
+	"github.com/nha-in/docs/mcp/internal/index"
+	"github.com/nha-in/docs/mcp/internal/route"
 )
 
 // The ten chat-visible tool descriptions, shared verbatim between the MCP

@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/eka-care/abdm-docs/mcp/internal/chat"
+	"github.com/nha-in/docs/mcp/internal/chat"
 )
 
 // votes answers with a fixed sequence of grades, one per call.

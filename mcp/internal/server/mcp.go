@@ -11,11 +11,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/eka-care/abdm-docs/mcp/internal/embed"
-	"github.com/eka-care/abdm-docs/mcp/internal/fhir"
-	"github.com/eka-care/abdm-docs/mcp/internal/index"
 	"github.com/google/jsonschema-go/jsonschema"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
+	"github.com/nha-in/docs/mcp/internal/embed"
+	"github.com/nha-in/docs/mcp/internal/fhir"
+	"github.com/nha-in/docs/mcp/internal/index"
 )
 
 const serverVersion = "0.1.0"

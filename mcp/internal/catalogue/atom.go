@@ -60,7 +60,7 @@ type frontmatter struct {
 // codes and the payer's, and ERR-PYR-CLM-007 is the one the scheme's payer
 // sends in a third shape. None of the three was here, so decode_error answered
 // "no error codes found" for all 310 codes the catalogue holds for NHCX.
-var errCodeRe = regexp.MustCompile(`\b(?:(?:ABDM|GATEWAY|MIS|EKA|HIS|AS|NHCX|PAYR)-\d{3,5}|ERR-PYR-[A-Z]{2,5}-\d{3})\b`)
+var errCodeRe = regexp.MustCompile(`\b(?:(?:ABDM|GATEWAY|MIS|HIS|AS|NHCX|PAYR)-\d{3,5}|ERR-PYR-[A-Z]{2,5}-\d{3})\b`)
 
 // gatewayCodeRe matches the gateway's numeric authentication codes (900900,
 // 900901, 900902) only as a JSON "code" value, so a bare six-digit number

@@ -20,9 +20,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/eka-care/abdm-docs/mcp/internal/chat"
-	"github.com/eka-care/abdm-docs/mcp/internal/server"
-	"github.com/eka-care/abdm-docs/mcp/internal/server/servertest"
+	"github.com/nha-in/docs/mcp/internal/chat"
+	"github.com/nha-in/docs/mcp/internal/server"
+	"github.com/nha-in/docs/mcp/internal/server/servertest"
 )
 
 // scriptedModel mirrors chat's own unexported fakeModel: it scripts a
