@@ -65,7 +65,13 @@ export default function Markdown({
   className?: string;
 }) {
   if (TABLE_OR_QUOTE.test(text)) {
-    const html = marked.parse(text.trim(), {async: false}) as string;
+    // Each table goes in the same scroll wrapper prose pages give theirs
+    // (MDXComponents.tsx, typography.css). Without it a code chip that will
+    // not wrap, such as `authData.child.profilePhoto`, pushed the table out
+    // of its column and over the request panel beside it.
+    const html = (marked.parse(text.trim(), {async: false}) as string)
+      .replaceAll('<table>', '<div class="table-scroll"><table>')
+      .replaceAll('</table>', '</table></div>');
     // The description is the build's own data, generated from the
     // specification, never reader input.
     return <div className={className} dangerouslySetInnerHTML={{__html: html}} />;
