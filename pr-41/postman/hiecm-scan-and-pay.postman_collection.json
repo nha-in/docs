@@ -1,0 +1,633 @@
+{
+  "info": {
+    "name": "ABDM HIE-CM Scan and Pay",
+    "description": "Generated from the ABDM HIE-CM specifications. Import hiecm-sandbox.postman_environment.json beside it and fill in clientId and clientSecret: the collection fetches a gateway session token before a call when it needs one.\n\nFolders follow the order a journey is built in. Callbacks are not included: ABDM sends those to your bridge URL, so receiving them needs a public endpoint, not Postman.\n\nValues ABDM expects encrypted, such as an Aadhaar number or an OTP, are shown as the specification gives them. Encrypt your own values before sending.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Gets a gateway session token when there is none or it has expired.",
+          "if (pm.request.url.getPath().endsWith('/api/hiecm/gateway/v3/sessions')) return;",
+          "const expiry = Number(pm.environment.get('accessTokenExpiry') || 0);",
+          "if (pm.environment.get('accessToken') && Date.now() < expiry) return;",
+          "pm.sendRequest({",
+          "  url: pm.variables.replaceIn('{{gatewayUrl}}/api/hiecm/gateway/v3/sessions'),",
+          "  method: 'POST',",
+          "  header: {",
+          "    'Content-Type': 'application/json',",
+          "    'REQUEST-ID': pm.variables.replaceIn('{{$guid}}'),",
+          "    'TIMESTAMP': new Date().toISOString(),",
+          "    'X-CM-ID': pm.variables.replaceIn('{{cmId}}'),",
+          "  },",
+          "  body: {",
+          "    mode: 'raw',",
+          "    raw: JSON.stringify({",
+          "      clientId: pm.variables.get('clientId'),",
+          "      clientSecret: pm.variables.get('clientSecret'),",
+          "      grantType: 'client_credentials',",
+          "    }),",
+          "  },",
+          "}, (error, response) => {",
+          "  if (error || response.code >= 300) {",
+          "    console.error('Session token request failed', error || response.text());",
+          "    return;",
+          "  }",
+          "  const {accessToken, expiresIn} = response.json();",
+          "  pm.environment.set('accessToken', accessToken);",
+          "  // A minute early, so a token never expires between this check and the call.",
+          "  pm.environment.set('accessTokenExpiry', Date.now() + (expiresIn - 60) * 1000);",
+          "});"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "Scan and pay, HIP side",
+      "item": [
+        {
+          "name": "2. Submit the HIE-CM to send all the open order for patient",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "REQUEST-ID",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "TIMESTAMP",
+                "value": "{{$isoTimestamp}}"
+              },
+              {
+                "key": "X-CM-ID",
+                "value": "{{cmId}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/api/hiecm/scan-gateway/v3/patient/on-share/open-order",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "api",
+                "hiecm",
+                "scan-gateway",
+                "v3",
+                "patient",
+                "on-share",
+                "open-order"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"intent\": \"OPEN_PAYMENT_ORDER\",\n  \"abhaAddress\": \"<ABHA_ADDRESS>\",\n  \"patientUid\": \"string\",\n  \"procedures\": [\n    {\n      \"category\": \"OPD consultation\",\n      \"services\": [\n        {\n          \"name\": \"consultation\",\n          \"serviceId\": \"service-12345\",\n          \"description\": \"Albumin 24 hrs Urine\",\n          \"amount\": 629.12\n        }\n      ]\n    },\n    {\n      \"category\": \"Laboratory and Diagnostics\",\n      \"services\": [\n        {\n          \"name\": \"Diagnostics\",\n          \"serviceId\": \"service-12345\",\n          \"description\": \"Albumin 24 hrs Urine\",\n          \"amount\": 629.12\n        }\n      ]\n    },\n    {\n      \"category\": \"Pharmacy\",\n      \"services\": [\n        {\n          \"name\": \"Pharmacy\",\n          \"serviceId\": \"service-12345\",\n          \"description\": \"Albumin 24 hrs Urine\",\n          \"amount\": 629.12\n        }\n      ]\n    },\n    {\n      \"category\": \"Miscellaneous/Other\",\n      \"services\": [\n        {\n          \"name\": \"Miscellaneous\",\n          \"serviceId\": \"service-12345\",\n          \"description\": \"Albumin 24 hrs Urine\",\n          \"amount\": 629.12\n        }\n      ]\n    }\n  ],\n  \"response\": {\n    \"requestId\": \"6c3d4e5c-09d1-****-817b-a0c82d130c53\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Share the response of HIECM's /hiecm/api/v3/scan-gateway/patient/on-share/open API.\n\n **Header**\n\nAUTHORIZATION will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: Bearer ]\n\nREQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]\n\nTIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]\n\nX-CM-ID consent manager ID [ Example: sbx ]\n\n **Request Body**\n\nintent This is a key value pair which contains the purpose [ Example: type: OPEN_PAYMENT_ORDER ]\n\nABHA address of the user.\n\nPatientUid of the user.\n\nerror is optional object in case of any error or Failure then only send error object\n\nprocedures which contains the list of open order\n\nresponse which contains the requestId [ Example: requestId: 059fcb69-8ad8-4789-a049-62db16c7b5a0 ]"
+          }
+        },
+        {
+          "name": "4. Share payment bundle alone with procedures of the patient",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "REQUEST-ID",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "TIMESTAMP",
+                "value": "{{$isoTimestamp}}"
+              },
+              {
+                "key": "X-CM-ID",
+                "value": "{{cmId}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/api/hiecm/scan-gateway/v3/patient/on-selection",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "api",
+                "hiecm",
+                "scan-gateway",
+                "v3",
+                "patient",
+                "on-selection"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"intent\": \"PAYMENT_ORDER\",\n  \"openOrderRequestId\": \"b767614f-153a-4aa3-946f-1622596f0fab\",\n  \"abhaAddress\": \"<ABHA_ADDRESS>\",\n  \"procedures\": [\n    {\n      \"category\": \"OPD consultation\",\n      \"services\": [\n        {\n          \"name\": \"consultation\",\n          \"serviceId\": \"service-12345\",\n          \"description\": \"Albumin 24 hrs Urine\",\n          \"amount\": 629.12\n        }\n      ]\n    },\n    {\n      \"category\": \"Laboratory and Diagnostics\",\n      \"services\": [\n        {\n          \"name\": \"Diagnostics\",\n          \"serviceId\": \"service-12345\",\n          \"description\": \"Albumin 24 hrs Urine\",\n          \"amount\": 629.12\n        }\n      ]\n    },\n    {\n      \"category\": \"Pharmacy\",\n      \"services\": [\n        {\n          \"name\": \"Pharmacy\",\n          \"serviceId\": \"service-12345\",\n          \"description\": \"Albumin 24 hrs Urine\",\n          \"amount\": 629.12\n        }\n      ]\n    }\n  ],\n  \"paymentBundle\": {\n    \"paymentMode\": \"GATEWAY\",\n    \"paymentUrl\": \"string\",\n    \"orderNumber\": \"string\",\n    \"amount\": 1250.55,\n    \"merchantId\": \"123465\",\n    \"description\": \"Testing\"\n  },\n  \"response\": {\n    \"requestId\": \"6c3d4e5c-09d1-***-817b-a0c82d130c53\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Share payment bundle alone with procedures of the patient. The HIP will sent the payment bundle to HIU.\n\n **Header**\n\nAUTHORIZATION will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: Bearer ]\n\nREQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]\n\nTIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]\n\nX-CM-ID consent manager ID[ Example: sbx ]\n\n **Request Body**\n\nintent This is a key value pair which contains the purpose [ Example: type: PAYMENT_ORDER ]\n\nopenOrderRequestId from the share open order requestId [ Example: 059fcb69-****-4789-a049-62db16c7b5a0 ]\n\nabhaAddress of the user/patient\n\nerror is optional object in case of any error or Failure then only send error object\n\nProcedures which contains the list of open order\n\npaymentBundle which contains payments details\n\nresponse which contains the requestId [ Example: requestId: 059fcb69-8ad8-4789-a049-62db16c7b5a0 ]"
+          }
+        },
+        {
+          "name": "5. Send the payment status to HIU",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "REQUEST-ID",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "TIMESTAMP",
+                "value": "{{$isoTimestamp}}"
+              },
+              {
+                "key": "X-CM-ID",
+                "value": "{{cmId}}"
+              },
+              {
+                "key": "X-HIP-ID",
+                "value": "{{hipId}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/api/hiecm/scan-gateway/v3/patient/scan-pay/notify",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "api",
+                "hiecm",
+                "scan-gateway",
+                "v3",
+                "patient",
+                "scan-pay",
+                "notify"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"acknowledgement\": {\n    \"status\": \"SUCCESS/ CANCELED/ PENDING/ FAIL/ REFUND_INITIATED/ REFUND_SUCCESS\",\n    \"abhaAddress\": \"<username>@sbx\",\n    \"transactionId\": \"string\",\n    \"orderNumber\": \"string\",\n    \"openOrderRequestId\": \"b767614f-153a-4aa3-946f-1622596f0fab\",\n    \"paymentDate\": \"2025-01-20T07:47:49.102Z\",\n    \"paymentRecipetLink\": \"PDF URL LINK of RECIPT\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Send the payment status to HIU.\n\n **Header**\n\nAuthorisation will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: Bearer ]\n\nREQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]\n\nTIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]\n\nX-CM-ID consent manager ID[ Example: sbx ]\n\n X-HIP-ID [Example: HIP_ID]\n\n **Request Body**\n\nacknowledgement This is a key value which contains the payment status abhaAddress transactionId orderNumber paymentRecipetURL[ Example: { status: [SUCCESS, CANCELED, PENDING, FAIL, REFUND_INITIATED, REFUND_SUCCESS] abhaAddress: transactionId: uniqueId orderNumber: 76274**** openOrderRequestId: 939** 800-325d-42c3-****-1******* paymentDate: 2025-01-20T07:47:49.102Z paymentRecipetURL: URL } ]\n\nerror is optional object in case of any error or Failure then only send error object"
+          }
+        },
+        {
+          "name": "8. Check the status of reports",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "REQUEST-ID",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "TIMESTAMP",
+                "value": "{{$isoTimestamp}}"
+              },
+              {
+                "key": "X-CM-ID",
+                "value": "{{cmId}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/api/hiecm/scan-gateway/v3/patient/scan-pay/on-order-status",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "api",
+                "hiecm",
+                "scan-gateway",
+                "v3",
+                "patient",
+                "scan-pay",
+                "on-order-status"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"acknowledgement\": {\n    \"status\": \"SUCCESS/ CANCELED/ PENDING/ FAIL/ REFUND_INITIATED/ REFUND_SUCCESS\",\n    \"abhaAddress\": \"<username>@sbx\",\n    \"transactionId\": \"string\",\n    \"orderNumber\": \"string\",\n    \"openOrderRequestId\": \"Queried Request id\",\n    \"paymentDate\": \"Transaction Date UTC\",\n    \"paymentRecipetLink\": \"PDF URL LINK of RECIPT\"\n  },\n  \"response\": {\n    \"requestId\": \"b767614f-153a-***-946f-1622596f0fab\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Check the status of reports.\n\n **Header**\n\nAUTHORIZATION will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: ]\n\nX-CM-ID consent manager ID[ Example: sbx ]\n\nREQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]\n\nTIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]\n\n **Request Body**\n\nacknowledgement This is a key value which contains the payment status abhaAddress transactionId orderNumber paymentRecipetURL[ Example: { status: [SUCCESS, CANCELED, PENDING, FAIL, REFUND_INITIATED, REFUND_SUCCESS] abhaAddress: transactionId: uniqueId orderNumber: 76274**** paymentRecipetURL: URL } ]\n\nerror is optional object in case of any error or Failure then only send error object\n\nresponse which contains the requestId [ Example: requestId: 059fcb69-8ad8-4789-a049-62db16c7b5a0 ]"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Scan and pay, PHR side",
+      "item": [
+        {
+          "name": "1. Share patient open order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "REQUEST-ID",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "TIMESTAMP",
+                "value": "{{$isoTimestamp}}"
+              },
+              {
+                "key": "X-CM-ID",
+                "value": "{{cmId}}"
+              },
+              {
+                "key": "X-AUTH-TOKEN",
+                "value": "<TOKEN>"
+              },
+              {
+                "key": "X-HIU-ID",
+                "value": "{{hiuId}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/api/hiecm/scan-gateway/v3/patient/share/open-order",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "api",
+                "hiecm",
+                "scan-gateway",
+                "v3",
+                "patient",
+                "share",
+                "open-order"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"intent\": \"OPEN_PAYMENT_ORDER\",\n  \"metaData\": {\n    \"hipId\": \"HIP_1\",\n    \"counterId\": \"123-456\"\n  },\n  \"profile\": {\n    \"patient\": {\n      \"abhaNumber\": \"91-7507-xxxx-xxxx\",\n      \"abhaAddress\": \"<ABHA_ADDRESS>\",\n      \"name\": \"name\",\n      \"gender\": \"M\",\n      \"dayOfBirth\": \"string\",\n      \"monthOfBirth\": \"string\",\n      \"yearOfBirth\": \"string\",\n      \"address\": {\n        \"line\": \"Address line 1\",\n        \"district\": \"XXXXXXX\",\n        \"state\": \"XXXXXX\",\n        \"pincode\": \"XXXXXX\"\n      },\n      \"phoneNumber\": \"987654xxxx\"\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "This is an API will be invoked from the **integrator application** to share the user/patient profile with HMIS/LIMS.\n\n **Header**\n\nAuthorisation will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: Bearer ]\n\nX-AUTH-TOKEN JWT Authentication token which was issued by ABDM after successful validation of user[ Example: Bearer ]\n\nREQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]\n\nTIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]\n\nX-CM-ID consent manager ID[ Example: sbx ]\n\nX-HIU-ID [ Example: HIU ID ]\n\n **Request Body**\n\nintent This is a key value pair which contains the purpose [ Example: type: OPEN_PAYMENT_ORDER ]\n\nmetaData This is a key value pair which contains hipId, counterId[ Example: { hipId:IN3810000008\n counterId: 12123 } ]\n\nprofile which contains user details"
+          }
+        },
+        {
+          "name": "3. Select the all open-order and send to HIP for a payment request detail",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "REQUEST-ID",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "TIMESTAMP",
+                "value": "{{$isoTimestamp}}"
+              },
+              {
+                "key": "X-CM-ID",
+                "value": "{{cmId}}"
+              },
+              {
+                "key": "X-AUTH-TOKEN",
+                "value": "<TOKEN>"
+              },
+              {
+                "key": "X-HIU-ID",
+                "value": "{{hiuId}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/api/hiecm/scan-gateway/v3/patient/selection",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "api",
+                "hiecm",
+                "scan-gateway",
+                "v3",
+                "patient",
+                "selection"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"intent\": \"PAYMENT_ORDER\",\n  \"openOrderRequestId\": \"b767614f-153a-***-946f-1622596f0fab\",\n  \"abhaAddress\": \"<ABHA_ADDRESS>\",\n  \"procedures\": [\n    {\n      \"category\": \"OPD consultation\",\n      \"services\": [\n        {\n          \"name\": \"consultation\",\n          \"serviceId\": \"service-12345\",\n          \"description\": \"Albumin 24 hrs Urine\",\n          \"amount\": 629.12\n        }\n      ]\n    },\n    {\n      \"category\": \"Laboratory and Diagnostics\",\n      \"services\": [\n        {\n          \"name\": \"Diagnostics\",\n          \"serviceId\": \"service-12345\",\n          \"description\": \"Albumin 24 hrs Urine\",\n          \"amount\": 629.12\n        }\n      ]\n    },\n    {\n      \"category\": \"Pharmacy\",\n      \"services\": [\n        {\n          \"name\": \"Pharmacy\",\n          \"serviceId\": \"service-12345\",\n          \"description\": \"Albumin 24 hrs Urine\",\n          \"amount\": 629.12\n        }\n      ]\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Select the all open-order and send to HIP for a payment request detail. In this user can select the multiple procedures.\n\n **Header**\n\nAuthorisation will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: Bearer ]\n\nREQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]\n\nTIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]\n\nX-CM-ID consent manager ID[ Example: sbx ]\n\nX-AUTH-TOKEN JWT Authentication token which was issued by ABDM after successful validation of user[ Example: Bearer ]\n\nX-HIU-ID [ Example: HIU ID ]\n\n **Request Body**\n\nintent This is a key value pair which contains the purpose [ Example: type: PAYMENT_ORDER ]\n\nopenOrderRequestId from the share open order requestId [ Example: 059fcb69-****-4789-a049-62db16c7b5a0 ]\n\n abhaAddress of the user/patient\n\nProcedures which contains the list of open order"
+          }
+        },
+        {
+          "name": "6. Notify to HIP so that confirm that the HIU received the payment status",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "REQUEST-ID",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "TIMESTAMP",
+                "value": "{{$isoTimestamp}}"
+              },
+              {
+                "key": "X-CM-ID",
+                "value": "{{cmId}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/api/hiecm/scan-gateway/v3/patient/scan-pay/on-notify",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "api",
+                "hiecm",
+                "scan-gateway",
+                "v3",
+                "patient",
+                "scan-pay",
+                "on-notify"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"acknowledgement\": {\n    \"status\": \"SUCCESS/ CANCELED/ PENDING/ FAIL/ REFUND_INITIATED/ REFUND_SUCCESS\",\n    \"abhaAddress\": \"<username>@sbx\",\n    \"transactionId\": \"string\",\n    \"orderNumber\": \"string\",\n    \"openOrderRequestId\": \"b767614f-153a-4aa3-946f-1622596f0fab\",\n    \"paymentDate\": \"2025-01-20T07:47:49.102Z\",\n    \"paymentRecipetLink\": \"PDF URL LINK of RECIPT\"\n  },\n  \"response\": {\n    \"requestId\": \"b767614f-153a-***-946f-1622596f0fab\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Notify to HIP so that confirm that the HIU received the payment status. This HIU will confirm the we will received the payment bundle(SUCCESS,CANCELED,PENDING,FAIL,REFUND_INITIATED, REFUND_SUCCESS) from HIP.\n\n **Header**\n\nAUTHORIZATION will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: Bearer ]\n\nREQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]\n\nTIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]\n\nX-CM-ID consent manager ID[ Example: sbx ]\n\n **Request Body**\n\nacknowledgement This is a key value which contains the payment status abhaAddress transactionId orderNumber paymentRecipetURL[ Example: { status: [SUCCESS, CANCELED, PENDING, FAIL, REFUND_INITIATED, REFUND_SUCCESS] abhaAddress: transactionId: uniqueId orderNumber: 76274**** openOrderRequestId: 939** 800-325d-42c3-****-1******* paymentDate: 2025-01-20T07:47:49.102Z paymentRecipetURL: URL } ]\n\nerror is optional object in case of any error or Failure then only send error object\n\nresponse which contains the requestId [ Example: requestId: 059fcb69-8ad8-4789-a049-62db16c7b5a0 ]"
+          }
+        },
+        {
+          "name": "7. Check the status of reports",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "REQUEST-ID",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "TIMESTAMP",
+                "value": "{{$isoTimestamp}}"
+              },
+              {
+                "key": "X-CM-ID",
+                "value": "{{cmId}}"
+              },
+              {
+                "key": "X-AUTH-TOKEN",
+                "value": "<TOKEN>"
+              },
+              {
+                "key": "X-HIU-ID",
+                "value": "{{hiuId}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/api/hiecm/scan-gateway/v3/patient/scan-pay/order-status",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "api",
+                "hiecm",
+                "scan-gateway",
+                "v3",
+                "patient",
+                "scan-pay",
+                "order-status"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"queryStatus\": {\n    \"orderNumber\": \"string\",\n    \"abhaAddress\": \"<ABHA_ADDRESS>\",\n    \"openOrderRequestId\": \"0d8bd16b-117c-4d07-9916-109fe3a9ab88\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Check the status of reports. If the notification is not get from HIP then this API will help to check the status on HIU side.\n\n **Header**\n\nAuthorisation will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: Bearer ]\n\nX-AUTH-TOKEN JWT Authentication token which was issued by ABDM after successful validation of user[ Example: Bearer ]\n\nREQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]\n\nTIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]\n\nX-CM-ID consent manager ID[ Example: sbx ]\n\nX-HIU-ID [ EXample: HIU_ID]\n\n **Request Body**\n\n queryStatus which contains the orderNumber and requestId[ Example: { orderNumber: 39413413 abhaAddress: openOrderRequestId: 059fcb69-8ad8-***-a049-62db16c7b5a0 } ]"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Scan and pay details and version update",
+      "item": [
+        {
+          "name": "1. Get the patient scan pay details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "REQUEST-ID",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "TIMESTAMP",
+                "value": "{{$isoTimestamp}}"
+              },
+              {
+                "key": "X-CM-ID",
+                "value": "{{cmId}}"
+              },
+              {
+                "key": "X-AUTH-TOKEN",
+                "value": "<TOKEN>"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/api/hiecm/scan-gateway/v3/patient/scan-pay/details?status=SUCCESS&limit=10&startDate=2024-07-13T07:30:10.186Z&endDate=2025-02-18T08:30:50.189Z&offset=0",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "api",
+                "hiecm",
+                "scan-gateway",
+                "v3",
+                "patient",
+                "scan-pay",
+                "details"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "SUCCESS"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "startDate",
+                  "value": "2024-07-13T07:30:10.186Z"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2025-02-18T08:30:50.189Z"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                }
+              ]
+            },
+            "description": "Retrieve the all the details of the user/patient based on the date ranges.\n\n **Header**\n\nAUTHORIZATION will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: Bearer ]\n\nREQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]\n\nTIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]\n\nX-AUTH-TOKEN JWT Authentication token which was issued by ABDM after successful validation of user[ Example: Bearer ]\n\nX-CM-ID consent manager ID [ Example: sbx ]\n\nstatus [ Example: SUCCESS, CANCELED, PENDING, FAIL, REFUND_INITIATED, REFUND_SUCCESS,ALL ]\n\nlimit [ Example: 10]\n\nstartDate [ Example: 2024-07-13T07:30:10.186Z]\n\nendDate [ Example: 2025-02-18T08:30:50.189Z]\n\noffset [ Example: 0]"
+          }
+        },
+        {
+          "name": "2. Update version to the serviceId",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "REQUEST-ID",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "TIMESTAMP",
+                "value": "{{$isoTimestamp}}"
+              },
+              {
+                "key": "X-CM-ID",
+                "value": "{{cmId}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/api/hiecm/gateway/v3/scanPay/updateVersion",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "api",
+                "hiecm",
+                "gateway",
+                "v3",
+                "scanPay",
+                "updateVersion"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"recordShareEnabled\": true,\n  \"scanPayEnabled\": true,\n  \"scanPayVersion\": \"v2\",\n  \"serviceId\": [\n    \"****_HIP, ***_HIU\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "This is used by the integrators to update the version for the particular service-ID.\n\n **Header**\n\nAuthorisation will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: Bearer ]\n\nREQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]\n\nTIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]\n\nX-CM-ID [ Example: sbx]\n\n **Request Body**\n\nrecordShareEnabled It describes whether the record share is enabled or not.\n\nscanPayEnabled It describes whether the scan pay is enabled or not.\n\nscanPayVersion This is a key value pair which contains the version [ Example: type: v2 / v3]\n\nserviceId This is a key value pair which contains ServiceId[ Example: SERVICE_ID1,SERVICE_ID2 ]"
+          }
+        }
+      ]
+    }
+  ]
+}

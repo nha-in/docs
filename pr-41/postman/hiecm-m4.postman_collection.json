@@ -1,0 +1,3573 @@
+{
+  "info": {
+    "name": "ABDM HIE-CM M4 Registry Integration",
+    "description": "Generated from the ABDM HIE-CM specifications. Import hiecm-sandbox.postman_environment.json beside it and fill in clientId and clientSecret: the collection fetches a gateway session token before a call when it needs one.\n\nFolders follow the order a journey is built in. Callbacks are not included: ABDM sends those to your bridge URL, so receiving them needs a public endpoint, not Postman.\n\nValues ABDM expects encrypted, such as an Aadhaar number or an OTP, are shown as the specification gives them. Encrypt your own values before sending.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Gets a gateway session token when there is none or it has expired.",
+          "if (pm.request.url.getPath().endsWith('/api/hiecm/gateway/v3/sessions')) return;",
+          "const expiry = Number(pm.environment.get('accessTokenExpiry') || 0);",
+          "if (pm.environment.get('accessToken') && Date.now() < expiry) return;",
+          "pm.sendRequest({",
+          "  url: pm.variables.replaceIn('{{gatewayUrl}}/api/hiecm/gateway/v3/sessions'),",
+          "  method: 'POST',",
+          "  header: {",
+          "    'Content-Type': 'application/json',",
+          "    'REQUEST-ID': pm.variables.replaceIn('{{$guid}}'),",
+          "    'TIMESTAMP': new Date().toISOString(),",
+          "    'X-CM-ID': pm.variables.replaceIn('{{cmId}}'),",
+          "  },",
+          "  body: {",
+          "    mode: 'raw',",
+          "    raw: JSON.stringify({",
+          "      clientId: pm.variables.get('clientId'),",
+          "      clientSecret: pm.variables.get('clientSecret'),",
+          "      grantType: 'client_credentials',",
+          "    }),",
+          "  },",
+          "}, (error, response) => {",
+          "  if (error || response.code >= 300) {",
+          "    console.error('Session token request failed', error || response.text());",
+          "    return;",
+          "  }",
+          "  const {accessToken, expiresIn} = response.json();",
+          "  pm.environment.set('accessToken', accessToken);",
+          "  // A minute early, so a token never expires between this check and the call.",
+          "  pm.environment.set('accessTokenExpiry', Date.now() + (expiresIn - 60) * 1000);",
+          "});"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "HPID, registration via Aadhaar",
+      "item": [
+        {
+          "name": "1. Generate Aadhaar link",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/aadhaar/generateLink",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "aadhaar",
+                "generateLink"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"scopes\": [\n    \"nhpr-register\"\n  ],\n  \"source\": \"NHPR\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "2. Submit the is Aadhaar authenticated",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/aadhaar/isAuthenticated",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "aadhaar",
+                "isAuthenticated"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"txnId\": \"259813b1-a339-4482-8df5-16ee45b8dcf2\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "3. Verify OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v2/registration/aadhaar/verifyOTP",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v2",
+                "registration",
+                "aadhaar",
+                "verifyOTP"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"txnId\": \"de4ff682-fcc6-4bcf-a978-0dbb19a288b4\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "4. Submit the demographic auth via mobile",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v2/registration/aadhaar/demographicAuthViaMobile",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v2",
+                "registration",
+                "aadhaar",
+                "demographicAuthViaMobile"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"txnId\": \"de4ff682-fcc6-4bcf-a978-0dbb19a288b4\",\n  \"mobileNumber\": \"JrHfDROoEcsYJ41g2wdkicsI7mT1ATCP347iqwBhWbfaEIgZ03/WHAYvDHRG2WXl4HBNuP2orD+3O75pN0xFhOz4oLXrePAxKTLK8uG5jdeAiGE2lKwOrShq9/gg+BckrQcDYjpMUePRuDau4mqLHa8FdSCQ8npGPY9KCpD2hZkscWNqZR68gRo/EwpY4u32kDzv5i1K/s+A7FNVwXqZS5AK2BadEhG5drSRk7P83eFxJZUlwtsvDK6iipOsM4VtMXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "5. Submit the account exist",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v1/registration/aadhaar/checkHpIdAccountExist",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v1",
+                "registration",
+                "aadhaar",
+                "checkHpIdAccountExist"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"txnId\": \"de4ff682-fcc6-4bcf-a978-0dbb19a288b4\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "6. Get suggesstion",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v1/registration/aadhaar/hpid/suggestion",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v1",
+                "registration",
+                "aadhaar",
+                "hpid",
+                "suggestion"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"txnId\": \"a825f76b-0696-40f3-864c-5a3a5b389a83\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "7. Generate mobile OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v1/registration/aadhaar/generateMobileOTP",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v1",
+                "registration",
+                "aadhaar",
+                "generateMobileOTP"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"mobile\": \"981065XXXX\",\n  \"txnId\": \"de4ff682-fcc6-4bcf-a978-0dbb19a288b4\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "8. Verify mobile OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v1/registration/aadhaar/verifyMobileOTP",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v1",
+                "registration",
+                "aadhaar",
+                "verifyMobileOTP"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"otp\": \"<BASE64 ENCODED STRING>\",\n  \"txnId\": \"de4ff682-fcc6-4bcf-a978-0dbb19a288b4\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "9. Create HPR ID V2",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v2/registration/aadhaar/createHprIdWithPreVerified",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v2",
+                "registration",
+                "aadhaar",
+                "createHprIdWithPreVerified"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idType\": \"hpr_id\",\n  \"domainName\": \"@hpr.abdm\",\n  \"email\": \"<ABHA_ADDRESS>.com\",\n  \"firstName\": \"Ayushman\",\n  \"middleName\": \"Bharat\",\n  \"lastName\": \"Mission\",\n  \"password\": \"Ayushman@143\",\n  \"profilePhoto\": \"<BASE64 ENCODED STRING>\",\n  \"txnId\": \"c3b0c27d-e19d-4244-b8bb-3fa19285054a\",\n  \"hprId\": \"<EMAIL>\",\n  \"sourceType\": \"DRIVING_LICENSE\",\n  \"hpCategoryCode\": 1,\n  \"hpSubCategoryCode\": 1,\n  \"clientId\": \"V4\",\n  \"stateCode\": \"<STATE_CODE>\",\n  \"districtCode\": \"<DISTRICT_CODE>\",\n  \"council\": false,\n  \"role\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "HFR, facility onboarding",
+      "item": [
+        {
+          "name": "1. Get filtered address post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/search/address/filter/deduplicate",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "search",
+                "address",
+                "filter",
+                "deduplicate"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Jethana\",\n  \"address\": \"<ADDRESS>\",\n  \"district\": \"511\",\n  \"subDistrict\": \"5271\",\n  \"village\": \"\",\n  \"geolocation\": \"\",\n  \"facilityId\": \"69765\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "2. Submit the v15Basic facility information",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "x-hprid-auth",
+                "value": "<X_HPRID_AUTH>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v1.5/facility/basic-information",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v1.5",
+                "facility",
+                "basic-information"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"trackingId\": \"\",\n  \"facilityInformation\": {\n    \"facilityName\": \"Sahyadri Hospital\",\n    \"facilityAddressDetails\": {\n      \"country\": \"India\",\n      \"stateLGDCode\": \"24\",\n      \"districtLGDCode\": \"438\",\n      \"subDistrictLGDCode\": \"6512\",\n      \"facilityRegion\": \"U\",\n      \"villageCityTownLGDCode\": \"\",\n      \"addressLine1\": \"townhall, Pune\",\n      \"addressLine2\": \"Pune\",\n      \"pincode\": \"<PINCODE>\",\n      \"latitude\": \"23.068570\",\n      \"longitude\": \"23.068570\"\n    },\n    \"facilityContactInformation\": {\n      \"facilityEmailId\": \"<ABHA_ADDRESS>.com\",\n      \"facilityContactNumber\": \"976243xxxx\",\n      \"websiteLink\": \"nha.abdm.gov.in\",\n      \"facilityLandlineNumber\": \"\",\n      \"facilityStdCode\": \"\"\n    },\n    \"ownershipCode\": \"G\",\n    \"ownershipSubTypeCode\": \"C\",\n    \"ownershipSubTypeCode2\": \"MOHF\",\n    \"systemOfMedicineCode\": \"M,D,UN\",\n    \"typeOfServiceCode\": \"IPD,OPD\",\n    \"facilityTypeCode\": \"5\",\n    \"specialityTypeCode\": \"SINGLE\",\n    \"facilityUploads\": {\n      \"facilityBoardPhoto\": {\n        \"name\": \"\",\n        \"value\": \"\"\n      },\n      \"facilityBuildingPhoto\": {\n        \"name\": \"\",\n        \"value\": \"\"\n      }\n    },\n    \"facilitySubType\": \"47\",\n    \"facilityOperationalStatus\": \"F\",\n    \"timingsOfFacility\": [\n      {\n        \"workingDays\": \"MON\",\n        \"openingHours\": \"9:00 AM - 6:00 PM\"\n      },\n      {\n        \"workingDays\": \"TUE\",\n        \"openingHours\": \"9:00 AM - 4:00 PM\"\n      },\n      {\n        \"workingDays\": \"WED\",\n        \"openingHours\": \"9:00 AM - 6:00 PM\"\n      }\n    ],\n    \"abdmCompliantSoftware\": [\n      {\n        \"existingSoftwares\": [\n          \"\"\n        ],\n        \"anyOther\": \"\"\n      }\n    ]\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "3. Submit the v15Facility additional information",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v1.5/facility/additional-information",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v1.5",
+                "facility",
+                "additional-information"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"trackingId\": \"80266\",\n  \"linkedProgramIds\": {\n    \"nhrrId\": \"1234\",\n    \"nin\": \"1234\",\n    \"abpmjayId\": \"1234\",\n    \"rohiniId\": \"1234\",\n    \"echsId\": \"1234\",\n    \"cghsId\": \"1234\",\n    \"ceaRegistration\": \"1234\",\n    \"stateInsuranceSchemeId\": \"1234\"\n  },\n  \"generalInformation\": {\n    \"hasDialysisCenter\": \"YALL\",\n    \"hasPharmacy\": \"YALL\",\n    \"hasBloodBank\": \"YALL\",\n    \"hasCathLab\": \"YALL\",\n    \"hasDiagnosticLab\": \"YALL\",\n    \"hasImagingCenter\": \"YALL\",\n    \"servicesByImagingCenter\": [\n      {\n        \"service\": \"S36\",\n        \"count\": 7\n      },\n      {\n        \"service\": \"S16\",\n        \"count\": 5\n      },\n      {\n        \"service\": \"S23\",\n        \"count\": 3\n      }\n    ]\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "4. Submit the v15Facility detailed information",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v1.5/facility/detailed-information",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v1.5",
+                "facility",
+                "detailed-information"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"trackingId\": \"80266\",\n  \"specialities\": [\n    {\n      \"systemOfMedicineCode\": \"M\",\n      \"isSpecializationAvalaible\": \"Y\",\n      \"specialities\": [\n        \"S29\",\n        \"S30\",\n        \"S31\"\n      ]\n    },\n    {\n      \"systemOfMedicineCode\": \"D\",\n      \"isSpecializationAvalaible\": \"Y\",\n      \"specialities\": [\n        \"S50\",\n        \"S51\",\n        \"S46\"\n      ]\n    },\n    {\n      \"systemOfMedicineCode\": \"UN\",\n      \"isSpecializationAvalaible\": \"Y\",\n      \"specialities\": [\n        \"S68\",\n        \"S168\",\n        \"S100\"\n      ]\n    }\n  ],\n  \"medicalInfrastructure\": {\n    \"countIPDBedsWithoutOxygen\": 2,\n    \"countIPDBedsWithOxygen\": 3,\n    \"countICUBedsWithVentilators\": 4,\n    \"countICUBedsWithoutVentilators\": 1,\n    \"countHDUBedsWithVentilators\": 5,\n    \"countHDUBedsWithoutVentilators\": 6,\n    \"totalNumberOfVentilators\": 7,\n    \"countDayCareBedsWithoutOxygen\": 8,\n    \"countDayCareBedsWithOxygen\": 9,\n    \"countDentalChairs\": 1,\n    \"totalNumberOfBeds\": 4\n  },\n  \"pharmacyDetails\": {\n    \"isJanAushadhiKendra\": \"Y\",\n    \"janAushadhiKendraId\": \"jan-id\",\n    \"drugLicenseNumber\": \"test1234\",\n    \"pharmacyGstinNumber\": \"testg1234\",\n    \"pharmacistRegistrationNumber\": \"reg1234\"\n  },\n  \"bloodBankDetails\": {\n    \"isFacilityRegisteredInERaktkosh\": \"N\",\n    \"eRaktoshId\": \"Y\",\n    \"bloodBankLicenseNumber\": \"345-test-regno\",\n    \"bloodStorageCenters\": \"Y\",\n    \"storageCentersCount\": 7,\n    \"bloodCollectedPerAnnum\": \"5\",\n    \"bloodRequiredPerAnnum\": \"6\"\n  },\n  \"imagingServices\": [\n    {\n      \"service\": \"S136\",\n      \"count\": 77\n    },\n    {\n      \"service\": \"S139\",\n      \"count\": 99\n    },\n    {\n      \"service\": \"S138\",\n      \"count\": 76\n    }\n  ],\n  \"diagnosticServices\": [\n    \"\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "5. Submit the v15Submit facility details",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "x-hprid-auth",
+                "value": "<X_HPRID_AUTH>"
+              },
+              {
+                "key": "x-hprid-auth-verifier",
+                "value": "<X_HPRID_AUTH_VERIFIER>",
+                "disabled": true
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v1.5/facility/submit-facility",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v1.5",
+                "facility",
+                "submit-facility"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"trackingId\": \"80266\",\n  \"sourceOfInformation\": \"HRP_SUB_1\",\n  \"sourceUniqueID\": \"1234\",\n  \"facilitySuperUser\": \"STATE_SUPER_1\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "HRP bridge services",
+      "item": [
+        {
+          "name": "1. Submit the facility add and update",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v1/bridges/MutipleHRPAddUpdateServices",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v1",
+                "bridges",
+                "MutipleHRPAddUpdateServices"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"facilityId\": \"IN0610090166\",\n  \"facilityName\": \"Singla Eye Center\",\n  \"HRP\": [\n    {\n      \"bridgeId\": \"SBX_00XXXX\",\n      \"hipName\": \"Singla Eye Center\",\n      \"type\": \"HIP\",\n      \"active\": true\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "HFR, master data",
+      "item": [
+        {
+          "name": "1. Get PSU details by ministry",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/getPsuDetailsByMinistry",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "getPsuDetailsByMinistry"
+              ],
+              "query": [
+                {
+                  "key": "ministry",
+                  "value": "",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "2. Get all facility sub type by facility type",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v1.5/facility/fetch-facility-Sub-type",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v1.5",
+                "facility",
+                "fetch-facility-Sub-type"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"facilityTypeCode\": \"2\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "3. Get all facility type by ownership and sys of med",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v1.5/facility/fetch-facility-type",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v1.5",
+                "facility",
+                "fetch-facility-type"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ownershipCode\": \"G\",\n  \"systemOfMedicineCode\": \"M\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "4. Get master data",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v1.5/facility/get-master-data?type=",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v1.5",
+                "facility",
+                "get-master-data"
+              ],
+              "query": [
+                {
+                  "key": "type",
+                  "value": ""
+                }
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "5. Get all master types",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v1.5/facility/get-master-types",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v1.5",
+                "facility",
+                "get-master-types"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "6. Get all sub types by owner ship type and sub type",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v1.5/facility/get-owner-subtype",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v1.5",
+                "facility",
+                "get-owner-subtype"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ownershipCode\": \"P\",\n  \"ownerSubtypeCode\": \"NP\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "7. Get all specialities by system of medicine code",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v1.5/facility/get-specialities",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v1.5",
+                "facility",
+                "get-specialities"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"systemOfMedicineCode\": \"D\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "8. Get all district by state ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v1.5/facility/lgd/districts?stateCode=",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v1.5",
+                "facility",
+                "lgd",
+                "districts"
+              ],
+              "query": [
+                {
+                  "key": "stateCode",
+                  "value": ""
+                }
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "9. Get all states by LGD",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v1.5/facility/lgd/states",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v1.5",
+                "facility",
+                "lgd",
+                "states"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "10. Get all sub district by district code",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v1.5/facility/lgd/subdistricts?districtCode=",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v1.5",
+                "facility",
+                "lgd",
+                "subdistricts"
+              ],
+              "query": [
+                {
+                  "key": "districtCode",
+                  "value": ""
+                }
+              ]
+            },
+            "description": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "HFR, facility search",
+      "item": [
+        {
+          "name": "1. Get facility and infrastructure within radius with filter",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/FacilityManagement/v1.5/facility/bygeoLocation/searchFacilityAndInfrastructureWithinRadiusWithFilter",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "FacilityManagement",
+                "v1.5",
+                "facility",
+                "bygeoLocation",
+                "searchFacilityAndInfrastructureWithinRadiusWithFilter"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"centerLat\": \"<CENTER_LAT>\",\n  \"centerLon\": \"<CENTER_LON>\",\n  \"radiusInKm\": \"<RADIUS_IN_KM>\",\n  \"speciality\": \"<SPECIALITY>\",\n  \"facilityOwnership\": \"<FACILITY_OWNERSHIP>\",\n  \"abdmSoftware\": \"<ABDM_SOFTWARE>\",\n  \"hospitalSpecialityType\": \"<HOSPITAL_SPECIALITY_TYPE>\",\n  \"facilityName\": \"<FACILITY_NAME>\",\n  \"facilityStatus\": \"<FACILITY_STATUS>\",\n  \"som\": \"<SOM>\",\n  \"gender\": \"<GENDER>\",\n  \"doctorName\": \"<DOCTOR_NAME>\",\n  \"doctorSystemOfMedicine\": \"<DOCTOR_SYSTEM_OF_MEDICINE>\",\n  \"languages\": \"<LANGUAGES>\",\n  \"isIcuBedsAvailable\": \"<IS_ICU_BEDS_AVAILABLE>\",\n  \"size\": \"<SIZE>\",\n  \"from\": \"<FROM>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "2. Search facility",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/FacilityManagement/v1.5/facility/search",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "FacilityManagement",
+                "v1.5",
+                "facility",
+                "search"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ownershipCode\": \"P\",\n  \"subDistrictLGDCode\": \"\",\n  \"pincode\": \"\",\n  \"facilityName\": \"hospital\",\n  \"facilityId\": \"\",\n  \"page\": 1,\n  \"resultsPerPage\": 10,\n  \"stateLGDCode\": \"27\",\n  \"districtLGDCode\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "HFR, linkage to the HPR",
+      "item": [
+        {
+          "name": "1. Send OTP to contact",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v1.5/facility/sendOtpToContact",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v1.5",
+                "facility",
+                "sendOtpToContact"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"facilityId\": \"IN2810002702\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "2. Validate OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v1.5/facility/validateOtp",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v1.5",
+                "facility",
+                "validateOtp"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"facilityId\": \"IN2810002702\",\n  \"sourceId\": \"AB-PMJAY\",\n  \"otp\": \"885210\",\n  \"source\": \"AB-PMJAY\",\n  \"transactionId\": \"2ddfc7ec-9a9f-412c-8c50-c2be92da5781\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "HPR, authentication",
+      "item": [
+        {
+          "name": "1. Login via password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/api/v1/auth/authPassword",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "authPassword"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idType\": \"\",\n  \"domainName\": \"\",\n  \"hprId\": \"<HPR_ID>\",\n  \"password\": \"XXXX@992\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "2. Get public certificate",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/api/v1/auth/cert?publicCertificateRequestDto=",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "cert"
+              ],
+              "query": [
+                {
+                  "key": "publicCertificateRequestDto",
+                  "value": ""
+                }
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "3. Verify Aadhaar OTP 1",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/api/v1/auth/confirmWithAadhaarOtp",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "confirmWithAadhaarOtp"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"otp\": \"308709\",\n  \"txnId\": \"de4ff682-fcc6-4bcf-a978-0dbb19a288b4\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "4. Send via Aadhaar OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/api/v1/auth/init",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "init"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idType\": \"\",\n  \"domainName\": \"\",\n  \"authMethod\": \"AADHAAR_OTP\",\n  \"hprId\": \"<HPR_ID>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "5. Send verify OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/api/v2/auth/loginViaMobileSendOTP",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "api",
+                "v2",
+                "auth",
+                "loginViaMobileSendOTP"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"txnId\": \"4c8c4b29-6d7e-4446-8f73-4574d6d14f09\",\n  \"mobile\": \"97624XXXXX\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "HPR, contact verification",
+      "item": [
+        {
+          "name": "1. Generate mobile OTP 2",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/apis/v1/doctors/generate-mobile-otp",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "apis",
+                "v1",
+                "doctors",
+                "generate-mobile-otp"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hpr_token\": \"<JWT TOKEN>\",\n  \"officialMobile\": \"<BASE64 ENCODED STRING>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "2. Send verification email",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/apis/v1/doctors/generate-verification-email",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "apis",
+                "v1",
+                "doctors",
+                "generate-verification-email"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"emailAddress\": \"<ABHA_ADDRESS>.com\",\n  \"otp_type\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "3. Submit the regenerate mobile OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/apis/v1/doctors/regenerate-mobile-otp",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "apis",
+                "v1",
+                "doctors",
+                "regenerate-mobile-otp"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hpr_token\": \"<JWT TOKEN>\",\n  \"officialMobile\": \"PFiI0AQJkAKIdLL6ytdJLKFObqXab9rwTvOEPHflksQBkMzIIb8HMDYUzZfN3AUdefedSbb+B4sPwi72lsaaNRkpXygWRF0GWntEwD/WL80JbXaW9DJkwPpDEzQpMYKKT17iCTp7pQer8337NZofO1D1aYiDfEnA9E1HMTyPCGFjvmbcL32hNqGsgpHKYNh4rHXCo4RwP5UQKWDYI1jLZqbWLp0a9GQu9nC1hyP5IR5LRCASzvhiRfrRk+Y660xuDSCvOKb+uUPcN3ZFA==xxxxxxxx\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "4. Resend verification email",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/apis/v1/doctors/resent-verify-email",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "apis",
+                "v1",
+                "doctors",
+                "resent-verify-email"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"emailAddress\": \"<ABHA_ADDRESS>.com\",\n  \"otp_type\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "5. Verify email OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/apis/v1/doctors/verify-email-otp",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "apis",
+                "v1",
+                "doctors",
+                "verify-email-otp"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hpr_token\": \"<JWT TOKEN>\",\n  \"hpr_id\": \"<HPR_ID>\",\n  \"officialEmail\": \"<ABHA_ADDRESS>.com\",\n  \"emailOtp\": 515999\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "6. Verify mobile OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/apis/v1/doctors/verify-mobile-otp",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "apis",
+                "v1",
+                "doctors",
+                "verify-mobile-otp"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hpr_token\": \"<JWT TOKEN>\",\n  \"txnId\": \"dd392164-0f4a-4894-8d64-1fce027ee033\",\n  \"otp\": \"<BASE64 ENCODED STRING>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "7. Send OTP if doctor verified",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v1/sendOtpIfDoctorVerified",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v1",
+                "sendOtpIfDoctorVerified"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hprId\": \"<HPR_ID>\",\n  \"mobileNumber\": \"<MOBILE_NUMBER>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "8. Verify doctor verification OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v1/verifyDoctorVerificationOtp",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v1",
+                "verifyDoctorVerificationOtp"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"txnId\": \"<TXN_ID>\",\n  \"otp\": \"<OTP>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "HPID, session and role",
+      "item": [
+        {
+          "name": "1. Get admin token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/getManagementToken",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "getManagementToken"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"<USERNAME>\",\n  \"password\": \"<PASSWORD>\",\n  \"resend\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "2. Submit the healdthloginwithmobile",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/healdthloginwithmobile",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "healdthloginwithmobile"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"txnId\": \"<TXN_ID>\",\n  \"issueToken\": \"<ISSUE_TOKEN>\",\n  \"token\": \"<TOKEN>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "3. Update role and category",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/profile/updateRole",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "profile",
+                "updateRole"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Ayushman\",\n  \"lastName\": \"Mission\",\n  \"middleName\": \"Bharat\",\n  \"hprId\": \"<EMAIL>\",\n  \"password\": \"Abdm@143\",\n  \"email\": \"<ABHA_ADDRESS>.com\",\n  \"profilePhoto\": \"<BASE64 ENCODED STRING>\",\n  \"stateCode\": \"7\",\n  \"districtCode\": \"71\",\n  \"subdistrictCode\": \"1\",\n  \"villageCode\": \"<VILLAGE_CODE>\",\n  \"townCode\": \"<TOWN_CODE>\",\n  \"wardCode\": \"<WARD_CODE>\",\n  \"pincode\": 110001,\n  \"address\": \"9th Floor, Tower-l, Jeevan Bharati Building, Connaught Place, New Delhi - 110001\",\n  \"yearOfBirth\": \"2021\",\n  \"monthOfBirth\": \"8\",\n  \"dayOfBirth\": \"15\",\n  \"hpCategoryCode\": \"1\",\n  \"hpSubCategoryCode\": \"1\",\n  \"txnId\": \"5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11\",\n  \"role\": \"<ROLE>\",\n  \"consentToDelete\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "HPID, categories",
+      "item": [
+        {
+          "name": "1. Fetch HPID categories",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/hpid/get/categories",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "hpid",
+                "get",
+                "categories"
+              ],
+              "query": [
+                {
+                  "key": "role",
+                  "value": "",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "2. Fetch HPID sub categories from category",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/hpid/get/subCategories",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "hpid",
+                "get",
+                "subCategories"
+              ],
+              "query": [
+                {
+                  "key": "categoryCode",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "role",
+                  "value": "",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "HPR, profile and password",
+      "item": [
+        {
+          "name": "1. Change password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/password/change/byPassword",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "password",
+                "change",
+                "byPassword"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"newPassword\": \"<BASE64 ENCODED STRING>\",\n  \"oldPassword\": \"<BASE64 ENCODED STRING>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "2. Recover password via Aadhaar",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/password/recover/byAadhaar",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "password",
+                "recover",
+                "byAadhaar"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hprId\": \"<HPR_ID>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "3. Generate mobile OTP 1",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/password/recover/byMobile/sendMobileOTP",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "password",
+                "recover",
+                "byMobile",
+                "sendMobileOTP"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hprId\": \"amol.xxxxxx\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "4. Verify mobile OTP 1",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/password/recover/byMobile/verifyMobileOTP",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "password",
+                "recover",
+                "byMobile",
+                "verifyMobileOTP"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"txnId\": \"7ebad8aa-127b-492f-bd0e-56da716bd39e\",\n  \"otp\": \"<BASE64 ENCODED STRING>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "5. Recover password confirm by Aadhaar",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/password/recover/confirmByAadhaar",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "password",
+                "recover",
+                "confirmByAadhaar"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"otp\": \"<BASE64 ENCODED STRING>\",\n  \"txnId\": \"9b78fdfb-3ba4-4707-8913-63c7c5e3a743\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "6. Reset password and session",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/password/reset/password",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "password",
+                "reset",
+                "password"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"newPassword\": \"<NEW_PASSWORD>\",\n  \"otp\": \"<OTP>\",\n  \"txnId\": \"5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "7. Reset password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/password/resetPassword",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "password",
+                "resetPassword"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"txnId\": \"9b78fdfb-3ba4-4707-8913-63c7c5e3a743\",\n  \"newPassword\": \"<BASE64 ENCODED STRING>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "8. Get account png card",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "X-Token",
+                "value": "<X_TOKEN>",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v1/account/getIdCard",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v1",
+                "account",
+                "getIdCard"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "9. Get user profile by JWT",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v1/account/information",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v1",
+                "account",
+                "information"
+              ],
+              "query": [
+                {
+                  "key": "masked",
+                  "value": "",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "10. Generate Aadhaar OTPFor re KYC",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v1/account/reKYC/generateAadhaarOTP",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v1",
+                "account",
+                "reKYC",
+                "generateAadhaarOTP"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "11. Verify Aadhaar OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v1/account/reKYC/verifyAadhaarOTP",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v1",
+                "account",
+                "reKYC",
+                "verifyAadhaarOTP"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"authType\": \"AADHAAR_OTP\",\n  \"hprId\": \"<HPR_ID>\",\n  \"password\": \"<PASSWORD>\",\n  \"aadhaar\": \"<AADHAAR>\",\n  \"mobileNumber\": \"<MOBILE_NUMBER>\",\n  \"txnId\": \"5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11\",\n  \"otp\": \"<OTP>\",\n  \"resend\": false,\n  \"aadhaarVerifyOtpRequestDto\": {\n    \"aadhaarNumber\": \"<AADHAAR_NUMBER>\",\n    \"otp\": \"<OTP>\",\n    \"faceAuthPid\": \"<FACE_AUTH_PID>\",\n    \"aadhaarLogType\": \"<AADHAAR_LOG_TYPE>\",\n    \"transactionId\": \"<TRANSACTION_ID>\",\n    \"txnId\": \"<TXN_ID>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "12. Verify Aadhaar OTPGet details",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v1/account/reKYC/verifyAadhaarOTPGetDetails",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v1",
+                "account",
+                "reKYC",
+                "verifyAadhaarOTPGetDetails"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"authType\": \"AADHAAR_OTP\",\n  \"hprId\": \"<HPR_ID>\",\n  \"password\": \"<PASSWORD>\",\n  \"aadhaar\": \"<AADHAAR>\",\n  \"mobileNumber\": \"<MOBILE_NUMBER>\",\n  \"txnId\": \"5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11\",\n  \"otp\": \"<OTP>\",\n  \"resend\": false,\n  \"aadhaarVerifyOtpRequestDto\": {\n    \"aadhaarNumber\": \"<AADHAAR_NUMBER>\",\n    \"otp\": \"<OTP>\",\n    \"faceAuthPid\": \"<FACE_AUTH_PID>\",\n    \"aadhaarLogType\": \"<AADHAAR_LOG_TYPE>\",\n    \"transactionId\": \"<TRANSACTION_ID>\",\n    \"txnId\": \"<TXN_ID>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "13. Get user details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v1/account/user-details/:hprId",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v1",
+                "account",
+                "user-details",
+                ":hprId"
+              ],
+              "variable": [
+                {
+                  "key": "hprId",
+                  "value": ""
+                }
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "14. Logout",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v4/auth/logout",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v4",
+                "auth",
+                "logout"
+              ]
+            },
+            "description": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "HPR, recover the HPR ID",
+      "item": [
+        {
+          "name": "1. Submit the retrieval health ID by Aadhaar",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v1/forgot/hprId/aadhaar",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v1",
+                "forgot",
+                "hprId",
+                "aadhaar"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"otp\": \"<BASE64 ENCODED STRING>\",\n  \"txnId\": \"4c115e27-a602-4320-b4cd-ee658539e2f0\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "2. Submit the retrieval health ID by mobile",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v1/forgot/hprId/mobile",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v1",
+                "forgot",
+                "hprId",
+                "mobile"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"txnId\": \"5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11\",\n  \"name\": \"<NAME>\",\n  \"gender\": \"<GENDER>\",\n  \"yearOfBirth\": \"<YEAR_OF_BIRTH>\",\n  \"monthOfBirth\": \"<MONTH_OF_BIRTH>\",\n  \"dayOfBirth\": \"<DAY_OF_BIRTH>\",\n  \"firstName\": \"<FIRST_NAME>\",\n  \"lastName\": \"<LAST_NAME>\",\n  \"middleName\": \"<MIDDLE_NAME>\",\n  \"otp\": \"<OTP>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "3. Generate mobile OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v1/forgot/hprId/mobile/generateOtp",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v1",
+                "forgot",
+                "hprId",
+                "mobile",
+                "generateOtp"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"mobileNumber\": \"VPoaDCJBNyGhJiX+sAh9yRq1WXAfRXkgcE31/0U2DMkH/+nvpspAA4GEmkbideZhKsSLYnFA1lHPkBH7PS6Bg4jz0aSdDAoovnYgVftJ/suP4mzhhg1Hrf7zQFPriHiraNlsIzsDeLl3ckGejNiCmXhfhBBw==xxxxxxxxxxxxx\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "HPR, search",
+      "item": [
+        {
+          "name": "1. Get the exists by HPR ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v1/search/existsByHprId/:hprId",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v1",
+                "search",
+                "existsByHprId",
+                ":hprId"
+              ],
+              "variable": [
+                {
+                  "key": "hprId",
+                  "value": ""
+                }
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "2. Search user by HPR ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v1/search/searchByHprId/:hprId",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v1",
+                "search",
+                "searchByHprId",
+                ":hprId"
+              ],
+              "variable": [
+                {
+                  "key": "hprId",
+                  "value": ""
+                }
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "3. Search user by mobile no",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/v1/search/searchByMobile/:mobile",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "v1",
+                "search",
+                "searchByMobile",
+                ":mobile"
+              ],
+              "variable": [
+                {
+                  "key": "mobile",
+                  "value": ""
+                }
+              ]
+            },
+            "description": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "HPR, professional registration",
+      "item": [
+        {
+          "name": "1. Register professional",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/apis/v1/doctors/register-professional-new",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "apis",
+                "v1",
+                "doctors",
+                "register-professional-new"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hprToken\": \"<JWT TOKEN>\",\n  \"practitioner\": {\n    \"healthProfessionalType\": \"doctor\",\n    \"profilePhoto\": \"<BASE64 ENCODED STRING>\",\n    \"officialMobileCode\": \"\",\n    \"officialMobile\": \"97624xxxxx\",\n    \"officialMobileStatus\": \"\",\n    \"officialEmail\": \"\",\n    \"officialEmailStatus\": \"\",\n    \"visibleProfilePicture\": \"0\",\n    \"profileVisibleToPublic\": \"1\",\n    \"personalInformation\": {\n      \"salutation\": \"1\",\n      \"firstName\": \"Ayushman\",\n      \"middleName\": \"\",\n      \"lastName\": \"Mission\",\n      \"nationality\": \"356\",\n      \"fatherName\": \"\",\n      \"motherName\": \"\",\n      \"spouseName\": \"\",\n      \"gender\": \"M\",\n      \"dateOfBirth\": \"<DOB>\",\n      \"placeOfBirthState\": \"68\",\n      \"district\": \"\",\n      \"subDistrict\": \"\",\n      \"city\": \"\",\n      \"languagesSpoken\": \"1,2\",\n      \"category\": \"C\"\n    },\n    \"addressAsPerKYC\": \"\",\n    \"communicationAddress\": {\n      \"isCommunicationAddressAsPerKYC\": \"false\",\n      \"address\": \"\",\n      \"name\": \"\",\n      \"country\": \"\",\n      \"state\": \"\",\n      \"district\": \"\",\n      \"subDistrict\": \"\",\n      \"city\": \"\",\n      \"pincode\": \"\"\n    },\n    \"contactInformation\": {\n      \"publicMobileNumber\": \"\",\n      \"publicMobileNumberCode\": \"\",\n      \"publicMobileNumberStatus\": \"\",\n      \"landLineNumber\": \"\",\n      \"landLineNumberCode\": \"\",\n      \"publicEmail\": \"\",\n      \"publicEmailStatus\": \"\"\n    },\n    \"registrationAcademic\": {\n      \"category\": \"1\",\n      \"registrationData\": [\n        {\n          \"registeredWithCouncil\": \"47\",\n          \"registrationNumber\": \"REG12032\",\n          \"registrationDate\": \"2024-12-01\",\n          \"registrationCertificate\": {\n            \"fileType\": \"pdf\",\n            \"data\": \"<BASE64 ENCODED STRING>\"\n          },\n          \"isPermanentOrRenewable\": \"Permanent\",\n          \"renewableDueDate\": \"\",\n          \"categoryId\": \"2\",\n          \"isNameDifferentInCertificate\": \"false\",\n          \"proofOfNameChangeCertificate\": \"\",\n          \"qualifications\": [\n            {\n              \"nameOfDegreeOrDiplomaObtained\": \"4074\",\n              \"country\": \"356\",\n              \"state\": \"27\",\n              \"college\": \"1022\",\n              \"university\": \"6372\",\n              \"yearOfAwardingDegreeDiploma\": \"2024\",\n              \"monthOfAwardingDegreeDiploma\": \"February\",\n              \"degreeCertificate\": {\n                \"fileType\": \"pdf\",\n                \"data\": \"<BASE64 ENCODED STRING>\"\n              },\n              \"isNameDifferentInCertificate\": \"false\",\n              \"proofOfNameChangeCertificate\": \"\"\n            },\n            {\n              \"nameOfDegreeOrDiplomaObtained\": \"Graduation\",\n              \"country\": \"United States Of America\",\n              \"state\": \"united\",\n              \"college\": \"united School\",\n              \"university\": \"united University\",\n              \"yearOfAwardingDegreeDiploma\": \"2024\",\n              \"monthOfAwardingDegreeDiploma\": \"February\",\n              \"degreeCertificate\": {\n                \"fileType\": \"pdf\",\n                \"data\": \"<BASE64 ENCODED STRING>\"\n              },\n              \"isNameDifferentInCertificate\": \"true\",\n              \"proofOfNameChangeCertificate\": \"<BASE64 ENCODED STRING>\"\n            }\n          ]\n        }\n      ]\n    },\n    \"currentWorkDetails\": {\n      \"currentlyWorking\": \"0\",\n      \"purposeOfWork\": \"Administrative\",\n      \"chooseWorkStatus\": \"1\",\n      \"reasonForNotWorking\": \"Retired\",\n      \"certificateAttachment\": \"<BASE64 ENCODED STRING>\",\n      \"facilityDeclarationData\": {\n        \"facilityId\": \"IN2710000059\",\n        \"facilityName\": \"\",\n        \"facilityAddress\": \"\",\n        \"facilityPincode\": \"\",\n        \"state\": \"\",\n        \"district\": \"\",\n        \"facilityType\": \"\",\n        \"facilityDepartment\": \"Surgery\",\n        \"facilityDesignation\": \"MD\",\n        \"ministry\": {\n          \"ministry\": \"MinistryMOR ( Mo Railways )\"\n        }\n      }\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "2. Update professional",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/apis/v1/doctors/update-professional-new",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "apis",
+                "v1",
+                "doctors",
+                "update-professional-new"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hprToken\": \"<JWT TOKEN>\",\n  \"practitioner\": {\n    \"healthProfessionalType\": \"doctor\",\n    \"profilePhoto\": \"<BASE64 ENCODED STRING>\",\n    \"officialMobileCode\": \"\",\n    \"officialMobile\": \"97624xxxxx\",\n    \"officialMobileStatus\": \"\",\n    \"officialEmail\": \"\",\n    \"officialEmailStatus\": \"\",\n    \"visibleProfilePicture\": \"0\",\n    \"profileVisibleToPublic\": \"1\",\n    \"personalInformation\": {\n      \"salutation\": \"1\",\n      \"firstName\": \"Ayushman\",\n      \"middleName\": \"\",\n      \"lastName\": \"Mission\",\n      \"nationality\": \"356\",\n      \"fatherName\": \"\",\n      \"motherName\": \"\",\n      \"spouseName\": \"\",\n      \"gender\": \"M\",\n      \"dateOfBirth\": \"<DOB>\",\n      \"placeOfBirthState\": \"68\",\n      \"district\": \"\",\n      \"subDistrict\": \"\",\n      \"city\": \"\",\n      \"languagesSpoken\": \"1,2\",\n      \"category\": \"C\"\n    },\n    \"addressAsPerKYC\": \"\",\n    \"communicationAddress\": {\n      \"isCommunicationAddressAsPerKYC\": \"false\",\n      \"address\": \"\",\n      \"name\": \"\",\n      \"country\": \"\",\n      \"state\": \"\",\n      \"district\": \"\",\n      \"subDistrict\": \"\",\n      \"city\": \"\",\n      \"pincode\": \"\"\n    },\n    \"contactInformation\": {\n      \"publicMobileNumber\": \"\",\n      \"publicMobileNumberCode\": \"\",\n      \"publicMobileNumberStatus\": \"\",\n      \"landLineNumber\": \"\",\n      \"landLineNumberCode\": \"\",\n      \"publicEmail\": \"\",\n      \"publicEmailStatus\": \"\"\n    },\n    \"registrationAcademic\": {\n      \"category\": \"1\",\n      \"registrationData\": [\n        {\n          \"registeredWithCouncil\": \"47\",\n          \"registrationNumber\": \"REG12032\",\n          \"registrationDate\": \"2024-12-01\",\n          \"registrationCertificate\": {\n            \"fileType\": \"pdf\",\n            \"data\": \"<BASE64 ENCODED STRING>\"\n          },\n          \"isPermanentOrRenewable\": \"Permanent\",\n          \"renewableDueDate\": \"\",\n          \"categoryId\": \"2\",\n          \"isNameDifferentInCertificate\": \"false\",\n          \"proofOfNameChangeCertificate\": \"\",\n          \"qualifications\": [\n            {\n              \"nameOfDegreeOrDiplomaObtained\": \"4074\",\n              \"country\": \"356\",\n              \"state\": \"27\",\n              \"college\": \"1022\",\n              \"university\": \"6372\",\n              \"yearOfAwardingDegreeDiploma\": \"2024\",\n              \"monthOfAwardingDegreeDiploma\": \"February\",\n              \"degreeCertificate\": {\n                \"fileType\": \"pdf\",\n                \"data\": \"<BASE64 ENCODED STRING>\"\n              },\n              \"isNameDifferentInCertificate\": \"false\",\n              \"proofOfNameChangeCertificate\": \"\"\n            },\n            {\n              \"nameOfDegreeOrDiplomaObtained\": \"Graduation\",\n              \"country\": \"United States Of America\",\n              \"state\": \"united\",\n              \"college\": \"united School\",\n              \"university\": \"united University\",\n              \"yearOfAwardingDegreeDiploma\": \"2024\",\n              \"monthOfAwardingDegreeDiploma\": \"February\",\n              \"degreeCertificate\": {\n                \"fileType\": \"pdf\",\n                \"data\": \"<BASE64 ENCODED STRING>\"\n              },\n              \"isNameDifferentInCertificate\": \"true\",\n              \"proofOfNameChangeCertificate\": \"<BASE64 ENCODED STRING>\"\n            }\n          ]\n        }\n      ]\n    },\n    \"currentWorkDetails\": {\n      \"currentlyWorking\": \"0\",\n      \"purposeOfWork\": \"Administrative\",\n      \"chooseWorkStatus\": \"1\",\n      \"reasonForNotWorking\": \"Retired\",\n      \"certificateAttachment\": \"<BASE64 ENCODED STRING>\",\n      \"facilityDeclarationData\": {\n        \"facilityId\": \"IN2710000059\",\n        \"facilityName\": \"\",\n        \"facilityAddress\": \"\",\n        \"facilityPincode\": \"\",\n        \"state\": \"\",\n        \"district\": \"\",\n        \"facilityType\": \"\",\n        \"facilityDepartment\": \"Surgery\",\n        \"facilityDesignation\": \"MD\",\n        \"ministry\": {\n          \"ministry\": \"MinistryMOR ( Mo Railways )\"\n        }\n      }\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "3. Fetch documents",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/apis/v1/doctors/fetch-documents-list",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "apis",
+                "v1",
+                "doctors",
+                "fetch-documents-list"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hprid\": \"<HPR_ID>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "4. Upload documents",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/apis/v1/uploads/upload-document",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "apis",
+                "v1",
+                "uploads",
+                "upload-document"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hpr_token\": \"<JWT TOKEN>\",\n  \"document\": [\n    {\n      \"document_id\": 20931,\n      \"document_type\": \"registrationCertificate\",\n      \"fileType\": \"\",\n      \"data\": \"JVBERi0xLjMK\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "5. Get professional info",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/apis/v1/doctors/fetch-professional-info",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "apis",
+                "v1",
+                "doctors",
+                "fetch-professional-info"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"practitioner\": {\n    \"id\": \"<HPR_ID>\",\n    \"name\": \"\",\n    \"contactNumber\": \"976243XXXX\",\n    \"state\": \"UTTAR PRADESH\",\n    \"registrationNumber\": \"\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "HPR, master data",
+      "item": [
+        {
+          "name": "1. Get all affiliated board",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/apis/v1/masters/affiliated-board",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "apis",
+                "v1",
+                "masters",
+                "affiliated-board"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "2. Get affiliated board by state ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/apis/v1/masters/affiliated-board/states/:id",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "apis",
+                "v1",
+                "masters",
+                "affiliated-board",
+                "states",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "3. Get affiliated board by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/apis/v1/masters/affiliated-board/:id",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "apis",
+                "v1",
+                "masters",
+                "affiliated-board",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "4. Get college by state",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/apis/v1/masters/colleges/:id",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "apis",
+                "v1",
+                "masters",
+                "colleges",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "5. Get college by state and medicine ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/apis/v1/masters/colleges/:stateId/:medicineId",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "apis",
+                "v1",
+                "masters",
+                "colleges",
+                ":stateId",
+                ":medicineId"
+              ],
+              "variable": [
+                {
+                  "key": "stateId",
+                  "value": ""
+                },
+                {
+                  "key": "medicineId",
+                  "value": ""
+                }
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "6. Get all countries",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/apis/v1/masters/countries",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "apis",
+                "v1",
+                "masters",
+                "countries"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "7. Get countries by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/apis/v1/masters/countries/:id",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "apis",
+                "v1",
+                "masters",
+                "countries",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "8. List courses",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/apis/v1/masters/courses",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "apis",
+                "v1",
+                "masters",
+                "courses"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"systemOfMedicine\": \"Registered Auxiliary Nurse Midwife(RANM)\",\n  \"hprType\": \"nurse\",\n  \"qualificationCount\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "9. Get all districts",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/apis/v1/masters/district",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "apis",
+                "v1",
+                "masters",
+                "district"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "10. Get districts by state",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/apis/v1/masters/district/:id",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "apis",
+                "v1",
+                "masters",
+                "district",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "11. List government health programmes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/apis/v1/masters/languages",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "apis",
+                "v1",
+                "masters",
+                "languages"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "12. Get pi languages by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/apis/v1/masters/languages/:id",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "apis",
+                "v1",
+                "masters",
+                "languages",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "13. Get all medical council",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/apis/v1/masters/medical-councils",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "apis",
+                "v1",
+                "masters",
+                "medical-councils"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "14. Get medical council by system of medicine name",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/apis/v1/masters/medical-councils/name?medicineName=",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "apis",
+                "v1",
+                "masters",
+                "medical-councils",
+                "name"
+              ],
+              "query": [
+                {
+                  "key": "medicineName",
+                  "value": ""
+                }
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "15. Get all nurse councils",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/apis/v1/masters/nurse-councils",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "apis",
+                "v1",
+                "masters",
+                "nurse-councils"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "16. Get all states",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/apis/v1/masters/states",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "apis",
+                "v1",
+                "masters",
+                "states"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "17. Get status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/apis/v1/masters/states/:id",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "apis",
+                "v1",
+                "masters",
+                "states",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "18. Get all sub districts",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/apis/v1/masters/sub-districts",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "apis",
+                "v1",
+                "masters",
+                "sub-districts"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "19. Get all sub districts 1",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/apis/v1/masters/sub-districts/:id",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "apis",
+                "v1",
+                "masters",
+                "sub-districts",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "20. Get all medical system",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/apis/v1/masters/system-of-medicines",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "apis",
+                "v1",
+                "masters",
+                "system-of-medicines"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "21. List all university",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/apis/v1/masters/universites",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "apis",
+                "v1",
+                "masters",
+                "universites"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "22. Get university by college",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/apis/v1/masters/universites/:id",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "apis",
+                "v1",
+                "masters",
+                "universites",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "23. Get facilities created by HPR ID",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/getFacilityCreatedByHprId",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "getFacilityCreatedByHprId"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "size",
+                  "value": "",
+                  "disabled": true
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hprId\": \"<HPR_ID>\",\n  \"source\": \"<SOURCE>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "24. Get facilities declared by HPR ID",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/getFacilityDeclaredByHprId",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "getFacilityDeclaredByHprId"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hprId\": \"<HPR_ID>\",\n  \"source\": \"<SOURCE>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "25. Update status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/hprWorkDetails/status",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "hprWorkDetails",
+                "status"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"<STATUS>\",\n  \"facilityId\": \"<FACILITY_ID>\",\n  \"professionalHprId\": \"<PROFESSIONAL_HPR_ID>\",\n  \"managerHprId\": \"<MANAGER_HPR_ID>\",\n  \"isHpr\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "26. Link delink existing facility",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/relinkOrDelinkProfessionalFromFacility",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "relinkOrDelinkProfessionalFromFacility"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hprId\": \"<HPR_ID>\",\n  \"facilityId\": \"<FACILITY_ID>\",\n  \"action\": \"<ACTION>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "HPR, facility linkage",
+      "item": [
+        {
+          "name": "1. Fetch professional facility",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/fetchProfessionalFacility",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "fetchProfessionalFacility"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"facilityId\": \"<FACILITY_ID>\",\n  \"page\": 0,\n  \"size\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "2. Create facility suggestion",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{hprUrl}}/hprFacilitySuggestions",
+              "host": [
+                "{{hprUrl}}"
+              ],
+              "path": [
+                "hprFacilitySuggestions"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<NAME>\",\n  \"address\": \"<ADDRESS>\",\n  \"state\": {\n    \"id\": 0,\n    \"name\": \"<NAME>\",\n    \"isoCode\": \"<ISO_CODE>\",\n    \"status\": false,\n    \"countryId\": 0,\n    \"visibleStatus\": false,\n    \"position\": false,\n    \"councilLabel\": \"<COUNCIL_LABEL>\",\n    \"systemOfMedicine\": false\n  },\n  \"district\": {\n    \"id\": 0,\n    \"stateId\": 0,\n    \"districtName\": \"<DISTRICT_NAME>\",\n    \"isoCode\": \"<ISO_CODE>\",\n    \"status\": false\n  },\n  \"pincode\": 0,\n  \"contactNo\": 0,\n  \"email\": \"<EMAIL>\",\n  \"contactName\": \"<CONTACT_NAME>\",\n  \"status\": \"pending\",\n  \"createdBy\": 0,\n  \"updatedBy\": 0,\n  \"facilityId\": 0,\n  \"hprProfileId\": 0,\n  \"facilityName\": \"<FACILITY_NAME>\",\n  \"facilityOwnership\": {\n    \"label\": \"<LABEL>\",\n    \"value\": \"<VALUE>\"\n  },\n  \"systemMedicine\": [\n    {\n      \"id\": \"<ID>\",\n      \"lastUpdateDate\": \"<LAST_UPDATE_DATE>\",\n      \"dropOrder\": 0,\n      \"creationDate\": \"<CREATION_DATE>\",\n      \"activeYN\": \"<ACTIVE_YN>\",\n      \"createdBy\": \"<CREATED_BY>\",\n      \"lastUpdatedUser\": \"<LAST_UPDATED_USER>\",\n      \"nhrrMedicineCode\": \"<NHRR_MEDICINE_CODE>\",\n      \"value\": \"<VALUE>\",\n      \"type\": \"<TYPE>\"\n    }\n  ],\n  \"facilityType\": {\n    \"id\": \"<ID>\",\n    \"facilityType\": \"<FACILITY_TYPE>\",\n    \"facilityTypeNdhm\": \"<FACILITY_TYPE_NDHM>\",\n    \"opd\": \"<OPD>\",\n    \"ipd\": \"<IPD>\",\n    \"dayCare\": \"<DAY_CARE>\",\n    \"other\": \"<OTHER>\",\n    \"activeYN\": \"<ACTIVE_YN>\",\n    \"createdBy\": \"<CREATED_BY>\",\n    \"createdDate\": \"<CREATED_DATE>\",\n    \"lastUpdatedUser\": \"<LAST_UPDATED_USER>\",\n    \"lastUpdatedDate\": \"<LAST_UPDATED_DATE>\",\n    \"linkToForm\": \"<LINK_TO_FORM>\",\n    \"facilityCode\": \"<FACILITY_CODE>\",\n    \"facilityCodeUfid\": \"<FACILITY_CODE_UFID>\",\n    \"facilityOrder\": 0\n  },\n  \"department\": \"<DEPARTMENT>\",\n  \"designation\": \"<DESIGNATION>\",\n  \"ministry\": {\n    \"ministry\": \"<MINISTRY>\"\n  },\n  \"psuName\": \"<PSU_NAME>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      ]
+    }
+  ]
+}
