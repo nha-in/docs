@@ -3,7 +3,7 @@ title: Personal Health Record (PHR) Application
 sidebar_label: PHR application
 sidebar_position: 7
 description: 'The citizen facing application: its role in ABDM, the capabilities each phase adds, and why it is where consent is managed.'
-source: PHR - Sandbox (2).docx, NHA content review of 21 September 2026, catalogue/openapi/hiecm/v3/hiecm-p1.yaml, catalogue/openapi/hiecm/v3/hiecm-p2.yaml, catalogue/openapi/hiecm/v3/hiecm-p3.yaml, catalogue/openapi/hiecm/v3/hiecm-p4.yaml
+source: PHR_Sandbox_Changes_V2.docx, NHA content review of 21 September 2026, catalogue/openapi/hiecm/v3/hiecm-p1.yaml, catalogue/openapi/hiecm/v3/hiecm-p2.yaml, catalogue/openapi/hiecm/v3/hiecm-p3.yaml, catalogue/openapi/hiecm/v3/hiecm-p4.yaml
 sidebar_class_name: sidebar-icon sidebar-icon--smartphone
 ---
 
@@ -33,7 +33,7 @@ marketplace URLs.
 | Integration phase | Functional capabilities |
 | --- | --- |
 | [Phase 1 (P1)](/docs/hiecm/v3/milestones/p1) | Facilitation of ABHA number and address creation, multiple authentication (four mandated login routes). |
-| [Phase 2 (P2)](/docs/hiecm/v3/milestones/p2) | Execution of facility-level Scan & Share, profile management, ABHA card and QR code generation, legacy record discovery, and standardized [Care Context](/docs/hiecm/v3/getting-started/glossary#care-context) linkage. |
+| [Phase 2 (P2)](/docs/hiecm/v3/milestones/p2) | Execution of facility-level Scan and Register, profile management, ABHA card and QR code generation, legacy record discovery, and standardized [Care Context](/docs/hiecm/v3/getting-started/glossary#care-context) linkage. |
 | [Phase 3 (P3)](/docs/hiecm/v3/milestones/p3) | Management of user locker subscriptions and system notifications, execution of consent decisions (approval/rejection), configuration of auto-approval policies, and the secure retrieval and storage of health records. |
 | Health Locker ([M2](/docs/hiecm/v3/milestones/m2)) | Processing direct document uploads necessitates certification as a Health Locker (Health Repository Provider), which requires the successful completion of Milestone 2 (M2) integration. |
 

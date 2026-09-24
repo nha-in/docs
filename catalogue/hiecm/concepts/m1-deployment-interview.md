@@ -48,7 +48,7 @@ Ask these six. Each is a yes or a no.
 |---|---|
 | Are you a government integrator? | The demographic route: one call, no one time password |
 | Does your record hold the patient's mobile at check in? | No route. It removes a screen, because the lookup is submitted from the number you already hold |
-| Are you a registered facility with a callback ABDM can reach? | Scan and share, which then becomes the default counter experience |
+| Are you a registered facility with a callback ABDM can reach? | Scan and register, which then becomes the default counter experience |
 | Is there a fingerprint or iris reader at the desk? | The biometric method |
 | Do patients arrive with the ABHA app? | The face route, as a second method rather than a first |
 | Which record types does your system actually produce? | The bundles worth generating, rather than all seven |
