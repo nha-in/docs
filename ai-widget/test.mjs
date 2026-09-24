@@ -215,7 +215,7 @@ for (const asked of [
 const ctx = {
   docsOrigin: 'https://d.example/',
   mcpUrl: 'https://mcp.example/x',
-  pluginRepo: 'example-org/example-docs',
+  pluginRepo: 'example-org/example-docs', pluginMarketplace: 'example',
 };
 assert.deepEqual(TOOLS.map((t) => t.id), ['skills', 'mcp', 'plugin']);
 assert.deepEqual(AGENTS.map((a) => a.id), ['claude', 'codex', 'cursor', 'other']);
@@ -241,6 +241,9 @@ assert.match(answer({at: 'answer', tool: 'skills', agent: 'other', named: 'Zed'}
   /Zed included/);
 assert.match(answer({at: 'answer', tool: 'plugin', agent: 'claude'}, ctx).text,
   /claude plugin marketplace add example-org\/example-docs/);
+// The install names the marketplace the host passes, not one written into the widget.
+assert.match(answer({at: 'answer', tool: 'plugin', agent: 'claude'}, ctx).text,
+  /claude plugin install abdm-integrators-assistant@example\b/);
 // Codex installs the same plugin from the same repository, since Agent
 // Plugins 1.0. Cursor reads the standard but installs from its own
 // marketplace, so it is told that rather than given a command that fails.
@@ -252,7 +255,7 @@ assert.match(cursorPlugin.text, /not listed in one yet/);
 
 // No MCP address in this build is a sentence, never a placeholder command.
 const locked = answer({at: 'answer', tool: 'mcp', agent: 'claude'},
-  {docsOrigin: 'https://d.example', mcpUrl: null, pluginRepo: 'example-org/example-docs'});
+  {docsOrigin: 'https://d.example', mcpUrl: null, pluginRepo: 'example-org/example-docs', pluginMarketplace: 'example'});
 assert.equal(locked.text.includes('```'), false, 'no command without an address');
 assert.match(locked.text, /does not carry its address/);
 

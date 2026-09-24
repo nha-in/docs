@@ -47,6 +47,7 @@ export default function Omnibox() {
   // backend, and the flow says so rather than printing a placeholder command.
   const mcpUrl = siteConfig.customFields?.mcpUrl as string | null;
   const pluginRepo = siteConfig.customFields?.pluginRepo as string;
+  const pluginMarketplace = siteConfig.customFields?.marketplaceName as string;
   const support = useBaseUrl('/docs/support');
   // Where the panel finds this site's pages: the origin the reader actually
   // has open. The configured url is right in production and wrong on a
@@ -306,6 +307,7 @@ export default function Omnibox() {
         docs-origin={docsOrigin}
         {...(mcpUrl ? {'mcp-url': mcpUrl} : {})}
         plugin-repo={pluginRepo}
+        plugin-marketplace={pluginMarketplace}
         {...(starters ? {starters} : {})}
         {...(shortcut ? {shortcut} : {})}
         support-url={support}
