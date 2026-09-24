@@ -289,10 +289,11 @@ async function sidebarItemsGenerator({defaultSidebarItemsGenerator, ...args}: an
   if (dirName.endsWith('/troubleshooting') || dirName.endsWith('/go-live')) {
     return withoutIndex();
   }
-  // NHCX's reference folder feeds three tabs. In the Docs sidebar it lists
-  // only what is neither FHIR reference nor error codes: those two tabs own
-  // theirs (see SPLIT_REFERENCE in site/sidebars.ts).
-  if (/^nhcx\/[^/]+\/reference$/.test(dirName)) {
+  // A reference folder lists only what is neither FHIR reference nor error
+  // codes, wherever it appears (the API sidebar, or Docs on a split gateway):
+  // those pages are Developer resources, whose sidebar lists them itself
+  // (site/sidebars.ts). One home per page.
+  if (/^[^/]+\/[^/]+\/reference$/.test(dirName)) {
     return items.filter((item: any) => {
       const id = firstDocId(item) ?? '';
       return !id.includes('/reference/fhir/') && !/\/reference\/(error-codes|error-code-guide|pmjay-error-codes)$/.test(id);
