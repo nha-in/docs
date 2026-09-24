@@ -145,6 +145,8 @@ const DETAIL: Record<string, (entry: Entry) => string> = {
     (entry.tests ?? 0) > 0
       ? `${entry.tests} test matrix rows, from offline pins up to a live payer on the sandbox.`
       : 'The test pyramid, from offline pins up to a live payer on the sandbox.',
+  design: () =>
+    'What the journey around the calls has to do, and what a screen is forbidden to claim.',
   generate: () => 'Building NRCES compliant bundle generation into a codebase.',
   audit: () => "Checking an existing FHIR store's output against the same profiles.",
 };
