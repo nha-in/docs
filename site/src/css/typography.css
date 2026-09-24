@@ -99,7 +99,9 @@
   font-weight: 600;
 }
 
-.markdown a:not(.card):not(.button):not(.page-actions__item) {
+/* A ui/button rendered as a link (data-slot="button") carries its own colours;
+   this would paint its text the accent it sits on. */
+.markdown a:not(.card):not(.button):not(.page-actions__item):not([data-slot='button']) {
   color: var(--accent);
   font-weight: 600;
   text-decoration: underline;
@@ -109,7 +111,7 @@
   transition: text-decoration-color 150ms ease, color 150ms ease;
 }
 
-.markdown a:not(.card):not(.button):not(.page-actions__item):hover {
+.markdown a:not(.card):not(.button):not(.page-actions__item):not([data-slot='button']):hover {
   color: var(--accent-hover);
   text-decoration-color: var(--accent);
 }
