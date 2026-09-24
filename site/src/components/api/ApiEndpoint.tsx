@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import CodeBlock from '@theme/CodeBlock';
 import Heading from '@theme/Heading';
+import Link from '@docusaurus/Link';
 import {Check, Copy, Play} from 'lucide-react';
 import {
   Dialog,
@@ -48,8 +49,17 @@ export type Operation = {
     in?: string;
     headerName?: string;
     description: string;
+    /** The header's value as the specification writes it, e.g. "Bearer <access token>". */
+    example?: string;
+    /** What Try it puts in front of the held token for this scheme. */
+    prefix?: string;
   }[];
   headers: Field[];
+  /** NHCX: the fields of the JWE protected header of `payload`. Never HTTP
+      headers, so never in the samples or sent by Try it. */
+  protectedHeader?: Field[];
+  /** The gateway the page belongs to: hiecm, nhcx. */
+  gateway?: string;
   pathParams: Field[];
   queryParams: Field[];
   body: Field[];
@@ -58,6 +68,10 @@ export type Operation = {
     status: string;
     description: string;
     example?: unknown;
+    /** True when `example` was built from the schema, not written in the spec. */
+    synthesised?: boolean;
+    /** The response body's fields, from its schema. */
+    fields?: Field[];
     /** Where to read about this failure, when a page for it exists. */
     help?: {label: string; href: string};
   }[];
@@ -68,7 +82,7 @@ export type Operation = {
   tagDescription?: string;
 };
 
-function FieldRow({field}: {field: Field}) {
+function FieldRow({field, showExample}: {field: Field; showExample?: boolean}) {
   return (
     <div className="api-field">
       <div className="api-field__head">
@@ -86,6 +100,11 @@ function FieldRow({field}: {field: Field}) {
           One of {field.enum.map((value) => (
             <code key={String(value)}>{String(value)}</code>
           ))}
+        </p>
+      ) : null}
+      {showExample && field.example !== undefined && field.example !== '' ? (
+        <p className="api-field__enum">
+          Example <code>{String(field.example)}</code>
         </p>
       ) : null}
     </div>
@@ -136,6 +155,10 @@ export function CopyButton({value}: {value: string}) {
  * An older build carried only `curl`, so a page rendered from a stale JSON
  * still gets its one tab rather than an empty panel.
  */
+// Said once, beside the request, on every NHCX page (NHA review, #40).
+const PLACEHOLDER_NOTE =
+  'Participant codes, ABHA numbers, tokens and payloads in these examples are placeholders, never real credentials or patient data.';
+
 function RequestPanel({operation}: {operation: Operation}) {
   const samples =
     operation.samples?.length
@@ -163,6 +186,9 @@ function RequestPanel({operation}: {operation: Operation}) {
         <CopyButton value={current.code} />
       </div>
       <CodeBlock language={current.language}>{current.code}</CodeBlock>
+      {operation.gateway === 'nhcx' ? (
+        <p className="api-panel__note">{PLACEHOLDER_NOTE}</p>
+      ) : null}
     </div>
   );
 }
@@ -202,13 +228,15 @@ function ResponsePanel({responses}: {responses: Operation['responses']}) {
           <CodeBlock language="json">
             {JSON.stringify(current.example, null, 2)}
           </CodeBlock>
-          {/* NHA publishes field lists rather than captured bodies, so this is
-              built from the schema. Saying so stops a schema default being
-              read as a value the gateway returned. */}
-          <p className="api-panel__note">
-            Generated from the schema. The values are placeholders, not a
-            captured response.
-          </p>
+          {/* Only an example built from the schema says so. One the
+              specification wrote out is shown as it is, without a note that
+              would call it a placeholder. */}
+          {current.synthesised ? (
+            <p className="api-panel__note">
+              Generated from the response schema listed under Responses. The
+              values are placeholders, not a captured response.
+            </p>
+          ) : null}
         </>
       ) : (
         <p className="api-panel__empty">{current.description}</p>
@@ -284,7 +312,9 @@ export default function ApiEndpoint({operation}: {operation: Operation}) {
                   type: scheme.scheme === 'bearer' ? 'bearer token' : scheme.type,
                   required: true,
                   description: scheme.description,
+                  example: scheme.example,
                 }}
+                showExample
               />
             ))}
           </Section>
@@ -314,6 +344,26 @@ export default function ApiEndpoint({operation}: {operation: Operation}) {
           </Section>
         ) : null}
 
+        {operation.protectedHeader?.length ? (
+          <Section title="Protected header">
+            <p className="api-section__lede">
+              These fields go in the JWE protected header of <code>payload</code>,
+              not as HTTP headers.{' '}
+              <Link to="/docs/nhcx/v1/getting-started/building-and-sending-a-jwe">
+                Building and sending a JWE
+              </Link>{' '}
+              shows how to prepare and encrypt the payload, and{' '}
+              <Link to="/docs/nhcx/v1/getting-started/receiving-a-callback">
+                Receiving a callback
+              </Link>{' '}
+              how to decrypt one.
+            </p>
+            {operation.protectedHeader.map((field) => (
+              <FieldRow key={field.name} field={field} showExample />
+            ))}
+          </Section>
+        ) : null}
+
         {operation.body.length && !nhaBody ? (
           <Section title="Body">
             {operation.body.map((field) => (
@@ -339,6 +389,13 @@ export default function ApiEndpoint({operation}: {operation: Operation}) {
                   <p className="api-field__help">
                     <a href={response.help.href}>{response.help.label}</a>
                   </p>
+                ) : null}
+                {response.fields?.length ? (
+                  <div className="api-response-fields">
+                    {response.fields.map((field) => (
+                      <FieldRow key={field.name} field={field} />
+                    ))}
+                  </div>
                 ) : null}
               </div>
             ))}

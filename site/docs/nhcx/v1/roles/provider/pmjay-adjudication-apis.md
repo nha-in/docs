@@ -66,7 +66,7 @@ curl --location --request POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/nhcxpaye
   }'
 ```
 
-[Adjudicator: role for a case in the API reference](/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-pmjay-sbxhcx-nhcxpayerservice-v1-get-user-role)
+[Adjudicator: get the user role for a case in the API reference](/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-pmjay-sbxhcx-nhcxpayerservice-v1-get-user-role)
 
 ```json
 { "currentuserrole": "PPD-Trust", "errormessage": null }
@@ -173,12 +173,22 @@ fresh every time.
 
 ## What it refuses, and what those refusals mean
 
-| Message | What it means |
-| :---- | :---- |
-| `No Data found with the caseid <id>. Please use the current active case id.` | You asked with the hospital's claim number instead of the scheme's case id |
-| `Event Meta Log not found for correlationId` | The exchange has not finished delivering the request you are acting on. Try again shortly |
-| `Case not found for caseId` | The case is mid-filing. Try again shortly |
-| An action refused for the current role | Read the role again. It has moved, or it never was what you assumed |
+- **`No Data found with the caseid <id>. Please use the current active case id.`**
+
+  You asked with the hospital's claim number instead of the scheme's case id.
+
+- **`Event Meta Log not found for correlationId`**
+
+  The exchange has not finished delivering the request you are acting on. Try
+  again shortly.
+
+- **`Case not found for caseId`**
+
+  The case is mid-filing. Try again shortly.
+
+- **An action refused for the current role**
+
+  Read the role again. It has moved, or it never was what you assumed.
 
 The first is a modelling error and needs a fix. The second and third are timing
 and are safely retried.

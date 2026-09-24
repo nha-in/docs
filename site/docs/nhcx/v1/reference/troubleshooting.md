@@ -34,10 +34,10 @@ passed, which is why a scheme-rule refusal is good news about your bundle.
 
 | What you see | Layer | Most likely cause | What to do |
 | :---- | :---- | :---- | :---- |
-| `401` on the sessions call | 1 | Wrong client ID or secret, or Milestone 1 incomplete | Check the credentials against onboarding |
+| `401` on the sessions call | 1 | Wrong client ID or secret | Check the credentials against onboarding |
 | `401` naming a header on the sessions call | 1 | `REQUEST-ID` reused or absent, `TIMESTAMP` stale or malformed, `X-CM-ID` missing | Generate a fresh UUID per call; take the time from the system clock |
 | `401 Sender is not authorized to execute the operation` | 1 | Token expired | Fetch a new token and retry once. Never retry with the same token |
-| `401` immediately after a fresh token | 1 | `Bearer ` prefix missing, or the token sent on the wrong header name | Send `bearer_auth: Bearer <token>`, and `Authorization` alongside it |
+| `401` immediately after a fresh token | 1 | `Bearer ` prefix missing, or the token sent on the wrong header name | Send `bearer_auth: Bearer <token>`. NHCX reads `bearer_auth`, not `Authorization` |
 | `401` on policy link or de-link only | 1 | The client ID calling is not the one that created the participant | Run the linking job under the credentials that created the record |
 | `400` on a use-case call | 2 | Envelope failed validation | Check every `x-hcx-` field against Envelope Fields |
 | `NHCX-1005` invalid request header | 2 | A header missing, malformed or of the wrong type | As above |

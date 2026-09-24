@@ -25,7 +25,7 @@ Make your first three National Health Claims Exchange (NHCX) calls with nothing 
 - A terminal with `curl`, and a way to generate a universally unique identifier (UUID).
 - A clock synchronised with NTP, because the session call carries the current time.
 
-## 1. Get a session token
+## Get a session token
 
 ```bash
 curl --location --request POST 'https://dev.abdm.gov.in/api/hiecm/gateway/v3/sessions' \
@@ -48,7 +48,7 @@ curl --location --request POST 'https://dev.abdm.gov.in/api/hiecm/gateway/v3/ses
 
 You receive HTTP `200` with a non-empty `accessToken` and `expiresIn` set to `1200`. The token lasts 1200 seconds (20 minutes) from the moment it arrives. Keep it for the next two steps.
 
-## 2. Look up the dummy payer
+## Look up the dummy payer
 
 ```bash
 curl --location --request POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/participant/search' \
@@ -67,7 +67,7 @@ curl --location --request POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/particip
 
 You receive HTTP `200` with a `participants` array. Its entry carries the code you sent, its roles and its status. A participant is ready to receive messages when its status is `Active`, and its `endpoint_url` and `encryption_cert` are filled.
 
-## 3. Fetch its certificate
+## Fetch its certificate
 
 ```bash
 curl --location --request POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/fetch/certs' \

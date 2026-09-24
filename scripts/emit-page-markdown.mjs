@@ -250,6 +250,19 @@ export function renderOperationMarkdown(op) {
     })),
   );
   fieldSection(lines, 'Headers', op.headers);
+  // NHCX sends these inside the JWE, not as HTTP headers, so they get their
+  // own section rather than joining Headers, where a reader would put them
+  // on the wire.
+  if (op.protectedHeader?.length) {
+    lines.push(
+      '## Protected header',
+      '',
+      'These fields go in the JWE protected header of `payload`, not as HTTP headers.',
+      '',
+      ...op.protectedHeader.map(fieldLine),
+      '',
+    );
+  }
   fieldSection(lines, 'Path parameters', op.pathParams);
   fieldSection(lines, 'Query parameters', op.queryParams);
   fieldSection(lines, 'Body', op.body);
@@ -260,6 +273,7 @@ export function renderOperationMarkdown(op) {
       const description = (response.description ?? '').replace(/\s*\n\s*/g, ' ').trim();
       lines.push(`- \`${response.status}\`${description ? `: ${description}` : ''}`);
       if (response.help) lines.push(`  See ${response.help.label}: ${response.help.href}`);
+      for (const field of response.fields ?? []) lines.push(`  ${fieldLine(field)}`);
     }
     lines.push('');
     // A worked example beats a schema for an agent writing a parser, so the
@@ -276,7 +290,9 @@ export function renderOperationMarkdown(op) {
       const example = exampleFor(shown.example);
       if (example) {
         lines.push(
-          `Shape of the ${shown.status} response, generated from the schema. The values are placeholders, not a captured response:`,
+          shown.synthesised === false
+            ? `Example ${shown.status} response. The values are placeholders:`
+            : `Shape of the ${shown.status} response, generated from the schema. The values are placeholders, not a captured response:`,
           '',
           '```json',
           example,

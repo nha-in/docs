@@ -114,7 +114,6 @@ curl -X POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/dummyhcxpayer/paymentNotic
   -H 'Accept: application/json' \
   -H 'Content-Type: application/json' \
   -H 'bearer_auth: Bearer <ACCESS_TOKEN_FROM_GET_SESSION>' \
-  -H 'Authorization: Bearer <ACCESS_TOKEN_FROM_GET_SESSION>' \
   -d '{"providerId": "<YOUR_PARTICIPANT_CODE>", "claimNumber": "<CLAIM_NUMBER_FROM_USE_CASE_9>"}'
 ```
 
@@ -136,7 +135,6 @@ curl -X POST 'https://apisbx.abdm.gov.in/hcx/v1/paymentnotice/on_request' \
   -H 'Accept: application/json' \
   -H 'Content-Type: application/json' \
   -H 'bearer_auth: Bearer <ACCESS_TOKEN_FROM_GET_SESSION>' \
-  -H 'Authorization: Bearer <ACCESS_TOKEN_FROM_GET_SESSION>' \
   -d '{"type": "JWEPayload", "payload": "<JWE_COMPACT_STRING>"}'
 ```
 

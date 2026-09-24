@@ -583,7 +583,7 @@ components:
     bearerAuth:
       type: http
       scheme: bearer
-      description: "On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value."
+      description: "The biometric calls go to the ABDM gateway, not to NHCX, so they carry the ABDM session token on `Authorization` as `Bearer <token>`. NHCX's own calls use `bearer_auth` instead."
   parameters:
     Process:
       name: process

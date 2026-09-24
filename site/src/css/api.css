@@ -328,6 +328,26 @@
   margin-right: 0.25rem;
 }
 
+/* The sentence that opens a section, such as Protected header saying its
+   fields travel inside the JWE rather than as HTTP headers. */
+.api-page .api-section__lede {
+  margin: 0 0 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--text-body);
+}
+
+/* A response's body fields, set in under the status they belong to. */
+.api-response-fields {
+  margin-top: 0.5rem;
+  padding-left: 0.875rem;
+  border-left: 1px solid var(--border);
+}
+
+.api-response-fields .api-field {
+  padding: 0.625rem 0;
+}
+
 /* ---------- side panels ---------- */
 
 .api-panel {
@@ -413,7 +433,7 @@
    value the gateway returned. Quieter than the block it annotates. */
 .api-panel__note {
   margin: 0;
-  padding: 0 0.875rem 0.75rem;
+  padding: 0.75rem 0.875rem;
   font-size: 0.75rem;
   line-height: 1.5;
   color: var(--text-muted);

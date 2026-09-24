@@ -107,7 +107,7 @@ graph TD
 |---|---|---|
 | Coverage eligibility request | `CoverageEligibilityRequest` | Eligibility checks |
 | Coverage eligibility response | `CoverageEligibilityResponse` | Eligibility answers |
-| Claim | `Claim`, with `use` of `predetermination`, `preauthorization` or `claim` | Predetermination, preauthorisation, claim |
+| Claim | `Claim`, with `use` of `preauthorization` or `claim` | Preauthorisation, claim |
 | Claim response | `ClaimResponse` | Every decision on a claim bundle |
 | Task | `Task` | Communication, payment notice, search, reprocess, insurance plan request |
 | Insurance plan | `InsurancePlan` | The payer's plan |

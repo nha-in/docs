@@ -56,7 +56,7 @@ related:
 
 A [payer](../glossary/payer.md) calls this to link a beneficiary's [ABHA number](../../shared/glossary/abha-number.md) and member id to the products the beneficiary holds. Hospitals then find the policy with [`/participant/get/policies`](participant-get-policies.md). Without a link, a hospital's lookup returns nothing and the patient cannot be processed as cashless on [NHCX](../../shared/glossary/nhcx.md).
 
-Link ABHA with Policy is use case 1 of the payer [sandbox exit](../glossary/sandbox-exit.md). Call this path. [`/V2/participant/link/abha/policy`](v2-participant-link-abha-policy.md) takes the same body. See [policy linking](../concepts/policy-linking.md).
+Link ABHA with Policy is use case 1 of the payer [sandbox exit](../glossary/sandbox-exit.md). Call this path. [`/v2/participant/link/abha/policy`](v2-participant-link-abha-policy.md) takes the same body. See [policy linking](../concepts/policy-linking.md).
 
 ## Before you start
 

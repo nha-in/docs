@@ -83,6 +83,14 @@ export function caseTerms(text, vocab = acronyms()) {
 // the word ("the timestamp of the request"), not the header, and stay so.
 const PLAIN_WORDS = new Set(['TIMESTAMP']);
 
+// Where a term may not start or end. Never inside a longer word or a route,
+// and never inside a hostname: a dot joined to a letter on either side makes
+// `apisbx.abdm.gov.in` one token, so its `abdm` stays as the address writes it.
+// A full stop that ends a sentence is followed by a space, so "ABDM." still
+// cases.
+const NOT_AFTER = '(?<![A-Za-z0-9/])(?<![A-Za-z0-9]\\.)';
+const NOT_BEFORE = '(?![A-Za-z0-9/])(?!\\.[A-Za-z0-9])';
+
 function caseProse(text, vocab) {
   let out = text;
   for (const [pattern, joined] of SPLIT) out = out.replace(pattern, joined);
@@ -90,12 +98,12 @@ function caseProse(text, vocab) {
     // Hyphens and spaces inside a term match either. A term never matches
     // inside a longer word, so "idempotency" keeps its lowercase id.
     const pattern = term.replace(/[-\s]/g, '[-\\s]');
-    out = out.replace(new RegExp(`(?<![A-Za-z0-9/])${pattern}(?![A-Za-z0-9/])`, 'gi'), (m) =>
+    out = out.replace(new RegExp(`${NOT_AFTER}${pattern}${NOT_BEFORE}`, 'gi'), (m) =>
       PLAIN_WORDS.has(term) && m === m.toLowerCase() ? m : term,
     );
   }
   for (const [lower, proper] of Object.entries(PROPER)) {
-    out = out.replace(new RegExp(`(?<![A-Za-z0-9/])${lower}(?![A-Za-z0-9/])`, 'gi'), proper);
+    out = out.replace(new RegExp(`${NOT_AFTER}${lower}${NOT_BEFORE}`, 'gi'), proper);
   }
   return out;
 }

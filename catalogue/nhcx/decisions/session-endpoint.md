@@ -70,7 +70,7 @@ Put token acquisition behind one client in your code. Make its address, body for
 
 ## Before you start
 
-- You hold a client ID and secret. The [Milestone 1](../../shared/glossary/m1.md) credentials work here; no separate credentials are issued. See [onboard as a participant in the NHCX sandbox](../flows/sandbox-onboarding.md).
+- You hold the client ID and secret you received when you registered on the ABDM [sandbox](../../shared/glossary/sandbox.md), `ABDM_CLIENT_ID` and `ABDM_CLIENT_SECRET`. No separate NHCX credentials are issued. See [onboard as a participant in the NHCX sandbox](../flows/sandbox-onboarding.md).
 - You know which environment you are calling. See [environments and base URLs](../sandbox/environments-and-base-urls.md).
 - You have read [the session token every NHCX call carries](../concepts/session-token.md).
 
@@ -86,7 +86,7 @@ Put token acquisition behind one client in your code. Make its address, body for
 
 The same gateway call is also published at `/gateway/v0.5/sessions`, taking `clientId` and `clientSecret`. Point new builds at the v3 address, which requires `grantType`.
 
-The default is the gateway sessions call at the v3 address. It is the session address in the sandbox base URL list. It takes the credentials you already hold from Milestone 1. One token from it serves every NHCX call.
+The default is the gateway sessions call at the v3 address. It is the session address in the sandbox base URL list. It takes the sandbox client ID and secret you already hold. One token from it serves every NHCX call.
 
 Whichever address you configure, these rules hold:
 
@@ -94,7 +94,7 @@ Whichever address you configure, these rules hold:
 2. The token lasts 1200 seconds (20 minutes) from either call. The response states it as `expiresIn` or `expires_in`.
 3. Store the token with the time you received it. Fetch a new one before the 20 minutes run out.
 4. On a `401`, fetch a new token and retry that call once. A second `401` means the credentials are wrong or revoked: stop and alert.
-5. Send the token as `Bearer <ACCESS_TOKEN_FROM_SESSION_TOKEN>` in both the `bearer_auth` and `Authorization` headers.
+5. Send the token as `Bearer <ACCESS_TOKEN_FROM_SESSION_TOKEN>` in the `bearer_auth` header.
 6. Never log the token or the client secret.
 
 ## How you know it worked

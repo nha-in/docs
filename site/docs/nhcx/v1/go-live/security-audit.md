@@ -31,21 +31,21 @@ Every National Health Claims Exchange (NHCX) participant passes the functional a
 | WASA security audit | ABDM Milestone 1 production access, which NHCX production builds on. Under [PMJAY](/docs/nhcx/v1/getting-started/glossary#organisations-and-programmes) it is also on the sandbox exit list | Clearance for ABDM production access |
 | STQC or CERT-In review | When NHCX policy requires it | An additional security clearance |
 
-## 1. Pass the security tests for your role
+## Pass the security tests for your role
 
 Run the security tests and flows that apply to your role alongside the functional use cases. Submit your test results for review. Include how your application uses and interacts with the exchange APIs.
 
-## 2. Complete the WASA audit
+## Complete the WASA audit
 
 Milestone 1 production credentials follow Milestone 1 functional testing, the WASA security audit and the [Health Tech Committee (HTC)](/docs/nhcx/v1/getting-started/glossary#identity-and-registration) demo. For a hospital, the provider role is then assigned to that Milestone 1 production client ID. The same client ID gives you NHCX production access, so the audit comes before NHCX production.
 
 Under PMJAY, the sandbox exit adds the PMJAY team demo, the WASA audit and the NHCX sandbox exit form. [PMJAY on NHCX](/docs/nhcx/v1/concepts/pmjay-on-nhcx) has the scheme's full order.
 
-## 3. Plan for STQC or CERT-In review
+## Plan for STQC or CERT-In review
 
 Sandbox certification can require additional security testing, such as an STQC or CERT-In review. Plan for it until your onboarding confirms whether it applies. Request your demos and bundle review by email to `hcx.integration@nha.gov.in`.
 
-## 4. Keep the certificates for production onboarding
+## Keep the certificates for production onboarding
 
 On approval, the sandbox issues a completion certificate, valid for a configured period. When you apply for production, a final approval reviews it. You share the functional and security testing certificates issued in the sandbox, and production credentials follow.
 

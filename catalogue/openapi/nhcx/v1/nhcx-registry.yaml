@@ -9,13 +9,12 @@ info:
   x-portal:
     module: registry
     label: Participant registry
-    position: 10
+    position: 2
   title: NHCX participant registry
   summary: >-
-    The participant service holds the registry: who is on the exchange, their certificates and
-    callback addresses, and the policies linked to a beneficiary.
+    The participant service holds the registry: who is on the exchange, their certificates and callback addresses, and the policies linked to a beneficiary.
   description: |-
-    The Participant registry calls on the National Health Claims Exchange (NHCX): 23 operations.
+    The Participant registry calls on the National Health Claims Exchange (NHCX): 21 operations.
 
     Every NHCX API call, whether a registry lookup, a certificate fetch or a claim submission, is rejected unless it carries a valid Bearer token, so this is the first call any integration makes and the first thing to check when a working integration starts failing.
 
@@ -125,8 +124,8 @@ paths:
                   type: string
             example:
               _contentType: application/x-www-form-urlencoded
-              client_id: <NHCX_CLIENT_ID>
-              client_secret: <NHCX_CLIENT_SECRET>
+              client_id: <ABDM_CLIENT_ID>
+              client_secret: <ABDM_CLIENT_SECRET>
               grant_type: client_credentials
       responses:
         "200":
@@ -153,9 +152,12 @@ paths:
       x-abdm-use-case: Participant registry
       tags:
         - Participant registry
+      servers:
+        - url: https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice
+          description: Sandbox, Participant service. This call is for the sandbox.
       summary: Participant update (v1)
       description: |-
-        Updates a participant's registry record; participant_code and roles are mandatory, every other field (certificate, endpoint, contacts, status) is optional.
+        Sandbox call. Updates a participant's registry record; participant_code and roles are mandatory, every other field (certificate, endpoint, contacts, status) is optional.
 
         ### Business purpose
 
@@ -163,7 +165,7 @@ paths:
 
         ### When to use
 
-        Use it after registration whenever a detail of your participant record must change. For a certificate change alone, `/v2/update/cert` is simpler.
+        Use it in the sandbox, after registration, whenever a detail of your participant record must change. The sandbox address is `https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/participant/update`. In production, use `/v2/participant/update` followed by `/update/validate` to change the certificate or the callback URL. For a certificate change alone, `/v2/update/cert` is simpler.
 
         ### Preconditions
 
@@ -198,6 +200,7 @@ paths:
         Chapter [Your certificate](/docs/nhcx/v1/getting-started/your-certificate) of the NHCX integration specification.
       parameters:
         - $ref: "#/components/parameters/BearerAuth"
+        - $ref: "#/components/parameters/Accept"
       requestBody:
         required: true
         content:
@@ -264,9 +267,12 @@ paths:
       x-abdm-use-case: Participant registry
       tags:
         - Participant registry
+      servers:
+        - url: https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice
+          description: Production, Participant service. This call is for production.
       summary: Participant certificate and bridge update (v2)
       description: |-
-        Stages a change to a participant encryption certificate and/or endpoint URL; returns a transactionid for passcode confirmation via /update/validate.
+        Production call. Stages a change to a participant encryption certificate and/or endpoint URL; returns a transactionid for passcode confirmation via /update/validate.
 
         ### Business purpose
 
@@ -274,7 +280,7 @@ paths:
 
         ### When to use
 
-        Use it right after your participant is confirmed, to upload your certificate and callback URL. Use it again whenever either changes, then confirm with `/update/validate` within 24 hours.
+        Use it in production, right after your participant is confirmed, to upload your certificate and callback URL. Use it again whenever either changes, then confirm with `/update/validate` within 24 hours. The production address is `https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice/v2/participant/update`. In the sandbox, use `/participant/update`.
 
         ### Preconditions
 
@@ -312,6 +318,7 @@ paths:
         Chapter [Your certificate](/docs/nhcx/v1/getting-started/your-certificate) of the NHCX integration specification.
       parameters:
         - $ref: "#/components/parameters/BearerAuth"
+        - $ref: "#/components/parameters/Accept"
       requestBody:
         required: true
         content:
@@ -399,6 +406,7 @@ paths:
         Chapter [Creating and updating a participant](/docs/nhcx/v1/getting-started/creating-and-updating-a-participant) of the NHCX integration specification.
       parameters:
         - $ref: "#/components/parameters/BearerAuth"
+        - $ref: "#/components/parameters/Accept"
       requestBody:
         required: true
         content:
@@ -409,7 +417,7 @@ paths:
                 participant_code:
                   type: string
             example:
-              participant_code: 1518@hcx
+              participant_code: <payer participant code>
       responses:
         "200":
           description: "HTTP 200 with ParticipantSearchResponse: timestamp (Unix timestamp when the request is sent) and participants, an array of full participant records with participant_code, linked_registry_codes, participant_name, scheme_code, roles, address, primaryEmail, additionalEmail, phone, primaryMobile, additionalMobile, status, signing_cert_path, encryption_cert, endpoint_url and payment_details."
@@ -454,7 +462,7 @@ paths:
               example:
                 timestamp: 1716204567358
                 participants:
-                  - participant_code: 1518@hcx
+                  - participant_code: <payer participant code>
                     participant_name: Demo Insurance Company
                     linked_registry_codes:
                       - 125@payer
@@ -476,7 +484,7 @@ paths:
         - Participant registry
       summary: Participant details (v2 search)
       description: |-
-        V2 variant of participant search: takes participant_code and returns the matching full registry records.
+        v2 variant of participant search: takes participant_code and returns the matching full registry records.
 
         ### Business purpose
 
@@ -518,6 +526,7 @@ paths:
         Chapter [Creating and updating a participant](/docs/nhcx/v1/getting-started/creating-and-updating-a-participant) of the NHCX integration specification.
       parameters:
         - $ref: "#/components/parameters/BearerAuth"
+        - $ref: "#/components/parameters/Accept"
       requestBody:
         required: true
         content:
@@ -635,6 +644,7 @@ paths:
         Chapter [Creating and updating a participant](/docs/nhcx/v1/getting-started/creating-and-updating-a-participant) of the NHCX integration specification.
       parameters:
         - $ref: "#/components/parameters/BearerAuth"
+        - $ref: "#/components/parameters/Accept"
       requestBody:
         required: true
         content:
@@ -682,7 +692,7 @@ paths:
                     participantname: NHCX Dummy Payer
                     address: New Delhi
                     state: Delhi
-                  - participantcode: 1518@hcx
+                  - participantcode: <payer participant code>
                     participantname: Demo Insurance Company
                     address: Bengaluru
                     state: Karnataka
@@ -732,13 +742,14 @@ paths:
 
         ### Related scenario
 
-        A hospital is about to send its first pre-authorisation to payer 1518@hcx. The engine checks its certificate cache, finds no entry, and calls /fetch/certs with participantid 1518@hcx and a Bearer token. The response is a PEM X.509 certificate, which is parsed and cached for 24 hours. The engine builds the JWE protected header with x-hcx-sender_code, x-hcx-recipient_code 1518@hcx and the other x-hcx headers, encrypts the FHIR bundle with RSA-OAEP-256 and A256GCM using the fetched key, and POSTs to /v1/preauth/submit. Later that week the payer rotates its certificate; a PAYR-1001 on the next submission triggers eviction and a fresh fetch.
+        A hospital is about to send its first pre-authorisation to a payer. The engine checks its certificate cache, finds no entry, and calls /fetch/certs with the payer's participant code and a Bearer token. The response is a PEM X.509 certificate, which is parsed and cached for 24 hours. The engine builds the JWE protected header with x-hcx-sender_code, x-hcx-recipient_code set to that code and the other x-hcx headers, encrypts the FHIR bundle with RSA-OAEP-256 and A256GCM using the fetched key, and POSTs to /v1/preauth/submit. Later that week the payer rotates its certificate; a PAYR-1001 on the next submission triggers eviction and a fresh fetch.
 
         ### Specification
 
         Chapter [Finding participants and policies](/docs/nhcx/v1/getting-started/finding-participants-and-policies) of the NHCX integration specification.
       parameters:
         - $ref: "#/components/parameters/BearerAuth"
+        - $ref: "#/components/parameters/Accept"
       requestBody:
         required: true
         content:
@@ -749,7 +760,7 @@ paths:
                 participantid:
                   type: string
             example:
-              participantid: 1518@hcx
+              participantid: <payer participant code>
       responses:
         "200":
           description: HTTP 200 with a string body containing a PEM-encoded X.509 certificate or an SPKI public key, as uploaded by that participant.
@@ -809,13 +820,14 @@ paths:
 
         ### Related scenario
 
-        An integrator building a registry inspection tool for a TPA wants to show, for each payer, where the registry references its certificate as well as the certificate itself. The tool obtains a Bearer token, calls /fetch/certs/path with participantid 1518@hcx and displays the returned path string, then calls /fetch/certs for the PEM used for actual encryption. The production claims engine itself only uses /fetch/certs, as the Integration Handbook prescribes, before each /v1/claim/submit.
+        An integrator building a registry inspection tool for a TPA wants to show, for each payer, where the registry references its certificate as well as the certificate itself. The tool obtains a Bearer token, calls /fetch/certs/path with the payer's participant code and displays the returned path string, then calls /fetch/certs for the PEM used for actual encryption. The production claims engine itself only uses /fetch/certs, as the Integration Handbook prescribes, before each /v1/claim/submit.
 
         ### Specification
 
         Chapter [Finding participants and policies](/docs/nhcx/v1/getting-started/finding-participants-and-policies) of the NHCX integration specification.
       parameters:
         - $ref: "#/components/parameters/BearerAuth"
+        - $ref: "#/components/parameters/Accept"
       requestBody:
         required: true
         content:
@@ -826,7 +838,7 @@ paths:
                 participantid:
                   type: string
             example:
-              participantid: 1518@hcx
+              participantid: <payer participant code>
       responses:
         "200":
           description: HTTP 200 with a string body.
@@ -895,6 +907,7 @@ paths:
         Chapter [Your certificate](/docs/nhcx/v1/getting-started/your-certificate) of the NHCX integration specification.
       parameters:
         - $ref: "#/components/parameters/BearerAuth"
+        - $ref: "#/components/parameters/Accept"
       requestBody:
         required: true
         content:
@@ -924,78 +937,6 @@ paths:
               example:
                 participantId: XXXX@hcx
                 certificate: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0t...
-  /get/linked/registry/mst:
-    post:
-      operationId: registry_get_linked_registry_mst
-      x-abdm-use-case: Participant registry
-      tags:
-        - Participant registry
-      summary: Get linked registry master (internal)
-      description: |-
-        Internal-use participant-service operation that fetches the linked registry master; listed in the OpenAPI but not intended for integrators.
-
-        ### Business purpose
-
-        The participant registry can be extended from or linked to external registries such as the ABDM Health Facility Registry and the payer registry, and participant records carry linked_registry_codes in identifier@registry form with supported registry codes configured at instance level. This operation, described in the OpenAPI as for internal use and fetching the linked registry, appears to serve that master configuration to the platform itself. It is documented here for completeness of the 63-endpoint index, not as an integration point.
-
-        ### When to use
-
-        Do not call it. It is for NHCX internal use. To see a participant's linked registries, read them from `/participant/search`.
-
-        ### Preconditions
-
-        - It is internal. Integrators should not call it.
-
-        ### Postconditions
-
-        It returns a string whose content is not documented. Nothing changes.
-
-        ### Common mistakes
-
-        - Building your integration on an internal operation.
-        - Confusing it with the linked registry codes on a participant record.
-
-        ### Best practices
-
-        - Leave it out of client libraries and Postman collections used for certification.
-        - Source registry codes from the onboarding documentation and participant records instead.
-        - If an onboarding contact directs you to it, record their exact instruction, since the specification documents neither a body nor the response content.
-
-        ### Related scenario
-
-        While generating a client from the participanthcxservice OpenAPI document, a hospital integrator notices /get/linked/registry/mst next to /participant/search and asks whether to wire it into the payer picker. The answer from the documentation is no: it is an internal operation, and the picker should be built on /fetch/participants/list, with each selected payer confirmed through /participant/search and its linked_registry_codes read from that record. The generated method is left unused and excluded from the sandbox-exit test evidence.
-
-        ### Specification
-
-        Chapter [Creating and updating a participant](/docs/nhcx/v1/getting-started/creating-and-updating-a-participant) of the NHCX integration specification.
-      parameters:
-        - $ref: "#/components/parameters/BearerAuth"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                _body:
-                  type: string
-            example:
-              _body: No request body or parameters are documented in the OpenAPI entry for this internal operation.
-      responses:
-        "200":
-          description: The OpenAPI declares a 200 response of type string, with 400 Client Error, 404 Resource not found and 500 Downstream systems down each returning the ErrorResponse envelope (timestamp plus error code, message and trace).
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  _contentType:
-                    type: string
-                  _body:
-                    type: string
-              example:
-                _contentType: string
-                _body: <string as declared by the OpenAPI 200 response; content not documented>
   /participant/link/abha/policy:
     post:
       operationId: registry_participant_link_abha_policy
@@ -1049,6 +990,7 @@ paths:
         Chapter [Creating and updating a participant](/docs/nhcx/v1/getting-started/creating-and-updating-a-participant) of the NHCX integration specification.
       parameters:
         - $ref: "#/components/parameters/BearerAuth"
+        - $ref: "#/components/parameters/Accept"
       requestBody:
         required: true
         content:
@@ -1099,16 +1041,16 @@ paths:
                     type: string
               example:
                 result: success
-  /V2/participant/link/abha/policy:
+  /v2/participant/link/abha/policy:
     post:
       operationId: registry_v2_participant_link_abha_policy
       x-abdm-atom: nhcx.endpoint.v2-participant-link-abha-policy
       x-abdm-use-case: Participant registry
       tags:
         - Participant registry
-      summary: Link ABHA number to policies (V2)
+      summary: Link ABHA number to policies (v2)
       description: |-
-        V2 variant of the ABHA policy link; same ParticipantLinkAbhaRequest body and ParticipantLinkAbhaResponse as the unversioned call.
+        v2 variant of the ABHA policy link; same ParticipantLinkAbhaRequest body and ParticipantLinkAbhaResponse as the unversioned call.
 
         ### Business purpose
 
@@ -1116,13 +1058,12 @@ paths:
 
         ### When to use
 
-        Use it in the same cases as the v1 link call. Pick the v1 or V2 path and use it throughout your integration.
+        Use it in the same cases as the v1 link call. Pick the v1 or v2 path and use it throughout your integration.
 
         ### Preconditions
 
         - You have a valid access token in the `bearer_auth` header.
         - You are the payer or its TPA, using the credentials that participant was created with.
-        - The path starts with a capital `V2`.
 
         ### Postconditions
 
@@ -1132,7 +1073,6 @@ paths:
 
         - Using a token from different credentials than the payer or TPA was created with.
         - Mixing up `payerid` and `processingid`.
-        - Writing the path with a lower-case `v2`, which is a different route.
         - Leaving out a required field.
 
         ### Best practices
@@ -1145,13 +1085,14 @@ paths:
 
         ### Related scenario
 
-        A TPA that processes claims for several insurers migrates its integration to the V2 participant APIs. When one of its insurers issues a new individual health policy, the TPA's system calls /V2/participant/link/abha/policy with the insurer's participant code as payerid and its own code as processingid, listing the product from the insurer's catalogue. The TPA then confirms the link with /V2/participant/get/policies using the member's ABHA number. When the beneficiary later visits a hospital, the provider resolves the processingid as the receiver code and submits the coverage-eligibility check and preauthorisation to the TPA.
+        A TPA that processes claims for several insurers migrates its integration to the v2 participant APIs. When one of its insurers issues a new individual health policy, the TPA's system calls /v2/participant/link/abha/policy with the insurer's participant code as payerid and its own code as processingid, listing the product from the insurer's catalogue. The TPA then confirms the link with /v2/participant/get/policies using the member's ABHA number. When the beneficiary later visits a hospital, the provider resolves the processingid as the receiver code and submits the coverage-eligibility check and preauthorisation to the TPA.
 
         ### Specification
 
         Chapter [Creating and updating a participant](/docs/nhcx/v1/getting-started/creating-and-updating-a-participant) of the NHCX integration specification.
       parameters:
         - $ref: "#/components/parameters/BearerAuth"
+        - $ref: "#/components/parameters/Accept"
       requestBody:
         required: true
         content:
@@ -1234,7 +1175,6 @@ paths:
 
         - Stopping here and never calling the validate step.
         - Using a token from different credentials than the payer or TPA was created with.
-        - Mixing up the path case: this uses a lower-case `v2`.
         - Mixing up `payerid` and `processingid`.
 
         ### Best practices
@@ -1247,13 +1187,14 @@ paths:
 
         ### Related scenario
 
-        An insurer's policy administration team is required by its NHCX instance to confirm member links by passcode. When a new policy is issued, the system posts the ParticipantLinkAbhaRequest to /v2/participant/link/abha/policy/init and records the transaction identifier. The authorised operator receives the passcode and the system calls GET /v2/participant/link/abha/policy/validate with passcode and transactionId to complete the link. The team then checks /V2/participant/get/policies for the member's ABHA number and, satisfied, closes the case; the hospital will discover the policy on the beneficiary's next admission.
+        An insurer's policy administration team is required by its NHCX instance to confirm member links by passcode. When a new policy is issued, the system posts the ParticipantLinkAbhaRequest to /v2/participant/link/abha/policy/init and records the transaction identifier. The authorised operator receives the passcode and the system calls GET /v2/participant/link/abha/policy/validate with passcode and transactionId to complete the link. The team then checks /v2/participant/get/policies for the member's ABHA number and, satisfied, closes the case; the hospital will discover the policy on the beneficiary's next admission.
 
         ### Specification
 
         Chapter [Creating and updating a participant](/docs/nhcx/v1/getting-started/creating-and-updating-a-participant) of the NHCX integration specification.
       parameters:
         - $ref: "#/components/parameters/BearerAuth"
+        - $ref: "#/components/parameters/Accept"
       requestBody:
         required: true
         content:
@@ -1347,13 +1288,14 @@ paths:
 
         ### Related scenario
 
-        A TPA's operations desk initiated a policy link for a new member earlier in the day through /v2/participant/link/abha/policy/init and stored the transaction identifier against the case. When the authorised approver supplies the passcode, the system calls GET /v2/participant/link/abha/policy/validate?passcode=...&transactionId=... and receives a 200 with a result string. The desk then runs /V2/participant/get/policies for the member's ABHA number, sees the product listed, and closes the linking task; the next call in the member's journey will be the hospital's coverage-eligibility check.
+        A TPA's operations desk initiated a policy link for a new member earlier in the day through /v2/participant/link/abha/policy/init and stored the transaction identifier against the case. When the authorised approver supplies the passcode, the system calls GET /v2/participant/link/abha/policy/validate?passcode=...&transactionId=... and receives a 200 with a result string. The desk then runs /v2/participant/get/policies for the member's ABHA number, sees the product listed, and closes the linking task; the next call in the member's journey will be the hospital's coverage-eligibility check.
 
         ### Specification
 
         Chapter [Creating and updating a participant](/docs/nhcx/v1/getting-started/creating-and-updating-a-participant) of the NHCX integration specification.
       parameters:
         - $ref: "#/components/parameters/BearerAuth"
+        - $ref: "#/components/parameters/Accept"
       responses:
         "200":
           description: On success the endpoint returns HTTP 200 with ParticipantLinkAbhaResponse (optional result and errormessage).
@@ -1419,6 +1361,7 @@ paths:
         Chapter [Creating and updating a participant](/docs/nhcx/v1/getting-started/creating-and-updating-a-participant) of the NHCX integration specification.
       parameters:
         - $ref: "#/components/parameters/BearerAuth"
+        - $ref: "#/components/parameters/Accept"
       requestBody:
         required: true
         content:
@@ -1463,30 +1406,29 @@ paths:
                     type: string
               example:
                 result: success
-  /V2/participant/delink/abha/policy:
+  /v2/participant/delink/abha/policy:
     post:
       operationId: registry_v2_participant_delink_abha_policy
       x-abdm-atom: nhcx.endpoint.v2-participant-delink-abha-policy
       x-abdm-use-case: Participant registry
       tags:
         - Participant registry
-      summary: De-link ABHA policies (V2)
+      summary: De-link ABHA policies (v2)
       description: |-
-        V2 variant of the ABHA policy de-link; same ParticipantDeLinkAbhaRequest body and response as the unversioned call.
+        v2 variant of the ABHA policy de-link; same ParticipantDeLinkAbhaRequest body and response as the unversioned call.
 
         ### Business purpose
 
-        This endpoint performs the same member-layer removal as /participant/delink/abha/policy: it takes products out of a member's link for a given payer so that providers stop discovering lapsed or migrated coverage. The OpenAPI document exposes it as participantDeLinkAbhaPolicyV2 with an identical request and response schema; the documentation does not describe any behavioural difference beyond the path and operationId. It is the natural partner of /V2/participant/link/abha/policy for integrations that have standardised on the V2 paths.
+        This endpoint performs the same member-layer removal as /participant/delink/abha/policy: it takes products out of a member's link for a given payer so that providers stop discovering lapsed or migrated coverage. The OpenAPI document exposes it as participantDeLinkAbhaPolicyV2 with an identical request and response schema; the documentation does not describe any behavioural difference beyond the path and operationId. It is the natural partner of /v2/participant/link/abha/policy for integrations that have standardised on the v2 paths.
 
         ### When to use
 
-        Use it in the same cases as the v1 de-link. Pair it with the V2 link and get-policies calls.
+        Use it in the same cases as the v1 de-link. Pair it with the v2 link and get-policies calls.
 
         ### Preconditions
 
         - You have a valid access token in the `bearer_auth` header.
         - You are the payer or TPA that linked the policies.
-        - The path starts with a capital `V2`.
 
         ### Postconditions
 
@@ -1497,7 +1439,6 @@ paths:
         - Calling as a participant that did not create the link.
         - Listing a policy that is not linked.
         - Adding an ABHA number to the body.
-        - Writing the path with a lower-case `v2`.
 
         ### Best practices
 
@@ -1509,13 +1450,14 @@ paths:
 
         ### Related scenario
 
-        A TPA is informed by one of its insurers that a corporate group policy has been cancelled mid-term. The TPA's system lists the affected members from its own records, calls /V2/participant/get/policies to confirm what NHCX currently holds, and then calls /V2/participant/delink/abha/policy per member with the insurer's participant code as payerid, its own code as processingid and the cancelled product. Each success is logged against the member. When a former member later presents at a hospital, the provider's policy lookup (after a forced cache refresh) no longer shows the product, and the desk proceeds as a self-pay case rather than submitting a coverage-eligibility check.
+        A TPA is informed by one of its insurers that a corporate group policy has been cancelled mid-term. The TPA's system lists the affected members from its own records, calls /v2/participant/get/policies to confirm what NHCX currently holds, and then calls /v2/participant/delink/abha/policy per member with the insurer's participant code as payerid, its own code as processingid and the cancelled product. Each success is logged against the member. When a former member later presents at a hospital, the provider's policy lookup (after a forced cache refresh) no longer shows the product, and the desk proceeds as a self-pay case rather than submitting a coverage-eligibility check.
 
         ### Specification
 
         Chapter [Creating and updating a participant](/docs/nhcx/v1/getting-started/creating-and-updating-a-participant) of the NHCX integration specification.
       parameters:
         - $ref: "#/components/parameters/BearerAuth"
+        - $ref: "#/components/parameters/Accept"
       requestBody:
         required: true
         content:
@@ -1613,6 +1555,7 @@ paths:
         Chapter [Creating and updating a participant](/docs/nhcx/v1/getting-started/creating-and-updating-a-participant) of the NHCX integration specification.
       parameters:
         - $ref: "#/components/parameters/BearerAuth"
+        - $ref: "#/components/parameters/Accept"
       requestBody:
         required: true
         content:
@@ -1654,20 +1597,20 @@ paths:
                     participantname: Demo Health Insurance Co
                     address: Plot 12, Sector 5, Gurugram
                     state: Haryana
-  /V2/participant/get/policies:
+  /v2/participant/get/policies:
     post:
       operationId: registry_v2_participant_get_policies
       x-abdm-atom: nhcx.endpoint.v2-participant-get-policies
       x-abdm-use-case: Participant registry
       tags:
         - Participant registry
-      summary: Get beneficiary policies (V2)
+      summary: Get beneficiary policies (v2)
       description: |-
-        V2 variant of the beneficiary policy lookup; same FetchParticipantPoliciesRequest body and ParticipantListResponse as the unversioned call.
+        v2 variant of the beneficiary policy lookup; same FetchParticipantPoliciesRequest body and ParticipantListResponse as the unversioned call.
 
         ### Business purpose
 
-        This endpoint answers the same question as /participant/get/policies: which payer products is this beneficiary linked to, and therefore which payer or TPA should the hospital address. The OpenAPI document exposes it as getParticipantGetPoliciesV2 with an identical request and response schema and the same Registry APIs tag; the documentation records no behavioural difference beyond the path. Integrations that use the V2 link and de-link calls typically read back through this endpoint.
+        This endpoint answers the same question as /participant/get/policies: which payer products is this beneficiary linked to, and therefore which payer or TPA should the hospital address. The OpenAPI document exposes it as getParticipantGetPoliciesV2 with an identical request and response schema and the same Registry APIs tag; the documentation records no behavioural difference beyond the path. Integrations that use the v2 link and de-link calls typically read back through this endpoint.
 
         ### When to use
 
@@ -1677,7 +1620,7 @@ paths:
 
         - You have a valid access token in the `bearer_auth` header.
         - The payer or TPA has already linked the member.
-        - Send the ABHA number without hyphens. The path starts with a capital `V2`.
+        - Send the ABHA number without hyphens.
 
         ### Postconditions
 
@@ -1688,7 +1631,6 @@ paths:
         - Using the payer ID as `x-hcx-recipient_code`. Use the processing ID from this response.
         - Sending the ABHA number with hyphens.
         - Trying only one identifier type.
-        - Writing the path with a lower-case `v2`.
 
         ### Best practices
 
@@ -1700,13 +1642,14 @@ paths:
 
         ### Related scenario
 
-        A TPA has just linked a new member through /V2/participant/link/abha/policy and wants to verify the write before closing the ticket. It calls /V2/participant/get/policies with identifiertype AbhaNumber and the member's hyphen-free ABHA number and sees the product returned. Months later the same member is admitted; the hospital's HMIS runs the identifier cascade (ABHA, then member id, then mobile) against this endpoint, caches the result, and proceeds to /v1/insuranceplan/request and /v1/preauth/submit addressed to the TPA's participant code taken from processingID.
+        A TPA has just linked a new member through /v2/participant/link/abha/policy and wants to verify the write before closing the ticket. It calls /v2/participant/get/policies with identifiertype AbhaNumber and the member's hyphen-free ABHA number and sees the product returned. Months later the same member is admitted; the hospital's HMIS runs the identifier cascade (ABHA, then member id, then mobile) against this endpoint, caches the result, and proceeds to /v1/insuranceplan/request and /v1/preauth/submit addressed to the TPA's participant code taken from processingID.
 
         ### Specification
 
         Chapter [Creating and updating a participant](/docs/nhcx/v1/getting-started/creating-and-updating-a-participant) of the NHCX integration specification.
       parameters:
         - $ref: "#/components/parameters/BearerAuth"
+        - $ref: "#/components/parameters/Accept"
       requestBody:
         required: true
         content:
@@ -1748,82 +1691,6 @@ paths:
                     participantname: Demo Health Insurance Co
                     address: Plot 12, Sector 5, Gurugram
                     state: Haryana
-  /update/abhanumber:
-    post:
-      operationId: registry_update_abhanumber
-      x-abdm-use-case: Participant registry
-      tags:
-        - Participant registry
-      summary: Update ABHA number
-      description: |-
-        Replaces a placeholder (dummy) ABHA number with the beneficiary's real ABHA number in the ABHA_AUTH_TRANSACTION table.
-
-        ### Business purpose
-
-        Beneficiaries are sometimes onboarded before their real ABHA is known, using a placeholder value. Because the member layer and the Patient resource both key on the ABHA number, a placeholder that is never corrected leaves the beneficiary undiscoverable and breaks the identifier rules for claim bundles. This endpoint, tagged Retrieving API and implemented by updateAbhaNumberController, lets the placeholder be swapped for the real number so that later policy lookups and claim transactions line up. The docs describe it as updating the ABHA number in the ABHA_AUTH_TRANSACTION table.
-
-        ### When to use
-
-        Use it when a member's real ABHA number becomes available after they were set up with a placeholder. Do it before you rely on ABHA-based lookups.
-
-        ### Preconditions
-
-        - You have a valid access token in the `bearer_auth` header.
-        - You know both the placeholder and the real ABHA number.
-
-        ### Postconditions
-
-        The member's ABHA number is updated. Errors come back in the same response shape as success, so read `errorMessage`.
-
-        ### Common mistakes
-
-        - Reading errors as the usual registry error format.
-        - Sending an empty body.
-        - Forgetting to refresh cached policies that still use the placeholder.
-
-        ### Best practices
-
-        - Record both the placeholder and the real ABHA with the timestamp of the change for audit purposes.
-        - Read successMessage and errorMessage on every response and treat a non-200 status as failure even if the body parses.
-        - Immediately re-run /participant/get/policies with forceRefresh: true for the affected beneficiary.
-        - Keep the ABHA formatting rule per field: hyphen-free for member lookups and x-hcx-ben-abha-id, XX-XXXX-XXXX-XXXX where NHCX-1018 applies.
-        - Never log the token; log the ABHA change with the request identifier only.
-
-        ### Related scenario
-
-        A state scheme enrols a beneficiary in a hurry with a dummy ABHA so that a policy can be linked and an emergency admission can proceed. After discharge the beneficiary completes ABHA creation and the real number is captured. The payer's system calls /update/abhanumber with dummyAbha and realAbha, receives a successMessage, and then calls /participant/get/policies with forceRefresh to make sure the real ABHA resolves the linked product. The hospital's billing team, preparing the final claim, refreshes its own policy cache so that the Claim bundle's Patient identifiers carry the PMJAY member id and the real hyphen-free ABHA.
-
-        ### Specification
-
-        Chapter [Participants and policies](/docs/nhcx/v1/registries) of the NHCX integration specification.
-      parameters:
-        - $ref: "#/components/parameters/BearerAuth"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                dummyAbha:
-                  type: string
-                realAbha:
-                  type: string
-            example:
-              dummyAbha: "99999999999999"
-              realAbha: "12345678910111"
-      responses:
-        "200":
-          description: A successful call returns HTTP 200 with UpdateAbhaResponse, which carries optional successMessage and errorMessage strings.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  successMessage:
-                    type: string
-              example:
-                successMessage: ABHA number updated successfully
   /product/link:
     post:
       operationId: registry_product_link
@@ -1874,6 +1741,7 @@ paths:
         Chapter [Participants and policies](/docs/nhcx/v1/registries) of the NHCX integration specification.
       parameters:
         - $ref: "#/components/parameters/BearerAuth"
+        - $ref: "#/components/parameters/Accept"
       requestBody:
         required: true
         content:
@@ -1954,6 +1822,7 @@ paths:
         Chapter [Participants and policies](/docs/nhcx/v1/registries) of the NHCX integration specification.
       parameters:
         - $ref: "#/components/parameters/BearerAuth"
+        - $ref: "#/components/parameters/Accept"
       requestBody:
         required: true
         content:
@@ -1999,7 +1868,7 @@ paths:
 
         ### When to use
 
-        Use it when you have a product ID and need the payer that owns it.
+        Use it when you have a product ID and need the payer that owns it. Payers use it after `/product/link` or `/product/delink` to confirm the registry state.
 
         ### Preconditions
 
@@ -2033,6 +1902,7 @@ paths:
         Chapter [Participants and policies](/docs/nhcx/v1/registries) of the NHCX integration specification.
       parameters:
         - $ref: "#/components/parameters/BearerAuth"
+        - $ref: "#/components/parameters/Accept"
       requestBody:
         required: true
         content:
@@ -2056,6 +1926,24 @@ paths:
                     type: string
               example:
                 participant_code: 100234@sbx
+        "400":
+          description: Client error. The body is the participant service's ErrorResponse.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Resource not found. The body is the participant service's ErrorResponse.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Downstream systems down, or an unhandled exception. The body is the participant service's ErrorResponse.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /participant/getProductIdName:
     post:
       operationId: registry_participant_getproductidname
@@ -2105,6 +1993,7 @@ paths:
         Chapter [Participants and policies](/docs/nhcx/v1/registries) of the NHCX integration specification.
       parameters:
         - $ref: "#/components/parameters/BearerAuth"
+        - $ref: "#/components/parameters/Accept"
       requestBody:
         required: true
         content:
@@ -2131,12 +2020,55 @@ paths:
                     type: string
               example:
                 participant_code: 100234@sbx
+        "400":
+          description: Client error. The body is the participant service's ErrorResponse.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Resource not found. The body is the participant service's ErrorResponse.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Downstream systems down, or an unhandled exception. The body is the participant service's ErrorResponse.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
+  schemas:
+    ErrorResponse:
+      type: object
+      description: The participant service's error envelope.
+      properties:
+        timestamp:
+          type: string
+          description: When the response was sent, as a Unix timestamp in milliseconds.
+          example: "1629057611000"
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              description: The error code, namespaced by the system that raised it.
+            message:
+              type: string
+              description: A short description of the error.
+            trace:
+              type: string
+              description: A longer description supporting the code.
+      required:
+        - timestamp
+        - error
   securitySchemes:
     bearerAuth:
-      type: http
-      scheme: bearer
-      description: "On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value."
+      type: apiKey
+      in: header
+      name: bearer_auth
+      description: Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
   parameters:
     BearerAuth:
       name: bearer_auth
@@ -2146,3 +2078,11 @@ components:
       schema:
         type: string
       example: Bearer <access token>
+    Accept:
+      name: Accept
+      in: header
+      required: true
+      description: Always `application/json` on the participant service.
+      schema:
+        type: string
+      example: application/json

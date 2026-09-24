@@ -63,12 +63,10 @@ related:
   - nhcx.flow.payment-notice
   - nhcx.flow.status-check
   - nhcx.flow.claim-search
-  - nhcx.flow.predetermination
   glossary:
   - nhcx.glossary.coverage-eligibility
   - nhcx.glossary.preauthorisation
   - nhcx.glossary.enhancement
-  - nhcx.glossary.predetermination
   - nhcx.glossary.claim
   - nhcx.glossary.payment-notice
 ---
@@ -110,7 +108,6 @@ graph TD
 |---|---|---|---|
 | [Coverage eligibility](./coverage-eligibility-purposes.md) | Provider | `/v1/coverageeligibility/check` | CoverageEligibilityRequest |
 | [Insurance plan](./insurance-plan.md) | Provider | `/v1/insuranceplan/request` | Task with code `poll` |
-| Predetermination | Provider | `/v1/predetermination/submit` | Claim with use `predetermination` |
 | Preauthorisation | Provider | `/v1/preauth/submit` | Claim with use `preauthorization` |
 | Enhancement | Provider | `/v1/preauth/submit` | Claim, resubmitted with added items |
 | Query | Payer | See [queries](./queries-and-communication.md) | ClaimResponse or CommunicationRequest |

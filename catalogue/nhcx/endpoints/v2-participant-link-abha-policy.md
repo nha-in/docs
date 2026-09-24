@@ -4,7 +4,7 @@ type: endpoint
 gateway: nhcx
 milestone: n/a
 version: nhcx-v1
-title: POST /V2/participant/link/abha/policy
+title: POST /v2/participant/link/abha/policy
 summary: >-
   The second path for linking a beneficiary to the products they hold; it takes
   the same body as the main link call.
@@ -13,7 +13,7 @@ sources:
   file: catalogue/openapi/.raw/nhcx-site-2026-09-14/swagger/participanthcxservice.json
   hash: sha256:6d0a2192da8160fe4b292bbdd81e937ba254bf6d27915d23907e70b82faebf63
   fetched: '2026-09-14'
-  note: 'API specification: participanthcxservice, row 23 of the NHCX document sheet, listed on https://hcxsbx.abdm.gov.in/#/technical-specifications/api-specifications. paths./V2/participant/link/abha/policy.post.'
+  note: 'API specification: participanthcxservice, row 23 of the NHCX document sheet, listed on https://hcxsbx.abdm.gov.in/#/technical-specifications/api-specifications. paths./v2/participant/link/abha/policy.post.'
 - url: https://hcxsbx.abdm.gov.in/images/038d85cffc7df66ed1a4.pdf
   file: catalogue/openapi/.raw/nhcx-site-2026-09-14/documents/Common Mistakes while implementing through NHCX.pdf
   hash: sha256:b4af12a432a29886e1ae4956340ff07782bba7df792380de3a408f4e5a55673f
@@ -42,13 +42,13 @@ related:
   - nhcx.error.nhcx-401
 ---
 
-# POST /V2/participant/link/abha/policy
+# POST /v2/participant/link/abha/policy
 
 ## In plain words
 
 This path links a beneficiary's [ABHA number](../../shared/glossary/abha-number.md) and member id to the products they hold, like [`/participant/link/abha/policy`](participant-link-abha-policy.md). It takes the same body and returns the same response.
 
-Call [`/participant/link/abha/policy`](participant-link-abha-policy.md), the path in the payer [sandbox exit](../glossary/sandbox-exit.md). If you use this V2 path, pair it with [`/V2/participant/get/policies`](v2-participant-get-policies.md) and [`/V2/participant/delink/abha/policy`](v2-participant-delink-abha-policy.md).
+Call [`/participant/link/abha/policy`](participant-link-abha-policy.md), the path in the payer [sandbox exit](../glossary/sandbox-exit.md). If you use this v2 path, pair it with [`/v2/participant/get/policies`](v2-participant-get-policies.md) and [`/v2/participant/delink/abha/policy`](v2-participant-delink-abha-policy.md).
 
 ## Before you start
 
@@ -64,7 +64,7 @@ Your system posts the link to the participant service. The registry records it a
 | Production | `https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice` |
 
 ```bash
-curl -X POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/V2/participant/link/abha/policy' \
+curl -X POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/v2/participant/link/abha/policy' \
   -H 'Accept: application/json' \
   -H 'Content-Type: application/json' \
   -H 'bearer_auth: Bearer <ACCESS_TOKEN_FROM_SESSION_TOKEN>' \
@@ -84,16 +84,15 @@ curl -X POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/V2/p
   }'
 ```
 
-The path starts with a capital `V2`. The fields are described on [`/participant/link/abha/policy`](participant-link-abha-policy.md). The response is JSON with a `result` string.
+The fields are described on [`/participant/link/abha/policy`](participant-link-abha-policy.md). The response is JSON with a `result` string.
 
-**Idempotency.** Send a new `requestid` on every call. Before you retry a link that timed out, check [`/V2/participant/get/policies`](v2-participant-get-policies.md) for the products.
+**Idempotency.** Send a new `requestid` on every call. Before you retry a link that timed out, check [`/v2/participant/get/policies`](v2-participant-get-policies.md) for the products.
 
 ## How you know it worked
 
-You receive HTTP 200 with a `result` string. [`/V2/participant/get/policies`](v2-participant-get-policies.md) with the same ABHA number returns the products you linked.
+You receive HTTP 200 with a `result` string. [`/v2/participant/get/policies`](v2-participant-get-policies.md) with the same ABHA number returns the products you linked.
 
 ## When it goes wrong
 
-- **404 on the path.** The path was written with a lower-case `v2`. Write `/V2/participant/link/abha/policy`.
 - **The link is refused although the token is valid.** The token does not belong to the `payerid` or `processingid` participant.
 - **401 Unauthorized.** The token is missing, has expired, or went out without the `Bearer ` prefix. Mint a new token, then retry the call once. See [NHCX-401](../errors/nhcx-401.md) and [every call returns 401](../troubleshooting/everything-returns-401.md).

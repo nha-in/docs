@@ -29,7 +29,7 @@ Sent on `/v1/preauth/submit`, answered on `/v1/preauth/on_submit`, workflow 13, 
 
 ## Elements
 
-### 1. Claim
+### Claim
 
 NRCeS profile: [Claim](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Claim.html).
 
@@ -91,7 +91,7 @@ NRCeS profile: [Claim](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Claim.h
 | `item[].category.coding[]` | `Surgical` Surgical in `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-benefit-category` |
 | `total` | value `195000`, currency `INR` |
 
-### 2. Patient
+### Patient
 
 NRCeS profile: [Patient](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Patient.html).
 
@@ -107,7 +107,7 @@ NRCeS profile: [Patient](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Patie
 | `gender` | `male` |
 | `birthDate` | `1985-06-15` |
 
-### 3. Organization (prov)
+### Organization (prov)
 
 NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Organization.html).
 
@@ -118,7 +118,7 @@ NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-
 | `type[].coding[]` | `prov` Healthcare Provider in `http://terminology.hl7.org/CodeSystem/organization-type` |
 | `name` | `KyroCare Multispeciality Hospital` |
 
-### 4. Organization (pay)
+### Organization (pay)
 
 NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Organization.html).
 
@@ -129,7 +129,7 @@ NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-
 | `type[].coding[]` | `pay` Payer in `http://terminology.hl7.org/CodeSystem/organization-type` |
 | `name` | `Sandbox Payer` |
 
-### 5. Coverage
+### Coverage
 
 NRCeS profile: [Coverage](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Coverage.html).
 
@@ -145,7 +145,7 @@ NRCeS profile: [Coverage](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Cove
 | `relationship.coding[]` | `self` in `http://terminology.hl7.org/CodeSystem/subscriber-relationship` |
 | `payor[]` | reference `https://nhcx.abdm.gov.in/payer` |
 
-### 6. Practitioner
+### Practitioner
 
 NRCeS profile: [Practitioner](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Practitioner.html).
 
@@ -158,7 +158,7 @@ NRCeS profile: [Practitioner](https://nrces.in/ndhm/fhir/r4/StructureDefinition-
 | `name[]` | text `Dr. Ananya Rao` |
 | `qualification[].code.coding[]` | `MD` Doctor of Medicine in `http://terminology.hl7.org/CodeSystem/v2-0360` |
 
-### 7. Procedure
+### Procedure
 
 NRCeS profile: [Procedure](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Procedure.html).
 
@@ -170,7 +170,7 @@ NRCeS profile: [Procedure](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Pro
 | `subject` | reference `https://nhcx.abdm.gov.in/patient` |
 | `performedDateTime` | `2026-09-10T00:00:00+05:30` |
 
-### 8. Procedure
+### Procedure
 
 NRCeS profile: [Procedure](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Procedure.html).
 
@@ -182,7 +182,7 @@ NRCeS profile: [Procedure](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Pro
 | `subject` | reference `https://nhcx.abdm.gov.in/patient` |
 | `performedDateTime` | `2026-09-10T00:00:00+05:30` |
 
-### 9. QuestionnaireResponse
+### QuestionnaireResponse
 
 | Element | Example |
 | :-- | :-- |
@@ -198,23 +198,23 @@ NRCeS profile: [Procedure](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Pro
 
 ## Rules
 
-### 1. The protocol says enhancement, not the payload
+### The protocol says enhancement, not the payload
 
 `Claim.use` stays `preauthorization` and the case number is unchanged. The workflow code and `x-hcx-use_case` declare the enhancement.
 
-### 2. Cumulative
+### Cumulative
 
 Carry the approved items and the ones now sought. `Claim.total` is the sum of all of them.
 
-### 3. No link in the payload
+### No link in the payload
 
 `Claim.related` is absent. The case number and your stored correlation ids are the thread.
 
-### 4. One at a time
+### One at a time
 
 Refused when there is no approval, when a request on the case is still open, or after the claim has been raised.
 
-### 5. Order
+### Order
 
 Response items can come back out of order; read by `itemSequence`. Order a case's messages by receipt, not by `Bundle.timestamp`.
 

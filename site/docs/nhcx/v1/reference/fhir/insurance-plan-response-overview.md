@@ -27,7 +27,7 @@ Sent on `/v1/insuranceplan/on_request`.
 
 ## Elements
 
-### 1. InsurancePlan
+### InsurancePlan
 
 NRCeS profile: [InsurancePlan](https://nrces.in/ndhm/fhir/r4/StructureDefinition-InsurancePlan.html).
 
@@ -45,7 +45,7 @@ NRCeS profile: [InsurancePlan](https://nrces.in/ndhm/fhir/r4/StructureDefinition
 | `plan[].type.coding[]` | `01` Individual in `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-plan-type` |
 | `plan[].generalCost[].cost` | value `500000`, currency `INR` |
 
-### 2. Organization (ins)
+### Organization (ins)
 
 NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Organization.html).
 
@@ -55,7 +55,7 @@ NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-
 | `name` | `Sandbox Payer` |
 | `address[]` | city `Bengaluru`, state `Karnataka`, country `India` |
 
-### 3. Questionnaire
+### Questionnaire
 
 | Element | Example |
 | :-- | :-- |
@@ -64,7 +64,7 @@ NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-
 | `title` | `Paediatric Pneumonia, PICU Management, Standard Treatment Guidelines` |
 | `status` | `active` |
 
-### 4. Questionnaire
+### Questionnaire
 
 | Element | Example |
 | :-- | :-- |
@@ -73,7 +73,7 @@ NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-
 | `title` | `Percutaneous Transluminal Coronary Angioplasty (PTCA), Standard Treatment Guide…` |
 | `status` | `active` |
 
-### 5. Questionnaire
+### Questionnaire
 
 | Element | Example |
 | :-- | :-- |
@@ -82,7 +82,7 @@ NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-
 | `title` | `Cataract Surgery with Foldable IOL, Standard Treatment Guidelines` |
 | `status` | `active` |
 
-### 6. Questionnaire
+### Questionnaire
 
 | Element | Example |
 | :-- | :-- |
@@ -91,7 +91,7 @@ NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-
 | `title` | `Acute Appendectomy (Laparoscopic), Standard Treatment Guidelines` |
 | `status` | `active` |
 
-### 7. Questionnaire
+### Questionnaire
 
 | Element | Example |
 | :-- | :-- |
@@ -112,31 +112,31 @@ NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-
 
 ## Rules
 
-### 1. Two shapes
+### Two shapes
 
 Coverage-based, sent by private insurers and TPAs: benefits with money limits, rules as prose. Package-based, sent by government schemes: named packages at fixed rates, rules as flags. The next two chapters take each shape.
 
-### 2. Two type codes
+### Two type codes
 
 `InsurancePlan.type` says what kind of insurance this is. `plan.type` says how it is sold, individual or group.
 
-### 3. Identifier
+### Identifier
 
 A private insurer's plan is identified under `https://irdai.gov.in`. A scheme plan is identified under NHA hosts, with the policy code and the revision.
 
-### 4. The wallet
+### The wallet
 
 `plan.generalCost` is the sum insured, or the family wallet under a scheme.
 
-### 5. Cache per policy
+### Cache per policy
 
 Stamp the cache with the plan's revision identifier, and record on every preauthorisation and claim which revision it was built against.
 
-### 6. The first line of validation
+### The first line of validation
 
 Codes and displays, amounts, quantities and mandatory documents are checked against the cached plan on the server before anything is sent.
 
-### 7. The forms
+### The forms
 
 The `Questionnaire` resources are the payer's forms. Render them from the plan, never hard-code them, because they change with the plan.
 

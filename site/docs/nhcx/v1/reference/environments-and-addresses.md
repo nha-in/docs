@@ -71,10 +71,8 @@ failure.
 | PMJAY payer service | `bearer_auth: Bearer <token>` | `Accept`, `Content-Type` |
 | Notification service | `Authorization: Bearer <token>` | `Content-Type` |
 
-The sources are not unanimous about `bearer_auth` against `Authorization` on
-the exchange's own endpoints: the authentication note and the FAQ both write
-the example as `Authorization`. Sending both headers with the same value is
-what the adapter does and it costs nothing.
+The exchange's own endpoints, the participant service and the PMJAY payer
+service read the token from `bearer_auth`, not `Authorization`.
 
 `Accept: application/json` is the portal's sixth most common mistake when
 omitted.
@@ -135,7 +133,6 @@ Every path in the V1 cashless use case, with its direction.
 | Coverage eligibility | `/v1/coverageeligibility/check` | `/v1/coverageeligibility/on_check` | provider to payer |
 | Insurance plan | `/v1/insuranceplan/request` | `/v1/insuranceplan/on_request` | provider to payer |
 | Preauthorisation | `/v1/preauth/submit` | `/v1/preauth/on_submit` | provider to payer |
-| Predetermination | `/v1/predetermination/submit` | `/v1/predetermination/on_submit` | provider to payer |
 | Claim | `/v1/claim/submit` | `/v1/claim/on_submit` | provider to payer |
 | Communication | `/v1/communication/request` | `/v1/communication/on_request` | payer to provider |
 | Payment notice | `/v1/paymentnotice/request` | `/v1/paymentnotice/on_request` | payer to provider |
@@ -145,11 +142,6 @@ Every path in the V1 cashless use case, with its direction.
 | Status | `/v1/status` | `/v1/on_status` | either party to the exchange |
 | Error report | | `/v1/error` | exchange to every participant |
 | Notifications | `/v1/notification/subscribe` | `/v1/notification/on_subscribe` | patient app to exchange |
-
-Predetermination is listed on the Technical Specifications page among the APIs
-"designed and deployed in the sandbox environment", which is more than the FHIR
-Reference chapter on it can say. No payer in the corpus is recorded as having
-implemented it.
 
 ## A defect in the published table
 

@@ -116,7 +116,6 @@ curl -X POST 'https://apisbx.abdm.gov.in/hcx/v1/claim/on_submit' \
   -H 'Accept: application/json' \
   -H 'Content-Type: application/json' \
   -H 'bearer_auth: Bearer <ACCESS_TOKEN_FROM_GET_SESSION>' \
-  -H 'Authorization: Bearer <ACCESS_TOKEN_FROM_GET_SESSION>' \
   -d '{"type": "JWEPayload", "payload": "<JWE_COMPACT_STRING>"}'
 ```
 

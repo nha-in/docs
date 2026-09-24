@@ -25,7 +25,6 @@ Under the `endpoint_url` you registered, the exchange will POST to a path per us
 /v1/insuranceplan/on_request
 /v1/preauth/on_submit
 /v1/claim/on_submit
-/v1/predetermination/on_submit
 /v1/search/on_submit
 /v1/communication/request
 /v1/paymentnotice/request

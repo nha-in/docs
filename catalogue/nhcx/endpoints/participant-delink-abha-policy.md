@@ -56,7 +56,7 @@ related:
 
 A [payer](../glossary/payer.md) calls this to remove products from a beneficiary's policy link on [NHCX](../../shared/glossary/nhcx.md). Hospitals then stop finding that coverage through [`/participant/get/policies`](participant-get-policies.md). It reverses [`/participant/link/abha/policy`](participant-link-abha-policy.md).
 
-De-Link ABHA from Policy is use case 3 of the payer [sandbox exit](../glossary/sandbox-exit.md). Call this path. [`/V2/participant/delink/abha/policy`](v2-participant-delink-abha-policy.md) takes the same body.
+De-Link ABHA from Policy is use case 3 of the payer [sandbox exit](../glossary/sandbox-exit.md). Call this path. [`/v2/participant/delink/abha/policy`](v2-participant-delink-abha-policy.md) takes the same body.
 
 ## Before you start
 

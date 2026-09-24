@@ -132,27 +132,27 @@ NRCeS profile: [InsurancePlan](https://nrces.in/ndhm/fhir/r4/StructureDefinition
 
 ## Rules
 
-### 1. One structure per benefit
+### One structure per benefit
 
 Everything about a benefit, its conditions and required documents, hangs off `coverage[].benefit[]`, with its money cap in `limit[]`. `plan[].specificCost[]` carries the cost per benefit category.
 
-### 2. Conditions are prose
+### Conditions are prose
 
 The `Claim-Condition` extension on a benefit carries a sentence, such as a window after discharge, with the number in `limit[]` as a value, a comparator and a unit.
 
-### 3. Benefit types are the insurer's vocabulary
+### Benefit types are the insurer's vocabulary
 
 No closed value set is published for indemnity benefit types. Ask the insurer for its list before building a picker.
 
-### 4. Requirements by stage
+### Requirements by stage
 
 Supporting-info requirements name the stage they apply to, preauthorisation, discharge or claim, in the extension url.
 
-### 5. Exclusions
+### Exclusions
 
 Waiting periods, pre-existing-condition rules and excluded procedures are `Claim-Exclusion` extensions on the plan, each with a category and a statement.
 
-### 6. What the screen caps
+### What the screen caps
 
 The amount, against the benefit's limit. Submission is blocked by an amount over the limit or a missing mandatory document.
 

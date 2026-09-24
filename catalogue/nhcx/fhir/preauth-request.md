@@ -47,8 +47,6 @@ related:
   - nhcx.fhir.claim-request
   - nhcx.fhir.terminologies
   - nhcx.fhir.validation
-  decisions:
-  - nhcx.decision.preauth-or-predetermination
   errors:
   - nhcx.error.payr-1011
   - nhcx.error.payr-1012

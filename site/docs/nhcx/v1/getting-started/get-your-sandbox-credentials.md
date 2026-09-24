@@ -30,7 +30,7 @@ Every National Health Claims Exchange (NHCX) call carries a session token, and e
 
 - Your organisation, and a mobile number for its registry record that you can receive messages on.
 
-## 1. Register the organisation
+## Register the organisation
 
 | You are | Register in | Your registry id |
 | :---- | :---- | :---- |
@@ -39,7 +39,7 @@ Every National Health Claims Exchange (NHCX) call carries a session token, and e
 
 Keep the mobile number on the registry record current. Participant creation checks it and sends a passcode to it.
 
-## 2. Apply for ABDM sandbox credentials
+## Apply for ABDM sandbox credentials
 
 1. Apply at https://sandbox.abdm.gov.in/sandbox/v3/.
 2. Select "Providers and Payer" and Milestone 1 as your intent.
@@ -49,11 +49,11 @@ The review is semi-manual. It filters out repeat requests from one organisation,
 
 Store the secret the way you store any production credential. Never commit it, and never write it to a log.
 
-## 3. Build Milestone 1
+## Build Milestone 1
 
 Your software must support ABDM Milestone 1 before it joins NHCX. It creates an ABHA number through Aadhaar or a driving licence. It verifies an ABHA number or ABHA address at patient registration.
 
-## 4. Register on the NHCX sandbox
+## Register on the NHCX sandbox
 
 Register at https://sandbox.abdm.gov.in/sandbox/v3/sandbox-registration with your ABDM sandbox client ID and secret. When the form is submitted, NHCX sandbox roles are assigned to your client.
 
@@ -65,7 +65,7 @@ Decide your role before you create your participant. A wrong role and registry p
 | Payer | `10002` | Payer | `10004` |
 | TPA | `10003` | Payer | `10004` |
 
-## 5. Meet the dummy payer
+## Meet the dummy payer
 
 A provider needs a payer to send requests to. The sandbox has one: the dummy payer, participant code `1000003538@hcx`.
 

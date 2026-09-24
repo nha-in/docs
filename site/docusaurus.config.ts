@@ -344,6 +344,11 @@ const config: Config = {
     {src: `${siteBase}agent/abdm-support-agent.js`, defer: true},
   ],
 
+  // A client-side link to /reference/<spec> reaches a page whose Scalar
+  // bundle scalarOnReferencePagesOnly() removed from the page the reader came
+  // from. This reloads such a page in full so the bundle arrives with it.
+  clientModules: [require.resolve('./src/clientModules/scalarOnNavigation.ts')],
+
   headTags: [
     // The soft keyboard resizes the page rather than sliding it out from under
     // the chrome.
@@ -538,6 +543,15 @@ const config: Config = {
           {from: '/docs/nhcx/v1/concepts/pmjay-scheme-rules', to: '/docs/nhcx/v1/concepts/pmjay-on-nhcx'},
           // Payer flexibility was removed; its readers land on the use cases.
           {from: '/docs/nhcx/v1/concepts/payer-flexibility', to: '/docs/nhcx/v1/concepts/nhcx-use-cases'},
+          // Predetermination was removed from NHCX on 24 September 2026. Its
+          // FHIR page kept status and search under a new name.
+          {from: '/docs/nhcx/v1/reference/fhir/predetermination-status-and-search', to: '/docs/nhcx/v1/reference/fhir/status-and-search'},
+          {from: '/docs/nhcx/v1/api/predetermination', to: '/docs/nhcx/v1/api/'},
+          {from: '/reference/nhcx-predetermination', to: '/docs/nhcx/v1/api/'},
+          // The internal registry master call was removed from the registry.
+          {from: '/docs/nhcx/v1/api/registry/endpoints/registry-get-linked-registry-mst', to: '/docs/nhcx/v1/api/registry/'},
+          // Update ABHA number moved from the registry to the PMJAY payer APIs.
+          {from: '/docs/nhcx/v1/api/registry/endpoints/registry-update-abhanumber', to: '/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-update-abhanumber'},
           // Eleven NHCX endpoint pages were renamed so every slug is derived
           // from the operation's path, as the other pages are. The old slugs
           // came from the Bruno request names.

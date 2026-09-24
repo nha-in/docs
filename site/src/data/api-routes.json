@@ -10,7 +10,7 @@
     "moduleDir": "adjudicator",
     "method": "POST",
     "path": "/paymentNotice/init",
-    "summary": "Dummy payer, send a payment notice",
+    "summary": "Provider: make the dummy payer send a payment notice",
     "route": "/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-paymentnotice-init",
     "callbacks": []
   },
@@ -40,7 +40,7 @@
     "moduleDir": "adjudicator",
     "method": "POST",
     "path": "/pmjay/sbxhcx/nhcxpayerservice/v1/get/user-role",
-    "summary": "Adjudicator: role for a case",
+    "summary": "Adjudicator: get the user role for a case",
     "route": "/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-pmjay-sbxhcx-nhcxpayerservice-v1-get-user-role",
     "callbacks": []
   },
@@ -55,8 +55,24 @@
     "moduleDir": "adjudicator",
     "method": "POST",
     "path": "/process/request",
-    "summary": "Dummy payer, act on a request",
+    "summary": "Provider: make the dummy payer act on a request",
     "route": "/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-process-request",
+    "callbacks": []
+  },
+  {
+    "key": "update/abhanumber",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "adjudicator_update_abhanumber",
+    "module": "PMJAY adjudicator",
+    "moduleDir": "adjudicator",
+    "method": "POST",
+    "path": "/update/abhanumber",
+    "summary": "Update ABHA number",
+    "route": "/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-update-abhanumber",
     "callbacks": []
   },
   {
@@ -161,13 +177,13 @@
     "moduleDir": "claim",
     "method": "POST",
     "path": "/v1/claim/on_submit",
-    "summary": "Claim callback",
+    "summary": "Payer: send the claim response",
     "route": "/docs/nhcx/v1/api/claim/endpoints/claim-v1-claim-on-submit",
     "callbacks": [
       {
         "method": "POST",
         "path": "/v1/claim/on_submit",
-        "summary": "Receive claim callback",
+        "summary": "Provider receives the claim response",
         "route": "/docs/nhcx/v1/api/claim/endpoints/claim-webhook-v1-claim-on-submit",
         "relation": "triggered-by"
       }
@@ -185,13 +201,13 @@
     "moduleDir": "claim",
     "method": "POST",
     "path": "/v1/claim/submit",
-    "summary": "Claim submit",
+    "summary": "Provider: submit a claim",
     "route": "/docs/nhcx/v1/api/claim/endpoints/claim-v1-claim-submit",
     "callbacks": [
       {
         "method": "POST",
         "path": "/v1/claim/submit",
-        "summary": "Receive claim submit",
+        "summary": "Payer receives a claim",
         "route": "/docs/nhcx/v1/api/claim/endpoints/claim-webhook-v1-claim-submit",
         "relation": "triggered-by"
       }
@@ -209,7 +225,7 @@
     "moduleDir": "claim",
     "method": "POST",
     "path": "/v1/claim/on_submit",
-    "summary": "Receive claim callback",
+    "summary": "Provider receives the claim response",
     "route": "/docs/nhcx/v1/api/claim/endpoints/claim-webhook-v1-claim-on-submit",
     "callbacks": []
   },
@@ -225,7 +241,7 @@
     "moduleDir": "claim",
     "method": "POST",
     "path": "/v1/claim/submit",
-    "summary": "Receive claim submit",
+    "summary": "Payer receives a claim",
     "route": "/docs/nhcx/v1/api/claim/endpoints/claim-webhook-v1-claim-submit",
     "callbacks": []
   },
@@ -241,13 +257,13 @@
     "moduleDir": "communication",
     "method": "POST",
     "path": "/v1/communication/on_request",
-    "summary": "Communication acknowledgement callback",
+    "summary": "Provider: acknowledge the communication",
     "route": "/docs/nhcx/v1/api/communication/endpoints/communication-v1-communication-on-request",
     "callbacks": [
       {
         "method": "POST",
         "path": "/v1/communication/on_request",
-        "summary": "Receive communication acknowledgement callback",
+        "summary": "Payer receives the communication acknowledgement",
         "route": "/docs/nhcx/v1/api/communication/endpoints/communication-webhook-v1-communication-on-request",
         "relation": "triggered-by"
       }
@@ -265,13 +281,13 @@
     "moduleDir": "communication",
     "method": "POST",
     "path": "/v1/communication/request",
-    "summary": "Communication request",
+    "summary": "Payer: send a communication request",
     "route": "/docs/nhcx/v1/api/communication/endpoints/communication-v1-communication-request",
     "callbacks": [
       {
         "method": "POST",
         "path": "/v1/communication/request",
-        "summary": "Receive communication request",
+        "summary": "Provider receives a communication request",
         "route": "/docs/nhcx/v1/api/communication/endpoints/communication-webhook-v1-communication-request",
         "relation": "triggered-by"
       }
@@ -289,7 +305,7 @@
     "moduleDir": "communication",
     "method": "POST",
     "path": "/v1/communication/on_request",
-    "summary": "Receive communication acknowledgement callback",
+    "summary": "Payer receives the communication acknowledgement",
     "route": "/docs/nhcx/v1/api/communication/endpoints/communication-webhook-v1-communication-on-request",
     "callbacks": []
   },
@@ -305,7 +321,7 @@
     "moduleDir": "communication",
     "method": "POST",
     "path": "/v1/communication/request",
-    "summary": "Receive communication request",
+    "summary": "Provider receives a communication request",
     "route": "/docs/nhcx/v1/api/communication/endpoints/communication-webhook-v1-communication-request",
     "callbacks": []
   },
@@ -321,13 +337,13 @@
     "moduleDir": "eligibility",
     "method": "POST",
     "path": "/v1/coverageeligibility/check",
-    "summary": "Coverage eligibility check",
+    "summary": "Provider: check coverage eligibility",
     "route": "/docs/nhcx/v1/api/eligibility/endpoints/eligibility-v1-coverageeligibility-check",
     "callbacks": [
       {
         "method": "POST",
         "path": "/v1/coverageeligibility/check",
-        "summary": "Receive coverage eligibility check",
+        "summary": "Payer receives a coverage eligibility check",
         "route": "/docs/nhcx/v1/api/eligibility/endpoints/eligibility-webhook-v1-coverageeligibility-check",
         "relation": "triggered-by"
       }
@@ -345,13 +361,13 @@
     "moduleDir": "eligibility",
     "method": "POST",
     "path": "/v1/coverageeligibility/on_check",
-    "summary": "Coverage eligibility callback",
+    "summary": "Payer: send the coverage eligibility response",
     "route": "/docs/nhcx/v1/api/eligibility/endpoints/eligibility-v1-coverageeligibility-on-check",
     "callbacks": [
       {
         "method": "POST",
         "path": "/v1/coverageeligibility/on_check",
-        "summary": "Receive coverage eligibility callback",
+        "summary": "Provider receives the coverage eligibility response",
         "route": "/docs/nhcx/v1/api/eligibility/endpoints/eligibility-webhook-v1-coverageeligibility-on-check",
         "relation": "triggered-by"
       }
@@ -369,7 +385,7 @@
     "moduleDir": "eligibility",
     "method": "POST",
     "path": "/v1/coverageeligibility/check",
-    "summary": "Receive coverage eligibility check",
+    "summary": "Payer receives a coverage eligibility check",
     "route": "/docs/nhcx/v1/api/eligibility/endpoints/eligibility-webhook-v1-coverageeligibility-check",
     "callbacks": []
   },
@@ -385,7 +401,7 @@
     "moduleDir": "eligibility",
     "method": "POST",
     "path": "/v1/coverageeligibility/on_check",
-    "summary": "Receive coverage eligibility callback",
+    "summary": "Provider receives the coverage eligibility response",
     "route": "/docs/nhcx/v1/api/eligibility/endpoints/eligibility-webhook-v1-coverageeligibility-on-check",
     "callbacks": []
   },
@@ -465,13 +481,13 @@
     "moduleDir": "insurance-plan",
     "method": "POST",
     "path": "/v1/insuranceplan/on_request",
-    "summary": "Insurance plan callback",
+    "summary": "Payer: send the insurance plan",
     "route": "/docs/nhcx/v1/api/insurance-plan/endpoints/insurance-plan-v1-insuranceplan-on-request",
     "callbacks": [
       {
         "method": "POST",
         "path": "/v1/insuranceplan/on_request",
-        "summary": "Receive insurance plan callback",
+        "summary": "Provider receives the insurance plan",
         "route": "/docs/nhcx/v1/api/insurance-plan/endpoints/insurance-plan-webhook-v1-insuranceplan-on-request",
         "relation": "triggered-by"
       }
@@ -489,13 +505,13 @@
     "moduleDir": "insurance-plan",
     "method": "POST",
     "path": "/v1/insuranceplan/request",
-    "summary": "Insurance plan request",
+    "summary": "Provider: request an insurance plan",
     "route": "/docs/nhcx/v1/api/insurance-plan/endpoints/insurance-plan-v1-insuranceplan-request",
     "callbacks": [
       {
         "method": "POST",
         "path": "/v1/insuranceplan/request",
-        "summary": "Receive insurance plan request",
+        "summary": "Payer receives an insurance plan request",
         "route": "/docs/nhcx/v1/api/insurance-plan/endpoints/insurance-plan-webhook-v1-insuranceplan-request",
         "relation": "triggered-by"
       }
@@ -513,7 +529,7 @@
     "moduleDir": "insurance-plan",
     "method": "POST",
     "path": "/v1/insuranceplan/on_request",
-    "summary": "Receive insurance plan callback",
+    "summary": "Provider receives the insurance plan",
     "route": "/docs/nhcx/v1/api/insurance-plan/endpoints/insurance-plan-webhook-v1-insuranceplan-on-request",
     "callbacks": []
   },
@@ -529,7 +545,7 @@
     "moduleDir": "insurance-plan",
     "method": "POST",
     "path": "/v1/insuranceplan/request",
-    "summary": "Receive insurance plan request",
+    "summary": "Payer receives an insurance plan request",
     "route": "/docs/nhcx/v1/api/insurance-plan/endpoints/insurance-plan-webhook-v1-insuranceplan-request",
     "callbacks": []
   },
@@ -4467,8 +4483,7 @@
   {
     "key": "participant/create",
     "hosts": [
-      "apisbx.abdm.gov.in",
-      "apisprod.nha.gov.in"
+      "apisbx.abdm.gov.in"
     ],
     "kind": "operation",
     "operationId": "onboarding_participant_create",
@@ -4483,7 +4498,6 @@
   {
     "key": "update/validate",
     "hosts": [
-      "apisbx.abdm.gov.in",
       "apisprod.nha.gov.in"
     ],
     "kind": "operation",
@@ -4499,7 +4513,6 @@
   {
     "key": "participant/create",
     "hosts": [
-      "apisbx.abdm.gov.in",
       "apisprod.nha.gov.in"
     ],
     "kind": "operation",
@@ -4531,7 +4544,6 @@
   {
     "key": "validate",
     "hosts": [
-      "apisbx.abdm.gov.in",
       "apisprod.nha.gov.in"
     ],
     "kind": "operation",
@@ -4542,54 +4554,6 @@
     "path": "/validate",
     "summary": "Validate participant creation",
     "route": "/docs/nhcx/v1/api/onboarding/endpoints/onboarding-validate",
-    "callbacks": []
-  },
-  {
-    "key": "swagger-resources",
-    "hosts": [
-      "apisbx.abdm.gov.in",
-      "apisprod.nha.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "other_swagger_resources",
-    "module": "Other",
-    "moduleDir": "other",
-    "method": "GET",
-    "path": "/swagger-resources",
-    "summary": "Swagger resources list",
-    "route": "/docs/nhcx/v1/api/other/endpoints/other-swagger-resources",
-    "callbacks": []
-  },
-  {
-    "key": "swagger-resources/configuration/security",
-    "hosts": [
-      "apisbx.abdm.gov.in",
-      "apisprod.nha.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "other_swagger_resources_configuration_security",
-    "module": "Other",
-    "moduleDir": "other",
-    "method": "GET",
-    "path": "/swagger-resources/configuration/security",
-    "summary": "Swagger security configuration",
-    "route": "/docs/nhcx/v1/api/other/endpoints/other-swagger-resources-configuration-security",
-    "callbacks": []
-  },
-  {
-    "key": "swagger-resources/configuration/ui",
-    "hosts": [
-      "apisbx.abdm.gov.in",
-      "apisprod.nha.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "other_swagger_resources_configuration_ui",
-    "module": "Other",
-    "moduleDir": "other",
-    "method": "GET",
-    "path": "/swagger-resources/configuration/ui",
-    "summary": "Swagger UI configuration",
-    "route": "/docs/nhcx/v1/api/other/endpoints/other-swagger-resources-configuration-ui",
     "callbacks": []
   },
   {
@@ -4604,7 +4568,7 @@
     "moduleDir": "other",
     "method": "POST",
     "path": "/v1/delete",
-    "summary": "Delete records (troubleshooting)",
+    "summary": "Support: delete records by correlation ID",
     "route": "/docs/nhcx/v1/api/other/endpoints/other-v1-delete",
     "callbacks": []
   },
@@ -4620,13 +4584,13 @@
     "moduleDir": "other",
     "method": "POST",
     "path": "/v1/error",
-    "summary": "Error report (callback)",
+    "summary": "NHCX: report a request it could not deliver",
     "route": "/docs/nhcx/v1/api/other/endpoints/other-v1-error",
     "callbacks": [
       {
         "method": "POST",
         "path": "/v1/error",
-        "summary": "Receive error report (callback)",
+        "summary": "Participant receives an error report",
         "route": "/docs/nhcx/v1/api/other/endpoints/other-webhook-v1-error",
         "relation": "triggered-by"
       }
@@ -4644,7 +4608,7 @@
     "moduleDir": "other",
     "method": "POST",
     "path": "/v1/notification/on_subscribe",
-    "summary": "Notification on_subscribe",
+    "summary": "Patient app: acknowledge a notification subscription",
     "route": "/docs/nhcx/v1/api/other/endpoints/other-v1-notification-on-subscribe",
     "callbacks": []
   },
@@ -4659,7 +4623,7 @@
     "moduleDir": "other",
     "method": "POST",
     "path": "/v1/notification/subscribe",
-    "summary": "Notification subscribe",
+    "summary": "Patient app: subscribe an ABHA number to notifications",
     "route": "/docs/nhcx/v1/api/other/endpoints/other-v1-notification-subscribe",
     "callbacks": []
   },
@@ -4675,49 +4639,17 @@
     "moduleDir": "other",
     "method": "POST",
     "path": "/v1/on_status",
-    "summary": "Status callback",
+    "summary": "Recipient: answer a status check",
     "route": "/docs/nhcx/v1/api/other/endpoints/other-v1-on-status",
     "callbacks": [
       {
         "method": "POST",
         "path": "/v1/on_status",
-        "summary": "Receive status callback",
+        "summary": "Sender receives the status answer",
         "route": "/docs/nhcx/v1/api/other/endpoints/other-webhook-v1-on-status",
         "relation": "triggered-by"
       }
     ]
-  },
-  {
-    "key": "api-docs",
-    "hosts": [
-      "apisbx.abdm.gov.in",
-      "apisprod.nha.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "other_v2_api_docs",
-    "module": "Other",
-    "moduleDir": "other",
-    "method": "GET",
-    "path": "/v2/api-docs",
-    "summary": "Swagger 2 document (status service)",
-    "route": "/docs/nhcx/v1/api/other/endpoints/other-v2-api-docs",
-    "callbacks": []
-  },
-  {
-    "key": "api-docs",
-    "hosts": [
-      "apisbx.abdm.gov.in",
-      "apisprod.nha.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "other_v3_api_docs",
-    "module": "Other",
-    "moduleDir": "other",
-    "method": "GET",
-    "path": "/v3/api-docs",
-    "summary": "OpenAPI 3 document (status service)",
-    "route": "/docs/nhcx/v1/api/other/endpoints/other-v3-api-docs",
-    "callbacks": []
   },
   {
     "key": "error",
@@ -4731,7 +4663,7 @@
     "moduleDir": "other",
     "method": "POST",
     "path": "/v1/error",
-    "summary": "Receive error report (callback)",
+    "summary": "Participant receives an error report",
     "route": "/docs/nhcx/v1/api/other/endpoints/other-webhook-v1-error",
     "callbacks": []
   },
@@ -4747,7 +4679,7 @@
     "moduleDir": "other",
     "method": "POST",
     "path": "/v1/on_status",
-    "summary": "Receive status callback",
+    "summary": "Sender receives the status answer",
     "route": "/docs/nhcx/v1/api/other/endpoints/other-webhook-v1-on-status",
     "callbacks": []
   },
@@ -5829,13 +5761,13 @@
     "moduleDir": "payment-notice",
     "method": "POST",
     "path": "/v1/paymentnotice/on_request",
-    "summary": "Payment notice acknowledgement",
+    "summary": "Provider: acknowledge the payment notice",
     "route": "/docs/nhcx/v1/api/payment-notice/endpoints/payment-notice-v1-paymentnotice-on-request",
     "callbacks": [
       {
         "method": "POST",
         "path": "/v1/paymentnotice/on_request",
-        "summary": "Receive payment notice acknowledgement",
+        "summary": "Payer receives the payment acknowledgement",
         "route": "/docs/nhcx/v1/api/payment-notice/endpoints/payment-notice-webhook-v1-paymentnotice-on-request",
         "relation": "triggered-by"
       }
@@ -5853,13 +5785,13 @@
     "moduleDir": "payment-notice",
     "method": "POST",
     "path": "/v1/paymentnotice/request",
-    "summary": "Payment notice request",
+    "summary": "Payer: send a payment notice",
     "route": "/docs/nhcx/v1/api/payment-notice/endpoints/payment-notice-v1-paymentnotice-request",
     "callbacks": [
       {
         "method": "POST",
         "path": "/v1/paymentnotice/request",
-        "summary": "Receive payment notice request",
+        "summary": "Provider receives a payment notice",
         "route": "/docs/nhcx/v1/api/payment-notice/endpoints/payment-notice-webhook-v1-paymentnotice-request",
         "relation": "triggered-by"
       }
@@ -5877,7 +5809,7 @@
     "moduleDir": "payment-notice",
     "method": "POST",
     "path": "/v1/paymentnotice/on_request",
-    "summary": "Receive payment notice acknowledgement",
+    "summary": "Payer receives the payment acknowledgement",
     "route": "/docs/nhcx/v1/api/payment-notice/endpoints/payment-notice-webhook-v1-paymentnotice-on-request",
     "callbacks": []
   },
@@ -5893,7 +5825,7 @@
     "moduleDir": "payment-notice",
     "method": "POST",
     "path": "/v1/paymentnotice/request",
-    "summary": "Receive payment notice request",
+    "summary": "Provider receives a payment notice",
     "route": "/docs/nhcx/v1/api/payment-notice/endpoints/payment-notice-webhook-v1-paymentnotice-request",
     "callbacks": []
   },
@@ -5909,13 +5841,13 @@
     "moduleDir": "preauth",
     "method": "POST",
     "path": "/v1/preauth/on_submit",
-    "summary": "Pre-authorisation callback",
+    "summary": "Payer: send the pre-authorisation response",
     "route": "/docs/nhcx/v1/api/preauth/endpoints/preauth-v1-preauth-on-submit",
     "callbacks": [
       {
         "method": "POST",
         "path": "/v1/preauth/on_submit",
-        "summary": "Receive pre-authorisation callback",
+        "summary": "Provider receives the pre-authorisation response",
         "route": "/docs/nhcx/v1/api/preauth/endpoints/preauth-webhook-v1-preauth-on-submit",
         "relation": "triggered-by"
       }
@@ -5933,13 +5865,13 @@
     "moduleDir": "preauth",
     "method": "POST",
     "path": "/v1/preauth/submit",
-    "summary": "Pre-authorisation submit",
+    "summary": "Provider: submit a pre-authorisation",
     "route": "/docs/nhcx/v1/api/preauth/endpoints/preauth-v1-preauth-submit",
     "callbacks": [
       {
         "method": "POST",
         "path": "/v1/preauth/submit",
-        "summary": "Receive pre-authorisation submit",
+        "summary": "Payer receives a pre-authorisation",
         "route": "/docs/nhcx/v1/api/preauth/endpoints/preauth-webhook-v1-preauth-submit",
         "relation": "triggered-by"
       }
@@ -5957,7 +5889,7 @@
     "moduleDir": "preauth",
     "method": "POST",
     "path": "/v1/preauth/on_submit",
-    "summary": "Receive pre-authorisation callback",
+    "summary": "Provider receives the pre-authorisation response",
     "route": "/docs/nhcx/v1/api/preauth/endpoints/preauth-webhook-v1-preauth-on-submit",
     "callbacks": []
   },
@@ -5973,88 +5905,8 @@
     "moduleDir": "preauth",
     "method": "POST",
     "path": "/v1/preauth/submit",
-    "summary": "Receive pre-authorisation submit",
+    "summary": "Payer receives a pre-authorisation",
     "route": "/docs/nhcx/v1/api/preauth/endpoints/preauth-webhook-v1-preauth-submit",
-    "callbacks": []
-  },
-  {
-    "key": "predetermination/on_submit",
-    "hosts": [
-      "apisbx.abdm.gov.in",
-      "apisprod.nha.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "predetermination_v1_predetermination_on_submit",
-    "module": "Predetermination",
-    "moduleDir": "predetermination",
-    "method": "POST",
-    "path": "/v1/predetermination/on_submit",
-    "summary": "Predetermination callback",
-    "route": "/docs/nhcx/v1/api/predetermination/endpoints/predetermination-v1-predetermination-on-submit",
-    "callbacks": [
-      {
-        "method": "POST",
-        "path": "/v1/predetermination/on_submit",
-        "summary": "Receive predetermination callback",
-        "route": "/docs/nhcx/v1/api/predetermination/endpoints/predetermination-webhook-v1-predetermination-on-submit",
-        "relation": "triggered-by"
-      }
-    ]
-  },
-  {
-    "key": "predetermination/submit",
-    "hosts": [
-      "apisbx.abdm.gov.in",
-      "apisprod.nha.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "predetermination_v1_predetermination_submit",
-    "module": "Predetermination",
-    "moduleDir": "predetermination",
-    "method": "POST",
-    "path": "/v1/predetermination/submit",
-    "summary": "Predetermination request",
-    "route": "/docs/nhcx/v1/api/predetermination/endpoints/predetermination-v1-predetermination-submit",
-    "callbacks": [
-      {
-        "method": "POST",
-        "path": "/v1/predetermination/submit",
-        "summary": "Receive predetermination request",
-        "route": "/docs/nhcx/v1/api/predetermination/endpoints/predetermination-webhook-v1-predetermination-submit",
-        "relation": "triggered-by"
-      }
-    ]
-  },
-  {
-    "key": "predetermination/on_submit",
-    "hosts": [
-      "apisbx.abdm.gov.in",
-      "apisprod.nha.gov.in"
-    ],
-    "kind": "callback",
-    "operationId": "predetermination_webhook_v1_predetermination_on_submit",
-    "module": "Predetermination",
-    "moduleDir": "predetermination",
-    "method": "POST",
-    "path": "/v1/predetermination/on_submit",
-    "summary": "Receive predetermination callback",
-    "route": "/docs/nhcx/v1/api/predetermination/endpoints/predetermination-webhook-v1-predetermination-on-submit",
-    "callbacks": []
-  },
-  {
-    "key": "predetermination/submit",
-    "hosts": [
-      "apisbx.abdm.gov.in",
-      "apisprod.nha.gov.in"
-    ],
-    "kind": "callback",
-    "operationId": "predetermination_webhook_v1_predetermination_submit",
-    "module": "Predetermination",
-    "moduleDir": "predetermination",
-    "method": "POST",
-    "path": "/v1/predetermination/submit",
-    "summary": "Receive predetermination request",
-    "route": "/docs/nhcx/v1/api/predetermination/endpoints/predetermination-webhook-v1-predetermination-submit",
     "callbacks": []
   },
   {
@@ -6265,22 +6117,6 @@
     "callbacks": []
   },
   {
-    "key": "get/linked/registry/mst",
-    "hosts": [
-      "apisbx.abdm.gov.in",
-      "apisprod.nha.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "registry_get_linked_registry_mst",
-    "module": "Participant registry",
-    "moduleDir": "registry",
-    "method": "POST",
-    "path": "/get/linked/registry/mst",
-    "summary": "Get linked registry master (internal)",
-    "route": "/docs/nhcx/v1/api/registry/endpoints/registry-get-linked-registry-mst",
-    "callbacks": []
-  },
-  {
     "key": "get/session",
     "hosts": [
       "apisbx.abdm.gov.in",
@@ -6395,8 +6231,7 @@
   {
     "key": "participant/update",
     "hosts": [
-      "apisbx.abdm.gov.in",
-      "apisprod.nha.gov.in"
+      "apisbx.abdm.gov.in"
     ],
     "kind": "operation",
     "operationId": "registry_participant_update",
@@ -6457,22 +6292,6 @@
     "callbacks": []
   },
   {
-    "key": "update/abhanumber",
-    "hosts": [
-      "apisbx.abdm.gov.in",
-      "apisprod.nha.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "registry_update_abhanumber",
-    "module": "Participant registry",
-    "moduleDir": "registry",
-    "method": "POST",
-    "path": "/update/abhanumber",
-    "summary": "Update ABHA number",
-    "route": "/docs/nhcx/v1/api/registry/endpoints/registry-update-abhanumber",
-    "callbacks": []
-  },
-  {
     "key": "participant/delink/policy",
     "hosts": [
       "apisbx.abdm.gov.in",
@@ -6483,8 +6302,8 @@
     "module": "Participant registry",
     "moduleDir": "registry",
     "method": "POST",
-    "path": "/V2/participant/delink/abha/policy",
-    "summary": "De-link ABHA policies (V2)",
+    "path": "/v2/participant/delink/abha/policy",
+    "summary": "De-link ABHA policies (v2)",
     "route": "/docs/nhcx/v1/api/registry/endpoints/registry-v2-participant-delink-abha-policy",
     "callbacks": []
   },
@@ -6499,8 +6318,8 @@
     "module": "Participant registry",
     "moduleDir": "registry",
     "method": "POST",
-    "path": "/V2/participant/get/policies",
-    "summary": "Get beneficiary policies (V2)",
+    "path": "/v2/participant/get/policies",
+    "summary": "Get beneficiary policies (v2)",
     "route": "/docs/nhcx/v1/api/registry/endpoints/registry-v2-participant-get-policies",
     "callbacks": []
   },
@@ -6515,8 +6334,8 @@
     "module": "Participant registry",
     "moduleDir": "registry",
     "method": "POST",
-    "path": "/V2/participant/link/abha/policy",
-    "summary": "Link ABHA number to policies (V2)",
+    "path": "/v2/participant/link/abha/policy",
+    "summary": "Link ABHA number to policies (v2)",
     "route": "/docs/nhcx/v1/api/registry/endpoints/registry-v2-participant-link-abha-policy",
     "callbacks": []
   },
@@ -6555,7 +6374,6 @@
   {
     "key": "participant/update",
     "hosts": [
-      "apisbx.abdm.gov.in",
       "apisprod.nha.gov.in"
     ],
     "kind": "operation",
@@ -7004,13 +6822,13 @@
     "moduleDir": "status",
     "method": "POST",
     "path": "/v1/search/on_submit",
-    "summary": "Search result callback",
+    "summary": "Payer: send the search result",
     "route": "/docs/nhcx/v1/api/status/endpoints/status-v1-search-on-submit",
     "callbacks": [
       {
         "method": "POST",
         "path": "/v1/search/on_submit",
-        "summary": "Receive search result callback",
+        "summary": "Authorised entity receives the search result",
         "route": "/docs/nhcx/v1/api/status/endpoints/status-webhook-v1-search-on-submit",
         "relation": "triggered-by"
       }
@@ -7028,13 +6846,13 @@
     "moduleDir": "status",
     "method": "POST",
     "path": "/v1/search/submit",
-    "summary": "Search submit",
+    "summary": "Authorised entity: search for claim information",
     "route": "/docs/nhcx/v1/api/status/endpoints/status-v1-search-submit",
     "callbacks": [
       {
         "method": "POST",
         "path": "/v1/search/submit",
-        "summary": "Receive search submit",
+        "summary": "Payer receives a claim search",
         "route": "/docs/nhcx/v1/api/status/endpoints/status-webhook-v1-search-submit",
         "relation": "triggered-by"
       }
@@ -7052,13 +6870,13 @@
     "moduleDir": "status",
     "method": "POST",
     "path": "/v1/status",
-    "summary": "Status check",
+    "summary": "Sender: check the status of a request",
     "route": "/docs/nhcx/v1/api/status/endpoints/status-v1-status",
     "callbacks": [
       {
         "method": "POST",
         "path": "/v1/status",
-        "summary": "Receive status check",
+        "summary": "Payer receives a status check",
         "route": "/docs/nhcx/v1/api/status/endpoints/status-webhook-v1-status",
         "relation": "triggered-by"
       }
@@ -7076,7 +6894,7 @@
     "moduleDir": "status",
     "method": "POST",
     "path": "/v1/search/on_submit",
-    "summary": "Receive search result callback",
+    "summary": "Authorised entity receives the search result",
     "route": "/docs/nhcx/v1/api/status/endpoints/status-webhook-v1-search-on-submit",
     "callbacks": []
   },
@@ -7092,7 +6910,7 @@
     "moduleDir": "status",
     "method": "POST",
     "path": "/v1/search/submit",
-    "summary": "Receive search submit",
+    "summary": "Payer receives a claim search",
     "route": "/docs/nhcx/v1/api/status/endpoints/status-webhook-v1-search-submit",
     "callbacks": []
   },
@@ -7108,7 +6926,7 @@
     "moduleDir": "status",
     "method": "POST",
     "path": "/v1/status",
-    "summary": "Receive status check",
+    "summary": "Payer receives a status check",
     "route": "/docs/nhcx/v1/api/status/endpoints/status-webhook-v1-status",
     "callbacks": []
   },
@@ -7124,9 +6942,17 @@
     "moduleDir": "task",
     "method": "POST",
     "path": "/v1/task/on_submit",
-    "summary": "Task callback (reprocess or cancel outcome)",
+    "summary": "Payer: send the task outcome",
     "route": "/docs/nhcx/v1/api/task/endpoints/task-v1-task-on-submit",
-    "callbacks": []
+    "callbacks": [
+      {
+        "method": "POST",
+        "path": "/v1/task/on_submit",
+        "summary": "Provider receives the task outcome",
+        "route": "/docs/nhcx/v1/api/task/endpoints/task-webhook-v1-task-on-submit",
+        "relation": "triggered-by"
+      }
+    ]
   },
   {
     "key": "task/submit",
@@ -7140,9 +6966,17 @@
     "moduleDir": "task",
     "method": "POST",
     "path": "/v1/task/submit",
-    "summary": "Task submit (reprocess or cancel)",
+    "summary": "Provider: submit a reprocess or cancel task",
     "route": "/docs/nhcx/v1/api/task/endpoints/task-v1-task-submit",
-    "callbacks": []
+    "callbacks": [
+      {
+        "method": "POST",
+        "path": "/v1/task/submit",
+        "summary": "Payer receives a reprocess or cancel task",
+        "route": "/docs/nhcx/v1/api/task/endpoints/task-webhook-v1-task-submit",
+        "relation": "triggered-by"
+      }
+    ]
   },
   {
     "key": "task/on_submit",
@@ -7156,7 +6990,7 @@
     "moduleDir": "task",
     "method": "POST",
     "path": "/v1/task/on_submit",
-    "summary": "Receive task callback (reprocess or cancel outcome)",
+    "summary": "Provider receives the task outcome",
     "route": "/docs/nhcx/v1/api/task/endpoints/task-webhook-v1-task-on-submit",
     "callbacks": []
   },
@@ -7172,7 +7006,7 @@
     "moduleDir": "task",
     "method": "POST",
     "path": "/v1/task/submit",
-    "summary": "Receive task submit (reprocess or cancel)",
+    "summary": "Payer receives a reprocess or cancel task",
     "route": "/docs/nhcx/v1/api/task/endpoints/task-webhook-v1-task-submit",
     "callbacks": []
   }

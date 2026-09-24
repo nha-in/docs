@@ -25,7 +25,7 @@ Sent on `/v1/claim/on_submit`.
 
 ## Elements
 
-### 1. ClaimResponse
+### ClaimResponse
 
 NRCeS profile: [ClaimResponse](https://nrces.in/ndhm/fhir/r4/StructureDefinition-ClaimResponse.html).
 
@@ -58,7 +58,7 @@ NRCeS profile: [ClaimResponse](https://nrces.in/ndhm/fhir/r4/StructureDefinition
 | `total[].amount` | value `150000` |
 | `total[]` | id `MRAV1985001/SANDBOX-DEFAULT-01` |
 
-### 2. Patient
+### Patient
 
 NRCeS profile: [Patient](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Patient.html).
 
@@ -70,7 +70,7 @@ NRCeS profile: [Patient](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Patie
 | `gender` | `male` |
 | `birthDate` | `1985-06-15` |
 
-### 3. Organization (pay)
+### Organization (pay)
 
 NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Organization.html).
 
@@ -82,7 +82,7 @@ NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-
 | `type[].coding[]` | `pay` Payer in `http://terminology.hl7.org/CodeSystem/organization-type` |
 | `name` | `Sandbox Payer` |
 
-### 4. Organization (prov)
+### Organization (prov)
 
 NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Organization.html).
 
@@ -94,7 +94,7 @@ NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-
 | `type[].coding[]` | `prov` Healthcare Provider in `http://terminology.hl7.org/CodeSystem/organization-type` |
 | `name` | `XYZ Multispeciality Hospital` |
 
-### 5. Coverage
+### Coverage
 
 NRCeS profile: [Coverage](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Coverage.html).
 
@@ -123,23 +123,23 @@ The same bundle, told apart by the workflow code, `outcome` and the claim-level 
 
 ## Rules
 
-### 1. partial is two things
+### partial is two things
 
 An acknowledgement and a query are both `partial`. Read the claim-level reason, then `disposition`, then the totals.
 
-### 2. Deductions
+### Deductions
 
 Item-level `deductible` adjudications carry the amount and the reason. Sum them before reporting an approved figure.
 
-### 3. Joining
+### Joining
 
 Join the response to the claim by `identifier.value`.
 
-### 4. Settlement is separate
+### Settlement is separate
 
 An approval closes adjudication, not the money. The claim closes on the payment notice.
 
-### 5. Submitted amounts
+### Submitted amounts
 
 Do not reconcile your submitted amount against the payer's `submitted` total; it comes from the payer's own record.
 

@@ -52,7 +52,7 @@ related:
 
 This call gives you an access token. Every call you make to the National Health Claims Exchange ([NHCX](../../shared/glossary/nhcx.md)) carries it.
 
-You send the client id and client secret issued to you for [ABDM](../../shared/glossary/abdm.md) [Milestone 1](../../shared/glossary/m1.md). The ABDM [gateway](../../shared/glossary/gateway.md) returns a bearer token that lasts 1200 seconds (20 minutes). You renew it on a timer before the 20 minutes run out. See [the session token](../concepts/session-token.md) for how one token serves every NHCX call.
+You send the client ID and client secret you received when you registered on the [ABDM](../../shared/glossary/abdm.md) sandbox, `ABDM_CLIENT_ID` and `ABDM_CLIENT_SECRET`. The ABDM [gateway](../../shared/glossary/gateway.md) returns a bearer token that lasts 1200 seconds (20 minutes). You renew it on a timer before the 20 minutes run out. See [the session token](../concepts/session-token.md) for how one token serves every NHCX call.
 
 ## Before you start
 

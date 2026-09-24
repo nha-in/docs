@@ -192,7 +192,7 @@ Encrypt the bundle into a [JWE](../glossary/jwe.md) in compact serialisation: fi
 
 ### 5. Post it
 
-Post to the use-case path on the use-case base address in [NHCX environments, hosts and base URLs](../sandbox/environments-and-base-urls.md). Send `Accept: application/json` and `Content-Type: application/json`. Send the session token in both `bearer_auth` and `Authorization`, each as `Bearer <ACCESS_TOKEN_FROM_SESSION_TOKEN>`.
+Post to the use-case path on the use-case base address in [NHCX environments, hosts and base URLs](../sandbox/environments-and-base-urls.md). Send `Accept: application/json` and `Content-Type: application/json`. Send the session token in `bearer_auth`, as `Bearer <ACCESS_TOKEN_FROM_SESSION_TOKEN>`.
 
 NHCX answers `202` at once. A gateway error, an `NHCX-` code, comes back in this response instead.
 

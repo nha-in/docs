@@ -120,7 +120,7 @@ graph LR
 
 ### The use cases it carries
 
-Coverage eligibility, insurance plan, preauthorisation, predetermination, claim, communication requests, payment notices, reprocess and cancel tasks, status checks and claim search. [The claim cycle](./claim-cycle.md) shows how they fit together.
+Coverage eligibility, insurance plan, preauthorisation, claim, communication requests, payment notices, reprocess and cancel tasks, status checks and claim search. [The claim cycle](./claim-cycle.md) shows how they fit together.
 
 ## How you know it worked
 
