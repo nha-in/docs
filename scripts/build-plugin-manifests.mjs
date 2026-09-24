@@ -15,7 +15,7 @@
 //   .codex-plugin/plugin.json  Codex, which points at ./skills/ explicitly
 //
 // plus .agents/plugins/marketplace.json at the repository root, which is what
-// `codex plugin marketplace add nha-in/docs` reads, mirroring the
+// `codex plugin marketplace add` reads, mirroring the
 // .claude-plugin/marketplace.json beside it.
 //
 // Three manifests naming the same version is three chances to disagree, so
@@ -120,6 +120,7 @@ function standard(manifest) {
 const market = JSON.parse(
   readFileSync(join(root, '.claude-plugin', 'marketplace.json'), 'utf8'),
 );
+const PUBLIC = JSON.parse(readFileSync(join(root, 'publish', 'agent-plugins.json'), 'utf8'));
 
 /**
  * Component folders a plugin keeps for Claude Code, having accepted that the
@@ -184,9 +185,14 @@ for (const entry of market.plugins) {
     throw new Error(`No storefront copy for the portable plugin ${claude.name}`);
   }
   const homepage = entry.homepage ?? market.owner?.url;
+  // A plugin published to the public marketplace names that repository as its
+  // source; this one is private.
+  const repository = PUBLIC.plugins.includes(claude.name) ? `https://github.com/${PUBLIC.repo}` : homepage;
   const author = {
     name: claude.author?.name ?? market.owner?.name,
-    ...(market.owner?.url ? {url: market.owner.url} : {}),
+    // The plugin's own homepage when it has one: a public plugin must not link
+    // its author to this repository, which is private.
+    ...(entry.homepage ?? market.owner?.url ? {url: entry.homepage ?? market.owner.url} : {}),
   };
 
   // The standard's manifest schema is closed: $schema and name are required,
@@ -201,7 +207,7 @@ for (const entry of market.plugins) {
     description: claude.description,
     author,
     homepage,
-    repository: homepage,
+    repository,
     license: claude.license,
     keywords: claude.keywords,
   }));
@@ -217,7 +223,7 @@ for (const entry of market.plugins) {
     description: claude.description,
     author,
     homepage,
-    repository: homepage,
+    repository,
     license: claude.license,
     keywords: claude.keywords,
     skills: './skills/',
