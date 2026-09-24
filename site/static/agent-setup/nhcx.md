@@ -23,13 +23,13 @@ The plugin carries all seven and updates in place, so prefer it wherever it inst
 ### Claude Code
 
 ```
-claude plugin marketplace add nha-in/docs && claude plugin install nhcx@abdm-portal
+claude plugin marketplace add nha-in/agent-plugins && claude plugin install nhcx@nha
 ```
 
 ### Codex
 
 ```
-codex plugin marketplace add nha-in/docs
+codex plugin marketplace add nha-in/agent-plugins
 ```
 
 Then open /plugins in Codex and install `nhcx`.
@@ -39,22 +39,22 @@ Then open /plugins in Codex and install `nhcx`.
 Cursor, GitHub Copilot and the others install plugins only from their own marketplaces, where NHCX is not listed yet. Install the skills one at a time instead, which is also the fallback anywhere the marketplace add above fails. The skills installer finds every coding agent in the project and sets the skill up for each:
 
 ```
-npx skills add nha-in/docs/plugins/nhcx/skills/nhcx-coverage
+npx skills add nha-in/agent-plugins/plugins/nhcx/skills/nhcx-coverage
 ```
 
 With git alone, fetch just the skill's folder and copy it to where the agent reads skills from: `.claude/skills` for Claude Code, `.agents/skills` for Codex, `.cursor/skills` for Cursor, `.github/skills` for GitHub Copilot, `.gemini/skills` for Gemini CLI. For example:
 
 ```
-git clone --depth 1 --filter=blob:none --sparse https://github.com/nha-in/docs .nhcx && git -C .nhcx sparse-checkout set plugins/nhcx/skills/nhcx-coverage && mkdir -p .claude/skills && cp -R .nhcx/plugins/nhcx/skills/nhcx-coverage .claude/skills/ && rm -rf .nhcx
+git clone --depth 1 --filter=blob:none --sparse https://github.com/nha-in/agent-plugins .nhcx && git -C .nhcx sparse-checkout set plugins/nhcx/skills/nhcx-coverage && mkdir -p .claude/skills && cp -R .nhcx/plugins/nhcx/skills/nhcx-coverage .claude/skills/ && rm -rf .nhcx
 ```
 
-- `nha-in/docs/plugins/nhcx/skills/nhcx-full`
-- `nha-in/docs/plugins/nhcx/skills/nhcx-coverage`
-- `nha-in/docs/plugins/nhcx/skills/nhcx-preauth`
-- `nha-in/docs/plugins/nhcx/skills/nhcx-claim`
-- `nha-in/docs/plugins/nhcx/skills/nhcx-communication`
-- `nha-in/docs/plugins/nhcx/skills/nhcx-payment`
-- `nha-in/docs/plugins/nhcx/skills/nhcx-reprocess`
+- `nha-in/agent-plugins/plugins/nhcx/skills/nhcx-full`
+- `nha-in/agent-plugins/plugins/nhcx/skills/nhcx-coverage`
+- `nha-in/agent-plugins/plugins/nhcx/skills/nhcx-preauth`
+- `nha-in/agent-plugins/plugins/nhcx/skills/nhcx-claim`
+- `nha-in/agent-plugins/plugins/nhcx/skills/nhcx-communication`
+- `nha-in/agent-plugins/plugins/nhcx/skills/nhcx-payment`
+- `nha-in/agent-plugins/plugins/nhcx/skills/nhcx-reprocess`
 
 `https://docs.abdm.gov.in/skills/nhcx-index.json` lists every NHCX skill, its archive and the exact files it is made of. A skill is 66 to 131 files across its folders, so take the archive rather than fetching files one at a time.
 
