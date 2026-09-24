@@ -1,4 +1,4 @@
-# Submit the notification subscribe
+# Patient app: subscribe an ABHA number to notifications
 
 `POST /v1/notification/subscribe`
 
@@ -27,7 +27,7 @@ NHCX saves the subscription and answers `200` with a `subscription_ID` and its s
 
 - Reusing a correlation ID on a retry, which returns `409`.
 - Subscribing once and assuming it still holds after another app logs in.
-- Sending it to the exchange host instead of `https://hcxsbx.ABDM.gov.in/v1/notification/subscribe`.
+- Sending it to the exchange host instead of `https://hcxsbx.abdm.gov.in/v1/notification/subscribe`.
 - Sending the token on `bearer_auth` instead of `Authorization`.
 
 ### Best practices
@@ -49,10 +49,6 @@ Chapter [Notifications and patient apps](/docs/nhcx/v1/reference/notifications-a
 ```bash
 curl --request POST \
   --url https://hcxsbx.abdm.gov.in/v1/notification/subscribe \
-  --header 'x-hcx-sender_code: phr-app-xyz@bsp' \
-  --header 'x-hcx-recipient_code: nhcx-gateway@hcx' \
-  --header 'x-hcx-timestamp: <iso timestamp>' \
-  --header 'x-hcx-correlation_id: <uuid>' \
   --header 'Content-Type: application/json' \
   --data '{
   "payload": "eyJhbGciOiJSU0EtT0FFUCIsImVuYyI6IkEyNTZHQ00iLCJ4LWhjeC1zZW5kZXJfY29kZSI6InBoci1hcHAteHl6QGJzcCJ9.encrypted_key.iv.ciphertext.tag",
@@ -70,12 +66,16 @@ curl --request POST \
 }'
 ```
 
-## Headers
+## Protected header
 
+These fields go in the JWE protected header of `payload`, not as HTTP headers.
+
+- `alg` (string, required): Key management algorithm. Always `RSA-OAEP-256`: the content key is wrapped with the recipient's RSA public key.
+- `enc` (string, required): Content encryption algorithm. Always `A256GCM`.
 - `x-hcx-sender_code` (string, required): Your participant code. Mandatory on the envelope.
 - `x-hcx-recipient_code` (string, required): The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
-- `x-hcx-timestamp` (string, required): See the format note below. Mandatory on the envelope.
-- `x-hcx-correlation_id` (string, required): The thread. See the rule below. Mandatory on the envelope.
+- `x-hcx-timestamp` (string, required): The time the message was made. [Timestamp](/docs/nhcx/v1/reference/envelope-fields#timestamp) gives the format. Mandatory on the envelope.
+- `x-hcx-correlation_id` (string, required): The thread that ties a request to its answers. [The correlation ID rule](/docs/nhcx/v1/reference/envelope-fields#the-correlation-id-rule-in-full) says when to reuse it. Mandatory on the envelope.
 
 ## Body
 
@@ -91,8 +91,15 @@ curl --request POST \
 ## Responses
 
 - `200`: NHCX decrypts the request with its private key, validates headers and payload, persists the subscription with Last-Linked-Wins per ABHA id and returns the subscription state synchronously: HTTP 200 with a SubscribeResponse carrying timestamp, api_call_id, correlation_id, subscription_id, subscription_status (active, replaced or expired), expiry and message.
+  - `timestamp` (string)
+  - `api_call_id` (string)
+  - `correlation_id` (string)
+  - `subscription_id` (string)
+  - `subscription_status` (string)
+  - `expiry` (string)
+  - `message` (string)
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

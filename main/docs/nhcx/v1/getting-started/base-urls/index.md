@@ -1,12 +1,12 @@
 # Base URLs
 
-Every NHCX call is a base URL followed by a path. The paths are the same in the sandbox and in production. The bases are not, and they differ from one service to the next, so keep each one in configuration rather than in code.
+Every NHCX call is a base URL followed by a path. Each base URL is fixed: one value in the sandbox and one in production. It does not change from call to call or from participant to participant. The paths are the same in both environments. Each service has its own base, so keep the bases in configuration and set them once per environment.
 
 ## In short
 
 - Each service has its own base. The exchange, the participant service and the ABDM gateway are three different bases, not one.
 - A path in this documentation, such as `/v1/preauth/submit`, goes after the base of the service that serves it.
-- Only some production bases are published. The rest arrive with your onboarding; Going Live has the order of the switch.
+- Each base is a fixed value for its environment. Going Live has the order of the switch from the sandbox values to the production values.
 
 ## Every base, in both environments
 
@@ -40,7 +40,7 @@ On the sandbox, a preauthorisation is therefore posted to `https://apisbx.abdm.g
 
 ## Production
 
-The exchange's production base is `https://apisprod.nha.gov.in/hcx`. The participant service's production address is published, and so is ABDM's production gateway. The NHCX Adapter assumes the pattern of swapping the sandbox hostname for the others, but that is an inference. Check every production base against your onboarding letter before you switch.
+The production bases are fixed values, listed in the table above. The exchange's production base is `https://apisprod.nha.gov.in/hcx`. The participant service's is `https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice`, and the ABDM gateway's is `https://apis.abdm.gov.in`. When you go live, set each base to its production value once.
 
 ## Next steps
 

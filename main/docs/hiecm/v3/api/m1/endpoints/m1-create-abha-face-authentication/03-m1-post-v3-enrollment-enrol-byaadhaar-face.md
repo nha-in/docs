@@ -26,7 +26,7 @@ Creates an ABHA number with Aadhaar face authentication. First call *Face auth -
 | `authData.authMethods` | `["face_auth"]` | yes | Authentication method used in this step. |
 | `authData.face` | object | yes | Face authentication block. |
 | `authData.face.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
-| `authData.face.Aadhaar` | string | yes | Aadhaar number, RSA-encrypted. |
+| `authData.face.aadhaar` | string | yes | Aadhaar number, RSA-encrypted. |
 | `authData.face.mobile` | string | no | Mobile number to be linked with the ABHA (plain, 10 digits). |
 | `consent` | object | yes | Consent captured from the user for ABHA enrolment. |
 | `consent.code` | string | yes | Consent code. Use `ABHA-enrollment`. |
@@ -83,16 +83,45 @@ curl --request POST \
 ## Responses
 
 - `200`: Success: Create ABHA via Face - Positive Flow
+  - `message` (string)
+  - `tokens` (object)
+  - `tokens.token` (string)
+  - `tokens.expiresIn` (integer)
+  - `tokens.refreshToken` (string)
+  - `tokens.refreshExpiresIn` (integer)
+  - `ABHAProfile` (object)
+  - `ABHAProfile.firstName` (string)
+  - `ABHAProfile.middleName` (string)
+  - `ABHAProfile.lastName` (string)
+  - `ABHAProfile.dob` (string)
+  - `ABHAProfile.gender` (string)
+  - `ABHAProfile.mobile` (string)
+  - `ABHAProfile.phrAddress` (string[])
+  - `ABHAProfile.districtCode` (string)
+  - `ABHAProfile.stateCode` (string)
+  - `ABHAProfile.abhaType` (string)
+  - `ABHAProfile.stateName` (string)
+  - `ABHAProfile.districtName` (string)
+  - `ABHAProfile.ABHANumber` (string)
+  - `ABHAProfile.abhaStatus` (string)
+  - `isNew` (boolean)
 - `400`: Bad Request (request validation failed).
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+  - `txnId` (string)
+  - `timestamp` (string)
 - `401`: Unauthorized (invalid / expired gateway token, X-token or benefit access): Invalid Benefit Name (generic)
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `message` (string)
+  - `timestamp` (string)
 - `422`: Unprocessable Entity (business rule or UIDAI failure).
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+  - `error` (object)
+  - `error.code` (string)
+  - `error.message` (string)
 - `500`: Internal Server Error.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

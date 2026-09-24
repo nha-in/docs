@@ -19,10 +19,10 @@ User can use this transaction ID to generate QR code using any QR generator tool
 The data format of the QR code should follow this pattern:
 https:///face-auth?txnId=.
 
-**For example:** https://phrsbx.ABDM.gov.in/face-auth?txnId=bac7251b-cd25-44d5-9707-f3d2ba181c1c
+**For example:** https://phrsbx.abdm.gov.in/face-auth?txnId=bac7251b-cd25-44d5-9707-f3d2ba181c1c
 
- For Sandbox- PHR-env-base-URL - https://phrsbx.ABDM.gov.in
- For Production - PHR-env-base-URL - https://phr.ABDM.gov.in
+ For Sandbox- PHR-env-base-URL - https://phrsbx.abdm.gov.in
+ For Production - PHR-env-base-URL - https://phr.abdm.gov.in
 
 ```bash
 curl --request POST \
@@ -55,14 +55,21 @@ curl --request POST \
 ## Responses
 
 - `200`: The 200 response code indicates a successful request. In this context, it refers to the successful generation of Transaction Id.
+  - `txnId` (string)
+  - `message` (string)
 - `400`: The 400 response code indicates a bad request.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+  - `scope` (string)
+  - `timestamp` (string)
 - `401`: The 401 response code indicates an unauthorized request. In this context, it refers to the lack of proper authentication during the operation of the Invalid Credentials
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `code` (string)
+  - `message` (string)
+  - `description` (string)
 - `500`: **Internal Server Error** An Internal Server Error (500) indicates that the server encountered an unexpected condition that prevented it from fulfilling the request.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

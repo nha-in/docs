@@ -17,8 +17,8 @@ A code is on this page because the Catalogue records it. The specifications carr
 | `NHCX-401`  | The exchange does not accept your authorisation for this call            | `/v1/error`, `/v3/sessions`                 |
 | `NHCX-1001` | The recipient's system is not reachable                                  | `/v1/error`                                 |
 | `NHCX-1002` | The sender is not a registered participant                               | `/v1/error`                                 |
-| `NHCX-1003` | The recipient is not a registered participant                            | `/v1/error`                                 |
-| `NHCX-1004` | No recipient is registered for the scheme you asked for                  | `/v1/error`                                 |
+| `NHCX-1003` | The recipient is not a registered participant                            | `/v1/error`, `/v2/participant/get/policies` |
+| `NHCX-1004` | No recipient is registered for the scheme you asked for                  | `/v1/error`, `/v2/participant/get/policies` |
 | `NHCX-1005` | A request header is missing or not valid                                 | `/v1/error`                                 |
 | `NHCX-1006` | The correlation id has already been used                                 | `/v1/error`                                 |
 | `NHCX-1007` | The exchange could not process the request's structure or values         | `/v1/error`                                 |

@@ -30,13 +30,27 @@ curl --request POST \
 ## Responses
 
 - `200`: OK
+  - `consentAutoApprovalId` (string)
 - `400`: Bad Request
+  - `error` (object): The error code and message, if any occurred.
+  - `error.code` (string, required): ABDM-1066 - Invalid JWT token. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.
+  - `error.message` (string, required)
 - `401`: Unauthorized
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `code` (string): 900901 - Invalid Credentials. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.
+  - `message` (string)
+  - `description` (string)
 - `403`: Forbidden
 - `404`: server cannot find the requested resource
 - `500`: Internal Server Error
+  - `timestamp` (number, required)
+  - `path` (string, required)
+  - `status` (integer, required)
+  - `error` (string, required): The error code and message, if any occurred.
+  - `requestId` (string, required)
 - `503`: Service Unavailable
+  - `code` (string, required): ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.
+  - `message` (string, required)
 
 Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 

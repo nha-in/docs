@@ -27,47 +27,47 @@ A Payer is the Insurance Company who has issued the policy and is liable to make
 
 This is a two-way communication between the Hospital and the Insurance Company, that is, between the Provider and the Payer. It concerns the policy, the treatment rendered to the policyholder patient, and finally the payment of hospital bills after proper scrutiny of all relevant documents. It starts with the treating hospital informing the Insurance Company of an imminent claim for a patient who is to be admitted for treatment. It ends with the realisation of payment from the Insurance Company for all expenses incurred while treating the patient. The entire journey of claim settlement can be broken down into the following distinct flows or use cases.
 
-## The 10 Steps of Claim Settlement on NHCX
+## The Stages of Claim Settlement on NHCX
 
-The traditional ten stages of claim settlement map directly onto NHCX exchanges.
+The traditional ten stages of claim settlement map directly onto NHCX exchanges. They run in the order below, from intimation to payment.
 
-#### Step 1: Intimation
+#### Intimation
 
 The hospital informs the insurance company that a patient holding one of its policies is going to be treated for the diagnosed ailments.
 
-#### Step 2: Policy verification by the hospital
+#### Policy verification by the hospital
 
 The hospital checks that the patient to be treated holds a valid policy from that insurance company and that the ailments to be treated are covered under the policy.
 
-#### Step 3: Beneficiary and tie-up verification by the payer
+#### Beneficiary and tie-up verification by the payer
 
 The insurance company checks that a bona fide policyholder has come for treatment and that a proper tie-up is in place with the hospital for providing such cashless treatment.
 
-#### Step 4: Treatment plan intimation
+#### Treatment plan intimation
 
 The hospital sends the insurance company an initial intimation of the treatment plan, any procedures to be carried out, and the expected length of stay needed for treatment.
 
-#### Step 5: Preauthorisation
+#### Preauthorisation
 
 Once satisfied with the genuineness of the case, the insurance company sends a preliminary approval, commonly known as Preauthorisation or "PreAuth". This authorises the hospital to go ahead with treatment for the policyholder patient, and the patient is then admitted.
 
-#### Step 6: Enhancement
+#### Enhancement
 
 During the course of treatment, the hospital may approach the insurance company again to notify it that additional procedures may be required or that an extension of stay is needed. This is commonly known as "Enhancement".
 
-#### Step 7: Discharge and document submission
+#### Discharge and document submission
 
 The patient is discharged, and the hospital submits all necessary documents to the insurance company, including consultation and clinical notes, diagnostic reports, medication details, the discharge summary and all bills.
 
-#### Step 8: Payer query and resolution
+#### Payer query and resolution
 
 At this stage, the insurance company may ask for further explanation or for documents it considers necessary to substantiate the claim and support its adjudication. Such a communication from the insurance company to the hospital is called a "Query".
 
-#### Step 9: Claim adjudication
+#### Claim adjudication
 
 The insurance company carries out the final adjudication and conveys the outcome to the hospital, stating whether the claimed amount is "Granted", "Denied" or "Partially Granted", along with the reasons.
 
-#### Step 10: Payment and reconciliation
+#### Payment and reconciliation
 
 The insurance company pays the hospital the granted amount for the claim. It also notifies the hospital of the bank transaction details along with other details such as applicable tax or deductions.
 

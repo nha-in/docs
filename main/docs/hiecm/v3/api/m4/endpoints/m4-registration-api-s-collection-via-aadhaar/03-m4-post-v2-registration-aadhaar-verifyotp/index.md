@@ -23,9 +23,28 @@ curl --request POST \
 ## Responses
 
 - `200`: OK
+  - `txnId` (string)
+  - `mobileNumber` (string)
+  - `photo` (string)
+  - `gender` (string)
+  - `name` (string)
+  - `email` (string)
+  - `pincode` (string)
+  - `birthdate` (string)
+  - `careOf` (string)
+  - `house` (string)
+  - `street` (string)
+  - `landmark` (string)
+  - `locality` (string)
+  - `villageTownCity` (string)
+  - `subDist` (string)
+  - `district` (string)
+  - `state` (string)
+  - `postOffice` (string)
+  - `address` (string)
 - `404`: Not Found
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

@@ -2,7 +2,7 @@
 
 `POST /participant/update`
 
-Updates a participant's registry record; participant_code and roles are mandatory, every other field (certificate, endpoint, contacts, status) is optional.
+Sandbox call. Updates a participant's registry record; participant_code and roles are mandatory, every other field (certificate, endpoint, contacts, status) is optional.
 
 ### Business purpose
 
@@ -10,7 +10,7 @@ Participant details change over the life of an integration: callback endpoints m
 
 ### When to use
 
-Use it after registration whenever a detail of your participant record must change. For a certificate change alone, `/v2/update/cert` is simpler.
+Use it in the sandbox, after registration, whenever a detail of your participant record must change. The sandbox address is `https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/participant/update`. In production, use `/v2/participant/update` followed by `/update/validate` to change the certificate or the callback URL. For a certificate change alone, `/v2/update/cert` is simpler.
 
 ### Preconditions
 
@@ -47,8 +47,8 @@ Chapter [Your certificate](/docs/nhcx/v1/getting-started/your-certificate) of th
 ```bash
 curl --request POST \
   --url https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/participant/update \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'bearer_auth: Bearer <access token>' \
+  --header 'Accept: application/json' \
   --header 'Content-Type: application/json' \
   --data '{
   "participant_code": "<participant code>",
@@ -70,11 +70,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
+- `bearer_auth` (apiKey, required): Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
 
 ## Headers
 
-- `bearer_auth` (string, required): It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.
+- `Accept` (string, required): Always `application/json` on the participant service.
 
 ## Body
 
@@ -92,8 +92,10 @@ curl --request POST \
 ## Responses
 
 - `200`: HTTP 200 with a string body (the OpenAPI declares string; the sandbox onboarding document shows the participant code echoed back, for example 100001@sbx).
+  - `_contentType` (string)
+  - `_body` (string)
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

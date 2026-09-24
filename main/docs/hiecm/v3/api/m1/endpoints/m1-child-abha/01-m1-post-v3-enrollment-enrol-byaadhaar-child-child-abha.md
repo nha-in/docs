@@ -101,16 +101,45 @@ curl --request POST \
 ## Responses
 
 - `200`: Success: Create CHILD ABHA - Positive Flow; CHILD ABHA - Account Already Exist
+  - `message` (string)
+  - `tokens` (object)
+  - `tokens.token` (string)
+  - `tokens.expiresIn` (integer)
+  - `tokens.refreshToken` (string)
+  - `tokens.refreshExpiresIn` (integer)
+  - `ABHAProfile` (object)
+  - `ABHAProfile.firstName` (string)
+  - `ABHAProfile.middleName` (string)
+  - `ABHAProfile.lastName` (string)
+  - `ABHAProfile.dob` (string)
+  - `ABHAProfile.gender` (string)
+  - `ABHAProfile.mobile` (string)
+  - `ABHAProfile.phrAddress` (string[])
+  - `ABHAProfile.districtCode` (string)
+  - `ABHAProfile.stateCode` (string)
+  - `ABHAProfile.abhaType` (string)
+  - `ABHAProfile.stateName` (string)
+  - `ABHAProfile.districtName` (string)
+  - `ABHAProfile.ABHANumber` (string)
+  - `ABHAProfile.abhaStatus` (string)
+  - `isNew` (boolean)
 - `400`: Bad Request (request validation failed).
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+  - `txnId` (string)
+  - `timestamp` (string)
 - `401`: Unauthorized (invalid / expired gateway token, X-token or benefit access): CHILD ABHA-Invalid Benefit Name; CHILD ABHA-Access Issue; CHILD ABHA - X-token expired
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `message` (string)
+  - `timestamp` (string)
 - `422`: Unprocessable Entity (business rule or UIDAI failure): CHILD ABHA-CHILD LIMIT
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+  - `error` (object)
+  - `error.code` (string)
+  - `error.message` (string)
 - `500`: Internal Server Error.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

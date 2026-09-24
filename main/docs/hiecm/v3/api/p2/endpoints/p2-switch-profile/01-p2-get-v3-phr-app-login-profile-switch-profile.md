@@ -24,10 +24,21 @@ curl --request GET \
 ## Responses
 
 - `200`: OK
+  - `txnId` (string)
+  - `users` (object[])
+  - `users.abhaAddress` (string)
+  - `users.fullName` (string)
+  - `users.status` (string)
+  - `users.kycStatus` (string)
+  - `tokens` (object)
+  - `tokens.token` (string)
+  - `tokens.expiresIn` (integer)
+  - `tokens.refreshToken` (object)
+  - `tokens.refreshExpiresIn` (object)
 - `403`: Forbidden
   See Error codes for this module: /docs/hiecm/v3/api/p2/errors
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

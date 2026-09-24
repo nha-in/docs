@@ -36,14 +36,23 @@ curl --request GET \
 ## Responses
 
 - `200`: This scenario occurs when an ABHA (Ayushman Bharat Health Account) is linked to one or multiple benefit programs. Each benefit program may offer different types of health services, financial assistance, or other healthcare-related benefits. The system ensures that the ABHA number is correctly associated with all the relevant benefit programs, allowing the user to access and manage their benefits efficiently
+  - `abhaNumber` (string)
+  - `programme` (object[])
+  - `programme.benefitName` (string)
 - `401`: The 401 response code indicates an unauthorized request. In this context, it refers to the lack of proper authentication
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `code` (string)
+  - `message` (string)
+  - `description` (string)
 - `404`: The 404 response code indicates that the requested resource could not be found. In the context of searching for an ABHA (Ayushman Bharat Health Account) number using the endpoint API, this error occurs when the specified ABHA number does not exist or cannot be found in the system.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+  - `error` (object)
+  - `error.code` (string)
+  - `error.message` (string)
 - `500`: **Internal Server Error** An Internal Server Error (500) indicates that the server encountered an unexpected condition that prevented it from fulfilling the request.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

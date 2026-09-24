@@ -60,7 +60,7 @@ paths:
         - Session
       summary: Session token
       description: |-
-        Mints the ABDM gateway session token that every NHCX call carries, from the client ID and secret issued for Milestone 1.
+        Mints the ABDM gateway session token that every NHCX call carries, from the client ID and secret you received when you registered on the ABDM sandbox (`ABDM_CLIENT_ID` and `ABDM_CLIENT_SECRET`).
 
         ### Business purpose
 
@@ -72,14 +72,14 @@ paths:
 
         ### Preconditions
 
-        - You have finished Milestone 1 and hold its client ID and secret.
+        - You hold the client ID and secret you received when you registered on the ABDM sandbox (`ABDM_CLIENT_ID` and `ABDM_CLIENT_SECRET`).
         - `REQUEST-ID` is a new UUID and `TIMESTAMP` is the current UTC time from a synced clock.
         - `X-CM-ID` is `sbx` on the sandbox.
         - The body sets `grantType` to `client_credentials`.
 
         ### Postconditions
 
-        The gateway returns an access token in `accessToken`. Send it on every NHCX call as `Bearer <token>`, in both `bearer_auth` and `Authorization`. The token lasts 1200 seconds (20 minutes), stated in `expiresIn`.
+        The gateway returns an access token in `accessToken`. Send it on every NHCX call in the `bearer_auth` header, as `Bearer <token>`. The token lasts 1200 seconds (20 minutes), stated in `expiresIn`.
 
         ### Common mistakes
 
@@ -92,7 +92,7 @@ paths:
 
         - Keep the token together with the time you got it, and fetch a new one before a call if it is more than about 18 minutes old, ahead of the 20-minute expiry.
         - On any `401`, get a new token and retry that call once.
-        - Send the token on both `bearer_auth` and `Authorization`.
+        - Send the token in `bearer_auth` on every NHCX call.
         - Keep the clock synchronised with NTP and let a date library format the timestamp.
 
         ### Related scenario
@@ -153,7 +153,7 @@ components:
     bearerAuth:
       type: http
       scheme: bearer
-      description: "On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value."
+      description: "On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. NHCX reads `bearer_auth`, not `Authorization`."
   parameters:
     RequestId:
       name: REQUEST-ID

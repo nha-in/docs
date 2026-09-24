@@ -1,22 +1,21 @@
-# Submit the de-link ABHA policies (V2)
+# Submit the de-link ABHA policies (v2)
 
-`POST /V2/participant/delink/abha/policy`
+`POST /v2/participant/delink/abha/policy`
 
-V2 variant of the ABHA policy de-link; same ParticipantDeLinkAbhaRequest body and response as the unversioned call.
+v2 variant of the ABHA policy de-link; same ParticipantDeLinkAbhaRequest body and response as the unversioned call.
 
 ### Business purpose
 
-This endpoint performs the same member-layer removal as /participant/delink/abha/policy: it takes products out of a member's link for a given payer so that providers stop discovering lapsed or migrated coverage. The OpenAPI document exposes it as participantDeLinkAbhaPolicyV2 with an identical request and response schema; the documentation does not describe any behavioural difference beyond the path and operationId. It is the natural partner of /V2/participant/link/abha/policy for integrations that have standardised on the V2 paths.
+This endpoint performs the same member-layer removal as /participant/delink/abha/policy: it takes products out of a member's link for a given payer so that providers stop discovering lapsed or migrated coverage. The OpenAPI document exposes it as participantDeLinkAbhaPolicyV2 with an identical request and response schema; the documentation does not describe any behavioural difference beyond the path and operationId. It is the natural partner of /v2/participant/link/abha/policy for integrations that have standardised on the v2 paths.
 
 ### When to use
 
-Use it in the same cases as the v1 de-link. Pair it with the V2 link and get-policies calls.
+Use it in the same cases as the v1 de-link. Pair it with the v2 link and get-policies calls.
 
 ### Preconditions
 
 - You have a valid access token in the `bearer_auth` header.
 - You are the payer or TPA that linked the policies.
-- The path starts with a capital `V2`.
 
 ### Postconditions
 
@@ -27,7 +26,6 @@ The policies are no longer returned for that member. Providers that cached them 
 - Calling as a participant that did not create the link.
 - Listing a policy that is not linked.
 - Adding an ABHA number to the body.
-- Writing the path with a lower-case `v2`.
 
 ### Best practices
 
@@ -39,7 +37,7 @@ The policies are no longer returned for that member. Providers that cached them 
 
 ### Related scenario
 
-A TPA is informed by one of its insurers that a corporate group policy has been cancelled mid-term. The TPA's system lists the affected members from its own records, calls /V2/participant/get/policies to confirm what NHCX currently holds, and then calls /V2/participant/delink/abha/policy per member with the insurer's participant code as payerid, its own code as processingid and the cancelled product. Each success is logged against the member. When a former member later presents at a hospital, the provider's policy lookup (after a forced cache refresh) no longer shows the product, and the desk proceeds as a self-pay case rather than submitting a coverage-eligibility check.
+A TPA is informed by one of its insurers that a corporate group policy has been cancelled mid-term. The TPA's system lists the affected members from its own records, calls /v2/participant/get/policies to confirm what NHCX currently holds, and then calls /v2/participant/delink/abha/policy per member with the insurer's participant code as payerid, its own code as processingid and the cancelled product. Each success is logged against the member. When a former member later presents at a hospital, the provider's policy lookup (after a forced cache refresh) no longer shows the product, and the desk proceeds as a self-pay case rather than submitting a coverage-eligibility check.
 
 ### Specification
 
@@ -47,9 +45,9 @@ Chapter [Creating and updating a participant](/docs/nhcx/v1/getting-started/crea
 
 ```bash
 curl --request POST \
-  --url https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/V2/participant/delink/abha/policy \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --url https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/v2/participant/delink/abha/policy \
   --header 'bearer_auth: Bearer <access token>' \
+  --header 'Accept: application/json' \
   --header 'Content-Type: application/json' \
   --data '{
   "requestid": "c4d2e1f0-8b7a-4c6d-9e5f-1a2b3c4d5e66",
@@ -67,11 +65,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
+- `bearer_auth` (apiKey, required): Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
 
 ## Headers
 
-- `bearer_auth` (string, required): It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.
+- `Accept` (string, required): Always `application/json` on the participant service.
 
 ## Body
 
@@ -86,8 +84,9 @@ curl --request POST \
 ## Responses
 
 - `200`: On success the service returns HTTP 200 with ParticipantDeLinkAbhaResponse and the products are no longer visible through the get-policies endpoints for that payer and member.
+  - `result` (string)
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

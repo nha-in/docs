@@ -2,11 +2,11 @@
 
 The token does not come from NHCX.
 
-## Calls
+## APIs
 
-| Call                                                                                                 | Method and path                       | What it does                                                                                                             |
-| ---------------------------------------------------------------------------------------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| [Session token](/docs/main/docs/nhcx/v1/api/session/endpoints/session-api-hiecm-gateway-v3-sessions) | `POST /api/hiecm/gateway/v3/sessions` | Mints the ABDM gateway session token that every NHCX call carries, from the client ID and secret issued for Milestone 1. |
+| Call                                                                                                 | Called by       | Method and path                       | What it does                                                                                                                                           |
+| ---------------------------------------------------------------------------------------------------- | --------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [Session token](/docs/main/docs/nhcx/v1/api/session/endpoints/session-api-hiecm-gateway-v3-sessions) | Any participant | `POST /api/hiecm/gateway/v3/sessions` | Mints the ABDM gateway session token that every NHCX call carries, from the client ID and secret you received when you registered on the ABDM sandbox. |
 
 ## Base URLs
 

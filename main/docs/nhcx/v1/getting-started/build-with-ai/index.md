@@ -147,15 +147,15 @@ There is one skill for the whole provider-side integration, `nhcx-full`, and one
 
 Each skill is self-contained, so install only the ones your integration needs. `npx skills` finds every coding agent in the project and sets the skill up for each. With git alone, the command fetches just the skill's folder into the directory your agent reads skills from.
 
-| Skill                | What it builds                                                                                                                                                   | [Use cases](/docs/main/docs/nhcx/v1/concepts/nhcx-use-cases) |
-| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| `nhcx-full`          | The whole provider-side integration, every exchange end to end, with the NHCX gateway embedded in the application                                                | All provider use cases                                       |
-| `nhcx-coverage`      | Beneficiary policy search and coverage eligibility: validation, benefits and discovery                                                                           | A2, B1, D3                                                   |
-| `nhcx-preauth`       | The payer's insurance plan, line items, authorisation requirements, the pre-authorisation, predetermination, enhancement, query answers, cancellation and status | B2, B3, B8 cancel, B9, D1, D2, D4 to D8                      |
-| `nhcx-claim`         | Discharge details, claim documents and forms, the claim and its query answers, the payer's verdict and status enquiries                                          | A5, B5, D9, D10                                              |
-| `nhcx-communication` | Payer queries, notifications and notes on a case, replies with text and documents, and acknowledgements                                                          | B4                                                           |
-| `nhcx-payment`       | The payer's payment notice and its breakdown, matched to the claim and acknowledged                                                                              | B7, D13                                                      |
-| `nhcx-reprocess`     | Asking the payer to look again at a decided claim, and asking for the unpaid balance of a partly paid claim                                                      | B8 reprocess, D11, D12                                       |
+| Skill                | What it builds                                                                                                                                 | [Use cases](/docs/main/docs/nhcx/v1/concepts/nhcx-use-cases) |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| `nhcx-full`          | The whole provider-side integration, every exchange end to end, with the NHCX gateway embedded in the application                              | All provider use cases                                       |
+| `nhcx-coverage`      | Beneficiary policy search and coverage eligibility: validation, benefits and discovery                                                         | A2, B1, D3                                                   |
+| `nhcx-preauth`       | The payer's insurance plan, line items, authorisation requirements, the pre-authorisation, enhancement, query answers, cancellation and status | B2, B3, B8 cancel, D1, D2, D4 to D8                          |
+| `nhcx-claim`         | Discharge details, claim documents and forms, the claim and its query answers, the payer's verdict and status enquiries                        | A5, B5, D9, D10                                              |
+| `nhcx-communication` | Payer queries, notifications and notes on a case, replies with text and documents, and acknowledgements                                        | B4                                                           |
+| `nhcx-payment`       | The payer's payment notice and its breakdown, matched to the claim and acknowledged                                                            | B7, D13                                                      |
+| `nhcx-reprocess`     | Asking the payer to look again at a decided claim, and asking for the unpaid balance of a partly paid claim                                    | B8 reprocess, D11, D12                                       |
 
 NHCX agent skill
 

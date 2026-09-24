@@ -4,6 +4,16 @@ The patient or end-user can log in to the PHR application and use the "Scan and 
 
 This process shares the patient's health records with the Health Information User (HIU) system. It ensures secure authentication and consent before sharing sensitive health information. Patients can easily control and transmit their health data to the intended HIU.
 
+## Postman collection
+
+5 requests in the order you build them, and a sandbox environment to fill in.
+
+[Collection](/docs/main/postman/hiecm-record-share.postman_collection.json)[Environment](/docs/main/postman/hiecm-sandbox.postman_environment.json)
+
+`https://nha-in.github.io/docs/main/postman/hiecm-record-share.postman_collection.json`
+
+Postman, Insomnia, Hoppscotch and Bruno take this through Import, as a link or as the downloaded file.
+
 ## Base URL and X-CM-ID
 
 | Environment | Base URL                   | X-CM-ID |

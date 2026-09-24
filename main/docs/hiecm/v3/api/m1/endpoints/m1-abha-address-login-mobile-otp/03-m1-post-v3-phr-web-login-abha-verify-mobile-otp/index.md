@@ -24,9 +24,9 @@ Verifies the mobile OTP for ABHA-address login. Returns the linked ABHA address(
 | `scope` | `["ABHA-address-login", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
 | `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
-| `authData.OTP` | object | yes | OTP authentication block. |
-| `authData.OTP.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
-| `authData.OTP.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
+| `authData.otp` | object | yes | OTP authentication block. |
+| `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
+| `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
 
 ```bash
 curl --request POST \
@@ -73,14 +73,31 @@ curl --request POST \
 ## Responses
 
 - `200`: Success: OTP Verification -Success Mobile Otp; OTP Verification -OTP expired
+  - `message` (string)
+  - `authResult` (string)
+  - `users` (object[])
+  - `users.abhaAddress` (string)
+  - `users.fullName` (string)
+  - `users.profilePhoto` (string)
+  - `users.abhaNumber` (string)
+  - `users.status` (string)
+  - `users.kycStatus` (string)
+  - `tokens` (object)
+  - `tokens.token` (string)
+  - `tokens.expiresIn` (integer)
+  - `tokens.refreshToken` (string)
+  - `tokens.refreshExpiresIn` (integer)
 - `400`: Bad Request (request validation failed).
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
 - `401`: Unauthorized (invalid / expired gateway token, X-token or benefit access): Missing Credentials (generic)
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `code` (string)
+  - `message` (string)
+  - `description` (string)
 - `500`: Internal Server Error.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

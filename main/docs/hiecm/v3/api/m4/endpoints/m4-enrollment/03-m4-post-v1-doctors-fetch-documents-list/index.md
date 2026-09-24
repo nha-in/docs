@@ -23,9 +23,17 @@ curl --request POST \
 ## Responses
 
 - `200`: OK
+  - `documentList` (object)
+  - `documentList.profileDetails` (object)
+  - `documentList.registrationDetails` (object[])
+  - `documentList.qualificationDetails` (object[])
+  - `documentList.qualification` (object[])
+  - `documentList.internationalDoctorQualificationDetails` (object[])
+  - `message` (string)
+  - `Message` (string)
 - `404`: Not Found
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

@@ -56,14 +56,48 @@ curl --request PATCH \
 ## Responses
 
 - `200`: Success.
+  - `ABHANumber` (string)
+  - `preferredAbhaAddress` (string)
+  - `mobile` (string)
+  - `firstName` (string)
+  - `middleName` (string)
+  - `lastName` (string)
+  - `yearOfBirth` (integer)
+  - `monthOfBirth` (integer)
+  - `dayOfBirth` (integer)
+  - `gender` (string)
+  - `status` (string)
+  - `stateCode` (integer)
+  - `districtCode` (integer)
+  - `stateName` (string)
+  - `districtName` (string)
+  - `subdistrictName` (string)
+  - `authMethods` (string[])
+  - `tags` (object)
+  - `kycVerified` (boolean)
+  - `verificationStatus` (string)
+  - `verificationType` (string)
+  - `createdDate` (string)
 - `400`: Bad Request (request validation failed).
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+  - `error` (object)
+  - `error.message` (string)
+  - `error.timestamp` (string)
 - `401`: Unauthorized (invalid / expired gateway token, X-token or benefit access).
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `error` (object)
+  - `error.code` (string)
+  - `error.message` (string)
 - `404`: Not Found.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+  - `error` (object)
+  - `error.code` (string)
+  - `error.message` (string)
 - `422`: Unprocessable Entity (business rule or UIDAI failure).
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+  - `error` (object)
+  - `error.code` (string)
+  - `error.message` (string)
 - `500`: Internal Server Error.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
 

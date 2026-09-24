@@ -28,9 +28,10 @@ curl --request POST \
 ## Responses
 
 - `200`: OK
+  - `message` (string)
 - `404`: Not Found
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

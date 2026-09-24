@@ -18,7 +18,7 @@ Sent on `/v1/claim/submit`, answered on `/v1/claim/on_submit`, workflow 15.
 
 ## Elements
 
-### 1. Claim
+### Claim
 
 NRCeS profile: [Claim](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Claim.html).
 
@@ -73,7 +73,7 @@ NRCeS profile: [Claim](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Claim.h
 | `item[].category.coding[]`                      | `Surgical` Surgical in `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-benefit-category`                                                                                          |
 | `total`                                         | value `150000`, currency `INR`                                                                                                                                                   |
 
-### 2. Patient
+### Patient
 
 NRCeS profile: [Patient](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Patient.html).
 
@@ -89,7 +89,7 @@ NRCeS profile: [Patient](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Patie
 | `gender`                     | `male`                                                                                                                       |
 | `birthDate`                  | `1985-06-15`                                                                                                                 |
 
-### 3. Organization (prov)
+### Organization (prov)
 
 NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Organization.html).
 
@@ -100,7 +100,7 @@ NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-
 | `type[].coding[]`            | `prov` Healthcare Provider in `http://terminology.hl7.org/CodeSystem/organization-type` |
 | `name`                       | `XYZ Multispeciality Hospital`                                                          |
 
-### 4. Organization (pay)
+### Organization (pay)
 
 NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Organization.html).
 
@@ -111,7 +111,7 @@ NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-
 | `type[].coding[]`            | `pay` Payer in `http://terminology.hl7.org/CodeSystem/organization-type`                              |
 | `name`                       | `Sandbox Payer`                                                                                       |
 
-### 5. Coverage
+### Coverage
 
 NRCeS profile: [Coverage](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Coverage.html).
 
@@ -127,7 +127,7 @@ NRCeS profile: [Coverage](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Cove
 | `relationship.coding[]`      | `self` in `http://terminology.hl7.org/CodeSystem/subscriber-relationship`                |
 | `payor[]`                    | reference `https://nhcx.abdm.gov.in/payer`                                               |
 
-### 6. Practitioner
+### Practitioner
 
 NRCeS profile: [Practitioner](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Practitioner.html).
 
@@ -140,7 +140,7 @@ NRCeS profile: [Practitioner](https://nrces.in/ndhm/fhir/r4/StructureDefinition-
 | `name[]`                        | text `Dr. Ananya Rao`                                                                                                |
 | `qualification[].code.coding[]` | `MD` Doctor of Medicine in `http://terminology.hl7.org/CodeSystem/v2-0360`                                           |
 
-### 7. Procedure
+### Procedure
 
 NRCeS profile: [Procedure](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Procedure.html).
 
@@ -154,27 +154,27 @@ NRCeS profile: [Procedure](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Pro
 
 ## Rules
 
-### 1. What a claim adds
+### What a claim adds
 
 The final bill under `MB` and the discharge summary under `HDS`, with the implant invoice, the operation notes and the signed claim form where the plan asks for them.
 
-### 2. The stay
+### The stay
 
 `billablePeriod` carries the admission and the discharge.
 
-### 3. Sequences may have gaps
+### Sequences may have gaps
 
 Map supporting information by `sequence` and resolve `item.informationSequence` through the map.
 
-### 4. The amount
+### The amount
 
 May not exceed what the preauthorisation approved.
 
-### 5. Cyclic treatment
+### Cyclic treatment
 
 One supporting-info entry per cycle, with `timingPeriod`, listed in the item's `informationSequence`, its record referenced from `valueReference`.
 
-### 6. Newborn
+### Newborn
 
 The parent stays the primary `Patient`; the child is a second `Patient` linked with `link.type` `refer`, with gender and birth date, and a proof of birth under category `DOB`, code `BCF` or `DCB`.
 

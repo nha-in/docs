@@ -24,12 +24,20 @@ curl --request GET \
 ## Responses
 
 - `200`: OK
+  - `tokens` (object)
+  - `tokens.token` (string)
+  - `tokens.expiresIn` (integer)
+  - `tokens.refreshToken` (string)
+  - `tokens.refreshExpiresIn` (integer)
 - `401`: Unauthorized
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `code` (string)
+  - `message` (string)
+  - `description` (string)
 - `403`: Forbidden
   See Error codes for this module: /docs/hiecm/v3/api/p2/errors
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

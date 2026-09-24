@@ -49,7 +49,7 @@ Base: `https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice`.
 **1. Create.** `POST v2/participant/create`
 
 ```bash
-curl --location --request POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/v2/participant/create' \  --header 'Accept: application/json' \  --header 'Content-Type: application/json' \  --header 'bearer_auth: Bearer <access token>' \  --data-raw '{    "registrytype": "10001",    "registryid": "XXXXX74586",    "role": [      "10001"    ],    "endpointurl": "https://nhcx.demohospital.example.in",    "mobilenumber": "XXXX748348",    "email": "sample@gmail.com"  }'
+curl --location --request POST 'https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice/v2/participant/create' \  --header 'Accept: application/json' \  --header 'Content-Type: application/json' \  --header 'bearer_auth: Bearer <access token>' \  --data-raw '{    "registrytype": "10001",    "registryid": "XXXXX74586",    "role": [      "10001"    ],    "endpointurl": "https://nhcx.demohospital.example.in",    "mobilenumber": "XXXX748348",    "email": "sample@gmail.com"  }'
 ```
 
 [Participant create (v2) in the API reference](/docs/main/docs/nhcx/v1/api/onboarding/endpoints/onboarding-v2-participant-create)
@@ -59,7 +59,7 @@ The mobile number must match the one on your HFR record exactly, or for a payer 
 **2. Confirm.** `GET validate?transactionId=<id>&passcode=<code>`. Note the method: the two confirmation calls are GETs, not POSTs. The participant becomes active.
 
 ```bash
-curl --location --request GET 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/validate?transactionId=<transaction id>&passcode=<passcode>' \  --header 'Accept: application/json' \  --header 'Content-Type: application/json' \  --header 'bearer_auth: Bearer <access token>'
+curl --location --request GET 'https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice/validate?transactionId=<transaction id>&passcode=<passcode>' \  --header 'Accept: application/json' \  --header 'Content-Type: application/json' \  --header 'bearer_auth: Bearer <access token>'
 ```
 
 [Validate participant creation in the API reference](/docs/main/docs/nhcx/v1/api/onboarding/endpoints/onboarding-validate)
@@ -67,7 +67,7 @@ curl --location --request GET 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/participa
 **3. Configure.** `POST v2/participant/update`
 
 ```bash
-curl --location --request POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/v2/participant/update' \  --header 'Accept: application/json' \  --header 'Content-Type: application/json' \  --header 'bearer_auth: Bearer <access token>' \  --data-raw '{    "participantcode": "XXXXX7583@hcx",    "encryptioncert": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0t...",    "endpointurl": "https://nhcx.demotpa.example.in"  }'
+curl --location --request POST 'https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice/v2/participant/update' \  --header 'Accept: application/json' \  --header 'Content-Type: application/json' \  --header 'bearer_auth: Bearer <access token>' \  --data-raw '{    "participantcode": "XXXXX7583@hcx",    "encryptioncert": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0t...",    "endpointurl": "https://nhcx.demotpa.example.in"  }'
 ```
 
 [Participant certificate and bridge update (v2) in the API reference](/docs/main/docs/nhcx/v1/api/registry/endpoints/registry-v2-participant-update)
@@ -77,7 +77,7 @@ A second transaction ID and passcode arrive.
 **4. Confirm again.** `GET update/validate?transactionId=<id>&passcode=<code>`. The certificate and address go live.
 
 ```bash
-curl --location --request GET 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/update/validate?transactionId=<transaction id>&passcode=<passcode>' \  --header 'Accept: application/json' \  --header 'Content-Type: application/json' \  --header 'bearer_auth: Bearer <access token>'
+curl --location --request GET 'https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice/update/validate?transactionId=<transaction id>&passcode=<passcode>' \  --header 'Accept: application/json' \  --header 'Content-Type: application/json' \  --header 'bearer_auth: Bearer <access token>'
 ```
 
 [Validate participant update in the API reference](/docs/main/docs/nhcx/v1/api/onboarding/endpoints/onboarding-update-validate)
@@ -89,7 +89,7 @@ Passcodes and transaction IDs are valid for 24 hours. If one is lost, repeat tha
 In production there is a shorter path that skips the passcode:
 
 ```bash
-curl --location --request POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/v2/update/cert' \  --header 'Accept: application/json' \  --header 'Content-Type: application/json' \  --header 'bearer_auth: Bearer <access token>' \  --data-raw '{    "participantId": "XXXX@hcx",    "certificate": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0t..."  }'
+curl --location --request POST 'https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice/v2/update/cert' \  --header 'Accept: application/json' \  --header 'Content-Type: application/json' \  --header 'bearer_auth: Bearer <access token>' \  --data-raw '{    "participantId": "XXXX@hcx",    "certificate": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0t..."  }'
 ```
 
 [Update certificate (v2, no passcode) in the API reference](/docs/main/docs/nhcx/v1/api/registry/endpoints/registry-v2-update-cert)

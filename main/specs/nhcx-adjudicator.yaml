@@ -9,13 +9,15 @@ info:
   x-portal:
     module: adjudicator
     label: PMJAY adjudicator
-    position: 12
+    position: 13
   title: NHCX PMJAY adjudicator
   summary: A PMJAY case is not decided over NHCX.
   description: |-
-    The PMJAY adjudicator calls on the National Health Claims Exchange (NHCX): 4 operations.
+    The PMJAY adjudicator calls on the National Health Claims Exchange (NHCX): 5 operations.
 
     A PMJAY case is not decided over NHCX.
+
+    The calls fall in two groups. The dummy payer APIs are sandbox hooks a provider uses to make the test payer answer. The PMJAY payer APIs read and act on a PMJAY case in the State Health Agency's Transaction Management System. An integrator testing a PMJAY flow needs them to move a case, and a scheme payer building its own side can copy their shape.
 
     Guides that use these calls: [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback), [Get your sandbox credentials](/docs/nhcx/v1/getting-started/get-your-sandbox-credentials), [PMJAY sandbox run](/docs/nhcx/v1/roles/provider/pmjay-sandbox-run), [PMJAY adjudication APIs](/docs/nhcx/v1/roles/provider/pmjay-adjudication-apis).
 
@@ -36,6 +38,7 @@ info:
   x-abdm-phase: 1
   x-abdm-roles:
     - provider
+    - payer
 x-abdm-sources:
   - file: nhcx-package/apis/12-adjudicator
     role: upstream
@@ -49,8 +52,10 @@ servers:
   - url: https://apisbx.abdm.gov.in/pmjay/sbxhcx/dummyhcxpayer
     description: Sandbox, Dummy payer.
 tags:
-  - name: PMJAY adjudicator
-    description: A PMJAY case is not decided over NHCX.
+  - name: Dummy payer APIs
+    description: "Sandbox only. These calls make the sandbox dummy payer, participant `1000003538@hcx`, answer a request you sent it or send you a payment notice."
+  - name: PMJAY payer APIs
+    description: The NHCX Payer Service. These calls read and act on a PMJAY case in the State Health Agency's Transaction Management System, where the case is decided, and replace a beneficiary's placeholder ABHA number with the real one.
 security:
   - bearerAuth: []
 paths:
@@ -60,8 +65,8 @@ paths:
       x-abdm-atom: nhcx.endpoint.payer-service-get-user-role
       x-abdm-use-case: PMJAY adjudicator
       tags:
-        - PMJAY adjudicator
-      summary: "Adjudicator: role for a case"
+        - PMJAY payer APIs
+      summary: "Adjudicator: get the user role for a case"
       description: |-
         Asks the NHCX Payer Service which role in the State Health Agency's Transaction Management System holds a PMJAY case, and so which actions may be taken on it next.
 
@@ -71,7 +76,7 @@ paths:
 
         ### When to use
 
-        Call it before every `Adjudicator: act on a case`, and whenever a PMJAY case has gone quiet. The case moves on its own, so read the role each time.
+        It is mandatory before any claim action. Call it before every `Adjudicator: act on a case`, and whenever a PMJAY case has gone quiet. The case moves on its own, so read the role each time.
 
         ### Preconditions
 
@@ -107,6 +112,7 @@ paths:
           description: Sandbox, PMJAY payer service, role lookup.
       parameters:
         - $ref: "#/components/parameters/BearerAuth"
+        - $ref: "#/components/parameters/Accept"
       requestBody:
         required: true
         content:
@@ -116,8 +122,13 @@ paths:
               properties:
                 caseid:
                   type: string
+                  description: The scheme's case ID, such as `2026072210000472`. Not the hospital's claim number.
                 payerid:
                   type: string
+                  description: The scheme payer's registry code without the `@hcx` suffix, such as `1518`.
+              required:
+                - caseid
+                - payerid
             example:
               caseid: <case number>
               payerid: <payer code>
@@ -141,10 +152,10 @@ paths:
       x-abdm-atom: nhcx.endpoint.payer-service-process-case
       x-abdm-use-case: PMJAY adjudicator
       tags:
-        - PMJAY adjudicator
+        - PMJAY payer APIs
       summary: "Adjudicator: act on a case"
       description: |-
-        Approves, rejects, queries or forwards a PMJAY case in the State Health Agency's Transaction Management System, as the role that currently holds it.
+        Approves, rejects, queries, forwards or pends a PMJAY case in the State Health Agency's Transaction Management System, as the role that currently holds it.
 
         In the sandbox this call is reached on `https://apisbeta.nha.gov.in`, a different host from the role lookup, which sits on `https://apisbx.abdm.gov.in`. That is the only published address for it. No production host is published for this call, so obtain it at onboarding and keep it configurable rather than deriving it from the sandbox one.
 
@@ -154,7 +165,19 @@ paths:
 
         ### When to use
 
-        Call it after `Adjudicator: role for a case` names the role that holds the case. Each role accepts its own action names, and `usecase` must match the role.
+        Call it after `Adjudicator: get the user role for a case` names the role that holds the case. Each role accepts its own action names, and `usecase` must match the role.
+
+        ### Roles and actions
+
+        | Step | Role | Actions | `usecase` |
+        | --- | --- | --- | --- |
+        | Pre-authorisation | `PPD-Trust` | `Approve`, `Reject`, `Query` | `PREAUTH` |
+        | Claim 1 | `CEX-Trust` | `Forward` | `CLAIM` |
+        | Claim 2 | `CPD-Trust` | `cpdApprove`, `cpdReject`, `Pending` | `CLAIM` |
+        | Claim 3 | Medical Audit Committee | `Approve`, `Reject`, `iQuery` | `Medical Audit Committee` |
+        | Claim 4 | `ACO-Trust` | `Approve`, `Reject`, `Pending` | `CLAIM` |
+        | Claim 5 | `SHA-Trust` | `Approve`, `Reject`, `Pending` | `CLAIM` |
+        | Claim 6 | Claim Review Committee | `Approve`, `Reject`, `Pending` | `Claim Review Committee` |
 
         ### Preconditions
 
@@ -170,6 +193,7 @@ paths:
         ### Common mistakes
 
         - Sending `Approve` to `CPD-Trust`, which takes `cpdApprove`.
+        - Sending `Query` to the Medical Audit Committee, which takes `iQuery`.
         - Sending `CLAIM` as `usecase` at a committee, which takes its full name.
         - Reusing a correlation ID across calls.
         - Raising a second request on a case while the first is still queued.
@@ -193,6 +217,7 @@ paths:
           description: Sandbox, PMJAY payer service, act on a case. The only published address; no production host is published.
       parameters:
         - $ref: "#/components/parameters/BearerAuth"
+        - $ref: "#/components/parameters/Accept"
       requestBody:
         required: true
         content:
@@ -202,20 +227,51 @@ paths:
               properties:
                 casenumber:
                   type: string
+                  description: The scheme's case ID, the same one sent to the role lookup as `caseid`.
                 action:
                   type: string
+                  description: The action, spelled exactly as the current role takes it in the table above. Case-sensitive.
+                  enum:
+                    - Approve
+                    - Reject
+                    - Query
+                    - Forward
+                    - Pending
+                    - cpdApprove
+                    - cpdReject
+                    - iQuery
                 receivercode:
                   type: string
+                  description: The payer's registry code without the `@hcx` suffix, such as `1518`.
                 usecase:
                   type: string
+                  description: "`PREAUTH` for a pre-authorisation, `CLAIM` for the claim roles, and the committee's full name at the two committees."
+                  enum:
+                    - PREAUTH
+                    - CLAIM
+                    - Medical Audit Committee
+                    - Claim Review Committee
                 correlationid:
                   type: string
+                  description: A new UUID for every request.
                 sendercode:
                   type: string
+                  description: Your participant code without the `@hcx` suffix.
                 memberid:
                   type: string
+                  description: The beneficiary's member ID.
                 remarks:
                   type: string
+                  description: Free text the desk records with the action.
+              required:
+                - casenumber
+                - action
+                - receivercode
+                - usecase
+                - correlationid
+                - sendercode
+                - memberid
+                - remarks
             example:
               casenumber: <case number>
               action: Approve
@@ -246,8 +302,8 @@ paths:
       x-abdm-atom: nhcx.endpoint.dummy-payer-process-request
       x-abdm-use-case: PMJAY adjudicator
       tags:
-        - PMJAY adjudicator
-      summary: Dummy payer, act on a request
+        - Dummy payer APIs
+      summary: "Provider: make the dummy payer act on a request"
       description: |-
         Makes the sandbox dummy payer, participant `1000003538@hcx`, approve, reject or query a pre-authorisation or claim you have submitted, by correlation ID.
 
@@ -316,8 +372,8 @@ paths:
       x-abdm-atom: nhcx.endpoint.dummy-payer-paymentnotice-init
       x-abdm-use-case: PMJAY adjudicator
       tags:
-        - PMJAY adjudicator
-      summary: Dummy payer, send a payment notice
+        - Dummy payer APIs
+      summary: "Provider: make the dummy payer send a payment notice"
       description: |-
         Makes the sandbox dummy payer send a payment notice to the provider named, on `/v1/paymentnotice/request`.
 
@@ -376,12 +432,95 @@ paths:
       responses:
         "200":
           description: The dummy payer sends a payment notice to the provider named, arriving on `/v1/paymentnotice/request`.
+  /update/abhanumber:
+    post:
+      operationId: adjudicator_update_abhanumber
+      x-abdm-use-case: PMJAY adjudicator
+      tags:
+        - PMJAY payer APIs
+      summary: Update ABHA number
+      description: |-
+        Replaces a placeholder (dummy) ABHA number with the beneficiary's real ABHA number in the ABHA_AUTH_TRANSACTION table.
+
+        ### Business purpose
+
+        Beneficiaries are sometimes onboarded before their real ABHA is known, using a placeholder value. Because the member layer and the Patient resource both key on the ABHA number, a placeholder that is never corrected leaves the beneficiary undiscoverable and breaks the identifier rules for claim bundles. This endpoint, tagged Retrieving API and implemented by updateAbhaNumberController, lets the placeholder be swapped for the real number so that later policy lookups and claim transactions line up. The docs describe it as updating the ABHA number in the ABHA_AUTH_TRANSACTION table.
+
+        ### When to use
+
+        Use it when a member's real ABHA number becomes available after they were set up with a placeholder. Do it before you rely on ABHA-based lookups.
+
+        ### Preconditions
+
+        - You have a valid access token in the `bearer_auth` header.
+        - You know both the placeholder and the real ABHA number.
+
+        ### Postconditions
+
+        The member's ABHA number is updated. Errors come back in the same response shape as success, so read `errorMessage`.
+
+        ### Common mistakes
+
+        - Reading errors as the usual registry error format.
+        - Sending an empty body.
+        - Forgetting to refresh cached policies that still use the placeholder.
+
+        ### Best practices
+
+        - Record both the placeholder and the real ABHA with the timestamp of the change for audit purposes.
+        - Read successMessage and errorMessage on every response and treat a non-200 status as failure even if the body parses.
+        - Immediately re-run /participant/get/policies with forceRefresh: true for the affected beneficiary.
+        - Keep the ABHA formatting rule per field: hyphen-free for member lookups and x-hcx-ben-abha-id, XX-XXXX-XXXX-XXXX where NHCX-1018 applies.
+        - Never log the token; log the ABHA change with the request identifier only.
+
+        ### Related scenario
+
+        A state scheme enrols a beneficiary in a hurry with a dummy ABHA so that a policy can be linked and an emergency admission can proceed. After discharge the beneficiary completes ABHA creation and the real number is captured. The payer's system calls /update/abhanumber with dummyAbha and realAbha, receives a successMessage, and then calls /participant/get/policies with forceRefresh to make sure the real ABHA resolves the linked product. The hospital's billing team, preparing the final claim, refreshes its own policy cache so that the Claim bundle's Patient identifiers carry the PMJAY member id and the real hyphen-free ABHA.
+
+        ### Specification
+
+        Chapter [Participants and policies](/docs/nhcx/v1/registries) of the NHCX integration specification.
+      servers:
+        - url: https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice
+          description: Sandbox, Participant service.
+        - url: https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice
+          description: Production.
+      parameters:
+        - $ref: "#/components/parameters/BearerAuth"
+        - $ref: "#/components/parameters/Accept"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dummyAbha:
+                  type: string
+                realAbha:
+                  type: string
+            example:
+              dummyAbha: "99999999999999"
+              realAbha: "12345678910111"
+      responses:
+        "200":
+          description: A successful call returns HTTP 200 with UpdateAbhaResponse, which carries optional successMessage and errorMessage strings.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  successMessage:
+                    type: string
+              example:
+                successMessage: ABHA number updated successfully
 components:
   securitySchemes:
     bearerAuth:
-      type: http
-      scheme: bearer
-      description: "On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value."
+      type: apiKey
+      in: header
+      name: bearer_auth
+      description: Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
   parameters:
     BearerAuth:
       name: bearer_auth
@@ -391,3 +530,11 @@ components:
       schema:
         type: string
       example: Bearer <access token>
+    Accept:
+      name: Accept
+      in: header
+      required: true
+      description: Always `application/json` on the payer service.
+      schema:
+        type: string
+      example: application/json

@@ -6,13 +6,13 @@ The post-decision exchanges. All are `Task` bundles on `/v1/task/submit`, answer
 
 `/v1/task/submit` has no path per purpose. Build the request from this table, and route an inbound one by the same three columns.
 
-| You want to                | `Task.code` | Reason                                                            | Workflow on the request | Workflow on the answer                       |
-| -------------------------- | ----------- | ----------------------------------------------------------------- | ----------------------- | -------------------------------------------- |
-| Cancel a preauthorisation  | `cancel`    | One of the seven `ndhm-reason-code` values in [rule 1](#1-cancel) | `PC01`                  | `PC02`                                       |
-| Reprocess a rejected claim | `reprocess` | `claimrejected`                                                   | `36`                    | `37`, then the verdict on the claim's thread |
-| Claim a shortfall          | `reprocess` | `partialpayment`                                                  | `36`                    | `37`, then the verdict on the claim's thread |
-| Release an amount          | `release`   | `partialpayment`                                                  | Not published           | Not published                                |
-| Nullify a claim            | `nullify`   | Not published                                                     | Not published           | Not published                                |
+| You want to                | `Task.code` | Reason                                                                     | Workflow on the request | Workflow on the answer                       |
+| -------------------------- | ----------- | -------------------------------------------------------------------------- | ----------------------- | -------------------------------------------- |
+| Cancel a preauthorisation  | `cancel`    | One of the seven `ndhm-reason-code` values in the [Cancel rule](#cancel-1) | `PC01`                  | `PC02`                                       |
+| Reprocess a rejected claim | `reprocess` | `claimrejected`                                                            | `36`                    | `37`, then the verdict on the claim's thread |
+| Claim a shortfall          | `reprocess` | `partialpayment`                                                           | `36`                    | `37`, then the verdict on the claim's thread |
+| Release an amount          | `release`   | `partialpayment`                                                           | Not published           | Not published                                |
+| Nullify a claim            | `nullify`   | Not published                                                              | Not published           | Not published                                |
 
 `suspend` is a listed code with no exchange behind it, so it has no row. A payment acknowledgement does not travel here: it goes on `/v1/paymentnotice/on_request`, as [Payment notice and acknowledgement](/docs/main/docs/nhcx/v1/reference/fhir/payment-notice-and-acknowledgement) sets out.
 
@@ -22,7 +22,7 @@ On every other use case the decision is an entry you read straight from the call
 
 1. Read `Task.output[0].valueReference.reference`, for example `ClaimResponse/cr-reprocess-approved`.
 2. Find the `ClaimResponse` entry with that identity in the same bundle.
-3. Read the result from that `ClaimResponse`, as [rule 6](#6-the-answer) sets out.
+3. Read the result from that `ClaimResponse`, as the rule [The answer](#the-answer) sets out.
 
 A parser that looks for a `ClaimResponse` as the bundle's leading resource finds nothing on this callback.
 
@@ -40,7 +40,7 @@ Sent on `/v1/task/submit`, workflow PC01.
 
 ### Elements
 
-#### 1. Task
+#### Task
 
 NRCeS profile: [Task](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Task.html).
 
@@ -58,7 +58,7 @@ NRCeS profile: [Task](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Task.htm
 | `input[].type.coding[]` | `claimNumber` ClaimNumber in `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-input-type-code`                                   |
 |                         | `intimationNumber` Intimation Number in `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-input-type-code`                        |
 
-#### 2. Organization (prov)
+#### Organization (prov)
 
 NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Organization.html).
 
@@ -69,7 +69,7 @@ NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-
 | `type[].coding[]`            | `prov` Healthcare Provider in `http://terminology.hl7.org/CodeSystem/organization-type` |
 | `name`                       | `XYZ Multispeciality Hospital`                                                          |
 
-#### 3. Organization (pay)
+#### Organization (pay)
 
 NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Organization.html).
 
@@ -94,7 +94,7 @@ Sent on `/v1/task/submit`, workflow 36.
 
 ### Elements
 
-#### 1. Task
+#### Task
 
 NRCeS profile: [Task](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Task.html).
 
@@ -117,7 +117,7 @@ NRCeS profile: [Task](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Task.htm
 | `for.identifier`                     | value `MRAV1985001`                                                                                                             |
 | `for.identifier.type.coding[]`       | `MB` Member Number in `http://terminology.hl7.org/CodeSystem/v2-0203`                                                           |
 
-#### 2. Organization (prov)
+#### Organization (prov)
 
 NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Organization.html).
 
@@ -128,7 +128,7 @@ NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-
 | `type[].coding[]`            | `prov` Healthcare Provider in `http://terminology.hl7.org/CodeSystem/organization-type` |
 | `name`                       | `XYZ Multispeciality Hospital`                                                          |
 
-#### 3. Organization (pay)
+#### Organization (pay)
 
 NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Organization.html).
 
@@ -153,7 +153,7 @@ Sent on `/v1/task/submit`.
 
 ### Elements
 
-#### 1. Task
+#### Task
 
 NRCeS profile: [Task](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Task.html).
 
@@ -175,7 +175,7 @@ NRCeS profile: [Task](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Task.htm
 |                                      | `amount` Amount in `https://nhcx.abdm.gov.in/task-input-type`                                                                     |
 | `input[].valueMoney`                 | value `1650`, currency `INR`                                                                                                      |
 
-#### 2. Organization (prov)
+#### Organization (prov)
 
 NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Organization.html).
 
@@ -186,7 +186,7 @@ NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-
 | `type[].coding[]`            | `prov` Healthcare Provider in `http://terminology.hl7.org/CodeSystem/organization-type` |
 | `name`                       | `Facility Name`                                                                         |
 
-#### 3. Organization (pay)
+#### Organization (pay)
 
 NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Organization.html).
 
@@ -214,7 +214,7 @@ Sent on `/v1/task/on_submit`, workflow PC02.
 
 ### Elements
 
-#### 1. Task
+#### Task
 
 NRCeS profile: [Task](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Task.html).
 
@@ -230,7 +230,7 @@ NRCeS profile: [Task](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Task.htm
 | `output[].type.coding[]`  | `include` Include in `http://terminology.hl7.org/CodeSystem/financialtaskinputtype`         |
 | `output[].valueReference` | reference `<participant-defined>`                                                           |
 
-#### 2. ClaimResponse
+#### ClaimResponse
 
 NRCeS profile: [ClaimResponse](https://nrces.in/ndhm/fhir/r4/StructureDefinition-ClaimResponse.html).
 
@@ -273,7 +273,7 @@ Sent on `/v1/task/on_submit`, workflow 37.
 
 ### Elements
 
-#### 1. Task
+#### Task
 
 NRCeS profile: [Task](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Task.html).
 
@@ -289,7 +289,7 @@ NRCeS profile: [Task](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Task.htm
 | `output[].type.coding[]`  | `include` Include in `http://terminology.hl7.org/CodeSystem/financialtaskinputtype`         |
 | `output[].valueReference` | reference `<participant-defined>`                                                           |
 
-#### 2. ClaimResponse
+#### ClaimResponse
 
 NRCeS profile: [ClaimResponse](https://nrces.in/ndhm/fhir/r4/StructureDefinition-ClaimResponse.html).
 
@@ -318,35 +318,35 @@ The `Patient`, `Organization`, `Coverage` entries are shaped as in the chapters 
 
 ## Rules
 
-### 1. Cancel
+### Cancel
 
 `Task.code` `cancel`, a reason from `ndhm-reason-code` (`treatmentplanchanged`, `patientrequest`, `financialconstraints`, `alternativetreatment`, `duplicateclaim`, `administrativeerror`, `other`), and the inputs `claimNumber` and `intimationNumber`.
 
-### 2. Reprocess
+### Reprocess
 
 `Task.code` `reprocess`, reason `claimrejected` for a rejected claim or `partialpayment` for one paid short, `basedOn` naming the claim by its `CLN` identifier, `for` the member, and the inputs `claimNumber` and `intimationNumber`, spelled so.
 
-### 3. Release
+### Release
 
 `Task.code` `release`, reason `partialpayment`, with the claim number and the amount sought as a `valueMoney` input.
 
-### 4. Nullify
+### Nullify
 
 The Reprocess sheet of the requests-and-responses workbook gives `Task.code` on `/v1/task/submit` as `reprocess`, `cancel`, `release` or `nullify`, as the use case needs, each with a `ClaimNumber` input carrying the claim number and `Task.status` `requested`; the answer is a `Task` whose output is the `ClaimResponse`. The provider sandbox exit checklist names the same four codes. The value sets describe `nullify` as closing a claim the provider submitted. No sample bundle, reason code or workflow code is published for it.
 
-### 5. Suspend
+### Suspend
 
 `suspend` appears only as a code. The value sets list it, glossed "suspend the preauthorization or claim that was submitted by provider", beside the task output `claimsuspended`. No exchange carries it: no request shape, answer or workflow code is published.
 
-### 6. The answer
+### The answer
 
 A `Task` whose `output` of type `include` references a `ClaimResponse` in the same bundle. Read the result from that `ClaimResponse`'s adjudication reason, not from `outcome` and not from `Task.code`. A cancellation is `completed` with reason `cancelled`; a reprocess is `accepted` with the `ClaimResponse` `queued`, and the new verdict follows on the claim's own thread.
 
-### 7. Switch on system and code together
+### Switch on system and code together
 
 The Task code systems differ between request and response.
 
-### 8. A cancelled case still reports money
+### A cancelled case still reports money
 
 Zero the figure yourself once the reason reads `cancelled`.
 

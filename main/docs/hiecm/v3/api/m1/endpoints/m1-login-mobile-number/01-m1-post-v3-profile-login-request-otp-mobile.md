@@ -63,16 +63,28 @@ curl --request POST \
 ## Responses
 
 - `200`: Success: Login Via Mobile Number - Using Mobile OTP - Send OTP
+  - `txnId` (string)
+  - `message` (string)
 - `400`: Bad Request (request validation failed): Login Via Mobile Number - Invalid LoginHint
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+  - `txnId` (string)
+  - `timestamp` (string)
 - `401`: Unauthorized (invalid / expired gateway token, X-token or benefit access): Login Via Mobile Number - Invalid access token
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `code` (string)
+  - `message` (string)
+  - `description` (string)
 - `404`: Not Found: Login ABHA API's
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+  - `timestamp` (string)
+  - `path` (string)
+  - `description` (string)
+  - `error` (string)
+  - `requestId` (string)
 - `500`: Internal Server Error.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

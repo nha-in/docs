@@ -6,7 +6,7 @@ Every call fails with `401`, often with the message `Sender is not authorized to
 
 - An expired token is the usual cause. Fetch a new one and retry the failing call once.
 - The header value is `Bearer`, a space, then the token.
-- Send the same value in `bearer_auth` and `Authorization`.
+- Send the token in `bearer_auth`. NHCX reads `bearer_auth`, not `Authorization`.
 - A sandbox token never works against a production host.
 
 ## Prerequisites
@@ -18,7 +18,7 @@ Every call fails with `401`, often with the message `Sender is not authorized to
 
 1. **Has the token expired?** An expired token returns this message. A token lasts 1200 seconds (20 minutes) from the moment it arrives, so a token older than that has expired. Fetch a new token and retry the failing call once. A retry with the old token fails the same way.
 2. **Does the value start with `Bearer `?** The header value is the word `Bearer`, a space, then the token. A bare token returns `401`.
-3. **Is the token in the header the call reads?** Send the same value in both `bearer_auth` and `Authorization`.
+3. **Is the token in the header the call reads?** Every NHCX call reads the token from `bearer_auth`, not `Authorization`.
 4. **Are the token and the host from the same environment?** A sandbox token does not work against a production host, or the reverse. Compare the host that issued the token with the host of the failing call. [Base URLs](/docs/main/docs/nhcx/v1/getting-started/base-urls) lists both.
 5. **Is the token call itself healthy?** If minting a token fails, check the credentials and the body. The session address needs `grantType` set to `client_credentials`. [Session Token](/docs/main/docs/nhcx/v1/getting-started/session-token) has the call.
 

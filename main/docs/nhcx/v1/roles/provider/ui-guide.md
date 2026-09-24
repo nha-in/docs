@@ -43,7 +43,7 @@ flowchart LR
 | Clinical findings, history, diagnosis, care team | The HMIS record                                       | Yes, in the HMIS                |
 | Bill number, date, amount claimed                | Hospital billing                                      | Yes, within the approved amount |
 
-## Flow 1: find the patient and register
+## Find the patient and register
 
 ```mermaid
 sequenceDiagram
@@ -75,7 +75,7 @@ sequenceDiagram
 
 **States the screen shows.** Searching, policies found, checking cover, cover confirmed, cover refused, registered.
 
-## Flow 2: plan the treatment
+## Plan the treatment
 
 ```mermaid
 flowchart TD
@@ -102,7 +102,7 @@ Everything this screen offers comes from the insurance plan. The specialties, th
 
 The auth-requirements exchange is specified to return the required documents, and the rest of this section says so. The one published sample does not: it carries no benefit detail and no supporting-information requirements, and is indistinguishable from the plain benefits answer. So build the checklist from the plan, which certainly carries the requirements, and use the auth-requirements answer to confirm that authorisation is needed and to add anything it does return. A screen that depends on that answer alone will be empty against the only payer whose response has been published.
 
-## Flow 3: preauthorisation, query, enhancement, cancel
+## Preauthorisation, query, enhancement, cancel
 
 ```mermaid
 stateDiagram-v2
@@ -136,7 +136,7 @@ What each state shows the user: Submitted means "sent, no word yet", not approva
 
 Three fields on the answer are worth naming, because the response carries several amounts and picking the wrong one misstates the decision. The **approved amount** for the case as a whole is the benefit total on the response, and the same category per line gives the approved amount for each item. The submitted category alongside it is what you asked for, not what you were granted. Showing it as the decision is the classic error. The **preauthorisation reference** is the payer's own number for the case. The **reduction note**, and any other sentence the adjudicator wrote, arrives as process notes and is shown verbatim. The Preauthorisation Response chapter in the FHIR Reference gives the full shape.
 
-## Flow 4: discharge and claim
+## Discharge and claim
 
 ```mermaid
 sequenceDiagram
@@ -163,19 +163,19 @@ sequenceDiagram
 
 **States.** Draft, submitted, in process, forwarded, queried, approved, reduced, rejected. Rejected is final; the only action offered is appeal.
 
-## Flow 5: appeal a decision
+## Appeal a decision
 
 **Screen.** From a rejected or short-paid case, one appeal form: the payer's reason shown at the top, a document attachment that is required, and for a shortfall an amount field capped at the difference. A notice of how many appeals remain, and, once the Committee has decided, a closed state with the decision.
 
 **What the UI enforces.** No appeal without a document. Shortfall amount never above the difference. Under PMJAY, the shortfall form stays disabled until the settlement notice has arrived and been acknowledged, and neither form reopens after a Committee decision.
 
-## Flow 6: payments
+## Payments
 
 **Screen.** Per case, a payment panel listing each notice as it arrives, and on settlement the UTR as text on the page, gross, deductions itemised, and net. Reconciliation staff copy the UTR, so a copy control beside it earns its place. The value still has to be readable without one: a UTR that exists only inside the `value` attribute of an input box is not on the screen. The same goes for every other figure the payer sent. An acknowledge button per notice. A reconciliation view across cases for accounts, filterable by date and payer, exportable.
 
 **What the UI enforces.** There are two different acknowledgements here and the screen should not confuse them. The 202 receipt your callback returns is a transport acknowledgement, sent automatically the moment the notice arrives. Separately, the provider sends a real acknowledgement message back to the payer, a Task on workflow 17, and the Payment and Communication chapter gives its shape. That one is a business act, so it belongs on the screen: one button per notice, and a clear indication once it has gone. Send it whether or not the user clicks, and show that it went. A rejected payment notice shows as not paid, in red, with the case kept open.
 
-## Flow 7: the case list and the inbox
+## The case list and the inbox
 
 ```mermaid
 flowchart LR

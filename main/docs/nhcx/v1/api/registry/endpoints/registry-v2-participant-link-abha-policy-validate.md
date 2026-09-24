@@ -37,7 +37,7 @@ The link is confirmed and providers can find the member's policies. If the passc
 
 ### Related scenario
 
-A TPA's operations desk initiated a policy link for a new member earlier in the day through /v2/participant/link/abha/policy/init and stored the transaction identifier against the case. When the authorised approver supplies the passcode, the system calls GET /v2/participant/link/abha/policy/validate?passcode=...&transactionId=... and receives a 200 with a result string. The desk then runs /V2/participant/get/policies for the member's ABHA number, sees the product listed, and closes the linking task; the next call in the member's journey will be the hospital's coverage-eligibility check.
+A TPA's operations desk initiated a policy link for a new member earlier in the day through /v2/participant/link/abha/policy/init and stored the transaction identifier against the case. When the authorised approver supplies the passcode, the system calls GET /v2/participant/link/abha/policy/validate?passcode=...&transactionId=... and receives a 200 with a result string. The desk then runs /v2/participant/get/policies for the member's ABHA number, sees the product listed, and closes the linking task; the next call in the member's journey will be the hospital's coverage-eligibility check.
 
 ### Specification
 
@@ -46,23 +46,24 @@ Chapter [Creating and updating a participant](/docs/nhcx/v1/getting-started/crea
 ```bash
 curl --request GET \
   --url https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/v2/participant/link/abha/policy/validate \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'bearer_auth: Bearer <access token>'
+  --header 'bearer_auth: Bearer <access token>' \
+  --header 'Accept: application/json'
 ```
 
 ## Authorization
 
-- `Authorization` (bearer token, required): On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
+- `bearer_auth` (apiKey, required): Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
 
 ## Headers
 
-- `bearer_auth` (string, required): It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.
+- `Accept` (string, required): Always `application/json` on the participant service.
 
 ## Responses
 
 - `200`: On success the endpoint returns HTTP 200 with ParticipantLinkAbhaResponse (optional result and errormessage).
+  - `result` (string)
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

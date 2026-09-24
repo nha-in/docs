@@ -64,8 +64,10 @@ curl --request POST \
 ## Responses
 
 - `200`: Answers `PENDING` with `Awaiting PID capture` until the patient finishes, then `COMPLETE` with `PID capture successful`.
+  - `status` (string)
+  - `message` (string)
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

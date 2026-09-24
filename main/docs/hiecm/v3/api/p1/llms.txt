@@ -4,6 +4,7 @@
 
 ## Pages
 
+- ['P1 Registration and login'](https://nha-in.github.io/docs/main/docs/hiecm/v3/api/p1): P1 base URLs and the PHR registration and login operations grouped by use case.
 - [Get the PHR certificate](https://nha-in.github.io/docs/main/docs/hiecm/v3/api/p1/endpoints/p1-certificate-and-session/01-p1-get-v3-phr-app-login-public-certificate): PHR Certificate
 - [Generate access token](https://nha-in.github.io/docs/main/docs/hiecm/v3/api/p1/endpoints/p1-certificate-and-session/02-gateway-post-gateway-v3-sessions): Generate an access token. When invoked, it facilitates the authentication process by providing a secure token that can be used to access various services...
 - [Request enrolment OTP](https://nha-in.github.io/docs/main/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-abha-number-aadhaar-otp/01-p1-post-v3-phr-app-enrollment-request-otp): Flows: - P1-Registration-login › P1 - Create ABHA Address Flow › Enrolment via Mobile › OTP Request - Mobile - P1-Registration-login › P1 - Create ABHA...

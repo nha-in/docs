@@ -32,16 +32,41 @@ curl --request GET \
 ## Responses
 
 - `200`: OK
+  - `Patient` (object)
+  - `Patient.id` (string, required)
+  - `Patient.links` (object[], required)
+  - `Patient.links.hip` (object): Identifier and name of the health information provider.
+  - `Patient.links.hip.id` (string)
+  - `Patient.links.hip.name` (string)
+  - `Patient.links.hip.type` (string)
+  - `Patient.links.referenceNumber` (string): Reference number used while linking the health records of the patient.
+  - `Patient.links.display` (string): Displayed information about the care context.
+  - `Patient.links.hiType` (string) One of: DiagnosticReport, DischargeSummary, HealthDocumentRecord, ImmunizationRecord, OPConsultation, Prescription, WellnessRecord, Invoice.
+  - `Patient.links.careContexts` (object[]): List of care contexts linked at the HIP end for the identified patient.
+  - `Patient.links.careContexts.referenceNumber` (string): Reference number used while linking the health records of the patient.
+  - `Patient.links.careContexts.display` (string): Displayed information about the care context.
+  - `Patient.links.dateCreated` (string)
 - `400`: Bad Request
   See Error codes for this module: /docs/hiecm/v3/api/p2/errors
+  - `error` (object): The error code and message, if any occurred.
+  - `error.code` (string, required): ABDM-1065 - Invalid X Auth token. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.
+  - `error.message` (string, required)
 - `401`: Unauthorized
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `code` (string): 900902 - Unauthorized. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.
+  - `message` (string)
+  - `description` (string)
 - `403`: Forbidden
   See Error codes for this module: /docs/hiecm/v3/api/p2/errors
 - `404`: server cannot find the requested resource
   See Error codes for this module: /docs/hiecm/v3/api/p2/errors
+  - `error` (object): The error code and message, if any occurred.
+  - `error.code` (string, required): ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing ": " separator (`ABDM-1001: `); match on the code itself and tolerate the separator.
+  - `error.message` (string, required)
 - `500`: Internal Server Error
   See Error codes for this module: /docs/hiecm/v3/api/p2/errors
+  - `code` (string): ABDM-9999 - Unknown exception. May be returned either bare (`ABDM-9999`) or with a trailing ": " separator (`ABDM-9999: `); match on the code itself and tolerate the separator.
+  - `message` (string)
 
 Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 

@@ -2,7 +2,7 @@
 
 `POST /v2/participant/create`
 
-Registry-linked creation: registry type and ID, role codes, endpoint URL and contacts; returns participantid and a transactionid for /validate.
+Production call. Registry-linked creation: registry type and ID, role codes, endpoint URL and contacts; returns participantid and a transactionid for /validate.
 
 ### Business purpose
 
@@ -10,7 +10,7 @@ Production onboarding needs to prove that the organisation registering on NHCX i
 
 ### When to use
 
-Use it for production onboarding, after sandbox certification. Follow it with `GET /validate` within 24 hours, using the returned `transactionid` and the SMS passcode.
+Use it for production onboarding, after sandbox certification. The production address is `https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice/v2/participant/create`. Follow it with `GET /validate` within 24 hours, using the returned `transactionid` and the SMS passcode. In the sandbox, use `/participant/create` instead.
 
 ### Preconditions
 
@@ -48,9 +48,9 @@ Chapter [Your certificate](/docs/nhcx/v1/getting-started/your-certificate) of th
 
 ```bash
 curl --request POST \
-  --url https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/v2/participant/create \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --url https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice/v2/participant/create \
   --header 'bearer_auth: Bearer <access token>' \
+  --header 'Accept: application/json' \
   --header 'Content-Type: application/json' \
   --data '{
   "registrytype": "10001",
@@ -66,11 +66,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
+- `bearer_auth` (apiKey, required): Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
 
 ## Headers
 
-- `bearer_auth` (string, required): It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.
+- `Accept` (string, required): Always `application/json` on the participant service.
 
 ## Body
 
@@ -84,8 +84,17 @@ curl --request POST \
 ## Responses
 
 - `200`: HTTP 200 with ParticipantCreateV2Resp: participantid, facilityname, facilitycontact and facilityemail echoed from the linked registry, a transactionid such as 1vouv8tlz2tnl-1fpspjhwj07c6, and an error object (code, message, trace).
+  - `participantid` (string)
+  - `facilityname` (string)
+  - `facilitycontact` (string)
+  - `facilityemail` (string)
+  - `transactionid` (string)
+  - `error` (object)
+  - `error.code` (string)
+  - `error.message` (string)
+  - `error.trace` (string)
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

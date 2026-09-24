@@ -45,7 +45,7 @@ Every M1 call, one per use case, with its error codes in one file: 132 operation
 [SKILL.md](/docs/main/skills/abdm-m1/SKILL.md "The router. Use the command below to take the references with it.")
 
 - ScaffoldThe loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.
-- Design
+- DesignWhat the journey around the calls has to do, and what a screen is forbidden to claim.
 - Integrate125 operations, with their hosts and headers.
 - Debug17 error codes, each with what to do about it.
 

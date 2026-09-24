@@ -4,101 +4,86 @@ Every endpoint below is generated from the specification that declares it. Each 
 
 This page lists every module, including any that the role you have chosen does not use. The sidebar shows only yours.
 
-## Session
+## [Session](/docs/main/docs/nhcx/v1/api/session/)
 
 1 endpoint, with its own page in the sidebar.
 
-[Read the whole specification](/docs/main/reference/nhcx-session)
+[Open the Session overview](/docs/main/docs/nhcx/v1/api/session/). The whole specification is also on [one page](/docs/main/reference/nhcx-session).
 
-## Coverage eligibility
+## [Participant registry](/docs/main/docs/nhcx/v1/api/registry/)
 
-4 endpoints, each with its own page in the sidebar.
+21 endpoints, each with its own page in the sidebar.
 
-[Read the whole specification](/docs/main/reference/nhcx-eligibility)
+[Open the Participant registry overview](/docs/main/docs/nhcx/v1/api/registry/). The whole specification is also on [one page](/docs/main/reference/nhcx-registry).
 
-## Pre-authorisation
-
-4 endpoints, each with its own page in the sidebar.
-
-[Read the whole specification](/docs/main/reference/nhcx-preauth)
-
-## Predetermination
+## [Coverage eligibility](/docs/main/docs/nhcx/v1/api/eligibility/)
 
 4 endpoints, each with its own page in the sidebar.
 
-[Read the whole specification](/docs/main/reference/nhcx-predetermination)
+[Open the Coverage eligibility overview](/docs/main/docs/nhcx/v1/api/eligibility/). The whole specification is also on [one page](/docs/main/reference/nhcx-eligibility).
 
-## Claim
-
-4 endpoints, each with its own page in the sidebar.
-
-[Read the whole specification](/docs/main/reference/nhcx-claim)
-
-## Reprocess, cancel and shortfall
+## [Insurance plan](/docs/main/docs/nhcx/v1/api/insurance-plan/)
 
 4 endpoints, each with its own page in the sidebar.
 
-[Read the whole specification](/docs/main/reference/nhcx-task)
+[Open the Insurance plan overview](/docs/main/docs/nhcx/v1/api/insurance-plan/). The whole specification is also on [one page](/docs/main/reference/nhcx-insurance-plan).
 
-## Payment notice
-
-4 endpoints, each with its own page in the sidebar.
-
-[Read the whole specification](/docs/main/reference/nhcx-payment-notice)
-
-## Communication
+## [Pre-authorisation](/docs/main/docs/nhcx/v1/api/preauth/)
 
 4 endpoints, each with its own page in the sidebar.
 
-[Read the whole specification](/docs/main/reference/nhcx-communication)
+[Open the Pre-authorisation overview](/docs/main/docs/nhcx/v1/api/preauth/). The whole specification is also on [one page](/docs/main/reference/nhcx-preauth).
 
-## Status and search
+## [Claim](/docs/main/docs/nhcx/v1/api/claim/)
+
+4 endpoints, each with its own page in the sidebar.
+
+[Open the Claim overview](/docs/main/docs/nhcx/v1/api/claim/). The whole specification is also on [one page](/docs/main/reference/nhcx-claim).
+
+## [Reprocess, cancel and shortfall](/docs/main/docs/nhcx/v1/api/task/)
+
+4 endpoints, each with its own page in the sidebar.
+
+[Open the Reprocess, cancel and shortfall overview](/docs/main/docs/nhcx/v1/api/task/). The whole specification is also on [one page](/docs/main/reference/nhcx-task).
+
+## [Payment notice](/docs/main/docs/nhcx/v1/api/payment-notice/)
+
+4 endpoints, each with its own page in the sidebar.
+
+[Open the Payment notice overview](/docs/main/docs/nhcx/v1/api/payment-notice/). The whole specification is also on [one page](/docs/main/reference/nhcx-payment-notice).
+
+## [Communication](/docs/main/docs/nhcx/v1/api/communication/)
+
+4 endpoints, each with its own page in the sidebar.
+
+[Open the Communication overview](/docs/main/docs/nhcx/v1/api/communication/). The whole specification is also on [one page](/docs/main/reference/nhcx-communication).
+
+## [Status and search](/docs/main/docs/nhcx/v1/api/status/)
 
 6 endpoints, each with its own page in the sidebar.
 
-[Read the whole specification](/docs/main/reference/nhcx-status)
+[Open the Status and search overview](/docs/main/docs/nhcx/v1/api/status/). The whole specification is also on [one page](/docs/main/reference/nhcx-status).
 
-## Insurance plan
-
-4 endpoints, each with its own page in the sidebar.
-
-[Read the whole specification](/docs/main/reference/nhcx-insurance-plan)
-
-## Participant registry
-
-23 endpoints, each with its own page in the sidebar.
-
-[Read the whole specification](/docs/main/reference/nhcx-registry)
-
-## Onboarding
+## [Onboarding](/docs/main/docs/nhcx/v1/api/onboarding/)
 
 5 endpoints, each with its own page in the sidebar.
 
-[Read the whole specification](/docs/main/reference/nhcx-onboarding)
+[Open the Onboarding overview](/docs/main/docs/nhcx/v1/api/onboarding/). The whole specification is also on [one page](/docs/main/reference/nhcx-onboarding).
 
-## PMJAY adjudicator
+## [PMJAY adjudicator](/docs/main/docs/nhcx/v1/api/adjudicator/)
 
-4 endpoints, each with its own page in the sidebar.
+5 endpoints across 2 groups: Dummy payer APIs, PMJAY payer APIs. Each endpoint has its own page in the sidebar.
 
-[Read the whole specification](/docs/main/reference/nhcx-adjudicator)
+[Open the PMJAY adjudicator overview](/docs/main/docs/nhcx/v1/api/adjudicator/). The whole specification is also on [one page](/docs/main/reference/nhcx-adjudicator).
 
-## Other
-
-12 endpoints, each with its own page in the sidebar.
-
-[Read the whole specification](/docs/main/reference/nhcx-other)
-
-## ABHA biometric authentication
+## [ABHA biometric authentication](/docs/main/docs/nhcx/v1/api/biometric/)
 
 6 endpoints, each with its own page in the sidebar.
 
-[Read the whole specification](/docs/main/reference/nhcx-biometric)
+[Open the ABHA biometric authentication overview](/docs/main/docs/nhcx/v1/api/biometric/). The whole specification is also on [one page](/docs/main/reference/nhcx-biometric).
 
-## Callbacks with no documented trigger
+## [Other](/docs/main/docs/nhcx/v1/api/other/)
 
-2 callbacks are declared at module level with no call named against them. Which call produces each one is not documented, so this page does not say.
+7 endpoints, each with its own page in the sidebar.
 
-| Module                          | Method | Arrives at                                                                                        | What it carries                                     |
-| ------------------------------- | ------ | ------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
-| Reprocess, cancel and shortfall | POST   | [`/v1/task/submit`](/docs/main/docs/nhcx/v1/api/task/endpoints/task-webhook-v1-task-submit)       | Receive task submit (reprocess or cancel)           |
-| Reprocess, cancel and shortfall | POST   | [`/v1/task/on_submit`](/docs/main/docs/nhcx/v1/api/task/endpoints/task-webhook-v1-task-on-submit) | Receive task callback (reprocess or cancel outcome) |
+[Open the Other overview](/docs/main/docs/nhcx/v1/api/other/). The whole specification is also on [one page](/docs/main/reference/nhcx-other).

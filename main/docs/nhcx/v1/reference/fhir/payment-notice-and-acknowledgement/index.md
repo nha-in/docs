@@ -18,7 +18,7 @@ Sent on `/v1/paymentnotice/request`, workflow 30 initiated, 31 processed, 33 set
 
 ### Elements
 
-#### 1. Task
+#### Task
 
 NRCeS profile: [Task](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Task.html).
 
@@ -34,7 +34,7 @@ NRCeS profile: [Task](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Task.htm
 | `input[].type.coding[]`  | `status` Status code in `http://terminology.hl7.org/CodeSystem/financialtaskinputtype` |
 | `input[].valueReference` | reference `<participant-defined>`                                                      |
 
-#### 2. PaymentNotice
+#### PaymentNotice
 
 NRCeS profile: [PaymentNotice](https://nrces.in/ndhm/fhir/r4/StructureDefinition-PaymentNotice.html).
 
@@ -49,7 +49,7 @@ NRCeS profile: [PaymentNotice](https://nrces.in/ndhm/fhir/r4/StructureDefinition
 | `amount`                     | value `135000`, currency `INR`                                                             |
 | `paymentStatus.coding[]`     | `cleared` Cleared in `http://terminology.hl7.org/CodeSystem/paymentstatus`                 |
 
-#### 3. PaymentReconciliation
+#### PaymentReconciliation
 
 NRCeS profile: [PaymentReconciliation](https://nrces.in/ndhm/fhir/r4/StructureDefinition-PaymentReconciliation.html).
 
@@ -90,7 +90,7 @@ Sent on `/v1/paymentnotice/on_request`, workflow 30 echoed; 17 under PMJAY.
 
 ### Elements
 
-#### 1. Task
+#### Task
 
 NRCeS profile: [Task](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Task.html).
 
@@ -112,19 +112,19 @@ The `Organization` entries are shaped as in the chapters that introduce them.
 
 ## Rules
 
-### 1. The notice
+### The notice
 
 A `Task` coded `deliver` in `ndhm-task-codes` whose input references the `PaymentNotice`. `PaymentNotice.amount` is the net that reaches the account. `PaymentReconciliation` carries the payment date, the `UTR` and one `detail[]` line per money type.
 
-### 2. The arithmetic
+### The arithmetic
 
 Net plus the deductions equals the adjudicated benefit, not the submitted amount. Run the check on every notice and flag a case that fails it.
 
-### 3. The acknowledgement
+### The acknowledgement
 
 A `Task` coded `status` in `financialtaskcode`, `completed`, with an output `paymentack` and the claim number as a second output. It confirms receipt, not agreement.
 
-### 4. Three notices
+### Three notices
 
 30, 31 and 33, each with its own correlation id. The bank reference arrives on 33. Keep the path for the acknowledgement configurable per payer.
 

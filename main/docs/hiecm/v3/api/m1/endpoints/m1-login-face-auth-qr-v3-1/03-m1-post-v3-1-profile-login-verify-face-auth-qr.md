@@ -26,7 +26,7 @@ Completes login through the face-auth QR / ABHA-app flow. First call *Face auth 
 | `authData.authMethods` | `["face_auth"]` | yes | Authentication method used in this step. |
 | `authData.face_login` | object | yes | Face login block (v3.1). |
 | `authData.face_login.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
-| `authData.face_login.Aadhaar` | string | yes | Aadhaar number, RSA-encrypted. |
+| `authData.face_login.aadhaar` | string | yes | Aadhaar number, RSA-encrypted. |
 
 > **Note:** This API is only in the Postman collection (v3.1).
 
@@ -75,16 +75,34 @@ curl --request POST \
 ## Responses
 
 - `200`: Success: Positive flow
+  - `authResult` (string)
+  - `message` (string)
+  - `token` (string)
+  - `expiresIn` (integer)
+  - `refreshToken` (string)
+  - `refreshExpiresIn` (integer)
+  - `accounts` (object[])
+  - `accounts.ABHANumber` (string)
+  - `accounts.preferredAbhaAddress` (string)
+  - `accounts.name` (string)
+  - `accounts.status` (string)
+  - `accounts.profilePhoto` (string)
 - `400`: Bad Request (request validation failed).
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
 - `401`: Unauthorized (invalid / expired gateway token, X-token or benefit access): Invalid Credentials (generic)
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `code` (string)
+  - `description` (string)
+  - `message` (string)
 - `404`: Not Found: User Not Found; Resource Not Found
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+  - `error` (object)
+  - `error.code` (string)
+  - `error.message` (string)
 - `500`: Internal Server Error.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

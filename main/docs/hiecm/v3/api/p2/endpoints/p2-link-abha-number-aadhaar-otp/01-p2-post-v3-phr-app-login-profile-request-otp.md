@@ -46,14 +46,19 @@ curl --request POST \
 ## Responses
 
 - `200`: OK
+  - `txnId` (string)
+  - `message` (string)
 - `400`: Bad Request
   See Error codes for this module: /docs/hiecm/v3/api/p2/errors
 - `401`: Unauthorized
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `code` (string)
+  - `message` (string)
+  - `description` (string)
 - `403`: Forbidden
   See Error codes for this module: /docs/hiecm/v3/api/p2/errors
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

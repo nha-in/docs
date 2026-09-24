@@ -62,14 +62,22 @@ curl --request POST \
 - `200`: Success: Benefit Search via ABHA number; Benefit found (Postman); Benefit found - sandbox (Postman)
 - `400`: Bad Request (request validation failed): Invalid Scope; Invalid Login Hint; Invalid LoginId; Invalid Benefit Name
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+  - `loginId` (string)
+  - `timestamp` (string)
 - `401`: Unauthorized (invalid / expired gateway token, X-token or benefit access): Invalid access token
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `code` (string)
+  - `message` (string)
+  - `description` (string)
 - `404`: Not Found: User Not Found
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+  - `error` (object)
+  - `error.code` (string)
+  - `error.message` (string)
 - `500`: Internal Server Error.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 [

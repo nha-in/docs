@@ -20,7 +20,7 @@ Use it when fingerprint and iris do not work for the patient. The patient comple
 
 ### Postconditions
 
-Returns a `txnId`. Show `https://phrsbx.ABDM.gov.in/face-auth?txnId=<txnId>` as a QR code for the patient to scan with the ABHA app.
+Returns a `txnId`. Show `https://phrsbx.abdm.gov.in/face-auth?txnId=<txnId>` as a QR code for the patient to scan with the ABHA app.
 
 ### Common mistakes
 

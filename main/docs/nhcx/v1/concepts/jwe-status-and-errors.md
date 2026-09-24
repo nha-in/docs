@@ -14,13 +14,33 @@ A few facts can also be written on the outside of the envelope, for example the 
 
 ## One exchange or several
 
+```mermaid
+sequenceDiagram
+  participant P as Provider (on instance A)
+  participant A as NHCX instance A
+  participant B as NHCX instance B
+  participant Y as Payer (on instance B)
+  P->>A: Sealed request
+  A->>A: Registry lookup, validation, audit
+  A->>B: Relay the sealed request
+  B->>B: Registry lookup, validation, audit
+  B->>Y: Deliver to the payer's callback
+  Y->>B: Sealed answer
+  B->>A: Relay the sealed answer
+  A->>P: Deliver to the provider's callback
+```
+
 NHCX is designed so that more than one exchange instance can run, relaying messages between them. A participant's address carries the instance after the `@`, as in `1518@hcx`. When a hospital and its payer are on the same instance, that instance delivers the message. When they are on different instances, the hospital's instance relays it to the payer's. Each instance does its own registry lookup, validation, audit and routing. The relaying exchange is a participant with the role `HIE`, and it cannot read the letter either.
 
-Three cases need a relay:
+A relay is needed whenever the two participants in an exchange sit on different instances. Three cases lead to that:
 
-1. The provider is on one instance and the payer for the policy's scheme is on another.
-2. A beneficiary is treated in another state, and that hospital is on a different instance from the payer.
-3. A top-up case, where the primary and secondary insurance are handled by payers on different instances.
+- **Payer on another instance.** The hospital is on instance A. The payer that runs the policy's scheme is on instance B. Instance A passes the hospital's message to instance B, which delivers it to the payer.
+- **Treatment in another state.** A beneficiary is treated at a network hospital in another state. That hospital is on instance A, and the beneficiary's payer is on instance B. The relay works as in the first case.
+- **Top-up cover.** The patient has a primary and a secondary insurance. The primary payer is on instance A and the secondary payer is on instance B. A hospital on instance A reaches the primary payer directly, and its messages to the secondary payer are relayed to instance B.
+
+In every case the answer travels back along the same path, from instance B to instance A and then to the hospital.
+
+Neither instance can open the letter at any point on this path.
 
 ## Protected Headers
 

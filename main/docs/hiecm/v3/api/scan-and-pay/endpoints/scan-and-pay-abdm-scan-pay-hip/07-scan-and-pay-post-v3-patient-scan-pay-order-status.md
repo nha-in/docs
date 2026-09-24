@@ -58,11 +58,22 @@ curl --request POST \
 - `200`: OK
 - `400`: Bad Request. The request could not be processed because it was malformed or failed validation - a missing mandatory field, a value in the wrong format, or a header that did not match the body.
   See Error codes for this module: /docs/hiecm/v3/api/scan-and-pay/errors
+  - `error` (object): The error code and message, if any occurred.
+  - `error.code` (string, required): ABDM-1006 - Bad Request, invalid request Body. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.
+  - `error.message` (string, required): Short description of the failure.
 - `401`: Unauthorized. The request carried no valid credentials, or the access token has expired. Obtain a fresh token from the session API and retry.
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `code` (string): 900901 - Invalid Credentials. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.
+  - `message` (string): Short description of the failure.
+  - `description` (string): Detailed description of the failure.
 - `403`: Forbidden. The caller is authenticated but is not permitted to perform this operation on this resource.
   See Error codes for this module: /docs/hiecm/v3/api/scan-and-pay/errors
 - `500`: Internal Server Error
   See Error codes for this module: /docs/hiecm/v3/api/scan-and-pay/errors
+  - `error` (object): The error code and message, if any occurred.
+  - `error.code` (string, required): ABDM-2500 - Unknown error occurred. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.
+  - `error.message` (string, required)
 - `503`: Service Unavailable
   See Error codes for this module: /docs/hiecm/v3/api/scan-and-pay/errors
+  - `code` (string, required): ABDM-2500 - Service Unavailable. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.
+  - `message` (string, required)

@@ -38,12 +38,24 @@ curl --request GET \
 ## Responses
 
 - `200`: Indicates a successful request. The response includes the updated child ABHA profile details
+  - `parentAbhaNumber` (string)
+  - `mobileNumber` (string)
+  - `childrenCount` (integer)
+  - `children` (object[])
+  - `children.dateOfBirth` (string)
+  - `children.name` (string)
+  - `children.gender` (string)
+  - `children.phrAddress` (string)
+  - `children.ABHANumber` (string)
 - `401`: Indicates an unauthorized request due to invalid credentials
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `error` (object)
+  - `error.code` (string)
+  - `error.message` (string)
 - `500`: **Internal Server Error** An Internal Server Error (500) indicates that the server encountered an unexpected condition that prevented it from fulfilling the request.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

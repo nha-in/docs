@@ -4,6 +4,7 @@
 
 ## Pages
 
+- ['P2 Consents Management'](https://nha-in.github.io/docs/main/docs/hiecm/v3/api/p2): P2 base URLs and the PHR profile, linking, sharing and consent operations grouped by use case.
 - [OPD token generation](https://nha-in.github.io/docs/main/docs/hiecm/v3/api/p2/endpoints/p2-abdm-hiecm-patient-share-phr/01-p2-post-patient-share-v3-share): This is an API will be invoked from the PHR-HIU to share the user/patient profile with HMIS/LIMS.
 - [Receive the HIU patient on share](https://nha-in.github.io/docs/main/docs/hiecm/v3/api/p2/endpoints/p2-abdm-hiecm-patient-share-phr/02-p2-post-v3-hiu-patient-on-share): Hosted by the HIP/HIU, not by ABDM. ABDM calls this endpoint at the callback URL registered for your bridge, so the path below is relative to that URL. This...
 - [OPD Token History](https://nha-in.github.io/docs/main/docs/hiecm/v3/api/p2/endpoints/p2-abdm-hiecm-patient-share-phr/03-p2-get-patient-share-v3-profile-gettokendetails): This is an API will be invoked get the historical token numbers of the patient.

@@ -1,4 +1,4 @@
-# Delete records (troubleshooting)
+# Support: delete records by correlation ID
 
 `POST /v1/delete`
 
@@ -6,7 +6,7 @@ Internal troubleshooting operation on the claim service that deletes records by 
 
 ### Business purpose
 
-The claim service OpenAPI lists /v1/delete as an internal troubleshooting operation for deleting records identified by a correlationid and an action. It exists to clear stuck or erroneous records during integration testing and support, not to move a claim through its lifecycle. The published documentation gives no further business context and does not state which participant roles may call it.
+`/v1/delete` is a troubleshooting operation on the claim service. It deletes the record identified by a correlation ID and an action, to clear a stuck or erroneous record during integration testing and support. It does not move a claim through its lifecycle.
 
 ### When to use
 
@@ -46,7 +46,6 @@ No chapter of the current documentation covers this operation. It appears only i
 ```bash
 curl --request POST \
   --url https://apisbx.abdm.gov.in/hcx/v1/delete \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'bearer_auth: Bearer <access token>' \
   --header 'Content-Type: application/json' \
   --data '{
@@ -57,11 +56,7 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
-
-## Headers
-
-- `bearer_auth` (string, required): It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.
+- `bearer_auth` (apiKey, required): Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
 
 ## Body
 
@@ -71,8 +66,11 @@ curl --request POST \
 ## Responses
 
 - `200`: The endpoint sits in the claim service, whose domain operations all return 202 Accepted, 400 Request Validation failed, 404 Requested resource was not found and 500 Downstream systems down, each carrying StatusSuccessResponse.
+  - `httpStatus` (integer)
+  - `schema` (string)
+  - `note` (string)
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

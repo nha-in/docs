@@ -19,9 +19,47 @@ curl --request GET \
 ## Responses
 
 - `200`: OK
+  - `hprIdNumber` (string)
+  - `hprId` (string)
+  - `mobile` (string)
+  - `firstName` (string)
+  - `middleName` (string)
+  - `lastName` (string)
+  - `name` (string)
+  - `yearOfBirth` (string)
+  - `dayOfBirth` (string)
+  - `monthOfBirth` (string)
+  - `gender` (string)
+  - `email` (string)
+  - `profilePhoto` (string)
+  - `stateCode` (string)
+  - `districtCode` (string)
+  - `subDistrictCode` (string)
+  - `villageCode` (string)
+  - `townCode` (string)
+  - `wardCode` (string)
+  - `pincode` (string)
+  - `address` (string)
+  - `kycPhoto` (string)
+  - `stateName` (string)
+  - `districtName` (string)
+  - `subdistrictName` (string)
+  - `villageName` (string)
+  - `townName` (string)
+  - `wardName` (string)
+  - `authMethods` (string[])
+  - `kycVerified` (boolean)
+  - `verificationStatus` (string)
+  - `categoryId` (integer)
+  - `categoryName` (string)
+  - `categorySubId` (integer)
+  - `categorySubName` (string)
+  - `emailVerified` (boolean)
+  - `role` (integer)
+  - `new` (boolean)
 - `404`: Not Found
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

@@ -34,14 +34,43 @@ curl --request GET \
 ## Responses
 
 - `200`: The 200 response code indicates a successful request. In this context, it signifies that the user was successfully verified with the OTP in the previous API call. A valid JWT token was provided, which authenticated the user and allowed access to their profile. As a result, the user profile was successfully retrieved, including all ABHA profile details.
+  - `abhaAddress` (string)
+  - `fullName` (string)
+  - `profilePhoto` (string)
+  - `firstName` (string)
+  - `middleName` (string)
+  - `lastName` (string)
+  - `dayOfBirth` (string)
+  - `monthOfBirth` (string)
+  - `yearOfBirth` (string)
+  - `dateOfBirth` (string)
+  - `gender` (string)
+  - `email` (string)
+  - `mobile` (string)
+  - `abhaNumber` (string)
+  - `address` (string)
+  - `stateName` (string)
+  - `pinCode` (string)
+  - `stateCode` (string)
+  - `districtCode` (string)
+  - `authMethods` (string[])
+  - `status` (string)
+  - `subDistrictCode` (string)
+  - `subDistrictName` (string)
+  - `emailVerified` (string)
+  - `mobileVerified` (string)
+  - `kycStatus` (string)
 - `400`: A  Bad Request error with the description “invalid X-token”  indicates that the server received a request with an invalid or missing authentication token.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
 - `401`: The 401 response code indicates that the request was not authorized due to invalid credentials. Ensure that your API invocation includes the appropriate authorization header.
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `code` (string)
+  - `message` (string)
+  - `description` (string)
 - `500`: **Internal Server Error** An Internal Server Error (500) indicates that the server encountered an unexpected condition that prevented it from fulfilling the request.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

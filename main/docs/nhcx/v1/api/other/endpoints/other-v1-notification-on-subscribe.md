@@ -1,4 +1,4 @@
-# Submit the notification on_subscribe
+# Patient app: acknowledge a notification subscription
 
 `POST /v1/notification/on_subscribe`
 
@@ -48,7 +48,6 @@ Chapter [Notifications and patient apps](/docs/nhcx/v1/reference/notifications-a
 ```bash
 curl --request POST \
   --url https://apisbx.abdm.gov.in/hcx/v1/notification/on_subscribe \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'bearer_auth: Bearer <access token>' \
   --header 'Content-Type: application/json' \
   --data '{
@@ -77,11 +76,7 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
-
-## Headers
-
-- `bearer_auth` (string, required): It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.
+- `bearer_auth` (apiKey, required): Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
 
 ## Body
 
@@ -106,8 +101,15 @@ curl --request POST \
 ## Responses
 
 - `200`: The NHCX-side operation returns HTTP 200 with a SubscribeResponse (timestamp, api_call_id, correlation_id, subscription_id, subscription_status active, replaced or expired, expiry, message); 400, 401, 403, 409 and 500 return a StatusSuccessResponse with the same descriptions as the subscribe table.
+  - `timestamp` (string)
+  - `api_call_id` (string)
+  - `correlation_id` (string)
+  - `subscription_id` (string)
+  - `subscription_status` (string)
+  - `expiry` (string)
+  - `message` (string)
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

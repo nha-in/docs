@@ -2,7 +2,7 @@
 
 `POST /participant/create`
 
-Creates a participant record in the NHCX registry from a full v1 profile and returns the generated participant_code.
+Sandbox call. Creates a participant record in the NHCX registry from a full v1 profile and returns the generated participant_code.
 
 ### Business purpose
 
@@ -10,7 +10,7 @@ Nothing moves through NHCX until both the sender and the recipient exist in the 
 
 ### When to use
 
-Call it once, when you first register, before any other NHCX call. The sandbox uses this path. To change a certificate or callback URL later, use an update call.
+Call it once in the sandbox, when you first register, before any other NHCX call. The sandbox address is `https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/participant/create`. In production, register with `/v2/participant/create` followed by `GET /validate`. To change a certificate or callback URL later, use an update call.
 
 ### Preconditions
 
@@ -49,8 +49,8 @@ Chapter [Your certificate](/docs/nhcx/v1/getting-started/your-certificate) of th
 ```bash
 curl --request POST \
   --url https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/participant/create \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'bearer_auth: Bearer <access token>' \
+  --header 'Accept: application/json' \
   --header 'source: internal' \
   --header 'Content-Type: application/json' \
   --data '{
@@ -78,11 +78,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
+- `bearer_auth` (apiKey, required): Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
 
 ## Headers
 
-- `bearer_auth` (string, required): It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.
+- `Accept` (string, required): Always `application/json` on the participant service.
 - `source` (string, required): Sent on this call, as the package's request carries it.
 
 ## Body
@@ -104,8 +104,9 @@ curl --request POST \
 ## Responses
 
 - `200`: On success the registry returns HTTP 200 with ParticipantCreateResponse containing only participant_code, described as the machine-generated unique identifier of the participant on the HCX instance; sandbox codes look like 100001@sbx and production codes like XXXXX7583@hcx.
+  - `participant_code` (string)
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

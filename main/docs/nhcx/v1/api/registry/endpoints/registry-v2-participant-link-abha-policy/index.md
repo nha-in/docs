@@ -1,8 +1,8 @@
-# Link ABHA number to policies (V2)
+# Link ABHA number to policies (v2)
 
-`POST /V2/participant/link/abha/policy`
+`POST /v2/participant/link/abha/policy`
 
-V2 variant of the ABHA policy link; same ParticipantLinkAbhaRequest body and ParticipantLinkAbhaResponse as the unversioned call.
+v2 variant of the ABHA policy link; same ParticipantLinkAbhaRequest body and ParticipantLinkAbhaResponse as the unversioned call.
 
 ### Business purpose
 
@@ -10,13 +10,12 @@ This endpoint serves the same business need as /participant/link/abha/policy: it
 
 ### When to use
 
-Use it in the same cases as the v1 link call. Pick the v1 or V2 path and use it throughout your integration.
+Use it in the same cases as the v1 link call. Pick the v1 or v2 path and use it throughout your integration.
 
 ### Preconditions
 
 - You have a valid access token in the `bearer_auth` header.
 - You are the payer or its TPA, using the credentials that participant was created with.
-- The path starts with a capital `V2`.
 
 ### Postconditions
 
@@ -26,7 +25,6 @@ The member's policies are linked at once and providers can find them. Only the d
 
 - Using a token from different credentials than the payer or TPA was created with.
 - Mixing up `payerid` and `processingid`.
-- Writing the path with a lower-case `v2`, which is a different route.
 - Leaving out a required field.
 
 ### Best practices
@@ -39,7 +37,7 @@ The member's policies are linked at once and providers can find them. Only the d
 
 ### Related scenario
 
-A TPA that processes claims for several insurers migrates its integration to the V2 participant APIs. When one of its insurers issues a new individual health policy, the TPA's system calls /V2/participant/link/abha/policy with the insurer's participant code as payerid and its own code as processingid, listing the product from the insurer's catalogue. The TPA then confirms the link with /V2/participant/get/policies using the member's ABHA number. When the beneficiary later visits a hospital, the provider resolves the processingid as the receiver code and submits the coverage-eligibility check and preauthorisation to the TPA.
+A TPA that processes claims for several insurers migrates its integration to the v2 participant APIs. When one of its insurers issues a new individual health policy, the TPA's system calls /v2/participant/link/abha/policy with the insurer's participant code as payerid and its own code as processingid, listing the product from the insurer's catalogue. The TPA then confirms the link with /v2/participant/get/policies using the member's ABHA number. When the beneficiary later visits a hospital, the provider resolves the processingid as the receiver code and submits the coverage-eligibility check and preauthorisation to the TPA.
 
 ### Specification
 
@@ -47,9 +45,9 @@ Chapter [Creating and updating a participant](/docs/nhcx/v1/getting-started/crea
 
 ```bash
 curl --request POST \
-  --url https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/V2/participant/link/abha/policy \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --url https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/v2/participant/link/abha/policy \
   --header 'bearer_auth: Bearer <access token>' \
+  --header 'Accept: application/json' \
   --header 'Content-Type: application/json' \
   --data '{
   "requestid": "0b1d6c1e-6a5f-4d3c-8b9a-4f2e7c0d1a22",
@@ -69,11 +67,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
+- `bearer_auth` (apiKey, required): Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
 
 ## Headers
 
-- `bearer_auth` (string, required): It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.
+- `Accept` (string, required): Always `application/json` on the participant service.
 
 ## Body
 
@@ -90,8 +88,9 @@ curl --request POST \
 ## Responses
 
 - `200`: A successful call returns HTTP 200 with ParticipantLinkAbhaResponse (optional result string and optional errormessage with errorcode and errordescription).
+  - `result` (string)
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

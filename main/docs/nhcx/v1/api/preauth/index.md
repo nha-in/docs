@@ -2,12 +2,12 @@
 
 Pre-authorisation is the provider's formal request for the payer's approval to deliver a specific treatment to a covered beneficiary.
 
-## Calls
+## APIs
 
-| Call                                                                                                     | Method and path              | What it does                                                                                                                                                                                        |
-| -------------------------------------------------------------------------------------------------------- | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Pre-authorisation submit](/docs/main/docs/nhcx/v1/api/preauth/endpoints/preauth-v1-preauth-submit)      | `POST /v1/preauth/submit`    | Provider submits, resubmits, enhances or answers a query on a pre-authorisation Claim bundle (Claim.use preauthorization); NHCX routes it to the payer. Also sent as pre-authorisation enhancement. |
-| [Pre-authorisation callback](/docs/main/docs/nhcx/v1/api/preauth/endpoints/preauth-v1-preauth-on-submit) | `POST /v1/preauth/on_submit` | Payer returns the ClaimResponseBundle for a pre-authorisation (approved, partially approved, queried or rejected) to the provider via NHCX.                                                         |
+| Call                                                                                                                     | Called by | Method and path              | What it does                                                                                                                                                                                        |
+| ------------------------------------------------------------------------------------------------------------------------ | --------- | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Provider: submit a pre-authorisation](/docs/main/docs/nhcx/v1/api/preauth/endpoints/preauth-v1-preauth-submit)          | Provider  | `POST /v1/preauth/submit`    | Provider submits, resubmits, enhances or answers a query on a pre-authorisation Claim bundle (Claim.use preauthorization); NHCX routes it to the payer. Also sent as pre-authorisation enhancement. |
+| [Payer: send the pre-authorisation response](/docs/main/docs/nhcx/v1/api/preauth/endpoints/preauth-v1-preauth-on-submit) | Payer     | `POST /v1/preauth/on_submit` | Payer returns the ClaimResponseBundle for a pre-authorisation (approved, partially approved, queried or rejected) to the provider via NHCX.                                                         |
 
 ## Callbacks you host
 
@@ -32,5 +32,8 @@ The exchange posts these to the `endpoint_url` you registered. Answer each with 
 - [Preauthorisation response](/docs/main/docs/nhcx/v1/reference/fhir/preauthorisation-response)
 - [Preauthorisation enhancement](/docs/main/docs/nhcx/v1/reference/fhir/preauthorisation-enhancement)
 - [Preauthorisation query and answer](/docs/main/docs/nhcx/v1/reference/fhir/preauthorisation-query-and-answer)
+- [Resubmission and cancellation of a pre-authorisation](/docs/main/docs/nhcx/v1/roles/provider/preauthorisation#follow-ups-on-the-same-case): resubmission on workflow `121`, cancellation on `PC01`, answered on `PC02`
+- [Cancelling a pre-authorisation with a Task](/docs/main/docs/nhcx/v1/reference/fhir/cancel-reprocess-and-shortfall#cancel)
+- [Reprocess, cancel and shortfall calls](/docs/main/docs/nhcx/v1/api/task/): a cancellation is sent on `/v1/task/submit`, not on `/v1/preauth/submit`
 
 The whole specification, with a request you can send from the page, is the [Pre-authorisation API reference](/docs/main/reference/nhcx-preauth).

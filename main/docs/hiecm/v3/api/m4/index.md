@@ -2,6 +2,16 @@
 
 Register a healthcare professional on the HPR, onboard a facility to the HFR, and link the facility to its bridges.
 
+## Postman collection
+
+100 requests in the order you build them, and a sandbox environment to fill in.
+
+[Collection](/docs/main/postman/hiecm-m4.postman_collection.json)[Environment](/docs/main/postman/hiecm-sandbox.postman_environment.json)
+
+`https://nha-in.github.io/docs/main/postman/hiecm-m4.postman_collection.json`
+
+Postman, Insomnia, Hoppscotch and Bruno take this through Import, as a link or as the downloaded file.
+
 ## Base URLs
 
 | Purpose           | Environment | Base URL                                |

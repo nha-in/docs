@@ -2,7 +2,7 @@
 
 `GET /validate`
 
-Confirms a participant creation by presenting the SMS passcode and the transactionId returned by /v2/participant/create.
+Production call. Confirms a participant creation by presenting the SMS passcode and the transactionId returned by /v2/participant/create.
 
 ### Business purpose
 
@@ -10,7 +10,7 @@ Registering an organisation on a national claims exchange must be authorised by 
 
 ### When to use
 
-Call it after `/v2/participant/create` returns a `transactionid` and the passcode arrives by SMS. Do it within 24 hours, and before any `/v2/participant/update`.
+Call it in production after `/v2/participant/create` returns a `transactionid` and the passcode arrives by SMS. Do it within 24 hours, and before any `/v2/participant/update`. The production address is `https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice/validate`.
 
 ### Preconditions
 
@@ -45,18 +45,18 @@ Chapter [Your certificate](/docs/nhcx/v1/getting-started/your-certificate) of th
 
 ```bash
 curl --request GET \
-  --url "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/validate?transactionId=<TRANSACTIONID>&passcode=<PASSCODE>" \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'bearer_auth: Bearer <access token>'
+  --url "https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice/validate?transactionId=<TRANSACTIONID>&passcode=<PASSCODE>" \
+  --header 'bearer_auth: Bearer <access token>' \
+  --header 'Accept: application/json'
 ```
 
 ## Authorization
 
-- `Authorization` (bearer token, required): On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
+- `bearer_auth` (apiKey, required): Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
 
 ## Headers
 
-- `bearer_auth` (string, required): It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.
+- `Accept` (string, required): Always `application/json` on the participant service.
 
 ## Query parameters
 
@@ -66,8 +66,10 @@ curl --request GET \
 ## Responses
 
 - `200`: HTTP 200 with a bare string body; the OpenAPI declares the 200 response type as string and the operation (particiapntValidate) as validating approval from the participant for participant creation.
+  - `_contentType` (string)
+  - `_body` (string)
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

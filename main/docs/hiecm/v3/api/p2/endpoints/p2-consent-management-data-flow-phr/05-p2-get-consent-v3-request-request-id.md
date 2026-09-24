@@ -32,18 +32,70 @@ curl --request GET \
 ## Responses
 
 - `200`: OK
+  - `requestId` (string)
+  - `purpose` (object)
+  - `purpose.text` (string, required) One of: Care Management, Break the Glass, Public Health, Healthcare Payment, Disease Specific Healthcare Research, Self Requested.
+  - `purpose.code` (string, required) One of: CAREMGT, BTG, PUBHLTH, HPAYMT, DSRCH, PATRQT.
+  - `purpose.refUri` (string, required): The reference URL.Allows alpha numeric and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
+  - `patient` (object)
+  - `patient.id` (string, required): The abha address of the patient
+  - `hip` (object): Identifier and name of the health information provider.
+  - `hip.id` (string, required): The service ID of the health information provider. Allows alpha numeric character and special characters like [A-Z a-z 0-9]+[A-Z a-z 0-9 //_//-]*[A-Z a-z 0-9]$
+  - `hip.name` (string, required): The name of the health information provider. Allows alpha numeric and special characters like "^[a-zA-Z]+[A-Za-z0-9_\\-@,().\\s\\xa0:/]+"
+  - `hip.type` (string): The type of the health information provider. Allows alpha numeric and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
+  - `hiu` (object)
+  - `hiu.id` (string, required): The service ID of the health information user.  Allows alpha numeric character and special characters like [A-Z a-z 0-9]+[A-Z a-z 0-9 //_//-]*[A-Z a-z 0-9]$
+  - `hiu.name` (string, required): The name of the health information user. Allows alpha numeric and special characters like "^[a-zA-Z]+[A-Za-z0-9_\\-@,().\\s\\xa0:/]+"
+  - `hiu.type` (string): The type of the health information user. Allows alpha numeric and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
+  - `careContexts` (object[]): List of care contexts linked at the HIP end for the identified patient.
+  - `careContexts.patientReference` (string, required): A patient identifier with which patient is registered in the facility/hospital
+  - `careContexts.careContextReference` (string, required): An identifier of patient's care context created in HIP. A care context is a group of patient's health data (Not the actual health data)
+  - `requester` (object)
+  - `requester.name` (string, required): The name of the requester
+  - `requester.identifier` (object, required)
+  - `requester.identifier.value` (string, required): The type of the identification. Allows alpha numeric character and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
+  - `requester.identifier.type` (string, required): The identification value. Allows alpha numeric character and special characters like  "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
+  - `requester.identifier.system` (string, required): Allows alpha numeric character and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
+  - `status` (string) One of: REQUESTED, EXPIRED, DENIED, GRANTED, REVOKED.
+  - `createdAt` (string)
+  - `lastUpdated` (string)
+  - `hiType` (string[])
+  - `permission` (object)
+  - `permission.accessMode` (string, required) One of: VIEW, STORE, STREAM, QUERY.
+  - `permission.dateRange` (object, required)
+  - `permission.dateRange.from` (string, required): Should be UTC date time in ISO format
+  - `permission.dateRange.to` (string, required): Should be UTC date time in ISO format
+  - `permission.dataEraseAt` (string, required): The date at which the consent expire. Should be UTC date time in ISO format
+  - `permission.frequency` (object, required)
+  - `permission.frequency.unit` (string, required) One of: HOUR, DAY, WEEK, MONTH, YEAR.
+  - `permission.frequency.value` (number, required): The frequency unit value. Should be be a integer
+  - `permission.frequency.repeats` (number, required): Should be be a integer
 - `400`: Bad Request
   See Error codes for this module: /docs/hiecm/v3/api/p2/errors
+  - `error` (object): The error code and message, if any occurred.
+  - `error.code` (string, required): ABDM-1039 - Invalid Consent request id. May be returned either bare (`ABDM-1039`) or with a trailing ": " separator (`ABDM-1039: `); match on the code itself and tolerate the separator.
+  - `error.message` (string, required)
 - `401`: Unauthorized
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `code` (string): 900901 - Unauthorized. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.
+  - `message` (string)
+  - `description` (string)
 - `403`: Forbidden
   See Error codes for this module: /docs/hiecm/v3/api/p2/errors
 - `404`: Not Found
   See Error codes for this module: /docs/hiecm/v3/api/p2/errors
+  - `error` (object): The error code and message, if any occurred.
+  - `error.code` (string, required): ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing ": " separator (`ABDM-1001: `); match on the code itself and tolerate the separator.
+  - `error.message` (string, required)
 - `500`: Internal Server Error
   See Error codes for this module: /docs/hiecm/v3/api/p2/errors
+  - `code` (string): 900900 - Unclassified Authentication Failure. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.
+  - `message` (string)
+  - `description` (string)
 - `503`: Service Unavailable
   See Error codes for this module: /docs/hiecm/v3/api/p2/errors
+  - `code` (string, required): ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.
+  - `message` (string, required)
 
 Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 

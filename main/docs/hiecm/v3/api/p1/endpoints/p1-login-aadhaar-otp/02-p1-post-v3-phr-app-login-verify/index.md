@@ -59,12 +59,67 @@ curl --request POST \
 ## Responses
 
 - `200`: OK
+  - `txnId` (string)
+  - `message` (string)
+  - `authResult` (string)
+  - `users` (object[])
+  - `users.abhaAddress` (string)
+  - `users.fullName` (string)
+  - `users.abhaNumber` (string)
+  - `users.status` (string)
+  - `users.kycStatus` (string)
+  - `tokens` (object)
+  - `tokens.token` (string)
+  - `tokens.expiresIn` (integer)
+  - `tokens.refreshToken` (string)
+  - `tokens.refreshExpiresIn` (integer)
+  - `tokens.switchProfileEnabled` (boolean)
+  - `accounts` (object[])
+  - `accounts.mobile` (string)
+  - `accounts.firstName` (string)
+  - `accounts.middleName` (string)
+  - `accounts.lastName` (string)
+  - `accounts.name` (string)
+  - `accounts.yearOfBirth` (string)
+  - `accounts.dayOfBirth` (string)
+  - `accounts.monthOfBirth` (string)
+  - `accounts.gender` (string)
+  - `accounts.email` (object)
+  - `accounts.profilePhoto` (string)
+  - `accounts.status` (string)
+  - `accounts.stateCode` (string)
+  - `accounts.districtCode` (string)
+  - `accounts.subDistrictCode` (object)
+  - `accounts.villageCode` (object)
+  - `accounts.townCode` (object)
+  - `accounts.wardCode` (object)
+  - `accounts.pincode` (string)
+  - `accounts.address` (string)
+  - `accounts.kycPhoto` (string)
+  - `accounts.stateName` (string)
+  - `accounts.districtName` (string)
+  - `accounts.subdistrictName` (string)
+  - `accounts.villageName` (object)
+  - `accounts.townName` (string)
+  - `accounts.wardName` (object)
+  - `accounts.authMethods` (string[])
+  - `accounts.tags` (object)
+  - `accounts.kycVerified` (boolean)
+  - `accounts.verificationStatus` (string)
+  - `accounts.verificationType` (string)
+  - `accounts.emailVerified` (object)
+  - `accounts.ABHANumber` (string)
+  - `accounts.preferredAbhaAddress` (string)
+  - `preferredAbhaAddress` (string)
 - `400`: Bad Request
   See Error codes for this module: /docs/hiecm/v3/api/p1/errors
 - `401`: Unauthorized
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `code` (string)
+  - `message` (string)
+  - `description` (string)
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

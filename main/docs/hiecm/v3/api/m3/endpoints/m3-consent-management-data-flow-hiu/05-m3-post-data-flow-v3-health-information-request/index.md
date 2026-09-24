@@ -73,13 +73,24 @@ curl --request POST \
   See The callback never arrives: /docs/hiecm/v3/troubleshooting/callback-never-arrives
 - `400`: Bad Request
   See Error codes for this module: /docs/hiecm/v3/api/m3/errors
+  - `error` (object): The error code and message, if any occurred.
+  - `error.code` (string, required): ABDM-1015 - Invalid Response. May be returned either bare (`ABDM-1015`) or with a trailing ": " separator (`ABDM-1015: `); match on the code itself and tolerate the separator.
+  - `error.message` (string, required)
 - `401`: Unauthorized
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `code` (string, required): 900901 - Invalid Credentials. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.
+  - `message` (string, required)
+  - `description` (string, required)
 - `403`: Access Denied
   See Error codes for this module: /docs/hiecm/v3/api/m3/errors
 - `404`: Not Found
   See Error codes for this module: /docs/hiecm/v3/api/m3/errors
 - `500`: Internal Server Error
   See Error codes for this module: /docs/hiecm/v3/api/m3/errors
+  - `code` (string): 900900 - Unclassified Authentication Failure. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.
+  - `message` (string)
+  - `description` (string)
 - `503`: Service Unavailable
   See Error codes for this module: /docs/hiecm/v3/api/m3/errors
+  - `code` (string, required): ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.
+  - `message` (string, required)

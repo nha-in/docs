@@ -7,7 +7,7 @@ Every answer on the exchange arrives at your server, not in the response to your
 Under the `endpoint_url` you registered, the exchange will POST to a path per use case. For a provider that starts with:
 
 ```text
-/v1/coverageeligibility/on_check/v1/insuranceplan/on_request/v1/preauth/on_submit/v1/claim/on_submit/v1/predetermination/on_submit/v1/search/on_submit/v1/communication/request/v1/paymentnotice/request/v1/task/on_submit/v1/on_status/v1/error
+/v1/coverageeligibility/on_check/v1/insuranceplan/on_request/v1/preauth/on_submit/v1/claim/on_submit/v1/search/on_submit/v1/communication/request/v1/paymentnotice/request/v1/task/on_submit/v1/on_status/v1/error
 ```
 
 A payer hosts the mirror set, the `submit` and `check` sides. Both host `/v1/error`; it is where the exchange reports a message it could not deliver after five attempts, and without it you never find out.

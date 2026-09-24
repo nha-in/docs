@@ -1,6 +1,6 @@
 # Session token
 
-Every call carries a bearer token. The token does not come from NHCX. It comes from the ABDM gateway, with the client ID and secret you were given for Milestone 1.
+Every call carries a bearer token. The token does not come from NHCX. It comes from the ABDM gateway, with the client ID and secret you received when you registered on the ABDM sandbox. The handbook calls them `ABDM_CLIENT_ID` and `ABDM_CLIENT_SECRET`.
 
 ## Getting one
 
@@ -26,7 +26,7 @@ The response:
 
 ## Using it
 
-On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
+On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. NHCX reads `bearer_auth`, not `Authorization`.
 
 ```text
 bearer_auth: Bearer eyJhbGciOiJSUzI1NiIs...
@@ -62,7 +62,7 @@ Use the gateway sessions call by default. The sandbox exit test cases name `/get
 
 | Symptom                                                                 | Cause                                                                                         |
 | ----------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| `401` on the sessions call itself                                       | Wrong client ID or secret, or Milestone 1 not complete                                        |
+| `401` on the sessions call itself                                       | Wrong client ID or secret                                                                     |
 | An error on the sessions call naming a header                           | `REQUEST-ID` reused or absent, `TIMESTAMP` stale or in the wrong format, or `X-CM-ID` missing |
 | An error on the sessions call naming the body                           | `grantType` omitted, which the v3 address requires                                            |
 | `401 Sender is not authorized to execute the operation` on an NHCX call | Token expired                                                                                 |

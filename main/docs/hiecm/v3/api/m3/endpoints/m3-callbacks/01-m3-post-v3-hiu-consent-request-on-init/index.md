@@ -3,7 +3,7 @@
 `POST /api/v3/hiu/consent/request/on-init`
 
 **Hosted by the HIP/HIU, not by ABDM.** ABDM calls this endpoint at the callback URL registered for your bridge, so the path below is relative to that URL.
-Result of consent request creation for a patient. **consentRequest.ID** represents the consentrequest ID created by CM. The result must contain either**consentRequest** or the**error** caused. Reasons for error may be
+Result of consent request creation for a patient. **consentRequest.id** represents the consentrequest ID created by CM. The result must contain either**consentRequest** or the**error** caused. Reasons for error may be
 
  Invalid references (e.g patient ID, HIU ID), purpose, hiTypes, ranges, persmission
 
@@ -54,13 +54,27 @@ curl --request POST \
 - `200`: OK
 - `400`: Bad Request. The request could not be processed because it was malformed or failed validation - a missing mandatory field, a value in the wrong format, or a header that did not match the body.
   See Error codes for this module: /docs/hiecm/v3/api/m3/errors
+  - `error` (object): The error code and message, if any occurred.
+  - `error.code` (string, required): ABDM-1006 - Bad Request, invalid request Body. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.
+  - `error.message` (string, required): Short description of the failure.
 - `401`: Unauthorized
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `code` (string): 900901 - Unauthorized. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.
+  - `message` (string)
+  - `description` (string)
 - `403`: Forbidden
   See Error codes for this module: /docs/hiecm/v3/api/m3/errors
 - `404`: Not Found
   See Error codes for this module: /docs/hiecm/v3/api/m3/errors
+  - `error` (object): The error code and message, if any occurred.
+  - `error.code` (string, required): ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing ": " separator (`ABDM-1001: `); match on the code itself and tolerate the separator.
+  - `error.message` (string, required)
 - `500`: Internal Server Error
   See Error codes for this module: /docs/hiecm/v3/api/m3/errors
+  - `code` (string): 900900 - Unclassified Authentication Failure. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.
+  - `message` (string)
+  - `description` (string)
 - `503`: Service Unavailable
   See Error codes for this module: /docs/hiecm/v3/api/m3/errors
+  - `code` (string, required): ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.
+  - `message` (string, required)

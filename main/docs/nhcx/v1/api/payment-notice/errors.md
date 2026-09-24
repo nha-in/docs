@@ -4,9 +4,9 @@ A Payment notice code arrives sealed inside the callback, not in the response to
 
 ## Codes
 
-| Code        | What it means                                                                                       |
-| ----------- | --------------------------------------------------------------------------------------------------- |
-| `PAYR-1020` | The payer holds no valid bank details for your facility, or a supporting info category is not valid |
+| Code                                                                              | What it means                                                                                       |
+| --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| [`PAYR-1020`](/docs/main/docs/nhcx/v1/reference/pmjay-error-codes?code=PAYR-1020) | The payer holds no valid bank details for your facility, or a supporting info category is not valid |
 
 Every code above is recorded in the Catalogue. The aggregated list across modules is at [error codes](/docs/main/docs/nhcx/v1/reference/pmjay-error-codes).
 

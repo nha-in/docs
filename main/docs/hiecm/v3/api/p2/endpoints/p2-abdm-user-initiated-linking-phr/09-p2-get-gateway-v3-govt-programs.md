@@ -30,16 +30,30 @@ curl --request GET \
 
 - `200`: OK
 - `204`: No Content
+  - `error` (object): The error code and message, if any occurred.
+  - `error.code` (string, required): ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing ": " separator (`ABDM-1001: `); match on the code itself and tolerate the separator.
+  - `error.message` (string, required)
 - `400`: Bad Request
   See Error codes for this module: /docs/hiecm/v3/api/p2/errors
+  - `error` (object): The error code and message, if any occurred.
+  - `error.code` (string, required): ABDM-1015 - Invalid Response. May be returned either bare (`ABDM-1015`) or with a trailing ": " separator (`ABDM-1015: `); match on the code itself and tolerate the separator.
+  - `error.message` (string, required)
 - `401`: Unauthorized
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `code` (string): 900901 - Invalid Credentials. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.
+  - `message` (string)
+  - `description` (string)
 - `403`: Forbidden. The caller is authenticated but is not permitted to perform this operation on this resource.
   See Error codes for this module: /docs/hiecm/v3/api/p2/errors
 - `500`: Internal Server Error
   See Error codes for this module: /docs/hiecm/v3/api/p2/errors
+  - `error` (object): The error code and message, if any occurred.
+  - `error.code` (string, required): ABDM-9999 - Unknown exception. May be returned either bare (`ABDM-9999`) or with a trailing ": " separator (`ABDM-9999: `); match on the code itself and tolerate the separator.
+  - `error.message` (string, required)
 - `503`: Service Unavailable
   See Error codes for this module: /docs/hiecm/v3/api/p2/errors
+  - `code` (string, required): ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing ": " separator (`ABDM-1024: `); match on the code itself and tolerate the separator.
+  - `message` (string, required)
 
 Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 

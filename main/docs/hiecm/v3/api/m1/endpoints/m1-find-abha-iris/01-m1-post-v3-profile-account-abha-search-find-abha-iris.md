@@ -48,14 +48,22 @@ curl --request POST \
 - `200`: Successfully retrieved ABHA details.
 - `400`: Invalid mobile number.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+  - `mobile` (string)
+  - `timestamp` (string)
 - `401`: Missing Credentials.
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `code` (string)
+  - `message` (string)
+  - `description` (string)
 - `404`: User not found.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+  - `error` (object)
+  - `error.code` (string)
+  - `error.message` (string)
 - `500`: Internal Server Error.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 [

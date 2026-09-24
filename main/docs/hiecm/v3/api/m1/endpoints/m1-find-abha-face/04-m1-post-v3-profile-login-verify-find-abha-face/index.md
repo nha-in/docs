@@ -70,18 +70,39 @@ curl --request POST \
 ## Responses
 
 - `200`: Success: Positive flow
+  - `authResult` (string)
+  - `message` (string)
+  - `token` (string)
+  - `expiresIn` (integer)
+  - `refreshToken` (string)
+  - `refreshExpiresIn` (integer)
+  - `accounts` (object[])
+  - `accounts.ABHANumber` (string)
+  - `accounts.preferredAbhaAddress` (string)
+  - `accounts.name` (string)
+  - `accounts.status` (string)
+  - `accounts.profilePhoto` (string)
 - `400`: Bad Request (request validation failed): Invalid DTO; Invalid DTO (2); Invalid PID; Empty Body; Invalid TxnId; Invalid AuthMethod; Invalid AuthMethod (2)
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
 - `401`: Unauthorized (invalid / expired gateway token, X-token or benefit access): Invalid Authorization
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `code` (string)
+  - `description` (string)
+  - `message` (string)
 - `404`: Not Found: Invalid URL
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+  - `error` (object)
+  - `error.code` (string)
+  - `error.message` (string)
 - `422`: Unprocessable Entity (business rule or UIDAI failure): Used PID; Expired PID; Used Bio PID; Another User PID; Biometric not matched
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+  - `error` (object, required)
+  - `error.code` (string, required): Consent code. Use `abha-enrollment`.
+  - `error.message` (string, required)
 - `500`: Internal Server Error.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

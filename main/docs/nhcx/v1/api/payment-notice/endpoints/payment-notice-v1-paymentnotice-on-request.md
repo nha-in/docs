@@ -1,4 +1,4 @@
-# Submit the payment notice acknowledgement
+# Provider: acknowledge the payment notice
 
 `POST /v1/paymentnotice/on_request`
 
@@ -50,51 +50,56 @@ Chapter [Payment notice and acknowledgement](/docs/nhcx/v1/reference/fhir/paymen
 ```bash
 curl --request POST \
   --url https://apisbx.abdm.gov.in/hcx/v1/paymentnotice/on_request \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'bearer_auth: Bearer <access token>' \
-  --header 'x-hcx-sender_code: 1000004446@hcx' \
-  --header 'x-hcx-recipient_code: 1518@hcx' \
-  --header 'x-hcx-api_call_id: <uuid>' \
-  --header 'x-hcx-request_id: <uuid>' \
-  --header 'x-hcx-correlation_id: <uuid>' \
-  --header 'x-hcx-workflow_id: 17' \
-  --header 'x-hcx-timestamp: <iso timestamp>' \
-  --header 'x-hcx-status: response.complete' \
-  --header 'x-hcx-ben-abha-id: 91711234567890' \
-  --header 'x-hcx-debug_flag: INFO' \
   --header 'Content-Type: application/json' \
   --data '{
+  "type": "JWEPayload",
   "payload": "eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2R0NNIiwieC1oY3gtc2VuZGVyX2NvZGUiOi4uLn0.encrypted_key.iv.ciphertext.tag"
 }'
 ```
 
 ## Authorization
 
-- `Authorization` (bearer token, required): On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
+- `bearer_auth` (apiKey, required): Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
 
-## Headers
+## Protected header
 
-- `bearer_auth` (string, required): It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.
+These fields go in the JWE protected header of `payload`, not as HTTP headers.
+
+- `alg` (string, required): Key management algorithm. Always `RSA-OAEP-256`: the content key is wrapped with the recipient's RSA public key.
+- `enc` (string, required): Content encryption algorithm. Always `A256GCM`.
 - `x-hcx-sender_code` (string, required): Your participant code. Mandatory on the envelope.
 - `x-hcx-recipient_code` (string, required): The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
 - `x-hcx-api_call_id` (string, required): Fresh on every message, including responses. Mandatory on the envelope.
 - `x-hcx-request_id` (string): One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope. Send it anyway, as a fresh UUID per originating request: it is cheap and satisfies both readings until NHA rules.
-- `x-hcx-correlation_id` (string, required): The thread. See the rule below. Mandatory on the envelope.
-- `x-hcx-workflow_id` (string): Which step, or which case. See the two readings below. Optional on the envelope.
-- `x-hcx-timestamp` (string, required): See the format note below. Mandatory on the envelope.
-- `x-hcx-status` (string, required): Where this message stands. Values below. Mandatory on the envelope.
+- `x-hcx-correlation_id` (string, required): The thread that ties a request to its answers. [The correlation ID rule](/docs/nhcx/v1/reference/envelope-fields#the-correlation-id-rule-in-full) says when to reuse it. Mandatory on the envelope.
+- `x-hcx-workflow_id` (string): Which step, or which case. [The workflow code](/docs/nhcx/v1/reference/envelope-fields#the-workflow-code-means-two-different-things) explains both readings. Optional on the envelope.
+- `x-hcx-timestamp` (string, required): The time the message was made. [Timestamp](/docs/nhcx/v1/reference/envelope-fields#timestamp) gives the format. Mandatory on the envelope.
+- `x-hcx-status` (string, required): Where this message stands. [Status words](/docs/nhcx/v1/reference/envelope-fields#status-words) lists the values. Mandatory on the envelope.
 - `x-hcx-ben-abha-id` (string): The beneficiary's ABHA number. Optional: send it when the beneficiary has an ABHA number. Optional on the envelope.
 - `x-hcx-debug_flag` (string): `Error`, `Info` or `Debug`. A server may ignore it. Optional on the envelope.
 
 ## Body
 
-- `payload` (string)
+- `type` (string, required): Always `JWEPayload`. Every response (`on_`) call sends it beside `payload`. One of: JWEPayload.
+- `payload` (string, required)
 
 ## Responses
 
 - `202`: NHCX returns HTTP 202 Accepted with a StatusSuccessResponse acknowledgement (entity_type payment) and forwards the Task to the payer asynchronously; the payer's endpoint must acknowledge with 202 within 30 seconds or NHCX retries up to five times.
+  - `timestamp` (string)
+  - `api_call_id` (string)
+  - `correlation_id` (string)
+  - `result` (object)
+  - `result.sender_code` (string)
+  - `result.recipient_code` (string)
+  - `result.entity_type` (string)
+  - `result.protocol_status` (string)
+  - `error` (object)
+  - `error.code` (string)
+  - `error.message` (string)
 
-Shape of the 202 response, generated from the schema. The values are placeholders, not a captured response:
+Example 202 response. The values are placeholders:
 
 ```json
 {
@@ -102,8 +107,8 @@ Shape of the 202 response, generated from the schema. The values are placeholder
   "api_call_id": "b1a2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
   "correlation_id": "c3d2e1f0-a9b8-4c7d-9e6f-5a4b3c2d1e0f",
   "result": {
-    "sender_code": "1000004446@hcx",
-    "recipient_code": "1518@hcx",
+    "sender_code": "<provider participant code>",
+    "recipient_code": "<payer participant code>",
     "entity_type": "payment",
     "protocol_status": "request.dispatched"
   },

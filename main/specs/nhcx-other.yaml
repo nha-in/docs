@@ -9,15 +9,15 @@ info:
   x-portal:
     module: other
     label: Other
-    position: 13
+    position: 15
   title: NHCX other
-  summary: "Calls that belong to no single use case: notification subscription, deletion, the status callback, the protocol error report and the service's own Swagger documents."
+  summary: "Calls that belong to no single use case: notification subscription, deletion, the status callback and the protocol error report."
   description: |-
-    The Other calls on the National Health Claims Exchange (NHCX): 10 operations, and 2 callbacks you host.
+    The Other calls on the National Health Claims Exchange (NHCX): 5 operations, and 2 callbacks you host.
 
-    Calls that belong to no single use case: notification subscription, deletion, the status callback, the protocol error report and the service's own Swagger documents.
+    Calls that belong to no single use case: notification subscription, deletion, the status callback and the protocol error report.
 
-    Guides that use these calls: [Predetermination, status and search](/docs/nhcx/v1/reference/fhir/predetermination-status-and-search), [Notifications and patient apps](/docs/nhcx/v1/reference/notifications-and-patient-apps), [Accepted with 202, and no callback arrives](/docs/nhcx/v1/troubleshooting/accepted-then-no-callback).
+    Guides that use these calls: [Building and sending a JWE](/docs/nhcx/v1/getting-started/building-and-sending-a-jwe), [Status and search](/docs/nhcx/v1/reference/fhir/status-and-search), [Notifications and patient apps](/docs/nhcx/v1/reference/notifications-and-patient-apps), [Accepted with 202, and no callback arrives](/docs/nhcx/v1/troubleshooting/accepted-then-no-callback).
 
     Production address for the NHCX portal: not published.
   version: nhcx-v1
@@ -53,7 +53,7 @@ servers:
     description: Production.
 tags:
   - name: Other
-    description: "Calls that belong to no single use case: notification subscription, deletion, the status callback, the protocol error report and the service's own Swagger documents."
+    description: "Calls that belong to no single use case: notification subscription, deletion, the status callback and the protocol error report."
 security:
   - bearerAuth: []
 paths:
@@ -64,7 +64,7 @@ paths:
       x-abdm-use-case: Other
       tags:
         - Other
-      summary: Notification subscribe
+      summary: "Patient app: subscribe an ABHA number to notifications"
       description: |-
         A Beneficiary Service Provider (PHR app) subscribes an ABHA id to notification topics; NHCX persists it synchronously, Last-Linked-Wins per ABHA id.
 
@@ -113,23 +113,19 @@ paths:
       servers:
         - url: https://hcxsbx.abdm.gov.in
           description: Sandbox, NHCX portal.
-      parameters:
+      x-nhcx-protected-header:
+        - alg
+        - enc
         - name: x-hcx-sender_code
-          in: header
           required: true
           description: Your participant code. Mandatory on the envelope.
-          schema:
-            type: string
           example: phr-app-xyz@bsp
         - name: x-hcx-recipient_code
-          in: header
           required: true
           description: The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
-          schema:
-            type: string
           example: nhcx-gateway@hcx
-        - $ref: "#/components/parameters/XHcxTimestamp"
-        - $ref: "#/components/parameters/XHcxCorrelationId"
+        - x-hcx-timestamp
+        - x-hcx-correlation_id
       requestBody:
         required: true
         content:
@@ -203,7 +199,7 @@ paths:
       x-abdm-use-case: Other
       tags:
         - Other
-      summary: Notification on_subscribe
+      summary: "Patient app: acknowledge a notification subscription"
       description: |-
         BSP-side subscription acknowledgement; the same name denotes the callback where NHCX pushes claim-event notifications for a subscribed ABHA id.
 
@@ -347,13 +343,13 @@ paths:
       x-abdm-use-case: Other
       tags:
         - Other
-      summary: Delete records (troubleshooting)
+      summary: "Support: delete records by correlation ID"
       description: |-
         Internal troubleshooting operation on the claim service that deletes records by correlationid and action; not part of the business transaction flows.
 
         ### Business purpose
 
-        The claim service OpenAPI lists /v1/delete as an internal troubleshooting operation for deleting records identified by a correlationid and an action. It exists to clear stuck or erroneous records during integration testing and support, not to move a claim through its lifecycle. The published documentation gives no further business context and does not state which participant roles may call it.
+        `/v1/delete` is a troubleshooting operation on the claim service. It deletes the record identified by a correlation ID and an action, to clear a stuck or erroneous record during integration testing and support. It does not move a claim through its lifecycle.
 
         ### When to use
 
@@ -423,423 +419,6 @@ paths:
                 httpStatus: 202
                 schema: StatusSuccessResponse
                 note: The claim service spec lists 202, 400, 404 and 500, all carrying StatusSuccessResponse; no worked response body is published for /v1/delete.
-  /v3/api-docs:
-    get:
-      operationId: other_v3_api_docs
-      x-abdm-use-case: Other
-      tags:
-        - Other
-      summary: OpenAPI 3 document (status service)
-      description: |-
-        Serves the status service's OpenAPI 3 document, optionally filtered by a group query parameter; a discovery endpoint, not a protocol API.
-
-        ### Business purpose
-
-        Integrators need a machine-readable contract for the Status API in order to generate clients, validate their requests and confirm the server prefix. This endpoint serves that contract in OpenAPI 3 form for the status service (statushcxservice, OpenAPI 3.0.1, service version 1.0.0). It carries no claim-settlement data and involves no payer or provider business logic; its value is purely in making the /v1/status operation discoverable and verifiable during integration and troubleshooting.
-
-        ### When to use
-
-        Use it when you set up an integration or generate a client, to read the status service's contract. It is not part of any claim flow.
-
-        ### Preconditions
-
-        - A plain `GET` to the status service host, under `/statushcxservice`.
-        - No encryption, no `x-hcx-*` headers and no request body.
-
-        ### Postconditions
-
-        The service returns `200` with its OpenAPI 3 document. Nothing changes and no callback follows.
-
-        ### Common mistakes
-
-        - Calling the gateway address instead of the status service host.
-        - Treating this document as the contract for gateway traffic.
-        - Sending a `POST`, a request body or `x-hcx-*` headers.
-
-        ### Best practices
-
-        - Use these endpoints for exploration and client generation in the sandbox, and cache the document rather than fetching it on every run.
-        - Diff the served document against the corpus (Status service: OpenAPI 3.0.1, version 1.0.0) when behaviour changes unexpectedly.
-        - Never let production traffic depend on the availability of the documentation endpoints.
-        - Keep the /v1/status protocol rules in mind when reading the spec: x-hcx-correlation_id must carry the original request's correlation id.
-
-        ### Related scenario
-
-        A hospital's integration team is building status polling for stalled preauthorisations. Before wiring /v1/status, an engineer fetches /v3/api-docs from the status service host, confirms the server prefix and the response schema, and generates a typed client. The team then implements the status request with the original correlation id in x-hcx-correlation_id, handles the synchronous request.queued and request.dispatched outcomes, and receives the payer's answer on the status callback.
-
-        ### Specification
-
-        Chapter [Environments and addresses](/docs/nhcx/v1/reference/environments-and-addresses) of the NHCX integration specification.
-      parameters:
-        - $ref: "#/components/parameters/BearerAuth"
-      responses:
-        "200":
-          description: "The service returns HTTP 200 with a JSON OpenAPI 3 document describing the status service: its info block, the /statushcxservice server entry and the /v1/status operation with its StatusSuccessResponse responses."
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  openapi:
-                    type: string
-                  info:
-                    type: object
-                    properties:
-                      title:
-                        type: string
-                      version:
-                        type: string
-                  servers:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        url:
-                          type: string
-                  paths:
-                    type: object
-                    properties:
-                      /v1/status:
-                        type: object
-                        properties:
-                          post:
-                            type: object
-                            properties:
-                              operationId:
-                                type: string
-                              responses:
-                                type: object
-                                properties:
-                                  "202":
-                                    type: object
-                                    properties:
-                                      description:
-                                        type: string
-              example:
-                openapi: 3.0.1
-                info:
-                  title: Status service
-                  version: 1.0.0
-                servers:
-                  - url: /statushcxservice
-                paths:
-                  /v1/status:
-                    post:
-                      operationId: status
-                      responses:
-                        "202":
-                          description: Accepted
-  /v2/api-docs:
-    get:
-      operationId: other_v2_api_docs
-      x-abdm-use-case: Other
-      tags:
-        - Other
-      summary: Swagger 2 document (status service)
-      description: |-
-        Serves the status service's Swagger 2 document, optionally filtered by a group query parameter; a discovery endpoint, not a protocol API.
-
-        ### Business purpose
-
-        Some tooling still consumes Swagger 2 rather than OpenAPI 3. This endpoint serves the status service's contract in that older format so that such tools can generate clients and validate requests against /v1/status. It exists alongside /v3/api-docs and describes the same service; it carries no claim-settlement data and involves no business logic. Its value is limited to integration setup and troubleshooting.
-
-        ### When to use
-
-        Use it when your tools need the older Swagger 2 format. It describes the same service as `/v3/api-docs`.
-
-        ### Preconditions
-
-        - A plain `GET` to the status service host, under `/statushcxservice`.
-        - No encryption, no `x-hcx-*` headers and no request body.
-
-        ### Postconditions
-
-        The service returns `200` with its Swagger 2 document. Nothing changes and no callback follows.
-
-        ### Common mistakes
-
-        - Calling the gateway address instead of the status service host.
-        - Treating this document as the contract for gateway traffic.
-        - Sending a `POST`, a request body or `x-hcx-*` headers.
-
-        ### Best practices
-
-        - Use these endpoints for exploration and client generation in the sandbox, and cache the document rather than fetching it on every run.
-        - Diff the served document against the corpus (Status service: OpenAPI 3.0.1, version 1.0.0) when behaviour changes unexpectedly.
-        - Never let production traffic depend on the availability of the documentation endpoints.
-        - Keep the /v1/status protocol rules in mind when reading the spec: x-hcx-correlation_id must carry the original request's correlation id.
-
-        ### Related scenario
-
-        A TPA's legacy integration platform only imports Swagger 2 definitions. During onboarding to the status flow the team fetches /v2/api-docs from the status service, imports it, and confirms that the /v1/status operation and its StatusSuccessResponse are represented. They then implement the JWE-wrapped status request for preauthorisations that have not received an on_submit callback, and respond to providers' status requests on the status callback.
-
-        ### Specification
-
-        Chapter [Environments and addresses](/docs/nhcx/v1/reference/environments-and-addresses) of the NHCX integration specification.
-      parameters:
-        - $ref: "#/components/parameters/BearerAuth"
-      responses:
-        "200":
-          description: "The service returns HTTP 200 with a JSON Swagger 2 document (swagger: 2.0) describing the status service, its base path and the /v1/status operation."
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  swagger:
-                    type: string
-                  info:
-                    type: object
-                    properties:
-                      title:
-                        type: string
-                      version:
-                        type: string
-                  basePath:
-                    type: string
-                  paths:
-                    type: object
-                    properties:
-                      /v1/status:
-                        type: object
-                        properties:
-                          post:
-                            type: object
-                            properties:
-                              operationId:
-                                type: string
-                              responses:
-                                type: object
-                                properties:
-                                  "202":
-                                    type: object
-                                    properties:
-                                      description:
-                                        type: string
-              example:
-                swagger: "2.0"
-                info:
-                  title: Status service
-                  version: 1.0.0
-                basePath: /statushcxservice
-                paths:
-                  /v1/status:
-                    post:
-                      operationId: status
-                      responses:
-                        "202":
-                          description: Accepted
-  /swagger-resources:
-    get:
-      operationId: other_swagger_resources
-      x-abdm-use-case: Other
-      tags:
-        - Other
-      summary: Swagger resources list
-      description: |-
-        Lists the Swagger resources (API document locations) exposed by the status service; used by Swagger UI, not by integrations.
-
-        ### Business purpose
-
-        Swagger UI discovers which API documents a service offers by reading this list. On the status service it points the UI at the /v2/api-docs and /v3/api-docs documents so that an engineer can browse the /v1/status operation interactively. It carries no claim-settlement data and involves no business logic; the endpoint index describes it simply as the list of Swagger resources.
-
-        ### When to use
-
-        Use it only with Swagger UI, or when a tool needs to find the service's API documents. Integrations never call it.
-
-        ### Preconditions
-
-        - A plain `GET` to the status service host, under `/statushcxservice`.
-        - No encryption, no `x-hcx-*` headers and no request body.
-
-        ### Postconditions
-
-        The service returns `200` with a list of where its API documents live. Nothing changes and no callback follows.
-
-        ### Common mistakes
-
-        - Calling the gateway address instead of the status service host.
-        - Treating this document as the contract for gateway traffic.
-        - Sending a `POST`, a request body or `x-hcx-*` headers.
-
-        ### Best practices
-
-        - Use these endpoints for exploration and client generation in the sandbox, and cache the document rather than fetching it on every run.
-        - Diff the served document against the corpus (Status service: OpenAPI 3.0.1, version 1.0.0) when behaviour changes unexpectedly.
-        - Never let production traffic depend on the availability of the documentation endpoints.
-        - Keep the /v1/status protocol rules in mind when reading the spec: x-hcx-correlation_id must carry the original request's correlation id.
-
-        ### Related scenario
-
-        An integration engineer opens Swagger UI against the status service in the sandbox to reproduce a colleague's failing status call. The UI first requests /swagger-resources to learn where the API documents live, then loads /v3/api-docs. The engineer inspects the /v1/status operation, notices the colleague had minted a fresh correlation id instead of reusing the original preauth correlation id, and fixes the client before retrying the status request.
-
-        ### Specification
-
-        Chapter [Environments and addresses](/docs/nhcx/v1/reference/environments-and-addresses) of the NHCX integration specification.
-      parameters:
-        - $ref: "#/components/parameters/BearerAuth"
-      responses:
-        "200":
-          description: The service returns HTTP 200 with a JSON list of resource descriptors that locate the service's API documents.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  _note:
-                    type: string
-                  resources:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        name:
-                          type: string
-                        url:
-                          type: string
-                        swaggerVersion:
-                          type: string
-              example:
-                _note: The service returns a JSON array of resource descriptors; wrapped here for display.
-                resources:
-                  - name: default
-                    url: /v3/api-docs
-                    swaggerVersion: "3.0"
-  /swagger-resources/configuration/ui:
-    get:
-      operationId: other_swagger_resources_configuration_ui
-      x-abdm-use-case: Other
-      tags:
-        - Other
-      summary: Swagger UI configuration
-      description: |-
-        Returns the Swagger UI display configuration for the status service; consumed by Swagger UI, not by integrations.
-
-        ### Business purpose
-
-        Swagger UI reads this endpoint to learn how the service wants its documentation rendered (for example, expansion and deep-linking settings). It supports the interactive exploration of the status service's /v1/status operation and has no role in claim settlement, routing or security. The endpoint index describes it as the Swagger UI configuration.
-
-        ### When to use
-
-        Use it only in a Swagger UI session against the status service. Integrations never call it.
-
-        ### Preconditions
-
-        - A plain `GET` to the status service host, under `/statushcxservice`.
-        - No encryption, no `x-hcx-*` headers and no request body.
-
-        ### Postconditions
-
-        The service returns `200` with a small set of UI settings. Nothing changes and no callback follows.
-
-        ### Common mistakes
-
-        - Calling the gateway address instead of the status service host.
-        - Treating this document as the contract for gateway traffic.
-        - Sending a `POST`, a request body or `x-hcx-*` headers.
-
-        ### Best practices
-
-        - Use these endpoints for exploration and client generation in the sandbox, and cache the document rather than fetching it on every run.
-        - Diff the served document against the corpus (Status service: OpenAPI 3.0.1, version 1.0.0) when behaviour changes unexpectedly.
-        - Never let production traffic depend on the availability of the documentation endpoints.
-        - Keep the /v1/status protocol rules in mind when reading the spec: x-hcx-correlation_id must carry the original request's correlation id.
-
-        ### Related scenario
-
-        While preparing sandbox exit evidence, a payer's engineer captures screenshots of the status service's Swagger UI. The browser loads /swagger-resources/configuration/ui to decide how to render the page, then the resources list and the OpenAPI document. The engineer uses the rendered /v1/status operation to explain to the certification reviewer how the payer responds on the status callback when a provider asks about a dispatched preauthorisation.
-
-        ### Specification
-
-        Chapter [Environments and addresses](/docs/nhcx/v1/reference/environments-and-addresses) of the NHCX integration specification.
-      parameters:
-        - $ref: "#/components/parameters/BearerAuth"
-      responses:
-        "200":
-          description: The service returns HTTP 200 with a small JSON object of UI settings.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  deepLinking:
-                    type: boolean
-                  docExpansion:
-                    type: string
-                  displayRequestDuration:
-                    type: boolean
-              example:
-                deepLinking: true
-                docExpansion: none
-                displayRequestDuration: false
-  /swagger-resources/configuration/security:
-    get:
-      operationId: other_swagger_resources_configuration_security
-      x-abdm-use-case: Other
-      tags:
-        - Other
-      summary: Swagger security configuration
-      description: |-
-        Returns the Swagger UI security configuration for the status service; consumed by Swagger UI, not by integrations.
-
-        ### Business purpose
-
-        Swagger UI reads this endpoint to learn how to present authorisation inputs (such as a bearer token field) when a user tries operations from the browser. It describes UI behaviour only; it does not issue tokens, and it is unrelated to the client-credentials flow at /get/session or to the JWE encryption that protects protocol payloads. The endpoint index describes it as the Swagger security configuration.
-
-        ### When to use
-
-        Use it only in a Swagger UI session against the status service. It does not issue tokens, and integrations never call it.
-
-        ### Preconditions
-
-        - A plain `GET` to the status service host, under `/statushcxservice`.
-        - No encryption, no `x-hcx-*` headers and no request body.
-
-        ### Postconditions
-
-        The service returns `200` with the UI's security settings. No token is issued and no callback follows.
-
-        ### Common mistakes
-
-        - Calling the gateway address instead of the status service host.
-        - Treating this document as the contract for gateway traffic.
-        - Sending a `POST`, a request body or `x-hcx-*` headers.
-        - Mistaking it for a way to get a token.
-
-        ### Best practices
-
-        - Use these endpoints for exploration and client generation in the sandbox, and cache the document rather than fetching it on every run.
-        - Diff the served document against the corpus (Status service: OpenAPI 3.0.1, version 1.0.0) when behaviour changes unexpectedly.
-        - Never let production traffic depend on the availability of the documentation endpoints.
-        - Keep the /v1/status protocol rules in mind when reading the spec: x-hcx-correlation_id must carry the original request's correlation id.
-
-        ### Related scenario
-
-        A provider's engineer wants to try /v1/status from Swagger UI in the sandbox. The UI fetches /swagger-resources/configuration/security to decide how to show the authorisation dialog, and the engineer pastes a Bearer token obtained separately from the client-credentials call. Because the status request body must be a JWE built with the payer's certificate, the engineer ultimately uses the UI only to confirm the schema and runs the real status request from the integration code, which reuses the original preauth correlation id.
-
-        ### Specification
-
-        Chapter [Environments and addresses](/docs/nhcx/v1/reference/environments-and-addresses) of the NHCX integration specification.
-      parameters:
-        - $ref: "#/components/parameters/BearerAuth"
-      responses:
-        "200":
-          description: The service returns HTTP 200 with a small JSON object describing how Swagger UI should handle security inputs.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  apiKeyVehicle:
-                    type: string
-                  apiKeyName:
-                    type: string
-                  scopeSeparator:
-                    type: string
-              example:
-                apiKeyVehicle: header
-                apiKeyName: bearer_auth
-                scopeSeparator: ","
   /v1/on_status:
     post:
       operationId: other_v1_on_status
@@ -847,7 +426,7 @@ paths:
       x-abdm-use-case: Other
       tags:
         - Other
-      summary: Status callback
+      summary: "Recipient: answer a status check"
       description: |-
         The answer to a status request, delivered to the sender that asked. The `x-hcx-status` in the protected header says where the message you asked about got to. The payload is an empty string.
 
@@ -889,35 +468,26 @@ paths:
         Chapter [NHCX adapter (Optional)](/docs/nhcx/v1/getting-started/nhcx-adapter) of the NHCX integration specification.
       parameters:
         - $ref: "#/components/parameters/BearerAuth"
+      x-nhcx-protected-header:
+        - alg
+        - enc
         - name: x-hcx-sender_code
-          in: header
           required: true
           description: Your participant code. Mandatory on the envelope.
-          schema:
-            type: string
           example: <participant code>
         - name: x-hcx-recipient_code
-          in: header
           required: true
           description: The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
-          schema:
-            type: string
           example: <recipient code>
-        - $ref: "#/components/parameters/XHcxApiCallId"
+        - x-hcx-api_call_id
         - name: x-hcx-correlation_id
-          in: header
           required: true
-          description: The thread. See the rule below. Mandatory on the envelope.
-          schema:
-            type: string
+          description: "The thread that ties a request to its answers. [The correlation ID rule](/docs/nhcx/v1/reference/envelope-fields#the-correlation-id-rule-in-full) says when to reuse it. Mandatory on the envelope."
           example: <correlation id>
-        - $ref: "#/components/parameters/XHcxTimestamp"
+        - x-hcx-timestamp
         - name: x-hcx-status
-          in: header
           required: true
-          description: Where this message stands. Values below. Mandatory on the envelope.
-          schema:
-            type: string
+          description: "Where this message stands. [Status words](/docs/nhcx/v1/reference/envelope-fields#status-words) lists the values. Mandatory on the envelope."
           example: response.complete
       requestBody:
         required: true
@@ -926,9 +496,18 @@ paths:
             schema:
               type: object
               properties:
+                type:
+                  type: string
+                  enum:
+                    - JWEPayload
+                  description: Always `JWEPayload`. Every response (`on_`) call sends it beside `payload`.
                 payload:
                   type: string
+              required:
+                - type
+                - payload
             example:
+              type: JWEPayload
               payload: <compact JWE>
       responses:
         "200":
@@ -964,7 +543,7 @@ paths:
       x-abdm-use-case: Other
       tags:
         - Other
-      summary: Error report (callback)
+      summary: "NHCX: report a request it could not deliver"
       description: |-
         Where the exchange tells a sender that a request could not be delivered after five attempts. Received by every participant under its registered address. There is no outbound form.
 
@@ -1006,35 +585,26 @@ paths:
         Chapter [Building and sending a JWE](/docs/nhcx/v1/getting-started/building-and-sending-a-jwe) of the NHCX integration specification.
       parameters:
         - $ref: "#/components/parameters/BearerAuth"
+      x-nhcx-protected-header:
+        - alg
+        - enc
         - name: x-hcx-sender_code
-          in: header
           required: true
           description: Your participant code. Mandatory on the envelope.
-          schema:
-            type: string
           example: nhcx-gateway@hcx
         - name: x-hcx-recipient_code
-          in: header
           required: true
           description: The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
-          schema:
-            type: string
-          example: 1000004446@hcx
-        - $ref: "#/components/parameters/XHcxApiCallId"
+          example: <provider participant code>
+        - x-hcx-api_call_id
         - name: x-hcx-correlation_id
-          in: header
           required: true
-          description: The thread. See the rule below. Mandatory on the envelope.
-          schema:
-            type: string
+          description: "The thread that ties a request to its answers. [The correlation ID rule](/docs/nhcx/v1/reference/envelope-fields#the-correlation-id-rule-in-full) says when to reuse it. Mandatory on the envelope."
           example: <correlation id>
-        - $ref: "#/components/parameters/XHcxTimestamp"
+        - x-hcx-timestamp
         - name: x-hcx-status
-          in: header
           required: true
-          description: Where this message stands. Values below. Mandatory on the envelope.
-          schema:
-            type: string
+          description: "Where this message stands. [Status words](/docs/nhcx/v1/reference/envelope-fields#status-words) lists the values. Mandatory on the envelope."
           example: response.error
       requestBody:
         required: true
@@ -1073,7 +643,7 @@ paths:
             example:
               type: ProtocolResponse
               x-hcx-sender_code: nhcx-gateway@hcx
-              x-hcx-recipient_code: 1000004446@hcx
+              x-hcx-recipient_code: <provider participant code>
               x-hcx-api_call_id: <uuid>
               x-hcx-correlation_id: <correlation id>
               x-hcx-workflow_id: "12"
@@ -1122,7 +692,7 @@ paths:
                 correlation_id: <from the incoming header>
                 result:
                   sender_code: 1000003538@hcx
-                  recipient_code: 1000004446@hcx
+                  recipient_code: <provider participant code>
                   entity_type: preauth
                   protocol_status: request.queued
                 error:
@@ -1137,42 +707,33 @@ webhooks:
       x-abdm-use-case: Webhooks
       tags:
         - Other
-      summary: Receive status callback
+      summary: Sender receives the status answer
       description: |-
-        Hosted by the provider. The exchange posts this message to the `endpoint_url` you registered, at `/v1/on_status`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+        Hosted by every participant that sends `/v1/status`. The exchange posts this message to the `endpoint_url` you registered, at `/v1/on_status`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
 
         The answer to a status request, delivered to the sender that asked. The `x-hcx-status` in the protected header says where the message you asked about got to. The payload is an empty string.
       parameters:
         - $ref: "#/components/parameters/BearerAuth"
+      x-nhcx-protected-header:
+        - alg
+        - enc
         - name: x-hcx-sender_code
-          in: header
           required: true
           description: Your participant code. Mandatory on the envelope.
-          schema:
-            type: string
           example: <participant code>
         - name: x-hcx-recipient_code
-          in: header
           required: true
           description: The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
-          schema:
-            type: string
           example: <recipient code>
-        - $ref: "#/components/parameters/XHcxApiCallId"
+        - x-hcx-api_call_id
         - name: x-hcx-correlation_id
-          in: header
           required: true
-          description: The thread. See the rule below. Mandatory on the envelope.
-          schema:
-            type: string
+          description: "The thread that ties a request to its answers. [The correlation ID rule](/docs/nhcx/v1/reference/envelope-fields#the-correlation-id-rule-in-full) says when to reuse it. Mandatory on the envelope."
           example: <correlation id>
-        - $ref: "#/components/parameters/XHcxTimestamp"
+        - x-hcx-timestamp
         - name: x-hcx-status
-          in: header
           required: true
-          description: Where this message stands. Values below. Mandatory on the envelope.
-          schema:
-            type: string
+          description: "Where this message stands. [Status words](/docs/nhcx/v1/reference/envelope-fields#status-words) lists the values. Mandatory on the envelope."
           example: response.complete
       requestBody:
         required: true
@@ -1181,9 +742,18 @@ webhooks:
             schema:
               type: object
               properties:
+                type:
+                  type: string
+                  enum:
+                    - JWEPayload
+                  description: Always `JWEPayload`. Every response (`on_`) call sends it beside `payload`.
                 payload:
                   type: string
+              required:
+                - type
+                - payload
             example:
+              type: JWEPayload
               payload: <compact JWE>
       responses:
         "202":
@@ -1223,7 +793,7 @@ webhooks:
                 correlation_id: <from the incoming header>
                 result:
                   sender_code: 1000003538@hcx
-                  recipient_code: 1000004446@hcx
+                  recipient_code: <provider participant code>
                   entity_type: preauth
                   protocol_status: request.queued
                 error:
@@ -1237,42 +807,33 @@ webhooks:
       x-abdm-use-case: Webhooks
       tags:
         - Other
-      summary: Receive error report (callback)
+      summary: Participant receives an error report
       description: |-
         Hosted by every participant. The exchange posts this message to the `endpoint_url` you registered, at `/v1/error`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
 
         Where the exchange tells a sender that a request could not be delivered after five attempts. Received by every participant under its registered address. There is no outbound form.
       parameters:
         - $ref: "#/components/parameters/BearerAuth"
+      x-nhcx-protected-header:
+        - alg
+        - enc
         - name: x-hcx-sender_code
-          in: header
           required: true
           description: Your participant code. Mandatory on the envelope.
-          schema:
-            type: string
           example: nhcx-gateway@hcx
         - name: x-hcx-recipient_code
-          in: header
           required: true
           description: The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
-          schema:
-            type: string
-          example: 1000004446@hcx
-        - $ref: "#/components/parameters/XHcxApiCallId"
+          example: <provider participant code>
+        - x-hcx-api_call_id
         - name: x-hcx-correlation_id
-          in: header
           required: true
-          description: The thread. See the rule below. Mandatory on the envelope.
-          schema:
-            type: string
+          description: "The thread that ties a request to its answers. [The correlation ID rule](/docs/nhcx/v1/reference/envelope-fields#the-correlation-id-rule-in-full) says when to reuse it. Mandatory on the envelope."
           example: <correlation id>
-        - $ref: "#/components/parameters/XHcxTimestamp"
+        - x-hcx-timestamp
         - name: x-hcx-status
-          in: header
           required: true
-          description: Where this message stands. Values below. Mandatory on the envelope.
-          schema:
-            type: string
+          description: "Where this message stands. [Status words](/docs/nhcx/v1/reference/envelope-fields#status-words) lists the values. Mandatory on the envelope."
           example: response.error
       requestBody:
         required: true
@@ -1311,7 +872,7 @@ webhooks:
             example:
               type: ProtocolResponse
               x-hcx-sender_code: nhcx-gateway@hcx
-              x-hcx-recipient_code: 1000004446@hcx
+              x-hcx-recipient_code: <provider participant code>
               x-hcx-api_call_id: <uuid>
               x-hcx-correlation_id: <correlation id>
               x-hcx-workflow_id: "12"
@@ -1360,7 +921,7 @@ webhooks:
                 correlation_id: <from the incoming header>
                 result:
                   sender_code: 1000003538@hcx
-                  recipient_code: 1000004446@hcx
+                  recipient_code: <provider participant code>
                   entity_type: preauth
                   protocol_status: request.queued
                 error:
@@ -1369,9 +930,10 @@ webhooks:
 components:
   securitySchemes:
     bearerAuth:
-      type: http
-      scheme: bearer
-      description: "On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value."
+      type: apiKey
+      in: header
+      name: bearer_auth
+      description: Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
   parameters:
     BearerAuth:
       name: bearer_auth
@@ -1381,78 +943,51 @@ components:
       schema:
         type: string
       example: Bearer <access token>
-    XHcxSenderCode:
-      name: x-hcx-sender_code
-      in: header
+  x-nhcx-protected-header:
+    alg:
+      required: true
+      description: "Key management algorithm. Always `RSA-OAEP-256`: the content key is wrapped with the recipient's RSA public key."
+      example: RSA-OAEP-256
+    enc:
+      required: true
+      description: Content encryption algorithm. Always `A256GCM`.
+      example: A256GCM
+    x-hcx-sender_code:
       required: true
       description: Your participant code. Mandatory on the envelope.
-      schema:
-        type: string
-      example: 1000004446@hcx
-    XHcxRecipientCode:
-      name: x-hcx-recipient_code
-      in: header
+      example: <provider participant code>
+    x-hcx-recipient_code:
       required: true
       description: The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
-      schema:
-        type: string
-      example: 1518@hcx
-    XHcxApiCallId:
-      name: x-hcx-api_call_id
-      in: header
+      example: <payer participant code>
+    x-hcx-api_call_id:
       required: true
       description: Fresh on every message, including responses. Mandatory on the envelope.
-      schema:
-        type: string
       example: <uuid>
-    XHcxRequestId:
-      name: x-hcx-request_id
-      in: header
+    x-hcx-request_id:
       required: false
       description: "One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope. Send it anyway, as a fresh UUID per originating request: it is cheap and satisfies both readings until NHA rules."
-      schema:
-        type: string
       example: <uuid>
-    XHcxCorrelationId:
-      name: x-hcx-correlation_id
-      in: header
+    x-hcx-correlation_id:
       required: true
-      description: The thread. See the rule below. Mandatory on the envelope.
-      schema:
-        type: string
+      description: "The thread that ties a request to its answers. [The correlation ID rule](/docs/nhcx/v1/reference/envelope-fields#the-correlation-id-rule-in-full) says when to reuse it. Mandatory on the envelope."
       example: <uuid>
-    XHcxWorkflowId:
-      name: x-hcx-workflow_id
-      in: header
+    x-hcx-workflow_id:
       required: false
-      description: Which step, or which case. See the two readings below. Optional on the envelope.
-      schema:
-        type: string
+      description: "Which step, or which case. [The workflow code](/docs/nhcx/v1/reference/envelope-fields#the-workflow-code-means-two-different-things) explains both readings. Optional on the envelope."
       example: "18"
-    XHcxTimestamp:
-      name: x-hcx-timestamp
-      in: header
+    x-hcx-timestamp:
       required: true
-      description: See the format note below. Mandatory on the envelope.
-      schema:
-        type: string
+      description: "The time the message was made. [Timestamp](/docs/nhcx/v1/reference/envelope-fields#timestamp) gives the format. Mandatory on the envelope."
       example: <iso timestamp>
-    XHcxStatus:
-      name: x-hcx-status
-      in: header
+    x-hcx-status:
       required: true
-      description: Where this message stands. Values below. Mandatory on the envelope.
-      schema:
-        type: string
+      description: "Where this message stands. [Status words](/docs/nhcx/v1/reference/envelope-fields#status-words) lists the values. Mandatory on the envelope."
       example: request.initiated
-    XHcxBenAbhaId:
-      name: x-hcx-ben-abha-id
-      in: header
+    x-hcx-ben-abha-id:
       required: false
       description: "The beneficiary's ABHA number. Optional: send it when the beneficiary has an ABHA number. Optional on the envelope."
-      schema:
-        type: string
-      example: "91711234567890"
+      example: <14-digit ABHA number>
 x-abdm-errors:
   notes: |-
     Codes any exchange call can meet are recorded once, in the [Other](/docs/nhcx/v1/api/other) specification: the gateway's NHCX- codes, the standard payer codes, and the reference payer's structure and transport codes. The reference payer's other codes sit with the exchange they reject: coverage eligibility, preauthorisation, claim and insurance plan. [Reading error codes](/docs/nhcx/v1/reference/error-code-guide) explains the code spaces.

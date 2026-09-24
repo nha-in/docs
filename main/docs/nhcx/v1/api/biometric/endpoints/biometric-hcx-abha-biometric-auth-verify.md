@@ -84,8 +84,19 @@ curl --request POST \
 ## Responses
 
 - `200`: On success it returns `authResult` `success`, a user `token` with `expiresIn` 1800 seconds, a `refreshToken` with `refreshExpiresIn` 1296000 seconds, fifteen days, and the ABHA `accounts` matched.
+  - `txnId` (string)
+  - `authResult` (string)
+  - `message` (string)
+  - `token` (string)
+  - `refreshToken` (string)
+  - `expiresIn` (integer)
+  - `refreshExpiresIn` (integer)
+  - `accounts` (object[])
+  - `accounts.ABHANumber` (string)
+  - `accounts.name` (string)
+  - `accounts.status` (string)
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

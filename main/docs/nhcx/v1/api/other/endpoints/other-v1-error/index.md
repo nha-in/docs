@@ -1,4 +1,4 @@
-# Submit the error report (callback)
+# NHCX: report a request it could not deliver
 
 `POST /v1/error`
 
@@ -44,19 +44,12 @@ Chapter [Building and sending a JWE](/docs/nhcx/v1/getting-started/building-and-
 ```bash
 curl --request POST \
   --url https://apisbx.abdm.gov.in/hcx/v1/error \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'bearer_auth: Bearer <access token>' \
-  --header 'x-hcx-sender_code: nhcx-gateway@hcx' \
-  --header 'x-hcx-recipient_code: 1000004446@hcx' \
-  --header 'x-hcx-api_call_id: <uuid>' \
-  --header 'x-hcx-correlation_id: <correlation id>' \
-  --header 'x-hcx-timestamp: <iso timestamp>' \
-  --header 'x-hcx-status: response.error' \
   --header 'Content-Type: application/json' \
   --data '{
   "type": "ProtocolResponse",
   "x-hcx-sender_code": "nhcx-gateway@hcx",
-  "x-hcx-recipient_code": "1000004446@hcx",
+  "x-hcx-recipient_code": "<provider participant code>",
   "x-hcx-api_call_id": "<uuid>",
   "x-hcx-correlation_id": "<correlation id>",
   "x-hcx-workflow_id": "12",
@@ -73,17 +66,20 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
+- `bearer_auth` (apiKey, required): Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
 
-## Headers
+## Protected header
 
-- `bearer_auth` (string, required): It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.
+These fields go in the JWE protected header of `payload`, not as HTTP headers.
+
+- `alg` (string, required): Key management algorithm. Always `RSA-OAEP-256`: the content key is wrapped with the recipient's RSA public key.
+- `enc` (string, required): Content encryption algorithm. Always `A256GCM`.
 - `x-hcx-sender_code` (string, required): Your participant code. Mandatory on the envelope.
 - `x-hcx-recipient_code` (string, required): The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
 - `x-hcx-api_call_id` (string, required): Fresh on every message, including responses. Mandatory on the envelope.
-- `x-hcx-correlation_id` (string, required): The thread. See the rule below. Mandatory on the envelope.
-- `x-hcx-timestamp` (string, required): See the format note below. Mandatory on the envelope.
-- `x-hcx-status` (string, required): Where this message stands. Values below. Mandatory on the envelope.
+- `x-hcx-correlation_id` (string, required): The thread that ties a request to its answers. [The correlation ID rule](/docs/nhcx/v1/reference/envelope-fields#the-correlation-id-rule-in-full) says when to reuse it. Mandatory on the envelope.
+- `x-hcx-timestamp` (string, required): The time the message was made. [Timestamp](/docs/nhcx/v1/reference/envelope-fields#timestamp) gives the format. Mandatory on the envelope.
+- `x-hcx-status` (string, required): Where this message stands. [Status words](/docs/nhcx/v1/reference/envelope-fields#status-words) lists the values. Mandatory on the envelope.
 
 ## Body
 
@@ -104,8 +100,19 @@ curl --request POST \
 ## Responses
 
 - `200`: Answer 202 with the receipt, like every other delivery, filling in whatever identifiers the report carries and leaving the rest empty.
+  - `timestamp` (string)
+  - `api_call_id` (string)
+  - `correlation_id` (string)
+  - `result` (object)
+  - `result.sender_code` (string)
+  - `result.recipient_code` (string)
+  - `result.entity_type` (string)
+  - `result.protocol_status` (string)
+  - `error` (object)
+  - `error.code` (string)
+  - `error.message` (string)
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {
@@ -114,7 +121,7 @@ Shape of the 200 response, generated from the schema. The values are placeholder
   "correlation_id": "<from the incoming header>",
   "result": {
     "sender_code": "1000003538@hcx",
-    "recipient_code": "1000004446@hcx",
+    "recipient_code": "<provider participant code>",
     "entity_type": "preauth",
     "protocol_status": "request.queued"
   },

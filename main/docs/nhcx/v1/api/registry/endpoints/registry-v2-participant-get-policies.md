@@ -1,12 +1,12 @@
-# Get beneficiary policies (V2)
+# Get beneficiary policies (v2)
 
-`POST /V2/participant/get/policies`
+`POST /v2/participant/get/policies`
 
-V2 variant of the beneficiary policy lookup; same FetchParticipantPoliciesRequest body and ParticipantListResponse as the unversioned call.
+v2 variant of the beneficiary policy lookup; same FetchParticipantPoliciesRequest body and ParticipantListResponse as the unversioned call.
 
 ### Business purpose
 
-This endpoint answers the same question as /participant/get/policies: which payer products is this beneficiary linked to, and therefore which payer or TPA should the hospital address. The OpenAPI document exposes it as getParticipantGetPoliciesV2 with an identical request and response schema and the same Registry APIs tag; the documentation records no behavioural difference beyond the path. Integrations that use the V2 link and de-link calls typically read back through this endpoint.
+This endpoint answers the same question as /participant/get/policies: which payer products is this beneficiary linked to, and therefore which payer or TPA should the hospital address. The OpenAPI document exposes it as getParticipantGetPoliciesV2 with an identical request and response schema and the same Registry APIs tag; the documentation records no behavioural difference beyond the path. Integrations that use the v2 link and de-link calls typically read back through this endpoint.
 
 ### When to use
 
@@ -16,7 +16,7 @@ Use it at the same point as the v1 lookup, before eligibility and pre-authorisat
 
 - You have a valid access token in the `bearer_auth` header.
 - The payer or TPA has already linked the member.
-- Send the ABHA number without hyphens. The path starts with a capital `V2`.
+- Send the ABHA number without hyphens.
 
 ### Postconditions
 
@@ -27,7 +27,6 @@ You get the member's linked policies. Cache them, and force a refresh when somet
 - Using the payer ID as `x-hcx-recipient_code`. Use the processing ID from this response.
 - Sending the ABHA number with hyphens.
 - Trying only one identifier type.
-- Writing the path with a lower-case `v2`.
 
 ### Best practices
 
@@ -39,7 +38,7 @@ You get the member's linked policies. Cache them, and force a refresh when somet
 
 ### Related scenario
 
-A TPA has just linked a new member through /V2/participant/link/abha/policy and wants to verify the write before closing the ticket. It calls /V2/participant/get/policies with identifiertype AbhaNumber and the member's hyphen-free ABHA number and sees the product returned. Months later the same member is admitted; the hospital's HMIS runs the identifier cascade (ABHA, then member ID, then mobile) against this endpoint, caches the result, and proceeds to /v1/insuranceplan/request and /v1/preauth/submit addressed to the TPA's participant code taken from processingID.
+A TPA has just linked a new member through /v2/participant/link/abha/policy and wants to verify the write before closing the ticket. It calls /v2/participant/get/policies with identifiertype AbhaNumber and the member's hyphen-free ABHA number and sees the product returned. Months later the same member is admitted; the hospital's HMIS runs the identifier cascade (ABHA, then member ID, then mobile) against this endpoint, caches the result, and proceeds to /v1/insuranceplan/request and /v1/preauth/submit addressed to the TPA's participant code taken from processingID.
 
 ### Specification
 
@@ -47,9 +46,9 @@ Chapter [Creating and updating a participant](/docs/nhcx/v1/getting-started/crea
 
 ```bash
 curl --request POST \
-  --url https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/V2/participant/get/policies \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --url https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/v2/participant/get/policies \
   --header 'bearer_auth: Bearer <access token>' \
+  --header 'Accept: application/json' \
   --header 'Content-Type: application/json' \
   --data '{
   "identifiertype": "MemberId",
@@ -59,11 +58,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
+- `bearer_auth` (apiKey, required): Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
 
 ## Headers
 
-- `bearer_auth` (string, required): It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.
+- `Accept` (string, required): Always `application/json` on the participant service.
 
 ## Body
 
@@ -73,8 +72,13 @@ curl --request POST \
 ## Responses
 
 - `200`: Returns HTTP 200 with ParticipantListResponse (optional participantdetails array of participantcode, participantname, address, state).
+  - `participantdetails` (object[])
+  - `participantdetails.participantcode` (string)
+  - `participantdetails.participantname` (string)
+  - `participantdetails.address` (string)
+  - `participantdetails.state` (string)
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

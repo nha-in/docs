@@ -1,4 +1,4 @@
-# Submit the status callback
+# Recipient: answer a status check
 
 `POST /v1/on_status`
 
@@ -44,43 +44,47 @@ Chapter [NHCX adapter (Optional)](/docs/nhcx/v1/getting-started/nhcx-adapter) of
 ```bash
 curl --request POST \
   --url https://apisbx.abdm.gov.in/hcx/v1/on_status \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'bearer_auth: Bearer <access token>' \
-  --header 'x-hcx-sender_code: <participant code>' \
-  --header 'x-hcx-recipient_code: <recipient code>' \
-  --header 'x-hcx-api_call_id: <uuid>' \
-  --header 'x-hcx-correlation_id: <correlation id>' \
-  --header 'x-hcx-timestamp: <iso timestamp>' \
-  --header 'x-hcx-status: response.complete' \
   --header 'Content-Type: application/json' \
   --data '{
+  "type": "JWEPayload",
   "payload": "<compact JWE>"
 }'
 ```
 
 ## Authorization
 
-- `Authorization` (bearer token, required): On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
+- `bearer_auth` (apiKey, required): Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
 
-## Headers
+## Protected header
 
-- `bearer_auth` (string, required): It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.
+These fields go in the JWE protected header of `payload`, not as HTTP headers.
+
+- `alg` (string, required): Key management algorithm. Always `RSA-OAEP-256`: the content key is wrapped with the recipient's RSA public key.
+- `enc` (string, required): Content encryption algorithm. Always `A256GCM`.
 - `x-hcx-sender_code` (string, required): Your participant code. Mandatory on the envelope.
 - `x-hcx-recipient_code` (string, required): The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
 - `x-hcx-api_call_id` (string, required): Fresh on every message, including responses. Mandatory on the envelope.
-- `x-hcx-correlation_id` (string, required): The thread. See the rule below. Mandatory on the envelope.
-- `x-hcx-timestamp` (string, required): See the format note below. Mandatory on the envelope.
-- `x-hcx-status` (string, required): Where this message stands. Values below. Mandatory on the envelope.
+- `x-hcx-correlation_id` (string, required): The thread that ties a request to its answers. [The correlation ID rule](/docs/nhcx/v1/reference/envelope-fields#the-correlation-id-rule-in-full) says when to reuse it. Mandatory on the envelope.
+- `x-hcx-timestamp` (string, required): The time the message was made. [Timestamp](/docs/nhcx/v1/reference/envelope-fields#timestamp) gives the format. Mandatory on the envelope.
+- `x-hcx-status` (string, required): Where this message stands. [Status words](/docs/nhcx/v1/reference/envelope-fields#status-words) lists the values. Mandatory on the envelope.
 
 ## Body
 
-- `payload` (string)
+- `type` (string, required): Always `JWEPayload`. Every response (`on_`) call sends it beside `payload`. One of: JWEPayload.
+- `payload` (string, required)
 
 ## Responses
 
 - `200`: Read `x-hcx-status` from the protected header.
+  - `timestamp` (string)
+  - `api_call_id` (string)
+  - `correlation_id` (string)
+  - `error` (object)
+  - `error.code` (string)
+  - `error.message` (string)
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

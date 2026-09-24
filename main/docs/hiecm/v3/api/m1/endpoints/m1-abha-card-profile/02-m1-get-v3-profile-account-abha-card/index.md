@@ -34,7 +34,12 @@ curl --request GET \
 - `200`: Successfully retrieved ABHA card image.
 - `400`: Invalid X-token.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+  - `message` (string)
+  - `timestamp` (string)
 - `401`: Unauthorized.
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `code` (string)
+  - `message` (string)
+  - `description` (string)
 - `500`: Internal Server Error.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors

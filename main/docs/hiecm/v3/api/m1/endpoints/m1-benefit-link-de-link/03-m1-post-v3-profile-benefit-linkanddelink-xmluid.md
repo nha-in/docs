@@ -60,14 +60,22 @@ curl --request POST \
 ## Responses
 
 - `200`: Success: Linked successfully; Linked successfully (2); Linked successfully (Postman); De-linked successfully
+  - `benefitName` (string)
+  - `healthId` (string)
+  - `status` (string)
 - `400`: Bad Request (request validation failed): Already de-linked (spec); Already linked; Already de-linked; Invalid Login ID
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+  - `code` (string)
+  - `message` (string)
 - `401`: Unauthorized (invalid / expired gateway token, X-token or benefit access): Invalid access token; Insurance Restricted - De-link; Insurance Restricted - Link; Invalid Benefit Name - Link; Invalid Benefit Name - De-link
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `code` (string)
+  - `description` (string)
+  - `message` (string)
 - `500`: Internal Server Error.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

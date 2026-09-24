@@ -1,4 +1,4 @@
-# Submit the dummy payer, send a payment notice
+# Provider: make the dummy payer send a payment notice
 
 `POST /paymentNotice/init`
 
@@ -44,7 +44,6 @@ Chapter [NHCX Use Cases](/docs/nhcx/v1/concepts/nhcx-use-cases) of the NHCX inte
 ```bash
 curl --request POST \
   --url https://apisbx.abdm.gov.in/pmjay/sbxhcx/dummyhcxpayer/paymentNotice/init \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'bearer_auth: Bearer <access token>' \
   --header 'Content-Type: application/json' \
   --data '{
@@ -55,11 +54,7 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
-
-## Headers
-
-- `bearer_auth` (string, required): It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.
+- `bearer_auth` (apiKey, required): Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
 
 ## Body
 

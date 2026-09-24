@@ -257,7 +257,7 @@ The Pradhan Mantri Jan Arogya Yojana (PMJAY) operates under strict operational, 
 
 ---
 
-### 1. Core Principles of PMJAY Adjudication
+### Core Principles of PMJAY Adjudication
 
 1. **Strictly Package-Based**: PMJAY does not reimburse fee-for-service line items. All admissions are governed by Health Benefit Packages (HBP) with bundled tariffs covering registration, bed charges, nursing, consultations, procedures, medicines, consumables, and standard post-discharge follow-up.
 2. **100% Cashless Mandate**: Empanelled healthcare providers cannot collect out-of-pocket co-payments from beneficiaries for covered procedures (`adjudication.copay` = ₹0).
@@ -266,7 +266,7 @@ The Pradhan Mantri Jan Arogya Yojana (PMJAY) operates under strict operational, 
 
 ---
 
-### 2. Discharge Types and Stages
+### Discharge Types and Stages
 
 Under PMJAY, a hospital cannot record an open-ended "referral" or "transfer" discharge. Every patient episode must terminate in one of four standardized discharge types, qualified by the surgical timing stage:
 
@@ -287,7 +287,7 @@ Every claim records the clinical timing stage under `supportingInfo` category `D
 
 ---
 
-### 3. Package LM100 and LAMA/DAMA Billing Rules
+### Package LM100 and LAMA/DAMA Billing Rules
 
 ```mermaid
 flowchart TD
@@ -299,7 +299,7 @@ flowchart TD
 
 When a patient departs under `LAMA` or `DAMA`, the scheme strictly prohibits billing the full surgical package if the surgical intervention was not completed:
 
-#### 1. Before or During Surgery
+#### Before or During Surgery
 
 - **Nullification**: Submitting a LAMA/DAMA claim before or during surgery immediately **nullifies all prior approved surgical pre-authorisation packages**.
 - **Item Code `LM100`**: The claim replaces all surgical line items with a single item: procedure code `LM100` (Conservative / Per Diem Inpatient Care).
@@ -308,7 +308,7 @@ When a patient departs under `LAMA` or `DAMA`, the scheme strictly prohibits bil
 - **Error Safeguard**: Submitting a surgical package code alongside LAMA/DAMA before or during surgery triggers automated rejection with error `PAYR-1362`.
 - **Pre-Auth Prohibition**: `LM100` is strictly a claim-time adjudication code. Submitting `LM100` in a pre-authorisation request triggers error `PAYR-1270`.
 
-#### 2. After Surgery
+#### After Surgery
 
 - If surgery was successfully performed and the patient subsequently leaves against medical advice during post-operative recovery:
 
@@ -318,7 +318,7 @@ When a patient departs under `LAMA` or `DAMA`, the scheme strictly prohibits bil
 
 ---
 
-### 4. In-Hospital Death Claims (`DTM`)
+### In-Hospital Death Claims (`DTM`)
 
 If a patient expires during hospitalisation:
 
@@ -329,7 +329,7 @@ If a patient expires during hospitalisation:
 
 ---
 
-### 5. Cyclic Procedures (Dialysis, Chemotherapy)
+### Cyclic Procedures (Dialysis, Chemotherapy)
 
 Cyclic treatments represent recurring therapy requiring multiple sessions under a single overarching pre-authorisation:
 
@@ -342,7 +342,7 @@ Cyclic treatments represent recurring therapy requiring multiple sessions under 
 
 ---
 
-### 6. Unspecified Surgical and Medical Procedures
+### Unspecified Surgical and Medical Procedures
 
 When a patient requires a clinically necessary surgical intervention not present in the PMJAY Health Benefit Package master:
 
@@ -363,7 +363,7 @@ When a patient requires a clinically necessary surgical intervention not present
 
 ---
 
-### 7. Biometric Authentication and Aadhaar Exemption
+### Biometric Authentication and Aadhaar Exemption
 
 The captures these rules call for, at registration, preauthorisation, every cyclic visit and discharge, are made through ABDM's biometric APIs, not over NHCX. Biometric Authentication, in Building a Provider, gives the calls: fingerprint and iris on one host, face on another, the user token they return and its refresh, the `K-547` device error, and the Aadhaar exemption consent and questionnaire that stand in where a capture is not possible.
 

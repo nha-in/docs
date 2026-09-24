@@ -26,7 +26,6 @@ The link is started but not confirmed. Do not rely on it until the validate call
 
 - Stopping here and never calling the validate step.
 - Using a token from different credentials than the payer or TPA was created with.
-- Mixing up the path case: this uses a lower-case `v2`.
 - Mixing up `payerid` and `processingid`.
 
 ### Best practices
@@ -39,7 +38,7 @@ The link is started but not confirmed. Do not rely on it until the validate call
 
 ### Related scenario
 
-An insurer's policy administration team is required by its NHCX instance to confirm member links by passcode. When a new policy is issued, the system posts the ParticipantLinkAbhaRequest to /v2/participant/link/abha/policy/init and records the transaction identifier. The authorised operator receives the passcode and the system calls GET /v2/participant/link/abha/policy/validate with passcode and transactionId to complete the link. The team then checks /V2/participant/get/policies for the member's ABHA number and, satisfied, closes the case; the hospital will discover the policy on the beneficiary's next admission.
+An insurer's policy administration team is required by its NHCX instance to confirm member links by passcode. When a new policy is issued, the system posts the ParticipantLinkAbhaRequest to /v2/participant/link/abha/policy/init and records the transaction identifier. The authorised operator receives the passcode and the system calls GET /v2/participant/link/abha/policy/validate with passcode and transactionId to complete the link. The team then checks /v2/participant/get/policies for the member's ABHA number and, satisfied, closes the case; the hospital will discover the policy on the beneficiary's next admission.
 
 ### Specification
 
@@ -48,8 +47,8 @@ Chapter [Creating and updating a participant](/docs/nhcx/v1/getting-started/crea
 ```bash
 curl --request POST \
   --url https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/v2/participant/link/abha/policy/init \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'bearer_auth: Bearer <access token>' \
+  --header 'Accept: application/json' \
   --header 'Content-Type: application/json' \
   --data '{
   "requestid": "3c9e8d2f-5b4a-4e1c-9f7d-8a6b5c4d3e21",
@@ -69,11 +68,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
+- `bearer_auth` (apiKey, required): Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
 
 ## Headers
 
-- `bearer_auth` (string, required): It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.
+- `Accept` (string, required): Always `application/json` on the participant service.
 
 ## Body
 
@@ -90,8 +89,9 @@ curl --request POST \
 ## Responses
 
 - `200`: The service answers synchronously with HTTP 200 and ParticipantLinkAbhaResponse (optional result and errormessage).
+  - `result` (string)
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

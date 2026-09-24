@@ -19,7 +19,7 @@ Sent on `/v1/preauth/submit`, answered on `/v1/preauth/on_submit`, workflow 12 n
 
 ## Elements
 
-### 1. Claim
+### Claim
 
 NRCeS profile: [Claim](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Claim.html).
 
@@ -75,7 +75,7 @@ NRCeS profile: [Claim](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Claim.h
 | `item[].category.coding[]`                      | `Surgical` Surgical in `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-benefit-category`                                                                                                |
 | `total`                                         | value `150000`, currency `INR`                                                                                                                                                         |
 
-### 2. Patient
+### Patient
 
 NRCeS profile: [Patient](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Patient.html).
 
@@ -91,7 +91,7 @@ NRCeS profile: [Patient](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Patie
 | `gender`                     | `male`                                                                                                                       |
 | `birthDate`                  | `1985-06-15`                                                                                                                 |
 
-### 3. Organization (prov)
+### Organization (prov)
 
 NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Organization.html).
 
@@ -102,7 +102,7 @@ NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-
 | `type[].coding[]`            | `prov` Healthcare Provider in `http://terminology.hl7.org/CodeSystem/organization-type` |
 | `name`                       | `KyroCare Multispeciality Hospital`                                                     |
 
-### 4. Organization (pay)
+### Organization (pay)
 
 NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Organization.html).
 
@@ -113,7 +113,7 @@ NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-
 | `type[].coding[]`            | `pay` Payer in `http://terminology.hl7.org/CodeSystem/organization-type`                              |
 | `name`                       | `Sandbox Payer`                                                                                       |
 
-### 5. Coverage
+### Coverage
 
 NRCeS profile: [Coverage](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Coverage.html).
 
@@ -129,7 +129,7 @@ NRCeS profile: [Coverage](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Cove
 | `relationship.coding[]`      | `self` in `http://terminology.hl7.org/CodeSystem/subscriber-relationship`                |
 | `payor[]`                    | reference `https://nhcx.abdm.gov.in/payer`                                               |
 
-### 6. Practitioner
+### Practitioner
 
 NRCeS profile: [Practitioner](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Practitioner.html).
 
@@ -142,7 +142,7 @@ NRCeS profile: [Practitioner](https://nrces.in/ndhm/fhir/r4/StructureDefinition-
 | `name[]`                        | text `Dr. Ananya Rao`                                                                                                |
 | `qualification[].code.coding[]` | `MD` Doctor of Medicine in `http://terminology.hl7.org/CodeSystem/v2-0360`                                           |
 
-### 7. Procedure
+### Procedure
 
 NRCeS profile: [Procedure](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Procedure.html).
 
@@ -154,7 +154,7 @@ NRCeS profile: [Procedure](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Pro
 | `subject`           | reference `https://nhcx.abdm.gov.in/patient`                 |
 | `performedDateTime` | `2026-09-10T00:00:00+05:30`                                  |
 
-### 8. QuestionnaireResponse
+### QuestionnaireResponse
 
 | Element           | Example                                                                                                              |
 | ----------------- | -------------------------------------------------------------------------------------------------------------------- |
@@ -170,31 +170,31 @@ NRCeS profile: [Procedure](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Pro
 
 ## Rules
 
-### 1. The case number
+### The case number
 
 `Claim.identifier`, typed `CLN`, carries the provider's case number. Every later message on the case, the payer's included, names it.
 
-### 2. One focal insurance
+### One focal insurance
 
 Exactly one `Claim.insurance[]` entry carries `focal: true`.
 
-### 3. Items
+### Items
 
 Each item links to the care team, diagnosis and procedure by sequence. `net` is `unitPrice` times `quantity`; do not compute with `factor`. `Claim.total` equals the sum of the item nets.
 
-### 4. Documents
+### Documents
 
 The mandatory document codes are the ones the auth-requirements answer returned. Send each code and display exactly as given.
 
-### 5. The STG answers
+### The STG answers
 
 Each package's STG questionnaire is answered as a `QuestionnaireResponse` in the bundle, with the `linkId`s the plan gives.
 
-### 6. Claim.type
+### Claim.type
 
 SNOMED `737481003`, Inpatient care management. Payers echo it, some under the `ndhm-claim-type` ValueSet URL.
 
-### 7. References to records
+### References to records
 
 A `valueReference` may point at the `Composition` heading an embedded record rather than at a `DocumentReference`. Follow the reference, then walk the record.
 

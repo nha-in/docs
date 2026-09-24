@@ -35,7 +35,7 @@ You get a string back. What it contains beyond a certificate path is not documen
 
 ### Related scenario
 
-An integrator building a registry inspection tool for a TPA wants to show, for each payer, where the registry references its certificate as well as the certificate itself. The tool obtains a Bearer token, calls /fetch/certs/path with participantid 1518@hcx and displays the returned path string, then calls /fetch/certs for the PEM used for actual encryption. The production claims engine itself only uses /fetch/certs, as the Integration Handbook prescribes, before each /v1/claim/submit.
+An integrator building a registry inspection tool for a TPA wants to show, for each payer, where the registry references its certificate as well as the certificate itself. The tool obtains a Bearer token, calls /fetch/certs/path with the payer's participant code and displays the returned path string, then calls /fetch/certs for the PEM used for actual encryption. The production claims engine itself only uses /fetch/certs, as the Integration Handbook prescribes, before each /v1/claim/submit.
 
 ### Specification
 
@@ -44,21 +44,21 @@ Chapter [Finding participants and policies](/docs/nhcx/v1/getting-started/findin
 ```bash
 curl --request POST \
   --url https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/fetch/certs/path \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'bearer_auth: Bearer <access token>' \
+  --header 'Accept: application/json' \
   --header 'Content-Type: application/json' \
   --data '{
-  "participantid": "1518@hcx"
+  "participantid": "<payer participant code>"
 }'
 ```
 
 ## Authorization
 
-- `Authorization` (bearer token, required): On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
+- `bearer_auth` (apiKey, required): Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
 
 ## Headers
 
-- `bearer_auth` (string, required): It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.
+- `Accept` (string, required): Always `application/json` on the participant service.
 
 ## Body
 
@@ -67,8 +67,10 @@ curl --request POST \
 ## Responses
 
 - `200`: HTTP 200 with a string body.
+  - `_contentType` (string)
+  - `_body` (string)
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

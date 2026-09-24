@@ -39,7 +39,7 @@ You get the recipient's certificate or public key. Use it to encrypt messages to
 
 ### Related scenario
 
-A hospital is about to send its first pre-authorisation to payer 1518@hcx. The engine checks its certificate cache, finds no entry, and calls /fetch/certs with participantid 1518@hcx and a Bearer token. The response is a PEM X.509 certificate, which is parsed and cached for 24 hours. The engine builds the JWE protected header with x-hcx-sender_code, x-hcx-recipient_code 1518@hcx and the other x-hcx headers, encrypts the FHIR bundle with RSA-OAEP-256 and A256GCM using the fetched key, and POSTs to /v1/preauth/submit. Later that week the payer rotates its certificate; a PAYR-1001 on the next submission triggers eviction and a fresh fetch.
+A hospital is about to send its first pre-authorisation to a payer. The engine checks its certificate cache, finds no entry, and calls /fetch/certs with the payer's participant code and a Bearer token. The response is a PEM X.509 certificate, which is parsed and cached for 24 hours. The engine builds the JWE protected header with x-hcx-sender_code, x-hcx-recipient_code set to that code and the other x-hcx headers, encrypts the FHIR bundle with RSA-OAEP-256 and A256GCM using the fetched key, and POSTs to /v1/preauth/submit. Later that week the payer rotates its certificate; a PAYR-1001 on the next submission triggers eviction and a fresh fetch.
 
 ### Specification
 
@@ -48,21 +48,21 @@ Chapter [Finding participants and policies](/docs/nhcx/v1/getting-started/findin
 ```bash
 curl --request POST \
   --url https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/fetch/certs \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'bearer_auth: Bearer <access token>' \
+  --header 'Accept: application/json' \
   --header 'Content-Type: application/json' \
   --data '{
-  "participantid": "1518@hcx"
+  "participantid": "<payer participant code>"
 }'
 ```
 
 ## Authorization
 
-- `Authorization` (bearer token, required): On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
+- `bearer_auth` (apiKey, required): Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
 
 ## Headers
 
-- `bearer_auth` (string, required): It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.
+- `Accept` (string, required): Always `application/json` on the participant service.
 
 ## Body
 
@@ -71,8 +71,10 @@ curl --request POST \
 ## Responses
 
 - `200`: HTTP 200 with a string body containing a PEM-encoded X.509 certificate or an SPKI public key, as uploaded by that participant.
+  - `_contentType` (string)
+  - `_body` (string)
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

@@ -24,10 +24,10 @@ Verifies the Aadhaar OTP and creates the ABHA number, or returns the existing AB
 |---|---|---|---|
 | `authData` | object | yes | Authentication payload for this use case. |
 | `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
-| `authData.OTP` | object | yes | OTP authentication block. |
-| `authData.OTP.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
-| `authData.OTP.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
-| `authData.OTP.mobile` | string | no | Mobile number to be linked with the ABHA (plain, 10 digits). |
+| `authData.otp` | object | yes | OTP authentication block. |
+| `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
+| `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
+| `authData.otp.mobile` | string | no | Mobile number to be linked with the ABHA (plain, 10 digits). |
 | `consent` | object | yes | Consent captured from the user for ABHA enrolment. |
 | `consent.code` | string | yes | Consent code. Use `ABHA-enrollment`. |
 | `consent.version` | string | yes | Consent version. Use `1.4`. |
@@ -83,16 +83,45 @@ curl --request POST \
 ## Responses
 
 - `200`: Success: Create ABHA by verifying OTP - Positive flow
+  - `message` (string)
+  - `tokens` (object)
+  - `tokens.token` (string)
+  - `tokens.expiresIn` (integer)
+  - `tokens.refreshToken` (string)
+  - `tokens.refreshExpiresIn` (integer)
+  - `ABHAProfile` (object)
+  - `ABHAProfile.firstName` (string)
+  - `ABHAProfile.middleName` (string)
+  - `ABHAProfile.lastName` (string)
+  - `ABHAProfile.dob` (string)
+  - `ABHAProfile.gender` (string)
+  - `ABHAProfile.mobile` (string)
+  - `ABHAProfile.phrAddress` (string[])
+  - `ABHAProfile.districtCode` (string)
+  - `ABHAProfile.stateCode` (string)
+  - `ABHAProfile.abhaType` (string)
+  - `ABHAProfile.stateName` (string)
+  - `ABHAProfile.districtName` (string)
+  - `ABHAProfile.ABHANumber` (string)
+  - `ABHAProfile.abhaStatus` (string)
+  - `isNew` (boolean)
 - `400`: Bad Request (request validation failed): Create ABHA by verifying OTP-Invalid Transaction Id; Create ABHA by verifying OTP-Invalid authMethod; Create ABHA by verifying OTP-Invalid Mobile Number
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+  - `txnId` (string)
+  - `timestamp` (string)
 - `401`: Unauthorized (invalid / expired gateway token, X-token or benefit access): Invalid Benefit Name (generic)
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `message` (string)
+  - `timestamp` (string)
 - `422`: Unprocessable Entity (business rule or UIDAI failure): Create ABHA by verifying OTP- Invalid OTP value
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+  - `error` (object)
+  - `error.code` (string)
+  - `error.message` (string)
 - `500`: Internal Server Error.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

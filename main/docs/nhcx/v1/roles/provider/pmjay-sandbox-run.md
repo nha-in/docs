@@ -13,19 +13,19 @@ Identifiers, amounts and dates from the run are replaced by placeholders. Yours 
 
 ## The journey in order
 
-### 1. Find the policy
+### Find the policy
 
 `/participant/get/policies` by ABHA, member id or mobile. Take the policy code and the `processingid` from the answer. Every later call is addressed to the processing id, and the package master is keyed on this policy code, not on any other the hospital knows of.
 
-### 2. Check coverage
+### Check coverage
 
 `/v1/coverageeligibility/check` with each purpose: `discovery`, `validation`, `benefits`, `auth-requirements`. Validation returns the coverage period and the wallet; auth-requirements returns what the preauthorisation must carry, including the consent questionnaire when there is no biometric token. The reference coverage bundles pass unchanged.
 
-### 3. Fetch the package master
+### Fetch the package master
 
 `/v1/insuranceplan/request` with a plan Task keyed on the beneficiary's own policy code and the provider id. A policy the hospital is not empanelled under is refused with `PAYR-1401`; ask again with the code from step 1. The master is large, over a thousand packages, so store it queryable and read every package attribute from it rather than from code.
 
-### 4. Raise the preauthorisation
+### Raise the preauthorisation
 
 `/v1/preauth/submit` on workflow `12`. The acknowledgement comes back on `20`, the decision later on `21`, `23` or `24`, on the request's own correlation id. The bundle passes only with all of the following, each learned from a refusal listed further down:
 
@@ -38,7 +38,7 @@ Identifiers, amounts and dates from the run are replaced by placeholders. Yours 
 
 The SHA prices the package itself: the benefit approved is the master's rate for the tier, whatever amount was asked.
 
-### 5. Adjudicate on the payer service
+### Adjudicate on the payer service
 
 A PMJAY case is not decided over NHCX. It sits at `request.initiated` until someone acts on it in the SHA's Transaction Management System. In the sandbox that someone is you, through two endpoints of the NHCX Payer Service. Both take the ordinary session token in `bearer_auth`.
 
@@ -48,7 +48,7 @@ First ask who holds the case:
 curl --location --request POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/nhcxpayerservice/v1/get/user-role' \  --header 'Accept: application/json' \  --header 'Content-Type: application/json' \  --header 'bearer_auth: Bearer <access token>' \  --data-raw '{    "caseid": "<case number>",    "payerid": "<payer code>"  }'
 ```
 
-[Adjudicator: role for a case in the API reference](/docs/main/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-pmjay-sbxhcx-nhcxpayerservice-v1-get-user-role)
+[Adjudicator: get the user role for a case in the API reference](/docs/main/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-pmjay-sbxhcx-nhcxpayerservice-v1-get-user-role)
 
 ```json
 { "currentuserrole": "PPD-Trust", "errormessage": null }
@@ -76,7 +76,7 @@ The roles a case may pass through, and the actions each takes:
 
 Read the role before every action, use the exact spelling, and mint a new correlation id per call. The decision then comes back over NHCX as the `ClaimResponse` on the request's own thread, so the desk call and the callback are two halves of one step.
 
-### 6. Enhance
+### Enhance
 
 `/v1/preauth/submit` on workflow `13` with `x-hcx-use_case: Enhancement`, carrying the approved items and the ones now sought. Three rules:
 
@@ -86,7 +86,7 @@ Read the role before every action, use the exact spelling, and mint a new correl
 
 The SHA may answer `queued` again when asked to approve an enhancement and decide it in its own time, a minute later or several. Report the scheme's pace; do not assert it away.
 
-### 7. Claim
+### Claim
 
 `/v1/claim/submit` on workflow `15`. Beyond the preauthorisation rules:
 
@@ -95,7 +95,7 @@ The SHA may answer `queued` again when asked to approve an enhancement and decid
 - Answer the plan's discharge consent questionnaire when there is no discharge biometric token, or meet `PAYR-1363`.
 - Attach documents as `application/pdf`, `application/jpg`, `application/jpeg`, `application/png` or `application/fhir+json`. Anything else, `text/plain` included, is refused with `PAYR-1008`.
 
-### 8. Walk the claim through the roles
+### Walk the claim through the roles
 
 Read the role, act, read again. On the run the claim was forwarded by `CEX-Trust`, approved by `CPD-Trust` as `cpdApprove`, then by `ACO-Trust` and `SHA-Trust`, after which the role lookup answered with no role at all: the case was decided and the verdict arrived on the claim's own thread. Neither committee held the case. The seven roles are the ones a case may pass through, not a queue every case walks, and a cycle that assumes the next role in the list will be refused.
 

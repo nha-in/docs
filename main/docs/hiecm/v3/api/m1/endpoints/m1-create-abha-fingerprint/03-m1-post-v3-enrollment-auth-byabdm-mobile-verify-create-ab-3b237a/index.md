@@ -24,9 +24,9 @@ Verifies the OTP sent by *After ABHA creation - send OTP to verify mobile (optio
 | `scope` | `["ABHA-enrol", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
 | `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
-| `authData.OTP` | object | yes | OTP authentication block. |
-| `authData.OTP.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
-| `authData.OTP.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
+| `authData.otp` | object | yes | OTP authentication block. |
+| `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
+| `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
 
 ```bash
 curl --request POST \
@@ -73,14 +73,26 @@ curl --request POST \
 ## Responses
 
 - `200`: Success: Mobile Update - Verify OTP-positive flow; Mobile Update - Verify OTP-OTP EXPIRED
+  - `txnId` (string)
+  - `authResult` (string)
+  - `message` (string)
+  - `accounts` (object[])
 - `400`: Bad Request (request validation failed): Mobile Update - Verify OTP; Invalid Transaction Id; Invalid Scope; Invalid AuthMethod
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+  - `txnId` (string)
+  - `timestamp` (string)
 - `401`: Unauthorized (invalid / expired gateway token, X-token or benefit access): Invalid access token
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `code` (string)
+  - `message` (string)
+  - `description` (string)
 - `500`: Internal Server Error: Mobile Update - Verify OTP-Invalid access token
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+  - `code` (string)
+  - `message` (string)
+  - `description` (string)
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

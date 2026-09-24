@@ -4,6 +4,17 @@ The provider asks the payer whether a policy is live, what it covers, and what a
 
 Sent on `/v1/coverageeligibility/check`, answered on `/v1/coverageeligibility/on_check`.
 
+## The four purposes
+
+One builder, with `purpose` switched. The purposes differ in what they send and what the payer must return.
+
+| Variant           | What it asks                                                                       | purpose             | item                                                                                     |
+| ----------------- | ---------------------------------------------------------------------------------- | ------------------- | ---------------------------------------------------------------------------------------- |
+| Discovery         | Which policies does this person hold? Searches by ABHA or demographic identifiers. | `discovery`         | none                                                                                     |
+| Validation        | Is the policy in force, and what is left in the wallet?                            | `validation`        | none                                                                                     |
+| Benefits          | Is this package covered for this beneficiary?                                      | `benefits`          | `MG004C` Dengue shock syndrome (Dengue fever) in `https://nhcx.abdm.gov.in/product-code` |
+| Auth-requirements | What must a preauthorisation carry for this package?                               | `auth-requirements` | `MG004C` Dengue shock syndrome (Dengue fever) in `https://nhcx.abdm.gov.in/product-code` |
+
 ## The bundle
 
 | # | Resource                     | Profile                                                                                                         |
@@ -18,7 +29,7 @@ Sent on `/v1/coverageeligibility/check`, answered on `/v1/coverageeligibility/on
 
 ## Elements
 
-### 1. CoverageEligibilityRequest
+### CoverageEligibilityRequest
 
 NRCeS profile: [CoverageEligibilityRequest](https://nrces.in/ndhm/fhir/r4/StructureDefinition-CoverageEligibilityRequest.html).
 
@@ -40,7 +51,7 @@ NRCeS profile: [CoverageEligibilityRequest](https://nrces.in/ndhm/fhir/r4/Struct
 | `item[].productOrService.coding[]` | `PROC-KNEE-01` Total Knee Replacement (Unilateral) in `https://nhcx.abdm.gov.in/product-code` |
 | `item[].quantity`                  | value `1`                                                                                     |
 
-### 2. Patient
+### Patient
 
 NRCeS profile: [Patient](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Patient.html).
 
@@ -50,7 +61,7 @@ NRCeS profile: [Patient](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Patie
 | `identifier[].type.coding[]` | `PMJAY` Pradhan Mantri Jan Aarogya Yojana (PMJAY) ID in `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-identifier-type-code` |
 |                              | `MB` Member Number in `http://terminology.hl7.org/CodeSystem/v2-0203`                                                        |
 
-### 3. Organization (prov)
+### Organization (prov)
 
 NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Organization.html).
 
@@ -61,7 +72,7 @@ NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-
 | `type[].coding[]`            | `prov` Healthcare Provider in `http://terminology.hl7.org/CodeSystem/organization-type` |
 | `name`                       | `XYZ Multispeciality Hospital`                                                          |
 
-### 4. Organization (pay)
+### Organization (pay)
 
 NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Organization.html).
 
@@ -72,7 +83,7 @@ NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-
 | `type[].coding[]`            | `pay` Payer in `http://terminology.hl7.org/CodeSystem/organization-type`                              |
 | `name`                       | `Sandbox Payer`                                                                                       |
 
-### 5. Location
+### Location
 
 NRCeS profile: [Location](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Location.html).
 
@@ -81,7 +92,7 @@ NRCeS profile: [Location](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Loca
 | `name`                 | `XYZ Multispeciality Hospital`                |
 | `managingOrganization` | reference `https://nhcx.abdm.gov.in/provider` |
 
-### 6. Coverage
+### Coverage
 
 NRCeS profile: [Coverage](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Coverage.html).
 
@@ -97,7 +108,7 @@ NRCeS profile: [Coverage](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Cove
 | `relationship.coding[]`      | `self` in `http://terminology.hl7.org/CodeSystem/subscriber-relationship`                |
 | `payor[]`                    | reference `https://nhcx.abdm.gov.in/payer`                                               |
 
-### 7. PractitionerRole
+### PractitionerRole
 
 NRCeS profile: [PractitionerRole](https://nrces.in/ndhm/fhir/r4/StructureDefinition-PractitionerRole.html).
 
@@ -105,36 +116,25 @@ NRCeS profile: [PractitionerRole](https://nrces.in/ndhm/fhir/r4/StructureDefinit
 | ----------------- | ---------------------------------------------------------- |
 | `code[].coding[]` | `307988006` Medical technician in `http://snomed.info/sct` |
 
-## The four purposes
-
-One builder, with `purpose` switched. The purposes differ in what they send and what the payer must return.
-
-| Variant           | What it asks                                                                       | purpose             | item                                                                                     |
-| ----------------- | ---------------------------------------------------------------------------------- | ------------------- | ---------------------------------------------------------------------------------------- |
-| Discovery         | Which policies does this person hold? Searches by ABHA or demographic identifiers. | `discovery`         | none                                                                                     |
-| Validation        | Is the policy in force, and what is left in the wallet?                            | `validation`        | none                                                                                     |
-| Benefits          | Is this package covered for this beneficiary?                                      | `benefits`          | `MG004C` Dengue shock syndrome (Dengue fever) in `https://nhcx.abdm.gov.in/product-code` |
-| Auth-requirements | What must a preauthorisation carry for this package?                               | `auth-requirements` | `MG004C` Dengue shock syndrome (Dengue fever) in `https://nhcx.abdm.gov.in/product-code` |
-
 ## Rules
 
-### 1. One purpose per request
+### One purpose per request
 
 `purpose[]` carries one of `discovery`, `validation`, `benefits`, `auth-requirements`.
 
-### 2. Items make a question answerable
+### Items make a question answerable
 
 `item[]` is what makes `benefits` and `auth-requirements` answerable. `validation` does not need it. `discovery` omits `item[]` and `Coverage`.
 
-### 3. Date of service
+### Date of service
 
 `servicedDate` is the date of service, not the date of asking.
 
-### 4. The Coverage you send is a stub
+### The Coverage you send is a stub
 
 It names the policy you mean, not its terms. Take the term and the class from the payer's `Coverage` in the response.
 
-### 5. Parties by reference
+### Parties by reference
 
 `provider` and `insurer` reference `Organization` entries typed `prov` and `pay`, identified by `NPI` and `NIIP`. `facility` references a `Location` the provider manages, and `enterer` a `PractitionerRole`.
 

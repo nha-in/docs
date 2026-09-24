@@ -26,12 +26,40 @@ curl --request GET \
 ## Responses
 
 - `200`: OK
+  - `abhaAddress` (string)
+  - `fullName` (string)
+  - `firstName` (string)
+  - `middleName` (string)
+  - `lastName` (string)
+  - `dayOfBirth` (string)
+  - `monthOfBirth` (string)
+  - `yearOfBirth` (string)
+  - `dateOfBirth` (string)
+  - `gender` (string)
+  - `email` (string)
+  - `mobile` (string)
+  - `abhaNumber` (string)
+  - `address` (string)
+  - `stateName` (string)
+  - `districtName` (string)
+  - `pinCode` (string)
+  - `stateCode` (string)
+  - `districtCode` (string)
+  - `authMethods` (string[])
+  - `status` (string)
+  - `emailVerified` (string)
+  - `mobileVerified` (string)
+  - `kycStatus` (string)
+  - `abhaLinkedCount` (string)
 - `401`: Unauthorized
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `code` (string)
+  - `message` (string)
+  - `description` (string)
 - `403`: Forbidden
   See Error codes for this module: /docs/hiecm/v3/api/p2/errors
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

@@ -70,16 +70,35 @@ curl --request POST \
 ## Responses
 
 - `200`: Ok
+  - `transactionId` (string)
+  - `abhaAddress` (string)
+  - `patient` (object[])
+  - `patient.referenceNumber` (string): Reference number used while linking the health records of the patient.
+  - `patient.careContexts` (object[]): List of care contexts linked at the HIP end for the identified patient.
+  - `patient.careContexts.referenceNumber` (string): Reference number used while linking the health records of the patient.
+  - `patient.hiType` (string) One of: DiagnosticReport, DischargeSummary, HealthDocumentRecord, ImmunizationRecord, OPConsultation, Prescription, WellnessRecord, Invoice.
+  - `patient.count` (integer): Number of health records in the careContext object.
 - `400`: Bad Request
   See Error codes for this module: /docs/hiecm/v3/api/m2/errors
+  - `error` (object): The error code and message, if any occurred.
+  - `error.code` (string, required): ABDM-1104 - Duplicate Init request. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.
+  - `error.message` (string, required)
 - `401`: Unauthorized
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `code` (string): 900901 - Invalid Credentials. May be returned either bare or with a trailing ": " separator; match on the code itself and tolerate the separator.
+  - `message` (string)
+  - `description` (string)
 - `403`: Forbidden
   See Error codes for this module: /docs/hiecm/v3/api/m2/errors
 - `500`: Internal Server Error
   See Error codes for this module: /docs/hiecm/v3/api/m2/errors
+  - `timestamp` (number, required)
+  - `path` (string, required)
+  - `status` (integer, required)
+  - `error` (string, required): The error code and message, if any occurred.
+  - `requestId` (string, required): The request id that was passed.Allows alpha numeric characters and special characters like "^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}"
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

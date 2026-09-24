@@ -44,14 +44,22 @@ curl --request POST \
 ## Responses
 
 - `200`: The 200 response code indicates a successful request. In this context, it refers to the successful operation of the Enroll ABHA Address API.
+  - `txnId` (string)
+  - `abhaAddress` (string)
+  - `preferred` (integer)
 - `400`: The 400 response code indicates a bad request. In this context, it refers to various errors encountered during the operation of the Suggestion API. **Types of Suggestion API Errors:** **Invalid Preferred Flag:** This error occurs when the transaction ID provided in the request is invalid. The transaction ID is essential for tracking the request and ensuring that the correct information is processed. An invalid transaction ID means the server cannot verify the request, leading to a failure in enrolling the ABHA address. . **Invalid Transaction Id:** This error occurs when the preferred flag provided in the request is invalid. The preferred flag indicates the user’s preference for the suggested ABHA address. An invalid preferred flag means the server cannot process the user’s preference correctly, leading to a failure in enrolling the ABHA address.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+  - `preferred` (string)
+  - `timestamp` (string)
 - `401`: The 401 response code indicates an unauthorized request. In this context, it refers to the lack of proper authentication during the operation of the Invalid Credentials.
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `code` (string)
+  - `message` (string)
+  - `description` (string)
 - `500`: **Internal Server Error** An Internal Server Error (500) indicates that the server encountered an unexpected condition that prevented it from fulfilling the request.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

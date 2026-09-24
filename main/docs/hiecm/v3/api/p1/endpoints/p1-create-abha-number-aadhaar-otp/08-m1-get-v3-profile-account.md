@@ -32,16 +32,65 @@ curl --request GET \
 ## Responses
 
 - `200`: The account information was successfully retrieved or updated.
+  - `ABHANumber` (string)
+  - `preferredAbhaAddress` (string)
+  - `mobile` (string)
+  - `firstName` (string)
+  - `middleName` (string)
+  - `lastName` (string)
+  - `name` (string)
+  - `yearOfBirth` (string)
+  - `dayOfBirth` (string)
+  - `monthOfBirth` (string)
+  - `gender` (string)
+  - `profilePhoto` (string)
+  - `status` (string)
+  - `stateCode` (string)
+  - `districtCode` (string)
+  - `pincode` (string)
+  - `address` (string)
+  - `kycPhoto` (string)
+  - `stateName` (string)
+  - `districtName` (string)
+  - `subdistrictName` (string)
+  - `authMethods` (string[])
+  - `tags` (object)
+  - `kycVerified` (boolean)
+  - `verificationStatus` (string)
+  - `verificationType` (string)
+  - `localizedDetails` (object)
+  - `localizedDetails.name` (string)
+  - `localizedDetails.stateName` (string)
+  - `localizedDetails.districtName` (string)
+  - `localizedDetails.villageName` (string)
+  - `localizedDetails.townName` (string)
+  - `localizedDetails.gender` (string)
+  - `localizedDetails.localizedLabels` (object)
+  - `localizedDetails.localizedLabels.name` (string)
+  - `localizedDetails.localizedLabels.abhaNumber` (string)
+  - `localizedDetails.localizedLabels.abhaAddress` (string)
+  - `localizedDetails.localizedLabels.gender` (string)
+  - `localizedDetails.localizedLabels.dob` (string)
+  - `localizedDetails.localizedLabels.mobile` (string)
+  - `createdDate` (string)
 - `400`: Indicates various errors encountered during the account management process, such as invalid identifiers or missing parameters.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+  - `message` (string)
+  - `timestamp` (string)
 - `401`: The request was unauthorized. This can occur due to invalid credentials or token.
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `code` (string)
+  - `message` (string)
+  - `description` (string)
 - `404`: Not Found
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+  - `error` (object)
+  - `error.code` (string)
+  - `error.message` (string)
 - `500`: Internal Server Error
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

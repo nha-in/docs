@@ -50,24 +50,19 @@ Chapter [Base URLs](/docs/nhcx/v1/getting-started/base-urls) of the NHCX integra
 ```bash
 curl --request POST \
   --url https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/get/session \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'bearer_auth: Bearer <access token>' \
   --header 'Content-Type: application/json' \
   --data '{
   "_contentType": "application/x-www-form-urlencoded",
-  "client_id": "<NHCX_CLIENT_ID>",
-  "client_secret": "<NHCX_CLIENT_SECRET>",
+  "client_id": "<ABDM_CLIENT_ID>",
+  "client_secret": "<ABDM_CLIENT_SECRET>",
   "grant_type": "client_credentials"
 }'
 ```
 
 ## Authorization
 
-- `Authorization` (bearer token, required): On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
-
-## Headers
-
-- `bearer_auth` (string, required): It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.
+- `bearer_auth` (apiKey, required): Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
 
 ## Body
 
@@ -79,8 +74,11 @@ curl --request POST \
 ## Responses
 
 - `200`: HTTP 200 with { access_token, expires_in: 1200, token_type: Bearer }.
+  - `access_token` (string)
+  - `expires_in` (integer)
+  - `token_type` (string)
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

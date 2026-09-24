@@ -33,7 +33,7 @@ The terms this documentation uses, in the sense it uses them. Where NHA's docume
 - **NIN, ROHINI.** Other registries a participant may be identified by.
 - **Registry ID.** A participant's identity in the registry it belongs to: HFR ID for a hospital, IRDAI ID for an insurer or TPA, client ID for an app.
 - **Participant ID, participant code.** A participant's address on the exchange, in the form `1518@hcx`. The part after the `@` names the exchange instance.
-- **Client ID and secret.** The ABDM credentials used to obtain an access token; the same ones issued for Milestone 1.
+- **Client ID and secret.** The ABDM sandbox credentials used to obtain an access token.
 - **Milestone 1, M1.** The ABDM integration level, ABHA creation and verification, that must be complete before NHCX.
 - **Bridge URL, endpoint URL.** The base address of a participant's callback server, registered on its participant record.
 - **Passcode.** The one-time code sent to a participant's registered mobile to confirm creation or configuration in production.
@@ -67,7 +67,6 @@ The terms this documentation uses, in the sense it uses them. Where NHA's docume
 - **Resubmission.** A revised preauthorisation that replaces an earlier one.
 - **Query.** The payer asking for more before it decides. The case stays open.
 - **Claim.** The request for payment after discharge. A `Claim` with `use = claim`.
-- **Predetermination.** Asking what a payer would approve, without committing.
 - **Adjudication.** The payer's decision on a preauthorisation or claim.
 - **Reprocess.** An appeal against a rejection, raised as a Task.
 - **Shortfall.** A request for the difference when a claim was paid short, raised as a Task after payment settles, under reason `partialpayment`.

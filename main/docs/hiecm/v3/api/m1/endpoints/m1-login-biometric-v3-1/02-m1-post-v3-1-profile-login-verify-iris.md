@@ -23,7 +23,7 @@ v3.1 IRIS login in a single call. Send the encrypted Aadhaar number and the IRIS
 | `authData` | object | yes | Authentication payload for this use case. |
 | `authData.authMethods` | `["iris_login"]` | yes | Authentication method used in this step. |
 | `authData.iris_login` | object | yes | IRIS login block (v3.1). |
-| `authData.iris_login.Aadhaar` | string | yes | Aadhaar number, RSA-encrypted. |
+| `authData.iris_login.aadhaar` | string | yes | Aadhaar number, RSA-encrypted. |
 | `authData.iris_login.irisAuthPid` | string | yes | Base64 PID block captured from a registered IRIS RD device. |
 
 > **Note:** This API is only in the Postman collection (v3.1). The request/response is taken from there, and the success response shape reuses the v3 biometric verify example.
@@ -73,16 +73,34 @@ curl --request POST \
 ## Responses
 
 - `200`: Success: Verify Login via Iris (v3.1) - Positive flow
+  - `authResult` (string)
+  - `message` (string)
+  - `token` (string)
+  - `expiresIn` (integer)
+  - `refreshToken` (string)
+  - `refreshExpiresIn` (integer)
+  - `accounts` (object[])
+  - `accounts.ABHANumber` (string)
+  - `accounts.preferredAbhaAddress` (string)
+  - `accounts.name` (string)
+  - `accounts.status` (string)
+  - `accounts.profilePhoto` (string)
 - `400`: Bad Request (request validation failed).
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
 - `401`: Unauthorized (invalid / expired gateway token, X-token or benefit access): Invalid Credentials (generic)
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `code` (string)
+  - `description` (string)
+  - `message` (string)
 - `404`: Not Found: User Not Found; Resource Not Found
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+  - `error` (object)
+  - `error.code` (string)
+  - `error.message` (string)
 - `500`: Internal Server Error.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

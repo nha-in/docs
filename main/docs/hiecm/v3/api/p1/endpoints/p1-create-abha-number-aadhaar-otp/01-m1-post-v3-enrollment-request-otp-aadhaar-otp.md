@@ -67,14 +67,24 @@ curl --request POST \
 ## Responses
 
 - `200`: Success: ABHA enrolment via Aadhaar-positive flow; ABHA Creation via Aadhaar OTP-REQUEST OTP FOR AADHAAR AUTHENTICATION
+  - `txnId` (string)
+  - `message` (string)
 - `400`: Bad Request (request validation failed): ABHA enrolment via Aadhaar-Invalid scope; ABHA enrolment via Aadhaar-Invalid LoginId; ABHA enrolment via Aadhaar-Invalid Login Hint; ABHA Creation via Aadhaar OTP-Invalid scope; ABHA Creation via Aadhaar OTP-Invalid Login Hint
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+  - `scope` (string)
+  - `timestamp` (string)
 - `401`: Unauthorized (invalid / expired gateway token, X-token or benefit access): ABHA enrolment via Aadhaar-Invalid access token; ABHA Creation via Aadhaar OTP-Invalid access token
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `code` (string)
+  - `message` (string)
+  - `description` (string)
 - `500`: Internal Server Error.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+  - `code` (string)
+  - `message` (string)
+  - `description` (string)
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

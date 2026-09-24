@@ -75,14 +75,31 @@ curl --request POST \
 ## Responses
 
 - `200`: Success: Verify via Biometric - Iris Authentication
+  - `message` (string)
+  - `authResult` (string)
+  - `users` (object[])
+  - `users.abhaAddress` (string)
+  - `users.fullName` (string)
+  - `users.profilePhoto` (string)
+  - `users.abhaNumber` (string)
+  - `users.status` (string)
+  - `users.kycStatus` (string)
+  - `tokens` (object)
+  - `tokens.token` (string)
+  - `tokens.expiresIn` (integer)
+  - `tokens.refreshToken` (string)
+  - `tokens.refreshExpiresIn` (integer)
 - `400`: Bad Request (request validation failed): Biometric is locked; Biometric data did not match
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
 - `401`: Unauthorized (invalid / expired gateway token, X-token or benefit access): Missing Credentials (generic)
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `code` (string)
+  - `message` (string)
+  - `description` (string)
 - `500`: Internal Server Error.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

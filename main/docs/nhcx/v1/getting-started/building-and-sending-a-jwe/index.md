@@ -52,10 +52,10 @@ The result is one long string with four dots in it. That is the whole message. J
 
 ## Sending it
 
-The request body is a JSON object with one field.
+The request body is a JSON object with one field. The `x-hcx-` fields are not HTTP headers: they travel inside the JWE's protected header, sealed above. The only headers on the wire are the token and the content types.
 
 ```bash
-curl --location --request POST 'https://apisbx.abdm.gov.in/hcx/v1/preauth/submit' \  --header 'Accept: application/json' \  --header 'Content-Type: application/json' \  --header 'bearer_auth: Bearer <access token>' \  --header 'x-hcx-sender_code: 1000004446@hcx' \  --header 'x-hcx-recipient_code: 1518@hcx' \  --header 'x-hcx-api_call_id: <uuid>' \  --header 'x-hcx-request_id: <uuid>' \  --header 'x-hcx-correlation_id: <uuid>' \  --header 'x-hcx-workflow_id: 12' \  --header 'x-hcx-timestamp: <iso timestamp>' \  --header 'x-hcx-status: request.initiated' \  --header 'x-hcx-ben-abha-id: 91711234567890' \  --header 'x-hcx-use_case: New' \  --data-raw '{    "payload": "eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2R0NNIiwieC1oY3gtc2VuZGVyX2NvZGUiOi4uLn0.encrypted_key.iv.ciphertext.tag"  }'
+curl --location --request POST 'https://apisbx.abdm.gov.in/hcx/v1/preauth/submit' \  --header 'Accept: application/json' \  --header 'Content-Type: application/json' \  --header 'bearer_auth: Bearer <access token>' \  --data-raw '{    "payload": "eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2R0NNIiwieC1oY3gtc2VuZGVyX2NvZGUiOi4uLn0.encrypted_key.iv.ciphertext.tag"  }'
 ```
 
 [Pre-authorisation submit in the API reference](/docs/main/docs/nhcx/v1/api/preauth/endpoints/preauth-v1-preauth-submit)

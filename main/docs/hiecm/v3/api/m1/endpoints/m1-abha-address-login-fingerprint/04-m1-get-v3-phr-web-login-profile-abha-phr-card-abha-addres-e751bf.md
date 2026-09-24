@@ -39,5 +39,8 @@ curl --request GET \
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
 - `401`: Invalid Credentials error occurs when a server receives a request but cannot authorize it due to incorrect or missing authentication
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `code` (string)
+  - `message` (string)
+  - `description` (string)
 - `500`: **Internal Server Error** An Internal Server Error (500) indicates that the server encountered an unexpected condition that prevented it from fulfilling the request.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors

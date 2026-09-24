@@ -4,10 +4,10 @@ A Status and search code arrives sealed inside the callback, not in the response
 
 ## Codes
 
-| Code        | What it means                                        |
-| ----------- | ---------------------------------------------------- |
-| `NHCX-1010` | No request matches the correlation id on your answer |
-| `NHCX-1012` | No message matches the api\_call\_id you gave        |
+| Code                                                                              | What it means                                        |
+| --------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| [`NHCX-1010`](/docs/main/docs/nhcx/v1/reference/pmjay-error-codes?code=NHCX-1010) | No request matches the correlation id on your answer |
+| [`NHCX-1012`](/docs/main/docs/nhcx/v1/reference/pmjay-error-codes?code=NHCX-1012) | No message matches the api\_call\_id you gave        |
 
 Every code above is recorded in the Catalogue. The aggregated list across modules is at [error codes](/docs/main/docs/nhcx/v1/reference/pmjay-error-codes).
 

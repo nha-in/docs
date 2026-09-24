@@ -38,12 +38,16 @@ curl --request POST \
 ## Responses
 
 - `200`: OK
+  - `message` (string)
+  - `authResult` (string)
 - `400`: Bad Request
   See Error codes for this module: /docs/hiecm/v3/api/p2/errors
+  - `code` (string)
+  - `message` (string)
 - `403`: Forbidden
   See Error codes for this module: /docs/hiecm/v3/api/p2/errors
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

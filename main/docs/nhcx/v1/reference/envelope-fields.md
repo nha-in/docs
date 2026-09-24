@@ -22,7 +22,7 @@ The authority here is the Technical Specifications page on the portal, which car
 | `x-hcx-use_case`       | String      | Optional     | Values differ by exchange, see below                                                                                                                                                                                                                                                                     |
 | `x-hcx-error_details`  | JSON object | Optional     | `code`, `message`, `trace`. Mandatory on a protocol response                                                                                                                                                                                                                                             |
 | `x-hcx-debug_details`  | JSON object | Optional     | The same shape, for debugging                                                                                                                                                                                                                                                                            |
-| `x-hcx-debug_flag`     | Enum        | Optional     | `Error`, `Info` or `Debug`. A server may ignore it                                                                                                                                                                                                                                                       |
+| `x-hcx-debug_flag`     | Enum        | Optional     | The specification lists `Error`, `Info` and `Debug`; the samples send `INFO`. A server may ignore it                                                                                                                                                                                                     |
 
 **The `x-hcx-use_case` values are not one enum.** The workbook states them on three sheets and they are not the same on all three.
 
@@ -34,7 +34,7 @@ The authority here is the Technical Specifications page on the portal, which car
 
 A claim cannot be enhanced, which is why `Enhancement` is absent from that row. Both workbooks agree, sheet for sheet.
 
-**`x-hcx-debug_flag` is typed two ways.** The Technical Specifications page gives the enum as `Error`, `Info` or `Debug`. The NHCX Requests and Responses workbook types it as Enum with the single value `INFO`, on its response headers, and every header table in the FHIR Reference and every sample in the API collection that carries the field sends `INFO`. The field is optional and a server may ignore it. Where you send it, send `INFO`, as the samples do. No source says whether a server checks the case of the value.
+**`x-hcx-debug_flag` is typed two ways.** The Technical Specifications page gives the enum as `Error`, `Info` or `Debug`. The NHCX Requests and Responses workbook types it as Enum with the single value `INFO`, on its response headers, and every header table in the FHIR Reference and every sample in the API collection that carries the field sends `INFO`. The field is optional and a server may ignore it. No source says whether a server checks the case of the value.
 
 Three of those obligations are not stated anywhere else in this documentation and are worth reading twice. `x-hcx-request_id` is optional. `x-hcx-workflow_id` is optional. `x-hcx-ben-abha-id` is optional.
 
@@ -138,3 +138,5 @@ Not a protected header, but the shape every participant must return within thirt
 ```
 
 HTTP `202`. Not `200`, not an empty body. `entity_type` is derived from the path: the second-to-last segment, or the last where that is `v1`, with `on_` stripped.
+
+The receipt's `timestamp` is written day first, as `DD/MM/YYYY HH:mm:ss:SSS`. That form belongs to the receipt only. The `x-hcx-timestamp` header still takes ISO 8601 with `+05:30`.

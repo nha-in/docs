@@ -4,7 +4,7 @@ Generated from the specifications. Every scheme and header below is declared in 
 
 ## Session
 
-**bearerAuth**, `http` `bearer`. On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
+**bearerAuth**, `http` `bearer`. On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. NHCX reads `bearer_auth`, not `Authorization`.
 
 | Header       | Required | What it is                                                                                                                                                                                                                                                                                                 |
 | ------------ | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -12,164 +12,74 @@ Generated from the specifications. Every scheme and header below is declared in 
 | `TIMESTAMP`  | yes      | `TIMESTAMP` is the current time in UTC, ISO 8601 with milliseconds and a trailing `Z`, as in `2026-09-04T06:15:51.975Z`. A clock that has drifted will be refused, so take the time from the system rather than constructing it by hand. How to produce it in each language is at the end of this chapter. |
 | `X-CM-ID`    | yes      | `X-CM-ID` names the environment. It is `sbx` on the sandbox. The mirror and the adapter both use lowercase.                                                                                                                                                                                                |
 
+## Participant registry
+
+**bearerAuth**, `apiKey`. Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
+
+| Header        | Required | What it is                                                         |
+| ------------- | -------- | ------------------------------------------------------------------ |
+| `bearer_auth` | yes      | It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints. |
+| `Accept`      | yes      | Always `application/json` on the participant service.              |
+
 ## Coverage eligibility
 
-**bearerAuth**, `http` `bearer`. On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
+**bearerAuth**, `apiKey`. Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
 
-| Header                 | Required | What it is                                                                                                                                                                                                                                                               |
-| ---------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `bearer_auth`          | yes      | It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.                                                                                                                                                                                                       |
-| `x-hcx-sender_code`    | yes      | Your participant code. Mandatory on the envelope.                                                                                                                                                                                                                        |
-| `x-hcx-recipient_code` | yes      | The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.                                                                                                                                                                   |
-| `x-hcx-api_call_id`    | yes      | Fresh on every message, including responses. Mandatory on the envelope.                                                                                                                                                                                                  |
-| `x-hcx-request_id`     | no       | One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope. Send it anyway, as a fresh UUID per originating request: it is cheap and satisfies both readings until NHA rules. |
-| `x-hcx-correlation_id` | yes      | The thread. See the rule below. Mandatory on the envelope.                                                                                                                                                                                                               |
-| `x-hcx-workflow_id`    | no       | Which step, or which case. See the two readings below. Optional on the envelope.                                                                                                                                                                                         |
-| `x-hcx-timestamp`      | yes      | See the format note below. Mandatory on the envelope.                                                                                                                                                                                                                    |
-| `x-hcx-status`         | yes      | Where this message stands. Values below. Mandatory on the envelope.                                                                                                                                                                                                      |
-| `x-hcx-ben-abha-id`    | no       | The beneficiary's ABHA number. Optional: send it when the beneficiary has an ABHA number. Optional on the envelope.                                                                                                                                                      |
-| `x-hcx-debug_flag`     | no       | `Error`, `Info` or `Debug`. A server may ignore it. Optional on the envelope.                                                                                                                                                                                            |
-
-## Pre-authorisation
-
-**bearerAuth**, `http` `bearer`. On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
-
-| Header                 | Required | What it is                                                                                                                                                                                                                                                               |
-| ---------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `bearer_auth`          | yes      | It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.                                                                                                                                                                                                       |
-| `x-hcx-sender_code`    | yes      | Your participant code. Mandatory on the envelope.                                                                                                                                                                                                                        |
-| `x-hcx-recipient_code` | yes      | The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.                                                                                                                                                                   |
-| `x-hcx-api_call_id`    | yes      | Fresh on every message, including responses. Mandatory on the envelope.                                                                                                                                                                                                  |
-| `x-hcx-request_id`     | no       | One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope. Send it anyway, as a fresh UUID per originating request: it is cheap and satisfies both readings until NHA rules. |
-| `x-hcx-correlation_id` | yes      | The thread. See the rule below. Mandatory on the envelope.                                                                                                                                                                                                               |
-| `x-hcx-workflow_id`    | no       | Which step, or which case. See the two readings below. Optional on the envelope.                                                                                                                                                                                         |
-| `x-hcx-timestamp`      | yes      | See the format note below. Mandatory on the envelope.                                                                                                                                                                                                                    |
-| `x-hcx-status`         | yes      | Where this message stands. Values below. Mandatory on the envelope.                                                                                                                                                                                                      |
-| `x-hcx-ben-abha-id`    | no       | The beneficiary's ABHA number. Optional: send it when the beneficiary has an ABHA number. Optional on the envelope.                                                                                                                                                      |
-| `x-hcx-use_case`       | no       | Values differ by exchange, see below. Optional on the envelope.                                                                                                                                                                                                          |
-| `x-hcx-debug_flag`     | no       | `Error`, `Info` or `Debug`. A server may ignore it. Optional on the envelope.                                                                                                                                                                                            |
-
-## Predetermination
-
-**bearerAuth**, `http` `bearer`. On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
-
-| Header                 | Required | What it is                                                                                             |
-| ---------------------- | -------- | ------------------------------------------------------------------------------------------------------ |
-| `bearer_auth`          | yes      | It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.                                     |
-| `x-hcx-sender_code`    | yes      | Your participant code. Mandatory on the envelope.                                                      |
-| `x-hcx-recipient_code` | yes      | The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope. |
-| `x-hcx-api_call_id`    | yes      | Fresh on every message, including responses. Mandatory on the envelope.                                |
-| `x-hcx-correlation_id` | yes      | The thread. See the rule below. Mandatory on the envelope.                                             |
-| `x-hcx-timestamp`      | yes      | See the format note below. Mandatory on the envelope.                                                  |
-| `x-hcx-status`         | yes      | Where this message stands. Values below. Mandatory on the envelope.                                    |
-
-## Claim
-
-**bearerAuth**, `http` `bearer`. On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
-
-| Header                 | Required | What it is                                                                                                                                                                                                                                                               |
-| ---------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `bearer_auth`          | yes      | It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.                                                                                                                                                                                                       |
-| `x-hcx-sender_code`    | yes      | Your participant code. Mandatory on the envelope.                                                                                                                                                                                                                        |
-| `x-hcx-recipient_code` | yes      | The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.                                                                                                                                                                   |
-| `x-hcx-api_call_id`    | yes      | Fresh on every message, including responses. Mandatory on the envelope.                                                                                                                                                                                                  |
-| `x-hcx-request_id`     | no       | One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope. Send it anyway, as a fresh UUID per originating request: it is cheap and satisfies both readings until NHA rules. |
-| `x-hcx-correlation_id` | yes      | The thread. See the rule below. Mandatory on the envelope.                                                                                                                                                                                                               |
-| `x-hcx-workflow_id`    | no       | Which step, or which case. See the two readings below. Optional on the envelope.                                                                                                                                                                                         |
-| `x-hcx-timestamp`      | yes      | See the format note below. Mandatory on the envelope.                                                                                                                                                                                                                    |
-| `x-hcx-status`         | yes      | Where this message stands. Values below. Mandatory on the envelope.                                                                                                                                                                                                      |
-| `x-hcx-ben-abha-id`    | no       | The beneficiary's ABHA number. Optional: send it when the beneficiary has an ABHA number. Optional on the envelope.                                                                                                                                                      |
-| `x-hcx-use_case`       | no       | Values differ by exchange, see below. Optional on the envelope.                                                                                                                                                                                                          |
-| `x-hcx-debug_flag`     | no       | `Error`, `Info` or `Debug`. A server may ignore it. Optional on the envelope.                                                                                                                                                                                            |
-
-## Reprocess, cancel and shortfall
-
-**bearerAuth**, `http` `bearer`. On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
-
-| Header                 | Required | What it is                                                                                                                                                                                                                                                               |
-| ---------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `bearer_auth`          | yes      | It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.                                                                                                                                                                                                       |
-| `x-hcx-sender_code`    | yes      | Your participant code. Mandatory on the envelope.                                                                                                                                                                                                                        |
-| `x-hcx-recipient_code` | yes      | The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.                                                                                                                                                                   |
-| `x-hcx-api_call_id`    | yes      | Fresh on every message, including responses. Mandatory on the envelope.                                                                                                                                                                                                  |
-| `x-hcx-request_id`     | no       | One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope. Send it anyway, as a fresh UUID per originating request: it is cheap and satisfies both readings until NHA rules. |
-| `x-hcx-correlation_id` | yes      | The thread. See the rule below. Mandatory on the envelope.                                                                                                                                                                                                               |
-| `x-hcx-workflow_id`    | no       | Which step, or which case. See the two readings below. Optional on the envelope.                                                                                                                                                                                         |
-| `x-hcx-timestamp`      | yes      | See the format note below. Mandatory on the envelope.                                                                                                                                                                                                                    |
-| `x-hcx-status`         | yes      | Where this message stands. Values below. Mandatory on the envelope.                                                                                                                                                                                                      |
-| `x-hcx-ben-abha-id`    | no       | The beneficiary's ABHA number. Optional: send it when the beneficiary has an ABHA number. Optional on the envelope.                                                                                                                                                      |
-
-## Payment notice
-
-**bearerAuth**, `http` `bearer`. On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
-
-| Header                 | Required | What it is                                                                                                                                                                                                                                                               |
-| ---------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `bearer_auth`          | yes      | It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.                                                                                                                                                                                                       |
-| `x-hcx-sender_code`    | yes      | Your participant code. Mandatory on the envelope.                                                                                                                                                                                                                        |
-| `x-hcx-recipient_code` | yes      | The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.                                                                                                                                                                   |
-| `x-hcx-api_call_id`    | yes      | Fresh on every message, including responses. Mandatory on the envelope.                                                                                                                                                                                                  |
-| `x-hcx-request_id`     | no       | One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope. Send it anyway, as a fresh UUID per originating request: it is cheap and satisfies both readings until NHA rules. |
-| `x-hcx-correlation_id` | yes      | The thread. See the rule below. Mandatory on the envelope.                                                                                                                                                                                                               |
-| `x-hcx-workflow_id`    | no       | Which step, or which case. See the two readings below. Optional on the envelope.                                                                                                                                                                                         |
-| `x-hcx-timestamp`      | yes      | See the format note below. Mandatory on the envelope.                                                                                                                                                                                                                    |
-| `x-hcx-status`         | yes      | Where this message stands. Values below. Mandatory on the envelope.                                                                                                                                                                                                      |
-| `x-hcx-ben-abha-id`    | no       | The beneficiary's ABHA number. Optional: send it when the beneficiary has an ABHA number. Optional on the envelope.                                                                                                                                                      |
-| `x-hcx-debug_flag`     | no       | `Error`, `Info` or `Debug`. A server may ignore it. Optional on the envelope.                                                                                                                                                                                            |
-
-## Communication
-
-**bearerAuth**, `http` `bearer`. On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
-
-| Header                 | Required | What it is                                                                                                                                                                                                                                                               |
-| ---------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `bearer_auth`          | yes      | It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.                                                                                                                                                                                                       |
-| `x-hcx-sender_code`    | yes      | Your participant code. Mandatory on the envelope.                                                                                                                                                                                                                        |
-| `x-hcx-recipient_code` | yes      | The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.                                                                                                                                                                   |
-| `x-hcx-api_call_id`    | yes      | Fresh on every message, including responses. Mandatory on the envelope.                                                                                                                                                                                                  |
-| `x-hcx-request_id`     | no       | One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope. Send it anyway, as a fresh UUID per originating request: it is cheap and satisfies both readings until NHA rules. |
-| `x-hcx-correlation_id` | yes      | The thread. See the rule below. Mandatory on the envelope.                                                                                                                                                                                                               |
-| `x-hcx-workflow_id`    | no       | Which step, or which case. See the two readings below. Optional on the envelope.                                                                                                                                                                                         |
-| `x-hcx-timestamp`      | yes      | See the format note below. Mandatory on the envelope.                                                                                                                                                                                                                    |
-| `x-hcx-status`         | yes      | Where this message stands. Values below. Mandatory on the envelope.                                                                                                                                                                                                      |
-| `x-hcx-ben-abha-id`    | no       | The beneficiary's ABHA number. Optional: send it when the beneficiary has an ABHA number. Optional on the envelope.                                                                                                                                                      |
-
-## Status and search
-
-**bearerAuth**, `http` `bearer`. On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
-
-| Header                 | Required | What it is                                                                                                                                                                                                                                                               |
-| ---------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `bearer_auth`          | yes      | It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.                                                                                                                                                                                                       |
-| `x-hcx-sender_code`    | yes      | Your participant code. Mandatory on the envelope.                                                                                                                                                                                                                        |
-| `x-hcx-recipient_code` | yes      | The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.                                                                                                                                                                   |
-| `x-hcx-api_call_id`    | yes      | Fresh on every message, including responses. Mandatory on the envelope.                                                                                                                                                                                                  |
-| `x-hcx-request_id`     | no       | One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope. Send it anyway, as a fresh UUID per originating request: it is cheap and satisfies both readings until NHA rules. |
-| `x-hcx-correlation_id` | yes      | The thread. See the rule below. Mandatory on the envelope.                                                                                                                                                                                                               |
-| `x-hcx-timestamp`      | yes      | See the format note below. Mandatory on the envelope.                                                                                                                                                                                                                    |
-| `x-hcx-status`         | yes      | Where this message stands. Values below. Mandatory on the envelope.                                                                                                                                                                                                      |
-| `x-hcx-ben-abha-id`    | no       | The beneficiary's ABHA number. Optional: send it when the beneficiary has an ABHA number. Optional on the envelope.                                                                                                                                                      |
+| Header        | Required | What it is                                                         |
+| ------------- | -------- | ------------------------------------------------------------------ |
+| `bearer_auth` | yes      | It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints. |
 
 ## Insurance plan
 
-**bearerAuth**, `http` `bearer`. On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
+**bearerAuth**, `apiKey`. Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
 
-| Header                 | Required | What it is                                                                                                                                                                                                                                                               |
-| ---------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `bearer_auth`          | yes      | It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.                                                                                                                                                                                                       |
-| `x-hcx-sender_code`    | yes      | Your participant code. Mandatory on the envelope.                                                                                                                                                                                                                        |
-| `x-hcx-recipient_code` | yes      | The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.                                                                                                                                                                   |
-| `x-hcx-api_call_id`    | yes      | Fresh on every message, including responses. Mandatory on the envelope.                                                                                                                                                                                                  |
-| `x-hcx-request_id`     | no       | One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope. Send it anyway, as a fresh UUID per originating request: it is cheap and satisfies both readings until NHA rules. |
-| `x-hcx-correlation_id` | yes      | The thread. See the rule below. Mandatory on the envelope.                                                                                                                                                                                                               |
-| `x-hcx-workflow_id`    | no       | Which step, or which case. See the two readings below. Optional on the envelope.                                                                                                                                                                                         |
-| `x-hcx-timestamp`      | yes      | See the format note below. Mandatory on the envelope.                                                                                                                                                                                                                    |
-| `x-hcx-status`         | yes      | Where this message stands. Values below. Mandatory on the envelope.                                                                                                                                                                                                      |
-| `x-hcx-ben-abha-id`    | no       | The beneficiary's ABHA number. Optional: send it when the beneficiary has an ABHA number. Optional on the envelope.                                                                                                                                                      |
+| Header        | Required | What it is                                                         |
+| ------------- | -------- | ------------------------------------------------------------------ |
+| `bearer_auth` | yes      | It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints. |
 
-## Participant registry
+## Pre-authorisation
 
-**bearerAuth**, `http` `bearer`. On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
+**bearerAuth**, `apiKey`. Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
+
+| Header        | Required | What it is                                                         |
+| ------------- | -------- | ------------------------------------------------------------------ |
+| `bearer_auth` | yes      | It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints. |
+
+## Claim
+
+**bearerAuth**, `apiKey`. Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
+
+| Header        | Required | What it is                                                         |
+| ------------- | -------- | ------------------------------------------------------------------ |
+| `bearer_auth` | yes      | It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints. |
+
+## Reprocess, cancel and shortfall
+
+**bearerAuth**, `apiKey`. Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
+
+| Header        | Required | What it is                                                         |
+| ------------- | -------- | ------------------------------------------------------------------ |
+| `bearer_auth` | yes      | It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints. |
+
+## Payment notice
+
+**bearerAuth**, `apiKey`. Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
+
+| Header        | Required | What it is                                                         |
+| ------------- | -------- | ------------------------------------------------------------------ |
+| `bearer_auth` | yes      | It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints. |
+
+## Communication
+
+**bearerAuth**, `apiKey`. Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
+
+| Header        | Required | What it is                                                         |
+| ------------- | -------- | ------------------------------------------------------------------ |
+| `bearer_auth` | yes      | It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints. |
+
+## Status and search
+
+**bearerAuth**, `apiKey`. Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
 
 | Header        | Required | What it is                                                         |
 | ------------- | -------- | ------------------------------------------------------------------ |
@@ -177,41 +87,26 @@ Generated from the specifications. Every scheme and header below is declared in 
 
 ## Onboarding
 
-**bearerAuth**, `http` `bearer`. On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
+**bearerAuth**, `apiKey`. Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
 
 | Header        | Required | What it is                                                         |
 | ------------- | -------- | ------------------------------------------------------------------ |
 | `bearer_auth` | yes      | It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints. |
+| `Accept`      | yes      | Always `application/json` on the participant service.              |
 | `source`      | yes      | Sent on this call, as the package's request carries it.            |
 
 ## PMJAY adjudicator
 
-**bearerAuth**, `http` `bearer`. On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
+**bearerAuth**, `apiKey`. Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
 
 | Header        | Required | What it is                                                         |
 | ------------- | -------- | ------------------------------------------------------------------ |
 | `bearer_auth` | yes      | It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints. |
-
-## Other
-
-**bearerAuth**, `http` `bearer`. On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
-
-| Header                 | Required | What it is                                                                                                                                                                                                                                                               |
-| ---------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `bearer_auth`          | yes      | It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.                                                                                                                                                                                                       |
-| `x-hcx-sender_code`    | yes      | Your participant code. Mandatory on the envelope.                                                                                                                                                                                                                        |
-| `x-hcx-recipient_code` | yes      | The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.                                                                                                                                                                   |
-| `x-hcx-api_call_id`    | yes      | Fresh on every message, including responses. Mandatory on the envelope.                                                                                                                                                                                                  |
-| `x-hcx-request_id`     | no       | One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope. Send it anyway, as a fresh UUID per originating request: it is cheap and satisfies both readings until NHA rules. |
-| `x-hcx-correlation_id` | yes      | The thread. See the rule below. Mandatory on the envelope.                                                                                                                                                                                                               |
-| `x-hcx-workflow_id`    | no       | Which step, or which case. See the two readings below. Optional on the envelope.                                                                                                                                                                                         |
-| `x-hcx-timestamp`      | yes      | See the format note below. Mandatory on the envelope.                                                                                                                                                                                                                    |
-| `x-hcx-status`         | yes      | Where this message stands. Values below. Mandatory on the envelope.                                                                                                                                                                                                      |
-| `x-hcx-ben-abha-id`    | no       | The beneficiary's ABHA number. Optional: send it when the beneficiary has an ABHA number. Optional on the envelope.                                                                                                                                                      |
+| `Accept`      | yes      | Always `application/json` on the payer service.                    |
 
 ## ABHA biometric authentication
 
-**bearerAuth**, `http` `bearer`. On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
+**bearerAuth**, `http` `bearer`. The biometric calls go to the ABDM gateway, not to NHCX, so they carry the ABDM session token on `Authorization` as `Bearer <token>`. NHCX's own calls use `bearer_auth` instead.
 
 | Header       | Required | What it is                                                                                                                                                                                                                                                                                                 |
 | ------------ | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -220,3 +115,11 @@ Generated from the specifications. Every scheme and header below is declared in 
 | `R-token`    | yes      | Sent on this call, as the package's request carries it.                                                                                                                                                                                                                                                    |
 | `REQUEST-ID` | yes      | `REQUEST-ID` is a fresh UUID that you generate for every call. Sending the same one twice is the mistake to avoid; generate it, do not copy it from an example.                                                                                                                                            |
 | `TIMESTAMP`  | yes      | `TIMESTAMP` is the current time in UTC, ISO 8601 with milliseconds and a trailing `Z`, as in `2026-09-04T06:15:51.975Z`. A clock that has drifted will be refused, so take the time from the system rather than constructing it by hand. How to produce it in each language is at the end of this chapter. |
+
+## Other
+
+**bearerAuth**, `apiKey`. Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
+
+| Header        | Required | What it is                                                         |
+| ------------- | -------- | ------------------------------------------------------------------ |
+| `bearer_auth` | yes      | It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints. |

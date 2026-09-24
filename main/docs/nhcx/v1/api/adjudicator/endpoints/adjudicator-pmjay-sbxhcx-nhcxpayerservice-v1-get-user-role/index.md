@@ -1,4 +1,4 @@
-# Submit the adjudicator: role for a case
+# Adjudicator: get the user role for a case
 
 `POST /pmjay/sbxhcx/nhcxpayerservice/v1/get/user-role`
 
@@ -10,7 +10,7 @@ A PMJAY case is not decided over NHCX. The exchange carries the submission to th
 
 ### When to use
 
-Call it before every `Adjudicator: act on a case`, and whenever a PMJAY case has gone quiet. The case moves on its own, so read the role each time.
+It is mandatory before any claim action. Call it before every `Adjudicator: act on a case`, and whenever a PMJAY case has gone quiet. The case moves on its own, so read the role each time.
 
 ### Preconditions
 
@@ -45,8 +45,8 @@ Chapter [PMJAY adjudication APIs](/docs/nhcx/v1/roles/provider/pmjay-adjudicatio
 ```bash
 curl --request POST \
   --url https://apisbx.abdm.gov.in/pmjay/sbxhcx/nhcxpayerservice/v1/get/user-role \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'bearer_auth: Bearer <access token>' \
+  --header 'Accept: application/json' \
   --header 'Content-Type: application/json' \
   --data '{
   "caseid": "<case number>",
@@ -56,22 +56,24 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
+- `bearer_auth` (apiKey, required): Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
 
 ## Headers
 
-- `bearer_auth` (string, required): It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.
+- `Accept` (string, required): Always `application/json` on the payer service.
 
 ## Body
 
-- `caseid` (string)
-- `payerid` (string)
+- `caseid` (string, required): The scheme's case ID, such as `2026072210000472`. Not the hospital's claim number.
+- `payerid` (string, required): The scheme payer's registry code without the `@hcx` suffix, such as `1518`.
 
 ## Responses
 
 - `200`: The service answers with the role that holds the case in `currentuserrole`, and `errormessage` empty.
+  - `currentuserrole` (string)
+  - `errormessage` (object)
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

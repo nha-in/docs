@@ -1,10 +1,10 @@
-# Submit the adjudicator: act on a case
+# Adjudicator: act on a case
 
 `POST /pmjay/hcx/nhcxpayerservice/wrapper/process/case`
 
-Approves, rejects, queries or forwards a PMJAY case in the State Health Agency's Transaction Management System, as the role that currently holds it.
+Approves, rejects, queries, forwards or pends a PMJAY case in the State Health Agency's Transaction Management System, as the role that currently holds it.
 
-In the sandbox this call is reached on `https://apisbeta.NHA.gov.in`, a different host from the role lookup, which sits on `https://apisbx.ABDM.gov.in`. That is the only published address for it. No production host is published for this call, so obtain it at onboarding and keep it configurable rather than deriving it from the sandbox one.
+In the sandbox this call is reached on `https://apisbeta.nha.gov.in`, a different host from the role lookup, which sits on `https://apisbx.abdm.gov.in`. That is the only published address for it. No production host is published for this call, so obtain it at onboarding and keep it configurable rather than deriving it from the sandbox one.
 
 ### Business purpose
 
@@ -12,7 +12,19 @@ This is the action half of the NHCX Payer Service. A PMJAY case sits at `request
 
 ### When to use
 
-Call it after `Adjudicator: role for a case` names the role that holds the case. Each role accepts its own action names, and `usecase` must match the role.
+Call it after `Adjudicator: get the user role for a case` names the role that holds the case. Each role accepts its own action names, and `usecase` must match the role.
+
+### Roles and actions
+
+| Step | Role | Actions | `usecase` |
+| --- | --- | --- | --- |
+| Pre-authorisation | `PPD-Trust` | `Approve`, `Reject`, `Query` | `PREAUTH` |
+| Claim 1 | `CEX-Trust` | `Forward` | `CLAIM` |
+| Claim 2 | `CPD-Trust` | `cpdApprove`, `cpdReject`, `Pending` | `CLAIM` |
+| Claim 3 | Medical Audit Committee | `Approve`, `Reject`, `iQuery` | `Medical Audit Committee` |
+| Claim 4 | `ACO-Trust` | `Approve`, `Reject`, `Pending` | `CLAIM` |
+| Claim 5 | `SHA-Trust` | `Approve`, `Reject`, `Pending` | `CLAIM` |
+| Claim 6 | Claim Review Committee | `Approve`, `Reject`, `Pending` | `Claim Review Committee` |
 
 ### Preconditions
 
@@ -28,6 +40,7 @@ The scheme's decision reaches you over NHCX as a normal `ClaimResponse` on the o
 ### Common mistakes
 
 - Sending `Approve` to `CPD-Trust`, which takes `cpdApprove`.
+- Sending `Query` to the Medical Audit Committee, which takes `iQuery`.
 - Sending `CLAIM` as `usecase` at a committee, which takes its full name.
 - Reusing a correlation ID across calls.
 - Raising a second request on a case while the first is still queued.
@@ -50,8 +63,8 @@ Chapter [PMJAY adjudication APIs](/docs/nhcx/v1/roles/provider/pmjay-adjudicatio
 ```bash
 curl --request POST \
   --url https://apisbeta.nha.gov.in/pmjay/hcx/nhcxpayerservice/wrapper/process/case \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'bearer_auth: Bearer <access token>' \
+  --header 'Accept: application/json' \
   --header 'Content-Type: application/json' \
   --data '{
   "casenumber": "<case number>",
@@ -67,28 +80,30 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
+- `bearer_auth` (apiKey, required): Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
 
 ## Headers
 
-- `bearer_auth` (string, required): It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.
+- `Accept` (string, required): Always `application/json` on the payer service.
 
 ## Body
 
-- `casenumber` (string)
-- `action` (string)
-- `receivercode` (string)
-- `usecase` (string)
-- `correlationid` (string)
-- `sendercode` (string)
-- `memberid` (string)
-- `remarks` (string)
+- `casenumber` (string, required): The scheme's case ID, the same one sent to the role lookup as `caseid`.
+- `action` (string, required): The action, spelled exactly as the current role takes it in the table above. Case-sensitive. One of: Approve, Reject, Query, Forward, Pending, cpdApprove, cpdReject, iQuery.
+- `receivercode` (string, required): The payer's registry code without the `@hcx` suffix, such as `1518`.
+- `usecase` (string, required): `PREAUTH` for a pre-authorisation, `CLAIM` for the claim roles, and the committee's full name at the two committees. One of: PREAUTH, CLAIM, Medical Audit Committee, Claim Review Committee.
+- `correlationid` (string, required): A new UUID for every request.
+- `sendercode` (string, required): Your participant code without the `@hcx` suffix.
+- `memberid` (string, required): The beneficiary's member ID.
+- `remarks` (string, required): Free text the desk records with the action.
 
 ## Responses
 
 - `200`: Acting on the case makes the scheme issue its verdict, which reaches the provider over NHCX as an ordinary `ClaimResponse` on the original request's correlation ID.
+  - `status` (string)
+  - `message` (string)
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

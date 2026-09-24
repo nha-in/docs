@@ -74,10 +74,38 @@ curl --request POST \
 ## Responses
 
 - `200`: OK
+  - `txnId` (string)
+  - `message` (string)
+  - `phrDetails` (object)
+  - `phrDetails.firstName` (string)
+  - `phrDetails.middleName` (string)
+  - `phrDetails.lastName` (string)
+  - `phrDetails.fullName` (string)
+  - `phrDetails.dayOfBirth` (string)
+  - `phrDetails.monthOfBirth` (string)
+  - `phrDetails.yearOfBirth` (string)
+  - `phrDetails.dateOfBirth` (string)
+  - `phrDetails.gender` (string)
+  - `phrDetails.email` (string)
+  - `phrDetails.mobile` (string)
+  - `phrDetails.address` (string)
+  - `phrDetails.stateName` (string)
+  - `phrDetails.districtName` (string)
+  - `phrDetails.pinCode` (string)
+  - `phrDetails.abhaAddress` (string[])
+  - `phrDetails.stateCode` (string)
+  - `phrDetails.districtCode` (string)
+  - `tokens` (object)
+  - `tokens.token` (string)
+  - `tokens.expiresIn` (integer)
+  - `tokens.refreshToken` (string)
+  - `tokens.refreshExpiresIn` (integer)
 - `400`: Bad Request
   See Error codes for this module: /docs/hiecm/v3/api/p1/errors
+  - `code` (string)
+  - `message` (string)
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

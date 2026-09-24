@@ -4,6 +4,7 @@
 
 ## Pages
 
+- ['Scan and Pay'](https://nha-in.github.io/docs/main/docs/hiecm/v3/api/scan-and-pay): Scan and Pay base URLs and the operations grouped by use case.
 - [Share patient open order](https://nha-in.github.io/docs/main/docs/hiecm/v3/api/scan-and-pay/endpoints/scan-and-pay-abdm-hiecm-scan-pay-phr/01-scan-and-pay-post-scan-gateway-v3-patient-share-open-order): This is an API will be invoked from the integrator application to share the user/patient profile with HMIS/LIMS.
 - [Receive the patient on-share](https://nha-in.github.io/docs/main/docs/hiecm/v3/api/scan-and-pay/endpoints/scan-and-pay-abdm-hiecm-scan-pay-phr/02-scan-and-pay-post-v3-patient-on-share-open-order): Hosted by the HIP/HIU, not by ABDM. ABDM calls this endpoint at the callback URL registered for your bridge, so the path below is relative to that URL. This...
 - [Select the all open-order and send to HIP for a payment request detail](https://nha-in.github.io/docs/main/docs/hiecm/v3/api/scan-and-pay/endpoints/scan-and-pay-abdm-hiecm-scan-pay-phr/03-scan-and-pay-post-scan-gateway-v3-patient-selection): Select the all open-order and send to HIP for a payment request detail. In this user can select the multiple procedures.

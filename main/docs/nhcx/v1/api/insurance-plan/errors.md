@@ -4,19 +4,19 @@ A Insurance plan code arrives sealed inside the callback, not in the response to
 
 ## Codes
 
-| Code        | What it means                                                          |
-| ----------- | ---------------------------------------------------------------------- |
-| `PAYR-1035` | The policy code is invalid                                             |
-| `PAYR-1401` | The policy is not allowed for your hospital                            |
-| `PAYR-1402` | The payer has no policy with the code you requested                    |
-| `PAYR-1403` | The renewal does not belong to the requested policy                    |
-| `PAYR-1404` | No treatment is configured for the policy under any speciality         |
-| `PAYR-1405` | The payer has no enrolled hospital for your HFR id or sender code      |
-| `PAYR-1406` | An earlier insurance plan request for the same policy is still running |
-| `PAYR-1510` | A parameter code in your request is not valid                          |
-| `PAYR-1511` | A parameter value in your request is not valid                         |
-| `PAYR-1518` | Your Task resource carries no input parameters                         |
-| `PAYR-1519` | A Task input parameter has no type                                     |
+| Code                                                                              | What it means                                                          |
+| --------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| [`PAYR-1035`](/docs/main/docs/nhcx/v1/reference/pmjay-error-codes?code=PAYR-1035) | The policy code is invalid                                             |
+| [`PAYR-1401`](/docs/main/docs/nhcx/v1/reference/pmjay-error-codes?code=PAYR-1401) | The policy is not allowed for your hospital                            |
+| [`PAYR-1402`](/docs/main/docs/nhcx/v1/reference/pmjay-error-codes?code=PAYR-1402) | The payer has no policy with the code you requested                    |
+| [`PAYR-1403`](/docs/main/docs/nhcx/v1/reference/pmjay-error-codes?code=PAYR-1403) | The renewal does not belong to the requested policy                    |
+| [`PAYR-1404`](/docs/main/docs/nhcx/v1/reference/pmjay-error-codes?code=PAYR-1404) | No treatment is configured for the policy under any speciality         |
+| [`PAYR-1405`](/docs/main/docs/nhcx/v1/reference/pmjay-error-codes?code=PAYR-1405) | The payer has no enrolled hospital for your HFR id or sender code      |
+| [`PAYR-1406`](/docs/main/docs/nhcx/v1/reference/pmjay-error-codes?code=PAYR-1406) | An earlier insurance plan request for the same policy is still running |
+| [`PAYR-1510`](/docs/main/docs/nhcx/v1/reference/pmjay-error-codes?code=PAYR-1510) | A parameter code in your request is not valid                          |
+| [`PAYR-1511`](/docs/main/docs/nhcx/v1/reference/pmjay-error-codes?code=PAYR-1511) | A parameter value in your request is not valid                         |
+| [`PAYR-1518`](/docs/main/docs/nhcx/v1/reference/pmjay-error-codes?code=PAYR-1518) | Your Task resource carries no input parameters                         |
+| [`PAYR-1519`](/docs/main/docs/nhcx/v1/reference/pmjay-error-codes?code=PAYR-1519) | A Task input parameter has no type                                     |
 
 Every code above is recorded in the Catalogue. The aggregated list across modules is at [error codes](/docs/main/docs/nhcx/v1/reference/pmjay-error-codes).
 

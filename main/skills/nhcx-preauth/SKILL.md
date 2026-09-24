@@ -9,7 +9,7 @@ Copied from github.com/nha-in/nhcx-skills on 21 September 2026, over commit `7f5
 
 This folder is a snapshot. Re-download the whole folder from the portal's /skills/nhcx-preauth/ path when it is older than the work you are doing: this router and every file under `apis/`, `callbacks/`, `database/`, `fhir/`, `gateway/`, `references/`, `screens/` and `steps/`. Fetching this file alone leaves its pointers aimed at files you do not have.
 
-If the nhcx-docs MCP server is connected, trust its answers over this folder. It serves the Catalogue live, which holds 543 NHCX atoms, and this folder cites none of them.
+If the nhcx-docs MCP server is connected, trust its answers over this folder. It serves the Catalogue live, which holds 536 NHCX atoms, and this folder cites none of them.
 
 What the claims here rest on. The protocol comes from the knowledge source the skill records at its first step: the nhcx-docs MCP server, or a release of the NHCX package checked against its `MANIFEST`. What was seen only on the NHCX sandbox is marked [SANDBOX], and what depends on the payer is marked [PAYER]. None of it is re-verified in this repository: `catalogue/verification/` holds 65 sandbox records and not one of them is NHCX.
 <!-- /provenance -->

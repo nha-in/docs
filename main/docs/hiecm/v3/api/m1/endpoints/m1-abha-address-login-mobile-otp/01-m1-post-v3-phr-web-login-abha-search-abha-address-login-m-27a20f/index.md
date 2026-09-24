@@ -35,16 +35,31 @@ curl --request POST \
 ## Responses
 
 - `200`: The 200 response code indicates a successful request. In this context, it refers to the successful retrieve of user details based on the ABHA address
+  - `healthIdNumber` (string)
+  - `abhaAddress` (string)
+  - `authMethods` (string[])
+  - `blockedAuthMethods` (string[])
+  - `status` (string)
+  - `message` (string)
+  - `fullName` (string)
+  - `mobile` (string)
 - `400`: The 400 response code signifies a bad request. In this context, it means that no user was found for the provided ABHA address.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+  - `code` (string)
+  - `message` (string)
 - `401`: A 401 Unauthorized error occurs when a server receives a request without valid authentication credentials or with incorrect credentials. This error indicates that the server cannot authenticate the user,
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `code` (string)
+  - `message` (string)
+  - `description` (string)
 - `404`: A 404 Not Found error occurs when a server cannot find the requested resource. This error indicates that the server is reachable, but the specific page or resource is not available
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+  - `code` (string)
+  - `message` (string)
 - `500`: **Internal Server Error** An Internal Server Error (500) indicates that the server encountered an unexpected condition that prevented it from fulfilling the request.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

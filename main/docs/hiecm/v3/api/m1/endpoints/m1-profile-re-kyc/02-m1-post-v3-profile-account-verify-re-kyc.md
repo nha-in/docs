@@ -25,9 +25,9 @@ Verifies the Aadhaar OTP sent by *Re-KYC - send Aadhaar OTP* and refreshes the A
 | `scope` | `["ABHA-profile", "re-KYC"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
 | `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
-| `authData.OTP` | object | yes | OTP authentication block. |
-| `authData.OTP.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
-| `authData.OTP.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
+| `authData.otp` | object | yes | OTP authentication block. |
+| `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
+| `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
 
 ```bash
 curl --request POST \
@@ -76,16 +76,28 @@ curl --request POST \
 ## Responses
 
 - `200`: Success: Re-KYC- Positive Flow
+  - `txnId` (string)
+  - `authResult` (string)
+  - `message` (string)
+  - `accounts` (object[])
+  - `accounts.ABHANumber` (string)
 - `400`: Bad Request (request validation failed): Re-KYC- Invalid Transaction Id; Re-KYC- Invalid Scope; ReKyc- Invalid Auth Method; Re-KYC- Invalid X-token; Re-Kyc- Invalid OTP Value
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+  - `Invalid Scope` (string)
+  - `timestamp` (string)
 - `401`: Unauthorized (invalid / expired gateway token, X-token or benefit access): ReKyc- Invalid access token; ReKYC- X-token expired
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `code` (string)
+  - `message` (string)
+  - `description` (string)
 - `422`: Unprocessable Entity (business rule or UIDAI failure): Re-KYC-INVALID OTP
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+  - `message` (string)
+  - `timestamp` (string)
 - `500`: Internal Server Error.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

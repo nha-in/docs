@@ -1,4 +1,4 @@
-# Submit the coverage eligibility check
+# Provider: check coverage eligibility
 
 `POST /v1/coverageeligibility/check`
 
@@ -10,7 +10,15 @@ Coverage eligibility is the pre-check a hospital desk runs before committing a p
 
 ### When to use
 
-Call it at registration or admission, before you submit a pre-authorisation. The `purpose` field says what you want back, such as whether the policy is active or whether a procedure needs approval.
+- Call it at registration or admission, before you submit a pre-authorisation on `/v1/preauth/submit`.
+- Set `purpose` to say what you want back. It takes one or more values:
+ - `discovery` finds the beneficiary's policies. Use it only when `/participant/get/policies` gives no policy code.
+ - `validation` says whether the policy is in force, with the used amount, available balance and wallet liability.
+ - `benefits` says whether a package is covered for this beneficiary.
+ - `auth-requirements` says whether a chosen procedure is covered at this hospital, and returns the STG questionnaires and `MAND` document codes the pre-authorisation must carry.
+- Send `x-hcx-status` `request.initiated`.
+- No workflow code is specific to eligibility. The sample exchange uses `x-hcx-workflow_ID` `11` (PATIENT_ADMITTED).
+- Under PMJAY, run an `auth-requirements` check even for an unspecified procedure.
 
 ### Preconditions
 
@@ -51,17 +59,7 @@ Chapter [Coverage eligibility request](/docs/nhcx/v1/reference/fhir/coverage-eli
 ```bash
 curl --request POST \
   --url https://apisbx.abdm.gov.in/hcx/v1/coverageeligibility/check \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'bearer_auth: Bearer <access token>' \
-  --header 'x-hcx-sender_code: 1000004446@hcx' \
-  --header 'x-hcx-recipient_code: 1518@hcx' \
-  --header 'x-hcx-api_call_id: <uuid>' \
-  --header 'x-hcx-request_id: <uuid>' \
-  --header 'x-hcx-correlation_id: <uuid>' \
-  --header 'x-hcx-workflow_id: 11' \
-  --header 'x-hcx-timestamp: <iso timestamp>' \
-  --header 'x-hcx-status: request.initiated' \
-  --header 'x-hcx-ben-abha-id: 91711234567890' \
   --header 'Content-Type: application/json' \
   --data '{
   "payload": "eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2R0NNIiwieC1oY3gtc2VuZGVyX2NvZGUiOi4uLn0.encrypted_key.iv.ciphertext.tag"
@@ -70,19 +68,22 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
+- `bearer_auth` (apiKey, required): Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
 
-## Headers
+## Protected header
 
-- `bearer_auth` (string, required): It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.
+These fields go in the JWE protected header of `payload`, not as HTTP headers.
+
+- `alg` (string, required): Key management algorithm. Always `RSA-OAEP-256`: the content key is wrapped with the recipient's RSA public key.
+- `enc` (string, required): Content encryption algorithm. Always `A256GCM`.
 - `x-hcx-sender_code` (string, required): Your participant code. Mandatory on the envelope.
 - `x-hcx-recipient_code` (string, required): The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
 - `x-hcx-api_call_id` (string, required): Fresh on every message, including responses. Mandatory on the envelope.
 - `x-hcx-request_id` (string): One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope. Send it anyway, as a fresh UUID per originating request: it is cheap and satisfies both readings until NHA rules.
-- `x-hcx-correlation_id` (string, required): The thread. See the rule below. Mandatory on the envelope.
-- `x-hcx-workflow_id` (string): Which step, or which case. See the two readings below. Optional on the envelope.
-- `x-hcx-timestamp` (string, required): See the format note below. Mandatory on the envelope.
-- `x-hcx-status` (string, required): Where this message stands. Values below. Mandatory on the envelope.
+- `x-hcx-correlation_id` (string, required): The thread that ties a request to its answers. [The correlation ID rule](/docs/nhcx/v1/reference/envelope-fields#the-correlation-id-rule-in-full) says when to reuse it. Mandatory on the envelope.
+- `x-hcx-workflow_id` (string): Which step, or which case. [The workflow code](/docs/nhcx/v1/reference/envelope-fields#the-workflow-code-means-two-different-things) explains both readings. Optional on the envelope.
+- `x-hcx-timestamp` (string, required): The time the message was made. [Timestamp](/docs/nhcx/v1/reference/envelope-fields#timestamp) gives the format. Mandatory on the envelope.
+- `x-hcx-status` (string, required): Where this message stands. [Status words](/docs/nhcx/v1/reference/envelope-fields#status-words) lists the values. Mandatory on the envelope.
 - `x-hcx-ben-abha-id` (string): The beneficiary's ABHA number. Optional: send it when the beneficiary has an ABHA number. Optional on the envelope.
 
 ## Body
@@ -92,8 +93,19 @@ curl --request POST \
 ## Responses
 
 - `202`: NHCX replies synchronously with HTTP 202 Accepted and a StatusSuccessResponse acknowledgement (timestamp, api_call_id, correlation_id, result with sender_code, recipient_code, entity_type coverageeligibility and protocol_status such as request.queued or request.dispatched, plus an empty error object).
+  - `timestamp` (string)
+  - `api_call_id` (string)
+  - `correlation_id` (string)
+  - `result` (object)
+  - `result.sender_code` (string)
+  - `result.recipient_code` (string)
+  - `result.entity_type` (string)
+  - `result.protocol_status` (string)
+  - `error` (object)
+  - `error.code` (string)
+  - `error.message` (string)
 
-Shape of the 202 response, generated from the schema. The values are placeholders, not a captured response:
+Example 202 response. The values are placeholders:
 
 ```json
 {
@@ -101,8 +113,8 @@ Shape of the 202 response, generated from the schema. The values are placeholder
   "api_call_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
   "correlation_id": "11223344-5566-7788-99aa-bbccddeeff00",
   "result": {
-    "sender_code": "1000004446@hcx",
-    "recipient_code": "1518@hcx",
+    "sender_code": "<provider participant code>",
+    "recipient_code": "<payer participant code>",
     "entity_type": "coverageeligibility",
     "protocol_status": "request.queued"
   },

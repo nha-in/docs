@@ -7,7 +7,6 @@ A use case covers each stage of the claims lifecycle: onboarding providers and p
 - **Onboarding Providers and Payers**: Onboard participants onto NHCX to validate and route requests to target applications.
 - **Check Coverage Eligibility**: Called by providers to verify beneficiary coverage, policy validity, sum insured, sub-limits, and document requirements.
 - **Preauth Request Submission**: Submitted by providers before admission or planned surgery. Payers respond with a line-item decision.
-- **Predetermination Request**: Inquires expected coverage and deductible calculations for planned procedures without reserving policy balance.
 - **Claim Request Submission**: Submitted by providers upon discharge with final bill, discharge summary, and itemised claims.
 - **Communication Request**: Enables payers to query providers for additional documents, flag turnaround-time breaches, or issue policy updates.
 - **Payment Notice & Reconciliation**: Payers notify providers of bank transfers, detailing claimed, approved, TDS, and settled amounts.
@@ -18,7 +17,7 @@ A use case covers each stage of the claims lifecycle: onboarding providers and p
 
 ## Master Use Cases Matrix
 
-All 40 use cases by role. Open one to see what it does in plain words, its full detail, the API it calls and where the answer comes back.
+All 38 use cases by role. Open one to see what it does in plain words, its full detail, the API it calls and where the answer comes back.
 
 ### Shared
 
@@ -41,13 +40,13 @@ CallbackNone
 
 A2Get policy
 
-Finds the insurance policies a patient holds, using their mobile number or ABHA number. Each policy names the insurer and the company that processes its claims. Claims are always sent to that processing company.
+Finds the insurance policies a patient holds, using their ABHA number, member ID or mobile number. Each policy names the insurer and the company that processes its claims. Claims are always sent to that processing company.
 
-The policies a beneficiary holds, by mobile number or ABHA. Each names the insurer and the processor, and the processor is the recipient for every claim-side call.
+The policies a beneficiary holds, by ABHA number, member ID or mobile number. Each names the insurer and the processor, and the processor is the recipient for every claim-side call.
 
 **What information goes in and out**
 
-- **You send:** the patient's mobile number or ABHA number.
+- **You send:** the patient's ABHA number, member ID or mobile number, as `identifiertype` (`AbhaNumber`, `MemberId` or `MobileNo`) and `identifiervalue`.
 - **You get back:** each policy number, with the insurer and the claims processor for that policy.
 
 API call[`/participant/get/policies`API reference](/docs/main/docs/nhcx/v1/api/registry/endpoints/registry-participant-get-policies)
@@ -73,7 +72,7 @@ A4Get auth token
 
 Gets the pass that every call to the exchange must carry. It is issued with the same client ID and secret used for ABDM.
 
-The ABDM session token every NHCX call carries, minted with the Milestone 1 client id and secret.
+The ABDM session token every NHCX call carries, minted with your ABDM sandbox client ID and secret.
 
 **What information goes in and out**
 
@@ -88,7 +87,7 @@ A5Get status
 
 Asks where an earlier request has got to. Useful when an answer is slow to arrive.
 
-- **FHIR Reference:** [Predetermination, Status and Search, A5](/docs/main/docs/nhcx/v1/reference/fhir/predetermination-status-and-search#a5-get-status-shared)
+- **FHIR Reference:** [Status and Search, A5](/docs/main/docs/nhcx/v1/reference/fhir/status-and-search#a5-get-status-shared)
 
 Where any request you made got to, by its correlation id. The sandbox's own status page answers without a token.
 
@@ -182,7 +181,7 @@ B6Search claims
 
 Looks up claims that match some criteria. The published sources do not agree on which address a hospital uses to search its own claims, so confirm it before building.
 
-- **FHIR Reference:** [Predetermination, Status and Search, B6](/docs/main/docs/nhcx/v1/reference/fhir/predetermination-status-and-search#b6-search-claims-provider)
+- **FHIR Reference:** [Status and Search, B6](/docs/main/docs/nhcx/v1/reference/fhir/status-and-search#b6-search-claims-provider)
 
 Look up claim information by criteria. The provider sandbox exit checklist names /v1/search/submit for claim search, while the Technical Specifications route /search/submit from NHA through NHCX to the payer: a cross-payer search for NHA or a regulator. A provider's search over its own cases is /claim/search in the protocol, which the access-control policy allows for requests that originated from the provider. No source confirms which of the two the sandbox accepts from a provider.
 
@@ -215,18 +214,6 @@ One endpoint, several jobs, told apart by the Task's code and reason: reprocess 
 API call[`/v1/task/submit`API reference](/docs/main/docs/nhcx/v1/api/task/endpoints/task-v1-task-submit)
 
 Callback[`/v1/task/on_submit`API reference](/docs/main/docs/nhcx/v1/api/task/endpoints/task-webhook-v1-task-on-submit)
-
-B9Submit predetermination
-
-Asks what the insurer would approve for a planned treatment, before committing to it. Nothing is reserved from the policy.
-
-- **FHIR Reference:** [Predetermination, Status and Search, B9](/docs/main/docs/nhcx/v1/reference/fhir/predetermination-status-and-search#b9-submit-predetermination-provider)
-
-What would the payer approve for this treatment? Same bundle shape as a pre-authorisation, asked before committing to one.
-
-API call[`/v1/predetermination/submit`API reference](/docs/main/docs/nhcx/v1/api/predetermination/endpoints/predetermination-v1-predetermination-submit)
-
-Callback[`/v1/predetermination/on_submit`API reference](/docs/main/docs/nhcx/v1/api/predetermination/endpoints/predetermination-webhook-v1-predetermination-on-submit)
 
 ### PMJAY
 
@@ -514,7 +501,7 @@ C8Respond to search
 
 Returns the claims that match a search.
 
-- **FHIR Reference:** [Predetermination, Status and Search, C8](/docs/main/docs/nhcx/v1/reference/fhir/predetermination-status-and-search#c8-respond-to-search-payer)
+- **FHIR Reference:** [Status and Search, C8](/docs/main/docs/nhcx/v1/reference/fhir/status-and-search#c8-respond-to-search-payer)
 
 The ClaimResponse objects matching the criteria asked for.
 
@@ -547,18 +534,6 @@ The answer to a reprocess, shortfall or cancel. A cancellation done is PC02 and 
 API call[`/v1/task/on_submit`API reference](/docs/main/docs/nhcx/v1/api/task/endpoints/task-v1-task-on-submit)
 
 Callback[`/v1/task/submit`API reference](/docs/main/docs/nhcx/v1/api/task/endpoints/task-webhook-v1-task-submit)
-
-C11Respond to predetermination
-
-Tells the hospital what would be approved for a planned treatment.
-
-- **FHIR Reference:** [Predetermination, Status and Search, C11](/docs/main/docs/nhcx/v1/reference/fhir/predetermination-status-and-search#c11-respond-to-predetermination-payer)
-
-What the payer would approve for the proposed treatment.
-
-API call[`/v1/predetermination/on_submit`API reference](/docs/main/docs/nhcx/v1/api/predetermination/endpoints/predetermination-v1-predetermination-on-submit)
-
-Callback[`/v1/predetermination/submit`API reference](/docs/main/docs/nhcx/v1/api/predetermination/endpoints/predetermination-webhook-v1-predetermination-submit)
 
 ### Patient app
 

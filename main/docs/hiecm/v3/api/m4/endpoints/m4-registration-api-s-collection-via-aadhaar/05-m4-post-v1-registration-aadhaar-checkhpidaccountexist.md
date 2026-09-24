@@ -24,9 +24,34 @@ curl --request POST \
 ## Responses
 
 - `200`: OK
+  - `token` (string)
+  - `hprIdNumber` (string)
+  - `categoryId` (integer)
+  - `categoryName` (string)
+  - `subCategoryId` (integer)
+  - `categorySubName` (string)
+  - `txnId` (string)
+  - `name` (string)
+  - `gender` (string)
+  - `yearOfBirth` (string)
+  - `monthOfBirth` (string)
+  - `dayOfBirth` (string)
+  - `firstName` (string)
+  - `middleName` (string)
+  - `lastName` (string)
+  - `stateCode` (string)
+  - `districtCode` (string)
+  - `stateName` (string)
+  - `districtName` (string)
+  - `address` (string)
+  - `pincode` (string)
+  - `profilePhoto` (string)
+  - `mobile` (string)
+  - `hprId` (string)
+  - `new` (boolean)
 - `404`: Not Found
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

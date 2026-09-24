@@ -24,9 +24,9 @@ Verifies the ABHA (mobile) OTP for ABHA-number login. Returns the user X-token (
 | `scope` | `["ABHA-login", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
 | `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
-| `authData.OTP` | object | yes | OTP authentication block. |
-| `authData.OTP.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
-| `authData.OTP.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
+| `authData.otp` | object | yes | OTP authentication block. |
+| `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
+| `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
 
 ```bash
 curl --request POST \
@@ -73,16 +73,34 @@ curl --request POST \
 ## Responses
 
 - `200`: Success: Verify Login Via ABHA Number - Using ABHA OTP
+  - `authResult` (string)
+  - `message` (string)
+  - `token` (string)
+  - `expiresIn` (integer)
+  - `refreshToken` (string)
+  - `refreshExpiresIn` (integer)
+  - `accounts` (object[])
+  - `accounts.ABHANumber` (string)
+  - `accounts.preferredAbhaAddress` (string)
+  - `accounts.name` (string)
+  - `accounts.status` (string)
+  - `accounts.profilePhoto` (string)
 - `400`: Bad Request (request validation failed): Verify Login via ABHA Number using ABHA OTP - Invalid OTP Value
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
 - `401`: Unauthorized (invalid / expired gateway token, X-token or benefit access): Invalid Credentials (generic)
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
+  - `code` (string)
+  - `description` (string)
+  - `message` (string)
 - `404`: Not Found: User Not Found; Resource Not Found
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
+  - `error` (object)
+  - `error.code` (string)
+  - `error.message` (string)
 - `500`: Internal Server Error.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

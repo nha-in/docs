@@ -78,8 +78,12 @@ curl --request POST \
 ## Responses
 
 - `200`: Returns the `txnId` that `Biometric auth verify` quotes, with a message saying the authentication request was sent.
+  - `txnId` (string)
+  - `authMode` (object)
+  - `message` (string)
+  - `status` (object)
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {

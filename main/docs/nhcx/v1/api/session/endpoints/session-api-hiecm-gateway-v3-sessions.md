@@ -2,7 +2,7 @@
 
 `POST /api/hiecm/gateway/v3/sessions`
 
-Mints the ABDM gateway session token that every NHCX call carries, from the client ID and secret issued for Milestone 1.
+Mints the ABDM gateway session token that every NHCX call carries, from the client ID and secret you received when you registered on the ABDM sandbox (`ABDM_CLIENT_ID` and `ABDM_CLIENT_SECRET`).
 
 ### Business purpose
 
@@ -14,14 +14,14 @@ Call it before your first NHCX call. Call it again when your token is more than 
 
 ### Preconditions
 
-- You have finished Milestone 1 and hold its client ID and secret.
+- You hold the client ID and secret you received when you registered on the ABDM sandbox (`ABDM_CLIENT_ID` and `ABDM_CLIENT_SECRET`).
 - `REQUEST-ID` is a new UUID and `TIMESTAMP` is the current UTC time from a synced clock.
 - `X-CM-ID` is `sbx` on the sandbox.
 - The body sets `grantType` to `client_credentials`.
 
 ### Postconditions
 
-The gateway returns an access token in `accessToken`. Send it on every NHCX call as `Bearer <token>`, in both `bearer_auth` and `Authorization`. The token lasts 1200 seconds (20 minutes), stated in `expiresIn`.
+The gateway returns an access token in `accessToken`. Send it on every NHCX call in the `bearer_auth` header, as `Bearer <token>`. The token lasts 1200 seconds (20 minutes), stated in `expiresIn`.
 
 ### Common mistakes
 
@@ -34,7 +34,7 @@ The gateway returns an access token in `accessToken`. Send it on every NHCX call
 
 - Keep the token together with the time you got it, and fetch a new one before a call if it is more than about 18 minutes old, ahead of the 20-minute expiry.
 - On any `401`, get a new token and retry that call once.
-- Send the token on both `bearer_auth` and `Authorization`.
+- Send the token in `bearer_auth` on every NHCX call.
 - Keep the clock synchronised with NTP and let a date library format the timestamp.
 
 ### Related scenario
@@ -74,8 +74,13 @@ curl --request POST \
 ## Responses
 
 - `200`: The gateway returns `accessToken`, `expiresIn` `1200` (20 minutes), `refreshToken` and `tokenType` `bearer`.
+  - `accessToken` (string)
+  - `expiresIn` (integer)
+  - `refreshTokenIn` (integer)
+  - `refreshToken` (string)
+  - `tokenType` (string)
 
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+Example 200 response. The values are placeholders:
 
 ```json
 {
