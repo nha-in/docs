@@ -146,7 +146,11 @@ mkdirSync(outDir, {recursive: true});
 
 const journeys = loadJourneys();
 const modules = [...new Set(calls.map((op) => op.moduleId))].sort();
-const manifest = {environment: 'hiecm-sandbox.postman_environment.json', modules: {}};
+const manifest = {
+  environment: 'hiecm-sandbox.postman_environment.json',
+  ...(published.workspace && {workspace: published.workspace}),
+  modules: {},
+};
 const used = new Set();
 
 for (const module of modules) {
