@@ -1,9 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://nha-in.github.io/docs/pr-46/sitemap.xml
-
-# Documentation for language models:
-#   https://nha-in.github.io/docs/pr-46/llms.txt        an index of the site
-#   https://nha-in.github.io/docs/pr-46/llms-full.txt   every page in one document
-# Adding .md to any documentation URL returns that page as markdown.
