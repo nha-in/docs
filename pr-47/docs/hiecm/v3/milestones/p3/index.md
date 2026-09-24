@@ -1,0 +1,54 @@
+# P3 Consent and notifications
+
+P3 is the other side of [M3 Health Information User](/docs/pr-47/docs/hiecm/v3/milestones/m3). M3 is a requester asking for records. P3 is the patient deciding, and being told each time.
+
+A citizen fetching records is the [HIU](/docs/pr-47/docs/hiecm/v3/getting-started/glossary#hiu), so every [PHR](/docs/pr-47/docs/hiecm/v3/getting-started/glossary#phr) application must implement that side.
+
+## In short
+
+- Build for revocation from the start. A consent that worked yesterday can be withdrawn today, and that is the system working correctly.
+- A subscription is how your app hears about changes to a user's ABHA address. Set one up at address creation and at first login on a new install.
+- An auto approval policy stops the user approving a request every time a hospital adds a record.
+- The user must be able to disable a policy at any time.
+
+## Subscriptions and notifications
+
+Ask the user for consent before you create a subscription. An approved subscription notifies your app when a care context is linked or updated. Surface these as device notifications.
+
+You need screens to list subscriptions, approve them, deny them and edit them. Editing covers health information types, purpose, categories and the time period.
+
+## Auto approval: subscribe once, approve every time
+
+1. Ask the user to confirm your app may retrieve new linked records automatically.
+2. Set up an auto approval policy with the [HIE-CM](/docs/pr-47/docs/hiecm/v3/getting-started/glossary#hie-cm).
+
+While the policy is active, the consent request you raise on a new or updated care context notification is granted immediately, and you fetch and store the record. Disable the policy and a request arrives for each record instead.
+
+## Consent management
+
+| Capability           | What it covers                                                       |
+| -------------------- | -------------------------------------------------------------------- |
+| View requests        | Requesting HIU, purpose, data types, date range, validity, status    |
+| Modify a request     | Access duration, record date range, data categories, validity period |
+| Grant or deny        | The decision goes back to the HIE-CM                                 |
+| View active consents | Who currently has access, and to what                                |
+| Revoke               | Withdraw at any time. Sharing under that consent stops immediately   |
+
+The Consents tab and the Subscriptions tab group state the same way: a Requests section holding Requested, Denied and Expired, and an Approved section holding Granted and Revoked.
+
+## Fetching and displaying records
+
+Once a care context is linked to the user's ABHA address:
+
+1. Your app receives the notification.
+2. It creates a consent request for that record and sends it to the HIE-CM.
+3. The consent is granted, automatically if a policy exists, otherwise by the user.
+4. It raises a health information request with the approved [consent artefact](/docs/pr-47/docs/hiecm/v3/getting-started/glossary#consent-artefact).
+5. The [HIP](/docs/pr-47/docs/hiecm/v3/getting-started/glossary#hip) sends the records across the network.
+6. Your app stores them for long term access and displays them, preferably in chronological order.
+
+## Next
+
+- The calls and base URLs: [P3 API reference](/docs/pr-47/reference/hiecm-p3).
+- Back to the four provider milestones: [Milestones](/docs/pr-47/docs/hiecm/v3/milestones).
+- Take your integration to production: [Go live](/docs/pr-47/docs/hiecm/v3/getting-started/going-live).
