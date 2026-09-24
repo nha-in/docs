@@ -161,6 +161,8 @@ jobs:
         env:
           DOCUSAURUS_URL: ${{ vars.SITE_URL || 'https://docs.abdm.gov.in' }}
       - run: npm run lint:tables
+      # The build wrote the Postman collections; this checks what it wrote.
+      - run: npm run test:postman
 
   widget:
     name: Test the support agent widget
