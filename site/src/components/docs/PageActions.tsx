@@ -27,7 +27,7 @@ const STATUS_TEXT: Record<Status, string> = {
 /** The Markdown mark: a rounded box with an M and a down arrow. */
 function MarkdownMark(): React.ReactNode {
   return (
-    <svg viewBox="0 0 208 128" width="18" height="11" aria-hidden="true" fill="none">
+    <svg viewBox="0 0 208 128" width="15" height="9" aria-hidden="true" fill="none">
       <rect
         x="5"
         y="5"
