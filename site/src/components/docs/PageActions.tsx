@@ -27,7 +27,7 @@ const STATUS_TEXT: Record<Status, string> = {
 /** The Markdown mark: a rounded box with an M and a down arrow. */
 function MarkdownMark(): React.ReactNode {
   return (
-    <svg viewBox="0 0 208 128" width="18" height="11" aria-hidden="true" fill="none">
+    <svg viewBox="0 0 208 128" width="15" height="9" aria-hidden="true" fill="none">
       <rect
         x="5"
         y="5"
@@ -52,9 +52,10 @@ function MarkdownMark(): React.ReactNode {
  * site's own assistant; Copy for LLM copies the page as Markdown; View as
  * Markdown opens it; Install AI tools opens the install pop-up (InstallToolsDialog).
  *
- * Copy and View read the `index.md` a postbuild step writes beside every
- * route (see scripts/emit-page-markdown.mjs), so neither exists in
- * `npm start`: the fetch 404s and the copy button reports "unavailable"
+ * Copy reads the `index.md` a postbuild step writes beside every route, and
+ * View opens the `<route>.md` sibling it writes too (see
+ * scripts/emit-page-markdown.mjs). Neither exists in `npm start`: the fetch
+ * 404s and the copy button reports "unavailable"
  * rather than failing silently. The URL is built from `pathname` alone, not
  * `useBaseUrl`, which would double the base URL on a non-root deployment.
  */
@@ -104,9 +105,12 @@ export default function PageActions(): React.ReactNode {
         <ClipboardList className="page-actions__icon" aria-hidden="true" />
         {COPY_TEXT[status]}
       </button>
+      {/* The raw file, as Stripe serves `/get-started.md`: no site around
+          it. The CDN sends it as text/markdown with a charset (deploy.sh),
+          so the browser shows it rather than downloading it. */}
       <a
         className="page-actions__item"
-        href={`/markdown?path=${encodeURIComponent(pathname)}`}
+        href={`${pathname.replace(/\/$/, '')}.md`}
         target="_blank"
         rel="noopener noreferrer">
         <MarkdownMark />

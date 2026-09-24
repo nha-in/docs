@@ -1,7 +1,7 @@
 import {render} from 'preact';
 import {useEffect, useRef, useState} from 'preact/hooks';
 import ChatMarkdown, {CopyButton, absolute, headings} from './markdown';
-import {ArrowUp, Paperclip, Plus, Sparkles, X} from './icons';
+import {ArrowUp, ChevronRight, FileText, Paperclip, Plus, Sparkles, X} from './icons';
 import {readStream, UNREACHABLE, type Source} from './sse';
 import {
   AGENTS,
@@ -1023,21 +1023,38 @@ function Panel({
                   className="ask-ai__turn-copy"
                 />
               )}
+            {/* One line until the reader asks for them, as Stripe's
+                assistant does: "Used 5 sources", which opens to the list.
+                A native details element, so it opens from the keyboard and
+                announces its state with no script of its own. Below the
+                answer rather than above it, because the sources land when
+                the answer ends, and a line appearing above would push the
+                text the reader is on down the panel. */}
             {turn.sources && turn.sources.length > 0 && (
-              <div class="ask-ai__sources">
-                <span class="ask-ai__sources-label">Sources</span>
-                {turn.sources.map((source) => (
-                  <a
-                    key={source.id}
-                    href={absolute(source.url, docsOrigin) ?? source.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="ask-ai__source-chip">
-                    {source.title}
-                    {source.status !== 'verified' ? ' (spec)' : ''}
-                  </a>
-                ))}
-              </div>
+              <details class="ask-ai__sources">
+                <summary class="ask-ai__sources-toggle">
+                  <ChevronRight />
+                  Used {turn.sources.length}{' '}
+                  {turn.sources.length === 1 ? 'source' : 'sources'}
+                </summary>
+                <ul class="ask-ai__source-list">
+                  {turn.sources.map((source) => (
+                    <li key={source.id}>
+                      <a
+                        href={absolute(source.url, docsOrigin) ?? source.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="ask-ai__source-link">
+                        <FileText />
+                        <span class="ask-ai__source-title">
+                          {source.title}
+                          {source.status !== 'verified' ? ' (spec)' : ''}
+                        </span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </details>
             )}
             {/* The install flow's own controls, on the newest step only.
                 An older step's chips stay on the page as a record of what
