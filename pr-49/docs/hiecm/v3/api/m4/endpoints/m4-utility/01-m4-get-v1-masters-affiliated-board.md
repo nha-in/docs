@@ -10,37 +10,32 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Responses
 
 - `200`: OK
 - `404`: Not Found
 
-Example 200 response. The values are placeholders:
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 
 ```json
 [
   {
-    "id": 1,
-    "name": "Central Board Of Secondary Education (CBSE)",
-    "status": true,
-    "visibleStatus": true,
-    "stateId": null,
-    "courseId": null,
-    "councilBoard": false,
-    "nationalBoard": true
-  },
-  {
-    "id": 2,
-    "name": "Council for the Indian School Certificate Examination (CISCE)",
-    "status": true,
-    "visibleStatus": true,
-    "stateId": null,
-    "courseId": null,
-    "councilBoard": false,
-    "nationalBoard": true
-  },
-  "... 1 more of the same shape"
+    "id": 0,
+    "name": "<NAME>",
+    "status": false,
+    "visibleStatus": false,
+    "stateId": 0,
+    "stateName": "<STATE_NAME>",
+    "courseId": 0,
+    "courseName": "<COURSE_NAME>",
+    "nationalBoard": false,
+    "councilBoard": false
+  }
 ]
 ```

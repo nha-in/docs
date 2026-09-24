@@ -1,4 +1,4 @@
-# Receive the transferred health information
+# Push the encrypted records to the HIU's data push URL
 
 `POST /health-information/transfer`
 

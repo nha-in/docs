@@ -19,10 +19,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
 
 ## Headers
 
+- `Authorization` (string)
 - `x-hprid-auth` (string, required): The HPR token of the signed-in professional, from the HPR login.
 - `x-hprid-auth-verifier` (string): The HPR token of the professional verifying the facility submission.
 
@@ -36,4 +37,17 @@ curl --request POST \
 ## Responses
 
 - `200`: OK
+  - `facilityId` (string)
+  - `status` (string)
+  - `message` (string)
 - `404`: Not Found
+
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+{
+  "facilityId": "<FACILITY_ID>",
+  "status": "<STATUS>",
+  "message": "<MESSAGE>"
+}
+```

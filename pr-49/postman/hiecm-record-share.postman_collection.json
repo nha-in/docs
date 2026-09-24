@@ -397,7 +397,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"notification\": {\n    \"transactionId\": \"a0e7bed4-ef98-4ea8-9077-f4a6192bfe2b\",\n    \"doneAt\": \"2026-03-19T08:01:11.090Z\",\n    \"statusNotification\": {\n      \"sessionStatus\": \"TRANSFERRED\",\n      \"statusResponses\": [\n        {\n          \"careContextReference\": \"COC497647c1-0627-48fa-8131-0dddc1b3e0b4\",\n          \"hiStatus\": \"DELIVERED\",\n          \"description\": \"Data sent successfully\"\n        },\n        {\n          \"careContextReference\": \"COC497647c1-0627-48fa-8131-0dddc1b3e0b5\",\n          \"hiStatus\": \"DELIVERED\",\n          \"description\": \"Data sent successfully\"\n        }\n      ]\n    }\n  }\n}",
+              "raw": "{\n  \"notification\": {\n    \"transactionId\": \"3acbbb52-6de0-441f-b452-3c9488462b25\",\n    \"doneAt\": \"2023-01-24T06:35:44.167Z\",\n    \"statusNotification\": {\n      \"sessionStatus\": \"RECEIVED\",\n      \"statusResponses\": [\n        {\n          \"careContextReference\": \"10004-20200001768-1\",\n          \"hiStatus\": \"VALID\",\n          \"description\": \"Data received successfully\"\n        },\n        {\n          \"careContextReference\": \"10004-20200001768-2\",\n          \"hiStatus\": \"ERRORED\",\n          \"description\": \"Data could not be decrypted\"\n        }\n      ]\n    }\n  }\n}",
               "options": {
                 "raw": {
                   "language": "json"

@@ -57,7 +57,7 @@ The M2 skill gives an AI coding assistant this milestone as one file: every M2 c
 
 M2 agent skill
 
-Every M2 call and callback, its error codes and its certification cases in one file: 31 operations, 120 codes, 46 cases.
+Every M2 call and callback with its error codes in one file: 24 operations, 120 codes.
 
 [SKILL.md](/docs/pr-49/skills/abdm-m2/SKILL.md "The router. Use the command below to take the references with it.")
 

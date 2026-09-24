@@ -10,7 +10,11 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Query parameters
 
@@ -59,50 +63,49 @@ curl --request GET \
   - `new` (boolean)
 - `404`: Not Found
 
-Example 200 response. The values are placeholders:
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 
 ```json
 {
-  "hprIdNumber": "<HPR_ID>",
-  "hprId": "<EMAIL>",
-  "mobile": "******2125",
-  "firstName": "Ayushman",
-  "middleName": "Bharat",
-  "lastName": "Mission",
-  "name": "Ayushman Bharat Mission",
-  "yearOfBirth": "<DOB>",
-  "dayOfBirth": "<DOB>",
-  "monthOfBirth": "<DOB>",
-  "gender": "M",
-  "email": "<ABHA_ADDRESS>.com",
-  "profilePhoto": "<BASE64 ENCODED STRING>",
-  "stateCode": "27",
-  "districtCode": "490",
-  "subDistrictCode": null,
-  "villageCode": null,
-  "townCode": null,
-  "wardCode": null,
+  "hprIdNumber": "<HPR_ID_NUMBER>",
+  "hprId": "<HPR_ID>",
+  "mobile": "<MOBILE>",
+  "firstName": "<FIRST_NAME>",
+  "middleName": "<MIDDLE_NAME>",
+  "lastName": "<LAST_NAME>",
+  "name": "<NAME>",
+  "yearOfBirth": "<YEAR_OF_BIRTH>",
+  "dayOfBirth": "<DAY_OF_BIRTH>",
+  "monthOfBirth": "<MONTH_OF_BIRTH>",
+  "gender": "<GENDER>",
+  "email": "<EMAIL>",
+  "profilePhoto": "<PROFILE_PHOTO>",
+  "stateCode": "<STATE_CODE>",
+  "districtCode": "<DISTRICT_CODE>",
+  "subDistrictCode": "<SUB_DISTRICT_CODE>",
+  "villageCode": "<VILLAGE_CODE>",
+  "townCode": "<TOWN_CODE>",
+  "wardCode": "<WARD_CODE>",
   "pincode": "<PINCODE>",
-  "address": "9th Floor, Tower-l, Jeevan Bharati Building, Connaught Place, New Delhi - 110001",
-  "kycPhoto": "<BASE64 ENCODED STRING>",
-  "stateName": "MAHARASHTRA",
-  "districtName": "<ADDRESS>",
-  "subdistrictName": null,
-  "villageName": null,
-  "townName": "<ADDRESS>",
-  "wardName": null,
+  "address": "<ADDRESS>",
+  "kycPhoto": "<KYC_PHOTO>",
+  "stateName": "<STATE_NAME>",
+  "districtName": "<DISTRICT_NAME>",
+  "subdistrictName": "<SUBDISTRICT_NAME>",
+  "villageName": "<VILLAGE_NAME>",
+  "townName": "<TOWN_NAME>",
+  "wardName": "<WARD_NAME>",
   "authMethods": [
-    "MOBILE_OTP",
-    "DEMOGRAPHICS",
-    "... 1 more of the same shape"
+    "AADHAAR_OTP"
   ],
-  "kycVerified": true,
-  "verificationStatus": "true",
-  "categoryId": 1,
-  "categoryName": "DOCTOR",
-  "categorySubId": 3,
-  "categorySubName": "AYURVEDA",
+  "kycVerified": false,
+  "verificationStatus": "<VERIFICATION_STATUS>",
+  "categoryId": 0,
+  "categoryName": "<CATEGORY_NAME>",
+  "categorySubId": 0,
+  "categorySubName": "<CATEGORY_SUB_NAME>",
   "emailVerified": false,
+  "role": 0,
   "new": false
 }
 ```

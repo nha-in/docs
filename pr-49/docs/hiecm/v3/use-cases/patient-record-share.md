@@ -78,4 +78,4 @@ The request and response bodies, with every field, are on the [Patient scan and 
 
 - The milestone this belongs to: [M3 Health Information User](/docs/pr-49/docs/hiecm/v3/milestones/m3).
 - The profile-only version of the same scan: [Scan and Register](/docs/pr-49/docs/hiecm/v3/use-cases/scan-and-register).
-- The patient's side of the share: [P3 Consent and records](/docs/pr-49/docs/hiecm/v3/milestones/p3).
+- The patient's side of the share: [P3 Subscription](/docs/pr-49/docs/hiecm/v3/milestones/p3).

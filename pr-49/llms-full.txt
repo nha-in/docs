@@ -373,83 +373,184 @@ New to this? Start with [Milestones](/docs/pr-49/docs/hiecm/v3/milestones).
 
 # API references
 
-Every endpoint below is generated from the specification that declares it. Each one has its own page with the headers, the body and a request you can send.
+The ABDM API Reference section provides comprehensive technical documentation for integrating with various ABDM building blocks and services. These APIs enable healthcare providers, health applications, technology partners, and other ecosystem participants to securely exchange health information and deliver ABDM-compliant digital health services.
 
-This page lists every module, including any that the role you have chosen does not use. The sidebar shows only yours.
+All APIs are designed in accordance with ABDM standards and support secure, consent-based, and interoperable health data exchange across the digital health ecosystem.
 
-In M2 and M3 a call is acknowledged now and answered later. The answer arrives as a callback, a POST from ABDM to the URL you registered, declared in the specification as a webhook. Each callback is shown on the call it belongs to, and has a page of its own under that module.
+## About the API documentation
 
-## Gateway session
+The API Reference provides:
+
+- Detailed endpoint specifications
+- Request and response schemas
+- Authentication and authorization requirements
+- API workflows and integration patterns
+- Callback and webhook specifications
+- Error codes and handling guidelines
+- Sample requests and responses
+- Implementation and onboarding guidance
+
+Integrators should refer to the relevant API reference sections based on the ABDM services they intend to implement.
+
+## Core ABDM API modules
+
+### Gateway session
+
+Gateway APIs facilitate secure communication between ABDM participants and support authentication, session management, routing, and certificate-based interactions within the ABDM ecosystem.
+
+**Typical use cases**
+
+- Gateway registration and connectivity
+- Session establishment
+- Certificate management
+- Secure participant communication
 
 4 endpoints across 2 use cases: Bridge, Session. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/docs/pr-49/reference/hiecm-gateway)
 
-## M1 Identity
+### M1 Identity
+
+Milestone 1 APIs enable the creation, authentication, verification, and management of ABHA accounts.
+
+**Key capabilities**
+
+- ABHA creation
+- ABHA authentication and login modes
+- ABHA profile management
+- ABHA-related services and operations
 
 122 endpoints across 10 use cases: Create ABHA, Child ABHA, Login, Profile, ABHA Card & Profile, Find ABHA, Forgot ABHA, Benefit, Access Tokens & Encryption, ABHA Address Login. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/docs/pr-49/reference/hiecm-m1)
 
-## M2 Health Information Provider
+### M2 Health Information Provider
+
+Milestone 2 APIs are intended for Health Information Providers (HIPs) to participate in consent-based health information exchange.
+
+**Key capabilities**
+
+- Health record linking
+- Care context management
+- Patient discovery and identification
 
 20 endpoints across 5 use cases: Link token, HIP initiated linking, User initiated linking, Consent and data flow, Callbacks. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/docs/pr-49/reference/hiecm-m2)
 
-## M3 Health Information User
+### M3 Health Information User
+
+Milestone 3 APIs enable Health Information Users (HIUs) to request and access health information after obtaining citizen consent.
+
+**Key capabilities**
+
+- Consent request management
+- Consent-based data access
+- Health information retrieval
+- Secure health data exchange
 
 12 endpoints across 2 use cases: Consent and data flow, Callbacks. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/docs/pr-49/reference/hiecm-m3)
 
-## M4 Registry Integration
+### M4 Registry Integration
 
-100 endpoints across 4 use cases: HPID, HFR, HRP bridge services, HPR. Each endpoint has its own page in the sidebar.
+Milestone 4 APIs support interaction with ABDM healthcare registries.
+
+**Key components**
+
+- Health Professional Registry (HPR)
+- Health Facility Registry (HFR)
+- Registry search and verification
+- Healthcare professional onboarding
+- Healthcare facility registration and management
+
+87 endpoints across 4 use cases: HPID, HPR, HFR, HRP bridge services. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/docs/pr-49/reference/hiecm-m4)
 
-## P1 Registration and login
+### P1 Registration and login
+
+Personal Health Record (PHR) APIs support applications that provide citizens with access to and control over their health information. P1 supports onboarding and authentication of users within ABDM-enabled PHR applications.
 
 42 endpoints across 4 use cases: PHR certificate and session token, Create ABHA number, Aadhaar OTP, Create ABHA address, PHR login. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/docs/pr-49/reference/hiecm-p1)
 
-## P2 Consents Management
+### P2 Consents Management
+
+P2 supports management of citizen health accounts and digital health interactions.
+
+**Key capabilities**
+
+- Profile management
+- Health record linking
+- Consent management
+- Patient information sharing
+- Account administration
 
 46 endpoints across 5 use cases: PHR profile, Link ABHA number, Quick OPD Registration, User initiated linking, Consent manager. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/docs/pr-49/reference/hiecm-p2)
 
-## P3 Subscription
+### P3 Subscription
+
+Subscription APIs enable healthcare applications and ecosystem participants to manage ABDM notification and subscription workflows.
+
+**Key capabilities**
+
+- Subscription management
+- Event notifications
+- Consent-related updates
+- Status alerts and communication workflows
 
 14 endpoints across 2 use cases: Subscription request and notifications, HIU side, Subscription approval and management, PHR side. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/docs/pr-49/reference/hiecm-p3)
 
-## P4 Locker
+### P4 Locker
+
+Health Locker APIs enable secure storage and management of digital health documents in ABDM-compliant locker systems.
+
+**Key capabilities**
+
+- Document storage
+- Document retrieval
+- Health record management
+- Secure document access
 
 5 endpoints across 1 use case: Locker. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/docs/pr-49/reference/hiecm-p4)
 
-## Scan and Register
+### Scan and Register
+
+Scan and Register APIs support digital registration and patient onboarding experiences at healthcare facilities.
+
+**Key capabilities**
+
+- QR code-based patient identification
+- Digital registration workflows
+- Patient data sharing with consent
+- Faster healthcare facility onboarding experiences
 
 2 endpoints across 1 use case: Scan and register. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/docs/pr-49/reference/hiecm-scan-and-register)
 
-## Patient scan and record share
+### Patient scan and record share
 
 11 endpoints across 1 use case: Record share. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/docs/pr-49/reference/hiecm-record-share)
 
-## Scan and Pay
+### Scan and Pay
 
 18 endpoints across 2 use cases: Scan and pay, Scan and pay details and version update. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/docs/pr-49/reference/hiecm-scan-and-pay)
+
+This API Reference section serves as the central repository for all ABDM integration specifications, helping ecosystem participants build secure, interoperable, and standards-compliant digital health solutions.
 
 
 ---
@@ -13043,7 +13144,7 @@ Postman, Insomnia, Hoppscotch and Bruno take this through Import, as a link or a
 | ----------- | ------------------------------------------ |
 | Sandbox     | `https://abhasbx.abdm.gov.in/abha/api/v3/` |
 
-Login by fingerprint or iris uses the same base URL, through `profile/login/verify` with a `bio` or `iris` block.
+Login by fingerprint or iris uses the v3.1 path, `/abha/api/v3.1/profile/login/verify`, with a `bio` or `iris` block.
 
 [See the user journeyWhat the person experiences, screen by screen, before you write any code.](/docs/pr-49/docs/hiecm/v3/milestones/m1)[When it goes wrongThe recorded error shapes and codes, and what to do about each.](/docs/pr-49/docs/hiecm/v3/api/m1/errors)
 
@@ -14487,7 +14588,7 @@ curl --request POST \
 
 ---
 
-# Receive the transferred health information
+# Push the encrypted records to the HIU's data push URL
 
 `POST /health-information/transfer`
 
@@ -14750,17 +14851,17 @@ curl --request POST \
     "transactionId": "18235d89-cb13-479d-ad71-7a57d5f669a8",
     "doneAt": "2023-01-24T06:35:44.167Z",
     "notifier": {
-      "type": "HIU",
-      "id": "100005"
+      "type": "HIP",
+      "id": "IN2810014366"
     },
     "statusNotification": {
-      "sessionStatus": "RECEIVED",
+      "sessionStatus": "TRANSFERRED",
       "hipId": "IN2810014366",
       "statusResponses": [
         {
           "careContextReference": "10004-20200001768-1",
-          "hiStatus": "OK",
-          "description": "Data received successfully"
+          "hiStatus": "DELIVERED",
+          "description": "Data sent successfully"
         }
       ]
     }
@@ -16176,7 +16277,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -16194,13 +16299,13 @@ curl --request POST \
   - `refreshExpiresIn` (integer)
 - `404`: Not Found
 
-Example 200 response. The values are placeholders:
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 
 ```json
 {
-  "token": "<JWT TOKEN>",
-  "expiresIn": 1733639805,
-  "refreshToken": null,
+  "token": "<TOKEN>",
+  "expiresIn": 0,
+  "refreshToken": "<REFRESH_TOKEN>",
   "refreshExpiresIn": 0
 }
 ```
@@ -16220,7 +16325,11 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Query parameters
 
@@ -16231,10 +16340,16 @@ curl --request GET \
 - `200`: OK
 - `404`: Not Found
 
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+"<VALUE>"
+```
+
 
 ---
 
-# Verify Aadhaar OTP 1
+# Verify Aadhaar OTP
 
 `POST /api/v1/auth/confirmWithAadhaarOtp`
 
@@ -16251,7 +16366,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -16261,7 +16380,22 @@ curl --request POST \
 ## Responses
 
 - `200`: OK
+  - `token` (string)
+  - `expiresIn` (integer)
+  - `refreshToken` (string)
+  - `refreshExpiresIn` (integer)
 - `404`: Not Found
+
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+{
+  "token": "<TOKEN>",
+  "expiresIn": 0,
+  "refreshToken": "<REFRESH_TOKEN>",
+  "refreshExpiresIn": 0
+}
+```
 
 
 ---
@@ -16285,7 +16419,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -16330,7 +16468,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -16369,135 +16511,38 @@ curl --request POST \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "hprToken": "<JWT TOKEN>",
   "practitioner": {
-    "healthProfessionalType": "doctor",
-    "profilePhoto": "<BASE64 ENCODED STRING>",
-    "officialMobileCode": "",
-    "officialMobile": "97624xxxxx",
-    "officialMobileStatus": "",
-    "officialEmail": "",
-    "officialEmailStatus": "",
-    "visibleProfilePicture": "0",
-    "profileVisibleToPublic": "1",
-    "personalInformation": {
-      "salutation": "1",
-      "firstName": "Ayushman",
-      "middleName": "",
-      "lastName": "Mission",
-      "nationality": "356",
-      "fatherName": "",
-      "motherName": "",
-      "spouseName": "",
-      "gender": "M",
-      "dateOfBirth": "<DOB>",
-      "placeOfBirthState": "68",
-      "district": "",
-      "subDistrict": "",
-      "city": "",
-      "languagesSpoken": "1,2",
-      "category": "C"
-    },
-    "addressAsPerKYC": "",
-    "communicationAddress": {
-      "isCommunicationAddressAsPerKYC": "false",
-      "address": "",
-      "name": "",
-      "country": "",
-      "state": "",
-      "district": "",
-      "subDistrict": "",
-      "city": "",
-      "pincode": ""
-    },
-    "contactInformation": {
-      "publicMobileNumber": "",
-      "publicMobileNumberCode": "",
-      "publicMobileNumberStatus": "",
-      "landLineNumber": "",
-      "landLineNumberCode": "",
-      "publicEmail": "",
-      "publicEmailStatus": ""
-    },
-    "registrationAcademic": {
-      "category": "1",
-      "registrationData": [
-        {
-          "registeredWithCouncil": "47",
-          "registrationNumber": "REG12032",
-          "registrationDate": "2024-12-01",
-          "registrationCertificate": {
-            "fileType": "pdf",
-            "data": "<BASE64 ENCODED STRING>"
-          },
-          "isPermanentOrRenewable": "Permanent",
-          "renewableDueDate": "",
-          "categoryId": "2",
-          "isNameDifferentInCertificate": "false",
-          "proofOfNameChangeCertificate": "",
-          "qualifications": [
-            {
-              "nameOfDegreeOrDiplomaObtained": "4074",
-              "country": "356",
-              "state": "27",
-              "college": "1022",
-              "university": "6372",
-              "yearOfAwardingDegreeDiploma": "2024",
-              "monthOfAwardingDegreeDiploma": "February",
-              "degreeCertificate": {
-                "fileType": "pdf",
-                "data": "<BASE64 ENCODED STRING>"
-              },
-              "isNameDifferentInCertificate": "false",
-              "proofOfNameChangeCertificate": ""
-            },
-            {
-              "nameOfDegreeOrDiplomaObtained": "Graduation",
-              "country": "United States Of America",
-              "state": "united",
-              "college": "united School",
-              "university": "united University",
-              "yearOfAwardingDegreeDiploma": "2024",
-              "monthOfAwardingDegreeDiploma": "February",
-              "degreeCertificate": {
-                "fileType": "pdf",
-                "data": "<BASE64 ENCODED STRING>"
-              },
-              "isNameDifferentInCertificate": "true",
-              "proofOfNameChangeCertificate": "<BASE64 ENCODED STRING>"
-            }
-          ]
-        }
-      ]
-    },
-    "currentWorkDetails": {
-      "currentlyWorking": "0",
-      "purposeOfWork": "Administrative",
-      "chooseWorkStatus": "1",
-      "reasonForNotWorking": "Retired",
-      "certificateAttachment": "<BASE64 ENCODED STRING>",
-      "facilityDeclarationData": {
-        "facilityId": "IN2710000059",
-        "facilityName": "",
-        "facilityAddress": "",
-        "facilityPincode": "",
-        "state": "",
-        "district": "",
-        "facilityType": "",
-        "facilityDepartment": "Surgery",
-        "facilityDesignation": "MD",
-        "ministry": {
-          "ministry": "MinistryMOR ( Mo Railways )"
-        }
-      }
-    }
-  }
+    "personalInformation": "<PERSONAL_INFORMATION>",
+    "communicationAddress": "<COMMUNICATION_ADDRESS>",
+    "contactInformation": "<CONTACT_INFORMATION>",
+    "registrationAcademic": "<REGISTRATION_ACADEMIC>",
+    "specialities": [
+      "<SPECIALITIES>"
+    ],
+    "currentWorkDetails": "<CURRENT_WORK_DETAILS>",
+    "apiClientId": "<API_CLIENT_ID>",
+    "profilePhoto": "<PROFILE_PHOTO>",
+    "healthProfessionalType": "<HEALTH_PROFESSIONAL_TYPE>",
+    "officialMobileCode": "<OFFICIAL_MOBILE_CODE>",
+    "officialMobile": "<OFFICIAL_MOBILE>",
+    "officialMobileStatus": "<OFFICIAL_MOBILE_STATUS>",
+    "officialEmail": "<OFFICIAL_EMAIL>",
+    "officialEmailStatus": "<OFFICIAL_EMAIL_STATUS>",
+    "visibleProfilePicture": "<VISIBLE_PROFILE_PICTURE>",
+    "profileVisibleToPublic": "<PROFILE_VISIBLE_TO_PUBLIC>",
+    "addressAsPerKYC": "<ADDRESS_AS_PER_KYC>"
+  },
+  "hprToken": "<HPR_TOKEN>"
 }'
 ```
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -16531,14 +16576,13 @@ curl --request POST \
   - `hprId` (string)
 - `404`: Not Found
 
-Example 200 response. The values are placeholders:
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 
 ```json
 {
-  "referenceNumber": "9a2d25fc-6897-4645-8e78-7f12a91b4ab4",
-  "status": "true",
-  "message": "Congratulations! Your profile has been submitted successfully for verification.",
-  "error": null,
+  "referenceNumber": "<REFERENCE_NUMBER>",
+  "status": "<STATUS>",
+  "message": "<MESSAGE>",
   "hprId": "<HPR_ID>"
 }
 ```
@@ -16556,135 +16600,38 @@ curl --request POST \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "hprToken": "<JWT TOKEN>",
   "practitioner": {
-    "healthProfessionalType": "doctor",
-    "profilePhoto": "<BASE64 ENCODED STRING>",
-    "officialMobileCode": "",
-    "officialMobile": "97624xxxxx",
-    "officialMobileStatus": "",
-    "officialEmail": "",
-    "officialEmailStatus": "",
-    "visibleProfilePicture": "0",
-    "profileVisibleToPublic": "1",
-    "personalInformation": {
-      "salutation": "1",
-      "firstName": "Ayushman",
-      "middleName": "",
-      "lastName": "Mission",
-      "nationality": "356",
-      "fatherName": "",
-      "motherName": "",
-      "spouseName": "",
-      "gender": "M",
-      "dateOfBirth": "<DOB>",
-      "placeOfBirthState": "68",
-      "district": "",
-      "subDistrict": "",
-      "city": "",
-      "languagesSpoken": "1,2",
-      "category": "C"
-    },
-    "addressAsPerKYC": "",
-    "communicationAddress": {
-      "isCommunicationAddressAsPerKYC": "false",
-      "address": "",
-      "name": "",
-      "country": "",
-      "state": "",
-      "district": "",
-      "subDistrict": "",
-      "city": "",
-      "pincode": ""
-    },
-    "contactInformation": {
-      "publicMobileNumber": "",
-      "publicMobileNumberCode": "",
-      "publicMobileNumberStatus": "",
-      "landLineNumber": "",
-      "landLineNumberCode": "",
-      "publicEmail": "",
-      "publicEmailStatus": ""
-    },
-    "registrationAcademic": {
-      "category": "1",
-      "registrationData": [
-        {
-          "registeredWithCouncil": "47",
-          "registrationNumber": "REG12032",
-          "registrationDate": "2024-12-01",
-          "registrationCertificate": {
-            "fileType": "pdf",
-            "data": "<BASE64 ENCODED STRING>"
-          },
-          "isPermanentOrRenewable": "Permanent",
-          "renewableDueDate": "",
-          "categoryId": "2",
-          "isNameDifferentInCertificate": "false",
-          "proofOfNameChangeCertificate": "",
-          "qualifications": [
-            {
-              "nameOfDegreeOrDiplomaObtained": "4074",
-              "country": "356",
-              "state": "27",
-              "college": "1022",
-              "university": "6372",
-              "yearOfAwardingDegreeDiploma": "2024",
-              "monthOfAwardingDegreeDiploma": "February",
-              "degreeCertificate": {
-                "fileType": "pdf",
-                "data": "<BASE64 ENCODED STRING>"
-              },
-              "isNameDifferentInCertificate": "false",
-              "proofOfNameChangeCertificate": ""
-            },
-            {
-              "nameOfDegreeOrDiplomaObtained": "Graduation",
-              "country": "United States Of America",
-              "state": "united",
-              "college": "united School",
-              "university": "united University",
-              "yearOfAwardingDegreeDiploma": "2024",
-              "monthOfAwardingDegreeDiploma": "February",
-              "degreeCertificate": {
-                "fileType": "pdf",
-                "data": "<BASE64 ENCODED STRING>"
-              },
-              "isNameDifferentInCertificate": "true",
-              "proofOfNameChangeCertificate": "<BASE64 ENCODED STRING>"
-            }
-          ]
-        }
-      ]
-    },
-    "currentWorkDetails": {
-      "currentlyWorking": "0",
-      "purposeOfWork": "Administrative",
-      "chooseWorkStatus": "1",
-      "reasonForNotWorking": "Retired",
-      "certificateAttachment": "<BASE64 ENCODED STRING>",
-      "facilityDeclarationData": {
-        "facilityId": "IN2710000059",
-        "facilityName": "",
-        "facilityAddress": "",
-        "facilityPincode": "",
-        "state": "",
-        "district": "",
-        "facilityType": "",
-        "facilityDepartment": "Surgery",
-        "facilityDesignation": "MD",
-        "ministry": {
-          "ministry": "MinistryMOR ( Mo Railways )"
-        }
-      }
-    }
-  }
+    "personalInformation": "<PERSONAL_INFORMATION>",
+    "communicationAddress": "<COMMUNICATION_ADDRESS>",
+    "contactInformation": "<CONTACT_INFORMATION>",
+    "registrationAcademic": "<REGISTRATION_ACADEMIC>",
+    "specialities": [
+      "<SPECIALITIES>"
+    ],
+    "currentWorkDetails": "<CURRENT_WORK_DETAILS>",
+    "apiClientId": "<API_CLIENT_ID>",
+    "profilePhoto": "<PROFILE_PHOTO>",
+    "healthProfessionalType": "<HEALTH_PROFESSIONAL_TYPE>",
+    "officialMobileCode": "<OFFICIAL_MOBILE_CODE>",
+    "officialMobile": "<OFFICIAL_MOBILE>",
+    "officialMobileStatus": "<OFFICIAL_MOBILE_STATUS>",
+    "officialEmail": "<OFFICIAL_EMAIL>",
+    "officialEmailStatus": "<OFFICIAL_EMAIL_STATUS>",
+    "visibleProfilePicture": "<VISIBLE_PROFILE_PICTURE>",
+    "profileVisibleToPublic": "<PROFILE_VISIBLE_TO_PUBLIC>",
+    "addressAsPerKYC": "<ADDRESS_AS_PER_KYC>"
+  },
+  "hprToken": "<HPR_TOKEN>"
 }'
 ```
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -16718,14 +16665,13 @@ curl --request POST \
   - `hprId` (string)
 - `404`: Not Found
 
-Example 200 response. The values are placeholders:
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 
 ```json
 {
-  "referenceNumber": "5b17ca73-f069-4018-91a0-665df0117d43",
-  "status": "true",
-  "message": "Congratulations! Your profile has been submitted successfully for verification.",
-  "error": null,
+  "referenceNumber": "<REFERENCE_NUMBER>",
+  "status": "<STATUS>",
+  "message": "<MESSAGE>",
   "hprId": "<HPR_ID>"
 }
 ```
@@ -16749,7 +16695,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -16768,54 +16718,27 @@ curl --request POST \
   - `Message` (string)
 - `404`: Not Found
 
-Example 200 response. The values are placeholders:
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 
 ```json
 {
   "documentList": {
-    "profileDetails": {
-      "profilePhoto": {
-        "id": 30106,
-        "data": "<BASE64_PHOTO>"
-      },
-      "proofOfWorkCertificate": {
-        "id": 30106,
-        "data": "JVBERi0xLjMK"
-      }
-    },
+    "profileDetails": "<PROFILE_DETAILS>",
     "registrationDetails": [
-      {
-        "registrationCertificate": {
-          "id": 21021,
-          "systemOfMedicide": "modern_medicine",
-          "data": "JVBERi0xLjMK"
-        },
-        "proofOfNameChangeRegCertificate": {
-          "id": 21021,
-          "systemOfMedicide": "modern_medicine",
-          "data": "JVBERi0xLjMK"
-        }
-      }
+      "<REGISTRATION_DETAILS>"
     ],
     "qualificationDetails": [
-      {
-        "degreeCertificate": {
-          "id": 9693,
-          "courseName": "PhD Biostatistics",
-          "qualificationYear": "2021",
-          "data": "JVBERi0xLjMK"
-        },
-        "proofOfNameChangeQualCertificate": {
-          "id": 9693,
-          "courseName": "PhD Biostatistics",
-          "qualificationYear": "2021",
-          "data": "JVBERi0xLjMK"
-        }
-      }
+      "<QUALIFICATION_DETAILS>"
     ],
-    "qualification": null
+    "qualification": [
+      "<QUALIFICATION>"
+    ],
+    "internationalDoctorQualificationDetails": [
+      "<INTERNATIONAL_DOCTOR_QUALIFICATION_DETAILS>"
+    ]
   },
-  "Message": "Data fetched successfully"
+  "message": "<MESSAGE>",
+  "Message": "<MESSAGE>"
 }
 ```
 
@@ -16832,13 +16755,15 @@ curl --request POST \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "hpr_token": "<JWT TOKEN>",
+  "hpr_token": "<HPR_TOKEN>",
   "document": [
     {
-      "document_id": 20931,
-      "document_type": "registrationCertificate",
-      "fileType": "",
-      "data": "JVBERi0xLjMK"
+      "document_id": 0,
+      "document_type": "<DOCUMENT_TYPE>",
+      "fileType": "<FILE_TYPE>",
+      "data": [
+        "<DATA>"
+      ]
     }
   ]
 }'
@@ -16846,7 +16771,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -16855,30 +16784,45 @@ curl --request POST \
 - `document.document_id` (integer)
 - `document.document_type` (string)
 - `document.fileType` (string)
-- `document.data` (string)
+- `document.data` (string[])
 
 ## Responses
 
 - `200`: OK
   - `profilePhoto` (object)
+  - `profilePhoto.status` (string)
+  - `profilePhoto.msg` (string)
   - `degreeCertificate` (object)
+  - `degreeCertificate.status` (string)
+  - `degreeCertificate.msg` (string)
   - `registrationCertificate` (object)
   - `registrationCertificate.status` (string)
   - `registrationCertificate.msg` (string)
   - `proofOfWorkCertificate` (object)
+  - `proofOfWorkCertificate.status` (string)
+  - `proofOfWorkCertificate.msg` (string)
 - `404`: Not Found
 
-Example 200 response. The values are placeholders:
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 
 ```json
 {
-  "profilePhoto": null,
-  "degreeCertificate": null,
-  "registrationCertificate": {
-    "status": "pass",
-    "msg": "Registration certificate updated"
+  "profilePhoto": {
+    "status": "<STATUS>",
+    "msg": "<MSG>"
   },
-  "proofOfWorkCertificate": null
+  "degreeCertificate": {
+    "status": "<STATUS>",
+    "msg": "<MSG>"
+  },
+  "registrationCertificate": {
+    "status": "<STATUS>",
+    "msg": "<MSG>"
+  },
+  "proofOfWorkCertificate": {
+    "status": "<STATUS>",
+    "msg": "<MSG>"
+  }
 }
 ```
 
@@ -16907,7 +16851,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -16923,58 +16871,14 @@ curl --request POST \
 
 - `200`: OK
   - `message` (string)
-  - `practitioners` (array[])
+  - `practitioners` (object)
 - `404`: Not Found
 
-Example 200 response. The values are placeholders:
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 
 ```json
 {
-  "practitioners": [
-    [
-      {
-        "identifier": 38053,
-        "active": false,
-        "name": "Ayushman Bharat Mission",
-        "gender": "Male",
-        "salutation": "Mr",
-        "communicationLanguage": " English ",
-        "registrations": [
-          {
-            "identifier": 25989,
-            "category": "Dentistry",
-            "nuidnumber": null,
-            "nuidvalidtill": null,
-            "systemOfMedicide": null,
-            "isRenewable": "false",
-            "dueDate": null,
-            "councilName": "Karnataka State Dental Council",
-            "registeredAt": null,
-            "registrationNumber": "REG12032",
-            "registrationDate": "2024-12-01"
-          }
-        ],
-        "qualifications": [
-          {
-            "identifier": 12835,
-            "courseName": "Bds - Bachelor Of Dental Surgery",
-            "collegeName": "A.j. Institute Of Dental Sciences, Mangalore",
-            "universityName": "Rajiv Gandhi University Of Health Sciences (rguhs)",
-            "qualificationYear": "2024",
-            "qualificationMonth": ""
-          }
-        ],
-        "hpr_id": "<HPR_ID>",
-        "application_status": null,
-        "is_council_verified": "true",
-        "is_work_verified": null,
-        "email": "",
-        "mobileNumber": "******2125",
-        "hpr_category": "doctor"
-      }
-    ]
-  ],
-  "message": "Data fetched successfully"
+  "message": "<MESSAGE>"
 }
 ```
 
@@ -16998,7 +16902,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -17050,7 +16958,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -17068,7 +16980,20 @@ curl --request POST \
 ## Responses
 
 - `200`: OK
+  - `hprId` (string)
+  - `hprIdNumber` (string)
+  - `token` (string)
 - `404`: Not Found
+
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+{
+  "hprId": "<HPR_ID>",
+  "hprIdNumber": "<HPR_ID_NUMBER>",
+  "token": "<TOKEN>"
+}
+```
 
 
 ---
@@ -17089,7 +17014,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -17135,7 +17064,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -17151,15 +17084,17 @@ curl --request POST \
   - `errorStatus` (object[])
 - `404`: Not Found
 
-Example 200 response. The values are placeholders:
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 
 ```json
 {
-  "facilityId": "IN0610089709",
-  "status": "Success",
-  "message": "Otp sent successfully! Please keep transaction id for future reference",
-  "transactionId": "3cf3de44-94a4-4f77-b7f9-de6ec86785b3",
-  "errorStatus": null
+  "facilityId": "<FACILITY_ID>",
+  "status": "<STATUS>",
+  "message": "<MESSAGE>",
+  "transactionId": "<TRANSACTION_ID>",
+  "errorStatus": [
+    "<ERROR_STATUS>"
+  ]
 }
 ```
 
@@ -17186,7 +17121,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -17205,356 +17144,18 @@ curl --request POST \
   - `errorStatus` (object[])
 - `404`: Not Found
 
-Example 200 response. The values are placeholders:
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 
 ```json
 {
-  "facilityId": "IN2810002702",
-  "status": "success",
-  "message": "OTP validated successfully!!! Hospital id linked to HFR",
-  "errorStatus": null
+  "facilityId": "<FACILITY_ID>",
+  "status": "<STATUS>",
+  "message": "<MESSAGE>",
+  "errorStatus": [
+    "<ERROR_STATUS>"
+  ]
 }
 ```
-
-
----
-
-# Get admin token
-
-`POST /getManagementToken`
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/getManagementToken \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "username": "<USERNAME>",
-  "password": "<PASSWORD>",
-  "resend": false
-}'
-```
-
-## Authorization
-
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
-
-## Body
-
-- `username` (string)
-- `password` (string)
-- `resend` (boolean)
-
-## Responses
-
-- `200`: OK
-- `404`: Not Found
-
-
----
-
-# Submit the healdthloginwithmobile
-
-`POST /healdthloginwithmobile`
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/healdthloginwithmobile \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "txnId": "<TXN_ID>",
-  "issueToken": "<ISSUE_TOKEN>",
-  "token": "<TOKEN>"
-}'
-```
-
-## Authorization
-
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
-
-## Body
-
-- `txnId` (string)
-- `issueToken` (string)
-- `token` (string)
-
-## Responses
-
-- `200`: OK
-- `404`: Not Found
-
-
----
-
-# Update role and category
-
-`POST /profile/updateRole`
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/profile/updateRole \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "firstName": "Ayushman",
-  "lastName": "Mission",
-  "middleName": "Bharat",
-  "hprId": "<EMAIL>",
-  "password": "Abdm@143",
-  "email": "<ABHA_ADDRESS>.com",
-  "profilePhoto": "<BASE64 ENCODED STRING>",
-  "stateCode": "7",
-  "districtCode": "71",
-  "subdistrictCode": "1",
-  "villageCode": "<VILLAGE_CODE>",
-  "townCode": "<TOWN_CODE>",
-  "wardCode": "<WARD_CODE>",
-  "pincode": 110001,
-  "address": "9th Floor, Tower-l, Jeevan Bharati Building, Connaught Place, New Delhi - 110001",
-  "yearOfBirth": "2021",
-  "monthOfBirth": "8",
-  "dayOfBirth": "15",
-  "hpCategoryCode": "1",
-  "hpSubCategoryCode": "1",
-  "txnId": "5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11",
-  "role": "<ROLE>",
-  "consentToDelete": false
-}'
-```
-
-## Authorization
-
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
-
-## Body
-
-- `firstName` (string): First Name of the user).
-- `lastName` (string): Last name of the user
-- `middleName` (string): Middle name of the user
-- `hprId` (string): Healthcare Professional ID Alias.
-- `password` (string): User Authentication password.
-- `email` (string): Email Address of the user.
-- `profilePhoto` (string): Profile photo of the user (Uploaded by the user).
-- `stateCode` (string): State Code of the user (LGD).
-- `districtCode` (string): District Code of the user (LGD).
-- `subdistrictCode` (string): Sub District Code of the user (LGD).
-- `villageCode` (string): Village Code of the user (LGD).
-- `townCode` (string): Town Code of the user (LGD).
-- `wardCode` (string): Ward Code of the user (LGD).
-- `pincode` (integer): Pincode of the user.
-- `address` (string): Address of the user.
-- `yearOfBirth` (string): Year of birth of the user.
-- `monthOfBirth` (string): Month of birth of the user.
-- `dayOfBirth` (string): Day of birth of the user.
-- `hpCategoryCode` (string)
-- `hpSubCategoryCode` (string)
-- `txnId` (string)
-- `role` (string)
-- `consentToDelete` (boolean)
-
-## Responses
-
-- `200`: OK
-- `404`: Not Found
-
-
----
-
-# Fetch professional facility
-
-`POST /fetchProfessionalFacility`
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/fetchProfessionalFacility \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "facilityId": "<FACILITY_ID>",
-  "page": 0,
-  "size": 0
-}'
-```
-
-## Authorization
-
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
-
-## Body
-
-- `facilityId` (string)
-- `page` (integer)
-- `size` (integer)
-
-## Responses
-
-- `200`: OK
-- `404`: Not Found
-
-
----
-
-# Create facility suggestion
-
-`POST /hprFacilitySuggestions`
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/hprFacilitySuggestions \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "name": "<NAME>",
-  "address": "<ADDRESS>",
-  "state": {
-    "id": 0,
-    "name": "<NAME>",
-    "isoCode": "<ISO_CODE>",
-    "status": false,
-    "countryId": 0,
-    "visibleStatus": false,
-    "position": false,
-    "councilLabel": "<COUNCIL_LABEL>",
-    "systemOfMedicine": false
-  },
-  "district": {
-    "id": 0,
-    "stateId": 0,
-    "districtName": "<DISTRICT_NAME>",
-    "isoCode": "<ISO_CODE>",
-    "status": false
-  },
-  "pincode": 0,
-  "contactNo": 0,
-  "email": "<EMAIL>",
-  "contactName": "<CONTACT_NAME>",
-  "status": "pending",
-  "createdBy": 0,
-  "updatedBy": 0,
-  "facilityId": 0,
-  "hprProfileId": 0,
-  "facilityName": "<FACILITY_NAME>",
-  "facilityOwnership": {
-    "label": "<LABEL>",
-    "value": "<VALUE>"
-  },
-  "systemMedicine": [
-    {
-      "id": "<ID>",
-      "lastUpdateDate": "<LAST_UPDATE_DATE>",
-      "dropOrder": 0,
-      "creationDate": "<CREATION_DATE>",
-      "activeYN": "<ACTIVE_YN>",
-      "createdBy": "<CREATED_BY>",
-      "lastUpdatedUser": "<LAST_UPDATED_USER>",
-      "nhrrMedicineCode": "<NHRR_MEDICINE_CODE>",
-      "value": "<VALUE>",
-      "type": "<TYPE>"
-    }
-  ],
-  "facilityType": {
-    "id": "<ID>",
-    "facilityType": "<FACILITY_TYPE>",
-    "facilityTypeNdhm": "<FACILITY_TYPE_NDHM>",
-    "opd": "<OPD>",
-    "ipd": "<IPD>",
-    "dayCare": "<DAY_CARE>",
-    "other": "<OTHER>",
-    "activeYN": "<ACTIVE_YN>",
-    "createdBy": "<CREATED_BY>",
-    "createdDate": "<CREATED_DATE>",
-    "lastUpdatedUser": "<LAST_UPDATED_USER>",
-    "lastUpdatedDate": "<LAST_UPDATED_DATE>",
-    "linkToForm": "<LINK_TO_FORM>",
-    "facilityCode": "<FACILITY_CODE>",
-    "facilityCodeUfid": "<FACILITY_CODE_UFID>",
-    "facilityOrder": 0
-  },
-  "department": "<DEPARTMENT>",
-  "designation": "<DESIGNATION>",
-  "ministry": {
-    "ministry": "<MINISTRY>"
-  },
-  "psuName": "<PSU_NAME>"
-}'
-```
-
-## Authorization
-
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
-
-## Body
-
-- `name` (string)
-- `address` (string)
-- `state` (object)
-- `state.id` (integer)
-- `state.name` (string)
-- `state.isoCode` (string)
-- `state.status` (boolean)
-- `state.countryId` (integer)
-- `state.visibleStatus` (boolean)
-- `state.position` (boolean)
-- `state.councilLabel` (string)
-- `state.systemOfMedicine` (boolean)
-- `district` (object)
-- `district.id` (integer)
-- `district.stateId` (integer)
-- `district.districtName` (string)
-- `district.isoCode` (string)
-- `district.status` (boolean)
-- `pincode` (integer)
-- `contactNo` (integer)
-- `email` (string)
-- `contactName` (string)
-- `status` (string) One of: pending, approved, rejected.
-- `createdBy` (integer)
-- `updatedBy` (integer)
-- `facilityId` (integer)
-- `hprProfileId` (integer)
-- `facilityName` (string)
-- `facilityOwnership` (object)
-- `facilityOwnership.label` (string)
-- `facilityOwnership.value` (string)
-- `systemMedicine` (object[])
-- `systemMedicine.id` (string)
-- `systemMedicine.lastUpdateDate` (string)
-- `systemMedicine.dropOrder` (integer)
-- `systemMedicine.creationDate` (string)
-- `systemMedicine.activeYN` (string)
-- `systemMedicine.createdBy` (string)
-- `systemMedicine.lastUpdatedUser` (string)
-- `systemMedicine.nhrrMedicineCode` (string)
-- `systemMedicine.value` (string)
-- `systemMedicine.type` (string)
-- `facilityType` (object)
-- `facilityType.id` (object)
-- `facilityType.facilityType` (string)
-- `facilityType.facilityTypeNdhm` (string)
-- `facilityType.opd` (string)
-- `facilityType.ipd` (string)
-- `facilityType.dayCare` (string)
-- `facilityType.other` (string)
-- `facilityType.activeYN` (string)
-- `facilityType.createdBy` (string)
-- `facilityType.createdDate` (string)
-- `facilityType.lastUpdatedUser` (string)
-- `facilityType.lastUpdatedDate` (string)
-- `facilityType.linkToForm` (string)
-- `facilityType.facilityCode` (string)
-- `facilityType.facilityCodeUfid` (string)
-- `facilityType.facilityOrder` (integer)
-- `department` (string)
-- `designation` (string)
-- `ministry` (object)
-- `ministry.ministry` (string)
-- `psuName` (string)
-
-## Responses
-
-- `200`: OK
-- `404`: Not Found
 
 
 ---
@@ -17584,7 +17185,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -17600,6 +17205,72 @@ curl --request POST \
 
 - `200`: OK
 - `404`: Not Found
+
+
+---
+
+# Search facility
+
+`POST /v1.0/facility/search-facilities`
+
+```bash
+curl --request POST \
+  --url https://apihspsbx.abdm.gov.in/v4/int/v1.0/facility/search-facilities \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "requestId": "5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11",
+  "timestamp": "<TIMESTAMP>",
+  "facility": {
+    "facilityName": "<FACILITY_NAME>",
+    "systemOfMedicine": "<SYSTEM_OF_MEDICINE>",
+    "facilityType": "<FACILITY_TYPE>",
+    "state": "<STATE>",
+    "district": "<DISTRICT>",
+    "photo": "<PHOTO>",
+    "ownership": "<OWNERSHIP>"
+  }
+}'
+```
+
+## Authorization
+
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
+
+## Body
+
+- `requestId` (string)
+- `timestamp` (string)
+- `facility` (object)
+- `facility.facilityName` (string)
+- `facility.systemOfMedicine` (string)
+- `facility.facilityType` (string)
+- `facility.state` (string)
+- `facility.district` (string)
+- `facility.photo` (string)
+- `facility.ownership` (string)
+
+## Responses
+
+- `200`: OK
+  - `referenceNumber` (string)
+  - `facilities` (object[])
+- `404`: Not Found
+
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+{
+  "referenceNumber": "<REFERENCE_NUMBER>",
+  "facilities": [
+    "<FACILITIES>"
+  ]
+}
+```
 
 
 ---
@@ -17626,7 +17297,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string, required)
 
 ## Body
 
@@ -17643,10 +17318,19 @@ curl --request POST \
 - `200`: OK
 - `404`: Not Found
 
-Example 200 response. The values are placeholders:
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 
 ```json
-"array"
+[
+  {
+    "facility_name": "<FACILITY_NAME>",
+    "alternate_id": "<ALTERNATE_ID>",
+    "sub_district": "<SUB_DISTRICT>",
+    "district": "<DISTRICT>",
+    "state": "<STATE>",
+    "distances": "<DISTANCES>"
+  }
+]
 ```
 
 
@@ -17733,10 +17417,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
 
 ## Headers
 
+- `Authorization` (string)
 - `x-hprid-auth` (string, required): The HPR token of the signed-in professional, from the HPR login.
 
 ## Body
@@ -17771,14 +17456,14 @@ curl --request POST \
   - `errorStatus` (object[])
 - `404`: Not Found
 
-Example 200 response. The values are placeholders:
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 
 ```json
 {
-  "trackingId": "76803",
-  "status": "success",
-  "message": "Facility is saved successfully",
-  "errorStatus": null
+  "trackingId": "<TRACKING_ID>",
+  "status": "<STATUS>",
+  "message": "<MESSAGE>",
+  "errorStatus": []
 }
 ```
 
@@ -17833,7 +17518,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -17865,14 +17554,14 @@ curl --request POST \
   - `errorStatus` (object[])
 - `404`: Not Found
 
-Example 200 response. The values are placeholders:
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 
 ```json
 {
-  "trackingId": "76803",
-  "status": "Created",
-  "message": "Facility details have been saved successfully. Please login at https://nhpr.abdm.gov.in/ and submit your facility details for approval.",
-  "errorStatus": null
+  "trackingId": "<TRACKING_ID>",
+  "status": "<STATUS>",
+  "message": "<MESSAGE>",
+  "errorStatus": []
 }
 ```
 
@@ -17970,7 +17659,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -18027,14 +17720,14 @@ curl --request POST \
   - `errorStatus` (object[])
 - `404`: Not Found
 
-Example 200 response. The values are placeholders:
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 
 ```json
 {
-  "trackingId": "76803",
-  "status": "Saved",
-  "message": "Facility details have been saved successfully. Please login at \" + hfrUrl\n\" and submit your facility details for approval.",
-  "errorStatus": null
+  "trackingId": "<TRACKING_ID>",
+  "status": "<STATUS>",
+  "message": "<MESSAGE>",
+  "errorStatus": []
 }
 ```
 
@@ -18062,10 +17755,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
 
 ## Headers
 
+- `Authorization` (string)
 - `x-hprid-auth` (string, required): The HPR token of the signed-in professional, from the HPR login.
 - `x-hprid-auth-verifier` (string): The HPR token of the professional verifying the facility submission.
 
@@ -18079,7 +17773,20 @@ curl --request POST \
 ## Responses
 
 - `200`: OK
+  - `facilityId` (string)
+  - `status` (string)
+  - `message` (string)
 - `404`: Not Found
+
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+{
+  "facilityId": "<FACILITY_ID>",
+  "status": "<STATUS>",
+  "message": "<MESSAGE>"
+}
+```
 
 
 ---
@@ -18094,19 +17801,26 @@ curl --request POST \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "newPassword": "<BASE64 ENCODED STRING>",
-  "oldPassword": "<BASE64 ENCODED STRING>"
+  "oldPassword": "<OLD_PASSWORD>",
+  "newPassword": "<NEW_PASSWORD>",
+  "txnId": "<TXN_ID>",
+  "hprID": "<HPR_ID>",
+  "otp": "<OTP>"
 }'
 ```
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string, required)
 
 ## Body
 
 - `oldPassword` (string)
-- `newPassword` (string)
+- `newPassword` (string, required)
 - `txnId` (string)
 - `hprID` (string)
 - `otp` (string)
@@ -18144,7 +17858,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string, required)
 
 ## Body
 
@@ -18190,7 +17908,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string, required)
 
 ## Body
 
@@ -18229,19 +17951,26 @@ curl --request POST \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "txnId": "7ebad8aa-127b-492f-bd0e-56da716bd39e",
-  "otp": "<BASE64 ENCODED STRING>"
+  "oldPassword": "<OLD_PASSWORD>",
+  "newPassword": "<NEW_PASSWORD>",
+  "txnId": "<TXN_ID>",
+  "hprID": "<HPR_ID>",
+  "otp": "<OTP>"
 }'
 ```
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string, required)
 
 ## Body
 
 - `oldPassword` (string)
-- `newPassword` (string)
+- `newPassword` (string, required)
 - `txnId` (string)
 - `hprID` (string)
 - `otp` (string)
@@ -18276,19 +18005,24 @@ curl --request POST \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "otp": "<BASE64 ENCODED STRING>",
-  "txnId": "9b78fdfb-3ba4-4707-8913-63c7c5e3a743"
+  "newPassword": "<NEW_PASSWORD>",
+  "otp": "<OTP>",
+  "txnId": "5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11"
 }'
 ```
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string, required)
 
 ## Body
 
-- `newPassword` (string): Encrypted new Password.
-- `otp` (string): Encrypted OTP.
+- `newPassword` (string, required): Encrypted new Password.
+- `otp` (string, required): Encrypted OTP.
 - `txnId` (string, required)
 
 ## Responses
@@ -18328,18 +18062,31 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string, required)
 
 ## Body
 
-- `newPassword` (string): Encrypted new Password.
-- `otp` (string): Encrypted OTP.
+- `newPassword` (string, required): Encrypted new Password.
+- `otp` (string, required): Encrypted OTP.
 - `txnId` (string, required)
 
 ## Responses
 
 - `200`: OK
+  - `message` (string)
 - `404`: Not Found
+
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+{
+  "message": "<MESSAGE>"
+}
+```
 
 
 ---
@@ -18354,19 +18101,24 @@ curl --request POST \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "txnId": "9b78fdfb-3ba4-4707-8913-63c7c5e3a743",
-  "newPassword": "<BASE64 ENCODED STRING>"
+  "newPassword": "<NEW_PASSWORD>",
+  "otp": "<OTP>",
+  "txnId": "5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11"
 }'
 ```
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string, required)
 
 ## Body
 
-- `newPassword` (string): Encrypted new Password.
-- `otp` (string): Encrypted OTP.
+- `newPassword` (string, required): Encrypted new Password.
+- `otp` (string, required): Encrypted OTP.
 - `txnId` (string, required)
 
 ## Responses
@@ -18399,23 +18151,26 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
 
 ## Headers
 
+- `Authorization` (string)
 - `X-Token` (string): The HPR token of the signed-in professional, from the HPR login.
 
 ## Responses
 
 - `200`: OK
-  - `pdf` (string)
+  - `pdf` (string[])
 - `404`: Not Found
 
-Example 200 response. The values are placeholders:
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 
 ```json
 {
-  "pdf": "JVBERi0xLjMK"
+  "pdf": [
+    "<PDF>"
+  ]
 }
 ```
 
@@ -18434,7 +18189,11 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Query parameters
 
@@ -18483,193 +18242,52 @@ curl --request GET \
   - `new` (boolean)
 - `404`: Not Found
 
-Example 200 response. The values are placeholders:
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 
 ```json
 {
-  "hprIdNumber": "<HPR_ID>",
-  "hprId": "<EMAIL>",
-  "mobile": "******2125",
-  "firstName": "Ayushman",
-  "middleName": "Bharat",
-  "lastName": "Mission",
-  "name": "Ayushman Bharat Mission",
-  "yearOfBirth": "<DOB>",
-  "dayOfBirth": "<DOB>",
-  "monthOfBirth": "<DOB>",
-  "gender": "M",
-  "email": "<ABHA_ADDRESS>.com",
-  "profilePhoto": "<BASE64 ENCODED STRING>",
-  "stateCode": "27",
-  "districtCode": "490",
-  "subDistrictCode": null,
-  "villageCode": null,
-  "townCode": null,
-  "wardCode": null,
+  "hprIdNumber": "<HPR_ID_NUMBER>",
+  "hprId": "<HPR_ID>",
+  "mobile": "<MOBILE>",
+  "firstName": "<FIRST_NAME>",
+  "middleName": "<MIDDLE_NAME>",
+  "lastName": "<LAST_NAME>",
+  "name": "<NAME>",
+  "yearOfBirth": "<YEAR_OF_BIRTH>",
+  "dayOfBirth": "<DAY_OF_BIRTH>",
+  "monthOfBirth": "<MONTH_OF_BIRTH>",
+  "gender": "<GENDER>",
+  "email": "<EMAIL>",
+  "profilePhoto": "<PROFILE_PHOTO>",
+  "stateCode": "<STATE_CODE>",
+  "districtCode": "<DISTRICT_CODE>",
+  "subDistrictCode": "<SUB_DISTRICT_CODE>",
+  "villageCode": "<VILLAGE_CODE>",
+  "townCode": "<TOWN_CODE>",
+  "wardCode": "<WARD_CODE>",
   "pincode": "<PINCODE>",
-  "address": "9th Floor, Tower-l, Jeevan Bharati Building, Connaught Place, New Delhi - 110001",
-  "kycPhoto": "<BASE64 ENCODED STRING>",
-  "stateName": "MAHARASHTRA",
-  "districtName": "<ADDRESS>",
-  "subdistrictName": null,
-  "villageName": null,
-  "townName": "<ADDRESS>",
-  "wardName": null,
+  "address": "<ADDRESS>",
+  "kycPhoto": "<KYC_PHOTO>",
+  "stateName": "<STATE_NAME>",
+  "districtName": "<DISTRICT_NAME>",
+  "subdistrictName": "<SUBDISTRICT_NAME>",
+  "villageName": "<VILLAGE_NAME>",
+  "townName": "<TOWN_NAME>",
+  "wardName": "<WARD_NAME>",
   "authMethods": [
-    "MOBILE_OTP",
-    "DEMOGRAPHICS",
-    "... 1 more of the same shape"
+    "AADHAAR_OTP"
   ],
-  "kycVerified": true,
-  "verificationStatus": "true",
-  "categoryId": 1,
-  "categoryName": "DOCTOR",
-  "categorySubId": 3,
-  "categorySubName": "AYURVEDA",
+  "kycVerified": false,
+  "verificationStatus": "<VERIFICATION_STATUS>",
+  "categoryId": 0,
+  "categoryName": "<CATEGORY_NAME>",
+  "categorySubId": 0,
+  "categorySubName": "<CATEGORY_SUB_NAME>",
   "emailVerified": false,
+  "role": 0,
   "new": false
 }
 ```
-
-
----
-
-# Generate Aadhaar OTPFor re KYC
-
-`POST /v1/account/reKYC/generateAadhaarOTP`
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/v1/account/reKYC/generateAadhaarOTP \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
-```
-
-## Authorization
-
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
-
-## Responses
-
-- `200`: OK
-- `404`: Not Found
-
-
----
-
-# Verify Aadhaar OTP
-
-`POST /v1/account/reKYC/verifyAadhaarOTP`
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/v1/account/reKYC/verifyAadhaarOTP \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "authType": "AADHAAR_OTP",
-  "hprId": "<HPR_ID>",
-  "password": "<PASSWORD>",
-  "aadhaar": "<AADHAAR>",
-  "mobileNumber": "<MOBILE_NUMBER>",
-  "txnId": "5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11",
-  "otp": "<OTP>",
-  "resend": false,
-  "aadhaarVerifyOtpRequestDto": {
-    "aadhaarNumber": "<AADHAAR_NUMBER>",
-    "otp": "<OTP>",
-    "faceAuthPid": "<FACE_AUTH_PID>",
-    "aadhaarLogType": "<AADHAAR_LOG_TYPE>",
-    "transactionId": "<TRANSACTION_ID>",
-    "txnId": "<TXN_ID>"
-  }
-}'
-```
-
-## Authorization
-
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
-
-## Body
-
-- `authType` (string) One of: AADHAAR_OTP, USERNAME_PASSWORD, MOBILE_OTP.
-- `hprId` (string)
-- `password` (string)
-- `aadhaar` (string)
-- `mobileNumber` (string)
-- `txnId` (string)
-- `otp` (string)
-- `resend` (boolean)
-- `aadhaarVerifyOtpRequestDto` (object)
-- `aadhaarVerifyOtpRequestDto.aadhaarNumber` (string)
-- `aadhaarVerifyOtpRequestDto.otp` (string)
-- `aadhaarVerifyOtpRequestDto.faceAuthPid` (string)
-- `aadhaarVerifyOtpRequestDto.aadhaarLogType` (string)
-- `aadhaarVerifyOtpRequestDto.transactionId` (string)
-- `aadhaarVerifyOtpRequestDto.txnId` (string)
-
-## Responses
-
-- `200`: OK
-- `404`: Not Found
-
-
----
-
-# Verify Aadhaar OTPGet details
-
-`POST /v1/account/reKYC/verifyAadhaarOTPGetDetails`
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/v1/account/reKYC/verifyAadhaarOTPGetDetails \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "authType": "AADHAAR_OTP",
-  "hprId": "<HPR_ID>",
-  "password": "<PASSWORD>",
-  "aadhaar": "<AADHAAR>",
-  "mobileNumber": "<MOBILE_NUMBER>",
-  "txnId": "5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11",
-  "otp": "<OTP>",
-  "resend": false,
-  "aadhaarVerifyOtpRequestDto": {
-    "aadhaarNumber": "<AADHAAR_NUMBER>",
-    "otp": "<OTP>",
-    "faceAuthPid": "<FACE_AUTH_PID>",
-    "aadhaarLogType": "<AADHAAR_LOG_TYPE>",
-    "transactionId": "<TRANSACTION_ID>",
-    "txnId": "<TXN_ID>"
-  }
-}'
-```
-
-## Authorization
-
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
-
-## Body
-
-- `authType` (string) One of: AADHAAR_OTP, USERNAME_PASSWORD, MOBILE_OTP.
-- `hprId` (string)
-- `password` (string)
-- `aadhaar` (string)
-- `mobileNumber` (string)
-- `txnId` (string)
-- `otp` (string)
-- `resend` (boolean)
-- `aadhaarVerifyOtpRequestDto` (object)
-- `aadhaarVerifyOtpRequestDto.aadhaarNumber` (string)
-- `aadhaarVerifyOtpRequestDto.otp` (string)
-- `aadhaarVerifyOtpRequestDto.faceAuthPid` (string)
-- `aadhaarVerifyOtpRequestDto.aadhaarLogType` (string)
-- `aadhaarVerifyOtpRequestDto.transactionId` (string)
-- `aadhaarVerifyOtpRequestDto.txnId` (string)
-
-## Responses
-
-- `200`: OK
-- `404`: Not Found
 
 
 ---
@@ -18686,7 +18304,11 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Path parameters
 
@@ -18695,7 +18317,24 @@ curl --request GET \
 ## Responses
 
 - `200`: OK
+  - `hprIdNumber` (string)
+  - `name` (string)
+  - `hprId` (string)
+  - `categoryName` (string)
+  - `categorySubName` (string)
 - `404`: Not Found
+
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+{
+  "hprIdNumber": "<HPR_ID_NUMBER>",
+  "name": "<NAME>",
+  "hprId": "<HPR_ID>",
+  "categoryName": "<CATEGORY_NAME>",
+  "categorySubName": "<CATEGORY_SUB_NAME>"
+}
+```
 
 
 ---
@@ -18712,12 +18351,22 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string, required)
 
 ## Responses
 
 - `200`: OK
 - `404`: Not Found
+
+Example 200 response. The values are placeholders:
+
+```json
+"User Profile LoggedOut Successfully!!"
+```
 
 
 ---
@@ -18741,7 +18390,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -18784,7 +18437,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -18820,7 +18477,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -18850,29 +18511,29 @@ curl --request POST \
   - `address` (string)
 - `404`: Not Found
 
-Example 200 response. The values are placeholders:
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 
 ```json
 {
-  "txnId": "951b4258-2ac7-432c-8dbf-6ed990757b88",
-  "mobileNumber": null,
-  "photo": "<BASE64 ENCODED STRING>",
-  "gender": "M",
-  "name": "Ayushman Bharat Mission",
-  "email": null,
+  "txnId": "<TXN_ID>",
+  "mobileNumber": "<MOBILE_NUMBER>",
+  "photo": "<PHOTO>",
+  "gender": "<GENDER>",
+  "name": "<NAME>",
+  "email": "<EMAIL>",
   "pincode": "<PINCODE>",
-  "birthdate": "<DOB>",
-  "careOf": "<NAME>",
-  "house": "<ADDRESS>",
-  "street": "<ADDRESS>",
-  "landmark": null,
-  "locality": "<ADDRESS>",
-  "villageTownCity": "Sahibabad",
-  "subDist": null,
-  "district": "Ghaziabad",
-  "state": "Uttar Pradesh",
-  "postOffice": "Sahibabad",
-  "address": "9th Floor, Tower-l, Jeevan Bharati Building, Connaught Place, New Delhi - 110001"
+  "birthdate": "<BIRTHDATE>",
+  "careOf": "<CARE_OF>",
+  "house": "<HOUSE>",
+  "street": "<STREET>",
+  "landmark": "<LANDMARK>",
+  "locality": "<LOCALITY>",
+  "villageTownCity": "<VILLAGE_TOWN_CITY>",
+  "subDist": "<SUB_DIST>",
+  "district": "<DISTRICT>",
+  "state": "<STATE>",
+  "postOffice": "<POST_OFFICE>",
+  "address": "<ADDRESS>"
 }
 ```
 
@@ -18889,14 +18550,18 @@ curl --request POST \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "txnId": "de4ff682-fcc6-4bcf-a978-0dbb19a288b4",
-  "mobileNumber": "JrHfDROoEcsYJ41g2wdkicsI7mT1ATCP347iqwBhWbfaEIgZ03/WHAYvDHRG2WXl4HBNuP2orD+3O75pN0xFhOz4oLXrePAxKTLK8uG5jdeAiGE2lKwOrShq9/gg+BckrQcDYjpMUePRuDau4mqLHa8FdSCQ8npGPY9KCpD2hZkscWNqZR68gRo/EwpY4u32kDzv5i1K/s+A7FNVwXqZS5AK2BadEhG5drSRk7P83eFxJZUlwtsvDK6iipOsM4VtMXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+  "txnId": "<TXN_ID>",
+  "mobileNumber": "<MOBILE_NUMBER>"
 }'
 ```
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -18939,7 +18604,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -18976,32 +18645,34 @@ curl --request POST \
   - `new` (boolean)
 - `404`: Not Found
 
-Example 200 response. The values are placeholders:
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 
 ```json
 {
-  "token": "<JWT TOKEN>",
-  "hprIdNumber": "<HPR_ID>",
-  "categoryId": 100,
-  "subCategoryId": 85,
-  "txnId": "79dbf65d-affa-4249-8935-3d01676d8b82",
-  "name": "Ayushman Bharat Mission",
-  "gender": "M",
-  "yearOfBirth": "<DOB>",
-  "monthOfBirth": "<DOB>",
-  "dayOfBirth": "<DOB>",
-  "firstName": "Ayushman",
-  "middleName": "",
-  "lastName": "Mission",
-  "stateCode": "9",
-  "districtCode": "145",
-  "stateName": "Uttar Pradesh",
-  "districtName": "<ADDRESS>",
-  "address": "9th Floor, Tower-l, Jeevan Bharati Building, Connaught Place, New Delhi - 110001",
+  "token": "<TOKEN>",
+  "hprIdNumber": "<HPR_ID_NUMBER>",
+  "categoryId": 0,
+  "categoryName": "<CATEGORY_NAME>",
+  "subCategoryId": 0,
+  "categorySubName": "<CATEGORY_SUB_NAME>",
+  "txnId": "5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11",
+  "name": "<NAME>",
+  "gender": "<GENDER>",
+  "yearOfBirth": "<YEAR_OF_BIRTH>",
+  "monthOfBirth": "<MONTH_OF_BIRTH>",
+  "dayOfBirth": "<DAY_OF_BIRTH>",
+  "firstName": "<FIRST_NAME>",
+  "middleName": "<MIDDLE_NAME>",
+  "lastName": "<LAST_NAME>",
+  "stateCode": "<STATE_CODE>",
+  "districtCode": "<DISTRICT_CODE>",
+  "stateName": "<STATE_NAME>",
+  "districtName": "<DISTRICT_NAME>",
+  "address": "<ADDRESS>",
   "pincode": "<PINCODE>",
-  "profilePhoto": "<BASE64 ENCODED STRING>",
-  "mobile": null,
-  "hprId": "<EMAIL>",
+  "profilePhoto": "<PROFILE_PHOTO>",
+  "mobile": "<MOBILE>",
+  "hprId": "<HPR_ID>",
   "new": false
 }
 ```
@@ -19025,7 +18696,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -19064,7 +18739,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -19078,12 +18757,12 @@ curl --request POST \
   - `mobileNumber` (string)
 - `404`: Not Found
 
-Example 200 response. The values are placeholders:
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 
 ```json
 {
-  "txnId": "951b4258-2ac7-432c-8dbf-6ed990757b88",
-  "mobileNumber": null
+  "txnId": "<TXN_ID>",
+  "mobileNumber": "<MOBILE_NUMBER>"
 }
 ```
 
@@ -19107,7 +18786,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -19117,7 +18800,18 @@ curl --request POST \
 ## Responses
 
 - `200`: OK
+  - `txnId` (string)
+  - `mobileNumber` (string)
 - `404`: Not Found
+
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+{
+  "txnId": "<TXN_ID>",
+  "mobileNumber": "<MOBILE_NUMBER>"
+}
+```
 
 
 ---
@@ -19155,7 +18849,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -19181,18 +18879,77 @@ curl --request POST \
 ## Responses
 
 - `200`: OK
+  - `token` (string)
+  - `hprIdNumber` (string)
+  - `name` (string)
+  - `gender` (string)
+  - `yearOfBirth` (string)
+  - `monthOfBirth` (string)
+  - `dayOfBirth` (string)
+  - `firstName` (string)
+  - `hprId` (string)
+  - `lastName` (string)
+  - `middleName` (string)
+  - `stateCode` (string)
+  - `districtCode` (string)
+  - `subDistrictCode` (string)
+  - `subDistrictName` (string)
+  - `stateName` (string)
+  - `districtName` (string)
+  - `email` (string)
+  - `kycPhoto` (string)
+  - `mobile` (string)
+  - `categoryId` (integer)
+  - `subCategoryId` (integer)
+  - `role` (integer)
+  - `authMethods` (string[])
+  - `new` (boolean)
 - `404`: Not Found
+
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+{
+  "token": "<TOKEN>",
+  "hprIdNumber": "<HPR_ID_NUMBER>",
+  "name": "<NAME>",
+  "gender": "<GENDER>",
+  "yearOfBirth": "<YEAR_OF_BIRTH>",
+  "monthOfBirth": "<MONTH_OF_BIRTH>",
+  "dayOfBirth": "<DAY_OF_BIRTH>",
+  "firstName": "<FIRST_NAME>",
+  "hprId": "<HPR_ID>",
+  "lastName": "<LAST_NAME>",
+  "middleName": "<MIDDLE_NAME>",
+  "stateCode": "<STATE_CODE>",
+  "districtCode": "<DISTRICT_CODE>",
+  "subDistrictCode": "<SUB_DISTRICT_CODE>",
+  "subDistrictName": "<SUB_DISTRICT_NAME>",
+  "stateName": "<STATE_NAME>",
+  "districtName": "<DISTRICT_NAME>",
+  "email": "<EMAIL>",
+  "kycPhoto": "<KYC_PHOTO>",
+  "mobile": "<MOBILE>",
+  "categoryId": 0,
+  "subCategoryId": 0,
+  "role": 0,
+  "authMethods": [
+    "AADHAAR_OTP"
+  ],
+  "new": false
+}
+```
 
 
 ---
 
-# Get facility and infrastructure within radius with filter
+# Get facility within radius with filter
 
-`POST /FacilityManagement/v1.5/facility/bygeoLocation/searchFacilityAndInfrastructureWithinRadiusWithFilter`
+`POST /FacilityManagement/v1.5/facility/bygeoLocation/searchWithinRadiusWithFilter`
 
 ```bash
 curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/FacilityManagement/v1.5/facility/bygeoLocation/searchFacilityAndInfrastructureWithinRadiusWithFilter \
+  --url https://apihspsbx.abdm.gov.in/v4/int/FacilityManagement/v1.5/facility/bygeoLocation/searchWithinRadiusWithFilter \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'Content-Type: application/json' \
   --data '{
@@ -19218,7 +18975,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -19243,12 +19004,25 @@ curl --request POST \
 ## Responses
 
 - `200`: OK
+  - `searchCountTotal` (integer)
+  - `recordList` (object[])
 - `404`: Not Found
+
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+{
+  "searchCountTotal": 0,
+  "recordList": [
+    "<RECORD_LIST>"
+  ]
+}
+```
 
 
 ---
 
-# Search facility
+# Search facility 1
 
 `POST /FacilityManagement/v1.5/facility/search`
 
@@ -19272,7 +19046,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -19295,38 +19073,16 @@ curl --request POST \
   - `numberOfPages` (integer)
 - `404`: Not Found
 
-Example 200 response. The values are placeholders:
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 
 ```json
 {
   "facilities": [
-    {
-      "ownership": "GOVERNMENT",
-      "systemOfMedicineCode": "P,M",
-      "systemOfMedicine": "Physiotherapy,Modern Medicine(Allopathy)",
-      "facilityType": "Hospital",
-      "stateName": "Bihar",
-      "stateLGDCode": "10",
-      "districtName": "<ADDRESS>",
-      "districtLGDCode": "212",
-      "subDistrictName": "<ADDRESS>",
-      "subDistrictLGDCode": "1400",
-      "villageCityTownName": null,
-      "villageCityTownLGDCode": null,
-      "address": "<ADDRESS>",
-      "pincode": "<PINCODE>",
-      "latitude": "25.635802000000098",
-      "longitude": "85.10391099999993",
-      "facilityId": "",
-      "facilityName": "Asian City Hospital",
-      "facilityStatus": "Submitted",
-      "ownershipCode": "G",
-      "facilityTypeCode": "H"
-    }
+    "<FACILITIES>"
   ],
-  "message": "Request processed successfully",
-  "totalFacilities": 1,
-  "numberOfPages": 1
+  "message": "<MESSAGE>",
+  "totalFacilities": 0,
+  "numberOfPages": 0
 }
 ```
 
@@ -19345,7 +19101,11 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Path parameters
 
@@ -19377,7 +19137,11 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Path parameters
 
@@ -19426,7 +19190,11 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Path parameters
 
@@ -19471,7 +19239,11 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string, required)
 
 ## Query parameters
 
@@ -19535,7 +19307,11 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string, required)
 
 ## Query parameters
 
@@ -19578,7 +19354,11 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Query parameters
 
@@ -19608,7 +19388,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -19651,14 +19435,18 @@ curl --request POST \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "ownershipCode": "G",
-  "systemOfMedicineCode": "M"
+  "ownershipCode": "<OWNERSHIP_CODE>",
+  "systemOfMedicineCode": "<SYSTEM_OF_MEDICINE_CODE>"
 }'
 ```
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -19704,7 +19492,11 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Query parameters
 
@@ -19751,7 +19543,11 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Responses
 
@@ -19790,14 +19586,18 @@ curl --request POST \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "ownershipCode": "P",
-  "ownerSubtypeCode": "NP"
+  "ownershipCode": "<OWNERSHIP_CODE>",
+  "ownerSubtypeCode": "<OWNER_SUBTYPE_CODE>"
 }'
 ```
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -19841,13 +19641,17 @@ curl --request POST \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "systemOfMedicineCode": "D"
+  "systemOfMedicineCode": "<SYSTEM_OF_MEDICINE_CODE>"
 }'
 ```
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -19892,7 +19696,11 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Query parameters
 
@@ -19934,7 +19742,11 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Responses
 
@@ -19994,7 +19806,11 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Query parameters
 
@@ -20036,38 +19852,33 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Responses
 
 - `200`: OK
 - `404`: Not Found
 
-Example 200 response. The values are placeholders:
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 
 ```json
 [
   {
-    "id": 1,
-    "name": "Central Board Of Secondary Education (CBSE)",
-    "status": true,
-    "visibleStatus": true,
-    "stateId": null,
-    "courseId": null,
-    "councilBoard": false,
-    "nationalBoard": true
-  },
-  {
-    "id": 2,
-    "name": "Council for the Indian School Certificate Examination (CISCE)",
-    "status": true,
-    "visibleStatus": true,
-    "stateId": null,
-    "courseId": null,
-    "councilBoard": false,
-    "nationalBoard": true
-  },
-  "... 1 more of the same shape"
+    "id": 0,
+    "name": "<NAME>",
+    "status": false,
+    "visibleStatus": false,
+    "stateId": 0,
+    "stateName": "<STATE_NAME>",
+    "courseId": 0,
+    "courseName": "<COURSE_NAME>",
+    "nationalBoard": false,
+    "councilBoard": false
+  }
 ]
 ```
 
@@ -20086,7 +19897,11 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Path parameters
 
@@ -20097,31 +19912,20 @@ curl --request GET \
 - `200`: OK
 - `404`: Not Found
 
-Example 200 response. The values are placeholders:
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 
 ```json
 [
   {
-    "id": 38,
-    "name": "Maharashtra  State Board of Secondary  and Higher Secondary  Education,   Pune",
-    "status": true,
-    "visibleStatus": true,
-    "stateId": 20,
-    "courseId": null,
-    "councilBoard": false,
-    "nationalBoard": false
-  },
-  {
-    "id": 821,
-    "name": "MAHARASHTRA NURSING COUNCIL, MUMBAI",
-    "status": true,
-    "visibleStatus": true,
-    "stateId": 20,
-    "courseId": null,
-    "councilBoard": true,
-    "nationalBoard": false
-  },
-  "... 1 more of the same shape"
+    "id": 0,
+    "name": "<NAME>",
+    "status": false,
+    "visibleStatus": false,
+    "stateId": 0,
+    "courseId": 0,
+    "nationalBoard": false,
+    "councilBoard": false
+  }
 ]
 ```
 
@@ -20140,7 +19944,11 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Path parameters
 
@@ -20149,7 +19957,34 @@ curl --request GET \
 ## Responses
 
 - `200`: OK
+  - `id` (integer)
+  - `name` (string)
+  - `status` (boolean)
+  - `visibleStatus` (boolean)
+  - `stateId` (integer)
+  - `stateName` (string)
+  - `courseId` (integer)
+  - `courseName` (string)
+  - `nationalBoard` (boolean)
+  - `councilBoard` (boolean)
 - `404`: Not Found
+
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+{
+  "id": 0,
+  "name": "<NAME>",
+  "status": false,
+  "visibleStatus": false,
+  "stateId": 0,
+  "stateName": "<STATE_NAME>",
+  "courseId": 0,
+  "courseName": "<COURSE_NAME>",
+  "nationalBoard": false,
+  "councilBoard": false
+}
+```
 
 
 ---
@@ -20166,7 +20001,11 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Path parameters
 
@@ -20177,37 +20016,24 @@ curl --request GET \
 - `200`: OK
 - `404`: Not Found
 
-Example 200 response. The values are placeholders:
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 
 ```json
 [
   {
-    "id": 21,
-    "name": "Dayanand Medical College And Hospital",
-    "status": true,
-    "visibleStatus": true,
-    "createdAt": "2023-08-17T16:58:31.000Z",
-    "systemOfMedicineId": 1,
-    "stateId": 27,
-    "courseId": null,
-    "stateName": "Maharashtra",
-    "systemOfMedicineName": null,
-    "deleted": false
-  },
-  {
-    "id": 22,
-    "name": "Gian Sagar Medical College And Hospital",
-    "status": true,
-    "visibleStatus": true,
-    "createdAt": "2023-08-17T16:58:31.000Z",
-    "systemOfMedicineId": 1,
-    "stateId": 27,
-    "courseId": null,
-    "stateName": "Maharashtra",
-    "systemOfMedicineName": null,
-    "deleted": false
-  },
-  "... 1 more of the same shape"
+    "id": 0,
+    "name": "<NAME>",
+    "status": false,
+    "visibleStatus": false,
+    "createdAt": "2026-08-24T10:15:30.000Z",
+    "systemOfMedicineId": 0,
+    "stateId": 0,
+    "courseId": 0,
+    "stateName": "<STATE_NAME>",
+    "systemOfMedicineName": "<SYSTEM_OF_MEDICINE_NAME>",
+    "deleted": false,
+    "courseName": "<COURSE_NAME>"
+  }
 ]
 ```
 
@@ -20226,7 +20052,11 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Path parameters
 
@@ -20237,6 +20067,27 @@ curl --request GET \
 
 - `200`: OK
 - `404`: Not Found
+
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+[
+  {
+    "id": 0,
+    "name": "<NAME>",
+    "status": false,
+    "visibleStatus": false,
+    "createdAt": "2026-08-24T10:15:30.000Z",
+    "systemOfMedicineId": 0,
+    "stateId": 0,
+    "courseId": 0,
+    "stateName": "<STATE_NAME>",
+    "systemOfMedicineName": "<SYSTEM_OF_MEDICINE_NAME>",
+    "deleted": false,
+    "courseName": "<COURSE_NAME>"
+  }
+]
+```
 
 
 ---
@@ -20253,12 +20104,30 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Responses
 
 - `200`: OK
 - `404`: Not Found
+
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+[
+  {
+    "id": 0,
+    "alpha_2_code": "<ALPHA_2_CODE>",
+    "alpha_3_code": "<ALPHA_3_CODE>",
+    "enShortName": "<EN_SHORT_NAME>",
+    "nationality": "<NATIONALITY>"
+  }
+]
+```
 
 
 ---
@@ -20275,7 +20144,11 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Path parameters
 
@@ -20284,7 +20157,24 @@ curl --request GET \
 ## Responses
 
 - `200`: OK
+  - `id` (integer)
+  - `alpha_2_code` (string)
+  - `alpha_3_code` (string)
+  - `enShortName` (string)
+  - `nationality` (string)
 - `404`: Not Found
+
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+{
+  "id": 0,
+  "alpha_2_code": "<ALPHA_2_CODE>",
+  "alpha_3_code": "<ALPHA_3_CODE>",
+  "enShortName": "<EN_SHORT_NAME>",
+  "nationality": "<NATIONALITY>"
+}
+```
 
 
 ---
@@ -20307,7 +20197,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -20331,6 +20225,29 @@ curl --request POST \
 - `200`: OK
 - `404`: Not Found
 
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+[
+  {
+    "id": 0,
+    "name": "<NAME>",
+    "systemOfMedicineId": 0,
+    "visibleStatus": false,
+    "status": false,
+    "sortOrder": false,
+    "courseCategory": "basic",
+    "systemOfMedicine": "<SYSTEM_OF_MEDICINE>",
+    "hprType": "doctor",
+    "qualificationCount": 0,
+    "international": false,
+    "createdBy": 0,
+    "acronym": "<ACRONYM>",
+    "priority": "<PRIORITY>"
+  }
+]
+```
+
 
 ---
 
@@ -20346,12 +20263,30 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Responses
 
 - `200`: OK
 - `404`: Not Found
+
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+[
+  {
+    "id": 0,
+    "stateId": 0,
+    "districtName": "<DISTRICT_NAME>",
+    "isoCode": "<ISO_CODE>",
+    "status": false
+  }
+]
+```
 
 
 ---
@@ -20368,7 +20303,11 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Path parameters
 
@@ -20378,6 +20317,20 @@ curl --request GET \
 
 - `200`: OK
 - `404`: Not Found
+
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+[
+  {
+    "id": 0,
+    "stateId": 0,
+    "districtName": "<DISTRICT_NAME>",
+    "isoCode": "<ISO_CODE>",
+    "status": false
+  }
+]
+```
 
 
 ---
@@ -20394,12 +20347,31 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Responses
 
 - `200`: OK
 - `404`: Not Found
+
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+[
+  {
+    "id": 0,
+    "name": "<NAME>",
+    "culture": "<CULTURE>",
+    "status": false,
+    "createdAt": "2026-08-24T10:15:30.000Z",
+    "modifiedAt": "2026-08-24T10:15:30.000Z"
+  }
+]
+```
 
 
 ---
@@ -20416,7 +20388,11 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Path parameters
 
@@ -20425,7 +20401,26 @@ curl --request GET \
 ## Responses
 
 - `200`: OK
+  - `id` (integer)
+  - `name` (string)
+  - `culture` (string)
+  - `status` (boolean)
+  - `createdAt` (string)
+  - `modifiedAt` (string)
 - `404`: Not Found
+
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+{
+  "id": 0,
+  "name": "<NAME>",
+  "culture": "<CULTURE>",
+  "status": false,
+  "createdAt": "2026-08-24T10:15:30.000Z",
+  "modifiedAt": "2026-08-24T10:15:30.000Z"
+}
+```
 
 
 ---
@@ -20442,12 +20437,31 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Responses
 
 - `200`: OK
 - `404`: Not Found
+
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+[
+  {
+    "id": 0,
+    "name": "<NAME>",
+    "stateId": "<STATE_ID>",
+    "systemOfMedicineId": 0,
+    "position": 0,
+    "status": false
+  }
+]
+```
 
 
 ---
@@ -20464,7 +20478,11 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Query parameters
 
@@ -20474,6 +20492,21 @@ curl --request GET \
 
 - `200`: OK
 - `404`: Not Found
+
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+[
+  {
+    "id": 0,
+    "name": "<NAME>",
+    "stateId": "<STATE_ID>",
+    "systemOfMedicineId": 0,
+    "position": 0,
+    "status": false
+  }
+]
+```
 
 
 ---
@@ -20490,7 +20523,11 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Responses
 
@@ -20536,12 +20573,34 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Responses
 
 - `200`: OK
 - `404`: Not Found
+
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+[
+  {
+    "id": 0,
+    "name": "<NAME>",
+    "isoCode": "<ISO_CODE>",
+    "status": false,
+    "countryId": 0,
+    "visibleStatus": false,
+    "isSystemOfMedicine": false,
+    "position": false,
+    "councilLabel": "<COUNCIL_LABEL>"
+  }
+]
+```
 
 
 ---
@@ -20558,7 +20617,11 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Path parameters
 
@@ -20567,7 +20630,32 @@ curl --request GET \
 ## Responses
 
 - `200`: OK
+  - `id` (integer)
+  - `name` (string)
+  - `isoCode` (string)
+  - `status` (boolean)
+  - `countryId` (integer)
+  - `visibleStatus` (boolean)
+  - `isSystemOfMedicine` (boolean)
+  - `position` (boolean)
+  - `councilLabel` (string)
 - `404`: Not Found
+
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+{
+  "id": 0,
+  "name": "<NAME>",
+  "isoCode": "<ISO_CODE>",
+  "status": false,
+  "countryId": 0,
+  "visibleStatus": false,
+  "isSystemOfMedicine": false,
+  "position": false,
+  "councilLabel": "<COUNCIL_LABEL>"
+}
+```
 
 
 ---
@@ -20584,12 +20672,30 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Responses
 
 - `200`: OK
 - `404`: Not Found
+
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+[
+  {
+    "id": 0,
+    "districtCode": 0,
+    "subDistrictName": "<SUB_DISTRICT_NAME>",
+    "isoCode": "<ISO_CODE>",
+    "status": false
+  }
+]
+```
 
 
 ---
@@ -20606,7 +20712,11 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Path parameters
 
@@ -20616,6 +20726,20 @@ curl --request GET \
 
 - `200`: OK
 - `404`: Not Found
+
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+[
+  {
+    "id": 0,
+    "districtCode": 0,
+    "subDistrictName": "<SUB_DISTRICT_NAME>",
+    "isoCode": "<ISO_CODE>",
+    "status": false
+  }
+]
+```
 
 
 ---
@@ -20632,12 +20756,32 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Responses
 
 - `200`: OK
 - `404`: Not Found
+
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+[
+  {
+    "id": 0,
+    "medicalSystem": "<MEDICAL_SYSTEM>",
+    "code": "<CODE>",
+    "position": 0,
+    "excludeStates": "<EXCLUDE_STATES>",
+    "hprType": "<HPR_TYPE>",
+    "councilMandatory": 0
+  }
+]
+```
 
 
 ---
@@ -20654,12 +20798,33 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Responses
 
 - `200`: OK
 - `404`: Not Found
+
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+[
+  {
+    "id": 0,
+    "name": "<NAME>",
+    "status": false,
+    "visibleStatus": false,
+    "collegeId": 0,
+    "collegeName": "<COLLEGE_NAME>",
+    "deleted": false,
+    "college": "<COLLEGE>"
+  }
+]
+```
 
 
 ---
@@ -20676,7 +20841,11 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Path parameters
 
@@ -20687,163 +20856,22 @@ curl --request GET \
 - `200`: OK
 - `404`: Not Found
 
-Example 200 response. The values are placeholders:
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 
 ```json
 [
   {
-    "id": 6046,
-    "name": "Baba Farid University Of Health Sciences,faridkot",
-    "status": true,
-    "visibleStatus": true,
-    "collegeId": 27,
-    "collegeName": null,
+    "id": 0,
+    "name": "<NAME>",
+    "status": false,
+    "visibleStatus": false,
+    "collegeId": 0,
+    "collegeName": "<COLLEGE_NAME>",
     "deleted": false,
-    "college": null
+    "college": "<COLLEGE>"
   }
 ]
 ```
-
-
----
-
-# Get facilities created by HPR ID
-
-`POST /getFacilityCreatedByHprId`
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/getFacilityCreatedByHprId \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "hprId": "<HPR_ID>",
-  "source": "<SOURCE>"
-}'
-```
-
-## Authorization
-
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
-
-## Query parameters
-
-- `page` (integer)
-- `size` (integer)
-
-## Body
-
-- `hprId` (string)
-- `source` (string)
-
-## Responses
-
-- `200`: OK
-- `404`: Not Found
-
-
----
-
-# Get facilities declared by HPR ID
-
-`POST /getFacilityDeclaredByHprId`
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/getFacilityDeclaredByHprId \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "hprId": "<HPR_ID>",
-  "source": "<SOURCE>"
-}'
-```
-
-## Authorization
-
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
-
-## Body
-
-- `hprId` (string)
-- `source` (string)
-
-## Responses
-
-- `200`: OK
-- `404`: Not Found
-
-
----
-
-# Update status
-
-`PUT /hprWorkDetails/status`
-
-```bash
-curl --request PUT \
-  --url https://apihspsbx.abdm.gov.in/v4/int/hprWorkDetails/status \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "status": "<STATUS>",
-  "facilityId": "<FACILITY_ID>",
-  "professionalHprId": "<PROFESSIONAL_HPR_ID>",
-  "managerHprId": "<MANAGER_HPR_ID>",
-  "isHpr": false
-}'
-```
-
-## Authorization
-
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
-
-## Body
-
-- `status` (string)
-- `facilityId` (string)
-- `professionalHprId` (string)
-- `managerHprId` (string)
-- `isHpr` (boolean)
-
-## Responses
-
-- `200`: OK
-- `404`: Not Found
-
-
----
-
-# Link delink existing facility
-
-`POST /relinkOrDelinkProfessionalFromFacility`
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/relinkOrDelinkProfessionalFromFacility \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "hprId": "<HPR_ID>",
-  "facilityId": "<FACILITY_ID>",
-  "action": "<ACTION>"
-}'
-```
-
-## Authorization
-
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
-
-## Body
-
-- `hprId` (string)
-- `facilityId` (string)
-- `action` (string)
-
-## Responses
-
-- `200`: OK
-- `404`: Not Found
 
 
 ---
@@ -20865,7 +20893,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -20908,7 +20940,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -20953,7 +20989,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -20963,7 +21003,18 @@ curl --request POST \
 ## Responses
 
 - `200`: OK
+  - `status` (string)
+  - `txnId` (string)
 - `404`: Not Found
+
+Example 200 response. The values are placeholders:
+
+```json
+{
+  "status": "<string>",
+  "txnId": "<string>"
+}
+```
 
 
 ---
@@ -20985,7 +21036,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -21030,7 +21085,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -21076,7 +21135,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -21086,71 +21149,18 @@ curl --request POST \
 ## Responses
 
 - `200`: OK
+  - `status` (string)
+  - `txnId` (string)
 - `404`: Not Found
 
+Example 200 response. The values are placeholders:
 
----
-
-# Send OTP if doctor verified
-
-`POST /v1/sendOtpIfDoctorVerified`
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/v1/sendOtpIfDoctorVerified \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "hprId": "<HPR_ID>",
-  "mobileNumber": "<MOBILE_NUMBER>"
-}'
+```json
+{
+  "status": "<string>",
+  "txnId": "<string>"
+}
 ```
-
-## Authorization
-
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
-
-## Body
-
-- `hprId` (string)
-- `mobileNumber` (string)
-
-## Responses
-
-- `200`: OK
-- `404`: Not Found
-
-
----
-
-# Verify doctor verification OTP
-
-`POST /v1/verifyDoctorVerificationOtp`
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/v1/verifyDoctorVerificationOtp \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "txnId": "<TXN_ID>",
-  "otp": "<OTP>"
-}'
-```
-
-## Authorization
-
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
-
-## Body
-
-- `txnId` (string)
-- `otp` (string)
-
-## Responses
-
-- `200`: OK
-- `404`: Not Found
 
 
 ---
@@ -21161,7 +21171,7 @@ Register a healthcare professional on the HPR, onboard a facility to the HFR, an
 
 ## Postman collection
 
-100 requests in the order you build them, and a sandbox environment to fill in. Each step keeps the txnId and X-token it gets back for the steps after it.
+87 requests in the order you build them, and a sandbox environment to fill in. Each step keeps the txnId and X-token it gets back for the steps after it.
 
 [Collection](/docs/pr-49/postman/hiecm-m4.postman_collection.json)[Environment](/docs/pr-49/postman/hiecm-sandbox.postman_environment.json)[Run in Postman](https://app.getpostman.com/run-collection/58494529-0d03a8e1-0ca2-44c6-b831-4ee0d6533f4b?action=collection%2Ffork\&collection-url=entityId%3D58494529-0d03a8e1-0ca2-44c6-b831-4ee0d6533f4b%26entityType%3Dcollection%26workspaceId%3D87d6429f-b4ee-4ec4-ac5d-5e6e5700b974)
 
@@ -25213,7 +25223,7 @@ Postman, Insomnia, Hoppscotch and Bruno take this through Import, as a link or a
 
 The full operation list is in the [P1 Registration and login API reference](/docs/pr-49/reference/hiecm-p1).
 
-New to this? Start with [P1 Identity and login](/docs/pr-49/docs/hiecm/v3/milestones/p1).
+New to this? Start with [P1 Registration and login](/docs/pr-49/docs/hiecm/v3/milestones/p1).
 
 
 ---
@@ -29805,7 +29815,7 @@ Postman, Insomnia, Hoppscotch and Bruno take this through Import, as a link or a
 
 The full operation list is in the [P2 Consents Management API reference](/docs/pr-49/reference/hiecm-p2).
 
-New to this? Start with [P2 Linking and records](/docs/pr-49/docs/hiecm/v3/milestones/p2).
+New to this? Start with [P2 Consents Management](/docs/pr-49/docs/hiecm/v3/milestones/p2).
 
 
 ---
@@ -31367,7 +31377,7 @@ Postman, Insomnia, Hoppscotch and Bruno take this through Import, as a link or a
 
 The full operation list is in the [P3 Subscription API reference](/docs/pr-49/reference/hiecm-p3).
 
-New to this? Start with [P3 Consent and notifications](/docs/pr-49/docs/hiecm/v3/milestones/p3).
+New to this? Start with [P3 Subscription](/docs/pr-49/docs/hiecm/v3/milestones/p3).
 
 
 ---
@@ -32055,7 +32065,7 @@ Postman, Insomnia, Hoppscotch and Bruno take this through Import, as a link or a
 
 The full operation list is in the [P4 Locker API reference](/docs/pr-49/reference/hiecm-p4).
 
-New to this? Start with [Personal Health Record (PHR) Application](/docs/pr-49/docs/hiecm/v3/concepts/participants/phr).
+New to this? Start with [P4 Locker](/docs/pr-49/docs/hiecm/v3/milestones/p4).
 
 
 ---
@@ -32403,20 +32413,20 @@ curl --request POST \
   --header 'Content-Type: application/json' \
   --data '{
   "notification": {
-    "transactionId": "a0e7bed4-ef98-4ea8-9077-f4a6192bfe2b",
-    "doneAt": "2026-03-19T08:01:11.090Z",
+    "transactionId": "3acbbb52-6de0-441f-b452-3c9488462b25",
+    "doneAt": "2023-01-24T06:35:44.167Z",
     "statusNotification": {
-      "sessionStatus": "TRANSFERRED",
+      "sessionStatus": "RECEIVED",
       "statusResponses": [
         {
-          "careContextReference": "COC497647c1-0627-48fa-8131-0dddc1b3e0b4",
-          "hiStatus": "DELIVERED",
-          "description": "Data sent successfully"
+          "careContextReference": "10004-20200001768-1",
+          "hiStatus": "VALID",
+          "description": "Data received successfully"
         },
         {
-          "careContextReference": "COC497647c1-0627-48fa-8131-0dddc1b3e0b5",
-          "hiStatus": "DELIVERED",
-          "description": "Data sent successfully"
+          "careContextReference": "10004-20200001768-2",
+          "hiStatus": "ERRORED",
+          "description": "Data could not be decrypted"
         }
       ]
     }
@@ -32629,7 +32639,7 @@ curl --request POST \
 
 ---
 
-# Receive the encrypted records at the data push URL, as the HIU
+# Push the encrypted records to the HIU's data push URL, as the PHR app
 
 `POST /health-information/transfer`
 
@@ -35658,8 +35668,8 @@ An auto approval policy works like this: the patient authorises the app once, th
 
 - [Hospital, lab and pharmacy systems](/docs/pr-49/docs/hiecm/v3/concepts/hip-hiu), the facility taking each role.
 - [The ABDM gateway](/docs/pr-49/docs/hiecm/v3/concepts/gateway), which holds every artefact here.
-- [M3 Health Information User, Health Information User Services](/docs/pr-49/docs/hiecm/v3/api/m3), the requesting side.
-- [M2 Health Information Provider, Health Information Provider Services](/docs/pr-49/docs/hiecm/v3/api/m2), what a record holder validates.
+- [M3 Health Information User: Fetch data with consent](/docs/pr-49/docs/hiecm/v3/api/m3), the requesting side.
+- [M2 Health Information Provider: Create and link records](/docs/pr-49/docs/hiecm/v3/api/m2), what a record holder validates.
 - [How a record travels](/docs/pr-49/docs/hiecm/v3/concepts/data-flow), what happens next.
 
 
@@ -35782,8 +35792,8 @@ Two reference implementations exist. Fidelius, at [github.com/sukreet/fidelius](
 ## Where this is implemented
 
 - [Hospital, lab and pharmacy systems](/docs/pr-49/docs/hiecm/v3/concepts/hip-hiu), which side the facility you act for is on.
-- [M2 Health Information Provider, Health Information Provider Services](/docs/pr-49/docs/hiecm/v3/api/m2), the sending side.
-- [M3 Health Information User, Health Information User Services](/docs/pr-49/docs/hiecm/v3/api/m3), the receiving side.
+- [M2 Health Information Provider: Create and link records](/docs/pr-49/docs/hiecm/v3/api/m2), the sending side.
+- [M3 Health Information User: Fetch data with consent](/docs/pr-49/docs/hiecm/v3/api/m3), the receiving side.
 - [Consent](/docs/pr-49/docs/hiecm/v3/concepts/consent), the artefact this flow depends on.
 - [FHIR and health record formats](/docs/pr-49/docs/hiecm/v3/concepts/fhir), what is inside the payload.
 
@@ -35991,18 +36001,18 @@ One exception. In the health information flow the HIU supplies a data push URL, 
 
 ## What moves through it
 
-| Module                                 | What the gateway routes                                                                                                                                                                                         | Reference                                          |
-| -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
-| [M1](/docs/pr-49/docs/hiecm/v3/api/m1) | Session tokens, and the calls that create and authenticate an ABHA identity                                                                                                                                     | [M1 API reference](/docs/pr-49/reference/hiecm-m1) |
-| [M2](/docs/pr-49/docs/hiecm/v3/api/m2) | [Discovery](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#discovery), care context linking, health information requests to a HIP                                                                           | [M2 API reference](/docs/pr-49/reference/hiecm-m2) |
-| [M3](/docs/pr-49/docs/hiecm/v3/api/m3) | Consent requests, consent notifications, artefact fetches, data flow requests                                                                                                                                   | [M3 API reference](/docs/pr-49/reference/hiecm-m3) |
-| [M4](/docs/pr-49/docs/hiecm/v3/api/m4) | The [HPR](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#hpr) and [HFR](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#hfr) registry calls, which carry their own token from `POST /getManagementToken` | [M4 API reference](/docs/pr-49/reference/hiecm-m4) |
+| Module                                 | What the gateway routes                                                                                                                                                                                                | Reference                                          |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
+| [M1](/docs/pr-49/docs/hiecm/v3/api/m1) | Session tokens, and the calls that create and authenticate an ABHA identity                                                                                                                                            | [M1 API reference](/docs/pr-49/reference/hiecm-m1) |
+| [M2](/docs/pr-49/docs/hiecm/v3/api/m2) | [Discovery](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#discovery), care context linking, health information requests to a HIP                                                                                  | [M2 API reference](/docs/pr-49/reference/hiecm-m2) |
+| [M3](/docs/pr-49/docs/hiecm/v3/api/m3) | Consent requests, consent notifications, artefact fetches, data flow requests                                                                                                                                          | [M3 API reference](/docs/pr-49/reference/hiecm-m3) |
+| [M4](/docs/pr-49/docs/hiecm/v3/api/m4) | The [HPR](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#hpr) and [HFR](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#hfr) registry calls, which carry their own bearer token rather than the gateway session | [M4 API reference](/docs/pr-49/reference/hiecm-m4) |
 
 The gateway holds no health record. It routes the permission and the metadata.
 
 ## The session endpoint
 
-One endpoint issues the token every other call carries. It is the call [M1](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#m1) uses. [M4](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#m4) declares bearer authentication, and its HPID calls publish `POST /getManagementToken`.
+One endpoint issues the token every other call carries. It is the call [M1](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#m1) uses. [M4](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#m4) calls carry their own bearer token instead.
 
 **POST** `/api/hiecm/gateway/v3/sessions`
 
@@ -36271,21 +36281,18 @@ Link as soon as the health record is ready to be shared, not when the visit open
 
 Whenever a care context is linked, or an existing one gains new records, the HIE-CM notifies every PHR application subscribed to that ABHA address. You do not send those notifications. You trigger them by linking.
 
-## Three routes onto the map
+## Two routes onto the map
 
-Which route applies depends on what the patient gave you at registration.
+Records are linked through either HIP initiated linking or user initiated linking.
 
-| Route                                                                              | When it applies                                                     | Who starts it             |
-| ---------------------------------------------------------------------------------- | ------------------------------------------------------------------- | ------------------------- |
-| [HIP](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#hip) initiated linking    | The patient shared their ABHA address with you                      | You                       |
-| Notification to mobile                                                             | You hold a mobile number, name, age and gender, but no ABHA address | You, and then the patient |
-| [Discovery](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#discovery) and link | The patient goes looking for old records from their PHR app         | The patient               |
+| Route                                                                                                | When it applies                                                 | Who starts it |
+| ---------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- | ------------- |
+| [HIP](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#hip) initiated linking                      | The patient shared their ABHA address with you                  | You           |
+| User initiated linking, by [discovery](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#discovery) | The patient goes looking for earlier records from their PHR app | The patient   |
 
-**HIP initiated linking.** You know who the patient is, so you assign each new record to a care context and link it against their ABHA address.
+**HIP initiated linking.** You know who the patient is. You generate a link token to authenticate the patient, assign each new record to a care context, and link it against their ABHA address. The linked care contexts then appear in the patient's PHR app.
 
-**Notification to mobile.** With no ABHA address to link to, you tell ABDM a record is ready. ABDM sends the patient an SMS with a secure deep link, which opens their PHR app or sends them to install one, where they can create an ABHA address, discover the record and link it. This route converts into the third one.
-
-**Discovery and link.** The request comes to you. The patient picks the facility they visited in their PHR app, and the HIE-CM forwards a discovery request to the [HRP](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#hrp) or HIP behind it. You match against your own patients and reply with care contexts, and the patient picks which to link. Implementing discovery is mandatory for every HIP, even if every patient gives you an ABHA address at the counter, because a patient who visited two years ago did not.
+**User initiated linking.** This finds records created earlier without an ABHA address. The request comes to you. The patient picks the facility they visited in their PHR app, and the HIE-CM forwards a discovery request to the [HRP](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#hrp) or HIP behind it. You match against your own patients and reply with care contexts, and the patient picks which to link. Implementing discovery is mandatory for every HIP, even if every patient gives you an ABHA address at the counter, because a patient who visited two years ago did not.
 
 What you are handed splits in two:
 
@@ -36325,7 +36332,7 @@ The full list is on [M2 errors](/docs/pr-49/docs/hiecm/v3/api/m2/errors).
 ## Where this is implemented
 
 - [Hospital, lab and pharmacy systems](/docs/pr-49/docs/hiecm/v3/concepts/hip-hiu), what a facility builds to do the linking.
-- [M2 Health Information Provider, Health Information Provider Services](/docs/pr-49/docs/hiecm/v3/api/m2), the call order for all three routes.
+- [M2 Health Information Provider: Create and link records](/docs/pr-49/docs/hiecm/v3/api/m2), the call order for both routes.
 - [Consent](/docs/pr-49/docs/hiecm/v3/concepts/consent), what happens once somebody asks for a linked care context.
 - [How a record travels](/docs/pr-49/docs/hiecm/v3/concepts/data-flow), what you do when that request arrives.
 - [PHR applications](/docs/pr-49/docs/hiecm/v3/concepts/participants/phr), the patient side of discovery and linking.
@@ -36335,40 +36342,113 @@ The full list is on [M2 errors](/docs/pr-49/docs/hiecm/v3/api/m2/errors).
 
 # Citizen
 
-You are the person the health records are about. You build nothing and call nothing. You hold an identity, and you decide who sees what.
+A **Citizen** is an individual who uses ABDM services to create, manage, and share their digital health information. Citizens remain in control of their health records and can decide when, how, and with whom their health information is shared through consent-based mechanisms.
 
-## Who you are in ABDM
+## Identity in ABDM
 
-Your identity is an [ABHA](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#abha), the Ayushman Bharat Health Account. It has two parts.
+Every citizen can be identified within the ABDM ecosystem through an **Ayushman Bharat Health Account ([ABHA](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#abha))**.
 
-|                | ABHA number                                                                                       | ABHA address                               |
-| -------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------ |
-| What it is     | 14 digits, such as `91-XXXX-XXXX-XXXX`                                                            | A readable name, such as `name@abdm`       |
-| How you get it | After an Aadhaar based [KYC](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#kyc) check passes | You choose it, or you are issued a default |
-| What it does   | Anchors one person to one number                                                                  | Routes records and consent requests to you |
+### ABHA Number
 
-You can hold an address without a number, created from a mobile number, name, year of birth and gender. That profile is self declared and carries no KYC.
+A unique 14-digit identifier assigned to an individual after successful identity verification.
 
-A [PHR](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#phr) app holds your account and acts for you. Hospitals, laboratories and pharmacies address records to your ABHA address.
+**Example:** `91-XXXX-XXXX-XXXX`
 
-## What you can do
+### ABHA Address
 
-- Create an ABHA, by Aadhaar [OTP](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#otp), face authentication, biometrics or a demographic match.
-- Share your profile at a counter by scanning the facility's QR code, and see what is being shared before you agree.
-- Search for a facility you visited, find records nobody has linked yet, and link them to your address.
-- Read a consent request in full: who is asking, why, which record types, which dates, and how long the access lasts.
-- Narrow it before you approve. You can change the access duration, the record date range, the data categories and the validity period.
-- Grant, deny, or revoke later. Revoking stops sharing under that consent immediately.
+A unique, user-friendly identifier used for digital health data exchange.
 
-## Why it is worth it
+**Example:** `name@abdm`
 
-Your records stay in the systems that created them. The [HIE-CM](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#hie-cm) holds identifiers, pointers and consent, never the record itself. Nothing central collects your health history.
+The ABHA Address enables healthcare facilities and ABDM-compliant applications to discover and securely exchange health information with the citizen, subject to valid consent.
 
-One address pulls records from many facilities into one app you choose. A permission you give is scoped and time boxed rather than open ended. Both sides of a transfer report it, so an exchange under your consent leaves a trail you can see.
+## Creating an ABHA
 
-## Next
+Citizens can create an ABHA through approved authentication methods such as:
 
-[Consent](/docs/pr-49/docs/hiecm/v3/concepts/consent) explains what a request carries and the states it moves through.
+- Aadhaar-based [OTP](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#otp) authentication
+- Aadhaar biometric authentication
+- Face authentication
+- Other ABDM-supported identity verification methods
+
+Upon successful verification, an ABHA Number and ABHA Address are created.
+
+## Health Record Management
+
+Citizens may use a Personal Health Record ([PHR](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#phr)) application to access and manage their digital health information.
+
+Through a PHR application, citizens can:
+
+- View and manage their ABHA profile
+- Receive and manage consent requests
+- Link health records from participating healthcare providers
+- Access and view linked health records
+
+Health records continue to remain with the healthcare providers that generate them and are shared only upon citizen consent.
+
+## Consent Management
+
+ABDM follows a consent-based framework for health information exchange.
+
+Citizens can:
+
+- Review consent requests received from healthcare providers or health information users.
+- Understand the purpose, duration, and scope of data access being requested.
+- Approve or deny consent requests.
+- Revoke previously granted consent at any time, subject to applicable policies and technical constraints.
+
+All health information sharing within ABDM is governed by citizen consent.
+
+## What Citizens Can Do
+
+### Create and Manage ABHA
+
+- Create an ABHA account.
+- Manage ABHA profile details.
+- Maintain and access ABHA credentials.
+
+### Link Health Records
+
+- Discover and link health records from participating healthcare facilities.
+- Consolidate records from multiple healthcare providers through ABDM-enabled applications.
+
+### Share Information Securely
+
+- Share health information digitally through consent-based workflows.
+- Use QR-code-based and other ABDM-supported mechanisms for sharing profile details where applicable.
+
+### Manage Consents
+
+- View active and historical consent requests.
+- Grant or deny consent.
+- Revoke consent when required.
+
+### Access Health History
+
+- View linked health records through ABDM-enabled applications.
+- Maintain a longitudinal view of healthcare interactions across participating providers.
+
+## Privacy and Security
+
+ABDM is designed to enable secure and consent-based exchange of health information.
+
+Key principles include:
+
+- Health records remain with the healthcare provider that generates them.
+- Citizens retain control over access to their health information.
+- Health information is shared only after obtaining valid consent.
+- Data exchange activities are auditable and traceable.
+- Access permissions are purpose-specific and time-bound.
+
+## Benefits for Citizens
+
+- Unified access to health records across participating healthcare providers.
+- Secure and paperless exchange of health information.
+- Greater control over personal health data.
+- Transparent and consent-driven data sharing.
+- Improved continuity of care across healthcare systems.
+
+This enables citizens to securely manage their digital health journey while maintaining control over their personal health information in accordance with ABDM principles.
 
 
 ---
@@ -36632,12 +36712,12 @@ The PHR application operates on behalf of the citizen and securely connects with
 
 ## Authorized capabilities and milestones
 
-| Integration phase                                             | Functional capabilities                                                                                                                                                                                                            |
-| ------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Phase 1 (P1)](/docs/pr-49/docs/hiecm/v3/milestones/p1)       | Facilitation of ABHA number and address creation, multiple authentication (four mandated login routes).                                                                                                                            |
-| [Phase 2 (P2)](/docs/pr-49/docs/hiecm/v3/milestones/p2)       | Execution of facility-level Scan & Share, profile management, ABHA card and QR code generation, legacy record discovery, and standardized [Care Context](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#care-context) linkage. |
-| [Phase 3 (P3)](/docs/pr-49/docs/hiecm/v3/milestones/p3)       | Management of user locker subscriptions and system notifications, execution of consent decisions (approval/rejection), configuration of auto-approval policies, and the secure retrieval and storage of health records.            |
-| Health Locker ([M2](/docs/pr-49/docs/hiecm/v3/milestones/m2)) | Processing direct document uploads necessitates certification as a Health Locker (Health Repository Provider), which requires the successful completion of Milestone 2 (M2) integration.                                           |
+| Integration phase                                             | Functional capabilities                                                                                                                                                                                                                 |
+| ------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Phase 1 (P1)](/docs/pr-49/docs/hiecm/v3/milestones/p1)       | Facilitation of ABHA number and address creation, multiple authentication (four mandated login routes).                                                                                                                                 |
+| [Phase 2 (P2)](/docs/pr-49/docs/hiecm/v3/milestones/p2)       | Execution of facility-level Scan and Register, profile management, ABHA card and QR code generation, legacy record discovery, and standardized [Care Context](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#care-context) linkage. |
+| [Phase 3 (P3)](/docs/pr-49/docs/hiecm/v3/milestones/p3)       | Management of user locker subscriptions and system notifications, execution of consent decisions (approval/rejection), configuration of auto-approval policies, and the secure retrieval and storage of health records.                 |
+| Health Locker ([M2](/docs/pr-49/docs/hiecm/v3/milestones/m2)) | Processing direct document uploads necessitates certification as a Health Locker (Health Repository Provider), which requires the successful completion of Milestone 2 (M2) integration.                                                |
 
 ## Significance and ecosystem value
 
@@ -36645,9 +36725,10 @@ The PHR application platform empowers citizens by providing a central interface 
 
 ## Next steps
 
-- [P1 Identity and login](/docs/pr-49/docs/hiecm/v3/milestones/p1): creating an ABHA address and the login routes, with the [P1 API reference](/docs/pr-49/reference/hiecm-p1).
-- [P2 Linking and records](/docs/pr-49/docs/hiecm/v3/milestones/p2): scan and share, discovery, the profile and the card, with the [P2 API reference](/docs/pr-49/reference/hiecm-p2).
-- [P3 Consent and notifications](/docs/pr-49/docs/hiecm/v3/milestones/p3): subscriptions, auto approval, consent and fetching records. The subscription calls are in the [P3 API reference](/docs/pr-49/reference/hiecm-p3), the auto approval and consent calls in the [P2 API reference](/docs/pr-49/reference/hiecm-p2), and the health locker calls in the [P4 API reference](/docs/pr-49/reference/hiecm-p4).
+- [P1 Registration and login](/docs/pr-49/docs/hiecm/v3/milestones/p1): creating an ABHA address and the login routes, with the [P1 API reference](/docs/pr-49/reference/hiecm-p1).
+- [P2 Consents Management](/docs/pr-49/docs/hiecm/v3/milestones/p2): scan and register, discovery and linking of records, with the [P2 API reference](/docs/pr-49/reference/hiecm-p2).
+- [P3 Subscription](/docs/pr-49/docs/hiecm/v3/milestones/p3): subscriptions, auto approval, consent and fetching records. The subscription calls are in the [P3 API reference](/docs/pr-49/reference/hiecm-p3), and the auto approval and consent calls in the [P2 API reference](/docs/pr-49/reference/hiecm-p2).
+- [P4 Locker](/docs/pr-49/docs/hiecm/v3/milestones/p4): setting up a health locker and keeping records as they are linked, with the [P4 API reference](/docs/pr-49/reference/hiecm-p4).
 - [Get started](/docs/pr-49/docs/hiecm/v3/getting-started/sandbox) for sandbox signup and your first call.
 
 
@@ -36733,7 +36814,7 @@ The person at the counter cannot act on a code. They can act on what to do next.
 | A step happening on somebody else's device is not a spinner                       | Face authentication waits on a person. Say that is what you are waiting for                                                                                                                                                                                                                                                   |
 | Show the masked destination before the wait                                       | The OTP request response names the masked mobile the OTP went to, which stops somebody waiting for a message that will never arrive                                                                                                                                                                                           |
 | Say upfront when the account will be restricted                                   | Otherwise the person meets the limit later, when something unrelated fails                                                                                                                                                                                                                                                    |
-| Answer scan and share inside thirty seconds                                       | The patient's screen is open for that long, and an acknowledgement after it shows them nothing                                                                                                                                                                                                                                |
+| Answer scan and register inside thirty seconds                                    | The patient's screen is open for that long, and an acknowledgement after it shows them nothing                                                                                                                                                                                                                                |
 | Offer the login methods the account actually has                                  | `authMethods` on the profile says which ones the person can use. A screen offering an Aadhaar OTP to a profile with no Aadhaar behind it fails for a reason nobody can see                                                                                                                                                    |
 | Put a setting at the level it belongs to                                          | Your credentials and your callback URL belong to the integration, the facility ID and the `hipId` belong to each facility. A settings screen that mixes them works for the first facility and fails on the next. See [one bridge, many facilities](/docs/pr-49/docs/hiecm/v3/concepts/how-it-fits#one-bridge-many-facilities) |
 | Aadhaar numbers, one time passwords and passwords never reach a log or a database | Encrypting a value and then logging the plain one is the same leak, moved. See [encryption](/docs/pr-49/docs/hiecm/v3/concepts/encryption)                                                                                                                                                                                    |
@@ -36943,10 +37024,10 @@ How to use it
 
 Download all skills
 
-- [ABHA Creation and Verification (M1)](https://nha-in.github.io/docs/pr-49/skills/abdm-m1/SKILL.md)
-- [Health Information Provider Services (M2)](https://nha-in.github.io/docs/pr-49/skills/abdm-m2/SKILL.md)
-- [Health Information User Services (M3)](https://nha-in.github.io/docs/pr-49/skills/abdm-m3/SKILL.md)
-- [National Healthcare Providers Registry (M4)](https://nha-in.github.io/docs/pr-49/skills/abdm-m4/SKILL.md)
+- [Create and verify ABHA (M1)](https://nha-in.github.io/docs/pr-49/skills/abdm-m1/SKILL.md)
+- [Create and link records (M2)](https://nha-in.github.io/docs/pr-49/skills/abdm-m2/SKILL.md)
+- [Fetch data with consent (M3)](https://nha-in.github.io/docs/pr-49/skills/abdm-m3/SKILL.md)
+- [Register facilities and professionals (M4)](https://nha-in.github.io/docs/pr-49/skills/abdm-m4/SKILL.md)
 - [PHR registration and login (P1)](https://nha-in.github.io/docs/pr-49/skills/abdm-p1/SKILL.md)
 - [Consents Management (P2)](https://nha-in.github.io/docs/pr-49/skills/abdm-p2/SKILL.md)
 - [PHR subscriptions (P3)](https://nha-in.github.io/docs/pr-49/skills/abdm-p3/SKILL.md)
@@ -37220,19 +37301,19 @@ The token that authorises a [Health Information Provider](#hip) to link [care co
 
 ### M1
 
-Milestone 1 (M1 Identity), ABHA Creation and Verification, covers ABHA-related functions implemented within an integrated application, including creation of an [ABHA Number](#abha-number) through supported methods, creation of an [ABHA Address](#abha-address), verification during patient registration, download of the ABHA Card and other role-specific functions prescribed in the current test cases. See [M1 Identity](/docs/pr-49/docs/hiecm/v3/milestones/m1).
+Milestone 1 (M1 Identity), Create and verify ABHA, covers ABHA-related functions implemented within an integrated application, including creation of an [ABHA Number](#abha-number) through supported methods, creation of an [ABHA Address](#abha-address), verification during patient registration, download of the ABHA Card and other role-specific functions prescribed in the current test cases. See [M1 Identity](/docs/pr-49/docs/hiecm/v3/milestones/m1).
 
 ### M2
 
-Milestone 2 (M2 Health Information Provider), [Health Information Provider](#hip) Services, covers linking health records with an individual’s [ABHA Address](#abha-address). It includes discovery of eligible [care contexts](#care-context), authentication or consent for linking, linking of care contexts by the HIP and notification of newly linked records to the applicable [PHR application](#phr). See [M2 Health Information Provider](/docs/pr-49/docs/hiecm/v3/milestones/m2).
+Milestone 2 (M2 [Health Information Provider](#hip)), Create and link records, covers linking health records with an individual’s [ABHA Address](#abha-address). It includes discovery of eligible [care contexts](#care-context), authentication or consent for linking, linking of care contexts by the HIP and notification of newly linked records to the applicable [PHR application](#phr). See [M2 Health Information Provider](/docs/pr-49/docs/hiecm/v3/milestones/m2).
 
 ### M3
 
-Milestone 3 (M3 Health Information User), [Health Information User](#hiu) Services, covers consent-based exchange of health information. It includes creation and management of consent requests by an HIU, receipt of the individual’s decision, retrieval of a valid [consent artefact](#consent-artefact) and secure exchange of the authorised health information between participating entities. See [M3 Health Information User](/docs/pr-49/docs/hiecm/v3/milestones/m3).
+Milestone 3 (M3 [Health Information User](#hiu)), Fetch data with consent, covers consent-based exchange of health information. It includes creation and management of consent requests by an HIU, receipt of the individual’s decision, retrieval of a valid [consent artefact](#consent-artefact) and secure exchange of the authorised health information between participating entities. See [M3 Health Information User](/docs/pr-49/docs/hiecm/v3/milestones/m3).
 
 ### M4
 
-Milestone 4 (M4 Registry Integration), also referred to as National Healthcare Providers Registry (NHPR) native integration, covers integration of healthcare-professional and health-facility registration functions into eligible applications. The milestone is undertaken in accordance with the roles, sequencing and test requirements prescribed by [NHA](#nha). See [M4 Registry Integration](/docs/pr-49/docs/hiecm/v3/milestones/m4).
+Milestone 4 (M4 Registry Integration), Register facilities and professionals, also referred to as National Healthcare Providers Registry (NHPR) native integration, covers integration of healthcare-professional and health-facility registration functions into eligible applications. The milestone is undertaken in accordance with the roles, sequencing and test requirements prescribed by [NHA](#nha). See [M4 Registry Integration](/docs/pr-49/docs/hiecm/v3/milestones/m4).
 
 ### PMS
 
@@ -37321,7 +37402,7 @@ Questions about the exit process itself, including where to submit the form or w
 
 Connect your application to India's Interoperable Digital Health Infrastructure.
 
-## What ABDM is
+## What is ABDM?
 
 Ayushman Bharat Digital Mission (ABDM) is India's national digital health ecosystem, designed to enable secure, interoperable, and consent-based exchange of health information across healthcare stakeholders. ABDM enables identification of healthcare beneficiaries, healthcare professionals, and healthcare facilities through nationally recognized digital registries. It also facilitates secure and consent-driven exchange of health information among authorized participants.
 
@@ -37507,7 +37588,7 @@ Two things about that URL decide whether your integration works:
 | The gateway, including the session call                                     | `https://dev.abdm.gov.in`, with the header `X-CM-ID: sbx` |
 | The [ABHA](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#abha) service | `https://abhasbx.abdm.gov.in/abha/api/v3/`                |
 
-More than one sandbox host appears across our published documents. [The ABDM gateway](/docs/pr-49/docs/hiecm/v3/concepts/gateway) lists every host and where each one is written down.
+[The ABDM gateway](/docs/pr-49/docs/hiecm/v3/concepts/gateway#which-host) gives the gateway host for sandbox and for production side by side.
 
 ## What you see when it works
 
@@ -37625,25 +37706,31 @@ Meera arrives at your clinic. Each card below is one thing your system has to be
 
 ## The same story from Meera's own app
 
-Building the patient's app ([PHR](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#phr))? Implement the applicable ABHA and PHR services to allow individuals to manage their ABHA details, discover and link health records, and manage consent for sharing health information. The work splits into three, and each part mirrors a milestone on the provider side.
+Building the patient's app ([PHR](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#phr))? Implement the applicable ABHA and PHR services to allow individuals to manage their ABHA details, discover and link health records, and manage consent for sharing health information. The work splits into four: the first three each mirror a milestone on the provider side, and the fourth keeps her records.
 
-1. PHR 1 · Identity and profileMeera signs up and holds her own profile
+1. PHR 1 · Registration and loginMeera signs up and holds her own profile
 
    She registers with a mobile number or an existing ABHA number, logs in four different ways, and manages her card, her QR code and her family members.
 
    [Build P1](/docs/pr-49/docs/hiecm/v3/milestones/p1)
 
-2. PHR 2 · Linking and recordsShe finds records she never linked
+2. PHR 2 · Consents ManagementShe finds records she never linked
 
    She searches for the hospital she visited last year, sees what it holds, verifies by one time password, and pulls those care contexts onto her ABHA address.
 
    [Build P2](/docs/pr-49/docs/hiecm/v3/milestones/p2)
 
-3. PHR 3 · Consent and notificationsShe decides who sees what
+3. PHR 3 · SubscriptionShe decides who sees what
 
    A clinic asks for her records. She reads the request, narrows it, grants or denies it, and revokes it later. Your app tells her each time.
 
    [Build P3](/docs/pr-49/docs/hiecm/v3/milestones/p3)
+
+4. PHR 4 · LockerHer records stay with her
+
+   Her health locker subscribes to her ABHA address. When a hospital links a new record, it asks her consent, fetches the record and keeps it for her.
+
+   [Build P4](/docs/pr-49/docs/hiecm/v3/milestones/p4)
 
 ## Select milestones based on the requirement of your software
 
@@ -37657,12 +37744,12 @@ The milestones required for integration depend on the role of the software. A He
 
 ## What each milestone gets you
 
-| Milestone                                                                                                       | What you get                                | Who needs it                                                   |
-| --------------------------------------------------------------------------------------------------------------- | ------------------------------------------- | -------------------------------------------------------------- |
-| [M1 Identity: ABHA Creation and Verification](/docs/pr-49/docs/hiecm/v3/milestones/m1)                          | Identity and the session token              | Everyone                                                       |
-| [M2 Health Information Provider: Health Information Provider Services](/docs/pr-49/docs/hiecm/v3/milestones/m2) | Linking and sharing records                 | A facility publishing records, and a citizen pushing their own |
-| [M3 Health Information User: Health Information User Services](/docs/pr-49/docs/hiecm/v3/milestones/m3)         | Consent and record fetching                 | Anyone reading records they did not create, and every PHR app  |
-| [M4 Registry Integration: National Healthcare Providers Registry](/docs/pr-49/docs/hiecm/v3/milestones/m4)      | A facility ID and professional registration | Anyone going live as a facility                                |
+| Milestone                                                                                                 | What you get                                | Who needs it                                                   |
+| --------------------------------------------------------------------------------------------------------- | ------------------------------------------- | -------------------------------------------------------------- |
+| [M1 Identity: Create and verify ABHA](/docs/pr-49/docs/hiecm/v3/milestones/m1)                            | Identity and the session token              | Everyone                                                       |
+| [M2 Health Information Provider: Create and link records](/docs/pr-49/docs/hiecm/v3/milestones/m2)        | Linking and sharing records                 | A facility publishing records, and a citizen pushing their own |
+| [M3 Health Information User: Fetch data with consent](/docs/pr-49/docs/hiecm/v3/milestones/m3)            | Consent and record fetching                 | Anyone reading records they did not create, and every PHR app  |
+| [M4 Registry Integration: Register facilities and professionals](/docs/pr-49/docs/hiecm/v3/milestones/m4) | A facility ID and professional registration | Anyone going live as a facility                                |
 
 These pages give the steps, the order to build them in and the failure modes. Every request URL, header and body sits on the [API reference](/docs/pr-49/docs/hiecm/v3/api) pages, one page per call.
 
@@ -37692,7 +37779,7 @@ Milestone 1 focuses on ABHA creation, authentication, and profile management fun
 | -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Session and tokens                                                         | Establish gateway sessions, manage access and refresh tokens, and retrieve public key certificates required for secure ABDM interactions.                                        |
 | ABHA creation                                                              | Support creation of ABHA and associated identifiers in accordance with ABDM onboarding and verification workflows.                                                               |
-| ABHA login                                                                 | Authenticate an ABHA holder using approved identifiers and authentication mechanisms, including mobile number, ABHA number, or ABHA address, as applicable.                      |
+| ABHA login                                                                 | Authenticate an ABHA holder using approved identifiers and authentication mechanisms, including mobile number, Aadhaar number, ABHA number, or ABHA address, as applicable.      |
 | Profile management                                                         | Retrieve and manage ABHA profile information, display ABHA credentials and QR codes, update eligible profile attributes, and support re-verification workflows where applicable. |
 | [Scan and Register](/docs/pr-49/docs/hiecm/v3/use-cases/scan-and-register) | Support patient registration through QR-based workflows and generate service or queue identifiers in accordance with organization-specific processes.                            |
 
@@ -37715,7 +37802,7 @@ The M1 skill gives an AI coding assistant this milestone as one file: every M1 c
 
 M1 agent skill
 
-Every M1 call, one per use case, with its error codes in one file: 132 operations, 17 codes.
+Every M1 call, one per use case, with its error codes in one file: 125 operations, 17 codes.
 
 [SKILL.md](/docs/pr-49/skills/abdm-m1/SKILL.md "The router. Use the command below to take the references with it.")
 
@@ -37755,6 +37842,7 @@ sequenceDiagram
     P->>S: OTP, and the mobile number for ABHA communication
     S->>A: POST /abha/api/v3/enrollment/enrol/byAadhaar<br/>authData.authMethods [otp], otp {txnId,<br/>otpValue (encrypted), mobile}, consent
     A-->>S: ABHAProfile (ABHANumber, name, dob, gender, photo),<br/>tokens.token, isNew
+    Note over S,A: Optional: verify the communication mobile
     S->>A: POST /abha/api/v3/enrollment/request/otp<br/>scope [abha-enrol, mobile-verify], loginHint mobile,<br/>loginId (encrypted mobile), txnId
     A-->>S: txnId
     A-)P: OTP by SMS to the communication mobile
@@ -37784,8 +37872,9 @@ sequenceDiagram
     P->>P: Scans the QR code in the ABHA app<br/>Face authentication through the Aadhaar RD service
     S->>A: POST /abha/api/v3/enrollment/enrol/capturePID<br/>txnId, scope [abha-enrol]
     A-->>S: status of the face authentication
-    S->>A: POST /abha/api/v3/enrollment/enrol/byAadhaar<br/>authData.authMethods [face], face {txnId,<br/>aadhaar (encrypted), rdPidData, mobile}, consent
+    S->>A: POST /abha/api/v3/enrollment/enrol/byAadhaar<br/>authData.authMethods [face], face {txnId,<br/>aadhaar (encrypted), mobile}, consent
     A-->>S: ABHAProfile (ABHANumber, name, dob, gender, photo),<br/>tokens.token, isNew
+    Note over S,A: Optional: verify the communication mobile
     S->>A: POST /abha/api/v3/enrollment/request/otp<br/>scope [abha-enrol, mobile-verify], loginHint mobile,<br/>loginId (encrypted mobile), txnId
     A-)P: OTP by SMS to the communication mobile
     P->>S: Mobile OTP
@@ -37820,8 +37909,8 @@ sequenceDiagram
     Note over S: Holds the gateway access token and the<br/>public key from GET /abha/api/v3/profile/public/certificate
     P->>S: Aadhaar number, name as per Aadhaar, date of birth,<br/>gender, consent
     S->>S: Encrypts the Aadhaar number with the public key
-    S->>A: POST /abha/api/v3/enrollment/enrol/byAadhaar<br/>authData.authMethods [demo_auth],<br/>demo_auth {aadhaar (encrypted), name, dob, gender,<br/>mobile}, consent
-    A-->>S: ABHAProfile (ABHANumber,<br/>phrAddress issued by default), tokens.token, isNew
+    S->>A: POST /abha/api/v3/enrollment/enrol/byAadhaar<br/>authData.authMethods [demo_auth],<br/>demo_auth {aadhaarNumber (encrypted), name, dateOfBirth,<br/>gender, stateCode, districtCode, and optionally<br/>mobile, pinCode, address}, consent
+    A-->>S: New ABHA: ABHAProfile (ABHANumber,<br/>phrAddress issued by default), tokens.token, isNew.<br/>Existing ABHA: top level token, healthIdNumber, jwtResponse
     S->>A: GET /abha/api/v3/profile/account<br/>header X-token tokens.token
     A-->>S: ABHANumber, preferredAbhaAddress, profile fields
 ```
@@ -37869,7 +37958,7 @@ sequenceDiagram
     S->>A: POST /abha/api/v3/profile/account/abha/search<br/>scope [search-abha], mobile (encrypted)
     A-->>S: txnId, ABHA list (masked ABHA number, name, gender)
     P->>S: Confirms the account to prove
-    S->>A: POST /abha/api/v3/profile/login/request/otp<br/>scope [abha-login, mobile-verify], loginHint mobile,<br/>loginId index, otpSystem abdm, txnId
+    S->>A: POST /abha/api/v3/profile/login/request/otp<br/>scope [abha-login, search-abha, mobile-verify],<br/>loginHint index, loginId (encrypted index),<br/>otpSystem abdm, txnId
     A-->>S: txnId
     A-)P: OTP by SMS to the registered mobile
     P->>S: OTP
@@ -37970,7 +38059,7 @@ The M2 skill gives an AI coding assistant this milestone as one file: every M2 c
 
 M2 agent skill
 
-Every M2 call and callback, its error codes and its certification cases in one file: 31 operations, 120 codes, 46 cases.
+Every M2 call and callback with its error codes in one file: 24 operations, 120 codes.
 
 [SKILL.md](/docs/pr-49/skills/abdm-m2/SKILL.md "The router. Use the command below to take the references with it.")
 
@@ -38244,7 +38333,7 @@ The M3 skill gives an AI coding assistant this milestone as one file: every M3 c
 
 M3 agent skill
 
-Every M3 call and callback with its error codes in one file: 25 operations, 95 codes.
+Every M3 call and callback in one file: 16 operations.
 
 [SKILL.md](/docs/pr-49/skills/abdm-m3/SKILL.md "The router. Use the command below to take the references with it.")
 
@@ -38274,7 +38363,7 @@ sequenceDiagram
     participant S as Application/System
     participant CM as HIE-CM
     actor P as Patient (PHR app)
-    Note over S: Every call carries REQUEST-ID, TIMESTAMP,<br/>X-CM-ID, X-HIU-ID and the gateway access token
+    Note over S: Every call carries REQUEST-ID, TIMESTAMP,<br/>X-CM-ID and the gateway access token.<br/>Status, fetch and the health information request<br/>also carry X-HIU-ID
     S->>CM: POST /api/hiecm/consent/v3/request/init<br/>consent {purpose.code, patient.id (ABHA address),<br/>hiu.id, requester {name, identifier}, hiTypes,<br/>permission {accessMode, dateRange, dataEraseAt,
     CM-->>S: 202 Accepted
     CM-)S: callback POST {bridgeUrl}/api/v3/hiu/consent/request/on-init<br/>consentRequest.id, response.requestId
@@ -38337,7 +38426,7 @@ sequenceDiagram
     CM->>H: Forwards the request to the HIP on its bridge
     H->>S: POST dataPushUrl<br/>pageNumber, pageCount, transactionId,<br/>entries [content (encrypted FHIR bundle), checksum,<br/>careContextReference],
     S->>S: Derives the shared key from the HIP keyMaterial,<br/>decrypts and verifies each entry
-    S->>CM: POST /api/hiecm/data-flow/v3/health-information/notify<br/>notification {consentId, transactionId,<br/>notifier {type HIU, id},<br/>statusNotification {sessionStatus DELIVERED or ERRORED,
+    S->>CM: POST /api/hiecm/data-flow/v3/health-information/notify<br/>notification {consentId, transactionId,<br/>notifier {type HIU, id},<br/>statusNotification {sessionStatus RECEIVED or FAILED,
     S->>CM: GET /api/hiecm/data-flow/v3/health-information/request/status/{transaction-id}<br/>to check a transfer that has not arrived
 ```
 
@@ -38353,7 +38442,7 @@ Using the consent artefact ID, the HIU fetches the consent artefact and requests
 
 ---
 
-# Milestone 4 (M4): Register Healthcare Professionals and Facilities
+# M4 Registry Integration: Register facilities and professionals
 
 Milestone 4 is the Registries milestone, commonly referred to as NHPR (National Healthcare Professionals and Facilities Registry). It establishes the identity of healthcare professionals and the details of healthcare facilities within the ABDM ecosystem.
 
@@ -38407,12 +38496,12 @@ The M4 skill gives an AI coding assistant this milestone as one file: every M4 c
 
 M4 agent skill
 
-Every M4 call in one file: 100 operations.
+Every M4 call in one file: 104 operations.
 
 [SKILL.md](/docs/pr-49/skills/abdm-m4/SKILL.md "The router. Use the command below to take the references with it.")
 
 - ScaffoldThe loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.
-- Integrate104 operations, with their hosts and headers.
+- Integrate91 operations, with their hosts and headers.
 - DebugNo error code is recorded yet.
 
 `mkdir -p .claude/skills/abdm-m4/references && curl -fsSL https://nha-in.github.io/docs/pr-49/skills/abdm-m4/SKILL.md -o .claude/skills/abdm-m4/SKILL.md && for f in scaffold integrate debug; do curl -fsSL https://nha-in.github.io/docs/pr-49/skills/abdm-m4/references/$f.md -o .claude/skills/abdm-m4/references/$f.md; done`
@@ -38635,20 +38724,20 @@ Next: [M4 API reference](/docs/pr-49/docs/hiecm/v3/api/m4).
 ## Next
 
 - The base URLs and the operation list: [M4 API reference](/docs/pr-49/docs/hiecm/v3/api/m4).
-- The patient side of all four: [P1 Identity and profile](/docs/pr-49/docs/hiecm/v3/milestones/p1).
+- The patient side of all four: [P1 Registration and login](/docs/pr-49/docs/hiecm/v3/milestones/p1).
 - Take your integration to production: [Go live](/docs/pr-49/docs/hiecm/v3/getting-started/going-live).
 
 
 ---
 
-# P1 Identity and login
+# P1 Registration and login
 
 P1 is the patient side of [M1 Identity](/docs/pr-49/docs/hiecm/v3/milestones/m1). M1 is how a hospital system creates an [ABHA](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#abha). P1 is how the patient's own [PHR](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#phr) app does it, and how it maintains the account afterwards.
 
 ## In short
 
 - Every user needs an ABHA address, `username@abdm`. Consent, notifications and record sharing all hang off it.
-- Build both creation paths: by mobile number, and by an existing 14 digit ABHA number.
+- Build all three creation paths: by mobile number, by an existing 14 digit ABHA number, and by Aadhaar number for someone with no ABHA number yet.
 - Every login route is mandatory.
 - Fetch the PHR public key first. It is not the ABHA service's key.
 - A user can hold several ABHA addresses but only one ABHA number.
@@ -38719,12 +38808,12 @@ Encrypt the Aadhaar number, mobile number, OTP and password with the PHR public 
 ## Next
 
 - The calls and base URLs: [P1 API reference](/docs/pr-49/reference/hiecm-p1).
-- The next milestone: [P2 Linking and records](/docs/pr-49/docs/hiecm/v3/milestones/p2).
+- The next milestone: [P2 Consents Management](/docs/pr-49/docs/hiecm/v3/milestones/p2).
 
 
 ---
 
-# P2 Linking and records
+# P2 Consents Management
 
 P2 is the mirror of [M2 Health Information Provider](/docs/pr-49/docs/hiecm/v3/milestones/m2). M2 is a provider publishing a record. P2 is the patient discovering it and linking it to their own [ABHA address](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#abha-address).
 
@@ -38737,9 +38826,9 @@ P2 is the mirror of [M2 Health Information Provider](/docs/pr-49/docs/hiecm/v3/m
 
 ## What you build
 
-Profile management, care context linking, user initiated linking, scan and share at a facility, and health locker subscriptions.
+Profile management, care context linking, user initiated linking, and scan and register at a facility.
 
-## Scan and share at a facility
+## Scan and register at a facility
 
 The facility displays a QR code holding a URL with two parameters: the HIP ID and a facility defined context such as a counter code. Your app scans it, then:
 
@@ -38793,12 +38882,12 @@ The signed in user manages their own profile from your app. Every call takes the
 ## Next
 
 - The calls and base URLs: [P2 API reference](/docs/pr-49/reference/hiecm-p2).
-- The next milestone: [P3 Consent and notifications](/docs/pr-49/docs/hiecm/v3/milestones/p3).
+- The next milestone: [P3 Subscription](/docs/pr-49/docs/hiecm/v3/milestones/p3).
 
 
 ---
 
-# P3 Consent and notifications
+# P3 Subscription
 
 P3 is the other side of [M3 Health Information User](/docs/pr-49/docs/hiecm/v3/milestones/m3). M3 is a requester asking for records. P3 is the patient deciding, and being told each time.
 
@@ -38850,8 +38939,74 @@ Once a care context is linked to the user's ABHA address:
 ## Next
 
 - The calls and base URLs: [P3 API reference](/docs/pr-49/reference/hiecm-p3).
+- Keeping the records for the long term: [P4 Locker](/docs/pr-49/docs/hiecm/v3/milestones/p4).
 - Back to the four provider milestones: [Milestones](/docs/pr-49/docs/hiecm/v3/milestones).
 - Take your integration to production: [Go live](/docs/pr-49/docs/hiecm/v3/getting-started/going-live).
+
+
+---
+
+# P4 Locker
+
+A health locker is a [PHR](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#phr) application that keeps a person's health records for the long term, under their control. It hears about new records through a subscription on their [ABHA address](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#abha-address), fetches them with consent, and stores them.
+
+## In short
+
+- A health locker subscribes to two categories on an ABHA address: LINK, a new care context linked at a HIP, and DATA, new data on an existing care context.
+- A subscription raised by a health locker is approved automatically for all HIPs and all health information types.
+- A LINK notification starts a consent request. A DATA notification reuses an existing consent that covers it.
+- Set up the locker for each patient, then read its settings back to show them.
+- Processing documents the person uploads needs certification as a Health Locker ([Health Repository Provider](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#hrp)), which requires [M2](/docs/pr-49/docs/hiecm/v3/milestones/m2).
+
+## Who needs it
+
+A PHR application that stores a person's records rather than only displaying them. A health locker builds on [P3 Subscription](/docs/pr-49/docs/hiecm/v3/milestones/p3): it uses the same subscription and consent calls, and adds the locker setup and settings calls on this page.
+
+## How a health locker receives records
+
+1. **Set up the locker for the patient.** Call setup locker with the locker's identifier in `X-LOCKER-ID`. The response carries a `consentAutoApprovalId`.
+
+2. **Subscribe to the patient's ABHA address.** Use the gateway subscription calls and identify your application as a health locker. The subscription is approved automatically for all HIPs and all health information types.
+
+3. **Act on each notification** by its category:
+
+   | Category | What happened                                          | What your locker does                                                                                                                   |
+   | -------- | ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
+   | `LINK`   | A HIP linked a new care context to the ABHA address    | Raise a consent request for that care context. Once the person grants it, raise the health information request                          |
+   | `DATA`   | New data is available on a care context already linked | Look for an existing consent that covers the health information type and date range, and use it to raise the health information request |
+
+4. **Store what arrives**, for long term access by the person.
+
+A notification carries no health records. The records arrive only through the health information request that follows a granted consent, as described in [P3 Subscription](/docs/pr-49/docs/hiecm/v3/milestones/p3).
+
+## The locker calls
+
+| Call                        | Method and path                                                        | What it returns                                                                                    |
+| --------------------------- | ---------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| Health locker providers     | `GET /api/hiecm/gateway/v3/health-lockers`                             | The providers with health locker enabled                                                           |
+| Set up a locker             | `POST /api/hiecm/subscription-requests/v3/setup-locker`                | `consentAutoApprovalId`                                                                            |
+| Lockers on an ABHA address  | `GET /api/hiecm/subscription-requests/v3/patients/lockers`             | Each locker's `lockerId`, `lockerName`, `isActive` and dates. `includeInactive` adds inactive ones |
+| One locker's settings       | `GET /api/hiecm/subscription-requests/v3/patients/lockers/{locker-id}` | The locker and its subscriptions, each with its purpose and status                                 |
+| Requests on an ABHA address | `GET /api/hiecm/subscription-requests/v3/patients/requests`            | The consent and subscription requests, filtered by status                                          |
+
+Every call carries `REQUEST-ID`, `TIMESTAMP`, `X-CM-ID` and the gateway session token. The calls about a patient also carry `X-AUTH-TOKEN`, the person's own login token from [P1 Registration and login](/docs/pr-49/docs/hiecm/v3/milestones/p1), which is a different token from the gateway session token.
+
+## How you know it worked
+
+- Setup locker answers 200 with a `consentAutoApprovalId`.
+- The lockers call lists your locker for the ABHA address with `isActive` true.
+- The locker's settings show its subscriptions with status `GRANTED`.
+
+## When it does not
+
+- **A notification arrived but no records did.** Raise the consent request, or the health information request under an existing consent. The notification only says that something changed.
+- **A patient call is refused.** Check that `X-AUTH-TOKEN` holds the person's login token, not the gateway session token.
+
+## Next
+
+- The calls and base URLs: [P4 API reference](/docs/pr-49/reference/hiecm-p4).
+- Subscriptions and consent from the patient's side: [P3 Subscription](/docs/pr-49/docs/hiecm/v3/milestones/p3).
+- Where a locker fits among PHR applications: [Personal Health Record (PHR) Application](/docs/pr-49/docs/hiecm/v3/concepts/participants/phr).
 
 
 ---
@@ -38878,7 +39033,7 @@ Generated from the specifications. Every scheme and header below is declared in 
 
 ## M4 Registry Integration
 
-**bearerAuth**, `http` `bearer`. M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+**bearerAuth**, `http` `bearer`. M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
 
 ## P1 Registration and login
 
@@ -39353,8 +39508,8 @@ Two paths are fixed here:
 
 - [HPR](/docs/pr-49/docs/hiecm/v3/registries/nhpr/hpr), which issues the token these calls need.
 - [NHPR](/docs/pr-49/docs/hiecm/v3/registries/nhpr), the parent page.
-- [the HPR and HFR call list](/docs/pr-49/docs/hiecm/v3/api/m4), parameter tables and `HIS-` error codes.
-- [M2 Health Information Provider, Health Information Provider Services](/docs/pr-49/docs/hiecm/v3/api/m2), which needs this facility ID.
+- [the HPR and HFR call list](/docs/pr-49/docs/hiecm/v3/api/m4), with parameter tables.
+- [M2 Health Information Provider: Create and link records](/docs/pr-49/docs/hiecm/v3/api/m2), which needs this facility ID.
 
 
 ---
@@ -39497,7 +39652,7 @@ Both registries share one base URL:
 Sandbox     https://apihspsbx.abdm.gov.in/v4/int/
 ```
 
-The calls take a bearer token in the `Authorization` header. M4 declares bearer authentication. The HPID calls publish `POST /getManagementToken`. [M4](/docs/pr-49/docs/hiecm/v3/api/m4) is the only milestone in [ABDM](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#abdm) that writes to NHPR, and its operations and their fields are in [the M4 API reference](/docs/pr-49/docs/hiecm/v3/api/m4).
+The calls take a bearer token in the `Authorization` header. [M4](/docs/pr-49/docs/hiecm/v3/api/m4) is the only milestone in [ABDM](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#abdm) that writes to NHPR, and its operations and their fields are in [the M4 API reference](/docs/pr-49/docs/hiecm/v3/api/m4).
 
 ## Next
 
@@ -39810,7 +39965,7 @@ The request and response bodies, with every field, are on the [Patient scan and 
 
 - The milestone this belongs to: [M3 Health Information User](/docs/pr-49/docs/hiecm/v3/milestones/m3).
 - The profile-only version of the same scan: [Scan and Register](/docs/pr-49/docs/hiecm/v3/use-cases/scan-and-register).
-- The patient's side of the share: [P3 Consent and records](/docs/pr-49/docs/hiecm/v3/milestones/p3).
+- The patient's side of the share: [P3 Subscription](/docs/pr-49/docs/hiecm/v3/milestones/p3).
 
 
 ---
@@ -39883,7 +40038,7 @@ Step 2 arrives on your bridge, your step 3 and step 6 return 202, and step 8 com
 
 - The profile-only version of the same scan: [Scan and Register](/docs/pr-49/docs/hiecm/v3/use-cases/scan-and-register).
 - The bridge these callbacks land on: [M2 Health Information Provider](/docs/pr-49/docs/hiecm/v3/milestones/m2).
-- The app's side: [P2 Linking and records](/docs/pr-49/docs/hiecm/v3/milestones/p2).
+- The app's side: [P2 Consents Management](/docs/pr-49/docs/hiecm/v3/milestones/p2).
 
 
 ---
@@ -39899,11 +40054,11 @@ sequenceDiagram
     participant S as Your system
     P->>A: Scans the counter QR code, agrees to share
     A->>CM: Share the profile with this HIP and counter
-    CM->>S: POST /patient-share/v3/share on your bridge
+    CM->>S: POST /api/v3/hip/patient/share on your bridge
     Note over CM,S: intent PROFILE_SHARE, metaData.hipId, metaData.context, profile.patient
     S-->>CM: 200, profile received
     S->>S: Register the patient, assign a queue token
-    S->>CM: POST /patient-share/v3/on-share with status and tokenNumber
+    S->>CM: POST /api/hiecm/patient-share/v3/on-share with status and tokenNumber
     CM-->>A: Token number to show the patient
 ```
 
@@ -39911,13 +40066,13 @@ Support patient registration through QR-based workflows and generate service or 
 
 Your facility prints a QR code at each counter. It holds a URL with two parameters: your HIP id and a counter context such as `OPD1`. The patient scans it in their [PHR](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#phr) app, agrees to share, and their profile arrives on your bridge. Nobody types a name at the desk, and every record from that visit links to the right ABHA address from the start.
 
-Step 3 is a callback on the URL registered for your bridge, not a call you make. Answer it with a 200 at once and do the registration afterwards. Step 7 is your reply: `acknowledgement.status` is `SUCCESS` with `profile.tokenNumber` and the same `context`, or `FAILURE` with an `error` code and message.
+Step 3 is a callback on the URL registered for your bridge, not a call you make. Answer it with a 200 at once and do the registration afterwards. Step 6 is your reply: `acknowledgement.status` is `SUCCESS` with `profile.tokenNumber` and the same `context`, or `FAILED` with an `error` code and message.
 
 The patient's app holds its screen open for 30 seconds. Send the acknowledgement inside that window or the patient sees no token.
 
 `profile.patient` carries the ABHA number, the ABHA address, name, gender, date of birth, mobile number, address and a KYC photo. Match on the ABHA address. The counter context is yours to define: up to 20 alphanumeric characters, and never the facility id, the HIP id or the HIP name.
 
-The two calls: [receive a patient's shared profile](/docs/pr-49/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/01-scan-and-register-post-v3-hip-patient-share) and [send the share acknowledgement](/docs/pr-49/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/02-scan-and-register-post-patient-share-v3-on-share). The patient's side is [P2 Linking and records](/docs/pr-49/docs/hiecm/v3/milestones/p2#scan-and-share-at-a-facility).
+The two calls: [receive a patient's shared profile](/docs/pr-49/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/01-scan-and-register-post-v3-hip-patient-share) and [send the share acknowledgement](/docs/pr-49/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/02-scan-and-register-post-patient-share-v3-on-share). The patient's side is [P2 Consents Management](/docs/pr-49/docs/hiecm/v3/milestones/p2#scan-and-register-at-a-facility).
 
 
 ---
@@ -66017,7 +66172,7 @@ Two bars on the HSPA role. For blood bank, your inventory data has to be maintai
 
 Your application must have completed ABDM M2 with [HIE-CM](/docs/pr-49/docs/uhi/v1/getting-started/glossary#hie-cm). An application that has not completed M2 cannot be onboarded onto UHI services. The gate applies to every service on the network.
 
-If M2 is not done, start at [M2 Health Information Provider, Health Information Provider Services](/docs/pr-49/docs/hiecm/v3/api/m2).
+If M2 is not done, start at [M2 Health Information Provider: Create and link records](/docs/pr-49/docs/hiecm/v3/api/m2).
 
 ## The steps
 
@@ -66108,7 +66263,7 @@ For anything about these pages rather than about UHI itself, see [support](/docs
 - [UHI gateway](/docs/pr-49/docs/uhi/v1/concepts/network-and-protocol), for the message pattern, the context block and signing
 - [Introduction](/docs/pr-49/docs/uhi/v1), for the two roles and how far each service goes
 - [Physical consultation](/docs/pr-49/docs/uhi/v1/concepts/services/physical-consultation), the service with the full booking lifecycle
-- [M2 Health Information Provider, Health Information Provider Services](/docs/pr-49/docs/hiecm/v3/api/m2), the prerequisite
+- [M2 Health Information Provider: Create and link records](/docs/pr-49/docs/hiecm/v3/api/m2), the prerequisite
 
 
 ---

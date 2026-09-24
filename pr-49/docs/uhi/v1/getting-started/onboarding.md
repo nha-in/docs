@@ -32,7 +32,7 @@ Two bars on the HSPA role. For blood bank, your inventory data has to be maintai
 
 Your application must have completed ABDM M2 with [HIE-CM](/docs/pr-49/docs/uhi/v1/getting-started/glossary#hie-cm). An application that has not completed M2 cannot be onboarded onto UHI services. The gate applies to every service on the network.
 
-If M2 is not done, start at [M2 Health Information Provider, Health Information Provider Services](/docs/pr-49/docs/hiecm/v3/api/m2).
+If M2 is not done, start at [M2 Health Information Provider: Create and link records](/docs/pr-49/docs/hiecm/v3/api/m2).
 
 ## The steps
 
@@ -123,4 +123,4 @@ For anything about these pages rather than about UHI itself, see [support](/docs
 - [UHI gateway](/docs/pr-49/docs/uhi/v1/concepts/network-and-protocol), for the message pattern, the context block and signing
 - [Introduction](/docs/pr-49/docs/uhi/v1), for the two roles and how far each service goes
 - [Physical consultation](/docs/pr-49/docs/uhi/v1/concepts/services/physical-consultation), the service with the full booking lifecycle
-- [M2 Health Information Provider, Health Information Provider Services](/docs/pr-49/docs/hiecm/v3/api/m2), the prerequisite
+- [M2 Health Information Provider: Create and link records](/docs/pr-49/docs/hiecm/v3/api/m2), the prerequisite

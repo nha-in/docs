@@ -1,11 +1,11 @@
-# P1 Identity and login
+# P1 Registration and login
 
 P1 is the patient side of [M1 Identity](/docs/pr-49/docs/hiecm/v3/milestones/m1). M1 is how a hospital system creates an [ABHA](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#abha). P1 is how the patient's own [PHR](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#phr) app does it, and how it maintains the account afterwards.
 
 ## In short
 
 - Every user needs an ABHA address, `username@abdm`. Consent, notifications and record sharing all hang off it.
-- Build both creation paths: by mobile number, and by an existing 14 digit ABHA number.
+- Build all three creation paths: by mobile number, by an existing 14 digit ABHA number, and by Aadhaar number for someone with no ABHA number yet.
 - Every login route is mandatory.
 - Fetch the PHR public key first. It is not the ABHA service's key.
 - A user can hold several ABHA addresses but only one ABHA number.
@@ -76,4 +76,4 @@ Encrypt the Aadhaar number, mobile number, OTP and password with the PHR public 
 ## Next
 
 - The calls and base URLs: [P1 API reference](/docs/pr-49/reference/hiecm-p1).
-- The next milestone: [P2 Linking and records](/docs/pr-49/docs/hiecm/v3/milestones/p2).
+- The next milestone: [P2 Consents Management](/docs/pr-49/docs/hiecm/v3/milestones/p2).

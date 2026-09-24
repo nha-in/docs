@@ -22,4 +22,4 @@ Postman, Insomnia, Hoppscotch and Bruno take this through Import, as a link or a
 
 The full operation list is in the [P1 Registration and login API reference](/docs/pr-49/reference/hiecm-p1).
 
-New to this? Start with [P1 Identity and login](/docs/pr-49/docs/hiecm/v3/milestones/p1).
+New to this? Start with [P1 Registration and login](/docs/pr-49/docs/hiecm/v3/milestones/p1).

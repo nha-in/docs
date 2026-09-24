@@ -18,7 +18,7 @@ Postman, Insomnia, Hoppscotch and Bruno take this through Import, as a link or a
 | ----------- | ------------------------------------------ |
 | Sandbox     | `https://abhasbx.abdm.gov.in/abha/api/v3/` |
 
-Login by fingerprint or iris uses the same base URL, through `profile/login/verify` with a `bio` or `iris` block.
+Login by fingerprint or iris uses the v3.1 path, `/abha/api/v3.1/profile/login/verify`, with a `bio` or `iris` block.
 
 [See the user journeyWhat the person experiences, screen by screen, before you write any code.](/docs/pr-49/docs/hiecm/v3/milestones/m1)[When it goes wrongThe recorded error shapes and codes, and what to do about each.](/docs/pr-49/docs/hiecm/v3/api/m1/errors)
 

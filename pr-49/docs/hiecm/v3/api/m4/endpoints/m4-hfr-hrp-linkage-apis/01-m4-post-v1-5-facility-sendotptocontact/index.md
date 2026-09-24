@@ -14,7 +14,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -30,14 +34,16 @@ curl --request POST \
   - `errorStatus` (object[])
 - `404`: Not Found
 
-Example 200 response. The values are placeholders:
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 
 ```json
 {
-  "facilityId": "IN0610089709",
-  "status": "Success",
-  "message": "Otp sent successfully! Please keep transaction id for future reference",
-  "transactionId": "3cf3de44-94a4-4f77-b7f9-de6ec86785b3",
-  "errorStatus": null
+  "facilityId": "<FACILITY_ID>",
+  "status": "<STATUS>",
+  "message": "<MESSAGE>",
+  "transactionId": "<TRANSACTION_ID>",
+  "errorStatus": [
+    "<ERROR_STATUS>"
+  ]
 }
 ```

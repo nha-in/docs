@@ -1,4 +1,4 @@
-# P2 Linking and records
+# P2 Consents Management
 
 P2 is the mirror of [M2 Health Information Provider](/docs/pr-49/docs/hiecm/v3/milestones/m2). M2 is a provider publishing a record. P2 is the patient discovering it and linking it to their own [ABHA address](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#abha-address).
 
@@ -11,9 +11,9 @@ P2 is the mirror of [M2 Health Information Provider](/docs/pr-49/docs/hiecm/v3/m
 
 ## What you build
 
-Profile management, care context linking, user initiated linking, scan and share at a facility, and health locker subscriptions.
+Profile management, care context linking, user initiated linking, and scan and register at a facility.
 
-## Scan and share at a facility
+## Scan and register at a facility
 
 The facility displays a QR code holding a URL with two parameters: the HIP ID and a facility defined context such as a counter code. Your app scans it, then:
 
@@ -67,4 +67,4 @@ The signed in user manages their own profile from your app. Every call takes the
 ## Next
 
 - The calls and base URLs: [P2 API reference](/docs/pr-49/reference/hiecm-p2).
-- The next milestone: [P3 Consent and notifications](/docs/pr-49/docs/hiecm/v3/milestones/p3).
+- The next milestone: [P3 Subscription](/docs/pr-49/docs/hiecm/v3/milestones/p3).

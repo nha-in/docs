@@ -14,7 +14,11 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -33,53 +37,26 @@ curl --request POST \
   - `Message` (string)
 - `404`: Not Found
 
-Example 200 response. The values are placeholders:
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 
 ```json
 {
   "documentList": {
-    "profileDetails": {
-      "profilePhoto": {
-        "id": 30106,
-        "data": "<BASE64_PHOTO>"
-      },
-      "proofOfWorkCertificate": {
-        "id": 30106,
-        "data": "JVBERi0xLjMK"
-      }
-    },
+    "profileDetails": "<PROFILE_DETAILS>",
     "registrationDetails": [
-      {
-        "registrationCertificate": {
-          "id": 21021,
-          "systemOfMedicide": "modern_medicine",
-          "data": "JVBERi0xLjMK"
-        },
-        "proofOfNameChangeRegCertificate": {
-          "id": 21021,
-          "systemOfMedicide": "modern_medicine",
-          "data": "JVBERi0xLjMK"
-        }
-      }
+      "<REGISTRATION_DETAILS>"
     ],
     "qualificationDetails": [
-      {
-        "degreeCertificate": {
-          "id": 9693,
-          "courseName": "PhD Biostatistics",
-          "qualificationYear": "2021",
-          "data": "JVBERi0xLjMK"
-        },
-        "proofOfNameChangeQualCertificate": {
-          "id": 9693,
-          "courseName": "PhD Biostatistics",
-          "qualificationYear": "2021",
-          "data": "JVBERi0xLjMK"
-        }
-      }
+      "<QUALIFICATION_DETAILS>"
     ],
-    "qualification": null
+    "qualification": [
+      "<QUALIFICATION>"
+    ],
+    "internationalDoctorQualificationDetails": [
+      "<INTERNATIONAL_DOCTOR_QUALIFICATION_DETAILS>"
+    ]
   },
-  "Message": "Data fetched successfully"
+  "message": "<MESSAGE>",
+  "Message": "<MESSAGE>"
 }
 ```

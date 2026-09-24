@@ -20,4 +20,4 @@ Postman, Insomnia, Hoppscotch and Bruno take this through Import, as a link or a
 
 The full operation list is in the [P4 Locker API reference](/docs/pr-49/reference/hiecm-p4).
 
-New to this? Start with [Personal Health Record (PHR) Application](/docs/pr-49/docs/hiecm/v3/concepts/participants/phr).
+New to this? Start with [P4 Locker](/docs/pr-49/docs/hiecm/v3/milestones/p4).

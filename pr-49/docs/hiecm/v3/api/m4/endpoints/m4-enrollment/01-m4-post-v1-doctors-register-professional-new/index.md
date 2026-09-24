@@ -8,135 +8,38 @@ curl --request POST \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "hprToken": "<JWT TOKEN>",
   "practitioner": {
-    "healthProfessionalType": "doctor",
-    "profilePhoto": "<BASE64 ENCODED STRING>",
-    "officialMobileCode": "",
-    "officialMobile": "97624xxxxx",
-    "officialMobileStatus": "",
-    "officialEmail": "",
-    "officialEmailStatus": "",
-    "visibleProfilePicture": "0",
-    "profileVisibleToPublic": "1",
-    "personalInformation": {
-      "salutation": "1",
-      "firstName": "Ayushman",
-      "middleName": "",
-      "lastName": "Mission",
-      "nationality": "356",
-      "fatherName": "",
-      "motherName": "",
-      "spouseName": "",
-      "gender": "M",
-      "dateOfBirth": "<DOB>",
-      "placeOfBirthState": "68",
-      "district": "",
-      "subDistrict": "",
-      "city": "",
-      "languagesSpoken": "1,2",
-      "category": "C"
-    },
-    "addressAsPerKYC": "",
-    "communicationAddress": {
-      "isCommunicationAddressAsPerKYC": "false",
-      "address": "",
-      "name": "",
-      "country": "",
-      "state": "",
-      "district": "",
-      "subDistrict": "",
-      "city": "",
-      "pincode": ""
-    },
-    "contactInformation": {
-      "publicMobileNumber": "",
-      "publicMobileNumberCode": "",
-      "publicMobileNumberStatus": "",
-      "landLineNumber": "",
-      "landLineNumberCode": "",
-      "publicEmail": "",
-      "publicEmailStatus": ""
-    },
-    "registrationAcademic": {
-      "category": "1",
-      "registrationData": [
-        {
-          "registeredWithCouncil": "47",
-          "registrationNumber": "REG12032",
-          "registrationDate": "2024-12-01",
-          "registrationCertificate": {
-            "fileType": "pdf",
-            "data": "<BASE64 ENCODED STRING>"
-          },
-          "isPermanentOrRenewable": "Permanent",
-          "renewableDueDate": "",
-          "categoryId": "2",
-          "isNameDifferentInCertificate": "false",
-          "proofOfNameChangeCertificate": "",
-          "qualifications": [
-            {
-              "nameOfDegreeOrDiplomaObtained": "4074",
-              "country": "356",
-              "state": "27",
-              "college": "1022",
-              "university": "6372",
-              "yearOfAwardingDegreeDiploma": "2024",
-              "monthOfAwardingDegreeDiploma": "February",
-              "degreeCertificate": {
-                "fileType": "pdf",
-                "data": "<BASE64 ENCODED STRING>"
-              },
-              "isNameDifferentInCertificate": "false",
-              "proofOfNameChangeCertificate": ""
-            },
-            {
-              "nameOfDegreeOrDiplomaObtained": "Graduation",
-              "country": "United States Of America",
-              "state": "united",
-              "college": "united School",
-              "university": "united University",
-              "yearOfAwardingDegreeDiploma": "2024",
-              "monthOfAwardingDegreeDiploma": "February",
-              "degreeCertificate": {
-                "fileType": "pdf",
-                "data": "<BASE64 ENCODED STRING>"
-              },
-              "isNameDifferentInCertificate": "true",
-              "proofOfNameChangeCertificate": "<BASE64 ENCODED STRING>"
-            }
-          ]
-        }
-      ]
-    },
-    "currentWorkDetails": {
-      "currentlyWorking": "0",
-      "purposeOfWork": "Administrative",
-      "chooseWorkStatus": "1",
-      "reasonForNotWorking": "Retired",
-      "certificateAttachment": "<BASE64 ENCODED STRING>",
-      "facilityDeclarationData": {
-        "facilityId": "IN2710000059",
-        "facilityName": "",
-        "facilityAddress": "",
-        "facilityPincode": "",
-        "state": "",
-        "district": "",
-        "facilityType": "",
-        "facilityDepartment": "Surgery",
-        "facilityDesignation": "MD",
-        "ministry": {
-          "ministry": "MinistryMOR ( Mo Railways )"
-        }
-      }
-    }
-  }
+    "personalInformation": "<PERSONAL_INFORMATION>",
+    "communicationAddress": "<COMMUNICATION_ADDRESS>",
+    "contactInformation": "<CONTACT_INFORMATION>",
+    "registrationAcademic": "<REGISTRATION_ACADEMIC>",
+    "specialities": [
+      "<SPECIALITIES>"
+    ],
+    "currentWorkDetails": "<CURRENT_WORK_DETAILS>",
+    "apiClientId": "<API_CLIENT_ID>",
+    "profilePhoto": "<PROFILE_PHOTO>",
+    "healthProfessionalType": "<HEALTH_PROFESSIONAL_TYPE>",
+    "officialMobileCode": "<OFFICIAL_MOBILE_CODE>",
+    "officialMobile": "<OFFICIAL_MOBILE>",
+    "officialMobileStatus": "<OFFICIAL_MOBILE_STATUS>",
+    "officialEmail": "<OFFICIAL_EMAIL>",
+    "officialEmailStatus": "<OFFICIAL_EMAIL_STATUS>",
+    "visibleProfilePicture": "<VISIBLE_PROFILE_PICTURE>",
+    "profileVisibleToPublic": "<PROFILE_VISIBLE_TO_PUBLIC>",
+    "addressAsPerKYC": "<ADDRESS_AS_PER_KYC>"
+  },
+  "hprToken": "<HPR_TOKEN>"
 }'
 ```
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 
@@ -170,14 +73,13 @@ curl --request POST \
   - `hprId` (string)
 - `404`: Not Found
 
-Example 200 response. The values are placeholders:
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 
 ```json
 {
-  "referenceNumber": "9a2d25fc-6897-4645-8e78-7f12a91b4ab4",
-  "status": "true",
-  "message": "Congratulations! Your profile has been submitted successfully for verification.",
-  "error": null,
+  "referenceNumber": "<REFERENCE_NUMBER>",
+  "status": "<STATUS>",
+  "message": "<MESSAGE>",
   "hprId": "<HPR_ID>"
 }
 ```

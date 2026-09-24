@@ -1,4 +1,4 @@
-# Milestone 4 (M4): Register Healthcare Professionals and Facilities
+# M4 Registry Integration: Register facilities and professionals
 
 Milestone 4 is the Registries milestone, commonly referred to as NHPR (National Healthcare Professionals and Facilities Registry). It establishes the identity of healthcare professionals and the details of healthcare facilities within the ABDM ecosystem.
 
@@ -52,12 +52,12 @@ The M4 skill gives an AI coding assistant this milestone as one file: every M4 c
 
 M4 agent skill
 
-Every M4 call in one file: 100 operations.
+Every M4 call in one file: 104 operations.
 
 [SKILL.md](/docs/pr-49/skills/abdm-m4/SKILL.md "The router. Use the command below to take the references with it.")
 
 - ScaffoldThe loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.
-- Integrate104 operations, with their hosts and headers.
+- Integrate91 operations, with their hosts and headers.
 - DebugNo error code is recorded yet.
 
 `mkdir -p .claude/skills/abdm-m4/references && curl -fsSL https://nha-in.github.io/docs/pr-49/skills/abdm-m4/SKILL.md -o .claude/skills/abdm-m4/SKILL.md && for f in scaffold integrate debug; do curl -fsSL https://nha-in.github.io/docs/pr-49/skills/abdm-m4/references/$f.md -o .claude/skills/abdm-m4/references/$f.md; done`
@@ -280,5 +280,5 @@ Next: [M4 API reference](/docs/pr-49/docs/hiecm/v3/api/m4).
 ## Next
 
 - The base URLs and the operation list: [M4 API reference](/docs/pr-49/docs/hiecm/v3/api/m4).
-- The patient side of all four: [P1 Identity and profile](/docs/pr-49/docs/hiecm/v3/milestones/p1).
+- The patient side of all four: [P1 Registration and login](/docs/pr-49/docs/hiecm/v3/milestones/p1).
 - Take your integration to production: [Go live](/docs/pr-49/docs/hiecm/v3/getting-started/going-live).

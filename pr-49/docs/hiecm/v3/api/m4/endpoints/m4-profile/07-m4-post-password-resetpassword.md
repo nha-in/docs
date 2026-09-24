@@ -8,19 +8,24 @@ curl --request POST \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "txnId": "9b78fdfb-3ba4-4707-8913-63c7c5e3a743",
-  "newPassword": "<BASE64 ENCODED STRING>"
+  "newPassword": "<NEW_PASSWORD>",
+  "otp": "<OTP>",
+  "txnId": "5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11"
 }'
 ```
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string, required)
 
 ## Body
 
-- `newPassword` (string): Encrypted new Password.
-- `otp` (string): Encrypted OTP.
+- `newPassword` (string, required): Encrypted new Password.
+- `otp` (string, required): Encrypted OTP.
 - `txnId` (string, required)
 
 ## Responses

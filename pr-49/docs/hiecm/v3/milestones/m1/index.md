@@ -17,7 +17,7 @@ Milestone 1 focuses on ABHA creation, authentication, and profile management fun
 | -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Session and tokens                                                         | Establish gateway sessions, manage access and refresh tokens, and retrieve public key certificates required for secure ABDM interactions.                                        |
 | ABHA creation                                                              | Support creation of ABHA and associated identifiers in accordance with ABDM onboarding and verification workflows.                                                               |
-| ABHA login                                                                 | Authenticate an ABHA holder using approved identifiers and authentication mechanisms, including mobile number, ABHA number, or ABHA address, as applicable.                      |
+| ABHA login                                                                 | Authenticate an ABHA holder using approved identifiers and authentication mechanisms, including mobile number, Aadhaar number, ABHA number, or ABHA address, as applicable.      |
 | Profile management                                                         | Retrieve and manage ABHA profile information, display ABHA credentials and QR codes, update eligible profile attributes, and support re-verification workflows where applicable. |
 | [Scan and Register](/docs/pr-49/docs/hiecm/v3/use-cases/scan-and-register) | Support patient registration through QR-based workflows and generate service or queue identifiers in accordance with organization-specific processes.                            |
 
@@ -40,7 +40,7 @@ The M1 skill gives an AI coding assistant this milestone as one file: every M1 c
 
 M1 agent skill
 
-Every M1 call, one per use case, with its error codes in one file: 132 operations, 17 codes.
+Every M1 call, one per use case, with its error codes in one file: 125 operations, 17 codes.
 
 [SKILL.md](/docs/pr-49/skills/abdm-m1/SKILL.md "The router. Use the command below to take the references with it.")
 
@@ -80,6 +80,7 @@ sequenceDiagram
     P->>S: OTP, and the mobile number for ABHA communication
     S->>A: POST /abha/api/v3/enrollment/enrol/byAadhaar<br/>authData.authMethods [otp], otp {txnId,<br/>otpValue (encrypted), mobile}, consent
     A-->>S: ABHAProfile (ABHANumber, name, dob, gender, photo),<br/>tokens.token, isNew
+    Note over S,A: Optional: verify the communication mobile
     S->>A: POST /abha/api/v3/enrollment/request/otp<br/>scope [abha-enrol, mobile-verify], loginHint mobile,<br/>loginId (encrypted mobile), txnId
     A-->>S: txnId
     A-)P: OTP by SMS to the communication mobile
@@ -109,8 +110,9 @@ sequenceDiagram
     P->>P: Scans the QR code in the ABHA app<br/>Face authentication through the Aadhaar RD service
     S->>A: POST /abha/api/v3/enrollment/enrol/capturePID<br/>txnId, scope [abha-enrol]
     A-->>S: status of the face authentication
-    S->>A: POST /abha/api/v3/enrollment/enrol/byAadhaar<br/>authData.authMethods [face], face {txnId,<br/>aadhaar (encrypted), rdPidData, mobile}, consent
+    S->>A: POST /abha/api/v3/enrollment/enrol/byAadhaar<br/>authData.authMethods [face], face {txnId,<br/>aadhaar (encrypted), mobile}, consent
     A-->>S: ABHAProfile (ABHANumber, name, dob, gender, photo),<br/>tokens.token, isNew
+    Note over S,A: Optional: verify the communication mobile
     S->>A: POST /abha/api/v3/enrollment/request/otp<br/>scope [abha-enrol, mobile-verify], loginHint mobile,<br/>loginId (encrypted mobile), txnId
     A-)P: OTP by SMS to the communication mobile
     P->>S: Mobile OTP
@@ -145,8 +147,8 @@ sequenceDiagram
     Note over S: Holds the gateway access token and the<br/>public key from GET /abha/api/v3/profile/public/certificate
     P->>S: Aadhaar number, name as per Aadhaar, date of birth,<br/>gender, consent
     S->>S: Encrypts the Aadhaar number with the public key
-    S->>A: POST /abha/api/v3/enrollment/enrol/byAadhaar<br/>authData.authMethods [demo_auth],<br/>demo_auth {aadhaar (encrypted), name, dob, gender,<br/>mobile}, consent
-    A-->>S: ABHAProfile (ABHANumber,<br/>phrAddress issued by default), tokens.token, isNew
+    S->>A: POST /abha/api/v3/enrollment/enrol/byAadhaar<br/>authData.authMethods [demo_auth],<br/>demo_auth {aadhaarNumber (encrypted), name, dateOfBirth,<br/>gender, stateCode, districtCode, and optionally<br/>mobile, pinCode, address}, consent
+    A-->>S: New ABHA: ABHAProfile (ABHANumber,<br/>phrAddress issued by default), tokens.token, isNew.<br/>Existing ABHA: top level token, healthIdNumber, jwtResponse
     S->>A: GET /abha/api/v3/profile/account<br/>header X-token tokens.token
     A-->>S: ABHANumber, preferredAbhaAddress, profile fields
 ```
@@ -194,7 +196,7 @@ sequenceDiagram
     S->>A: POST /abha/api/v3/profile/account/abha/search<br/>scope [search-abha], mobile (encrypted)
     A-->>S: txnId, ABHA list (masked ABHA number, name, gender)
     P->>S: Confirms the account to prove
-    S->>A: POST /abha/api/v3/profile/login/request/otp<br/>scope [abha-login, mobile-verify], loginHint mobile,<br/>loginId index, otpSystem abdm, txnId
+    S->>A: POST /abha/api/v3/profile/login/request/otp<br/>scope [abha-login, search-abha, mobile-verify],<br/>loginHint index, loginId (encrypted index),<br/>otpSystem abdm, txnId
     A-->>S: txnId
     A-)P: OTP by SMS to the registered mobile
     P->>S: OTP

@@ -8,14 +8,18 @@ curl --request POST \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "ownershipCode": "G",
-  "systemOfMedicineCode": "M"
+  "ownershipCode": "<OWNERSHIP_CODE>",
+  "systemOfMedicineCode": "<SYSTEM_OF_MEDICINE_CODE>"
 }'
 ```
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string)
 
 ## Body
 

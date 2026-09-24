@@ -20,7 +20,7 @@ Both registries share one base URL:
 Sandbox     https://apihspsbx.abdm.gov.in/v4/int/
 ```
 
-The calls take a bearer token in the `Authorization` header. M4 declares bearer authentication. The HPID calls publish `POST /getManagementToken`. [M4](/docs/pr-49/docs/hiecm/v3/api/m4) is the only milestone in [ABDM](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#abdm) that writes to NHPR, and its operations and their fields are in [the M4 API reference](/docs/pr-49/docs/hiecm/v3/api/m4).
+The calls take a bearer token in the `Authorization` header. [M4](/docs/pr-49/docs/hiecm/v3/api/m4) is the only milestone in [ABDM](/docs/pr-49/docs/hiecm/v3/getting-started/glossary#abdm) that writes to NHPR, and its operations and their fields are in [the M4 API reference](/docs/pr-49/docs/hiecm/v3/api/m4).
 
 ## Next
 

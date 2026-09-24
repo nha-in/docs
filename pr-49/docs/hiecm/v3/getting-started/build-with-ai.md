@@ -167,10 +167,10 @@ How to use it
 
 Download all skills
 
-- [ABHA Creation and Verification (M1)](https://nha-in.github.io/docs/pr-49/skills/abdm-m1/SKILL.md)
-- [Health Information Provider Services (M2)](https://nha-in.github.io/docs/pr-49/skills/abdm-m2/SKILL.md)
-- [Health Information User Services (M3)](https://nha-in.github.io/docs/pr-49/skills/abdm-m3/SKILL.md)
-- [National Healthcare Providers Registry (M4)](https://nha-in.github.io/docs/pr-49/skills/abdm-m4/SKILL.md)
+- [Create and verify ABHA (M1)](https://nha-in.github.io/docs/pr-49/skills/abdm-m1/SKILL.md)
+- [Create and link records (M2)](https://nha-in.github.io/docs/pr-49/skills/abdm-m2/SKILL.md)
+- [Fetch data with consent (M3)](https://nha-in.github.io/docs/pr-49/skills/abdm-m3/SKILL.md)
+- [Register facilities and professionals (M4)](https://nha-in.github.io/docs/pr-49/skills/abdm-m4/SKILL.md)
 - [PHR registration and login (P1)](https://nha-in.github.io/docs/pr-49/skills/abdm-p1/SKILL.md)
 - [Consents Management (P2)](https://nha-in.github.io/docs/pr-49/skills/abdm-p2/SKILL.md)
 - [PHR subscriptions (P3)](https://nha-in.github.io/docs/pr-49/skills/abdm-p3/SKILL.md)

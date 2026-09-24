@@ -1,4 +1,4 @@
-# Receive the encrypted records at the data push URL, as the HIU
+# Push the encrypted records to the HIU's data push URL, as the PHR app
 
 `POST /health-information/transfer`
 

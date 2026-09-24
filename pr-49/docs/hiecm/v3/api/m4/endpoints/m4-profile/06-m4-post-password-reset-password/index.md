@@ -16,15 +16,28 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+- `Authorization` (bearer token, required): M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
+
+## Headers
+
+- `Authorization` (string, required)
 
 ## Body
 
-- `newPassword` (string): Encrypted new Password.
-- `otp` (string): Encrypted OTP.
+- `newPassword` (string, required): Encrypted new Password.
+- `otp` (string, required): Encrypted OTP.
 - `txnId` (string, required)
 
 ## Responses
 
 - `200`: OK
+  - `message` (string)
 - `404`: Not Found
+
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+{
+  "message": "<MESSAGE>"
+}
+```

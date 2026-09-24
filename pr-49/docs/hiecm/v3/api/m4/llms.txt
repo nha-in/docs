@@ -4,10 +4,10 @@
 
 ## Pages
 
-- ['Milestone 4 (M4): Register Healthcare Professionals and Facilities'](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4): M4 base URLs and the HPR and HFR operations.
+- ['M4 Registry Integration: Register facilities and professionals'](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4): M4 base URLs and the HPR and HFR operations.
 - [Login via password](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-authentication/01-m4-post-v1-auth-authpassword): Login Via Password
 - [Get public certificate](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-authentication/02-m4-get-v1-auth-cert): Get Public Certificate
-- [Verify Aadhaar OTP 1](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-authentication/03-m4-post-v1-auth-confirmwithaadhaarotp): Verify Aadhaar OTP 1
+- [Verify Aadhaar OTP](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-authentication/03-m4-post-v1-auth-confirmwithaadhaarotp): Verify Aadhaar OTP
 - [Send via Aadhaar OTP](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-authentication/04-m4-post-v1-auth-init): Send Via Aadhaar OTP
 - [Send verify OTP](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-authentication/05-m4-post-v2-auth-loginviamobilesendotp): Send Verify OTP
 - [Register professional](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-enrollment/01-m4-post-v1-doctors-register-professional-new): Register Professional
@@ -20,12 +20,8 @@
 - [Generate mobile OTP](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-forgot-healthcare-professional-id-number/03-m4-post-v1-forgot-hprid-mobile-generateotp): Generate Mobile OTP
 - [Send OTP to contact](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-hfr-hrp-linkage-apis/01-m4-post-v1-5-facility-sendotptocontact): Send OTP To Contact
 - [Validate OTP](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-hfr-hrp-linkage-apis/02-m4-post-v1-5-facility-validateotp): Validate OTP
-- [Get admin token](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-hpid/01-m4-post-getmanagementtoken): Get Admin Token
-- [Submit the healdthloginwithmobile](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-hpid/02-m4-post-healdthloginwithmobile): Healdthloginwithmobile
-- [Update role and category](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-hpid/03-m4-post-profile-updaterole): Update Role And Category
-- [Fetch professional facility](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-hpr/01-m4-post-fetchprofessionalfacility): Fetch Professional Facility
-- [Create facility suggestion](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-hpr/02-m4-post-hprfacilitysuggestions): Create Facility Suggestion
 - [Submit the facility add and update](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-multiple-hrp-api/01-m4-post-v1-bridges-mutiplehrpaddupdateservices): Facility Add And Update
+- [Search facility](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-multiple-hrp-api/02-m4-post-v1-0-facility-search-facilities): Search Facility
 - [Get filtered address post](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-onboarding-apis/01-m4-post-search-address-filter-deduplicate): Get Filtered Address Post
 - [Submit the v15Basic facility information](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-onboarding-apis/02-m4-post-v1-5-facility-basic-information): V15Basic Facility Information
 - [Submit the v15Facility additional information](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-onboarding-apis/03-m4-post-v1-5-facility-additional-information): V15Facility Additional Information
@@ -40,11 +36,8 @@
 - [Reset password](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-profile/07-m4-post-password-resetpassword): Reset Password
 - [Get account png card](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-profile/08-m4-get-v1-account-getidcard): Get Account Png Card
 - [Get user profile by JWT](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-profile/09-m4-get-v1-account-information): Get User Profile By JWT
-- [Generate Aadhaar OTPFor re KYC](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-profile/10-m4-post-v1-account-rekyc-generateaadhaarotp): Generate Aadhaar OTPFor Re KYC
-- [Verify Aadhaar OTP](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-profile/11-m4-post-v1-account-rekyc-verifyaadhaarotp): Verify Aadhaar OTP
-- [Verify Aadhaar OTPGet details](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-profile/12-m4-post-v1-account-rekyc-verifyaadhaarotpgetdetails): Verify Aadhaar OTPGet Details
-- [Get user details](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-profile/13-m4-get-v1-account-user-details-hprid): Get User Details
-- [Logout](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-profile/14-m4-get-v4-auth-logout): Logout
+- [Get user details](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-profile/10-m4-get-v1-account-user-details-hprid): Get User Details
+- [Logout](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-profile/11-m4-get-v4-auth-logout): Logout
 - [Generate Aadhaar link](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-registration-api-s-collection-via-aadhaar/01-m4-post-aadhaar-generatelink): Generate Aadhaar Link
 - [Submit the is Aadhaar authenticated](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-registration-api-s-collection-via-aadhaar/02-m4-post-aadhaar-isauthenticated): Is Aadhaar Authenticated
 - [Verify OTP](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-registration-api-s-collection-via-aadhaar/03-m4-post-v2-registration-aadhaar-verifyotp): Verify OTP
@@ -54,8 +47,8 @@
 - [Generate mobile OTP](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-registration-api-s-collection-via-aadhaar/07-m4-post-v1-registration-aadhaar-generatemobileotp): Generate Mobile OTP
 - [Verify mobile OTP](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-registration-api-s-collection-via-aadhaar/08-m4-post-v1-registration-aadhaar-verifymobileotp): Verify Mobile OTP
 - [Create HPR ID V2](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-registration-api-s-collection-via-aadhaar/09-m4-post-v2-registration-aadhaar-createhpridwithpreverified): Create HPR ID V2
-- [Get facility and infrastructure within radius with filter](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-search/01-m4-post-facilitymanagement-v1-5-facility-bygeolocation-se-907b10): Get Facility And Infrastructure Within Radius With Filter
-- [Search facility](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-search/02-m4-post-facilitymanagement-v1-5-facility-search): Search Facility
+- [Get facility within radius with filter](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-search/01-m4-post-facilitymanagement-v1-5-facility-bygeolocation-se-16e590): Get Facility Within Radius With Filter
+- [Search facility 1](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-search/02-m4-post-facilitymanagement-v1-5-facility-search): Search Facility 1
 - [Get the exists by HPR ID](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-searched/01-m4-get-v1-search-existsbyhprid-hprid): Exists By HPR ID
 - [Search user by HPR ID](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-searched/02-m4-get-v1-search-searchbyhprid-hprid): Search User By HPR ID
 - [Search user by mobile no](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-searched/03-m4-get-v1-search-searchbymobile-mobile): Search User By Mobile No
@@ -93,15 +86,9 @@
 - [Get all medical system](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-utility/20-m4-get-v1-masters-system-of-medicines): Get All Medical System
 - [List all university](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-utility/21-m4-get-v1-masters-universites): List All University
 - [Get university by college](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-utility/22-m4-get-v1-masters-universites-id): Get University By College
-- [Get facilities created by HPR ID](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-utility/23-m4-post-getfacilitycreatedbyhprid): Get Facilities Created By HPR ID
-- [Get facilities declared by HPR ID](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-utility/24-m4-post-getfacilitydeclaredbyhprid): Get Facilities Declared By HPR ID
-- [Update status](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-utility/25-m4-put-hprworkdetails-status): Update Status
-- [Link delink existing facility](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-utility/26-m4-post-relinkordelinkprofessionalfromfacility): Link Delink Existing Facility
 - [Generate mobile OTP 2](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-verification/01-m4-post-v1-doctors-generate-mobile-otp): Generate Mobile OTP 2
 - [Send verification email](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-verification/02-m4-post-v1-doctors-generate-verification-email): Send Verification Email
 - [Submit the regenerate mobile OTP](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-verification/03-m4-post-v1-doctors-regenerate-mobile-otp): Regenerate Mobile OTP
 - [Resend verification email](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-verification/04-m4-post-v1-doctors-resent-verify-email): Resend Verification Email
 - [Verify email OTP](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-verification/05-m4-post-v1-doctors-verify-email-otp): Verify Email OTP
 - [Verify mobile OTP](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-verification/06-m4-post-v1-doctors-verify-mobile-otp): Verify Mobile OTP
-- [Send OTP if doctor verified](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-verification/07-m4-post-v1-sendotpifdoctorverified): Send OTP If Doctor Verified
-- [Verify doctor verification OTP](https://nha-in.github.io/docs/pr-49/docs/hiecm/v3/api/m4/endpoints/m4-verification/08-m4-post-v1-verifydoctorverificationotp): Verify Doctor Verification OTP
