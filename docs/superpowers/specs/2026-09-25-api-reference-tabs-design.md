@@ -126,8 +126,8 @@ already the shape of Razorpay's playground.
 `scripts/build-api-reference.mjs` line 1170 builds the journey step title as
 `` `${i + 1}. ${stepped.title}${optional}` ``. The `${i + 1}. ` prefix goes.
 Sidebar order is unchanged, because it comes from the order of the items
-array, not the label. The doc id keeps its `NN-` prefix, which Docusaurus
-strips, so no URL changes. The "step 2 of 5" line and Previous and Next in the
+array, not the label. The doc id and the URL keep their `NN-` prefix, which
+this change does not touch, so no URL changes. The "step 2 of 5" line and Previous and Next in the
 Overview tab stay: they place the reader in the journey rather than number the
 call. The generated pages and the sidebar JSON are gitignored build outputs,
 so they regenerate with the usual build and nothing generated is committed.
@@ -255,3 +255,45 @@ selector too.
   - The page that overflowed, with no overlap at 1280.
 - In a production build served locally, `<route>.md` opens as text and the
   emitted Markdown for an endpoint page still carries every tab's content.
+
+## As built, 25 September 2026
+
+Where the build departs from the design above, and why.
+
+- **The schema header and body checks were kept as they were.** Section 1
+  proposed `sections(...).headers !== ''` in place of the `**Headers**` and
+  `**Request body` tests. That would have hidden the typed schema fields on
+  the 46 P2 style descriptions whose `**Header**` section is loose prose. The
+  old tests stay, so those pages show NHA's text and the schema fields side by
+  side in the Headers tab, as they did before.
+- **No `ui/tabs.tsx` wrapper.** One consumer, so `ApiEndpoint.tsx` uses Radix
+  Tabs from `radix-ui` directly.
+- **Italic in the light renderer.** With the tables split out, the Overview
+  no longer goes through `marked`, and the Flow block's `*next call*` showed
+  its asterisks. `inline()` in `Markdown.tsx` now reads `*italic*`.
+- **No table bleed on endpoint pages.** Prose pages let a wide table reach
+  2rem into the page padding. On an endpoint page that padding borders the
+  request panel, so `--table-bleed` is 0 there.
+- **Picking a language or a status opens a folded panel.** A choice made on a
+  folded panel otherwise showed nothing.
+- **Asking from Try it closes Try it.** Radix's modal sets
+  `pointer-events: none` on the body and `aria-hidden` on the assistant's
+  host, so the assistant drew on top but could not be clicked or read. The
+  button now attaches the snippet and closes the console. Typed values go
+  with it, as they do on any close.
+- **PR #46 merged** on 25 September before the Try it buttons were written,
+  so they were built on it rather than waiting.
+- **Get started floats the drawing** rather than using two grid columns. At
+  1440px the text column beside the on-this-page rail fell to 376px, which
+  made the section taller. Floated, the first paragraph wraps beside the
+  drawing and the second runs the full measure.
+
+Two changes were asked for during the build and are part of this branch:
+
+- **Page actions at Stripe's size.** Ask about this page, Copy for LLM, View
+  as Markdown and Install AI tools went from 15px to 12px on a 16px line,
+  weight 600, read from docs.stripe.com's own computed styles.
+- **Sources behind one line in Ask AI.** An answer's sources fold into a
+  native `details` element, "Used 3 sources", that opens to a list of titles
+  with a document mark, as Stripe's assistant shows them. It stays below the
+  answer, because sources arrive when the answer ends.
