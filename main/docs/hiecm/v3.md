@@ -2,7 +2,7 @@
 
 Connect your application to India's Interoperable Digital Health Infrastructure.
 
-## What ABDM is
+## What is ABDM?
 
 Ayushman Bharat Digital Mission (ABDM) is India's national digital health ecosystem, designed to enable secure, interoperable, and consent-based exchange of health information across healthcare stakeholders. ABDM enables identification of healthcare beneficiaries, healthcare professionals, and healthcare facilities through nationally recognized digital registries. It also facilitates secure and consent-driven exchange of health information among authorized participants.
 
