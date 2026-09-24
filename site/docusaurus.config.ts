@@ -301,11 +301,6 @@ async function sidebarItemsGenerator({defaultSidebarItemsGenerator, ...args}: an
   return items;
 }
 
-const catalogueVersion = readFileSync(
-  join(__dirname, '../catalogue/VERSION'),
-  'utf8',
-).trim();
-
 /**
  * The repository this copy of the portal is published from. Actions sets
  * GITHUB_REPOSITORY on whichever fork is building, so a fork's install
@@ -699,11 +694,6 @@ const config: Config = {
           label: 'ABDM sandbox',
           position: 'right',
         },
-        {
-          href: `https://github.com/${pluginRepo}`,
-          label: 'GitHub',
-          position: 'right',
-        },
       ],
     },
     // NHA's own footer, transcribed from the ABDM sandbox documentation site:
@@ -751,9 +741,7 @@ const config: Config = {
           ],
         },
       ],
-      // The catalogue version stays: it is how a reader tells an agent which
-      // version of the documentation they are looking at.
-      copyright: `This website belongs to the National Health Authority, Ministry of Health and Family Welfare, Government of India · Catalogue ${catalogueVersion}`,
+      copyright: 'This website belongs to the National Health Authority, Ministry of Health and Family Welfare, Government of India',
     },
     prism: {
       theme: prismThemes.oneLight,

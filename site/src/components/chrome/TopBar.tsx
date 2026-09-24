@@ -1,13 +1,11 @@
 import React from 'react';
 import Link from '@docusaurus/Link';
 import useBaseUrl from '@docusaurus/useBaseUrl';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import ThemedImage from '@theme/ThemedImage';
 import NavbarColorModeToggle from '@theme/Navbar/ColorModeToggle';
-import {Check, ChevronDown, Languages, MoreHorizontal, Sparkles} from 'lucide-react';
+import {Check, ChevronDown, MoreHorizontal, Sparkles} from 'lucide-react';
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
@@ -32,20 +30,6 @@ import {
 } from '@site/src/components/ui/tooltip';
 import BrandMark from './BrandMark';
 import Omnibox from './Omnibox';
-
-/**
- * The repository this copy of the portal is published from. External, so not
- * a route and not in navigation.ts, and named by the build rather than
- * written down here: Actions sets GITHUB_REPOSITORY on whichever fork builds,
- * so the link goes to that fork's repository. See docusaurus.config.ts.
- *
- * It used to be a constant, and it pointed at the organisation rather than at
- * the repository, so the bar's GitHub link landed on a list of repositories.
- */
-function useGitHubUrl(): string {
-  const {siteConfig} = useDocusaurusContext();
-  return `https://github.com/${siteConfig.customFields?.pluginRepo as string}`;
-}
 
 /**
  * The sandbox: an open isometric tray with a code caret sitting in it, drawn
@@ -75,39 +59,6 @@ function SandboxMark() {
       <path d="M1.6 8.2v3.1L12 17.3l10.4-6V8.2" />
       <path d="M9.2 6.4 6.4 8.2l2.8 1.8M14.8 6.4l2.8 1.8-2.8 1.8M13.4 5.3l-2.8 6" />
     </svg>
-  );
-}
-
-function GitHubMark() {
-  return (
-    <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" fill="currentColor">
-      <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z" />
-    </svg>
-  );
-}
-
-/**
- * Locale control. The site publishes English only, so the menu records the
- * current locale and says plainly that nothing else is available yet.
- */
-function LocaleMenu() {
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger className="topbar-action topbar-locale">
-        <Languages className="size-4" aria-hidden="true" />
-        English
-        <ChevronDown className="size-3.5" aria-hidden="true" />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="min-w-56">
-        <DropdownMenuCheckboxItem checked disabled>
-          English
-        </DropdownMenuCheckboxItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem disabled>
-          Other locales are not published yet
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
   );
 }
 
@@ -197,8 +148,8 @@ function LandingBar() {
 }
 
 /**
- * The controls that leave the bar when it gets narrow: the sandbox, the
- * repository and the locale, gathered behind one mark.
+ * The controls that leave the bar when it gets narrow: the sandbox and the
+ * assistant, gathered behind one mark.
  *
  * The Claude Code docs do the same thing with the same control, and the reason
  * is arithmetic rather than taste: below about 1000px the bar cannot hold the
@@ -206,7 +157,6 @@ function LandingBar() {
  * or shrinking them under the size a thumb can hit.
  */
 function OverflowMenu() {
-  const githubUrl = useGitHubUrl();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -239,23 +189,6 @@ function OverflowMenu() {
             ABDM sandbox
           </a>
         </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <a href={githubUrl} target="_blank" rel="noopener noreferrer">
-            <GitHubMark />
-            GitHub
-          </a>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuLabel className="flex items-center gap-2">
-          <Languages className="size-4" aria-hidden="true" />
-          Language
-        </DropdownMenuLabel>
-        <DropdownMenuCheckboxItem checked disabled>
-          English
-        </DropdownMenuCheckboxItem>
-        <DropdownMenuItem disabled>
-          Other locales are not published yet
-        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -263,7 +196,6 @@ function OverflowMenu() {
 
 export default function TopBar() {
   const pathname = useRoutePath();
-  const githubUrl = useGitHubUrl();
   if (isLanding(pathname)) {
     return <LandingBar />;
   }
@@ -315,15 +247,6 @@ export default function TopBar() {
             <TooltipContent>ABDM sandbox</TooltipContent>
           </Tooltip>
         </TooltipProvider>
-        <a
-          className="topbar-action topbar-action--icon"
-          href={githubUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="GitHub repository">
-          <GitHubMark />
-        </a>
-        <LocaleMenu />
       </div>
 
       <OverflowMenu />
