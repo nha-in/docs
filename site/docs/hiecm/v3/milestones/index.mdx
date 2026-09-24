@@ -116,8 +116,8 @@ be able to do for her, and one milestone that gives you it.
 Building the patient's app ([PHR](/docs/hiecm/v3/getting-started/glossary#phr))?
 Implement the applicable ABHA and PHR services to allow individuals to manage
 their ABHA details, discover and link health records, and manage consent for
-sharing health information. The work splits into three, and each part mirrors a
-milestone on the provider side.
+sharing health information. The work splits into four: the first three each
+mirror a milestone on the provider side, and the fourth keeps her records.
 
 <PatientJourney
   label="The PHR side, from the patient's app"
@@ -148,6 +148,15 @@ milestone on the provider side.
       cta: 'Build P3',
       to: '/docs/hiecm/v3/milestones/p3',
       icon: 'shield-check',
+    },
+    {
+      eyebrow: 'PHR 4 · Locker',
+      title: 'Her records stay with her',
+      story:
+        'Her health locker subscribes to her ABHA address. When a hospital links a new record, it asks her consent, fetches the record and keeps it for her.',
+      cta: 'Build P4',
+      to: '/docs/hiecm/v3/milestones/p4',
+      icon: 'lock',
     },
   ]}
 />

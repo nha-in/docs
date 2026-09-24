@@ -92,6 +92,11 @@ const PHR_JOURNEY: Step[] = [
     detail: 'Let them grant, see and revoke consent, and receive what the gateway sends.',
     to: '/docs/hiecm/v3/milestones/p3',
   },
+  {
+    label: 'P4 Locker',
+    detail: 'Keep their records for the long term, fetched with consent as each one is linked.',
+    to: '/docs/hiecm/v3/milestones/p4',
+  },
 ];
 
 /** Remembers which card was pressed, since two of them set the same role. */

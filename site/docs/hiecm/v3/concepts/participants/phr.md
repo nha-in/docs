@@ -57,8 +57,10 @@ responsibilities of healthcare establishments.
   [P2 API reference](/reference/hiecm-p2).
 - [P3 Subscription](/docs/hiecm/v3/milestones/p3): subscriptions,
   auto approval, consent and fetching records. The subscription calls are in the
-  [P3 API reference](/reference/hiecm-p3), the auto approval and consent calls in
-  the [P2 API reference](/reference/hiecm-p2), and the health locker calls in the
+  [P3 API reference](/reference/hiecm-p3), and the auto approval and consent
+  calls in the [P2 API reference](/reference/hiecm-p2).
+- [P4 Locker](/docs/hiecm/v3/milestones/p4): setting up a health locker and
+  keeping records as they are linked, with the
   [P4 API reference](/reference/hiecm-p4).
 - [Get started](/docs/hiecm/v3/getting-started/sandbox) for sandbox signup and
   your first call.
