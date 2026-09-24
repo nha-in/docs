@@ -1136,14 +1136,19 @@ const promptSkills = abdmSlugs.map((slug) => [
   `${manifest[slug].title}. Sections: ${manifest[slug].sections.join(', ')}.`,
 ]);
 const mcpUrl = process.env.MCP_URL ?? 'https://docs.abdm.gov.in/mcp';
-// The public plugin marketplace, nha-in/agent-plugins, and its name, from
-// publish/agent-plugins.json: this repository is private, so a prompt naming
-// it would hand integrators an install that fails. MARKETPLACE_REPO overrides
-// the repository for a test marketplace. Keep the same chain in
-// site/docusaurus.config.ts, which is where the site's components read it.
-const publicMarketplace = JSON.parse(readFileSync(join(root, 'publish', 'agent-plugins.json'), 'utf8'));
-const pluginRepo = process.env.MARKETPLACE_REPO ?? publicMarketplace.repo;
-const marketplaceName = publicMarketplace.name;
+// The Claude Code plugin marketplace: this repository itself, named by the
+// environment rather than written down here. Actions sets GITHUB_REPOSITORY on
+// whichever fork is building, so a fork's prompt carries its own install
+// commands. Keep the same chain in site/docusaurus.config.ts, which is where
+// the site's own components read it from.
+const pluginRepo =
+  process.env.MARKETPLACE_REPO ?? process.env.GITHUB_REPOSITORY ?? 'nha-in/docs';
+// What `claude plugin install <plugin>@<marketplace>` has to name, taken from
+// the marketplace manifest rather than repeated here, so renaming the shelf
+// cannot leave a published command pointing at one that does not exist.
+const marketplaceName = JSON.parse(
+  readFileSync(join(root, '.claude-plugin', 'marketplace.json'), 'utf8'),
+).name;
 // Without DOCUSAURUS_URL every reference is origin-relative, and one note
 // tells the agent what the origin is: wherever it fetched this file from.
 const promptRef = (path) => (siteUrl ? `${siteUrl}${path}` : path);

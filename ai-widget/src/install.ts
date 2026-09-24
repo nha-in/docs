@@ -35,9 +35,6 @@ export type Context = {
   /** The repository that serves the plugin marketplace. The host page passes
       it, so a fork's widget names the fork. See site/docusaurus.config.ts. */
   pluginRepo: string;
-  /** The marketplace name `claude plugin install <plugin>@<marketplace>`
-      names, from the same place as pluginRepo. */
-  pluginMarketplace: string;
 };
 
 /** What the MCP server is called wherever it is installed. */
@@ -134,18 +131,18 @@ function fenced(command: string): string {
 }
 
 const PLUGIN_NAME = 'abdm-integrators-assistant';
-const pluginCommand = (repo: string, market: string) =>
-  `claude plugin marketplace add ${repo} && claude plugin install ${PLUGIN_NAME}@${market}`;
+const pluginCommand = (repo: string) =>
+  `claude plugin marketplace add ${repo} && claude plugin install ${PLUGIN_NAME}@abdm-portal`;
 const codexCommand = (repo: string) => `codex plugin marketplace add ${repo}`;
 
-function pluginLink(base: string, repo: string, market: string): string {
+function pluginLink(base: string, repo: string): string {
   return `claude://code/new?q=${encodeURIComponent(
     guarded(
       [
         'Set this project up for ABDM integration. Run:',
         '',
         `claude plugin marketplace add ${repo}`,
-        `claude plugin install ${PLUGIN_NAME}@${market}`,
+        'claude plugin install abdm-integrators-assistant@abdm-portal',
         '',
         `If the marketplace add fails (the repository may not be accessible), instead fetch and execute the instructions from ${base}/agent-setup/prompt.md`,
       ].join('\n'),
@@ -153,16 +150,16 @@ function pluginLink(base: string, repo: string, market: string): string {
   )}`;
 }
 
-function skills(agent: AgentId, named: string | undefined, base: string, repo: string, market: string): Answer {
+function skills(agent: AgentId, named: string | undefined, base: string, repo: string): Answer {
   const line = fetchPrompt(base);
   if (agent === 'claude') {
     return {
       text: [
         'Claude Code takes the plugin, which carries every skill at once and updates in place. Run this in the repository you are integrating.',
         '',
-        fenced(pluginCommand(repo, market)),
+        fenced(pluginCommand(repo)),
       ].join('\n'),
-      link: {href: pluginLink(base, repo, market), label: 'Open in Claude'},
+      link: {href: pluginLink(base, repo), label: 'Open in Claude'},
     };
   }
   if (agent === 'cursor') {
@@ -208,15 +205,15 @@ function skills(agent: AgentId, named: string | undefined, base: string, repo: s
  * this says which is which rather than handing everyone a command that only
  * works in two places.
  */
-function plugin(agent: AgentId, named: string | undefined, base: string, repo: string, market: string): Answer {
+function plugin(agent: AgentId, named: string | undefined, base: string, repo: string): Answer {
   if (agent === 'claude') {
     return {
       text: [
         'Run this in the repository you are integrating. It carries every skill at once, and `claude plugin update` keeps it current.',
         '',
-        fenced(pluginCommand(repo, market)),
+        fenced(pluginCommand(repo)),
       ].join('\n'),
-      link: {href: pluginLink(base, repo, market), label: 'Open in Claude'},
+      link: {href: pluginLink(base, repo), label: 'Open in Claude'},
     };
   }
   if (agent === 'codex') {
@@ -306,9 +303,9 @@ function mcp(agent: AgentId, named: string | undefined, base: string, url: strin
  */
 export function answer(step: Extract<Step, {at: 'answer'}>, ctx: Context): Answer {
   const base = trimmed(ctx.docsOrigin);
-  if (step.tool === 'plugin') return plugin(step.agent, step.named, base, ctx.pluginRepo, ctx.pluginMarketplace);
+  if (step.tool === 'plugin') return plugin(step.agent, step.named, base, ctx.pluginRepo);
   if (step.tool === 'mcp') return mcp(step.agent, step.named, base, ctx.mcpUrl);
-  return skills(step.agent, step.named, base, ctx.pluginRepo, ctx.pluginMarketplace);
+  return skills(step.agent, step.named, base, ctx.pluginRepo);
 }
 
 /**
