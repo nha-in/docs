@@ -1,0 +1,570 @@
+<!doctype html><html lang=en dir=ltr class="docs-wrapper plugin-docs plugin-id-default docs-version-current docs-doc-page docs-doc-id-uhi/v1/concepts/services/blood-bank" data-has-hydrated=false><head><meta charset=UTF-8><title data-rh=true>Blood bank discovery | ABDM Developer Portal</title><meta data-rh=true name=viewport content="width=device-width, initial-scale=1.0"/><meta data-rh=true name=twitter:card content=summary_large_image /><meta data-rh=true property=og:image content=https://nha-in.github.io/docs/pr-45/img/social-card.jpg /><meta data-rh=true name=twitter:image content=https://nha-in.github.io/docs/pr-45/img/social-card.jpg /><meta data-rh=true property=og:url content=https://nha-in.github.io/docs/pr-45/docs/uhi/v1/concepts/services/blood-bank /><meta data-rh=true property=og:locale content=en /><meta data-rh=true name=docsearch:language content=en /><meta data-rh=true property=og:type content=website /><meta data-rh=true property=og:site_name content="ABDM Developer Portal"/><meta data-rh=true property=og:image:width content=1200 /><meta data-rh=true property=og:image:height content=630 /><meta data-rh=true property=og:image:type content=image/jpeg /><meta data-rh=true property=og:image:alt content="ABDM Developer Portal, the National Health Authority"/><meta data-rh=true name=docusaurus_version content=current /><meta data-rh=true name=docsearch:version content=current /><meta data-rh=true property=og:title content="Blood bank discovery | ABDM Developer Portal"/><meta data-rh=true name=description content="Search live blood stock by group and component across registered blood banks, using one call pair."/><meta data-rh=true property=og:description content="Search live blood stock by group and component across registered blood banks, using one call pair."/><link data-rh=true rel=icon href=/docs/pr-45/img/favicon.svg /><link data-rh=true rel=canonical href=https://nha-in.github.io/docs/pr-45/docs/uhi/v1/concepts/services/blood-bank /><link data-rh=true rel=alternate href=https://nha-in.github.io/docs/pr-45/docs/uhi/v1/concepts/services/blood-bank hreflang=en /><link data-rh=true rel=alternate href=https://nha-in.github.io/docs/pr-45/docs/uhi/v1/concepts/services/blood-bank hreflang=x-default /><script data-rh=true type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://nha-in.github.io/docs/pr-45/docs/uhi/v1/concepts/services/blood-bank","name":"Blood bank","position":1}]}</script><meta name=viewport content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content"><link rel="alternate icon" type=image/png href=/docs/pr-45/img/favicon.png><link rel=apple-touch-icon href=/docs/pr-45/img/apple-touch-icon.png><script src=/docs/pr-45/agent/abdm-support-agent.js defer></script><link rel=stylesheet href=/docs/pr-45/assets/css/styles.ab939967.css /><script src=/docs/pr-45/assets/js/runtime~main.59bb6f70.js defer></script><script src=/docs/pr-45/assets/js/main.af429454.js defer></script></head><body><svg style="display: none;"><defs>
+<symbol id=theme-svg-external-link viewBox="0 0 24 24"><path fill=currentColor d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></symbol>
+</defs></svg>
+<script>!function(){var t=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme-a46")}catch(t){}}();document.documentElement.setAttribute("data-theme",t||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")),document.documentElement.setAttribute("data-theme-choice",t||"system")}(),function(){try{for(var[t,e]of new URLSearchParams(window.location.search).entries())if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}()</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div id=__docusaurus><link rel=preload as=image href=/docs/pr-45/img/nha-logo.svg /><link rel=preload as=image href=/docs/pr-45/img/nha-logo-dark.svg /><div role=region aria-label="Skip to main content"><a class=skipToContent_fXgn href=#__docusaurus_skipToContent_fallback>Skip to main content</a></div><nav class="navbar navbar--fixed-top topbar" aria-label=Site><a class=topbar-brand aria-label="ABDM Developer Portal" href=/docs/pr-45/><img src=/docs/pr-45/img/nha-logo.svg alt="" class="topbar-logo themedComponent_siVc themedComponent--light_hHel"/><img src=/docs/pr-45/img/nha-logo-dark.svg alt="" class="topbar-logo themedComponent_siVc themedComponent--dark_yETr"/><span class=brand-chip><span aria-hidden=true class=brand-chip__mark style='-webkit-mask-image:url("/docs/pr-45/img/ashoka-emblem-mark.svg");mask-image:url("/docs/pr-45/img/ashoka-emblem-mark.svg")'></span><span class=topbar-wordmark>ABDM Developer Portal</span></span></a><button type=button id=radix-_R_16akh_ aria-haspopup=menu aria-expanded=false data-state=closed data-slot=dropdown-menu-trigger class="topbar-action topbar-gateway" aria-label="Gateway: UHI">UHI<svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-chevron-down size-3.5" aria-hidden=true><path d="m6 9 6 6 6-6"/></svg></button><div class=topbar-center><div class=omnibox><div class="navbar__search searchBarContainer_bpSG" dir=ltr><svg aria-hidden=true class=searchIcon_qjAM focusable=false viewBox="0 0 16 16"><path fill=currentColor d="M6.02945 10.20327a4.17382 4.17382 0 1 1 4.17382-4.17382 4.15609 4.15609 0 0 1-4.17382 4.17382Zm9.69195 4.2199-4.8225-4.82338A5.88021 5.88021 0 0 0 12.058 6.02856 6.00467 6.00467 0 1 0 9.59979 10.8989l4.82338 4.82338a.89729.89729 0 0 0 1.29912 0 .89749.89749 0 0 0-.00087-1.29909Z"/></svg><input placeholder=Search aria-label=Search class="navbar__search-input searchInput_T5pz" value="" /><div class="loadingRing_hScY searchBarLoadingRing_dMau"><div></div><div></div><div></div><div></div></div></div><abdm-support-agent docs-origin=https://nha-in.github.io/docs/pr-45 mcp-url=https://docs.abdm.gov.in/mcp plugin-repo=nha-in/docs support-url=/docs/pr-45/docs/support></abdm-support-agent></div></div><div class=topbar-actions><a class="topbar-action topbar-action--icon" href=https://sbxai.abdm.gov.in target=_blank rel="noopener noreferrer" aria-label="ABDM sandbox" data-state=closed data-slot=tooltip-trigger><svg viewBox="1 1.8 22 16" width=26 height=19 fill=none stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round aria-hidden=true><path d="M12 2.2 22.4 8.2 12 14.2 1.6 8.2Z"/><path d="M1.6 8.2v3.1L12 17.3l10.4-6V8.2"/><path d="M9.2 6.4 6.4 8.2l2.8 1.8M14.8 6.4l2.8 1.8-2.8 1.8M13.4 5.3l-2.8 6"/></svg></a></div><button type=button id=radix-_R_2makh_ aria-haspopup=menu aria-expanded=false data-state=closed data-slot=dropdown-menu-trigger class="topbar-action topbar-action--icon topbar-overflow" aria-label=More><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-ellipsis size-5" aria-hidden=true><circle cx=12 cy=12 r=1 /><circle cx=19 cy=12 r=1 /><circle cx=5 cy=12 r=1 /></svg></button><div class="toggle_vylO topbar-toggle"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type=button disabled title="system mode" aria-label="Switch between dark and light mode (currently system mode)"><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round class="lucide lucide-sun toggleIcon_g3eP lightToggleIcon_pyhR" aria-hidden=true><circle cx=12 cy=12 r=4 /><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round class="lucide lucide-moon toggleIcon_g3eP darkToggleIcon_wfgR" aria-hidden=true><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round class="lucide lucide-laptop toggleIcon_g3eP systemToggleIcon_QzmC" aria-hidden=true><path d="M18 5a2 2 0 0 1 2 2v8.526a2 2 0 0 0 .212.897l1.068 2.127a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45l1.068-2.127A2 2 0 0 0 4 15.526V7a2 2 0 0 1 2-2z"/><path d="M20.054 15.987H3.946"/></svg></button></div></nav><nav class=docs-tabs aria-label="Documentation sections"><a class="docs-tab docs-tab--active" aria-current=page href=/docs/pr-45/docs/uhi/v1>Docs</a><a class=docs-tab href=/docs/pr-45/docs/uhi/v1/api>API reference</a><a class=docs-tab href=/docs/pr-45/docs/uhi/v1/resources>Developer resources</a><a class=docs-tab href=/docs/pr-45/docs/whats-new>What's new</a><a class=docs-tab href=/docs/pr-45/docs/support>Support</a></nav><button type=button aria-haspopup=dialog aria-expanded=false data-state=closed data-slot=sheet-trigger class=nav-row aria-label="Open navigation"><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-menu size-4" aria-hidden=true><path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h16"/></svg><span class=nav-row__label>Navigation</span><span class=nav-row__here>Docs</span><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-chevron-down size-4 nav-row__chevron" aria-hidden=true><path d="m6 9 6 6 6-6"/></svg></button><div id=__docusaurus_skipToContent_fallback class="theme-layout-main main-wrapper mainWrapper_z2l0"><div class=docsWrapper_hBAB><button aria-label="Scroll back to top" class="clean-btn theme-back-to-top-button backToTopButton_sjWU" type=button></button><div class=docRoot_UBD9><aside class="theme-doc-sidebar-container docSidebarContainer_YfHR"><div class=sidebarViewport_aRkj><div class=docs-sidebar><div class=docs-sidebar__head><div class=sidebar-pickers><button type=button aria-haspopup=dialog aria-expanded=false data-state=closed data-slot=popover-trigger class=sidebar-settings aria-label="Settings. Role Everything"><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-sliders-horizontal size-4 shrink-0" aria-hidden=true><path d="M10 5H3"/><path d="M12 19H3"/><path d="M14 3v4"/><path d="M16 17v4"/><path d="M21 12h-9"/><path d="M21 19h-5"/><path d="M21 5h-7"/><path d="M8 10v4"/><path d="M8 12H3"/></svg><span class=sidebar-settings__summary>Everything</span></button></div><button type=button class=sidebar-fold title="Collapse sidebar" aria-label="Collapse sidebar"><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-panel-left-close size-4" aria-hidden=true><rect width=18 height=18 x=3 y=3 rx=2 /><path d="M9 3v18"/><path d="m16 15-3-3 3-3"/></svg></button></div><nav aria-label="Docs sidebar" class="menu thin-scrollbar menu_SIkG"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item sidebar-icon sidebar-icon--compass"><a class=menu__link href=/docs/pr-45/docs/uhi/v1/><span class=linkLabel_WmDU>Introduction</span></a><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed sidebar-icon sidebar-icon--rocket"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false href=/docs/pr-45/docs/uhi/v1/getting-started/onboarding><span class=categoryLinkLabel_W154>Getting started</span></a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed sidebar-icon sidebar-icon--database"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist" href=/docs/pr-45/docs/uhi/v1/registries/><span class=categoryLinkLabel_W154>Registries</span></a><button aria-label="Expand sidebar category 'Registries'" aria-expanded=false type=button class="clean-btn menu__caret"></button></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item sidebar-icon sidebar-icon--shapes"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret menu__link--active" role=button aria-expanded=true href=/docs/pr-45/docs/uhi/v1/concepts/network-and-protocol><span class=categoryLinkLabel_W154>Core concepts</span></a></div><ul class=menu__list><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item sidebar-icon sidebar-icon--route"><a class=menu__link tabindex=0 href=/docs/pr-45/docs/uhi/v1/concepts/network-and-protocol><span class=linkLabel_WmDU>UHI gateway</span></a><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item sidebar-icon sidebar-icon--layers"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret menu__link--active" role=button aria-expanded=true tabindex=0 href=/docs/pr-45/docs/uhi/v1/concepts/services/physical-consultation><span class=categoryLinkLabel_W154>Services</span></a></div><ul class=menu__list><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item sidebar-icon sidebar-icon--stethoscope"><a class=menu__link tabindex=0 href=/docs/pr-45/docs/uhi/v1/concepts/services/physical-consultation><span class=linkLabel_WmDU>Physical consultation</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item sidebar-icon sidebar-icon--hospital"><a class=menu__link tabindex=0 href=/docs/pr-45/docs/uhi/v1/concepts/services/pmjay-hem><span class=linkLabel_WmDU>PM-JAY HEM</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item sidebar-icon sidebar-icon--droplet"><a class="menu__link menu__link--active" aria-current=page tabindex=0 href=/docs/pr-45/docs/uhi/v1/concepts/services/blood-bank><span class=linkLabel_WmDU>Blood bank</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item sidebar-icon sidebar-icon--ambulance"><a class=menu__link tabindex=0 href=/docs/pr-45/docs/uhi/v1/concepts/services/ambulance-booking><span class=linkLabel_WmDU>Ambulance booking</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item sidebar-icon sidebar-icon--store"><a class=menu__link tabindex=0 href=/docs/pr-45/docs/uhi/v1/concepts/services/jan-aushadhi-kendra><span class=linkLabel_WmDU>Jan Aushadhi Kendra</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item sidebar-icon sidebar-icon--search"><a class=menu__link tabindex=0 href=/docs/pr-45/docs/uhi/v1/concepts/services/jan-aushadhi-medicine-search><span class=linkLabel_WmDU>Jan Aushadhi medicine search</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item sidebar-icon sidebar-icon--pill"><a class=menu__link tabindex=0 href=/docs/pr-45/docs/uhi/v1/concepts/services/amrit-pharmacy><span class=linkLabel_WmDU>AMRIT Pharmacy</span></a></ul></ul></ul></nav><div role=separator aria-orientation=vertical aria-label="Resize the sidebar" tabindex=0 class=sidebar-resizer><span class=sidebar-resizer__grip aria-hidden=true></span></div></div></div></aside><main class=docMainContainer_TBSr><div class="container padding-top--md padding-bottom--lg"><div class=docs-article-row><div class=docs-article-main><div class=docs-content><article><nav class="theme-doc-breadcrumbs breadcrumbsContainer_Z_bl" aria-label=Breadcrumbs><ul class=breadcrumbs><li class=breadcrumbs__item><a aria-label="Home page" class=breadcrumbs__link href=/docs/pr-45/><svg viewBox="0 0 24 24" class=breadcrumbHomeIcon_YNFT><path d="M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z" fill=currentColor /></svg></a><li class=breadcrumbs__item><span class=breadcrumbs__link>Core concepts</span><li class=breadcrumbs__item><span class=breadcrumbs__link>Services</span><li class="breadcrumbs__item breadcrumbs__item--active"><span class=breadcrumbs__link>Blood bank</span></ul></nav><div class="tocCollapsible_ETCw theme-doc-toc-mobile tocMobile_ITEo"><button type=button class="clean-btn tocCollapsibleButton_TO0P">On this page</button></div><div><div class="theme-doc-markdown markdown"><header><h1>Blood bank discovery</h1></header>
+<p>Blood bank discovery is the smallest service on <a class="" href=/docs/pr-45/docs/uhi/v1/getting-started/glossary#uhi>UHI</a>: one call pair. Your app sends a search with a blood group, a component and a location, and gets back blood banks with unit counts, addresses and phone numbers.</p>
+<p>Read <a class="" href=/docs/pr-45/docs/uhi/v1>UHI services</a> first, for the <code>context</code> block, the acknowledgement model, signing and the two transports.</p>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=scope>Scope<a href=#scope class=hash-link aria-label="Direct link to Scope" title="Direct link to Scope" translate=no>​</a></h2>
+<p>Discovery only: <code>search</code> and <code>on_search</code>. There is no booking or reservation. Put the blood bank's phone number somewhere the user cannot miss it, because calling is how a unit gets held.</p>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=service-identity>Service identity<a href=#service-identity class=hash-link aria-label="Direct link to Service identity" title="Direct link to Service identity" translate=no>​</a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th>Field<th>Value<th>Note<tbody><tr><td><code>context.domain</code><td><code>nic2008:86906</code><td>Fixed. A wrong value means no HSPA answers your search<tr><td><code>context.core_version</code><td><code>0.7.1</code><td>Must match exactly<tr><td><code>context.action</code><td><code>search</code> or <code>on_search</code><td>Set by the sender<tr><td><code>message.intent.fulfillment.type</code><td><code>BloodStock</code><td>Fixed for every blood bank search</table></div>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=who-is-involved>Who is involved<a href=#who-is-involved class=hash-link aria-label="Direct link to Who is involved" title="Direct link to Who is involved" translate=no>​</a></h2>
+<p>Both roles are open here. An organisation can onboard as either or both.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th>Role<th>What it does<tbody><tr><td><a class="" href=/docs/pr-45/docs/uhi/v1/getting-started/glossary#eua>EUA</a><td>A patient or clinician facing app. Sends searches, receives results at its callback URL<tr><td><a class="" href=/docs/pr-45/docs/uhi/v1/getting-started/glossary#hspa>HSPA</a><td>A blood bank management system or aggregator. Answers searches from its own inventory database</table></div>
+<p>At the time of the document there was one registered blood bank HSPA on the network: e-RaktKosh, the centralised blood bank management system.</p>
+<p><a class="" href=/docs/pr-45/docs/uhi/v1/getting-started/glossary#nha>NHA</a> sets a bar for the HSPA role. Your blood bank database has to be maintained independently and cover stock at a scope and quality comparable to e-RaktKosh. Integrations built on manually maintained or infrequently updated records will not be approved for production.</p>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=the-flow>The flow<a href=#the-flow class=hash-link aria-label="Direct link to The flow" title="Direct link to The flow" translate=no>​</a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th>Step<th>Who<th>What happens<tbody><tr><td>1<td>Your EUA<td>Posts <code>search</code> to the gateway with blood group, component and location<tr><td>2<td><a class="" href=/docs/pr-45/docs/uhi/v1/getting-started/glossary#gateway>Gateway</a><td>Returns HTTP 200 with an acknowledgement. This confirms receipt only<tr><td>3<td>Gateway<td>Routes the search to every registered blood bank HSPA<tr><td>4<td>HSPA<td>Queries its inventory database<tr><td>5<td>HSPA<td>Posts <code>on_search</code> to the gateway with availability and unit counts<tr><td>6<td>Gateway<td>Forwards <code>on_search</code> to your <code>consumer_uri</code><tr><td>7<td>Your EUA<td>Returns HTTP 200 and aggregates results as they arrive</table></div>
+<p>There is no end signal. Responses land one at a time and nothing tells you the last one has arrived. Use a timeout window of 10 to 15 seconds, and display results as they come in.</p>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=two-search-modes>Two search modes<a href=#two-search-modes class=hash-link aria-label="Direct link to Two search modes" title="Direct link to Two search modes" translate=no>​</a></h2>
+<p>Blood group and component filters work with either mode.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th>Mode<th>Mandatory<th>Optional<th>Behaviour<tbody><tr><td>GPS and radius<td><code>location.gps</code>, <code>location.radius</code><td>Blood group, component<td>Returns matching blood banks within the radius. Group and component default to <code>All</code> if omitted<tr><td>State and district<td><code>location.state</code> (name and code), <code>location.district</code> (name and code)<td>Blood group, component<td>Returns matching blood banks in that district</table></div>
+<p>Support both. GPS returns incomplete results where blood bank density is low, and state and district is the only option when GPS is unavailable.</p>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=search>search<a href=#search class=hash-link aria-label="Direct link to search" title="Direct link to search" translate=no>​</a></h2>
+<p><code>context</code> is the standard UHI block, with <code>domain</code> fixed to <code>nic2008:86906</code> and <code>action</code> set to <code>search</code>. Set <code>city</code> to <code>std:011</code> as the default. The filters live in <code>message.intent</code>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th>Field<th>Value<th>What it is<tbody><tr><td><code>item.descriptor.name</code><td>Blood group name or <code>All</code><td>The group being searched, for example <code>O+Ve</code><tr><td><code>item.descriptor.code</code><td>Blood group code or <code>-1</code><td>Numeric code from the master list below. <code>-1</code> means all groups<tr><td><code>category.descriptor.name</code><td>Component name<td>For example <code>WholeBlood</code>, <code>PlateletConcentrate</code><tr><td><code>category.descriptor.code</code><td>Component code<td>Numeric code from the master list below<tr><td><code>fulfillment.type</code><td><code>BloodStock</code><td>Fixed<tr><td><code>fulfillment.start.time.timestamp</code><td>ISO 8601<td>Start of the availability window<tr><td><code>fulfillment.end.time.timestamp</code><td>ISO 8601<td>End of the availability window<tr><td><code>location.gps</code><td><code>latitude,longitude</code><td>Search origin, for GPS mode<tr><td><code>location.radius.type</code><td><code>CONSTANT</code><td>Fixed, for GPS mode<tr><td><code>location.radius.value</code><td>Numeric string<td>Radius in km, for example <code>10.0</code><tr><td><code>location.radius.unit</code><td><code>km</code><td>Fixed<tr><td><code>location.state.name</code><td>State name in capitals<td>For example <code>DELHI</code><tr><td><code>location.state.code</code><td>Numeric state code<td>For example <code>7</code><tr><td><code>location.district.name</code><td>District name in capitals<td>For example <code>SOUTH</code><tr><td><code>location.district.code</code><td>Numeric district code<td>For example <code>83</code></table></div>
+<h3 class="anchor anchorTargetStickyNavbar_tleR" id=sample-gps-with-a-specific-group-and-component>Sample, GPS with a specific group and component<a href=#sample-gps-with-a-specific-group-and-component class=hash-link aria-label="Direct link to Sample, GPS with a specific group and component" title="Direct link to Sample, GPS with a specific group and component" translate=no>​</a></h3>
+<div class="language-json codeBlockContainer_Ckt0 theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class=codeBlockContent_QJqH><pre tabindex=0 class="prism-code language-json codeBlock_bY9V thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class=codeBlockLines_e6Vv><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token property" style="color:hsl(5, 74%, 59%)">"context"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">    </span><span class="token property" style="color:hsl(5, 74%, 59%)">"domain"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"nic2008:86906"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">    </span><span class="token property" style="color:hsl(5, 74%, 59%)">"country"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"IND"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">    </span><span class="token property" style="color:hsl(5, 74%, 59%)">"city"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"std:011"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">    </span><span class="token property" style="color:hsl(5, 74%, 59%)">"action"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"search"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">    </span><span class="token property" style="color:hsl(5, 74%, 59%)">"core_version"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"0.7.1"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">    </span><span class="token property" style="color:hsl(5, 74%, 59%)">"consumer_id"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"&lt;YOUR_EUA_ID_FROM_NHA_ONBOARDING>"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">    </span><span class="token property" style="color:hsl(5, 74%, 59%)">"consumer_uri"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"&lt;YOUR_HTTPS_CALLBACK_URL>"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">    </span><span class="token property" style="color:hsl(5, 74%, 59%)">"message_id"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"5cc46ce0-cd96-11ef-957f-718cff4e4e0a"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">    </span><span class="token property" style="color:hsl(5, 74%, 59%)">"timestamp"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"2025-01-08T07:58:36.421576Z"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">    </span><span class="token property" style="color:hsl(5, 74%, 59%)">"transaction_id"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"5cc46ce0-cd96-11ef-957f-718cff4e4e0a"</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token property" style="color:hsl(5, 74%, 59%)">"message"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">    </span><span class="token property" style="color:hsl(5, 74%, 59%)">"intent"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">      </span><span class="token property" style="color:hsl(5, 74%, 59%)">"item"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">        </span><span class="token property" style="color:hsl(5, 74%, 59%)">"descriptor"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"> </span><span class="token property" style="color:hsl(5, 74%, 59%)">"name"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"O+Ve"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"> </span><span class="token property" style="color:hsl(5, 74%, 59%)">"code"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"15"</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">      </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">      </span><span class="token property" style="color:hsl(5, 74%, 59%)">"category"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">        </span><span class="token property" style="color:hsl(5, 74%, 59%)">"descriptor"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"> </span><span class="token property" style="color:hsl(5, 74%, 59%)">"name"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"WholeBlood"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"> </span><span class="token property" style="color:hsl(5, 74%, 59%)">"code"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"11"</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">      </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">      </span><span class="token property" style="color:hsl(5, 74%, 59%)">"fulfillment"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">        </span><span class="token property" style="color:hsl(5, 74%, 59%)">"type"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"BloodStock"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">        </span><span class="token property" style="color:hsl(5, 74%, 59%)">"start"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"> </span><span class="token property" style="color:hsl(5, 74%, 59%)">"time"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"> </span><span class="token property" style="color:hsl(5, 74%, 59%)">"timestamp"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"2025-01-08T13:28:36"</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">        </span><span class="token property" style="color:hsl(5, 74%, 59%)">"end"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"> </span><span class="token property" style="color:hsl(5, 74%, 59%)">"time"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"> </span><span class="token property" style="color:hsl(5, 74%, 59%)">"timestamp"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"2025-01-08T23:59:59"</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">      </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">      </span><span class="token property" style="color:hsl(5, 74%, 59%)">"location"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">        </span><span class="token property" style="color:hsl(5, 74%, 59%)">"gps"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"17.3788008,78.4368212"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">        </span><span class="token property" style="color:hsl(5, 74%, 59%)">"radius"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"> </span><span class="token property" style="color:hsl(5, 74%, 59%)">"type"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"CONSTANT"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"> </span><span class="token property" style="color:hsl(5, 74%, 59%)">"value"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"10.0"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"> </span><span class="token property" style="color:hsl(5, 74%, 59%)">"unit"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"km"</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">      </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">    </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain"></span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><br/></div></code></pre></div></div>
+<p>To search every blood group at once, set <code>item.descriptor.name</code> to <code>All</code> and <code>item.descriptor.code</code> to <code>-1</code>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_tleR" id=sample-state-and-district>Sample, state and district<a href=#sample-state-and-district class=hash-link aria-label="Direct link to Sample, state and district" title="Direct link to Sample, state and district" translate=no>​</a></h3>
+<p>Replace the <code>location</code> block. Everything else is the same.</p>
+<div class="language-json codeBlockContainer_Ckt0 theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class=codeBlockContent_QJqH><pre tabindex=0 class="prism-code language-json codeBlock_bY9V thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class=codeBlockLines_e6Vv><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token property" style="color:hsl(5, 74%, 59%)">"location"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">    </span><span class="token property" style="color:hsl(5, 74%, 59%)">"state"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"> </span><span class="token property" style="color:hsl(5, 74%, 59%)">"name"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"DELHI"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"> </span><span class="token property" style="color:hsl(5, 74%, 59%)">"code"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"7"</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">    </span><span class="token property" style="color:hsl(5, 74%, 59%)">"district"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"> </span><span class="token property" style="color:hsl(5, 74%, 59%)">"name"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"SOUTH"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"> </span><span class="token property" style="color:hsl(5, 74%, 59%)">"code"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"83"</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain"></span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><br/></div></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=on_search>on_search<a href=#on_search class=hash-link aria-label="Direct link to on_search" title="Direct link to on_search" translate=no>​</a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th>Field<th>Type<th>What it is<tbody><tr><td><code>context.action</code><td>string<td><code>on_search</code><tr><td><code>context.provider_id</code><td>string<td>The responding HSPA<tr><td><code>context.provider_uri</code><td>string<td>The HSPA's callback URL<tr><td><code>context.transaction_id</code><td>string<td>Echoed from your search. Use it to correlate<tr><td><code>catalog.descriptor.name</code><td>string<td>HSPA or data source name, for example <code>e-RaktKosh</code><tr><td><code>providers[].id</code><td>string<td>Unique ID for this blood bank record<tr><td><code>providers[].descriptor.name</code><td>string<td>Blood bank name<tr><td><code>providers[].descriptor.short_desc</code><td>string<td>Blood bank type, for example <code>Govt.</code>, <code>Charitable/Vol</code><tr><td><code>providers[].categories[].descriptor.name</code><td>string<td>Blood component name<tr><td><code>providers[].categories[].descriptor.code</code><td>string<td>Blood component code<tr><td><code>providers[].fulfillments[].type</code><td>string<td><code>Available</code> or <code>NotAvailable</code><tr><td><code>providers[].items[].descriptor.name</code><td>string<td>Blood group name<tr><td><code>providers[].items[].descriptor.code</code><td>string<td>Blood group code<tr><td><code>providers[].items[].quantity.count</code><td>integer<td>Units available for this group<tr><td><code>providers[].items[].fulfillment_id</code><td>string<td>Points at the fulfilment record that says <code>Available</code> or <code>NotAvailable</code><tr><td><code>providers[].location.gps</code><td>string<td>Blood bank coordinates<tr><td><code>providers[].location.address</code><td>string<td>Full address<tr><td><code>providers[].location.city.name</code><td>string<td>City<tr><td><code>providers[].location.state.name</code><td>string<td>State<tr><td><code>providers[].location.district.name</code><td>string<td>District<tr><td><code>providers[].contact.phone</code><td>string<td>Blood bank phone number<tr><td><code>providers[].contact.email</code><td>string<td>Blood bank email</table></div>
+<h3 class="anchor anchorTargetStickyNavbar_tleR" id=the-part-that-trips-people-up>The part that trips people up<a href=#the-part-that-trips-people-up class=hash-link aria-label="Direct link to The part that trips people up" title="Direct link to The part that trips people up" translate=no>​</a></h3>
+<p>Availability is not a field on the item. Each provider declares a small set of <code>fulfillments</code>, one meaning <code>Available</code> and one meaning <code>NotAvailable</code>. Each blood group item points at one of them through <code>fulfillment_id</code>. A group with a unit count of 16 can still be unavailable. Resolve the link before you show a number to a user.</p>
+<h3 class="anchor anchorTargetStickyNavbar_tleR" id=sample-response>Sample response<a href=#sample-response class=hash-link aria-label="Direct link to Sample response" title="Direct link to Sample response" translate=no>​</a></h3>
+<div class="language-json codeBlockContainer_Ckt0 theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class=codeBlockContent_QJqH><pre tabindex=0 class="prism-code language-json codeBlock_bY9V thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class=codeBlockLines_e6Vv><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token property" style="color:hsl(5, 74%, 59%)">"context"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">    </span><span class="token property" style="color:hsl(5, 74%, 59%)">"domain"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"nic2008:86906"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">    </span><span class="token property" style="color:hsl(5, 74%, 59%)">"action"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"on_search"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">    </span><span class="token property" style="color:hsl(5, 74%, 59%)">"consumer_id"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"&lt;YOUR_EUA_ID_FROM_NHA_ONBOARDING>"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">    </span><span class="token property" style="color:hsl(5, 74%, 59%)">"consumer_uri"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"&lt;YOUR_HTTPS_CALLBACK_URL>"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">    </span><span class="token property" style="color:hsl(5, 74%, 59%)">"provider_id"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"nha.hspa"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">    </span><span class="token property" style="color:hsl(5, 74%, 59%)">"provider_uri"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"https://hspasbx.abdm.gov.in/api/v1/bloodbank"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">    </span><span class="token property" style="color:hsl(5, 74%, 59%)">"transaction_id"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"c51c2800-cd96-11ef-957f-718cff4e4e0a"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">    </span><span class="token property" style="color:hsl(5, 74%, 59%)">"message_id"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"c51c2800-cd96-11ef-957f-718cff4e4e0a"</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token property" style="color:hsl(5, 74%, 59%)">"message"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">    </span><span class="token property" style="color:hsl(5, 74%, 59%)">"catalog"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">      </span><span class="token property" style="color:hsl(5, 74%, 59%)">"descriptor"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">        </span><span class="token property" style="color:hsl(5, 74%, 59%)">"name"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"e-RaktKosh"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">        </span><span class="token property" style="color:hsl(5, 74%, 59%)">"short_desc"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"e-RaktKosh: A Centralized Blood Bank Management System"</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">      </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">      </span><span class="token property" style="color:hsl(5, 74%, 59%)">"providers"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">[</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">        </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">          </span><span class="token property" style="color:hsl(5, 74%, 59%)">"id"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"0"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">          </span><span class="token property" style="color:hsl(5, 74%, 59%)">"descriptor"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">            </span><span class="token property" style="color:hsl(5, 74%, 59%)">"name"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"Janseva Blood Centre"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">            </span><span class="token property" style="color:hsl(5, 74%, 59%)">"short_desc"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"Charitable/Vol"</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">          </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">          </span><span class="token property" style="color:hsl(5, 74%, 59%)">"categories"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">[</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">            </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"> </span><span class="token property" style="color:hsl(5, 74%, 59%)">"id"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"0"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"> </span><span class="token property" style="color:hsl(5, 74%, 59%)">"descriptor"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"> </span><span class="token property" style="color:hsl(5, 74%, 59%)">"name"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"WholeBlood"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"> </span><span class="token property" style="color:hsl(5, 74%, 59%)">"code"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"11"</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">          </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">]</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">          </span><span class="token property" style="color:hsl(5, 74%, 59%)">"fulfillments"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">[</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">            </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"> </span><span class="token property" style="color:hsl(5, 74%, 59%)">"id"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"0"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"> </span><span class="token property" style="color:hsl(5, 74%, 59%)">"type"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"NotAvailable"</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">            </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"> </span><span class="token property" style="color:hsl(5, 74%, 59%)">"id"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"1"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"> </span><span class="token property" style="color:hsl(5, 74%, 59%)">"type"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"Available"</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">          </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">]</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">          </span><span class="token property" style="color:hsl(5, 74%, 59%)">"items"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">[</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">            </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">              </span><span class="token property" style="color:hsl(5, 74%, 59%)">"id"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"0"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">              </span><span class="token property" style="color:hsl(5, 74%, 59%)">"descriptor"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"> </span><span class="token property" style="color:hsl(5, 74%, 59%)">"name"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"O+Ve"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"> </span><span class="token property" style="color:hsl(5, 74%, 59%)">"code"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"15"</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">              </span><span class="token property" style="color:hsl(5, 74%, 59%)">"quantity"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"> </span><span class="token property" style="color:hsl(5, 74%, 59%)">"count"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token number" style="color:hsl(35, 99%, 36%)">2</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">              </span><span class="token property" style="color:hsl(5, 74%, 59%)">"category_id"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"0"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">              </span><span class="token property" style="color:hsl(5, 74%, 59%)">"fulfillment_id"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"1"</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">            </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">            </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">              </span><span class="token property" style="color:hsl(5, 74%, 59%)">"id"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"1"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">              </span><span class="token property" style="color:hsl(5, 74%, 59%)">"descriptor"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"> </span><span class="token property" style="color:hsl(5, 74%, 59%)">"name"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"AB+Ve"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"> </span><span class="token property" style="color:hsl(5, 74%, 59%)">"code"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"17"</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">              </span><span class="token property" style="color:hsl(5, 74%, 59%)">"quantity"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"> </span><span class="token property" style="color:hsl(5, 74%, 59%)">"count"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token number" style="color:hsl(35, 99%, 36%)">16</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">              </span><span class="token property" style="color:hsl(5, 74%, 59%)">"category_id"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"0"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">              </span><span class="token property" style="color:hsl(5, 74%, 59%)">"fulfillment_id"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"0"</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">            </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">          </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">]</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">          </span><span class="token property" style="color:hsl(5, 74%, 59%)">"location"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">            </span><span class="token property" style="color:hsl(5, 74%, 59%)">"gps"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"18.5246036,73.792927"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">            </span><span class="token property" style="color:hsl(5, 74%, 59%)">"address"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"Paud Road, Pune, Maharashtra"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">            </span><span class="token property" style="color:hsl(5, 74%, 59%)">"city"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"> </span><span class="token property" style="color:hsl(5, 74%, 59%)">"name"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"Pune"</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">            </span><span class="token property" style="color:hsl(5, 74%, 59%)">"state"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"> </span><span class="token property" style="color:hsl(5, 74%, 59%)">"name"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"Maharashtra"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"> </span><span class="token property" style="color:hsl(5, 74%, 59%)">"code"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"27"</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">            </span><span class="token property" style="color:hsl(5, 74%, 59%)">"district"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"> </span><span class="token property" style="color:hsl(5, 74%, 59%)">"name"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"Pune"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"> </span><span class="token property" style="color:hsl(5, 74%, 59%)">"code"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"521"</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">          </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">          </span><span class="token property" style="color:hsl(5, 74%, 59%)">"contact"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">            </span><span class="token property" style="color:hsl(5, 74%, 59%)">"phone"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"&lt;MOBILE_NUMBER>"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">            </span><span class="token property" style="color:hsl(5, 74%, 59%)">"email"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"contact@example.org"</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">          </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">        </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">      </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">]</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">    </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain"></span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><br/></div></code></pre></div></div>
+<p>In that response <code>O+Ve</code> points at fulfilment <code>1</code>, which is <code>Available</code>. <code>AB+Ve</code> has a count of 16 but points at fulfilment <code>0</code>, which is <code>NotAvailable</code>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=blood-group-master-list>Blood group master list<a href=#blood-group-master-list class=hash-link aria-label="Direct link to Blood group master list" title="Direct link to Blood group master list" translate=no>​</a></h2>
+<p>Use these in <code>item.descriptor.code</code>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th>Code<th>Group<tbody><tr><td><code>-1</code><td>All<tr><td><code>11</code><td>A+Ve<tr><td><code>12</code><td>A-Ve<tr><td><code>13</code><td>B+Ve<tr><td><code>14</code><td>B-Ve<tr><td><code>15</code><td>O+Ve<tr><td><code>16</code><td>O-Ve<tr><td><code>17</code><td>AB+Ve<tr><td><code>18</code><td>AB-Ve<tr><td><code>22</code><td>Oh+Ve<tr><td><code>23</code><td>Oh-Ve</table></div>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=blood-component-master-list>Blood component master list<a href=#blood-component-master-list class=hash-link aria-label="Direct link to Blood component master list" title="Direct link to Blood component master list" translate=no>​</a></h2>
+<p>Use these in <code>category.descriptor.code</code>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th>Code<th>Component<tbody><tr><td><code>11</code><td>Whole Blood<tr><td><code>12</code><td>Packed Red Blood Cells<tr><td><code>13</code><td>Fresh Frozen Plasma<tr><td><code>14</code><td>Single Donor Platelet<tr><td><code>16</code><td>Platelet Rich Plasma<tr><td><code>17</code><td>Cryoprecipitate<tr><td><code>18</code><td>Single Donor Plasma<tr><td><code>19</code><td>Plasma<tr><td><code>20</code><td>Platelet Concentrate<tr><td><code>21</code><td>Cryo Poor Plasma<tr><td><code>23</code><td>Random Donor Platelets<tr><td><code>24</code><td>Platelets Additive Solutions<tr><td><code>28</code><td>SAGM Packed Red Blood Cells<tr><td><code>29</code><td>Irradiated RBC<tr><td><code>30</code><td>Leukoreduced RBC</table></div>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=known-limitations>Known limitations<a href=#known-limitations class=hash-link aria-label="Direct link to Known limitations" title="Direct link to Known limitations" translate=no>​</a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th>Limitation<th>What to do about it<tbody><tr><td>GPS search returns incomplete results where blood bank density is low<td>Offer state and district as a visible alternative, not a hidden fallback<tr><td>Update frequency varies by blood bank. Some update in real time, others daily<td>Show a disclaimer that counts are indicative and may have changed. Tell users to call before travelling<tr><td>Responses arrive asynchronously with no end signal<td>Use a 10 to 15 second timeout and render results as they arrive<tr><td>No pagination on <code>on_search</code><td>Expect large payloads. Paginate or lazy load on the client<tr><td>No booking or reservation<td>Show the blood bank phone number prominently</table></div>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=prerequisites>Prerequisites<a href=#prerequisites class=hash-link aria-label="Direct link to Prerequisites" title="Direct link to Prerequisites" translate=no>​</a></h2>
+<p>For an EUA:</p>
+<ul>
+<li class=""><a class="" href=/docs/pr-45/docs/uhi/v1/getting-started/glossary#abdm>ABDM</a> <a class="" href=/docs/pr-45/docs/hiecm/v3/api/m2>M2</a> with <a class="" href=/docs/pr-45/docs/uhi/v1/getting-started/glossary#hie-cm>HIE-CM</a> completed. This is a hard prerequisite for any UHI service.</li>
+<li class="">A publicly reachable HTTPS <code>consumer_uri</code>.</li>
+<li class="">Ed25519 signing with BLAKE-512 body hashing.</li>
+<li class="">Asynchronous handling. Do not block on a synchronous reply to <code>search</code>.</li>
+</ul>
+<p>For an HSPA:</p>
+<ul>
+<li class="">An independently maintained blood bank database with real-time or near real-time inventory, comparable in scope and quality to e-RaktKosh.</li>
+<li class="">A publicly reachable HTTPS <code>provider_uri</code> to receive searches from the gateway.</li>
+<li class="">Ed25519 signing on every outbound response.</li>
+<li class="">Sandbox integration and written sign-off before production.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=what-is-missing-here>What is missing here<a href=#what-is-missing-here class=hash-link aria-label="Direct link to What is missing here" title="Direct link to What is missing here" translate=no>​</a></h2>
+<ul>
+<li class="">No error code list is published for this service.</li>
+<li class="">No response time SLA is published for HSPAs beyond an acceptable latency window.</li>
+<li class="">State and district codes are issued at onboarding. Delhi is <code>7</code> and South district is <code>83</code>.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=next>Next<a href=#next class=hash-link aria-label="Direct link to Next" title="Direct link to Next" translate=no>​</a></h2>
+<ul>
+<li class=""><a class="" href=/docs/pr-45/docs/uhi/v1>UHI services</a> for the shared protocol</li>
+<li class=""><a class="" href=/docs/pr-45/docs/uhi/v1/concepts/services/ambulance-booking>Ambulance booking</a></li>
+<li class=""><a class="" href=/docs/pr-45/docs/uhi/v1/concepts/services/physical-consultation>Physical consultation</a></li>
+<li class=""><a class="" href=/docs/pr-45/docs/support>Support</a></li>
+</ul></div></div><footer class="theme-doc-footer docusaurus-mt-lg"><div class="row margin-top--sm theme-doc-footer-edit-meta-row"><div class="col noPrint_WFHX"></div><div class="col lastUpdated_JAkA"><span class=theme-last-updated>Last updated<!-- --> on <b><time datetime=2026-09-24T17:42:41.000Z itemprop=dateModified>Sep 24, 2026</time></b></span></div></div></footer></article><nav class=page-next aria-label="Where to go next"><a class="next-step card" href=/docs/pr-45/docs/uhi/v1/concepts/services/ambulance-booking><span class=next-step__eyebrow>Next</span><span class=next-step__label>Ambulance booking<svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-arrow-right size-4" aria-hidden=true><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span></a><div class=page-next__nearby><p class=page-next__heading>Also in this section<ul class=page-next__links><li><a class="page-next__link card" href=/docs/pr-45/docs/uhi/v1/concepts/services/physical-consultation>Physical consultation</a><li><a class="page-next__link card" href=/docs/pr-45/docs/uhi/v1/concepts/services/pmjay-hem>PM-JAY HEM</a><li><a class="page-next__link card" href=/docs/pr-45/docs/uhi/v1/concepts/services/jan-aushadhi-kendra>Jan Aushadhi Kendra</a><li><a class="page-next__link card" href=/docs/pr-45/docs/uhi/v1/concepts/services/jan-aushadhi-medicine-search>Jan Aushadhi medicine search</a></ul></div></nav></div></div><div class=docs-toc-col><nav aria-labelledby=docs-toc-heading class="docs-toc thin-scrollbar theme-doc-toc-desktop"><p id=docs-toc-heading class=docs-toc-heading>On this page<ul class="table-of-contents table-of-contents__left-border"><li><a href=#scope class="table-of-contents__link toc-highlight">Scope</a><li><a href=#service-identity class="table-of-contents__link toc-highlight">Service identity</a><li><a href=#who-is-involved class="table-of-contents__link toc-highlight">Who is involved</a><li><a href=#the-flow class="table-of-contents__link toc-highlight">The flow</a><li><a href=#two-search-modes class="table-of-contents__link toc-highlight">Two search modes</a><li><a href=#search class="table-of-contents__link toc-highlight">search</a><ul><li><a href=#sample-gps-with-a-specific-group-and-component class="table-of-contents__link toc-highlight">Sample, GPS with a specific group and component</a><li><a href=#sample-state-and-district class="table-of-contents__link toc-highlight">Sample, state and district</a></ul><li><a href=#on_search class="table-of-contents__link toc-highlight">on_search</a><ul><li><a href=#the-part-that-trips-people-up class="table-of-contents__link toc-highlight">The part that trips people up</a><li><a href=#sample-response class="table-of-contents__link toc-highlight">Sample response</a></ul><li><a href=#blood-group-master-list class="table-of-contents__link toc-highlight">Blood group master list</a><li><a href=#blood-component-master-list class="table-of-contents__link toc-highlight">Blood component master list</a><li><a href=#known-limitations class="table-of-contents__link toc-highlight">Known limitations</a><li><a href=#prerequisites class="table-of-contents__link toc-highlight">Prerequisites</a><li><a href=#what-is-missing-here class="table-of-contents__link toc-highlight">What is missing here</a><li><a href=#next class="table-of-contents__link toc-highlight">Next</a></ul></nav></div></div></div></main></div></div></div><footer class="theme-layout-footer footer"><div class="container container-fluid"><div class="row footer__links"><div class="theme-layout-footer-column col footer__col"><div class=footer__title>Contact</div><ul class="footer__items clean-list"><li class=footer__item><a href=https://abdm.gov.in/ target=_blank rel="noopener noreferrer" class=footer__link-item>National Health Authority, 9th Floor, Tower-I, Jeevan Bharati Building, Connaught Place, New Delhi 110 001<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=mailto:abdm@nha.gov.in target=_blank rel="noopener noreferrer" class=footer__link-item>abdm@nha.gov.in<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=tel:18001144477 target=_blank rel="noopener noreferrer" class=footer__link-item>Toll free 1800-11-4477<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a></ul></div><div class="theme-layout-footer-column col footer__col"><div class=footer__title>Important links</div><ul class="footer__items clean-list"><li class=footer__item><a href=https://www.mohfw.gov.in/ target=_blank rel="noopener noreferrer" class=footer__link-item>Ministry of Health & Family Welfare<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://abha.abdm.gov.in/ target=_blank rel="noopener noreferrer" class=footer__link-item>Ayushman Bharat Health Account (ABHA)<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://nhpr.abdm.gov.in/ target=_blank rel="noopener noreferrer" class=footer__link-item>Healthcare Professionals Registry (HPR)<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://facility.abdm.gov.in/ target=_blank rel="noopener noreferrer" class=footer__link-item>Health Facility Registry (HFR)<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://grievance.abdm.gov.in/ target=_blank rel="noopener noreferrer" class=footer__link-item>Grievance portal<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a></ul></div><div class="theme-layout-footer-column col footer__col"><div class=footer__title>Policies</div><ul class="footer__items clean-list"><li class=footer__item><a href=https://abdm.gov.in/terms-condition target=_blank rel="noopener noreferrer" class=footer__link-item>Terms and conditions<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://abdm.gov.in/website-policy target=_blank rel="noopener noreferrer" class=footer__link-item>Website policies<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://abdm.gov.in/strapicms/uploads/health_management_policy_bac9429a79.pdf target=_blank rel="noopener noreferrer" class=footer__link-item>Health Data Management Policy<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://abdm.gov.in/strapicms/uploads/privacypolicy_178041845b.pdf target=_blank rel="noopener noreferrer" class=footer__link-item>Data privacy policy<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a></ul></div></div><div class="footer__bottom text--center"><div class=footer__copyright>This website belongs to the National Health Authority, Ministry of Health and Family Welfare, Government of India</div></div></div></footer></div></body>
