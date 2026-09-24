@@ -19,6 +19,7 @@ import {
 } from '@site/src/components/ui/tooltip';
 import type {Field, Operation} from './ApiEndpoint';
 import {CopyButton} from './ApiEndpoint';
+import {inline} from './Markdown';
 import type {BodyNode} from './body';
 import {compose, leaves, seed, toTree} from './body';
 import {curlFrom} from './curl';
@@ -55,20 +56,6 @@ function environmentOf(description: string): 'Production' | 'Sandbox' | null {
   if (/\bprod/i.test(description)) return 'Production';
   if (/sandbox|sbx|\bdev\b/i.test(description)) return 'Sandbox';
   return null;
-}
-
-/**
- * The lede is one paragraph of the operation's markdown description, rendered
- * as text rather than through the MDX pipeline, so an inline code span arrived
- * as literal backticks: "Send the `txnId` from the OTP request". The same
- * string is code on the page body. Backticks are the only markup NHA's
- * summaries use, so that is all this turns back into elements.
- */
-function withInlineCode(text: string): React.ReactNode[] {
-  // A capturing split alternates plain text and the contents of each span.
-  return text
-    .split(/`([^`]+)`/g)
-    .map((part, index) => (index % 2 ? <code key={index}>{part}</code> : part));
 }
 
 /** Refresh REQUEST-ID/TIMESTAMP in a header map, leaving everything else as typed. */
@@ -775,8 +762,11 @@ export default function TryIt({operation}: {operation: Operation}) {
         </DialogClose>
       </header>
 
+      {/* The first paragraph of the description, with the inline markup the
+          endpoint page renders: code spans and bold runs. NHA's M1 ledes use
+          both, and a backticks-only renderer left "**parent's**" as typed. */}
       <DialogDescription className="api-console__lede">
-        {withInlineCode(operation.description.split('\n\n')[0] || operation.summary)}
+        {inline(operation.description.split('\n\n')[0] || operation.summary)}
       </DialogDescription>
 
       <div className="api-console__body">
