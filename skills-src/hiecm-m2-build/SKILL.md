@@ -298,17 +298,17 @@ curl --request POST \
     "transactionId": "18235d89-cb13-479d-ad71-7a57d5f669a8",
     "doneAt": "2023-01-24T06:35:44.167Z",
     "notifier": {
-      "type": "HIU",
-      "id": "100005"
+      "type": "HIP",
+      "id": "IN2810014366"
     },
     "statusNotification": {
-      "sessionStatus": "RECEIVED",
+      "sessionStatus": "TRANSFERRED",
       "hipId": "IN2810014366",
       "statusResponses": [
         {
           "careContextReference": "10004-20200001768-1",
-          "hiStatus": "OK",
-          "description": "Data received successfully"
+          "hiStatus": "DELIVERED",
+          "description": "Data sent successfully"
         }
       ]
     }
@@ -432,9 +432,9 @@ curl --request POST \
 
 Inbound to your bridge at `/api/v3/hip/health-information/request`. Acknowledge it and continue.
 
-#### 10. Receive the transferred health information (`m2_post_health_information_transfer`)
+#### 10. Push the encrypted records to the HIU's data push URL (`m2_post_health_information_transfer`)
 
-Inbound to your bridge at `/health-information/transfer`. Acknowledge it and continue.
+Outbound from your bridge. POST each page of encrypted records to the `dataPushUrl` in the health information request of step 9. The call goes straight to the HIU, not through the gateway. The HIU answers 202 for each page.
 
 **Exit condition (Observe until this is true)**
 

@@ -1160,6 +1160,16 @@ for (const {platform, version, files} of tree) {
           stepped.curl = curlFor(stepped);
           stepped.samples = samplesFor(stepped);
         }
+        // A journey step may correct the spec for this side of the call: a
+        // title, and a request body where the spec's only example belongs to
+        // the other side. compile-skills.mjs reads the same step data.
+        if (step.title) stepped.title = step.title;
+        if (step.body) {
+          stepped.requestExample = step.body;
+          stepped.exampleName = undefined;
+          stepped.curl = curlFor(stepped);
+          stepped.samples = samplesFor(stepped);
+        }
         const dataName = stepDataName(step.op, journey.id, i);
         writeFileSync(join(dataDir, `${dataName}.json`), `${JSON.stringify(stepped, null, 2)}\n`);
         const dir = join(docsDir, module.dir, 'endpoints', journey.id);
@@ -1184,7 +1194,7 @@ for (const {platform, version, files} of tree) {
           "import ApiEndpoint from '@site/src/components/api/ApiEndpoint';",
           `import operation from '@site/src/data/api/${dataName}.json';`,
           '', '<ApiEndpoint operation={operation} />', '',
-          ...(entry.kind === 'callback' ? callbackOriginSection(step.op, module.file) : callbackSection(step.op, module.dir)),
+          ...(step.say ? ['## Where this fits', '', step.say, ''] : entry.kind === 'callback' ? callbackOriginSection(step.op, module.file) : callbackSection(step.op, module.dir)),
         ].join('\n'));
         items.push({type: 'doc', id: `${platform}/${version}/api/${module.dir}/endpoints/${journey.id}/${nn}-${slug(step.op)}`, label: title, className: `api-method api-method--${stepped.method.toLowerCase()}`});
         count += 1;

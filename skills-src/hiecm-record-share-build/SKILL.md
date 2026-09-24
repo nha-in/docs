@@ -77,9 +77,9 @@ curl --request POST \
 
 Inbound to your bridge at `/api/v3/patient-record/on-share`. Acknowledge it and continue.
 
-#### 3. Receive the encrypted records at the data push URL, as the HIU (`record-share_post_health_information_transfer`)
+#### 3. Push the encrypted records to the HIU's data push URL, as the PHR app (`record-share_post_health_information_transfer`)
 
-Inbound to your bridge at `/health-information/transfer`. Acknowledge it and continue.
+Outbound from your app. POST the encrypted records to the `dataPushUrl` the HIU sent in the on-share of step 2. The call goes straight to the HIU, not through the gateway. The HIU answers 202.
 
 #### 4. Notify patient record (`record-share_post_patient_record_v3_notify`)
 
@@ -229,20 +229,20 @@ curl --request POST \
   --header 'Content-Type: application/json' \
   --data '{
   "notification": {
-    "transactionId": "a0e7bed4-ef98-4ea8-9077-f4a6192bfe2b",
-    "doneAt": "2026-03-19T08:01:11.090Z",
+    "transactionId": "3acbbb52-6de0-441f-b452-3c9488462b25",
+    "doneAt": "2023-01-24T06:35:44.167Z",
     "statusNotification": {
-      "sessionStatus": "TRANSFERRED",
+      "sessionStatus": "RECEIVED",
       "statusResponses": [
         {
-          "careContextReference": "COC497647c1-0627-48fa-8131-0dddc1b3e0b4",
-          "hiStatus": "DELIVERED",
-          "description": "Data sent successfully"
+          "careContextReference": "10004-20200001768-1",
+          "hiStatus": "VALID",
+          "description": "Data received successfully"
         },
         {
-          "careContextReference": "COC497647c1-0627-48fa-8131-0dddc1b3e0b5",
-          "hiStatus": "DELIVERED",
-          "description": "Data sent successfully"
+          "careContextReference": "10004-20200001768-2",
+          "hiStatus": "ERRORED",
+          "description": "Data could not be decrypted"
         }
       ]
     }
