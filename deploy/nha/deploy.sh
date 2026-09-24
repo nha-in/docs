@@ -62,7 +62,15 @@ aws s3 sync "$repo/site/build/" "s3://$SITE_BUCKET/main/" --delete --only-show-e
   --exclude "*.html" --exclude "*.xml" --exclude "*.yaml" --exclude "*.json" --exclude "*.txt" --exclude "*.md" \
   --cache-control "public,max-age=31536000,immutable"
 aws s3 sync "$repo/site/build/" "s3://$SITE_BUCKET/main/" --delete --only-show-errors \
-  --exclude "*" --include "*.html" --include "*.xml" --include "*.yaml" --include "*.json" --include "*.txt" --include "*.md" \
+  --exclude "*" --include "*.html" --include "*.xml" --include "*.yaml" --include "*.json" --include "*.txt" \
+  --cache-control "public,max-age=0,must-revalidate"
+# Page markdown in a pass of its own, with its type named. View as Markdown opens
+# <route>.md in a new tab, and a guessed type carries no charset, so the browser
+# either downloaded the file or showed its curly quotes garbled. This is the
+# header docs.stripe.com sends for its own .md pages.
+aws s3 sync "$repo/site/build/" "s3://$SITE_BUCKET/main/" --delete --only-show-errors \
+  --exclude "*" --include "*.md" \
+  --content-type "text/markdown; charset=utf-8" \
   --cache-control "public,max-age=0,must-revalidate"
 
 # The same build under <version>/, which the CDN never serves and later deploys never
