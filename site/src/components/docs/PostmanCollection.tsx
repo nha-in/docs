@@ -53,6 +53,7 @@ export default function PostmanCollection({module}: {module: string}): ReactNode
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="text-sm text-muted-foreground">
           {entry.requests} requests in the order you build them, and a sandbox environment to fill in.
+          Each step keeps the txnId and X-token it gets back for the steps after it.
         </div>
         <div className="flex flex-wrap gap-2">
           <Button asChild size="sm">

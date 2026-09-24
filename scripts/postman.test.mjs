@@ -60,3 +60,38 @@ test('the token call goes to the gateway sessions path', () => {
   const exec = read('hiecm-m2.postman_collection.json').event[0].script.exec.join('\n');
   assert.match(exec, /\{\{gatewayUrl\}\}\/api\/hiecm\/gateway\/v3\/sessions/);
 });
+
+// The scripts run here against a stand-in for Postman's `pm`, so a script
+// that does not parse, or sets the wrong variable, fails the build.
+const script = (collection, listen) => collection.event.find((e) => e.listen === listen).script.exec.join('\n');
+
+test('a response hands its txnId and X-token to the calls after it', () => {
+  const m1 = read('hiecm-m1.postman_collection.json');
+  const set = {};
+  const pm = {
+    response: {json: () => ({txnId: 't1', tokens: {token: 'x1', refreshToken: 'r1'}})},
+    collectionVariables: {set: (key, value) => (set[key] = value)},
+  };
+  new Function('pm', script(m1, 'test'))(pm);
+  assert.deepEqual(set, {txnId: 't1', 'X-token': 'x1', jwtToken: 'x1', 'R-jwtToken': 'r1'});
+  assert.deepEqual(m1.variable.map((v) => v.key).sort(), Object.keys(set).concat('searchTxnId').sort());
+});
+
+test('a response that is not JSON leaves the variables alone', () => {
+  const set = {};
+  const pm = {response: {json: () => { throw new Error('not JSON'); }}, collectionVariables: {set: (k, v) => (set[k] = v)}};
+  new Function('pm', script(read('hiecm-m1.postman_collection.json'), 'test'))(pm);
+  assert.deepEqual(set, {});
+});
+
+test('the sessions call does not fetch a token for itself', () => {
+  let fetched = false;
+  const pm = {
+    request: {url: {getPath: () => '/api/hiecm/gateway/v3/sessions'}},
+    environment: {get: () => ''},
+    variables: {get: () => '', replaceIn: (s) => s},
+    sendRequest: () => (fetched = true),
+  };
+  new Function('pm', script(read('hiecm-gateway.postman_collection.json'), 'prerequest'))(pm);
+  assert.equal(fetched, false);
+});

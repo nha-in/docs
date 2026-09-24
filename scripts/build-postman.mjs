@@ -13,6 +13,7 @@
 // session token when there is none or it has expired.
 import {existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync} from 'node:fs';
 import {join} from 'node:path';
+import esbuild from 'esbuild';
 import {loadJourneys, stepDataName} from './lib/journeys.mjs';
 
 const root = join(import.meta.dirname, '..');
@@ -101,7 +102,10 @@ function requestFor(op) {
 const item = (name, op) => ({name, request: {...requestFor(op), description: op.description ?? ''}});
 
 // The sessions call itself is skipped, or it would fetch a token for itself.
+// Both scripts sit inside a function so an early return never depends on how
+// a client wraps a script.
 const tokenScript = `// Gets a gateway session token when there is none or it has expired.
+(function () {
 if (pm.request.url.getPath().endsWith('${session.path}')) return;
 const expiry = Number(pm.environment.get('accessTokenExpiry') || 0);
 if (pm.environment.get('accessToken') && Date.now() < expiry) return;
@@ -131,12 +135,29 @@ pm.sendRequest({
   pm.environment.set('accessToken', accessToken);
   // A minute early, so a token never expires between this check and the call.
   pm.environment.set('accessTokenExpiry', Date.now() + (expiresIn - 60) * 1000);
-});`;
+});
+})();`;
+
+// The values a response hands to the calls after it, by the same rule the
+// site's Try It panel uses: carry.ts, embedded here as its own source.
+const carryTs = readFileSync(join(root, 'site', 'src', 'components', 'api', 'carry.ts'), 'utf8');
+const {code: carryJs} = await esbuild.transform(carryTs, {loader: 'ts', format: 'esm'});
+const {carriedValues} = await import(`data:text/javascript,${encodeURIComponent(carryJs)}`);
+const CARRIED = ['txnId', 'searchTxnId', 'X-token', 'jwtToken', 'R-jwtToken'];
+const carryScript = `// Keeps what this response hands to the calls after it, such as the txnId an
+// OTP request returns and the X-token a login returns, as collection variables.
+(function () {
+let body;
+try { body = pm.response.json(); } catch (error) { return; }
+${carriedValues.toString()}
+const values = carriedValues(body);
+Object.keys(values).forEach(function (key) { pm.collectionVariables.set(key, values[key]); });
+})();`;
 
 const DESCRIPTION = [
   'Generated from the ABDM HIE-CM specifications. Import hiecm-sandbox.postman_environment.json beside it and fill in clientId and clientSecret: the collection fetches a gateway session token before a call when it needs one.',
   '',
-  'Folders follow the order a journey is built in. Callbacks are not included: ABDM sends those to your bridge URL, so receiving them needs a public endpoint, not Postman.',
+  'Folders follow the order a journey is built in. Send the steps in order: each response keeps the txnId and the X-token it returns as collection variables, and the steps after it read them. Callbacks are not included: ABDM sends those to your bridge URL, so receiving them needs a public endpoint, not Postman.',
   '',
   'Values ABDM expects encrypted, such as an Aadhaar number or an OTP, are shown as the specification gives them. Encrypt your own values before sending.',
 ].join('\n');
@@ -186,7 +207,12 @@ for (const module of modules) {
   const file = `hiecm-${module}.postman_collection.json`;
   const collection = {
     info: {name: `ABDM HIE-CM ${label}`, description: DESCRIPTION, schema: SCHEMA},
-    event: [{listen: 'prerequest', script: {type: 'text/javascript', exec: tokenScript.split('\n')}}],
+    event: [
+      {listen: 'prerequest', script: {type: 'text/javascript', exec: tokenScript.split('\n')}},
+      {listen: 'test', script: {type: 'text/javascript', exec: carryScript.split('\n')}},
+    ],
+    // Declared empty so a reader can see what the script will fill in.
+    variable: CARRIED.map((key) => ({key, value: ''})),
     item: folders,
   };
   writeFileSync(join(outDir, file), `${JSON.stringify(collection, null, 2)}\n`);
