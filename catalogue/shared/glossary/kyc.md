@@ -24,10 +24,10 @@ related:
 
 Know Your Customer: the identity check that must pass before an [ABHA
 number](abha-number.md) is issued. In ABDM the check runs against
-Aadhaar, by one of four methods: an [OTP](otp.md) to the Aadhaar linked
-mobile number, face authentication, fingerprint or IRIS capture on a
-registered device, or a demographic match. Re-KYC repeats the check on
-an ABHA number that already exists.
+Aadhaar: by an [OTP](otp.md) to the Aadhaar linked mobile number, by
+biometric authentication (face, fingerprint or iris), or, for government
+entities only, by demographic authentication. Re-KYC repeats the check
+on an ABHA number that already exists.
 
 ## Before you start
 

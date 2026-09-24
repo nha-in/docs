@@ -58,7 +58,7 @@ integrator then implements renderers for the screens that survive, rather than
 implementing a flow.
 
 The sixth question belongs here rather than with the record work, because
-scaffolding all seven record types before knowing which two a system produces is
+scaffolding all eight record types before knowing which two a system produces is
 the most expensive guess available in this integration.
 
 ## How you know it worked

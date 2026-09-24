@@ -16,6 +16,15 @@ sources:
       Of the five inbound requests a provider answers, four carry no payload
       shape in either of the published sources, so the first real delivery is
       the only way to learn the shape.
+  - file: site/docs/hiecm/v3/concepts/callback-authenticity.md
+    status: reference
+    note: >
+      Callbacks carry a bearer token in the Authorization header.
+  - file: site/docs/hiecm/v3/concepts/how-it-fits.md
+    status: reference
+    note: >
+      One callback URL per bridge, never per facility. The facility is named
+      in X-HIP-ID or X-HIU-ID.
 related:
   concepts:
     - hiecm.concept.m2-exchange-not-call
@@ -38,8 +47,9 @@ patient's records undiscoverable while appearing to work.
 
 ## Before you start
 
-- A callback URL registered against your facility id, or nothing inbound
-  arrives at all.
+- One callback URL registered for your bridge, or nothing inbound arrives at
+  all. It serves every facility linked to the bridge, never one facility. Each
+  delivery names its facility in `X-HIP-ID` in M2 and `X-HIU-ID` in M3.
 - A place to record deliveries, from
   [the integrator call panel](m2-integrator-call-panel.md).
 
@@ -53,14 +63,13 @@ Not an empty list, and not silence. A named, visible condition, saying what a
 correct reply would have been.
 
 Where the payload is undocumented, record the entire body and the entire header
-set on the first delivery of each path, before anything tries to read it. That
-first delivery is also the only way to answer a question the published sources
-do not: which header carries the signed token on an inbound callback. ABDM signs
-its callbacks and publishes the keys, and no source names the field carrying the
-signature.
-
+set on the first delivery of each path, before anything tries to read it.
 Record header names and lengths, never values. The name is the finding. The
 value is a credential.
+
+Every inbound callback carries a bearer token in the `Authorization` header, as
+`Bearer <token>`. Verify it before your handler does any work. See
+[proving a callback came from ABDM](/docs/hiecm/v3/concepts/callback-authenticity).
 
 The security rule underneath: a URL reachable by ABDM is reachable by everyone.
 A presented signature that fails verification is refused everywhere. An absent
