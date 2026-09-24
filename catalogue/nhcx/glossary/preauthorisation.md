@@ -23,11 +23,8 @@ related:
   - nhcx.flow.preauth-submit
   endpoints:
   - nhcx.endpoint.preauth-submit
-  decisions:
-  - nhcx.decision.preauth-or-predetermination
   glossary:
   - nhcx.glossary.enhancement
-  - nhcx.glossary.predetermination
 ---
 
 # Preauthorisation

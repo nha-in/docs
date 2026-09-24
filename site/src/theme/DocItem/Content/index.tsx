@@ -3,9 +3,30 @@ import {createPortal} from 'react-dom';
 import Content from '@theme-original/DocItem/Content';
 import type ContentType from '@theme/DocItem/Content';
 import type {WrapperProps} from '@docusaurus/types';
+import {useLocation} from '@docusaurus/router';
 import PageActions from '@site/src/components/docs/PageActions';
+import {rolesFor, useRole} from '@site/src/config/roles';
 
 type Props = WrapperProps<typeof ContentType>;
+
+/**
+ * The NHCX role the reader picked, said on the page itself (NHA review, #30).
+ * The picker filters the sidebar, which a reader can miss; this line says
+ * which role that is. Nothing shows until a role is chosen.
+ */
+function RoleNote(): React.ReactNode {
+  const {pathname} = useLocation();
+  const platform = /\/docs\/nhcx\//.test(pathname) ? 'nhcx' : '';
+  const [role] = useRole(platform);
+  const label = rolesFor(platform).find((r) => r.id === role)?.label;
+  if (!label) return null;
+  return (
+    <p className="role-note">
+      Role: <strong>{label}</strong>. The sidebar shows the pages for this role;
+      change it with the picker above the sidebar.
+    </p>
+  );
+}
 
 /**
  * Open a rendered mermaid diagram in its own tab at its natural size. The
@@ -115,7 +136,15 @@ export default function ContentWrapper(props: Props): React.ReactNode {
   return (
     <div ref={root}>
       <Content {...props} />
-      {host ? createPortal(<PageActions />, host) : null}
+      {host
+        ? createPortal(
+            <>
+              <RoleNote />
+              <PageActions />
+            </>,
+            host,
+          )
+        : null}
     </div>
   );
 }

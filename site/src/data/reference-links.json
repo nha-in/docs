@@ -52,16 +52,20 @@
     "to": "/reference/nhcx-session"
   },
   {
+    "label": "Participant registry",
+    "to": "/reference/nhcx-registry"
+  },
+  {
     "label": "Coverage eligibility",
     "to": "/reference/nhcx-eligibility"
   },
   {
-    "label": "Pre-authorisation",
-    "to": "/reference/nhcx-preauth"
+    "label": "Insurance plan",
+    "to": "/reference/nhcx-insurance-plan"
   },
   {
-    "label": "Predetermination",
-    "to": "/reference/nhcx-predetermination"
+    "label": "Pre-authorisation",
+    "to": "/reference/nhcx-preauth"
   },
   {
     "label": "Claim",
@@ -84,14 +88,6 @@
     "to": "/reference/nhcx-status"
   },
   {
-    "label": "Insurance plan",
-    "to": "/reference/nhcx-insurance-plan"
-  },
-  {
-    "label": "Participant registry",
-    "to": "/reference/nhcx-registry"
-  },
-  {
     "label": "Onboarding",
     "to": "/reference/nhcx-onboarding"
   },
@@ -100,11 +96,11 @@
     "to": "/reference/nhcx-adjudicator"
   },
   {
-    "label": "Other",
-    "to": "/reference/nhcx-other"
-  },
-  {
     "label": "ABHA biometric authentication",
     "to": "/reference/nhcx-biometric"
+  },
+  {
+    "label": "Other",
+    "to": "/reference/nhcx-other"
   }
 ]

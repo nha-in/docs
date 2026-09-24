@@ -13,12 +13,12 @@ Claims are often not fully approved first time, for mundane reasons: missing doc
 
 One pair of calls carries every request a provider makes after a decision. `Task.code` and its reason say which one it is, and [one endpoint, five requests](/docs/nhcx/v1/reference/fhir/cancel-reprocess-and-shortfall#one-endpoint-five-requests) lists the valid combinations.
 
-## Calls
+## APIs
 
-| Call | Method and path | What it does |
-| --- | --- | --- |
-| [Task submit (reprocess or cancel)](/docs/nhcx/v1/api/task/endpoints/task-v1-task-submit) | `POST /v1/task/submit` | Provider sends a FHIR Task asking the payer to reprocess a rejected or short-paid claim or to cancel a preauth; Task.code and reasonCode set the intent. |
-| [Task callback (reprocess or cancel outcome)](/docs/nhcx/v1/api/task/endpoints/task-v1-task-on-submit) | `POST /v1/task/on_submit` | Payer returns a Task bundle with Task.status completed whose Task.output references a ClaimResponse carrying the reprocess or cancellation outcome. |
+| Call | Called by | Method and path | What it does |
+| --- | --- | --- | --- |
+| [Provider: submit a reprocess or cancel task](/docs/nhcx/v1/api/task/endpoints/task-v1-task-submit) | Provider | `POST /v1/task/submit` | Provider sends a FHIR Task asking the payer to reprocess a rejected or short-paid claim or to cancel a preauth; Task.code and reasonCode set the intent. |
+| [Payer: send the task outcome](/docs/nhcx/v1/api/task/endpoints/task-v1-task-on-submit) | Payer | `POST /v1/task/on_submit` | Payer returns a Task bundle with Task.status completed whose Task.output references a ClaimResponse carrying the reprocess or cancellation outcome. |
 
 The callback does not carry the decision as its leading resource. It carries a `Task` whose output points at the `ClaimResponse`, as [the answer is nested](/docs/nhcx/v1/reference/fhir/cancel-reprocess-and-shortfall#the-answer-is-nested-unlike-every-other-callback) sets out.
 
@@ -40,6 +40,7 @@ The exchange posts these to the `endpoint_url` you registered. Answer each with 
 
 ## Guides that use these calls
 
+- [Building and sending a JWE](/docs/nhcx/v1/getting-started/building-and-sending-a-jwe)
 - [Cancel, reprocess and shortfall](/docs/nhcx/v1/reference/fhir/cancel-reprocess-and-shortfall)
 
 The whole specification, with a request you can send from the page, is the [Reprocess, cancel and shortfall API reference](/reference/nhcx-task).

@@ -79,7 +79,7 @@ client_id=<YOUR_CLIENT_ID>&client_secret=<YOUR_CLIENT_SECRET>&grant_type=client_
 ```
 
 2. Read `access_token` and `expires_in` from the response. `expires_in` is `1200`: the token lasts 20 minutes.
-3. Send the token on every later call. Participant service calls take it as `bearer_auth: Bearer <ACCESS_TOKEN_FROM_GET_SESSION>`. Exchange calls take the same value on both `bearer_auth` and `Authorization`.
+3. Send the token on every later call. Every NHCX call, on the participant service and on the exchange, takes it as `bearer_auth: Bearer <ACCESS_TOKEN_FROM_GET_SESSION>`.
 4. Schedule a refresh before the 20 minutes run out. Do not wait for a 401.
 5. Prove the token works: run [use case 1](provider-uc-01.md) with it.
 

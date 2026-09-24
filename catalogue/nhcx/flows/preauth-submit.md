@@ -77,8 +77,6 @@ related:
   - nhcx.flow.preauth-query-response
   - nhcx.flow.send-a-sealed-request
   - nhcx.flow.status-check
-  decisions:
-  - nhcx.decision.preauth-or-predetermination
   errors:
   - nhcx.error.nhcx-1006
   - nhcx.error.payr-1001

@@ -45,3 +45,77 @@ p2_get_patient_share_v3_profile_gettokendetails: OPD Token History
 # P3, the subscription request side
 p3_post_subscription_requests_v3_hiu_care_context_on_notify: Answer the care context subscription notification
 p3_post_subscription_requests_v3_hiu_on_notify: Answer the subscription request notification
+
+# NHCX exchange modules. Named by who does what, in order, so a reader sees
+# which party makes each call and which party hosts each callback (NHA review,
+# #20 and #44). A call the integrator makes is "<Role>: <verb> ...". A
+# callback the integrator hosts is "<Role> receives ...". The role is taken
+# from the operation's own description: "Provider asks...", "Payer
+# returns...", "Hosted by the payer". Every value is quoted, because a colon
+# followed by a space ends a plain YAML value.
+
+# Coverage eligibility
+eligibility_v1_coverageeligibility_check: "Provider: check coverage eligibility"
+eligibility_v1_coverageeligibility_on_check: "Payer: send the coverage eligibility response"
+eligibility_webhook_v1_coverageeligibility_check: "Payer receives a coverage eligibility check"
+eligibility_webhook_v1_coverageeligibility_on_check: "Provider receives the coverage eligibility response"
+
+# Insurance plan
+insurance_plan_v1_insuranceplan_request: "Provider: request an insurance plan"
+insurance_plan_v1_insuranceplan_on_request: "Payer: send the insurance plan"
+insurance_plan_webhook_v1_insuranceplan_request: "Payer receives an insurance plan request"
+insurance_plan_webhook_v1_insuranceplan_on_request: "Provider receives the insurance plan"
+
+# Pre-authorisation
+preauth_v1_preauth_submit: "Provider: submit a pre-authorisation"
+preauth_v1_preauth_on_submit: "Payer: send the pre-authorisation response"
+preauth_webhook_v1_preauth_submit: "Payer receives a pre-authorisation"
+preauth_webhook_v1_preauth_on_submit: "Provider receives the pre-authorisation response"
+
+# Claim
+claim_v1_claim_submit: "Provider: submit a claim"
+claim_v1_claim_on_submit: "Payer: send the claim response"
+claim_webhook_v1_claim_submit: "Payer receives a claim"
+claim_webhook_v1_claim_on_submit: "Provider receives the claim response"
+
+# Reprocess, cancel and shortfall
+task_v1_task_submit: "Provider: submit a reprocess or cancel task"
+task_v1_task_on_submit: "Payer: send the task outcome"
+task_webhook_v1_task_submit: "Payer receives a reprocess or cancel task"
+task_webhook_v1_task_on_submit: "Provider receives the task outcome"
+
+# Payment notice. The payer starts this exchange.
+payment_notice_v1_paymentnotice_request: "Payer: send a payment notice"
+payment_notice_v1_paymentnotice_on_request: "Provider: acknowledge the payment notice"
+payment_notice_webhook_v1_paymentnotice_request: "Provider receives a payment notice"
+payment_notice_webhook_v1_paymentnotice_on_request: "Payer receives the payment acknowledgement"
+
+# Communication. The payer starts this exchange.
+communication_v1_communication_request: "Payer: send a communication request"
+communication_v1_communication_on_request: "Provider: acknowledge the communication"
+communication_webhook_v1_communication_request: "Provider receives a communication request"
+communication_webhook_v1_communication_on_request: "Payer receives the communication acknowledgement"
+
+# Status and search
+status_v1_status: "Sender: check the status of a request"
+status_v1_search_submit: "Authorised entity: search for claim information"
+status_v1_search_on_submit: "Payer: send the search result"
+status_webhook_v1_status: "Payer receives a status check"
+status_webhook_v1_search_submit: "Payer receives a claim search"
+status_webhook_v1_search_on_submit: "Authorised entity receives the search result"
+
+# Other
+other_v1_notification_subscribe: "Patient app: subscribe an ABHA number to notifications"
+other_v1_notification_on_subscribe: "Patient app: acknowledge a notification subscription"
+other_v1_delete: "Support: delete records by correlation ID"
+other_v1_on_status: "Recipient: answer a status check"
+other_v1_error: "NHCX: report a request it could not deliver"
+other_webhook_v1_on_status: "Sender receives the status answer"
+other_webhook_v1_error: "Participant receives an error report"
+
+# PMJAY adjudicator. The user-role call is a lookup, so it is named for what
+# it returns (NHA review, #44).
+adjudicator_pmjay_sbxhcx_nhcxpayerservice_v1_get_user_role: "Adjudicator: get the user role for a case"
+adjudicator_pmjay_hcx_nhcxpayerservice_wrapper_process_case: "Adjudicator: act on a case"
+adjudicator_process_request: "Provider: make the dummy payer act on a request"
+adjudicator_paymentnotice_init: "Provider: make the dummy payer send a payment notice"

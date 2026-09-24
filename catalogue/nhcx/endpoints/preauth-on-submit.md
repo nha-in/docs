@@ -138,14 +138,13 @@ curl --location --request POST 'https://apisbx.abdm.gov.in/hcx/v1/preauth/on_sub
   --header 'Accept: application/json' \
   --header 'Content-Type: application/json' \
   --header 'bearer_auth: Bearer <ACCESS_TOKEN_FROM_SESSION_TOKEN>' \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSION_TOKEN>' \
   --data-raw '{
     "type": "JWEPayload",
     "payload": "<JWE_COMPACT_STRING>"
   }'
 ```
 
-Send the token on both `bearer_auth` and `Authorization`, with the same value and the word `Bearer` in front. `<JWE_COMPACT_STRING>` is your sealed message: five base64url parts joined by dots. See [the JWE envelope](../concepts/jwe-envelope.md).
+Send the token on `bearer_auth`, with the word `Bearer` in front. `<JWE_COMPACT_STRING>` is your sealed message: five base64url parts joined by dots. See [the JWE envelope](../concepts/jwe-envelope.md).
 
 ### 3. Refusing a request
 

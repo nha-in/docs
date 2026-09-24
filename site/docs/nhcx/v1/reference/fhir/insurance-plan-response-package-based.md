@@ -189,39 +189,39 @@ NRCeS profile: [InsurancePlan](https://nrces.in/ndhm/fhir/r4/StructureDefinition
 
 ## Rules
 
-### 1. Two parallel structures
+### Two parallel structures
 
 `coverage[]` carries the rules: flags, document requirements, questionnaire links and `limit[]` rates. `plan[].specificCost[]` carries the money: `cost[]` lines by type. Both hold the same package codes. Index both by package code and join; neither is complete alone.
 
-### 2. Categories
+### Categories
 
 `coverage[].type` and `specificCost[].category` bind to `https://nrces.in/ndhm/fhir/r4/ValueSet/ndhm-benefitcategory`. Codes beginning `S` are surgical, `M` medical.
 
-### 3. Flags are strings
+### Flags are strings
 
 Every flag except `ParentProcedure` is a `valueString`. `"N"` is truthy in most languages; compare against the literal `"Y"`.
 
-### 4. Cost lines
+### Cost lines
 
 `Procedure` is the base package rate. `Stratification` is the rate for a ward tier, named in `cost.qualifiers[]`. `Implant` is added over the package rate.
 
-### 5. A zero base rate
+### A zero base rate
 
 A base limit of 0 means the payable amount is set entirely by the ward tier chosen. It is not missing data. Never submit a zero-value item.
 
-### 6. Document requirements come in two shapes
+### Document requirements come in two shapes
 
 Nested, one sub-extension per document, and flat, with `category`, `code` and `documentationUrl` directly under the extension. Recurse, or one shape is silently dropped.
 
-### 7. Where the question is
+### Where the question is
 
 Policy-level questionnaires put the question in `item.text`, STG questionnaires in `item.prefix`. Read `text` and fall back to `prefix`.
 
-### 8. Implant codes repeat
+### Implant codes repeat
 
 Once per parent procedure they may accompany. Key on the package code with its parent, or on the element `id`.
 
-### 9. Extension urls change form
+### Extension urls change form
 
 The absolute `https://nrces.in/ndhm/fhir/r4/StructureDefinition/Claim-Condition` and the relative `claim-condition` both occur. Match on the last segment.
 

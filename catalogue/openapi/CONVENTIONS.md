@@ -32,7 +32,6 @@ and path an NHCX endpoint or callback atom names in its title.
 | `nhcx-eligibility.yaml` | Coverage eligibility | `apisbx.abdm.gov.in` |
 | `nhcx-insurance-plan.yaml` | Insurance plan | `apisbx.abdm.gov.in` |
 | `nhcx-preauth.yaml` | Pre-authorisation | `apisbx.abdm.gov.in` |
-| `nhcx-predetermination.yaml` | Predetermination | `apisbx.abdm.gov.in` |
 | `nhcx-claim.yaml` | Claim | `apisbx.abdm.gov.in` |
 | `nhcx-payment-notice.yaml` | Payment notice | `apisbx.abdm.gov.in` |
 | `nhcx-communication.yaml` | Communication | `apisbx.abdm.gov.in` |

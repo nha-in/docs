@@ -30,7 +30,7 @@ Sent on `/v1/communication/request`.
 
 ### Elements
 
-#### 1. Task
+#### Task
 
 NRCeS profile: [Task](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Task.html).
 
@@ -47,7 +47,7 @@ NRCeS profile: [Task](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Task.htm
 | `input[].type.coding[]` | `include` in `http://terminology.hl7.org/CodeSystem/financialtaskinputtype` |
 | `input[].valueReference` | reference `urn:uuid:4b35a6eb-3f99-5d0c-b0c8-5b2f049fdbde`, display `CommunicationRequest` |
 
-#### 2. CommunicationRequest
+#### CommunicationRequest
 
 NRCeS profile: [CommunicationRequest](https://nrces.in/ndhm/fhir/r4/StructureDefinition-CommunicationRequest.html).
 
@@ -83,7 +83,7 @@ Sent on `/v1/communication/request`, workflow N02.
 
 ### Elements
 
-#### 1. Task
+#### Task
 
 NRCeS profile: [Task](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Task.html).
 
@@ -96,7 +96,7 @@ NRCeS profile: [Task](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Task.htm
 | `input[].type.coding[]` | `include` Include in `http://terminology.hl7.org/CodeSystem/financialtaskinputtype` |
 | `input[].valueReference` | reference `https://payer.pmajy.nha.gov.in/CommunicationRequest/1a857700-c6f3-49e1-b5d1-049…`, display `Communication` |
 
-#### 2. CommunicationRequest
+#### CommunicationRequest
 
 NRCeS profile: [CommunicationRequest](https://nrces.in/ndhm/fhir/r4/StructureDefinition-CommunicationRequest.html).
 
@@ -130,7 +130,7 @@ Sent on `/v1/communication/on_request`.
 
 ### Elements
 
-#### 1. Task
+#### Task
 
 NRCeS profile: [Task](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Task.html).
 
@@ -146,7 +146,7 @@ NRCeS profile: [Task](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Task.htm
 | `requester` | display `Organization`, reference `https://nhcx.abdm.gov.in/provider` |
 | `status` | `completed` |
 
-#### 2. Communication
+#### Communication
 
 NRCeS profile: [Communication](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Communication.html).
 
@@ -168,27 +168,27 @@ The `CommunicationRequest`, `Claim`, `Patient`, `Organization`, `Practitioner`, 
 
 ## Rules
 
-### 1. The push pattern
+### The push pattern
 
 `Task.code` `poll` with an input of type `include` referencing the resource being delivered, a `CommunicationRequest` from the payer. `intent` is `order` on a request and `proposal` on a notification. Resolve the reference and read its type.
 
-### 2. Switch on the reason
+### Switch on the reason
 
 `Task.reasonCode` from `ndhm-reason-code`: `tatquery`, `grievance`, `walletupdate`, `policychange`, `additionalinfo`, `claimArbitration`. Accept the misspelling `claimArbitartion` on receipt.
 
-### 3. Notifications
+### Notifications
 
 A notification carries its reason under the communication-category system, such as `information`, and a `CommunicationRequest` with category `notification` and the message in `payload`.
 
-### 4. Category, priority, topic
+### Category, priority, topic
 
 `category` `alert`, `reminder`, `notification`, `instruction` or `questionnaire`; `priority` `routine`, `urgent`, `asap` or `stat`; `topic` `progress-update` for anything about a live case.
 
-### 5. completed is the event
+### completed is the event
 
 `Task.status` and `Communication.status` read `completed` when the message is delivered. Do not close a case on them.
 
-### 6. The acknowledgement
+### The acknowledgement
 
 A `Task` coded `deliver`, `completed`, whose `include` input references a `Communication` with `basedOn` naming the request. Same correlation id. Take each organisation's role from `Organization.type`, not from the identifier type.
 

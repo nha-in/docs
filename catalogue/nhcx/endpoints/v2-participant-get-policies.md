@@ -4,7 +4,7 @@ type: endpoint
 gateway: nhcx
 milestone: n/a
 version: nhcx-v1
-title: POST /V2/participant/get/policies
+title: POST /v2/participant/get/policies
 summary: >-
   The second path for looking up a beneficiary's linked policies; it takes the same
   body as the main lookup.
@@ -13,7 +13,7 @@ sources:
   file: catalogue/openapi/.raw/nhcx-site-2026-09-14/swagger/participanthcxservice.json
   hash: sha256:6d0a2192da8160fe4b292bbdd81e937ba254bf6d27915d23907e70b82faebf63
   fetched: '2026-09-14'
-  note: 'API specification: participanthcxservice, row 23 of the NHCX document sheet, listed on https://hcxsbx.abdm.gov.in/#/technical-specifications/api-specifications. paths./V2/participant/get/policies.post.'
+  note: 'API specification: participanthcxservice, row 23 of the NHCX document sheet, listed on https://hcxsbx.abdm.gov.in/#/technical-specifications/api-specifications. paths./v2/participant/get/policies.post.'
 - url: https://hcxsbx.abdm.gov.in/images/038d85cffc7df66ed1a4.pdf
   file: catalogue/openapi/.raw/nhcx-site-2026-09-14/documents/Common Mistakes while implementing through NHCX.pdf
   hash: sha256:b4af12a432a29886e1ae4956340ff07782bba7df792380de3a408f4e5a55673f
@@ -51,13 +51,13 @@ related:
   - nhcx.error.nhcx-1003
 ---
 
-# POST /V2/participant/get/policies
+# POST /v2/participant/get/policies
 
 ## In plain words
 
 This path returns the policies linked to a beneficiary, like [`/participant/get/policies`](participant-get-policies.md). It takes the same body and returns the same response.
 
-Call [`/participant/get/policies`](participant-get-policies.md), the path in the provider and payer [sandbox exit](../glossary/sandbox-exit.md). If you use the V2 paths, pair this with [`/V2/participant/link/abha/policy`](v2-participant-link-abha-policy.md) and [`/V2/participant/delink/abha/policy`](v2-participant-delink-abha-policy.md).
+Call [`/participant/get/policies`](participant-get-policies.md), the path in the provider and payer [sandbox exit](../glossary/sandbox-exit.md). If you use the v2 paths, pair this with [`/v2/participant/link/abha/policy`](v2-participant-link-abha-policy.md) and [`/v2/participant/delink/abha/policy`](v2-participant-delink-abha-policy.md).
 
 ## Before you start
 
@@ -75,7 +75,7 @@ Your system posts one identifier. The registry answers on the same connection wi
 | Production | `https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice` |
 
 ```bash
-curl -X POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/V2/participant/get/policies' \
+curl -X POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/v2/participant/get/policies' \
   -H 'Accept: application/json' \
   -H 'Content-Type: application/json' \
   -H 'bearer_auth: Bearer <ACCESS_TOKEN_FROM_SESSION_TOKEN>' \
@@ -84,8 +84,6 @@ curl -X POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/V2/p
     "identifiervalue": "<IDENTIFIER_VALUE>"
   }'
 ```
-
-The path starts with a capital `V2`.
 
 | Field | What to send |
 |---|---|
@@ -102,7 +100,6 @@ You receive HTTP 200 with at least one linked policy. You hold a processing part
 
 ## When it goes wrong
 
-- **404 on the path.** The path was written with a lower-case `v2`. Write `/V2/participant/get/policies`.
 - **Messages to the payer fail with a receiver error.** The payer id went into `x-hcx-recipient_code`. Use the processing id. See [NHCX-1003](../errors/nhcx-1003.md).
 - **Nothing is returned for an ABHA number.** Send 14 digits without hyphens, then try `MemberId` and `MobileNo`.
 - **401 Unauthorized.** The token is missing, has expired, or went out without the `Bearer ` prefix. Mint a new token, then retry the call once. See [NHCX-401](../errors/nhcx-401.md) and [every call returns 401](../troubleshooting/everything-returns-401.md).

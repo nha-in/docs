@@ -103,7 +103,7 @@ Base: `https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice`.
 **1. Create.** `POST v2/participant/create`
 
 ```bash
-curl --location --request POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/v2/participant/create' \
+curl --location --request POST 'https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice/v2/participant/create' \
   --header 'Accept: application/json' \
   --header 'Content-Type: application/json' \
   --header 'bearer_auth: Bearer <access token>' \
@@ -126,7 +126,7 @@ The mobile number must match the one on your HFR record exactly, or for a payer 
 **2. Confirm.** `GET validate?transactionId=<id>&passcode=<code>`. Note the method: the two confirmation calls are GETs, not POSTs. The participant becomes active.
 
 ```bash
-curl --location --request GET 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/validate?transactionId=<transaction id>&passcode=<passcode>' \
+curl --location --request GET 'https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice/validate?transactionId=<transaction id>&passcode=<passcode>' \
   --header 'Accept: application/json' \
   --header 'Content-Type: application/json' \
   --header 'bearer_auth: Bearer <access token>'
@@ -137,7 +137,7 @@ curl --location --request GET 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/participa
 **3. Configure.** `POST v2/participant/update`
 
 ```bash
-curl --location --request POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/v2/participant/update' \
+curl --location --request POST 'https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice/v2/participant/update' \
   --header 'Accept: application/json' \
   --header 'Content-Type: application/json' \
   --header 'bearer_auth: Bearer <access token>' \
@@ -155,7 +155,7 @@ A second transaction ID and passcode arrive.
 **4. Confirm again.** `GET update/validate?transactionId=<id>&passcode=<code>`. The certificate and address go live.
 
 ```bash
-curl --location --request GET 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/update/validate?transactionId=<transaction id>&passcode=<passcode>' \
+curl --location --request GET 'https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice/update/validate?transactionId=<transaction id>&passcode=<passcode>' \
   --header 'Accept: application/json' \
   --header 'Content-Type: application/json' \
   --header 'bearer_auth: Bearer <access token>'
@@ -170,7 +170,7 @@ Passcodes and transaction IDs are valid for 24 hours. If one is lost, repeat tha
 In production there is a shorter path that skips the passcode:
 
 ```bash
-curl --location --request POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/v2/update/cert' \
+curl --location --request POST 'https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice/v2/update/cert' \
   --header 'Accept: application/json' \
   --header 'Content-Type: application/json' \
   --header 'bearer_auth: Bearer <access token>' \

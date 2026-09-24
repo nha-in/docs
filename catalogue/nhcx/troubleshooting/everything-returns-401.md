@@ -68,7 +68,7 @@ Work through these in order.
 
 1. **Has the token expired?** This message appears when the session token has expired. A session token lasts 1200 seconds (20 minutes) from the moment it arrives, so a token older than that has expired. Fetch a new token and retry the failing call once. Retrying with the old token fails the same way. See [the session token every NHCX call carries](../concepts/session-token.md).
 2. **Does the value start with `Bearer `?** The header value is the word `Bearer`, a space, then the token. A bare token gives `401`.
-3. **Is the token in the header the call reads?** Send the same value in both `bearer_auth` and `Authorization`: `Bearer <ACCESS_TOKEN_FROM_SESSION_TOKEN>`.
+3. **Is the token in the header the call reads?** Every NHCX call reads the token from `bearer_auth`: `bearer_auth: Bearer <ACCESS_TOKEN_FROM_SESSION_TOKEN>`.
 4. **Are the token and the host from the same environment?** A sandbox token does not work against a production host, or the reverse. Compare the host you minted the token on with the host of the failing call. See [environments and base URLs](../sandbox/environments-and-base-urls.md).
 5. **Is the token call itself healthy?** If minting a token fails, check the credentials and the body format for the address you call. See [`POST /api/hiecm/gateway/v3/sessions`](../endpoints/session-token.md) and [`POST /get/session`](../endpoints/get-session.md).
 

@@ -67,6 +67,37 @@ const slug = (s) =>
     .replace(/^-+|-+$/g, '')
     .toLowerCase();
 
+/**
+ * What a heading, a sidebar row and a table cell show for one operation.
+ *
+ * A row in catalogue/titles.yaml, or `x-abdm-title`, is used as written: it is
+ * already a name, so no verb is put in front of it. Otherwise the title is
+ * derived from NHA's summary and always starts with a verb.
+ */
+function titleFor(op, {id, path, method, kind}) {
+  const override = titleOverrides[id] ?? op['x-abdm-title'];
+  if (override) return caseTerms(String(override));
+  return imperative(cleanTitle(op.summary, {path, method}), {method, kind});
+}
+
+// Who hosts an NHCX webhook, from the sentence its description opens with:
+// "Hosted by the payer." The exchange delivers to that party, not to whoever
+// made the call, and the page has to say which.
+const hostRole = (op) =>
+  (String(op?.description ?? '').match(/^\s*Hosted by (?:the |every )?([a-z-]+)/i) ?? [])[1]?.toLowerCase();
+
+// Who makes an NHCX call, from the sentence its description opens with:
+// "Provider asks the payer...", "Payer returns...".
+const callerRole = (op) =>
+  (String(op?.description ?? '').match(/^\s*(provider|payer)\b/i) ?? [])[1]?.toLowerCase();
+
+// The role a hand written title opens with: "Recipient: answer a status
+// check" names the recipient.
+const titleRole = (title) => (String(title).match(/^([A-Za-z ]+):\s/) ?? [])[1]?.toLowerCase();
+
+// The name a page gives the gateway that relays a callback.
+const GATEWAY_NAMES = {nhcx: 'NHCX'};
+
 /** Local $ref resolution. The specs only reference their own components. */
 function deref(spec, node, depth = 0) {
   if (!node || typeof node !== 'object' || depth > 8) return node;
@@ -183,6 +214,35 @@ function sampleFromSchema(schema, name = '', depth = 0) {
   return `<${placeholder}>`;
 }
 
+/**
+ * The fields an NHCX operation carries in the JWE protected header of its
+ * `payload`, from `x-nhcx-protected-header`.
+ *
+ * They are not HTTP headers, so they never reach `headers`, the samples or
+ * the Try it console. Each item is a name, resolved against
+ * `components.x-nhcx-protected-header`, or an inline object for a value one
+ * operation sets differently.
+ */
+function protectedHeaderFor(spec, op, file) {
+  const list = op['x-nhcx-protected-header'];
+  if (!Array.isArray(list)) return [];
+  const shared = spec.components?.['x-nhcx-protected-header'] ?? {};
+  return list.flatMap((item) => {
+    const def = typeof item === 'string' ? {name: item, ...(shared[item] ?? {})} : item;
+    if (typeof item === 'string' && !shared[item]) {
+      console.warn(`  ! ${file}: protected header field "${item}" is not declared under components.x-nhcx-protected-header`);
+    }
+    if (!def?.name) return [];
+    return [{
+      name: def.name,
+      type: 'string',
+      required: Boolean(def.required),
+      description: htmlToMarkdown(def.description),
+      example: def.example,
+    }];
+  });
+}
+
 function firstExample(content) {
   const media = content?.['application/json'];
   if (!media) return undefined;
@@ -241,7 +301,9 @@ function securityHeaders(security = []) {
       return [{name: 'Authorization'}];
     }
     if (entry.type === 'apiKey' && entry.in === 'header' && entry.headerName) {
-      return [{name: entry.headerName}];
+      // The example the specification gives for the header, when it declares
+      // one: NHCX's `bearer_auth` is "Bearer <access token>", not a bare key.
+      return [{name: entry.headerName, example: entry.example}];
     }
     return [];
   });
@@ -498,7 +560,7 @@ let count = 0;
 const journeys = loadJourneys();
 
 // The group for what a module's journeys do not name.
-const LEFTOVERS = 'Other operations';
+const LEFTOVERS = 'APIs';
 const opIndex = operationIndex();
 
 for (const {platform, version, files} of tree) {
@@ -611,6 +673,9 @@ for (const {platform, version, files} of tree) {
         const id = op.operationId ?? slug(`${method}-${path}`);
         operations.set(id, {
           summary: (op.summary ?? id).trim(),
+          title: titleFor(op, {id, path, method, kind: 'operation'}),
+          path,
+          caller: callerRole(op) ?? titleRole(titleFor(op, {id, path, method, kind: 'operation'})),
           route: operationPage(module.dir, id),
         });
       }
@@ -621,6 +686,9 @@ for (const {platform, version, files} of tree) {
   const callbacksByOperation = new Map();
   const pairingByCallback = new Map();
   const unpairedCallbacks = [];
+  // module dir -> webhook path -> its entry, so a call can name the callback
+  // its answer arrives on.
+  const webhooksByModule = new Map();
   for (const module of modules) {
     for (const [path, item] of Object.entries(module.spec.webhooks ?? {})) {
       for (const method of METHODS) {
@@ -632,8 +700,12 @@ for (const {platform, version, files} of tree) {
           method: method.toUpperCase(),
           path,
           summary: (hook.summary ?? '').trim(),
+          title: titleFor(hook, {id, path, method, kind: 'callback'}),
+          host: hostRole(hook),
           route: operationPage(module.dir, id),
         };
+        if (!webhooksByModule.has(module.dir)) webhooksByModule.set(module.dir, new Map());
+        webhooksByModule.get(module.dir).set(path, entry);
         const triggeredBy = hook['x-abdm-triggered-by'];
         const answeredBy = hook['x-abdm-answered-by'];
         const target = triggeredBy ?? answeredBy;
@@ -715,10 +787,36 @@ for (const {platform, version, files} of tree) {
     collect('callback', module.spec.webhooks);
   }
 
+  const gateway = GATEWAY_NAMES[platform] ?? 'ABDM';
+
+  /**
+   * The webhook a call's answer comes back on, in the same module: the call's
+   * last path segment with `on_` in front. `/v1/preauth/submit` is answered on
+   * `/v1/preauth/on_submit`. Only NHCX names its answers this way.
+   */
+  function answerFor(operationId, moduleDir) {
+    if (platform !== 'nhcx') return undefined;
+    const path = operations.get(operationId)?.path;
+    if (!path) return undefined;
+    const cut = path.lastIndexOf('/');
+    const last = path.slice(cut + 1);
+    if (!last || last.startsWith('on_')) return undefined;
+    return webhooksByModule.get(moduleDir)?.get(`${path.slice(0, cut)}/on_${last}`);
+  }
+
   /** The Callbacks section appended to an operation's page, if it has any. */
-  function callbackSection(operationId) {
+  function callbackSection(operationId, moduleDir) {
     const entries = callbacksByOperation.get(operationId) ?? [];
-    if (entries.length === 0) return [];
+    const answer = answerFor(operationId, moduleDir);
+    if (entries.length === 0 && !answer) return [];
+    // NHCX delivers a call to the other party under the same path, so the
+    // bullet names who receives it; otherwise a reader takes the forwarded
+    // message for their own answer.
+    const forwarded = (entry) =>
+      entry.host
+        ? `- NHCX delivers this call to the ${entry.host}, on the ${entry.host}'s own \`${entry.path}\`, not back to you. [${entry.title}](${entry.route}).`
+        : `- After this call, NHCX posts **${entry.title}** to \`${entry.path}\`. [Open the callback](${entry.route}).`;
+    const answerer = entries.find((entry) => entry.host && entry.host !== answer?.host)?.host;
     return [
       '## Callbacks',
       '',
@@ -726,9 +824,16 @@ for (const {platform, version, files} of tree) {
       // or the one you send in reply, and each bullet says which it is.
       ...entries.map((entry) =>
         entry.relation === 'triggered-by'
-          ? `- After this call, ABDM posts **${entry.summary}** to \`${entry.path}\`. [Open the callback](${entry.route}).`
-          : `- You make this call in reply to **${entry.summary}**, which ABDM posts to \`${entry.path}\`. [Open the callback](${entry.route}).`,
+          ? platform === 'nhcx'
+            ? forwarded(entry)
+            : `- After this call, ${gateway} posts **${entry.summary}** to \`${entry.path}\`. [Open the callback](${entry.route}).`
+          : `- You make this call in reply to **${platform === 'nhcx' ? entry.title : entry.summary}**, which ${gateway} posts to \`${entry.path}\`. [Open the callback](${entry.route}).`,
       ),
+      ...(answer
+        ? [
+            `- ${answerer ? `The ${answerer}'s answer` : 'The answer'} comes back to you on [\`${answer.path}\`](${answer.route}), the callback you host.`,
+          ]
+        : []),
       '',
     ];
   }
@@ -736,11 +841,35 @@ for (const {platform, version, files} of tree) {
   /** The section appended to a callback's own page, saying where it fits. */
   function callbackOriginSection(callbackId, moduleFile) {
     const pairing = pairingByCallback.get(callbackId);
+    if (!pairing && platform === 'nhcx') {
+      // NHCX has no journeys to take the order from.
+      return [
+        '## Where this fits',
+        '',
+        'The specification does not name the call that produces this callback. The module overview lists the calls and callbacks in order.',
+        '',
+      ];
+    }
     if (!pairing) {
       return [
         '## Where this fits',
         '',
         'This callback arrives in the journey listed above. The call that produces it is not yet published; take the order from the journey.',
+        '',
+      ];
+    }
+    // On NHCX the callback is the exchange delivering somebody else's call,
+    // so the page names both parties rather than telling the host it made it.
+    if (platform === 'nhcx' && pairing.relation === 'triggered-by') {
+      const {operation} = pairing;
+      const to = pairing.host ? ` to the ${pairing.host}` : '';
+      const link = `[${operation.title}](${operation.route})`;
+      return [
+        '## Where this fits',
+        '',
+        operation.caller === 'nhcx'
+          ? `NHCX sends this message${to} itself: ${link}.`
+          : `NHCX delivers this message${to} when ${operation.caller ? `the ${operation.caller}` : 'another participant'} calls \`${operation.path}\`: ${link}.`,
         '',
       ];
     }
@@ -798,9 +927,15 @@ for (const {platform, version, files} of tree) {
     );
     // A module with no journey file has nothing for its operations to be
     // "other" than. Every NHCX module is one: grouped as leftovers, each opened
-    // onto a single "Other operations" folder holding all of it. Its operations
-    // sit directly under the module instead, where a journey would.
+    // onto a single folder holding all of it. Its operations sit directly
+    // under the module instead, where a journey would.
     const hasJourneys = (journeys.get(module.id) ?? []).length > 0;
+    // Unless its specification splits them into tags: then each tag is a
+    // group, in the order the specification declares them, so the PMJAY
+    // adjudicator reads as its dummy payer calls and its PMJAY payer calls.
+    const declaredTags = (spec.tags ?? []).map((t) => t.name).filter(Boolean);
+    const groupByTag = !hasJourneys && declaredTags.length > 1;
+    if (groupByTag) for (const name of declaredTags) byTag.set(name, []);
 
     const entries = [];
     for (const [path, item] of Object.entries(spec.paths ?? {})) {
@@ -836,6 +971,17 @@ for (const {platform, version, files} of tree) {
         example:
           firstExample(response.content) ??
           sampleFromSchema(response.content?.['application/json']?.schema),
+        // True when the example above was built from the schema rather than
+        // written in the specification, which is the only case the page says
+        // its values are placeholders.
+        synthesised:
+          firstExample(response.content) === undefined &&
+          response.content?.['application/json']?.schema?.example === undefined &&
+          sampleFromSchema(response.content?.['application/json']?.schema) !== undefined,
+        // The response body's fields, as the request body's are listed.
+        fields: fields(response.content?.['application/json']?.schema).map(
+          ({encrypted, fixed, ...field}) => field,
+        ),
         help: helpFor(status, module.dir, op.operationId),
       }));
 
@@ -854,7 +1000,26 @@ for (const {platform, version, files} of tree) {
       // operation a journey names is read through that journey, so it carries
       // no tag and gets no page outside the journey.
       const unnamed = !named.has(id);
-      const tag = unnamed && hasJourneys ? LEFTOVERS : undefined;
+      const group = groupByTag ? (op.tags?.[0] ?? LEFTOVERS) : LEFTOVERS;
+      const tag = unnamed && hasJourneys ? LEFTOVERS : groupByTag ? group : undefined;
+      const protectedHeader = protectedHeaderFor(spec, op, module.file);
+      const inPayload = new Set(protectedHeader.map((f) => f.name.toLowerCase()));
+      const security = securityFor(op);
+      // An apiKey scheme names its own header. When the specification also
+      // declares that header as a parameter, the page shows it once, under
+      // Authorizations, with the parameter's example; listing it again under
+      // Headers read as two headers to send.
+      const keyHeaders = new Set(
+        security.filter((s) => s.type === 'apiKey' && s.in === 'header' && s.headerName).map((s) => s.headerName.toLowerCase()),
+      );
+      for (const scheme of security) {
+        if (!keyHeaders.has(scheme.headerName?.toLowerCase())) continue;
+        const declared = parameters.find((p) => p.in === 'header' && p.name.toLowerCase() === scheme.headerName.toLowerCase());
+        const example = declared?.example ?? declared?.schema?.example;
+        if (example !== undefined) scheme.example = example;
+        // Try it puts the same prefix in front of the token it holds.
+        if (/^Bearer\s/.test(String(example ?? ''))) scheme.prefix = 'Bearer ';
+      }
 
       const operation = {
         id,
@@ -877,16 +1042,17 @@ for (const {platform, version, files} of tree) {
         // this carries the name. Always an instruction starting with a verb.
         // `x-abdm-title` overrides it where NHA's summary names nothing a rule
         // can rescue. See scripts/lib/titles.mjs.
-        title: (titleOverrides[id] ?? op['x-abdm-title'])
-          ? caseTerms(titleOverrides[id] ?? op['x-abdm-title'])
-          : imperative(cleanTitle(op.summary, {path: entry.path, method: entry.method}), {
-              method: entry.method,
-              kind: entry.kind,
-            }),
+        title: titleFor(op, {id, path: entry.path, method: entry.method, kind: entry.kind}),
         description: cleanDescription(op.description),
-        security: securityFor(op),
+        // Which gateway the page belongs to, for what the page says around
+        // the samples.
+        gateway: platform,
+        security,
         headers: parameters
           .filter((p) => p.in === 'header')
+          // Not HTTP headers: they travel inside the JWE, listed below.
+          .filter((p) => !inPayload.has(p.name.toLowerCase()))
+          .filter((p) => !keyHeaders.has(p.name.toLowerCase()))
           .map((p) => ({
             name: p.name,
             required: Boolean(p.required),
@@ -905,6 +1071,8 @@ for (const {platform, version, files} of tree) {
         // panel and the curl are never blank for an operation that takes a body.
         requestExample:
           firstExample(op.requestBody?.content) ?? sampleFromSchema(requestSchema),
+        // The JWE protected header of `payload`. NHCX only.
+        ...(protectedHeader.length && {protectedHeader}),
         responses,
         tag,
       };
@@ -948,12 +1116,12 @@ for (const {platform, version, files} of tree) {
         // or says that no specification names one.
         ...(entry.kind === 'callback'
           ? callbackOriginSection(id, module.file)
-          : callbackSection(id)),
+          : callbackSection(id, module.dir)),
       ].join('\n');
       writeFileSync(join(endpointsDir, `${name}.mdx`), frontMatter);
 
-        if (!byTag.has(LEFTOVERS)) byTag.set(LEFTOVERS, []);
-        byTag.get(LEFTOVERS).push({
+        if (!byTag.has(group)) byTag.set(group, []);
+        byTag.get(group).push({
           type: 'doc',
           id: `${platform}/${version}/api/${module.dir}/endpoints/${name}`,
           label: operation.title,
@@ -1016,7 +1184,7 @@ for (const {platform, version, files} of tree) {
           "import ApiEndpoint from '@site/src/components/api/ApiEndpoint';",
           `import operation from '@site/src/data/api/${dataName}.json';`,
           '', '<ApiEndpoint operation={operation} />', '',
-          ...(entry.kind === 'callback' ? callbackOriginSection(step.op, module.file) : callbackSection(step.op)),
+          ...(entry.kind === 'callback' ? callbackOriginSection(step.op, module.file) : callbackSection(step.op, module.dir)),
         ].join('\n'));
         items.push({type: 'doc', id: `${platform}/${version}/api/${module.dir}/endpoints/${journey.id}/${nn}-${slug(step.op)}`, label: title, className: `api-method api-method--${stepped.method.toLowerCase()}`});
         count += 1;
@@ -1060,11 +1228,13 @@ for (const {platform, version, files} of tree) {
     const families = new Map();
     for (const {label: title, items} of [
       ...journeyGroups,
-      ...[...byTag.entries()].map(([label, items]) => ({label, items})),
+      ...[...byTag.entries()].filter(([, items]) => items.length).map(([label, items]) => ({label, items})),
     ]) {
       const label = pretty(title);
       const comma = label.indexOf(', ');
-      const family = comma === -1 ? label : label.slice(0, comma);
+      // A tag is one name even when it has a comma in it: "Reprocess, cancel
+      // and shortfall" is not a family of reprocess journeys.
+      const family = comma === -1 || groupByTag ? label : label.slice(0, comma);
       if (!families.has(family)) families.set(family, []);
       families.get(family).push({label, items});
     }
@@ -1072,7 +1242,7 @@ for (const {platform, version, files} of tree) {
       members.length === 1
         ? // `flat` tells the sidebar to list the items under the module itself
           // rather than inside a category of this name.
-          {...members[0], ...(!hasJourneys && {flat: true})}
+          {...members[0], ...(!hasJourneys && !groupByTag && {flat: true})}
         : {
             label: family,
             children: members.map((member) => {
@@ -1132,7 +1302,15 @@ for (const {platform, version, files} of tree) {
     // A family group holds its endpoints one level down, in its children.
     const flatGroups = entry.groups.flatMap((g) => g.children ?? [g]);
     const total = flatGroups.reduce((n, g) => n + g.items.length, 0);
-    indexLines.push(`## ${module.label}`);
+    // Where a module has an overview page of its own, the heading opens it: a
+    // reader clicking a module name expects that module's page, not the raw
+    // specification, which stays one line below as the secondary link.
+    const overview = ['index.md', 'index.mdx'].some((f) => existsSync(join(docsDir, module.dir, f)));
+    indexLines.push(
+      platform === 'nhcx' && overview
+        ? `## [${module.label}](/docs/${platform}/${version}/api/${module.dir}/)`
+        : `## ${module.label}`,
+    );
     indexLines.push('');
     // A module with no journeys has no use cases to count or name.
     const flat = entry.groups.every((g) => g.flat);
@@ -1142,13 +1320,17 @@ for (const {platform, version, files} of tree) {
         : total
         ? `${total} endpoint${total === 1 ? '' : 's'} across ${
             entry.groups.length
-          } use case${entry.groups.length === 1 ? '' : 's'}: ${entry.groups
+          } ${isHiecmV3 ? 'use case' : 'group'}${entry.groups.length === 1 ? '' : 's'}: ${entry.groups
             .map((g) => g.label)
             .join(', ')}. Each endpoint has its own page in the sidebar.`
         : 'No endpoint is published in this specification yet.',
     );
     indexLines.push('');
-    indexLines.push(`[Read the whole specification](${module.route})`);
+    indexLines.push(
+      platform === 'nhcx' && overview
+        ? `[Open the ${module.label} overview](/docs/${platform}/${version}/api/${module.dir}/). The whole specification is also on [one page](${module.route}).`
+        : `[Read the whole specification](${module.route})`,
+    );
     indexLines.push('');
   }
 
@@ -1469,7 +1651,14 @@ for (const {platform, version, files} of tree) {
         );
         // The page is already one module's, so the path column said the same
         // thing on every row.
-        for (const e of here) lines.push(`| \`${e.code}\` | ${e.meaning.replace(/\|/g, '\\|')} |`);
+        // Each code opens on its own row of the searchable error table, which
+        // carries the message as sent and what to do; the table reads `?code=`.
+        // Other gateways have no such table, so their codes stay plain.
+        const codeCell = (code) =>
+          platform === 'nhcx'
+            ? `[\`${code}\`](/docs/${platform}/${version}/reference/pmjay-error-codes?code=${encodeURIComponent(code)})`
+            : `\`${code}\``;
+        for (const e of here) lines.push(`| ${codeCell(e.code)} | ${e.meaning.replace(/\|/g, '\\|')} |`);
         lines.push('');
       } else {
         lines.push(

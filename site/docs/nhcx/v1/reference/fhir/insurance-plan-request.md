@@ -21,7 +21,7 @@ Sent on `/v1/insuranceplan/request`, answered on `/v1/insuranceplan/on_request`.
 
 ## Elements
 
-### 1. Task
+### Task
 
 NRCeS profile: [Task](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Task.html).
 
@@ -37,27 +37,27 @@ NRCeS profile: [Task](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Task.htm
 
 ## Rules
 
-### 1. The Task code system
+### The Task code system
 
 `poll` under `http://terminology.hl7.org/CodeSystem/financialtaskcode`, not the older `https://nhcx.abdm.gov.in/api`.
 
-### 2. Intent
+### Intent
 
 `order`. Some element tables say `original-order`; the bundle sends `order`.
 
-### 3. Inputs
+### Inputs
 
 `valueString`, typed `policyNumber` and `providerId` under `ndhm-task-input-type-code`. Both are required, one of each: the policy number and the hospital's HFR ID (`facilityId` in the data elements below). Together they narrow the answer to the packages this hospital is empanelled for.
 
-### 4. No case yet
+### No case yet
 
 No case exists, so the bundle carries no case number. The callback is the only link between request and answer.
 
-### 5. Task codes differ by system across the exchange
+### Task codes differ by system across the exchange
 
 `poll`, `cancel`, `reprocess`, `release` and `status` in `financialtaskcode`; `deliver` in `ndhm-task-codes`; `approve` in `http://hl7.org/fhir/CodeSystem/task-code`. Switch on system and code together.
 
-### 6. When to send it
+### When to send it
 
 Once per policy, not per patient. Refresh on a `policychange` communication and on your own schedule.
 

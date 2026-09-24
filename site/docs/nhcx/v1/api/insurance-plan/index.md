@@ -11,12 +11,12 @@ generated: true
 
 Policies have traditionally been PDFs that hospital desks interpret by hand, producing ambiguity about benefits, claim conditions and documents, and rework and rejections downstream.
 
-## Calls
+## APIs
 
-| Call | Method and path | What it does |
-| --- | --- | --- |
-| [Insurance plan request](/docs/nhcx/v1/api/insurance-plan/endpoints/insurance-plan-v1-insuranceplan-request) | `POST /v1/insuranceplan/request` | Provider sends a Task with code poll naming both a policy number and its HFR id to fetch the payer's machine-readable InsurancePlan for that pairing. |
-| [Insurance plan callback](/docs/nhcx/v1/api/insurance-plan/endpoints/insurance-plan-v1-insuranceplan-on-request) | `POST /v1/insuranceplan/on_request` | Payer returns the InsurancePlan collection Bundle (InsurancePlan, Organization, optional Questionnaire) under the request correlation id. |
+| Call | Called by | Method and path | What it does |
+| --- | --- | --- | --- |
+| [Provider: request an insurance plan](/docs/nhcx/v1/api/insurance-plan/endpoints/insurance-plan-v1-insuranceplan-request) | Provider | `POST /v1/insuranceplan/request` | Provider sends a Task with code poll naming both a policy number and its HFR id to fetch the payer's machine-readable InsurancePlan for that pairing. |
+| [Payer: send the insurance plan](/docs/nhcx/v1/api/insurance-plan/endpoints/insurance-plan-v1-insuranceplan-on-request) | Payer | `POST /v1/insuranceplan/on_request` | Payer returns the InsurancePlan collection Bundle (InsurancePlan, Organization, optional Questionnaire) under the request correlation id. |
 
 ## Callbacks you host
 
@@ -36,6 +36,7 @@ The exchange posts these to the `endpoint_url` you registered. Answer each with 
 
 ## Guides that use these calls
 
+- [Building and sending a JWE](/docs/nhcx/v1/getting-started/building-and-sending-a-jwe)
 - [Insurance plan request](/docs/nhcx/v1/reference/fhir/insurance-plan-request)
 - [Insurance plan response](/docs/nhcx/v1/reference/fhir/insurance-plan-response-overview)
 

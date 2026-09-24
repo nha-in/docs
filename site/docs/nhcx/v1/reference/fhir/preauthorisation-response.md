@@ -25,7 +25,7 @@ Sent on `/v1/preauth/on_submit`.
 
 ## Elements
 
-### 1. ClaimResponse
+### ClaimResponse
 
 NRCeS profile: [ClaimResponse](https://nrces.in/ndhm/fhir/r4/StructureDefinition-ClaimResponse.html).
 
@@ -59,7 +59,7 @@ NRCeS profile: [ClaimResponse](https://nrces.in/ndhm/fhir/r4/StructureDefinition
 | `total[].amount` | value `150000` |
 | `total[]` | id `MRAV1985001/SANDBOX-DEFAULT-01` |
 
-### 2. Patient
+### Patient
 
 NRCeS profile: [Patient](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Patient.html).
 
@@ -71,7 +71,7 @@ NRCeS profile: [Patient](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Patie
 | `gender` | `male` |
 | `birthDate` | `1985-06-15` |
 
-### 3. Organization (pay)
+### Organization (pay)
 
 NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Organization.html).
 
@@ -83,7 +83,7 @@ NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-
 | `type[].coding[]` | `pay` Payer in `http://terminology.hl7.org/CodeSystem/organization-type` |
 | `name` | `Sandbox Payer` |
 
-### 4. Organization (prov)
+### Organization (prov)
 
 NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Organization.html).
 
@@ -95,7 +95,7 @@ NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-
 | `type[].coding[]` | `prov` Healthcare Provider in `http://terminology.hl7.org/CodeSystem/organization-type` |
 | `name` | `XYZ Multispeciality Hospital` |
 
-### 5. Coverage
+### Coverage
 
 NRCeS profile: [Coverage](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Coverage.html).
 
@@ -125,35 +125,35 @@ The same bundle, told apart by the workflow code, `outcome` and the claim-level 
 
 ## Rules
 
-### 1. Read outcome with the reason
+### Read outcome with the reason
 
 `outcome` `complete` covers approval and rejection alike. Read it with `adjudication[].reason` at claim level.
 
-### 2. Answer early, decide later
+### Answer early, decide later
 
 Acknowledge at once on 20 as `response.partial`, then decide on 21 or 23 as `response.complete`, or the exchange retires the correlation before the adjudicator gets to it.
 
-### 3. The case number
+### The case number
 
 `preAuthRef` carries the payer's own case number. Store it on arrival; later requests on the case name it.
 
-### 4. Items by sequence
+### Items by sequence
 
 Read item adjudication by `itemSequence`, never by array position. A reduced amount does not force `outcome` to `partial`; reconcile the amounts yourself.
 
-### 5. Totals
+### Totals
 
 `total[]` carries `benefit`, `submitted` and `eligible`. The `eligible` total names the member and the plan in its `id`; key on the category and the `id` together.
 
-### 6. disposition is prose
+### disposition is prose
 
 For a human. Route on `outcome` and the adjudication codes.
 
-### 7. Match on the case number
+### Match on the case number
 
 Join the response to the request on `identifier` and `preAuthRef`, never on the provider identifier or name, which can change shape between request and response.
 
-### 8. Adjudication systems
+### Adjudication systems
 
 Some senders bind adjudication categories to a documentation URL. Match on the code.
 

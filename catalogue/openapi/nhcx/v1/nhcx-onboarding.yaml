@@ -9,7 +9,7 @@ info:
   x-portal:
     module: onboarding
     label: Onboarding
-    position: 11
+    position: 12
   title: NHCX onboarding
   summary: Nothing moves through NHCX until both the sender and the recipient exist in the participant registry, which the platform treats as the source of truth for who may exchange claims data.
   description: |-
@@ -58,9 +58,12 @@ paths:
       x-abdm-use-case: Onboarding
       tags:
         - Onboarding
+      servers:
+        - url: https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice
+          description: Sandbox, Participant service. This call is for the sandbox.
       summary: Participant create (v1)
       description: |-
-        Creates a participant record in the NHCX registry from a full v1 profile and returns the generated participant_code.
+        Sandbox call. Creates a participant record in the NHCX registry from a full v1 profile and returns the generated participant_code.
 
         ### Business purpose
 
@@ -68,7 +71,7 @@ paths:
 
         ### When to use
 
-        Call it once, when you first register, before any other NHCX call. The sandbox uses this path. To change a certificate or callback URL later, use an update call.
+        Call it once in the sandbox, when you first register, before any other NHCX call. The sandbox address is `https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/participant/create`. In production, register with `/v2/participant/create` followed by `GET /validate`. To change a certificate or callback URL later, use an update call.
 
         ### Preconditions
 
@@ -105,6 +108,7 @@ paths:
         Chapter [Your certificate](/docs/nhcx/v1/getting-started/your-certificate) of the NHCX integration specification.
       parameters:
         - $ref: "#/components/parameters/BearerAuth"
+        - $ref: "#/components/parameters/Accept"
         - $ref: "#/components/parameters/Source"
       requestBody:
         required: true
@@ -181,9 +185,12 @@ paths:
       x-abdm-use-case: Onboarding
       tags:
         - Onboarding
+      servers:
+        - url: https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice
+          description: Production, Participant service. This call is for production.
       summary: Participant create (v2)
       description: |-
-        Registry-linked creation: registry type and ID, role codes, endpoint URL and contacts; returns participantid and a transactionid for /validate.
+        Production call. Registry-linked creation: registry type and ID, role codes, endpoint URL and contacts; returns participantid and a transactionid for /validate.
 
         ### Business purpose
 
@@ -191,7 +198,7 @@ paths:
 
         ### When to use
 
-        Use it for production onboarding, after sandbox certification. Follow it with `GET /validate` within 24 hours, using the returned `transactionid` and the SMS passcode.
+        Use it for production onboarding, after sandbox certification. The production address is `https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice/v2/participant/create`. Follow it with `GET /validate` within 24 hours, using the returned `transactionid` and the SMS passcode. In the sandbox, use `/participant/create` instead.
 
         ### Preconditions
 
@@ -228,6 +235,7 @@ paths:
         Chapter [Your certificate](/docs/nhcx/v1/getting-started/your-certificate) of the NHCX integration specification.
       parameters:
         - $ref: "#/components/parameters/BearerAuth"
+        - $ref: "#/components/parameters/Accept"
       requestBody:
         required: true
         content:
@@ -347,6 +355,7 @@ paths:
         Chapter [Your certificate](/docs/nhcx/v1/getting-started/your-certificate) of the NHCX integration specification.
       parameters:
         - $ref: "#/components/parameters/BearerAuth"
+        - $ref: "#/components/parameters/Accept"
       requestBody:
         required: true
         content:
@@ -476,9 +485,12 @@ paths:
       x-abdm-use-case: Onboarding
       tags:
         - Onboarding
+      servers:
+        - url: https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice
+          description: Production, Participant service. This call is for production.
       summary: Validate participant creation
       description: |-
-        Confirms a participant creation by presenting the SMS passcode and the transactionId returned by /v2/participant/create.
+        Production call. Confirms a participant creation by presenting the SMS passcode and the transactionId returned by /v2/participant/create.
 
         ### Business purpose
 
@@ -486,7 +498,7 @@ paths:
 
         ### When to use
 
-        Call it after `/v2/participant/create` returns a `transactionid` and the passcode arrives by SMS. Do it within 24 hours, and before any `/v2/participant/update`.
+        Call it in production after `/v2/participant/create` returns a `transactionid` and the passcode arrives by SMS. Do it within 24 hours, and before any `/v2/participant/update`. The production address is `https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice/validate`.
 
         ### Preconditions
 
@@ -520,6 +532,7 @@ paths:
         Chapter [Your certificate](/docs/nhcx/v1/getting-started/your-certificate) of the NHCX integration specification.
       parameters:
         - $ref: "#/components/parameters/BearerAuth"
+        - $ref: "#/components/parameters/Accept"
         - name: transactionId
           in: query
           required: true
@@ -554,9 +567,12 @@ paths:
       x-abdm-use-case: Onboarding
       tags:
         - Onboarding
+      servers:
+        - url: https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice
+          description: Production, Participant service. This call is for production.
       summary: Validate participant update
       description: |-
-        Confirms a participant update by presenting the SMS passcode and the transactionId returned by /v2/participant/update.
+        Production call. Confirms a participant update by presenting the SMS passcode and the transactionId returned by /v2/participant/update.
 
         ### Business purpose
 
@@ -564,7 +580,7 @@ paths:
 
         ### When to use
 
-        Call it after `/v2/participant/update` returns a `transactionid` and the passcode arrives by SMS, within 24 hours. It makes the new certificate and callback URL live.
+        Call it in production after `/v2/participant/update` returns a `transactionid` and the passcode arrives by SMS, within 24 hours. It makes the new certificate and callback URL live. The production address is `https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice/update/validate`.
 
         ### Preconditions
 
@@ -598,6 +614,7 @@ paths:
         Chapter [Your certificate](/docs/nhcx/v1/getting-started/your-certificate) of the NHCX integration specification.
       parameters:
         - $ref: "#/components/parameters/BearerAuth"
+        - $ref: "#/components/parameters/Accept"
         - name: transactionId
           in: query
           required: true
@@ -628,9 +645,10 @@ paths:
 components:
   securitySchemes:
     bearerAuth:
-      type: http
-      scheme: bearer
-      description: "On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value."
+      type: apiKey
+      in: header
+      name: bearer_auth
+      description: Every NHCX call carries the access token from the session call in a header named `bearer_auth`, as the word `Bearer`, a space and the token. NHCX reads `bearer_auth`, not `Authorization`.
   parameters:
     BearerAuth:
       name: bearer_auth
@@ -640,6 +658,14 @@ components:
       schema:
         type: string
       example: Bearer <access token>
+    Accept:
+      name: Accept
+      in: header
+      required: true
+      description: Always `application/json` on the participant service.
+      schema:
+        type: string
+      example: application/json
     Source:
       name: source
       in: header

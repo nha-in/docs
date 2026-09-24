@@ -14,7 +14,6 @@ covers:
   - nhcx.flow.preauth-enhancement
   - nhcx.flow.preauth-cancel
   - nhcx.flow.preauth-query-response
-  - nhcx.flow.predetermination
 ---
 
 # Preauthorisation

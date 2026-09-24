@@ -30,7 +30,7 @@ Sent on `/v1/communication/request`, workflow 24.
 
 ### Elements
 
-#### 1. Task
+#### Task
 
 NRCeS profile: [Task](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Task.html).
 
@@ -47,7 +47,7 @@ NRCeS profile: [Task](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Task.htm
 | `input[].type.coding[]` | `include` in `http://terminology.hl7.org/CodeSystem/financialtaskinputtype` |
 | `input[].valueReference` | reference `urn:uuid:4b35a6eb-3f99-5d0c-b0c8-5b2f049fdbde`, display `CommunicationRequest` |
 
-#### 2. CommunicationRequest
+#### CommunicationRequest
 
 NRCeS profile: [CommunicationRequest](https://nrces.in/ndhm/fhir/r4/StructureDefinition-CommunicationRequest.html).
 
@@ -88,7 +88,7 @@ Sent on `/v1/communication/on_request`, workflow 24, echoed.
 
 ### Elements
 
-#### 1. Task
+#### Task
 
 NRCeS profile: [Task](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Task.html).
 
@@ -104,7 +104,7 @@ NRCeS profile: [Task](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Task.htm
 | `input[].valueReference` | reference `urn:uuid:3e398f2b-ab14-41e5-8939-d7746eea43de`, display `Communication` |
 | `reasonCode.coding[]` | `additionalinfo` Additional Information Request in `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-reason-code` |
 
-#### 2. Communication
+#### Communication
 
 NRCeS profile: [Communication](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Communication.html).
 
@@ -133,11 +133,11 @@ The `CommunicationRequest`, `Claim`, `Patient`, `Organization`, `Practitioner`, 
 
 ## Rules
 
-### 1. The generic query
+### The generic query
 
 A `Task` coded `poll`, reason `additionalinfo`, with an `include` input referencing a `CommunicationRequest` whose `basedOn` names the preauthorisation. Sent on `/v1/communication/request` under 24.
 
-### 2. The generic answer
+### The generic answer
 
 A `Task` coded `deliver` in `ndhm-task-codes`, `completed`, with an `include` input referencing a `Communication` whose `basedOn` names the request and whose `payload` carries the message and the documents. Posted on `/v1/communication/on_request`, echoing the correlation id and workflow id.
 
@@ -159,7 +159,7 @@ PMJAY uses a different bundle for this step, headed by `ClaimResponse` rather th
 | 4 | `Organization (prov)` | none declared; NRCeS [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Organization.html) |
 | 5 | `Coverage` | none declared; NRCeS [Coverage](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Coverage.html) |
 
-###### 1. ClaimResponse
+###### ClaimResponse
 
 NRCeS profile: [ClaimResponse](https://nrces.in/ndhm/fhir/r4/StructureDefinition-ClaimResponse.html).
 
@@ -223,7 +223,7 @@ PMJAY uses a different bundle for this step, headed by `Claim` rather than `Task
 | 8 | `QuestionnaireResponse` | `QuestionnaireResponse`, which NRCeS does not publish; base FHIR [QuestionnaireResponse](https://hl7.org/fhir/R4/questionnaireresponse.html) |
 | 9 | `QuestionnaireResponse` | `QuestionnaireResponse`, which NRCeS does not publish; base FHIR [QuestionnaireResponse](https://hl7.org/fhir/R4/questionnaireresponse.html) |
 
-###### 1. Claim
+###### Claim
 
 NRCeS profile: [Claim](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Claim.html).
 
@@ -282,7 +282,7 @@ NRCeS profile: [Claim](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Claim.h
 | `item[].programCode[].coding[]` | `AB-PMJAY` Ayushman Bharat Pradhan Mantri Jan Arogya Yojana (AB-PMJAY) in `https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-program-code` |
 | `total` | value `1800`, currency `INR` |
 
-###### 8. QuestionnaireResponse
+###### QuestionnaireResponse
 
 | Element | Example |
 | :-- | :-- |
@@ -298,7 +298,7 @@ NRCeS profile: [Claim](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Claim.h
 |  | valueString `PLANNED` |
 |  | valueString `Yes` |
 
-###### 9. QuestionnaireResponse
+###### QuestionnaireResponse
 
 | Element | Example |
 | :-- | :-- |

@@ -370,6 +370,20 @@ export default function TryIt({operation}: {operation: Operation}) {
   // in the session store from an earlier panel; that does not make this
   // operation authorized.
   const hasAuth = operation.security.length > 0;
+  // The header the token travels in. An http bearer scheme puts it in
+  // Authorization; an apiKey scheme names its own header, as NHCX's
+  // `bearer_auth` does, and sending Authorization there is ignored.
+  const scheme = operation.security[0];
+  const authHeader =
+    scheme?.type === 'apiKey' && scheme.in === 'header' && scheme.headerName
+      ? scheme.headerName
+      : 'Authorization';
+  const authValue = (held: string): string =>
+    authHeader === 'Authorization'
+      ? `Bearer ${held}`
+      : /^Bearer\s/i.test(held)
+        ? held
+        : `${scheme?.prefix ?? ''}${held}`;
   const environment = environmentOf(
     operation.servers.find((entry) => entry.url === server)?.description ?? '',
   );
@@ -452,7 +466,7 @@ export default function TryIt({operation}: {operation: Operation}) {
   function outgoingHeaders(): Record<string, string> {
     const sent: Record<string, string> = {};
     for (const [name, value] of Object.entries(headers)) if (value) sent[name] = value;
-    if (hasAuth && token) sent.Authorization = `Bearer ${token}`;
+    if (hasAuth && token) sent[authHeader] = authValue(token);
     if (hasBody && bodyText()) sent['Content-Type'] = 'application/json';
     return sent;
   }
@@ -554,7 +568,7 @@ export default function TryIt({operation}: {operation: Operation}) {
       for (const [name, value] of Object.entries(outgoing)) {
         if (value) sent[name] = value;
       }
-      if (hasAuth && token) sent.Authorization = `Bearer ${token}`;
+      if (hasAuth && token) sent[authHeader] = authValue(token);
       const payload = await outgoingBody();
       if (hasBody && payload) sent['Content-Type'] = 'application/json';
 
@@ -771,7 +785,7 @@ export default function TryIt({operation}: {operation: Operation}) {
               <Row
                 id={`try-${operation.id}-token`}
                 field={{
-                  name: 'Authorization',
+                  name: authHeader,
                   type:
                     operation.security[0]?.scheme === 'bearer' ? 'bearer token' : 'token',
                   required: true,

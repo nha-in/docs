@@ -111,3 +111,14 @@ test('a description whose opener cannot be stripped is left as NHA wrote it', ()
   const awkward = 'This is an API will be invoked get the historical token numbers of the patient.';
   assert.equal(cleanDescription(awkward, {vocab}), awkward);
 });
+
+test('a hostname keeps the case it is written in', () => {
+  const v = ['ABDM', 'NHA', ...vocab];
+  assert.equal(
+    caseTerms('call apisbeta.nha.gov.in or apisbx.abdm.gov.in', v),
+    'call apisbeta.nha.gov.in or apisbx.abdm.gov.in',
+  );
+  assert.equal(caseTerms('https://apisbx.abdm.gov.in/hcx for abdm', v), 'https://apisbx.abdm.gov.in/hcx for ABDM');
+  // A full stop that ends a sentence still lets the term case.
+  assert.equal(caseTerms('ask nha. then abdm.', v), 'ask NHA. then ABDM.');
+});

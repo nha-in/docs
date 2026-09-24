@@ -25,7 +25,7 @@ Sent on `/v1/coverageeligibility/on_check`.
 
 ## Elements
 
-### 1. CoverageEligibilityResponse
+### CoverageEligibilityResponse
 
 NRCeS profile: [CoverageEligibilityResponse](https://nrces.in/ndhm/fhir/r4/StructureDefinition-CoverageEligibilityResponse.html).
 
@@ -60,7 +60,7 @@ Procedure Code: PROC-KNEE-01` |
 |  | `RAD` Radiology / X-Ray / CT / MRI Scan Reports in `<participant-defined>` |
 | | and 7 more |
 
-### 2. Patient
+### Patient
 
 NRCeS profile: [Patient](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Patient.html).
 
@@ -74,7 +74,7 @@ NRCeS profile: [Patient](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Patie
 | `gender` | `male` |
 | `birthDate` | `1985-06-15` |
 
-### 3. Coverage
+### Coverage
 
 NRCeS profile: [Coverage](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Coverage.html).
 
@@ -92,7 +92,7 @@ NRCeS profile: [Coverage](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Cove
 | `class[]` | value `POL7UMU002`, name `Sandbox Default Policy` |
 | `class[].type.coding[]` | `plan` Plan in `http://terminology.hl7.org/CodeSystem/coverage-class` |
 
-### 4. CoverageEligibilityRequest
+### CoverageEligibilityRequest
 
 NRCeS profile: [CoverageEligibilityRequest](https://nrces.in/ndhm/fhir/r4/StructureDefinition-CoverageEligibilityRequest.html).
 
@@ -108,7 +108,7 @@ NRCeS profile: [CoverageEligibilityRequest](https://nrces.in/ndhm/fhir/r4/Struct
 | `insurance[]` | focal `true` |
 | `insurance[].coverage` | reference `urn:uuid:966d4b2b-591b-50b6-bbbb-d504d3c6897f`, display `Sandbox Default Policy` |
 
-### 5. Organization (ins)
+### Organization (ins)
 
 NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Organization.html).
 
@@ -120,35 +120,35 @@ NRCeS profile: [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-
 
 ## Rules
 
-### 1. Read the answer in three places
+### Read the answer in three places
 
 `outcome`, `insurance[].inforce` and `insurance[].item[]`. `disposition` is prose for a human.
 
-### 2. Match to the request by reference
+### Match to the request by reference
 
 Use `CoverageEligibilityResponse.request.reference`, never a resource id, to join the answer to what you sent.
 
-### 3. Items come back in your own codes
+### Items come back in your own codes
 
 `insurance[].item[].productOrService` carries the package code you sent, for example `MG004A`, as NHA's published PMJAY bundles show. Match items by that code. The numbers in the handbook's response table (100005, 100478, 100063, 100012) are not item codes; in the published bundles they are questionnaire, document-requirement and question identifiers.
 
-### 4. Index entries by fullUrl
+### Index entries by fullUrl
 
 A response can carry more than one `Patient` or `Organization`. Index by `fullUrl`, not by resource type.
 
-### 5. Money
+### Money
 
 `allowedMoney` is the balance remaining and `usedMoney` the amount used, not the sum insured. There is one benefit per wallet; read them all.
 
-### 6. Build for the fuller form
+### Build for the fuller form
 
 `benefit[]` with `Procedure`, `Investigation` and `Stratification` types for benefits, and `authorizationSupporting[]` with the mandatory document codes for auth-requirements. Tolerate a leaner answer.
 
-### 7. Documents by stage
+### Documents by stage
 
 `authorizationSupporting[]` lists the documents the next request must carry. Its `text` names the stage: pre for the preauthorisation, post for the claim.
 
-### 8. The identifier is not a correlation key
+### The identifier is not a correlation key
 
 `CoverageEligibilityResponse.identifier` identifies the beneficiary at the hospital. Correlate on the protocol headers.
 
@@ -175,7 +175,7 @@ PMJAY uses a different bundle for this step, headed by `CoverageEligibilityReque
 | 11 | `Organization (pay)` | none declared; NRCeS [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Organization.html) |
 | 12 | `Organization (prov)` | none declared; NRCeS [Organization](https://nrces.in/ndhm/fhir/r4/StructureDefinition-Organization.html) |
 
-##### 8. CoverageEligibilityResponse
+##### CoverageEligibilityResponse
 
 NRCeS profile: [CoverageEligibilityResponse](https://nrces.in/ndhm/fhir/r4/StructureDefinition-CoverageEligibilityResponse.html).
 

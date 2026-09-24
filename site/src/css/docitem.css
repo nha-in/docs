@@ -116,6 +116,13 @@
   border-bottom: 1px solid var(--border);
 }
 
+/* The NHCX role the sidebar is filtered to, above the page actions. */
+.role-note {
+  margin: 0 0 0.75rem;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
 .page-actions {
   display: flex;
   align-items: center;

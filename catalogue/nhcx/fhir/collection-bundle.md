@@ -98,7 +98,7 @@ You build the bundle, seal it inside the [JWE](../glossary/jwe.md) payload of th
 
 | Profile | Canonical URL | Focal resource | Carried on |
 |---|---|---|---|
-| ClaimBundle | `https://nrces.in/ndhm/fhir/r4/StructureDefinition/ClaimBundle` | `Claim` | `/v1/preauth/submit`, `/v1/predetermination/submit`, `/v1/claim/submit` |
+| ClaimBundle | `https://nrces.in/ndhm/fhir/r4/StructureDefinition/ClaimBundle` | `Claim` | `/v1/preauth/submit`, `/v1/claim/submit` |
 | ClaimResponseBundle | `https://nrces.in/ndhm/fhir/r4/StructureDefinition/ClaimResponseBundle` | `ClaimResponse` | the matching `on_submit` paths |
 | CoverageEligibilityRequestBundle | `https://nrces.in/ndhm/fhir/r4/StructureDefinition/CoverageEligibilityRequestBundle` | `CoverageEligibilityRequest` | `/v1/coverageeligibility/check` |
 | CoverageEligibilityResponseBundle | `https://nrces.in/ndhm/fhir/r4/StructureDefinition/CoverageEligibilityResponseBundle` | `CoverageEligibilityResponse` | `/v1/coverageeligibility/on_check` |

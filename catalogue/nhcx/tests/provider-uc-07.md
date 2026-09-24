@@ -124,7 +124,6 @@ curl -X POST 'https://apisbx.abdm.gov.in/hcx/v1/preauth/submit' \
   -H 'Accept: application/json' \
   -H 'Content-Type: application/json' \
   -H 'bearer_auth: Bearer <ACCESS_TOKEN_FROM_GET_SESSION>' \
-  -H 'Authorization: Bearer <ACCESS_TOKEN_FROM_GET_SESSION>' \
   -d '{"payload": "<JWE_COMPACT_STRING>"}'
 ```
 
@@ -139,7 +138,6 @@ curl -X POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/dummyhcxpayer/process/requ
   -H 'Accept: application/json' \
   -H 'Content-Type: application/json' \
   -H 'bearer_auth: Bearer <ACCESS_TOKEN_FROM_GET_SESSION>' \
-  -H 'Authorization: Bearer <ACCESS_TOKEN_FROM_GET_SESSION>' \
   -d '{"action": "Approve", "method": "Preauth", "correlationId": "<CORRELATION_ID_OF_YOUR_REQUEST>"}'
 ```
 

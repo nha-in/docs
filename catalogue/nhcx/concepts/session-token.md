@@ -61,7 +61,7 @@ You get the token by sending your client ID and client secret to a session endpo
 
 ## Before you start
 
-You need a client ID and client secret from the ABDM [sandbox](../../shared/glossary/sandbox.md) registration. If your system already has credentials for ABDM [Milestone 1](../../shared/glossary/m1.md), the same credentials work for NHCX.
+You need a client ID and client secret from the ABDM [sandbox](../../shared/glossary/sandbox.md) registration. These are `ABDM_CLIENT_ID` and `ABDM_CLIENT_SECRET`. If your system already holds ABDM sandbox credentials, the same pair works for NHCX.
 
 ## What happens
 
@@ -84,7 +84,7 @@ graph LR
 - Call the session endpoint with your credentials. Which endpoint to call is covered in [choosing the session endpoint](../decisions/session-endpoint.md).
 - The token lasts 1200 seconds (20 minutes). The response states it as `expiresIn` or `expires_in`, depending on the endpoint.
 - Renew the token before it lapses, from a background task, so no request goes out with an expired token.
-- Send it as `Bearer <ACCESS_TOKEN_FROM_SESSION_CALL>`. Each endpoint atom names the request header that carries it.
+- Send it in the `bearer_auth` header as `Bearer <ACCESS_TOKEN_FROM_SESSION_CALL>`. Every NHCX call reads it from `bearer_auth`.
 
 ### Revocation
 

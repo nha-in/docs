@@ -73,7 +73,7 @@ related:
 
 This call returns the policies that payers have linked to a beneficiary. A hospital uses it to learn which [payer](../glossary/payer.md) or [TPA](../glossary/tpa.md) to address, and the member id and product to put in claim messages. Payers use it to confirm their own links.
 
-Get Policy is use case 2 of both the provider and the payer [sandbox exit](../glossary/sandbox-exit.md). Call this path. [`/V2/participant/get/policies`](v2-participant-get-policies.md) takes the same body.
+Get Policy is use case 2 of both the provider and the payer [sandbox exit](../glossary/sandbox-exit.md). Call this path. [`/v2/participant/get/policies`](v2-participant-get-policies.md) takes the same body.
 
 ## Before you start
 
