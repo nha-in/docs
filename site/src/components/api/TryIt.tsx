@@ -29,10 +29,14 @@ import {
   findToken,
   GENERATED_HEADERS,
   perRequestHeaders,
+  readCarried,
   readToken,
+  subscribeCarried,
   subscribeToken,
+  writeCarried,
   writeToken,
 } from './session';
+import {carriedValues, fillFrom} from './carry';
 
 // The V3 public certificate lives at this path under the M1 server. It is the
 // key that encrypts the identifiers in an M1 request body, and its response
@@ -365,6 +369,29 @@ export default function TryIt({operation}: {operation: Operation}) {
     setHeaders((current) => withFreshGenerated(current));
   }, []);
 
+  // A value an earlier step returned fills the field whose example names it:
+  // the txnId an OTP request hands the verify call, the X-token a login hands
+  // the profile calls. That step may have run on another page in this tab.
+  // Only empty fields are filled, so nothing the reader typed is replaced.
+  useEffect(() => {
+    const headerExamples = Object.fromEntries(operation.headers.map((h) => [h.name, h.example]));
+    const fill = (current: Record<string, string>, examples: Record<string, unknown>, carried: Record<string, string>) => {
+      let next = current;
+      for (const [name, example] of Object.entries(examples)) {
+        if (current[name]) continue;
+        const value = fillFrom(example, carried);
+        if (value !== undefined) next = {...next, [name]: value};
+      }
+      return next;
+    };
+    const apply = (carried: Record<string, string>) => {
+      setValues((current) => fill(current, ghosts, carried));
+      setHeaders((current) => fill(current, headerExamples, carried));
+    };
+    apply(readCarried());
+    return subscribeCarried(apply);
+  }, [ghosts, operation.headers]);
+
   // The operation's own security array is the only source of truth for
   // whether a bearer token belongs on this request. A token can be sitting
   // in the session store from an earlier panel; that does not make this
@@ -590,6 +617,12 @@ export default function TryIt({operation}: {operation: Operation}) {
       if (returned && returned !== token) {
         setToken(returned);
         writeToken(returned);
+      }
+      // And whatever it hands the next step: a txnId, an X-token.
+      try {
+        writeCarried(carriedValues(JSON.parse(text)));
+      } catch {
+        // Not JSON, so nothing to carry.
       }
 
       setResult({
