@@ -5,7 +5,7 @@ info:
     label: M4 Registry Integration
     position: 5
     icon: building-2
-  title: ABDM M4, professional and facility registries
+  title: ABDM M4, register facilities and professionals
   summary: Register healthcare professionals and facilities on the NHPR.
   version: abdm-v3
   license:

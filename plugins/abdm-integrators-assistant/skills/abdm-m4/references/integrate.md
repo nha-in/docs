@@ -1,4 +1,4 @@
-# Integrate M4, facility and professional registries
+# Integrate M4, register facilities and professionals
 
 The calls themselves: where they live, what they need in their headers, and one request written out in full.
 
