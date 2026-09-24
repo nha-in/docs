@@ -17,11 +17,13 @@ function agent(): SupportAgent | null {
  * the words the reader already typed, without knowing where the panel lives.
  *
  * Dispatch `window.dispatchEvent(new CustomEvent('abdm:ask-ai', {detail:
- * {page, title, question, send}}))` and the `<abdm-support-agent>` element in
+ * {page, title, question, send, snippet}}))` and the `<abdm-support-agent>` element in
  * the top bar opens, the same way its own chip opens it, by setting its `open`
  * attribute. `question` seeds the composer, and with `send` it is asked
  * outright. `page` hands the panel the page as Markdown, so their first
- * question is answered against what they are looking at.
+ * question is answered against what they are looking at. `snippet`, a
+ * `{title, markdown}` pair, hands it one part of the page instead: the
+ * request or response an endpoint page's Ask AI button sits on.
  *
  * The Markdown is the `index.md` a postbuild step writes beside every route
  * (see scripts/emit-page-markdown.mjs), which is also what Copy for LLM
@@ -42,7 +44,7 @@ export default function AskAiBridge(): null {
     const open = (event: Event) => {
       const el = agent();
       if (!el) return;
-      const {page, title, question, send} = (event as CustomEvent).detail ?? {};
+      const {page, title, question, send, snippet} = (event as CustomEvent).detail ?? {};
       // A caller that already has the reader's words hands them over, and the
       // panel seeds its composer with them. With `send`, the caller is saying
       // the reader has finished asking, and the panel answers rather than
@@ -51,6 +53,13 @@ export default function AskAiBridge(): null {
       if (question && send) el.setAttribute('send', '');
       else el.removeAttribute('send');
       el.setAttribute('open', '');
+      // One part of a page rather than all of it: an endpoint's request or
+      // response. The caller already holds the text, so nothing is fetched,
+      // and it attaches under `npm start` too.
+      if (snippet && el.attachPage) {
+        el.attachPage({title: snippet.title, url: window.location.href, markdown: snippet.markdown});
+        return;
+      }
       if (!page || !el.attachPage) return;
       const url = `${String(page).replace(/\/$/, '')}/index.md`;
       // The panel opens now and the page lands a moment later. Fetching

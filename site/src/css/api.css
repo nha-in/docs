@@ -32,14 +32,151 @@
 /* The request and the response share one view. A long request body used to
    fill the sticky column and push the response example below the fold, so
    each panel's code scrolls inside its own box instead. */
-.api-page__aside > .api-panel:first-child pre {
+/* Counted by type: the fold button sits before the two panels. */
+.api-page__aside > .api-panel:nth-of-type(1) pre {
   max-height: 42vh;
   overflow: auto;
 }
 
-.api-page__aside > .api-panel:nth-child(2) pre {
+.api-page__aside > .api-panel:nth-of-type(2) pre {
   max-height: 32vh;
   overflow: auto;
+}
+
+/* The Examples column, the request and response beside the reference. It
+   starts folded to one named button, so the reference has the width and
+   NHA's body tables do not scroll sideways; open, the name heads the column
+   with the fold control beside it, as the sidebar folds. Only where the
+   column sits beside the reference: below 1280px the panels stack under it,
+   always shown, and fold one at a time. */
+.api-aside__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: -0.5rem;
+}
+
+.api-aside__title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.api-aside__open {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color 150ms ease, background-color 150ms ease;
+}
+
+.api-aside__open:hover {
+  border-color: var(--border-strong);
+  background: var(--hover-soft);
+}
+
+.api-aside__open:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (min-width: 1280px) {
+  .api-page--wide {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1.5rem;
+  }
+
+  .api-page--wide .api-page__aside > .api-panel {
+    display: none;
+  }
+}
+
+@media (max-width: 1279px) {
+  .api-aside__head,
+  .api-aside__open {
+    display: none;
+  }
+}
+
+/* ---------- reference tabs ----------
+   Overview, Headers, Params, Body, Responses, as Postman lays out a request.
+   The page used to run every table and every response down one scroll; a
+   reader now opens the part they came for. The strip sticks under the site
+   chrome so switching never means scrolling back up. */
+
+.api-tabs {
+  margin-top: 1.75rem;
+  scroll-margin-top: var(--chrome-height);
+}
+
+.api-tabs__list {
+  position: sticky;
+  top: var(--chrome-height);
+  z-index: 2;
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-bottom: 1px solid var(--border);
+  background: var(--background);
+}
+
+.api-tabs__trigger {
+  flex: none;
+  margin-bottom: -1px;
+  padding: 0.625rem 0;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.api-tabs__trigger:hover {
+  color: var(--text);
+}
+
+.api-tabs__trigger[data-state='active'] {
+  border-bottom-color: var(--accent);
+  color: var(--text-heading);
+}
+
+.api-tabs__trigger:focus-visible,
+.api-tabs__panel:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.api-tabs__panel {
+  padding-top: 1.25rem;
+}
+
+.api-tabs__panel[data-state='inactive'] {
+  display: none;
+}
+
+/* A prose page lets a wide table bleed 2rem into its padding
+   (typography.css). Here the other side of that padding is the request
+   panel, so the table keeps to its column and scrolls. */
+.markdown .api-page .table-scroll {
+  --table-bleed: 0rem;
 }
 
 /* ---------- heading ---------- */
@@ -365,6 +502,51 @@
   border-bottom: 1px solid var(--border);
 }
 
+/* Request and Response beside the reference fold away to their header. A
+   folded panel has nothing under its header, so the rule goes too. */
+.api-panel[data-state='closed'] .api-panel__head {
+  border-bottom: 0;
+}
+
+.api-panel__toggle {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.api-panel__toggle:hover {
+  color: var(--text);
+}
+
+.api-panel__toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.api-panel__chevron {
+  transition: transform 150ms ease;
+}
+
+.api-panel[data-state='closed'] .api-panel__chevron {
+  transform: rotate(-90deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .api-panel__chevron {
+    transition: none;
+  }
+}
+
 .api-panel__label {
   flex: 1 1 auto;
   min-width: 0;
@@ -497,8 +679,10 @@
 .api-console {
   display: flex;
   flex-direction: column;
-  width: min(72rem, calc(100vw - 3rem));
-  height: min(46rem, calc(100vh - 5rem));
+  /* Nearly the whole window, as Razorpay's API playground opens: the form
+     and the request and response beside it all have room at once. */
+  width: min(96rem, calc(100vw - 4rem));
+  height: calc(100vh - 4rem);
   overflow: hidden;
   padding: 0;
   border-radius: var(--radius-panel);
@@ -1197,6 +1381,25 @@ label.api-console__ident {
   line-height: 1.25rem;
   padding-top: 0.3125rem;
   padding-bottom: 0.3125rem;
+}
+
+/* A row too narrow for the verb and a readable title beside it, deep in the
+   tree or in a narrow sidebar, puts the verb on its own line and gives the
+   title the whole row. Measured on the row itself, so a wide sidebar keeps
+   the verb beside the title. */
+.api-method {
+  container-type: inline-size;
+}
+
+@container (max-width: 11rem) {
+  .api-method > .menu__link {
+    flex-wrap: wrap;
+    row-gap: 0;
+  }
+
+  .api-method > .menu__link > * {
+    flex-basis: 100%;
+  }
 }
 
 .api-method > .menu__link::before,

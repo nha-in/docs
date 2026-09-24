@@ -67,7 +67,7 @@ question.
 
 | Route | Questions | One time passwords | Calls |
 |---|---|---|---|
-| Scan and share | 0 | 0 | 0 out, 2 in |
+| Scan and register | 0 | 0 | 1 out, 1 in |
 | Create, demographic authentication | 1 | 0 | 1 |
 | Create, fingerprint | 1 | 0 | 1 to 3 |
 | Create, face | 1 | 0 | 3 plus polling |
@@ -97,7 +97,7 @@ Every field the profile carries arrives filled, and the only screen asking for
 input is the one confirming the form.
 
 Count the one time passwords spent on a full registration. On the demographic
-route and on scan and share that count is zero.
+route and on scan and register that count is zero.
 
 ## When it goes wrong
 

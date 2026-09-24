@@ -116,14 +116,14 @@ be able to do for her, and one milestone that gives you it.
 Building the patient's app ([PHR](/docs/hiecm/v3/getting-started/glossary#phr))?
 Implement the applicable ABHA and PHR services to allow individuals to manage
 their ABHA details, discover and link health records, and manage consent for
-sharing health information. The work splits into three, and each part mirrors a
-milestone on the provider side.
+sharing health information. The work splits into four: the first three each
+mirror a milestone on the provider side, and the fourth keeps her records.
 
 <PatientJourney
   label="The PHR side, from the patient's app"
   steps={[
     {
-      eyebrow: 'PHR 1 · Identity and profile',
+      eyebrow: 'PHR 1 · Registration and login',
       title: 'Meera signs up and holds her own profile',
       story:
         'She registers with a mobile number or an existing ABHA number, logs in four different ways, and manages her card, her QR code and her family members.',
@@ -132,7 +132,7 @@ milestone on the provider side.
       icon: 'smartphone',
     },
     {
-      eyebrow: 'PHR 2 · Linking and records',
+      eyebrow: 'PHR 2 · Consents Management',
       title: 'She finds records she never linked',
       story:
         'She searches for the hospital she visited last year, sees what it holds, verifies by one time password, and pulls those care contexts onto her ABHA address.',
@@ -141,13 +141,22 @@ milestone on the provider side.
       icon: 'folder-plus',
     },
     {
-      eyebrow: 'PHR 3 · Consent and notifications',
+      eyebrow: 'PHR 3 · Subscription',
       title: 'She decides who sees what',
       story:
         'A clinic asks for her records. She reads the request, narrows it, grants or denies it, and revokes it later. Your app tells her each time.',
       cta: 'Build P3',
       to: '/docs/hiecm/v3/milestones/p3',
       icon: 'shield-check',
+    },
+    {
+      eyebrow: 'PHR 4 · Locker',
+      title: 'Her records stay with her',
+      story:
+        'Her health locker subscribes to her ABHA address. When a hospital links a new record, it asks her consent, fetches the record and keeps it for her.',
+      cta: 'Build P4',
+      to: '/docs/hiecm/v3/milestones/p4',
+      icon: 'lock',
     },
   ]}
 />
@@ -173,10 +182,10 @@ services offered.
 
 | Milestone | What you get | Who needs it |
 | --- | --- | --- |
-| [M1 Identity: ABHA Creation and Verification](/docs/hiecm/v3/milestones/m1) | Identity and the session token | Everyone |
-| [M2 Health Information Provider: Health Information Provider Services](/docs/hiecm/v3/milestones/m2) | Linking and sharing records | A facility publishing records, and a citizen pushing their own |
-| [M3 Health Information User: Health Information User Services](/docs/hiecm/v3/milestones/m3) | Consent and record fetching | Anyone reading records they did not create, and every PHR app |
-| [M4 Registry Integration: National Healthcare Providers Registry](/docs/hiecm/v3/milestones/m4) | A facility ID and professional registration | Anyone going live as a facility |
+| [M1 Identity: Create and verify ABHA](/docs/hiecm/v3/milestones/m1) | Identity and the session token | Everyone |
+| [M2 Health Information Provider: Create and link records](/docs/hiecm/v3/milestones/m2) | Linking and sharing records | A facility publishing records, and a citizen pushing their own |
+| [M3 Health Information User: Fetch data with consent](/docs/hiecm/v3/milestones/m3) | Consent and record fetching | Anyone reading records they did not create, and every PHR app |
+| [M4 Registry Integration: Register facilities and professionals](/docs/hiecm/v3/milestones/m4) | A facility ID and professional registration | Anyone going live as a facility |
 
 These pages give the steps, the order to build them in and the failure modes.
 Every request URL, header and body sits on the [API

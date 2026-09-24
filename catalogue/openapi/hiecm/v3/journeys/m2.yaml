@@ -23,6 +23,23 @@
     - op: m2_post_consent_v3_request_hip_on_notify
     - op: m2_post_data_flow_v3_health_information_hip_on_request
     - op: m2_post_data_flow_v3_health_information_notify
+      # The spec's only example for this call is the HIU's. As the HIP you
+      # send notifier HIP, sessionStatus TRANSFERRED and hiStatus DELIVERED.
+      body:
+        notification:
+          consentId: 18235d89-cb13-479d-ad71-7a57d5f669a8
+          transactionId: 18235d89-cb13-479d-ad71-7a57d5f669a8
+          doneAt: '2023-01-24T06:35:44.167Z'
+          notifier:
+            type: HIP
+            id: IN2810014366
+          statusNotification:
+            sessionStatus: TRANSFERRED
+            hipId: IN2810014366
+            statusResponses:
+            - careContextReference: 10004-20200001768-1
+              hiStatus: DELIVERED
+              description: Data sent successfully
 - id: m2-callbacks
   title: Callbacks
   steps:
@@ -35,4 +52,12 @@
     - op: m2_post_v3_hip_link_care_context_confirm
     - op: m2_post_v3_consent_request_hip_notify
     - op: m2_post_v3_hip_health_information_request
+    # The spec files this under webhooks because the HIU hosts it. The HIP
+    # makes the call, to the dataPushUrl in the health information request.
     - op: m2_post_health_information_transfer
+      title: Push the encrypted records to the HIU's data push URL
+      say: >-
+        Outbound from your bridge. POST each page of encrypted records to the
+        `dataPushUrl` in the health information request of step 9. The call goes
+        straight to the HIU, not through the gateway. The HIU answers 202 for
+        each page.

@@ -24,22 +24,22 @@ type Choice = {
 const CHOICES: Choice[] = [
   {
     slug: 'abdm-m1',
-    label: 'ABHA Creation and Verification (M1)',
+    label: 'Create and verify ABHA (M1)',
     note: 'The whole of M1: the calls, the loop that builds them, every error code and the tests.',
   },
   {
     slug: 'abdm-m2',
-    label: 'Health Information Provider Services (M2)',
+    label: 'Create and link records (M2)',
     note: 'The whole of M2: linking care contexts, discovery, and pushing records to a requester.',
   },
   {
     slug: 'abdm-m3',
-    label: 'Health Information User Services (M3)',
+    label: 'Fetch data with consent (M3)',
     note: 'The whole of M3: raising a consent request, reading the artefact, fetching what it covers.',
   },
   {
     slug: 'abdm-m4',
-    label: 'National Healthcare Providers Registry (M4)',
+    label: 'Register facilities and professionals (M4)',
     note: 'The HPR and the HFR: the operations NHA has published, the registration order and the identifier formats.',
   },
   {

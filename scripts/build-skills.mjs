@@ -186,7 +186,7 @@ const MODULES = [
   {
     id: 'm1',
     slug: 'abdm-m1',
-    title: 'M1, ABHA creation and verification',
+    title: 'M1, create and verify ABHA',
     docs: '/docs/hiecm/v3/api/m1',
     spec: 'hiecm-m1.yaml',
     example: 'Add ABHA creation by Aadhaar OTP to this codebase',
@@ -205,7 +205,7 @@ const MODULES = [
   {
     id: 'm2',
     slug: 'abdm-m2',
-    title: 'M2, health information provider services',
+    title: 'M2, create and link records',
     docs: '/docs/hiecm/v3/api/m2',
     spec: 'hiecm-m2.yaml',
     example: 'Link a care context for this patient',
@@ -214,15 +214,15 @@ const MODULES = [
     rules: [
       UNVERIFIED,
       'You act as the HIP.',
-      'M2 is keyed to an ABHA address, so a working M1 integration comes first.',
+      'Before M2, three things must hold: the facility is registered in the HFR with a valid HFR ID, that HIP ID is linked to your client ID (through the NHPR portal or the M4 software linkage APIs), and a callback URL is set for the client ID with the Update Bridge API.',
       'You are the side that encrypts, and the parameters arrive from the requester rather than from you. The health information request carries `keyMaterial` with `cryptoAlg`, `curve: Curve25519`, the requester\'s `dhPublicKey` and a `nonce`. Generate your own Curve25519 pair and your own nonce, and send your public key and nonce back with the data so the requester can derive the same secret.',
-      'The key derivation and the symmetric cipher applied over that shared secret are not yet published. Confirm both at onboarding before you ship, rather than inferring them from a sample.',
+      'The key derivation and the symmetric cipher applied over that shared secret are not in the specification. The data flow page (/docs/hiecm/v3/concepts/data-flow) and the Fidelius reference (shared.concept.fidelius-ecdh-interop) give the scheme: HKDF over the shared secret, and AES-GCM for the payload. Build from those, not from a sample.',
     ],
   },
   {
     id: 'm3',
     slug: 'abdm-m3',
-    title: 'M3, health information user services',
+    title: 'M3, fetch data with consent',
     docs: '/docs/hiecm/v3/api/m3',
     spec: 'hiecm-m3.yaml',
     example: 'Raise a consent request and fetch the records it covers',
@@ -238,7 +238,7 @@ const MODULES = [
   {
     id: 'm4',
     slug: 'abdm-m4',
-    title: 'M4, facility and professional registries',
+    title: 'M4, register facilities and professionals',
     docs: '/docs/hiecm/v3/api/m4',
     spec: 'hiecm-m4.yaml',
     example: 'Onboard this facility to the HFR and link its HIP bridge',
@@ -572,12 +572,12 @@ function sections(markdown) {
  */
 const CAPABILITIES = {
   m1: [
-    'Create an ABHA for somebody who has none: by Aadhaar, by mobile, by an identity document, by face or fingerprint, or under a parent for a child.',
+    'Create an ABHA for somebody who has none: by Aadhaar OTP, by demographic authentication, by face or fingerprint, or under a parent for a child.',
     'Log in somebody who already has one, by Aadhaar, mobile, ABHA number or ABHA address.',
     'Read their profile, which carries the whole registration form: names, date of birth, gender, mobile, address with its codes, and a photograph.',
     'Find an ABHA somebody has forgotten, and pick the right account when one mobile holds several.',
     'Show the ABHA card and QR code, and take a profile a patient shares by QR at your counter.',
-    'Update a profile, change a mobile, and upgrade a mobile made address to KYC verified.',
+    'Update a profile and change a mobile.',
   ],
   m2: [
     'Tell ABDM a patient had a visit with you, so their records can be found later.',

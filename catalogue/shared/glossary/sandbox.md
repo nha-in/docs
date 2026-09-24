@@ -24,7 +24,9 @@ related:
 
 NHA's test environment, and where every integration starts: you register
 on the sandbox portal, declare your role and the milestones you plan to
-complete, and receive a client id and client secret. Sandbox hosts
+complete, and wait for your request to be approved. Once it is, you
+sign in to the sandbox application, where your client id and client
+secret are issued. Sandbox hosts
 differ from production, and ABHA calls go to `abhasbx.abdm.gov.in` in
 sandbox. Everything in sandbox is
 test data; see [Get started](/docs/hiecm/v3/getting-started/sandbox).

@@ -22,9 +22,9 @@ related:
 
 ## In plain words
 
-The token that authorises your system to link a [care context](care-
-context.md) to a patient's [ABHA address](abha-address.md); your system
-obtains it when the patient registers and stores it against that
+The token that authorises your system to link a
+[care context](/docs/hiecm/v3/concepts/care-context) to a patient's
+[ABHA address](abha-address.md); your system obtains it when the patient registers and stores it against that
 patient. NHA's M2 document gives it a validity of six months and says to
 validate it before use. If you do not hold a valid one, regenerate it
 through demographic authentication before you link.
