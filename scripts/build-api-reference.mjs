@@ -243,8 +243,13 @@ function protectedHeaderFor(spec, op, file) {
   });
 }
 
+// A body NHA's M4 groups declare only as */*, which is the service's JSON
+// under a media type Springdoc leaves unset. Read it as JSON rather than
+// render the body as absent.
+const jsonMedia = (content) => content?.['application/json'] ?? content?.['*/*'];
+
 function firstExample(content) {
-  const media = content?.['application/json'];
+  const media = jsonMedia(content);
   if (!media) return undefined;
   if (media.example !== undefined) return media.example;
   const examples = Object.values(media.examples ?? {});
@@ -970,16 +975,16 @@ for (const {platform, version, files} of tree) {
         // never renders as prose alone.
         example:
           firstExample(response.content) ??
-          sampleFromSchema(response.content?.['application/json']?.schema),
+          sampleFromSchema(jsonMedia(response.content)?.schema),
         // True when the example above was built from the schema rather than
         // written in the specification, which is the only case the page says
         // its values are placeholders.
         synthesised:
           firstExample(response.content) === undefined &&
-          response.content?.['application/json']?.schema?.example === undefined &&
-          sampleFromSchema(response.content?.['application/json']?.schema) !== undefined,
+          jsonMedia(response.content)?.schema?.example === undefined &&
+          sampleFromSchema(jsonMedia(response.content)?.schema) !== undefined,
         // The response body's fields, as the request body's are listed.
-        fields: fields(response.content?.['application/json']?.schema).map(
+        fields: fields(jsonMedia(response.content)?.schema).map(
           ({encrypted, fixed, ...field}) => field,
         ),
         help: helpFor(status, module.dir, op.operationId),
@@ -1160,6 +1165,16 @@ for (const {platform, version, files} of tree) {
           stepped.curl = curlFor(stepped);
           stepped.samples = samplesFor(stepped);
         }
+        // A journey step may correct the spec for this side of the call: a
+        // title, and a request body where the spec's only example belongs to
+        // the other side. compile-skills.mjs reads the same step data.
+        if (step.title) stepped.title = step.title;
+        if (step.body) {
+          stepped.requestExample = step.body;
+          stepped.exampleName = undefined;
+          stepped.curl = curlFor(stepped);
+          stepped.samples = samplesFor(stepped);
+        }
         const dataName = stepDataName(step.op, journey.id, i);
         writeFileSync(join(dataDir, `${dataName}.json`), `${JSON.stringify(stepped, null, 2)}\n`);
         const dir = join(docsDir, module.dir, 'endpoints', journey.id);
@@ -1186,7 +1201,7 @@ for (const {platform, version, files} of tree) {
           "import ApiEndpoint from '@site/src/components/api/ApiEndpoint';",
           `import operation from '@site/src/data/api/${dataName}.json';`,
           '', '<ApiEndpoint operation={operation} />', '',
-          ...(entry.kind === 'callback' ? callbackOriginSection(step.op, module.file) : callbackSection(step.op, module.dir)),
+          ...(step.say ? ['## Where this fits', '', step.say, ''] : entry.kind === 'callback' ? callbackOriginSection(step.op, module.file) : callbackSection(step.op, module.dir)),
         ].join('\n'));
         items.push({type: 'doc', id: `${platform}/${version}/api/${module.dir}/endpoints/${journey.id}/${nn}-${slug(step.op)}`, label: title, className: `api-method api-method--${stepped.method.toLowerCase()}`});
         count += 1;
@@ -1272,6 +1287,60 @@ for (const {platform, version, files} of tree) {
     });
   }
 
+  // What each HIE-CM v3 module is for, above its endpoint count. The text is
+  // NHA's, from Sandbox Changes from WhatsApp.docx; a module without an entry
+  // shows its count and link alone.
+  const hiecmCopy = {
+    gateway: {
+      text: 'Gateway APIs facilitate secure communication between ABDM participants and support authentication, session management, routing, and certificate-based interactions within the ABDM ecosystem.',
+      list: 'Typical use cases',
+      items: ['Gateway registration and connectivity', 'Session establishment', 'Certificate management', 'Secure participant communication'],
+    },
+    m1: {
+      text: 'Milestone 1 APIs enable the creation, authentication, verification, and management of ABHA accounts.',
+      list: 'Key capabilities',
+      items: ['ABHA creation', 'ABHA authentication and login modes', 'ABHA profile management', 'ABHA-related services and operations'],
+    },
+    m2: {
+      text: 'Milestone 2 APIs are intended for Health Information Providers (HIPs) to participate in consent-based health information exchange.',
+      list: 'Key capabilities',
+      items: ['Health record linking', 'Care context management', 'Patient discovery and identification'],
+    },
+    m3: {
+      text: 'Milestone 3 APIs enable Health Information Users (HIUs) to request and access health information after obtaining citizen consent.',
+      list: 'Key capabilities',
+      items: ['Consent request management', 'Consent-based data access', 'Health information retrieval', 'Secure health data exchange'],
+    },
+    m4: {
+      text: 'Milestone 4 APIs support interaction with ABDM healthcare registries.',
+      list: 'Key components',
+      items: ['Health Professional Registry (HPR)', 'Health Facility Registry (HFR)', 'Registry search and verification', 'Healthcare professional onboarding', 'Healthcare facility registration and management'],
+    },
+    p1: {
+      text: 'Personal Health Record (PHR) APIs support applications that provide citizens with access to and control over their health information. P1 supports onboarding and authentication of users within ABDM-enabled PHR applications.',
+    },
+    p2: {
+      text: 'P2 supports management of citizen health accounts and digital health interactions.',
+      list: 'Key capabilities',
+      items: ['Profile management', 'Health record linking', 'Consent management', 'Patient information sharing', 'Account administration'],
+    },
+    p3: {
+      text: 'Subscription APIs enable healthcare applications and ecosystem participants to manage ABDM notification and subscription workflows.',
+      list: 'Key capabilities',
+      items: ['Subscription management', 'Event notifications', 'Consent-related updates', 'Status alerts and communication workflows'],
+    },
+    p4: {
+      text: 'Health Locker APIs enable secure storage and management of digital health documents in ABDM-compliant locker systems.',
+      list: 'Key capabilities',
+      items: ['Document storage', 'Document retrieval', 'Health record management', 'Secure document access'],
+    },
+    'scan-and-register': {
+      text: 'Scan and Register APIs support digital registration and patient onboarding experiences at healthcare facilities.',
+      list: 'Key capabilities',
+      items: ['QR code-based patient identification', 'Digital registration workflows', 'Patient data sharing with consent', 'Faster healthcare facility onboarding experiences'],
+    },
+  };
+
   // The overview index: one line per module, linking into the endpoints.
   const indexLines = [
     '---',
@@ -1285,17 +1354,41 @@ for (const {platform, version, files} of tree) {
     '',
     '# API references',
     '',
-    'Every endpoint below is generated from the specification that declares it. Each one has its own page with the headers, the body and a request you can send.',
-    '',
-    'This page lists every module, including any that the role you have chosen does not use. The sidebar shows only yours.',
-    '',
     ...(isHiecmV3
       ? [
-          'In M2 and M3 a call is acknowledged now and answered later. The answer arrives as a callback, a POST from ABDM to the URL you registered, declared in the specification as a webhook. Each callback is shown on the call it belongs to, and has a page of its own under that module.',
+          'The ABDM API Reference section provides comprehensive technical documentation for integrating with various ABDM building blocks and services. These APIs enable healthcare providers, health applications, technology partners, and other ecosystem participants to securely exchange health information and deliver ABDM-compliant digital health services.',
+          '',
+          'All APIs are designed in accordance with ABDM standards and support secure, consent-based, and interoperable health data exchange across the digital health ecosystem.',
+          '',
+          '## About the API documentation',
+          '',
+          'The API Reference provides:',
+          '',
+          ...[
+            'Detailed endpoint specifications',
+            'Request and response schemas',
+            'Authentication and authorization requirements',
+            'API workflows and integration patterns',
+            'Callback and webhook specifications',
+            'Error codes and handling guidelines',
+            'Sample requests and responses',
+            'Implementation and onboarding guidance',
+          ].map((item) => `- ${item}`),
+          '',
+          'Integrators should refer to the relevant API reference sections based on the ABDM services they intend to implement.',
+          '',
+          '## Core ABDM API modules',
           '',
         ]
-      : []),
+      : [
+          'Every endpoint below is generated from the specification that declares it. Each one has its own page with the headers, the body and a request you can send.',
+          '',
+          'This page lists every module, including any that the role you have chosen does not use. The sidebar shows only yours.',
+          '',
+        ]),
   ];
+  // Under the Core ABDM API modules heading, each module sits one level down.
+  const moduleHeading = isHiecmV3 ? '###' : '##';
 
   for (const module of modules) {
     const entry = sidebar.find(
@@ -1311,9 +1404,14 @@ for (const {platform, version, files} of tree) {
     indexLines.push(
       platform === 'nhcx' && overview
         ? `## [${module.label}](/docs/${platform}/${version}/api/${module.dir}/)`
-        : `## ${module.label}`,
+        : `${moduleHeading} ${module.label}`,
     );
     indexLines.push('');
+    const copy = isHiecmV3 && hiecmCopy[module.id];
+    if (copy) {
+      indexLines.push(copy.text, '');
+      if (copy.list) indexLines.push(`**${copy.list}**`, '', ...copy.items.map((item) => `- ${item}`), '');
+    }
     // A module with no journeys has no use cases to count or name.
     const flat = entry.groups.every((g) => g.flat);
     indexLines.push(
@@ -1334,6 +1432,12 @@ for (const {platform, version, files} of tree) {
         : `[Read the whole specification](${module.route})`,
     );
     indexLines.push('');
+  }
+  if (isHiecmV3) {
+    indexLines.push(
+      'This API Reference section serves as the central repository for all ABDM integration specifications, helping ecosystem participants build secure, interoperable, and standards-compliant digital health solutions.',
+      '',
+    );
   }
 
   // The callbacks no specification pairs with a call. They are named here

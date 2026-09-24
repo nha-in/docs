@@ -24,6 +24,7 @@ var RecordTypes = map[string]string{
 	"ImmunizationRecord":   "ImmunizationRecord",
 	"HealthDocumentRecord": "HealthDocumentRecord",
 	"WellnessRecord":       "WellnessRecord",
+	"Invoice":              "InvoiceRecord",
 }
 
 // IG is the loaded implementation guide package.

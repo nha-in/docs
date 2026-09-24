@@ -14,12 +14,18 @@ sources:
     status: documented-2026-09-16
     note: >
       The data transfer needs a key derivation and a symmetric cipher over the
-      shared secret, and neither is published, so the step cannot be completed
-      from the specification alone.
+      shared secret, and neither is in the specification, so the step cannot
+      be completed from the specification alone.
+  - file: site/docs/hiecm/v3/concepts/data-flow.md
+    status: reference
+    note: >
+      The published data flow page gives the scheme: ECDH on Curve25519,
+      HKDF for the session key, and AES-GCM for the payload.
 related:
   concepts:
     - hiecm.concept.m3-plural-artefacts-and-codes
     - hiecm.concept.m2-integrator-call-panel
+    - shared.concept.fidelius-ecdh-interop
 ---
 
 # Refuse to guess an undocumented step, and say so before the work starts
@@ -27,8 +33,12 @@ related:
 ## In plain words
 
 M3's data transfer needs a key derivation and a symmetric cipher over the shared
-secret. Neither is published. So the step cannot be completed from the
-specification, and no amount of care in the code around it changes that.
+secret. Neither is in the specification. The
+[data flow page](/docs/hiecm/v3/concepts/data-flow) and the
+[Fidelius reference](../../shared/concepts/fidelius-ecdh-interop.md) give the
+scheme: HKDF over the shared secret, and AES-GCM for the payload. Build the step
+from those. A desk that reads only the specification cannot complete it, and no
+amount of care in the code around it changes that.
 
 What matters is where the integrator finds out. A desk that discovers it cannot
 decrypt at the moment records arrive has discovered it in the worst place
@@ -42,9 +52,10 @@ records in hand and nothing to do with them.
 
 ## What happens
 
-Derive what is documented, then throw on the undocumented step with a message
-naming exactly what is missing. Not a generic failure. The name of the step, and
-what would have to be published for it to work.
+Build every step from what is documented. Where a step is documented nowhere,
+throw on it with a message naming exactly what is missing. Not a generic
+failure. The name of the step, and what would have to be published for it to
+work.
 
 Then report it in the readiness check up front, rather than at the moment the
 first encrypted bundle arrives.
@@ -60,17 +71,18 @@ because it looks like a decision somebody made deliberately.
 
 ## How you know it worked
 
-Open the readiness check before running anything. It names the data transfer
-step as unavailable, and says which part is unpublished.
+Open the readiness check before running anything. It names any step that is
+documented nowhere as unavailable, and says which part is missing.
 
-Run the flow anyway. It fails at the derivation step with a message naming that
-step, rather than at a later point with a decoding error.
+Run the flow anyway. Where a step is missing, it fails at that step with a
+message naming it, rather than at a later point with a decoding error.
 
 ## When it goes wrong
 
 - Records arrive and cannot be read, and the failure reads as a corrupt payload.
   The undocumented step failed quietly somewhere earlier.
-- A library appeared in the dependency list to solve the cipher. Whatever it
-  implements, it is not what ABDM specified, because ABDM has not specified one.
+- A library appeared in the dependency list to solve the cipher, chosen from a
+  sample rather than from the data flow page. Check it implements HKDF and
+  AES-GCM as that page gives them.
 - The readiness check is green and the capability does not work. The check is
   testing configuration rather than capability.

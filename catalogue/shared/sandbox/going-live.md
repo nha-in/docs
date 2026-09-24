@@ -6,9 +6,9 @@ milestone: n/a
 version: abdm-v3
 title: Going live, the sandbox exit process
 summary: >
-  What NHA's FAQ says about leaving the sandbox for production: the
-  demonstration, the functional testing and security audit, the exit
-  form, and what NHA does not publish about any of it.
+  How an integration leaves the sandbox for production: functional testing
+  and the security audit, the Health Tech Committee demonstration, then
+  production credentials.
 sources:
   - url: https://sandbox.abdm.gov.in/docs/integration_and_exit_process
     status: docs-only
@@ -25,6 +25,11 @@ sources:
       The Sandbox category, the question "What to do when my
       integration is completed? What are the next steps?", and the
       related questions on functional testing and security assessment.
+  - file: site/docs/hiecm/v3/getting-started/going-live.mdx
+    status: reference
+    note: >
+      The published Go live page: stages 4 to 6 of sandbox integration, no
+      per milestone submission. The body follows it.
 related:
   sandbox: [shared.sandbox.wasa]
   glossary: [shared.glossary.nha, shared.glossary.abha]
@@ -34,61 +39,50 @@ related:
 
 ## In plain words
 
-NHA certifies each milestone your role needs individually; this catalogue does not document how
-a milestone is submitted for certification. Being certified on every milestone you need is not
-the same as being live. Between the two sits an exit process [NHA](shared.glossary.nha) runs
-once, at the end, and it is separate from any one milestone's certification.
+Working in the sandbox is not the same as being live. Sandbox integration has six stages.
+Stages 1 to 3 get you access and build the milestones. Stages 4 to 6 take you to production,
+and you run them once, at the end.
+
+There is no per milestone submission. Stages 4 to 6 cover your whole integration.
 
 ## Before you start
 
-Have every milestone your role needs already certified. The
-[milestones page](/docs/hiecm/v3/milestones) has a row per entity you build for, a
-facility, an insurer or a citizen, and says which milestones each one needs. See
-[roles](hiecm.concept.roles) for which role that entity takes on a given call. NHA's FAQ
-describes the exit process as something you run after integration is complete, not milestone by
+Every milestone your integration needs works end to end. The
+[milestones page](/docs/hiecm/v3/milestones) says which ones apply to each entity you build
+for, a facility, an insurer or a citizen. See [roles](hiecm.concept.roles) for which role that
+entity takes on a given call. Start stage 4 once all of them are complete, not milestone by
 milestone.
-
-You also need the [Safe to Host certificate](wasa.md) NHA requires before production, which is
-its own separate audit.
 
 ## What happens
 
-NHA's FAQ describes the exit process in four steps, in this order, and links
-[NHA's own integration and exit process page](https://sandbox.abdm.gov.in/docs/integration_and_exit_process)
-as the fuller source:
+1. **Stage 4: functional testing and the security audit.** Before testing, you demonstrate
+   the [ABDM](shared.glossary.abdm) functionality you built to the integration team.
+   Empanelled agencies then run both exercises. Functional testing produces a report and a
+   certificate. The security audit produces the [Safe to Host certificate](wasa.md), and the
+   [WASA](wasa.md) atom covers it in detail. You then upload the exit form on the sandbox with
+   four things: the functional testing report and certificate, the security audit report, a
+   signed undertaking, and any other supporting document the integration team requests.
+2. **Stage 5: the Health Tech Committee demonstration.** You present the integrated solution
+   to the Health Tech Committee (HTC) and obtain approval for production access. The committee
+   records its decision in four review stages, each with its own reviewer and date, so the
+   outcome arrives as a sequence rather than a single answer.
+3. **Stage 6: go live.** You move the approved integration to production. Production
+   credentials are issued once the committee approves.
 
-1. **Demonstration.** NHA's FAQ says you demonstrate the [ABDM](shared.glossary.abdm)
-   functionalities you built to the ABDM integration team.
-2. **Functional testing and security audit.** NHA's FAQ says these run after the demonstration,
-   done by NHA-empanelled agencies. The [WASA](wasa.md) atom covers the security audit in
-   detail.
-3. **Exit form submission.** NHA's FAQ names the documents you upload with the exit form on the
-   sandbox: the functional testing report and certificate, the security audit report, a signed
-   undertaking document, and any other supporting document NHA asks for.
-4. **A second demonstration.** NHA's FAQ says that once the earlier steps are complete, the
-   ABDM team schedules a demo for the Health Tech Committee (HTC). This is a different
-   demonstration from step 1, to a different audience. The committee's decision is recorded
-   in four review stages, each with its own reviewer, comment and date.
-
-NHA's FAQ does not say how long any of these four steps take, individually or together.
-NHA's documents do not say what the functional testing report or the undertaking document have
-to contain beyond their names, so treat the exact evidence format as something to confirm with
-NHA rather than something published.
+Confirm the format of the functional testing report and the undertaking with the integration
+team before you assemble them.
 
 ## How you know it worked
 
-You hold production credentials: a production client id and client secret, issued after the
-exit process completes. They are not the same values as your sandbox credentials.
+You hold production credentials: a production client id and client secret. They are not the
+same values as your sandbox credentials.
 
-You also switch base URLs. The [gateway concept page](/docs/hiecm/v3/concepts/gateway) records
-the sandbox and production hosts side by side. For the gateway session call, sandbox is
-`https://dev.abdm.gov.in` with `X-CM-ID: sbx`, and production is `https://apis.abdm.gov.in`.
-For the [ABHA](shared.glossary.abha) service, sandbox is
-`https://abhasbx.abdm.gov.in/abha/api/v3/`. A production client id against a sandbox host, or the
-reverse, fails.
+You also switch base URLs. For the gateway session call, sandbox is `https://dev.abdm.gov.in`
+with `X-CM-ID: sbx`, and production is `https://apis.abdm.gov.in`. For the
+[ABHA](shared.glossary.abha) service, sandbox is `https://abhasbx.abdm.gov.in/abha/api/v3/`. A
+production client id against a sandbox host, or the reverse, fails.
 
-NHA's FAQ does not publish what a production client id or secret looks like, so this atom does
-not describe their shape beyond that they differ from sandbox values.
+A call that worked in the sandbox returns the same result against the production host.
 
 ## When it goes wrong
 

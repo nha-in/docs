@@ -28,7 +28,7 @@ request to the [HIP](hip.md) with verified identifiers (ABHA address,
 mobile number, name, gender, year of birth) and any unverified
 identifier the patient typed, such as a hospital patient ID. Your system
 matches those against your own patients and replies with a list of [care
-contexts](care-context.md), carrying no clinical detail.
+contexts](/docs/hiecm/v3/concepts/care-context), carrying no clinical detail.
 
 ## Before you start
 

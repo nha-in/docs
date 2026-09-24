@@ -1,4 +1,4 @@
-# Design M3, health information user services
+# Design M3, fetch data with consent
 
 What the integration has to do to the journey around the calls: how many questions a patient is asked, where a failure is shown, and what a screen is forbidden to claim. Every rule below comes from a Catalogue atom, cited at the end.
 
@@ -9,7 +9,8 @@ What the integration has to do to the journey around the calls: how many questio
 Two habits cause most of the avoidable failures on the consent side, and both
 are about reading what came back rather than what you expected.
 
-A consent request produces more than one artefact. Taking the first element is
+A consent request produces one artefact per HIP, so a request that spans
+facilities returns several. Taking the first element is
 the bug that silently drops half a fetch.
 
 And the same error code means different things in different modules, so a code
@@ -38,7 +39,7 @@ it is worth confirming on your own data before building on it.
 
 ### How you know it worked
 
-Raise a consent covering more than one care context. The number of artefacts you
+Raise a consent covering care contexts at two HIPs. The number of artefacts you
 hold matches the number ABDM returned, and a fetch runs for each one.
 
 Trigger a refusal. The screen shows ABDM's own message text alongside the code,
@@ -58,8 +59,12 @@ and no wording of your own has replaced it.
 ### In plain words
 
 M3's data transfer needs a key derivation and a symmetric cipher over the shared
-secret. Neither is published. So the step cannot be completed from the
-specification, and no amount of care in the code around it changes that.
+secret. Neither is in the specification. The
+[data flow page](/docs/hiecm/v3/concepts/data-flow) and the
+Fidelius reference give the
+scheme: HKDF over the shared secret, and AES-GCM for the payload. Build the step
+from those. A desk that reads only the specification cannot complete it, and no
+amount of care in the code around it changes that.
 
 What matters is where the integrator finds out. A desk that discovers it cannot
 decrypt at the moment records arrive has discovered it in the worst place
@@ -68,9 +73,10 @@ records in hand and nothing to do with them.
 
 ### What happens
 
-Derive what is documented, then throw on the undocumented step with a message
-naming exactly what is missing. Not a generic failure. The name of the step, and
-what would have to be published for it to work.
+Build every step from what is documented. Where a step is documented nowhere,
+throw on it with a message naming exactly what is missing. Not a generic
+failure. The name of the step, and what would have to be published for it to
+work.
 
 Then report it in the readiness check up front, rather than at the moment the
 first encrypted bundle arrives.
@@ -86,18 +92,19 @@ because it looks like a decision somebody made deliberately.
 
 ### How you know it worked
 
-Open the readiness check before running anything. It names the data transfer
-step as unavailable, and says which part is unpublished.
+Open the readiness check before running anything. It names any step that is
+documented nowhere as unavailable, and says which part is missing.
 
-Run the flow anyway. It fails at the derivation step with a message naming that
-step, rather than at a later point with a decoding error.
+Run the flow anyway. Where a step is missing, it fails at that step with a
+message naming it, rather than at a later point with a decoding error.
 
 ### When it goes wrong
 
 - Records arrive and cannot be read, and the failure reads as a corrupt payload.
   The undocumented step failed quietly somewhere earlier.
-- A library appeared in the dependency list to solve the cipher. Whatever it
-  implements, it is not what ABDM specified, because ABDM has not specified one.
+- A library appeared in the dependency list to solve the cipher, chosen from a
+  sample rather than from the data flow page. Check it implements HKDF and
+  AES-GCM as that page gives them.
 - The readiness check is green and the capability does not work. The check is
   testing configuration rather than capability.
 
