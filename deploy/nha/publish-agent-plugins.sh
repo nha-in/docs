@@ -35,7 +35,7 @@ if ! git -C "$dir" rev-parse --verify --quiet HEAD >/dev/null; then
   git -C "$dir" symbolic-ref HEAD refs/heads/main
 fi
 
-node "$repo/scripts/publish-agent-plugins.mjs" "$dir" >/dev/null
+node "$repo/scripts/publish-agent-plugins.mjs" "$dir" | sed "s/^/    /"
 
 git -C "$dir" add -A
 if git -C "$dir" diff --cached --quiet; then
