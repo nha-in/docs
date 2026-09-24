@@ -19,8 +19,8 @@ Every skill takes its NHCX facts from one knowledge source: the nhcx-docs MCP
 server when it is connected, otherwise the release of the NHCX package at
 github.com/nha-in/nhcx-package.
 
-Install all seven with `claude plugin install nhcx@nha`, after
-`claude plugin marketplace add nha-in/agent-plugins`, or one at a time from the
+Install all seven with `claude plugin install nhcx@abdm-portal`, after
+`claude plugin marketplace add` for this repository, or one at a time from the
 site. The site build copies each folder to `/skills/<name>/` and packs it as
 `/skills/<name>.tar.gz`, which the site's install commands unpack.
 
