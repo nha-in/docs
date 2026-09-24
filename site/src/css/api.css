@@ -1315,6 +1315,25 @@ label.api-console__ident {
   padding-bottom: 0.3125rem;
 }
 
+/* A row too narrow for the verb and a readable title beside it, deep in the
+   tree or in a narrow sidebar, puts the verb on its own line and gives the
+   title the whole row. Measured on the row itself, so a wide sidebar keeps
+   the verb beside the title. */
+.api-method {
+  container-type: inline-size;
+}
+
+@container (max-width: 11rem) {
+  .api-method > .menu__link {
+    flex-wrap: wrap;
+    row-gap: 0;
+  }
+
+  .api-method > .menu__link > * {
+    flex-basis: 100%;
+  }
+}
+
 .api-method > .menu__link::before,
 .menu__link.api-method::before {
   content: 'GET';
