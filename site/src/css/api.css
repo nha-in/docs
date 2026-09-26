@@ -783,7 +783,6 @@
 }
 
 .api-console__head {
-  position: relative;
   display: flex;
   flex: 0 0 auto;
   align-items: center;
@@ -792,44 +791,6 @@
   border-bottom: 1px solid var(--border);
 }
 
-/* The request in flight, drawn over the header's bottom border. While the call
-   is out it eases most of the way across and waits there; when the response
-   lands it runs to the end and fades, so a fast call still reads as done. */
-.api-console__progress {
-  position: absolute;
-  left: 0;
-  bottom: -1px;
-  width: 100%;
-  height: 2px;
-  background: var(--progress, var(--accent));
-  opacity: 0;
-  pointer-events: none;
-  transition: width 200ms ease-out, opacity 400ms ease 200ms;
-}
-
-.api-console__progress--running {
-  opacity: 1;
-  transition: none;
-  animation: api-console-progress 2.4s cubic-bezier(0.1, 0.6, 0.3, 1) forwards;
-}
-
-@keyframes api-console-progress {
-  from { width: 0; }
-  to   { width: 85%; }
-}
-
-.api-console__progress--get    { --progress: var(--method-get); }
-.api-console__progress--post   { --progress: var(--method-post); }
-.api-console__progress--put    { --progress: var(--method-put); }
-.api-console__progress--patch  { --progress: var(--method-patch); }
-.api-console__progress--delete { --progress: var(--method-delete); }
-
-@media (prefers-reduced-motion: reduce) {
-  .api-console__progress--running {
-    width: 100%;
-    animation: none;
-  }
-}
 
 .api-console__title {
   flex: 0 0 auto;
@@ -857,6 +818,55 @@
   overflow-x: auto;
   white-space: nowrap;
   scrollbar-width: none;
+}
+
+/* The request in flight: the bar fills from the left in the method's colour.
+   While the call is out it eases most of the way across and waits there; when
+   the response lands it runs to the end and fades, so a fast call still reads
+   as done. Drawn under the URL, which stays on top of it. */
+.api-console__url {
+  position: relative;
+  isolation: isolate;
+}
+
+.api-console__url > * {
+  position: relative;
+}
+
+.api-console__url::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  z-index: -1;
+  width: 100%;
+  background: color-mix(in srgb, var(--progress, var(--accent)) 24%, transparent);
+  opacity: 0;
+  pointer-events: none;
+  transition: width 200ms ease-out, opacity 400ms ease 200ms;
+}
+
+.api-console__url--running::before {
+  opacity: 1;
+  transition: none;
+  animation: api-console-progress 2.4s cubic-bezier(0.1, 0.6, 0.3, 1) forwards;
+}
+
+@keyframes api-console-progress {
+  from { width: 0; }
+  to   { width: 85%; }
+}
+
+.api-console__url--get    { --progress: var(--method-get); }
+.api-console__url--post   { --progress: var(--method-post); }
+.api-console__url--put    { --progress: var(--method-put); }
+.api-console__url--patch  { --progress: var(--method-patch); }
+.api-console__url--delete { --progress: var(--method-delete); }
+
+@media (prefers-reduced-motion: reduce) {
+  .api-console__url--running::before {
+    width: 100%;
+    animation: none;
+  }
 }
 
 .api-console__url::-webkit-scrollbar {

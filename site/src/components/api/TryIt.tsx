@@ -667,21 +667,17 @@ export default function TryIt({operation}: {operation: Operation}) {
       onSubmit={send}
       aria-busy={result.state === 'sending'}>
       <header className="api-console__head">
-        {/* The call in flight, along the header's bottom edge in the method's
-            own colour: it runs most of the way while the request is out and
-            finishes when the response lands. */}
-        <span
-          aria-hidden="true"
-          className={`api-console__progress api-console__progress--${operation.method.toLowerCase()}${
-            result.state === 'sending' ? ' api-console__progress--running' : ''
-          }`}
-        />
         <span className={`api-chip api-chip--${operation.method.toLowerCase()}`}>
           {operation.method}
         </span>
         <DialogTitle className="api-console__title">{operation.title || operation.summary}</DialogTitle>
 
-        <code className="api-console__url">
+        {/* The address bar fills in the method's colour while the call is
+            out, most of the way, and finishes when the response lands. */}
+        <code
+          className={`api-console__url api-console__url--${operation.method.toLowerCase()}${
+            result.state === 'sending' ? ' api-console__url--running' : ''
+          }`}>
           {environment ? (
             <TooltipProvider>
               <Tooltip>
