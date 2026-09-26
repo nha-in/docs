@@ -5,7 +5,7 @@ description: The internal support agent that answers integrator questions strict
 
 # Support Agent
 
-A Slack or Claude-based agent for whichever team fields integrator questions, connected to the operator's own Docs MCP server's public `/mcp` endpoint. Any operator running this Catalogue can point the agent at their own deployment; nothing here names a specific company or team. It does not live in any Scalar surface: there is no on-site assistant in V1, and this agent is not it.
+A Slack or Claude-based agent for whichever team fields integrator questions, connected to the operator's own Docs MCP server's public `/mcp` endpoint. Any operator running this Catalogue can point the agent at their own deployment; nothing here names a specific company or team. It does not live on the docs site: there is no on-site assistant in V1, and this agent is not it.
 
 Its value is not that it answers quickly. It is that it answers **only from the Catalogue**, and that every question it cannot answer becomes a gap we can see.
 

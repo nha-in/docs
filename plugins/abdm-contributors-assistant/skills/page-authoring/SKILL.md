@@ -205,5 +205,5 @@ Pages carrying `generated: true` in frontmatter come from `scripts/build-api-ref
 - The icon the page shows in the sidebar: `sidebar-icons`
 - Voice, which outranks every rule here: `nha-voice`
 - Site structure, tabs and the module page ladder: `docs-ux`
-- The Scalar docs site and its build: `scalar-docs`
+- The docs site, its generated API reference and its build: `scalar-docs`
 - Catalogue atoms, a different kind of file: `atom-authoring`

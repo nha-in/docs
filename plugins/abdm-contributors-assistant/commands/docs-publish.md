@@ -1,5 +1,5 @@
 ---
-description: Generate navigation, preview and publish the Scalar documentation site for the ABDM Catalogue.
+description: Generate navigation, preview and publish the documentation site for the ABDM Catalogue.
 argument-hint: '[--preview|--nav-only|--check]'
 ---
 

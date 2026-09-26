@@ -1,9 +1,9 @@
 ---
 name: portal-architecture
 description: 'The architecture of the ABDM Developer Portal: the four building blocks, how the Catalogue compiles into docs, skills and MCP surfaces, the seven binding principles, the atom model, and what is deliberately excluded from V1. Use whenever someone asks how the portal fits together, why a design decision was made, whether something belongs in V1, where a new capability should live, or proposes a change to the structure. Also use before designing any new component so it lands in the right layer instead of beside it.'
-plan_version: 2026.09.23
+plan_version: 2026.09.26
 plan_source: abdm-v1-phase1-architecture-and-plan.md
-plan_hash: sha256:0900f96d7600aff9a92db957d6104e5a313ef59d171adea8bb1ad85236b4fee5
+plan_hash: sha256:857014992d8ab82910a27c11e51a890b55b6c4c9087990e6baf57f783033a2b7
 compiled_from_plan: true
 ---
 
@@ -11,7 +11,7 @@ compiled_from_plan: true
 
 ## The one-paragraph version
 
-One knowledge Catalogue of India's health gateways, scoped in phases: HIE-CM carries specifications and generated reference pages for the gateway, M1 to M4, P1 to P4, subscriptions and Scan and Pay, UHI and NHCX carry pages, and the atoms written so far are shared ones that belong to no single gateway. Every gateway is open to atoms; which ones have them is a question of what the schedule reached. It is written so a first-day developer can follow it and structured so a machine can compile it. A self-hosted Docusaurus site with Scalar's open source reference component renders the human side; our own Go MCP server with hybrid retrieval serves the machine side. A build pipeline compiles the same Catalogue into agent skills, a plugin, an index and the MCP's snapshot, and re-runs whenever NHA changes something. Everything is FOSS, self-hosted, and runs without Eka.
+One knowledge Catalogue of India's health gateways, scoped in phases: HIE-CM carries specifications and generated reference pages for the gateway, M1 to M4, P1 to P4, subscriptions and Scan and Pay, UHI and NHCX carry pages, and the atoms written so far are shared ones that belong to no single gateway. Every gateway is open to atoms; which ones have them is a question of what the schedule reached. It is written so a first-day developer can follow it and structured so a machine can compile it. A self-hosted Docusaurus site renders the human side, with an API reference it generates from the OpenAPI files itself, one page per endpoint; our own Go MCP server with hybrid retrieval serves the machine side. A build pipeline compiles the same Catalogue into agent skills, a plugin, an index and the MCP's snapshot, and re-runs whenever NHA changes something. Everything is FOSS, self-hosted, and runs without Eka.
 
 ## The four building blocks
 
@@ -22,7 +22,7 @@ One is the source. Three are renderings of it.
    typed atoms + HIE-CM OpenAPI, one file per module
    callbacks as OpenAPI 3.1 webhooks inside the module file
         |
-        +--> 04 Docs site         -> Docusaurus + self-hosted Scalar references
+        +--> 04 Docs site         -> Docusaurus + generated API reference, self-hosted
         +--> 02 Docs MCP server   -> coding agents, internal support agent
         +--> 03 Skills + plugin   -> coding agent in the integrator's repo
                 + generated index
@@ -35,7 +35,7 @@ The design is that NHA sources are watched daily and feed the Catalogue through 
 | 01 Catalogue | NHA's HIE-CM M1 to M3 endpoints as atoms | Nothing downstream is hand-maintained. `scripts/validate-skills.mjs` fails CI on a cited atom id the Catalogue does not define, or a curl target recorded on no atom. Error codes are not checked. |
 | 02 MCP | Our own Go Docs MCP server: nine read tools over one indexed snapshot of the Catalogue, hybrid keyword plus semantic retrieval | Retrieval only. Nothing executes against NHA. Every response carries the catalogue version. |
 | 03 Skills | Compiled, never written. Index, per-milestone build, test and debug skills, one bundle | The compiler may reword. It may not add facts. |
-| 04 Docs | Docusaurus site with self-hosted Scalar API references, structured after developer.eka.care flow pages | No status banner exists, and no atom carries a status to render. A page that needs the warning says it in its own prose, which is held by review. Do not tell anyone the site will flag a page for them. |
+| 04 Docs | Docusaurus site with an API reference generated from the specifications at build time, one page per endpoint, structured after developer.eka.care flow pages | No status banner exists, and no atom carries a status to render. A page that needs the warning says it in its own prose, which is held by review. Do not tell anyone the site will flag a page for them. |
 
 ## The seven principles and their enforcement
 
@@ -48,7 +48,7 @@ A principle without an enforcement mechanism is a wish. Each of these has one.
 | P3 | No em dashes, write like a person | A CI rule blocks U+2014. The writing guide is in the repo and in the compiler prompt. |
 | P4 | Human and machine readable from one source | Typed atoms: frontmatter is the machine half, body is the human half, structured blocks are fenced with a declared schema. |
 | P5 | Fool, idiot and dummy proof | Five mandatory sections per atom or CI rejects it. The first-day developer test is in the definition of done. |
-| P6 | FOSS, replicable, no Eka dependency, no vendor cloud | Catalogue in a public git repo under a neutral licence, copyright NHA. Everything self-hosted from day one: Docusaurus with the MIT Scalar packages vendored, no CDN, no Scalar cloud services, telemetry off, our own Go MCP server, embeddings from a self-hosted Ollama sidecar. The handover unit is one compose file. No `eka.care` URL anywhere in the core Catalogue. Eka content lives in a separate overlay repo. |
+| P6 | FOSS, replicable, no Eka dependency, no vendor cloud | Catalogue in a public git repo under a neutral licence, copyright NHA. Everything self-hosted from day one: Docusaurus with every browser asset bundled at build time, no CDN, no hosted services, telemetry off, our own Go MCP server, embeddings from a self-hosted Ollama sidecar. The handover unit is one compose file. No `eka.care` URL anywhere in the core Catalogue. Eka content lives in a separate overlay repo. |
 | P7 | Update once, everything moves | Designed, not built. `scripts/check-source-freshness.mjs` runs in CI and fails on a changed raw hash, which is the detection half. The watcher, the hash store and the pull request bot do not exist yet, so nothing opens a pull request today. |
 
 When someone proposes something that breaks a principle, name the principle and the enforcement, not just the objection.
