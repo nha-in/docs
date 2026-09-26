@@ -1,4 +1,5 @@
-import {readFileSync, readdirSync, writeFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {existsSync, readFileSync, readdirSync, writeFileSync} from 'node:fs';
 import {join, relative, sep} from 'node:path';
 import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
@@ -25,6 +26,17 @@ function tailwindPlugin() {
 // absolute paths, so they must carry the base path when the site is
 // served under one, e.g. GitHub Pages at /abdm-docs/.
 const siteBase = process.env.DOCUSAURUS_BASE_URL ?? '/';
+
+// The widget script keeps one name across builds, and the CDN caches every
+// file that is not a page for a year as immutable (deploy/nha/deploy.sh). A
+// phone that once loaded it kept that copy and never saw a newer panel. The
+// pages revalidate, so a hash of the build in the URL they carry is what moves
+// a reader onto the new script. The prestart and prebuild steps write the
+// file before this config is read.
+const widgetFile = join(__dirname, 'static/agent/abdm-support-agent.js');
+const widgetVersion = existsSync(widgetFile)
+  ? `?v=${createHash('sha256').update(readFileSync(widgetFile)).digest('hex').slice(0, 12)}`
+  : '';
 
 // One interactive reference per specification file, discovered from the
 // catalogue tree: dropping a YAML under catalogue/openapi/<platform>/<version>
@@ -340,7 +352,7 @@ const config: Config = {
   // reloads them when a client side link lands on one.
   clientModules: [require.resolve('./src/clientModules/reference-reload.ts')],
   scripts: [
-    {src: `${siteBase}agent/abdm-support-agent.js`, defer: true},
+    {src: `${siteBase}agent/abdm-support-agent.js${widgetVersion}`, defer: true},
   ],
 
   headTags: [
