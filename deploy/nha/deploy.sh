@@ -58,9 +58,18 @@ echo "==> site: building for $site_url"
 # so every file a page references is in the bucket before the page is; pages and the spec
 # files fetched at runtime must revalidate, which is what makes a deploy visible without an
 # invalidation (the distribution is in another account).
+#
+# Only assets/ is fingerprinted: Docusaurus names those files after their contents. What
+# comes from site/static (the Ask AI widget, its vendor readers, images, skills) keeps one
+# name across builds, and a year as immutable left phones on an old widget. Those
+# revalidate instead, which costs a 304 when nothing changed.
 aws s3 sync "$repo/site/build/" "s3://$SITE_BUCKET/main/" --delete --only-show-errors \
-  --exclude "*.html" --exclude "*.xml" --exclude "*.yaml" --exclude "*.json" --exclude "*.txt" --exclude "*.md" \
+  --exclude "*" --include "assets/*" \
   --cache-control "public,max-age=31536000,immutable"
+aws s3 sync "$repo/site/build/" "s3://$SITE_BUCKET/main/" --delete --only-show-errors \
+  --exclude "assets/*" \
+  --exclude "*.html" --exclude "*.xml" --exclude "*.yaml" --exclude "*.json" --exclude "*.txt" --exclude "*.md" \
+  --cache-control "public,max-age=0,must-revalidate"
 aws s3 sync "$repo/site/build/" "s3://$SITE_BUCKET/main/" --delete --only-show-errors \
   --exclude "*" --include "*.html" --include "*.xml" --include "*.yaml" --include "*.json" --include "*.txt" \
   --cache-control "public,max-age=0,must-revalidate"
