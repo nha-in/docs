@@ -1,0 +1,171 @@
+{
+  "info": {
+    "name": "ABDM HIE-CM Scan and Register",
+    "description": "Generated from the ABDM HIE-CM specifications. Import hiecm-sandbox.postman_environment.json beside it and fill in clientId and clientSecret: the collection fetches a gateway session token before a call when it needs one.\n\nFolders follow the order a journey is built in. Send the steps in order: each response keeps the txnId and the X-token it returns as collection variables, and the steps after it read them. Callbacks are not included: ABDM sends those to your bridge URL, so receiving them needs a public endpoint, not Postman.\n\nValues ABDM expects encrypted, such as an Aadhaar number or an OTP, are shown as the specification gives them. Encrypt your own values before sending.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Gets a gateway session token when there is none or it has expired.",
+          "(function () {",
+          "if (pm.request.url.getPath().endsWith('/api/hiecm/gateway/v3/sessions')) return;",
+          "const expiry = Number(pm.environment.get('accessTokenExpiry') || 0);",
+          "if (pm.environment.get('accessToken') && Date.now() < expiry) return;",
+          "pm.sendRequest({",
+          "  url: pm.variables.replaceIn('{{gatewayUrl}}/api/hiecm/gateway/v3/sessions'),",
+          "  method: 'POST',",
+          "  header: {",
+          "    'Content-Type': 'application/json',",
+          "    'REQUEST-ID': pm.variables.replaceIn('{{$guid}}'),",
+          "    'TIMESTAMP': new Date().toISOString(),",
+          "    'X-CM-ID': pm.variables.replaceIn('{{cmId}}'),",
+          "  },",
+          "  body: {",
+          "    mode: 'raw',",
+          "    raw: JSON.stringify({",
+          "      clientId: pm.variables.get('clientId'),",
+          "      clientSecret: pm.variables.get('clientSecret'),",
+          "      grantType: 'client_credentials',",
+          "    }),",
+          "  },",
+          "}, (error, response) => {",
+          "  if (error || response.code >= 300) {",
+          "    console.error('Session token request failed', error || response.text());",
+          "    return;",
+          "  }",
+          "  const {accessToken, expiresIn} = response.json();",
+          "  pm.environment.set('accessToken', accessToken);",
+          "  // A minute early, so a token never expires between this check and the call.",
+          "  pm.environment.set('accessTokenExpiry', Date.now() + (expiresIn - 60) * 1000);",
+          "});",
+          "})();"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Keeps what this response hands to the calls after it, such as the txnId an",
+          "// OTP request returns and the X-token a login returns, as collection variables.",
+          "(function () {",
+          "let body;",
+          "try { body = pm.response.json(); } catch (error) { return; }",
+          "function carriedValues(body) {",
+          "  const list = Array.isArray(body);",
+          "  const first = list ? body[0] : body;",
+          "  if (!first || typeof first !== \"object\") return {};",
+          "  const read = (path) => {",
+          "    let at = first;",
+          "    for (const key of path.split(\".\")) {",
+          "      if (!at || typeof at !== \"object\") return void 0;",
+          "      at = at[key];",
+          "    }",
+          "    return typeof at === \"string\" && at ? at : void 0;",
+          "  };",
+          "  const out = {};",
+          "  const txnId = read(\"txnId\");",
+          "  if (txnId) out[list ? \"searchTxnId\" : \"txnId\"] = txnId;",
+          "  const tokenAt = [\"tokens.token\", \"jwtResponse.token\", \"token\"].find((path) => read(path));",
+          "  if (tokenAt) {",
+          "    const token = read(tokenAt);",
+          "    out[\"X-token\"] = token;",
+          "    out.jwtToken = token;",
+          "    const refresh = read(tokenAt.replace(/token$/, \"refreshToken\"));",
+          "    if (refresh) out[\"R-jwtToken\"] = refresh;",
+          "  }",
+          "  return out;",
+          "}",
+          "const values = carriedValues(body);",
+          "Object.keys(values).forEach(function (key) { pm.collectionVariables.set(key, values[key]); });",
+          "})();"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "txnId",
+      "value": ""
+    },
+    {
+      "key": "searchTxnId",
+      "value": ""
+    },
+    {
+      "key": "X-token",
+      "value": ""
+    },
+    {
+      "key": "jwtToken",
+      "value": ""
+    },
+    {
+      "key": "R-jwtToken",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Scan and register",
+      "item": [
+        {
+          "name": "2. Answer the patient share request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "REQUEST-ID",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "TIMESTAMP",
+                "value": "{{$isoTimestamp}}"
+              },
+              {
+                "key": "X-CM-ID",
+                "value": "{{cmId}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/api/hiecm/patient-share/v3/on-share",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "api",
+                "hiecm",
+                "patient-share",
+                "v3",
+                "on-share"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"acknowledgement\": {\n    \"status\": \"SUCCESS\",\n    \"abhaAddress\": \"<ABHA_ADDRESS>\",\n    \"profile\": {\n      \"context\": \"43\",\n      \"tokenNumber\": \"3\",\n      \"expiry\": 180\n    }\n  },\n  \"error\": {\n    \"code\": \"ABDM-9999\",\n    \"message\": \"Unknown exception\"\n  },\n  \"response\": {\n    \"requestId\": \"6f0b4665-a915-4c92-aa36-65afb4a2cd71\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Share the response of HIECM's /api/hiecm/patient-share/v3/on-share API.\n\n **Header**\n\nAUTHORIZATION will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: ]\n\nREQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]\n\nTIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]\n\nX-CM-ID consent manager ID[ Example: sbx ]\n\n **Request Body**\n\nIncase of success scenario,acknowledgement is mandatory and error is optional\n\nIncase of failure scenario,error is mandatory and acknowledgment is optional\n\nresponse is mandatory object in both the cases"
+          }
+        }
+      ]
+    }
+  ]
+}
