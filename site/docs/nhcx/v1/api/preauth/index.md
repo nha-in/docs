@@ -45,4 +45,4 @@ The exchange posts these to the `endpoint_url` you registered. Answer each with 
 - [Cancelling a pre-authorisation with a Task](/docs/nhcx/v1/reference/fhir/cancel-reprocess-and-shortfall#cancel)
 - [Reprocess, cancel and shortfall calls](/docs/nhcx/v1/api/task/): a cancellation is sent on `/v1/task/submit`, not on `/v1/preauth/submit`
 
-The whole specification, with a request you can send from the page, is the [Pre-authorisation API reference](/reference/nhcx-preauth).
+Each call has its own page in the sidebar, with a request you can send from it. The whole specification downloads as [YAML](/specs/nhcx-preauth.yaml) or [JSON](/specs/nhcx-preauth.json).

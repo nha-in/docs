@@ -34,4 +34,4 @@ The calls take a bearer token in the `Authorization` header. [M4](/docs/hiecm/v3
 - [HPR](/docs/hiecm/v3/registries/nhpr/hpr): the HPID and the registration journey.
 - [HFR](/docs/hiecm/v3/registries/nhpr/hfr): the facility record, the five call onboarding sequence, bridge linkage.
 - [ABHA](/docs/hiecm/v3/registries/abha), the patient side.
-- [M4 API reference](/reference/hiecm-m4).
+- [M4 API reference](/docs/hiecm/v3/api/m4/).

@@ -39,4 +39,4 @@ The exchange posts these to the `endpoint_url` you registered. Answer each with 
 - [Building and sending a JWE](/docs/nhcx/v1/getting-started/building-and-sending-a-jwe)
 - [Payment notice and acknowledgement](/docs/nhcx/v1/reference/fhir/payment-notice-and-acknowledgement)
 
-The whole specification, with a request you can send from the page, is the [Payment notice API reference](/reference/nhcx-payment-notice).
+Each call has its own page in the sidebar, with a request you can send from it. The whole specification downloads as [YAML](/specs/nhcx-payment-notice.yaml) or [JSON](/specs/nhcx-payment-notice.json).

@@ -1,9 +1,8 @@
-import {readFileSync, readdirSync, writeFileSync} from 'node:fs';
-import {join, relative, sep} from 'node:path';
+import {readFileSync} from 'node:fs';
+import {join} from 'node:path';
 import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
-import type {ScalarOptions} from '@scalar/docusaurus';
 import apiTree from './src/data/api-sidebar.json';
 import {sandboxLinks} from './src/data/sandboxLinks';
 
@@ -25,124 +24,6 @@ function tailwindPlugin() {
 // absolute paths, so they must carry the base path when the site is
 // served under one, e.g. GitHub Pages at /abdm-docs/.
 const siteBase = process.env.DOCUSAURUS_BASE_URL ?? '/';
-
-// One interactive reference per specification file, discovered from the
-// catalogue tree: dropping a YAML under catalogue/openapi/<platform>/<version>
-// publishes its Scalar reference at /reference/<filename-stem>. Every instance
-// is self-hosted: the bundle is vendored, and Scalar's cloud services stay off.
-function listSpecFiles(dir: string): string[] {
-  return readdirSync(dir, {withFileTypes: true}).flatMap((entry) => {
-    if (entry.isDirectory()) {
-      // journeys/ holds step lists and errors/ holds NHA's per-module error
-      // code lists. Neither is an OpenAPI document, so neither gets a reference.
-      return entry.name.startsWith('.') || entry.name === 'journeys' || entry.name === 'errors'
-        ? []
-        : listSpecFiles(join(dir, entry.name));
-    }
-    return /\.(yaml|json)$/.test(entry.name) ? [entry.name] : [];
-  });
-}
-const references = listSpecFiles(join(__dirname, '../catalogue/openapi')).map((file) => {
-  const id = file.replace(/\.(yaml|json)$/, '');
-  return {id, label: id, spec: file};
-});
-
-const scalarPlugins = references.map(
-  (reference) =>
-    [
-      '@scalar/docusaurus',
-      {
-        id: reference.id,
-        label: reference.label,
-        route: `/reference/${reference.id}`,
-        showNavLink: false,
-        // Serve the reference bundle from our own origin, not jsdelivr.
-        // Vendored by scripts/sync-specs.mjs from @scalar/api-reference.
-        cdn: `${siteBase}vendor/scalar/standalone.js`,
-        configuration: {
-          url: `${siteBase}specs/${reference.spec}`,
-          // Self-hosted: no Scalar cloud services. "Try it" requests go
-          // directly from the browser, so target APIs must allow CORS, or
-          // proxyUrl must point to a proxy in our own infrastructure
-          // (Scalar's proxy server is open source and self-hostable).
-          proxyUrl: '',
-          telemetry: false,
-          // Links to client.scalar.com, a hosted service.
-          hideClientButton: true,
-          agent: {
-            disabled: true,
-          },
-          showDeveloperTools: 'never',
-        },
-      } as ScalarOptions,
-    ],
-);
-
-// @scalar/docusaurus loads its bundle from `injectHtmlTags`, which Docusaurus
-// applies to every page of the site. Nine specifications means nine plugin
-// instances, so every page carried nine identical tags, including the landing
-// page and Support, which render no reference at all. The browser deduplicates
-// the request, so the cost is one 1.1 MB gzipped bundle rather than nine, but
-// it was still paid on 400 pages that cannot use it.
-//
-// The upstream plugin takes no per-route option and its `cdn` fallback is
-// jsdelivr, which self-hosting rules out, so the tags cannot be suppressed at
-// source. They are removed from the built HTML instead, and one is put back
-// where the body tag opens, on the reference pages that need it.
-function scalarOnReferencePagesOnly() {
-  const bundle = `${siteBase}vendor/scalar/standalone.js`;
-  const tagPattern = new RegExp(
-    `<script[^>]*\\bsrc=["']?${bundle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}["']?[^>]*>\\s*</script>`,
-    'g',
-  );
-  // The routes that actually mount a Scalar reference, taken from the same
-  // list that registers the plugins. Matching on the path instead would also
-  // catch docs/<gateway>/<version>/reference/, which is hand written pages
-  // about authentication and error codes and mounts no reference at all.
-  const scalarRoutes = new Set(references.map((reference) => `reference/${reference.id}`));
-  return {
-    name: 'scalar-on-reference-pages-only',
-    async postBuild({outDir}: {outDir: string}) {
-      let kept = 0;
-      let stripped = 0;
-      for (const entry of readdirSync(outDir, {
-        recursive: true,
-        withFileTypes: true,
-      })) {
-        if (!entry.isFile() || !entry.name.endsWith('.html')) continue;
-        // parentPath is Node 20.12 and later; path is the older spelling of
-        // the same thing, and the bundled types only know one of them.
-        const dirent = entry as {parentPath?: string; path?: string};
-        const file = join(dirent.parentPath ?? dirent.path ?? outDir, entry.name);
-        const html = readFileSync(file, 'utf8');
-        tagPattern.lastIndex = 0;
-        if (!tagPattern.test(html)) continue;
-        tagPattern.lastIndex = 0;
-        const withoutBundle = html.replace(tagPattern, '');
-        const route = relative(outDir, file)
-          .split(sep)
-          .join('/')
-          .replace(/\/?index\.html$/, '');
-        if (scalarRoutes.has(route)) {
-          writeFileSync(
-            file,
-            withoutBundle.replace(
-              /<body[^>]*>/,
-              (open) => `${open}<script src="${bundle}"></script>`,
-            ),
-          );
-          kept += 1;
-        } else {
-          writeFileSync(file, withoutBundle);
-          stripped += 1;
-        }
-      }
-      console.log(
-        `[scalar] bundle kept on ${kept} reference page(s), removed from ${stripped} other page(s)`,
-      );
-    },
-  };
-}
 
 // ---------------------------------------------------------------------------
 // Sidebar shaping. Sidebars are autogenerated from the docs tree (sidebars.ts);
@@ -336,9 +217,6 @@ const config: Config = {
   // The support agent is a standalone custom element, loaded like any
   // third-party embed would load it. Nothing in the site imports it, which is
   // what keeps it usable on pages that are not this site.
-  // Reference pages carry the Scalar bundle only on a full load; this
-  // reloads them when a client side link lands on one.
-  clientModules: [require.resolve('./src/clientModules/reference-reload.ts')],
   scripts: [
     {src: `${siteBase}agent/abdm-support-agent.js`, defer: true},
   ],
@@ -457,8 +335,6 @@ const config: Config = {
 
   plugins: [
     tailwindPlugin,
-    ...scalarPlugins,
-    scalarOnReferencePagesOnly,
     [
       // A reader who types /docs, or follows a link written before the
       // gateway segment existed, lands on the HIE-CM introduction rather
@@ -467,6 +343,15 @@ const config: Config = {
       {
         redirects: [
           {from: '/docs', to: '/docs/hiecm/v3'},
+          // The Scalar references that used to live at /reference/<spec stem>,
+          // retired for the generated reference. Each lands on its module's
+          // index page, so links and bookmarks out in the world still work.
+          ...(apiTree as {spec?: string; route: string}[])
+            .filter((entry) => entry.spec)
+            .map((entry) => ({
+              from: `/reference/${entry.spec!.replace(/\.(yaml|json)$/, '')}`,
+              to: entry.route,
+            })),
           // Old flat and building-blocks URLs from before the folder
           // restructure. The `from` paths are the URLs as they were published,
           // under the platform's old name (abdm); the blanket abdm-to-hiecm
@@ -496,7 +381,7 @@ const config: Config = {
           {from: '/docs/hiecm/v3/api/subscription/endpoints/subscription-subscription-hiu/02-subscription-post-v3-hiu-hiecm-subscription-requests-on-init', to: '/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/02-p3-post-v3-hiu-hiecm-subscription-requests-on-init'},
           {from: '/docs/hiecm/v3/api/subscription/endpoints/subscription-subscription-hiu/05-subscription-post-v3-hiu-subscription-notify', to: '/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/05-p3-post-v3-hiu-subscription-notify'},
           {from: '/docs/hiecm/v3/api/subscription/endpoints/subscription-subscription-hiu/03-subscription-post-v3-hiu-subscription-requests-hiu-notify', to: '/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/03-p3-post-v3-hiu-subscription-requests-hiu-notify'},
-          {from: '/reference/hiecm-subscription', to: '/reference/hiecm-p3'},
+          {from: '/reference/hiecm-subscription', to: '/docs/hiecm/v3/api/p3/'},
           // Gateway calls NHA's sandbox observations of 23 September 2026 moved out of the gateway, or left out.
           {from: '/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/03-gateway-get-gateway-v3-certs', to: '/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions'},
           {from: '/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/07-gateway-get-gateway-v3-govt-programs', to: '/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/09-p2-get-gateway-v3-govt-programs'},

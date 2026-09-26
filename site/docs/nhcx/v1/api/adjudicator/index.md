@@ -52,4 +52,4 @@ The dummy payer exists only in the sandbox, so it has no production address.
 - [PMJAY sandbox run](/docs/nhcx/v1/roles/provider/pmjay-sandbox-run)
 - [PMJAY adjudication APIs](/docs/nhcx/v1/roles/provider/pmjay-adjudication-apis)
 
-The whole specification, with a request you can send from the page, is the [PMJAY adjudicator API reference](/reference/nhcx-adjudicator).
+Each call has its own page in the sidebar, with a request you can send from it. The whole specification downloads as [YAML](/specs/nhcx-adjudicator.yaml) or [JSON](/specs/nhcx-adjudicator.json).

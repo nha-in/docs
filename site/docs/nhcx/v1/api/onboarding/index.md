@@ -56,4 +56,4 @@ No environment limit is published for this call. Use it when the scheme operator
 - [Creating and updating a participant](/docs/nhcx/v1/getting-started/creating-and-updating-a-participant)
 - [Your callback URL is rejected or never called](/docs/nhcx/v1/troubleshooting/your-callback-url-is-rejected)
 
-The whole specification, with a request you can send from the page, is the [Onboarding API reference](/reference/nhcx-onboarding).
+Each call has its own page in the sidebar, with a request you can send from it. The whole specification downloads as [YAML](/specs/nhcx-onboarding.yaml) or [JSON](/specs/nhcx-onboarding.json).

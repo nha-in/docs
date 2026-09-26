@@ -43,4 +43,4 @@ The exchange posts these to the `endpoint_url` you registered. Answer each with 
 - [Building and sending a JWE](/docs/nhcx/v1/getting-started/building-and-sending-a-jwe)
 - [Cancel, reprocess and shortfall](/docs/nhcx/v1/reference/fhir/cancel-reprocess-and-shortfall)
 
-The whole specification, with a request you can send from the page, is the [Reprocess, cancel and shortfall API reference](/reference/nhcx-task).
+Each call has its own page in the sidebar, with a request you can send from it. The whole specification downloads as [YAML](/specs/nhcx-task.yaml) or [JSON](/specs/nhcx-task.json).

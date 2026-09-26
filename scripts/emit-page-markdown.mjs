@@ -349,48 +349,6 @@ export function routeFor(srcPath, raw) {
   return join('docs', r);
 }
 
-/**
- * The Scalar reference pages at /reference/<gateway>-<module> render entirely
- * in the browser, so fetching one as markdown got an empty shell. They are
- * linked from 21 pages of prose, which means an agent reading this site as
- * markdown followed a link and arrived nowhere.
- *
- * The interactive page stays as it is, for a reader with a browser. What is
- * written beside it is a short pointer at the two machine readable forms of
- * the same module: the page-per-operation markdown under api/, and the
- * specification the reference itself is built from.
- */
-function emitReferenceStubs(buildDir) {
-  const dir = join(buildDir, 'reference');
-  if (!existsSync(dir)) return 0;
-  let written = 0;
-  for (const id of readdirSync(dir)) {
-    const outDir = join(dir, id);
-    if (!statSync(outDir).isDirectory()) continue;
-    const [gateway, ...rest] = id.split('-');
-    const moduleId = rest.join('-');
-    if (!gateway || !moduleId) continue;
-    const label = moduleId.toUpperCase();
-    const md = [
-      `# ${label} API reference`,
-      '',
-      `The ${label} reference is an interactive page. It renders in a browser and`,
-      'carries no text to read here.',
-      '',
-      'The same operations in a form you can read:',
-      '',
-      `- [Every ${label} page as markdown](/docs/${gateway}/v3/api/${moduleId}), one page per operation, each with its headers, parameters, responses and a worked curl.`,
-      `- [The OpenAPI specification](/specs/${id}.yaml) this reference is generated from.`,
-      `- [The module index](/docs/${gateway}/v3/api/${moduleId}/llms.txt), which lists every operation with a link.`,
-      '',
-    ].join('\n');
-    writeFileSync(join(outDir, 'index.md'), md);
-    writeFileSync(`${outDir}.md`, md);
-    written += 1;
-  }
-  return written;
-}
-
 function main() {
   const full = [];
   let emitted = 0;
@@ -456,8 +414,6 @@ function main() {
     }
   }
 
-  const stubs = emitReferenceStubs(BUILD);
-
   writeFileSync(join(BUILD, 'llms-full.txt'), full.join('\n\n---\n\n'));
 
   // Per-module llms.txt, same DOCUSAURUS_URL fallback-and-warn as build-nav.mjs.
@@ -494,7 +450,7 @@ function main() {
   }
 
   console.log(
-    `emit-page-markdown: ${emitted} pages emitted, ${skipped} skipped (no matching build route), ${stubs} reference stub(s), llms-full.txt written, ${apiModulePages.size} module llms.txt file(s) written.`,
+    `emit-page-markdown: ${emitted} pages emitted, ${skipped} skipped (no matching build route), llms-full.txt written, ${apiModulePages.size} module llms.txt file(s) written.`,
   );
   if (unrendered.length) {
     console.error(

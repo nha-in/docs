@@ -52,4 +52,4 @@ The exchange posts these to the `endpoint_url` you registered. Answer each with 
 - [Claim response](/docs/nhcx/v1/reference/fhir/claim-response)
 - [Claim query and answer](/docs/nhcx/v1/reference/fhir/claim-query-and-answer)
 
-The whole specification, with a request you can send from the page, is the [Claim API reference](/reference/nhcx-claim).
+Each call has its own page in the sidebar, with a request you can send from it. The whole specification downloads as [YAML](/specs/nhcx-claim.yaml) or [JSON](/specs/nhcx-claim.json).

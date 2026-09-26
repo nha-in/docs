@@ -39,4 +39,4 @@ The exchange posts these to the `endpoint_url` you registered. Answer each with 
 - [Building and sending a JWE](/docs/nhcx/v1/getting-started/building-and-sending-a-jwe)
 - [Communication](/docs/nhcx/v1/reference/fhir/communication)
 
-The whole specification, with a request you can send from the page, is the [Communication API reference](/reference/nhcx-communication).
+Each call has its own page in the sidebar, with a request you can send from it. The whole specification downloads as [YAML](/specs/nhcx-communication.yaml) or [JSON](/specs/nhcx-communication.json).

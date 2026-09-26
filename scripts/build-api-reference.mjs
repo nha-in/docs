@@ -4,7 +4,8 @@
 // The spec tree is the source of structure: a YAML at catalogue/openapi/
 // <platform>/<version>/<spec>.yaml renders under site/docs/<platform>/
 // <version>/api. Each spec names its module in info.x-portal ({module, label,
-// position}); the filename stem is the Scalar route (/reference/<stem>).
+// position}); the filename stem is the old /reference/<stem> route, which now
+// redirects to the module's index page.
 // Everything under .../api/<module>/endpoints, the generated reference pages
 // and site/src/data/api are build outputs. Edit the specs, not the output.
 import {existsSync, readdirSync, readFileSync, writeFileSync, mkdirSync, rmSync} from 'node:fs';
@@ -591,7 +592,8 @@ for (const {platform, version, files} of tree) {
         section: portal.section,
         dir: portal.module ?? stem,
         file: file.name,
-        route: `/reference/${stem}`,
+        stem,
+        route: `/docs/${platform}/${version}/api/${portal.module ?? stem}/`,
         spec,
       };
     })
@@ -1283,6 +1285,9 @@ for (const {platform, version, files} of tree) {
       moduleDir: `${platform}/${version}/api/${module.dir}`,
       label: module.label,
       route: module.route,
+      // The specification file, so the site can redirect the old
+      // /reference/<stem> URLs to this module's index page.
+      spec: module.file,
       // Which integrator roles this module is for. Declared in the spec as
       // info.x-abdm-roles, so the sidebar's role switcher is driven by the
       // catalogue rather than by a list kept in the site.
@@ -1432,8 +1437,8 @@ for (const {platform, version, files} of tree) {
     indexLines.push('');
     indexLines.push(
       platform === 'nhcx' && overview
-        ? `[Open the ${module.label} overview](/docs/${platform}/${version}/api/${module.dir}/). The whole specification is also on [one page](${module.route}).`
-        : `[Read the whole specification](${module.route})`,
+        ? `[Open the ${module.label} overview](${module.route}). The whole specification downloads as [YAML](/specs/${module.file}) or [JSON](/specs/${module.stem}.json).`
+        : `[Open the ${module.label} overview](${module.route}), or download the whole specification as [YAML](/specs/${module.file}) or [JSON](/specs/${module.stem}.json).`,
     );
     indexLines.push('');
   }

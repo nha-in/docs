@@ -123,7 +123,7 @@ It checks structural correctness, conformance to the NRCES profiles, and require
 
 ## Where this is implemented
 
-- [M2 use cases](/reference/hiecm-m2), the transfer call that carries the encrypted bundle.
+- [M2 use cases](/docs/hiecm/v3/api/m2/), the transfer call that carries the encrypted bundle.
 - [How a record travels](/docs/hiecm/v3/concepts/data-flow), what happens to the bundle after you build it.
 - [Care contexts and linking](/docs/hiecm/v3/concepts/linking), how records are grouped and made findable.
 - [Consent](/docs/hiecm/v3/concepts/consent), where the HI type codes above are chosen and read.
