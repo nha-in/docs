@@ -1052,6 +1052,10 @@ for (const {platform, version, files} of tree) {
         // Which gateway the page belongs to, for what the page says around
         // the samples.
         gateway: platform,
+        // The file the page came from and what it declares, for the pills
+        // over the title and the download beside them. The file is served
+        // flat under /specs/ by sync-specs.mjs, beside a JSON copy.
+        spec: {file: module.file, openapi: String(module.spec.openapi ?? ''), version},
         security,
         headers: parameters
           .filter((p) => p.in === 'header')

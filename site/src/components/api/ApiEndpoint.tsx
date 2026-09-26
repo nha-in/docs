@@ -2,6 +2,8 @@ import React, {useEffect, useState} from 'react';
 import CodeBlock from '@theme/CodeBlock';
 import Heading from '@theme/Heading';
 import Link from '@docusaurus/Link';
+import useBaseUrl from '@docusaurus/useBaseUrl';
+import platforms from '@site/src/data/platforms.json';
 import {
   Check,
   ChevronDown,
@@ -75,6 +77,9 @@ export type Operation = {
   protectedHeader?: Field[];
   /** The gateway the page belongs to: hiecm, nhcx. */
   gateway?: string;
+  /** The specification the page was generated from: its served file name,
+      the OpenAPI version it declares, and the gateway version folder. */
+  spec?: {file: string; openapi: string; version: string};
   pathParams: Field[];
   queryParams: Field[];
   body: Field[];
@@ -127,6 +132,42 @@ function FieldRow({field, showExample}: {field: Field; showExample?: boolean}) {
 }
 
 /** A titled part of a tab. Untitled where the tab's own name already says it. */
+/**
+ * What the page was generated from, over its title: the gateway version and
+ * the OpenAPI version as pills, and the whole module's specification to
+ * download in either format, the way Scalar's own reference offers it.
+ */
+export function SpecMeta({
+  gateway,
+  spec,
+}: {
+  gateway?: string;
+  spec: {file: string; openapi: string; version: string};
+}) {
+  const yaml = useBaseUrl(`/specs/${spec.file}`);
+  const json = useBaseUrl(`/specs/${spec.file.replace(/\.ya?ml$/, '.json')}`);
+  const label = platforms.find((p) => p.id === gateway)?.label ?? gateway;
+  return (
+    <div className="api-spec">
+      {label ? (
+        <span className="api-spec__pill">
+          {label} {spec.version}
+        </span>
+      ) : null}
+      {spec.openapi ? <span className="api-spec__pill">OpenAPI {spec.openapi}</span> : null}
+      <span className="api-spec__download">
+        Download OpenAPI Document
+        <a href={json} download>
+          JSON
+        </a>
+        <a href={yaml} download>
+          YAML
+        </a>
+      </span>
+    </div>
+  );
+}
+
 function Section({
   title,
   children,
@@ -571,11 +612,17 @@ export default function ApiEndpoint({operation}: {operation: Operation}) {
       label: 'Responses',
       content: operation.responses.length ? (
         <Section>
+          {/* One fold per status, all shut: the reader opens the code they
+              got rather than scrolling past every code they did not. */}
           {operation.responses.map((response) => (
-            <div key={response.status} className="api-field">
-              <div className="api-field__head">
-                <code className="api-field__name">{response.status}</code>
-              </div>
+            <details key={response.status} className="api-field api-response">
+              <summary className="api-field__head api-response__head">
+                <ChevronDown className="api-response__chevron size-3.5" aria-hidden="true" />
+                <code
+                  className={`api-field__name api-response__status api-response__status--${response.status.charAt(0)}xx`}>
+                  {response.status}
+                </code>
+              </summary>
               {response.description ? (
                 <Markdown
                   text={response.description}
@@ -594,7 +641,7 @@ export default function ApiEndpoint({operation}: {operation: Operation}) {
                   ))}
                 </div>
               ) : null}
-            </div>
+            </details>
           ))}
         </Section>
       ) : null,
@@ -608,6 +655,7 @@ export default function ApiEndpoint({operation}: {operation: Operation}) {
   return (
     <div className={examples ? 'api-page' : 'api-page api-page--wide'}>
       <div className="api-page__main">
+        {operation.spec ? <SpecMeta gateway={operation.gateway} spec={operation.spec} /> : null}
         {operation.tag ? (
           <p className="api-page__eyebrow">{operation.tag.replace(/-/g, ' ')}</p>
         ) : null}
