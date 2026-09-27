@@ -100,6 +100,13 @@ test('23 to 25 September: what moved, what NHA republished, what we corrected', 
   assert.ok(shared.some((e) => e.change.field === 'required' && e.change.to.join() === 'payload,type' && e.modules.length >= 8));
   assert.equal(of(entries, 'correction', 'claim').length, 0, 'claim has nothing left once the shared corrections are folded out');
   assert.equal(of(entries, 'withdrawn', 'predetermination').length, 1);
+  // Every link points at a page that exists after the change: a withdrawal
+  // from a module that is itself gone opens the gateway's API index.
+  assert.equal(of(entries, 'withdrawn', 'predetermination')[0].link, '/docs/nhcx/v1/api/');
+  for (const e of entries.filter((x) => x.gateway !== 'site')) {
+    const m = e.link.match(/^\/docs\/([^/]+)\/[^/]+\/api\/([^/]+)\//);
+    if (m) assert.ok(sep25.modules[`${m[1]}-${m[2]}`], `${e.kind} ${e.module} links to a module that is gone: ${e.link}`);
+  }
   assert.equal(of(entries, 'coverage-module', 'task').length, 1);
   assert.deepEqual(of(entries, 'coverage-role', 'adjudicator')[0]?.items, [{role: 'payer'}]);
   // The adjudicator's operationIds changed on unchanged paths: not a withdrawal.

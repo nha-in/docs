@@ -207,7 +207,12 @@ export function entriesFor(prev, next, date) {
     }
     return [...groups.values()];
   };
-  for (const {m, items} of byModule(gone)) add('withdrawn', m, items);
+  // A withdrawal from a module that is itself gone has no module page to
+  // open; the gateway's API index is where the reader goes instead.
+  for (const {m, items} of byModule(gone)) {
+    const stillThere = nextModules[`${m.gateway}-${m.module}`];
+    add('withdrawn', m, items, stillThere ? {} : {link: `/docs/${m.gateway}/${m.version}/api/`});
+  }
   for (const {m, items} of byModule(arrived.filter((x) => !x.covered))) add('added', m, items);
 
   foldSharedCorrections(entries);
