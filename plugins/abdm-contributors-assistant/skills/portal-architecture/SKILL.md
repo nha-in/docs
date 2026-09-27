@@ -1,9 +1,9 @@
 ---
 name: portal-architecture
 description: 'The architecture of the ABDM Developer Portal: the four building blocks, how the Catalogue compiles into docs, skills and MCP surfaces, the seven binding principles, the atom model, and what is deliberately excluded from V1. Use whenever someone asks how the portal fits together, why a design decision was made, whether something belongs in V1, where a new capability should live, or proposes a change to the structure. Also use before designing any new component so it lands in the right layer instead of beside it.'
-plan_version: 2026.09.23
+plan_version: 2026.09.28
 plan_source: abdm-v1-phase1-architecture-and-plan.md
-plan_hash: sha256:0900f96d7600aff9a92db957d6104e5a313ef59d171adea8bb1ad85236b4fee5
+plan_hash: sha256:b504e9424235906f7ad60616c3dfae402ac5e71d62b8aaa30ab582c7affac368
 compiled_from_plan: true
 ---
 
@@ -29,6 +29,8 @@ One is the source. Three are renderings of it.
 ```
 
 The design is that NHA sources are watched daily and feed the Catalogue through a reviewed pull request. Today a person brings a source in by hand and CI checks the recorded hashes; see P7 below. Either way, nothing feeds the renderings directly.
+
+The docs site's What's New tab is generated the same way, with no model and no person writing it. A facts snapshot under `catalogue/changelog/facts/` holds every operation contract, source hash, role, error list, skill and MCP tool name; `npm run changelog` diffs the working tree against it, maps each difference to one of the six entry kinds the `changelog` skill defines, and renders the entries from fixed templates into the dated pages, the index and the sidebar order. Wording, layout and navigation are never read, so they can never produce an entry. `npm run check:changelog` fails CI when the snapshot or the pages are stale.
 
 | Block | What it is in V1 | The rule that keeps it honest |
 |---|---|---|
