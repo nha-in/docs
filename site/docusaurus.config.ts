@@ -394,6 +394,8 @@ const config: Config = {
   baseUrl: process.env.DOCUSAURUS_BASE_URL ?? '/',
 
   onBrokenLinks: 'throw',
+  // The What's New index links every entry by its heading anchor.
+  onBrokenAnchors: 'throw',
 
   customFields: {
     // The repository this copy of the portal is published from, which is the
