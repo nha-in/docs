@@ -1,0 +1,622 @@
+{
+  "errors": [],
+  "file": "nhcx-registry.yaml",
+  "gateway": "nhcx",
+  "label": "Participant registry",
+  "module": "registry",
+  "operations": {
+    "GET /v2/participant/link/abha/policy/validate": {
+      "encrypted": [],
+      "id": "registry_v2_participant_link_abha_policy_validate",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Accept!",
+        "header:bearer_auth!"
+      ],
+      "path": "/v2/participant/link/abha/policy/validate",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+      "servers": [
+        "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+        "https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice"
+      ]
+    },
+    "POST /fetch/certs": {
+      "encrypted": [],
+      "id": "registry_fetch_certs",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Accept!",
+        "header:bearer_auth!"
+      ],
+      "path": "/fetch/certs",
+      "properties": [
+        "participantid"
+      ],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+      "servers": [
+        "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+        "https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice"
+      ]
+    },
+    "POST /fetch/certs/path": {
+      "encrypted": [],
+      "id": "registry_fetch_certs_path",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Accept!",
+        "header:bearer_auth!"
+      ],
+      "path": "/fetch/certs/path",
+      "properties": [
+        "participantid"
+      ],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+      "servers": [
+        "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+        "https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice"
+      ]
+    },
+    "POST /fetch/participants/list": {
+      "encrypted": [],
+      "id": "registry_fetch_participants_list",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Accept!",
+        "header:bearer_auth!"
+      ],
+      "path": "/fetch/participants/list",
+      "properties": [
+        "entitytype",
+        "fromdate",
+        "role",
+        "todate"
+      ],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+      "servers": [
+        "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+        "https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice"
+      ]
+    },
+    "POST /get/session": {
+      "encrypted": [],
+      "id": "registry_get_session",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:bearer_auth!"
+      ],
+      "path": "/get/session",
+      "properties": [
+        "_contentType",
+        "client_id",
+        "client_secret",
+        "grant_type"
+      ],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+      "servers": [
+        "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+        "https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice"
+      ]
+    },
+    "POST /participant/delink/abha/policy": {
+      "encrypted": [],
+      "id": "registry_participant_delink_abha_policy",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Accept!",
+        "header:bearer_auth!"
+      ],
+      "path": "/participant/delink/abha/policy",
+      "properties": [
+        "memberid",
+        "payerid",
+        "policies",
+        "processingid",
+        "requestid"
+      ],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+      "servers": [
+        "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+        "https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice"
+      ]
+    },
+    "POST /participant/details": {
+      "encrypted": [],
+      "id": "registry_participant_details",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Accept!",
+        "header:bearer_auth!"
+      ],
+      "path": "/participant/details",
+      "properties": [
+        "participant_code"
+      ],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+      "servers": [
+        "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+        "https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice"
+      ]
+    },
+    "POST /participant/get/policies": {
+      "encrypted": [],
+      "id": "registry_participant_get_policies",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Accept!",
+        "header:bearer_auth!"
+      ],
+      "path": "/participant/get/policies",
+      "properties": [
+        "identifiertype",
+        "identifiervalue"
+      ],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+      "servers": [
+        "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+        "https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice"
+      ]
+    },
+    "POST /participant/getProductIdName": {
+      "encrypted": [],
+      "id": "registry_participant_getproductidname",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Accept!",
+        "header:bearer_auth!"
+      ],
+      "path": "/participant/getProductIdName",
+      "properties": [
+        "_body",
+        "_note"
+      ],
+      "required": [],
+      "responses": [
+        "200",
+        "400",
+        "404",
+        "500"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+      "servers": [
+        "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+        "https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice"
+      ]
+    },
+    "POST /participant/link/abha/policy": {
+      "encrypted": [],
+      "id": "registry_participant_link_abha_policy",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Accept!",
+        "header:bearer_auth!"
+      ],
+      "path": "/participant/link/abha/policy",
+      "properties": [
+        "abhanumber",
+        "memberid",
+        "mobilenumber",
+        "payerid",
+        "policies",
+        "processingid",
+        "requestid"
+      ],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+      "servers": [
+        "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+        "https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice"
+      ]
+    },
+    "POST /participant/search": {
+      "encrypted": [],
+      "id": "registry_participant_search",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Accept!",
+        "header:bearer_auth!"
+      ],
+      "path": "/participant/search",
+      "properties": [
+        "participant_code"
+      ],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+      "servers": [
+        "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+        "https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice"
+      ]
+    },
+    "POST /participant/update": {
+      "encrypted": [],
+      "id": "registry_participant_update",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Accept!",
+        "header:bearer_auth!"
+      ],
+      "path": "/participant/update",
+      "properties": [
+        "encryption_cert",
+        "endpoint_url",
+        "participant_code",
+        "participant_name",
+        "phone",
+        "primaryEmail",
+        "primaryMobile",
+        "roles",
+        "scheme_code",
+        "signing_cert_path"
+      ],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+      "servers": [
+        "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice"
+      ]
+    },
+    "POST /product/delink": {
+      "encrypted": [],
+      "id": "registry_product_delink",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Accept!",
+        "header:bearer_auth!"
+      ],
+      "path": "/product/delink",
+      "properties": [
+        "participantcode",
+        "productid",
+        "productname"
+      ],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+      "servers": [
+        "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+        "https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice"
+      ]
+    },
+    "POST /product/getowner": {
+      "encrypted": [],
+      "id": "registry_product_getowner",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Accept!",
+        "header:bearer_auth!"
+      ],
+      "path": "/product/getowner",
+      "properties": [
+        "productid"
+      ],
+      "required": [],
+      "responses": [
+        "200",
+        "400",
+        "404",
+        "500"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+      "servers": [
+        "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+        "https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice"
+      ]
+    },
+    "POST /product/link": {
+      "encrypted": [],
+      "id": "registry_product_link",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Accept!",
+        "header:bearer_auth!"
+      ],
+      "path": "/product/link",
+      "properties": [
+        "participantcode",
+        "productid",
+        "productname"
+      ],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+      "servers": [
+        "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+        "https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice"
+      ]
+    },
+    "POST /v2/participant/delink/abha/policy": {
+      "encrypted": [],
+      "id": "registry_v2_participant_delink_abha_policy",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Accept!",
+        "header:bearer_auth!"
+      ],
+      "path": "/v2/participant/delink/abha/policy",
+      "properties": [
+        "memberid",
+        "payerid",
+        "policies",
+        "processingid",
+        "requestid"
+      ],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+      "servers": [
+        "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+        "https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice"
+      ]
+    },
+    "POST /v2/participant/get/policies": {
+      "encrypted": [],
+      "id": "registry_v2_participant_get_policies",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Accept!",
+        "header:bearer_auth!"
+      ],
+      "path": "/v2/participant/get/policies",
+      "properties": [
+        "identifiertype",
+        "identifiervalue"
+      ],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+      "servers": [
+        "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+        "https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice"
+      ]
+    },
+    "POST /v2/participant/link/abha/policy": {
+      "encrypted": [],
+      "id": "registry_v2_participant_link_abha_policy",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Accept!",
+        "header:bearer_auth!"
+      ],
+      "path": "/v2/participant/link/abha/policy",
+      "properties": [
+        "abhanumber",
+        "memberid",
+        "mobilenumber",
+        "payerid",
+        "policies",
+        "processingid",
+        "requestid"
+      ],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+      "servers": [
+        "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+        "https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice"
+      ]
+    },
+    "POST /v2/participant/link/abha/policy/init": {
+      "encrypted": [],
+      "id": "registry_v2_participant_link_abha_policy_init",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Accept!",
+        "header:bearer_auth!"
+      ],
+      "path": "/v2/participant/link/abha/policy/init",
+      "properties": [
+        "abhanumber",
+        "memberid",
+        "mobilenumber",
+        "payerid",
+        "policies",
+        "processingid",
+        "requestid"
+      ],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+      "servers": [
+        "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+        "https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice"
+      ]
+    },
+    "POST /v2/participant/update": {
+      "encrypted": [],
+      "id": "registry_v2_participant_update",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Accept!",
+        "header:bearer_auth!"
+      ],
+      "path": "/v2/participant/update",
+      "properties": [
+        "encryptioncert",
+        "endpointurl",
+        "participantcode"
+      ],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice",
+      "servers": [
+        "https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice"
+      ]
+    },
+    "POST /v2/update/cert": {
+      "encrypted": [],
+      "id": "registry_v2_update_cert",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Accept!",
+        "header:bearer_auth!"
+      ],
+      "path": "/v2/update/cert",
+      "properties": [
+        "certificate",
+        "participantId"
+      ],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+      "servers": [
+        "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+        "https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice"
+      ]
+    }
+  },
+  "roles": [
+    "payer",
+    "provider"
+  ],
+  "sources": {
+    "nhcx-package/apis/10-registry": {
+      "fetched": null,
+      "hash": "sha256:24a781be25eb64996be9a7eb98c1f941a9dc74485129740b4831edcc54c55df0"
+    },
+    "nhcx-package/baseurl.yaml": {
+      "fetched": null,
+      "hash": "sha256:88515b7b29c6b349a131e016c80774436ea16a29738db743b4cc3a24cbd42453"
+    }
+  },
+  "version": "v1"
+}

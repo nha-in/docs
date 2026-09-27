@@ -1,0 +1,82 @@
+{
+  "errors": [],
+  "file": "nhcx-preauth.yaml",
+  "gateway": "nhcx",
+  "label": "Pre-authorisation",
+  "module": "preauth",
+  "operations": {
+    "POST /v1/preauth/on_submit": {
+      "encrypted": [],
+      "id": "preauth_webhook_v1_preauth_on_submit",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:bearer_auth!"
+      ],
+      "path": "/v1/preauth/on_submit",
+      "properties": [
+        "payload",
+        "type"
+      ],
+      "required": [
+        "payload",
+        "type"
+      ],
+      "responses": [
+        "202"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/hcx",
+      "servers": [
+        "https://apisbx.abdm.gov.in/hcx",
+        "https://apisprod.nha.gov.in/hcx"
+      ]
+    },
+    "POST /v1/preauth/submit": {
+      "encrypted": [],
+      "id": "preauth_webhook_v1_preauth_submit",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:bearer_auth!"
+      ],
+      "path": "/v1/preauth/submit",
+      "properties": [
+        "payload"
+      ],
+      "required": [],
+      "responses": [
+        "202"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/hcx",
+      "servers": [
+        "https://apisbx.abdm.gov.in/hcx",
+        "https://apisprod.nha.gov.in/hcx"
+      ]
+    }
+  },
+  "roles": [
+    "payer",
+    "provider"
+  ],
+  "sources": {
+    "nhcx-package/apis/03-preauth": {
+      "fetched": null,
+      "hash": "sha256:270ab9c7c4783d9042ee4c4adbd8141d8fd69037d358a330808f23e3d945deca"
+    },
+    "nhcx-package/baseurl.yaml": {
+      "fetched": null,
+      "hash": "sha256:88515b7b29c6b349a131e016c80774436ea16a29738db743b4cc3a24cbd42453"
+    },
+    "nhcx-package/nhcx-error.yaml": {
+      "fetched": null,
+      "hash": "sha256:d24ac927ed4dd722e60d7bd1d6fed15de370cc29f750d68999ee56fac93c941b"
+    }
+  },
+  "version": "v1"
+}

@@ -1,0 +1,155 @@
+{
+  "errors": [],
+  "file": "hiecm-gateway.yaml",
+  "gateway": "hiecm",
+  "label": "Gateway session",
+  "module": "gateway",
+  "operations": {
+    "GET /api/hiecm/gateway/v3/bridge-service/serviceId/{}": {
+      "encrypted": [],
+      "id": "gateway_get_gateway_v3_bridge_service_serviceid_service_id",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-CM-ID!",
+        "path:{}!"
+      ],
+      "path": "/api/hiecm/gateway/v3/bridge-service/serviceId/{service-id}",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "204",
+        "400",
+        "401",
+        "403",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "GET /api/hiecm/gateway/v3/bridge-services": {
+      "encrypted": [],
+      "id": "gateway_get_gateway_v3_bridge_services",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-CM-ID!"
+      ],
+      "path": "/api/hiecm/gateway/v3/bridge-services",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "204",
+        "400",
+        "401",
+        "403",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "PATCH /api/hiecm/gateway/v3/bridge/url": {
+      "encrypted": [],
+      "id": "gateway_patch_gateway_v3_bridge_url",
+      "kind": "call",
+      "method": "PATCH",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-CM-ID!"
+      ],
+      "path": "/api/hiecm/gateway/v3/bridge/url",
+      "properties": [
+        "url"
+      ],
+      "required": [
+        "url"
+      ],
+      "responses": [
+        "202",
+        "204",
+        "400",
+        "401",
+        "403",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/hiecm/gateway/v3/sessions": {
+      "encrypted": [],
+      "id": "gateway_post_gateway_v3_sessions",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-CM-ID!"
+      ],
+      "path": "/api/hiecm/gateway/v3/sessions",
+      "properties": [
+        "clientId",
+        "clientSecret",
+        "grantType"
+      ],
+      "required": [
+        "clientId",
+        "clientSecret",
+        "grantType"
+      ],
+      "responses": [
+        "202",
+        "204",
+        "400",
+        "401",
+        "403",
+        "500",
+        "503"
+      ],
+      "security": [],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    }
+  },
+  "roles": [
+    "his",
+    "phr"
+  ],
+  "sources": {
+    "catalogue/openapi/.raw/nha-2026-09-16/hiecm/gateway.yaml": {
+      "fetched": "2026-09-16",
+      "hash": "sha256:d3bc599054c2570a50818ca54906c44cf652ad6f813473e8ac243667da4e9300"
+    }
+  },
+  "version": "v3"
+}

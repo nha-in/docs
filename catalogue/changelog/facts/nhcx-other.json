@@ -1,0 +1,164 @@
+{
+  "errors": [],
+  "file": "nhcx-other.yaml",
+  "gateway": "nhcx",
+  "label": "Other",
+  "module": "other",
+  "operations": {
+    "POST /v1/delete": {
+      "encrypted": [],
+      "id": "other_v1_delete",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:bearer_auth!"
+      ],
+      "path": "/v1/delete",
+      "properties": [
+        "action",
+        "correlationid"
+      ],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/hcx",
+      "servers": [
+        "https://apisbx.abdm.gov.in/hcx",
+        "https://apisprod.nha.gov.in/hcx"
+      ]
+    },
+    "POST /v1/error": {
+      "encrypted": [],
+      "id": "other_webhook_v1_error",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:bearer_auth!"
+      ],
+      "path": "/v1/error",
+      "properties": [
+        "type",
+        "x-hcx-api_call_id",
+        "x-hcx-correlation_id",
+        "x-hcx-entity-type",
+        "x-hcx-error_details",
+        "x-hcx-recipient_code",
+        "x-hcx-sender_code",
+        "x-hcx-status",
+        "x-hcx-timestamp",
+        "x-hcx-workflow_id"
+      ],
+      "required": [],
+      "responses": [
+        "202"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/hcx",
+      "servers": [
+        "https://apisbx.abdm.gov.in/hcx",
+        "https://apisprod.nha.gov.in/hcx"
+      ]
+    },
+    "POST /v1/notification/on_subscribe": {
+      "encrypted": [],
+      "id": "other_v1_notification_on_subscribe",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:bearer_auth!"
+      ],
+      "path": "/v1/notification/on_subscribe",
+      "properties": [
+        "hvalues",
+        "request"
+      ],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/hcx",
+      "servers": [
+        "https://apisbx.abdm.gov.in/hcx",
+        "https://apisprod.nha.gov.in/hcx"
+      ]
+    },
+    "POST /v1/notification/subscribe": {
+      "encrypted": [],
+      "id": "other_v1_notification_subscribe",
+      "kind": "call",
+      "method": "POST",
+      "params": [],
+      "path": "/v1/notification/subscribe",
+      "properties": [
+        "_payload_plaintext",
+        "payload"
+      ],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [],
+      "server": "https://hcxsbx.abdm.gov.in",
+      "servers": [
+        "https://hcxsbx.abdm.gov.in"
+      ]
+    },
+    "POST /v1/on_status": {
+      "encrypted": [],
+      "id": "other_webhook_v1_on_status",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:bearer_auth!"
+      ],
+      "path": "/v1/on_status",
+      "properties": [
+        "payload",
+        "type"
+      ],
+      "required": [
+        "payload",
+        "type"
+      ],
+      "responses": [
+        "202"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/hcx",
+      "servers": [
+        "https://apisbx.abdm.gov.in/hcx",
+        "https://apisprod.nha.gov.in/hcx"
+      ]
+    }
+  },
+  "roles": [
+    "payer",
+    "provider"
+  ],
+  "sources": {
+    "nhcx-package/apis/13-other": {
+      "fetched": null,
+      "hash": "sha256:d65315e2042e17c77dd9400fc36380a58195496d693f53bb5102e805d7231de2"
+    },
+    "nhcx-package/baseurl.yaml": {
+      "fetched": null,
+      "hash": "sha256:88515b7b29c6b349a131e016c80774436ea16a29738db743b4cc3a24cbd42453"
+    },
+    "nhcx-package/nhcx-error.yaml": {
+      "fetched": null,
+      "hash": "sha256:d24ac927ed4dd722e60d7bd1d6fed15de370cc29f750d68999ee56fac93c941b"
+    }
+  },
+  "version": "v1"
+}
