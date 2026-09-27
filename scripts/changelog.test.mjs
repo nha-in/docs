@@ -12,7 +12,7 @@ import {readFileSync} from 'node:fs';
 import {join} from 'node:path';
 import {entriesFor} from './lib/changelog-rules.mjs';
 import {normalisePath, operationKey} from './lib/changelog-facts.mjs';
-import {render, headingFor} from './lib/changelog-render.mjs';
+import {render, headingFor, slug} from './lib/changelog-render.mjs';
 
 const fixture = (name) =>
   JSON.parse(readFileSync(join(import.meta.dirname, 'fixtures', 'changelog', `${name}.json`), 'utf8'));
@@ -27,6 +27,12 @@ const of = (entries, kind, module) =>
 test('a placeholder rename is the same address', () => {
   assert.equal(normalisePath('/v3/{request-id}/approve'), '/v3/{}/approve');
   assert.equal(operationKey('post', '/v3/{a}/x'), operationKey('POST', '/v3/{b}/x'));
+});
+
+test('the index anchor is the heading id Docusaurus writes', () => {
+  assert.equal(slug("The PHR public key is not the ABHA service's key"), 'the-phr-public-key-is-not-the-abha-services-key');
+  assert.equal(slug('NHCX: four calls no longer take x-hcx-api_call_id as headers'), 'nhcx-four-calls-no-longer-take-x-hcx-api_call_id-as-headers');
+  assert.equal(slug('P2 consent, linking and share calls go to the gateway'), 'p2-consent-linking-and-share-calls-go-to-the-gateway');
 });
 
 test('a baseline produces no entries', () => {

@@ -261,7 +261,7 @@ export function slug(heading) {
   return heading
     .toLowerCase()
     .replace(/`/g, '')
-    .replace(/[^a-z0-9 -]/g, '')
+    .replace(/[^a-z0-9_ -]/g, '')
     .trim()
     .replace(/\s+/g, '-');
 }
