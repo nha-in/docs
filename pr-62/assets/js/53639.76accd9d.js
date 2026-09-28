@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["53639"],{83450(e,s,t){t.r(s),t.d(s,{__iconNode:()=>c,default:()=>_});var d=t(34438);let c=[["rect",{x:"5",y:"2",width:"14",height:"20",rx:"7",key:"11ol66"}],["path",{d:"M12 6v4",key:"16clxf"}]],_=(0,d.A)("mouse",c)}}]);
