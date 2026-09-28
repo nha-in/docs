@@ -1,0 +1,21 @@
+## Confirmation of a link, carrying the token the patient approved {/* #m2-on-link-confirm */}
+
+After the patient enters the [OTP](/docs/hiecm/v3/getting-started/glossary#otp) you sent, ABDM posts it to your bridge at `/api/v3/hip/link/care-context/confirm`. `confirmation.token` is that six digit code. `confirmation.linkRefNumber` is the reference you issued at init. Check both, then answer through [on-confirm](/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/03-m2-post-user-initiated-linking-v3-link-care-context-on-confirm).
+
+<AgentOnly>
+**Before you start.** The link reference number you issued in on-init, and the code you sent the patient.
+
+**What happens.** ABDM posts with the `REQUEST-ID`, `TIMESTAMP` and `X-HIP-ID` headers, and expects 200 OK.
+
+**When it goes wrong.** A repeated confirm request is the `ABDM-1105` case, Duplicate Confirm request. An on-confirm answer that cannot be accepted is the `ABDM-1111` case, Invalid On confirm response.
+</AgentOnly>
+
+## Link confirm request to the HIP {/* #p2-callback-for-health-record-confirmation */}
+
+When the person enters the code you sent, ABDM posts it here as `confirmation.token`, with `confirmation.linkRefNumber`. Check the code, link the care contexts, then answer with the link on-confirm call.
+
+<AgentOnly>
+**What happens.** Answer at `/api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm`.
+
+**When it goes wrong.** `400` with `ABDM-1105` means a duplicate confirm request.
+</AgentOnly>

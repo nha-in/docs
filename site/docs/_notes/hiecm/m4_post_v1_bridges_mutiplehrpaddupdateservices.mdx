@@ -1,0 +1,23 @@
+## Register or update bridge services for an HIU {/* #gateway-register-bridge-services */}
+
+Registers your facility as a service on your [bridge](/docs/hiecm/v3/getting-started/glossary#bridge), or updates it. For a [Health Information User (HIU)](/docs/hiecm/v3/getting-started/glossary#hiu), set `type` to `HIU` in each `HRP` entry. Send the facility's `facilityId` and `facilityName`, and one `HRP` entry per service with its `bridgeId`, `hipName`, `type` and `active`.
+
+<AgentOnly>
+**Before you start.** A facility id that starts with `IN`, and your bridge id. The call goes to the registry server `https://apihspsbx.abdm.gov.in/v4/int`, not to the gateway.
+
+**How you know it worked.** A 200. Then the gateway's list call shows the service under your bridge with the type you registered.
+
+**When it goes wrong.** A 404 means the facility or the path was not found: check `facilityId` and the path spelling `MutipleHRPAddUpdateServices`.
+</AgentOnly>
+
+## Register or update HIP and HIU services for a facility {/* #m1-register-hrp-services */}
+
+Tells [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) which services a facility offers through your [bridge](/docs/hiecm/v3/getting-started/glossary#bridge). One call can add or update several: send one `HRP` entry per service, with `type` set to `HIP` or `HIU` and `active` set to true. Register the bridge callback URL first, so ABDM can reach the services once they are registered.
+
+<AgentOnly>
+**Before you start.** The facility's `facilityId` and `facilityName`, and your `bridgeId`.
+
+**What happens.** Every `HRP` entry needs `bridgeId`, `hipName`, `type` and `active`. Send `active` as false to switch a service off without removing it.
+
+**How you know it worked.** A 200, and the gateway's service lookup returns the facility with `isHip` or `isHiu` set as you registered it.
+</AgentOnly>

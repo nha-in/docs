@@ -25,6 +25,7 @@ import { readFileSync, readdirSync, statSync, existsSync, writeFileSync } from "
 import { join, relative, extname, basename, dirname } from "node:path";
 import { parse } from "yaml";
 import { loadAtoms, root } from "./lib/atoms.mjs";
+import { loadMap } from "./lib/map.mjs";
 
 const check = process.argv.includes("--check");
 const docsRoot = join(root, "site", "docs");
@@ -126,10 +127,10 @@ for (const p of pages) {
 }
 
 // ---------- Rule -1: the atom registry names the section ----------
-// An atom whose words live on a page is listed in catalogue/map.yaml with the
-// published URL of its section, so its route is known exactly and wins.
-const mapPath = join(root, "catalogue", "map.yaml");
-const registryMap = existsSync(mapPath) ? (parse(readFileSync(mapPath, "utf8")) ?? {}) : {};
+// An atom whose words live on a page is listed in catalogue/map.yaml or a
+// catalogue/map.d/ fragment with the published URL of its section, so its
+// route is known exactly and wins. A duplicate id is check:sections' to report.
+const { map: registryMap } = loadMap(root);
 
 // ---------- Rule 1: same spec operation ----------
 const apiPageByOperation = new Map();

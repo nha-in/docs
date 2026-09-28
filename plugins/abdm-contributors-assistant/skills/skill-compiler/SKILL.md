@@ -9,7 +9,7 @@ Skills are build outputs. Nobody writes a SKILL.md for ABDM by hand. If a compil
 
 ## What runs today
 
-The HIE-CM module skills do not compile from atoms. No HIE-CM atom exists since the 16 September 2026 reset. Three scripts build them from the specifications and the journey files:
+The HIE-CM module skills compile from the specifications and the journey files, not from the endpoint, callback and error atoms. HIE-CM has atoms again: 227 of the 256 the 16 September 2026 reset deleted were rebuilt on 29 September 2026 as page sections and notes partials, beside the 20 design rules, but only concept atoms carrying a milestone reach a skill, as its `references/design.md`. Three scripts build them:
 
 1. `node scripts/build-api-reference.mjs` writes one data file per operation and per journey step from `catalogue/openapi/hiecm/v3/*.yaml` and `journeys/*.yaml`.
 2. `node scripts/compile-skills.mjs` writes the guided loops under `skills-src/`: `hiecm-<module>-build` for a module with journeys, and `hiecm-<module>-debug` for a module whose specification's response examples return error codes.

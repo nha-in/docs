@@ -1,0 +1,11 @@
+## List consent and subscription requests together {/* #p3-get-all-subscription-request */}
+
+Lists the logged-in person's consent requests and subscription requests together, each paged on its own. `consentLimit` and `consentOffset` page the consents. `subscriptionLimit` and `subscriptionOffset` page the subscriptions. `status` filters both.
+
+<AgentOnly>
+**Before you start.** The person's `X-AUTH-TOKEN`.
+
+**How you know it worked.** You receive `200` with a `consents` page and a `subscriptions` page.
+
+**When it goes wrong.** `400` with `ABDM-1066` means the token is invalid: log the person in again.
+</AgentOnly>

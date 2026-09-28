@@ -383,3 +383,39 @@ func TestSideFilter(t *testing.T) {
 		t.Fatalf("side payer = %v, want the payer atom only", got)
 	}
 }
+
+// A question asking what something is prefers the glossary: an error atom
+// that repeats the term must not outrank the entry that defines it.
+func TestDefinitionQuestionsPreferTheGlossary(t *testing.T) {
+	atoms := append(fixtureAtoms(),
+		catalogue.Atom{ID: "shared.glossary.hiu", Type: "glossary", Gateway: "shared", Milestone: "n/a", Title: "HIU, health information user", Summary: "The system that requests records.", Body: "## In plain words\n\nAn HIU requests a person's records with consent.", Related: map[string][]string{}},
+		catalogue.Atom{ID: "hiecm.error.abdm-1040", Type: "error", Gateway: "hiecm", Milestone: "M3", Title: "ABDM-1040 HIU not found", Summary: "The HIU id is not registered as an HIU.", Body: "## In plain words\n\nHIU HIU HIU. The HIU in the request is not an HIU the gateway knows. Register the HIU.", Related: map[string][]string{}},
+	)
+	dbPath := filepath.Join(t.TempDir(), "catalogue.db")
+	if err := Build(dbPath, atoms, nil, fixtureOps(), fixtureSpecErrors(), nil, nil, nil, Meta{CatalogueVersion: "v", BuiltAt: "t"}); err != nil {
+		t.Fatal(err)
+	}
+	r, err := Open(dbPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer r.Close()
+	for _, q := range []string{"hiu", "what is an HIU?"} {
+		hits, err := r.SearchIn(context.Background(), q, "", "", "", 5, nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if len(hits) == 0 || hits[0].ID != "shared.glossary.hiu" {
+			t.Errorf("%q: top hit %v, want the glossary entry first", q, ids(hits))
+		}
+	}
+	// Not a definition question: the error atom may lead.
+	for _, q := range []string{"what are the tests required before exiting the ABDM sandbox", "what is the NHCX claim API endpoint"} {
+		if definitionShaped(q) {
+			t.Errorf("%q asks for a request, not a term's definition", q)
+		}
+	}
+	if definitionShaped("the gateway rejects my HIU request with an error") {
+		t.Error("a full sentence about an error is not definition shaped")
+	}
+}

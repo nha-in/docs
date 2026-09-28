@@ -1,0 +1,11 @@
+## Generate Refresh Token {/* #p1-generate-refresh-token */}
+
+Exchanges the refresh token from a login for a new set of `tokens`. The person stays signed in to a [PHR](/docs/hiecm/v3/getting-started/glossary#phr) app without logging in again. Send the refresh token in the `R-token` header. The call takes no body.
+
+<AgentOnly>
+**Before you start.** The `refreshToken` from a login, an enrolment or a verify user response.
+
+**How you know it worked.** The response carries `tokens` with a new `token` and `refreshToken`. `refreshExpiresIn` is `1296000`, fifteen days in seconds. Replace both stored tokens.
+
+**When it goes wrong.** A `401` with `900902` and `Missing Credentials` means the header is missing. Send the person back to login.
+</AgentOnly>

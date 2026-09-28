@@ -1,0 +1,11 @@
+## List the consent requests of an ABHA address {/* #p3-get-all-consent-request-for-an-abha-address */}
+
+Lists the consent requests made to the logged-in person, a page at a time. `limit` is required. `offset` and `status` are optional, and `status=ALL` returns every state.
+
+<AgentOnly>
+**Before you start.** The person's `X-AUTH-TOKEN`.
+
+**How you know it worked.** You receive `200` with `size`, `limit`, `offset` and the page in `requests`. Show requests with `status` `REQUESTED` for a decision.
+
+**When it goes wrong.** `404` with `ABDM-1001` means the person has no consent requests in that state.
+</AgentOnly>

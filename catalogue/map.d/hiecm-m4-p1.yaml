@@ -1,0 +1,280 @@
+hiecm.endpoint.m4-hfr-search-facility:
+  type: endpoint
+  gateway: hiecm
+  milestone: M4
+  title: Search the facility registry before creating anything
+  summary: Finds facilities that already match a name and location, so a second record
+    is never created for one that exists.
+  page: site/docs/_notes/hiecm/m4_post_facilitymanagement_v1_5_facility_search.mdx
+  heading: m4-hfr-search-facility
+  url: /docs/hiecm/v3/api/m4/endpoints/m4-search/02-m4-post-facilitymanagement-v1-5-facility-search#m4-hfr-search-facility
+  operation: m4_post_facilitymanagement_v1_5_facility_search
+  related:
+    flows:
+    - hiecm.flow.m4-onboard-facility
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.m4-hpr-create-hprid:
+  type: endpoint
+  gateway: hiecm
+  milestone: M4
+  title: Create the HPID
+  summary: Issues the healthcare professional's HPID and the token that stands for
+    them on later calls.
+  page: site/docs/_notes/hiecm/m4_post_v2_registration_aadhaar_createhpridwithpreverified.mdx
+  heading: m4-hpr-create-hprid
+  url: /docs/hiecm/v3/api/m4/endpoints/m4-registration-api-s-collection-via-aadhaar/09-m4-post-v2-registration-aadhaar-createhpridwithpreverified#m4-hpr-create-hprid
+  operation: m4_post_v2_registration_aadhaar_createhpridwithpreverified
+  related:
+    flows:
+    - hiecm.flow.m4-create-hpid
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.m4-hpr-demographic-auth-mobile:
+  type: endpoint
+  gateway: hiecm
+  milestone: M4
+  title: Check whether the mobile number is the one on the Aadhaar record
+  summary: Tells you whether the professional's mobile number matches their Aadhaar
+    record, which decides whether it needs its own OTP.
+  page: site/docs/_notes/hiecm/m4_post_v2_registration_aadhaar_demographicauthviamobile.mdx
+  heading: m4-hpr-demographic-auth-mobile
+  url: /docs/hiecm/v3/api/m4/endpoints/m4-registration-api-s-collection-via-aadhaar/04-m4-post-v2-registration-aadhaar-demographicauthviamobile#m4-hpr-demographic-auth-mobile
+  operation: m4_post_v2_registration_aadhaar_demographicauthviamobile
+  related:
+    flows:
+    - hiecm.flow.m4-create-hpid
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.m4-hpr-fetch-documents-list:
+  type: endpoint
+  gateway: hiecm
+  milestone: M4
+  title: List the documents this professional must upload
+  summary: Returns the documents the registry expects for a professional and the id
+    to upload each one against.
+  page: site/docs/_notes/hiecm/m4_post_v1_doctors_fetch_documents_list.mdx
+  heading: m4-hpr-fetch-documents-list
+  url: /docs/hiecm/v3/api/m4/endpoints/m4-enrollment/03-m4-post-v1-doctors-fetch-documents-list#m4-hpr-fetch-documents-list
+  operation: m4_post_v1_doctors_fetch_documents_list
+  related:
+    flows:
+    - hiecm.flow.m4-register-professional
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.m4-hpr-fetch-professional-info:
+  type: endpoint
+  gateway: hiecm
+  milestone: M4
+  title: Read a professional's profile
+  summary: Returns what the registry holds for a healthcare professional, found by
+    HPR ID or other details.
+  page: site/docs/_notes/hiecm/m4_post_v1_doctors_fetch_professional_info.mdx
+  heading: m4-hpr-fetch-professional-info
+  url: /docs/hiecm/v3/api/m4/endpoints/m4-enrollment/05-m4-post-v1-doctors-fetch-professional-info#m4-hpr-fetch-professional-info
+  operation: m4_post_v1_doctors_fetch_professional_info
+  related:
+    flows:
+    - hiecm.flow.m4-register-professional
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.m4-hpr-register-professional:
+  type: endpoint
+  gateway: hiecm
+  milestone: M4
+  title: Register the professional's profile
+  summary: Adds qualifications, council registration and current work to an HPID that
+    already exists.
+  page: site/docs/_notes/hiecm/m4_post_v1_doctors_register_professional_new.mdx
+  heading: m4-hpr-register-professional
+  url: /docs/hiecm/v3/api/m4/endpoints/m4-enrollment/01-m4-post-v1-doctors-register-professional-new#m4-hpr-register-professional
+  operation: m4_post_v1_doctors_register_professional_new
+  related:
+    flows:
+    - hiecm.flow.m4-register-professional
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.m4-hpr-upload-document:
+  type: endpoint
+  gateway: hiecm
+  milestone: M4
+  title: Upload one of the professional's documents
+  summary: Attaches a professional's certificates to their registration against the
+    ids the document list returned.
+  page: site/docs/_notes/hiecm/m4_post_v1_uploads_upload_document.mdx
+  heading: m4-hpr-upload-document
+  url: /docs/hiecm/v3/api/m4/endpoints/m4-enrollment/04-m4-post-v1-uploads-upload-document#m4-hpr-upload-document
+  operation: m4_post_v1_uploads_upload_document
+  related:
+    flows:
+    - hiecm.flow.m4-register-professional
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.p1-get-certificate-public-key:
+  type: endpoint
+  gateway: hiecm
+  milestone: P1
+  title: GET Certificate (Public key)
+  summary: Returns the public certificate a PHR app encrypts sensitive values with
+    before sending them.
+  page: site/docs/_notes/hiecm/p1_get_v3_phr_app_login_public_certificate.mdx
+  heading: p1-get-certificate-public-key
+  url: /docs/hiecm/v3/api/p1/endpoints/p1-certificate-and-session/01-p1-get-v3-phr-app-login-public-certificate#p1-get-certificate-public-key
+  operation: p1_get_v3_phr_app_login_public_certificate
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.p1-encrypt-data-aadhaar-mobile-otp-password:
+  type: endpoint
+  gateway: hiecm
+  milestone: P1
+  title: Encrypt data (Aadhaar/Mobile/OTP/Password)
+  summary: Says which values a PHR app encrypts with the public certificate and which
+    field carries each one.
+  page: site/docs/_notes/hiecm/p1_get_v3_phr_app_login_public_certificate.mdx
+  heading: p1-encrypt-data-aadhaar-mobile-otp-password
+  url: /docs/hiecm/v3/api/p1/endpoints/p1-certificate-and-session/01-p1-get-v3-phr-app-login-public-certificate#p1-encrypt-data-aadhaar-mobile-otp-password
+  operation: p1_get_v3_phr_app_login_public_certificate
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.p1-enrollment-address-exists:
+  type: endpoint
+  gateway: hiecm
+  milestone: P1
+  title: Check whether an address is taken
+  summary: Says whether the ABHA address the person chose already exists.
+  page: site/docs/_notes/hiecm/p1_get_v3_phr_app_enrollment_isexists.mdx
+  heading: p1-enrollment-address-exists
+  url: /docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/04-p1-get-v3-phr-app-enrollment-isexists#p1-enrollment-address-exists
+  operation: p1_get_v3_phr_app_enrollment_isexists
+  related:
+    flows:
+    - hiecm.flow.p1-create-abha-address
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.p1-enrollment-address-suggestion:
+  type: endpoint
+  gateway: hiecm
+  milestone: P1
+  title: Ask for address suggestions
+  summary: Returns ABHA addresses the person can choose from, built from their name
+    and date of birth.
+  page: site/docs/_notes/hiecm/p1_post_v3_phr_app_enrollment_suggestion.mdx
+  heading: p1-enrollment-address-suggestion
+  url: /docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/03-p1-post-v3-phr-app-enrollment-suggestion#p1-enrollment-address-suggestion
+  operation: p1_post_v3_phr_app_enrollment_suggestion
+  related:
+    flows:
+    - hiecm.flow.p1-create-abha-address
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.p1-enrollment-enrol:
+  type: endpoint
+  gateway: hiecm
+  milestone: P1
+  title: Create the health address
+  summary: Creates the ABHA address the person chose and signs them in.
+  page: site/docs/_notes/hiecm/p1_post_v3_phr_app_enrollment_enrol.mdx
+  heading: p1-enrollment-enrol
+  url: /docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/05-p1-post-v3-phr-app-enrollment-enrol#p1-enrollment-enrol
+  operation: p1_post_v3_phr_app_enrollment_enrol
+  related:
+    flows:
+    - hiecm.flow.p1-create-abha-address
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.p1-enrollment-request-otp:
+  type: endpoint
+  gateway: hiecm
+  milestone: P1
+  title: Send the OTP that starts a registration
+  summary: Starts registration by sending a one time code to the mobile number, or
+    for the ABHA number, the person gave.
+  page: site/docs/_notes/hiecm/p1_post_v3_phr_app_enrollment_request_otp.mdx
+  heading: p1-enrollment-request-otp
+  url: /docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/01-p1-post-v3-phr-app-enrollment-request-otp#p1-enrollment-request-otp
+  operation: p1_post_v3_phr_app_enrollment_request_otp
+  related:
+    flows:
+    - hiecm.flow.p1-create-abha-address
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.p1-enrollment-verify-otp:
+  type: endpoint
+  gateway: hiecm
+  milestone: P1
+  title: Verify the registration OTP
+  summary: Checks the code against its transaction and returns the ABHA addresses
+    already held against that number.
+  page: site/docs/_notes/hiecm/p1_post_v3_phr_app_enrollment_verify.mdx
+  heading: p1-enrollment-verify-otp
+  url: /docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/02-p1-post-v3-phr-app-enrollment-verify#p1-enrollment-verify-otp
+  operation: p1_post_v3_phr_app_enrollment_verify
+  related:
+    flows:
+    - hiecm.flow.p1-create-abha-address
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.p1-login-request-otp:
+  type: endpoint
+  gateway: hiecm
+  milestone: P1
+  title: Send the OTP that starts a login
+  summary: Starts a sign in by sending a one time code, whichever of the five OTP
+    routes the person is using.
+  page: site/docs/_notes/hiecm/p1_post_v3_phr_app_login_request_otp.mdx
+  heading: p1-login-request-otp
+  url: /docs/hiecm/v3/api/p1/endpoints/p1-login-mobile/01-p1-post-v3-phr-app-login-request-otp#p1-login-request-otp
+  operation: p1_post_v3_phr_app_login_request_otp
+  related:
+    flows:
+    - hiecm.flow.p1-login
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.p1-login-using-password-search-user:
+  type: endpoint
+  gateway: hiecm
+  milestone: P1
+  title: Login using Password Search user
+  summary: Looks up an ABHA address and returns the sign in methods it accepts, before
+    a password login.
+  page: site/docs/_notes/hiecm/p1_post_v3_phr_app_login_search.mdx
+  heading: p1-login-using-password-search-user
+  url: /docs/hiecm/v3/api/p1/endpoints/p1-login-abha-address-password/01-p1-post-v3-phr-app-login-search#p1-login-using-password-search-user
+  operation: p1_post_v3_phr_app_login_search
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.p1-login-verify-otp:
+  type: endpoint
+  gateway: hiecm
+  milestone: P1
+  title: Verify the login OTP
+  summary: Checks the sign in code or password and returns the tokens the app holds
+    afterwards.
+  page: site/docs/_notes/hiecm/p1_post_v3_phr_app_login_verify.mdx
+  heading: p1-login-verify-otp
+  url: /docs/hiecm/v3/api/p1/endpoints/p1-login-mobile/02-p1-post-v3-phr-app-login-verify#p1-login-verify-otp
+  operation: p1_post_v3_phr_app_login_verify
+  related:
+    flows:
+    - hiecm.flow.p1-login
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.p1-login-verify-user:
+  type: endpoint
+  gateway: hiecm
+  milestone: P1
+  title: Say which address is signing in
+  summary: Resolves a sign in to one ABHA address when the mobile or ABHA number carries
+    several.
+  page: site/docs/_notes/hiecm/p1_post_v3_phr_app_login_verify_user.mdx
+  heading: p1-login-verify-user
+  url: /docs/hiecm/v3/api/p1/endpoints/p1-login-mobile/03-p1-post-v3-phr-app-login-verify-user#p1-login-verify-user
+  operation: p1_post_v3_phr_app_login_verify_user
+  related:
+    flows:
+    - hiecm.flow.p1-login
+    concepts:
+    - hiecm.concept.gateway-session

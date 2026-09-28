@@ -1,0 +1,21 @@
+## Answer a profile share with a token number {/* #p2-profile-on-share */}
+
+The facility's answer to a profile share. After ABDM posts a person's profile to your [Health Information Provider (HIP)](/docs/hiecm/v3/getting-started/glossary#hip) bridge, send this call. Put the token number the person shows at the counter in `acknowledgement.profile.tokenNumber`.
+
+<AgentOnly>
+**What happens.** Set `response.requestId` to the `REQUEST-ID` of the share request ABDM posted. Send either `acknowledgement` or `error`.
+
+**How you know it worked.** You receive `202`. ABDM passes the answer to the person's PHR app.
+
+**When it goes wrong.** `400` with `ABDM-1006` means the body is invalid. `408` with `ABDM-1007` means the answer came too late.
+</AgentOnly>
+
+## Send share acknowledgement {/* #m1-on-share-acknowledgement */}
+
+After your [Health Information Provider (HIP)](/docs/hiecm/v3/getting-started/glossary#hip) receives a person's shared profile, send this acknowledgement. On success, set `acknowledgement.status` to `SUCCESS`, and give the person's `abhaAddress` and a `profile` holding the counter `context` and the `tokenNumber` you assigned. `expiry` says how long the token stays valid. If you could not register the person, send `error` instead, with a code and message.
+
+<AgentOnly>
+**Before you start.** The `REQUEST-ID` of the share ABDM posted to you, for `response.requestId`, and the access token as `Authorization: Bearer <gateway token>`.
+
+**When it goes wrong.** A 404 with `ABDM-1001` means no share matches `response.requestId`. A 429 with `ABDM-1022` means wait before retrying.
+</AgentOnly>

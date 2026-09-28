@@ -11,6 +11,10 @@ to the docs pages, and only to the pages: every other surface is built from them
 
 1. For each correction, find the page and the section. Search the site, or run
    `grep -rn "<phrase from the correction>" site/docs`.
+   A correction to an API call or an error code goes to its notes partial, not
+   to the API page, which is generated: `site/docs/_notes/hiecm/<operationId>.mdx`
+   for a call, `site/docs/_notes/hiecm/errors/<module>.mdx` for an error code.
+   The partial renders on the API page, so edit it as you would a page section.
 2. Edit the visible text of that section on the page.
 3. If the section has an `<AgentOnly>` block in the page file, read it. These
    notes are hidden on the site and NHA does not review them, so you are the

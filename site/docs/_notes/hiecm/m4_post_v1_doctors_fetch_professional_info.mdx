@@ -1,0 +1,7 @@
+## Read a professional's profile {/* #m4-hpr-fetch-professional-info */}
+
+Reads back what the [HPR](/docs/hiecm/v3/getting-started/glossary#hpr) holds for a healthcare professional. Call it before you register someone, so a professional who already has a profile is not registered again. Search by the HPR ID in `practitioner.id`, or by `name`, `contactNumber`, `state`, `registrationNumber` and `stateCouncilName`.
+
+<AgentOnly>
+**How you know it worked.** The response carries a `message` and the matching `practitioners`.
+</AgentOnly>

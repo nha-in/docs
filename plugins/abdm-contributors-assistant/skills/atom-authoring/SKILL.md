@@ -48,7 +48,7 @@ skills:
 Field rules that catch people out:
 
 - `id` is `gateway.type.slug`, lowercase, stable, and never reused. Renaming an id is a breaking change and needs a redirect.
-- `gateway` is one of `hiecm`, `uhi`, `nhcx`, `shared`. Shared atoms have no milestone; use `n/a`. All four lint clean. `uhi` and `nhcx` carry no atoms yet because Phase 1's time went to HIE-CM M1 to M3, not because anything rejects them. Write one when you have the time to prove it.
+- `gateway` is one of `hiecm`, `uhi`, `nhcx`, `shared`. Shared atoms have no milestone; use `n/a`. All four lint clean. `uhi` carries no atoms yet because Phase 1's time went to HIE-CM, not because anything rejects it. Write one when you have the time to prove it.
 - `version` is the NHA spec version this is true for, not the Catalogue version. The Catalogue version is stamped by the build.
 - `summary` is one sentence a new developer understands with no acronyms. It is what the index and the search result show. Write it last, after the body, when you know what the atom actually says.
 - There is no `verified` field. Lint fails an atom that carries one. The Catalogue is published as ABDM's statement of how ABDM works; sandbox checks are internal, run by `npm run verify:atoms`, and their evidence lives under `catalogue/verification/`, never in the atom.
@@ -141,7 +141,7 @@ if you only have the repository open.
 
 ## Migrated atoms are edited on their page
 
-An atom listed in `catalogue/map.yaml` has no hand-written file. Its words are
+An atom listed in `catalogue/map.yaml` or a fragment in `catalogue/map.d/` has no hand-written file. Its words are
 the page section named by its `page` and `heading`, and its rules for agents are
 the `<AgentOnly>` notes in that section. Edit the page, then run
 `npm run build:sections`. Never edit `catalogue/generated/`. Only an atom that is
@@ -155,6 +155,8 @@ How a section becomes an atom:
 - An agent note may narrow or restate the page and the specifications. It never adds an API literal, anything in backticks, that neither states. NHA does not review the notes, so CI is their only guard.
 - The map entry holds `type`, `gateway`, `milestone`, `title`, `summary`, `page`, `heading`, `url` and `related`, and no prose. No `related` list names its own atom.
 - `<AgentOnly>` is JSX, so a page gains one only if it is `.mdx`. Convert a page in its own commit, and build the site before any content moves.
+- Endpoint, callback and error atoms have no hand-written page, because API pages are generated. Their sections live in hand-written notes partials: `site/docs/_notes/<gateway>/<operationId>.mdx`, rendered on that operation's generated API page, and `site/docs/_notes/<gateway>/errors/<module>.mdx`, rendered after the module's error table on `/docs/<gateway>/<version>/api/<module>/errors`. A partial has no frontmatter and holds only sections with explicit heading ids, one per atom, nothing else. Endpoint and callback map entries also carry `operation` (contract v2).
+- A batch of new map entries goes in one fragment of its own, `catalogue/map.d/<gateway>-<batch>.yaml`, so batches do not conflict in `map.yaml`. An id defined in two map files fails `check:sections`.
 
 Moving a class of atoms onto pages follows the checklist in the page-canonical plan: heading ids first, words onto the page, map entries added and files deleted in the same PR, `npm run report:migration -- <ids>` pasted into the PR, and the retrieval gate run before and after with at least one question per migrated atom (`portal-proof`). NHCX atoms do not move until the NHCX source is decided.
 

@@ -1,0 +1,13 @@
+## Confirm the link with the code the person received {/* #p2-link-care-context-confirm */}
+
+The last call in user initiated linking. Send the code the person received as `token`, with the `linkRefNumber` from the on-init callback. The code proves the person is who the facility thinks they are. The outcome arrives on your on-confirm callback.
+
+<AgentOnly>
+**Before you start.** The `referenceNumber` from the on-init callback's `link`, sent here as `linkRefNumber`, and the code the person typed. Send `token` as a number, not a string.
+
+**What happens.** You receive `202`. The outcome arrives at `/api/v3/hiu/patient/care-context/on-confirm`.
+
+**How you know it worked.** The on-confirm callback lists the linked care contexts in `careContexts`.
+
+**When it goes wrong.** `400` with `ABDM-1105` means a duplicate confirm request. Wait for the callback instead of sending the request again.
+</AgentOnly>

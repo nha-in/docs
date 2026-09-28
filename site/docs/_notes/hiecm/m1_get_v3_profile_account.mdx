@@ -1,0 +1,9 @@
+## Read the signed in person's ABHA profile {/* #m1-profile-get-account */}
+
+Returns the full [ABHA](/docs/hiecm/v3/getting-started/glossary#abha) profile of the person whose `X-token` you send. It covers name, date of birth, gender, mobile, address with state and district codes, [KYC](/docs/hiecm/v3/getting-started/glossary#kyc) status and preferred ABHA address. It needs the person's token, not only yours, because it reads one person's account.
+
+<AgentOnly>
+**Before you start.** The person's `X-token` from login or enrolment, sent as `Bearer <token>`.
+
+**When it goes wrong.** A 400 with `Invalid X-token` means the token is missing, wrong or expired: refresh it or sign in again. A 404 with `ABDM-1030` means the `REQUEST-ID` was refused: send a fresh one.
+</AgentOnly>

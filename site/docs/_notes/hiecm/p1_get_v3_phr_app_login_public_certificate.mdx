@@ -1,0 +1,26 @@
+## GET Certificate (Public key) {/* #p1-get-certificate-public-key */}
+
+Returns the public certificate a [PHR](/docs/hiecm/v3/getting-started/glossary#phr) app encrypts sensitive values with before it sends them. Fetch it before registration or login. The call takes no request body, only the `REQUEST-ID` and `TIMESTAMP` headers with your access token.
+
+<AgentOnly>
+**Before you start.** An access token for the `Authorization` header, a fresh UUID for `REQUEST-ID`, and the current time in UTC for `TIMESTAMP`.
+
+**What happens.** You fetch the certificate once and encrypt with it every value the registration, login and profile calls take encrypted.
+</AgentOnly>
+
+## Encrypt data (Aadhaar/Mobile/OTP/Password) {/* #p1-encrypt-data-aadhaar-mobile-otp-password */}
+
+A [PHR](/docs/hiecm/v3/getting-started/glossary#phr) app never sends an Aadhaar number, mobile number, [ABHA number](/docs/hiecm/v3/getting-started/glossary#abha-number), one time password ([OTP](/docs/hiecm/v3/getting-started/glossary#otp)) or password in clear text. Encrypt each one with the public certificate from this call, then send the result in its field:
+
+| Call | Field that carries the encrypted value |
+| --- | --- |
+| Request an OTP | `loginId` |
+| Verify an OTP | `otpValue` |
+| Log in with a password | `password` |
+| Enrol an ABHA address | `mobile` and `password` in `phrDetails` |
+
+<AgentOnly>
+**Before you start.** The public certificate from this call.
+
+**When it goes wrong.** A call refuses an identifier it cannot read with a `400` naming the field, for example `Invalid LoginId`. Check that the value was encrypted with this certificate before you look elsewhere.
+</AgentOnly>
