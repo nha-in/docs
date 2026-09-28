@@ -79234,7 +79234,7 @@ They are no longer published; remove them from your agent. [Build with AI](/docs
 
 # 29 September 2026
 
-4 changes
+7 changes
 
 ### Ambulance Booking has an API reference
 
@@ -79252,6 +79252,18 @@ Five calls, for EUAs and HSPAs, each on its own page with a request you can send
 
 Reinstall to move from 0.5.0. [Build with AI](/docs/pr-62/docs/hiecm/v3/getting-started/build-with-ai).
 
+### The abdm-contributors-assistant plugin is 0.3.4
+
+Reinstall to move from 0.3.0. [Build with AI](/docs/pr-62/docs/hiecm/v3/getting-started/build-with-ai).
+
+### The abdm-integrators-assistant plugin is 0.9.2
+
+Reinstall to move from 0.9.0. [Build with AI](/docs/pr-62/docs/hiecm/v3/getting-started/build-with-ai).
+
+### The nhcx plugin is 1.0.1
+
+Reinstall to move from 1.0.0. [Build with AI](/docs/pr-62/docs/hiecm/v3/getting-started/build-with-ai).
+
 
 ---
 
@@ -79261,12 +79273,15 @@ Changes that affect what you can build against, newest first. Each entry links t
 
 ## 29 September 2026
 
-4 changes
+7 changes
 
 - [Ambulance Booking has an API reference](/docs/pr-62/docs/whats-new/2026-09-29#ambulance-booking-has-an-api-reference)
 - [Physical Consultation has an API reference](/docs/pr-62/docs/whats-new/2026-09-29#physical-consultation-has-an-api-reference)
 - [Network and discovery has an API reference](/docs/pr-62/docs/whats-new/2026-09-29#network-and-discovery-has-an-api-reference)
 - [The abdm-integrators-assistant plugin is 0.9.0](/docs/pr-62/docs/whats-new/2026-09-29#the-abdm-integrators-assistant-plugin-is-090)
+- [The abdm-contributors-assistant plugin is 0.3.4](/docs/pr-62/docs/whats-new/2026-09-29#the-abdm-contributors-assistant-plugin-is-034)
+- [The abdm-integrators-assistant plugin is 0.9.2](/docs/pr-62/docs/whats-new/2026-09-29#the-abdm-integrators-assistant-plugin-is-092)
+- [The nhcx plugin is 1.0.1](/docs/pr-62/docs/whats-new/2026-09-29#the-nhcx-plugin-is-101)
 
 ## 25 September 2026
 
