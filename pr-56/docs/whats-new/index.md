@@ -2,6 +2,12 @@
 
 Changes that affect what you can build against, newest first. Each entry links to what you can now read, run or consume.
 
+## 29 September 2026
+
+1 change
+
+- [The abdm-integrators-assistant plugin is 0.9.0](/docs/pr-56/docs/whats-new/2026-09-29#the-abdm-integrators-assistant-plugin-is-090)
+
 ## 25 September 2026
 
 31 changes
