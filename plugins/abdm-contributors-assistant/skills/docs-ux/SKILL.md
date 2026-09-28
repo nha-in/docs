@@ -90,11 +90,23 @@ The landing tab. In order:
 Descend by choice, never by listing everything flat:
 
 1. Choose your gateway: HIE-CM, UHI, NHCX
-2. Choose your role: PHR or information management system
-3. Choose your module: M1, M2, M3
+2. Choose your role: on HIE-CM, PHR or information management system; on
+   NHCX, provider or payer
+3. Choose your module: on HIE-CM, M1 to M4 and P1 to P4; on NHCX, one group
+   per specification, such as eligibility, preauth and claim
 4. Then the module ladder below
 
-Phase scope renders honestly: HIE-CM M1 to M3 carry content. UHI and M4 pages say Phase 2 and stop. NHCX says out of scope. See the phase table in `abdm-portal-index`.
+Scope renders honestly, and every page says what its content rests on:
+
+| Gateway | What renders | What it rests on |
+|---|---|---|
+| HIE-CM, M1 to M4 and P1 to P4 | Every operation, generated from `hiecm-*.yaml` in the order its journey file declares | The specification. No HIE-CM operation has an atom; the M1 to M3 design rules do |
+| NHCX | Every operation, generated from the fourteen `nhcx-*.yaml` files, beside the role, registry, FHIR, error and troubleshooting pages | The specifications and the NHCX atoms |
+| UHI | Orientation pages, and no reference yet | NHA's onboarding documents |
+
+M4 is not Phase 2 and NHCX is not out of scope: both render in full. No page
+carries a sandbox result, so no page may say or imply that a call was run. Counts move with every merge, so read them from the
+phase table in `abdm-portal-index`, not from here.
 
 ### Tab 3: Developer resources
 
@@ -123,7 +135,7 @@ Contact emails and channels, and links to connectors. Short. A support tab that 
 
 ## The module page ladder
 
-Every module (M1, M2, M3) walks the same ladder, in this order. The compiler and reviewer check for it the way they check the five atom sections:
+Every HIE-CM milestone module (M1 to M4) walks the same ladder, in this order. The compiler and reviewer check for it the way they check the five atom sections:
 
 1. **Overview**: building blocks used, prerequisites, each linking to the atom that gets you there
 2. **User journey**: flow diagrams (mermaid), one per journey

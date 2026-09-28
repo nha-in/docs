@@ -28,7 +28,7 @@ from openpyxl.utils import get_column_letter as L
 from openpyxl.worksheet.datavalidation import DataValidation
 from openpyxl.worksheet.table import Table, TableStyleInfo
 
-PLAN_VERSION = "2026.09.28"
+PLAN_VERSION = "2026.09.29-2"
 SHEET_URL = "https://docs.google.com/spreadsheets/d/17OkDm9-wUSgMZ5G2Tegv69-MP-aXTdjjjN37t4-HxSE/edit"
 
 NAVY, BAND, PLAN = "14274E", "E8EDF7", "A9C3F0"
@@ -92,7 +92,7 @@ DONE_CRITERIA = [
     (7,  "The watcher has opened at least one real pull request from a real NHA source change.", "Shyamjith"),
     (8,  "The support agent answered the six eval tasks from the Catalogue, citing atom ids, with the score recorded.", "Both"),
     (9,  "First day developer test: no ABDM exposure, docs plus sandbox credentials only, a working M1 call in under two hours with no human help.", "Product"),
-    (10, "Landing page, index entries and skill descriptions state the phase scope: M1 to M3 in Phase 1, M4 and UHI in Phase 2, NHCX out. Lint rejects gateway: nhcx.", "Product"),
+    (10, "Landing page, index entries and skill descriptions state the phase scope as plan section 7 does, keeping what exists apart from what is only specified, and naming what NHCX carries: specifications, pages, atoms and its own skills, none of it proven against the sandbox.", "Product"),
     (11, "Public repo, neutral licence, CONTRIBUTING, SECURITY and GOVERNANCE files, and no eka.care reference in the core Catalogue.", "Product"),
 ]
 

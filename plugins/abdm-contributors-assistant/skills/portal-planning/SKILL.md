@@ -1,9 +1,9 @@
 ---
 name: portal-planning
 description: The ABDM Developer Portal schedule, workstreams, ownership split, two-day shipping increments, definition of done, and risk register. Use whenever someone asks what ships when, what is blocked, who owns a piece of work, whether V1 is on track, what counts as finished, how to sequence a task, or wants a standup, a status update, or a re-plan. Also use when scope is being added or cut so the trade is made against the schedule rather than in the abstract.
-plan_version: 2026.09.28
+plan_version: 2026.09.29-2
 plan_source: abdm-v1-phase1-architecture-and-plan.md
-plan_hash: sha256:b504e9424235906f7ad60616c3dfae402ac5e71d62b8aaa30ab582c7affac368
+plan_hash: sha256:e9a0800d8b18912b18197200e0db3f5cf4b28f8daad49e352c5986232fdbbb80
 compiled_from_plan: true
 ---
 
@@ -62,7 +62,7 @@ Every item is checkable. None is a judgement call. This is the list to run befor
 7. The watcher has opened at least one real pull request from a real source change
 8. The support agent answered the six eval tasks from the Catalogue, citing atom ids, with the score recorded
 9. The first-day developer test passes: no ABDM exposure, docs URL and sandbox credentials only, successful M1 ABHA verification call in under two hours with no human asked
-10. The landing page, index entries and skill descriptions state the phase scope as the plan's §7 states it, keeping what exists separate from what is merely specified, and naming NHCX as present in site pages and carrying no atoms yet
+10. The landing page, index entries and skill descriptions state the phase scope as the plan's §7 states it, keeping what exists separate from what is merely specified, and naming what NHCX carries: specifications, site pages, atoms and its own skills, none of it proven against the sandbox
 11. Public repo, neutral licence, contributing, security and governance files present, no `eka.care` reference in the core Catalogue
 
 ## Risk register
@@ -71,11 +71,11 @@ Each risk carries the decision it needs, because an unowned risk is just anxiety
 
 | Risk | Mitigation | Decision needed |
 |---|---|---|
-| Verification lags authoring badly, and the gap has widened. 57 atoms are written and none has been run against sandbox, while the plan promises dummy proof and recorded responses | Credentials, then a verification sweep across M1 to M3 before ship. Evidence lands in `catalogue/verification/`, and a wrong atom is corrected through an issue keyed by its id | The long pole, and authoring has moved three times since it was written. If credentials slip, ship atoms that state what the specification says and nothing more |
+| Verification lags authoring badly, and the gap has widened. 627 atoms are written, 536 of them NHCX, and none has been run against sandbox, while the plan promises dummy proof and recorded responses | Credentials, then a verification sweep across M1 to M3 before ship. Evidence lands in `catalogue/verification/`, and a wrong atom is corrected through an issue keyed by its id | The long pole, and authoring has moved three times since it was written. If credentials slip, ship atoms that state what the specification says and nothing more |
 | NHA swagger is inconsistent or incomplete, with known 403s on some V3 sandbox endpoints | Ingest, hand-correct, record both the NHA file and the correction in `sources`, record the correction and leave the atom stating what the specification carries | Accept that some endpoints ship without a recorded sandbox response |
 | Docusaurus guides and Scalar references are two rendering systems on one site | Keep prose in plain markdown, avoid MDX beyond callouts and steps, so it ports anywhere; specs stay the single source under `catalogue/openapi/` | Decided: fully self-hosted from day one, no hosted-Scalar phase |
 | An existing community docs site overlaps heavily | Reach out early, propose the Catalogue as shared upstream | Product makes the call and the call |
-| The time available is not enough for three gateways at full depth | Atom depth is HIE-CM only, and since the 16 September 2026 reset no HIE-CM module carries atoms. Every HIE-CM module, UHI and NHCX stay at specification or site page depth, with no atoms written against them yet | Needs sign-off, already decided in the plan |
+| The time available is not enough for three gateways at full depth | Atom depth in the ten days was HIE-CM only, and since the 16 September 2026 reset no HIE-CM operation carries an atom. Every HIE-CM module and UHI stay at specification or site page depth. NHCX went on to atoms after the ten days, and none of them is proven against the sandbox | Needs sign-off, already decided in the plan |
 | The prose pass invents facts | `scripts/validate-skills.mjs` fails the build on a cited atom id the Catalogue does not define and on a curl target recorded on no atom. It does not diff every token | Residual. A fabricated sentence carrying no identifier passes, which is why the compiled skills still need a reader |
 | The Docs MCP is public with no auth in V1 | Read-only server over public docs; rate limiting at the reverse proxy; Ollama sidecar never exposed | Add auth and quotas only when abuse is observed |
 | Ollama sidecar down at query time | Search degrades to keyword-only by design; `/healthz` reports `embeddings: false` | None, the degradation is tested |
