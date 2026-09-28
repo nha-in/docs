@@ -67,6 +67,17 @@ Keeping callbacks in the module file means one retrievable chunk per
 callback, carrying its own `operationId`, indexed by the same pipeline as
 the request operations.
 
+### UHI is the exception
+
+A UHI callback is not sent by a gateway to one integrator. `on_init` is sent
+by the HSPA to the EUA, and whether it is "your" callback depends on which
+role you build, so a `webhooks` entry would be right for one reader and wrong
+for the other. UHI participant calls are therefore `paths`, each carrying
+`x-abdm-hosted-by` (`gateway`, `eua` or `hspa`) and a server with a
+`{provider_uri}` or `{consumer_uri}` variable. Requests and their callbacks are
+paired with `x-abdm-answered-by` and `x-abdm-triggered-by`, as webhooks are.
+Only `paths` reach the Docs MCP index, which is the other reason.
+
 ## operationId
 
 The join key for everything downstream, so it is stable and unique across
@@ -124,7 +135,7 @@ specification must carry.
 | Extension | Where | What it carries |
 |---|---|---|
 | `x-abdm-gateway` | `info` | `hiecm`, `uhi`, `nhcx` or `shared`. All four are accepted. |
-| `x-abdm-module` | `info` | HIE-CM: `gateway`, `M1`, `M2`, `M3`, `M4`. NHCX: the module id, as `claim` or `registry` |
+| `x-abdm-module` | `info` | HIE-CM: `gateway`, `M1`, `M2`, `M3`, `M4`. NHCX: the module id, as `claim` or `registry`. UHI: `network`, `consultation`, `ambulance` |
 | `x-abdm-phase` | `info` | `1` for what ships now, `2` for declared but unwritten |
 | `x-abdm-roles` | `info` | Which integrator roles call this module |
 | `x-abdm-sources` | root | Where the content came from, with fetch status |
