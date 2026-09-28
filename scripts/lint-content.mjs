@@ -218,7 +218,8 @@ const show = (list, limit = 40) => {
 // Anything else inside that div, an anchor span or a second paragraph, shifts
 // every following term into the definition column and the table reads as
 // nonsense from there down. That shipped once without anyone noticing, so it is
-// checked here rather than left to the eye.
+// checked here rather than left to the eye. An <AgentOnly> note is exempt:
+// docitem.css spans it across the whole row, so it takes no cell.
 const glossaryDir = join(root, 'site', 'docs', '_glossary');
 for (const name of readdirSync(glossaryDir).filter((f) => f.endsWith('.mdx'))) {
   const opened = readFileSync(join(glossaryDir, name), 'utf8').split(
@@ -227,6 +228,7 @@ for (const name of readdirSync(glossaryDir).filter((f) => f.endsWith('.mdx'))) {
   if (!opened) continue;
   const blocks = opened
     .split('</div>')[0]
+    .replace(/<AgentOnly>[\s\S]*?<\/AgentOnly>/g, '')
     .split(/\n\s*\n/)
     .map((block) => block.trim())
     .filter(Boolean);
