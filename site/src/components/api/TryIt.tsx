@@ -18,7 +18,9 @@ import {
   TooltipTrigger,
 } from '@site/src/components/ui/tooltip';
 import type {Field, Operation} from './ApiEndpoint';
-import {CopyButton} from './ApiEndpoint';
+import {AskAiButton, CopyButton, fenced} from './ApiEndpoint';
+import {inline} from './Markdown';
+import {redact} from './redact';
 import type {BodyNode} from './body';
 import {compose, leaves, seed, toTree} from './body';
 import {curlFrom} from './curl';
@@ -29,10 +31,14 @@ import {
   findToken,
   GENERATED_HEADERS,
   perRequestHeaders,
+  readCarried,
   readToken,
+  subscribeCarried,
   subscribeToken,
+  writeCarried,
   writeToken,
 } from './session';
+import {carriedValues, fillFrom} from './carry';
 
 // The V3 public certificate lives at this path under the M1 server. It is the
 // key that encrypts the identifiers in an M1 request body, and its response
@@ -51,20 +57,6 @@ function environmentOf(description: string): 'Production' | 'Sandbox' | null {
   if (/\bprod/i.test(description)) return 'Production';
   if (/sandbox|sbx|\bdev\b/i.test(description)) return 'Sandbox';
   return null;
-}
-
-/**
- * The lede is one paragraph of the operation's markdown description, rendered
- * as text rather than through the MDX pipeline, so an inline code span arrived
- * as literal backticks: "Send the `txnId` from the OTP request". The same
- * string is code on the page body. Backticks are the only markup NHA's
- * summaries use, so that is all this turns back into elements.
- */
-function withInlineCode(text: string): React.ReactNode[] {
-  // A capturing split alternates plain text and the contents of each span.
-  return text
-    .split(/`([^`]+)`/g)
-    .map((part, index) => (index % 2 ? <code key={index}>{part}</code> : part));
 }
 
 /** Refresh REQUEST-ID/TIMESTAMP in a header map, leaving everything else as typed. */
@@ -365,6 +357,29 @@ export default function TryIt({operation}: {operation: Operation}) {
     setHeaders((current) => withFreshGenerated(current));
   }, []);
 
+  // A value an earlier step returned fills the field whose example names it:
+  // the txnId an OTP request hands the verify call, the X-token a login hands
+  // the profile calls. That step may have run on another page in this tab.
+  // Only empty fields are filled, so nothing the reader typed is replaced.
+  useEffect(() => {
+    const headerExamples = Object.fromEntries(operation.headers.map((h) => [h.name, h.example]));
+    const fill = (current: Record<string, string>, examples: Record<string, unknown>, carried: Record<string, string>) => {
+      let next = current;
+      for (const [name, example] of Object.entries(examples)) {
+        if (current[name]) continue;
+        const value = fillFrom(example, carried);
+        if (value !== undefined) next = {...next, [name]: value};
+      }
+      return next;
+    };
+    const apply = (carried: Record<string, string>) => {
+      setValues((current) => fill(current, ghosts, carried));
+      setHeaders((current) => fill(current, headerExamples, carried));
+    };
+    apply(readCarried());
+    return subscribeCarried(apply);
+  }, [ghosts, operation.headers]);
+
   // The operation's own security array is the only source of truth for
   // whether a bearer token belongs on this request. A token can be sitting
   // in the session store from an earlier panel; that does not make this
@@ -591,6 +606,12 @@ export default function TryIt({operation}: {operation: Operation}) {
         setToken(returned);
         writeToken(returned);
       }
+      // And whatever it hands the next step: a txnId, an X-token.
+      try {
+        writeCarried(carriedValues(JSON.parse(text)));
+      } catch {
+        // Not JSON, so nothing to carry.
+      }
 
       setResult({
         state: 'done',
@@ -651,7 +672,12 @@ export default function TryIt({operation}: {operation: Operation}) {
         </span>
         <DialogTitle className="api-console__title">{operation.title || operation.summary}</DialogTitle>
 
-        <code className="api-console__url">
+        {/* The address bar fills in the method's colour while the call is
+            out, most of the way, and finishes when the response lands. */}
+        <code
+          className={`api-console__url api-console__url--${operation.method.toLowerCase()}${
+            result.state === 'sending' ? ' api-console__url--running' : ''
+          }`}>
           {environment ? (
             <TooltipProvider>
               <Tooltip>
@@ -742,8 +768,11 @@ export default function TryIt({operation}: {operation: Operation}) {
         </DialogClose>
       </header>
 
+      {/* The first paragraph of the description, with the inline markup the
+          endpoint page renders: code spans and bold runs. NHA's M1 ledes use
+          both, and a backticks-only renderer left "**parent's**" as typed. */}
       <DialogDescription className="api-console__lede">
-        {withInlineCode(operation.description.split('\n\n')[0] || operation.summary)}
+        {inline(operation.description.split('\n\n')[0] || operation.summary)}
       </DialogDescription>
 
       <div className="api-console__body">
@@ -1002,6 +1031,18 @@ export default function TryIt({operation}: {operation: Operation}) {
               <span className="api-panel__label">Request</span>
               <span className="api-panel__lang">cURL</span>
               <CopyButton value={curl} />
+              {/* The assistant cannot be used on top of this modal console,
+                  so asking closes the console first. Tokens are taken out:
+                  the assistant needs the shape of the call, not the keys. */}
+              <DialogClose asChild>
+                <AskAiButton
+                  label="Ask AI about this request"
+                  title={`Request as typed: ${operation.title || operation.summary}`}
+                  markdown={() =>
+                    `**Endpoint:** \`${operation.method} ${operation.path}\`\n\n${fenced('bash', redact(curl))}`
+                  }
+                />
+              </DialogClose>
             </div>
             <div
               className="api-console__pane api-console__pane--curl"
@@ -1061,6 +1102,29 @@ export default function TryIt({operation}: {operation: Operation}) {
                 {expanded ? 'Collapse' : 'Expand'}
               </button>
               {copyable ? <CopyButton value={copyable} /> : null}
+              {copyable || result.state === 'failed' ? (
+                <DialogClose asChild>
+                  <AskAiButton
+                    label="Ask AI about this response"
+                    title={
+                      tab === 'live'
+                        ? `Live response: ${operation.title || operation.summary}`
+                        : `${tab} example: ${operation.title || operation.summary}`
+                    }
+                    markdown={() => {
+                      const endpoint = `**Endpoint:** \`${operation.method} ${operation.path}\``;
+                      if (tab === 'live' && result.state === 'failed') {
+                        return `${endpoint}\n\n**The request did not complete:** ${redact(result.message)}`;
+                      }
+                      const status =
+                        tab === 'live' && result.state === 'done'
+                          ? `**Live response:** ${result.status} ${result.statusText}, in ${result.ms} ms`
+                          : `**Documented response:** ${tab}${documented?.description ? `, ${documented.description}` : ''}`;
+                      return `${endpoint}\n\n${status}\n\n${fenced('json', redact(copyable))}`;
+                    }}
+                  />
+                </DialogClose>
+              ) : null}
             </div>
 
             <div

@@ -1,4 +1,4 @@
-# Design M2, health information provider services
+# Design M2, create and link records
 
 What the integration has to do to the journey around the calls: how many questions a patient is asked, where a failure is shown, and what a screen is forbidden to claim. Every rule below comes from a Catalogue atom, cited at the end.
 
@@ -252,14 +252,13 @@ Not an empty list, and not silence. A named, visible condition, saying what a
 correct reply would have been.
 
 Where the payload is undocumented, record the entire body and the entire header
-set on the first delivery of each path, before anything tries to read it. That
-first delivery is also the only way to answer a question the published sources
-do not: which header carries the signed token on an inbound callback. ABDM signs
-its callbacks and publishes the keys, and no source names the field carrying the
-signature.
-
+set on the first delivery of each path, before anything tries to read it.
 Record header names and lengths, never values. The name is the finding. The
 value is a credential.
+
+Every inbound callback carries a bearer token in the `Authorization` header, as
+`Bearer <token>`. Verify it before your handler does any work. See
+[proving a callback came from ABDM](/docs/hiecm/v3/concepts/callback-authenticity).
 
 The security rule underneath: a URL reachable by ABDM is reachable by everyone.
 A presented signature that fails verification is refused everywhere. An absent

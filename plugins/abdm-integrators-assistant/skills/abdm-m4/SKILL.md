@@ -3,7 +3,7 @@ name: abdm-m4
 description: Use when building, debugging or testing ABDM Milestone 4, the NHPR: creating an HPID, registering a healthcare professional on the HPR, onboarding a facility to the HFR, and linking that facility to a bridge. Carries the operations, their hosts and headers.
 ---
 
-# ABDM M4, facility and professional registries
+# ABDM M4, register facilities and professionals
 
 Generated from the ABDM Developer Portal on 2026-09-16, catalogue version 2026.09.16. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.
 
@@ -22,7 +22,7 @@ What it cannot do yet matters as much. Read **Before anything else** below befor
 ## What is in this folder
 
 - **Scaffold.** Survey the codebase first when one exists, then build it flow by flow against the sandbox, as a loop that ends when the step's exit condition holds rather than on a call returning 200. [references/scaffold.md](references/scaffold.md)
-- **Integrate.** 104 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
+- **Integrate.** 91 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
 - **Debug.** The specification's examples return no error code for this module. [references/debug.md](references/debug.md)
 
 This file is the map. Each line above is a file beside it, opened one at a time rather than read through.

@@ -102,6 +102,63 @@ export function forget(): void {
   } catch {}
 }
 
+/**
+ * Which conversation this tab is in the middle of.
+ *
+ * The panel lives in its host's page, and the host can take it away: this
+ * site's landing page has a different top bar, and any full page load builds
+ * a new panel. Readers came back to an empty chat and said it had forgotten
+ * them. The conversation itself is already in the list above, so all a tab
+ * has to remember is which one it was, and sessionStorage forgets that when
+ * the tab closes, which is when a reader expects to start again.
+ */
+const CURRENT_KEY = 'abdm-ask-ai-current';
+
+export function currentId(): string | null {
+  try {
+    return sessionStorage.getItem(CURRENT_KEY);
+  } catch {
+    return null;
+  }
+}
+
+export function setCurrentId(id: string): void {
+  try {
+    sessionStorage.setItem(CURRENT_KEY, id);
+  } catch {}
+}
+
+export function clearCurrentId(): void {
+  try {
+    sessionStorage.removeItem(CURRENT_KEY);
+  } catch {}
+}
+
+/**
+ * The conversation the reader chose to carry on past the window with, so the
+ * offer to start a new one is made once, and not again after a reload.
+ */
+const CONTINUED_KEY = 'abdm-ask-ai-continued';
+
+export function continuedId(): string | null {
+  try {
+    return sessionStorage.getItem(CONTINUED_KEY);
+  } catch {
+    return null;
+  }
+}
+
+export function setContinuedId(id: string): void {
+  try {
+    sessionStorage.setItem(CONTINUED_KEY, id);
+  } catch {}
+}
+
+/** The conversation to put back on screen, if this tab was in one. */
+export function resumable<T extends Said>(list: Session<T>[], id: string | null): Session<T> | null {
+  return (id && list.find((session) => session.id === id)) || null;
+}
+
 /** Short and plain, because a date on a list of ten is noise. */
 export function whenSaid(at: number, now = Date.now()): string {
   const mins = Math.floor((now - at) / 60000);

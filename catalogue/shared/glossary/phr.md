@@ -37,7 +37,7 @@ account of the person holding the application.
 
 ## What happens
 
-`phr_post_consent_v3_request_request_id_approve` is the call this application
+`p2_post_consent_v3_request_request_id_approve` is the call this application
 makes when the patient agrees to a request, and the deny and revoke calls sit
 beside it.
 

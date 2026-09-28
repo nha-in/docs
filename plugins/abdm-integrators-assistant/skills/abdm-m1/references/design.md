@@ -1,4 +1,4 @@
-# Design M1, ABHA creation and verification
+# Design M1, create and verify ABHA
 
 What the integration has to do to the journey around the calls: how many questions a patient is asked, where a failure is shown, and what a screen is forbidden to claim. Every rule below comes from a Catalogue atom, cited at the end.
 
@@ -89,7 +89,7 @@ question.
 
 | Route | Questions | One time passwords | Calls |
 |---|---|---|---|
-| Scan and share | 0 | 0 | 0 out, 2 in |
+| Scan and register | 0 | 0 | 1 out, 1 in |
 | Create, demographic authentication | 1 | 0 | 1 |
 | Create, fingerprint | 1 | 0 | 1 to 3 |
 | Create, face | 1 | 0 | 3 plus polling |
@@ -119,7 +119,7 @@ Every field the profile carries arrives filled, and the only screen asking for
 input is the one confirming the form.
 
 Count the one time passwords spent on a full registration. On the demographic
-route and on scan and share that count is zero.
+route and on scan and register that count is zero.
 
 ### When it goes wrong
 
@@ -329,7 +329,7 @@ Ask these six. Each is a yes or a no.
 |---|---|
 | Are you a government integrator? | The demographic route: one call, no one time password |
 | Does your record hold the patient's mobile at check in? | No route. It removes a screen, because the lookup is submitted from the number you already hold |
-| Are you a registered facility with a callback ABDM can reach? | Scan and share, which then becomes the default counter experience |
+| Are you a registered facility with a callback ABDM can reach? | Scan and register, which then becomes the default counter experience |
 | Is there a fingerprint or iris reader at the desk? | The biometric method |
 | Do patients arrive with the ABHA app? | The face route, as a second method rather than a first |
 | Which record types does your system actually produce? | The bundles worth generating, rather than all seven |
@@ -339,7 +339,7 @@ integrator then implements renderers for the screens that survive, rather than
 implementing a flow.
 
 The sixth question belongs here rather than with the record work, because
-scaffolding all seven record types before knowing which two a system produces is
+scaffolding all eight record types before knowing which two a system produces is
 the most expensive guess available in this integration.
 
 ### How you know it worked
@@ -670,17 +670,11 @@ that is a decision rather than an omission.
 | Placement | What a desk is asked for |
 |---|---|
 | Find a forgotten ABHA | A patient knows they have one and cannot produce it |
-| Upgrade a mobile made address | An account that was never verified against an identity document, and cannot be looked up before an OTP is spent |
 | Show the card and the QR code | A patient wants their ABHA on screen or on paper |
 | Take a profile shared by QR at the counter | The share route, which is also the cheapest registration journey |
 | Update a mobile number | The number on the account is not the one the patient carries |
 
-Two of these are worth deciding early rather than late.
-
-The upgrade matters because a mobile made address is the lesser account, and a
-desk that can upgrade it in place is the only opportunity most patients will get.
-Creation is from Aadhaar exists so a desk does
-not create those accounts; the upgrade is what to do about the ones that exist.
+One of these is worth deciding early rather than late.
 
 The card and QR are usually the first thing a patient asks for and the last
 thing an integration builds, because they are not part of registering anybody.
@@ -700,9 +694,6 @@ journey.
   each one looks like new scope rather than a decision deferred.
 - **A patient cannot be shown their own card.** The operations support it and
   the journey has nowhere to put it.
-- **Mobile made accounts accumulate with no upgrade path.** The desk stopped
-  creating them and never offered the upgrade to the people already holding
-  one.
 
 ## Where these came from
 

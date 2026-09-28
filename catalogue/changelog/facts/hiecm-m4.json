@@ -1,0 +1,2347 @@
+{
+  "errors": [],
+  "file": "hiecm-m4.yaml",
+  "gateway": "hiecm",
+  "label": "M4 Registry Integration",
+  "module": "m4",
+  "operations": {
+    "GET /api/v1/auth/cert": {
+      "encrypted": [],
+      "id": "m4_get_v1_auth_cert",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization",
+        "query:publicCertificateRequestDto!"
+      ],
+      "path": "/api/v1/auth/cert",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "GET /apis/v1/masters/affiliated-board": {
+      "encrypted": [],
+      "id": "m4_get_v1_masters_affiliated_board",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/apis/v1/masters/affiliated-board",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "GET /apis/v1/masters/affiliated-board/states/{}": {
+      "encrypted": [],
+      "id": "m4_get_v1_masters_affiliated_board_states_id",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization",
+        "path:{}!"
+      ],
+      "path": "/apis/v1/masters/affiliated-board/states/{id}",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "GET /apis/v1/masters/affiliated-board/{}": {
+      "encrypted": [],
+      "id": "m4_get_v1_masters_affiliated_board_id",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization",
+        "path:{}!"
+      ],
+      "path": "/apis/v1/masters/affiliated-board/{id}",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "GET /apis/v1/masters/colleges/{}": {
+      "encrypted": [],
+      "id": "m4_get_v1_masters_colleges_id",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization",
+        "path:{}!"
+      ],
+      "path": "/apis/v1/masters/colleges/{id}",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "GET /apis/v1/masters/colleges/{}/{}": {
+      "encrypted": [],
+      "id": "m4_get_v1_masters_colleges_stateid_medicineid",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization",
+        "path:{}!"
+      ],
+      "path": "/apis/v1/masters/colleges/{stateId}/{medicineId}",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "GET /apis/v1/masters/countries": {
+      "encrypted": [],
+      "id": "m4_get_v1_masters_countries",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/apis/v1/masters/countries",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "GET /apis/v1/masters/countries/{}": {
+      "encrypted": [],
+      "id": "m4_get_v1_masters_countries_id",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization",
+        "path:{}!"
+      ],
+      "path": "/apis/v1/masters/countries/{id}",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "GET /apis/v1/masters/district": {
+      "encrypted": [],
+      "id": "m4_get_v1_masters_district",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/apis/v1/masters/district",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "GET /apis/v1/masters/district/{}": {
+      "encrypted": [],
+      "id": "m4_get_v1_masters_district_id",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization",
+        "path:{}!"
+      ],
+      "path": "/apis/v1/masters/district/{id}",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "GET /apis/v1/masters/languages": {
+      "encrypted": [],
+      "id": "m4_get_v1_masters_languages",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/apis/v1/masters/languages",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "GET /apis/v1/masters/languages/{}": {
+      "encrypted": [],
+      "id": "m4_get_v1_masters_languages_id",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization",
+        "path:{}!"
+      ],
+      "path": "/apis/v1/masters/languages/{id}",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "GET /apis/v1/masters/medical-councils": {
+      "encrypted": [],
+      "id": "m4_get_v1_masters_medical_councils",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/apis/v1/masters/medical-councils",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "GET /apis/v1/masters/medical-councils/name": {
+      "encrypted": [],
+      "id": "m4_get_v1_masters_medical_councils_name",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization",
+        "query:medicineName!"
+      ],
+      "path": "/apis/v1/masters/medical-councils/name",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "GET /apis/v1/masters/nurse-councils": {
+      "encrypted": [],
+      "id": "m4_get_v1_masters_nurse_councils",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/apis/v1/masters/nurse-councils",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "GET /apis/v1/masters/states": {
+      "encrypted": [],
+      "id": "m4_get_v1_masters_states",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/apis/v1/masters/states",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "GET /apis/v1/masters/states/{}": {
+      "encrypted": [],
+      "id": "m4_get_v1_masters_states_id",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization",
+        "path:{}!"
+      ],
+      "path": "/apis/v1/masters/states/{id}",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "GET /apis/v1/masters/sub-districts": {
+      "encrypted": [],
+      "id": "m4_get_v1_masters_sub_districts",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/apis/v1/masters/sub-districts",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "GET /apis/v1/masters/sub-districts/{}": {
+      "encrypted": [],
+      "id": "m4_get_v1_masters_sub_districts_id",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization",
+        "path:{}!"
+      ],
+      "path": "/apis/v1/masters/sub-districts/{id}",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "GET /apis/v1/masters/system-of-medicines": {
+      "encrypted": [],
+      "id": "m4_get_v1_masters_system_of_medicines",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/apis/v1/masters/system-of-medicines",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "GET /apis/v1/masters/universites": {
+      "encrypted": [],
+      "id": "m4_get_v1_masters_universites",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/apis/v1/masters/universites",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "GET /apis/v1/masters/universites/{}": {
+      "encrypted": [],
+      "id": "m4_get_v1_masters_universites_id",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization",
+        "path:{}!"
+      ],
+      "path": "/apis/v1/masters/universites/{id}",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "GET /getPsuDetailsByMinistry": {
+      "encrypted": [],
+      "id": "m4_get_getpsudetailsbyministry",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization",
+        "query:ministry"
+      ],
+      "path": "/getPsuDetailsByMinistry",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "GET /hpid/get/categories": {
+      "encrypted": [],
+      "id": "m4_get_hpid_get_categories",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization!",
+        "query:role"
+      ],
+      "path": "/hpid/get/categories",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "GET /hpid/get/subCategories": {
+      "encrypted": [],
+      "id": "m4_get_hpid_get_subcategories",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization!",
+        "query:categoryCode",
+        "query:role"
+      ],
+      "path": "/hpid/get/subCategories",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "GET /v1.5/facility/get-master-data": {
+      "encrypted": [],
+      "id": "m4_get_v1_5_facility_get_master_data",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization",
+        "query:type!"
+      ],
+      "path": "/v1.5/facility/get-master-data",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "GET /v1.5/facility/get-master-types": {
+      "encrypted": [],
+      "id": "m4_get_v1_5_facility_get_master_types",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/v1.5/facility/get-master-types",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "GET /v1.5/facility/lgd/districts": {
+      "encrypted": [],
+      "id": "m4_get_v1_5_facility_lgd_districts",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization",
+        "query:stateCode!"
+      ],
+      "path": "/v1.5/facility/lgd/districts",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "GET /v1.5/facility/lgd/states": {
+      "encrypted": [],
+      "id": "m4_get_v1_5_facility_lgd_states",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/v1.5/facility/lgd/states",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "GET /v1.5/facility/lgd/subdistricts": {
+      "encrypted": [],
+      "id": "m4_get_v1_5_facility_lgd_subdistricts",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization",
+        "query:districtCode!"
+      ],
+      "path": "/v1.5/facility/lgd/subdistricts",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "GET /v1/account/getIdCard": {
+      "encrypted": [],
+      "id": "m4_get_v1_account_getidcard",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization",
+        "header:X-Token"
+      ],
+      "path": "/v1/account/getIdCard",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "GET /v1/account/information": {
+      "encrypted": [],
+      "id": "m4_get_v1_account_information",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization",
+        "query:masked"
+      ],
+      "path": "/v1/account/information",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "GET /v1/account/user-details/{}": {
+      "encrypted": [],
+      "id": "m4_get_v1_account_user_details_hprid",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization",
+        "path:{}!"
+      ],
+      "path": "/v1/account/user-details/{hprId}",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "GET /v1/search/existsByHprId/{}": {
+      "encrypted": [],
+      "id": "m4_get_v1_search_existsbyhprid_hprid",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization",
+        "path:{}!"
+      ],
+      "path": "/v1/search/existsByHprId/{hprId}",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "GET /v1/search/searchByHprId/{}": {
+      "encrypted": [],
+      "id": "m4_get_v1_search_searchbyhprid_hprid",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization",
+        "path:{}!"
+      ],
+      "path": "/v1/search/searchByHprId/{hprId}",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "GET /v1/search/searchByMobile/{}": {
+      "encrypted": [],
+      "id": "m4_get_v1_search_searchbymobile_mobile",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization",
+        "path:{}!"
+      ],
+      "path": "/v1/search/searchByMobile/{mobile}",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "GET /v4/auth/logout": {
+      "encrypted": [],
+      "id": "m4_get_v4_auth_logout",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Authorization!"
+      ],
+      "path": "/v4/auth/logout",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /FacilityManagement/v1.5/facility/bygeoLocation/searchWithinRadiusWithFilter": {
+      "encrypted": [],
+      "id": "m4_post_facilitymanagement_v1_5_facility_bygeolocation_se_16e590",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/FacilityManagement/v1.5/facility/bygeoLocation/searchWithinRadiusWithFilter",
+      "properties": [
+        "abdmSoftware",
+        "centerLat",
+        "centerLon",
+        "doctorName",
+        "doctorSystemOfMedicine",
+        "facilityName",
+        "facilityOwnership",
+        "facilityStatus",
+        "from",
+        "gender",
+        "hospitalSpecialityType",
+        "isIcuBedsAvailable",
+        "languages",
+        "radiusInKm",
+        "size",
+        "som",
+        "speciality"
+      ],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /FacilityManagement/v1.5/facility/search": {
+      "encrypted": [],
+      "id": "m4_post_facilitymanagement_v1_5_facility_search",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/FacilityManagement/v1.5/facility/search",
+      "properties": [
+        "districtLGDCode",
+        "facilityId",
+        "facilityName",
+        "ownershipCode",
+        "page",
+        "pincode",
+        "resultsPerPage",
+        "stateLGDCode",
+        "subDistrictLGDCode"
+      ],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /aadhaar/generateLink": {
+      "encrypted": [],
+      "id": "m4_post_aadhaar_generatelink",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/aadhaar/generateLink",
+      "properties": [
+        "scopes",
+        "source"
+      ],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /aadhaar/isAuthenticated": {
+      "encrypted": [],
+      "id": "m4_post_aadhaar_isauthenticated",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/aadhaar/isAuthenticated",
+      "properties": [
+        "txnId"
+      ],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /api/v1/auth/authPassword": {
+      "encrypted": [],
+      "id": "m4_post_v1_auth_authpassword",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/api/v1/auth/authPassword",
+      "properties": [
+        "domainName",
+        "hprId",
+        "idType",
+        "password"
+      ],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /api/v1/auth/confirmWithAadhaarOtp": {
+      "encrypted": [],
+      "id": "m4_post_v1_auth_confirmwithaadhaarotp",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/api/v1/auth/confirmWithAadhaarOtp",
+      "properties": [
+        "otp",
+        "txnId"
+      ],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /api/v1/auth/init": {
+      "encrypted": [],
+      "id": "m4_post_v1_auth_init",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/api/v1/auth/init",
+      "properties": [
+        "authMethod",
+        "domainName",
+        "hprId",
+        "idType"
+      ],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /api/v2/auth/loginViaMobileSendOTP": {
+      "encrypted": [],
+      "id": "m4_post_v2_auth_loginviamobilesendotp",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/api/v2/auth/loginViaMobileSendOTP",
+      "properties": [
+        "hpid",
+        "mobile",
+        "otp",
+        "txnId"
+      ],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /apis/v1/doctors/fetch-documents-list": {
+      "encrypted": [],
+      "id": "m4_post_v1_doctors_fetch_documents_list",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/apis/v1/doctors/fetch-documents-list",
+      "properties": [
+        "hprid"
+      ],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /apis/v1/doctors/fetch-professional-info": {
+      "encrypted": [],
+      "id": "m4_post_v1_doctors_fetch_professional_info",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/apis/v1/doctors/fetch-professional-info",
+      "properties": [
+        "practitioner"
+      ],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /apis/v1/doctors/generate-mobile-otp": {
+      "encrypted": [],
+      "id": "m4_post_v1_doctors_generate_mobile_otp",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/apis/v1/doctors/generate-mobile-otp",
+      "properties": [
+        "hpr_token",
+        "officialMobile"
+      ],
+      "required": [
+        "hpr_token",
+        "officialMobile"
+      ],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /apis/v1/doctors/generate-verification-email": {
+      "encrypted": [],
+      "id": "m4_post_v1_doctors_generate_verification_email",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/apis/v1/doctors/generate-verification-email",
+      "properties": [
+        "emailAddress",
+        "otp_type"
+      ],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /apis/v1/doctors/regenerate-mobile-otp": {
+      "encrypted": [],
+      "id": "m4_post_v1_doctors_regenerate_mobile_otp",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/apis/v1/doctors/regenerate-mobile-otp",
+      "properties": [
+        "hpr_token",
+        "officialMobile"
+      ],
+      "required": [
+        "hpr_token",
+        "officialMobile"
+      ],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /apis/v1/doctors/register-professional-new": {
+      "encrypted": [],
+      "id": "m4_post_v1_doctors_register_professional_new",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/apis/v1/doctors/register-professional-new",
+      "properties": [
+        "hprToken",
+        "practitioner"
+      ],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /apis/v1/doctors/resent-verify-email": {
+      "encrypted": [],
+      "id": "m4_post_v1_doctors_resent_verify_email",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/apis/v1/doctors/resent-verify-email",
+      "properties": [
+        "emailAddress",
+        "otp_type"
+      ],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /apis/v1/doctors/update-professional-new": {
+      "encrypted": [],
+      "id": "m4_post_v1_doctors_update_professional_new",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/apis/v1/doctors/update-professional-new",
+      "properties": [
+        "hprToken",
+        "practitioner"
+      ],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /apis/v1/doctors/verify-email-otp": {
+      "encrypted": [],
+      "id": "m4_post_v1_doctors_verify_email_otp",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/apis/v1/doctors/verify-email-otp",
+      "properties": [
+        "emailOtp",
+        "hpr_id",
+        "hpr_token",
+        "officialEmail"
+      ],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /apis/v1/doctors/verify-mobile-otp": {
+      "encrypted": [],
+      "id": "m4_post_v1_doctors_verify_mobile_otp",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/apis/v1/doctors/verify-mobile-otp",
+      "properties": [
+        "otp",
+        "txnId"
+      ],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /apis/v1/masters/courses": {
+      "encrypted": [],
+      "id": "m4_post_v1_masters_courses",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/apis/v1/masters/courses",
+      "properties": [
+        "acronym",
+        "courseCategory",
+        "createdBy",
+        "hprType",
+        "id",
+        "international",
+        "name",
+        "priority",
+        "qualificationCount",
+        "sortOrder",
+        "status",
+        "systemOfMedicine",
+        "systemOfMedicineId",
+        "visibleStatus"
+      ],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /apis/v1/uploads/upload-document": {
+      "encrypted": [],
+      "id": "m4_post_v1_uploads_upload_document",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/apis/v1/uploads/upload-document",
+      "properties": [
+        "document",
+        "hpr_token"
+      ],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /password/change/byPassword": {
+      "encrypted": [],
+      "id": "m4_post_password_change_bypassword",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization!"
+      ],
+      "path": "/password/change/byPassword",
+      "properties": [
+        "hprID",
+        "newPassword",
+        "oldPassword",
+        "otp",
+        "txnId"
+      ],
+      "required": [
+        "newPassword"
+      ],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /password/recover/byAadhaar": {
+      "encrypted": [],
+      "id": "m4_post_password_recover_byaadhaar",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization!"
+      ],
+      "path": "/password/recover/byAadhaar",
+      "properties": [
+        "categories",
+        "hprId"
+      ],
+      "required": [
+        "hprId"
+      ],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /password/recover/byMobile/sendMobileOTP": {
+      "encrypted": [],
+      "id": "m4_post_password_recover_bymobile_sendmobileotp",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization!"
+      ],
+      "path": "/password/recover/byMobile/sendMobileOTP",
+      "properties": [
+        "categories",
+        "hprId"
+      ],
+      "required": [
+        "hprId"
+      ],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /password/recover/byMobile/verifyMobileOTP": {
+      "encrypted": [],
+      "id": "m4_post_password_recover_bymobile_verifymobileotp",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization!"
+      ],
+      "path": "/password/recover/byMobile/verifyMobileOTP",
+      "properties": [
+        "hprID",
+        "newPassword",
+        "oldPassword",
+        "otp",
+        "txnId"
+      ],
+      "required": [
+        "newPassword"
+      ],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /password/recover/confirmByAadhaar": {
+      "encrypted": [],
+      "id": "m4_post_password_recover_confirmbyaadhaar",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization!"
+      ],
+      "path": "/password/recover/confirmByAadhaar",
+      "properties": [
+        "newPassword",
+        "otp",
+        "txnId"
+      ],
+      "required": [
+        "newPassword",
+        "otp",
+        "txnId"
+      ],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /password/reset/password": {
+      "encrypted": [],
+      "id": "m4_post_password_reset_password",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization!"
+      ],
+      "path": "/password/reset/password",
+      "properties": [
+        "newPassword",
+        "otp",
+        "txnId"
+      ],
+      "required": [
+        "newPassword",
+        "otp",
+        "txnId"
+      ],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /password/resetPassword": {
+      "encrypted": [],
+      "id": "m4_post_password_resetpassword",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization!"
+      ],
+      "path": "/password/resetPassword",
+      "properties": [
+        "newPassword",
+        "otp",
+        "txnId"
+      ],
+      "required": [
+        "newPassword",
+        "otp",
+        "txnId"
+      ],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /search/address/filter/deduplicate": {
+      "encrypted": [],
+      "id": "m4_post_search_address_filter_deduplicate",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization!"
+      ],
+      "path": "/search/address/filter/deduplicate",
+      "properties": [
+        "address",
+        "district",
+        "facilityId",
+        "geolocation",
+        "name",
+        "subDistrict",
+        "village"
+      ],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /v1.0/facility/search-facilities": {
+      "encrypted": [],
+      "id": "m4_post_v1_0_facility_search_facilities",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/v1.0/facility/search-facilities",
+      "properties": [
+        "facility",
+        "requestId",
+        "timestamp"
+      ],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /v1.5/facility/additional-information": {
+      "encrypted": [],
+      "id": "m4_post_v1_5_facility_additional_information",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/v1.5/facility/additional-information",
+      "properties": [
+        "generalInformation",
+        "linkedProgramIds",
+        "trackingId"
+      ],
+      "required": [
+        "trackingId"
+      ],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /v1.5/facility/basic-information": {
+      "encrypted": [],
+      "id": "m4_post_v1_5_facility_basic_information",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization",
+        "header:x-hprid-auth!"
+      ],
+      "path": "/v1.5/facility/basic-information",
+      "properties": [
+        "facilityInformation",
+        "trackingId"
+      ],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /v1.5/facility/detailed-information": {
+      "encrypted": [],
+      "id": "m4_post_v1_5_facility_detailed_information",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/v1.5/facility/detailed-information",
+      "properties": [
+        "bloodBankDetails",
+        "diagnosticServices",
+        "imagingServices",
+        "medicalInfrastructure",
+        "pharmacyDetails",
+        "specialities",
+        "trackingId"
+      ],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /v1.5/facility/fetch-facility-Sub-type": {
+      "encrypted": [],
+      "id": "m4_post_v1_5_facility_fetch_facility_sub_type",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/v1.5/facility/fetch-facility-Sub-type",
+      "properties": [
+        "facilityTypeCode"
+      ],
+      "required": [
+        "facilityTypeCode"
+      ],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /v1.5/facility/fetch-facility-type": {
+      "encrypted": [],
+      "id": "m4_post_v1_5_facility_fetch_facility_type",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/v1.5/facility/fetch-facility-type",
+      "properties": [
+        "ownershipCode",
+        "systemOfMedicineCode"
+      ],
+      "required": [
+        "ownershipCode",
+        "systemOfMedicineCode"
+      ],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /v1.5/facility/get-owner-subtype": {
+      "encrypted": [],
+      "id": "m4_post_v1_5_facility_get_owner_subtype",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/v1.5/facility/get-owner-subtype",
+      "properties": [
+        "ownerSubtypeCode",
+        "ownershipCode"
+      ],
+      "required": [
+        "ownerSubtypeCode",
+        "ownershipCode"
+      ],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /v1.5/facility/get-specialities": {
+      "encrypted": [],
+      "id": "m4_post_v1_5_facility_get_specialities",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/v1.5/facility/get-specialities",
+      "properties": [
+        "systemOfMedicineCode"
+      ],
+      "required": [
+        "systemOfMedicineCode"
+      ],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /v1.5/facility/sendOtpToContact": {
+      "encrypted": [],
+      "id": "m4_post_v1_5_facility_sendotptocontact",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/v1.5/facility/sendOtpToContact",
+      "properties": [
+        "facilityId"
+      ],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /v1.5/facility/submit-facility": {
+      "encrypted": [],
+      "id": "m4_post_v1_5_facility_submit_facility",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization",
+        "header:x-hprid-auth!",
+        "header:x-hprid-auth-verifier"
+      ],
+      "path": "/v1.5/facility/submit-facility",
+      "properties": [
+        "facilitySuperUser",
+        "sourceOfInformation",
+        "sourceUniqueID",
+        "trackingId"
+      ],
+      "required": [
+        "trackingId"
+      ],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /v1.5/facility/validateOtp": {
+      "encrypted": [],
+      "id": "m4_post_v1_5_facility_validateotp",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/v1.5/facility/validateOtp",
+      "properties": [
+        "facilityId",
+        "otp",
+        "source",
+        "sourceId",
+        "transactionId"
+      ],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /v1/bridges/MutipleHRPAddUpdateServices": {
+      "encrypted": [],
+      "id": "m4_post_v1_bridges_mutiplehrpaddupdateservices",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/v1/bridges/MutipleHRPAddUpdateServices",
+      "properties": [
+        "HRP",
+        "facilityId",
+        "facilityName"
+      ],
+      "required": [
+        "facilityId",
+        "facilityName"
+      ],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /v1/forgot/hprId/aadhaar": {
+      "encrypted": [],
+      "id": "m4_post_v1_forgot_hprid_aadhaar",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/v1/forgot/hprId/aadhaar",
+      "properties": [
+        "txnId"
+      ],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /v1/forgot/hprId/mobile": {
+      "encrypted": [],
+      "id": "m4_post_v1_forgot_hprid_mobile",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/v1/forgot/hprId/mobile",
+      "properties": [
+        "dayOfBirth",
+        "firstName",
+        "gender",
+        "lastName",
+        "middleName",
+        "monthOfBirth",
+        "name",
+        "otp",
+        "txnId",
+        "yearOfBirth"
+      ],
+      "required": [
+        "firstName",
+        "gender",
+        "name",
+        "otp",
+        "txnId",
+        "yearOfBirth"
+      ],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /v1/forgot/hprId/mobile/generateOtp": {
+      "encrypted": [],
+      "id": "m4_post_v1_forgot_hprid_mobile_generateotp",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/v1/forgot/hprId/mobile/generateOtp",
+      "properties": [
+        "email",
+        "hpid",
+        "mobileNumber",
+        "type"
+      ],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /v1/registration/aadhaar/checkHpIdAccountExist": {
+      "encrypted": [],
+      "id": "m4_post_v1_registration_aadhaar_checkhpidaccountexist",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/v1/registration/aadhaar/checkHpIdAccountExist",
+      "properties": [
+        "preverifiedCheck",
+        "txnId"
+      ],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /v1/registration/aadhaar/generateMobileOTP": {
+      "encrypted": [],
+      "id": "m4_post_v1_registration_aadhaar_generatemobileotp",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/v1/registration/aadhaar/generateMobileOTP",
+      "properties": [
+        "mobile",
+        "txnId"
+      ],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /v1/registration/aadhaar/hpid/suggestion": {
+      "encrypted": [],
+      "id": "m4_post_v1_registration_aadhaar_hpid_suggestion",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/v1/registration/aadhaar/hpid/suggestion",
+      "properties": [
+        "txnId"
+      ],
+      "required": [
+        "txnId"
+      ],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /v1/registration/aadhaar/verifyMobileOTP": {
+      "encrypted": [],
+      "id": "m4_post_v1_registration_aadhaar_verifymobileotp",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/v1/registration/aadhaar/verifyMobileOTP",
+      "properties": [
+        "otp",
+        "txnId"
+      ],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /v2/registration/aadhaar/createHprIdWithPreVerified": {
+      "encrypted": [],
+      "id": "m4_post_v2_registration_aadhaar_createhpridwithpreverified",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/v2/registration/aadhaar/createHprIdWithPreVerified",
+      "properties": [
+        "clientId",
+        "council",
+        "districtCode",
+        "domainName",
+        "email",
+        "firstName",
+        "hpCategoryCode",
+        "hpSubCategoryCode",
+        "hprId",
+        "idType",
+        "lastName",
+        "middleName",
+        "password",
+        "profilePhoto",
+        "role",
+        "sourceType",
+        "stateCode",
+        "txnId"
+      ],
+      "required": [
+        "email",
+        "txnId"
+      ],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /v2/registration/aadhaar/demographicAuthViaMobile": {
+      "encrypted": [],
+      "id": "m4_post_v2_registration_aadhaar_demographicauthviamobile",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/v2/registration/aadhaar/demographicAuthViaMobile",
+      "properties": [
+        "mobileNumber",
+        "txnId"
+      ],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    },
+    "POST /v2/registration/aadhaar/verifyOTP": {
+      "encrypted": [],
+      "id": "m4_post_v2_registration_aadhaar_verifyotp",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization"
+      ],
+      "path": "/v2/registration/aadhaar/verifyOTP",
+      "properties": [
+        "txnId"
+      ],
+      "required": [],
+      "responses": [
+        "200",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apihspsbx.abdm.gov.in/v4/int",
+      "servers": [
+        "https://apihspsbx.abdm.gov.in/v4/int"
+      ]
+    }
+  },
+  "roles": [
+    "his"
+  ],
+  "sources": {
+    "catalogue/openapi/.raw/nha-2026-09-24/M4/M4-HFR.json": {
+      "fetched": "2026-09-24",
+      "hash": "sha256:39a581bb31e74f48340703056258e31850788848220787814ffa49750d23d9ba"
+    },
+    "catalogue/openapi/.raw/nha-2026-09-24/M4/M4-HPID.json": {
+      "fetched": "2026-09-24",
+      "hash": "sha256:b673f1dc7d25958998a8be194c87df9b779fd80389f9c8970bdb28b53df30b12"
+    },
+    "catalogue/openapi/.raw/nha-2026-09-24/M4/M4-HPR.json": {
+      "fetched": "2026-09-24",
+      "hash": "sha256:2cbcab72692ada1b6b07bce3c6c6d3e3bd047bcaca0c5716ac1d691121025081"
+    }
+  },
+  "version": "v3"
+}

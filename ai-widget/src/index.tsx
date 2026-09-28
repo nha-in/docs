@@ -1,7 +1,7 @@
-import {render} from 'preact';
+import {Fragment, render} from 'preact';
 import {useEffect, useRef, useState} from 'preact/hooks';
 import ChatMarkdown, {CopyButton, absolute, headings} from './markdown';
-import {ArrowUp, Paperclip, Plus, Sparkles, X} from './icons';
+import {ArrowUp, ChevronRight, FileText, Paperclip, Plus, Sparkles, X} from './icons';
 import {readStream, UNREACHABLE, type Source} from './sse';
 import {
   AGENTS,
@@ -16,20 +16,27 @@ import {
 } from './install';
 import {revealStep} from './pacing';
 import {
+  clearCurrentId,
+  continuedId,
+  currentId,
   forget,
   forgetOne,
   load as loadHistory,
   remember,
+  resumable,
   save as saveHistory,
+  setContinuedId,
+  setCurrentId,
   titleOf,
   type Session,
 } from './history';
+import {ABOUT, isAboutQuestion} from './about';
 import {Composer, type Menu} from './Composer';
 import {HistoryList} from './HistoryList';
 import {Welcome} from './Welcome';
 import {ThinkingOrb} from './orb/frosted-orb';
 import {startersFrom, type Starter} from './starters';
-import {forModel} from './transcript';
+import {forModel, MAX_TURNS, memoryOf, sentFrom} from './transcript';
 import {isHtmlDocument, markdownUrl, pageUrl, type PageEntry} from './pages';
 import {moduleLabel, skillNote, type CommandId, type SkillUse} from './commands';
 import type {Attached, PageAttachment} from './types';
@@ -208,6 +215,8 @@ type PanelProps = {
   starters: Starter[];
   /** False where the host asked not to keep conversations in its origin. */
   keepHistory: boolean;
+  /** The gateway of the page the panel is on, hiecm or nhcx, or empty. */
+  gateway: string;
   supportUrl: string;
   page: PageAttachment | null;
   onDetach: () => void;
@@ -344,6 +353,7 @@ function Panel({
   send,
   starters,
   keepHistory,
+  gateway,
   supportUrl,
 }: PanelProps) {
   // Empty until the reader asks something: the welcome stands in for an
@@ -378,6 +388,9 @@ function Panel({
   const [menu, setMenu] = useState<Menu>('closed');
   const [attaching, setAttaching] = useState<string | null>(null);
   const conversation = useRef(newId());
+  // The conversation the reader chose to carry on past the window with, so
+  // the offer to start a new one is made once per conversation.
+  const [continued, setContinued] = useState<string | null>(continuedId);
   const autoAsked = useRef<string | null>(null);
   const dialog = useRef<HTMLDialogElement>(null);
   const thread = useRef<HTMLDivElement>(null);
@@ -389,6 +402,8 @@ function Panel({
   // as a failure, because a reader who asked for the page to be attached has
   // to be told it was not.
   const attached = page !== null && page.markdown !== '';
+  const memory = memoryOf(turns);
+  const cut = sentFrom(turns);
 
   // Text that has arrived but has not been shown yet, and the frame loop that
   // shows it. Both are refs: the loop runs from a callback the browser holds,
@@ -586,6 +601,7 @@ function Panel({
       saveHistory(next);
       return next;
     });
+    setCurrentId(conversation.current);
   };
 
   useEffect(() => {
@@ -593,7 +609,16 @@ function Panel({
   }, [phase, turns]);
 
   useEffect(() => {
-    if (keepHistory) setHistory(loadHistory<Turn>());
+    if (!keepHistory) return;
+    const held = loadHistory<Turn>();
+    setHistory(held);
+    // Back from a page with no panel, or from a reload: the conversation
+    // this tab was in comes back, where the reader left it.
+    const left = resumable(held, currentId());
+    if (left) {
+      conversation.current = left.id;
+      setTurns((now) => (now.length ? now : left.turns));
+    }
   }, [keepHistory]);
 
   /** Puts a past conversation back on screen, where it can be carried on. */
@@ -618,6 +643,7 @@ function Panel({
     // conversation being left goes into the list before it is cleared.
     keep(turns);
     conversation.current = newId();
+    clearCurrentId();
     setView('chat');
     setMenu('closed');
     abort.current?.abort();
@@ -750,6 +776,18 @@ function Panel({
     setMenu('closed');
     setView('chat');
 
+    // A question about the panel itself is the panel's to answer, the same
+    // on every page, and like the install steps it is never shown to the
+    // model: `local` drops the pair from what the next question sends.
+    if (!file && !command && isAboutQuestion(asked)) {
+      setTurns([
+        ...base,
+        {from: 'you', text: asked},
+        {from: 'assistant', text: ABOUT, local: true},
+      ]);
+      return;
+    }
+
     // The panel's own exchanges, the install flow and the module question,
     // are in the thread because the reader had them, but the model did not
     // say them and would only be confused by them. forModel drops each with
@@ -791,7 +829,7 @@ function Panel({
         signal: controller.signal,
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
-          turns: history.slice(-9).map((t) => ({
+          turns: history.slice(-MAX_TURNS).map((t) => ({
             role: t.from === 'you' ? 'user' : 'assistant',
             text: t.text,
             // The file rides with the question it came with, on every round,
@@ -825,6 +863,9 @@ function Panel({
           // travels, never skill text.
           ...(command ? {command} : {}),
           ...(opts.module ? {module: opts.module} : {}),
+          // Which gateway's documentation the reader is in, so the answer's
+          // searches stay in it unless the question names another.
+          ...(gateway ? {gateway} : {}),
         }),
       });
       if (!res.ok || !res.body) throw new Error(`status ${res.status}`);
@@ -975,12 +1016,20 @@ function Panel({
             onPick={(prompt) => void ask(prompt)}
           />
         )}
-        {turns.map((turn, index) =>
-          // An answer with nothing in it yet is not a bubble. The thinking
-          // indicator below stands in its place until the first word.
-          turn.from === 'assistant' && turn.text === '' ? null : (
+        {turns.map((turn, index) => (
+          <Fragment key={index}>
+          {/* Above the oldest message the next question still carries, once
+              the conversation is longer than that: what is above the line,
+              the assistant no longer has. */}
+          {index === cut && (
+            <p class="ask-ai__cut" role="separator">
+              <span>Earlier turns are no longer sent</span>
+            </p>
+          )}
+          {/* An answer with nothing in it yet is not a bubble. The thinking
+              indicator below stands in its place until the first word. */}
+          {turn.from === 'assistant' && turn.text === '' ? null : (
           <div
-            key={index}
             class={`ask-ai__turn ask-ai__turn--${turn.from}${
               phase === 'streaming' && index === turns.length - 1
                 ? ' ask-ai__turn--streaming'
@@ -1023,21 +1072,38 @@ function Panel({
                   className="ask-ai__turn-copy"
                 />
               )}
+            {/* One line until the reader asks for them, as Stripe's
+                assistant does: "Used 5 sources", which opens to the list.
+                A native details element, so it opens from the keyboard and
+                announces its state with no script of its own. Below the
+                answer rather than above it, because the sources land when
+                the answer ends, and a line appearing above would push the
+                text the reader is on down the panel. */}
             {turn.sources && turn.sources.length > 0 && (
-              <div class="ask-ai__sources">
-                <span class="ask-ai__sources-label">Sources</span>
-                {turn.sources.map((source) => (
-                  <a
-                    key={source.id}
-                    href={absolute(source.url, docsOrigin) ?? source.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="ask-ai__source-chip">
-                    {source.title}
-                    {source.status !== 'verified' ? ' (spec)' : ''}
-                  </a>
-                ))}
-              </div>
+              <details class="ask-ai__sources">
+                <summary class="ask-ai__sources-toggle">
+                  <ChevronRight />
+                  Used {turn.sources.length}{' '}
+                  {turn.sources.length === 1 ? 'source' : 'sources'}
+                </summary>
+                <ul class="ask-ai__source-list">
+                  {turn.sources.map((source) => (
+                    <li key={source.id}>
+                      <a
+                        href={absolute(source.url, docsOrigin) ?? source.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="ask-ai__source-link">
+                        <FileText />
+                        <span class="ask-ai__source-title">
+                          {source.title}
+                          {source.status !== 'verified' ? ' (spec)' : ''}
+                        </span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </details>
             )}
             {/* The install flow's own controls, on the newest step only.
                 An older step's chips stay on the page as a record of what
@@ -1189,13 +1255,37 @@ function Panel({
               </button>
             )}
           </div>
-          ),
-        )}
+          )}
+          </Fragment>
+        ))}
         {showActivity && (
           <p class="ask-ai__activity">
             <ThinkingOrb />
             {activity ?? 'Thinking'}
           </p>
+        )}
+
+        {/* Once the conversation fills what a question carries, the reader
+            is asked, once, whether to go on here or start afresh. Going on
+            is fine: the oldest exchanges simply stop being sent. */}
+        {memory.full && !busy && continued !== conversation.current && (
+          <div class="ask-ai__window-offer" role="status">
+            <p>Context window full. Earlier turns are no longer sent.</p>
+            <div class="ask-ai__window-offer-actions">
+              <button type="button" class="ask-ai__window-offer-new" onClick={reset}>
+                Start a new chat
+              </button>
+              <button
+                type="button"
+                class="ask-ai__window-offer-stay"
+                onClick={() => {
+                  setContinued(conversation.current);
+                  setContinuedId(conversation.current);
+                }}>
+                Continue here
+              </button>
+            </div>
+          </div>
         )}
 
       </div>
@@ -1222,6 +1312,7 @@ function Panel({
         onRemovePage={onDetach}
         command={command}
         onCommand={setCommand}
+        memory={memory}
       />
       </>
       )}
@@ -1246,6 +1337,7 @@ function Widget({
   send,
   starters,
   keepHistory,
+  gateway,
 }: {
   host: HTMLElement;
   apiBase: string;
@@ -1264,6 +1356,7 @@ function Widget({
   starters: Starter[];
   /** False where the host asked not to keep conversations in its origin. */
   keepHistory: boolean;
+  gateway: string;
 }) {
   const close = () => {
     host.removeAttribute('open');
@@ -1304,6 +1397,7 @@ function Widget({
         send={send}
         starters={starters}
         keepHistory={keepHistory}
+        gateway={gateway}
         onClose={close}
         page={page}
         onDetach={onDetach}
@@ -1338,7 +1432,11 @@ function Widget({
  *   history      "off" stops past conversations being kept. They are kept in
  *                localStorage, which belongs to the page doing the embedding
  *                and not to this element, so a host whose origin should not
- *                hold what readers type turns the list off here
+ *                hold what readers type turns the list off here. Off also
+ *                means a reload starts a fresh conversation
+ *   gateway      the gateway the page belongs to, "hiecm" or "nhcx", so the
+ *                answers stay in its documentation unless the reader names
+ *                another; absent on a page that belongs to no gateway
  *
  * One thing is set by method rather than attribute: attachPage({title, url,
  * markdown}) gives the conversation the page the reader is looking at, and
@@ -1388,6 +1486,7 @@ class SupportAgentElement extends HTMLElement {
     'starters',
     'history',
     'ground',
+    'gateway',
   ];
 
   private root: ShadowRoot | null = null;
@@ -1460,6 +1559,7 @@ class SupportAgentElement extends HTMLElement {
         send={this.hasAttribute('send')}
         starters={startersFrom(this.getAttribute('starters') ?? '')}
         keepHistory={this.getAttribute('history') !== 'off'}
+        gateway={this.getAttribute('gateway') ?? ''}
       />,
       this.root!,
     );

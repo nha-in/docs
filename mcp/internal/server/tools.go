@@ -222,7 +222,10 @@ func openPassage(r atomOpener, h index.SearchHit) (Passage, []map[string]string)
 // at a 200 character snippet; a cheap model stops there more often. Doing
 // the chain in code costs nothing the model can get wrong.
 func (t *Tools) Lookup(ctx context.Context, in lookupIn) (PassagePack, error) {
-	hits, err := t.r.Search(ctx, in.Query, "", in.Milestone, lookupHits, t.emb)
+	// The chat scopes a request to the reader's gateway (chat.WithGateway);
+	// the pre-retrieval and the model's own search_docs both land here, so
+	// both are scoped. An MCP client never sets it and searches everything.
+	hits, err := t.r.SearchIn(ctx, in.Query, "", in.Milestone, chat.GatewayFrom(ctx), lookupHits, t.emb)
 	if err != nil {
 		return PassagePack{}, err
 	}

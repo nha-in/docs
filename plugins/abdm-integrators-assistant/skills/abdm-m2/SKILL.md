@@ -3,7 +3,7 @@ name: abdm-m2
 description: Use when building, debugging or testing ABDM Milestone 2: care contexts, HIP initiated linking, discovery, and pushing encrypted health records to a requester. Carries the endpoints and the encryption parameters. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.
 ---
 
-# ABDM M2, health information provider services
+# ABDM M2, create and link records
 
 Generated from the ABDM Developer Portal on 2026-09-16, catalogue version 2026.09.16. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.
 
@@ -33,9 +33,9 @@ This file is the map. Each line above is a file beside it, opened one at a time 
 - No call in this skill has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.
 - The design section is the exception. Its rules come from building a working front desk against the sandbox, and each atom it cites names what was observed and the date it was seen.
 - You act as the HIP.
-- M2 is keyed to an ABHA address, so a working M1 integration comes first.
+- Before M2, three things must hold: the facility is registered in the HFR with a valid HFR ID, that HIP ID is linked to your client ID (through the NHPR portal or the M4 software linkage APIs), and a callback URL is set for the client ID with the Update Bridge API.
 - You are the side that encrypts, and the parameters arrive from the requester rather than from you. The health information request carries `keyMaterial` with `cryptoAlg`, `curve: Curve25519`, the requester's `dhPublicKey` and a `nonce`. Generate your own Curve25519 pair and your own nonce, and send your public key and nonce back with the data so the requester can derive the same secret.
-- The key derivation and the symmetric cipher applied over that shared secret are not yet published. Confirm both at onboarding before you ship, rather than inferring them from a sample.
+- The key derivation and the symmetric cipher applied over that shared secret are not in the specification. The data flow page (/docs/hiecm/v3/concepts/data-flow) and the Fidelius reference (shared.concept.fidelius-ecdh-interop) give the scheme: HKDF over the shared secret, and AES-GCM for the payload. Build from those, not from a sample.
 
 ## Practices that hold across every call
 

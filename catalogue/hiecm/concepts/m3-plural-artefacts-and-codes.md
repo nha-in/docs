@@ -6,12 +6,12 @@ milestone: M3
 version: abdm-v3
 order: 1
 router: >
-  One consent request can produce more than one artefact, so store the
+  One consent request produces one artefact per HIP, so store the
   request id and every artefact id. Taking the first element is the bug
   that silently drops half a fetch.
 title: Read plural as plural, and never translate a code into a meaning
 summary: >
-  A consent request produces more than one artefact, and the same error code
+  A consent request produces one artefact per HIP, and the same error code
   means different things in different modules, so carry ABDM's own message.
 sources:
   - url: https://sandbox.abdm.gov.in/
@@ -39,7 +39,8 @@ related:
 Two habits cause most of the avoidable failures on the consent side, and both
 are about reading what came back rather than what you expected.
 
-A consent request produces more than one artefact. Taking the first element is
+A consent request produces one artefact per HIP, so a request that spans
+facilities returns several. Taking the first element is
 the bug that silently drops half a fetch.
 
 And the same error code means different things in different modules, so a code
@@ -75,7 +76,7 @@ it is worth confirming on your own data before building on it.
 
 ## How you know it worked
 
-Raise a consent covering more than one care context. The number of artefacts you
+Raise a consent covering care contexts at two HIPs. The number of artefacts you
 hold matches the number ABDM returned, and a fetch runs for each one.
 
 Trigger a refusal. The screen shows ABDM's own message text alongside the code,

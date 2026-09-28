@@ -1,0 +1,78 @@
+{
+  "errors": [],
+  "file": "nhcx-payment-notice.yaml",
+  "gateway": "nhcx",
+  "label": "Payment notice",
+  "module": "payment-notice",
+  "operations": {
+    "POST /v1/paymentnotice/on_request": {
+      "encrypted": [],
+      "id": "payment_notice_webhook_v1_paymentnotice_on_request",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:bearer_auth!"
+      ],
+      "path": "/v1/paymentnotice/on_request",
+      "properties": [
+        "payload",
+        "type"
+      ],
+      "required": [
+        "payload",
+        "type"
+      ],
+      "responses": [
+        "202"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/hcx",
+      "servers": [
+        "https://apisbx.abdm.gov.in/hcx",
+        "https://apisprod.nha.gov.in/hcx"
+      ]
+    },
+    "POST /v1/paymentnotice/request": {
+      "encrypted": [],
+      "id": "payment_notice_webhook_v1_paymentnotice_request",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:bearer_auth!"
+      ],
+      "path": "/v1/paymentnotice/request",
+      "properties": [
+        "payload"
+      ],
+      "required": [],
+      "responses": [
+        "202"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/hcx",
+      "servers": [
+        "https://apisbx.abdm.gov.in/hcx",
+        "https://apisprod.nha.gov.in/hcx"
+      ]
+    }
+  },
+  "roles": [
+    "payer",
+    "provider"
+  ],
+  "sources": {
+    "nhcx-package/apis/06-payment-notice": {
+      "fetched": null,
+      "hash": "sha256:ecbc5eba98524e6d102f3375c652f11a4aab2a32272cbef94c0993e8efe0d0f6"
+    },
+    "nhcx-package/baseurl.yaml": {
+      "fetched": null,
+      "hash": "sha256:88515b7b29c6b349a131e016c80774436ea16a29738db743b4cc3a24cbd42453"
+    }
+  },
+  "version": "v1"
+}

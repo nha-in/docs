@@ -1,7 +1,8 @@
 // Copies the catalogue's OpenAPI files into the site's static
 // directory so the Scalar plugin can serve them. The catalogue is the only
 // place specs are edited; site/static/specs is a build output.
-import { cpSync, mkdirSync, rmSync } from "node:fs";
+import { cpSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { parse } from "yaml";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { listSpecs } from "./specs.mjs";
@@ -40,6 +41,13 @@ for (const spec of specs) {
   }
   byName.set(spec.name, spec);
   cpSync(spec.path, join(dest, spec.name));
+  // A JSON copy beside each YAML one, so a reference page offers both, the
+  // way Scalar's own download does. Scalar converts in the browser; these
+  // pages are static, so the conversion happens here, once.
+  if (/\.ya?ml$/.test(spec.name)) {
+    const doc = parse(readFileSync(spec.path, "utf8"));
+    writeFileSync(join(dest, spec.name.replace(/\.ya?ml$/, ".json")), `${JSON.stringify(doc, null, 2)}\n`);
+  }
 }
 console.log(
   `Synced ${specs.length} spec(s) to site/static/specs: ${specs.map((s) => s.name).join(", ")}`,

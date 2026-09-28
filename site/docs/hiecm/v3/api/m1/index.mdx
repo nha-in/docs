@@ -5,11 +5,16 @@ sidebar_position: 0
 description: M1 base URLs and the operations grouped by use case.
 ---
 
+import PostmanCollection from '@site/src/components/docs/PostmanCollection';
 import {PathChoices} from '@site/src/components/docs/PathForward';
 
 # M1 Identity: Create and verify ABHA
 
 Create an ABHA, authenticate a holder, and read or update the profile, QR code and linked mobile number.
+
+## Postman collection
+
+<PostmanCollection module="m1" />
 
 ## Base URLs
 
@@ -17,7 +22,7 @@ Create an ABHA, authenticate a holder, and read or update the profile, QR code a
 |---|---|
 | Sandbox | `https://abhasbx.abdm.gov.in/abha/api/v3/` |
 
-Login by fingerprint or iris uses the same base URL, through `profile/login/verify` with a `bio` or `iris` block.
+Login by fingerprint or iris uses the v3.1 path, `/abha/api/v3.1/profile/login/verify`, with a `bio` or `iris` block.
 
 <PathChoices
   paths={[

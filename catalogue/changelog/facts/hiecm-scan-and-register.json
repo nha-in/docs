@@ -1,0 +1,91 @@
+{
+  "errors": [],
+  "file": "hiecm-scan-and-register.yaml",
+  "gateway": "hiecm",
+  "label": "Scan and Register",
+  "module": "scan-and-register",
+  "operations": {
+    "POST /api/hiecm/patient-share/v3/on-share": {
+      "encrypted": [],
+      "id": "scan-and-register_post_patient_share_v3_on_share",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-CM-ID!"
+      ],
+      "path": "/api/hiecm/patient-share/v3/on-share",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "202",
+        "400",
+        "401",
+        "403",
+        "404",
+        "408",
+        "429",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/v3/hip/patient/share": {
+      "encrypted": [],
+      "id": "scan-and-register_post_v3_hip_patient_share",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-HIP-ID!"
+      ],
+      "path": "/api/v3/hip/patient/share",
+      "properties": [
+        "intent",
+        "metaData",
+        "profile"
+      ],
+      "required": [
+        "intent",
+        "metaData",
+        "profile"
+      ],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "408",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    }
+  },
+  "roles": [
+    "his"
+  ],
+  "sources": {
+    "catalogue/openapi/.raw/nha-2026-09-16/hiecm/patient-share.yaml": {
+      "fetched": "2026-09-16",
+      "hash": "sha256:8de274b417bbb860e87718adc299bf626c093cd91435fdcd095fa8748b28523a"
+    }
+  },
+  "version": "v3"
+}

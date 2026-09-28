@@ -22,6 +22,14 @@ sources:
       Sandbox category, "How to integrate digital health solutions in
       the sandbox?": application takes around 10 minutes, processed in
       a maximum of 5 working days.
+  - file: catalogue/openapi/hiecm/v3/hiecm-gateway.yaml
+    status: read-from-spec-2026-09-23
+    note: The session call answers 202 Accepted with the token fields.
+  - file: site/docs/hiecm/v3/getting-started/sandbox.mdx
+    status: reference
+    note: >
+      Once access is approved, the client id and client secret are issued
+      inside the sandbox application.
 related: {}
 ---
 
@@ -34,7 +42,7 @@ You cannot run a live [ABDM](shared.glossary.abdm) call until
 for that review: applications are processed within 5 working days. This page gives you a
 genuine fifteen minutes of your own while that runs: with nothing but a browser, read one
 complete transcribed exchange of the
-[gateway session](hiecm.concept.gateway-session) call and leave with your own first
+[gateway session](/docs/hiecm/v3/concepts/gateway) call and leave with your own first
 call already written. Applying for sandbox access is a separate step, worth doing first since
 it starts NHA's review clock.
 
@@ -50,7 +58,7 @@ Apply first, then spend fifteen minutes of your own on the two steps below.
 1. **Register in the sandbox app, about 10 minutes.** NHA's FAQ gives this estimate for the
    application itself, and a maximum of 5 working days for it to be processed. This starts
    NHA's review clock, so do it before anything else. See
-   [registration and credentials](registration-and-credentials.md).
+   [sandbox access](/docs/hiecm/v3/getting-started/sandbox).
 2. **Read one transcribed exchange, about 5 minutes.** Below is the gateway session call, the
    one every other ABDM call depends on. The header and body values shown are example values
    from the specification rather than a recorded response, so read the shape and expect your
@@ -85,12 +93,11 @@ curl --request POST \
 }'
 ```
 
-This repository's specification (`catalogue/openapi/hiecm/v3/hiecm-gateway.yaml`) describes a
-successful call as answering `200`, with a session created and a bearer token issued. The
-specification carries no captured response body from NHA, only the field list: `accessToken`,
-`expiresIn`, `refreshExpiresIn`, `refreshToken` and `tokenType`. See
-[the endpoint page](/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions) for what each field means.
-Nothing here invents a body NHA never sent.
+A successful call answers `202 Accepted`, with a session created and a bearer token issued.
+The response carries `accessToken`, `expiresIn`, `refreshExpiresIn`, `refreshToken` and
+`tokenType`. See
+[the endpoint page](/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions)
+for what each field means.
 
 ### Your own first call
 
@@ -111,8 +118,8 @@ curl --request POST \
 }'
 ```
 
-Save it. When NHA emails your client id and client secret, this is the one paste away from
-your first real call.
+Save it. Once your access is approved, your client id and client secret are issued inside the
+sandbox application, and this is the one paste away from your first real call.
 
 ### What you test M1 with
 
@@ -137,7 +144,7 @@ retry loop against one number spends the transaction rather than trying again.
 ## How you know it worked
 
 For the transcribed exchange, you can now say what the session endpoint returns and where the
-token goes on every later call: a `200` carrying `accessToken`, sent afterwards as
+token goes on every later call: a `202` carrying `accessToken`, sent afterwards as
 `Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>` on every other gateway call.
 
 For your own first call, this is `Not yet observed`. It stays that way until you run it, and
@@ -155,5 +162,5 @@ If your first real call fails with a 401, that is a different problem from regis
 [Everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401).
 
 While NHA reviews your registration, use the wait. See
-[registration and credentials](registration-and-credentials.md) for what to read next: picking
-your role and the milestone table.
+[sandbox access](/docs/hiecm/v3/getting-started/sandbox) for what to read next, then
+[the milestones page](/docs/hiecm/v3/milestones) to pick your role and your milestones.

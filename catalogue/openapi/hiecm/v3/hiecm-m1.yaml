@@ -5,7 +5,7 @@ info:
     label: M1 Identity
     position: 2
     icon: id-card
-  title: ABDM M1, ABHA creation and verification
+  title: ABDM M1, create and verify ABHA
   summary: Create, find, log into and manage an ABHA.
   version: abdm-v3
   license:

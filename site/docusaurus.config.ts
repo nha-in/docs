@@ -1,4 +1,5 @@
-import {readFileSync, readdirSync, writeFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {existsSync, readFileSync, readdirSync, writeFileSync} from 'node:fs';
 import {join, relative, sep} from 'node:path';
 import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
@@ -25,6 +26,17 @@ function tailwindPlugin() {
 // absolute paths, so they must carry the base path when the site is
 // served under one, e.g. GitHub Pages at /abdm-docs/.
 const siteBase = process.env.DOCUSAURUS_BASE_URL ?? '/';
+
+// The widget script keeps one name across builds, and the CDN caches every
+// file that is not a page for a year as immutable (deploy/nha/deploy.sh). A
+// phone that once loaded it kept that copy and never saw a newer panel. The
+// pages revalidate, so a hash of the build in the URL they carry is what moves
+// a reader onto the new script. The prestart and prebuild steps write the
+// file before this config is read.
+const widgetFile = join(__dirname, 'static/agent/abdm-support-agent.js');
+const widgetVersion = existsSync(widgetFile)
+  ? `?v=${createHash('sha256').update(readFileSync(widgetFile)).digest('hex').slice(0, 12)}`
+  : '';
 
 // One interactive reference per specification file, discovered from the
 // catalogue tree: dropping a YAML under catalogue/openapi/<platform>/<version>
@@ -289,10 +301,11 @@ async function sidebarItemsGenerator({defaultSidebarItemsGenerator, ...args}: an
   if (dirName.endsWith('/troubleshooting') || dirName.endsWith('/go-live')) {
     return withoutIndex();
   }
-  // NHCX's reference folder feeds three tabs. In the Docs sidebar it lists
-  // only what is neither FHIR reference nor error codes: those two tabs own
-  // theirs (see SPLIT_REFERENCE in site/sidebars.ts).
-  if (/^nhcx\/[^/]+\/reference$/.test(dirName)) {
+  // A reference folder lists only what is neither FHIR reference nor error
+  // codes, wherever it appears (the API sidebar, or Docs on a split gateway):
+  // those pages are Developer resources, whose sidebar lists them itself
+  // (site/sidebars.ts). One home per page.
+  if (/^[^/]+\/[^/]+\/reference$/.test(dirName)) {
     return items.filter((item: any) => {
       const id = firstDocId(item) ?? '';
       return !id.includes('/reference/fhir/') && !/\/reference\/(error-codes|error-code-guide|pmjay-error-codes)$/.test(id);
@@ -302,18 +315,21 @@ async function sidebarItemsGenerator({defaultSidebarItemsGenerator, ...args}: an
 }
 
 /**
- * The public repository integrators add as a plugin marketplace, and the
- * marketplace name `claude plugin install <plugin>@<marketplace>` has to name.
- * This repository is private, so both come from publish/agent-plugins.json,
- * which scripts/publish-agent-plugins.mjs publishes from.
- * MARKETPLACE_REPO overrides the repository for a test marketplace.
+ * The repository this copy of the portal is published from. Actions sets
+ * GITHUB_REPOSITORY on whichever fork is building, so a fork's install
+ * commands and GitHub link name that fork without anyone editing a constant.
+ * MARKETPLACE_REPO overrides it where the plugin is served from elsewhere.
  * Keep the same chain in scripts/build-skills.mjs.
  */
-const publicMarketplace = JSON.parse(
-  readFileSync(join(__dirname, '..', 'publish', 'agent-plugins.json'), 'utf8'),
-) as {repo: string; name: string};
-const pluginRepo = process.env.MARKETPLACE_REPO ?? publicMarketplace.repo;
-const marketplaceName = publicMarketplace.name;
+const pluginRepo =
+  process.env.MARKETPLACE_REPO ?? process.env.GITHUB_REPOSITORY ?? 'nha-in/docs';
+
+/** What `claude plugin install <plugin>@<marketplace>` has to name. Read from
+    the manifest rather than repeated, so renaming the shelf cannot leave a
+    published command pointing at one that does not exist. */
+const marketplaceName = JSON.parse(
+  readFileSync(join(__dirname, '..', '.claude-plugin', 'marketplace.json'), 'utf8'),
+).name as string;
 
 const config: Config = {
   title: 'ABDM Developer Portal',
@@ -336,7 +352,7 @@ const config: Config = {
   // reloads them when a client side link lands on one.
   clientModules: [require.resolve('./src/clientModules/reference-reload.ts')],
   scripts: [
-    {src: `${siteBase}agent/abdm-support-agent.js`, defer: true},
+    {src: `${siteBase}agent/abdm-support-agent.js${widgetVersion}`, defer: true},
   ],
 
   headTags: [
@@ -390,6 +406,8 @@ const config: Config = {
   baseUrl: process.env.DOCUSAURUS_BASE_URL ?? '/',
 
   onBrokenLinks: 'throw',
+  // The What's New index links every entry by its heading anchor.
+  onBrokenAnchors: 'throw',
 
   customFields: {
     // The repository this copy of the portal is published from, which is the
@@ -412,7 +430,7 @@ const config: Config = {
     // default is NHA's repository; a deployment serving the plugin from
     // somewhere else sets MARKETPLACE_REPO, and scripts/build-skills.mjs reads
     // the same variable so the page and agent-setup/prompt.md agree.
-    marketplaceRepo: pluginRepo,
+    marketplaceRepo: process.env.MARKETPLACE_REPO ?? 'nha-in/docs',
   },
 
   i18n: {

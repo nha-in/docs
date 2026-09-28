@@ -370,10 +370,11 @@
   color: var(--aa-body);
 }
 
+/* Tinted like the launcher chip that opened the panel. */
 .ask-ai__turn--you {
   align-self: flex-end;
-  background: var(--aa-accent);
-  color: var(--aa-accent-contrast);
+  background: var(--aa-accent-soft);
+  color: var(--aa-accent);
 }
 
 /* The assistant writes markdown; these keep its blocks at chat scale.
@@ -523,44 +524,93 @@
 /* Openers for the empty state. Full width because they are sentences, and a
    reader picks one by reading it rather than by scanning a row. */
 /* Citation chips, one per source, under the answer text they support. */
+/* Sources: one line, "Used 5 sources", that opens to the list, as Stripe's
+   assistant does. A row of chips took half the panel under every answer
+   before the reader had asked where the answer came from. */
 .ask-ai__sources {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.375rem;
   margin-top: 0.625rem;
-  padding-top: 0.5rem;
-  border-top: 1px solid var(--aa-border);
 }
 
-.ask-ai__sources-label {
-  font-size: 0.6875rem;
+.ask-ai__sources-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  list-style: none;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 0.8125rem;
   font-weight: 500;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--aa-faint);
+  color: var(--aa-accent);
 }
 
-.ask-ai__source-chip {
-  /* A citation is a pointer, not a sentence: long atom titles are cut rather
-     than allowed to take a line each, which is what turned six sources into
-     half a panel of boxes. */
-  max-width: 11rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  padding: 0.125rem 0.5rem;
-  border: 1px solid var(--aa-border);
-  border-radius: var(--aa-radius-chip);
-  background: var(--aa-surface);
-  font-size: 0.75rem;
-  color: var(--aa-body);
+/* Safari draws its own disclosure triangle unless told not to. */
+.ask-ai__sources-toggle::-webkit-details-marker {
+  display: none;
+}
+
+.ask-ai__sources-toggle svg {
+  flex: none;
+  transition: transform 150ms ease;
+}
+
+.ask-ai__sources[open] .ask-ai__sources-toggle svg {
+  transform: rotate(90deg);
+}
+
+/* Scoped under .ask-ai__sources to outrank `.ask-ai__turn--assistant ul`
+   and `li`, which dress the lists inside an answer with bullets and margins. */
+.ask-ai__sources .ask-ai__source-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  margin: 0.375rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ask-ai__sources .ask-ai__source-list > li {
+  margin: 0;
+}
+
+.ask-ai__source-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0;
+  border-radius: 4px;
+  font-size: 0.8125rem;
+  color: var(--aa-accent);
   text-decoration: none;
 }
 
-.ask-ai__source-chip:hover {
-  border-color: var(--aa-border-strong);
-  color: var(--aa-heading);
+.ask-ai__source-link svg {
+  flex: none;
+}
+
+/* A citation is a pointer, not a sentence: a long atom title is cut to one
+   line rather than wrapping. */
+.ask-ai__source-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ask-ai__source-link:hover .ask-ai__source-title {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.ask-ai__sources-toggle:focus-visible,
+.ask-ai__source-link:focus-visible {
+  outline: 2px solid var(--aa-accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ask-ai__sources-toggle svg {
+    transition: none;
+  }
 }
 
 /* The install flow's quick replies. A row rather than the openers' column:
@@ -736,6 +786,10 @@
 
 /* The foot: the chat bar card, and the commands under it. */
 .ask-ai__foot {
+  /* Above the thread, so a tip rising out of the chat bar (the context
+     window's) is drawn over the conversation rather than under it. */
+  position: relative;
+  z-index: 2;
   display: grid;
   gap: 0.625rem;
   padding: 0.5rem 0.875rem 0.875rem;
@@ -1084,9 +1138,8 @@
 }
 
 /* The file named under the question it went with. It sits inside the
-   reader's own bubble, which is the accent colour, so it takes that
-   bubble's ink at slightly less weight rather than the page's muted grey:
-   grey on green is the one combination here that cannot be read. */
+   reader's own bubble, which is accent tinted, so it takes that bubble's
+   ink at slightly less weight rather than the page's muted grey. */
 .ask-ai__turn-file {
   display: flex;
   align-items: center;
@@ -1360,3 +1413,168 @@
     transition: none !important;
   }
 }
+
+/* The context window: a ring beside the send button, filling as the
+   conversation grows, with the numbers in a tip on hover or focus. */
+.ask-ai__ring {
+  position: relative;
+  flex: 0 0 auto;
+  display: inline-flex;
+}
+
+.ask-ai__ring-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  cursor: default;
+}
+
+.ask-ai__ring-mark:focus-visible {
+  outline: 2px solid var(--aa-accent);
+  outline-offset: 2px;
+}
+
+.ask-ai__ring svg {
+  transform: rotate(-90deg);
+}
+
+.ask-ai__ring-track,
+.ask-ai__ring-fill {
+  fill: none;
+  stroke-width: 2.5;
+}
+
+.ask-ai__ring-track {
+  stroke: var(--aa-fill-soft);
+}
+
+.ask-ai__ring-fill {
+  stroke: var(--aa-faint);
+  stroke-linecap: round;
+  transition: stroke-dashoffset 250ms ease-out;
+}
+
+.ask-ai__ring--full .ask-ai__ring-fill {
+  stroke: #c07a12;
+}
+
+.ask-ai__ring-tip {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 0.5rem);
+  z-index: 3;
+  display: grid;
+  gap: 0.25rem;
+  width: 15rem;
+  padding: 0.5rem 0.625rem;
+  border: 1px solid var(--aa-border-strong);
+  border-radius: 0.5rem;
+  background: var(--aa-surface);
+  box-shadow: 0 8px 24px -12px rgb(0 0 0 / 0.3);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--aa-faint);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(2px);
+  transition: opacity 120ms ease-out, transform 120ms ease-out, visibility 0s linear 120ms;
+  pointer-events: none;
+}
+
+.ask-ai__ring-tip strong {
+  color: var(--aa-heading);
+  font-weight: 600;
+}
+
+.ask-ai__ring:hover .ask-ai__ring-tip,
+.ask-ai__ring-mark:focus-visible + .ask-ai__ring-tip {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition-delay: 0s;
+}
+
+/* The disclaimer under the chat bar, quiet and always there. */
+.ask-ai__disclaimer {
+  margin: 0.125rem 0 0;
+  font-size: 0.6875rem;
+  line-height: 1.4;
+  text-align: center;
+  color: var(--aa-faint);
+}
+
+/* The line above the oldest message a question still carries. */
+.ask-ai__cut {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin: 0.25rem 0;
+  font-size: 0.6875rem;
+  color: var(--aa-faint);
+}
+
+.ask-ai__cut::before,
+.ask-ai__cut::after {
+  content: '';
+  flex: 1 1 auto;
+  height: 1px;
+  background: var(--aa-border-strong);
+}
+
+.ask-ai__cut span {
+  flex: 0 1 auto;
+  text-align: center;
+}
+
+/* Asked once when the conversation fills the window: go on, or start afresh. */
+.ask-ai__window-offer {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid var(--aa-border-strong);
+  border-radius: 0.75rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--aa-heading);
+}
+
+.ask-ai__window-offer p {
+  margin: 0;
+}
+
+.ask-ai__window-offer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.ask-ai__window-offer-new,
+.ask-ai__window-offer-stay {
+  padding: 0.25rem 0.625rem;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.ask-ai__window-offer-new {
+  border: 0;
+  background: var(--aa-accent);
+  color: var(--aa-accent-contrast);
+}
+
+.ask-ai__window-offer-stay {
+  border: 1px solid var(--aa-border-strong);
+  background: transparent;
+  color: var(--aa-heading);
+}
+
+.ask-ai__window-offer-new:focus-visible,
+.ask-ai__window-offer-stay:focus-visible {
+  outline: 2px solid var(--aa-accent);
+  outline-offset: 2px;
+}
+

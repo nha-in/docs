@@ -6,7 +6,14 @@
   steps:
     - op: record-share_post_patient_record_v3_share
     - op: record-share_post_v3_patient_record_on_share
+    # The spec files this under webhooks because the HIU hosts it. On this
+    # side the PHR app makes the call, to the HIU's dataPushUrl.
     - op: record-share_post_health_information_transfer
+      title: Push the encrypted records to the HIU's data push URL, as the PHR app
+      say: >-
+        Outbound from your app. POST the encrypted records to the `dataPushUrl`
+        the HIU sent in the on-share of step 2. The call goes straight to the
+        HIU, not through the gateway. The HIU answers 202.
     - op: record-share_post_patient_record_v3_notify
     - op: record-share_post_v3_patient_record_on_notify
     - op: record-share_get_patient_record_v3_audit_history
@@ -18,3 +25,4 @@
     - op: record-share_post_health_information_transfer
     - op: record-share_post_v3_patient_record_on_notify
     - op: record-share_post_patient_record_v3_notify
+      example: HIU, after receipt

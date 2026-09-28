@@ -78,19 +78,24 @@ const IMS_JOURNEY: Step[] = [
 
 const PHR_JOURNEY: Step[] = [
   {
-    label: 'P1 Identity and profile',
+    label: 'P1 Registration and login',
     detail: 'Sign a patient in with their ABHA and hold their profile.',
     to: '/docs/hiecm/v3/milestones/p1',
   },
   {
-    label: 'P2 Linking and records',
+    label: 'P2 Consents Management',
     detail: 'Find their records across facilities and link them to the account.',
     to: '/docs/hiecm/v3/milestones/p2',
   },
   {
-    label: 'P3 Consent and notifications',
+    label: 'P3 Subscription',
     detail: 'Let them grant, see and revoke consent, and receive what the gateway sends.',
     to: '/docs/hiecm/v3/milestones/p3',
+  },
+  {
+    label: 'P4 Locker',
+    detail: 'Keep their records for the long term, fetched with consent as each one is linked.',
+    to: '/docs/hiecm/v3/milestones/p4',
   },
 ];
 

@@ -26,9 +26,9 @@ The set of callback endpoints your system exposes to NHA's
 [gateway](gateway.md). A bridge is your integration rather than a
 facility: NHA stores one bridge URL for each registered participant,
 every facility linked to that bridge shares it, and callbacks are posted
-underneath it. NHA's M3 document gives
-`POST {hiuBridgeUrl}/v0.5/consents/hiu/notify` for an [HIU](hiu.md) and
-`POST {hipBridgeUrl}/v0.5/health-information/hip/request` for a
+underneath it. The specification gives
+`POST {hiuBridgeUrl}/api/v3/hiu/consent/request/notify` for an [HIU](hiu.md) and
+`POST {hipBridgeUrl}/api/v3/hip/health-information/request` for a
 [HIP](hip.md). Registering your bridge URL is part of sandbox
 onboarding.
 

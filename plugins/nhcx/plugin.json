@@ -5,10 +5,10 @@
   "description": "Agent skills for building the provider side of the National Health Claims Exchange (NHCX) into a hospital information system: nhcx-full for the whole integration, and one skill per use case, nhcx-coverage, nhcx-preauth, nhcx-claim, nhcx-communication, nhcx-payment and nhcx-reprocess. Each works through eight logged steps from discovery to sandbox tests, takes its NHCX facts from the nhcx-docs MCP server or the NHCX package, and installs and runs alone. Connects the nhcx-docs MCP server, and carries /nhcx-decode-error, /nhcx-preflight and /nhcx-prove-seal, and the nhcx-call-debugger agent.",
   "author": {
     "name": "ABDM Developer Portal",
-    "url": "https://docs.abdm.gov.in"
+    "url": "https://github.com/nha-in/docs"
   },
-  "homepage": "https://docs.abdm.gov.in",
-  "repository": "https://github.com/nha-in/agent-plugins",
+  "homepage": "https://github.com/nha-in/docs",
+  "repository": "https://github.com/nha-in/docs",
   "license": "MIT",
   "keywords": [
     "nhcx",

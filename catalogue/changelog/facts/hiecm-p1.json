@@ -1,0 +1,357 @@
+{
+  "errors": [],
+  "file": "hiecm-p1.yaml",
+  "gateway": "hiecm",
+  "label": "P1 Registration and login",
+  "module": "p1",
+  "operations": {
+    "GET /abha/api/v3/phr/app/enrollment/isExists": {
+      "encrypted": [],
+      "id": "p1_get_v3_phr_app_enrollment_isexists",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "query:abhaAddress"
+      ],
+      "path": "/abha/api/v3/phr/app/enrollment/isExists",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "400",
+        "401"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://abhasbx.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in"
+      ]
+    },
+    "GET /abha/api/v3/phr/app/login/public/certificate": {
+      "encrypted": [],
+      "id": "p1_get_v3_phr_app_login_public_certificate",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!"
+      ],
+      "path": "/abha/api/v3/phr/app/login/public/certificate",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "default"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://abhasbx.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in"
+      ]
+    },
+    "POST /abha/api/v3/phr/app/enrollment/enrol": {
+      "encrypted": [],
+      "id": "p1_post_v3_phr_app_enrollment_enrol",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!"
+      ],
+      "path": "/abha/api/v3/phr/app/enrollment/enrol",
+      "properties": [
+        "phrDetails",
+        "txnId"
+      ],
+      "required": [
+        "phrDetails",
+        "txnId"
+      ],
+      "responses": [
+        "200",
+        "400"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://abhasbx.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in"
+      ]
+    },
+    "POST /abha/api/v3/phr/app/enrollment/request/otp": {
+      "encrypted": [],
+      "id": "p1_post_v3_phr_app_enrollment_request_otp",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!"
+      ],
+      "path": "/abha/api/v3/phr/app/enrollment/request/otp",
+      "properties": [
+        "loginHint",
+        "loginId",
+        "otpSystem",
+        "scope"
+      ],
+      "required": [
+        "loginHint",
+        "loginId",
+        "otpSystem",
+        "scope"
+      ],
+      "responses": [
+        "200",
+        "400"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://abhasbx.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in"
+      ]
+    },
+    "POST /abha/api/v3/phr/app/enrollment/suggestion": {
+      "encrypted": [],
+      "id": "p1_post_v3_phr_app_enrollment_suggestion",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!"
+      ],
+      "path": "/abha/api/v3/phr/app/enrollment/suggestion",
+      "properties": [
+        "dayOfBirth",
+        "email",
+        "firstName",
+        "lastName",
+        "monthOfBirth",
+        "txnId",
+        "yearOfBirth"
+      ],
+      "required": [
+        "dayOfBirth",
+        "firstName",
+        "lastName",
+        "monthOfBirth",
+        "txnId",
+        "yearOfBirth"
+      ],
+      "responses": [
+        "200",
+        "400"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://abhasbx.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in"
+      ]
+    },
+    "POST /abha/api/v3/phr/app/enrollment/verify": {
+      "encrypted": [],
+      "id": "p1_post_v3_phr_app_enrollment_verify",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!"
+      ],
+      "path": "/abha/api/v3/phr/app/enrollment/verify",
+      "properties": [
+        "authData",
+        "scope"
+      ],
+      "required": [
+        "authData",
+        "scope"
+      ],
+      "responses": [
+        "200",
+        "400"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://abhasbx.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in"
+      ]
+    },
+    "POST /abha/api/v3/phr/app/login/request/otp": {
+      "encrypted": [],
+      "id": "p1_post_v3_phr_app_login_request_otp",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!"
+      ],
+      "path": "/abha/api/v3/phr/app/login/request/otp",
+      "properties": [
+        "loginHint",
+        "loginId",
+        "otpSystem",
+        "scope"
+      ],
+      "required": [
+        "loginHint",
+        "loginId",
+        "otpSystem",
+        "scope"
+      ],
+      "responses": [
+        "200",
+        "400",
+        "401"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://abhasbx.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in"
+      ]
+    },
+    "POST /abha/api/v3/phr/app/login/search": {
+      "encrypted": [],
+      "id": "p1_post_v3_phr_app_login_search",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!"
+      ],
+      "path": "/abha/api/v3/phr/app/login/search",
+      "properties": [
+        "abhaAddress"
+      ],
+      "required": [
+        "abhaAddress"
+      ],
+      "responses": [
+        "200",
+        "400",
+        "401"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://abhasbx.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in"
+      ]
+    },
+    "POST /abha/api/v3/phr/app/login/verify": {
+      "encrypted": [],
+      "id": "p1_post_v3_phr_app_login_verify",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!"
+      ],
+      "path": "/abha/api/v3/phr/app/login/verify",
+      "properties": [
+        "authData",
+        "scope"
+      ],
+      "required": [
+        "authData",
+        "scope"
+      ],
+      "responses": [
+        "200",
+        "400",
+        "401"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://abhasbx.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in"
+      ]
+    },
+    "POST /abha/api/v3/phr/app/login/verify/user": {
+      "encrypted": [],
+      "id": "p1_post_v3_phr_app_login_verify_user",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:T-token!",
+        "header:TIMESTAMP!"
+      ],
+      "path": "/abha/api/v3/phr/app/login/verify/user",
+      "properties": [
+        "abhaAddress",
+        "txnId"
+      ],
+      "required": [
+        "abhaAddress",
+        "txnId"
+      ],
+      "responses": [
+        "200",
+        "400",
+        "403"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://abhasbx.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in"
+      ]
+    },
+    "POST /abha/api/v3/profile/account/request/emailVerificationLink": {
+      "encrypted": [],
+      "id": "p1_post_v3_profile_account_request_emailverificationlink",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-token!"
+      ],
+      "path": "/abha/api/v3/profile/account/request/emailVerificationLink",
+      "properties": [
+        "loginHint",
+        "loginId",
+        "otpSystem",
+        "scope"
+      ],
+      "required": [],
+      "responses": [
+        "default"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://abhasbx.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in"
+      ]
+    }
+  },
+  "roles": [
+    "phr"
+  ],
+  "sources": {
+    "catalogue/openapi/.raw/nha-2026-09-16/phr/PHR and Locker Swagger.yaml": {
+      "fetched": "2026-09-16",
+      "hash": "sha256:a7e1b7e0b56b75297623057678cf307f21ecdbfbc9ebdb022dc67df78540f6d5"
+    }
+  },
+  "version": "v3"
+}

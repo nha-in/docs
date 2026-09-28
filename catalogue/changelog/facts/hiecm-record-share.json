@@ -1,0 +1,290 @@
+{
+  "errors": [],
+  "file": "hiecm-record-share.yaml",
+  "gateway": "hiecm",
+  "label": "Patient scan and record share",
+  "module": "record-share",
+  "operations": {
+    "GET /api/hiecm/patient-record/v3/audit-history": {
+      "encrypted": [],
+      "id": "record-share_get_patient_record_v3_audit_history",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-CM-ID!",
+        "query:endDate",
+        "query:limit",
+        "query:offset",
+        "query:startDate"
+      ],
+      "path": "/api/hiecm/patient-record/v3/audit-history",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/hiecm/patient-record/v3/notify": {
+      "encrypted": [],
+      "id": "record-share_post_patient_record_v3_notify",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-CM-ID!",
+        "header:X-HIU-ID!"
+      ],
+      "path": "/api/hiecm/patient-record/v3/notify",
+      "properties": [
+        "notification"
+      ],
+      "required": [
+        "notification"
+      ],
+      "responses": [
+        "202"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/hiecm/patient-record/v3/on-share": {
+      "encrypted": [],
+      "id": "record-share_post_patient_record_v3_on_share",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-CM-ID!",
+        "header:X-HIU-ID!"
+      ],
+      "path": "/api/hiecm/patient-record/v3/on-share",
+      "properties": [
+        "hiRequest",
+        "response"
+      ],
+      "required": [
+        "hiRequest",
+        "response"
+      ],
+      "responses": [
+        "202"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/hiecm/patient-record/v3/share": {
+      "encrypted": [],
+      "id": "record-share_post_patient_record_v3_share",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-CM-ID!",
+        "header:X-HIU-ID!"
+      ],
+      "path": "/api/hiecm/patient-record/v3/share",
+      "properties": [
+        "consent",
+        "metaData",
+        "profile",
+        "sharedRecordCount"
+      ],
+      "required": [
+        "consent",
+        "metaData",
+        "profile",
+        "sharedRecordCount"
+      ],
+      "responses": [
+        "202"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/v3/patient-record/on-notify": {
+      "encrypted": [],
+      "id": "record-share_post_v3_patient_record_on_notify",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:request-id!",
+        "header:timestamp!",
+        "header:x-hiu-id!"
+      ],
+      "path": "/api/v3/patient-record/on-notify",
+      "properties": [
+        "notification"
+      ],
+      "required": [
+        "notification"
+      ],
+      "responses": [
+        "202"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/v3/patient-record/on-share": {
+      "encrypted": [],
+      "id": "record-share_post_v3_patient_record_on_share",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:request-id!",
+        "header:timestamp!",
+        "header:x-hiu-id!"
+      ],
+      "path": "/api/v3/patient-record/on-share",
+      "properties": [
+        "hiRequest",
+        "response"
+      ],
+      "required": [
+        "hiRequest",
+        "response"
+      ],
+      "responses": [
+        "202"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/v3/patient-record/share": {
+      "encrypted": [],
+      "id": "record-share_post_v3_patient_record_share",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:request-id!",
+        "header:timestamp!",
+        "header:x-hiu-id!"
+      ],
+      "path": "/api/v3/patient-record/share",
+      "properties": [
+        "consent",
+        "metaData",
+        "profile",
+        "sharedRecordCount",
+        "transactionId"
+      ],
+      "required": [
+        "consent",
+        "metaData",
+        "profile",
+        "sharedRecordCount",
+        "transactionId"
+      ],
+      "responses": [
+        "202"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /health-information/transfer": {
+      "encrypted": [],
+      "id": "record-share_post_health_information_transfer",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:request-id!",
+        "header:timestamp!"
+      ],
+      "path": "/health-information/transfer",
+      "properties": [
+        "entries",
+        "keyMaterial",
+        "pageCount",
+        "pageNumber",
+        "transactionId"
+      ],
+      "required": [
+        "entries",
+        "keyMaterial",
+        "pageCount",
+        "pageNumber",
+        "transactionId"
+      ],
+      "responses": [
+        "202"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    }
+  },
+  "roles": [
+    "his",
+    "phr"
+  ],
+  "sources": {
+    "catalogue/openapi/.raw/nha-2026-09-21-record-share/Patient Scan and Record Share.docx": {
+      "fetched": "2026-09-21",
+      "hash": "sha256:2d3ba3761a8a4b0a9b1b21d945a54797956f0ece683c85bfaa2af2bfbbb8df52"
+    },
+    "catalogue/openapi/.raw/nha-2026-09-21-record-share/Record_Share_19_03_2026.postman_collection.json": {
+      "fetched": "2026-09-21",
+      "hash": "sha256:a3a8d786cc35e6859c0d640eaf8be37f72e7eb8b65c27ec24f35ce1a3fb3f70c"
+    },
+    "catalogue/openapi/corrections/2026-09-21-record-share-ingest.md": {
+      "fetched": null,
+      "hash": null
+    }
+  },
+  "version": "v3"
+}

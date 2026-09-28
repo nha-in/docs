@@ -111,7 +111,7 @@ Every module skill opens `SKILL.md` with the same four parts, in this order, bef
 
 ```markdown
 ## What this skill does
-- Create an ABHA with zero OTPs at a registered facility (Scan and Share)
+- Create an ABHA with zero OTPs at a registered facility (Scan and Register)
 - Log a person in by the mobile number the record already holds
 - Open the registration form filled from the ABHA profile
 

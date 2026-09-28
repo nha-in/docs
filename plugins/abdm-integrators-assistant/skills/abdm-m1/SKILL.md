@@ -3,7 +3,7 @@ name: abdm-m1
 description: Use when building, debugging or testing ABDM Milestone 1: creating an ABHA number or address, ABHA login, profile management, or the gateway session token. Carries the endpoints, the required headers, the two token rule, the encryption rule and the error codes its specification's examples return. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.
 ---
 
-# ABDM M1, ABHA creation and verification
+# ABDM M1, create and verify ABHA
 
 Generated from the ABDM Developer Portal on 2026-09-16, catalogue version 2026.09.16. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.
 
@@ -12,12 +12,12 @@ If the abdm-docs MCP server is connected, trust its answers over this file: it s
 
 ## What you can do with M1
 
-- Create an ABHA for somebody who has none: by Aadhaar, by mobile, by an identity document, by face or fingerprint, or under a parent for a child.
+- Create an ABHA for somebody who has none: by Aadhaar OTP, by demographic authentication, by face or fingerprint, or under a parent for a child.
 - Log in somebody who already has one, by Aadhaar, mobile, ABHA number or ABHA address.
 - Read their profile, which carries the whole registration form: names, date of birth, gender, mobile, address with its codes, and a photograph.
 - Find an ABHA somebody has forgotten, and pick the right account when one mobile holds several.
 - Show the ABHA card and QR code, and take a profile a patient shares by QR at your counter.
-- Update a profile, change a mobile, and upgrade a mobile made address to KYC verified.
+- Update a profile and change a mobile.
 
 What it cannot do yet matters as much. Read **Before anything else** below before assuming a capability is one endpoint away.
 

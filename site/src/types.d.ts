@@ -21,6 +21,7 @@ declare module 'react' {
         starters?: string;
         shortcut?: string;
         send?: string;
+        gateway?: string;
       };
     }
   }

@@ -46,7 +46,13 @@ function buildSkill(module, hasErrorsPage) {
     '**Act: the calls in this journey, in order**', '',
     ...j.steps.map((s, i) => {
       const d = stepData(s, j.id, i);
-      return `#### ${i + 1}. ${d.title ?? d.summary}${s.optional ? ' (optional)' : ''} (\`${s.op}\`)\n\n${d.kind === 'callback' ? `Inbound to your bridge at \`${d.path}\`. Acknowledge it and continue.` : `\`\`\`bash\n${d.curl}\n\`\`\``}\n`;
+      // build-api-reference.mjs has already applied a step's `title` and
+      // `body`. `say` replaces the inbound line of a callback the step makes
+      // rather than receives.
+      const act = d.kind === 'callback'
+        ? (s.say ?? `Inbound to your bridge at \`${d.path}\`. Acknowledge it and continue.`)
+        : `${s.say ? `${s.say}\n\n` : ''}\`\`\`bash\n${d.curl}\n\`\`\``;
+      return `#### ${i + 1}. ${d.title ?? d.summary}${s.optional ? ' (optional)' : ''} (\`${s.op}\`)\n\n${act}\n`;
     }),
     '**Exit condition (Observe until this is true)**', '',
     exit(stepData(j.steps[j.steps.length - 1], j.id, j.steps.length - 1)),

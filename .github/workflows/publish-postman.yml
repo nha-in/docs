@@ -1,0 +1,48 @@
+name: publish-postman
+
+# Publishes the generated Postman collections to NHA's public workspace, so
+# "Run in Postman" opens the same collection the site serves for download.
+#
+# The site never depends on this: the collections are built and served from
+# the site on every build. Without the POSTMAN_API_KEY secret the publish step
+# says so and exits cleanly, so forks and self-hosted copies publish nothing.
+#
+# One-time setting: Settings -> Secrets and variables -> Actions ->
+# POSTMAN_API_KEY, a key for the Postman account that owns the workspace named
+# in catalogue/postman.json.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - catalogue/openapi/**
+      - catalogue/postman.json
+      - scripts/build-api-reference.mjs
+      - scripts/build-postman.mjs
+      - scripts/publish-postman.mjs
+      - scripts/lib/**
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-postman
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: node scripts/build-api-reference.mjs
+      - run: node scripts/build-postman.mjs
+      - run: npm run test:postman
+      - run: node scripts/publish-postman.mjs
+        env:
+          POSTMAN_API_KEY: ${{ secrets.POSTMAN_API_KEY }}

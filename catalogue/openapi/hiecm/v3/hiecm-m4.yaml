@@ -5,7 +5,7 @@ info:
     label: M4 Registry Integration
     position: 5
     icon: building-2
-  title: ABDM M4, professional and facility registries
+  title: ABDM M4, register facilities and professionals
   summary: Register healthcare professionals and facilities on the NHPR.
   version: abdm-v3
   license:
@@ -20,18 +20,18 @@ info:
   x-abdm-roles:
     - his
 x-abdm-sources:
-  - file: catalogue/openapi/.raw/nha-2026-09-16/M4/M4-HFR.json
+  - file: catalogue/openapi/.raw/nha-2026-09-24/M4/M4-HFR.json
     role: upstream
-    hash: sha256:25291734dd3782857bc3e012c7fa1881a069b49fdb3701e1657c514f43b590f5
-    fetched: "2026-09-16"
-  - file: catalogue/openapi/.raw/nha-2026-09-16/M4/M4-HPID.json
+    hash: sha256:39a581bb31e74f48340703056258e31850788848220787814ffa49750d23d9ba
+    fetched: "2026-09-24"
+  - file: catalogue/openapi/.raw/nha-2026-09-24/M4/M4-HPID.json
     role: upstream
-    hash: sha256:7e2eb837caa110f883dd56fb25ed606c942ac32324b9666d9a728b9a22582263
-    fetched: "2026-09-16"
-  - file: catalogue/openapi/.raw/nha-2026-09-16/M4/M4-HPR.json
+    hash: sha256:b673f1dc7d25958998a8be194c87df9b779fd80389f9c8970bdb28b53df30b12
+    fetched: "2026-09-24"
+  - file: catalogue/openapi/.raw/nha-2026-09-24/M4/M4-HPR.json
     role: upstream
-    hash: sha256:fe3e5b211cf9f1c0cf3af9830de9f3c28c6fbc52294bdc3bf24b76cfacf92cd0
-    fetched: "2026-09-16"
+    hash: sha256:2cbcab72692ada1b6b07bce3c6c6d3e3bd047bcaca0c5716ac1d691121025081
+    fetched: "2026-09-24"
 servers:
   - url: https://apihspsbx.abdm.gov.in/v4/int
     description: NHPR, sandbox
@@ -54,8 +54,6 @@ tags:
     description: ""
   - name: Verification
     description: ""
-  - name: hpid
-    description: ""
   - name: Util
     description: ""
   - name: Profile
@@ -68,14 +66,18 @@ tags:
     description: ""
   - name: Utility
     description: ""
-  - name: hpr
-    description: ""
 paths:
   /aadhaar/generateLink:
     post:
       tags:
         - Registration API's Collection Via Aadhaar
       operationId: m4_post_aadhaar_generatelink
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -89,7 +91,7 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 $ref: "#/components/schemas/AadharGenerateLinkResponse"
               example:
@@ -109,6 +111,12 @@ paths:
       tags:
         - Registration API's Collection Via Aadhaar
       operationId: m4_post_aadhaar_isauthenticated
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -120,7 +128,7 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 type: boolean
               example: true
@@ -138,6 +146,12 @@ paths:
       tags:
         - Registration API's Collection Via Aadhaar
       operationId: m4_post_v2_registration_aadhaar_verifyotp
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -149,29 +163,9 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 $ref: "#/components/schemas/AadharVerifyResponsePayload"
-              example:
-                txnId: 951b4258-2ac7-432c-8dbf-6ed990757b88
-                mobileNumber: null
-                photo: <BASE64 ENCODED STRING>
-                gender: M
-                name: Ayushman Bharat Mission
-                email: null
-                pincode: <PINCODE>
-                birthdate: <DOB>
-                careOf: <NAME>
-                house: <ADDRESS>
-                street: <ADDRESS>
-                landmark: null
-                locality: <ADDRESS>
-                villageTownCity: Sahibabad
-                subDist: null
-                district: Ghaziabad
-                state: Uttar Pradesh
-                postOffice: Sahibabad
-                address: 9th Floor, Tower-l, Jeevan Bharati Building, Connaught Place, New Delhi - 110001
         "404":
           description: Not Found
           content:
@@ -186,20 +180,23 @@ paths:
       tags:
         - Registration API's Collection Via Aadhaar
       operationId: m4_post_v2_registration_aadhaar_demographicauthviamobile
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/HPRIDGenerateMobileOTPResponseDTO"
-            example:
-              txnId: de4ff682-fcc6-4bcf-a978-0dbb19a288b4
-              mobileNumber: JrHfDROoEcsYJ41g2wdkicsI7mT1ATCP347iqwBhWbfaEIgZ03/WHAYvDHRG2WXl4HBNuP2orD+3O75pN0xFhOz4oLXrePAxKTLK8uG5jdeAiGE2lKwOrShq9/gg+BckrQcDYjpMUePRuDau4mqLHa8FdSCQ8npGPY9KCpD2hZkscWNqZR68gRo/EwpY4u32kDzv5i1K/s+A7FNVwXqZS5AK2BadEhG5drSRk7P83eFxJZUlwtsvDK6iipOsM4VtMXXXXXXXXXXXXXXXXXXXXXXXXXXX
         required: true
       responses:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 $ref: "#/components/schemas/MobileDemographicAuthResponseModel"
               example:
@@ -221,6 +218,12 @@ paths:
       tags:
         - Registration API's Collection Via Aadhaar
       operationId: m4_post_v1_registration_aadhaar_checkhpidaccountexist
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -233,33 +236,9 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 $ref: "#/components/schemas/AccountExistResponsePayload"
-              example:
-                token: <JWT TOKEN>
-                hprIdNumber: <HPR_ID>
-                categoryId: 100
-                subCategoryId: 85
-                txnId: 79dbf65d-affa-4249-8935-3d01676d8b82
-                name: Ayushman Bharat Mission
-                gender: M
-                yearOfBirth: <DOB>
-                monthOfBirth: <DOB>
-                dayOfBirth: <DOB>
-                firstName: Ayushman
-                middleName: ""
-                lastName: Mission
-                stateCode: "9"
-                districtCode: "145"
-                stateName: Uttar Pradesh
-                districtName: <ADDRESS>
-                address: 9th Floor, Tower-l, Jeevan Bharati Building, Connaught Place, New Delhi - 110001
-                pincode: <PINCODE>
-                profilePhoto: <BASE64 ENCODED STRING>
-                mobile: null
-                hprId: <EMAIL>
-                new: false
         "404":
           description: Not Found
           content:
@@ -274,6 +253,12 @@ paths:
       tags:
         - Registration API's Collection Via Aadhaar
       operationId: m4_post_v1_registration_aadhaar_hpid_suggestion
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -286,7 +271,7 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 type: array
                 items:
@@ -307,6 +292,12 @@ paths:
       tags:
         - Registration API's Collection Via Aadhaar
       operationId: m4_post_v1_registration_aadhaar_generatemobileotp
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -320,12 +311,9 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 $ref: "#/components/schemas/HPRIDGenerateMobileOTPResponseDTO"
-              example:
-                txnId: 951b4258-2ac7-432c-8dbf-6ed990757b88
-                mobileNumber: null
         "404":
           description: Not Found
           content:
@@ -340,6 +328,12 @@ paths:
       tags:
         - Registration API's Collection Via Aadhaar
       operationId: m4_post_v1_registration_aadhaar_verifymobileotp
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -370,6 +364,12 @@ paths:
       tags:
         - Registration API's Collection Via Aadhaar
       operationId: m4_post_v2_registration_aadhaar_createhpridwithpreverified
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -397,6 +397,12 @@ paths:
       tags:
         - Onboarding APIs
       operationId: m4_post_search_address_filter_deduplicate
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -414,203 +420,11 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 type: array
                 items:
                   $ref: "#/components/schemas/DeduplicateResponseDto"
-              example:
-                - nhrr_facility_id: null
-                  facility_central: ""
-                  fac_contact_per_desg: null
-                  e_hospital_id: null
-                  lst_upd_dt: "2024-04-09T08:08:53.224Z"
-                  fac_alt_contact_per_name: null
-                  hrp_source: null
-                  emr_software: ""
-                  source: HFR
-                  fac_contact_per_landline_no: null
-                  mobile_no: ""
-                  power_backup_it: null
-                  abdm_software: null
-                  facility_operational_status: F
-                  crt_dt: "2024-04-03T10:35:29.942Z"
-                  cea_id: null
-                  hospital_speciality_type: null
-                  hospital_link_to_colg: null
-                  pincode: <PINCODE>
-                  type_of_service_other: null
-                  fac_alt_contact_per_landline_no: null
-                  facility_type: "2"
-                  crt_usr: <HPR_ID>
-                  country: India
-                  sub_district:
-                    locId: "5271"
-                    locType: SDT
-                    locName: Adoni
-                    census2001Code: "22  "
-                    census2011Code: "05271"
-                    ssCode: null
-                    locParntId: "511"
-                    locLocalName: null
-                    crtUsr: LGDAPI
-                    updUsr: null
-                    hfrYn: Y
-                    stateShortName: null
-                    nhrrStateCode: null
-                    nhrrDistrictCode: null
-                    activeYn: Y
-                  submit_flag: null
-                  mobile_no_per_country_code: null
-                  ehospitalid: null
-                  echs_id: null
-                  fac_contact_per_surname: Roy
-                  book_app_url: ""
-                  facility_website: ""
-                  fac_alt_contact_per_mobile_no: null
-                  hmis_code: null
-                  pharmacy_software_name: null
-                  fac_contact_per_std_code: null
-                  ufid: null
-                  form3: null
-                  lmis_ris_name: null
-                  fac_contact_per_email_verified: <ABHA_ADDRESS>.com
-                  power_backup: null
-                  fac_contact_per_country_code: null
-                  emr_software_other: null
-                  geolocation: 26.<ABHA_NUMBER>,75.80129199999999
-                  open_time: null
-                  emr_system: N
-                  hospital_cnt_link_colg: null
-                  district:
-                    locId: "511"
-                    locType: DT
-                    locName: Kurnool
-                    census2001Code: "21"
-                    census2011Code: "552"
-                    ssCode: ""
-                    locParntId: "28"
-                    locLocalName: "Kurnool                                           "
-                    crtUsr: LGDAPI
-                    updUsr: LGDAPI
-                    hfrYn: Y
-                    stateShortName: null
-                    nhrrStateCode: null
-                    nhrrDistrictCode: "21"
-                    activeYn: Y
-                  fac_contact_per_middle_name: ""
-                  facility_pan: null
-                  health_wellness_center: null
-                  colg_cnt_link_hospital: null
-                  fac_alt_contact_per_desg: null
-                  private_profit_type: ""
-                  form1: null
-                  facility_owner_private: ""
-                  fac_contact_per_name: Tejeshvi
-                  facility_sub_type: "30"
-                  address2: ""
-                  hours_of_operation: null
-                  stinsid: null
-                  lst_upd_usr: null
-                  facility_gst: null
-                  state:
-                    locId: "28"
-                    locType: ST
-                    locName: Andhra Pradesh
-                    census2001Code: "28"
-                    census2011Code: "28"
-                    ssCode: null
-                    locParntId: "0"
-                    locLocalName: Andhra Pradesh
-                    crtUsr: LGDAPI
-                    updUsr: LGDAPI
-                    hfrYn: Y
-                    stateShortName: AP
-                    nhrrStateCode: "28"
-                    nhrrDistrictCode: null
-                    activeYn: Y
-                  fac_contact_per_prefix: null
-                  year_of_establishment: null
-                  pharmacy_information_system: null
-                  pharmacy_is_name: null
-                  fac_unique_id: "69711"
-                  declared_by: hfr
-                  address_proof_2: null
-                  fac_email_verified: No
-                  address1: Pisangan Ajmer
-                  facility_region: null
-                  e_arogya: null
-                  facility_subtype_other: null
-                  active_yn: Y
-                  facility_owner_govt: ""
-                  fac_alt_contact_per_surname: null
-                  name_asin_pancard: null
-                  form2: null
-                  identification_number: null
-                  facility_tan: null
-                  pmjay_id: null
-                  rohini_id: null
-                  e_sushrut_id: null
-                  lmis_ris_availaible: null
-                  terms_agree_flag: null
-                  any_other_system: ""
-                  address_proof_3: null
-                  facility_name: Jethana
-                  days_of_operation: Mon; Tue; Wed; Thu; Fri; Sat
-                  facility_ownership: G
-                  alternate_contact_dtls: null
-                  hrp_source_fac_id: null
-                  facility_email: ""
-                  address_proof: EBill
-                  fac_alt_contact_per_std_code: null
-                  fac_alt_contact_per_email_verified: null
-                  about_us: null
-                  fac_alt_contact_per_middle_name: null
-                  pharmacy_software: null
-                  system_of_medicine: M
-                  fac_contact_per_mobile_no: "******2125"
-                  pharmacy_software_other: null
-                  mobileno_verified: No
-                  facility_type_other: null
-                  private_not_profit_type: ""
-                  alt_health_dtls: null
-                  fac_alt_contact_per_country_code: null
-                  close_time: null
-                  fac_alt_contact_per_prefix: null
-                  owner_subtype: S
-                  entity_type: ""
-                  vilage_city_town:
-                    locId: ""
-                    locType: null
-                    locName: null
-                    census2001Code: null
-                    census2011Code: null
-                    ssCode: null
-                    locParntId: null
-                    locLocalName: null
-                    crtUsr: null
-                    updUsr: null
-                    hfrYn: null
-                    stateShortName: null
-                    nhrrStateCode: null
-                    nhrrDistrictCode: null
-                    activeYn: null
-                  net_available: null
-                  health_id: <HPR_ID>
-                  landline_no: ""
-                  type_of_service: OPD
-                  fac_contact_per_email: <ABHA_ADDRESS>.com
-                  progress_value: null
-                  it_available: null
-                  alternate_id: IN2810001372
-                  app_submitted_date: "2024-04-03T10:35:29.942Z"
-                  std_code: null
-                  status: Draft
-                  cghs_id: null
-                  nhrr_form_id: null
-                  facility_central_other: null
-                  fac_alt_contact_per_email: null
-                  distances: "0"
         "404":
           description: Not Found
           content:
@@ -626,6 +440,11 @@ paths:
         - Onboarding APIs
       operationId: m4_post_v1_5_facility_basic_information
       parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
         - name: x-hprid-auth
           in: header
           required: true
@@ -690,14 +509,9 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 $ref: "#/components/schemas/FacilityOnboardResponse"
-              example:
-                trackingId: "76803"
-                status: success
-                message: Facility is saved successfully
-                errorStatus: null
         "404":
           description: Not Found
           content:
@@ -712,6 +526,12 @@ paths:
       tags:
         - Onboarding APIs
       operationId: m4_post_v1_5_facility_additional_information
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -746,14 +566,9 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 $ref: "#/components/schemas/FacilityOnboardResponse"
-              example:
-                trackingId: "76803"
-                status: Created
-                message: Facility details have been saved successfully. Please login at https://nhpr.abdm.gov.in/ and submit your facility details for approval.
-                errorStatus: null
         "404":
           description: Not Found
           content:
@@ -768,6 +583,12 @@ paths:
       tags:
         - Onboarding APIs
       operationId: m4_post_v1_5_facility_detailed_information
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -834,16 +655,9 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 $ref: "#/components/schemas/FacilityOnboardResponse"
-              example:
-                trackingId: "76803"
-                status: Saved
-                message: |-
-                  Facility details have been saved successfully. Please login at " + hfrUrl
-                  " and submit your facility details for approval.
-                errorStatus: null
         "404":
           description: Not Found
           content:
@@ -859,6 +673,11 @@ paths:
         - Onboarding APIs
       operationId: m4_post_v1_5_facility_submit_facility
       parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
         - name: x-hprid-auth
           in: header
           required: true
@@ -902,6 +721,12 @@ paths:
       tags:
         - Multiple HRP API
       operationId: m4_post_v1_bridges_mutiplehrpaddupdateservices
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -937,6 +762,11 @@ paths:
         - Utilities
       operationId: m4_get_getpsudetailsbyministry
       parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
         - name: ministry
           in: query
           required: false
@@ -958,11 +788,17 @@ paths:
       x-abdm-nha-operation-id: getPsuData
       summary: Get Psu Data
       x-abdm-summary-derived: true
-  /FacilityManagement/v1.5/facility/bygeoLocation/searchFacilityAndInfrastructureWithinRadiusWithFilter:
+  /FacilityManagement/v1.5/facility/bygeoLocation/searchWithinRadiusWithFilter:
     post:
       tags:
         - Search
-      operationId: m4_post_facilitymanagement_v1_5_facility_bygeolocation_se_907b10
+      operationId: m4_post_facilitymanagement_v1_5_facility_bygeolocation_se_16e590
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -975,21 +811,27 @@ paths:
           content:
             "*/*":
               schema:
-                $ref: "#/components/schemas/FacilityWithInfrastructureSearchResponseDTO"
+                $ref: "#/components/schemas/FacilitySearchResponseDTO"
         "404":
           description: Not Found
           content:
             "*/*":
               schema:
                 type: string
-      x-abdm-nha-operation-id: getFacilityAndInfrastructureWithinRadiusWithFilter
-      summary: Get Facility And Infrastructure Within Radius With Filter
+      x-abdm-nha-operation-id: getFacilityWithinRadiusWithFilter
+      summary: Get Facility Within Radius With Filter
       x-abdm-summary-derived: true
   /FacilityManagement/v1.5/facility/search:
     post:
       tags:
         - Search
       operationId: m4_post_facilitymanagement_v1_5_facility_search
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -1009,35 +851,41 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 $ref: "#/components/schemas/FacilitySearchResponse"
-              example:
-                facilities:
-                  - ownership: GOVERNMENT
-                    systemOfMedicineCode: P,M
-                    systemOfMedicine: Physiotherapy,Modern Medicine(Allopathy)
-                    facilityType: Hospital
-                    stateName: Bihar
-                    stateLGDCode: "10"
-                    districtName: <ADDRESS>
-                    districtLGDCode: "212"
-                    subDistrictName: <ADDRESS>
-                    subDistrictLGDCode: "1400"
-                    villageCityTownName: null
-                    villageCityTownLGDCode: null
-                    address: <ADDRESS>
-                    pincode: <PINCODE>
-                    latitude: "25.635802000000098"
-                    longitude: "85.10391099999993"
-                    facilityId: ""
-                    facilityName: Asian City Hospital
-                    facilityStatus: Submitted
-                    ownershipCode: G
-                    facilityTypeCode: H
-                message: Request processed successfully
-                totalFacilities: 1
-                numberOfPages: 1
+        "404":
+          description: Not Found
+          content:
+            "*/*":
+              schema:
+                type: string
+      x-abdm-nha-operation-id: searchFacility_1
+      summary: Search Facility 1
+      x-abdm-summary-derived: true
+  /v1.0/facility/search-facilities:
+    post:
+      tags:
+        - Multiple HRP API
+      operationId: m4_post_v1_0_facility_search_facilities
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SearchFacilityRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/SearchFacilityResponse"
         "404":
           description: Not Found
           content:
@@ -1052,6 +900,12 @@ paths:
       tags:
         - Utilities
       operationId: m4_post_v1_5_facility_fetch_facility_sub_type
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -1063,7 +917,7 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 type: object
               example:
@@ -1089,19 +943,22 @@ paths:
       tags:
         - Utilities
       operationId: m4_post_v1_5_facility_fetch_facility_type
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/UtilityFacilityTypeReqDto"
-            example:
-              ownershipCode: G
-              systemOfMedicineCode: M
       responses:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 type: object
               example:
@@ -1128,6 +985,11 @@ paths:
         - Utilities
       operationId: m4_get_v1_5_facility_get_master_data
       parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
         - name: type
           in: query
           required: true
@@ -1137,7 +999,7 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 $ref: "#/components/schemas/UtilityTypeDataResDto"
               example:
@@ -1163,11 +1025,17 @@ paths:
       tags:
         - Utilities
       operationId: m4_get_v1_5_facility_get_master_types
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       responses:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 $ref: "#/components/schemas/MasterTypeResponseDto"
               example:
@@ -1192,19 +1060,22 @@ paths:
       tags:
         - Utilities
       operationId: m4_post_v1_5_facility_get_owner_subtype
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/SubTypeUtilityRequestDto"
-            example:
-              ownershipCode: P
-              ownerSubtypeCode: NP
       responses:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 type: object
               example:
@@ -1230,18 +1101,22 @@ paths:
       tags:
         - Utilities
       operationId: m4_post_v1_5_facility_get_specialities
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/SpecialitiesUtilityRequestDto"
-            example:
-              systemOfMedicineCode: D
       responses:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 type: object
               example:
@@ -1268,6 +1143,11 @@ paths:
         - Utilities
       operationId: m4_get_v1_5_facility_lgd_districts
       parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
         - name: stateCode
           in: query
           required: true
@@ -1277,7 +1157,7 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 type: array
                 items:
@@ -1303,11 +1183,17 @@ paths:
       tags:
         - Utilities
       operationId: m4_get_v1_5_facility_lgd_states
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       responses:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 type: array
                 items:
@@ -1355,6 +1241,11 @@ paths:
         - Utilities
       operationId: m4_get_v1_5_facility_lgd_subdistricts
       parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
         - name: districtCode
           in: query
           required: true
@@ -1364,7 +1255,7 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 type: array
                 items:
@@ -1390,6 +1281,12 @@ paths:
       tags:
         - HFR-HRP Linkage APIs
       operationId: m4_post_v1_5_facility_sendotptocontact
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -1401,15 +1298,9 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 $ref: "#/components/schemas/FacilityOtpResponse"
-              example:
-                facilityId: IN0610089709
-                status: Success
-                message: Otp sent successfully! Please keep transaction id for future reference
-                transactionId: 3cf3de44-94a4-4f77-b7f9-de6ec86785b3
-                errorStatus: null
         "404":
           description: Not Found
           content:
@@ -1424,6 +1315,12 @@ paths:
       tags:
         - HFR-HRP Linkage APIs
       operationId: m4_post_v1_5_facility_validateotp
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -1439,14 +1336,9 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 $ref: "#/components/schemas/ValidateOtpResponse"
-              example:
-                facilityId: IN2810002702
-                status: success
-                message: OTP validated successfully!!! Hospital id linked to HFR
-                errorStatus: null
         "404":
           description: Not Found
           content:
@@ -1461,6 +1353,12 @@ paths:
       tags:
         - Authentication
       operationId: m4_post_v1_auth_authpassword
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -1476,14 +1374,9 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
-                $ref: "#/components/schemas/LoginViaPasswordResponseDto_HPID"
-              example:
-                token: <JWT TOKEN>
-                expiresIn: 1733639805
-                refreshToken: null
-                refreshExpiresIn: 0
+                $ref: "#/components/schemas/LoginViaPasswordResponseDto"
         "404":
           description: Not Found
           content:
@@ -1499,6 +1392,11 @@ paths:
         - Authentication
       operationId: m4_get_v1_auth_cert
       parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
         - name: publicCertificateRequestDto
           in: query
           required: true
@@ -1525,6 +1423,12 @@ paths:
       tags:
         - Authentication
       operationId: m4_post_v1_auth_confirmwithaadhaarotp
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -1547,14 +1451,20 @@ paths:
             "*/*":
               schema:
                 type: string
-      x-abdm-nha-operation-id: verifyAadhaarOTP_1
-      summary: Verify Aadhaar OTP 1
+      x-abdm-nha-operation-id: verifyAadhaarOTP
+      summary: Verify Aadhaar OTP
       x-abdm-summary-derived: true
   /api/v1/auth/init:
     post:
       tags:
         - Authentication
       operationId: m4_post_v1_auth_init
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -1570,7 +1480,7 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 $ref: "#/components/schemas/AadhaarAuthResponseDTO"
               example:
@@ -1590,6 +1500,12 @@ paths:
       tags:
         - Authentication
       operationId: m4_post_v2_auth_loginviamobilesendotp
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -1603,7 +1519,7 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 $ref: "#/components/schemas/SendVerifyOtpResponseDto"
               example:
@@ -1623,6 +1539,12 @@ paths:
       tags:
         - Verification
       operationId: m4_post_v1_doctors_generate_mobile_otp
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -1636,7 +1558,7 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 $ref: "#/components/schemas/AadhaarGenerateOTPResponseDTO"
               example:
@@ -1656,6 +1578,12 @@ paths:
       tags:
         - Verification
       operationId: m4_post_v1_doctors_generate_verification_email
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -1669,7 +1597,7 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 $ref: "#/components/schemas/EmailAuthResponseDto"
               example:
@@ -1691,6 +1619,12 @@ paths:
       tags:
         - Verification
       operationId: m4_post_v1_doctors_regenerate_mobile_otp
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -1724,6 +1658,12 @@ paths:
       tags:
         - Verification
       operationId: m4_post_v1_doctors_resent_verify_email
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -1737,7 +1677,7 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 $ref: "#/components/schemas/EmailAuthResponseDto"
               example:
@@ -1757,6 +1697,12 @@ paths:
       tags:
         - Verification
       operationId: m4_post_v1_doctors_verify_email_otp
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -1772,7 +1718,7 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 $ref: "#/components/schemas/EmailOTPVerificationResponseDTO"
               example:
@@ -1792,6 +1738,12 @@ paths:
       tags:
         - Verification
       operationId: m4_post_v1_doctors_verify_mobile_otp
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -1821,60 +1773,6 @@ paths:
       x-abdm-nha-operation-id: verifyMobileOtp
       summary: Verify Mobile Otp
       x-abdm-summary-derived: true
-  /getManagementToken:
-    post:
-      tags:
-        - hpid
-      operationId: m4_post_getmanagementtoken
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/LoginDTO"
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            "*/*":
-              schema:
-                $ref: "#/components/schemas/LoginResponseDTO"
-        "404":
-          description: Not Found
-          content:
-            "*/*":
-              schema:
-                type: string
-      x-abdm-nha-operation-id: getAdminToken
-      summary: Get Admin Token
-      x-abdm-summary-derived: true
-  /healdthloginwithmobile:
-    post:
-      tags:
-        - hpid
-      operationId: m4_post_healdthloginwithmobile
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/TokenRequestDTO"
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            "*/*":
-              schema:
-                $ref: "#/components/schemas/TokenResponseDTO"
-        "404":
-          description: Not Found
-          content:
-            "*/*":
-              schema:
-                type: string
-      x-abdm-nha-operation-id: healdthloginwithmobile
-      summary: Healdthloginwithmobile
-      x-abdm-summary-derived: true
   /hpid/get/categories:
     get:
       tags:
@@ -1887,11 +1785,16 @@ paths:
           schema:
             type: integer
             format: int32
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 type: array
                 items:
@@ -1946,11 +1849,16 @@ paths:
           schema:
             type: integer
             format: int32
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 type: array
                 items:
@@ -1976,19 +1884,22 @@ paths:
       tags:
         - Profile
       operationId: m4_post_password_change_bypassword
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/HidChangePasswordRequestPayload"
-            example:
-              newPassword: <BASE64 ENCODED STRING>
-              oldPassword: <BASE64 ENCODED STRING>
       responses:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 $ref: "#/components/schemas/PasswordChangeDTO"
               example:
@@ -2007,6 +1918,12 @@ paths:
       tags:
         - Profile
       operationId: m4_post_password_recover_byaadhaar
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -2018,7 +1935,7 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 $ref: "#/components/schemas/TxnResponse"
               example:
@@ -2040,6 +1957,12 @@ paths:
       tags:
         - Profile
       operationId: m4_post_password_recover_bymobile_sendmobileotp
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -2051,7 +1974,7 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 $ref: "#/components/schemas/SendOtpResponse"
               example:
@@ -2073,20 +1996,23 @@ paths:
       tags:
         - Profile
       operationId: m4_post_password_recover_bymobile_verifymobileotp
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/HidChangePasswordRequestPayload"
-            example:
-              txnId: 7ebad8aa-127b-492f-bd0e-56da716bd39e
-              otp: <BASE64 ENCODED STRING>
         required: true
       responses:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 $ref: "#/components/schemas/SendOtpResponse"
               example:
@@ -2106,20 +2032,23 @@ paths:
       tags:
         - Profile
       operationId: m4_post_password_recover_confirmbyaadhaar
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/HidOtpWebRequestPaylaod"
-            example:
-              otp: <BASE64 ENCODED STRING>
-              txnId: 9b78fdfb-3ba4-4707-8913-63c7c5e3a743
         required: true
       responses:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 $ref: "#/components/schemas/ValidateAaddhaarDemographicMobileResponseDTO"
               example:
@@ -2139,6 +2068,12 @@ paths:
       tags:
         - Profile
       operationId: m4_post_password_reset_password
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -2166,20 +2101,23 @@ paths:
       tags:
         - Profile
       operationId: m4_post_password_resetpassword
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/HidOtpWebRequestPaylaod"
-            example:
-              txnId: 9b78fdfb-3ba4-4707-8913-63c7c5e3a743
-              newPassword: <BASE64 ENCODED STRING>
         required: true
       responses:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 $ref: "#/components/schemas/PasswordChangeDTO"
               example:
@@ -2193,38 +2131,17 @@ paths:
       x-abdm-nha-operation-id: resetPassword
       summary: Reset Password
       x-abdm-summary-derived: true
-  /profile/updateRole:
-    post:
-      tags:
-        - hpid
-      operationId: m4_post_profile_updaterole
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/UpdateAccountWebRequest"
-      responses:
-        "200":
-          description: OK
-          content:
-            "*/*":
-              schema:
-                $ref: "#/components/schemas/UserDTO"
-        "404":
-          description: Not Found
-          content:
-            "*/*":
-              schema:
-                type: string
-      x-abdm-nha-operation-id: updateRoleAndCategory
-      summary: Update Role And Category
-      x-abdm-summary-derived: true
   /v1/account/getIdCard:
     get:
       tags:
         - Profile
       operationId: m4_get_v1_account_getidcard
       parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
         - name: X-Token
           in: header
           required: false
@@ -2235,11 +2152,9 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 $ref: "#/components/schemas/ProfileResponseDTO"
-              example:
-                pdf: JVBERi0xLjMK
         "404":
           description: Not Found
           content:
@@ -2255,6 +2170,11 @@ paths:
         - Profile
       operationId: m4_get_v1_account_information
       parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
         - name: masked
           in: query
           required: false
@@ -2265,50 +2185,9 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
-                $ref: "#/components/schemas/UserProfileResponseDto_HPID"
-              example:
-                hprIdNumber: <HPR_ID>
-                hprId: <EMAIL>
-                mobile: "******2125"
-                firstName: Ayushman
-                middleName: Bharat
-                lastName: Mission
-                name: Ayushman Bharat Mission
-                yearOfBirth: <DOB>
-                dayOfBirth: <DOB>
-                monthOfBirth: <DOB>
-                gender: M
-                email: <ABHA_ADDRESS>.com
-                profilePhoto: <BASE64 ENCODED STRING>
-                stateCode: "27"
-                districtCode: "490"
-                subDistrictCode: null
-                villageCode: null
-                townCode: null
-                wardCode: null
-                pincode: <PINCODE>
-                address: 9th Floor, Tower-l, Jeevan Bharati Building, Connaught Place, New Delhi - 110001
-                kycPhoto: <BASE64 ENCODED STRING>
-                stateName: MAHARASHTRA
-                districtName: <ADDRESS>
-                subdistrictName: null
-                villageName: null
-                townName: <ADDRESS>
-                wardName: null
-                authMethods:
-                  - MOBILE_OTP
-                  - DEMOGRAPHICS
-                  - AADHAAR_BIO
-                kycVerified: true
-                verificationStatus: "true"
-                categoryId: 1
-                categoryName: DOCTOR
-                categorySubId: 3
-                categorySubName: AYURVEDA
-                emailVerified: false
-                new: false
+                $ref: "#/components/schemas/UserProfileResponseDto"
         "404":
           description: Not Found
           content:
@@ -2318,87 +2197,17 @@ paths:
       x-abdm-nha-operation-id: getUserProfileByJwt
       summary: Get User Profile By Jwt
       x-abdm-summary-derived: true
-  /v1/account/reKYC/generateAadhaarOTP:
-    post:
-      tags:
-        - Profile
-      operationId: m4_post_v1_account_rekyc_generateaadhaarotp
-      responses:
-        "200":
-          description: OK
-          content:
-            "*/*":
-              schema:
-                $ref: "#/components/schemas/TxnResponse"
-        "404":
-          description: Not Found
-          content:
-            "*/*":
-              schema:
-                type: string
-      x-abdm-nha-operation-id: generateAadhaarOTPForReKYC
-      summary: Generate Aadhaar OTPFor Re KYC
-      x-abdm-summary-derived: true
-  /v1/account/reKYC/verifyAadhaarOTP:
-    post:
-      tags:
-        - Profile
-      operationId: m4_post_v1_account_rekyc_verifyaadhaarotp
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/AuthRequestDto"
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            "*/*":
-              schema:
-                type: string
-        "404":
-          description: Not Found
-          content:
-            "*/*":
-              schema:
-                type: string
-      x-abdm-nha-operation-id: verifyAadhaarOTP
-      summary: Verify Aadhaar OTP
-      x-abdm-summary-derived: true
-  /v1/account/reKYC/verifyAadhaarOTPGetDetails:
-    post:
-      tags:
-        - Profile
-      operationId: m4_post_v1_account_rekyc_verifyaadhaarotpgetdetails
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/AuthRequestDto"
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            "*/*":
-              schema:
-                $ref: "#/components/schemas/UserDTO"
-        "404":
-          description: Not Found
-          content:
-            "*/*":
-              schema:
-                type: string
-      x-abdm-nha-operation-id: verifyAadhaarOTPGetDetails
-      summary: Verify Aadhaar OTPGet Details
-      x-abdm-summary-derived: true
   /v1/account/user-details/{hprId}:
     get:
       tags:
         - Profile
       operationId: m4_get_v1_account_user_details_hprid
       parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
         - name: hprId
           in: path
           required: true
@@ -2425,6 +2234,12 @@ paths:
       tags:
         - Forgot Healthcare Professional ID/number
       operationId: m4_post_v1_forgot_hprid_aadhaar
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -2437,7 +2252,7 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 $ref: "#/components/schemas/RetrieveHprIdPayloadResponse"
               example:
@@ -2458,6 +2273,12 @@ paths:
       tags:
         - Forgot Healthcare Professional ID/number
       operationId: m4_post_v1_forgot_hprid_mobile
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -2484,6 +2305,12 @@ paths:
       tags:
         - Forgot Healthcare Professional ID/number
       operationId: m4_post_v1_forgot_hprid_mobile_generateotp
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -2495,7 +2322,7 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 $ref: "#/components/schemas/SendOtpResponse"
               example:
@@ -2517,6 +2344,11 @@ paths:
         - Searched
       operationId: m4_get_v1_search_existsbyhprid_hprid
       parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
         - name: hprId
           in: path
           required: true
@@ -2526,7 +2358,7 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 type: boolean
               example: true
@@ -2545,6 +2377,11 @@ paths:
         - Searched
       operationId: m4_get_v1_search_searchbyhprid_hprid
       parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
         - name: hprId
           in: path
           required: true
@@ -2554,7 +2391,7 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 $ref: "#/components/schemas/ForgetUserEntityResponseDTO"
               example:
@@ -2582,6 +2419,11 @@ paths:
         - Searched
       operationId: m4_get_v1_search_searchbymobile_mobile
       parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
         - name: mobile
           in: path
           required: true
@@ -2591,7 +2433,7 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 type: array
                 items:
@@ -2615,63 +2457,17 @@ paths:
       x-abdm-nha-operation-id: searchUserByMobileNo
       summary: Search User By Mobile No
       x-abdm-summary-derived: true
-  /v1/sendOtpIfDoctorVerified:
-    post:
-      tags:
-        - Verification
-      operationId: m4_post_v1_sendotpifdoctorverified
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/SendOtpIfDoctorVerifiedRequest"
-      responses:
-        "200":
-          description: OK
-          content:
-            "*/*":
-              schema:
-                $ref: "#/components/schemas/SendOtpIfDoctorVerifiedResponse"
-        "404":
-          description: Not Found
-          content:
-            "*/*":
-              schema:
-                type: string
-      x-abdm-nha-operation-id: sendOtpIfDoctorVerified
-      summary: Send Otp If Doctor Verified
-      x-abdm-summary-derived: true
-  /v1/verifyDoctorVerificationOtp:
-    post:
-      tags:
-        - Verification
-      operationId: m4_post_v1_verifydoctorverificationotp
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/VerifyOtpRequest"
-      responses:
-        "200":
-          description: OK
-          content:
-            "*/*":
-              schema:
-                $ref: "#/components/schemas/VerifyDoctorOtpResponse"
-        "404":
-          description: Not Found
-          content:
-            "*/*":
-              schema:
-                type: string
-      x-abdm-nha-operation-id: verifyDoctorVerificationOtp
-      summary: Verify Doctor Verification Otp
-      x-abdm-summary-derived: true
   /v4/auth/logout:
     get:
       tags:
         - Profile
       operationId: m4_get_v4_auth_logout
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: OK
@@ -2694,129 +2490,24 @@ paths:
       tags:
         - Enrollment
       operationId: m4_post_v1_doctors_register_professional_new
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/HealthProfessionalDto"
-            example:
-              hprToken: <JWT TOKEN>
-              practitioner:
-                healthProfessionalType: doctor
-                profilePhoto: <BASE64 ENCODED STRING>
-                officialMobileCode: ""
-                officialMobile: 97624xxxxx
-                officialMobileStatus: ""
-                officialEmail: ""
-                officialEmailStatus: ""
-                visibleProfilePicture: "0"
-                profileVisibleToPublic: "1"
-                personalInformation:
-                  salutation: "1"
-                  firstName: Ayushman
-                  middleName: ""
-                  lastName: Mission
-                  nationality: "356"
-                  fatherName: ""
-                  motherName: ""
-                  spouseName: ""
-                  gender: M
-                  dateOfBirth: <DOB>
-                  placeOfBirthState: "68"
-                  district: ""
-                  subDistrict: ""
-                  city: ""
-                  languagesSpoken: 1,2
-                  category: C
-                addressAsPerKYC: ""
-                communicationAddress:
-                  isCommunicationAddressAsPerKYC: "false"
-                  address: ""
-                  name: ""
-                  country: ""
-                  state: ""
-                  district: ""
-                  subDistrict: ""
-                  city: ""
-                  pincode: ""
-                contactInformation:
-                  publicMobileNumber: ""
-                  publicMobileNumberCode: ""
-                  publicMobileNumberStatus: ""
-                  landLineNumber: ""
-                  landLineNumberCode: ""
-                  publicEmail: ""
-                  publicEmailStatus: ""
-                registrationAcademic:
-                  category: "1"
-                  registrationData:
-                    - registeredWithCouncil: "47"
-                      registrationNumber: REG12032
-                      registrationDate: "2024-12-01"
-                      registrationCertificate:
-                        fileType: pdf
-                        data: <BASE64 ENCODED STRING>
-                      isPermanentOrRenewable: Permanent
-                      renewableDueDate: ""
-                      categoryId: "2"
-                      isNameDifferentInCertificate: "false"
-                      proofOfNameChangeCertificate: ""
-                      qualifications:
-                        - nameOfDegreeOrDiplomaObtained: "4074"
-                          country: "356"
-                          state: "27"
-                          college: "1022"
-                          university: "6372"
-                          yearOfAwardingDegreeDiploma: "2024"
-                          monthOfAwardingDegreeDiploma: February
-                          degreeCertificate:
-                            fileType: pdf
-                            data: <BASE64 ENCODED STRING>
-                          isNameDifferentInCertificate: "false"
-                          proofOfNameChangeCertificate: ""
-                        - nameOfDegreeOrDiplomaObtained: Graduation
-                          country: United States Of America
-                          state: united
-                          college: united School
-                          university: united University
-                          yearOfAwardingDegreeDiploma: "2024"
-                          monthOfAwardingDegreeDiploma: February
-                          degreeCertificate:
-                            fileType: pdf
-                            data: <BASE64 ENCODED STRING>
-                          isNameDifferentInCertificate: "true"
-                          proofOfNameChangeCertificate: <BASE64 ENCODED STRING>
-                currentWorkDetails:
-                  currentlyWorking: "0"
-                  purposeOfWork: Administrative
-                  chooseWorkStatus: "1"
-                  reasonForNotWorking: Retired
-                  certificateAttachment: <BASE64 ENCODED STRING>
-                  facilityDeclarationData:
-                    facilityId: IN2710000059
-                    facilityName: ""
-                    facilityAddress: ""
-                    facilityPincode: ""
-                    state: ""
-                    district: ""
-                    facilityType: ""
-                    facilityDepartment: Surgery
-                    facilityDesignation: MD
-                    ministry:
-                      ministry: MinistryMOR ( Mo Railways )
       responses:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 $ref: "#/components/schemas/HealthProfessionalResponseDto"
-              example:
-                referenceNumber: 9a2d25fc-6897-4645-8e78-7f12a91b4ab4
-                status: "true"
-                message: Congratulations! Your profile has been submitted successfully for verification.
-                error: null
-                hprId: <HPR_ID>
         "404":
           description: Not Found
           content:
@@ -2831,129 +2522,24 @@ paths:
       tags:
         - Enrollment
       operationId: m4_post_v1_doctors_update_professional_new
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/HealthProfessionalDto"
-            example:
-              hprToken: <JWT TOKEN>
-              practitioner:
-                healthProfessionalType: doctor
-                profilePhoto: <BASE64 ENCODED STRING>
-                officialMobileCode: ""
-                officialMobile: 97624xxxxx
-                officialMobileStatus: ""
-                officialEmail: ""
-                officialEmailStatus: ""
-                visibleProfilePicture: "0"
-                profileVisibleToPublic: "1"
-                personalInformation:
-                  salutation: "1"
-                  firstName: Ayushman
-                  middleName: ""
-                  lastName: Mission
-                  nationality: "356"
-                  fatherName: ""
-                  motherName: ""
-                  spouseName: ""
-                  gender: M
-                  dateOfBirth: <DOB>
-                  placeOfBirthState: "68"
-                  district: ""
-                  subDistrict: ""
-                  city: ""
-                  languagesSpoken: 1,2
-                  category: C
-                addressAsPerKYC: ""
-                communicationAddress:
-                  isCommunicationAddressAsPerKYC: "false"
-                  address: ""
-                  name: ""
-                  country: ""
-                  state: ""
-                  district: ""
-                  subDistrict: ""
-                  city: ""
-                  pincode: ""
-                contactInformation:
-                  publicMobileNumber: ""
-                  publicMobileNumberCode: ""
-                  publicMobileNumberStatus: ""
-                  landLineNumber: ""
-                  landLineNumberCode: ""
-                  publicEmail: ""
-                  publicEmailStatus: ""
-                registrationAcademic:
-                  category: "1"
-                  registrationData:
-                    - registeredWithCouncil: "47"
-                      registrationNumber: REG12032
-                      registrationDate: "2024-12-01"
-                      registrationCertificate:
-                        fileType: pdf
-                        data: <BASE64 ENCODED STRING>
-                      isPermanentOrRenewable: Permanent
-                      renewableDueDate: ""
-                      categoryId: "2"
-                      isNameDifferentInCertificate: "false"
-                      proofOfNameChangeCertificate: ""
-                      qualifications:
-                        - nameOfDegreeOrDiplomaObtained: "4074"
-                          country: "356"
-                          state: "27"
-                          college: "1022"
-                          university: "6372"
-                          yearOfAwardingDegreeDiploma: "2024"
-                          monthOfAwardingDegreeDiploma: February
-                          degreeCertificate:
-                            fileType: pdf
-                            data: <BASE64 ENCODED STRING>
-                          isNameDifferentInCertificate: "false"
-                          proofOfNameChangeCertificate: ""
-                        - nameOfDegreeOrDiplomaObtained: Graduation
-                          country: United States Of America
-                          state: united
-                          college: united School
-                          university: united University
-                          yearOfAwardingDegreeDiploma: "2024"
-                          monthOfAwardingDegreeDiploma: February
-                          degreeCertificate:
-                            fileType: pdf
-                            data: <BASE64 ENCODED STRING>
-                          isNameDifferentInCertificate: "true"
-                          proofOfNameChangeCertificate: <BASE64 ENCODED STRING>
-                currentWorkDetails:
-                  currentlyWorking: "0"
-                  purposeOfWork: Administrative
-                  chooseWorkStatus: "1"
-                  reasonForNotWorking: Retired
-                  certificateAttachment: <BASE64 ENCODED STRING>
-                  facilityDeclarationData:
-                    facilityId: IN2710000059
-                    facilityName: ""
-                    facilityAddress: ""
-                    facilityPincode: ""
-                    state: ""
-                    district: ""
-                    facilityType: ""
-                    facilityDepartment: Surgery
-                    facilityDesignation: MD
-                    ministry:
-                      ministry: MinistryMOR ( Mo Railways )
       responses:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 $ref: "#/components/schemas/HealthProfessionalResponseDto"
-              example:
-                referenceNumber: 5b17ca73-f069-4018-91a0-665df0117d43
-                status: "true"
-                message: Congratulations! Your profile has been submitted successfully for verification.
-                error: null
-                hprId: <HPR_ID>
         "404":
           description: Not Found
           content:
@@ -2968,6 +2554,12 @@ paths:
       tags:
         - Enrollment
       operationId: m4_post_v1_doctors_fetch_documents_list
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -2980,40 +2572,9 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 $ref: "#/components/schemas/FetchDocumentResponseDTO"
-              example:
-                documentList:
-                  profileDetails:
-                    profilePhoto:
-                      id: 30106
-                      data: <BASE64_PHOTO>
-                    proofOfWorkCertificate:
-                      id: 30106
-                      data: JVBERi0xLjMK
-                  registrationDetails:
-                    - registrationCertificate:
-                        id: 21021
-                        systemOfMedicide: modern_medicine
-                        data: JVBERi0xLjMK
-                      proofOfNameChangeRegCertificate:
-                        id: 21021
-                        systemOfMedicide: modern_medicine
-                        data: JVBERi0xLjMK
-                  qualificationDetails:
-                    - degreeCertificate:
-                        id: 9693
-                        courseName: PhD Biostatistics
-                        qualificationYear: "2021"
-                        data: JVBERi0xLjMK
-                      proofOfNameChangeQualCertificate:
-                        id: 9693
-                        courseName: PhD Biostatistics
-                        qualificationYear: "2021"
-                        data: JVBERi0xLjMK
-                  qualification: null
-                Message: Data fetched successfully
         "404":
           description: Not Found
           content:
@@ -3028,33 +2589,25 @@ paths:
       tags:
         - Enrollment
       operationId: m4_post_v1_uploads_upload_document
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/UploadDocumentDTO"
-            example:
-              hpr_token: <JWT TOKEN>
-              document:
-                - document_id: 20931
-                  document_type: registrationCertificate
-                  fileType: ""
-                  data: JVBERi0xLjMK
         required: true
       responses:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 $ref: "#/components/schemas/UploadDocumentResponseDTO"
-              example:
-                profilePhoto: null
-                degreeCertificate: null
-                registrationCertificate:
-                  status: pass
-                  msg: Registration certificate updated
-                proofOfWorkCertificate: null
         "404":
           description: Not Found
           content:
@@ -3069,6 +2622,12 @@ paths:
       tags:
         - Enrollment
       operationId: m4_post_v1_doctors_fetch_professional_info
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -3086,44 +2645,9 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 $ref: "#/components/schemas/FetchProfessionalResponseDTO"
-              example:
-                practitioners:
-                  - - identifier: 38053
-                      active: false
-                      name: Ayushman Bharat Mission
-                      gender: Male
-                      salutation: Mr
-                      communicationLanguage: " English "
-                      registrations:
-                        - identifier: 25989
-                          category: Dentistry
-                          nuidnumber: null
-                          nuidvalidtill: null
-                          systemOfMedicide: null
-                          isRenewable: "false"
-                          dueDate: null
-                          councilName: Karnataka State Dental Council
-                          registeredAt: null
-                          registrationNumber: REG12032
-                          registrationDate: "2024-12-01"
-                      qualifications:
-                        - identifier: 12835
-                          courseName: Bds - Bachelor Of Dental Surgery
-                          collegeName: A.j. Institute Of Dental Sciences, Mangalore
-                          universityName: Rajiv Gandhi University Of Health Sciences (rguhs)
-                          qualificationYear: "2024"
-                          qualificationMonth: ""
-                      hpr_id: <HPR_ID>
-                      application_status: null
-                      is_council_verified: "true"
-                      is_work_verified: null
-                      email: ""
-                      mobileNumber: "******2125"
-                      hpr_category: doctor
-                message: Data fetched successfully
         "404":
           description: Not Found
           content:
@@ -3138,40 +2662,21 @@ paths:
       tags:
         - Utility
       operationId: m4_get_v1_masters_affiliated_board
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       responses:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 type: array
                 items:
                   $ref: "#/components/schemas/AffiliatedBoardResponseDTO"
-              example:
-                - id: 1
-                  name: Central Board Of Secondary Education (CBSE)
-                  status: true
-                  visibleStatus: true
-                  stateId: null
-                  courseId: null
-                  councilBoard: false
-                  nationalBoard: true
-                - id: 2
-                  name: Council for the Indian School Certificate Examination (CISCE)
-                  status: true
-                  visibleStatus: true
-                  stateId: null
-                  courseId: null
-                  councilBoard: false
-                  nationalBoard: true
-                - id: 3
-                  name: National Institute Of Open Schooling (NIOS)
-                  status: true
-                  visibleStatus: true
-                  stateId: null
-                  courseId: null
-                  councilBoard: false
-                  nationalBoard: true
         "404":
           description: Not Found
           content:
@@ -3187,6 +2692,11 @@ paths:
         - Utility
       operationId: m4_get_v1_masters_affiliated_board_states_id
       parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
         - name: id
           in: path
           required: true
@@ -3197,36 +2707,11 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 type: array
                 items:
                   $ref: "#/components/schemas/AffiliatedBoard"
-              example:
-                - id: 38
-                  name: Maharashtra  State Board of Secondary  and Higher Secondary  Education,   Pune
-                  status: true
-                  visibleStatus: true
-                  stateId: 20
-                  courseId: null
-                  councilBoard: false
-                  nationalBoard: false
-                - id: 821
-                  name: MAHARASHTRA NURSING COUNCIL, MUMBAI
-                  status: true
-                  visibleStatus: true
-                  stateId: 20
-                  courseId: null
-                  councilBoard: true
-                  nationalBoard: false
-                - id: 3154
-                  name: Maharashtra Nursing Council, Mumbai
-                  status: true
-                  visibleStatus: true
-                  stateId: 20
-                  courseId: 5519
-                  councilBoard: false
-                  nationalBoard: false
         "404":
           description: Not Found
           content:
@@ -3242,6 +2727,11 @@ paths:
         - Utility
       operationId: m4_get_v1_masters_affiliated_board_id
       parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
         - name: id
           in: path
           required: true
@@ -3270,6 +2760,11 @@ paths:
         - Utility
       operationId: m4_get_v1_masters_colleges_id
       parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
         - name: id
           in: path
           required: true
@@ -3280,45 +2775,11 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 type: array
                 items:
                   $ref: "#/components/schemas/CollegeResponseDTO"
-              example:
-                - id: 21
-                  name: Dayanand Medical College And Hospital
-                  status: true
-                  visibleStatus: true
-                  createdAt: "2023-08-17T16:58:31.000Z"
-                  systemOfMedicineId: 1
-                  stateId: 27
-                  courseId: null
-                  stateName: Maharashtra
-                  systemOfMedicineName: null
-                  deleted: false
-                - id: 22
-                  name: Gian Sagar Medical College And Hospital
-                  status: true
-                  visibleStatus: true
-                  createdAt: "2023-08-17T16:58:31.000Z"
-                  systemOfMedicineId: 1
-                  stateId: 27
-                  courseId: null
-                  stateName: Maharashtra
-                  systemOfMedicineName: null
-                  deleted: false
-                - id: 23
-                  name: Government Medical College (gmc), Amritsar
-                  status: true
-                  visibleStatus: true
-                  createdAt: "2023-08-17T16:58:31.000Z"
-                  systemOfMedicineId: 1
-                  stateId: 27
-                  courseId: null
-                  stateName: Maharashtra
-                  systemOfMedicineName: null
-                  deleted: false
         "404":
           description: Not Found
           content:
@@ -3334,6 +2795,11 @@ paths:
         - Utility
       operationId: m4_get_v1_masters_colleges_stateid_medicineid
       parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
         - name: stateId
           in: path
           required: true
@@ -3368,6 +2834,12 @@ paths:
       tags:
         - Utility
       operationId: m4_get_v1_masters_countries
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       responses:
         "200":
           description: OK
@@ -3392,6 +2864,11 @@ paths:
         - Utility
       operationId: m4_get_v1_masters_countries_id
       parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
         - name: id
           in: path
           required: true
@@ -3419,6 +2896,12 @@ paths:
       tags:
         - Utility
       operationId: m4_post_v1_masters_courses
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -3452,6 +2935,12 @@ paths:
       tags:
         - Utility
       operationId: m4_get_v1_masters_district
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       responses:
         "200":
           description: OK
@@ -3476,6 +2965,11 @@ paths:
         - Utility
       operationId: m4_get_v1_masters_district_id
       parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
         - name: id
           in: path
           required: true
@@ -3505,6 +2999,12 @@ paths:
       tags:
         - Utility
       operationId: m4_get_v1_masters_languages
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       responses:
         "200":
           description: OK
@@ -3529,6 +3029,11 @@ paths:
         - Utility
       operationId: m4_get_v1_masters_languages_id
       parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
         - name: id
           in: path
           required: true
@@ -3556,6 +3061,12 @@ paths:
       tags:
         - Utility
       operationId: m4_get_v1_masters_medical_councils
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       responses:
         "200":
           description: OK
@@ -3580,6 +3091,11 @@ paths:
         - Utility
       operationId: m4_get_v1_masters_medical_councils_name
       parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
         - name: medicineName
           in: query
           required: true
@@ -3608,11 +3124,17 @@ paths:
       tags:
         - Utility
       operationId: m4_get_v1_masters_nurse_councils
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       responses:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 type: array
                 items:
@@ -3650,6 +3172,12 @@ paths:
       tags:
         - Utility
       operationId: m4_get_v1_masters_states
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       responses:
         "200":
           description: OK
@@ -3674,6 +3202,11 @@ paths:
         - Utility
       operationId: m4_get_v1_masters_states_id
       parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
         - name: id
           in: path
           required: true
@@ -3702,6 +3235,12 @@ paths:
       tags:
         - Utility
       operationId: m4_get_v1_masters_sub_districts
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       responses:
         "200":
           description: OK
@@ -3726,6 +3265,11 @@ paths:
         - Utility
       operationId: m4_get_v1_masters_sub_districts_id
       parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
         - name: id
           in: path
           required: true
@@ -3755,6 +3299,12 @@ paths:
       tags:
         - Utility
       operationId: m4_get_v1_masters_system_of_medicines
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       responses:
         "200":
           description: OK
@@ -3778,6 +3328,12 @@ paths:
       tags:
         - Utility
       operationId: m4_get_v1_masters_universites
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
       responses:
         "200":
           description: OK
@@ -3802,6 +3358,11 @@ paths:
         - Utility
       operationId: m4_get_v1_masters_universites_id
       parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
         - name: id
           in: path
           required: true
@@ -3812,20 +3373,11 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            "*/*":
               schema:
                 type: array
                 items:
                   $ref: "#/components/schemas/UniversityResponseDTO"
-              example:
-                - id: 6046
-                  name: Baba Farid University Of Health Sciences,faridkot
-                  status: true
-                  visibleStatus: true
-                  collegeId: 27
-                  collegeName: null
-                  deleted: false
-                  college: null
         "404":
           description: Not Found
           content:
@@ -3835,187 +3387,13 @@ paths:
       x-abdm-nha-operation-id: getUniversityByCollege
       summary: Get University By College
       x-abdm-summary-derived: true
-  /fetchProfessionalFacility:
-    post:
-      tags:
-        - hpr
-      operationId: m4_post_fetchprofessionalfacility
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/FacilityRequestDTO"
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            "*/*":
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/HprProfileFacilityResponseDTO"
-        "404":
-          description: Not Found
-          content:
-            "*/*":
-              schema:
-                type: string
-      x-abdm-nha-operation-id: fetchProfessionalFacility
-      summary: Fetch Professional Facility
-      x-abdm-summary-derived: true
-  /getFacilityCreatedByHprId:
-    post:
-      tags:
-        - Utility
-      operationId: m4_post_getfacilitycreatedbyhprid
-      parameters:
-        - name: page
-          in: query
-          required: false
-          schema:
-            type: integer
-            format: int32
-        - name: size
-          in: query
-          required: false
-          schema:
-            type: integer
-            format: int32
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/FacilitiesByHprIdRequest"
-      responses:
-        "200":
-          description: OK
-          content:
-            "*/*":
-              schema:
-                $ref: "#/components/schemas/FacilityByHprIdResponse"
-        "404":
-          description: Not Found
-          content:
-            "*/*":
-              schema:
-                type: string
-      x-abdm-nha-operation-id: getFacilitiesCreatedByHprId
-      summary: Get Facilities Created By Hpr Id
-      x-abdm-summary-derived: true
-  /getFacilityDeclaredByHprId:
-    post:
-      tags:
-        - Utility
-      operationId: m4_post_getfacilitydeclaredbyhprid
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/FacilitiesByHprIdRequest"
-      responses:
-        "200":
-          description: OK
-          content:
-            "*/*":
-              schema:
-                $ref: "#/components/schemas/FacilityDeclaredByHprIdResponseDTO"
-        "404":
-          description: Not Found
-          content:
-            "*/*":
-              schema:
-                type: string
-      x-abdm-nha-operation-id: getFacilitiesDeclaredByHprId
-      summary: Get Facilities Declared By Hpr Id
-      x-abdm-summary-derived: true
-  /hprFacilitySuggestions:
-    post:
-      tags:
-        - hpr
-      operationId: m4_post_hprfacilitysuggestions
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/HprFacilitySuggestionRequestDTO"
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            "*/*":
-              schema:
-                $ref: "#/components/schemas/HprFacilitySuggestionResponseDTO"
-        "404":
-          description: Not Found
-          content:
-            "*/*":
-              schema:
-                type: string
-      x-abdm-nha-operation-id: createFacilitySuggestion
-      summary: Create Facility Suggestion
-      x-abdm-summary-derived: true
-  /hprWorkDetails/status:
-    put:
-      tags:
-        - Utility
-      operationId: m4_put_hprworkdetails_status
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/WorkStatusUpdateRequestDTO"
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            "*/*":
-              schema:
-                type: string
-        "404":
-          description: Not Found
-          content:
-            "*/*":
-              schema:
-                type: string
-      x-abdm-nha-operation-id: updateStatus
-      summary: Update Status
-      x-abdm-summary-derived: true
-  /relinkOrDelinkProfessionalFromFacility:
-    post:
-      tags:
-        - Utility
-      operationId: m4_post_relinkordelinkprofessionalfromfacility
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/RelinkDelinkExistingFacilityRequest"
-      responses:
-        "200":
-          description: OK
-          content:
-            "*/*":
-              schema:
-                $ref: "#/components/schemas/RelinkDelinkExistingFacilityResponse"
-        "404":
-          description: Not Found
-          content:
-            "*/*":
-              schema:
-                type: string
-      x-abdm-nha-operation-id: linkDelinkExistingFacility
-      summary: Link Delink Existing Facility
-      x-abdm-summary-derived: true
 components:
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      description: M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
+      description: M4 declares bearer authentication. The published M4 specifications name no call that issues the token.
   schemas:
     AadhaarGetTransactionRequest:
       type: object
@@ -4029,7 +3407,6 @@ components:
           type: string
         mobileNumber:
           type: string
-          nullable: true
         photo:
           type: string
         gender:
@@ -4038,7 +3415,6 @@ components:
           type: string
         email:
           type: string
-          nullable: true
         pincode:
           type: string
         birthdate:
@@ -4051,14 +3427,12 @@ components:
           type: string
         landmark:
           type: string
-          nullable: true
         locality:
           type: string
         villageTownCity:
           type: string
         subDist:
           type: string
-          nullable: true
         district:
           type: string
         state:
@@ -4074,7 +3448,6 @@ components:
           type: string
         mobileNumber:
           type: string
-          nullable: true
     MobileDemographicAuthResponseModel:
       type: object
       properties:
@@ -4218,36 +3591,6 @@ components:
               - FACE_AUTH
         new:
           type: boolean
-    VerifyOtpRequest:
-      type: object
-      properties:
-        txnId:
-          type: string
-        otp:
-          type: string
-    VerifyDoctorOtpResponse:
-      type: object
-      properties:
-        message:
-          type: string
-        verified:
-          type: boolean
-    SendOtpIfDoctorVerifiedRequest:
-      type: object
-      properties:
-        hprId:
-          type: string
-        mobileNumber:
-          type: string
-    SendOtpIfDoctorVerifiedResponse:
-      type: object
-      properties:
-        txnId:
-          type: string
-        message:
-          type: string
-        mobileNumber:
-          type: string
     HPRIDVerifyMobileOTPRequestDTO:
       type: object
       properties:
@@ -4337,7 +3680,6 @@ components:
           type: string
         mobile:
           type: string
-          nullable: true
         hprId:
           type: string
         new:
@@ -4437,176 +3779,6 @@ components:
           type: string
         active:
           type: boolean
-    AadhaarVerifyOtpRequestDto:
-      type: object
-      properties:
-        aadhaarNumber:
-          type: string
-        otp:
-          type: string
-        faceAuthPid:
-          type: string
-        aadhaarLogType:
-          type: string
-        transactionId:
-          type: string
-        txnId:
-          type: string
-    AuthRequestDto:
-      type: object
-      properties:
-        authType:
-          type: string
-          enum:
-            - AADHAAR_OTP
-            - USERNAME_PASSWORD
-            - MOBILE_OTP
-        hprId:
-          type: string
-        password:
-          type: string
-        aadhaar:
-          type: string
-        mobileNumber:
-          type: string
-        txnId:
-          type: string
-          format: uuid
-        otp:
-          type: string
-        resend:
-          type: boolean
-        aadhaarVerifyOtpRequestDto:
-          $ref: "#/components/schemas/AadhaarVerifyOtpRequestDto"
-    UserDTO:
-      type: object
-      properties:
-        hprIdNumber:
-          type: string
-        hprId:
-          type: string
-        mobile:
-          type: string
-        firstName:
-          type: string
-        middleName:
-          type: string
-        lastName:
-          type: string
-        name:
-          type: string
-        yearOfBirth:
-          type: string
-        dayOfBirth:
-          type: string
-        monthOfBirth:
-          type: string
-        gender:
-          type: string
-        email:
-          type: string
-        profilePhoto:
-          type: string
-        stateCode:
-          type: string
-        districtCode:
-          type: string
-        subDistrictCode:
-          type: string
-        villageCode:
-          type: string
-        townCode:
-          type: string
-        wardCode:
-          type: string
-        pinCode:
-          type: string
-        address:
-          type: string
-        kycPhoto:
-          type: string
-        stateName:
-          type: string
-        districtName:
-          type: string
-        subdistrictName:
-          type: string
-        villageName:
-          type: string
-        townName:
-          type: string
-        wardName:
-          type: string
-        authMethods:
-          uniqueItems: true
-          type: array
-          items:
-            type: string
-            enum:
-              - AADHAAR_OTP
-              - MOBILE_OTP
-              - PASSWORD
-              - DEMOGRAPHICS
-              - AADHAAR_BIO
-              - EMAIL_OTP
-              - MOBILE_OTP_RESET_PASSWROD
-              - FACE_AUTH
-        kycVerified:
-          type: boolean
-        verificationType:
-          type: string
-        verificationStatus:
-          type: string
-        categoryId:
-          type: integer
-          format: int32
-        categoryName:
-          type: string
-        categorySubId:
-          type: integer
-          format: int32
-        categorySubName:
-          type: string
-        token:
-          type: string
-        hprIdCategories:
-          type: array
-          items:
-            type: integer
-            format: int32
-        fileEntityProfileId:
-          type: integer
-          format: int64
-        fileEntityKycId:
-          type: integer
-          format: int64
-        role:
-          type: integer
-          format: int32
-        hprProfileId:
-          type: integer
-          format: int64
-        new:
-          type: boolean
-        emailVerified:
-          type: boolean
-        xmluidexist:
-          type: boolean
-    TxnResponse:
-      type: object
-      properties:
-        txnId:
-          type: string
-          description: Based on UUID
-          format: uuid
-          example: a825f76b-0696-40f3-864c-5a3a5b389a83
-        mobileNumber:
-          type: string
-          example: "******2125"
-        msg:
-          type: string
-        verified:
-          type: boolean
     ValidateOtpRequestDto:
       type: object
       properties:
@@ -4640,7 +3812,6 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/ErrorStatus"
-          nullable: true
     FacilitySubmitDetails:
       required:
         - trackingId
@@ -4684,7 +3855,6 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/ErrorStatus"
-          nullable: true
     SpecialitiesUtilityRequestDto:
       required:
         - systemOfMedicineCode
@@ -4872,7 +4042,6 @@ components:
           type: array
           items:
             type: object
-          nullable: true
     AbdmCompliantSoftware:
       type: object
       properties:
@@ -5064,6 +4233,93 @@ components:
           minimum: 0
           type: integer
           format: int32
+    SearchFacilitiesRequestFacility:
+      type: object
+      properties:
+        facilityName:
+          type: string
+        systemOfMedicine:
+          type: string
+        facilityType:
+          type: string
+        state:
+          type: string
+        district:
+          type: string
+        photo:
+          type: string
+        ownership:
+          type: string
+    SearchFacilityRequest:
+      type: object
+      properties:
+        requestId:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+        facility:
+          $ref: "#/components/schemas/SearchFacilitiesRequestFacility"
+    Facility:
+      type: object
+      properties:
+        id:
+          type: string
+        transactionId:
+          type: string
+        name:
+          type: string
+        active:
+          type: string
+        systemOfMedicine:
+          type: string
+        contactNumber:
+          type: integer
+          format: int64
+        latitude:
+          type: string
+        langitude:
+          type: string
+        address:
+          $ref: "#/components/schemas/FacilityAddress"
+        photo:
+          type: string
+        facilityType:
+          type: string
+        facilityProfileStatus:
+          type: string
+        docDesignation:
+          type: string
+        docDepartment:
+          type: string
+    FacilityAddress:
+      type: object
+      properties:
+        use:
+          type: string
+        addressType:
+          type: string
+        addressLine1:
+          type: string
+        addressLine2:
+          type: string
+        city:
+          type: string
+        district:
+          type: string
+        state:
+          type: string
+        pincode:
+          type: string
+    SearchFacilityResponse:
+      type: object
+      properties:
+        referenceNumber:
+          type: string
+        facilities:
+          type: array
+          items:
+            $ref: "#/components/schemas/Facility"
     AddressFilterRequest:
       type: object
       properties:
@@ -5089,122 +4345,17 @@ components:
         alternate_id:
           type: string
         sub_district:
-          type: object
-          properties:
-            locId:
-              type: string
-            locType:
-              type: string
-            locName:
-              type: string
+          type: string
         district:
-          type: object
-          properties:
-            locId:
-              type: string
-            locType:
-              type: string
-            locName:
-              type: string
+          type: string
         state:
-          type: object
-          properties:
-            locId:
-              type: string
-            locType:
-              type: string
-            locName:
-              type: string
+          type: string
         distances:
           type: string
-    UpdateAccountWebRequest:
-      type: object
-      properties:
-        firstName:
-          type: string
-          description: First Name of the user).
-          example: Ayushman
-        lastName:
-          type: string
-          description: "Last name of the user "
-          example: Mission
-        middleName:
-          type: string
-          description: "Middle name of the user "
-          example: Bharat
-        hprId:
-          type: string
-          description: Healthcare Professional ID Alias.
-          example: <EMAIL>
-        password:
-          type: string
-          description: User Authentication password.
-          example: Abdm@143
-        email:
-          type: string
-          description: Email Address of the user.
-          example: <ABHA_ADDRESS>.com
-        profilePhoto:
-          type: string
-          description: Profile photo of the user (Uploaded by the user).
-          example: <BASE64 ENCODED STRING>
-        stateCode:
-          type: string
-          description: State Code of the user (LGD).
-          example: "7"
-        districtCode:
-          type: string
-          description: District Code of the user (LGD).
-          example: "71"
-        subdistrictCode:
-          type: string
-          description: Sub District Code of the user (LGD).
-          example: "1"
-        villageCode:
-          type: string
-          description: Village Code of the user (LGD).
-        townCode:
-          type: string
-          description: Town Code of the user (LGD).
-        wardCode:
-          type: string
-          description: Ward Code of the user (LGD).
-        pincode:
-          type: integer
-          description: Pincode of the user.
-          format: int32
-          example: 110001
-        address:
-          type: string
-          description: Address of the user.
-          example: 9th Floor, Tower-l, Jeevan Bharati Building, Connaught Place, New Delhi - 110001
-        yearOfBirth:
-          type: string
-          description: Year of birth of the user.
-          example: "2021"
-        monthOfBirth:
-          type: string
-          description: Month of birth of the user.
-          example: "8"
-        dayOfBirth:
-          type: string
-          description: Day of birth of the user.
-          example: "15"
-        hpCategoryCode:
-          type: string
-          example: "1"
-        hpSubCategoryCode:
-          type: string
-          example: "1"
-        txnId:
-          type: string
-          format: uuid
-        role:
-          type: string
-        consentToDelete:
-          type: boolean
     HidOtpWebRequestPaylaod:
       required:
+        - newPassword
+        - otp
         - txnId
       type: object
       properties:
@@ -5230,6 +4381,8 @@ components:
         txnId:
           type: string
     HidChangePasswordRequestPayload:
+      required:
+        - newPassword
       type: object
       properties:
         oldPassword:
@@ -5242,7 +4395,6 @@ components:
           type: string
         otp:
           type: string
-      description: Shared by /password/recover/byMobile/verifyMobileOTP (txnId, otp) and /password/change/byPassword (oldPassword, newPassword), per the official HPID "Change password" document.
     CategoryRequest:
       required:
         - hprId
@@ -5254,43 +4406,27 @@ components:
           type: object
           additionalProperties:
             type: string
-    TokenRequestDTO:
+    TxnResponse:
       type: object
       properties:
         txnId:
           type: string
-        issueToken:
+          description: Based on UUID
+          format: uuid
+          example: a825f76b-0696-40f3-864c-5a3a5b389a83
+        mobileNumber:
           type: string
-        token:
+          example: "******2125"
+        msg:
           type: string
-    TokenResponseDTO:
-      type: object
-      properties:
-        hbi:
+        verified:
           type: boolean
-        docid:
-          type: string
-        status:
-          type: string
-        siteUrl:
-          type: string
-        token:
-          type: string
-    LoginDTO:
+    VerifyOtpRequest:
       type: object
       properties:
-        username:
+        txnId:
           type: string
-        password:
-          type: string
-        resend:
-          type: boolean
-    LoginResponseDTO:
-      type: object
-      properties:
-        token:
-          type: string
-        ncToken:
+        otp:
           type: string
     AadhaarGenerateOTPResponseDTO:
       type: object
@@ -5528,10 +4664,8 @@ components:
           type: string
         villageCityTownName:
           type: string
-          nullable: true
         villageCityTownLGDCode:
           type: string
-          nullable: true
         address:
           type: string
         pincode:
@@ -5591,27 +4725,26 @@ components:
           type: string
         from:
           type: string
-    FacilitySpecialitiesResponseDTO:
+    CriticalMedicalInfrastructureResponseDTO:
       type: object
       properties:
-        systemOfMedicine:
+        has_icu_beds:
           type: string
-        specialities:
-          type: array
-          items:
-            type: string
-        services:
-          type: array
-          items:
-            type: string
-    FacilityTimingsResponseDTO:
-      type: object
-      properties:
-        workingDays:
+        no_of_level_1_icu_bed_with_vent:
           type: string
-        operationalHours:
-          type: object
-    FacilityWithInfrastructureSearchResponseDTO:
+        no_of_level_1_icu_bed_with_out_vent:
+          type: string
+        no_of_level_2_icu_beds:
+          type: string
+        no_of_level_3_icu_beds:
+          type: string
+        icu_beds_with_vent:
+          type: string
+        icu_beds_without_vent:
+          type: string
+        cmo_mo_icu_control_mobile:
+          type: string
+    FacilitySearchResponseDTO:
       type: object
       properties:
         searchCountTotal:
@@ -5620,8 +4753,8 @@ components:
         recordList:
           type: array
           items:
-            $ref: "#/components/schemas/FacilityWithPublicConsentAndInfrastructureDisplayResponseDTO"
-    FacilityWithPublicConsentAndInfrastructureDisplayResponseDTO:
+            $ref: "#/components/schemas/FacilityWithPublicConsentDisplayResponseDTO"
+    FacilityWithPublicConsentDisplayResponseDTO:
       type: object
       properties:
         mobile_no:
@@ -5676,44 +4809,8 @@ components:
           type: array
           items:
             type: string
-        lastUpdatedDate:
-          type: string
-        boardPhoto:
-          type: string
-          format: byte
-        buildPhoto:
-          type: string
-          format: byte
-        countIPDBedsWithoutOxygen:
-          type: string
-        countIPDBedsWithOxygen:
-          type: string
-        countICUBedsWithVentilators:
-          type: string
-        countICUBedsWithoutVentilators:
-          type: string
-        countHDUBedsWithVentilators:
-          type: string
-        countHDUBedsWithoutVentilators:
-          type: string
-        totalNumberOfVentilators:
-          type: string
-        countDayCareBedsWithoutOxygen:
-          type: string
-        countDayCareBedsWithOxygen:
-          type: string
-        countDentalChairs:
-          type: string
-        totalNumberOfBeds:
-          type: string
-        facilityTimings:
-          type: array
-          items:
-            $ref: "#/components/schemas/FacilityTimingsResponseDTO"
-        Facility specialization/services:
-          type: array
-          items:
-            $ref: "#/components/schemas/FacilitySpecialitiesResponseDTO"
+        criticalMedicalInfrastructure:
+          $ref: "#/components/schemas/CriticalMedicalInfrastructureResponseDTO"
     SOMListResponse:
       type: object
       properties:
@@ -5857,8 +4954,10 @@ components:
       type: object
       properties:
         pdf:
-          type: string
-          format: byte
+          type: array
+          items:
+            type: string
+            format: byte
     UtilityCodeNameResDto:
       type: object
       properties:
@@ -5940,496 +5039,6 @@ components:
       properties:
         mobile:
           type: string
-    LoginViaPasswordResponseDto_HPID:
-      type: object
-      properties:
-        token:
-          type: string
-        expiresIn:
-          type: integer
-          format: int64
-        refreshToken:
-          type: string
-          nullable: true
-        refreshExpiresIn:
-          type: integer
-          format: int64
-    UserProfileResponseDto_HPID:
-      type: object
-      properties:
-        hprIdNumber:
-          type: string
-        hprId:
-          type: string
-        mobile:
-          type: string
-        firstName:
-          type: string
-        middleName:
-          type: string
-        lastName:
-          type: string
-        name:
-          type: string
-        yearOfBirth:
-          type: string
-        dayOfBirth:
-          type: string
-        monthOfBirth:
-          type: string
-        gender:
-          type: string
-        email:
-          type: string
-        profilePhoto:
-          type: string
-        stateCode:
-          type: string
-        districtCode:
-          type: string
-        subDistrictCode:
-          type: string
-          nullable: true
-        villageCode:
-          type: string
-          nullable: true
-        townCode:
-          type: string
-          nullable: true
-        wardCode:
-          type: string
-          nullable: true
-        pincode:
-          type: string
-        address:
-          type: string
-        kycPhoto:
-          type: string
-        stateName:
-          type: string
-        districtName:
-          type: string
-        subdistrictName:
-          type: string
-          nullable: true
-        villageName:
-          type: string
-          nullable: true
-        townName:
-          type: string
-        wardName:
-          type: string
-          nullable: true
-        authMethods:
-          type: array
-          items:
-            type: string
-            enum:
-              - AADHAAR_OTP
-              - MOBILE_OTP
-              - PASSWORD
-              - DEMOGRAPHICS
-              - AADHAAR_BIO
-              - EMAIL_OTP
-              - MOBILE_OTP_RESET_PASSWROD
-              - FACE_AUTH
-        kycVerified:
-          type: boolean
-        verificationStatus:
-          type: string
-        categoryId:
-          type: integer
-          format: int32
-        categoryName:
-          type: string
-        categorySubId:
-          type: integer
-          format: int32
-        categorySubName:
-          type: string
-        emailVerified:
-          type: boolean
-        role:
-          type: integer
-          format: int32
-        new:
-          type: boolean
-    WorkStatusUpdateRequestDTO:
-      type: object
-      properties:
-        status:
-          type: string
-        facilityId:
-          type: string
-        professionalHprId:
-          type: string
-        managerHprId:
-          type: string
-        isHpr:
-          type: boolean
-    RelinkDelinkExistingFacilityRequest:
-      type: object
-      properties:
-        hprId:
-          type: string
-        facilityId:
-          type: string
-        action:
-          type: string
-    RelinkDelinkExistingFacilityResponse:
-      type: object
-      properties:
-        facilityId:
-          type: string
-        hprId:
-          type: string
-        status:
-          type: string
-        message:
-          type: string
-        errorStatus:
-          type: array
-          items:
-            type: object
-    Districts:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int32
-        stateId:
-          type: integer
-          format: int64
-        districtName:
-          type: string
-        isoCode:
-          type: string
-        status:
-          type: boolean
-    FacilityOwnershipDTO:
-      type: object
-      properties:
-        label:
-          type: string
-        value:
-          type: string
-    FacilityTypeDTO:
-      type: object
-      properties:
-        id:
-          $ref: "#/components/schemas/IdDTO"
-        facilityType:
-          type: string
-        facilityTypeNdhm:
-          type: string
-        opd:
-          type: string
-        ipd:
-          type: string
-        dayCare:
-          type: string
-        other:
-          type: string
-        activeYN:
-          type: string
-        createdBy:
-          type: string
-        createdDate:
-          type: string
-        lastUpdatedUser:
-          type: string
-        lastUpdatedDate:
-          type: string
-        linkToForm:
-          type: string
-        facilityCode:
-          type: string
-        facilityCodeUfid:
-          type: string
-        facilityOrder:
-          type: integer
-          format: int32
-    HprFacilitySuggestionRequestDTO:
-      type: object
-      properties:
-        name:
-          type: string
-        address:
-          type: string
-        state:
-          $ref: "#/components/schemas/States"
-        district:
-          $ref: "#/components/schemas/Districts"
-        pincode:
-          type: integer
-          format: int64
-        contactNo:
-          type: integer
-          format: int64
-        email:
-          pattern: |
-            ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$
-          type: string
-        contactName:
-          type: string
-        status:
-          type: string
-          enum:
-            - pending
-            - approved
-            - rejected
-        createdBy:
-          type: integer
-          format: int64
-        updatedBy:
-          type: integer
-          format: int64
-        facilityId:
-          type: integer
-          format: int64
-        hprProfileId:
-          type: integer
-          format: int64
-        facilityName:
-          type: string
-        facilityOwnership:
-          $ref: "#/components/schemas/FacilityOwnershipDTO"
-        systemMedicine:
-          type: array
-          items:
-            $ref: "#/components/schemas/SystemMedicineDTO"
-        facilityType:
-          $ref: "#/components/schemas/FacilityTypeDTO"
-        department:
-          type: string
-        designation:
-          type: string
-        ministry:
-          $ref: "#/components/schemas/MinistryResponseDTO"
-        psuName:
-          type: string
-    IdDTO:
-      type: object
-      properties:
-        sno:
-          type: integer
-          format: int32
-        systemmedicine:
-          type: string
-    MinistryResponseDTO:
-      type: object
-      properties:
-        ministry:
-          type: string
-    States:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        isoCode:
-          type: string
-        status:
-          type: boolean
-        countryId:
-          type: integer
-          format: int32
-        visibleStatus:
-          type: boolean
-        position:
-          type: boolean
-        councilLabel:
-          type: string
-        systemOfMedicine:
-          type: boolean
-    SystemMedicineDTO:
-      type: object
-      properties:
-        id:
-          type: string
-        lastUpdateDate:
-          type: string
-        dropOrder:
-          type: integer
-          format: int32
-        creationDate:
-          type: string
-        activeYN:
-          type: string
-        createdBy:
-          type: string
-        lastUpdatedUser:
-          type: string
-        nhrrMedicineCode:
-          type: string
-        value:
-          type: string
-        type:
-          type: string
-    HprFacilitySuggestionResponseDTO:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        address:
-          type: string
-        state:
-          $ref: "#/components/schemas/States"
-        district:
-          $ref: "#/components/schemas/Districts"
-        pincode:
-          type: integer
-          format: int64
-        contactNo:
-          type: integer
-          format: int64
-        email:
-          type: string
-        contactName:
-          type: string
-        status:
-          type: string
-          enum:
-            - pending
-            - approved
-            - rejected
-        createdBy:
-          type: integer
-          format: int64
-        updatedBy:
-          type: integer
-          format: int64
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-        facilityId:
-          type: integer
-          format: int64
-        hprProfileId:
-          type: integer
-          format: int64
-        facilityName:
-          type: string
-        facilityOwnership:
-          type: string
-        systemMedicine:
-          type: array
-          items:
-            type: string
-        facilityType:
-          type: string
-        department:
-          type: string
-        designation:
-          type: string
-        ministry:
-          $ref: "#/components/schemas/MinistryResponseDTO"
-        psuName:
-          type: string
-    FacilitiesByHprIdRequest:
-      type: object
-      properties:
-        hprId:
-          type: string
-        source:
-          type: string
-    FacilityDeclaredByHprIdResponseDTO:
-      type: object
-      properties:
-        totalNoOfFacilities:
-          type: integer
-          format: int32
-        facilities:
-          type: array
-          items:
-            $ref: "#/components/schemas/FacilityDetailsResponseDTO"
-    FacilityDetailsResponseDTO:
-      type: object
-      properties:
-        facilityId:
-          type: string
-        facilityName:
-          type: string
-        faciltyAddress:
-          type: string
-        department:
-          type: string
-        designation:
-          type: string
-        state:
-          type: string
-        district:
-          type: string
-        isCurrent:
-          type: boolean
-    FacilityByHprIdResponse:
-      type: object
-      properties:
-        message:
-          type: string
-        numberOfFacilities:
-          type: integer
-          format: int32
-        numberOfPages:
-          type: integer
-          format: int32
-        facilities:
-          type: array
-          items:
-            $ref: "#/components/schemas/SearchFacilityByHprIdResponseDTO"
-    SearchFacilityByHprIdResponseDTO:
-      type: object
-      properties:
-        facilityId:
-          type: string
-        facilityName:
-          type: string
-        district:
-          type: string
-        state:
-          type: string
-    FacilityRequestDTO:
-      type: object
-      properties:
-        facilityId:
-          type: string
-        page:
-          type: integer
-          format: int32
-        size:
-          type: integer
-          format: int32
-    HprProfileFacilityResponseDTO:
-      type: object
-      properties:
-        hprIdNumber:
-          type: string
-        name:
-          type: string
-        gender:
-          type: string
-        hprType:
-          type: string
-          enum:
-            - doctor
-            - nurse
-            - facility_manager
-            - asha
-            - paharmacist
-            - anganwadi
-            - administrator
-            - paramedical
-            - pharmacist
-        councilVerified:
-          type: boolean
     DocumentDTO:
       type: object
       properties:
@@ -6441,8 +5050,10 @@ components:
         fileType:
           type: string
         data:
-          type: string
-          format: byte
+          type: array
+          items:
+            type: string
+            format: byte
     UploadDocumentDTO:
       type: object
       properties:
@@ -6463,22 +5074,13 @@ components:
       type: object
       properties:
         profilePhoto:
-          allOf:
-            - $ref: "#/components/schemas/UploadDocumentMessage"
-          nullable: true
-          type: object
+          $ref: "#/components/schemas/UploadDocumentMessage"
         degreeCertificate:
-          allOf:
-            - $ref: "#/components/schemas/UploadDocumentMessage"
-          nullable: true
-          type: object
+          $ref: "#/components/schemas/UploadDocumentMessage"
         registrationCertificate:
           $ref: "#/components/schemas/UploadDocumentMessage"
         proofOfWorkCertificate:
-          allOf:
-            - $ref: "#/components/schemas/UploadDocumentMessage"
-          nullable: true
-          type: object
+          $ref: "#/components/schemas/UploadDocumentMessage"
     CoursesRequestDTO:
       type: object
       properties:
@@ -6621,6 +5223,11 @@ components:
           $ref: "#/components/schemas/PractitionerDTO"
         hprToken:
           type: string
+    MinistryResponseDTO:
+      type: object
+      properties:
+        ministry:
+          type: string
     PersonalInformationDTO:
       type: object
       properties:
@@ -6656,6 +5263,7 @@ components:
           type: string
         dateOfBirth:
           type: string
+          format: date-time
         category:
           type: string
         gender:
@@ -6778,7 +5386,6 @@ components:
             type: object
             additionalProperties:
               type: string
-          nullable: true
         hprId:
           type: string
     FetchPracticionerDTO:
@@ -6807,11 +5414,7 @@ components:
         message:
           type: string
         practitioners:
-          type: array
-          items:
-            type: array
-            items:
-              type: object
+          type: object
     FetchRequestDTO:
       type: object
       properties:
@@ -6828,8 +5431,10 @@ components:
         qualificationYear:
           type: string
         data:
-          type: string
-          format: byte
+          type: array
+          items:
+            type: string
+            format: byte
     DocumentListDTO:
       type: object
       properties:
@@ -6847,7 +5452,6 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/QualificationDetailsDTO"
-          nullable: true
         internationalDoctorQualificationDetails:
           type: array
           items:
@@ -6868,8 +5472,10 @@ components:
           type: integer
           format: int64
         data:
-          type: string
-          format: byte
+          type: array
+          items:
+            type: string
+            format: byte
     InternationalDoctorQualificationDetailsDTO:
       type: object
       properties:
@@ -6900,8 +5506,10 @@ components:
         systemOfMedicide:
           type: string
         data:
-          type: string
-          format: byte
+          type: array
+          items:
+            type: string
+            format: byte
     RegistrationDetailsDTO:
       type: object
       properties:
@@ -6933,12 +5541,10 @@ components:
         courseId:
           type: integer
           format: int64
-          nullable: true
         stateName:
           type: string
         systemOfMedicineName:
           type: string
-          nullable: true
         deleted:
           type: boolean
         courseName:
@@ -6960,14 +5566,10 @@ components:
           format: int64
         collegeName:
           type: string
-          nullable: true
         deleted:
           type: boolean
         college:
-          allOf:
-            - $ref: "#/components/schemas/CollegeResponseDTO"
-          nullable: true
-          type: object
+          $ref: "#/components/schemas/CollegeResponseDTO"
     MedicalSystemResponseDTO:
       type: object
       properties:
@@ -7124,13 +5726,11 @@ components:
         stateId:
           type: integer
           format: int32
-          nullable: true
         stateName:
           type: string
         courseId:
           type: integer
           format: int32
-          nullable: true
         courseName:
           type: string
         nationalBoard:
@@ -7155,7 +5755,6 @@ components:
         courseId:
           type: integer
           format: int32
-          nullable: true
         nationalBoard:
           type: boolean
         councilBoard:

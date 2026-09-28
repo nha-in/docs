@@ -72,8 +72,8 @@ func TestAllDigestsGolden(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(digests) != 8 {
-		t.Fatalf("got %d digests, want 8", len(digests))
+	if len(digests) != 9 {
+		t.Fatalf("got %d digests, want 9", len(digests))
 	}
 	got, _ := json.MarshalIndent(digests, "", "  ")
 	golden := "testdata/golden/digests.json"

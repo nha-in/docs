@@ -235,6 +235,7 @@ for (const file of walk(RAW).sort()) {
 const TITLES = {
   'nha-2026-09-16': ['# NHA final set, 16 September 2026', 'The M1 collection of 15 September sits beside the set because it supplies the order of M1 calls, and nothing else.'],
   'nha-2026-09-22': ['# NHA M1 swagger, use-case split, 22 September 2026', 'One file: the M1 swagger NHA reissued with one operation per use case, tags following the M1 Postman collection, and the real URL of each operation in x-actual-path. It replaces abha/M1 ABHA Swagger 1.yaml of the 16 September set as the M1 source.'],
+  'nha-2026-09-24': ['# NHA M4 swagger, published sandbox groups, 24 September 2026', 'The three groups the sandbox Swagger page at https://apihspsbx.abdm.gov.in/v4/int/swagger-ui-ext/index.html publishes, downloaded from /v4/int/v3/api-docs/HFR, /HPR and /HPID on 24 September 2026. They replace the M4 files of the 16 September set as the M4 source. The original sha256 is of the bytes as served, a single line of JSON; the committed file is the same JSON indented by four spaces, as the 16 September files are, and then redacted.'],
 };
 const [title, extra] = TITLES[SET] ?? [`# NHA raw set ${SET}`, ''];
 const lines = [

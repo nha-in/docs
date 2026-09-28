@@ -65,8 +65,8 @@ curl --request POST \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "txnId": "de4ff682-fcc6-4bcf-a978-0dbb19a288b4",
-  "mobileNumber": "JrHfDROoEcsYJ41g2wdkicsI7mT1ATCP347iqwBhWbfaEIgZ03/WHAYvDHRG2WXl4HBNuP2orD+3O75pN0xFhOz4oLXrePAxKTLK8uG5jdeAiGE2lKwOrShq9/gg+BckrQcDYjpMUePRuDau4mqLHa8FdSCQ8npGPY9KCpD2hZkscWNqZR68gRo/EwpY4u32kDzv5i1K/s+A7FNVwXqZS5AK2BadEhG5drSRk7P83eFxJZUlwtsvDK6iipOsM4VtMXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+  "txnId": "<TXN_ID>",
+  "mobileNumber": "<MOBILE_NUMBER>"
 }'
 ```
 
@@ -151,7 +151,846 @@ curl --request POST \
 
 **Exit condition (Observe until this is true)**
 
-A 200 response. The specification gives no body for it, so read what comes back.
+A 200 whose body matches:
+
+```json
+{
+  "token": "<TOKEN>",
+  "hprIdNumber": "<HPR_ID_NUMBER>",
+  "name": "<NAME>",
+  "gender": "<GENDER>",
+  "yearOfBirth": "<YEAR_OF_BIRTH>",
+  "monthOfBirth": "<MONTH_OF_BIRTH>",
+  "dayOfBirth": "<DAY_OF_BIRTH>",
+  "firstName": "<FIRST_NAME>",
+  "hprId": "<HPR_ID>",
+  "lastName": "<LAST_NAME>",
+  "middleName": "<MIDDLE_NAME>",
+  "stateCode": "<STATE_CODE>",
+  "districtCode": "<DISTRICT_CODE>",
+  "subDistrictCode": "<SUB_DISTRICT_CODE>",
+  "subDistrictName": "<SUB_DISTRICT_NAME>",
+  "stateName": "<STATE_NAME>",
+  "districtName": "<DISTRICT_NAME>",
+  "email": "<EMAIL>",
+  "kycPhoto": "<KYC_PHOTO>",
+  "mobile": "<MOBILE>",
+  "categoryId": 0,
+  "subCategoryId": 0,
+  "role": 0,
+  "authMethods": [
+    "AADHAAR_OTP"
+  ],
+  "new": false
+}
+```
+
+### HPID, categories (`m4-util`)
+
+**Act: the calls in this journey, in order**
+
+#### 1. Fetch HPID categories (`m4_get_hpid_get_categories`)
+
+```bash
+curl --request GET \
+  --url https://apihspsbx.abdm.gov.in/v4/int/hpid/get/categories \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
+```
+
+#### 2. Fetch HPID sub categories from category (`m4_get_hpid_get_subcategories`)
+
+```bash
+curl --request GET \
+  --url https://apihspsbx.abdm.gov.in/v4/int/hpid/get/subCategories \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
+```
+
+**Exit condition (Observe until this is true)**
+
+A 200 whose body matches:
+
+```json
+[
+  {
+    "code": "220",
+    "name": "Yoga and Naturopathy"
+  },
+  {
+    "code": "1",
+    "name": "Modern Medicine"
+  },
+  {
+    "code": "2",
+    "name": "Dentist"
+  }
+]
+```
+
+### HPR, authentication (`m4-authentication`)
+
+**Act: the calls in this journey, in order**
+
+#### 1. Login via password (`m4_post_v1_auth_authpassword`)
+
+```bash
+curl --request POST \
+  --url https://apihspsbx.abdm.gov.in/v4/int/api/v1/auth/authPassword \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "idType": "",
+  "domainName": "",
+  "hprId": "<HPR_ID>",
+  "password": "XXXX@992"
+}'
+```
+
+#### 2. Get public certificate (`m4_get_v1_auth_cert`)
+
+```bash
+curl --request GET \
+  --url "https://apihspsbx.abdm.gov.in/v4/int/api/v1/auth/cert?publicCertificateRequestDto=<PUBLICCERTIFICATEREQUESTDTO>" \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
+```
+
+#### 3. Verify Aadhaar OTP (`m4_post_v1_auth_confirmwithaadhaarotp`)
+
+```bash
+curl --request POST \
+  --url https://apihspsbx.abdm.gov.in/v4/int/api/v1/auth/confirmWithAadhaarOtp \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "otp": "308709",
+  "txnId": "de4ff682-fcc6-4bcf-a978-0dbb19a288b4"
+}'
+```
+
+#### 4. Send via Aadhaar OTP (`m4_post_v1_auth_init`)
+
+```bash
+curl --request POST \
+  --url https://apihspsbx.abdm.gov.in/v4/int/api/v1/auth/init \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "idType": "",
+  "domainName": "",
+  "authMethod": "AADHAAR_OTP",
+  "hprId": "<HPR_ID>"
+}'
+```
+
+#### 5. Send verify OTP (`m4_post_v2_auth_loginviamobilesendotp`)
+
+```bash
+curl --request POST \
+  --url https://apihspsbx.abdm.gov.in/v4/int/api/v2/auth/loginViaMobileSendOTP \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "txnId": "4c8c4b29-6d7e-4446-8f73-4574d6d14f09",
+  "mobile": "97624XXXXX"
+}'
+```
+
+**Exit condition (Observe until this is true)**
+
+A 200 whose body matches:
+
+```json
+{
+  "txnId": "28b4ce41-71df-48af-8b6c-13c30402816c",
+  "mobileNumber": "******1234"
+}
+```
+
+### HPR, contact verification (`m4-verification`)
+
+**Act: the calls in this journey, in order**
+
+#### 1. Generate mobile OTP 2 (`m4_post_v1_doctors_generate_mobile_otp`)
+
+```bash
+curl --request POST \
+  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/doctors/generate-mobile-otp \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "hpr_token": "<JWT TOKEN>",
+  "officialMobile": "<BASE64 ENCODED STRING>"
+}'
+```
+
+#### 2. Send verification email (`m4_post_v1_doctors_generate_verification_email`)
+
+```bash
+curl --request POST \
+  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/doctors/generate-verification-email \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "emailAddress": "<ABHA_ADDRESS>.com",
+  "otp_type": ""
+}'
+```
+
+#### 3. Submit the regenerate mobile OTP (`m4_post_v1_doctors_regenerate_mobile_otp`)
+
+```bash
+curl --request POST \
+  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/doctors/regenerate-mobile-otp \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "hpr_token": "<JWT TOKEN>",
+  "officialMobile": "PFiI0AQJkAKIdLL6ytdJLKFObqXab9rwTvOEPHflksQBkMzIIb8HMDYUzZfN3AUdefedSbb+B4sPwi72lsaaNRkpXygWRF0GWntEwD/WL80JbXaW9DJkwPpDEzQpMYKKT17iCTp7pQer8337NZofO1D1aYiDfEnA9E1HMTyPCGFjvmbcL32hNqGsgpHKYNh4rHXCo4RwP5UQKWDYI1jLZqbWLp0a9GQu9nC1hyP5IR5LRCASzvhiRfrRk+Y660xuDSCvOKb+uUPcN3ZFA==xxxxxxxx"
+}'
+```
+
+#### 4. Resend verification email (`m4_post_v1_doctors_resent_verify_email`)
+
+```bash
+curl --request POST \
+  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/doctors/resent-verify-email \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "emailAddress": "<ABHA_ADDRESS>.com",
+  "otp_type": ""
+}'
+```
+
+#### 5. Verify email OTP (`m4_post_v1_doctors_verify_email_otp`)
+
+```bash
+curl --request POST \
+  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/doctors/verify-email-otp \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "hpr_token": "<JWT TOKEN>",
+  "hpr_id": "<HPR_ID>",
+  "officialEmail": "<ABHA_ADDRESS>.com",
+  "emailOtp": 515999
+}'
+```
+
+#### 6. Verify mobile OTP (`m4_post_v1_doctors_verify_mobile_otp`)
+
+```bash
+curl --request POST \
+  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/doctors/verify-mobile-otp \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "hpr_token": "<JWT TOKEN>",
+  "txnId": "dd392164-0f4a-4894-8d64-1fce027ee033",
+  "otp": "<BASE64 ENCODED STRING>"
+}'
+```
+
+**Exit condition (Observe until this is true)**
+
+A 200 whose body matches:
+
+```json
+{
+  "status": "<string>",
+  "txnId": "<string>"
+}
+```
+
+### HPR, professional registration (`m4-enrollment`)
+
+**Act: the calls in this journey, in order**
+
+#### 1. Register professional (`m4_post_v1_doctors_register_professional_new`)
+
+```bash
+curl --request POST \
+  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/doctors/register-professional-new \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "practitioner": {
+    "personalInformation": "<PERSONAL_INFORMATION>",
+    "communicationAddress": "<COMMUNICATION_ADDRESS>",
+    "contactInformation": "<CONTACT_INFORMATION>",
+    "registrationAcademic": "<REGISTRATION_ACADEMIC>",
+    "specialities": [
+      "<SPECIALITIES>"
+    ],
+    "currentWorkDetails": "<CURRENT_WORK_DETAILS>",
+    "apiClientId": "<API_CLIENT_ID>",
+    "profilePhoto": "<PROFILE_PHOTO>",
+    "healthProfessionalType": "<HEALTH_PROFESSIONAL_TYPE>",
+    "officialMobileCode": "<OFFICIAL_MOBILE_CODE>",
+    "officialMobile": "<OFFICIAL_MOBILE>",
+    "officialMobileStatus": "<OFFICIAL_MOBILE_STATUS>",
+    "officialEmail": "<OFFICIAL_EMAIL>",
+    "officialEmailStatus": "<OFFICIAL_EMAIL_STATUS>",
+    "visibleProfilePicture": "<VISIBLE_PROFILE_PICTURE>",
+    "profileVisibleToPublic": "<PROFILE_VISIBLE_TO_PUBLIC>",
+    "addressAsPerKYC": "<ADDRESS_AS_PER_KYC>"
+  },
+  "hprToken": "<HPR_TOKEN>"
+}'
+```
+
+#### 2. Update professional (`m4_post_v1_doctors_update_professional_new`)
+
+```bash
+curl --request POST \
+  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/doctors/update-professional-new \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "practitioner": {
+    "personalInformation": "<PERSONAL_INFORMATION>",
+    "communicationAddress": "<COMMUNICATION_ADDRESS>",
+    "contactInformation": "<CONTACT_INFORMATION>",
+    "registrationAcademic": "<REGISTRATION_ACADEMIC>",
+    "specialities": [
+      "<SPECIALITIES>"
+    ],
+    "currentWorkDetails": "<CURRENT_WORK_DETAILS>",
+    "apiClientId": "<API_CLIENT_ID>",
+    "profilePhoto": "<PROFILE_PHOTO>",
+    "healthProfessionalType": "<HEALTH_PROFESSIONAL_TYPE>",
+    "officialMobileCode": "<OFFICIAL_MOBILE_CODE>",
+    "officialMobile": "<OFFICIAL_MOBILE>",
+    "officialMobileStatus": "<OFFICIAL_MOBILE_STATUS>",
+    "officialEmail": "<OFFICIAL_EMAIL>",
+    "officialEmailStatus": "<OFFICIAL_EMAIL_STATUS>",
+    "visibleProfilePicture": "<VISIBLE_PROFILE_PICTURE>",
+    "profileVisibleToPublic": "<PROFILE_VISIBLE_TO_PUBLIC>",
+    "addressAsPerKYC": "<ADDRESS_AS_PER_KYC>"
+  },
+  "hprToken": "<HPR_TOKEN>"
+}'
+```
+
+#### 3. Fetch documents (`m4_post_v1_doctors_fetch_documents_list`)
+
+```bash
+curl --request POST \
+  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/doctors/fetch-documents-list \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "hprid": "<HPR_ID>"
+}'
+```
+
+#### 4. Upload documents (`m4_post_v1_uploads_upload_document`)
+
+```bash
+curl --request POST \
+  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/uploads/upload-document \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "hpr_token": "<HPR_TOKEN>",
+  "document": [
+    {
+      "document_id": 0,
+      "document_type": "<DOCUMENT_TYPE>",
+      "fileType": "<FILE_TYPE>",
+      "data": [
+        "<DATA>"
+      ]
+    }
+  ]
+}'
+```
+
+#### 5. Get professional info (`m4_post_v1_doctors_fetch_professional_info`)
+
+```bash
+curl --request POST \
+  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/doctors/fetch-professional-info \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "practitioner": {
+    "id": "<HPR_ID>",
+    "name": "",
+    "contactNumber": "976243XXXX",
+    "state": "UTTAR PRADESH",
+    "registrationNumber": ""
+  }
+}'
+```
+
+**Exit condition (Observe until this is true)**
+
+A 200 whose body matches:
+
+```json
+{
+  "message": "<MESSAGE>"
+}
+```
+
+### HPR, master data (`m4-utility`)
+
+**Act: the calls in this journey, in order**
+
+#### 1. Get all affiliated board (`m4_get_v1_masters_affiliated_board`)
+
+```bash
+curl --request GET \
+  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/affiliated-board \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
+```
+
+#### 2. Get affiliated board by state ID (`m4_get_v1_masters_affiliated_board_states_id`)
+
+```bash
+curl --request GET \
+  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/affiliated-board/states/{id} \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
+```
+
+#### 3. Get affiliated board by ID (`m4_get_v1_masters_affiliated_board_id`)
+
+```bash
+curl --request GET \
+  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/affiliated-board/{id} \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
+```
+
+#### 4. Get college by state (`m4_get_v1_masters_colleges_id`)
+
+```bash
+curl --request GET \
+  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/colleges/{id} \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
+```
+
+#### 5. Get college by state and medicine ID (`m4_get_v1_masters_colleges_stateid_medicineid`)
+
+```bash
+curl --request GET \
+  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/colleges/{stateId}/{medicineId} \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
+```
+
+#### 6. Get all countries (`m4_get_v1_masters_countries`)
+
+```bash
+curl --request GET \
+  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/countries \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
+```
+
+#### 7. Get countries by ID (`m4_get_v1_masters_countries_id`)
+
+```bash
+curl --request GET \
+  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/countries/{id} \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
+```
+
+#### 8. List courses (`m4_post_v1_masters_courses`)
+
+```bash
+curl --request POST \
+  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/courses \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "systemOfMedicine": "Registered Auxiliary Nurse Midwife(RANM)",
+  "hprType": "nurse",
+  "qualificationCount": 0
+}'
+```
+
+#### 9. Get all districts (`m4_get_v1_masters_district`)
+
+```bash
+curl --request GET \
+  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/district \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
+```
+
+#### 10. Get districts by state (`m4_get_v1_masters_district_id`)
+
+```bash
+curl --request GET \
+  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/district/{id} \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
+```
+
+#### 11. List government health programmes (`m4_get_v1_masters_languages`)
+
+```bash
+curl --request GET \
+  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/languages \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
+```
+
+#### 12. Get pi languages by ID (`m4_get_v1_masters_languages_id`)
+
+```bash
+curl --request GET \
+  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/languages/{id} \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
+```
+
+#### 13. Get all medical council (`m4_get_v1_masters_medical_councils`)
+
+```bash
+curl --request GET \
+  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/medical-councils \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
+```
+
+#### 14. Get medical council by system of medicine name (`m4_get_v1_masters_medical_councils_name`)
+
+```bash
+curl --request GET \
+  --url "https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/medical-councils/name?medicineName=<MEDICINENAME>" \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
+```
+
+#### 15. Get all nurse councils (`m4_get_v1_masters_nurse_councils`)
+
+```bash
+curl --request GET \
+  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/nurse-councils \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
+```
+
+#### 16. Get all states (`m4_get_v1_masters_states`)
+
+```bash
+curl --request GET \
+  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/states \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
+```
+
+#### 17. Get status (`m4_get_v1_masters_states_id`)
+
+```bash
+curl --request GET \
+  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/states/{id} \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
+```
+
+#### 18. Get all sub districts (`m4_get_v1_masters_sub_districts`)
+
+```bash
+curl --request GET \
+  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/sub-districts \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
+```
+
+#### 19. Get all sub districts 1 (`m4_get_v1_masters_sub_districts_id`)
+
+```bash
+curl --request GET \
+  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/sub-districts/{id} \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
+```
+
+#### 20. Get all medical system (`m4_get_v1_masters_system_of_medicines`)
+
+```bash
+curl --request GET \
+  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/system-of-medicines \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
+```
+
+#### 21. List all university (`m4_get_v1_masters_universites`)
+
+```bash
+curl --request GET \
+  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/universites \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
+```
+
+#### 22. Get university by college (`m4_get_v1_masters_universites_id`)
+
+```bash
+curl --request GET \
+  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/universites/{id} \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
+```
+
+**Exit condition (Observe until this is true)**
+
+A 200 whose body matches:
+
+```json
+[
+  {
+    "id": 0,
+    "name": "<NAME>",
+    "status": false,
+    "visibleStatus": false,
+    "collegeId": 0,
+    "collegeName": "<COLLEGE_NAME>",
+    "deleted": false,
+    "college": "<COLLEGE>"
+  }
+]
+```
+
+### HPR, profile and password (`m4-profile`)
+
+**Act: the calls in this journey, in order**
+
+#### 1. Change password (`m4_post_password_change_bypassword`)
+
+```bash
+curl --request POST \
+  --url https://apihspsbx.abdm.gov.in/v4/int/password/change/byPassword \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "oldPassword": "<OLD_PASSWORD>",
+  "newPassword": "<NEW_PASSWORD>",
+  "txnId": "<TXN_ID>",
+  "hprID": "<HPR_ID>",
+  "otp": "<OTP>"
+}'
+```
+
+#### 2. Recover password via Aadhaar (`m4_post_password_recover_byaadhaar`)
+
+```bash
+curl --request POST \
+  --url https://apihspsbx.abdm.gov.in/v4/int/password/recover/byAadhaar \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "hprId": "<HPR_ID>"
+}'
+```
+
+#### 3. Generate mobile OTP 1 (`m4_post_password_recover_bymobile_sendmobileotp`)
+
+```bash
+curl --request POST \
+  --url https://apihspsbx.abdm.gov.in/v4/int/password/recover/byMobile/sendMobileOTP \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "hprId": "amol.xxxxxx"
+}'
+```
+
+#### 4. Verify mobile OTP 1 (`m4_post_password_recover_bymobile_verifymobileotp`)
+
+```bash
+curl --request POST \
+  --url https://apihspsbx.abdm.gov.in/v4/int/password/recover/byMobile/verifyMobileOTP \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "oldPassword": "<OLD_PASSWORD>",
+  "newPassword": "<NEW_PASSWORD>",
+  "txnId": "<TXN_ID>",
+  "hprID": "<HPR_ID>",
+  "otp": "<OTP>"
+}'
+```
+
+#### 5. Recover password confirm by Aadhaar (`m4_post_password_recover_confirmbyaadhaar`)
+
+```bash
+curl --request POST \
+  --url https://apihspsbx.abdm.gov.in/v4/int/password/recover/confirmByAadhaar \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "newPassword": "<NEW_PASSWORD>",
+  "otp": "<OTP>",
+  "txnId": "5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11"
+}'
+```
+
+#### 6. Reset password and session (`m4_post_password_reset_password`)
+
+```bash
+curl --request POST \
+  --url https://apihspsbx.abdm.gov.in/v4/int/password/reset/password \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "newPassword": "<NEW_PASSWORD>",
+  "otp": "<OTP>",
+  "txnId": "5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11"
+}'
+```
+
+#### 7. Reset password (`m4_post_password_resetpassword`)
+
+```bash
+curl --request POST \
+  --url https://apihspsbx.abdm.gov.in/v4/int/password/resetPassword \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "newPassword": "<NEW_PASSWORD>",
+  "otp": "<OTP>",
+  "txnId": "5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11"
+}'
+```
+
+#### 8. Get account png card (`m4_get_v1_account_getidcard`)
+
+```bash
+curl --request GET \
+  --url https://apihspsbx.abdm.gov.in/v4/int/v1/account/getIdCard \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'X-Token: <X_TOKEN>'
+```
+
+#### 9. Get user profile by JWT (`m4_get_v1_account_information`)
+
+```bash
+curl --request GET \
+  --url https://apihspsbx.abdm.gov.in/v4/int/v1/account/information \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
+```
+
+#### 10. Get user details (`m4_get_v1_account_user_details_hprid`)
+
+```bash
+curl --request GET \
+  --url https://apihspsbx.abdm.gov.in/v4/int/v1/account/user-details/{hprId} \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
+```
+
+#### 11. Logout (`m4_get_v4_auth_logout`)
+
+```bash
+curl --request GET \
+  --url https://apihspsbx.abdm.gov.in/v4/int/v4/auth/logout \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
+```
+
+**Exit condition (Observe until this is true)**
+
+A 200 whose body matches:
+
+```json
+"User Profile LoggedOut Successfully!!"
+```
+
+### HPR, recover the HPR ID (`m4-forgot-healthcare-professional-id-number`)
+
+**Act: the calls in this journey, in order**
+
+#### 1. Submit the retrieval health ID by Aadhaar (`m4_post_v1_forgot_hprid_aadhaar`)
+
+```bash
+curl --request POST \
+  --url https://apihspsbx.abdm.gov.in/v4/int/v1/forgot/hprId/aadhaar \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "otp": "<BASE64 ENCODED STRING>",
+  "txnId": "4c115e27-a602-4320-b4cd-ee658539e2f0"
+}'
+```
+
+#### 2. Submit the retrieval health ID by mobile (`m4_post_v1_forgot_hprid_mobile`)
+
+```bash
+curl --request POST \
+  --url https://apihspsbx.abdm.gov.in/v4/int/v1/forgot/hprId/mobile \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "txnId": "5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11",
+  "name": "<NAME>",
+  "gender": "<GENDER>",
+  "yearOfBirth": "<YEAR_OF_BIRTH>",
+  "monthOfBirth": "<MONTH_OF_BIRTH>",
+  "dayOfBirth": "<DAY_OF_BIRTH>",
+  "firstName": "<FIRST_NAME>",
+  "lastName": "<LAST_NAME>",
+  "middleName": "<MIDDLE_NAME>",
+  "otp": "<OTP>"
+}'
+```
+
+#### 3. Generate mobile OTP (`m4_post_v1_forgot_hprid_mobile_generateotp`)
+
+```bash
+curl --request POST \
+  --url https://apihspsbx.abdm.gov.in/v4/int/v1/forgot/hprId/mobile/generateOtp \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "mobileNumber": "VPoaDCJBNyGhJiX+sAh9yRq1WXAfRXkgcE31/0U2DMkH/+nvpspAA4GEmkbideZhKsSLYnFA1lHPkBH7PS6Bg4jz0aSdDAoovnYgVftJ/suP4mzhhg1Hrf7zQFPriHiraNlsIzsDeLl3ckGejNiCmXhfhBBw==xxxxxxxxxxxxx"
+}'
+```
+
+**Exit condition (Observe until this is true)**
+
+A 200 whose body matches:
+
+```json
+{
+  "txnId": "132dd7dd-ca5a-4ec1-a36c-093c007bf794",
+  "msg": "Please enter OTP sent on your mobile number ******2021",
+  "mobileNumber": "******2021"
+}
+```
+
+### HPR, search (`m4-searched`)
+
+**Act: the calls in this journey, in order**
+
+#### 1. Get the exists by HPR ID (`m4_get_v1_search_existsbyhprid_hprid`)
+
+```bash
+curl --request GET \
+  --url https://apihspsbx.abdm.gov.in/v4/int/v1/search/existsByHprId/{hprId} \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
+```
+
+#### 2. Search user by HPR ID (`m4_get_v1_search_searchbyhprid_hprid`)
+
+```bash
+curl --request GET \
+  --url https://apihspsbx.abdm.gov.in/v4/int/v1/search/searchByHprId/{hprId} \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
+```
+
+#### 3. Search user by mobile no (`m4_get_v1_search_searchbymobile_mobile`)
+
+```bash
+curl --request GET \
+  --url https://apihspsbx.abdm.gov.in/v4/int/v1/search/searchByMobile/{mobile} \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
+```
+
+**Exit condition (Observe until this is true)**
+
+A 200 whose body matches:
+
+```json
+[
+  {
+    "hprIdNumber": "<HPR_ID>",
+    "name": "Ayushman Bharat Mission",
+    "authMethods": [
+      "PASSWORD",
+      "MOBILE_OTP",
+      "AADHAAR_OTP"
+    ],
+    "hprId": "<EMAIL>",
+    "categoryId": "1",
+    "subCategoryId": "1"
+  }
+]
+```
 
 ### HFR, facility onboarding (`m4-onboarding-apis`)
 
@@ -402,36 +1241,15 @@ curl --request POST \
 
 **Exit condition (Observe until this is true)**
 
-A 200 response. The specification gives no body for it, so read what comes back.
+A 200 whose body matches:
 
-### HRP bridge services (`m4-multiple-hrp-api`)
-
-**Act: the calls in this journey, in order**
-
-#### 1. Submit the facility add and update (`m4_post_v1_bridges_mutiplehrpaddupdateservices`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/v1/bridges/MutipleHRPAddUpdateServices \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "facilityId": "IN0610090166",
-  "facilityName": "Singla Eye Center",
-  "HRP": [
-    {
-      "bridgeId": "SBX_00XXXX",
-      "hipName": "Singla Eye Center",
-      "type": "HIP",
-      "active": true
-    }
-  ]
-}'
+```json
+{
+  "facilityId": "<FACILITY_ID>",
+  "status": "<STATUS>",
+  "message": "<MESSAGE>"
+}
 ```
-
-**Exit condition (Observe until this is true)**
-
-A 200 response. The specification gives no body for it, so read what comes back.
 
 ### HFR, master data (`m4-utilities`)
 
@@ -465,8 +1283,8 @@ curl --request POST \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "ownershipCode": "G",
-  "systemOfMedicineCode": "M"
+  "ownershipCode": "<OWNERSHIP_CODE>",
+  "systemOfMedicineCode": "<SYSTEM_OF_MEDICINE_CODE>"
 }'
 ```
 
@@ -494,8 +1312,8 @@ curl --request POST \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "ownershipCode": "P",
-  "ownerSubtypeCode": "NP"
+  "ownershipCode": "<OWNERSHIP_CODE>",
+  "ownerSubtypeCode": "<OWNER_SUBTYPE_CODE>"
 }'
 ```
 
@@ -507,7 +1325,7 @@ curl --request POST \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "systemOfMedicineCode": "D"
+  "systemOfMedicineCode": "<SYSTEM_OF_MEDICINE_CODE>"
 }'
 ```
 
@@ -556,95 +1374,6 @@ A 200 whose body matches:
 ]
 ```
 
-### HFR, facility search (`m4-search`)
-
-**Act: the calls in this journey, in order**
-
-#### 1. Get facility and infrastructure within radius with filter (`m4_post_facilitymanagement_v1_5_facility_bygeolocation_se_907b10`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/FacilityManagement/v1.5/facility/bygeoLocation/searchFacilityAndInfrastructureWithinRadiusWithFilter \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "centerLat": "<CENTER_LAT>",
-  "centerLon": "<CENTER_LON>",
-  "radiusInKm": "<RADIUS_IN_KM>",
-  "speciality": "<SPECIALITY>",
-  "facilityOwnership": "<FACILITY_OWNERSHIP>",
-  "abdmSoftware": "<ABDM_SOFTWARE>",
-  "hospitalSpecialityType": "<HOSPITAL_SPECIALITY_TYPE>",
-  "facilityName": "<FACILITY_NAME>",
-  "facilityStatus": "<FACILITY_STATUS>",
-  "som": "<SOM>",
-  "gender": "<GENDER>",
-  "doctorName": "<DOCTOR_NAME>",
-  "doctorSystemOfMedicine": "<DOCTOR_SYSTEM_OF_MEDICINE>",
-  "languages": "<LANGUAGES>",
-  "isIcuBedsAvailable": "<IS_ICU_BEDS_AVAILABLE>",
-  "size": "<SIZE>",
-  "from": "<FROM>"
-}'
-```
-
-#### 2. Search facility (`m4_post_facilitymanagement_v1_5_facility_search`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/FacilityManagement/v1.5/facility/search \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "ownershipCode": "P",
-  "subDistrictLGDCode": "",
-  "pincode": "",
-  "facilityName": "hospital",
-  "facilityId": "",
-  "page": 1,
-  "resultsPerPage": 10,
-  "stateLGDCode": "27",
-  "districtLGDCode": ""
-}'
-```
-
-**Exit condition (Observe until this is true)**
-
-A 200 whose body matches:
-
-```json
-{
-  "facilities": [
-    {
-      "ownership": "GOVERNMENT",
-      "systemOfMedicineCode": "P,M",
-      "systemOfMedicine": "Physiotherapy,Modern Medicine(Allopathy)",
-      "facilityType": "Hospital",
-      "stateName": "Bihar",
-      "stateLGDCode": "10",
-      "districtName": "<ADDRESS>",
-      "districtLGDCode": "212",
-      "subDistrictName": "<ADDRESS>",
-      "subDistrictLGDCode": "1400",
-      "villageCityTownName": null,
-      "villageCityTownLGDCode": null,
-      "address": "<ADDRESS>",
-      "pincode": "<PINCODE>",
-      "latitude": "25.635802000000098",
-      "longitude": "85.10391099999993",
-      "facilityId": "",
-      "facilityName": "Asian City Hospital",
-      "facilityStatus": "Submitted",
-      "ownershipCode": "G",
-      "facilityTypeCode": "H"
-    }
-  ],
-  "message": "Request processed successfully",
-  "totalFacilities": 1,
-  "numberOfPages": 1
-}
-```
-
 ### HFR, linkage to the HPR (`m4-hfr-hrp-linkage-apis`)
 
 **Act: the calls in this journey, in order**
@@ -683,558 +1412,64 @@ A 200 whose body matches:
 
 ```json
 {
-  "facilityId": "IN2810002702",
-  "status": "success",
-  "message": "OTP validated successfully!!! Hospital id linked to HFR",
-  "errorStatus": null
+  "facilityId": "<FACILITY_ID>",
+  "status": "<STATUS>",
+  "message": "<MESSAGE>",
+  "errorStatus": [
+    "<ERROR_STATUS>"
+  ]
 }
 ```
 
-### HPR, authentication (`m4-authentication`)
+### HFR, facility search (`m4-search`)
 
 **Act: the calls in this journey, in order**
 
-#### 1. Login via password (`m4_post_v1_auth_authpassword`)
+#### 1. Get facility within radius with filter (`m4_post_facilitymanagement_v1_5_facility_bygeolocation_se_16e590`)
 
 ```bash
 curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/api/v1/auth/authPassword \
+  --url https://apihspsbx.abdm.gov.in/v4/int/FacilityManagement/v1.5/facility/bygeoLocation/searchWithinRadiusWithFilter \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "idType": "",
-  "domainName": "",
-  "hprId": "<HPR_ID>",
-  "password": "XXXX@992"
-}'
-```
-
-#### 2. Get public certificate (`m4_get_v1_auth_cert`)
-
-```bash
-curl --request GET \
-  --url "https://apihspsbx.abdm.gov.in/v4/int/api/v1/auth/cert?publicCertificateRequestDto=<PUBLICCERTIFICATEREQUESTDTO>" \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
-```
-
-#### 3. Verify Aadhaar OTP 1 (`m4_post_v1_auth_confirmwithaadhaarotp`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/api/v1/auth/confirmWithAadhaarOtp \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "otp": "308709",
-  "txnId": "de4ff682-fcc6-4bcf-a978-0dbb19a288b4"
-}'
-```
-
-#### 4. Send via Aadhaar OTP (`m4_post_v1_auth_init`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/api/v1/auth/init \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "idType": "",
-  "domainName": "",
-  "authMethod": "AADHAAR_OTP",
-  "hprId": "<HPR_ID>"
-}'
-```
-
-#### 5. Send verify OTP (`m4_post_v2_auth_loginviamobilesendotp`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/api/v2/auth/loginViaMobileSendOTP \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "txnId": "4c8c4b29-6d7e-4446-8f73-4574d6d14f09",
-  "mobile": "97624XXXXX"
-}'
-```
-
-**Exit condition (Observe until this is true)**
-
-A 200 whose body matches:
-
-```json
-{
-  "txnId": "28b4ce41-71df-48af-8b6c-13c30402816c",
-  "mobileNumber": "******1234"
-}
-```
-
-### HPR, contact verification (`m4-verification`)
-
-**Act: the calls in this journey, in order**
-
-#### 1. Generate mobile OTP 2 (`m4_post_v1_doctors_generate_mobile_otp`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/doctors/generate-mobile-otp \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "hpr_token": "<JWT TOKEN>",
-  "officialMobile": "<BASE64 ENCODED STRING>"
-}'
-```
-
-#### 2. Send verification email (`m4_post_v1_doctors_generate_verification_email`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/doctors/generate-verification-email \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "emailAddress": "<ABHA_ADDRESS>.com",
-  "otp_type": ""
-}'
-```
-
-#### 3. Submit the regenerate mobile OTP (`m4_post_v1_doctors_regenerate_mobile_otp`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/doctors/regenerate-mobile-otp \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "hpr_token": "<JWT TOKEN>",
-  "officialMobile": "PFiI0AQJkAKIdLL6ytdJLKFObqXab9rwTvOEPHflksQBkMzIIb8HMDYUzZfN3AUdefedSbb+B4sPwi72lsaaNRkpXygWRF0GWntEwD/WL80JbXaW9DJkwPpDEzQpMYKKT17iCTp7pQer8337NZofO1D1aYiDfEnA9E1HMTyPCGFjvmbcL32hNqGsgpHKYNh4rHXCo4RwP5UQKWDYI1jLZqbWLp0a9GQu9nC1hyP5IR5LRCASzvhiRfrRk+Y660xuDSCvOKb+uUPcN3ZFA==xxxxxxxx"
-}'
-```
-
-#### 4. Resend verification email (`m4_post_v1_doctors_resent_verify_email`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/doctors/resent-verify-email \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "emailAddress": "<ABHA_ADDRESS>.com",
-  "otp_type": ""
-}'
-```
-
-#### 5. Verify email OTP (`m4_post_v1_doctors_verify_email_otp`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/doctors/verify-email-otp \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "hpr_token": "<JWT TOKEN>",
-  "hpr_id": "<HPR_ID>",
-  "officialEmail": "<ABHA_ADDRESS>.com",
-  "emailOtp": 515999
-}'
-```
-
-#### 6. Verify mobile OTP (`m4_post_v1_doctors_verify_mobile_otp`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/doctors/verify-mobile-otp \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "hpr_token": "<JWT TOKEN>",
-  "txnId": "dd392164-0f4a-4894-8d64-1fce027ee033",
-  "otp": "<BASE64 ENCODED STRING>"
-}'
-```
-
-#### 7. Send OTP if doctor verified (`m4_post_v1_sendotpifdoctorverified`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/v1/sendOtpIfDoctorVerified \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "hprId": "<HPR_ID>",
-  "mobileNumber": "<MOBILE_NUMBER>"
-}'
-```
-
-#### 8. Verify doctor verification OTP (`m4_post_v1_verifydoctorverificationotp`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/v1/verifyDoctorVerificationOtp \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "txnId": "<TXN_ID>",
-  "otp": "<OTP>"
-}'
-```
-
-**Exit condition (Observe until this is true)**
-
-A 200 response. The specification gives no body for it, so read what comes back.
-
-### HPID, session and role (`m4-hpid`)
-
-**Act: the calls in this journey, in order**
-
-#### 1. Get admin token (`m4_post_getmanagementtoken`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/getManagementToken \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "username": "<USERNAME>",
-  "password": "<PASSWORD>",
-  "resend": false
-}'
-```
-
-#### 2. Submit the healdthloginwithmobile (`m4_post_healdthloginwithmobile`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/healdthloginwithmobile \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "txnId": "<TXN_ID>",
-  "issueToken": "<ISSUE_TOKEN>",
-  "token": "<TOKEN>"
-}'
-```
-
-#### 3. Update role and category (`m4_post_profile_updaterole`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/profile/updateRole \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "firstName": "Ayushman",
-  "lastName": "Mission",
-  "middleName": "Bharat",
-  "hprId": "<EMAIL>",
-  "password": "Abdm@143",
-  "email": "<ABHA_ADDRESS>.com",
-  "profilePhoto": "<BASE64 ENCODED STRING>",
-  "stateCode": "7",
-  "districtCode": "71",
-  "subdistrictCode": "1",
-  "villageCode": "<VILLAGE_CODE>",
-  "townCode": "<TOWN_CODE>",
-  "wardCode": "<WARD_CODE>",
-  "pincode": 110001,
-  "address": "9th Floor, Tower-l, Jeevan Bharati Building, Connaught Place, New Delhi - 110001",
-  "yearOfBirth": "2021",
-  "monthOfBirth": "8",
-  "dayOfBirth": "15",
-  "hpCategoryCode": "1",
-  "hpSubCategoryCode": "1",
-  "txnId": "5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11",
-  "role": "<ROLE>",
-  "consentToDelete": false
-}'
-```
-
-**Exit condition (Observe until this is true)**
-
-A 200 response. The specification gives no body for it, so read what comes back.
-
-### HPID, categories (`m4-util`)
-
-**Act: the calls in this journey, in order**
-
-#### 1. Fetch HPID categories (`m4_get_hpid_get_categories`)
-
-```bash
-curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/hpid/get/categories \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
-```
-
-#### 2. Fetch HPID sub categories from category (`m4_get_hpid_get_subcategories`)
-
-```bash
-curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/hpid/get/subCategories \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
-```
-
-**Exit condition (Observe until this is true)**
-
-A 200 whose body matches:
-
-```json
-[
-  {
-    "code": "220",
-    "name": "Yoga and Naturopathy"
-  },
-  {
-    "code": "1",
-    "name": "Modern Medicine"
-  },
-  {
-    "code": "2",
-    "name": "Dentist"
-  }
-]
-```
-
-### HPR, profile and password (`m4-profile`)
-
-**Act: the calls in this journey, in order**
-
-#### 1. Change password (`m4_post_password_change_bypassword`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/password/change/byPassword \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "newPassword": "<BASE64 ENCODED STRING>",
-  "oldPassword": "<BASE64 ENCODED STRING>"
-}'
-```
-
-#### 2. Recover password via Aadhaar (`m4_post_password_recover_byaadhaar`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/password/recover/byAadhaar \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "hprId": "<HPR_ID>"
-}'
-```
-
-#### 3. Generate mobile OTP 1 (`m4_post_password_recover_bymobile_sendmobileotp`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/password/recover/byMobile/sendMobileOTP \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "hprId": "amol.xxxxxx"
-}'
-```
-
-#### 4. Verify mobile OTP 1 (`m4_post_password_recover_bymobile_verifymobileotp`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/password/recover/byMobile/verifyMobileOTP \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "txnId": "7ebad8aa-127b-492f-bd0e-56da716bd39e",
-  "otp": "<BASE64 ENCODED STRING>"
-}'
-```
-
-#### 5. Recover password confirm by Aadhaar (`m4_post_password_recover_confirmbyaadhaar`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/password/recover/confirmByAadhaar \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "otp": "<BASE64 ENCODED STRING>",
-  "txnId": "9b78fdfb-3ba4-4707-8913-63c7c5e3a743"
-}'
-```
-
-#### 6. Reset password and session (`m4_post_password_reset_password`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/password/reset/password \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "newPassword": "<NEW_PASSWORD>",
-  "otp": "<OTP>",
-  "txnId": "5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11"
-}'
-```
-
-#### 7. Reset password (`m4_post_password_resetpassword`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/password/resetPassword \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "txnId": "9b78fdfb-3ba4-4707-8913-63c7c5e3a743",
-  "newPassword": "<BASE64 ENCODED STRING>"
-}'
-```
-
-#### 8. Get account png card (`m4_get_v1_account_getidcard`)
-
-```bash
-curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/v1/account/getIdCard \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'X-Token: <X_TOKEN>'
-```
-
-#### 9. Get user profile by JWT (`m4_get_v1_account_information`)
-
-```bash
-curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/v1/account/information \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
-```
-
-#### 10. Generate Aadhaar OTPFor re KYC (`m4_post_v1_account_rekyc_generateaadhaarotp`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/v1/account/reKYC/generateAadhaarOTP \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
-```
-
-#### 11. Verify Aadhaar OTP (`m4_post_v1_account_rekyc_verifyaadhaarotp`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/v1/account/reKYC/verifyAadhaarOTP \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "authType": "AADHAAR_OTP",
-  "hprId": "<HPR_ID>",
-  "password": "<PASSWORD>",
-  "aadhaar": "<AADHAAR>",
-  "mobileNumber": "<MOBILE_NUMBER>",
-  "txnId": "5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11",
-  "otp": "<OTP>",
-  "resend": false,
-  "aadhaarVerifyOtpRequestDto": {
-    "aadhaarNumber": "<AADHAAR_NUMBER>",
-    "otp": "<OTP>",
-    "faceAuthPid": "<FACE_AUTH_PID>",
-    "aadhaarLogType": "<AADHAAR_LOG_TYPE>",
-    "transactionId": "<TRANSACTION_ID>",
-    "txnId": "<TXN_ID>"
-  }
-}'
-```
-
-#### 12. Verify Aadhaar OTPGet details (`m4_post_v1_account_rekyc_verifyaadhaarotpgetdetails`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/v1/account/reKYC/verifyAadhaarOTPGetDetails \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "authType": "AADHAAR_OTP",
-  "hprId": "<HPR_ID>",
-  "password": "<PASSWORD>",
-  "aadhaar": "<AADHAAR>",
-  "mobileNumber": "<MOBILE_NUMBER>",
-  "txnId": "5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11",
-  "otp": "<OTP>",
-  "resend": false,
-  "aadhaarVerifyOtpRequestDto": {
-    "aadhaarNumber": "<AADHAAR_NUMBER>",
-    "otp": "<OTP>",
-    "faceAuthPid": "<FACE_AUTH_PID>",
-    "aadhaarLogType": "<AADHAAR_LOG_TYPE>",
-    "transactionId": "<TRANSACTION_ID>",
-    "txnId": "<TXN_ID>"
-  }
-}'
-```
-
-#### 13. Get user details (`m4_get_v1_account_user_details_hprid`)
-
-```bash
-curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/v1/account/user-details/{hprId} \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
-```
-
-#### 14. Logout (`m4_get_v4_auth_logout`)
-
-```bash
-curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/v4/auth/logout \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
-```
-
-**Exit condition (Observe until this is true)**
-
-A 200 response. The specification gives no body for it, so read what comes back.
-
-### HPR, recover the HPR ID (`m4-forgot-healthcare-professional-id-number`)
-
-**Act: the calls in this journey, in order**
-
-#### 1. Submit the retrieval health ID by Aadhaar (`m4_post_v1_forgot_hprid_aadhaar`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/v1/forgot/hprId/aadhaar \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "otp": "<BASE64 ENCODED STRING>",
-  "txnId": "4c115e27-a602-4320-b4cd-ee658539e2f0"
-}'
-```
-
-#### 2. Submit the retrieval health ID by mobile (`m4_post_v1_forgot_hprid_mobile`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/v1/forgot/hprId/mobile \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "txnId": "5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11",
-  "name": "<NAME>",
+  "centerLat": "<CENTER_LAT>",
+  "centerLon": "<CENTER_LON>",
+  "radiusInKm": "<RADIUS_IN_KM>",
+  "speciality": "<SPECIALITY>",
+  "facilityOwnership": "<FACILITY_OWNERSHIP>",
+  "abdmSoftware": "<ABDM_SOFTWARE>",
+  "hospitalSpecialityType": "<HOSPITAL_SPECIALITY_TYPE>",
+  "facilityName": "<FACILITY_NAME>",
+  "facilityStatus": "<FACILITY_STATUS>",
+  "som": "<SOM>",
   "gender": "<GENDER>",
-  "yearOfBirth": "<YEAR_OF_BIRTH>",
-  "monthOfBirth": "<MONTH_OF_BIRTH>",
-  "dayOfBirth": "<DAY_OF_BIRTH>",
-  "firstName": "<FIRST_NAME>",
-  "lastName": "<LAST_NAME>",
-  "middleName": "<MIDDLE_NAME>",
-  "otp": "<OTP>"
+  "doctorName": "<DOCTOR_NAME>",
+  "doctorSystemOfMedicine": "<DOCTOR_SYSTEM_OF_MEDICINE>",
+  "languages": "<LANGUAGES>",
+  "isIcuBedsAvailable": "<IS_ICU_BEDS_AVAILABLE>",
+  "size": "<SIZE>",
+  "from": "<FROM>"
 }'
 ```
 
-#### 3. Generate mobile OTP (`m4_post_v1_forgot_hprid_mobile_generateotp`)
+#### 2. Search facility 1 (`m4_post_facilitymanagement_v1_5_facility_search`)
 
 ```bash
 curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/v1/forgot/hprId/mobile/generateOtp \
+  --url https://apihspsbx.abdm.gov.in/v4/int/FacilityManagement/v1.5/facility/search \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "mobileNumber": "VPoaDCJBNyGhJiX+sAh9yRq1WXAfRXkgcE31/0U2DMkH/+nvpspAA4GEmkbideZhKsSLYnFA1lHPkBH7PS6Bg4jz0aSdDAoovnYgVftJ/suP4mzhhg1Hrf7zQFPriHiraNlsIzsDeLl3ckGejNiCmXhfhBBw==xxxxxxxxxxxxx"
+  "ownershipCode": "P",
+  "subDistrictLGDCode": "",
+  "pincode": "",
+  "facilityName": "hospital",
+  "facilityId": "",
+  "page": 1,
+  "resultsPerPage": 10,
+  "stateLGDCode": "27",
+  "districtLGDCode": ""
 }'
 ```
 
@@ -1244,379 +1479,58 @@ A 200 whose body matches:
 
 ```json
 {
-  "txnId": "132dd7dd-ca5a-4ec1-a36c-093c007bf794",
-  "msg": "Please enter OTP sent on your mobile number ******2021",
-  "mobileNumber": "******2021"
+  "facilities": [
+    "<FACILITIES>"
+  ],
+  "message": "<MESSAGE>",
+  "totalFacilities": 0,
+  "numberOfPages": 0
 }
 ```
 
-### HPR, search (`m4-searched`)
+### HRP bridge services (`m4-multiple-hrp-api`)
 
 **Act: the calls in this journey, in order**
 
-#### 1. Get the exists by HPR ID (`m4_get_v1_search_existsbyhprid_hprid`)
-
-```bash
-curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/v1/search/existsByHprId/{hprId} \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
-```
-
-#### 2. Search user by HPR ID (`m4_get_v1_search_searchbyhprid_hprid`)
-
-```bash
-curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/v1/search/searchByHprId/{hprId} \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
-```
-
-#### 3. Search user by mobile no (`m4_get_v1_search_searchbymobile_mobile`)
-
-```bash
-curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/v1/search/searchByMobile/{mobile} \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
-```
-
-**Exit condition (Observe until this is true)**
-
-A 200 whose body matches:
-
-```json
-[
-  {
-    "hprIdNumber": "<HPR_ID>",
-    "name": "Ayushman Bharat Mission",
-    "authMethods": [
-      "PASSWORD",
-      "MOBILE_OTP",
-      "AADHAAR_OTP"
-    ],
-    "hprId": "<EMAIL>",
-    "categoryId": "1",
-    "subCategoryId": "1"
-  }
-]
-```
-
-### HPR, professional registration (`m4-enrollment`)
-
-**Act: the calls in this journey, in order**
-
-#### 1. Register professional (`m4_post_v1_doctors_register_professional_new`)
+#### 1. Submit the facility add and update (`m4_post_v1_bridges_mutiplehrpaddupdateservices`)
 
 ```bash
 curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/doctors/register-professional-new \
+  --url https://apihspsbx.abdm.gov.in/v4/int/v1/bridges/MutipleHRPAddUpdateServices \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "hprToken": "<JWT TOKEN>",
-  "practitioner": {
-    "healthProfessionalType": "doctor",
-    "profilePhoto": "<BASE64 ENCODED STRING>",
-    "officialMobileCode": "",
-    "officialMobile": "97624xxxxx",
-    "officialMobileStatus": "",
-    "officialEmail": "",
-    "officialEmailStatus": "",
-    "visibleProfilePicture": "0",
-    "profileVisibleToPublic": "1",
-    "personalInformation": {
-      "salutation": "1",
-      "firstName": "Ayushman",
-      "middleName": "",
-      "lastName": "Mission",
-      "nationality": "356",
-      "fatherName": "",
-      "motherName": "",
-      "spouseName": "",
-      "gender": "M",
-      "dateOfBirth": "<DOB>",
-      "placeOfBirthState": "68",
-      "district": "",
-      "subDistrict": "",
-      "city": "",
-      "languagesSpoken": "1,2",
-      "category": "C"
-    },
-    "addressAsPerKYC": "",
-    "communicationAddress": {
-      "isCommunicationAddressAsPerKYC": "false",
-      "address": "",
-      "name": "",
-      "country": "",
-      "state": "",
-      "district": "",
-      "subDistrict": "",
-      "city": "",
-      "pincode": ""
-    },
-    "contactInformation": {
-      "publicMobileNumber": "",
-      "publicMobileNumberCode": "",
-      "publicMobileNumberStatus": "",
-      "landLineNumber": "",
-      "landLineNumberCode": "",
-      "publicEmail": "",
-      "publicEmailStatus": ""
-    },
-    "registrationAcademic": {
-      "category": "1",
-      "registrationData": [
-        {
-          "registeredWithCouncil": "47",
-          "registrationNumber": "REG12032",
-          "registrationDate": "2024-12-01",
-          "registrationCertificate": {
-            "fileType": "pdf",
-            "data": "<BASE64 ENCODED STRING>"
-          },
-          "isPermanentOrRenewable": "Permanent",
-          "renewableDueDate": "",
-          "categoryId": "2",
-          "isNameDifferentInCertificate": "false",
-          "proofOfNameChangeCertificate": "",
-          "qualifications": [
-            {
-              "nameOfDegreeOrDiplomaObtained": "4074",
-              "country": "356",
-              "state": "27",
-              "college": "1022",
-              "university": "6372",
-              "yearOfAwardingDegreeDiploma": "2024",
-              "monthOfAwardingDegreeDiploma": "February",
-              "degreeCertificate": {
-                "fileType": "pdf",
-                "data": "<BASE64 ENCODED STRING>"
-              },
-              "isNameDifferentInCertificate": "false",
-              "proofOfNameChangeCertificate": ""
-            },
-            {
-              "nameOfDegreeOrDiplomaObtained": "Graduation",
-              "country": "United States Of America",
-              "state": "united",
-              "college": "united School",
-              "university": "united University",
-              "yearOfAwardingDegreeDiploma": "2024",
-              "monthOfAwardingDegreeDiploma": "February",
-              "degreeCertificate": {
-                "fileType": "pdf",
-                "data": "<BASE64 ENCODED STRING>"
-              },
-              "isNameDifferentInCertificate": "true",
-              "proofOfNameChangeCertificate": "<BASE64 ENCODED STRING>"
-            }
-          ]
-        }
-      ]
-    },
-    "currentWorkDetails": {
-      "currentlyWorking": "0",
-      "purposeOfWork": "Administrative",
-      "chooseWorkStatus": "1",
-      "reasonForNotWorking": "Retired",
-      "certificateAttachment": "<BASE64 ENCODED STRING>",
-      "facilityDeclarationData": {
-        "facilityId": "IN2710000059",
-        "facilityName": "",
-        "facilityAddress": "",
-        "facilityPincode": "",
-        "state": "",
-        "district": "",
-        "facilityType": "",
-        "facilityDepartment": "Surgery",
-        "facilityDesignation": "MD",
-        "ministry": {
-          "ministry": "MinistryMOR ( Mo Railways )"
-        }
-      }
-    }
-  }
-}'
-```
-
-#### 2. Update professional (`m4_post_v1_doctors_update_professional_new`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/doctors/update-professional-new \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "hprToken": "<JWT TOKEN>",
-  "practitioner": {
-    "healthProfessionalType": "doctor",
-    "profilePhoto": "<BASE64 ENCODED STRING>",
-    "officialMobileCode": "",
-    "officialMobile": "97624xxxxx",
-    "officialMobileStatus": "",
-    "officialEmail": "",
-    "officialEmailStatus": "",
-    "visibleProfilePicture": "0",
-    "profileVisibleToPublic": "1",
-    "personalInformation": {
-      "salutation": "1",
-      "firstName": "Ayushman",
-      "middleName": "",
-      "lastName": "Mission",
-      "nationality": "356",
-      "fatherName": "",
-      "motherName": "",
-      "spouseName": "",
-      "gender": "M",
-      "dateOfBirth": "<DOB>",
-      "placeOfBirthState": "68",
-      "district": "",
-      "subDistrict": "",
-      "city": "",
-      "languagesSpoken": "1,2",
-      "category": "C"
-    },
-    "addressAsPerKYC": "",
-    "communicationAddress": {
-      "isCommunicationAddressAsPerKYC": "false",
-      "address": "",
-      "name": "",
-      "country": "",
-      "state": "",
-      "district": "",
-      "subDistrict": "",
-      "city": "",
-      "pincode": ""
-    },
-    "contactInformation": {
-      "publicMobileNumber": "",
-      "publicMobileNumberCode": "",
-      "publicMobileNumberStatus": "",
-      "landLineNumber": "",
-      "landLineNumberCode": "",
-      "publicEmail": "",
-      "publicEmailStatus": ""
-    },
-    "registrationAcademic": {
-      "category": "1",
-      "registrationData": [
-        {
-          "registeredWithCouncil": "47",
-          "registrationNumber": "REG12032",
-          "registrationDate": "2024-12-01",
-          "registrationCertificate": {
-            "fileType": "pdf",
-            "data": "<BASE64 ENCODED STRING>"
-          },
-          "isPermanentOrRenewable": "Permanent",
-          "renewableDueDate": "",
-          "categoryId": "2",
-          "isNameDifferentInCertificate": "false",
-          "proofOfNameChangeCertificate": "",
-          "qualifications": [
-            {
-              "nameOfDegreeOrDiplomaObtained": "4074",
-              "country": "356",
-              "state": "27",
-              "college": "1022",
-              "university": "6372",
-              "yearOfAwardingDegreeDiploma": "2024",
-              "monthOfAwardingDegreeDiploma": "February",
-              "degreeCertificate": {
-                "fileType": "pdf",
-                "data": "<BASE64 ENCODED STRING>"
-              },
-              "isNameDifferentInCertificate": "false",
-              "proofOfNameChangeCertificate": ""
-            },
-            {
-              "nameOfDegreeOrDiplomaObtained": "Graduation",
-              "country": "United States Of America",
-              "state": "united",
-              "college": "united School",
-              "university": "united University",
-              "yearOfAwardingDegreeDiploma": "2024",
-              "monthOfAwardingDegreeDiploma": "February",
-              "degreeCertificate": {
-                "fileType": "pdf",
-                "data": "<BASE64 ENCODED STRING>"
-              },
-              "isNameDifferentInCertificate": "true",
-              "proofOfNameChangeCertificate": "<BASE64 ENCODED STRING>"
-            }
-          ]
-        }
-      ]
-    },
-    "currentWorkDetails": {
-      "currentlyWorking": "0",
-      "purposeOfWork": "Administrative",
-      "chooseWorkStatus": "1",
-      "reasonForNotWorking": "Retired",
-      "certificateAttachment": "<BASE64 ENCODED STRING>",
-      "facilityDeclarationData": {
-        "facilityId": "IN2710000059",
-        "facilityName": "",
-        "facilityAddress": "",
-        "facilityPincode": "",
-        "state": "",
-        "district": "",
-        "facilityType": "",
-        "facilityDepartment": "Surgery",
-        "facilityDesignation": "MD",
-        "ministry": {
-          "ministry": "MinistryMOR ( Mo Railways )"
-        }
-      }
-    }
-  }
-}'
-```
-
-#### 3. Fetch documents (`m4_post_v1_doctors_fetch_documents_list`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/doctors/fetch-documents-list \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "hprid": "<HPR_ID>"
-}'
-```
-
-#### 4. Upload documents (`m4_post_v1_uploads_upload_document`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/uploads/upload-document \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "hpr_token": "<JWT TOKEN>",
-  "document": [
+  "facilityId": "IN0610090166",
+  "facilityName": "Singla Eye Center",
+  "HRP": [
     {
-      "document_id": 20931,
-      "document_type": "registrationCertificate",
-      "fileType": "",
-      "data": "JVBERi0xLjMK"
+      "bridgeId": "SBX_00XXXX",
+      "hipName": "Singla Eye Center",
+      "type": "HIP",
+      "active": true
     }
   ]
 }'
 ```
 
-#### 5. Get professional info (`m4_post_v1_doctors_fetch_professional_info`)
+#### 2. Search facility (`m4_post_v1_0_facility_search_facilities`)
 
 ```bash
 curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/doctors/fetch-professional-info \
+  --url https://apihspsbx.abdm.gov.in/v4/int/v1.0/facility/search-facilities \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "practitioner": {
-    "id": "<HPR_ID>",
-    "name": "",
-    "contactNumber": "976243XXXX",
-    "state": "UTTAR PRADESH",
-    "registrationNumber": ""
+  "requestId": "5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11",
+  "timestamp": "<TIMESTAMP>",
+  "facility": {
+    "facilityName": "<FACILITY_NAME>",
+    "systemOfMedicine": "<SYSTEM_OF_MEDICINE>",
+    "facilityType": "<FACILITY_TYPE>",
+    "state": "<STATE>",
+    "district": "<DISTRICT>",
+    "photo": "<PHOTO>",
+    "ownership": "<OWNERSHIP>"
   }
 }'
 ```
@@ -1627,404 +1541,12 @@ A 200 whose body matches:
 
 ```json
 {
-  "practitioners": [
-    [
-      {
-        "identifier": 38053,
-        "active": false,
-        "name": "Ayushman Bharat Mission",
-        "gender": "Male",
-        "salutation": "Mr",
-        "communicationLanguage": " English ",
-        "registrations": [
-          {
-            "identifier": 25989,
-            "category": "Dentistry",
-            "nuidnumber": null,
-            "nuidvalidtill": null,
-            "systemOfMedicide": null,
-            "isRenewable": "false",
-            "dueDate": null,
-            "councilName": "Karnataka State Dental Council",
-            "registeredAt": null,
-            "registrationNumber": "REG12032",
-            "registrationDate": "2024-12-01"
-          }
-        ],
-        "qualifications": [
-          {
-            "identifier": 12835,
-            "courseName": "Bds - Bachelor Of Dental Surgery",
-            "collegeName": "A.j. Institute Of Dental Sciences, Mangalore",
-            "universityName": "Rajiv Gandhi University Of Health Sciences (rguhs)",
-            "qualificationYear": "2024",
-            "qualificationMonth": ""
-          }
-        ],
-        "hpr_id": "<HPR_ID>",
-        "application_status": null,
-        "is_council_verified": "true",
-        "is_work_verified": null,
-        "email": "",
-        "mobileNumber": "******2125",
-        "hpr_category": "doctor"
-      }
-    ]
-  ],
-  "message": "Data fetched successfully"
+  "referenceNumber": "<REFERENCE_NUMBER>",
+  "facilities": [
+    "<FACILITIES>"
+  ]
 }
 ```
-
-### HPR, master data (`m4-utility`)
-
-**Act: the calls in this journey, in order**
-
-#### 1. Get all affiliated board (`m4_get_v1_masters_affiliated_board`)
-
-```bash
-curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/affiliated-board \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
-```
-
-#### 2. Get affiliated board by state ID (`m4_get_v1_masters_affiliated_board_states_id`)
-
-```bash
-curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/affiliated-board/states/{id} \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
-```
-
-#### 3. Get affiliated board by ID (`m4_get_v1_masters_affiliated_board_id`)
-
-```bash
-curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/affiliated-board/{id} \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
-```
-
-#### 4. Get college by state (`m4_get_v1_masters_colleges_id`)
-
-```bash
-curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/colleges/{id} \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
-```
-
-#### 5. Get college by state and medicine ID (`m4_get_v1_masters_colleges_stateid_medicineid`)
-
-```bash
-curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/colleges/{stateId}/{medicineId} \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
-```
-
-#### 6. Get all countries (`m4_get_v1_masters_countries`)
-
-```bash
-curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/countries \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
-```
-
-#### 7. Get countries by ID (`m4_get_v1_masters_countries_id`)
-
-```bash
-curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/countries/{id} \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
-```
-
-#### 8. List courses (`m4_post_v1_masters_courses`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/courses \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "systemOfMedicine": "Registered Auxiliary Nurse Midwife(RANM)",
-  "hprType": "nurse",
-  "qualificationCount": 0
-}'
-```
-
-#### 9. Get all districts (`m4_get_v1_masters_district`)
-
-```bash
-curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/district \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
-```
-
-#### 10. Get districts by state (`m4_get_v1_masters_district_id`)
-
-```bash
-curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/district/{id} \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
-```
-
-#### 11. List government health programmes (`m4_get_v1_masters_languages`)
-
-```bash
-curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/languages \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
-```
-
-#### 12. Get pi languages by ID (`m4_get_v1_masters_languages_id`)
-
-```bash
-curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/languages/{id} \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
-```
-
-#### 13. Get all medical council (`m4_get_v1_masters_medical_councils`)
-
-```bash
-curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/medical-councils \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
-```
-
-#### 14. Get medical council by system of medicine name (`m4_get_v1_masters_medical_councils_name`)
-
-```bash
-curl --request GET \
-  --url "https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/medical-councils/name?medicineName=<MEDICINENAME>" \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
-```
-
-#### 15. Get all nurse councils (`m4_get_v1_masters_nurse_councils`)
-
-```bash
-curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/nurse-councils \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
-```
-
-#### 16. Get all states (`m4_get_v1_masters_states`)
-
-```bash
-curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/states \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
-```
-
-#### 17. Get status (`m4_get_v1_masters_states_id`)
-
-```bash
-curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/states/{id} \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
-```
-
-#### 18. Get all sub districts (`m4_get_v1_masters_sub_districts`)
-
-```bash
-curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/sub-districts \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
-```
-
-#### 19. Get all sub districts 1 (`m4_get_v1_masters_sub_districts_id`)
-
-```bash
-curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/sub-districts/{id} \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
-```
-
-#### 20. Get all medical system (`m4_get_v1_masters_system_of_medicines`)
-
-```bash
-curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/system-of-medicines \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
-```
-
-#### 21. List all university (`m4_get_v1_masters_universites`)
-
-```bash
-curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/universites \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
-```
-
-#### 22. Get university by college (`m4_get_v1_masters_universites_id`)
-
-```bash
-curl --request GET \
-  --url https://apihspsbx.abdm.gov.in/v4/int/apis/v1/masters/universites/{id} \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
-```
-
-#### 23. Get facilities created by HPR ID (`m4_post_getfacilitycreatedbyhprid`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/getFacilityCreatedByHprId \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "hprId": "<HPR_ID>",
-  "source": "<SOURCE>"
-}'
-```
-
-#### 24. Get facilities declared by HPR ID (`m4_post_getfacilitydeclaredbyhprid`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/getFacilityDeclaredByHprId \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "hprId": "<HPR_ID>",
-  "source": "<SOURCE>"
-}'
-```
-
-#### 25. Update status (`m4_put_hprworkdetails_status`)
-
-```bash
-curl --request PUT \
-  --url https://apihspsbx.abdm.gov.in/v4/int/hprWorkDetails/status \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "status": "<STATUS>",
-  "facilityId": "<FACILITY_ID>",
-  "professionalHprId": "<PROFESSIONAL_HPR_ID>",
-  "managerHprId": "<MANAGER_HPR_ID>",
-  "isHpr": false
-}'
-```
-
-#### 26. Link delink existing facility (`m4_post_relinkordelinkprofessionalfromfacility`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/relinkOrDelinkProfessionalFromFacility \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "hprId": "<HPR_ID>",
-  "facilityId": "<FACILITY_ID>",
-  "action": "<ACTION>"
-}'
-```
-
-**Exit condition (Observe until this is true)**
-
-A 200 response. The specification gives no body for it, so read what comes back.
-
-### HPR, facility linkage (`m4-hpr`)
-
-**Act: the calls in this journey, in order**
-
-#### 1. Fetch professional facility (`m4_post_fetchprofessionalfacility`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/fetchProfessionalFacility \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "facilityId": "<FACILITY_ID>",
-  "page": 0,
-  "size": 0
-}'
-```
-
-#### 2. Create facility suggestion (`m4_post_hprfacilitysuggestions`)
-
-```bash
-curl --request POST \
-  --url https://apihspsbx.abdm.gov.in/v4/int/hprFacilitySuggestions \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "name": "<NAME>",
-  "address": "<ADDRESS>",
-  "state": {
-    "id": 0,
-    "name": "<NAME>",
-    "isoCode": "<ISO_CODE>",
-    "status": false,
-    "countryId": 0,
-    "visibleStatus": false,
-    "position": false,
-    "councilLabel": "<COUNCIL_LABEL>",
-    "systemOfMedicine": false
-  },
-  "district": {
-    "id": 0,
-    "stateId": 0,
-    "districtName": "<DISTRICT_NAME>",
-    "isoCode": "<ISO_CODE>",
-    "status": false
-  },
-  "pincode": 0,
-  "contactNo": 0,
-  "email": "<EMAIL>",
-  "contactName": "<CONTACT_NAME>",
-  "status": "pending",
-  "createdBy": 0,
-  "updatedBy": 0,
-  "facilityId": 0,
-  "hprProfileId": 0,
-  "facilityName": "<FACILITY_NAME>",
-  "facilityOwnership": {
-    "label": "<LABEL>",
-    "value": "<VALUE>"
-  },
-  "systemMedicine": [
-    {
-      "id": "<ID>",
-      "lastUpdateDate": "<LAST_UPDATE_DATE>",
-      "dropOrder": 0,
-      "creationDate": "<CREATION_DATE>",
-      "activeYN": "<ACTIVE_YN>",
-      "createdBy": "<CREATED_BY>",
-      "lastUpdatedUser": "<LAST_UPDATED_USER>",
-      "nhrrMedicineCode": "<NHRR_MEDICINE_CODE>",
-      "value": "<VALUE>",
-      "type": "<TYPE>"
-    }
-  ],
-  "facilityType": {
-    "id": "<ID>",
-    "facilityType": "<FACILITY_TYPE>",
-    "facilityTypeNdhm": "<FACILITY_TYPE_NDHM>",
-    "opd": "<OPD>",
-    "ipd": "<IPD>",
-    "dayCare": "<DAY_CARE>",
-    "other": "<OTHER>",
-    "activeYN": "<ACTIVE_YN>",
-    "createdBy": "<CREATED_BY>",
-    "createdDate": "<CREATED_DATE>",
-    "lastUpdatedUser": "<LAST_UPDATED_USER>",
-    "lastUpdatedDate": "<LAST_UPDATED_DATE>",
-    "linkToForm": "<LINK_TO_FORM>",
-    "facilityCode": "<FACILITY_CODE>",
-    "facilityCodeUfid": "<FACILITY_CODE_UFID>",
-    "facilityOrder": 0
-  },
-  "department": "<DEPARTMENT>",
-  "designation": "<DESIGNATION>",
-  "ministry": {
-    "ministry": "<MINISTRY>"
-  },
-  "psuName": "<PSU_NAME>"
-}'
-```
-
-**Exit condition (Observe until this is true)**
-
-A 200 response. The specification gives no body for it, so read what comes back.
 
 ## Where the detail is
 

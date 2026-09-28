@@ -4,7 +4,6 @@ sidebar_label: Care contexts
 description: A care context is a logical grouping of a patient's health records, and the unit that is associated with a patient's ABHA address.
 source: Proposed Simplified Milestone 2, section 2, Understanding Care Contexts (NHA, 24 August 2026)
 sidebar_position: 3
-covers: [hiecm.concept.care-context]
 sidebar_class_name: sidebar-icon sidebar-icon--layers
 ---
 

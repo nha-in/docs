@@ -52,7 +52,7 @@ documentation. Record file paths for each of these, or record that none exists:
 | Build, run and test commands | manifests, CI configuration, a Makefile | Each journey's exit condition becomes a test that runs the same way |
 | The frontend and backend split, and how they talk | the top level tree, an API client in the frontend, route definitions in the backend | The counter screens go in the frontend; every ABDM call goes through the backend |
 | The outbound HTTP client the backend already uses | the dependency list, a shared client module | ABDM calls reuse it, or a second one appears and the two drift |
-| How secrets and configuration reach the process | environment loading, a vault client, a config file | The client id, the secret and the gateway token travel the same way |
+| How secrets and configuration reach the process | environment loading, a vault client, a config file | The client id, the secret and the access token travel the same way |
 | The patient model, and the identifier fields it already carries | the schema, the ORM models, the migrations | The ABHA number and address become columns beside the existing identifiers, not a new table |
 | The visit, encounter or record model | the same places | A care context maps to one of these, and the plan has to say which |
 | Where inbound HTTP is routed and authenticated, and whether the deployment has a public URL | the router, the middleware, the reverse proxy configuration, the deployment manifests | ABDM calls back, and a callback route that nothing forwards is silence nobody notices |
@@ -71,8 +71,9 @@ driven journey until it has one; a desk with a fingerprint reader gets the
 biometric method. The route set is the intersection of what the deployment
 allows and what the code can host.
 
-**Decide.** Order the journeys. The session token comes first because every
-other call needs it. Then the journey whose exit condition can be observed with
+**Decide.** Order the journeys. The token comes first because every other call
+needs it: the gateway session token, or for M4 the bearer token the registry calls
+carry. Then the journey whose exit condition can be observed with
 the least new code, usually a profile read for a patient who already holds an
 ABHA. Creation and linking come after, because each depends on state the earlier
 ones produce. For each journey, name the files it will touch and the test that
@@ -407,17 +408,17 @@ curl --request POST \
     "transactionId": "18235d89-cb13-479d-ad71-7a57d5f669a8",
     "doneAt": "2023-01-24T06:35:44.167Z",
     "notifier": {
-      "type": "HIU",
-      "id": "100005"
+      "type": "HIP",
+      "id": "IN2810014366"
     },
     "statusNotification": {
-      "sessionStatus": "RECEIVED",
+      "sessionStatus": "TRANSFERRED",
       "hipId": "IN2810014366",
       "statusResponses": [
         {
           "careContextReference": "10004-20200001768-1",
-          "hiStatus": "OK",
-          "description": "Data received successfully"
+          "hiStatus": "DELIVERED",
+          "description": "Data sent successfully"
         }
       ]
     }
@@ -541,9 +542,9 @@ curl --request POST \
 
 Inbound to your bridge at `/api/v3/hip/health-information/request`. Acknowledge it and continue.
 
-#### 10. Receive the transferred health information (`m2_post_health_information_transfer`)
+#### 10. Push the encrypted records to the HIU's data push URL (`m2_post_health_information_transfer`)
 
-Inbound to your bridge at `/health-information/transfer`. Acknowledge it and continue.
+Outbound from your bridge. POST each page of encrypted records to the `dataPushUrl` in the health information request of step 9. The call goes straight to the HIU, not through the gateway. The HIU answers 202 for each page.
 
 **Exit condition (Observe until this is true)**
 

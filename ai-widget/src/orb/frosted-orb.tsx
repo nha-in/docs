@@ -256,6 +256,22 @@ export function FrostedOrb({size, state = 'idle', label = 'Assistant'}: Props) {
         }
       />
 
+      {/* What makes it a ball rather than a disc: a light from the upper
+          left, so a hot spot there, the edge falling away into shade on the
+          far side, and a little light bounced back up along the bottom rim. */}
+      <div
+        aria-hidden="true"
+        style={{
+          ...round,
+          pointerEvents: 'none',
+          background: [
+            'radial-gradient(circle at 33% 27%, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.45) 9%, rgba(255,255,255,0) 26%)',
+            'radial-gradient(ellipse 60% 22% at 50% 94%, rgba(214,236,255,0.45), rgba(214,236,255,0) 100%)',
+            'radial-gradient(circle at 40% 34%, rgba(60,52,150,0) 52%, rgba(60,52,150,0.16) 80%, rgba(46,40,130,0.38) 100%)',
+          ].join(', '),
+        }}
+      />
+
       {/* The sphere's own surface. This edge stays: it is the glass. */}
       <div
         aria-hidden="true"

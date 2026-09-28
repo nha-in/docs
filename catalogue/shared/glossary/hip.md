@@ -12,6 +12,12 @@ sources:
   - file: catalogue/openapi/.raw/nha-2026-09-16/hiecm/consent-management-data-flow.yaml
     fetched: 2026-09-16
     hash: sha256:4b0af51af2e2b5bfbf08f5e8745a940f59c550f8a1e4600c970c526f27bc8718
+  - file: site/docs/hiecm/v3/milestones/m2.mdx
+    status: reference
+    note: >
+      The consent notification steps: the consent manager calls
+      /api/v3/consent/request/hip/notify on the bridge, and the HIP answers
+      with /api/hiecm/consent/v3/request/hip/on-notify.
 related: {}
 ---
 
@@ -36,8 +42,10 @@ header value is that id rather than a name.
 
 ## What happens
 
-ABDM calls `m2_post_consent_v3_request_hip_on_notify` at your callback URL to
+ABDM calls `m2_post_v3_consent_request_hip_notify` at your callback URL to
 tell you a consent covering your records was granted, revoked or expired.
+Your system acknowledges it by calling
+`m2_post_consent_v3_request_hip_on_notify`.
 
 ## How you know it worked
 

@@ -21,7 +21,7 @@ import (
 
 // chatBodyLimit bounds how much of a POST /api/chat request body gets
 // decoded, so a client cannot force the server to buffer an unbounded
-// payload. 512 KiB covers MaxTurns turns of text (about 30 KB) alongside an
+// payload. 512 KiB covers MaxTurns turns of text (about 90 KB) alongside an
 // attached page at MaxPageChars (24 KB) and, on every user turn, an attachment
 // at MaxAttachmentLen, since the whole conversation is re-sent each request.
 // Turn count and per-field limits are still enforced by ValidateTurns; this
@@ -115,6 +115,9 @@ func Handler(r *index.Reader, emb embed.Embedder, allowOrigin string, chatSvc *c
 			// skill text is the server's own.
 			Command string `json:"command"`
 			Module  string `json:"module"`
+			// Optional: the gateway of the page the panel is on. Scopes the
+			// answer's searches; an unknown value is no scope.
+			Gateway string `json:"gateway"`
 		}
 		if err := json.NewDecoder(io.LimitReader(req.Body, chatBodyLimit)).Decode(&in); err != nil {
 			writeJSON(w, 400, map[string]string{"error": "bad request body"})
@@ -130,7 +133,7 @@ func Handler(r *index.Reader, emb embed.Embedder, allowOrigin string, chatSvc *c
 			writeJSON(w, 400, map[string]string{"error": err.Error()})
 			return
 		}
-		cmd := chat.Command{Name: in.Command, Module: in.Module}
+		cmd := chat.Command{Name: in.Command, Module: in.Module, Gateway: in.Gateway}
 		if err := chat.ValidateCommand(cmd); err != nil {
 			writeJSON(w, 400, map[string]string{"error": err.Error()})
 			return

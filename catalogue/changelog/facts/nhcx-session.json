@@ -1,0 +1,51 @@
+{
+  "errors": [],
+  "file": "nhcx-session.yaml",
+  "gateway": "nhcx",
+  "label": "Session",
+  "module": "session",
+  "operations": {
+    "POST /api/hiecm/gateway/v3/sessions": {
+      "encrypted": [],
+      "id": "session_api_hiecm_gateway_v3_sessions",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-CM-ID!"
+      ],
+      "path": "/api/hiecm/gateway/v3/sessions",
+      "properties": [
+        "clientId",
+        "clientSecret",
+        "grantType"
+      ],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    }
+  },
+  "roles": [
+    "payer",
+    "provider"
+  ],
+  "sources": {
+    "nhcx-package/apis/01-session": {
+      "fetched": null,
+      "hash": "sha256:04dbfe1121fdee8812399abb612d00cac445a312b9a88dc30881f34ce2b1059b"
+    },
+    "nhcx-package/baseurl.yaml": {
+      "fetched": null,
+      "hash": "sha256:88515b7b29c6b349a131e016c80774436ea16a29738db743b4cc3a24cbd42453"
+    }
+  },
+  "version": "v1"
+}

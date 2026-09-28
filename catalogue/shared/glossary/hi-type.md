@@ -24,6 +24,19 @@ sources:
   - url: https://nrces.in/ndhm/fhir/r4/index.html
     status: docs-only
     note: The NRCeS guide, which defines one composition profile per type.
+  - file: site/docs/hiecm/v3/concepts/fhir.md
+    status: reference
+    note: >
+      The published FHIR page: eight record types, Invoice included, and
+      that implementing all of them is mandatory for an HMIS.
+  - file: catalogue/openapi/hiecm/v3/hiecm-m2.yaml
+    status: read-from-spec-2026-09-23
+    note: The hiType enum on M2 and M3 requests carries eight values, Invoice included.
+  - file: catalogue/openapi/.raw/nrces-ndhm.in-6.5.0.tgz
+    status: reference
+    note: >
+      StructureDefinition-InvoiceRecord fixes Composition.type.text to
+      "Invoice Record" and carries no code.
 related:
   glossary: [shared.glossary.snomed-ct]
 ---
@@ -33,11 +46,11 @@ related:
 ## In plain words
 
 Health Information type: the kind of record being asked for or shared,
-used in consent requests and in data requests. NHA's M3 document lists
-seven values: `Prescription`, `DiagnosticReport`, `OPConsultation`,
-`DischargeSummary`, `ImmunizationRecord`, `HealthDocumentRecord` and
-`WellnessRecord`. The M2 error message for an invalid HI type also lists
-`Invoice`.
+used in consent requests and in data requests. There are eight values:
+`Prescription`, `DiagnosticReport`, `OPConsultation`, `DischargeSummary`,
+`ImmunizationRecord`, `HealthDocumentRecord`, `WellnessRecord` and
+`Invoice`. The first seven are clinical. `Invoice` is billing, and its
+record profile is `InvoiceRecord`.
 
 ## Before you start
 
@@ -57,8 +70,9 @@ type inside a bundle:
 | ImmunizationRecord | 41000179103 |
 | HealthDocumentRecord | 419891008 |
 | WellnessRecord | no code, matched on the exact text |
+| Invoice | no code, matched on the exact text `Invoice Record` |
 
-NHA states that implementing all of the types is mandatory. Integrators
+Implementing all eight types is mandatory for an HMIS. Integrators
 regularly build the two or three their product happens to generate and
 meet that rule at certification rather than at design time.
 
@@ -72,7 +86,7 @@ Sending a record whose HI type the consent did not cover. The consent
 names the types it permits, and anything outside them is not yours to
 send.
 
-Matching on the display string rather than the code. Two entries are
+Matching on the display string rather than the code. Three entries are
 traps: `HealthDocumentRecord` displays as "Record artifact", which is not
-its name, and `WellnessRecord` has no code at all and has to match on
-exact text.
+its name, and `WellnessRecord` and `Invoice` have no code at all and have
+to match on exact text.

@@ -127,7 +127,7 @@ Every module (M1, M2, M3) walks the same ladder, in this order. The compiler and
 
 1. **Overview**: building blocks used, prerequisites, each linking to the atom that gets you there
 2. **User journey**: flow diagrams (mermaid), one per journey
-3. **Use cases**: ABHA creation, scan and share, and the rest, each a page
+3. **Use cases**: ABHA creation, scan and register, and the rest, each a page
 4. **Agent skills**: skill download CTA and install CLI per agent (Claude, Cursor, others)
 5. **Implementation methodology**: mandatory versus optional paths, and how to choose
 6. **API sequence**: APIs and webhooks in call order

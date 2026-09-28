@@ -1,4 +1,4 @@
-# Integrate M1, ABHA creation and verification
+# Integrate M1, create and verify ABHA
 
 The calls themselves: where they live, what they need in their headers, and one request written out in full.
 

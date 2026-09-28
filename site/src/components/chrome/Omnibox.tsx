@@ -307,6 +307,10 @@ export default function Omnibox() {
         {...(mcpUrl ? {'mcp-url': mcpUrl} : {})}
         plugin-repo={pluginRepo}
         {...(starters ? {starters} : {})}
+        // The gateway this page belongs to, from its /docs/<gateway>/ route,
+        // so the assistant answers in that gateway's documentation. Absent on
+        // the landing page and Support, which belong to none.
+        {...(platform ? {gateway: platform.id} : {})}
         {...(shortcut ? {shortcut} : {})}
         support-url={support}
       />

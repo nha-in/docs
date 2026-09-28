@@ -5,7 +5,7 @@ info:
     label: M2 Health Information Provider
     position: 3
     icon: link
-  title: ABDM M2, health information provider services as a HIP
+  title: ABDM M2, create and link records
   summary: Link care contexts to an ABHA address and share records when consent arrives.
   version: abdm-v3
   license:

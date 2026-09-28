@@ -5,7 +5,7 @@ info:
     label: M3 Health Information User
     position: 4
     icon: file-check
-  title: ABDM M3, health information user services as an HIU
+  title: ABDM M3, fetch data with consent
   summary: Raise a consent request, fetch its artefacts, and receive records.
   version: abdm-v3
   license:

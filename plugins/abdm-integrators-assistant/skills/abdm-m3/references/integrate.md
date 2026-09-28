@@ -1,4 +1,4 @@
-# Integrate M3, health information user services
+# Integrate M3, fetch data with consent
 
 The calls themselves: where they live, what they need in their headers, and one request written out in full.
 

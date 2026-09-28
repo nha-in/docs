@@ -3142,7 +3142,7 @@
     "method": "GET",
     "path": "/v1/account/user-details/{hprId}",
     "summary": "Get User Details",
-    "route": "/docs/hiecm/v3/api/m4/endpoints/m4-profile/13-m4-get-v1-account-user-details-hprid",
+    "route": "/docs/hiecm/v3/api/m4/endpoints/m4-profile/10-m4-get-v1-account-user-details-hprid",
     "callbacks": []
   },
   {
@@ -3532,7 +3532,7 @@
     "method": "GET",
     "path": "/v4/auth/logout",
     "summary": "Logout",
-    "route": "/docs/hiecm/v3/api/m4/endpoints/m4-profile/14-m4-get-v4-auth-logout",
+    "route": "/docs/hiecm/v3/api/m4/endpoints/m4-profile/11-m4-get-v4-auth-logout",
     "callbacks": []
   },
   {
@@ -3566,18 +3566,18 @@
     "callbacks": []
   },
   {
-    "key": "facilitymanagement/facility/bygeolocation/searchfacilityandinfrastructurewithinradiuswithfilter",
+    "key": "facilitymanagement/facility/bygeolocation/searchwithinradiuswithfilter",
     "hosts": [
       "apihspsbx.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "m4_post_facilitymanagement_v1_5_facility_bygeolocation_se_907b10",
+    "operationId": "m4_post_facilitymanagement_v1_5_facility_bygeolocation_se_16e590",
     "module": "M4 Registry Integration",
     "moduleDir": "m4",
     "method": "POST",
-    "path": "/FacilityManagement/v1.5/facility/bygeoLocation/searchFacilityAndInfrastructureWithinRadiusWithFilter",
-    "summary": "Get Facility And Infrastructure Within Radius With Filter",
-    "route": "/docs/hiecm/v3/api/m4/endpoints/m4-search/01-m4-post-facilitymanagement-v1-5-facility-bygeolocation-se-907b10",
+    "path": "/FacilityManagement/v1.5/facility/bygeoLocation/searchWithinRadiusWithFilter",
+    "summary": "Get Facility Within Radius With Filter",
+    "route": "/docs/hiecm/v3/api/m4/endpoints/m4-search/01-m4-post-facilitymanagement-v1-5-facility-bygeolocation-se-16e590",
     "callbacks": []
   },
   {
@@ -3591,98 +3591,8 @@
     "moduleDir": "m4",
     "method": "POST",
     "path": "/FacilityManagement/v1.5/facility/search",
-    "summary": "Search Facility",
+    "summary": "Search Facility 1",
     "route": "/docs/hiecm/v3/api/m4/endpoints/m4-search/02-m4-post-facilitymanagement-v1-5-facility-search",
-    "callbacks": []
-  },
-  {
-    "key": "fetchprofessionalfacility",
-    "hosts": [
-      "apihspsbx.abdm.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "m4_post_fetchprofessionalfacility",
-    "module": "M4 Registry Integration",
-    "moduleDir": "m4",
-    "method": "POST",
-    "path": "/fetchProfessionalFacility",
-    "summary": "Fetch Professional Facility",
-    "route": "/docs/hiecm/v3/api/m4/endpoints/m4-hpr/01-m4-post-fetchprofessionalfacility",
-    "callbacks": []
-  },
-  {
-    "key": "getfacilitycreatedbyhprid",
-    "hosts": [
-      "apihspsbx.abdm.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "m4_post_getfacilitycreatedbyhprid",
-    "module": "M4 Registry Integration",
-    "moduleDir": "m4",
-    "method": "POST",
-    "path": "/getFacilityCreatedByHprId",
-    "summary": "Get Facilities Created By Hpr Id",
-    "route": "/docs/hiecm/v3/api/m4/endpoints/m4-utility/23-m4-post-getfacilitycreatedbyhprid",
-    "callbacks": []
-  },
-  {
-    "key": "getfacilitydeclaredbyhprid",
-    "hosts": [
-      "apihspsbx.abdm.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "m4_post_getfacilitydeclaredbyhprid",
-    "module": "M4 Registry Integration",
-    "moduleDir": "m4",
-    "method": "POST",
-    "path": "/getFacilityDeclaredByHprId",
-    "summary": "Get Facilities Declared By Hpr Id",
-    "route": "/docs/hiecm/v3/api/m4/endpoints/m4-utility/24-m4-post-getfacilitydeclaredbyhprid",
-    "callbacks": []
-  },
-  {
-    "key": "getmanagementtoken",
-    "hosts": [
-      "apihspsbx.abdm.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "m4_post_getmanagementtoken",
-    "module": "M4 Registry Integration",
-    "moduleDir": "m4",
-    "method": "POST",
-    "path": "/getManagementToken",
-    "summary": "Get Admin Token",
-    "route": "/docs/hiecm/v3/api/m4/endpoints/m4-hpid/01-m4-post-getmanagementtoken",
-    "callbacks": []
-  },
-  {
-    "key": "healdthloginwithmobile",
-    "hosts": [
-      "apihspsbx.abdm.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "m4_post_healdthloginwithmobile",
-    "module": "M4 Registry Integration",
-    "moduleDir": "m4",
-    "method": "POST",
-    "path": "/healdthloginwithmobile",
-    "summary": "Healdthloginwithmobile",
-    "route": "/docs/hiecm/v3/api/m4/endpoints/m4-hpid/02-m4-post-healdthloginwithmobile",
-    "callbacks": []
-  },
-  {
-    "key": "hprfacilitysuggestions",
-    "hosts": [
-      "apihspsbx.abdm.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "m4_post_hprfacilitysuggestions",
-    "module": "M4 Registry Integration",
-    "moduleDir": "m4",
-    "method": "POST",
-    "path": "/hprFacilitySuggestions",
-    "summary": "Create Facility Suggestion",
-    "route": "/docs/hiecm/v3/api/m4/endpoints/m4-hpr/02-m4-post-hprfacilitysuggestions",
     "callbacks": []
   },
   {
@@ -3791,36 +3701,6 @@
     "callbacks": []
   },
   {
-    "key": "profile/updaterole",
-    "hosts": [
-      "apihspsbx.abdm.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "m4_post_profile_updaterole",
-    "module": "M4 Registry Integration",
-    "moduleDir": "m4",
-    "method": "POST",
-    "path": "/profile/updateRole",
-    "summary": "Update Role And Category",
-    "route": "/docs/hiecm/v3/api/m4/endpoints/m4-hpid/03-m4-post-profile-updaterole",
-    "callbacks": []
-  },
-  {
-    "key": "relinkordelinkprofessionalfromfacility",
-    "hosts": [
-      "apihspsbx.abdm.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "m4_post_relinkordelinkprofessionalfromfacility",
-    "module": "M4 Registry Integration",
-    "moduleDir": "m4",
-    "method": "POST",
-    "path": "/relinkOrDelinkProfessionalFromFacility",
-    "summary": "Link Delink Existing Facility",
-    "route": "/docs/hiecm/v3/api/m4/endpoints/m4-utility/26-m4-post-relinkordelinkprofessionalfromfacility",
-    "callbacks": []
-  },
-  {
     "key": "search/address/filter/deduplicate",
     "hosts": [
       "apihspsbx.abdm.gov.in"
@@ -3833,6 +3713,21 @@
     "path": "/search/address/filter/deduplicate",
     "summary": "Get Filtered Address Post",
     "route": "/docs/hiecm/v3/api/m4/endpoints/m4-onboarding-apis/01-m4-post-search-address-filter-deduplicate",
+    "callbacks": []
+  },
+  {
+    "key": "v1.0/facility/search-facilities",
+    "hosts": [
+      "apihspsbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m4_post_v1_0_facility_search_facilities",
+    "module": "M4 Registry Integration",
+    "moduleDir": "m4",
+    "method": "POST",
+    "path": "/v1.0/facility/search-facilities",
+    "summary": "Search Facility",
+    "route": "/docs/hiecm/v3/api/m4/endpoints/m4-multiple-hrp-api/02-m4-post-v1-0-facility-search-facilities",
     "callbacks": []
   },
   {
@@ -3986,51 +3881,6 @@
     "callbacks": []
   },
   {
-    "key": "account/rekyc/generateaadhaarotp",
-    "hosts": [
-      "apihspsbx.abdm.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "m4_post_v1_account_rekyc_generateaadhaarotp",
-    "module": "M4 Registry Integration",
-    "moduleDir": "m4",
-    "method": "POST",
-    "path": "/v1/account/reKYC/generateAadhaarOTP",
-    "summary": "Generate Aadhaar OTPFor Re KYC",
-    "route": "/docs/hiecm/v3/api/m4/endpoints/m4-profile/10-m4-post-v1-account-rekyc-generateaadhaarotp",
-    "callbacks": []
-  },
-  {
-    "key": "account/rekyc/verifyaadhaarotp",
-    "hosts": [
-      "apihspsbx.abdm.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "m4_post_v1_account_rekyc_verifyaadhaarotp",
-    "module": "M4 Registry Integration",
-    "moduleDir": "m4",
-    "method": "POST",
-    "path": "/v1/account/reKYC/verifyAadhaarOTP",
-    "summary": "Verify Aadhaar OTP",
-    "route": "/docs/hiecm/v3/api/m4/endpoints/m4-profile/11-m4-post-v1-account-rekyc-verifyaadhaarotp",
-    "callbacks": []
-  },
-  {
-    "key": "account/rekyc/verifyaadhaarotpgetdetails",
-    "hosts": [
-      "apihspsbx.abdm.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "m4_post_v1_account_rekyc_verifyaadhaarotpgetdetails",
-    "module": "M4 Registry Integration",
-    "moduleDir": "m4",
-    "method": "POST",
-    "path": "/v1/account/reKYC/verifyAadhaarOTPGetDetails",
-    "summary": "Verify Aadhaar OTPGet Details",
-    "route": "/docs/hiecm/v3/api/m4/endpoints/m4-profile/12-m4-post-v1-account-rekyc-verifyaadhaarotpgetdetails",
-    "callbacks": []
-  },
-  {
     "key": "auth/authpassword",
     "hosts": [
       "apihspsbx.abdm.gov.in"
@@ -4056,7 +3906,7 @@
     "moduleDir": "m4",
     "method": "POST",
     "path": "/api/v1/auth/confirmWithAadhaarOtp",
-    "summary": "Verify Aadhaar OTP 1",
+    "summary": "Verify Aadhaar OTP",
     "route": "/docs/hiecm/v3/api/m4/endpoints/m4-authentication/03-m4-post-v1-auth-confirmwithaadhaarotp",
     "callbacks": []
   },
@@ -4361,21 +4211,6 @@
     "callbacks": []
   },
   {
-    "key": "sendotpifdoctorverified",
-    "hosts": [
-      "apihspsbx.abdm.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "m4_post_v1_sendotpifdoctorverified",
-    "module": "M4 Registry Integration",
-    "moduleDir": "m4",
-    "method": "POST",
-    "path": "/v1/sendOtpIfDoctorVerified",
-    "summary": "Send Otp If Doctor Verified",
-    "route": "/docs/hiecm/v3/api/m4/endpoints/m4-verification/07-m4-post-v1-sendotpifdoctorverified",
-    "callbacks": []
-  },
-  {
     "key": "uploads/upload-document",
     "hosts": [
       "apihspsbx.abdm.gov.in"
@@ -4388,21 +4223,6 @@
     "path": "/apis/v1/uploads/upload-document",
     "summary": "Upload Documents",
     "route": "/docs/hiecm/v3/api/m4/endpoints/m4-enrollment/04-m4-post-v1-uploads-upload-document",
-    "callbacks": []
-  },
-  {
-    "key": "verifydoctorverificationotp",
-    "hosts": [
-      "apihspsbx.abdm.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "m4_post_v1_verifydoctorverificationotp",
-    "module": "M4 Registry Integration",
-    "moduleDir": "m4",
-    "method": "POST",
-    "path": "/v1/verifyDoctorVerificationOtp",
-    "summary": "Verify Doctor Verification Otp",
-    "route": "/docs/hiecm/v3/api/m4/endpoints/m4-verification/08-m4-post-v1-verifydoctorverificationotp",
     "callbacks": []
   },
   {
@@ -4463,21 +4283,6 @@
     "path": "/v2/registration/aadhaar/verifyOTP",
     "summary": "Verify Otp",
     "route": "/docs/hiecm/v3/api/m4/endpoints/m4-registration-api-s-collection-via-aadhaar/03-m4-post-v2-registration-aadhaar-verifyotp",
-    "callbacks": []
-  },
-  {
-    "key": "hprworkdetails/status",
-    "hosts": [
-      "apihspsbx.abdm.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "m4_put_hprworkdetails_status",
-    "module": "M4 Registry Integration",
-    "moduleDir": "m4",
-    "method": "PUT",
-    "path": "/hprWorkDetails/status",
-    "summary": "Update Status",
-    "route": "/docs/hiecm/v3/api/m4/endpoints/m4-utility/25-m4-put-hprworkdetails-status",
     "callbacks": []
   },
   {

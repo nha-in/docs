@@ -1,6 +1,6 @@
 ---
-title: P1 Identity and login
-sidebar_label: P1 Identity
+title: P1 Registration and login
+sidebar_label: P1 Registration and login
 sidebar_position: 9
 sidebar_custom_props:
   roles: [phr]
@@ -12,7 +12,7 @@ sidebar_class_name: sidebar-icon sidebar-icon--contact-round
 
 import ApiLinks from '@site/src/components/docs/ApiLinks';
 
-# P1 Identity and login
+# P1 Registration and login
 
 P1 is the patient side of [M1 Identity](./m1). M1 is how a hospital system
 creates an [ABHA](/docs/hiecm/v3/getting-started/glossary#abha). P1 is how the
@@ -25,8 +25,8 @@ and how it maintains the account afterwards.
 
 - Every user needs an ABHA address, `username@abdm`. Consent, notifications and
   record sharing all hang off it.
-- Build both creation paths: by mobile number, and by an existing 14 digit ABHA
-  number.
+- Build all three creation paths: by mobile number, by an existing 14 digit
+  ABHA number, and by Aadhaar number for someone with no ABHA number yet.
 - Every login route is mandatory.
 - Fetch the PHR public key first. It is not the ABHA service's key.
 - A user can hold several ABHA addresses but only one ABHA number.
@@ -114,4 +114,4 @@ different key from the ABHA service's, so fetch it before any other PHR call.
 ## Next
 
 - The calls and base URLs: [P1 API reference](/reference/hiecm-p1).
-- The next milestone: [P2 Linking and records](./p2).
+- The next milestone: [P2 Consents Management](./p2).

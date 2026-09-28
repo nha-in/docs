@@ -1,0 +1,172 @@
+{
+  "errors": [],
+  "file": "nhcx-adjudicator.yaml",
+  "gateway": "nhcx",
+  "label": "PMJAY adjudicator",
+  "module": "adjudicator",
+  "operations": {
+    "POST /paymentNotice/init": {
+      "encrypted": [],
+      "id": "adjudicator_paymentnotice_init",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:bearer_auth!"
+      ],
+      "path": "/paymentNotice/init",
+      "properties": [
+        "claimNumber",
+        "providerId"
+      ],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/pmjay/sbxhcx/dummyhcxpayer",
+      "servers": [
+        "https://apisbx.abdm.gov.in/pmjay/sbxhcx/dummyhcxpayer"
+      ]
+    },
+    "POST /pmjay/hcx/nhcxpayerservice/wrapper/process/case": {
+      "encrypted": [],
+      "id": "adjudicator_pmjay_hcx_nhcxpayerservice_wrapper_process_case",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Accept!",
+        "header:bearer_auth!"
+      ],
+      "path": "/pmjay/hcx/nhcxpayerservice/wrapper/process/case",
+      "properties": [
+        "action",
+        "casenumber",
+        "correlationid",
+        "memberid",
+        "receivercode",
+        "remarks",
+        "sendercode",
+        "usecase"
+      ],
+      "required": [
+        "action",
+        "casenumber",
+        "correlationid",
+        "memberid",
+        "receivercode",
+        "remarks",
+        "sendercode",
+        "usecase"
+      ],
+      "responses": [
+        "200"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbeta.nha.gov.in",
+      "servers": [
+        "https://apisbeta.nha.gov.in"
+      ]
+    },
+    "POST /pmjay/sbxhcx/nhcxpayerservice/v1/get/user-role": {
+      "encrypted": [],
+      "id": "adjudicator_pmjay_sbxhcx_nhcxpayerservice_v1_get_user_role",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Accept!",
+        "header:bearer_auth!"
+      ],
+      "path": "/pmjay/sbxhcx/nhcxpayerservice/v1/get/user-role",
+      "properties": [
+        "caseid",
+        "payerid"
+      ],
+      "required": [
+        "caseid",
+        "payerid"
+      ],
+      "responses": [
+        "200"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in",
+      "servers": [
+        "https://apisbx.abdm.gov.in"
+      ]
+    },
+    "POST /process/request": {
+      "encrypted": [],
+      "id": "adjudicator_process_request",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:bearer_auth!"
+      ],
+      "path": "/process/request",
+      "properties": [
+        "action",
+        "correlationId",
+        "method"
+      ],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/pmjay/sbxhcx/dummyhcxpayer",
+      "servers": [
+        "https://apisbx.abdm.gov.in/pmjay/sbxhcx/dummyhcxpayer"
+      ]
+    },
+    "POST /update/abhanumber": {
+      "encrypted": [],
+      "id": "adjudicator_update_abhanumber",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Accept!",
+        "header:bearer_auth!"
+      ],
+      "path": "/update/abhanumber",
+      "properties": [
+        "dummyAbha",
+        "realAbha"
+      ],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+      "servers": [
+        "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+        "https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice"
+      ]
+    }
+  },
+  "roles": [
+    "payer",
+    "provider"
+  ],
+  "sources": {
+    "nhcx-package/apis/12-adjudicator": {
+      "fetched": null,
+      "hash": "sha256:cf374ac235b2e017924e723b2904d8305c73a0d0c30d252edce5b09f713e80c0"
+    },
+    "nhcx-package/baseurl.yaml": {
+      "fetched": null,
+      "hash": "sha256:88515b7b29c6b349a131e016c80774436ea16a29738db743b4cc3a24cbd42453"
+    }
+  },
+  "version": "v1"
+}
