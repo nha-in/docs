@@ -38,11 +38,19 @@ var gatewayNames = map[string]*regexp.Regexp{
 // gatewayLabels is the name a reader sees for each gateway.
 var gatewayLabels = map[string]string{"hiecm": "HIE-CM", "nhcx": "NHCX", "uhi": "UHI"}
 
+// claimsVocabulary is how a reader asks about the claims exchange without
+// naming it.
+var claimsVocabulary = regexp.MustCompile(`(?i)\b(claims?|insurers?|payers?|pre-?auth\w*|tpas?|polic(?:y|ies)|coverage|participant codes?|correlation ids?|jwe)\b`)
+
 // scopeFor decides the scope for one question. The page's gateway applies
 // unless the question names a different gateway, in which case the reader
-// has said what they want and nothing is filtered out. A gateway this server
-// does not know is no scope at all.
+// has said what they want and nothing is filtered out. A page that belongs
+// to no gateway infers one from the question. A gateway this server does not
+// know is no scope at all.
 func scopeFor(page, question string) string {
+	if page == "" {
+		return inferScope(question)
+	}
 	if _, known := gatewayLabels[page]; !known {
 		return ""
 	}
@@ -54,12 +62,42 @@ func scopeFor(page, question string) string {
 	return page
 }
 
+// inferScope scopes a question asked from a page that belongs to no gateway:
+// the landing page, support, What's New. Searching the whole catalogue there
+// let NHCX, most of the atoms, answer HIE-CM questions. A question naming one
+// gateway gets it and naming two gets no scope; claims vocabulary means NHCX;
+// anything else is HIE-CM, the portal's main gateway.
+func inferScope(question string) string {
+	named := ""
+	for id, re := range gatewayNames {
+		if re.MatchString(question) {
+			if named != "" {
+				return ""
+			}
+			named = id
+		}
+	}
+	if named != "" {
+		return named
+	}
+	if claimsVocabulary.MatchString(question) {
+		return "nhcx"
+	}
+	return "hiecm"
+}
+
 // gatewayNote tells the model which documentation the reader is in. It rides
 // in the last user turn with the other per-question text, never in the
 // system prompt, which stays byte identical so its cache point holds.
-func gatewayNote(gateway string) string {
+// fromPage is false when the scope was inferred from the question, and the
+// note then says so rather than naming a page the reader is not on.
+func gatewayNote(gateway string, fromPage bool) string {
 	label := gatewayLabels[gateway]
-	return "<reader_context>The reader is reading the " + label + " documentation. Answer for " + label +
+	where := "The reader is reading the " + label + " documentation."
+	if !fromPage {
+		where = "The question reads as a " + label + " question."
+	}
+	return "<reader_context>" + where + " Answer for " + label +
 		" unless they ask about another gateway, and do not bring in another gateway's calls or fields.</reader_context>"
 }
 
