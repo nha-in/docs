@@ -1,0 +1,20 @@
+[
+  {
+    "id": "e47750af4c5e",
+    "date": "2026-09-29",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "abdm-integrators-assistant",
+        "from": "0.5.0",
+        "to": "0.9.0"
+      }
+    ]
+  }
+]
