@@ -1,6 +1,6 @@
 // scripts/build-sections.mjs
-// catalogue/map.yaml is the atom registry: each atom id and the page section
-// that holds its words. This script builds, from the map and the pages, the
+// catalogue/map.yaml, with catalogue/map.d/*.yaml, is the atom registry: each
+// atom id and the page section that holds its words. This script builds, from the map and the pages, the
 // atom-shaped files every consumer already reads (catalogue/generated/), and
 // catalogue/registry.json, the list of every atom and where its words live.
 //   npm run build:sections
@@ -8,9 +8,10 @@
 import {readFileSync, writeFileSync, mkdirSync, rmSync, existsSync, readdirSync, statSync} from 'node:fs';
 import {join, dirname, relative} from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {parse, stringify} from 'yaml';
+import {stringify} from 'yaml';
 import {loadAtoms} from './lib/atoms.mjs';
 import {sectionsById, literals, plainMarkdown} from './lib/sections.mjs';
+import {loadMap} from './lib/map.mjs';
 
 // The folder per type that scripts/lint-atoms.mjs requires.
 const FOLDER = {concept: 'concepts', flow: 'flows', endpoint: 'endpoints', callback: 'callbacks', error: 'errors', test: 'tests', decision: 'decisions', glossary: 'glossary', fhir: 'fhir', sandbox: 'sandbox', troubleshooting: 'troubleshooting'};
@@ -76,11 +77,11 @@ function specText(root) {
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const root = join(fileURLToPath(import.meta.url), '..', '..');
-  const map = parse(readFileSync(join(root, 'catalogue', 'map.yaml'), 'utf8')) ?? {};
+  const {map, problems: mapProblems} = loadMap(root);
   const pages = Object.fromEntries([...new Set(Object.values(map).map((e) => e.page))].filter((p) => existsSync(join(root, p))).map((p) => [p, readFileSync(join(root, p), 'utf8')]));
   const {atoms} = loadAtoms();
   const hand = [...atoms.values()].filter((a) => !a.file.includes('/catalogue/generated/')).map((a) => ({id: a.fm.id, type: a.fm.type, gateway: a.fm.gateway, file: relative(root, a.file)}));
-  const found = problems({map, pages, handIds: new Set(hand.map((a) => a.id)), specText: specText(root)});
+  const found = [...mapProblems, ...problems({map, pages, handIds: new Set(hand.map((a) => a.id)), specText: specText(root)})];
   const want = new Map(Object.entries(map).filter(([, e]) => pages[e.page] && sectionsById(pages[e.page]).get(e.heading)).map(([id, e]) => [generatedPath(id, e), renderAtom(id, e, sectionsById(pages[e.page]).get(e.heading))]));
   const reg = `${JSON.stringify(registry({map, hand}), null, 2)}\n`;
   const genDir = join(root, 'catalogue', 'generated');
