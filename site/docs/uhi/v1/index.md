@@ -1,60 +1,60 @@
 ---
-title: Introduction
+title: Introduction to UHI
 sidebar_label: Introduction
-description: What UHI is, the two roles you can build, and how far each service goes today.
-source: UHI__UHI_Physical_Consultation_v2.0_-_Onboarding_Document.md, UHI__UHI_AmbulanceBooking_Onboarding_v1.1-July2026.md, UHI__UHI_BloodBank_Onboarding_v1.0.md
+description: What UHI is, the three parties in every exchange, the six services live on the network, and how to choose whether you build an EUA or an HSPA.
+source: UHI developer guide as of 22 September 2026, section 1.1
 sidebar_position: 1
 sidebar_class_name: sidebar-icon sidebar-icon--compass
 ---
 
-# Introduction
+# Introduction to UHI
 
-The Ayushman Bharat Digital Mission ([ABDM](/docs/uhi/v1/getting-started/glossary#abdm)) is India's national
-health data network, run by the National Health Authority ([NHA](/docs/uhi/v1/getting-started/glossary#nha)).
-It is three gateways, not one, and this section documents the second of them.
+The Unified Health Interface ([UHI](/docs/uhi/v1/getting-started/glossary#uhi)) is an open network under the Ayushman Bharat Digital Mission ([ABDM](/docs/uhi/v1/getting-started/glossary#abdm)). Any compliant patient app can discover health services from any compliant provider platform through one integration. For some services it can book them too. After this page you will know who takes part, which services are live, and which side you build.
 
-[UHI](/docs/uhi/v1/getting-started/glossary#uhi) is the Unified Health Interface, [ABDM](/docs/uhi/v1/getting-started/glossary#abdm)'s open network for finding and booking a health service. After this page you will know which role to build, how far each service goes, and where the protocol is written down.
+## In short
 
-[HIE-CM](/docs/uhi/v1/getting-started/glossary#hie-cm) moves records that already exist. UHI finds a doctor, an ambulance or a unit of blood before any record exists.
+- Every exchange has three parties: your app, the UHI Gateway and a provider application.
+- A patient-facing app is an [EUA](/docs/uhi/v1/getting-started/glossary#eua). A provider system that answers searches is an [HSPA](/docs/uhi/v1/getting-started/glossary#hspa).
+- Six services are live on the network.
+- For PM-JAY HEM, Jan Aushadhi and NOTTO, the HSPA already exists. You build only the EUA.
+- An EUA must complete [Milestone 2](/docs/hiecm/v3/milestones/m2) on [HIE-CM](/docs/uhi/v1/getting-started/glossary#hie-cm) before onboarding.
 
-## The gate before anything else
+## The three parties
 
-Your application must have completed ABDM [M2](/docs/hiecm/v3/api/m2) with HIE-CM before it can be onboarded to any UHI service. This applies to every service on the network. UHI sits on top of HIE-CM, it is not an alternative to it.
+Every UHI service is an asynchronous exchange. Your app sends a request, gets an immediate `ACK`, and receives the real answer later as a callback.
 
-## Two roles
-
-| Role | Full name | What it does |
+| Party | Who runs it | What it does |
 | --- | --- | --- |
-| [EUA](/docs/uhi/v1/getting-started/glossary#eua) | End User Application | The patient facing app. Searches, shows results, books, displays status. |
-| [HSPA](/docs/uhi/v1/getting-started/glossary#hspa) | Health Service Provider Application | The provider platform. Holds availability, answers searches, drives the booking lifecycle. |
+| EUA, End User Application | [PHR](/docs/uhi/v1/getting-started/glossary#phr) and consumer apps, such as Aarogya Setu or the [ABHA](/docs/uhi/v1/getting-started/glossary#abha) app | Takes the patient's query and sends `search`, and later booking calls. Receives callbacks on its `consumer_uri` and renders results |
+| [UHI Gateway](/docs/uhi/v1/getting-started/glossary#uhi-gateway) | [NHA](/docs/uhi/v1/getting-started/glossary#nha) | Validates and signs requests, routes `search` to the right HSPAs, and relays `on_search` back to the EUA |
+| HSPA, Health Service Provider Application | The service owner, such as a hospital network, NOTTO, PMBI or an ambulance aggregator | Queries its own registry and returns a signed catalog in `on_search`. Sends booking callbacks where the service supports them |
 
-The HSP is the hospital, clinic, doctor, ambulance operator or blood bank, and the HSPA is its digital interface. The [gateway](/docs/uhi/v1/getting-started/glossary#gateway) is the network's routing layer. Each service page says which roles it accepts.
+## The six services
 
-## Services
+A service is named by the `context.domain` value inside each call, not by a different endpoint.
 
-A service is identified by fixed values inside the call, not by a different endpoint. All three documents behind this page use `core_version` `0.7.1`.
-
-| Service | Domain code | Discovery | Order and quote | Booking and lifecycle |
+| Service | `context.domain` | Your role | Who runs the HSPA | Scope today |
 | --- | --- | --- | --- | --- |
-| [Physical consultation](/docs/uhi/v1/concepts/services/physical-consultation) | `nic2004:85111` | `search`, `on_search` | `init`, `on_init` | `confirm`, `on_confirm`, `status`, `on_status`, `on_update`, `cancel`, `on_cancel`, `on_message` |
-| [Ambulance booking](/docs/uhi/v1/concepts/services/ambulance-booking) | `nic2008:86909` | `search`, `on_search` | `init`, `on_init` | Not open for onboarding yet |
-| [Blood bank](/docs/uhi/v1/concepts/services/blood-bank) | `nic2008:86906` | `search`, `on_search` | Not in this service | Not in this service |
+| [Physical Consultation](/docs/uhi/v1/services/consultation) | `nic2004:85111` | EUA or HSPA | Any registered provider platform | Discovery, booking, check-in, cancellation |
+| [PM-JAY HEM Hospital Discovery](/docs/uhi/v1/services/pmjay-hem) | `nic2004:85112` | EUA | NHA | Discovery |
+| [Blood Bank Discovery](/docs/uhi/v1/services/blood-bank) | `nic2008:86906` | EUA or HSPA | e-RaktKosh, and any approved blood bank system | Discovery |
+| [Ambulance Booking](/docs/uhi/v1/services/ambulance) | `nic2008:86909` | EUA or HSPA | Any registered ambulance platform | Discovery and quote, in Phase 1 |
+| [Jan Aushadhi](/docs/uhi/v1/services/jan-aushadhi) | `nic2008:47721` | EUA | PMBI | Kendra and medicine discovery |
+| [NOTTO Hospital Discovery](/docs/uhi/v1/services/notto) | `nic2004:86100` | EUA | NOTTO | Discovery |
 
-Four more services have their own onboarding documents and their own pages:
-[Jan Aushadhi Kendra](/docs/uhi/v1/concepts/services/jan-aushadhi-kendra),
-[Jan Aushadhi medicine search](/docs/uhi/v1/concepts/services/jan-aushadhi-medicine-search),
-[AMRIT pharmacy](/docs/uhi/v1/concepts/services/amrit-pharmacy) and
-[PMJAY HEM](/docs/uhi/v1/concepts/services/pmjay-hem).
+Every service is listed on [Services](/docs/uhi/v1/services).
 
-## Two transports in one flow
+## Choose your role
 
-Discovery goes through the gateway, which broadcasts your one `search` to every registered HSPA in that domain, so several `on_search` calls come back. Everything after discovery is point to point between your EUA and the HSPA the patient chose. There is no central UHI API for those stages.
+| If you | You are | You build |
+| --- | --- | --- |
+| Build a patient-facing app | An EUA | The search, your callback endpoints, and the screens that render results |
+| Run a provider system that answers searches | An HSPA | A `search` endpoint that answers from your own registry, and the booking calls your service supports |
 
-Every call is asynchronous and signed.
+You can be an HSPA only for Physical Consultation, Blood Bank Discovery and Ambulance Booking.
 
-## Next
+## Next steps
 
-- [Network and protocol](/docs/uhi/v1/concepts/network-and-protocol), for the message pairs, the `context` block, Ed25519 signing and the network registry lookup
-- [Onboarding](/docs/uhi/v1/getting-started/onboarding), for the route from M2 to sandbox credentials to production
-- [Physical consultation](/docs/uhi/v1/concepts/services/physical-consultation), the service with the full booking lifecycle
-- [Support](/docs/support)
+- [Onboarding](/docs/uhi/v1/getting-started/onboarding): the six steps from sandbox to production.
+- [Quick start](/docs/uhi/v1/getting-started/quick-start): send one signed search and read the callback.
+- [Routes](/docs/uhi/v1/concepts/routes): which calls go through the Gateway and which go direct.

@@ -21,7 +21,10 @@ import CardGroup from '@site/src/components/mdx/CardGroup';
  * same material by two routes, one of which dropped the reader out of the
  * site. The reference is the route that keeps them in it.
  */
-type Module = 'gateway' | 'm1' | 'm2' | 'm3' | 'm4' | 'p1' | 'p2' | 'p3' | 'p4' | 'subscription' | 'scan-and-pay' | 'scan-and-register' | 'record-share';
+type Module =
+  | 'gateway' | 'm1' | 'm2' | 'm3' | 'm4' | 'p1' | 'p2' | 'p3' | 'p4' | 'subscription' | 'scan-and-pay' | 'scan-and-register' | 'record-share'
+  // UHI's modules. Pass platform="uhi" version="v1" with these.
+  | 'network' | 'consultation' | 'ambulance';
 
 const NAMES: Record<Module, string> = {
   gateway: 'Gateway',
@@ -37,11 +40,21 @@ const NAMES: Record<Module, string> = {
   'scan-and-pay': 'Scan and Pay',
   'scan-and-register': 'Scan and Register',
   'record-share': 'Patient record share',
+  network: 'Network and discovery',
+  consultation: 'Physical Consultation',
+  ambulance: 'Ambulance Booking',
 };
 
-export default function ApiLinks({module}: {module: Module}): ReactNode {
+type Props = {
+  module: Module;
+  /** The gateway folder under /docs. HIE-CM unless a page says otherwise. */
+  platform?: string;
+  version?: string;
+};
+
+export default function ApiLinks({module, platform = 'hiecm', version = 'v3'}: Props): ReactNode {
   const name = NAMES[module];
-  const docs = `/docs/hiecm/v3/api/${module}`;
+  const docs = `/docs/${platform}/${version}/api/${module}`;
   // Not every module has an overview or an errors page: a module with no
   // overview opens on its first endpoint page, and one with no recorded codes
   // shows no errors card, so neither card links to a page that does not exist.
