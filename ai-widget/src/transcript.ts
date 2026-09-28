@@ -41,5 +41,6 @@ export const MAX_TURNS = 17;
 export function memoryOf<T extends Said>(turns: T[]) {
   const earlier = Math.floor(forModel(turns).length / 2);
   const window = (MAX_TURNS - 1) / 2;
-  return {earlier, window, full: earlier >= window};
+  const percent = Math.min(100, Math.round((earlier / window) * 100));
+  return {earlier, window, percent, full: earlier >= window};
 }

@@ -56,9 +56,11 @@ assert.equal(resumable(held, 'gone'), null);
 // Memory: counts the exchanges the next question takes, not the panel's own.
 const turn = (from, text, extra = {}) => ({from, text, ...extra});
 const ex = (n) => Array.from({length: n}, (_, i) => [turn('you', `q${i}`), turn('assistant', `a${i}`)]).flat();
-assert.deepEqual(memoryOf([]), {earlier: 0, window: 8, full: false});
-assert.deepEqual(memoryOf(ex(3)), {earlier: 3, window: 8, full: false});
+assert.deepEqual(memoryOf([]), {earlier: 0, window: 8, percent: 0, full: false});
+assert.deepEqual(memoryOf(ex(1)), {earlier: 1, window: 8, percent: 13, full: false});
+assert.deepEqual(memoryOf(ex(3)), {earlier: 3, window: 8, percent: 38, full: false});
 assert.equal(memoryOf(ex(9)).full, true, 'past the window, the oldest are not sent');
+assert.equal(memoryOf(ex(9)).percent, 100, 'never over 100');
 assert.equal(memoryOf([...ex(2), turn('you', 'What can you do?'), turn('assistant', 'I answer', {local: true})]).earlier, 2, "the panel's own answer takes no memory");
 
 // About: the panel answers questions about itself, and only those.

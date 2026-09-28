@@ -1422,7 +1422,7 @@
 }
 
 .ask-ai__memory-bar {
-  flex: 0 0 2.5rem;
+  flex: 0 0 4rem;
   height: 3px;
   border-radius: 999px;
   background: var(--aa-fill-soft);
@@ -1435,6 +1435,14 @@
   background: var(--aa-accent);
   opacity: 0.6;
   transition: width 200ms ease-out;
+}
+
+.ask-ai__memory-percent {
+  font-variant-numeric: tabular-nums;
+}
+
+.ask-ai__memory--full .ask-ai__memory-percent {
+  color: #c07a12;
 }
 
 .ask-ai__memory--full .ask-ai__memory-bar > span {
