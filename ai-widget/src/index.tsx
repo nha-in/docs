@@ -16,20 +16,25 @@ import {
 } from './install';
 import {revealStep} from './pacing';
 import {
+  clearCurrentId,
+  currentId,
   forget,
   forgetOne,
   load as loadHistory,
   remember,
+  resumable,
   save as saveHistory,
+  setCurrentId,
   titleOf,
   type Session,
 } from './history';
+import {ABOUT, isAboutQuestion} from './about';
 import {Composer, type Menu} from './Composer';
 import {HistoryList} from './HistoryList';
 import {Welcome} from './Welcome';
 import {ThinkingOrb} from './orb/frosted-orb';
 import {startersFrom, type Starter} from './starters';
-import {forModel} from './transcript';
+import {forModel, MAX_TURNS, memoryOf} from './transcript';
 import {isHtmlDocument, markdownUrl, pageUrl, type PageEntry} from './pages';
 import {moduleLabel, skillNote, type CommandId, type SkillUse} from './commands';
 import type {Attached, PageAttachment} from './types';
@@ -208,6 +213,8 @@ type PanelProps = {
   starters: Starter[];
   /** False where the host asked not to keep conversations in its origin. */
   keepHistory: boolean;
+  /** The gateway of the page the panel is on, hiecm or nhcx, or empty. */
+  gateway: string;
   supportUrl: string;
   page: PageAttachment | null;
   onDetach: () => void;
@@ -330,6 +337,24 @@ function ResizeGrip({dialog}: {dialog: {current: HTMLDialogElement | null}}) {
   );
 }
 
+/** How much of the conversation the next question takes with it. See memoryOf. */
+function MemoryLine({turns}: {turns: Turn[]}) {
+  const {earlier, window, full} = memoryOf(turns);
+  if (!earlier) return null;
+  return (
+    <p
+      class={`ask-ai__memory${full ? ' ask-ai__memory--full' : ''}`}
+      title={`Each question goes with the ${window} exchanges before it. Very long answers go shortened.`}>
+      <span class="ask-ai__memory-bar" aria-hidden="true">
+        <span style={{width: `${Math.min(earlier, window) * (100 / window)}%`}} />
+      </span>
+      {full
+        ? `Remembers the last ${window} exchanges. Earlier ones are no longer sent; New starts afresh.`
+        : `Remembers ${earlier} of ${window} exchanges`}
+    </p>
+  );
+}
+
 function Panel({
   apiBase,
   docsOrigin,
@@ -344,6 +369,7 @@ function Panel({
   send,
   starters,
   keepHistory,
+  gateway,
   supportUrl,
 }: PanelProps) {
   // Empty until the reader asks something: the welcome stands in for an
@@ -586,6 +612,7 @@ function Panel({
       saveHistory(next);
       return next;
     });
+    setCurrentId(conversation.current);
   };
 
   useEffect(() => {
@@ -593,7 +620,16 @@ function Panel({
   }, [phase, turns]);
 
   useEffect(() => {
-    if (keepHistory) setHistory(loadHistory<Turn>());
+    if (!keepHistory) return;
+    const held = loadHistory<Turn>();
+    setHistory(held);
+    // Back from a page with no panel, or from a reload: the conversation
+    // this tab was in comes back, where the reader left it.
+    const left = resumable(held, currentId());
+    if (left) {
+      conversation.current = left.id;
+      setTurns((now) => (now.length ? now : left.turns));
+    }
   }, [keepHistory]);
 
   /** Puts a past conversation back on screen, where it can be carried on. */
@@ -618,6 +654,7 @@ function Panel({
     // conversation being left goes into the list before it is cleared.
     keep(turns);
     conversation.current = newId();
+    clearCurrentId();
     setView('chat');
     setMenu('closed');
     abort.current?.abort();
@@ -750,6 +787,18 @@ function Panel({
     setMenu('closed');
     setView('chat');
 
+    // A question about the panel itself is the panel's to answer, the same
+    // on every page, and like the install steps it is never shown to the
+    // model: `local` drops the pair from what the next question sends.
+    if (!file && !command && isAboutQuestion(asked)) {
+      setTurns([
+        ...base,
+        {from: 'you', text: asked},
+        {from: 'assistant', text: ABOUT, local: true},
+      ]);
+      return;
+    }
+
     // The panel's own exchanges, the install flow and the module question,
     // are in the thread because the reader had them, but the model did not
     // say them and would only be confused by them. forModel drops each with
@@ -791,7 +840,7 @@ function Panel({
         signal: controller.signal,
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
-          turns: history.slice(-9).map((t) => ({
+          turns: history.slice(-MAX_TURNS).map((t) => ({
             role: t.from === 'you' ? 'user' : 'assistant',
             text: t.text,
             // The file rides with the question it came with, on every round,
@@ -825,6 +874,9 @@ function Panel({
           // travels, never skill text.
           ...(command ? {command} : {}),
           ...(opts.module ? {module: opts.module} : {}),
+          // Which gateway's documentation the reader is in, so the answer's
+          // searches stay in it unless the question names another.
+          ...(gateway ? {gateway} : {}),
         }),
       });
       if (!res.ok || !res.body) throw new Error(`status ${res.status}`);
@@ -1217,6 +1269,8 @@ function Panel({
 
       </div>
 
+      <MemoryLine turns={turns} />
+
       <Composer
         draft={draft}
         onDraft={setDraft}
@@ -1263,6 +1317,7 @@ function Widget({
   send,
   starters,
   keepHistory,
+  gateway,
 }: {
   host: HTMLElement;
   apiBase: string;
@@ -1281,6 +1336,7 @@ function Widget({
   starters: Starter[];
   /** False where the host asked not to keep conversations in its origin. */
   keepHistory: boolean;
+  gateway: string;
 }) {
   const close = () => {
     host.removeAttribute('open');
@@ -1321,6 +1377,7 @@ function Widget({
         send={send}
         starters={starters}
         keepHistory={keepHistory}
+        gateway={gateway}
         onClose={close}
         page={page}
         onDetach={onDetach}
@@ -1355,7 +1412,11 @@ function Widget({
  *   history      "off" stops past conversations being kept. They are kept in
  *                localStorage, which belongs to the page doing the embedding
  *                and not to this element, so a host whose origin should not
- *                hold what readers type turns the list off here
+ *                hold what readers type turns the list off here. Off also
+ *                means a reload starts a fresh conversation
+ *   gateway      the gateway the page belongs to, "hiecm" or "nhcx", so the
+ *                answers stay in its documentation unless the reader names
+ *                another; absent on a page that belongs to no gateway
  *
  * One thing is set by method rather than attribute: attachPage({title, url,
  * markdown}) gives the conversation the page the reader is looking at, and
@@ -1405,6 +1466,7 @@ class SupportAgentElement extends HTMLElement {
     'starters',
     'history',
     'ground',
+    'gateway',
   ];
 
   private root: ShadowRoot | null = null;
@@ -1477,6 +1539,7 @@ class SupportAgentElement extends HTMLElement {
         send={this.hasAttribute('send')}
         starters={startersFrom(this.getAttribute('starters') ?? '')}
         keepHistory={this.getAttribute('history') !== 'off'}
+        gateway={this.getAttribute('gateway') ?? ''}
       />,
       this.root!,
     );

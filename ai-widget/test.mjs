@@ -12,9 +12,10 @@ await build({
                export {readStream} from './src/sse';
                export {revealStep, THINKING_HOLD, THINKING_BURST} from './src/pacing';
                export {say, answer, wantsTools, needsAgent, TOOLS, AGENTS} from './src/install';
-               export {titleOf, remember, whenSaid, forgetOne} from './src/history';
+               export {titleOf, remember, whenSaid, forgetOne, resumable} from './src/history';
+               export {ABOUT, isAboutQuestion} from './src/about';
                export {startersFrom, DEFAULT_STARTERS} from './src/starters';
-               export {forModel} from './src/transcript';
+               export {forModel, memoryOf} from './src/transcript';
                export {parseLlms, searchPages, pageUrl, markdownUrl, isHtmlDocument} from './src/pages';
                export {moduleLabel, skillNote, COMMANDS} from './src/commands';`,
     resolveDir: import.meta.dirname,
@@ -37,13 +38,39 @@ await build({
 const {
   toBlocks, absolute, headings, readStream, revealStep, THINKING_HOLD, THINKING_BURST,
   say, answer, wantsTools, needsAgent, TOOLS, AGENTS,
-  titleOf, remember, whenSaid, forgetOne,
+  titleOf, remember, whenSaid, forgetOne, resumable, ABOUT, isAboutQuestion, memoryOf,
   startersFrom, DEFAULT_STARTERS, forModel, parseLlms, searchPages, pageUrl, markdownUrl, isHtmlDocument,
   moduleLabel, skillNote, COMMANDS,
 } = await import(out);
 
 // History: one conversation comes out, the rest stay in order.
 assert.deepEqual(forgetOne([{id: 'a'}, {id: 'b'}, {id: 'c'}], 'b').map((s) => s.id), ['a', 'c']);
+
+// Resuming: the tab's conversation comes back from the list, and nothing
+// comes back when the tab was in none or the list has lost it.
+const held = [{id: 'a', turns: [{from: 'you', text: 'q'}]}, {id: 'b', turns: []}];
+assert.equal(resumable(held, 'a').id, 'a');
+assert.equal(resumable(held, null), null);
+assert.equal(resumable(held, 'gone'), null);
+
+// Memory: counts the exchanges the next question takes, not the panel's own.
+const turn = (from, text, extra = {}) => ({from, text, ...extra});
+const ex = (n) => Array.from({length: n}, (_, i) => [turn('you', `q${i}`), turn('assistant', `a${i}`)]).flat();
+assert.deepEqual(memoryOf([]), {earlier: 0, window: 8, full: false});
+assert.deepEqual(memoryOf(ex(3)), {earlier: 3, window: 8, full: false});
+assert.equal(memoryOf(ex(9)).full, true, 'past the window, the oldest are not sent');
+assert.equal(memoryOf([...ex(2), turn('you', 'What can you do?'), turn('assistant', 'I answer', {local: true})]).earlier, 2, "the panel's own answer takes no memory");
+
+// About: the panel answers questions about itself, and only those.
+for (const q of ['What can the Ask AI assistant do?', 'what can you do', 'Who are you?', 'help', 'What is Ask AI?', 'How do I use this?']) {
+  assert.ok(isAboutQuestion(q), `about: ${q}`);
+}
+for (const q of ['What can an HIU do with a consent artefact?', 'Hi', 'What does ABDM-1016 mean?', 'can you help me link care contexts', 'what are you returning here']) {
+  assert.ok(!isAboutQuestion(q), `not about: ${q}`);
+}
+assert.ok(isAboutQuestion(DEFAULT_STARTERS.find((s) => s.label === 'Learn about Ask AI').prompt), 'the starter is answered by the panel');
+assert.ok(!/\u2014/.test(ABOUT), 'no em dash in the about answer');
+assert.ok(!/NHCX|HIE-CM|payer|claim/i.test(ABOUT), 'the about answer is about the panel, not a gateway');
 
 // Starters: a pill's label and the question it asks; old hosts still work.
 assert.equal(startersFrom(''), DEFAULT_STARTERS);

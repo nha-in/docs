@@ -1409,3 +1409,36 @@
     transition: none !important;
   }
 }
+
+/* How much of the conversation the next question takes with it: a thin bar
+   and a count, quiet until the oldest exchanges stop being sent. */
+.ask-ai__memory {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0.875rem 0.375rem;
+  font-size: 0.6875rem;
+  color: var(--aa-faint);
+}
+
+.ask-ai__memory-bar {
+  flex: 0 0 2.5rem;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--aa-fill-soft);
+  overflow: hidden;
+}
+
+.ask-ai__memory-bar > span {
+  display: block;
+  height: 100%;
+  background: var(--aa-accent);
+  opacity: 0.6;
+  transition: width 200ms ease-out;
+}
+
+.ask-ai__memory--full .ask-ai__memory-bar > span {
+  background: #c07a12;
+  opacity: 1;
+}
+
