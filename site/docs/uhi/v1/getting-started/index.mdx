@@ -30,6 +30,30 @@ every provider on the network can answer it.
 
 </div>
 
+### Where UHI sits in ABDM
+
+ABDM has two layers. The identity layer says who is who. The service layer
+moves health information, claims and services between systems through three
+gateways, and UHI is the one for services.
+
+| Layer | Parts | What they do |
+| --- | --- | --- |
+| Service layer | [HIE-CM](/docs/hiecm/v3), [NHCX](/docs/nhcx/v1) and UHI | HIE-CM exchanges health records with consent, NHCX exchanges insurance claims, and UHI lets patients find and use health services |
+| Identity layer | [ABHA](/docs/uhi/v1/getting-started/glossary#abha) and the national registries of health professionals and facilities | Identify patients, doctors and facilities |
+
+### Why an open network
+
+Today patients and providers are spread across separate apps and portals.
+Finding a service depends on which app a patient happens to use, and many
+services can only be found offline.
+
+- **For a provider,** joining UHI once makes its services findable in every
+  app on the network.
+- **For an app,** joining once reaches every provider on the network, so it
+  offers more services without a deal with each one.
+- **For a patient,** the app they already use can find and book services from
+  many providers.
+
 ### Who takes part
 
 - **The patient app**, called an End User Application ([EUA](/docs/uhi/v1/getting-started/glossary#eua)). It is
