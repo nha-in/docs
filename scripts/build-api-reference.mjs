@@ -330,7 +330,9 @@ function requestFor(operation) {
     name: header.name,
     value:
       header.name.toLowerCase() === 'authorization'
-        ? 'Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
+        // UHI signs every request with the sender's Ed25519 key rather than
+        // presenting a session token (see /docs/uhi/v1/network/signing).
+        ? operation.gateway === 'uhi' ? '<SIGNED_AUTHORIZATION_HEADER>' : 'Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
         : header.example ?? `<${header.name.toUpperCase().replace(/-/g, '_')}>`,
   }));
   if (operation.requestExample !== undefined) {
@@ -889,6 +891,42 @@ for (const {platform, version, files} of tree) {
     ];
   }
 
+  // A UHI call is a path whichever side serves it: on_init is the EUA's and
+  // init the HSPA's. So its page says who serves it and links the request or
+  // callback it pairs with, inside the journey the reader is walking when
+  // there is one. Only a call carrying x-abdm-hosted-by gets this section.
+  const HOSTS = {gateway: 'UHI Gateway', eua: 'EUA', hspa: 'HSPA'};
+  function hostedSection(op, path, at) {
+    const host = op['x-abdm-hosted-by'];
+    if (!host) return undefined;
+    const routeTo = (target, after) => {
+      if (at) {
+        const steps = at.journey.steps;
+        const j = after
+          ? steps.findIndex((s, k) => k > at.index && s.op === target)
+          : steps.findLastIndex((s, k) => k < at.index && s.op === target);
+        if (j >= 0) return `/docs/${platform}/${version}/api/${at.moduleDir}/endpoints/${at.journey.id}/${String(j + 1).padStart(2, '0')}-${slug(target)}`;
+      }
+      return operations.get(target)?.route;
+    };
+    const about = (id) => {
+      const target = opIndex.get(id);
+      return {title: operations.get(id)?.title ?? id, path: target?.op['x-actual-path'] ?? target?.path, host: HOSTS[target?.op['x-abdm-hosted-by']]};
+    };
+    const lines = ['## Where this fits', '', `The ${HOSTS[host]} serves this call at \`${path}\`.`, ''];
+    const answer = op['x-abdm-answered-by'];
+    const trigger = op['x-abdm-triggered-by'];
+    if (answer) {
+      const t = about(answer);
+      lines.push(`The answer comes back as [${t.title}](${routeTo(answer, true)}), on \`${t.path}\`, which the ${t.host} serves.`, '');
+    }
+    if (trigger) {
+      const t = about(trigger);
+      lines.push(`This call answers [${t.title}](${routeTo(trigger, false)}), sent to \`${t.path}\`, which the ${t.host} serves.`, '');
+    }
+    return lines;
+  }
+
   for (const [moduleIndex, module] of modules.entries()) {
     const spec = module.spec;
     const servers = (spec.servers ?? []).map((s) => ({
@@ -996,8 +1034,10 @@ for (const {platform, version, files} of tree) {
       // An operation's own `servers` override the specification's, as OpenAPI
       // says they do. Without this the page joined the module's first server
       // to a path served elsewhere and printed an address that does not exist.
+      // A server variable, such as a UHI participant's {provider_uri}, is
+      // shown as a placeholder to fill in, never as raw braces a curl sends.
       const opServers = (op.servers ?? []).map((s) => ({
-        url: s.url,
+        url: s.url.replace(/\{(\w+)\}/g, '<$1>'),
         description: s.description ?? '',
       }));
       const served = opServers.length ? opServers : servers;
@@ -1053,6 +1093,9 @@ for (const {platform, version, files} of tree) {
         // Which gateway the page belongs to, for what the page says around
         // the samples.
         gateway: platform,
+        // A UHI call is signed with the sender's private key, which a browser
+        // console cannot hold, so its page offers no Try it.
+        ...(platform === 'uhi' ? {tryIt: false} : {}),
         // The file the page came from and what it declares, for the pills
         // over the title and the download beside them. The file is served
         // flat under /specs/ by sync-specs.mjs, beside a JSON copy.
@@ -1124,9 +1167,10 @@ for (const {platform, version, files} of tree) {
         // every webhook the gateway has. An operation shows the callbacks a
         // specification ties to it; a callback shows the call it pairs with,
         // or says that no specification names one.
-        ...(entry.kind === 'callback'
-          ? callbackOriginSection(id, module.file)
-          : callbackSection(id, module.dir)),
+        ...(hostedSection(op, operation.path) ??
+          (entry.kind === 'callback'
+            ? callbackOriginSection(id, module.file)
+            : callbackSection(id, module.dir))),
       ].join('\n');
       writeFileSync(join(endpointsDir, `${name}.mdx`), frontMatter);
 
@@ -1206,7 +1250,10 @@ for (const {platform, version, files} of tree) {
           "import ApiEndpoint from '@site/src/components/api/ApiEndpoint';",
           `import operation from '@site/src/data/api/${dataName}.json';`,
           '', '<ApiEndpoint operation={operation} />', '',
-          ...(step.say ? ['## Where this fits', '', step.say, ''] : entry.kind === 'callback' ? callbackOriginSection(step.op, module.file) : callbackSection(step.op, module.dir)),
+          ...(step.say
+            ? ['## Where this fits', '', step.say, '']
+            : hostedSection(entry.op, stepped.path, {journey, index: i, moduleDir: module.dir}) ??
+              (entry.kind === 'callback' ? callbackOriginSection(step.op, module.file) : callbackSection(step.op, module.dir))),
         ].join('\n'));
         items.push({type: 'doc', id: `${platform}/${version}/api/${module.dir}/endpoints/${journey.id}/${nn}-${slug(step.op)}`, label: title, className: `api-method api-method--${stepped.method.toLowerCase()}`});
         count += 1;

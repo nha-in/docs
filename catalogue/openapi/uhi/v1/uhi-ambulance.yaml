@@ -212,6 +212,7 @@ paths:
           name: Authorization
           description: UHI Auth header
           required: true
+      x-abdm-title: Send the patient's details for a quote
       x-abdm-hosted-by: hspa
       x-abdm-answered-by: uhi_ambulance_on_init
   /on_init:
@@ -462,6 +463,7 @@ paths:
           name: Authorization
           description: UHI Auth header
           required: true
+      x-abdm-title: Send the quote and terms
       x-abdm-hosted-by: eua
       x-abdm-triggered-by: uhi_ambulance_init
 components:

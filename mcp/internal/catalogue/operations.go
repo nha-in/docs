@@ -461,7 +461,7 @@ func ParseSpec(specPath string) (SpecData, error) {
 			ops = append(ops, Operation{
 				OperationID:       op.OperationID,
 				Method:            method,
-				Path:              path,
+				Path:              actualPath(path, op),
 				Summary:           op.Summary,
 				Tag:               tag,
 				Module:            module,
@@ -473,4 +473,18 @@ func ParseSpec(specPath string) (SpecData, error) {
 	}
 	sort.Slice(ops, func(i, j int) bool { return ops[i].OperationID < ops[j].OperationID })
 	return SpecData{Module: module, Operations: ops, ErrorCodes: errCodes}, nil
+}
+
+// actualPath is the endpoint an operation is sent to. A path key may carry a
+// #suffix so one endpoint appears more than once in a file, as M1's split per
+// use case and UHI's two directions of on_update do; x-actual-path names the
+// real one, and without it the suffix is dropped.
+func actualPath(path string, op *openapi3.Operation) string {
+	if v, ok := op.Extensions["x-actual-path"].(string); ok && v != "" {
+		return v
+	}
+	if i := strings.Index(path, "#"); i >= 0 {
+		return path[:i]
+	}
+	return path
 }

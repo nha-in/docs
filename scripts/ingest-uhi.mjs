@@ -60,6 +60,37 @@ const OPS = [
 ];
 const TRIGGER = Object.fromEntries(OPS.filter((o) => o.answer).map((o) => [o.answer, o.id]));
 
+// NHA's summaries name only the path and its direction ("/on_init (HSPA →
+// EUA)"), which the title rules cannot turn into a name. Each title is taken
+// from the guide's call tables (Part 3) and NHA's own operation descriptions.
+const TITLES = {
+  uhi_network_gateway_search: 'Search through the Gateway',
+  uhi_network_gateway_on_search: 'Send a catalog through the Gateway',
+  uhi_network_search: 'Search an HSPA',
+  uhi_network_on_search: 'Send a catalog to the EUA',
+  uhi_network_registry_lookup: 'Look up a network participant',
+  uhi_consultation_select: 'Select items and build an order',
+  uhi_consultation_on_select: 'Send a quoted draft order',
+  uhi_consultation_init: 'Initialise an order',
+  uhi_consultation_on_init: 'Send the order with its quote and terms',
+  uhi_consultation_confirm: 'Confirm the order',
+  uhi_consultation_on_confirm: 'Send the confirmed order and PIN',
+  uhi_consultation_status: 'Request the order status',
+  uhi_consultation_on_status: 'Send the order status',
+  uhi_consultation_cancel: 'Cancel the order',
+  uhi_consultation_on_cancel: 'Send the cancelled order',
+  uhi_consultation_on_update_to_eua: 'Send an order update to the EUA',
+  uhi_consultation_on_update_to_hspa: 'Send an order update to the HSPA',
+  uhi_consultation_on_message_to_eua: 'Send a message to the EUA',
+  uhi_consultation_on_message_to_hspa: 'Send a message to the HSPA',
+  uhi_consultation_on_confirm_audit: 'Copy on_confirm to the Gateway audit',
+  uhi_consultation_on_status_audit: 'Copy on_status to the Gateway audit',
+  uhi_consultation_on_update_audit: 'Copy on_update to the Gateway audit',
+  uhi_consultation_on_cancel_audit: 'Copy on_cancel to the Gateway audit',
+  uhi_ambulance_init: 'Send the patient\'s details for a quote',
+  uhi_ambulance_on_init: 'Send the quote and terms',
+};
+
 // NHA's service-grouped keys: `/search(NOTTO)`, `/on_update(Consultation-EUA)`.
 const SERVICES = {Consultation: 'consultation', 'PMJAY-HEM': 'pmjay-hem', BloodBank: 'blood-bank', Ambulance: 'ambulance', JanAushadhi: 'jan-aushadhi', NOTTO: 'notto'};
 const DISCOVERY = new Set(['/api/v1/uhi/search', '/api/v1/uhi/on_search', '/search', '/on_search']);
@@ -164,6 +195,12 @@ for (const [module, meta] of Object.entries(MODULES)) {
     if (nhaId) note(module, o.id, `operationId was \`${nhaId}\`; kept in x-abdm-nha-operation-id`);
     const body = rest.requestBody?.content?.['application/json'];
     if (body) body.examples = examplesFor.get(o.id);
+    // The guide signs every outbound call; NHA declares the header on every
+    // operation but select and on_select, so those two get the same one.
+    if (!(rest.parameters ?? []).some((p) => p.in === 'header' && p.name === 'Authorization')) {
+      rest.parameters = [...(rest.parameters ?? []), {schema: {type: 'string'}, in: 'header', name: 'Authorization', description: 'UHI Auth header', required: true}];
+      note(module, o.id, 'Authorization header parameter added, as NHA declares it on every other operation and the guide signs every call');
+    }
     const summary = vend.summary;
     const said = (theirs.description ?? '').trim() || (vend.description ?? '').trim() || summary.split(': ').slice(1).join(': ');
     (theirTags ?? []).forEach((t) => tags.add(t));
@@ -175,6 +212,7 @@ for (const [module, meta] of Object.entries(MODULES)) {
       ...(o.host === 'gateway' ? {} : {servers: PARTICIPANT[o.host]}),
       ...rest,
       ...(o.path !== o.actual ? {'x-actual-path': o.actual} : {}),
+      'x-abdm-title': TITLES[o.id],
       'x-abdm-hosted-by': o.host,
       ...(o.answer ? {'x-abdm-answered-by': o.answer} : {}),
       ...(TRIGGER[o.id] ? {'x-abdm-triggered-by': TRIGGER[o.id]} : {}),

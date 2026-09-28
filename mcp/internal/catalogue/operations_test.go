@@ -7,6 +7,8 @@ import (
 	"os/exec"
 	"path/filepath"
 	"testing"
+
+	"github.com/getkin/kin-openapi/openapi3"
 )
 
 func TestParseOperations(t *testing.T) {
@@ -421,3 +423,18 @@ console.log(JSON.stringify(out));`
 }
 
 var repoRoot = filepath.Join("..", "..", "..")
+
+// A path key carrying a #suffix, as M1's per-use-case split and UHI's two
+// directions of on_update use, is reported as the real endpoint.
+func TestActualPath(t *testing.T) {
+	withExt := &openapi3.Operation{Extensions: map[string]any{"x-actual-path": "/on_update"}}
+	if got := actualPath("/on_update#to-eua", withExt); got != "/on_update" {
+		t.Fatalf("x-actual-path: got %q", got)
+	}
+	if got := actualPath("/v3/otp#aadhaar-otp", &openapi3.Operation{}); got != "/v3/otp" {
+		t.Fatalf("suffix without extension: got %q", got)
+	}
+	if got := actualPath("/search", &openapi3.Operation{}); got != "/search" {
+		t.Fatalf("plain path: got %q", got)
+	}
+}

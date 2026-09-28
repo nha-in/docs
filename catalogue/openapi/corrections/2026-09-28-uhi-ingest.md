@@ -40,7 +40,9 @@ Written by `scripts/ingest-uhi.mjs` from `gateway/UHI Documentation Requirements
 | network | `uhi_network_on_search` | summary from gateway/UHI Gateway Service.yaml; description opens with the signing link and closes with the retry line |
 | network | `uhi_network_registry_lookup` | operationId was `gatewayLookupUsingPOST`; kept in x-abdm-nha-operation-id |
 | network | `uhi_network_registry_lookup` | summary from gateway/UHI Gateway Service.yaml; description opens with the signing link |
+| consultation | `uhi_consultation_select` | Authorization header parameter added, as NHA declares it on every other operation and the guide signs every call |
 | consultation | `uhi_consultation_select` | summary from gateway/UHI Gateway Service.yaml; description opens with the signing link |
+| consultation | `uhi_consultation_on_select` | Authorization header parameter added, as NHA declares it on every other operation and the guide signs every call |
 | consultation | `uhi_consultation_on_select` | summary from gateway/UHI Gateway Service.yaml; description opens with the signing link and closes with the retry line |
 | consultation | `uhi_consultation_init` | summary from gateway/UHI Gateway Service.yaml; description opens with the signing link |
 | consultation | `uhi_consultation_on_init` | summary from gateway/UHI Gateway Service.yaml; description opens with the signing link and closes with the retry line |

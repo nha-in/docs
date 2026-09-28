@@ -1166,6 +1166,7 @@ paths:
                     $ref: "#/components/schemas/Error"
                 required:
                   - context
+      x-abdm-title: Search through the Gateway
       x-abdm-hosted-by: gateway
       x-abdm-answered-by: uhi_network_gateway_on_search
       x-abdm-nha-operation-id: searchUsingPOST
@@ -3513,6 +3514,7 @@ paths:
           description: UHI Auth header
           name: Authorization
           required: true
+      x-abdm-title: Send a catalog through the Gateway
       x-abdm-hosted-by: gateway
       x-abdm-triggered-by: uhi_network_gateway_search
       x-abdm-nha-operation-id: searchUsingPOST_1
@@ -4639,6 +4641,7 @@ paths:
           name: Authorization
           description: UHI Auth header. For second search only. For first search, UHI gateway shall pass X-Gateway-Authorization header
           required: true
+      x-abdm-title: Search an HSPA
       x-abdm-hosted-by: hspa
       x-abdm-answered-by: uhi_network_on_search
   /on_search:
@@ -6998,6 +7001,7 @@ paths:
           name: Authorization
           description: Passed by HSPA for second onsearch. For first onsearch, UHI gateway shall pass X-Gateway-Authorization header
           required: true
+      x-abdm-title: Send a catalog to the EUA
       x-abdm-hosted-by: eua
       x-abdm-triggered-by: uhi_network_search
   /api/v1/networkregistry/lookup:
@@ -7057,6 +7061,7 @@ paths:
           name: Authorization
           description: UHI Auth header
           required: true
+      x-abdm-title: Look up a network participant
       x-abdm-hosted-by: gateway
       x-abdm-nha-operation-id: gatewayLookupUsingPOST
 components:

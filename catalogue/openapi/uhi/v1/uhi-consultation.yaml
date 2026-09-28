@@ -134,6 +134,14 @@ paths:
                     $ref: "#/components/schemas/Error"
                 required:
                   - message
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: Authorization
+          description: UHI Auth header
+          required: true
+      x-abdm-title: Select items and build an order
       x-abdm-hosted-by: hspa
       x-abdm-answered-by: uhi_consultation_on_select
   /on_select:
@@ -256,6 +264,14 @@ paths:
                     $ref: "#/components/schemas/Error"
                 required:
                   - message
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: Authorization
+          description: UHI Auth header
+          required: true
+      x-abdm-title: Send a quoted draft order
       x-abdm-hosted-by: eua
       x-abdm-triggered-by: uhi_consultation_select
   /init:
@@ -412,6 +428,7 @@ paths:
           name: Authorization
           description: UHI Auth header
           required: true
+      x-abdm-title: Initialise an order
       x-abdm-hosted-by: hspa
       x-abdm-answered-by: uhi_consultation_on_init
   /on_init:
@@ -645,6 +662,7 @@ paths:
           name: Authorization
           description: UHI Auth header
           required: true
+      x-abdm-title: Send the order with its quote and terms
       x-abdm-hosted-by: eua
       x-abdm-triggered-by: uhi_consultation_init
   /confirm:
@@ -877,6 +895,7 @@ paths:
           name: Authorization
           description: UHI Auth header
           required: true
+      x-abdm-title: Confirm the order
       x-abdm-hosted-by: hspa
       x-abdm-answered-by: uhi_consultation_on_confirm
   /on_confirm:
@@ -1319,6 +1338,7 @@ paths:
           name: Authorization
           description: UHI Auth header
           required: true
+      x-abdm-title: Send the confirmed order and PIN
       x-abdm-hosted-by: eua
       x-abdm-triggered-by: uhi_consultation_confirm
   /status:
@@ -1398,6 +1418,7 @@ paths:
           name: Authorization
           description: UHI Auth header
           required: true
+      x-abdm-title: Request the order status
       x-abdm-hosted-by: hspa
       x-abdm-answered-by: uhi_consultation_on_status
   /on_status:
@@ -2121,6 +2142,7 @@ paths:
           name: Authorization
           description: UHI Auth header
           required: true
+      x-abdm-title: Send the order status
       x-abdm-hosted-by: eua
       x-abdm-triggered-by: uhi_consultation_status
   /cancel:
@@ -2205,6 +2227,7 @@ paths:
           name: Authorization
           description: UHI Auth header
           required: true
+      x-abdm-title: Cancel the order
       x-abdm-hosted-by: hspa
       x-abdm-answered-by: uhi_consultation_on_cancel
   /on_cancel:
@@ -2580,6 +2603,7 @@ paths:
           in: header
           name: Authorization
           required: true
+      x-abdm-title: Send the cancelled order
       x-abdm-hosted-by: eua
       x-abdm-triggered-by: uhi_consultation_cancel
   /on_update#to-eua:
@@ -3307,6 +3331,7 @@ paths:
           description: UHI Auth header
           required: true
       x-actual-path: /on_update
+      x-abdm-title: Send an order update to the EUA
       x-abdm-hosted-by: eua
   /on_update#to-hspa:
     post:
@@ -3525,6 +3550,7 @@ paths:
           description: UHI Auth header
           required: true
       x-actual-path: /on_update
+      x-abdm-title: Send an order update to the HSPA
       x-abdm-hosted-by: hspa
   /on_message#to-eua:
     post:
@@ -3665,6 +3691,7 @@ paths:
           description: UHI Auth header
           required: true
       x-actual-path: /on_message
+      x-abdm-title: Send a message to the EUA
       x-abdm-hosted-by: eua
   /on_message#to-hspa:
     post:
@@ -3803,6 +3830,7 @@ paths:
           description: UHI Auth header
           required: true
       x-actual-path: /on_message
+      x-abdm-title: Send a message to the HSPA
       x-abdm-hosted-by: hspa
   /api/v1/uhi/on_confirm_audit:
     post:
@@ -4242,6 +4270,7 @@ paths:
           name: Authorization
           description: UHI Auth header
           required: true
+      x-abdm-title: Copy on_confirm to the Gateway audit
       x-abdm-hosted-by: gateway
       x-abdm-nha-operation-id: AuditOnConfirmPOST
   /api/v1/uhi/on_status_audit:
@@ -4961,6 +4990,7 @@ paths:
           name: Authorization
           description: UHI Auth header
           required: true
+      x-abdm-title: Copy on_status to the Gateway audit
       x-abdm-hosted-by: gateway
       x-abdm-nha-operation-id: AuditOnStatusPOST
   /api/v1/uhi/on_update_audit:
@@ -5519,6 +5549,7 @@ paths:
           name: Authorization
           description: UHI Auth header
           required: true
+      x-abdm-title: Copy on_update to the Gateway audit
       x-abdm-hosted-by: gateway
       x-abdm-nha-operation-id: AuditOnUpdatePOST
   /api/v1/uhi/on_cancel_audit:
@@ -5917,6 +5948,7 @@ paths:
           name: Authorization
           description: UHI Auth header
           required: true
+      x-abdm-title: Copy on_cancel to the Gateway audit
       x-abdm-hosted-by: gateway
       x-abdm-nha-operation-id: AuditOnCancelPOST
 components:

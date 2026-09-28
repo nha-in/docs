@@ -17,8 +17,10 @@
       example: consultation-1st-onsearch-for-search-with-specialty-physicalconsultation
     - op: uhi_network_search
       example: consultation-second-search-hpr-address
+      title: Search the chosen HSPA for slots
     - op: uhi_network_on_search
       example: consultation-2nd-on-search-response
+      title: Send the doctor's slots
 - id: uhi-consultation-order
   title: Physical Consultation, order
   steps:
