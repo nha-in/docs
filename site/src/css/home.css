@@ -197,8 +197,10 @@
      centre is the copy's, not the layer's: this layer reaches up under the
      top bar so the courier's light is not cut off by it, and the copy does
      not sit on the middle of it. */
-  left: calc(50% + var(--ring-x) * var(--ux));
-  top: calc(var(--ring-cy) + var(--ring-y) * var(--uy));
+  /* `--out` is how far beyond the ring the node stands, in px: 0 on the
+     ring, more in the column a pathway sends the uninvolved to. */
+  left: calc(50% + (var(--ring-x) + var(--out, 0px)) * var(--ux));
+  top: calc(var(--ring-cy) + (var(--ring-y) + var(--out, 0px)) * var(--uy));
   text-decoration: none;
   transform: translate(-50%, -50%);
   display: flex;
@@ -218,13 +220,13 @@
   z-index: -1;
   /* Concentric with the icon, not with the icon and label together. The pair
      is centred on the node's box, so a glow centred there sits half a line
-     low and lights the word instead of the mark. The icon is 1.375rem tall
+     low and lights the word instead of the mark. The icon is 1.625rem tall
      and first in the column, so its own centre is half that down. */
-  top: 0.6875rem;
+  top: 0.8125rem;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 7.5rem;
-  height: 7.5rem;
+  width: 8.5rem;
+  height: 8.5rem;
   border-radius: 999px;
   /* Stops on a curve, not a straight ramp: a two stop gradient reads as a
      disc with an edge however soft the second stop is. */
@@ -239,8 +241,77 @@
 }
 
 .network-node__icon {
-  width: 1.375rem;
-  height: 1.375rem;
+  width: 1.625rem;
+  height: 1.625rem;
+}
+
+/* ---------- a pathway on the network ----------
+
+   Set by NetworkWeb while a gateway card is asked about. Three strengths:
+   the journey itself, the participants beside it, and the rest of the
+   network, which stays drawn because the journey is part of it. Opacity
+   only, so reduced motion keeps all of it. */
+.network-web[data-intent] .network-node {
+  transition: opacity 450ms ease;
+}
+
+.network-web[data-intent] .network-node[data-role='primary'] {
+  opacity: calc(0.85 + var(--lit) * 0.15);
+}
+
+.network-web[data-intent] .network-node[data-role='primary'] .network-node__label {
+  color: var(--accent);
+  opacity: 1;
+}
+
+/* Stood aside in the column, outside the network. Close to the page edge,
+   where the layer's own vignette already takes some of it away. */
+.network-web[data-intent] .network-node[data-role='context'],
+.network-web[data-intent] .network-node[data-role='background'] {
+  opacity: 0.4;
+}
+
+/* Under the label and out of the node's flow, so a caption appearing never
+   moves the icon the links are drawn to. */
+.network-node__notes {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.125rem;
+  margin-top: 0.25rem;
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.network-node__via {
+  color: var(--text-faint);
+}
+
+.network-node__via:empty,
+.network-node__stage:empty {
+  display: none;
+}
+
+/* The step, as an annotation on the map: the accent, a hairline above it,
+   and a fade rather than a move. */
+.network-node__stage {
+  padding-top: 0.125rem;
+  border-top: 1px solid var(--accent-line);
+  font-weight: 600;
+  color: var(--accent);
+  opacity: 0;
+  transition: opacity 250ms ease;
+}
+
+.network-node__stage.is-on {
+  opacity: 1;
 }
 
 /* A participant is a link, so it says so on hover and on focus: the node
@@ -266,7 +337,7 @@
 }
 
 .network-node__label {
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -571,6 +642,33 @@
   flex-direction: column;
   align-items: center;
   gap: 0.75rem;
+}
+
+/* The footnote to a journey drawn on the network: on the hero's bottom edge,
+   below the lowest node, set as fine print. */
+.landing-hero__disclaimer {
+  position: absolute;
+  z-index: 1;
+  bottom: 0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  /* One line on a desktop window, so it stays under the lowest node. */
+  width: calc(100% - 3rem);
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-serif);
+  font-size: 0.625rem;
+  line-height: 1.5;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  opacity: 0;
+  transition: opacity 400ms ease;
+  pointer-events: none;
+}
+
+.landing-hero__disclaimer[data-on] {
+  opacity: 1;
 }
 
 .landing-hero__goals-list {
