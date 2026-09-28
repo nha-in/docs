@@ -20,6 +20,8 @@ run. Nothing in this repo can install it for you: Claude Code refuses to
 auto-install a plugin that repo-authored settings asked for, which is why this
 is a rule you follow rather than a gate that stops you.
 
+NHA corrections are applied to docs pages only. Follow `docs/runbook-nha-corrections.md`.
+
 Two things the index will not route for you, because they are repo-wide:
 
 - Generated files are never hand-edited. `site/docs/<gateway>/<version>/api/`,
