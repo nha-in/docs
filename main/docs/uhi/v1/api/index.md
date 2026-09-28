@@ -1,7 +1,23 @@
-# UHI API reference
+# API references
 
-No OpenAPI specification is published for UHI yet. The message shapes for each service are on its own page.
+Every endpoint below is generated from the specification that declares it. Each one has its own page with the headers, the body and a request you can send.
 
-- [Network and protocol](/docs/main/docs/uhi/v1/concepts/network-and-protocol): the search, select, init and confirm pattern every UHI service shares, and the roles on either side of it.
-- [Onboarding](/docs/main/docs/uhi/v1/getting-started/onboarding): registration, the signing keys and the callback URL your participant registers.
-- The service pages: the fields each service adds on top of the shared pattern.
+This page lists every module, including any that the role you have chosen does not use. The sidebar shows only yours.
+
+## Network and discovery
+
+25 endpoints across 5 use cases: PM-JAY HEM hospital discovery, Blood stock discovery, Jan Aushadhi, NOTTO hospital discovery, APIs. Each endpoint has its own page in the sidebar.
+
+[Read the whole specification](/docs/main/reference/uhi-network)
+
+## Physical Consultation
+
+24 endpoints across 5 use cases: Discovery, Order, Fulfilment, Post-fulfilment, APIs. Each endpoint has its own page in the sidebar.
+
+[Read the whole specification](/docs/main/reference/uhi-consultation)
+
+## Ambulance Booking
+
+6 endpoints across 2 use cases: Discovery, Order. Each endpoint has its own page in the sidebar.
+
+[Read the whole specification](/docs/main/reference/uhi-ambulance)
