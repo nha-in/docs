@@ -76,6 +76,7 @@ One term. ABHA, HFR, X-CM-ID.
 - Say the expansion, then what it means in practice, then where the reader will meet it.
 - No sections 2 and 3 in the usual sense; keep the headings and write "Nothing" under 2 if that is true. Lint requires the headings, not padding.
 - Every acronym in the Catalogue links here on first use in every atom, so this is the most linked-to type. Keep the id obvious.
+- Pick the gateway by who owns the term. `shared` only when it means the same thing on every gateway (ABHA, FHIR, NHA). A term one gateway owns goes in that gateway's `glossary/`: `hiecm.glossary.hip`, `uhi.glossary.eua`. The site's glossary partials draw the same line: a term on `site/docs/_glossary/_shared.mdx` is `shared`, one on `_hiecm.mdx` is `hiecm`, one on `_uhi.mdx` is `uhi`.
 
 ## fhir
 
