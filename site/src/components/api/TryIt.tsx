@@ -19,6 +19,7 @@ import {
 } from '@site/src/components/ui/tooltip';
 import type {Field, Operation} from './ApiEndpoint';
 import {AskAiButton, CopyButton, fenced} from './ApiEndpoint';
+import {inline} from './Markdown';
 import {redact} from './redact';
 import type {BodyNode} from './body';
 import {compose, leaves, seed, toTree} from './body';
