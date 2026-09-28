@@ -30,10 +30,37 @@
 
 ## Tasks
 
-- [ ] **H1. Infrastructure.** `build-sections` reads `catalogue/map.yaml` plus `catalogue/map.d/*.yaml`, so batches do not collide. `build-api-reference.mjs` renders `site/docs/_notes/hiecm/<operationId>.mdx` on the operation's page and `site/docs/_notes/hiecm/errors/<module>.mdx` on the module's error page when present. `loadOps` also reads `webhooks`. Tests for each.
-- [ ] **H2. Concepts, decisions, flows, troubleshooting, test (44).**
-- [ ] **H3. Endpoints and callbacks (173), one batch per module.** M1, M2, M3, M4, P1, P2, P3.
-- [ ] **H4. Errors (39), one partial per module.**
-- [ ] **H5. Plan, contributor plugin and runbook updated; the HIE-CM class recorded in the page-canonical plan.**
+- [x] **H1. Infrastructure.** `build-sections` reads `catalogue/map.yaml` plus `catalogue/map.d/*.yaml`, so batches do not collide. `build-api-reference.mjs` renders `site/docs/_notes/hiecm/<operationId>.mdx` on the operation's page and `site/docs/_notes/hiecm/errors/<module>.mdx` on the module's error page when present. `loadOps` also reads `webhooks`. Tests for each.
+- [x] **H2. Concepts, decisions, flows, troubleshooting, test (44).**
+- [x] **H3. Endpoints and callbacks (173), one batch per module.** M1, M2, M3, M4, P1, P2, P3.
+- [x] **H4. Errors (39), one partial per module.**
+- [x] **H5. Plan, contributor plugin and runbook updated; the HIE-CM class recorded in the page-canonical plan.**
 
 Each batch reports: ids rebuilt, literals dropped with reasons, ids not rebuilt with reasons, gate before and after.
+
+## As built
+
+227 of 256 atoms are back, under their original ids. With the 20 design rules in `catalogue/hiecm/concepts/`, HIE-CM carries 247 atoms.
+
+| Batch | Rebuilt | Not rebuilt |
+|---|---|---|
+| Pages: concepts, decisions, flows, troubleshooting, test | 43 of 44 | `hiecm.flow.m1-create-abha-by-document`: `enrol/byDocument` is not in the final set |
+| M1 endpoints and callbacks | 41 of 52 | 11 calls: gateway certs, OIDC config, four benefit searches, enrollment encrypt, `enrol/byDocument`, the v3.1 login OTP, login search, account logout |
+| M2 and M3 | 37 of 37 | none |
+| M4 and P1 | 33 of 35 | the M4 Aadhaar OTP call and the P1 email OTP call |
+| P2 and P3 | 48 of 49 | the P3 edit-subscription callback |
+| Errors | 25 of 39 | 14 codes, 6 AS- and 8 HIS-, that no final specification contains; their meanings came only from retired files |
+
+All 29 are left out for one reason: the final NHA set of 16 September has no such call or code, and rule 2 forbids restoring one on the retired documents' authority. `git log` on this branch lists them in each batch's commit body.
+
+**Placement decisions.**
+
+- M4 has no generated error page, so an M4 error atom would have had no partial to sit in. None of the M4 error codes was rebuildable, so none needed one.
+- `m1-receive-patient-share` sits in the notes partial of the scan-and-register operation that ABDM calls on the integrator's side, since that is the call it documents; its map entry keeps `milestone: M1`.
+
+**H1 follow-ups, open.**
+
+- Operation notes do not reach an API page's `.md` copy. `emit-page-markdown` skips `_notes` as a partial, so the notes render on the site and reach the atoms, but not the page's markdown copy or llms-full.txt.
+- The error generator skips a code sent with a trailing `": "`, so `ABDM-1016` is missing from the M1 codes table even though its atom section renders under it.
+
+**Retrieval gate.** Against the pre-rebuild baseline, with the glossary preference for definition-shaped questions (commit 3cb6bf275): mrr 0.505 to 0.601, hit@1 46 to 56, hit@10 76 to 87. Nine cases still fall one to five places. Whether they block the merge is open: the owner is deciding.

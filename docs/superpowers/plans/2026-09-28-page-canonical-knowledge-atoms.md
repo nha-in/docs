@@ -1645,6 +1645,9 @@ Each class below is its own plan, written when the class before it lands. Every 
 | 6 | NHCX errors (310): **[rev]** one section per code; adds a `lint:content` page type for error guides and an exact-code lookup in the indexer | the NHCX decision |
 | 7 | NHCX endpoints and callbacks (68): **[rev]** the skeleton (title, path, params, responses, error codes) is generated from the spec by `build-api-reference.mjs`; only the notes partial is authored | the NHCX decision |
 | 8 | NHCX tests, troubleshooting, decisions (49) | the NHCX decision |
+| Done, 29 September 2026 | HIE-CM rebuild: every HIE-CM atom the 16 September source reset deleted, as page sections on the HIE-CM pages and notes partials under `site/docs/_notes/hiecm/`, 227 of 256 (commits on `feat/hiecm-atoms-rebuild`, plan `2026-09-29-hiecm-atoms-rebuild.md`) | nothing |
+
+The HIE-CM rebuild closed a gap in the list above. Every class on it moves atoms that still exist from a file to a page, so the list had no class for knowledge that had no atom: the 256 HIE-CM atoms deleted with the retired NHA sources were in no file to move. That class was added and done outside this order, rebuilt from the deleted atoms as drafts and checked against the final set of 16 September.
 
 When the last class lands, `catalogue/` holds no hand-written atom file, `registry.json` shows every entry as `"source": "page"`, and `lint:atoms` checks only generated files.
 
