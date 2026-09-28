@@ -1,6 +1,19 @@
 ---
 name: abdm-scan-and-register
 description: Use when building, debugging or testing ABDM scan and register: receiving the profile a patient shares by QR code at a counter and answering with a queue token.
+type: skill
+domain: scan-and-register
+agent_consumers:
+  - abdm-integration-agent
+  - abdm-call-debugger
+requires:
+  - gateway-session-token
+  - facility-id
+produces:
+  - abha-profile
+  - registration
+can_execute: true
+can_orchestrate: false
 ---
 
 # ABDM Scan and register
@@ -26,7 +39,7 @@ This file is the map. Each line above is a file beside it, opened one at a time 
 
 ## Before anything else
 
-- No call in this skill has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.
+- Treat every request and response shape in this skill as unconfirmed until the sandbox has answered you. Check a response before you rely on its shape.
 
 ## Practices that hold across every call
 
