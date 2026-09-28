@@ -41,7 +41,7 @@ Every call, in both directions, starts with the same block. Build a fresh one fo
 
 | Field | Required | What it holds |
 | --- | --- | --- |
-| `domain` | Yes | The service, such as `nic2004:85112` for PM-JAY HEM. The [UHI Gateway](/docs/uhi/v1/getting-started/glossary#uhi-gateway) routes a search to every [HSPA](/docs/uhi/v1/getting-started/glossary#hspa) registered for it. [Each service's value](/docs/uhi/v1) |
+| `domain` | Yes | The service, such as `nic2004:85112` for PM-JAY HEM. The [UHI Gateway](/docs/uhi/v1/getting-started/glossary#uhi-gateway) routes a search to every [HSPA](/docs/uhi/v1/getting-started/glossary#hspa) registered for it. [Each service's value](/docs/uhi/v1/services) |
 | `country` | Yes | `IND` |
 | `city` | Yes | `std:011` |
 | `action` | Yes | The name of this call, such as `search` or `on_search` |

@@ -1,27 +1,66 @@
 ---
 title: Get started
 sidebar_label: Get started
+slug: /uhi/v1
 sidebar_position: 0
-description: Connect your app to the UHI network, from sandbox registration and your first signed search to going live.
+description: Connect your app to the UHI network, from the parties and services to sandbox registration, your first signed search and going live.
 source: UHI developer guide as of 22 September 2026, sections 1.1 to 1.4
 ---
+
+import UhiServicesArt from '@site/src/components/docs/UhiServicesArt';
 
 # Get started
 
 Connect your app to the Unified Health Interface
 ([UHI](/docs/uhi/v1/getting-started/glossary#uhi)) network.
 
-UHI is an open network under the Ayushman Bharat Digital Mission
-([ABDM](/docs/uhi/v1/getting-started/glossary#abdm)). A patient app built once
-can discover health services from every compliant provider platform, and book
-some of them. Every exchange is asynchronous: you send a signed request, get an
-`ACK` at once, and receive the answer later on your own callback URL.
+## What is UHI?
 
-You build one of two sides. A patient-facing app is an
-[EUA](/docs/uhi/v1/getting-started/glossary#eua). A provider system that
-answers searches is an [HSPA](/docs/uhi/v1/getting-started/glossary#hspa).
-[Introduction to UHI](/docs/uhi/v1) sets out the parties, the six live services
-and how to choose.
+<div className="intro-split">
+<UhiServicesArt />
+
+UHI is an open network under the Ayushman Bharat Digital Mission
+([ABDM](/docs/uhi/v1/getting-started/glossary#abdm)). Any compliant patient app
+can discover health services from any compliant provider platform through one
+integration, and book some of them.
+
+Every exchange is asynchronous. Your app sends a signed request, gets an `ACK`
+at once, and receives the real answer later as a callback on its own URL.
+
+</div>
+
+Every exchange has three parties.
+
+| Party | Who runs it | What it does |
+| --- | --- | --- |
+| [EUA](/docs/uhi/v1/getting-started/glossary#eua), End User Application | [PHR](/docs/uhi/v1/getting-started/glossary#phr) and consumer apps, such as Aarogya Setu or the [ABHA](/docs/uhi/v1/getting-started/glossary#abha) app | Takes the patient's query and sends `search`, and later booking calls. Receives callbacks on its `consumer_uri` and renders results |
+| [UHI Gateway](/docs/uhi/v1/getting-started/glossary#uhi-gateway) | [NHA](/docs/uhi/v1/getting-started/glossary#nha) | Validates and signs requests, routes `search` to the right HSPAs, and relays `on_search` back to the EUA |
+| [HSPA](/docs/uhi/v1/getting-started/glossary#hspa), Health Service Provider Application | The service owner, such as a hospital network, NOTTO, PMBI or an ambulance aggregator | Queries its own registry and returns a signed catalog in `on_search`. Sends booking callbacks where the service supports them |
+
+## Six services
+
+A service is named by the `context.domain` value inside each call, not by a
+different endpoint.
+
+| Service | `context.domain` | Your role | Who runs the HSPA | Scope today |
+| --- | --- | --- | --- | --- |
+| [Physical Consultation](/docs/uhi/v1/services/consultation) | `nic2004:85111` | EUA or HSPA | Any registered provider platform | Discovery, booking, check-in, cancellation |
+| [PM-JAY HEM Hospital Discovery](/docs/uhi/v1/services/pmjay-hem) | `nic2004:85112` | EUA | NHA | Discovery |
+| [Blood Bank Discovery](/docs/uhi/v1/services/blood-bank) | `nic2008:86906` | EUA or HSPA | e-RaktKosh, and any approved blood bank system | Discovery |
+| [Ambulance Booking](/docs/uhi/v1/services/ambulance) | `nic2008:86909` | EUA or HSPA | Any registered ambulance platform | Discovery and quote, in Phase 1 |
+| [Jan Aushadhi](/docs/uhi/v1/services/jan-aushadhi) | `nic2008:47721` | EUA | PMBI | Kendra and medicine discovery |
+| [NOTTO Hospital Discovery](/docs/uhi/v1/services/notto) | `nic2004:86100` | EUA | NOTTO | Discovery |
+
+## Choose your role
+
+| If you | You are | You build |
+| --- | --- | --- |
+| Build a patient-facing app | An EUA | The search, your callback endpoints, and the screens that render results |
+| Run a provider system that answers searches | An HSPA | A `search` endpoint that answers from your own registry, and the booking calls your service supports |
+
+You can be an HSPA only for Physical Consultation, Blood Bank Discovery and
+Ambulance Booking. For the other three, the HSPA already exists and you build
+only the EUA.
 
 An EUA must complete [Milestone 2](/docs/hiecm/v3/milestones/m2) on
 [HIE-CM](/docs/uhi/v1/getting-started/glossary#hie-cm) before it can be
@@ -34,10 +73,10 @@ onboarded onto any UHI service.
     Generate your key pair and register for a subscriber ID.
   </Card>
   <Card title="Quickstart" icon="terminal" href="/docs/uhi/v1/getting-started/first-fifteen-minutes">
-    Build, sign and send your first PM-JAY hospital search.
+    Send your first PM-JAY hospital search in four steps.
   </Card>
   <Card title="Services" icon="milestone" href="/docs/uhi/v1/services">
-    The six services on the network and which role each one takes.
+    What each service does and which one to build first.
   </Card>
   <Card title="Build with AI" icon="sparkles" href="/docs/uhi/v1/getting-started/build-with-ai">
     The Docs MCP server and Ask AI for your coding agent.
@@ -50,29 +89,6 @@ onboarded onto any UHI service.
   </Card>
 </CardGroup>
 
-## Common use cases
-
-<CardGroup cols={3}>
-  <Card title="I want to find PM-JAY hospitals" href="/docs/uhi/v1/services/pmjay-hem">
-    Empanelled hospitals by location and speciality.
-  </Card>
-  <Card title="I want to book a doctor's appointment" href="/docs/uhi/v1/services/consultation">
-    Discover, book, and check in with a PIN.
-  </Card>
-  <Card title="I want to find blood in stock" href="/docs/uhi/v1/services/blood-bank">
-    Blood banks by group and component.
-  </Card>
-  <Card title="I want to find an ambulance" href="/docs/uhi/v1/services/ambulance">
-    Emergency ambulances with arrival window and price.
-  </Card>
-  <Card title="I want to find a generic medicine" href="/docs/uhi/v1/services/jan-aushadhi">
-    Jan Aushadhi Kendras and the medicines they stock.
-  </Card>
-  <Card title="I want to find a transplant hospital" href="/docs/uhi/v1/services/notto">
-    NOTTO registered hospitals by organ or tissue.
-  </Card>
-</CardGroup>
-
 ## More resources
 
 <CardGroup cols={3}>
@@ -81,6 +97,9 @@ onboarded onto any UHI service.
   </Card>
   <Card title="How messages and callbacks work" href="/docs/uhi/v1/concepts/messages">
     The `context` block, the `ACK`, and matching the answer.
+  </Card>
+  <Card title="Which calls go through the Gateway" href="/docs/uhi/v1/concepts/routes">
+    Gateway routes, and the direct calls between EUA and HSPA.
   </Card>
 </CardGroup>
 

@@ -1,4 +1,5 @@
 [
+  {"from": "/docs/uhi/v1/getting-started", "to": "/docs/uhi/v1"},
   {"from": "/docs/uhi/v1/onboarding", "to": "/docs/uhi/v1/getting-started/sandbox"},
   {"from": "/docs/uhi/v1/getting-started/onboarding", "to": "/docs/uhi/v1/getting-started/sandbox"},
   {"from": "/docs/uhi/v1/getting-started/quick-start", "to": "/docs/uhi/v1/getting-started/first-fifteen-minutes"},
