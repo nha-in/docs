@@ -1,0 +1,13 @@
+## Link On-Init, HIP responds with OTP communication details {/* #m2-on-link-init */}
+
+Answer a [link init request](/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/06-m2-post-v3-hip-link-care-context-init) here. Generate a unique link reference number. Send an [OTP](/docs/hiecm/v3/getting-started/glossary#otp) to the mobile number you hold for the patient. Return the reference in `link.referenceNumber`, and say where the code went and when it expires in `link.meta`.
+
+<AgentOnly>
+**Before you start.** A gateway session token and the init request. Send the `REQUEST-ID`, `TIMESTAMP` and `X-CM-ID` headers.
+
+**What happens.** `authenticationType` is `DIRECT` or `MEDIATED`. `communicationMedium` is `MOBILE` or `EMAIL`. `communicationExpiry` is a UTC date time. Echo `transactionId`, and put the init request's `REQUEST-ID` in `requestId`. The call returns 202 Accepted.
+
+**How you know it worked.** A confirm request arrives on `/api/v3/hip/link/care-context/confirm`, carrying your reference number as `linkRefNumber`.
+
+**When it goes wrong.** A repeated answer is the `ABDM-1107` case, Duplicate On init request. `ABDM-2402` (Invalid Timestamp): check `TIMESTAMP` against your clock. `ABDM-2404` (Invalid Request Id): send a fresh UUID in `REQUEST-ID`. `ABDM-2500` (Authorization header is missing): send the session token. `ABDM-9999` (Unknown exception) gives no cause.
+</AgentOnly>

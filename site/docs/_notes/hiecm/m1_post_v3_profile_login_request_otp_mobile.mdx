@@ -1,0 +1,11 @@
+## Send a login OTP {/* #m1-login-request-otp */}
+
+Starts a login. `loginHint` names what the person identifies themselves with, such as `mobile`, `abha-number` or `aadhaar`, and `loginId` carries that value encrypted. `otpSystem` picks who sends the [OTP](/docs/hiecm/v3/getting-started/glossary#otp): `abdm` sends it to the mobile on the [ABHA](/docs/hiecm/v3/getting-started/glossary#abha), and `aadhaar` to the mobile linked with Aadhaar. The response carries the `txnId` for the verify call.
+
+<AgentOnly>
+**Before you start.** Encrypt `loginId` with the key and `encryptionAlgorithm` from the public certificate call.
+
+**How you know it worked.** A 200 with a `txnId` and a message naming where the OTP went.
+
+**When it goes wrong.** A 400 with `Invalid LoginId` means the value was refused: check the key and the padding before the value. A 400 with `Invalid Login Hint` means `loginHint` does not match this use.
+</AgentOnly>

@@ -1,0 +1,19 @@
+## Subscription approved callback {/* #p3-approve-subscription-request-call-back */}
+
+When the person approves your subscription request, ABDM posts it here with `notification.status` set to `GRANTED`. `notification.subscription` holds what the person granted, including the subscription id.
+
+<AgentOnly>
+**What happens.** Acknowledge it with the subscription request on-notify call, quoting its `subscriptionRequestId`.
+
+**How you know it worked.** `notification.status` is `GRANTED` and the granted subscription carries an `id`. Store it: record notifications quote it as `subscriptionId`.
+</AgentOnly>
+
+## Subscription denied callback {/* #p3-deny-subscription-call-back */}
+
+When the person denies your subscription request, ABDM posts it here with `notification.status` set to `DENIED`. `notification.reason` carries the person's reason.
+
+<AgentOnly>
+**What happens.** Acknowledge it with the subscription request on-notify call, quoting its `subscriptionRequestId`.
+
+**How you know it worked.** `notification.status` is `DENIED`. Expect no record notifications for this request.
+</AgentOnly>

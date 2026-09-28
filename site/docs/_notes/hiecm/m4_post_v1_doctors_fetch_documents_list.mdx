@@ -1,0 +1,11 @@
+## List the documents this professional must upload {/* #m4-hpr-fetch-documents-list */}
+
+A professional's registration in the [HPR](/docs/hiecm/v3/getting-started/glossary#hpr) carries supporting documents. This call takes the professional's `hprid` and returns `documentList`, which says which documents the registry expects and the `id` to upload each one against.
+
+<AgentOnly>
+**Before you start.** A registered professional and their `hprid`.
+
+**What happens.** `documentList` groups the documents. `profileDetails` holds `profilePhoto` and `proofOfWorkCertificate`. `registrationDetails` holds `registrationCertificate` and `proofOfNameChangeRegCertificate`. `qualificationDetails` holds `degreeCertificate` and `proofOfNameChangeQualCertificate`. Each entry carries an `id` and `data`.
+
+**How you know it worked.** The response carries `documentList`. Upload each outstanding document with the upload call, using the entry's `id` as its `document_id`.
+</AgentOnly>

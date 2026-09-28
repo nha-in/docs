@@ -1,0 +1,21 @@
+## A request to start linking a care context {/* #m2-on-link-init */}
+
+When the patient picks care contexts to link, ABDM posts them to your bridge at `/api/v3/hip/link/care-context/init`. Generate a link reference number and send an [OTP](/docs/hiecm/v3/getting-started/glossary#otp) to the mobile number you hold for the patient. Then answer through [on-init](/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/02-m2-post-user-initiated-linking-v3-link-care-context-on-init).
+
+<AgentOnly>
+**Before you start.** The `transactionId` from the discovery request.
+
+**What happens.** ABDM posts with the `REQUEST-ID`, `TIMESTAMP` and `X-HIP-ID` headers. The body carries `transactionId`, `abhaAddress` and the `patient` care contexts to link.
+
+**When it goes wrong.** A repeated init request is the `ABDM-1104` case, Duplicate Init request. An on-init answer that cannot be accepted is the `ABDM-1110` case, Invalid On init response.
+</AgentOnly>
+
+## Link init request to the HIP {/* #p2-callback-on-health-record-link-init */}
+
+When the person chooses records to link, ABDM posts the chosen care contexts here with their `abhaAddress`. Send the person a code, then answer with the link on-init call.
+
+<AgentOnly>
+**What happens.** Answer at `/api/hiecm/user-initiated-linking/v3/link/care-context/on-init`, quoting the `transactionId`.
+
+**When it goes wrong.** `400` with `ABDM-1104` means a duplicate init request.
+</AgentOnly>

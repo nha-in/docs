@@ -1,0 +1,204 @@
+hiecm.endpoint.p1-generate-refresh-token:
+  type: endpoint
+  gateway: hiecm
+  milestone: P1
+  title: Generate Refresh Token
+  summary: Exchanges the refresh token from a login for a new access token and refresh
+    token.
+  page: site/docs/_notes/hiecm/p2_get_v3_phr_app_login_profile_request_token.mdx
+  heading: p1-generate-refresh-token
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-profile/05-p2-get-v3-phr-app-login-profile-request-token#p1-generate-refresh-token
+  operation: p2_get_v3_phr_app_login_profile_request_token
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.p1-get-user-phr-card:
+  type: endpoint
+  gateway: hiecm
+  milestone: P1
+  title: Get User PHR Card
+  summary: Fetches the PHR card of the person signed in.
+  page: site/docs/_notes/hiecm/p2_get_v3_phr_app_login_profile_phrcard.mdx
+  heading: p1-get-user-phr-card
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-profile/03-p2-get-v3-phr-app-login-profile-phrcard#p1-get-user-phr-card
+  operation: p2_get_v3_phr_app_login_profile_phrcard
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.p1-get-user-profile:
+  type: endpoint
+  gateway: hiecm
+  milestone: P1
+  title: Get User Profile
+  summary: Returns the profile of the person signed in, identified by their user token.
+  page: site/docs/_notes/hiecm/p2_get_v3_phr_app_login_profile.mdx
+  heading: p1-get-user-profile
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-profile/01-p2-get-v3-phr-app-login-profile#p1-get-user-profile
+  operation: p2_get_v3_phr_app_login_profile
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.p1-get-user-qr-code:
+  type: endpoint
+  gateway: hiecm
+  milestone: P1
+  title: Get User QR Code
+  summary: Fetches a QR code that carries the signed in person's details.
+  page: site/docs/_notes/hiecm/p2_get_v3_phr_app_login_profile_qrcode.mdx
+  heading: p1-get-user-qr-code
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-profile/02-p2-get-v3-phr-app-login-profile-qrcode#p1-get-user-qr-code
+  operation: p2_get_v3_phr_app_login_profile_qrcode
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.p1-logout-user:
+  type: endpoint
+  gateway: hiecm
+  milestone: P1
+  title: Logout User
+  summary: Ends the session of the person signed in.
+  page: site/docs/_notes/hiecm/p2_get_v3_phr_app_login_profile_request_logout.mdx
+  heading: p1-logout-user
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-profile/06-p2-get-v3-phr-app-login-profile-request-logout#p1-logout-user
+  operation: p2_get_v3_phr_app_login_profile_request_logout
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.p1-link-abha-number-via-aadhaar-request-otp:
+  type: endpoint
+  gateway: hiecm
+  milestone: P1
+  title: Link ABHA number via AADHAAR-Request OTP
+  summary: Starts linking an ABHA number to the signed in ABHA address with an Aadhaar
+    OTP.
+  page: site/docs/_notes/hiecm/p2_post_v3_phr_app_login_profile_request_otp.mdx
+  heading: p1-link-abha-number-via-aadhaar-request-otp
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/01-p2-post-v3-phr-app-login-profile-request-otp#p1-link-abha-number-via-aadhaar-request-otp
+  operation: p2_post_v3_phr_app_login_profile_request_otp
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.p1-link-abha-number-via-mobile-request-otp:
+  type: endpoint
+  gateway: hiecm
+  milestone: P1
+  title: Link ABHA number via Mobile-Request OTP
+  summary: Starts linking an ABHA number to the signed in ABHA address with an OTP
+    to the ABHA number's mobile.
+  page: site/docs/_notes/hiecm/p2_post_v3_phr_app_login_profile_request_otp.mdx
+  heading: p1-link-abha-number-via-mobile-request-otp
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/01-p2-post-v3-phr-app-login-profile-request-otp#p1-link-abha-number-via-mobile-request-otp
+  operation: p2_post_v3_phr_app_login_profile_request_otp
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.p1-update-mobile-request-otp:
+  type: endpoint
+  gateway: hiecm
+  milestone: P1
+  title: Update the mobile number, request the OTP
+  summary: Sends an OTP to the new mobile number before it replaces the old one on
+    the ABHA address.
+  page: site/docs/_notes/hiecm/p2_post_v3_phr_app_login_profile_request_otp.mdx
+  heading: p1-update-mobile-request-otp
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/01-p2-post-v3-phr-app-login-profile-request-otp#p1-update-mobile-request-otp
+  operation: p2_post_v3_phr_app_login_profile_request_otp
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.p1-link-abha-number-via-aadhaar-verify-otp:
+  type: endpoint
+  gateway: hiecm
+  milestone: P1
+  title: Link ABHA number via AADHAAR-Verify OTP
+  summary: Verifies the Aadhaar OTP sent to link an ABHA number to the signed in ABHA
+    address.
+  page: site/docs/_notes/hiecm/p2_post_v3_phr_app_login_profile_verify.mdx
+  heading: p1-link-abha-number-via-aadhaar-verify-otp
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/02-p2-post-v3-phr-app-login-profile-verify#p1-link-abha-number-via-aadhaar-verify-otp
+  operation: p2_post_v3_phr_app_login_profile_verify
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.p1-link-abha-number-via-mobile-verify-otp:
+  type: endpoint
+  gateway: hiecm
+  milestone: P1
+  title: Link ABHA number via Mobile-Verify OTP
+  summary: Verifies the mobile OTP sent to link an ABHA number to the signed in ABHA
+    address.
+  page: site/docs/_notes/hiecm/p2_post_v3_phr_app_login_profile_verify.mdx
+  heading: p1-link-abha-number-via-mobile-verify-otp
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/02-p2-post-v3-phr-app-login-profile-verify#p1-link-abha-number-via-mobile-verify-otp
+  operation: p2_post_v3_phr_app_login_profile_verify
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.p1-update-mobile-verify-otp:
+  type: endpoint
+  gateway: hiecm
+  milestone: P1
+  title: Update Mobile Verify-OTP
+  summary: Verifies the OTP sent to the new mobile number and updates the number on
+    the ABHA address.
+  page: site/docs/_notes/hiecm/p2_post_v3_phr_app_login_profile_verify.mdx
+  heading: p1-update-mobile-verify-otp
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/02-p2-post-v3-phr-app-login-profile-verify#p1-update-mobile-verify-otp
+  operation: p2_post_v3_phr_app_login_profile_verify
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.p1-process-link-request-via-aadhaar-number:
+  type: endpoint
+  gateway: hiecm
+  milestone: P1
+  title: Process Link Request via Aadhaar OTP
+  summary: Links the ABHA number to the signed in ABHA address after the Aadhaar OTP
+    is verified.
+  page: site/docs/_notes/hiecm/p2_post_v3_phr_app_login_profile_link.mdx
+  heading: p1-process-link-request-via-aadhaar-number
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-link-abha-number-abha-otp/03-p2-post-v3-phr-app-login-profile-link#p1-process-link-request-via-aadhaar-number
+  operation: p2_post_v3_phr_app_login_profile_link
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.p1-process-link-request-via-abha-number:
+  type: endpoint
+  gateway: hiecm
+  milestone: P1
+  title: Process Link Request via ABHA OTP
+  summary: Links the ABHA number to the signed in ABHA address after the OTP to the
+    ABHA number's mobile is verified.
+  page: site/docs/_notes/hiecm/p2_post_v3_phr_app_login_profile_link.mdx
+  heading: p1-process-link-request-via-abha-number
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-link-abha-number-abha-otp/03-p2-post-v3-phr-app-login-profile-link#p1-process-link-request-via-abha-number
+  operation: p2_post_v3_phr_app_login_profile_link
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.p1-switch-profile-request:
+  type: endpoint
+  gateway: hiecm
+  milestone: P1
+  title: Switch Profile Request
+  summary: Lists the other ABHA addresses a signed in person can switch to.
+  page: site/docs/_notes/hiecm/p2_get_v3_phr_app_login_profile_switch_profile.mdx
+  heading: p1-switch-profile-request
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-switch-profile/01-p2-get-v3-phr-app-login-profile-switch-profile#p1-switch-profile-request
+  operation: p2_get_v3_phr_app_login_profile_switch_profile
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.p1-switch-profile-verify:
+  type: endpoint
+  gateway: hiecm
+  milestone: P1
+  title: Switch Profile Verify
+  summary: Completes a switch to another ABHA address and returns its session.
+  page: site/docs/_notes/hiecm/p2_post_v3_phr_app_login_profile_verify_switch_profile_user.mdx
+  heading: p1-switch-profile-verify
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-switch-profile/02-p2-post-v3-phr-app-login-profile-verify-switch-profile-user#p1-switch-profile-verify
+  operation: p2_post_v3_phr_app_login_profile_verify_switch_profile_user
+  related:
+    concepts:
+    - hiecm.concept.gateway-session

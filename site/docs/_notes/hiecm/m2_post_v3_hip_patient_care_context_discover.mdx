@@ -1,0 +1,21 @@
+## A discovery request for a patient you may hold records for {/* #m2-on-discovery-request */}
+
+When a patient searches for their records, ABDM posts a discovery request to your [HIP](/docs/hiecm/v3/getting-started/glossary#hip) bridge at `/api/v3/hip/patient/care-context/discover`. It carries the patient's name, gender, year of birth, and verified and unverified identifiers. Search your records with them. Then answer through [on-discover](/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/01-m2-post-user-initiated-linking-v3-patient-care-context-on-8c9340) with the unlinked care contexts you found.
+
+<AgentOnly>
+**Before you start.** A callback URL registered for your bridge and reachable from the public internet.
+
+**What happens.** ABDM posts with the `REQUEST-ID`, `TIMESTAMP` and `X-HIP-ID` headers, and expects 202 Accepted. Keep `transactionId`: every later step of this linking flow carries it.
+
+**When it goes wrong.** A repeated discovery request is the `ABDM-1103` case, Duplicate Discovery request. Answer each discovery once.
+</AgentOnly>
+
+## Discovery request to the HIP {/* #p2-callback-to-hip-discovery */}
+
+When a person asks from their PHR app what records your facility holds, ABDM posts the request here. Match the person on `patient.verifiedIdentifiers` and their name, gender and year of birth. Then answer with the [care contexts](/docs/hiecm/v3/getting-started/glossary#care-context) you hold.
+
+<AgentOnly>
+**What happens.** Answer with `202`, then send the on-discover call at `/api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover`, quoting the `transactionId`.
+
+**When it goes wrong.** `400` with `ABDM-1103` means a duplicate discovery request.
+</AgentOnly>

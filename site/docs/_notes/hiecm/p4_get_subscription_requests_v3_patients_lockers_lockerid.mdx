@@ -1,0 +1,11 @@
+## Get a health locker by its id {/* #p3-patient-locker-details-by-locker-id */}
+
+Returns one health locker's settings for the logged-in person, by its `locker-id`: whether it is `active`, and the `subscriptions` it holds.
+
+<AgentOnly>
+**Before you start.** The person's `X-AUTH-TOKEN` and a `lockerId` from the list of subscribed lockers.
+
+**How you know it worked.** You receive `200` with `lockerId`, `lockerName`, `active` and `subscriptions`.
+
+**When it goes wrong.** `400` with `ABDM-1066` means the token is invalid: log the person in again.
+</AgentOnly>

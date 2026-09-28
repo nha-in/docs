@@ -1,0 +1,15 @@
+## Create an ABHA from a verified Aadhaar OTP {/* #m1-enrolment-by-aadhaar */}
+
+Verifies the Aadhaar [OTP](/docs/hiecm/v3/getting-started/glossary#otp) and creates the [ABHA number](/docs/hiecm/v3/getting-started/glossary#abha-number). Send the `txnId` from the OTP request, the encrypted OTP, the mobile number to link, and the consent block recording that the person agreed.
+
+If an ABHA already exists for that Aadhaar, the call returns it instead of creating a second one, and `isNew` is false. The response carries the profile and the person's `X-token` in `tokens.token`.
+
+<AgentOnly>
+**Before you start.** The `txnId` from the Aadhaar OTP request. Send `consent` with `code` `abha-enrollment` and `version` `1.4`. Send `BENEFIT_NAME` only when the person enrols through a benefit programme.
+
+**What happens.** When `mobile` is not the mobile linked with Aadhaar, verify it next with the enrolment OTP call and `mobile-verify`.
+
+**How you know it worked.** A 200 with `ABHAProfile` and `tokens`, and `isNew` true for a new account.
+
+**When it goes wrong.** A 400 names the refused field, such as `Invalid Transaction Id` or `Invalid Mobile Number`. A 422 means Aadhaar or a business rule refused the request, for example a wrong OTP. A 401 with `ABDM-1021` means your integration lacks the privilege, often an unapproved `BENEFIT_NAME`.
+</AgentOnly>

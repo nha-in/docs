@@ -1,0 +1,9 @@
+## Check whether the mobile number is the one on the Aadhaar record {/* #m4-hpr-demographic-auth-mobile */}
+
+Checks the mobile number a healthcare professional gave against their Aadhaar record, inside the Aadhaar transaction `txnId`. The answer decides whether the number needs its own one time password ([OTP](/docs/hiecm/v3/getting-started/glossary#otp)) before the [HPID](/docs/hiecm/v3/getting-started/glossary#hpid) is created. The response field is `verified`.
+
+<AgentOnly>
+**Before you start.** The `txnId` of the Aadhaar transaction from the earlier steps, and the professional's `mobileNumber`.
+
+**How you know it worked.** The response carries `verified`. `true` means the number matches the Aadhaar record, and the mobile OTP steps are skipped. `false` means generate and verify a mobile OTP with the generate and verify mobile OTP calls before you create the HPID.
+</AgentOnly>

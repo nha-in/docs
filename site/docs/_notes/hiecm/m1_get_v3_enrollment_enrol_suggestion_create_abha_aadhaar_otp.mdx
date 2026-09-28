@@ -1,0 +1,9 @@
+## Get suggested ABHA addresses for a new account {/* #m1-enrolment-address-suggestions */}
+
+After the [ABHA number](/docs/hiecm/v3/getting-started/glossary#abha-number) is created, this returns available [ABHA addresses](/docs/hiecm/v3/getting-started/glossary#abha-address) built from the person's details. Offer them as choices, and let the person type their own instead. Send the enrolment `txnId` in the `TRANSACTION_ID` header. The suggestions come back in `abhaAddressList`.
+
+<AgentOnly>
+**What happens.** The next call claims the address the person chooses.
+
+**When it goes wrong.** `ABDM-1017` or `Invalid Transaction Id` means the `txnId` is wrong or stale. Send the latest `txnId` from this enrolment.
+</AgentOnly>

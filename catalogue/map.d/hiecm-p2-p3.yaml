@@ -1,0 +1,612 @@
+hiecm.endpoint.p2-all-providers:
+  type: endpoint
+  gateway: hiecm
+  milestone: P2
+  title: Search providers by name
+  summary: Search the facilities registered on ABDM by name, state and district before
+    asking one of them for records.
+  page: site/docs/_notes/hiecm/p2_get_gateway_v3_providers.mdx
+  heading: p2-all-providers
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/01-p2-get-gateway-v3-providers#p2-all-providers
+  operation: p2_get_gateway_v3_providers
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    endpoints:
+    - hiecm.endpoint.p2-provider-by-provider-id
+    - hiecm.endpoint.p2-care-context-discover
+hiecm.endpoint.p2-provider-by-provider-id:
+  type: endpoint
+  gateway: hiecm
+  milestone: P2
+  title: Get a provider by its id
+  summary: Fetch the details of one facility when you already hold its id.
+  page: site/docs/_notes/hiecm/p2_get_gateway_v3_providers_provider_id.mdx
+  heading: p2-provider-by-provider-id
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/02-p2-get-gateway-v3-providers-provider-id#p2-provider-by-provider-id
+  operation: p2_get_gateway_v3_providers_provider_id
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    endpoints:
+    - hiecm.endpoint.p2-all-providers
+hiecm.endpoint.p2-govt-programs:
+  type: endpoint
+  gateway: hiecm
+  milestone: P2
+  title: List government programmes
+  summary: Fetch the list of government health programmes.
+  page: site/docs/_notes/hiecm/p2_get_gateway_v3_govt_programs.mdx
+  heading: p2-govt-programs
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/09-p2-get-gateway-v3-govt-programs#p2-govt-programs
+  operation: p2_get_gateway_v3_govt_programs
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    endpoints:
+    - hiecm.endpoint.p2-all-providers
+hiecm.endpoint.p2-care-context-discover:
+  type: endpoint
+  gateway: hiecm
+  milestone: P2
+  title: Ask a facility what records it holds
+  summary: Ask one facility whether it holds records for the logged-in person; the
+    answer arrives on a callback.
+  page: site/docs/_notes/hiecm/p2_post_user_initiated_linking_v3_patient_care_context_discover.mdx
+  heading: p2-care-context-discover
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/03-p2-post-user-initiated-linking-v3-patient-care-context-discover#p2-care-context-discover
+  operation: p2_post_user_initiated_linking_v3_patient_care_context_discover
+  related:
+    flows:
+    - hiecm.flow.p2-discover-and-link
+    concepts:
+    - hiecm.concept.gateway-session
+    callbacks:
+    - hiecm.callback.p2-callback-on-health-record-discover
+    endpoints:
+    - hiecm.endpoint.p2-link-care-context-init
+hiecm.endpoint.p2-link-care-context-init:
+  type: endpoint
+  gateway: hiecm
+  milestone: P2
+  title: Start linking the care contexts the person chose
+  summary: Start linking the records the person chose after discovery; the facility
+    replies with how the person will confirm.
+  page: site/docs/_notes/hiecm/p2_post_user_initiated_linking_v3_link_care_context_init.mdx
+  heading: p2-link-care-context-init
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/05-p2-post-user-initiated-linking-v3-link-care-context-init#p2-link-care-context-init
+  operation: p2_post_user_initiated_linking_v3_link_care_context_init
+  related:
+    flows:
+    - hiecm.flow.p2-discover-and-link
+    concepts:
+    - hiecm.concept.gateway-session
+    callbacks:
+    - hiecm.callback.p2-response-on-health-record-link
+    endpoints:
+    - hiecm.endpoint.p2-care-context-discover
+    - hiecm.endpoint.p2-link-care-context-confirm
+hiecm.endpoint.p2-link-care-context-confirm:
+  type: endpoint
+  gateway: hiecm
+  milestone: P2
+  title: Confirm the link with the code the person received
+  summary: Finish user initiated linking by sending the code the person received.
+  page: site/docs/_notes/hiecm/p2_post_user_initiated_linking_v3_link_care_context_confirm.mdx
+  heading: p2-link-care-context-confirm
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/07-p2-post-user-initiated-linking-v3-link-care-context-confirm#p2-link-care-context-confirm
+  operation: p2_post_user_initiated_linking_v3_link_care_context_confirm
+  related:
+    flows:
+    - hiecm.flow.p2-discover-and-link
+    concepts:
+    - hiecm.concept.gateway-session
+    callbacks:
+    - hiecm.callback.p2-response-on-health-record-on-confirm
+    endpoints:
+    - hiecm.endpoint.p2-link-care-context-init
+hiecm.callback.p2-callback-on-health-record-discover:
+  type: callback
+  gateway: hiecm
+  milestone: P2
+  title: Discovery result callback
+  summary: ABDM posts the care contexts a facility found for the person to your on-discover
+    URL.
+  page: site/docs/_notes/hiecm/p2_post_v3_hiu_patient_care_context_on_discover.mdx
+  heading: p2-callback-on-health-record-discover
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/04-p2-post-v3-hiu-patient-care-context-on-discover#p2-callback-on-health-record-discover
+  operation: p2_post_v3_hiu_patient_care_context_on_discover
+  related:
+    flows:
+    - hiecm.flow.p2-discover-and-link
+    concepts:
+    - hiecm.concept.gateway-session
+    - hiecm.concept.asynchronous-callbacks
+    endpoints:
+    - hiecm.endpoint.p2-care-context-discover
+hiecm.callback.p2-response-on-health-record-link:
+  type: callback
+  gateway: hiecm
+  milestone: P2
+  title: Link init result callback
+  summary: ABDM posts the facility's answer to a link request, with the reference
+    and where the confirmation code went.
+  page: site/docs/_notes/hiecm/p2_post_v3_hiu_patient_care_context_on_init.mdx
+  heading: p2-response-on-health-record-link
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/06-p2-post-v3-hiu-patient-care-context-on-init#p2-response-on-health-record-link
+  operation: p2_post_v3_hiu_patient_care_context_on_init
+  related:
+    flows:
+    - hiecm.flow.p2-discover-and-link
+    concepts:
+    - hiecm.concept.gateway-session
+    - hiecm.concept.asynchronous-callbacks
+    endpoints:
+    - hiecm.endpoint.p2-link-care-context-init
+    - hiecm.endpoint.p2-link-care-context-confirm
+hiecm.callback.p2-response-on-health-record-on-confirm:
+  type: callback
+  gateway: hiecm
+  milestone: P2
+  title: Link confirm result callback
+  summary: ABDM posts the outcome of the confirm call, listing the care contexts now
+    linked.
+  page: site/docs/_notes/hiecm/p2_post_v3_hiu_patient_care_context_on_confirm.mdx
+  heading: p2-response-on-health-record-on-confirm
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/08-p2-post-v3-hiu-patient-care-context-on-confirm#p2-response-on-health-record-on-confirm
+  operation: p2_post_v3_hiu_patient_care_context_on_confirm
+  related:
+    flows:
+    - hiecm.flow.p2-discover-and-link
+    concepts:
+    - hiecm.concept.gateway-session
+    - hiecm.concept.asynchronous-callbacks
+    endpoints:
+    - hiecm.endpoint.p2-link-care-context-confirm
+    - hiecm.endpoint.p3-get-all-links-records
+hiecm.endpoint.p2-patient-share:
+  type: endpoint
+  gateway: hiecm
+  milestone: P2
+  title: Share the profile with the facility whose code was scanned
+  summary: Send the person's profile to the facility whose code they scanned; the
+    facility answers with a token number on a callback.
+  page: site/docs/_notes/hiecm/p2_post_patient_share_v3_share.mdx
+  heading: p2-patient-share
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-abdm-hiecm-patient-share-phr/01-p2-post-patient-share-v3-share#p2-patient-share
+  operation: p2_post_patient_share_v3_share
+  related:
+    flows:
+    - hiecm.flow.p2-scan-and-share
+    concepts:
+    - hiecm.concept.gateway-session
+    callbacks:
+    - hiecm.callback.p2-profile-on-share-callback
+hiecm.callback.p2-profile-on-share-callback:
+  type: callback
+  gateway: hiecm
+  milestone: P2
+  title: Profile share result callback
+  summary: ABDM posts the facility's answer to a profile share, with the person's
+    token number.
+  page: site/docs/_notes/hiecm/p2_post_v3_hiu_patient_on_share.mdx
+  heading: p2-profile-on-share-callback
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-abdm-hiecm-patient-share-phr/02-p2-post-v3-hiu-patient-on-share#p2-profile-on-share-callback
+  operation: p2_post_v3_hiu_patient_on_share
+  related:
+    flows:
+    - hiecm.flow.p2-scan-and-share
+    concepts:
+    - hiecm.concept.gateway-session
+    - hiecm.concept.asynchronous-callbacks
+    endpoints:
+    - hiecm.endpoint.p2-patient-share
+hiecm.endpoint.p3-consent-auto-approve:
+  type: endpoint
+  gateway: hiecm
+  milestone: P3
+  title: Set an auto approval policy
+  summary: Let consent requests from one health information user be approved automatically,
+    within limits the person sets.
+  page: site/docs/_notes/hiecm/p2_post_consent_v3_auto_approve.mdx
+  heading: p3-consent-auto-approve
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/01-p2-post-consent-v3-auto-approve#p3-consent-auto-approve
+  operation: p2_post_consent_v3_auto_approve
+  related:
+    flows:
+    - hiecm.flow.p3-subscribe-and-auto-approve
+    concepts:
+    - hiecm.concept.gateway-session
+    endpoints:
+    - hiecm.endpoint.p3-consent-disable-auto-approve
+    - hiecm.endpoint.p3-consent-enable-auto-approve
+hiecm.endpoint.p3-consent-disable-auto-approve:
+  type: endpoint
+  gateway: hiecm
+  milestone: P3
+  title: Disable an auto approval policy
+  summary: Turn off an auto approval policy so consent requests wait for the person
+    again.
+  page: site/docs/_notes/hiecm/p2_post_consent_v3_auto_approve_auto_approval_id_disable.mdx
+  heading: p3-consent-disable-auto-approve
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/02-p2-post-consent-v3-auto-approve-auto-approval-id-disable#p3-consent-disable-auto-approve
+  operation: p2_post_consent_v3_auto_approve_auto_approval_id_disable
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    endpoints:
+    - hiecm.endpoint.p3-consent-auto-approve
+    - hiecm.endpoint.p3-consent-enable-auto-approve
+hiecm.endpoint.p3-consent-enable-auto-approve:
+  type: endpoint
+  gateway: hiecm
+  milestone: P3
+  title: Enable an auto approval policy
+  summary: Turn a disabled auto approval policy back on.
+  page: site/docs/_notes/hiecm/p2_post_consent_v3_auto_approve_auto_approval_id_enable.mdx
+  heading: p3-consent-enable-auto-approve
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/03-p2-post-consent-v3-auto-approve-auto-approval-id-enable#p3-consent-enable-auto-approve
+  operation: p2_post_consent_v3_auto_approve_auto_approval_id_enable
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    endpoints:
+    - hiecm.endpoint.p3-consent-auto-approve
+    - hiecm.endpoint.p3-consent-disable-auto-approve
+hiecm.endpoint.p3-deny-consent-request:
+  type: endpoint
+  gateway: hiecm
+  milestone: P3
+  title: Deny a consent request
+  summary: Let the person refuse a consent request from their PHR app.
+  page: site/docs/_notes/hiecm/p2_post_consent_v3_request_request_id_deny.mdx
+  heading: p3-deny-consent-request
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/07-p2-post-consent-v3-request-request-id-deny#p3-deny-consent-request
+  operation: p2_post_consent_v3_request_request_id_deny
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    endpoints:
+    - hiecm.endpoint.p3-get-all-consent-request-for-an-abha-address
+    - hiecm.endpoint.p3-get-consent-request-details-by-consent-request-id
+hiecm.endpoint.p3-revoke-consent-request:
+  type: endpoint
+  gateway: hiecm
+  milestone: P3
+  title: Revoke a granted consent
+  summary: Let the person withdraw consent they already granted.
+  page: site/docs/_notes/hiecm/p2_post_consent_v3_revoke.mdx
+  heading: p3-revoke-consent-request
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/08-p2-post-consent-v3-revoke#p3-revoke-consent-request
+  operation: p2_post_consent_v3_revoke
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    endpoints:
+    - hiecm.endpoint.p3-get-all-consent-artifact-details-for-an-abha-address
+    - hiecm.endpoint.p3-get-consent-artefact-details-by-artifact-id
+hiecm.endpoint.p3-get-all-consent-artefact-details-by-request-id:
+  type: endpoint
+  gateway: hiecm
+  milestone: P3
+  title: Get the consent artefacts of one consent request
+  summary: Fetch every consent artefact created from one consent request, for the
+    logged-in person.
+  page: site/docs/_notes/hiecm/p2_get_consent_v3_artefact_request_request_id.mdx
+  heading: p3-get-all-consent-artefact-details-by-request-id
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/09-p2-get-consent-v3-artefact-request-request-id#p3-get-all-consent-artefact-details-by-request-id
+  operation: p2_get_consent_v3_artefact_request_request_id
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    endpoints:
+    - hiecm.endpoint.p3-get-consent-request-details-by-consent-request-id
+    - hiecm.endpoint.p3-get-consent-artefact-details-by-artifact-id
+hiecm.endpoint.p3-get-all-consent-artifact-details-for-an-abha-address:
+  type: endpoint
+  gateway: hiecm
+  milestone: P3
+  title: List the consent artefacts of an ABHA address
+  summary: List the logged-in person's consent artefacts, a page at a time.
+  page: site/docs/_notes/hiecm/p2_get_consent_v3_artefact.mdx
+  heading: p3-get-all-consent-artifact-details-for-an-abha-address
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/11-p2-get-consent-v3-artefact#p3-get-all-consent-artifact-details-for-an-abha-address
+  operation: p2_get_consent_v3_artefact
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    endpoints:
+    - hiecm.endpoint.p3-get-consent-artefact-details-by-artifact-id
+    - hiecm.endpoint.p3-revoke-consent-request
+hiecm.endpoint.p3-get-all-consent-request-for-an-abha-address:
+  type: endpoint
+  gateway: hiecm
+  milestone: P3
+  title: List the consent requests of an ABHA address
+  summary: List the consent requests made to the logged-in person, a page at a time.
+  page: site/docs/_notes/hiecm/p2_get_consent_v3_request.mdx
+  heading: p3-get-all-consent-request-for-an-abha-address
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/04-p2-get-consent-v3-request#p3-get-all-consent-request-for-an-abha-address
+  operation: p2_get_consent_v3_request
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    endpoints:
+    - hiecm.endpoint.p3-get-consent-request-details-by-consent-request-id
+    - hiecm.endpoint.p3-deny-consent-request
+hiecm.endpoint.p3-get-consent-artefact-details-by-artifact-id:
+  type: endpoint
+  gateway: hiecm
+  milestone: P3
+  title: Get one consent artefact by its id
+  summary: Fetch one consent artefact by its id for the logged-in person.
+  page: site/docs/_notes/hiecm/p2_get_consent_v3_artefact_artefact_id.mdx
+  heading: p3-get-consent-artefact-details-by-artifact-id
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/10-p2-get-consent-v3-artefact-artefact-id#p3-get-consent-artefact-details-by-artifact-id
+  operation: p2_get_consent_v3_artefact_artefact_id
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    endpoints:
+    - hiecm.endpoint.p3-get-all-consent-artifact-details-for-an-abha-address
+    - hiecm.endpoint.p3-get-all-consent-artefact-details-by-request-id
+hiecm.endpoint.p3-get-consent-request-details-by-consent-request-id:
+  type: endpoint
+  gateway: hiecm
+  milestone: P3
+  title: Get one consent request by its id
+  summary: Fetch one consent request by its id for the logged-in person.
+  page: site/docs/_notes/hiecm/p2_get_consent_v3_request_request_id.mdx
+  heading: p3-get-consent-request-details-by-consent-request-id
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/05-p2-get-consent-v3-request-request-id#p3-get-consent-request-details-by-consent-request-id
+  operation: p2_get_consent_v3_request_request_id
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    endpoints:
+    - hiecm.endpoint.p3-get-all-consent-request-for-an-abha-address
+    - hiecm.endpoint.p3-deny-consent-request
+hiecm.endpoint.p3-get-all-links-records:
+  type: endpoint
+  gateway: hiecm
+  milestone: P3
+  title: Get all linked records
+  summary: List every care context linked to the logged-in person's ABHA address,
+    grouped by facility.
+  page: site/docs/_notes/hiecm/p2_get_hip_v3_link_patient_links.mdx
+  heading: p3-get-all-links-records
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-consent-manager-hiu-hip/01-p2-get-hip-v3-link-patient-links#p3-get-all-links-records
+  operation: p2_get_hip_v3_link_patient_links
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    callbacks:
+    - hiecm.callback.p2-response-on-health-record-on-confirm
+hiecm.endpoint.p3-subscription-init:
+  type: endpoint
+  gateway: hiecm
+  milestone: P3
+  title: Request a subscription to a person's records
+  summary: Ask for a subscription that tells your system when a person's records change,
+    without polling.
+  page: site/docs/_notes/hiecm/p3_post_subscription_requests_v3_init.mdx
+  heading: p3-subscription-init
+  url: /docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/01-p3-post-subscription-requests-v3-init#p3-subscription-init
+  operation: p3_post_subscription_requests_v3_init
+  related:
+    flows:
+    - hiecm.flow.p3-subscribe-and-auto-approve
+    concepts:
+    - hiecm.concept.gateway-session
+    callbacks:
+    - hiecm.callback.p3-user-subscription-request-initiate-call-back
+    - hiecm.callback.p3-approve-subscription-request-call-back
+    - hiecm.callback.p3-deny-subscription-call-back
+    - hiecm.callback.p3-subscription-hiu-notify
+hiecm.callback.p3-user-subscription-request-initiate-call-back:
+  type: callback
+  gateway: hiecm
+  milestone: P3
+  title: Subscription request result callback
+  summary: ABDM posts the id of the subscription request you raised, or the error
+    that stopped it.
+  page: site/docs/_notes/hiecm/p3_post_v3_hiu_hiecm_subscription_requests_on_init.mdx
+  heading: p3-user-subscription-request-initiate-call-back
+  url: /docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/02-p3-post-v3-hiu-hiecm-subscription-requests-on-init#p3-user-subscription-request-initiate-call-back
+  operation: p3_post_v3_hiu_hiecm_subscription_requests_on_init
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    - hiecm.concept.asynchronous-callbacks
+    endpoints:
+    - hiecm.endpoint.p3-subscription-init
+hiecm.callback.p3-approve-subscription-request-call-back:
+  type: callback
+  gateway: hiecm
+  milestone: P3
+  title: Subscription approved callback
+  summary: ABDM tells the requesting HIU that the person approved its subscription
+    request.
+  page: site/docs/_notes/hiecm/p3_post_v3_hiu_subscription_requests_hiu_notify.mdx
+  heading: p3-approve-subscription-request-call-back
+  url: /docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/03-p3-post-v3-hiu-subscription-requests-hiu-notify#p3-approve-subscription-request-call-back
+  operation: p3_post_v3_hiu_subscription_requests_hiu_notify
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    - hiecm.concept.asynchronous-callbacks
+    endpoints:
+    - hiecm.endpoint.p3-subscription-request-hiu-on-notify
+    - hiecm.endpoint.p3-approve-subscription-request
+hiecm.callback.p3-deny-subscription-call-back:
+  type: callback
+  gateway: hiecm
+  milestone: P3
+  title: Subscription denied callback
+  summary: ABDM tells the requesting HIU that the person denied its subscription request.
+  page: site/docs/_notes/hiecm/p3_post_v3_hiu_subscription_requests_hiu_notify.mdx
+  heading: p3-deny-subscription-call-back
+  url: /docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/03-p3-post-v3-hiu-subscription-requests-hiu-notify#p3-deny-subscription-call-back
+  operation: p3_post_v3_hiu_subscription_requests_hiu_notify
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    - hiecm.concept.asynchronous-callbacks
+    endpoints:
+    - hiecm.endpoint.p3-subscription-request-hiu-on-notify
+    - hiecm.endpoint.p3-deny-subscription-request
+hiecm.endpoint.p3-subscription-request-hiu-on-notify:
+  type: endpoint
+  gateway: hiecm
+  milestone: P3
+  title: Acknowledge a subscription decision
+  summary: Tell ABDM you received the approve or deny notification for your subscription
+    request.
+  page: site/docs/_notes/hiecm/p3_post_subscription_requests_v3_hiu_on_notify.mdx
+  heading: p3-subscription-request-hiu-on-notify
+  url: /docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/04-p3-post-subscription-requests-v3-hiu-on-notify#p3-subscription-request-hiu-on-notify
+  operation: p3_post_subscription_requests_v3_hiu_on_notify
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    callbacks:
+    - hiecm.callback.p3-approve-subscription-request-call-back
+    - hiecm.callback.p3-deny-subscription-call-back
+hiecm.callback.p3-subscription-hiu-notify:
+  type: callback
+  gateway: hiecm
+  milestone: P3
+  title: New record notification callback
+  summary: Under a granted subscription, ABDM tells the HIU each time a care context
+    is linked or updated for the person.
+  page: site/docs/_notes/hiecm/p3_post_v3_hiu_subscription_notify.mdx
+  heading: p3-subscription-hiu-notify
+  url: /docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/05-p3-post-v3-hiu-subscription-notify#p3-subscription-hiu-notify
+  operation: p3_post_v3_hiu_subscription_notify
+  related:
+    flows:
+    - hiecm.flow.p3-subscribe-and-auto-approve
+    concepts:
+    - hiecm.concept.gateway-session
+    - hiecm.concept.asynchronous-callbacks
+    endpoints:
+    - hiecm.endpoint.p3-subscription-hiu-on-notify
+    - hiecm.endpoint.p3-subscription-init
+hiecm.endpoint.p3-subscription-hiu-on-notify:
+  type: endpoint
+  gateway: hiecm
+  milestone: P3
+  title: Acknowledge a new record notification
+  summary: Tell ABDM you received a new record notification under a subscription.
+  page: site/docs/_notes/hiecm/p3_post_subscription_requests_v3_hiu_care_context_on_notify.mdx
+  heading: p3-subscription-hiu-on-notify
+  url: /docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/06-p3-post-subscription-requests-v3-hiu-care-context-on-notify#p3-subscription-hiu-on-notify
+  operation: p3_post_subscription_requests_v3_hiu_care_context_on_notify
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    callbacks:
+    - hiecm.callback.p3-subscription-hiu-notify
+hiecm.endpoint.p3-approve-subscription-request:
+  type: endpoint
+  gateway: hiecm
+  milestone: P3
+  title: Approve a subscription request
+  summary: Let the person approve a subscription request from their PHR app, and set
+    what it covers.
+  page: site/docs/_notes/hiecm/p3_post_subscription_requests_v3_request_id_approve.mdx
+  heading: p3-approve-subscription-request
+  url: /docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/01-p3-post-subscription-requests-v3-request-id-approve#p3-approve-subscription-request
+  operation: p3_post_subscription_requests_v3_request_id_approve
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    endpoints:
+    - hiecm.endpoint.p3-get-all-subscription-requests-for-an-abha-address
+    - hiecm.endpoint.p3-edit-subscription
+    callbacks:
+    - hiecm.callback.p3-approve-subscription-request-call-back
+hiecm.endpoint.p3-deny-subscription-request:
+  type: endpoint
+  gateway: hiecm
+  milestone: P3
+  title: Deny a subscription request
+  summary: Let the person refuse a subscription request from their PHR app.
+  page: site/docs/_notes/hiecm/p3_post_subscription_requests_v3_request_id_deny.mdx
+  heading: p3-deny-subscription-request
+  url: /docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/02-p3-post-subscription-requests-v3-request-id-deny#p3-deny-subscription-request
+  operation: p3_post_subscription_requests_v3_request_id_deny
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    endpoints:
+    - hiecm.endpoint.p3-get-all-subscription-requests-for-an-abha-address
+    callbacks:
+    - hiecm.callback.p3-deny-subscription-call-back
+hiecm.endpoint.p3-edit-subscription:
+  type: endpoint
+  gateway: hiecm
+  milestone: P3
+  title: Edit a subscription
+  summary: Let the person change what an existing subscription covers, such as its
+    date range.
+  page: site/docs/_notes/hiecm/p3_put_subscription_requests_v3_patients_subscription_id.mdx
+  heading: p3-edit-subscription
+  url: /docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/04-p3-put-subscription-requests-v3-patients-subscription-id#p3-edit-subscription
+  operation: p3_put_subscription_requests_v3_patients_subscription_id
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    endpoints:
+    - hiecm.endpoint.p3-approve-subscription-request
+    - hiecm.endpoint.p3-details-by-subscription-id
+hiecm.endpoint.p3-details-by-request-id:
+  type: endpoint
+  gateway: hiecm
+  milestone: P3
+  title: Get a subscription request by its request id
+  summary: Fetch one subscription request by its request id for the logged-in person.
+  page: site/docs/_notes/hiecm/p3_get_subscription_requests_v3_request_request_id.mdx
+  heading: p3-details-by-request-id
+  url: /docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/07-p3-get-subscription-requests-v3-request-request-id#p3-details-by-request-id
+  operation: p3_get_subscription_requests_v3_request_request_id
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    endpoints:
+    - hiecm.endpoint.p3-get-all-subscription-requests-for-an-abha-address
+    - hiecm.endpoint.p3-details-by-subscription-id
+hiecm.endpoint.p3-details-by-subscription-id:
+  type: endpoint
+  gateway: hiecm
+  milestone: P3
+  title: Get a subscription by its subscription id
+  summary: Fetch one granted subscription by its subscription id for the logged-in
+    person.
+  page: site/docs/_notes/hiecm/p3_get_subscription_requests_v3_subscription_id.mdx
+  heading: p3-details-by-subscription-id
+  url: /docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/08-p3-get-subscription-requests-v3-subscription-id#p3-details-by-subscription-id
+  operation: p3_get_subscription_requests_v3_subscription_id
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    endpoints:
+    - hiecm.endpoint.p3-details-by-request-id
+    - hiecm.endpoint.p3-edit-subscription
+hiecm.endpoint.p3-get-all-subscription-requests-for-an-abha-address:
+  type: endpoint
+  gateway: hiecm
+  milestone: P3
+  title: List the subscription requests of an ABHA address
+  summary: List the logged-in person's subscription requests, a page at a time.
+  page: site/docs/_notes/hiecm/p3_get_subscription_requests_v3_requests.mdx
+  heading: p3-get-all-subscription-requests-for-an-abha-address
+  url: /docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/03-p3-get-subscription-requests-v3-requests#p3-get-all-subscription-requests-for-an-abha-address
+  operation: p3_get_subscription_requests_v3_requests
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    endpoints:
+    - hiecm.endpoint.p3-approve-subscription-request
+    - hiecm.endpoint.p3-deny-subscription-request
+    - hiecm.endpoint.p3-details-by-request-id

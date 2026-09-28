@@ -1,0 +1,11 @@
+## Get a provider by its id {/* #p2-provider-by-provider-id */}
+
+Fetch one facility's details when you already hold its id, for example from a provider search. The id goes in the path as `hip-id`.
+
+<AgentOnly>
+**Before you start.** A gateway session token, `X-CM-ID`, and the provider's `id` from the provider search.
+
+**How you know it worked.** You receive `200` with `identifier`, `facilityType` and `isHIP` for that one provider.
+
+**When it goes wrong.** `204` with `ABDM-1001` means no provider has that id.
+</AgentOnly>

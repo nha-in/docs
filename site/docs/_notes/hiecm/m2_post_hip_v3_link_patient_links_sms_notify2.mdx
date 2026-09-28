@@ -1,0 +1,11 @@
+## Send an SMS telling the patient a care context is linked {/* #m2-sms-deep-link-notify */}
+
+Ask ABDM to send the patient an SMS (text message) saying that a [care context](/docs/hiecm/v3/getting-started/glossary#care-context) is linked to their [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address). Send the mobile number in `phoneNo`, with your [HIP](/docs/hiecm/v3/getting-started/glossary#hip) `id` and `name`. The call returns 202 Accepted, and the outcome arrives on [patients SMS on-notify](/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/04-m2-post-v3-patients-sms-on-notify).
+
+<AgentOnly>
+**Before you start.** A gateway session token. Send the `REQUEST-ID`, `TIMESTAMP` and `X-CM-ID` headers.
+
+**How you know it worked.** A callback on `/api/v3/patients/sms/on-notify` with `acknowledgement` `status` of `SUCCESS`. That means accepted for sending, not delivered.
+
+**When it goes wrong.** The body holds only `notification`. The request id and timestamp travel as headers, not in the body. `ABDM-2402` (Invalid Timestamp): check `TIMESTAMP` against your clock. `ABDM-2404` (Invalid Request Id): send a fresh UUID in `REQUEST-ID`. `ABDM-2500` (Authorization header is missing): send the session token. `ABDM-9999` (Unknown exception) gives no cause.
+</AgentOnly>

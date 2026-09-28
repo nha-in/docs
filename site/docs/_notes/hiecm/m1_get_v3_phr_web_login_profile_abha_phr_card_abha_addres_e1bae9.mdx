@@ -1,0 +1,9 @@
+## Download PHR card {/* #m1-download-phr-card */}
+
+Returns the card for the [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address) the person signed in with, to show or save in your [PHR](/docs/hiecm/v3/getting-started/glossary#phr) app. It needs the `X-token` from the ABHA address verify step, and the same call serves every ABHA address login method.
+
+<AgentOnly>
+**How you know it worked.** A 202 that carries the card.
+
+**When it goes wrong.** A 400 with `ABDM-1006` and `Invalid X-token` means the token is missing or wrong. A 401 with `900902` means the access token was not sent.
+</AgentOnly>

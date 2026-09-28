@@ -1,0 +1,23 @@
+## Link token generation – Call Back API {/* #m2-link-token-generation-call-back */}
+
+After you [ask for a link token](/docs/hiecm/v3/api/m2/endpoints/m2-abdm-link-token-hip/01-m2-post-v3-token-generate-token), ABDM answers on your bridge at `/api/v3/hip/token/on-generate-token`. The path is relative to the callback URL you registered. On success the body carries the `linkToken` for the patient's [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address). On failure it carries an `error`.
+
+<AgentOnly>
+**Before you start.** A callback URL registered for your bridge and reachable from the public internet.
+
+**What happens.** ABDM posts with the `REQUEST-ID`, `TIMESTAMP` and `X-HIP-ID` headers. The body carries `abhaAddress`, `response` and either `linkToken` or `error`.
+
+**When it goes wrong.** `ABDM-1027`: blocked, try again after 24 hours. `ABDM-1051` (Invalid ABHA Number or ABHA Address): check the details you sent. `ABDM-1024` (Dependent service unavailable): try again later.
+</AgentOnly>
+
+## The link token you asked for, or why it was refused {/* #m2-on-generate-token-result */}
+
+A [link token](/docs/hiecm/v3/getting-started/glossary#link-token) is valid for six months. Store it against the patient before you answer the callback. Use it in the `X-LINK-TOKEN` header when you [link care contexts](/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/01-m2-post-hip-v3-link-carecontext). Match the callback to your request by `response.requestId`, which echoes the `REQUEST-ID` you sent.
+
+<AgentOnly>
+**Before you start.** Store the `REQUEST-ID` of the generate token call before you send it, so a fast callback still finds a match.
+
+**How you know it worked.** A callback carrying `linkToken` and a `requestId` equal to your stored `REQUEST-ID`. Answer it with 200 OK.
+
+**When it goes wrong.** A token received but not stored means generating another. Check the stored token is still valid before each link call. An `error` object is the answer, not a delivery fault: read the code before you call again.
+</AgentOnly>
