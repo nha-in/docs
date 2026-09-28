@@ -17,8 +17,8 @@ to the docs pages, and only to the pages: every other surface is built from them
    only person who will. If the correction makes any sentence in a note untrue,
    fix that sentence too. To see the notes on the site, use "Show notes for AI
    agents" at the very bottom of any page, or add `?agent-notes=1` to the URL.
-4. Never rename a heading id (the `{#...}` after a heading). Reword the heading
-   text freely.
+4. Never rename a heading id: the `{#...}` after a heading, written
+   `{/* #... */}` in an `.mdx` page. Reword the heading text freely.
 5. Run:
 
    ```bash
@@ -29,7 +29,8 @@ to the docs pages, and only to the pages: every other surface is built from them
 
 ## If a check fails
 
-- "heading id ... is missing": you removed or renamed a `{#...}`. Put it back,
+- "heading id ... is missing": you removed or renamed a `{#...}` or
+  `{/* #... */}`. Put it back,
   or move the atom in `catalogue/map.yaml` to the section that now holds its words.
 - "agent note introduces `...`": a note states an API detail the page and the
   specifications do not. Put it on the page, or take it out of the note.

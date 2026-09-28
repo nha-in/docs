@@ -74,3 +74,9 @@ test('[rev] code fences are left alone', () => {
   assert.equal(text, '```json\n{"a": 1}\n```');
   assert.deepEqual(problems, []);
 });
+
+test('an .mdx heading id is written as an MDX comment, and reads the same', () => {
+  const s = sectionsById(page.replace('### Link token {#link-token}', '### Link token {/* #link-token */}')).get('link-token');
+  assert.equal(s.heading, 'Link token');
+  assert.match(s.text, /Valid for six months\./);
+});

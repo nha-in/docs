@@ -1,9 +1,11 @@
 // scripts/lib/sections.mjs
-// A page section is addressed by its explicit heading id, `## Heading {#id}`.
+// A page section is addressed by its explicit heading id: `## Heading {#id}`
+// in a .md page, `## Heading {/* #id */}` in an .mdx page, where MDX would
+// otherwise parse {#id} as a JavaScript expression and fail the build.
 // The id survives any rewording of the heading, so an atom that points at it
 // never breaks when the words change. Text inside <AgentOnly> is kept apart:
 // labelled paragraphs fill an atom's agent sections.
-const HEADING_RE = /^(#{2,4})\s+(.+?)\s*(?:\{#([a-z0-9][a-z0-9-]*)\})?\s*$/;
+const HEADING_RE = /^(#{2,4})\s+(.+?)\s*(?:\{#([a-z0-9][a-z0-9-]*)\}|\{\/\*\s*#([a-z0-9][a-z0-9-]*)\s*\*\/\})?\s*$/;
 const FENCE_RE = /^\s*(```|~~~)/;
 const LABELS = {
   'Before you start': 'before',
@@ -38,7 +40,7 @@ export function sectionsById(raw) {
     if (FENCE_RE.test(lines[i])) { fenced = !fenced; continue; }
     if (fenced) continue;
     const h = lines[i].match(HEADING_RE);
-    if (h) heads.push({line: i, level: h[1].length, heading: h[2], id: h[3] ?? null});
+    if (h) heads.push({line: i, level: h[1].length, heading: h[2], id: h[3] ?? h[4] ?? null});
   }
   const out = new Map();
   heads.forEach((h, k) => {
