@@ -1,0 +1,12 @@
+# COMMUNICATION
+
+> Every page of the COMMUNICATION module of the ABDM Developer Portal, fetchable as markdown.
+
+## Pages
+
+- [Communication](https://nha-in.github.io/docs/pr-61/docs/nhcx/v1/api/communication): The Communication calls on NHCX: what each one does, the hosts they go to, and the guides that use them.
+- [Provider: acknowledge the communication](https://nha-in.github.io/docs/pr-61/docs/nhcx/v1/api/communication/endpoints/communication-v1-communication-on-request): Provider returns the acknowledgement Task bundle for a payer communication, echoing the reason code and correlation ID so the payer can close the loop.
+- [Payer: send a communication request](https://nha-in.github.io/docs/pr-61/docs/nhcx/v1/api/communication/endpoints/communication-v1-communication-request): Payer pushes a Task plus Communication bundle to a provider mid-claim: TAT alerts, wallet or policy changes, grievances or extra-information requests.
+- [Payer receives the communication acknowledgement](https://nha-in.github.io/docs/pr-61/docs/nhcx/v1/api/communication/endpoints/communication-webhook-v1-communication-on-request): Hosted by the payer. The exchange posts this message to the endpoint_URL you registered, at /v1/communication/on_request, with the headers and the sealed...
+- [Provider receives a communication request](https://nha-in.github.io/docs/pr-61/docs/nhcx/v1/api/communication/endpoints/communication-webhook-v1-communication-request): Hosted by the provider. The exchange posts this message to the endpoint_URL you registered, at /v1/communication/request, with the headers and the sealed...
+- [Communication errors](https://nha-in.github.io/docs/pr-61/docs/nhcx/v1/api/communication/errors): What Communication returns when a call fails, and what to do about it.
