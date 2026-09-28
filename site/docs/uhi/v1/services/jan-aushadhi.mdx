@@ -23,7 +23,7 @@ Jan Aushadhi on [UHI](/docs/uhi/v1/getting-started/glossary#uhi) helps a citizen
 - **Every call is `search` and `on_search` through the UHI Gateway.** There is no booking or ordering.
 - **No mandatory location.** State is not required. Each filter works alone or combined.
 - **Medicine search is a two step chain.** Flow B turns a name into a `medicineId`. Flow C uses that ID to find stock nearby.
-- **Stock is a flag.** In flow C, `items[].descriptor.flag` marks in or out of stock.
+- **Stock is a flag.** In flow C, `items[].descriptor.flag` is `true` for in stock and `false` for out of stock.
 
 ## Jan Aushadhi functionalities
 
@@ -439,7 +439,7 @@ All fields are mandatory.
 | `catalog.providers[].items[].id` | string | Flow C only. The `medicineId`. |
 | `catalog.providers[].items[].descriptor.name` | string | Flow C only. Generic name. |
 | `catalog.providers[].items[].descriptor.code` | string | Flow C only. Item code. |
-| `catalog.providers[].items[].descriptor.flag` | boolean | Flow C only. Stock status. See [Confirm at onboarding](#confirm-at-onboarding). |
+| `catalog.providers[].items[].descriptor.flag` | boolean | Flow C only. `true` in stock, `false` out of stock. |
 
 ### on_search: medicine records, flow B
 
@@ -455,7 +455,7 @@ All fields are mandatory.
 
 ## Confirm at onboarding
 
-- **The polarity of `items[].descriptor.flag` in flow C.** It marks in or out of stock, and the samples send `false`. Do not render "in stock" or "out of stock" from it until the polarity is confirmed.
+- **A stock count in flow C.** A count in `quantity.measure.value` may arrive, and is often absent. Render stock from `descriptor.flag`, and show a count only when one arrives.
 - **How the medicine name is matched.** Case handling and partial matching of the name are not fixed. Show every medicine that comes back and let the user choose one.
 
 ## Error codes
@@ -470,4 +470,4 @@ The test cases for this service are on [Jan Aushadhi test cases](/docs/uhi/v1/re
 
 - The other services on the network: [Services](/docs/uhi/v1/services).
 - Signing each call: [Signing](/docs/uhi/v1/concepts/signing).
-- Registration, sandbox and sign-off: [Onboarding](/docs/uhi/v1/getting-started/onboarding).
+- When every test case passes: [record a demo and request sign-off](/docs/uhi/v1/getting-started/onboarding#5-record-a-demo-and-request-sign-off).

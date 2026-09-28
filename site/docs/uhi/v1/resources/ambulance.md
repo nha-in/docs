@@ -75,3 +75,9 @@ EUA's screens.
 | AMB-F-02 | An HSPA answers with no ambulances. | An `on_search` with an empty `providers` array causes no crash and no display error in the EUA. |
 | AMB-F-03 | The same search is sent twice. | A second `search` with the same `transaction_id` is deduplicated by the Gateway or ignored by the HSPA. |
 | AMB-F-04 | The provider wants money in advance. | An `on_init` with `payment.type: PRE-ORDER` and a non-zero `minimum_Value` makes the EUA show the advance payment requirement. |
+
+## Next steps
+
+- [Ambulance Booking](/docs/uhi/v1/services/ambulance): the flow these test cases cover.
+- [Errors on UHI](/docs/uhi/v1/concepts/errors): what to log when a test case fails.
+- [Record a demo and request sign-off](/docs/uhi/v1/getting-started/onboarding#5-record-a-demo-and-request-sign-off): the onboarding step that follows your test cases.

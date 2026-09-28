@@ -61,7 +61,7 @@ The service is discovery: `search` and `on_search`.
 | --- | --- | --- |
 | Organ or tissue type | `category.descriptor.code` and `.name` | Mandatory |
 | State | `location.state.code`, an LGD code such as `06`, and `.name` such as `Haryana` | Optional |
-| District | `location.district.code` and `.name` | Optional. Needs state. See [Confirm at onboarding](#confirm-at-onboarding). |
+| District | `location.district.code` and `.name` | Optional. Needs state. |
 | GPS and radius | `location.gps`, `radius` with `CONSTANT`, a value and `km` | Not available yet |
 
 State, district and city codes follow the Local Government Directory (LGD).
@@ -290,7 +290,6 @@ The `context` block follows the shape on [Messages](/docs/uhi/v1/concepts/messag
 
 - **The registration type in `descriptor.short_desc`.** It is a mandatory string, and the sample omits it. Read it when present. When it is absent, describe the hospital from the four capability tags.
 - **The format of `providers[].id`.** It is a mandatory string, and the sample sends a number, `6086143.1`. Store it as a string whatever type arrives.
-- **District search.** The district fields are defined and need a state. Build the organ alone and organ with state searches first.
 - **The Gateway signature header.** Read the Gateway's signature from `X-Gateway-Authorization`, as the samples send it. Accept `Proxy-Authorization` as well until one is confirmed.
 
 ## Error codes
@@ -305,4 +304,4 @@ The test cases for this service are on [NOTTO test cases](/docs/uhi/v1/resources
 
 - The other services on the network: [Services](/docs/uhi/v1/services).
 - Signing each call: [Signing](/docs/uhi/v1/concepts/signing).
-- Registration, sandbox and sign-off: [Onboarding](/docs/uhi/v1/getting-started/onboarding).
+- When every test case passes: [record a demo and request sign-off](/docs/uhi/v1/getting-started/onboarding#5-record-a-demo-and-request-sign-off).

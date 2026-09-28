@@ -73,3 +73,9 @@ screens.
 | TC-E01 | A very long list still works. | A state only search for a high density state, such as Andhra Pradesh or Maharashtra, renders the full list without a crash or timeout. Scroll and filter work across all records. |
 | TC-E02 | No matching hospitals is handled. | A state and district search that matches nothing returns an `on_search` with an empty `providers[]`. Your app shows a fallback message, with no crash and no unhandled state. |
 | TC-E03 | A missing response does not leave the user waiting. | When no `on_search` arrives, your app shows a timeout message after its configured window and lets the user retry. It never stays loading indefinitely. |
+
+## Next steps
+
+- [PM-JAY HEM Hospital Discovery](/docs/uhi/v1/services/pmjay-hem): the flow these test cases cover.
+- [Errors on UHI](/docs/uhi/v1/concepts/errors): what to log when a test case fails.
+- [Record a demo and request sign-off](/docs/uhi/v1/getting-started/onboarding#5-record-a-demo-and-request-sign-off): the onboarding step that follows your test cases.

@@ -32,3 +32,4 @@ The same tag block can carry `@abdm/gov.in/experience`, `languages`, `education`
 
 - [HFR on UHI](/docs/uhi/v1/registries/hfr), the facility tag beside the doctor
 - [ABHA on UHI](/docs/uhi/v1/registries/abha), the patient in the same booking
+- [Physical Consultation](/docs/uhi/v1/services/consultation), the service where a patient books the doctor

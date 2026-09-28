@@ -20,4 +20,4 @@ The [HFR](/docs/uhi/v1/getting-started/glossary#hfr) is the national register of
 ## Next steps
 
 - [HPR on UHI](/docs/uhi/v1/registries/hpr), the doctor this tag sits beside
-- [Registries](/docs/uhi/v1/registries), every identifier UHI carries
+- [Physical Consultation](/docs/uhi/v1/services/consultation), the service whose catalog carries this tag

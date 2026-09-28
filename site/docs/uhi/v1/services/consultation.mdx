@@ -44,7 +44,7 @@ Providers (HSPs): hospitals, clinics or individual doctors.
 
 | In scope today | Not in scope today |
 | --- | --- |
-| Doctor discovery by name, [HPR](/docs/uhi/v1/getting-started/glossary#hpr) ID, speciality, city, pincode, GPS or facility name | Online payment before booking |
+| Doctor discovery by name, [HPR](/docs/uhi/v1/getting-started/glossary#hpr) ID, speciality, state, district, pincode, GPS or facility name | Online payment before booking |
 | Real-time slot selection | Refunds through the UHI flow |
 | Booking with terms the patient accepts | |
 | PIN-based check-in at the facility | |
@@ -148,6 +148,8 @@ the time window.
 | Doctor name | `fulfillment.agent.name` |
 | HPR ID | `fulfillment.agent.id` |
 | Speciality | `category.descriptor` |
+| State | `location.state` |
+| District | `location.district` |
 | City | `location.city` |
 | Pincode | `address.area_code` |
 | Facility name | `provider.descriptor.name` |
@@ -325,7 +327,7 @@ The order tags from `init` onwards:
 | Tag | Carries | Sent in |
 | --- | --- | --- |
 | `@abdm/gov.in/abha_number` | The patient's [ABHA number](/docs/uhi/v1/getting-started/glossary#abha-number) | From `init` |
-| `@abdm/gov.in/slot_id` | The chosen slot | From `init` |
+| `@abdm/gov.in/slot_id` | The chosen slot, in `order.fulfillment.tags` | From `init` |
 | `@abdm/gov.in/cancelledby` | `patient` or `doctor` | `cancel`, `on_cancel` |
 | `@abdm/gov.in/cancel_reason` | The reason code | `cancel`, `on_cancel` |
 | `@abdm/gov.in/messaging_support` | Whether messaging is supported | From `on_confirm` |
@@ -405,7 +407,7 @@ Work through this list before you request sign-off for production.
 | 5 | HTTPS `consumer_uri` callback URL live and reachable |
 | 6 | Direct EUA endpoints `/on_init`, `/on_confirm`, `/on_status` and `/on_update` exposed and exercised |
 | 7 | Request signing implemented: Ed25519 and BLAKE-512 |
-| 8 | Discovery run for every filter type: doctor name, GPS, city, pincode |
+| 8 | Discovery run for every filter type: doctor name, GPS, state and district, city, pincode |
 | 9 | Booking run: `init`, `on_init`, `confirm`, `on_confirm` |
 | 10 | PIN received in `on_confirm` and shown to the user correctly |
 | 11 | Status run: `status`, `on_status` |
@@ -425,9 +427,6 @@ Work through this list before you request sign-off for production.
   number O6. Key your handling on the reason code string, never on the number.
 - **`NOT_VERIFIED` as a PIN status.** Build for `GENERATED`, `VERIFIED` and
   `HSPAOVERRIDE`. Do not send or depend on `NOT_VERIFIED` until it is confirmed.
-- **Where `@abdm/gov.in/slot_id` sits in `on_confirm`.** Send and read it in
-  `order.fulfillment.tags`, as every specification example does. Confirm before
-  you read it from anywhere else.
 - **How long to wait for `on_search`.** No timeout is set for this service.
   Show results as they arrive, and agree a timeout at onboarding.
 
@@ -445,4 +444,4 @@ Find the test cases this service is certified against on
 
 - The calls, one page each: [Physical Consultation API reference](/docs/uhi/v1/api/consultation).
 - How every call is signed: [Signing](/docs/uhi/v1/concepts/signing).
-- From sandbox registration to production: [Onboarding to UHI](/docs/uhi/v1/getting-started/onboarding).
+- When every test case passes: [record a demo and request sign-off](/docs/uhi/v1/getting-started/onboarding#5-record-a-demo-and-request-sign-off).
