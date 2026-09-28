@@ -1,9 +1,9 @@
 ---
 name: portal-planning
 description: The ABDM Developer Portal schedule, workstreams, ownership split, two-day shipping increments, definition of done, and risk register. Use whenever someone asks what ships when, what is blocked, who owns a piece of work, whether V1 is on track, what counts as finished, how to sequence a task, or wants a standup, a status update, or a re-plan. Also use when scope is being added or cut so the trade is made against the schedule rather than in the abstract.
-plan_version: 2026.09.28-4
+plan_version: 2026.09.28-5
 plan_source: abdm-v1-phase1-architecture-and-plan.md
-plan_hash: sha256:50a10f8dc1ecb0200ce26a61ad95aa327792d10126cf0da68380742707e0ff79
+plan_hash: sha256:67d822c0faef8927e57151bb341daa70de19d801f4a02a74f88eb828ee10eda1
 compiled_from_plan: true
 ---
 

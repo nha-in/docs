@@ -156,7 +156,7 @@ How a section becomes an atom:
 - The map entry holds `type`, `gateway`, `milestone`, `title`, `summary`, `page`, `heading`, `url` and `related`, and no prose. No `related` list names its own atom.
 - `<AgentOnly>` is JSX, so a page gains one only if it is `.mdx`. Convert a page in its own commit, and build the site before any content moves.
 
-Moving a class of atoms onto pages follows the checklist in the page-canonical plan: heading ids first, words onto the page, map entries added and files deleted in the same PR, `npm run report:migration -- <ids>` pasted into the PR, and a before and after keyword ranking. NHCX atoms do not move until the NHCX source is decided.
+Moving a class of atoms onto pages follows the checklist in the page-canonical plan: heading ids first, words onto the page, map entries added and files deleted in the same PR, `npm run report:migration -- <ids>` pasted into the PR, and the retrieval gate run before and after with at least one question per migrated atom (`portal-proof`). NHCX atoms do not move until the NHCX source is decided.
 
 ## Related
 
