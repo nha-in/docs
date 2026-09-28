@@ -1,17 +1,17 @@
 {
   "id": "abstain-uhi-booking-integration-01",
   "slice": "abstain",
-  "class": "out-of-scope",
+  "class": "how-do-i",
   "turns": [{"role": "user", "text": "how do I integrate with UHI booking"}],
   "attachment": null,
   "page": null,
-  "must_contain": ["/docs/"],
-  "must_not_contain": ["<MASKED", "i apologize", "i apologise", "let me ", "great question", "the catalogue", "atom", "/api/uhi"],
+  "must_contain": ["/docs/uhi/v1/api/consultation/", "init"],
+  "must_not_contain": ["<MASKED", "i apologize", "i apologise", "let me ", "great question", "the catalogue", "atom", "/api/uhi", "teleconsultation"],
   "expected_sources": [],
-  "expected_shape": "decline",
-  "expected_behaviour": "decline",
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
   "derived_from": null,
   "source_row": "annexure#abdm-faq-general",
-  "catalogue_version": "2026.08.24",
-  "notes": "UHI booking is a separate gateway this portal does not document; the fail is an invented UHI booking path."
+  "catalogue_version": "2026.09.16",
+  "notes": "The portal documents UHI booking for Physical Consultation, so the answer grounds in uhi_consultation_init, the call that opens an order after on_search, and routes to its page under /docs/uhi/v1/api/consultation/. The fail is abstaining, an invented UHI booking path, or a teleconsultation flow. expected_sources stays empty because operations are reached through get_operation, which records no source."
 }
