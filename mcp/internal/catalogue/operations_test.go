@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -421,3 +422,46 @@ console.log(JSON.stringify(out));`
 }
 
 var repoRoot = filepath.Join("..", "..", "..")
+
+func TestChunkOperationIsFlatAndNamesErrors(t *testing.T) {
+	op := Operation{Gateway: "hiecm", OperationID: "m1_post_profile_verify", Method: "POST", Path: "/abha/api/v3/profile/login/verify", Summary: "Verify the OTP", Params: []string{"txnId", "otp"}, ResponseCodes: []string{"200", "401"}, ErrorCodes: []string{"ABDM-1062"}}
+	c := ChunkOperation(op)
+	for _, want := range []string{"hiecm > operation > POST /abha/api/v3/profile/login/verify", "Verify the OTP", "parameters: txnId, otp", "responses: 200, 401", "errors: ABDM-1062"} {
+		if !strings.Contains(c.Text, want) {
+			t.Errorf("missing %q in %q", want, c.Text)
+		}
+	}
+	if strings.Contains(c.Text, "{") {
+		t.Errorf("chunk carries schema JSON: %q", c.Text)
+	}
+	if c.Kind != "operation" || c.AtomID != op.OperationID {
+		t.Errorf("chunk kind %q id %q, want operation %s", c.Kind, c.AtomID, op.OperationID)
+	}
+}
+
+// The real M1 specification yields operations with their gateway, parameter
+// names, response codes and the error codes their examples return.
+func TestParsedOperationsCarryWhatTheirChunkNeeds(t *testing.T) {
+	data, err := ParseSpec("../../../catalogue/openapi/hiecm/v3/hiecm-m1.yaml")
+	if err != nil {
+		t.Fatal(err)
+	}
+	withParams, withResponses, withErrors := 0, 0, 0
+	for _, op := range data.Operations {
+		if op.Gateway != "hiecm" {
+			t.Fatalf("%s: gateway %q, want hiecm", op.OperationID, op.Gateway)
+		}
+		if len(op.Params) > 0 {
+			withParams++
+		}
+		if len(op.ResponseCodes) > 0 {
+			withResponses++
+		}
+		if len(op.ErrorCodes) > 0 {
+			withErrors++
+		}
+	}
+	if withParams == 0 || withResponses == 0 || withErrors == 0 {
+		t.Errorf("params on %d, responses on %d, error codes on %d of %d operations; want each on some", withParams, withResponses, withErrors, len(data.Operations))
+	}
+}

@@ -4,6 +4,7 @@
     {
       "doc_url": "/docs/hiecm/v3/reference/error-codes#m2-linking-and-sharing",
       "id": "hiecm.error.abdm-1035",
+      "kind": "atom",
       "milestone": "M2",
       "snippet": "...does not recognise your facility. **ABDM-1035** means the X-HIP-ID...",
       "summary": "The gateway rejected the call.",
@@ -13,6 +14,7 @@
     {
       "doc_url": "",
       "id": "hiecm.flow.m2-link-care-context",
+      "kind": "atom",
       "milestone": "M2",
       "snippet": "## In plain words\n\nLinking makes a visit discoverable.",
       "summary": "Tell ABDM about a visit.",
@@ -22,6 +24,7 @@
     {
       "doc_url": "",
       "id": "hiecm.endpoint.m1-enrolment-by-aadhaar",
+      "kind": "atom",
       "milestone": "M1",
       "snippet": "Enrol an ABHA by Aadhaar\nPOST enrol/byAadhaar creates an ABHA from an Aadhaar OTP.",
       "summary": "POST enrol/byAadhaar creates an ABHA from an Aadhaar OTP.",

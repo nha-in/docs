@@ -247,3 +247,82 @@ func TestKeywordFallbackIsForIdentifiersOnly(t *testing.T) {
 		t.Errorf("identifiers = %q", got)
 	}
 }
+
+// An intent with no atom behind it must still find the operation.
+func TestSearchFindsAnOperationByIntent(t *testing.T) {
+	ops := append(fixtureOps(), catalogue.Operation{
+		OperationID: "m1_post_profile_verify", Method: "post", Path: "/abha/api/v3/profile/login/verify",
+		Summary: "Verify the OTP", Module: "m1", Gateway: "hiecm", SpecJSON: []byte(`{}`),
+		Params: []string{"txnId", "otp"}, ResponseCodes: []string{"200", "401"},
+	})
+	var all []catalogue.Chunk
+	for _, a := range fixtureAtoms() {
+		all = append(all, catalogue.ChunkAtom(a)...)
+	}
+	for _, o := range ops {
+		all = append(all, catalogue.ChunkOperation(o))
+	}
+	f := embed.NewFake(64)
+	var texts []string
+	for _, c := range all {
+		texts = append(texts, c.Text)
+	}
+	vecs, err := f.Embed(context.Background(), texts)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var chunks []EmbeddedChunk
+	for i, c := range all {
+		chunks = append(chunks, EmbeddedChunk{Chunk: c, Vector: vecs[i]})
+	}
+	dbPath := filepath.Join(t.TempDir(), "catalogue.db")
+	meta := Meta{CatalogueVersion: "v", BuiltAt: "t", EmbeddingModel: f.Model(), EmbeddingDim: 64}
+	if err := Build(dbPath, fixtureAtoms(), nil, ops, fixtureSpecErrors(), nil, nil, chunks, meta); err != nil {
+		t.Fatal(err)
+	}
+	r, err := Open(dbPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer r.Close()
+	ctx := context.Background()
+	hits, err := r.SearchKind(ctx, "verify the otp", "operation", "", "", "", 5, f)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(hits) == 0 || hits[0].Kind != "operation" || hits[0].ID != "m1_post_profile_verify" {
+		t.Fatalf("operation not found by intent: %+v", hits)
+	}
+	if hits[0].DocURL != "/docs/hiecm/v3/api/m1/endpoints/m1-post-profile-verify" {
+		t.Errorf("operation doc url %q", hits[0].DocURL)
+	}
+	both, err := r.SearchKind(ctx, "verify the otp", "", "", "", "", 5, f)
+	if err != nil {
+		t.Fatal(err)
+	}
+	found := false
+	for _, h := range both {
+		found = found || (h.Kind == "operation" && h.ID == "m1_post_profile_verify")
+	}
+	if !found {
+		t.Errorf("default search, atoms and operations, missed the operation: %+v", both)
+	}
+	atomsOnly, err := r.SearchKind(ctx, "verify the otp", "atom", "", "", "", 5, f)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, h := range atomsOnly {
+		if h.Kind != "atom" {
+			t.Errorf("kind atom returned %+v", h)
+		}
+	}
+}
+
+// Mixed search puts each list's first hit on the same score; the atom, which
+// carries the guidance, goes first rather than whichever id sorts lower.
+func TestFuseBreaksATieForTheAtom(t *testing.T) {
+	got := fuse(10, []SearchHit{{Kind: "atom", ID: "shared.glossary.timestamp-header"}}, []SearchHit{{Kind: "operation", ID: "m2_notify"}})
+	if got[0].Kind != "atom" {
+		t.Fatalf("tie went to %+v, want the atom first", got[0])
+	}
+}

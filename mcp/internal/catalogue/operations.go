@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
@@ -24,6 +25,45 @@ type Operation struct {
 	SpecJSON          []byte
 	RequestSchemaJSON []byte
 	RequiredParams    []string
+	// What an operation chunk is built from: the gateway its specification
+	// sits under, every parameter name, the documented response codes, and
+	// the error codes its response examples return.
+	Gateway       string
+	Params        []string
+	ResponseCodes []string
+	ErrorCodes    []string
+}
+
+// ChunkOperation is an operation as one flat search chunk: method and path,
+// summary, then parameter names, response codes and error codes. No example
+// payloads and no nested schemas: raw schema JSON is noise to an embedder,
+// flattened field names are signal.
+func ChunkOperation(op Operation) Chunk {
+	var b strings.Builder
+	b.WriteString(op.Gateway + " > operation > " + strings.ToUpper(op.Method) + " " + op.Path)
+	if s := strings.TrimSpace(op.Summary); s != "" {
+		b.WriteString("\n" + s)
+	}
+	for _, f := range []struct {
+		label string
+		vals  []string
+	}{{"parameters", op.Params}, {"responses", op.ResponseCodes}, {"errors", op.ErrorCodes}} {
+		if len(f.vals) > 0 {
+			b.WriteString("\n" + f.label + ": " + strings.Join(f.vals, ", "))
+		}
+	}
+	return Chunk{AtomID: op.OperationID, Heading: "operation", Text: b.String(), Kind: "operation"}
+}
+
+// specGateway is the directory under openapi/ a specification sits in.
+func specGateway(specPath string) string {
+	parts := strings.Split(filepath.ToSlash(specPath), "/")
+	for i := 0; i+1 < len(parts); i++ {
+		if parts[i] == "openapi" {
+			return parts[i+1]
+		}
+	}
+	return ""
 }
 
 // SpecErrorCode is one error code found in a specification's 4xx/5xx
@@ -402,6 +442,13 @@ func ParseSpec(specPath string) (SpecData, error) {
 	if err != nil {
 		return SpecData{}, err
 	}
+	codesByOp := map[string][]string{}
+	for _, c := range errCodes {
+		if !slices.Contains(codesByOp[c.OperationID], c.Code) {
+			codesByOp[c.OperationID] = append(codesByOp[c.OperationID], c.Code)
+		}
+	}
+	gateway := specGateway(specPath)
 	var ops []Operation
 	for path, item := range doc.Paths.Map() {
 		for method, op := range item.Operations() {
@@ -458,7 +505,27 @@ func ParseSpec(specPath string) (SpecData, error) {
 				}
 			}
 			sort.Strings(required)
+			var params []string
+			for _, p := range paramMap {
+				if p.Value != nil && !slices.Contains(params, p.Value.Name) {
+					params = append(params, p.Value.Name)
+				}
+			}
+			sort.Strings(params)
+			var responses []string
+			if op.Responses != nil {
+				for code := range op.Responses.Map() {
+					responses = append(responses, code)
+				}
+			}
+			sort.Strings(responses)
+			codes := codesByOp[op.OperationID]
+			sort.Strings(codes)
 			ops = append(ops, Operation{
+				Gateway:           gateway,
+				Params:            params,
+				ResponseCodes:     responses,
+				ErrorCodes:        codes,
 				OperationID:       op.OperationID,
 				Method:            method,
 				Path:              path,

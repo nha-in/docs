@@ -13,6 +13,9 @@ import (
 )
 
 type SearchHit struct {
+	// Kind is "atom" or "operation". For an operation, ID is its operationId,
+	// Type is "operation", and DocURL is its generated reference page.
+	Kind                                         string
 	ID, Type, Milestone, Title, Summary, Snippet string
 	// DocURL and DocAnchor are the published page this atom's knowledge
 	// lives on. Empty means the atom has no page and must not be cited to
@@ -114,7 +117,7 @@ func (r *Reader) ftsRun(match, atomType, milestone, gateway string, limit int) (
 	defer rows.Close()
 	var hits []SearchHit
 	for rows.Next() {
-		var h SearchHit
+		h := SearchHit{Kind: "atom"}
 		if err := rows.Scan(&h.ID, &h.Type, &h.Milestone, &h.Title, &h.Summary,
 			&h.DocURL, &h.DocAnchor, &h.Snippet); err != nil {
 			return nil, err
@@ -152,7 +155,7 @@ func (r *Reader) vectorSearch(ctx context.Context, query, atomType, milestone, g
 	for rows.Next() {
 		var atomID, heading, text string
 		var blob []byte
-		var h SearchHit
+		h := SearchHit{Kind: "atom"}
 		if err := rows.Scan(&atomID, &heading, &text, &blob, &h.Type, &h.Milestone,
 			&h.Title, &h.Summary, &h.DocURL, &h.DocAnchor); err != nil {
 			return nil, err
@@ -230,13 +233,21 @@ func (r *Reader) SearchIn(ctx context.Context, query, atomType, milestone, gatew
 		}
 		return ftsHits, nil
 	}
-	// Reciprocal rank fusion over the two ranked lists.
+	return fuse(limit, ftsHits, vecHits), nil
+}
+
+// fuse merges ranked lists by reciprocal rank fusion: each list adds
+// 1/(rrfK+rank) to a hit's score, and a hit keeps the first non-empty
+// snippet it was given. On a tie an atom goes before an operation, since the
+// atom carries the guidance and the operation only the contract; otherwise
+// the lower id goes first.
+func fuse(limit int, lists ...[]SearchHit) []SearchHit {
 	type fused struct {
 		hit   SearchHit
 		score float64
 	}
 	scores := map[string]*fused{}
-	accumulate := func(hits []SearchHit) {
+	for _, hits := range lists {
 		for rank, h := range hits {
 			f, ok := scores[h.ID]
 			if !ok {
@@ -249,8 +260,6 @@ func (r *Reader) SearchIn(ctx context.Context, query, atomType, milestone, gatew
 			}
 		}
 	}
-	accumulate(ftsHits)
-	accumulate(vecHits)
 	var all []*fused
 	for _, f := range scores {
 		all = append(all, f)
@@ -259,11 +268,166 @@ func (r *Reader) SearchIn(ctx context.Context, query, atomType, milestone, gatew
 		if all[i].score != all[j].score {
 			return all[i].score > all[j].score
 		}
+		if ai, aj := all[i].hit.Kind == "atom", all[j].hit.Kind == "atom"; ai != aj {
+			return ai
+		}
 		return all[i].hit.ID < all[j].hit.ID
 	})
 	out := []SearchHit{}
 	for i := 0; i < len(all) && i < limit; i++ {
 		out = append(out, all[i].hit)
 	}
-	return out, nil
+	return out
+}
+
+// SearchKind searches atoms ("atom"), API operations ("operation"), or both
+// (""). Both is fused by rank; a type or milestone filter, or a gateway with
+// no operations indexed, means atoms only, since operations carry neither.
+func (r *Reader) SearchKind(ctx context.Context, query, kind, atomType, milestone, gateway string,
+	limit int, emb embed.Embedder) ([]SearchHit, error) {
+	if limit <= 0 {
+		limit = 10
+	}
+	if limit > 25 {
+		limit = 25
+	}
+	switch kind {
+	case "atom":
+		return r.SearchIn(ctx, query, atomType, milestone, gateway, limit, emb)
+	case "operation":
+		return r.SearchOperations(ctx, query, limit, emb)
+	case "":
+		atoms, err := r.SearchIn(ctx, query, atomType, milestone, gateway, limit, emb)
+		if err != nil || atomType != "" || milestone != "" || (gateway != "" && gateway != "hiecm") {
+			return atoms, err
+		}
+		ops, err := r.SearchOperations(ctx, query, limit, emb)
+		if err != nil {
+			return nil, err
+		}
+		return fuse(limit, atoms, ops), nil
+	default:
+		return nil, fmt.Errorf("kind %q is not one of atom, operation", kind)
+	}
+}
+
+// SearchOperations finds API operations by what they do: keyword search over
+// their flat chunks, fused with vector search when the index has embeddings.
+func (r *Reader) SearchOperations(ctx context.Context, query string, limit int, emb embed.Embedder) ([]SearchHit, error) {
+	match := ftsQuery(query, r.vocab)
+	if match == "" {
+		return []SearchHit{}, nil
+	}
+	kw, err := r.opFTS(match, limit)
+	if err == nil && len(kw) < limit {
+		// As for atoms: a stray word must not hide an exact identifier.
+		if ids := identifiers(query); len(ids) > 0 && len(ids) < len(strings.Fields(query)) {
+			more, err2 := r.opFTS(strings.Join(strings.Fields(ftsQuote(strings.Join(ids, " "))), " OR "), limit)
+			if err2 != nil {
+				return nil, err2
+			}
+			kw = fuse(limit, kw, more)
+		}
+	}
+	if err != nil {
+		return nil, err
+	}
+	if emb == nil || !r.EmbeddingsEnabled() || emb.Model() != r.EmbeddingModel() {
+		return fuse(limit, kw), nil
+	}
+	vec, err := r.opVectors(ctx, query, limit, emb)
+	if err != nil {
+		slog.Warn("operation vector search failed, keyword-only operations", "error", err)
+		return fuse(limit, kw), nil
+	}
+	return fuse(limit, kw, vec), nil
+}
+
+func (r *Reader) opFTS(match string, limit int) ([]SearchHit, error) {
+	rows, err := r.db.Query(`
+        SELECT o.operation_id, o.method, o.path, o.summary, o.module
+        FROM operations_fts
+        JOIN operations o ON o.operation_id = operations_fts.operation_id
+        WHERE operations_fts MATCH ?
+        ORDER BY bm25(operations_fts)
+        LIMIT ?`, match, limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var hits []SearchHit
+	for rows.Next() {
+		var id, method, path, summary, module string
+		if err := rows.Scan(&id, &method, &path, &summary, &module); err != nil {
+			return nil, err
+		}
+		hits = append(hits, opHit(id, method, path, summary, module))
+	}
+	return hits, rows.Err()
+}
+
+func (r *Reader) opVectors(ctx context.Context, query string, limit int, emb embed.Embedder) ([]SearchHit, error) {
+	qv, err := emb.Embed(ctx, []string{query})
+	if err != nil {
+		return nil, fmt.Errorf("embed query: %w", err)
+	}
+	rows, err := r.db.Query(`
+        SELECT o.operation_id, o.method, o.path, o.summary, o.module, c.embedding
+        FROM chunks c
+        JOIN operations o ON o.operation_id = c.atom_id
+        WHERE c.kind = 'operation' AND c.embedding IS NOT NULL`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	type scored struct {
+		hit   SearchHit
+		score float32
+	}
+	var all []scored
+	for rows.Next() {
+		var id, method, path, summary, module string
+		var blob []byte
+		if err := rows.Scan(&id, &method, &path, &summary, &module, &blob); err != nil {
+			return nil, err
+		}
+		all = append(all, scored{opHit(id, method, path, summary, module), embed.Cosine(qv[0], blobToVec(blob))})
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	sort.Slice(all, func(i, j int) bool { return all[i].score > all[j].score })
+	var hits []SearchHit
+	for i := 0; i < len(all) && i < limit; i++ {
+		hits = append(hits, all[i].hit)
+	}
+	return hits, nil
+}
+
+func opHit(id, method, path, summary, module string) SearchHit {
+	return SearchHit{Kind: "operation", ID: id, Type: "operation",
+		Title: strings.ToUpper(method) + " " + path, Summary: summary, Snippet: summary,
+		DocURL: OperationDocPath(module, id)}
+}
+
+// nonAlphanumeric matches the run-collapsing the site's route generator does
+// in scripts/build-api-reference.mjs. Keep the two in step: an operation id is
+// snake_case and its route is hyphenated, so without this an agent holding
+// `gateway_sessions_create` cannot reach
+// `/docs/hiecm/v3/api/gateway/endpoints/gateway-sessions-create`.
+var nonAlphanumeric = regexp.MustCompile(`[^a-zA-Z0-9]+`)
+
+// OperationDocPath is site-relative rather than absolute because the server is
+// not told where it is published. Every operation it indexes is HIE-CM v3
+// today, which is the one assumption here; a second gateway means carrying the
+// gateway and version through the index alongside the module.
+func OperationDocPath(module, operationID string) string {
+	if module == "" || operationID == "" {
+		return ""
+	}
+	slug := strings.Trim(nonAlphanumeric.ReplaceAllString(operationID, "-"), "-")
+	if slug == "" {
+		return ""
+	}
+	return "/docs/hiecm/v3/api/" + module + "/endpoints/" + strings.ToLower(slug)
 }

@@ -261,7 +261,7 @@ func searchHitsJSON(hits []index.SearchHit) []map[string]any {
 	out := []map[string]any{}
 	for _, h := range hits {
 		out = append(out, map[string]any{
-			"id": h.ID, "type": h.Type, "milestone": h.Milestone,
+			"kind": h.Kind, "id": h.ID, "type": h.Type, "milestone": h.Milestone,
 			"title": h.Title, "summary": h.Summary,
 			"snippet": h.Snippet,
 			"doc_url": index.DocLink(h.DocURL, h.DocAnchor),

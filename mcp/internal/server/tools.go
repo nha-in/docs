@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
-	"regexp"
 	"strings"
 
 	"github.com/getkin/kin-openapi/openapi3"
@@ -23,8 +22,8 @@ import (
 // The ten chat-visible tool descriptions, shared verbatim between the MCP
 // registration in mcp.go and the Defs table below.
 const (
-	searchDocsDescription = "Hybrid search over the ABDM catalogue atoms: concepts, flows, endpoints, callbacks, errors, tests, glossary entries, decisions, FHIR mappings, sandbox notes and troubleshooting guides. " +
-		"It does NOT search raw API operations; those are covered by list_operations and get_operation. " +
+	searchDocsDescription = "Hybrid search over the catalogue atoms and the API operations. Atoms are concepts, flows, endpoints, callbacks, errors, tests, glossary entries, decisions, FHIR mappings, sandbox notes and troubleshooting guides; each hit says its kind. " +
+		"Use kind: operation when you want the contract for an intent; get_operation returns the full contract by id. " +
 		"Use this when you have an intent in your own words and want the catalogue's guidance."
 	getAtomDescription = "Read one catalogue atom: full frontmatter fields and markdown body. " +
 		"Use this when you already know the exact atom id and want the one full atom; use search_docs when you only have an intent."
@@ -56,6 +55,7 @@ type searchIn struct {
 	Type      string `json:"type,omitempty" jsonschema:"optional atom type filter, one of: concept, flow, endpoint, callback, error, test, glossary, decision, fhir, sandbox, troubleshooting"`
 	Milestone string `json:"milestone,omitempty" jsonschema:"optional milestone filter, M1 to M4"`
 	Limit     int    `json:"limit,omitempty" jsonschema:"max results, default 10, cap 25"`
+	Kind      string `json:"kind,omitempty" jsonschema:"atom or operation; empty searches both"`
 }
 
 type getAtomIn struct {
@@ -131,7 +131,7 @@ func (t *Tools) versioned(fields map[string]any) map[string]any {
 }
 
 func (t *Tools) SearchDocs(ctx context.Context, in searchIn) (map[string]any, error) {
-	hits, err := t.r.Search(ctx, in.Query, in.Type, in.Milestone, in.Limit, t.emb)
+	hits, err := t.r.SearchKind(ctx, in.Query, in.Kind, in.Type, in.Milestone, "", in.Limit, t.emb)
 	if err != nil {
 		return nil, err
 	}
@@ -387,32 +387,10 @@ func (t *Tools) GetOperation(ctx context.Context, in getOpIn) (map[string]any, e
 		"operation_id": in.OperationID,
 		"spec":         json.RawMessage(frag),
 	}
-	if path := operationDocPath(module, in.OperationID); path != "" {
+	if path := index.OperationDocPath(module, in.OperationID); path != "" {
 		out["doc_path"] = path
 	}
 	return t.versioned(out), nil
-}
-
-// nonAlphanumeric matches the run-collapsing the site's route generator does
-// in scripts/build-api-reference.mjs. Keep the two in step: an operation id is
-// snake_case and its route is hyphenated, so without this an agent holding
-// `gateway_sessions_create` cannot reach
-// `/docs/hiecm/v3/api/gateway/endpoints/gateway-sessions-create`.
-var nonAlphanumeric = regexp.MustCompile(`[^a-zA-Z0-9]+`)
-
-// operationDocPath is site-relative rather than absolute because the server is
-// not told where it is published. Every operation it indexes is HIE-CM v3
-// today, which is the one assumption here; a second gateway means carrying the
-// gateway and version through the index alongside the module.
-func operationDocPath(module, operationID string) string {
-	if module == "" || operationID == "" {
-		return ""
-	}
-	slug := strings.Trim(nonAlphanumeric.ReplaceAllString(operationID, "-"), "-")
-	if slug == "" {
-		return ""
-	}
-	return "/docs/hiecm/v3/api/" + module + "/endpoints/" + strings.ToLower(slug)
 }
 
 func (t *Tools) CatalogueInfo(ctx context.Context, in emptyIn) (map[string]any, error) {
