@@ -1,0 +1,15 @@
+## Cancel the order {/* #consultation-cancel */}
+
+The [EUA](/docs/uhi/v1/getting-started/glossary#eua) cancels an appointment for the patient, [directly](/docs/uhi/v1/getting-started/glossary#direct-call-p2p) at the [HSPA](/docs/uhi/v1/getting-started/glossary#hspa)'s [`provider_uri`](/docs/uhi/v1/getting-started/glossary#provider-uri). It carries the `order.id` and the tag `@abdm/gov.in/cancelledby` set to `patient`. The reason code goes in `@abdm/gov.in/cancel_reason`. The HSPA replies with an `ACK`, then sends `on_cancel`. See [the reason codes](/docs/uhi/v1/services/consultation#cancellation-and-override-reason-codes).
+
+Sign every request with a fresh `Authorization` header. See [Signing](/docs/uhi/v1/concepts/signing).
+
+<AgentOnly>
+**Before you start.** A confirmed order, and its `order.id` and `transaction_id`.
+
+**What happens.** Send a patient reason code, P1 to P7, exactly as listed. P7, Other, needs free text from the patient.
+
+**How you know it worked.** An HTTP 200 carrying `ACK`, then an `on_cancel` at your `consumer_uri` with the order `CANCELLED`.
+
+**When it goes wrong.** The `@abdm/gov.in/cancelledby` tag is mandatory, so the right terms apply. A 401 means the signature was built over a different body, was reused, or has expired.
+</AgentOnly>

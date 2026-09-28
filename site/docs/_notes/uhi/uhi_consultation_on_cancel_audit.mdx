@@ -1,0 +1,15 @@
+## Copy on_cancel to the Gateway audit {/* #consultation-on-cancel-audit */}
+
+After the [HSPA](/docs/uhi/v1/getting-started/glossary#hspa) sends `on_cancel` to the [EUA](/docs/uhi/v1/getting-started/glossary#eua), it sends an exact copy of it here, to the [UHI Gateway](/docs/uhi/v1/getting-started/glossary#uhi-gateway). The Gateway does not see a [direct call](/docs/uhi/v1/getting-started/glossary#direct-call-p2p), so this [audit copy](/docs/uhi/v1/getting-started/glossary#audit-copy) is how it learns of one. See [Audit copies](/docs/uhi/v1/concepts/routes#audit-copies).
+
+Sign every request with a fresh `Authorization` header. See [Signing](/docs/uhi/v1/concepts/signing).
+
+<AgentOnly>
+**Before you start.** As a Physical Consultation HSPA, an `on_cancel` already sent to the EUA.
+
+**What happens.** Send the same body you sent the EUA, unchanged, and sign it with a fresh header.
+
+**How you know it worked.** An HTTP 200 carrying `ACK` from the Gateway.
+
+**When it goes wrong.** A 401 means the signature was built over a different body, was reused, or has expired. Build a new header for this call rather than reusing the one you sent the EUA.
+</AgentOnly>

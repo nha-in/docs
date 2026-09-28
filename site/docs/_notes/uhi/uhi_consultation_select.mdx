@@ -1,0 +1,7 @@
+## Select items and build an order {/* #consultation-select */}
+
+Do not implement `select` for Physical Consultation. After the second `on_search` returns the doctor's slots, the [EUA](/docs/uhi/v1/getting-started/glossary#eua) sends `init` directly. See [Physical Consultation](/docs/uhi/v1/services/consultation).
+
+<AgentOnly>
+**What happens.** The order starts with `init`, sent directly to the [HSPA](/docs/uhi/v1/getting-started/glossary#hspa)'s `provider_uri`. The HSPA answers with `on_init`.
+</AgentOnly>

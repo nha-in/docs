@@ -1,0 +1,76 @@
+# UHI network: the Gateway search and its relay, direct search, and the
+# network registry lookup. Words live in site/docs/_notes/uhi/<operationId>.mdx.
+uhi.endpoint.network-gateway-search:
+  type: endpoint
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Search through the Gateway
+  summary: The EUA sends a signed search to the UHI Gateway, which broadcasts it to every HSPA registered for the domain; results arrive later as on_search.
+  page: site/docs/_notes/uhi/uhi_network_gateway_search.mdx
+  heading: network-gateway-search
+  url: /docs/uhi/v1/api/network/endpoints/uhi-pmjay-hem/01-uhi-network-gateway-search#network-gateway-search
+  operation: uhi_network_gateway_search
+  related:
+    callbacks: [uhi.callback.network-gateway-on-search]
+    concepts: [uhi.concept.gateway-routes, uhi.concept.signing-headers, uhi.concept.context-block]
+    flows: [uhi.flow.pmjay-hem-discovery]
+uhi.callback.network-gateway-on-search:
+  type: callback
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Send a catalog through the Gateway
+  summary: An HSPA sends its catalog to the UHI Gateway in answer to a forwarded search; the Gateway relays it to the EUA's consumer_uri as on_search.
+  page: site/docs/_notes/uhi/uhi_network_gateway_on_search.mdx
+  heading: network-gateway-on-search
+  url: /docs/uhi/v1/api/network/endpoints/uhi-pmjay-hem/03-uhi-network-gateway-on-search#network-gateway-on-search
+  operation: uhi_network_gateway_on_search
+  related:
+    endpoints: [uhi.endpoint.network-gateway-search, uhi.endpoint.network-search]
+    callbacks: [uhi.callback.network-on-search]
+    concepts: [uhi.concept.gateway-routes, uhi.concept.match-transaction-id, uhi.concept.signing-headers]
+    flows: [uhi.flow.pmjay-hem-discovery]
+uhi.endpoint.network-search:
+  type: endpoint
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Search an HSPA
+  summary: An HSPA receives each search here, first from the UHI Gateway and, for Physical Consultation slots, directly from the EUA.
+  page: site/docs/_notes/uhi/uhi_network_search.mdx
+  heading: network-search
+  url: /docs/uhi/v1/api/network/endpoints/uhi-pmjay-hem/02-uhi-network-search#network-search
+  operation: uhi_network_search
+  related:
+    callbacks: [uhi.callback.network-on-search, uhi.callback.network-gateway-on-search]
+    concepts: [uhi.concept.gateway-routes, uhi.concept.direct-calls, uhi.concept.verifying-signatures, uhi.concept.ack-then-answer]
+    flows: [uhi.flow.pmjay-hem-discovery, uhi.flow.consultation-discovery]
+uhi.callback.network-on-search:
+  type: callback
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Send a catalog to the EUA
+  summary: An EUA receives each catalog here, relayed by the UHI Gateway after a broadcast search or sent by the HSPA after a direct search.
+  page: site/docs/_notes/uhi/uhi_network_on_search.mdx
+  heading: network-on-search
+  url: /docs/uhi/v1/api/network/endpoints/uhi-pmjay-hem/04-uhi-network-on-search#network-on-search
+  operation: uhi_network_on_search
+  related:
+    endpoints: [uhi.endpoint.network-search, uhi.endpoint.network-gateway-search]
+    concepts: [uhi.concept.match-transaction-id, uhi.concept.timeouts, uhi.concept.verifying-signatures, uhi.concept.ack-then-answer]
+    flows: [uhi.flow.pmjay-hem-discovery, uhi.flow.consultation-discovery]
+uhi.endpoint.network-registry-lookup:
+  type: endpoint
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Look up a network participant
+  summary: An EUA or HSPA fetches another participant's public key and details from the network registry, to check its signature on a direct call.
+  page: site/docs/_notes/uhi/uhi_network_registry_lookup.mdx
+  heading: network-registry-lookup
+  url: /docs/uhi/v1/api/network/endpoints/uhi-network-registry-lookup#network-registry-lookup
+  operation: uhi_network_registry_lookup
+  related:
+    concepts: [uhi.concept.registry-lookup, uhi.concept.verifying-signatures, uhi.concept.signing-headers, uhi.concept.direct-calls]
