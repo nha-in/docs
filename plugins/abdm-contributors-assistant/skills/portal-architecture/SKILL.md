@@ -1,9 +1,9 @@
 ---
 name: portal-architecture
 description: 'The architecture of the ABDM Developer Portal: the four building blocks, how the Catalogue compiles into docs, skills and MCP surfaces, the seven binding principles, the atom model, and what is deliberately excluded from V1. Use whenever someone asks how the portal fits together, why a design decision was made, whether something belongs in V1, where a new capability should live, or proposes a change to the structure. Also use before designing any new component so it lands in the right layer instead of beside it.'
-plan_version: 2026.09.28
+plan_version: 2026.09.29-3
 plan_source: abdm-v1-phase1-architecture-and-plan.md
-plan_hash: sha256:b504e9424235906f7ad60616c3dfae402ac5e71d62b8aaa30ab582c7affac368
+plan_hash: sha256:0291234b9e3d276af384acb543b8d6c71efd9d88e4f587f61aa2964f71090b59
 compiled_from_plan: true
 ---
 
@@ -11,7 +11,7 @@ compiled_from_plan: true
 
 ## The one-paragraph version
 
-One knowledge Catalogue of India's health gateways, scoped in phases: HIE-CM carries specifications and generated reference pages for the gateway, M1 to M4, P1 to P4, subscriptions and Scan and Pay, UHI and NHCX carry pages, and the atoms written so far are shared ones that belong to no single gateway. Every gateway is open to atoms; which ones have them is a question of what the schedule reached. It is written so a first-day developer can follow it and structured so a machine can compile it. A self-hosted Docusaurus site with Scalar's open source reference component renders the human side; our own Go MCP server with hybrid retrieval serves the machine side. A build pipeline compiles the same Catalogue into agent skills, a plugin, an index and the MCP's snapshot, and re-runs whenever NHA changes something. Everything is FOSS, self-hosted, and runs without Eka.
+One knowledge Catalogue of India's health gateways, scoped in phases: HIE-CM carries specifications and generated reference pages for the gateway, M1 to M4, P1 to P4 and the three use cases, Scan and Register, Record Share and Scan and Pay, UHI and NHCX carry pages, and the atoms written so far are shared ones that belong to no single gateway. Every gateway is open to atoms; which ones have them is a question of what the schedule reached. It is written so a first-day developer can follow it and structured so a machine can compile it. A self-hosted Docusaurus site with Scalar's open source reference component renders the human side; our own Go MCP server with hybrid retrieval serves the machine side. A build pipeline compiles the same Catalogue into agent skills, a plugin, an index and the MCP's snapshot, and re-runs whenever NHA changes something. Everything is FOSS, self-hosted, and runs without Eka.
 
 ## The four building blocks
 
@@ -94,7 +94,7 @@ Use this when someone proposes a capability and you need to place it.
 
 Scope is phased, and phase is not the only axis. Keep two claims apart at all times. **Exists** means a file is in the repository and a page renders from it. **Verified** means the call was made against the sandbox and the response recorded in an atom. A specification existing is not evidence that any operation in it works.
 
-What exists: `catalogue/openapi/hiecm/v3/` holds eleven specifications carrying 253 operations, 30 of them webhooks: the gateway plus M1, M2, M3, M4, P1, P2, P3, P4, subscriptions and Scan and Pay. The reference is ordered by the journey files under `catalogue/openapi/hiecm/v3/journeys/`, and each module's error page lists the codes its specification's response examples return. The site renders 398 HIE-CM pages, 345 of them generated, alongside 16 UHI pages and 5 NHCX pages.
+What exists: `catalogue/openapi/hiecm/v3/` holds twelve specifications carrying 337 operations, 34 of them webhooks: the gateway plus M1, M2, M3, M4, P1, P2, P3, P4, and the use cases Scan and Register, Record Share and Scan and Pay. Subscriptions have no specification of their own: their calls sit in P3. The reference is ordered by the journey files under `catalogue/openapi/hiecm/v3/journeys/`, and each module's error page lists the codes its specification's response examples return. The site renders 459 HIE-CM pages, 405 of them under `api/` and 392 of those generated, alongside 17 UHI pages and 5 NHCX pages.
 
 What the Catalogue holds: 57 atoms are indexed, and none carries a status. Every atom is shared and carries `milestone: n/a`: 40 glossary, 11 FHIR, 3 sandbox, 2 decision and 1 concept. The HIE-CM atoms came down in the 16 September 2026 reset. There are no HIE-CM atoms, no UHI atoms and no NHCX atoms.
 
@@ -108,7 +108,7 @@ One gateway written out beats three gateways half-written. Generated reference p
 
 Naming these prevents scope creep by accretion.
 
-- Atoms and skills for UHI. Its pages are already in the repository; only the atoms and skills are Phase 2. PHR application services was on this list and its specification was retired in the 16 September 2026 reset; the phase of atoms for P4, subscriptions and Scan and Pay is not decided. HIE-CM M4 and the PHR modules have come off this list: they carry compiled skills built from their journeys and specifications, and since the reset no atoms
+- Atoms and skills for UHI. Its pages are already in the repository; only the atoms and skills are Phase 2. PHR application services was on this list and its specification was retired in the 16 September 2026 reset; the phase of atoms for P4 and the three use cases, Scan and Register, Record Share and Scan and Pay, is not decided. HIE-CM M4 and the PHR modules have come off this list: they carry compiled skills built from their journeys and specifications, and since the reset no atoms
 - NHCX atoms and NHCX skills, in V1 only. Nothing rejects them: the gateway lints clean and Phase 2 may add them. NHCX site pages are not on this list: they exist and they ship
 - The conformance harness, ledger, gate and simulators
 - Execute-mode MCP exposed publicly
