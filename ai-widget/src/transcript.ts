@@ -21,3 +21,39 @@ export function forModel<T extends Said>(turns: T[]): T[] {
   }
   return out;
 }
+
+/**
+ * How many turns go to the server with a question: the question and the
+ * fifteen exchanges before it. The server's MaxTurns
+ * (mcp/internal/chat/loop.go) is the same number, and a request over it is
+ * refused, so the two move together.
+ */
+export const MAX_TURNS = 31;
+
+/**
+ * How much of the conversation the next question takes with it.
+ *
+ * Readers said the panel forgot what they had asked, and nothing on screen
+ * told them it remembers a fixed number of exchanges. The limit that binds is
+ * that number, not the model's context window, which no conversation here
+ * comes near: each question goes with the fifteen exchanges before it. So the
+ * count is of exchanges, and the panel's own answers take none.
+ */
+export function memoryOf<T extends Said>(turns: T[]) {
+  const earlier = Math.floor(forModel(turns).length / 2);
+  const window = (MAX_TURNS - 1) / 2;
+  const percent = Math.min(100, Math.round((earlier / window) * 100));
+  return {earlier, window, percent, full: earlier >= window};
+}
+
+/**
+ * Where the conversation stops being sent: the index, in the turns on screen,
+ * of the oldest turn the next question still carries, or -1 while every turn
+ * is still carried. The thread draws a line above it, so a reader can see
+ * which messages the assistant no longer has.
+ */
+export function sentFrom<T extends Said>(turns: T[]): number {
+  const shown = forModel(turns);
+  if (shown.length <= MAX_TURNS - 1) return -1;
+  return turns.indexOf(shown[shown.length - (MAX_TURNS - 1)]);
+}
