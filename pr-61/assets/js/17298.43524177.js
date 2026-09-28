@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["17298"],{44004(e,a,d){d.r(a),d.d(a,{__iconNode:()=>s,default:()=>t});var c=d(34438);let s=[["path",{d:"M5 21v-6",key:"1hz6c0"}],["path",{d:"M12 21V3",key:"1lcnhd"}],["path",{d:"M19 21V9",key:"unv183"}]],t=(0,c.A)("chart-no-axes-column",s)}}]);
