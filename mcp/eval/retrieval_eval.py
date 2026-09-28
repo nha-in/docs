@@ -104,8 +104,11 @@ RANK_CASES = [
     ("the exchange rejected my retry saying the correlation id was already used",
      {"nhcx.error.nhcx-1006", "nhcx.concept.message-identifiers"}),
     # -- the first atom whose words live on its page ---------------------------
+    # The rebuilt link token endpoint and its callback both state the
+    # six-month lifetime, so either answers.
     ("how long can I keep using the token that lets me link a patient's records",
-     {"shared.glossary.link-token"}),
+     {"shared.glossary.link-token", "hiecm.endpoint.m2-generate-link-token",
+      "hiecm.callback.m2-on-generate-token-result"}),
     ("linking care contexts fails because my stored link token has expired",
      {"shared.glossary.link-token"}),
 ]

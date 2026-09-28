@@ -1,0 +1,13 @@
+## Discovery result callback {/* #p2-callback-on-health-record-discover */}
+
+ABDM posts the result of a discovery request to this path on your bridge. It lists the [care contexts](/docs/hiecm/v3/getting-started/glossary#care-context) the facility found, grouped by patient reference and [HI type](/docs/hiecm/v3/getting-started/glossary#hi-type). Show them to the person so they can choose what to link.
+
+<AgentOnly>
+**Before you start.** A callback URL registered for your bridge and reachable from the public internet.
+
+**What happens.** Either `patient` or `error` is present, and `response` always is. Keep `transactionId`: the link init call sends it back.
+
+**How you know it worked.** `patient` holds at least one entry with `careContexts`. Answer with `200`.
+
+**When it goes wrong.** An `error` object instead of `patient` means discovery failed. Show the error `message` to the person and do not start linking.
+</AgentOnly>

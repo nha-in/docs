@@ -1,0 +1,11 @@
+## Get a subscription by its subscription id {/* #p3-details-by-subscription-id */}
+
+Returns one subscription by its subscription id: its purpose, `status`, when it was granted and the sources it covers. Use the request id call instead when you hold only a `subscriptionRequestId`.
+
+<AgentOnly>
+**Before you start.** The person's `X-AUTH-TOKEN` and the `subscriptionId`, from the approve call.
+
+**How you know it worked.** You receive `200` with `subscriptionId`, `status`, `dateGranted` and `includedSources`.
+
+**When it goes wrong.** `400` with `ABDM-1015` means the request was rejected. Check that the path holds a subscription id, not a subscription request id.
+</AgentOnly>

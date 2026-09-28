@@ -41,8 +41,10 @@ function pageType(file, fm) {
   if (fm?.page_type) return fm.page_type;
   const path = relative(docsDir, file);
   const name = basename(path);
-  if (/\/endpoints\//.test(path)) return 'endpoint';
-  if (/(^|\/)reference\//.test(path) || name === 'errors.md') return 'reference';
+  // A notes partial is read on the generated page that imports it.
+  if (/^_notes\/.*\/errors\//.test(path)) return 'reference';
+  if (/\/endpoints\//.test(path) || /^_notes\//.test(path)) return 'endpoint';
+  if (/(^|\/)reference\//.test(path) || /^errors\.mdx?$/.test(name)) return 'reference';
   if (/(^|\/)concepts\//.test(path)) return 'concept';
   if (/(^|\/)api\/[^/]+\/index\.mdx?$/.test(path)) return 'module-overview';
   return 'howto';
@@ -101,7 +103,10 @@ function paragraphs(text) {
 function walk(dir) {
   const out = [];
   for (const name of readdirSync(dir)) {
-    if (name.startsWith('_')) continue; // partials, never rendered as pages
+    // Partials, never rendered as pages. The _notes partials are the
+    // exception: hand-written prose on generated API pages, held to the same
+    // rules, and with no frontmatter they are spared the description check.
+    if (name.startsWith('_') && name !== '_notes') continue;
     const path = join(dir, name);
     if (statSync(path).isDirectory()) out.push(...walk(path));
     // READMEs are contributor notes for their folder and never render.

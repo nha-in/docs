@@ -1,0 +1,11 @@
+## Deny a consent request {/* #p3-deny-consent-request */}
+
+Lets the person refuse a consent request from their [PHR](/docs/hiecm/v3/getting-started/glossary#phr) app. The [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) that asked gets no access to the records. Send the person's reason in `reason`.
+
+<AgentOnly>
+**Before you start.** The person's `X-AUTH-TOKEN` and the `consentRequestId`, from the list of consent requests.
+
+**How you know it worked.** You receive `202`. The request's `status` then reads `DENIED` in the consent request calls.
+
+**When it goes wrong.** `404` with `ABDM-1001` means no consent request has that id. `400` with `ABDM-1065` means the `X-AUTH-TOKEN` is invalid.
+</AgentOnly>

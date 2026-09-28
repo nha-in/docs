@@ -1,0 +1,11 @@
+## List the health lockers an ABHA address subscribes to {/* #p3-get-patient-subscribed-lockers */}
+
+Lists the health lockers the logged-in person's ABHA address is subscribed to. Set `includeInactive` to true to include lockers that are no longer active.
+
+<AgentOnly>
+**Before you start.** The person's `X-AUTH-TOKEN`.
+
+**How you know it worked.** You receive `200` with an array. Each locker has a `lockerId`, a `lockerName` and `isActive`.
+
+**When it goes wrong.** `400` with `ABDM-1006` means the request is invalid.
+</AgentOnly>

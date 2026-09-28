@@ -1,0 +1,634 @@
+hiecm.endpoint.m2-consent-hip-on-notify:
+  type: endpoint
+  gateway: hiecm
+  milestone: M2
+  title: Acknowledge a consent notification
+  summary: The HIP acknowledges a consent granted, revoked or expired notification,
+    one consent artefact at a time.
+  page: site/docs/_notes/hiecm/m2_post_consent_v3_request_hip_on_notify.mdx
+  heading: m2-consent-hip-on-notify
+  url: /docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/01-m2-post-consent-v3-request-hip-on-notify#m2-consent-hip-on-notify
+  operation: m2_post_consent_v3_request_hip_on_notify
+  related:
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.m2-generate-link-token:
+  type: endpoint
+  gateway: hiecm
+  milestone: M2
+  title: Generate Link Token
+  summary: Ask for a link token for one patient; it arrives on your bridge and is
+    valid for six months.
+  page: site/docs/_notes/hiecm/m2_post_v3_token_generate_token.mdx
+  heading: m2-generate-link-token
+  url: /docs/hiecm/v3/api/m2/endpoints/m2-abdm-link-token-hip/01-m2-post-v3-token-generate-token#m2-generate-link-token
+  operation: m2_post_v3_token_generate_token
+  related:
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.m2-hip-link-care-context:
+  type: endpoint
+  gateway: hiecm
+  milestone: M2
+  title: Link care contexts to an ABHA address
+  summary: The HIP links one or more care contexts to a patient's ABHA address, using
+    the patient's link token.
+  page: site/docs/_notes/hiecm/m2_post_hip_v3_link_carecontext.mdx
+  heading: m2-hip-link-care-context
+  url: /docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/01-m2-post-hip-v3-link-carecontext#m2-hip-link-care-context
+  operation: m2_post_hip_v3_link_carecontext
+  related:
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.m2-link-care-context-notify:
+  type: endpoint
+  gateway: hiecm
+  milestone: M2
+  title: Notify an update to a linked care context
+  summary: The HIP tells ABDM that a care context it already linked has new health
+    information types.
+  page: site/docs/_notes/hiecm/m2_post_hip_v3_link_context_notify.mdx
+  heading: m2-link-care-context-notify
+  url: /docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/02-m2-post-hip-v3-link-context-notify#m2-link-care-context-notify
+  operation: m2_post_hip_v3_link_context_notify
+  related:
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.m2-sms-deep-link-notify:
+  type: endpoint
+  gateway: hiecm
+  milestone: M2
+  title: Send an SMS telling the patient a care context is linked
+  summary: The HIP asks ABDM to send the patient an SMS saying a care context is linked
+    to their ABHA address.
+  page: site/docs/_notes/hiecm/m2_post_hip_v3_link_patient_links_sms_notify2.mdx
+  heading: m2-sms-deep-link-notify
+  url: /docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/03-m2-post-hip-v3-link-patient-links-sms-notify2#m2-sms-deep-link-notify
+  operation: m2_post_hip_v3_link_patient_links_sms_notify2
+  related:
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.m2-on-discover-care-contexts:
+  type: endpoint
+  gateway: hiecm
+  milestone: M2
+  title: On Discovery, HIP responds with found care contexts
+  summary: The HIP answers a discovery request with the patient's unlinked care contexts
+    and how it matched the patient.
+  page: site/docs/_notes/hiecm/m2_post_user_initiated_linking_v3_patient_care_context_on_8c9340.mdx
+  heading: m2-on-discover-care-contexts
+  url: /docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/01-m2-post-user-initiated-linking-v3-patient-care-context-on-8c9340#m2-on-discover-care-contexts
+  operation: m2_post_user_initiated_linking_v3_patient_care_context_on_8c9340
+  related:
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.m2-on-link-init:
+  type: endpoint
+  gateway: hiecm
+  milestone: M2
+  title: Link On-Init, HIP responds with OTP communication details
+  summary: The HIP answers a link init request with a link reference number and where
+    it sent the patient's OTP.
+  page: site/docs/_notes/hiecm/m2_post_user_initiated_linking_v3_link_care_context_on_init.mdx
+  heading: m2-on-link-init
+  url: /docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/02-m2-post-user-initiated-linking-v3-link-care-context-on-init#m2-on-link-init
+  operation: m2_post_user_initiated_linking_v3_link_care_context_on_init
+  related:
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.m2-on-link-confirm:
+  type: endpoint
+  gateway: hiecm
+  milestone: M2
+  title: Link On-Confirm, HIP confirms linked care contexts
+  summary: The HIP checks the patient's code and answers a link confirm request with
+    the care contexts it linked.
+  page: site/docs/_notes/hiecm/m2_post_user_initiated_linking_v3_link_care_context_on_confirm.mdx
+  heading: m2-on-link-confirm
+  url: /docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/03-m2-post-user-initiated-linking-v3-link-care-context-on-confirm#m2-on-link-confirm
+  operation: m2_post_user_initiated_linking_v3_link_care_context_on_confirm
+  related:
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.m2-hip-health-information-on-request:
+  type: endpoint
+  gateway: hiecm
+  milestone: M2
+  title: Acknowledge a health information data request
+  summary: The HIP acknowledges a health information request, then encrypts the records
+    and pushes them to the requester.
+  page: site/docs/_notes/hiecm/m2_post_data_flow_v3_health_information_hip_on_request.mdx
+  heading: m2-hip-health-information-on-request
+  url: /docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request#m2-hip-health-information-on-request
+  operation: m2_post_data_flow_v3_health_information_hip_on_request
+  related:
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.m2-hip-data-flow-notify:
+  type: endpoint
+  gateway: hiecm
+  milestone: M2
+  title: Notify the gateway that a data transfer finished
+  summary: After pushing the records, the HIP reports the transfer with a session
+    status and a status per care context.
+  page: site/docs/_notes/hiecm/m2_post_data_flow_v3_health_information_notify.mdx
+  heading: m2-hip-data-flow-notify
+  url: /docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/03-m2-post-data-flow-v3-health-information-notify#m2-hip-data-flow-notify
+  operation: m2_post_data_flow_v3_health_information_notify
+  related:
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.m3-consent-request-init:
+  type: endpoint
+  gateway: hiecm
+  milestone: M3
+  title: Initiate a consent request
+  summary: The HIU asks a patient for consent to read their health records, for a
+    stated purpose, types and date range.
+  page: site/docs/_notes/hiecm/m3_post_consent_v3_request_init.mdx
+  heading: m3-consent-request-init
+  url: /docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/01-m3-post-consent-v3-request-init#m3-consent-request-init
+  operation: m3_post_consent_v3_request_init
+  related:
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.m3-consent-request-status:
+  type: endpoint
+  gateway: hiecm
+  milestone: M3
+  title: Check the status of a consent request
+  summary: The HIU asks for the current state of a consent request; the state arrives
+    on the on-status callback.
+  page: site/docs/_notes/hiecm/m3_post_consent_v3_request_status.mdx
+  heading: m3-consent-request-status
+  url: /docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/02-m3-post-consent-v3-request-status#m3-consent-request-status
+  operation: m3_post_consent_v3_request_status
+  related:
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.m3-consent-hiu-on-notify:
+  type: endpoint
+  gateway: hiecm
+  milestone: M3
+  title: Acknowledge a consent notification
+  summary: The HIU acknowledges a consent granted, denied, revoked or expired notification,
+    one entry per artefact.
+  page: site/docs/_notes/hiecm/m3_post_consent_v3_request_hiu_on_notify.mdx
+  heading: m3-consent-hiu-on-notify
+  url: /docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/03-m3-post-consent-v3-request-hiu-on-notify#m3-consent-hiu-on-notify
+  operation: m3_post_consent_v3_request_hiu_on_notify
+  related:
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.m3-consent-fetch:
+  type: endpoint
+  gateway: hiecm
+  milestone: M3
+  title: Fetch the full consent artefact
+  summary: The HIU fetches a granted consent artefact by id; the artefact arrives
+    on the on-fetch callback.
+  page: site/docs/_notes/hiecm/m3_post_consent_v3_fetch.mdx
+  heading: m3-consent-fetch
+  url: /docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/04-m3-post-consent-v3-fetch#m3-consent-fetch
+  operation: m3_post_consent_v3_fetch
+  related:
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.m3-hiu-health-information-request:
+  type: endpoint
+  gateway: hiecm
+  milestone: M3
+  title: Request a patient's health information
+  summary: The HIU asks for the records a consent artefact covers, with its ECDH key
+    material and the URL to push them to.
+  page: site/docs/_notes/hiecm/m3_post_data_flow_v3_health_information_request.mdx
+  heading: m3-hiu-health-information-request
+  url: /docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/05-m3-post-data-flow-v3-health-information-request#m3-hiu-health-information-request
+  operation: m3_post_data_flow_v3_health_information_request
+  related:
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.m3-hiu-data-flow-notify:
+  type: endpoint
+  gateway: hiecm
+  milestone: M3
+  title: Notify the gateway that data was received
+  summary: After the records arrive, the HIU reports receipt with a session status
+    and a status per care context.
+  page: site/docs/_notes/hiecm/m3_post_data_flow_v3_health_information_notify.mdx
+  heading: m3-hiu-data-flow-notify
+  url: /docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/06-m3-post-data-flow-v3-health-information-notify#m3-hiu-data-flow-notify
+  operation: m3_post_data_flow_v3_health_information_notify
+  related:
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.callback.m2-link-token-generation-call-back:
+  type: callback
+  gateway: hiecm
+  milestone: M2
+  title: Link token generation – Call Back API
+  summary: ABDM answers a link token request on the HIP's bridge, with the token or
+    an error.
+  page: site/docs/_notes/hiecm/m2_post_v3_hip_token_on_generate_token.mdx
+  heading: m2-link-token-generation-call-back
+  url: /docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-link-token-generation-call-back
+  operation: m2_post_v3_hip_token_on_generate_token
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    - hiecm.concept.asynchronous-callbacks
+hiecm.callback.m2-on-generate-token-result:
+  type: callback
+  gateway: hiecm
+  milestone: M2
+  title: The link token you asked for, or why it was refused
+  summary: The link token arrives here; store it against the patient, because it is
+    valid for six months.
+  page: site/docs/_notes/hiecm/m2_post_v3_hip_token_on_generate_token.mdx
+  heading: m2-on-generate-token-result
+  url: /docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-on-generate-token-result
+  operation: m2_post_v3_hip_token_on_generate_token
+  related:
+    endpoints:
+    - hiecm.endpoint.m2-generate-link-token
+    flows:
+    - hiecm.flow.m2-link-care-context
+    concepts:
+    - hiecm.concept.asynchronous-callbacks
+    errors:
+    - hiecm.error.abdm-9999
+hiecm.callback.m2-linking-care-context-call-back:
+  type: callback
+  gateway: hiecm
+  milestone: M2
+  title: Linking care context Call back API
+  summary: ABDM answers a care context link request on the HIP's bridge with the outcome.
+  page: site/docs/_notes/hiecm/m2_post_v3_link_on_carecontext.mdx
+  heading: m2-linking-care-context-call-back
+  url: /docs/hiecm/v3/api/m2/endpoints/m2-callbacks/02-m2-post-v3-link-on-carecontext#m2-linking-care-context-call-back
+  operation: m2_post_v3_link_on_carecontext
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    - hiecm.concept.asynchronous-callbacks
+hiecm.callback.m2-on-carecontext-result:
+  type: callback
+  gateway: hiecm
+  milestone: M2
+  title: The outcome of the care context linking call you made
+  summary: ABDM's answer to your link request says whether the care context is linked;
+    it is the linking flow's exit condition.
+  page: site/docs/_notes/hiecm/m2_post_v3_link_on_carecontext.mdx
+  heading: m2-on-carecontext-result
+  url: /docs/hiecm/v3/api/m2/endpoints/m2-callbacks/02-m2-post-v3-link-on-carecontext#m2-on-carecontext-result
+  operation: m2_post_v3_link_on_carecontext
+  related:
+    endpoints:
+    - hiecm.endpoint.m2-hip-link-care-context
+    flows:
+    - hiecm.flow.m2-link-care-context
+    concepts:
+    - hiecm.concept.asynchronous-callbacks
+    errors:
+    - hiecm.error.abdm-9999
+hiecm.callback.m2-call-back-api-for-notify-care-context-update:
+  type: callback
+  gateway: hiecm
+  milestone: M2
+  title: Call back API for notify care context update
+  summary: ABDM answers a care context update notification on the HIP's bridge.
+  page: site/docs/_notes/hiecm/m2_post_v3_links_context_on_notify.mdx
+  heading: m2-call-back-api-for-notify-care-context-update
+  url: /docs/hiecm/v3/api/m2/endpoints/m2-callbacks/03-m2-post-v3-links-context-on-notify#m2-call-back-api-for-notify-care-context-update
+  operation: m2_post_v3_links_context_on_notify
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    - hiecm.concept.asynchronous-callbacks
+hiecm.callback.m2-on-context-notify-result:
+  type: callback
+  gateway: hiecm
+  milestone: M2
+  title: The outcome of the care context notify call you made
+  summary: The acknowledgement status on this callback says whether ABDM accepted
+    your care context update.
+  page: site/docs/_notes/hiecm/m2_post_v3_links_context_on_notify.mdx
+  heading: m2-on-context-notify-result
+  url: /docs/hiecm/v3/api/m2/endpoints/m2-callbacks/03-m2-post-v3-links-context-on-notify#m2-on-context-notify-result
+  operation: m2_post_v3_links_context_on_notify
+  related:
+    endpoints:
+    - hiecm.endpoint.m2-link-care-context-notify
+    flows:
+    - hiecm.flow.m2-link-care-context
+    concepts:
+    - hiecm.concept.asynchronous-callbacks
+    errors:
+    - hiecm.error.abdm-9999
+hiecm.callback.m2-callback-api-for-sms-notification-to-patients:
+  type: callback
+  gateway: hiecm
+  milestone: M2
+  title: Callback API for SMS Notification to patients
+  summary: ABDM answers the HIP's SMS notification request on the HIP's bridge.
+  page: site/docs/_notes/hiecm/m2_post_v3_patients_sms_on_notify.mdx
+  heading: m2-callback-api-for-sms-notification-to-patients
+  url: /docs/hiecm/v3/api/m2/endpoints/m2-callbacks/04-m2-post-v3-patients-sms-on-notify#m2-callback-api-for-sms-notification-to-patients
+  operation: m2_post_v3_patients_sms_on_notify
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    - hiecm.concept.asynchronous-callbacks
+hiecm.callback.m2-on-sms-notify-result:
+  type: callback
+  gateway: hiecm
+  milestone: M2
+  title: The outcome of the SMS notify call you made
+  summary: The acknowledgement status on this callback says whether the SMS was accepted
+    for sending, not whether it was delivered.
+  page: site/docs/_notes/hiecm/m2_post_v3_patients_sms_on_notify.mdx
+  heading: m2-on-sms-notify-result
+  url: /docs/hiecm/v3/api/m2/endpoints/m2-callbacks/04-m2-post-v3-patients-sms-on-notify#m2-on-sms-notify-result
+  operation: m2_post_v3_patients_sms_on_notify
+  related:
+    endpoints:
+    - hiecm.endpoint.m2-sms-deep-link-notify
+    flows:
+    - hiecm.flow.m2-link-care-context
+    concepts:
+    - hiecm.concept.asynchronous-callbacks
+    errors:
+    - hiecm.error.abdm-9999
+hiecm.callback.m2-on-discovery-request:
+  type: callback
+  gateway: hiecm
+  milestone: M2
+  title: A discovery request for a patient you may hold records for
+  summary: ABDM asks the HIP to find a patient's unlinked care contexts from their
+    name, gender, year of birth and identifiers.
+  page: site/docs/_notes/hiecm/m2_post_v3_hip_patient_care_context_discover.mdx
+  heading: m2-on-discovery-request
+  url: /docs/hiecm/v3/api/m2/endpoints/m2-callbacks/05-m2-post-v3-hip-patient-care-context-discover#m2-on-discovery-request
+  operation: m2_post_v3_hip_patient_care_context_discover
+  related:
+    errors:
+    - hiecm.error.abdm-9999
+    concepts:
+    - hiecm.concept.asynchronous-callbacks
+hiecm.callback.m2-on-link-init:
+  type: callback
+  gateway: hiecm
+  milestone: M2
+  title: A request to start linking a care context
+  summary: ABDM posts the care contexts a patient chose to link; the HIP issues a
+    link reference number and sends an OTP.
+  page: site/docs/_notes/hiecm/m2_post_v3_hip_link_care_context_init.mdx
+  heading: m2-on-link-init
+  url: /docs/hiecm/v3/api/m2/endpoints/m2-callbacks/06-m2-post-v3-hip-link-care-context-init#m2-on-link-init
+  operation: m2_post_v3_hip_link_care_context_init
+  related:
+    errors:
+    - hiecm.error.abdm-9999
+    concepts:
+    - hiecm.concept.asynchronous-callbacks
+hiecm.callback.m2-on-link-confirm:
+  type: callback
+  gateway: hiecm
+  milestone: M2
+  title: Confirmation of a link, carrying the token the patient approved
+  summary: ABDM posts the code the patient entered and the link reference number;
+    the HIP checks them and answers on-confirm.
+  page: site/docs/_notes/hiecm/m2_post_v3_hip_link_care_context_confirm.mdx
+  heading: m2-on-link-confirm
+  url: /docs/hiecm/v3/api/m2/endpoints/m2-callbacks/07-m2-post-v3-hip-link-care-context-confirm#m2-on-link-confirm
+  operation: m2_post_v3_hip_link_care_context_confirm
+  related:
+    errors:
+    - hiecm.error.abdm-9999
+    concepts:
+    - hiecm.concept.asynchronous-callbacks
+hiecm.callback.m2-on-health-information-request:
+  type: callback
+  gateway: hiecm
+  milestone: M2
+  title: A request for the records a consent covers
+  summary: ABDM posts an HIU's data request to the HIP, with the consent artefact
+    id, date range, push URL and key material.
+  page: site/docs/_notes/hiecm/m2_post_v3_hip_health_information_request.mdx
+  heading: m2-on-health-information-request
+  url: /docs/hiecm/v3/api/m2/endpoints/m2-callbacks/09-m2-post-v3-hip-health-information-request#m2-on-health-information-request
+  operation: m2_post_v3_hip_health_information_request
+  related:
+    errors:
+    - hiecm.error.abdm-9999
+    concepts:
+    - hiecm.concept.asynchronous-callbacks
+hiecm.callback.m3-on-consent-request-notify-hip:
+  type: callback
+  gateway: hiecm
+  milestone: M3
+  title: The patient's decision, sent to the record holder
+  summary: ABDM tells the HIP that a consent covering its records was granted, revoked
+    or expired.
+  page: site/docs/_notes/hiecm/m2_post_v3_consent_request_hip_notify.mdx
+  heading: m3-on-consent-request-notify-hip
+  url: /docs/hiecm/v3/api/m2/endpoints/m2-callbacks/08-m2-post-v3-consent-request-hip-notify#m3-on-consent-request-notify-hip
+  operation: m2_post_v3_consent_request_hip_notify
+  related:
+    errors:
+    - hiecm.error.abdm-9999
+    concepts:
+    - hiecm.concept.asynchronous-callbacks
+hiecm.callback.m2-on-data-notification:
+  type: callback
+  gateway: hiecm
+  milestone: M2
+  title: The provider pushes encrypted health information to the URL named in the
+    request
+  summary: The HIP posts the encrypted records straight to the HIU's data push URL,
+    outside the gateway.
+  page: site/docs/_notes/hiecm/m2_post_health_information_transfer.mdx
+  heading: m2-on-data-notification
+  url: /docs/hiecm/v3/api/m2/endpoints/m2-callbacks/10-m2-post-health-information-transfer#m2-on-data-notification
+  operation: m2_post_health_information_transfer
+  related:
+    errors:
+    - hiecm.error.abdm-9999
+    concepts:
+    - hiecm.concept.asynchronous-callbacks
+hiecm.callback.m3-on-consent-request-init:
+  type: callback
+  gateway: hiecm
+  milestone: M3
+  title: The consent request was accepted, with its request id
+  summary: ABDM answers a consent request on the HIU's bridge with the consent request
+    id, or the error that refused it.
+  page: site/docs/_notes/hiecm/m3_post_v3_hiu_consent_request_on_init.mdx
+  heading: m3-on-consent-request-init
+  url: /docs/hiecm/v3/api/m3/endpoints/m3-callbacks/01-m3-post-v3-hiu-consent-request-on-init#m3-on-consent-request-init
+  operation: m3_post_v3_hiu_consent_request_on_init
+  related:
+    errors:
+    - hiecm.error.abdm-9999
+    concepts:
+    - hiecm.concept.asynchronous-callbacks
+hiecm.callback.m3-on-consent-request-status:
+  type: callback
+  gateway: hiecm
+  milestone: M3
+  title: The consent manager reports the state of a consent request you asked about
+  summary: ABDM answers a consent status request on the HIU's bridge with the request's
+    current state.
+  page: site/docs/_notes/hiecm/m3_post_v3_hiu_consent_request_on_status.mdx
+  heading: m3-on-consent-request-status
+  url: /docs/hiecm/v3/api/m3/endpoints/m3-callbacks/02-m3-post-v3-hiu-consent-request-on-status#m3-on-consent-request-status
+  operation: m3_post_v3_hiu_consent_request_on_status
+  related:
+    errors:
+    - hiecm.error.abdm-9999
+    concepts:
+    - hiecm.concept.asynchronous-callbacks
+hiecm.callback.m2-on-consent-notify-hiu:
+  type: callback
+  gateway: hiecm
+  milestone: M2
+  title: A consent notification to an HIU bridge
+  summary: ABDM posts a patient's consent decision to the HIU's bridge, which acknowledges
+    it through hiu on-notify.
+  page: site/docs/_notes/hiecm/m3_post_v3_hiu_consent_request_notify.mdx
+  heading: m2-on-consent-notify-hiu
+  url: /docs/hiecm/v3/api/m3/endpoints/m3-callbacks/03-m3-post-v3-hiu-consent-request-notify#m2-on-consent-notify-hiu
+  operation: m3_post_v3_hiu_consent_request_notify
+  related:
+    errors:
+    - hiecm.error.abdm-9999
+    concepts:
+    - hiecm.concept.asynchronous-callbacks
+hiecm.callback.m3-on-consent-request-notify-hiu:
+  type: callback
+  gateway: hiecm
+  milestone: M3
+  title: The patient's decision, sent to the requester
+  summary: On a grant the notification lists every consent artefact id created; on
+    a revocation, the artefacts withdrawn.
+  page: site/docs/_notes/hiecm/m3_post_v3_hiu_consent_request_notify.mdx
+  heading: m3-on-consent-request-notify-hiu
+  url: /docs/hiecm/v3/api/m3/endpoints/m3-callbacks/03-m3-post-v3-hiu-consent-request-notify#m3-on-consent-request-notify-hiu
+  operation: m3_post_v3_hiu_consent_request_notify
+  related:
+    errors:
+    - hiecm.error.abdm-9999
+    concepts:
+    - hiecm.concept.asynchronous-callbacks
+hiecm.callback.m3-on-consent-fetch:
+  type: callback
+  gateway: hiecm
+  milestone: M3
+  title: The consent artefact detail, fetched by artefact id
+  summary: ABDM posts the fetched consent artefact to the HIU's bridge, with its status,
+    detail and signature.
+  page: site/docs/_notes/hiecm/m3_post_v3_hiu_consent_on_fetch.mdx
+  heading: m3-on-consent-fetch
+  url: /docs/hiecm/v3/api/m3/endpoints/m3-callbacks/04-m3-post-v3-hiu-consent-on-fetch#m3-on-consent-fetch
+  operation: m3_post_v3_hiu_consent_on_fetch
+  related:
+    errors:
+    - hiecm.error.abdm-9999
+    concepts:
+    - hiecm.concept.asynchronous-callbacks
+hiecm.callback.m3-on-health-information-request:
+  type: callback
+  gateway: hiecm
+  milestone: M3
+  title: Acknowledgement of a health information request
+  summary: ABDM acknowledges an HIU's data request with its transaction id and status;
+    the records come separately.
+  page: site/docs/_notes/hiecm/m3_post_v3_hiu_health_information_on_request.mdx
+  heading: m3-on-health-information-request
+  url: /docs/hiecm/v3/api/m3/endpoints/m3-callbacks/05-m3-post-v3-hiu-health-information-on-request#m3-on-health-information-request
+  operation: m3_post_v3_hiu_health_information_on_request
+  related:
+    errors:
+    - hiecm.error.abdm-9999
+    concepts:
+    - hiecm.concept.asynchronous-callbacks

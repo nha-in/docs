@@ -139,7 +139,7 @@ in one click.
 <LegacyAnchor id="workflow-overview" />
 <LegacyAnchor id="the-journey-one-diagram-per-flow" />
 
-## Journey 1: raising a consent request
+## Journey 1: raising a consent request {/* #m3-request-consent */}
 
 - An HIU requests access to a patient's health data by sending a consent request
   with the patient's ABHA address via the HIE-CM.
@@ -167,6 +167,18 @@ sequenceDiagram
 ```
 
 The consent request ID is the handle for everything that follows. Store it against the requester and the patient.
+
+The patient's decision arrives later, on your bridge, as described in Journey 2.
+
+<AgentOnly>
+**Before you start.** A gateway session token, a bridge linked with type HIU for your facility, a callback URL reachable over public HTTPS, the patient's ABHA address, and a purpose of use code: an insurer checking a claim uses `HPAYMT`.
+
+**What happens.** Init the request with the ABHA address, the HI types, the date range the records must fall in, the purpose, and the expiry of the request itself, which is how long the patient has to answer. Store `consentRequest.id` from the on-init callback. Poll the status call only to show progress. On the notify callback, store every id in `consentArtefacts`, then acknowledge with `/api/hiecm/consent/v3/request/hiu/on-notify` so delivery stops.
+
+**How you know it worked.** A POST reaches `/api/v3/hiu/consent/request/notify` with status GRANTED and at least one consent artefact id. The window the patient has to act is the one you set on init, not a gateway timeout.
+
+**When it goes wrong.** The request stays in REQUESTED: see [consent stuck in Requested](/docs/hiecm/v3/troubleshooting/consent-stuck-requested). The on-init or notify callback never lands: see [the callback never arrives](/docs/hiecm/v3/troubleshooting/callback-never-arrives). DENIED is an answer, not a fault, and no retry changes it.
+</AgentOnly>
 
 ## Journey 2: the patient grants or denies
 
@@ -202,7 +214,7 @@ sequenceDiagram
 - If the patient revokes consent or it expires, access to the health
   information must be stopped.
 
-## Journey 3: fetching the records
+## Journey 3: fetching the records {/* #m3-fetch-records */}
 
 Using the consent artefact ID, the HIU fetches the consent artefact and
 requests the health information covered under that consent. The requested
@@ -226,6 +238,19 @@ sequenceDiagram
     S->>CM: POST /api/hiecm/data-flow/v3/health-information/notify<br/>notification {consentId, transactionId,<br/>notifier {type HIU, id},<br/>statusNotification {sessionStatus RECEIVED or FAILED,
     S->>CM: GET /api/hiecm/data-flow/v3/health-information/request/status/{transaction-id}<br/>to check a transfer that has not arrived
 ```
+
+A decrypted bundle today is not a standing right to fetch again tomorrow. Every
+fetch is a fresh permission check against an artefact the patient can revoke.
+
+<AgentOnly>
+**Before you start.** A granted consent request with at least one artefact id, a gateway session token, and a `dataPushUrl` endpoint of your own that accepts the encrypted FHIR bundles. Use a maintained implementation of the key exchange rather than writing it yourself: see [how a record travels](/docs/hiecm/v3/concepts/data-flow).
+
+**What happens.** Fetch the artefact and store what arrives on `/api/v3/hiu/consent/on-fetch`: the care contexts, HI types and date range it allows. Generate an ECDH key pair on `Curve25519` and a nonce for this transaction. Send the health information request with the consent id, a date range inside the artefact's, your `dataPushUrl` and your public key in `keyMaterial`. The on-request callback carries the `transactionId`. The HIP posts the pages to your `dataPushUrl` directly, not through the gateway. Derive the shared key from the HIP's `keyMaterial`, decrypt, then send the notify call.
+
+**How you know it worked.** Every entry for every care context decrypts, and your notify call reports `sessionStatus` `RECEIVED`.
+
+**When it goes wrong.** The chain stops between fetch, request and push: find the missing step on [accepted, then nothing](/docs/hiecm/v3/troubleshooting/accepted-then-nothing), and check the `dataPushUrl` you sent rather than your registered callback URL. `ABDM-1062`, consent not granted: the patient revoked or the grant lapsed mid flow. `ABDM-1112`: the artefact id is invalid or already expired. A transfer that never arrives can be checked with the status call against its `transactionId`.
+</AgentOnly>
 
 ## Next
 

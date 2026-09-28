@@ -72,3 +72,12 @@ test('[rev] a section with JSX fails the build naming the atom and the tag', () 
   const p = problems({map: {'shared.glossary.link-token': entry}, pages: {'g.mdx': jsx}, handIds: new Set(), specText: ''});
   assert.ok(p.some((x) => x.includes('shared.glossary.link-token') && x.includes('<Expandable')));
 });
+
+test('a generated atom carries the map entry contract v2 fields', () => {
+  const e = {...entry, type: 'endpoint', operation: 'm1_post_x', side: 'hip', status: 'current', facts: [{key: 'http_status', value: 202, source: 0}]};
+  const md = renderAtom('hiecm.endpoint.x', e, {text: 'Plain.', agent: {before: '', happens: '', worked: '', wrong: ''}});
+  assert.match(md, /\noperation: m1_post_x\n/);
+  assert.match(md, /\nside: hip\n/);
+  assert.match(md, /\nfacts:\n/);
+  assert.doesNotMatch(renderAtom('shared.glossary.link-token', entry, {text: 'x', agent: {before: '', happens: '', worked: '', wrong: ''}}), /operation:/);
+});

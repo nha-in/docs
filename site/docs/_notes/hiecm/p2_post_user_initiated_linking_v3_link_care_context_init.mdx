@@ -1,0 +1,13 @@
+## Start linking the care contexts the person chose {/* #p2-link-care-context-init */}
+
+Once the person has chosen which records to link, this call starts linking them. Send the `transactionId` from discovery and, for each patient reference, the care contexts chosen. The facility answers on your on-init callback with how the person will confirm.
+
+<AgentOnly>
+**Before you start.** The `transactionId` and care contexts from the on-discover callback. Offer the person only care contexts that are not linked already.
+
+**What happens.** You receive `202`. The answer arrives at `/api/v3/hiu/patient/care-context/on-init`.
+
+**How you know it worked.** The on-init callback carries a `referenceNumber` in `link`, and `communicationMedium` says whether the code went to `MOBILE` or `EMAIL`.
+
+**When it goes wrong.** `400` with `ABDM-1104` means a duplicate init request. Wait for the callback instead of sending the request again.
+</AgentOnly>

@@ -1,0 +1,9 @@
+## Get a new user token from a refresh token {/* #m1-token-refresh */}
+
+Issues a new `X-token` without making the person sign in again. Send the refresh token from login or enrolment in the `R-token` header. The response carries a new `token` and `refreshToken`, with their lifetimes in `expiresIn` and `refreshExpiresIn`. Read the lifetimes from the response rather than assuming them.
+
+<AgentOnly>
+**Before you start.** The `refreshToken` from login or enrolment, sent in the `R-token` header as `Bearer <token>`.
+
+**When it goes wrong.** A 400 with `Invalid R-token` means the refresh token is wrong or expired: sign the person in again. A 404 with `ABDM-1016` means the `TIMESTAMP` was refused: send UTC in ISO 8601 with milliseconds.
+</AgentOnly>

@@ -1,0 +1,9 @@
+## Upload one of the professional's documents {/* #m4-hpr-upload-document */}
+
+Attaches a healthcare professional's certificates to their registration in the [HPR](/docs/hiecm/v3/getting-started/glossary#hpr). The body carries the `hpr_token` and a `document` array. Each item names its `document_id`, from the document list call, its `document_type` and `fileType`, and carries the file as `data`.
+
+<AgentOnly>
+**Before you start.** The `hpr_token` for the professional, the `document_id` values from the document list call, and each file ready to send as `data`.
+
+**How you know it worked.** The response reports a `status` and a `msg` for each document type it received: `profilePhoto`, `degreeCertificate`, `registrationCertificate` and `proofOfWorkCertificate`.
+</AgentOnly>

@@ -1,0 +1,11 @@
+## Get one consent request by its id {/* #p3-get-consent-request-details-by-consent-request-id */}
+
+Returns one consent request by its id: who asked, for what purpose, which records and for which dates. Show it to the person before they approve or deny it.
+
+<AgentOnly>
+**Before you start.** The person's `X-AUTH-TOKEN` and the `consentRequestId`, from the list of consent requests.
+
+**How you know it worked.** You receive `200` with `requestId`, `purpose`, `hiu` and `permission`.
+
+**When it goes wrong.** `400` with `ABDM-1039` means the consent request id is invalid. `404` with `ABDM-1001` means no request has that id.
+</AgentOnly>

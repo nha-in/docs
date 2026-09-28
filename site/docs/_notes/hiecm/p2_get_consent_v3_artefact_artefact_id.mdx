@@ -1,0 +1,11 @@
+## Get one consent artefact by its id {/* #p3-get-consent-artefact-details-by-artifact-id */}
+
+Returns one [consent artefact](/docs/hiecm/v3/getting-started/glossary#consent-artefact) by its id. `status` says whether it is still in force, and `consentDetail` says what it permits. The path parameter `consentId` is the artefact id.
+
+<AgentOnly>
+**Before you start.** The person's `X-AUTH-TOKEN` and the artefact id.
+
+**How you know it worked.** You receive `200` with `status` and `consentDetail`.
+
+**When it goes wrong.** `400` with `ABDM-1080` means the id is not a valid consent artefact id. `404` with `ABDM-1001` means no artefact has that id.
+</AgentOnly>

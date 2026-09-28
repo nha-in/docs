@@ -1,0 +1,11 @@
+## Acknowledge a consent notification {/* #m2-consent-hip-on-notify */}
+
+Call this after ABDM [notifies your bridge](/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/08-m2-post-v3-consent-request-hip-notify) that a consent was granted, revoked or expired. Send one `acknowledgement` with the artefact's `consentId`. Put the notification's request id in `response.requestId`.
+
+<AgentOnly>
+**Before you start.** A gateway session token, and the `REQUEST-ID` of the notification you are acknowledging. Send the `REQUEST-ID`, `TIMESTAMP` and `X-CM-ID` headers.
+
+**What happens.** `acknowledgement` is one object on this call, with `status` and `consentId`. The HIU acknowledgement takes an array instead. The call returns 202 Accepted.
+
+**When it goes wrong.** `ABDM-2402` (Invalid Timestamp): check `TIMESTAMP` against your clock. `ABDM-2404` (Invalid Request Id): send a fresh UUID in `REQUEST-ID`. `ABDM-2500` (Authorization header is missing): send the session token. `ABDM-9999` (Unknown exception) gives no cause.
+</AgentOnly>

@@ -1,0 +1,11 @@
+## Revoke a granted consent {/* #p3-revoke-consent-request */}
+
+Lets the person withdraw consent they already granted, from their [PHR](/docs/hiecm/v3/getting-started/glossary#phr) app. Send the [consent artefact](/docs/hiecm/v3/getting-started/glossary#consent-artefact) ids in `consents`. Access under those artefacts ends.
+
+<AgentOnly>
+**Before you start.** The person's `X-AUTH-TOKEN` and the artefact ids, from the list of consent artefacts.
+
+**How you know it worked.** You receive `202` with `message`. The artefacts then read `REVOKED`.
+
+**When it goes wrong.** `400` with `ABDM-1080` means an id is not a valid consent artefact id. Send artefact ids, not consent request ids. `404` with `ABDM-1001` means an artefact was not found.
+</AgentOnly>

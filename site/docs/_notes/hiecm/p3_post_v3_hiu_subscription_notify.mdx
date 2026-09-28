@@ -1,0 +1,9 @@
+## New record notification callback {/* #p3-subscription-hiu-notify */}
+
+Once a subscription is granted, ABDM posts here each time a care context is linked or updated for the person. `event.category` is `LINK` or `DATA`. `event.content` names the person, the facility and the care contexts, with their HI type.
+
+<AgentOnly>
+**What happens.** `subscriptionId` in `event` says which subscription the event belongs to. Acknowledge each event with the care context on-notify call, quoting the event's `id` as `eventId`.
+
+**How you know it worked.** Answer with `200`, then send the on-notify call for the event.
+</AgentOnly>

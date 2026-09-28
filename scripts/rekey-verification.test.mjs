@@ -1,7 +1,10 @@
 // scripts/rekey-verification.test.mjs
 import {test} from 'node:test';
 import assert from 'node:assert';
-import {parseCurl, rekey, fileNames} from './rekey-verification.mjs';
+import {mkdtempSync, mkdirSync, writeFileSync} from 'node:fs';
+import {join} from 'node:path';
+import {tmpdir} from 'node:os';
+import {parseCurl, rekey, fileNames, loadOps} from './rekey-verification.mjs';
 
 const ops = [
   {operationId: 'gateway_get_bridge_service_by_id', method: 'get', path: '/api/hiecm/gateway/v3/bridge-service/serviceId/{serviceId}'},
@@ -29,4 +32,23 @@ test('two records for one operation get two file names, never one', () => {
 test('a request that matches no operation is reported, not guessed', () => {
   const bad = "curl -X GET 'https://dev.abdm.gov.in/nowhere'";
   assert.throws(() => rekey({atom: 'x', on: 'd', request: bad, status: 404}, ops), /no operation matches GET \/nowhere/);
+});
+
+test('callbacks, declared as webhooks, are operations too, keyed by their path', () => {
+  const root = mkdtempSync(join(tmpdir(), 'ops-'));
+  const dir = join(root, 'catalogue', 'openapi', 'hiecm', 'v3');
+  mkdirSync(dir, {recursive: true});
+  writeFileSync(join(dir, 'hiecm-m2.yaml'), [
+    'openapi: 3.1.0',
+    'paths:',
+    '  /api/hiecm/v3/link/carecontext#hip:',
+    '    post: {operationId: m2_post_link}',
+    'webhooks:',
+    '  /api/v3/link/on_carecontext:',
+    '    post: {operationId: m2_post_v3_link_on_carecontext}',
+  ].join('\n'));
+  assert.deepEqual(loadOps(root), [
+    {operationId: 'm2_post_link', method: 'post', path: '/api/hiecm/v3/link/carecontext'},
+    {operationId: 'm2_post_v3_link_on_carecontext', method: 'post', path: '/api/v3/link/on_carecontext'},
+  ]);
 });

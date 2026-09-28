@@ -187,7 +187,9 @@ Pages carrying `generated: true` in frontmatter come from `scripts/build-api-ref
 
 ## Sections that hold an atom, and notes for AI agents
 
-A section listed in `catalogue/map.yaml` is where an atom's words live; the atom file in `catalogue/generated/` is built from it.
+A section listed in `catalogue/map.yaml` or a fragment in `catalogue/map.d/` is where an atom's words live; the atom file in `catalogue/generated/` is built from it.
+
+Endpoint, callback and error atoms cannot sit on their API page, which is generated. They live in hand-written notes partials under `site/docs/_notes/<gateway>/`: `<operationId>.mdx` renders on that operation's page, and `errors/<module>.mdx` renders after the module's error table. A partial carries no frontmatter and only sections with explicit ids, one per atom. `lint:content` holds it to the page rules as hard errors, with the endpoint budget for an operation's notes and none for an error partial. New map entries for a batch go in one fragment of their own under `catalogue/map.d/`.
 
 - Its heading carries an id that never changes: `{#id}` in `.md`, `{/* #id */}` in `.mdx`. Reword the heading freely; never rename the id.
 - Rules only an agent needs go in `<AgentOnly>` in the same section, one paragraph per labelled part (`**Before you start.**`, `**What happens.**`, `**How you know it worked.**`, `**When it goes wrong.**`). Readers and site search do not see them; the page's `.md` copy and llms-full.txt do. "Show notes for AI agents" in the footer, or `?agent-notes=1`, shows them.

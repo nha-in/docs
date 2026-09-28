@@ -1,0 +1,821 @@
+hiecm.endpoint.gateway-get-bridge-service-by-id:
+  gateway: hiecm
+  heading: gateway-get-bridge-service-by-id
+  milestone: M1
+  operation: gateway_get_gateway_v3_bridge_service_serviceid_service_id
+  page: site/docs/_notes/hiecm/gateway_get_gateway_v3_bridge_service_serviceid_service_id.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+  summary: Returns one service registered on your bridge, looked up by its service
+    id.
+  title: Find a bridge service by its service id
+  type: endpoint
+  url: /docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/02-gateway-get-gateway-v3-bridge-service-serviceid-service-id#gateway-get-bridge-service-by-id
+hiecm.endpoint.gateway-list-bridge-services:
+  gateway: hiecm
+  heading: gateway-list-bridge-services
+  milestone: M1
+  operation: gateway_get_gateway_v3_bridge_services
+  page: site/docs/_notes/hiecm/gateway_get_gateway_v3_bridge_services.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+  summary: Returns your bridge, its callback URL and every service registered under
+    it.
+  title: List the services registered on your bridge
+  type: endpoint
+  url: /docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/01-gateway-get-gateway-v3-bridge-services#gateway-list-bridge-services
+hiecm.endpoint.gateway-register-bridge-services:
+  gateway: hiecm
+  heading: gateway-register-bridge-services
+  milestone: M1
+  operation: m4_post_v1_bridges_mutiplehrpaddupdateservices
+  page: site/docs/_notes/hiecm/m4_post_v1_bridges_mutiplehrpaddupdateservices.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+  summary: Registers or updates HIU service entries for a facility against your bridge.
+  title: Register or update bridge services for an HIU
+  type: endpoint
+  url: /docs/hiecm/v3/api/m4/endpoints/m4-multiple-hrp-api/01-m4-post-v1-bridges-mutiplehrpaddupdateservices#gateway-register-bridge-services
+hiecm.endpoint.gateway-sessions:
+  gateway: hiecm
+  heading: gateway-sessions
+  milestone: M1
+  operation: gateway_post_gateway_v3_sessions
+  page: site/docs/_notes/hiecm/gateway_post_gateway_v3_sessions.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2403
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+  summary: Exchanges your client id and client secret for the access token every ABDM
+    call carries.
+  title: Create a session and get an access token
+  type: endpoint
+  url: /docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions#gateway-sessions
+hiecm.endpoint.gateway-update-bridge-url:
+  gateway: hiecm
+  heading: gateway-update-bridge-url
+  milestone: M1
+  operation: gateway_patch_gateway_v3_bridge_url
+  page: site/docs/_notes/hiecm/gateway_patch_gateway_v3_bridge_url.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+  summary: Sets the callback URL that ABDM sends your callbacks to.
+  title: Update the bridge callback URL
+  type: endpoint
+  url: /docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/03-gateway-patch-gateway-v3-bridge-url#gateway-update-bridge-url
+hiecm.endpoint.m1-auth-token:
+  gateway: hiecm
+  heading: m1-auth-token
+  milestone: M1
+  operation: gateway_post_gateway_v3_sessions
+  page: site/docs/_notes/hiecm/gateway_post_gateway_v3_sessions.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+  summary: The session call that gives a PHR app the access token for its ABHA calls.
+  title: Auth token API
+  type: endpoint
+  url: /docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions#m1-auth-token
+hiecm.endpoint.m1-benefit-get-by-abha:
+  gateway: hiecm
+  heading: m1-benefit-get-by-abha
+  milestone: M1
+  operation: m1_get_v3_profile_benefit_abha_abhanumber
+  page: site/docs/_notes/hiecm/m1_get_v3_profile_benefit_abha_abhanumber.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.abdm-1013
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+  summary: Lists the benefit programmes linked to one ABHA number.
+  title: Get the benefit record for an ABHA number
+  type: endpoint
+  url: /docs/hiecm/v3/api/m1/endpoints/m1-benefit-search/03-m1-get-v3-profile-benefit-abha-abhanumber#m1-benefit-get-by-abha
+hiecm.endpoint.m1-benefit-link-or-delink:
+  gateway: hiecm
+  heading: m1-benefit-link-or-delink
+  milestone: M1
+  operation: m1_post_v3_profile_benefit_linkanddelink_x_token
+  page: site/docs/_notes/hiecm/m1_post_v3_profile_benefit_linkanddelink_x_token.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.900900
+    - hiecm.error.abdm-2401
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+  summary: Links or unlinks the programme named in the BENEFIT_NAME header for an
+    ABHA.
+  title: Link or unlink a benefit record from an ABHA
+  type: endpoint
+  url: /docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/01-m1-post-v3-profile-benefit-linkanddelink-x-token#m1-benefit-link-or-delink
+hiecm.endpoint.m1-benefit-search:
+  gateway: hiecm
+  heading: m1-benefit-search
+  milestone: M1
+  operation: m1_post_v3_profile_benefit_search_xmluid
+  page: site/docs/_notes/hiecm/m1_post_v3_profile_benefit_search_xmluid.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+  summary: Lists the benefit programmes linked to a person, found by encrypted xmlUid
+    or ABHA number.
+  title: Search benefit records for a person
+  type: endpoint
+  url: /docs/hiecm/v3/api/m1/endpoints/m1-benefit-search/01-m1-post-v3-profile-benefit-search-xmluid#m1-benefit-search
+hiecm.endpoint.m1-download-phr-card:
+  gateway: hiecm
+  heading: m1-download-phr-card
+  milestone: M1
+  operation: m1_get_v3_phr_web_login_profile_abha_phr_card_abha_addres_e1bae9
+  page: site/docs/_notes/hiecm/m1_get_v3_phr_web_login_profile_abha_phr_card_abha_addres_e1bae9.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+  summary: Returns the card for the ABHA address the person signed in with.
+  title: Download PHR card
+  type: endpoint
+  url: /docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/05-m1-get-v3-phr-web-login-profile-abha-phr-card-abha-addres-e1bae9#m1-download-phr-card
+hiecm.endpoint.m1-download-phr-qr-code:
+  gateway: hiecm
+  heading: m1-download-phr-qr-code
+  milestone: M1
+  operation: m1_get_v3_phr_web_login_profile_abha_qr_code_abha_address_a48785
+  page: site/docs/_notes/hiecm/m1_get_v3_phr_web_login_profile_abha_qr_code_abha_address_a48785.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+  summary: Returns a QR code for the ABHA address profile the person signed in with.
+  title: Download PHR QR code
+  type: endpoint
+  url: /docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/06-m1-get-v3-phr-web-login-profile-abha-qr-code-abha-address-a48785#m1-download-phr-qr-code
+hiecm.endpoint.m1-enrolment-address-suggestions:
+  gateway: hiecm
+  heading: m1-enrolment-address-suggestions
+  milestone: M1
+  operation: m1_get_v3_enrollment_enrol_suggestion_create_abha_aadhaar_otp
+  page: site/docs/_notes/hiecm/m1_get_v3_enrollment_enrol_suggestion_create_abha_aadhaar_otp.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+    flows:
+    - hiecm.flow.m1-create-abha-aadhaar-otp
+    - hiecm.flow.m1-create-abha-face-auth
+  summary: Returns available ABHA addresses built from the new account holder's details.
+  title: Get suggested ABHA addresses for a new account
+  type: endpoint
+  url: /docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/07-m1-get-v3-enrollment-enrol-suggestion-create-abha-aadhaar-otp#m1-enrolment-address-suggestions
+hiecm.endpoint.m1-enrolment-by-aadhaar:
+  gateway: hiecm
+  heading: m1-enrolment-by-aadhaar
+  milestone: M1
+  operation: m1_post_v3_enrollment_enrol_byaadhaar_otp
+  page: site/docs/_notes/hiecm/m1_post_v3_enrollment_enrol_byaadhaar_otp.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.900900
+    - hiecm.error.abdm-2401
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+    flows:
+    - hiecm.flow.m1-create-abha-aadhaar-otp
+    - hiecm.flow.m1-create-abha-face-auth
+  summary: Verifies the Aadhaar OTP and creates the ABHA number, or returns the one
+    already linked to that Aadhaar.
+  title: Create an ABHA from a verified Aadhaar OTP
+  type: endpoint
+  url: /docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/02-m1-post-v3-enrollment-enrol-byaadhaar-otp#m1-enrolment-by-aadhaar
+hiecm.endpoint.m1-enrolment-capture-pid:
+  gateway: hiecm
+  heading: m1-enrolment-capture-pid
+  milestone: M1
+  operation: m1_post_v3_enrollment_enrol_capturepid_create_abha_face_a_417d5e
+  page: site/docs/_notes/hiecm/m1_post_v3_enrollment_enrol_capturepid_create_abha_face_a_417d5e.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+    flows:
+    - hiecm.flow.m1-create-abha-face-auth
+  summary: Reports whether the person has completed face authentication in the ABHA
+    app.
+  title: Track face authentication status
+  type: endpoint
+  url: /docs/hiecm/v3/api/m1/endpoints/m1-create-abha-face-authentication/02-m1-post-v3-enrollment-enrol-capturepid-create-abha-face-a-417d5e#m1-enrolment-capture-pid
+hiecm.endpoint.m1-enrolment-claim-abha-address:
+  gateway: hiecm
+  heading: m1-enrolment-claim-abha-address
+  milestone: M1
+  operation: m1_post_v3_enrollment_enrol_abha_address_create_abha_aadhaar_otp
+  page: site/docs/_notes/hiecm/m1_post_v3_enrollment_enrol_abha_address_create_abha_aadhaar_otp.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.abdm-1170
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+    flows:
+    - hiecm.flow.m1-create-abha-aadhaar-otp
+    - hiecm.flow.m1-create-abha-face-auth
+  summary: Attaches the ABHA address the person chose to the ABHA number created earlier.
+  title: Claim a chosen ABHA address
+  type: endpoint
+  url: /docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/08-m1-post-v3-enrollment-enrol-abha-address-create-abha-aadhaar-otp#m1-enrolment-claim-abha-address
+hiecm.endpoint.m1-enrolment-face-auth-init:
+  gateway: hiecm
+  heading: m1-enrolment-face-auth-init
+  milestone: M1
+  operation: m1_post_v3_enrollment_enrol_auth_init_create_abha_face_au_4dea33
+  page: site/docs/_notes/hiecm/m1_post_v3_enrollment_enrol_auth_init_create_abha_face_au_4dea33.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+    flows:
+    - hiecm.flow.m1-create-abha-face-auth
+  summary: Starts face authentication and returns the transaction id the ABHA app
+    completes it with.
+  title: Start face authentication and get a transaction id
+  type: endpoint
+  url: /docs/hiecm/v3/api/m1/endpoints/m1-create-abha-face-authentication/01-m1-post-v3-enrollment-enrol-auth-init-create-abha-face-au-4dea33#m1-enrolment-face-auth-init
+hiecm.endpoint.m1-enrolment-list-children:
+  gateway: hiecm
+  heading: m1-enrolment-list-children
+  milestone: M1
+  operation: m1_get_v3_enrollment_profile_children_child_abha
+  page: site/docs/_notes/hiecm/m1_get_v3_enrollment_profile_children_child_abha.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.900900
+    - hiecm.error.abdm-2401
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+  summary: Returns the child ABHA accounts held under a parent's ABHA.
+  title: List the child ABHA accounts linked to this account
+  type: endpoint
+  url: /docs/hiecm/v3/api/m1/endpoints/m1-child-abha/02-m1-get-v3-enrollment-profile-children-child-abha#m1-enrolment-list-children
+hiecm.endpoint.m1-enrolment-request-otp:
+  gateway: hiecm
+  heading: m1-enrolment-request-otp
+  milestone: M1
+  operation: m1_post_v3_enrollment_request_otp_aadhaar_otp
+  page: site/docs/_notes/hiecm/m1_post_v3_enrollment_request_otp_aadhaar_otp.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+    flows:
+    - hiecm.flow.m1-create-abha-aadhaar-otp
+  summary: Starts an Aadhaar OTP enrolment, or sends the OTP that verifies a mobile
+    or email after it.
+  title: Send an OTP to begin or continue an enrolment
+  type: endpoint
+  url: /docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/01-m1-post-v3-enrollment-request-otp-aadhaar-otp#m1-enrolment-request-otp
+hiecm.endpoint.m1-enrolment-verify-abdm-otp:
+  gateway: hiecm
+  heading: m1-enrolment-verify-abdm-otp
+  milestone: M1
+  operation: m1_post_v3_enrollment_auth_byabdm_mobile_verify_create_ab_091285
+  page: site/docs/_notes/hiecm/m1_post_v3_enrollment_auth_byabdm_mobile_verify_create_ab_091285.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+    flows:
+    - hiecm.flow.m1-create-abha-aadhaar-otp
+  summary: Confirms the mobile number or email address given during enrolment and
+    links it to the new ABHA.
+  title: Verify an OTP that ABDM sent, during enrolment
+  type: endpoint
+  url: /docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/04-m1-post-v3-enrollment-auth-byabdm-mobile-verify-create-ab-091285#m1-enrolment-verify-abdm-otp
+hiecm.endpoint.m1-find-abha-search:
+  gateway: hiecm
+  heading: m1-find-abha-search
+  milestone: M1
+  operation: m1_post_v3_profile_account_abha_search_find_abha_mobile_otp
+  page: site/docs/_notes/hiecm/m1_post_v3_profile_account_abha_search_find_abha_mobile_otp.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+    flows:
+    - hiecm.flow.m1-find-abha
+  summary: Lists the ABHA accounts held against an encrypted mobile number, to start
+    Find ABHA.
+  title: Find an ABHA for somebody who does not know theirs
+  type: endpoint
+  url: /docs/hiecm/v3/api/m1/endpoints/m1-find-abha-mobile-otp/01-m1-post-v3-profile-account-abha-search-find-abha-mobile-otp#m1-find-abha-search
+hiecm.endpoint.m1-get-phr-profile:
+  gateway: hiecm
+  heading: m1-get-phr-profile
+  milestone: M1
+  operation: m1_get_v3_phr_web_login_profile_abha_profile_abha_address_b038c4
+  page: site/docs/_notes/hiecm/m1_get_v3_phr_web_login_profile_abha_profile_abha_address_b038c4.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+  summary: Returns the profile behind the ABHA address the person signed in with.
+  title: Get PHR profile
+  type: endpoint
+  url: /docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/04-m1-get-v3-phr-web-login-profile-abha-profile-abha-address-b038c4#m1-get-phr-profile
+hiecm.endpoint.m1-get-public-certificate:
+  gateway: hiecm
+  heading: m1-get-public-certificate
+  milestone: M1
+  operation: m1_get_v3_profile_public_certificate
+  page: site/docs/_notes/hiecm/m1_get_v3_profile_public_certificate.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    - hiecm.concept.error-codes
+    endpoints:
+    - hiecm.endpoint.p1-get-certificate-public-key
+    errors:
+    - hiecm.error.abdm-1016
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+  summary: Returns the public key and the encryption algorithm for every encrypted
+    ABHA field.
+  title: Get the public certificate
+  type: endpoint
+  url: /docs/hiecm/v3/api/m1/endpoints/m1-access-tokens-encryption/02-m1-get-v3-profile-public-certificate#m1-get-public-certificate
+hiecm.endpoint.m1-login-request-otp:
+  gateway: hiecm
+  heading: m1-login-request-otp
+  milestone: M1
+  operation: m1_post_v3_profile_login_request_otp_mobile
+  page: site/docs/_notes/hiecm/m1_post_v3_profile_login_request_otp_mobile.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    - hiecm.concept.encrypted-identifiers
+    - hiecm.concept.input-encryption
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+    flows:
+    - hiecm.flow.m1-login-by-mobile
+    - hiecm.flow.m1-find-abha
+    tests:
+    - hiecm.test.m1-encryption-padding
+  summary: Starts a login by mobile number, ABHA number or Aadhaar number.
+  title: Send a login OTP
+  type: endpoint
+  url: /docs/hiecm/v3/api/m1/endpoints/m1-login-mobile-number/01-m1-post-v3-profile-login-request-otp-mobile#m1-login-request-otp
+hiecm.endpoint.m1-login-select-account:
+  gateway: hiecm
+  heading: m1-login-select-account
+  milestone: M1
+  operation: m1_post_v3_profile_login_verify_user
+  page: site/docs/_notes/hiecm/m1_post_v3_profile_login_verify_user.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.abdm-1013
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+    flows:
+    - hiecm.flow.m1-login-by-mobile
+  summary: Signs the person in to the ABHA they picked and returns their X-token.
+  title: Choose which ABHA to sign in to
+  type: endpoint
+  url: /docs/hiecm/v3/api/m1/endpoints/m1-login-mobile-number/03-m1-post-v3-profile-login-verify-user#m1-login-select-account
+hiecm.endpoint.m1-login-verify:
+  gateway: hiecm
+  heading: m1-login-verify
+  milestone: M1
+  operation: m1_post_v3_profile_login_verify_mobile_otp
+  page: site/docs/_notes/hiecm/m1_post_v3_profile_login_verify_mobile_otp.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.900900
+    - hiecm.error.abdm-2401
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+    flows:
+    - hiecm.flow.m1-login-by-mobile
+    - hiecm.flow.m1-find-abha
+  summary: Checks the login OTP and returns the token for the next step and the accounts
+    on the mobile number.
+  title: Verify a login OTP
+  type: endpoint
+  url: /docs/hiecm/v3/api/m1/endpoints/m1-login-mobile-number/02-m1-post-v3-profile-login-verify-mobile-otp#m1-login-verify
+hiecm.endpoint.m1-login-verify-v31:
+  gateway: hiecm
+  heading: m1-login-verify-v31
+  milestone: M1
+  operation: m1_post_v3_1_profile_login_verify_fingerprint
+  page: site/docs/_notes/hiecm/m1_post_v3_1_profile_login_verify_fingerprint.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+  summary: Signs a person in with a fingerprint or iris capture in one call on the
+    v3.1 path.
+  title: Sign in with a biometric, v3.1
+  type: endpoint
+  url: /docs/hiecm/v3/api/m1/endpoints/m1-login-biometric-v3-1/01-m1-post-v3-1-profile-login-verify-fingerprint#m1-login-verify-v31
+hiecm.endpoint.m1-on-share-acknowledgement:
+  gateway: hiecm
+  heading: m1-on-share-acknowledgement
+  milestone: M1
+  operation: scan-and-register_post_patient_share_v3_on_share
+  page: site/docs/_notes/hiecm/scan-and-register_post_patient_share_v3_on_share.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+  summary: The facility tells ABDM it received a shared profile and gives the person
+    a token number.
+  title: Send share acknowledgement
+  type: endpoint
+  url: /docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/02-scan-and-register-post-patient-share-v3-on-share#m1-on-share-acknowledgement
+hiecm.endpoint.m1-phr-request-otp:
+  gateway: hiecm
+  heading: m1-phr-request-otp
+  milestone: M1
+  operation: m1_post_v3_phr_web_login_abha_request_otp_mobile_otp
+  page: site/docs/_notes/hiecm/m1_post_v3_phr_web_login_abha_request_otp_mobile_otp.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+  summary: Starts an ABHA address login by OTP, fingerprint or iris.
+  title: Send an OTP for ABHA address login
+  type: endpoint
+  url: /docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/02-m1-post-v3-phr-web-login-abha-request-otp-mobile-otp#m1-phr-request-otp
+hiecm.endpoint.m1-phr-search-abha-address:
+  gateway: hiecm
+  heading: m1-phr-search-abha-address
+  milestone: M1
+  operation: m1_post_v3_phr_web_login_abha_search_abha_address_login_m_27a20f
+  page: site/docs/_notes/hiecm/m1_post_v3_phr_web_login_abha_search_abha_address_login_m_27a20f.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+  summary: Checks that an ABHA address exists and returns the sign in methods it allows.
+  title: Search an ABHA address and get its sign in methods
+  type: endpoint
+  url: /docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/01-m1-post-v3-phr-web-login-abha-search-abha-address-login-m-27a20f#m1-phr-search-abha-address
+hiecm.endpoint.m1-phr-verify:
+  gateway: hiecm
+  heading: m1-phr-verify
+  milestone: M1
+  operation: m1_post_v3_phr_web_login_abha_verify_mobile_otp
+  page: site/docs/_notes/hiecm/m1_post_v3_phr_web_login_abha_verify_mobile_otp.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+  summary: Completes an ABHA address login and returns the X-token for the profile,
+    card and QR calls.
+  title: Verify OTP or biometric for ABHA address login
+  type: endpoint
+  url: /docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/03-m1-post-v3-phr-web-login-abha-verify-mobile-otp#m1-phr-verify
+hiecm.endpoint.m1-profile-download-abha-card:
+  gateway: hiecm
+  heading: m1-profile-download-abha-card
+  milestone: M1
+  operation: m1_get_v3_profile_account_download_abha_card
+  page: site/docs/_notes/hiecm/m1_get_v3_profile_account_download_abha_card.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.900900
+    - hiecm.error.abdm-2401
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+  summary: Returns the signed in person's ABHA card as a file to save or print.
+  title: Download the ABHA card as a file
+  type: endpoint
+  url: /docs/hiecm/v3/api/m1/endpoints/m1-abha-card-profile/04-m1-get-v3-profile-account-download-abha-card#m1-profile-download-abha-card
+hiecm.endpoint.m1-profile-get-abha-card:
+  gateway: hiecm
+  heading: m1-profile-get-abha-card
+  milestone: M1
+  operation: m1_get_v3_profile_account_abha_card
+  page: site/docs/_notes/hiecm/m1_get_v3_profile_account_abha_card.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.900900
+    - hiecm.error.abdm-2401
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+  summary: Returns the signed in person's ABHA card as an image for display.
+  title: Get the ABHA card
+  type: endpoint
+  url: /docs/hiecm/v3/api/m1/endpoints/m1-abha-card-profile/02-m1-get-v3-profile-account-abha-card#m1-profile-get-abha-card
+hiecm.endpoint.m1-profile-get-account:
+  gateway: hiecm
+  heading: m1-profile-get-account
+  milestone: M1
+  operation: m1_get_v3_profile_account
+  page: site/docs/_notes/hiecm/m1_get_v3_profile_account.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.900900
+    - hiecm.error.abdm-2401
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+    flows:
+    - hiecm.flow.m1-update-mobile
+  summary: Returns the full ABHA profile of the person whose X-token you send.
+  title: Read the signed in person's ABHA profile
+  type: endpoint
+  url: /docs/hiecm/v3/api/m1/endpoints/m1-abha-card-profile/03-m1-get-v3-profile-account#m1-profile-get-account
+hiecm.endpoint.m1-profile-get-qr-code:
+  gateway: hiecm
+  heading: m1-profile-get-qr-code
+  milestone: M1
+  operation: m1_get_v3_profile_account_qrcode
+  page: site/docs/_notes/hiecm/m1_get_v3_profile_account_qrcode.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.900900
+    - hiecm.error.abdm-2401
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+  summary: Returns a QR code for the signed in person's ABHA profile.
+  title: Get the ABHA QR code
+  type: endpoint
+  url: /docs/hiecm/v3/api/m1/endpoints/m1-abha-card-profile/01-m1-get-v3-profile-account-qrcode#m1-profile-get-qr-code
+hiecm.endpoint.m1-profile-request-otp:
+  gateway: hiecm
+  heading: m1-profile-request-otp
+  milestone: M1
+  operation: m1_post_v3_profile_account_request_otp_update_mobile
+  page: site/docs/_notes/hiecm/m1_post_v3_profile_account_request_otp_update_mobile.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.900900
+    - hiecm.error.abdm-2401
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+    flows:
+    - hiecm.flow.m1-update-mobile
+  summary: Raises the OTP for a profile change by a signed in person, such as a new
+    mobile number or re-KYC.
+  title: Send an OTP to change something on the profile
+  type: endpoint
+  url: /docs/hiecm/v3/api/m1/endpoints/m1-profile-update-mobile/01-m1-post-v3-profile-account-request-otp-update-mobile#m1-profile-request-otp
+hiecm.endpoint.m1-profile-update-account:
+  gateway: hiecm
+  heading: m1-profile-update-account
+  milestone: M1
+  operation: m1_patch_v3_profile_account_child_child_abha
+  page: site/docs/_notes/hiecm/m1_patch_v3_profile_account_child_child_abha.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.900900
+    - hiecm.error.abdm-1013
+    - hiecm.error.abdm-2401
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+  summary: Changes the name, date of birth and gender on a child ABHA, or the photo
+    on any signed in account.
+  title: Update fields on an ABHA profile
+  type: endpoint
+  url: /docs/hiecm/v3/api/m1/endpoints/m1-child-abha/03-m1-patch-v3-profile-account-child-child-abha#m1-profile-update-account
+hiecm.endpoint.m1-profile-verify-otp:
+  gateway: hiecm
+  heading: m1-profile-verify-otp
+  milestone: M1
+  operation: m1_post_v3_profile_account_verify_update_mobile
+  page: site/docs/_notes/hiecm/m1_post_v3_profile_account_verify_update_mobile.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.900900
+    - hiecm.error.abdm-2401
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+    flows:
+    - hiecm.flow.m1-update-mobile
+  summary: Completes the profile change the OTP was raised for.
+  title: Verify the OTP for a profile change
+  type: endpoint
+  url: /docs/hiecm/v3/api/m1/endpoints/m1-profile-update-mobile/02-m1-post-v3-profile-account-verify-update-mobile#m1-profile-verify-otp
+hiecm.endpoint.m1-receive-patient-share:
+  gateway: hiecm
+  heading: m1-receive-patient-share
+  milestone: M1
+  operation: scan-and-register_post_v3_hip_patient_share
+  page: site/docs/_notes/hiecm/scan-and-register_post_v3_hip_patient_share.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+  summary: The call ABDM makes to a facility's bridge when a person scans its code
+    and shares their profile.
+  title: Receive a patient's shared profile
+  type: endpoint
+  url: /docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/01-scan-and-register-post-v3-hip-patient-share#m1-receive-patient-share
+hiecm.endpoint.m1-register-hrp-services:
+  gateway: hiecm
+  heading: m1-register-hrp-services
+  milestone: M1
+  operation: m4_post_v1_bridges_mutiplehrpaddupdateservices
+  page: site/docs/_notes/hiecm/m4_post_v1_bridges_mutiplehrpaddupdateservices.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+  summary: Registers or updates the HIP and HIU services a facility offers through
+    your bridge.
+  title: Register or update HIP and HIU services for a facility
+  type: endpoint
+  url: /docs/hiecm/v3/api/m4/endpoints/m4-multiple-hrp-api/01-m4-post-v1-bridges-mutiplehrpaddupdateservices#m1-register-hrp-services
+hiecm.endpoint.m1-send-email-verification-link:
+  gateway: hiecm
+  heading: m1-send-email-verification-link
+  milestone: M1
+  operation: p1_post_v3_profile_account_request_emailverificationlink
+  page: site/docs/_notes/hiecm/p1_post_v3_profile_account_request_emailverificationlink.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+  summary: Emails a verification link to the address on a signed in person's ABHA.
+  title: Send email verification link
+  type: endpoint
+  url: /docs/hiecm/v3/api/p1/endpoints/p1-create-abha-number-aadhaar-otp/05-p1-post-v3-profile-account-request-emailverificationlink#m1-send-email-verification-link
+hiecm.endpoint.m1-token-refresh:
+  gateway: hiecm
+  heading: m1-token-refresh
+  milestone: M1
+  operation: m1_get_v3_profile_account_request_token
+  page: site/docs/_notes/hiecm/m1_get_v3_profile_account_request_token.mdx
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+  summary: Issues a new X-token from a refresh token without a new sign in.
+  title: Get a new user token from a refresh token
+  type: endpoint
+  url: /docs/hiecm/v3/api/m1/endpoints/m1-abha-card-profile/05-m1-get-v3-profile-account-request-token#m1-token-refresh

@@ -1,0 +1,11 @@
+## Create the health address {/* #p1-enrollment-enrol */}
+
+The call that creates the [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address). Everything before it was checking. Send the verified `txnId` and the person's details in `phrDetails`, with `mobile` and `password` encrypted with the public certificate. A success returns the profile and the session `tokens`.
+
+<AgentOnly>
+**Before you start.** A `txnId` from a verified registration OTP, and an address the existence check reported free.
+
+**How you know it worked.** `message` is `ABHA Address Created Successfully`, `abhaAddress` in `phrDetails` carries the address, and `tokens` carries a `token` and a `refreshToken`.
+
+**When it goes wrong.** `ABDM-9999` with `This ABHA Address already exists. Please create with unique ABHA address` means the address was taken in the meantime. Offer another and check it first. Other `ABDM-9999` messages name the invalid field, such as `Invalid Transaction Id`.
+</AgentOnly>

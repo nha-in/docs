@@ -343,6 +343,225 @@ refused, and the refusal names the reference that pointed outward.
 - A list of visits becomes slow to open. Bundles are being held in the list
   rather than stored separately and read when needed.
 
+## Asynchronous calls and callbacks, why a 200 means very little
+
+### In plain words
+
+Nothing goes participant to participant. Every request is addressed to the gateway, which forwards it. Two things follow.
+
+- **You get an acknowledgement, not an answer.** In the [M3](/docs/hiecm/v3/getting-started/glossary#m3) consent flow the [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) asks, the HIE-CM returns the consent request id on a callback, and the patient's decision comes back later. Each call's page in the [API reference](/docs/hiecm/v3/api) names the callback it produces.
+- **You have to be reachable.** Half of [M2](/docs/hiecm/v3/getting-started/glossary#m2) is endpoints the gateway calls on your system.
+
+One exception. In the health information flow the HIU supplies a data push URL, and the HIP encrypts the records and pushes them there. That URL may differ from the HIU's registered gateway URL, to improve privacy. The permission came through the gateway. The bytes do not.
+
+Match each callback to the call that caused it by `response.requestId`, which carries the `REQUEST-ID` you sent. Callbacks do not arrive in the order you sent the requests, and the same one can arrive twice, so a repeat must change nothing. Where each callback is described in the specifications is on [the API specifications](/docs/hiecm/v3/concepts/api-specifications).
+
+### What happens
+
+Send the call with a fresh `REQUEST-ID`, treat the 202 as receipt only, and wait for the callback. Key the handler on `response.requestId`, answer it quickly, and make a second delivery of the same request id a no-op.
+
+### How you know it worked
+
+A callback reaches your URL whose `response.requestId` equals the `REQUEST-ID` you sent. Given three calls and two callbacks, the call whose request id has no callback is the one outstanding.
+
+### When it goes wrong
+
+Nothing arrives: work through [the callback never arrives](/docs/hiecm/v3/troubleshooting/callback-never-arrives). A retry is appended as a new event: key on the request id. The code waits on the response body for the result: it never comes there, so the integration hangs.
+
+## Proving a callback really came from ABDM
+
+### In plain words
+
+Every callback in the specifications declares bearer authentication. The token
+arrives in the `Authorization` header as `Bearer <token>`. Check two things
+before your handler does any work:
+
+1. **A bearer token is present.** Reject a callback without one, and log the
+   rejection.
+2. **It answers a call you made.** Its `response.requestId` matches the
+   `REQUEST-ID` of a request you sent. A callback that answers nothing you sent
+   is not yours to act on.
+
+The keys that verify the token's signature are not among the published gateway
+calls. Confirm at onboarding how to verify the token, and meanwhile hold the two
+checks above.
+
+The signature inside a consent artefact is a different thing. It signs the
+artefact's contents and proves the artefact was not altered. Checking the
+delivery does not check the artefact, and checking the artefact does not check
+the delivery.
+
+### How you know it worked
+
+A callback carrying a bearer token and a request id you sent is processed. The
+same body with the `Authorization` header removed is rejected before your
+handler reads the payload, and the rejection is logged. The second is the test
+worth writing, because it is the only one that fails loudly when the check is
+silently skipped.
+
+### When it goes wrong
+
+**The check is skipped under load.** A handler that checks inside a try block
+and continues on failure is worse than one that never checked, because it reads
+as safe. Fail closed.
+
+**Nothing arrives at all**, which is a different problem. See
+[the callback never arrives](/docs/hiecm/v3/troubleshooting/callback-never-arrives).
+
+### What happens
+
+In the handler, before parsing the body for action: require the `Authorization` header with a bearer token, then require that `response.requestId` matches a `REQUEST-ID` your system sent and has not already handled. Reject otherwise. Do not invent a signature check against a key source the specifications do not publish.
+
+### How you know it worked
+
+A test posts a valid callback body without `Authorization` and sees it rejected and logged before any handler work.
+
+### When it goes wrong
+
+Never fall back to processing a callback that failed a check while you investigate. A callback whose request id is unknown to you is logged and dropped, not retried.
+
+## Care contexts, how records are grouped so they can be found
+
+### In plain words
+
+Each care context contains only two pieces of information:
+
+- **Reference ID.** A unique internal identifier assigned by the
+  [HRP](/docs/hiecm/v3/getting-started/glossary#hrp) (HMIS/LMIS). Used to link
+  and retrieve the associated health records.
+- **Display Name.** A user-friendly description to help identify the group of
+  records. Must not include any sensitive or confidential information such as
+  test results or diagnoses. Example: "OPD records (X-Ray, Prescription) from
+  3rd March 2023".
+
+### Recommended approach for structuring care contexts
+
+To ensure clarity and usability, it is recommended to organise patient data as
+follows:
+
+- Create one care context per outpatient visit (OPD)
+- Create one care context per inpatient admission (IPD)
+
+This approach provides a clear and event-based grouping of health records.
+
+### JSON structure of care contexts
+
+```json
+{
+  "patient": {
+    "referenceNumber": "TMH-PUID-001",
+    "display": "TMH records for Kiran Kumar",
+    "careContexts": [
+      {
+        "referenceNumber": "2375639",
+        "display": "OPD records for 03 Oct 2022"
+      }
+    ]
+  }
+}
+```
+
+### What happens
+
+Give each care context a `referenceNumber` your own system resolves to the records behind it, and a `display` a person recognises months later. Group by encounter: one per outpatient visit, one per inpatient admission, not one per test or document.
+
+### How you know it worked
+
+Three tests in one visit are one care context. A display name reads like "OPD records for 03 Oct 2022" and carries no diagnosis or result.
+
+### When it goes wrong
+
+A diagnosis or result in `display` leaks clinical information into a system built never to hold it, visible to anyone who can list the patient's care contexts. One care context per record produces a list no person can navigate.
+
+## Reading an ABDM error code
+
+### In plain words
+
+ABDM returns [several different error shapes](/docs/hiecm/v3/api/m1/errors), and
+only some of them carry a code. Parse for all of them before you write any handling,
+because the shape tells you where the failure came from.
+
+Every code in the [error code reference](/docs/hiecm/v3/reference/error-codes)
+carries an action. Key your handling to that column rather than to a list of
+codes you maintain by hand.
+
+| Action | What your code does |
+| --- | --- |
+| Fix request | Do not retry. Something you sent is wrong, and sending it again will not help |
+| Fix auth | Fetch a fresh token, then retry once |
+| New request id | Generate a new `REQUEST-ID`, then retry once |
+| Retry | Back off and retry, with a ceiling on attempts |
+| Cannot proceed | Stop, and tell the person why in their own terms |
+| Ask support | Stop, and collect the ids before the context is lost |
+| Unclassified | Treat as Cannot proceed until you have seen it once and know better |
+
+Symptom first debugging, for the failures that produce no useful code at all, is
+in [troubleshooting](/docs/hiecm/v3/troubleshooting).
+
+Read the code in the body before the HTTP status. A 404 can carry `ABDM-1016`,
+Invalid Timestamp: the route exists and the request was refused. A 404 whose
+body carries `Status report` and no code means no route matched the request. A
+code can arrive bare or with a trailing colon and space, as in `ABDM-1016: `, so
+match on the code itself.
+
+### What happens
+
+Parse the body for an error code before acting on the status. Strip a trailing colon and space from the code, then key the handling on the action column of the [error code reference](/docs/hiecm/v3/reference/error-codes), not on a list maintained by hand.
+
+### How you know it worked
+
+Given a code, you can say what it means and which header or field it concerns: `ABDM-2403` is Invalid X-CM-ID, the consent manager header.
+
+### When it goes wrong
+
+A one line message is read as a diagnosis: Invalid header covers many causes. A code that is not in the reference is handled as Unclassified, not guessed at. A 404 is treated as a wrong path when its body carries a code.
+
+## Roles, which entity your software acts for and which way the record moves
+
+### In plain words
+
+There are two integrator roles on HIE-CM, and your product is one of them for its
+whole life. What decides it is which entity your software acts for.
+
+| Role | It acts for | What you build |
+| --- | --- | --- |
+| [IMS](/docs/hiecm/v3/getting-started/glossary#ims) | A care provider. An HMIS in a hospital, an EMR in a clinic, a LIMS in a laboratory, a PMS in a pharmacy | [M1](/docs/hiecm/v3/milestones/m1) to [M4](/docs/hiecm/v3/milestones/m4) |
+| [PHR](/docs/hiecm/v3/getting-started/glossary#phr) | A care seeker, who holds their own records and gives consent | [P1](/docs/hiecm/v3/milestones/p1) to [P3](/docs/hiecm/v3/milestones/p3) |
+
+[HIP](/docs/hiecm/v3/getting-started/glossary#hip) and
+[HIU](/docs/hiecm/v3/getting-started/glossary#hiu) are not a third and a fourth
+role, and they are not something you register as. They are the two ends of one
+record moving: whoever publishes it is the HIP for that exchange, and whoever
+asks to read one they did not create is the HIU.
+
+Both roles are both, and it changes call by call:
+
+- A hospital is the HIP when it shares a discharge summary, and the HIU when it pulls an earlier prescription, through the same IMS.
+- A citizen is the HIP when they push a record from their PHR application, and the HIU when they fetch one.
+
+Neither is a thing you can build once and be. See
+[HIP and HIU](/docs/hiecm/v3/concepts/hip-hiu).
+
+So the milestones you build follow the direction your records move, not the kind
+of product you sell. A PHR app that lets a citizen push a record publishes as
+the HIP, and builds the M2 linking and transfer calls as well. See
+[where the citizen is the HIP](/docs/hiecm/v3/milestones/p2#where-the-citizen-is-the-hip).
+Records never pass through the consent manager: it routes the request and holds
+the consent, and the record goes from the system that holds it to the system
+that asked.
+
+### What happens
+
+Decide the role once, IMS or PHR, from the entity. Then list every direction a record moves through the product: publishing a record is HIP behaviour, fetching one it did not create is HIU behaviour. Build the milestones for each direction the product uses.
+
+### How you know it worked
+
+For a hospital system that also pulls a patient's history, you can name the role, IMS, both directions, and the milestones: M1, M2 and M3. For a PHR app that uploads a scanned prescription, you can say the citizen is the HIP for that record.
+
+### When it goes wrong
+
+HIP, HIU, health repository and health locker are chosen as though they were one list of company types: two are directions, one is custody, one is a product. A PHR app is built for P1 alone and then cannot publish the first record a citizen pushes. A fetch is designed against the consent manager, which holds no records.
+
 ## Where these came from
 
 - `hiecm.concept.m2-exchange-not-call`
@@ -351,3 +570,8 @@ refused, and the refusal names the reference that pointed outward.
 - `hiecm.concept.m2-integrator-call-panel`
 - `hiecm.concept.m2-inbound-is-a-surface`
 - `hiecm.concept.m2-care-context-and-records`
+- `hiecm.concept.asynchronous-callbacks`
+- `hiecm.concept.callback-authenticity`
+- `hiecm.concept.care-context`
+- `hiecm.concept.error-codes`
+- `hiecm.concept.roles`

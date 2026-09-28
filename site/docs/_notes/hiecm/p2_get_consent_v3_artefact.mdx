@@ -1,0 +1,11 @@
+## List the consent artefacts of an ABHA address {/* #p3-get-all-consent-artifact-details-for-an-abha-address */}
+
+Lists the [consent artefacts](/docs/hiecm/v3/getting-started/glossary#consent-artefact) of the logged-in person, a page at a time. `limit` is required. `offset` and `status` are optional, and `status=ALL` returns every state.
+
+<AgentOnly>
+**Before you start.** The person's `X-AUTH-TOKEN`.
+
+**How you know it worked.** You receive `200` with `size`, `limit`, `offset` and the page in `consentArtefacts`.
+
+**When it goes wrong.** `404` with `ABDM-1001` means the person has no consent artefacts in that state.
+</AgentOnly>

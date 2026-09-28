@@ -42,16 +42,17 @@ Checks every atom's frontmatter and body: mandatory fields, id format, gateway a
 
 ## `npm run check:sections` (`scripts/build-sections.mjs --check`)
 
-Builds every atom listed in `catalogue/map.yaml` from its page section and compares the result with `catalogue/generated/` and `catalogue/registry.json`. `npm run build:sections` rewrites both.
+Builds every atom listed in `catalogue/map.yaml` and the fragments in `catalogue/map.d/*.yaml` from its page section and compares the result with `catalogue/generated/` and `catalogue/registry.json`. `npm run build:sections` rewrites both.
 
 | Fails on | Message (verbatim) | Fix |
 |---|---|---|
+| An id is defined in two map files | `<id> is defined in both <file> and <file>. Keep one entry` | Delete one of the two entries. |
 | A mapped heading id is gone from its page | `<id>: heading id "<heading>" is missing from <page>. Put {#<heading>} back on the heading that holds its words, or point the atom at the section that now does`, with `{/* #<heading> */}` in place of `{#<heading>}` for an `.mdx` page | Put the id back in the form the message names, or repoint the map entry. |
 | An id is both a hand-written file and a map entry | `<id> is both a hand-written file and a map entry. Delete the hand-written file once its words are on the page` | Delete the file. |
 | An agent paragraph has no label | `<id>: <page>#<heading> has agent text without a label: "<text>". Start the paragraph with ...` | Start it with one of the four labels. |
 | An agent note states a literal no page or specification does | `` <id>: agent note introduces `<literal>`, which neither <page> nor any specification states. Put it on the page, or take it out of the note `` | Put it on the page, or take it out. |
 | The section carries page markup | `<id>: <page>#<heading> carries page markup the bot would quote: <tag>. Move it out of the mapped section or replace it with plain markdown` | Replace it with plain markdown. |
-| A map entry's `related` names itself or an unknown id | `<id> lists itself as related. ...` or `<id>: related names <ref>, which no atom defines. ...` | Fix `catalogue/map.yaml`. |
+| A map entry's `related` names itself or an unknown id | `<id> lists itself as related. ...` or `<id>: related names <ref>, which no atom defines. ...` | Fix the map file that defines it. |
 | Output is out of date | `<file> is stale; run npm run build:sections`, `<file> has no map entry; run npm run build:sections`, `catalogue/registry.json is stale; run npm run build:sections` | Run it and commit the result. |
 
 ## `npm run check:plugin-version` (`scripts/check-plugin-version.mjs`)
@@ -68,7 +69,7 @@ The scripts' own `node:test` suites, `scripts/*.test.mjs` and `scripts/lib/*.tes
 
 ## `npm run lint:content` (`scripts/lint-content.mjs`)
 
-Checks `site/docs` against the content paradigm in `CONTRIBUTING.md`: per-page-type word budgets, sentence length, paragraph length, the frontmatter description, and the em dash. Counted over prose only, code fences, tables, headings and JSX are stripped first. A page whose frontmatter carries `generated: true` reports every finding as a warning instead of an error, since a broken rule there is a bug in the generator or the specification, not something a contributor typed.
+Checks `site/docs` against the content paradigm in `CONTRIBUTING.md`: per-page-type word budgets, sentence length, paragraph length, the frontmatter description, and the em dash. Counted over prose only, code fences, tables, headings and JSX are stripped first. A page whose frontmatter carries `generated: true` reports every finding as a warning instead of an error, since a broken rule there is a bug in the generator or the specification, not something a contributor typed. Partials are skipped, except `site/docs/_notes/**`: those notes partials are hand-written prose on generated API pages, so they are checked as hard errors, as endpoint pages (`<operationId>.mdx`) or reference pages (`errors/<module>.mdx`), and are spared only the description check because they have no frontmatter.
 
 | Fails on | Message (verbatim) | Level | Fix |
 |---|---|---|---|

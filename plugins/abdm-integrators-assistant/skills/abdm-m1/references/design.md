@@ -695,6 +695,258 @@ journey.
 - **A patient cannot be shown their own card.** The operations support it and
   the journey has nowhere to put it.
 
+## What an ABHA address is allowed to be
+
+### In plain words
+
+ABHA Addresses must comply with defined validation standards.
+
+**Permitted Characters**
+
+- Alphabetic characters (A-Z)
+- Numeric characters (0-9)
+- Dot (.)
+
+**Validation Rules**
+
+- Cannot begin with a numeric character.
+- Cannot begin or end with a dot (.).
+- Must conform to ABDM validation requirements at the time of creation.
+- Mobile numbers cannot be used directly as ABHA Addresses.
+
+Organizations should rely on ABDM validation services to verify address eligibility.
+
+Every ABHA number is issued a default address built from its 14 digits. A person cannot create that address themselves, and can create a readable one beside it. Offer addresses built from the person's name rather than an empty field.
+
+### What happens
+
+Validate the rules above in your own form before you submit, so a refused address becomes an inline message. Offer the suggestions the service returns from `/abha/api/v3/enrollment/enrol/suggestion` during M1 enrolment. Send the chosen address without the `@` suffix where the call asks for it.
+
+### How you know it worked
+
+The address is created and the person can sign in with it. Before that, your form refuses an address that begins with a digit, begins or ends with a dot, or is a mobile number.
+
+### When it goes wrong
+
+The address is taken: show alternatives rather than an error alone. The person expects to use their mobile number as their address: say in the form that this is not allowed, rather than letting them find out on submission.
+
+## ABHA number and ABHA address, and why there are two
+
+### In plain words
+
+An ABHA account consists of two key identifiers:
+
+### 1. ABHA Number
+
+The ABHA Number is a unique 14-digit identifier assigned to an individual after successful identity verification.
+
+**Key Characteristics**
+
+- Unique to each individual.
+- Acts as the primary health identity within ABDM.
+- Used for patient identification across healthcare systems.
+- Issued after completion of the KYC verification process.
+- Always associated with at least one ABHA Address.
+
+### 2. ABHA Address
+
+The ABHA Address is a unique and user-friendly identifier in the format: `user@abdm`
+
+**Key Characteristics**
+
+- Facilitates secure routing of health information and consent requests.
+- Can be shared with healthcare providers for record linking and data exchange.
+- A default ABHA Address is generated along with every ABHA Number.
+- Users may subsequently create a personalized ABHA Address.
+
+The number answers who the person is. The address answers where their records are routed, and it is the identifier care contexts are linked to and consent requests are raised against. One number can carry more than one address, and one mobile number can carry several ABHA numbers, which is common in a family. That is why a login by mobile can return a list of accounts to choose from.
+
+### What happens
+
+Store the ABHA number as the patient's stable identity and the address as the routing handle beside it. Use the address wherever a call routes to the person: linking and consent.
+
+### How you know it worked
+
+You can answer two questions. An address a patient gives you routes to an existing account; it does not create one. Your patient record keys on the ABHA number, because a person can hold several addresses and add more later.
+
+### When it goes wrong
+
+An address stored as the primary key breaks when the person adds or changes one. A sandbox address does not exist in production, and the refusal reads as not found rather than as the wrong environment.
+
+## Why identifiers are encrypted, and where to do it
+
+### In plain words
+
+We publish the public half of a key pair. You encrypt with it. Only our private half can decrypt. Your system never holds a secret to do this, only the current certificate.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant S as Your system
+    participant A as ABHA service
+    S->>A: GET /abha/api/v3/profile/public/certificate
+    A-->>S: publicKey, encryptionAlgorithm
+    S->>S: RSA encrypt the Aadhaar number, mobile number,<br/>OTP or password with that public key
+    S->>A: The Base64 result as the field value,<br/>for example loginId or otp.otpValue
+    A->>A: Decrypts with its private key
+```
+
+There is nothing ABDM specific in the mechanics. Your platform's standard RSA library does the work. Both keys use `RSA/ECB/OAEPWithSHA-1AndMGF1Padding`. The one thing to confirm is which key you are using.
+
+Read `encryptionAlgorithm` from the certificate response and encrypt with what it names. Code that reads the field survives a change of algorithm. Code that cannot recognise what the field names should refuse to encrypt rather than fall back to a default.
+
+### What happens
+
+Put the plaintext in the shape the service validates after it decrypts, from the table above: an ABHA number keeps its dashes. Encrypt with the algorithm the response names and send the base64 result as the field value, for example `loginId`.
+
+### How you know it worked
+
+The raw Aadhaar or mobile number exists only inside your own process, for the length of the call, and never reaches a log. A call carrying your ciphertext passes validation.
+
+### When it goes wrong
+
+`400 {"loginId": "LoginId is invalid"}` means the value decrypted and the plaintext failed a format rule, usually an ABHA number sent without its dashes. Logging the plain value before encryption is the same leak, moved into your log store.
+
+## The gateway session, the first call in every integration
+
+### In plain words
+
+One endpoint issues the token every other call carries. It is the call [M1](/docs/hiecm/v3/getting-started/glossary#m1) uses. [M4](/docs/hiecm/v3/getting-started/glossary#m4) calls carry their own bearer token instead.
+
+**POST** `/api/hiecm/gateway/v3/sessions`
+
+Headers:
+
+| Header | Example value | What it is |
+|---|---|---|
+| `REQUEST-ID` | `18235d89-cb13-479d-ad71-7a57d5f669a8` | A fresh UUID for this call |
+| `TIMESTAMP` | `2022-10-06T15:10:00.587Z` | The time you made the call, ISO 8601 |
+| `X-CM-ID` | `sbx` | The consent manager. Use `sbx` for sandbox |
+| `Content-Type` | `application/json` | |
+
+No `Authorization` header on this call. It is the one call with no token yet.
+
+Body:
+
+```json
+{
+  "clientId": "<CLIENT_ID_FROM_SANDBOX_SIGNUP>",
+  "clientSecret": "<CLIENT_SECRET_FROM_SANDBOX_SIGNUP>",
+  "grantType": "client_credentials"
+}
+```
+
+Send the client id you were issued.
+
+Response shape:
+
+```json
+{
+  "accessToken": "<JWT>",
+  "expiresIn": 1200,
+  "refreshExpiresIn": 1800,
+  "refreshToken": "<JWT>",
+  "tokenType": "bearer"
+}
+```
+
+The response carries the token in `accessToken`.
+
+Send the token back as `Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>` on every other call. Headers per call, and the second token M1 login issues, are on [authentication](/docs/hiecm/v3/reference/authentication). Interactive: [gateway API reference](/reference/hiecm-gateway).
+
+The session token says which application is calling, not which person. [M1](/docs/hiecm/v3/milestones/m1) profile calls also carry a user token in `X-token`, which login returns.
+
+### What happens
+
+Call the session endpoint with `clientId`, `clientSecret` and `grantType` set to `client_credentials`. Send the `accessToken` it returns as `Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>` on every other gateway call. Renew before `expiresIn` runs out rather than on a fixed timer.
+
+### How you know it worked
+
+The response carries `accessToken` and `expiresIn`, and the next gateway call with that token is not refused as unauthorised.
+
+### When it goes wrong
+
+Every call returns 401: see [everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401). A profile call is refused while the session token is fresh: the `X-token` is missing, or it holds the short lived token from login verify, which the verify user call exchanges for the user token. `ABDM-1094` reads X-token expired, and the token sent is often the wrong kind rather than an old one.
+
+## Encrypting sensitive inputs, Aadhaar, mobile, OTP and passwords
+
+### In plain words
+
+Six kinds of value never travel raw in an M1 request body.
+
+| Value | Where it appears |
+| --- | --- |
+| Aadhaar number | Enrolment and login by Aadhaar |
+| ABHA number | Login and search by ABHA number |
+| Mobile number | Login, search and mobile update |
+| Email address | Email verification |
+| One time password ([OTP](/docs/hiecm/v3/getting-started/glossary#otp)) value | Every call that verifies a challenge |
+| Password | Password based login |
+
+Each is encrypted with RSA using the ABDM public certificate, and the base64 of the ciphertext goes in the field.
+
+The padding belongs to the certificate. M1 and PHR calls use RSA OAEP with SHA-1 for both the digest and the mask generation function, which the certificate names as `RSA/ECB/OAEPWithSHA-1AndMGF1Padding`. The [M4](/docs/hiecm/v3/milestones/m4) registries use `RSA/ECB/PKCS1Padding` under a certificate of their own. An integration that calls both holds both keys and never crosses them.
+
+### What happens
+
+Encrypt each value in the table in your own process and send the standard base64 of the ciphertext. In most libraries OAEP defaults to SHA-256, so pass SHA-1 explicitly: in Node, the OAEP padding constant with the OAEP hash set to sha1; in Java, the transformation the certificate names. The certificate arrives as base64 DER with no PEM armour, so add the armour before your library loads it. Cache the certificate with a validity window, not forever.
+
+### How you know it worked
+
+A value your code encrypted is accepted by a real M1 call: the OTP request returns a `txnId` instead of a validation refusal.
+
+### When it goes wrong
+
+A wrong padding or digest does not fail when you encrypt. It fails at the API as a validation refusal that names the business field, which reads as a wrong Aadhaar or mobile number. Check the padding, the digest and the key before you doubt the plaintext. A stale cached certificate fails every encrypted call at once.
+
+## A suggested ABHA journey, and what holds if you design your own
+
+### In plain words
+
+A front desk adopts ABHA because the receptionist stops typing. A verified ABHA
+profile already carries the name, date of birth, gender, mobile, address and
+photograph. So the ABHA step comes before your registration form, and fills it.
+
+The suggested journey, in five steps:
+
+1. **Start registering the patient** in your own system, under your own number.
+2. **Ask whether they have an ABHA.** No means the form is typed by hand, and
+   the patient is treated exactly the same.
+3. **Take one identifier.** Aadhaar is the one to recommend, because it is the
+   only route that ends in a KYC verified ABHA number. Mobile sits beside it.
+   Under Aadhaar only, ask how they prove it: an OTP, a face scan, or a
+   fingerprint or iris reader.
+4. **Log in or create, decided by the answer.** Every identifier starts on the
+   login path. One account signs the person in. Several need a chooser. None
+   offers creation.
+5. **Fill your form from what came back,** and let the receptionist confirm it
+   rather than type it.
+
+Whatever journey you build, these hold:
+
+- **Look before you create.** Creating an ABHA for a person who already holds
+  one leaves them with two ABHA numbers, and nothing in M1 merges them.
+- **The login token is not the profile token.** Login verify returns a short
+  lived token, which the verify user call exchanges for the `X-token` that
+  profile calls accept.
+- **An ABHA is optional to your record.** ABDM does not require a person to
+  hold an ABHA to be treated. A journey that cannot finish without one blocks
+  care.
+- **The profile is what ABDM holds**, not what is in front of your clinician.
+  Present the filled form for confirmation rather than saving it unseen.
+
+### What happens
+
+Send every identifier, Aadhaar included, to the login OTP request first, never straight to enrolment. Read `accounts` on the verify response: one account, call verify user with its `ABHANumber` and the same `txnId`; several, show a chooser and do the same with the chosen one; none, offer creation. Then read the profile at `/abha/api/v3/profile/account` with the `X-token` and fill the form.
+
+### How you know it worked
+
+A person with an ABHA registers with their details arriving from the profile and the receptionist correcting at most one field. A person who declines is still registered, with no error, and can be offered ABHA again from their chart. A person who already holds an ABHA, run through the path a new patient takes, ends signed in to the account they had.
+
+### When it goes wrong
+
+Two ABHA numbers for one person: the journey branched into creation without reading `accounts`. The desk types everything and then links an ABHA: the order is wrong, fetch the profile first. A refused encrypted field shown to the person as a wrong number: check the padding before you blame the number, see [encryption](/docs/hiecm/v3/concepts/encryption).
+
 ## Where these came from
 
 - `hiecm.concept.m1-operations-not-a-journey`
@@ -709,3 +961,9 @@ journey.
 - `hiecm.concept.m1-avoiding-duplicate-abha`
 - `hiecm.concept.m1-honest-screen-states`
 - `hiecm.concept.m1-the-whole-surface`
+- `hiecm.concept.abha-address-policy`
+- `hiecm.concept.abha-number-and-address`
+- `hiecm.concept.encrypted-identifiers`
+- `hiecm.concept.gateway-session`
+- `hiecm.concept.input-encryption`
+- `hiecm.concept.m1-journey-design`

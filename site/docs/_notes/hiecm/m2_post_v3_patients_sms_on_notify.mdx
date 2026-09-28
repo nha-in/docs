@@ -1,0 +1,23 @@
+## Callback API for SMS Notification to patients {/* #m2-callback-api-for-sms-notification-to-patients */}
+
+After you ask ABDM to [send the patient an SMS](/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/03-m2-post-hip-v3-link-patient-links-sms-notify2), ABDM answers on your bridge at `/api/v3/patients/sms/on-notify`. The path is relative to the callback URL you registered.
+
+<AgentOnly>
+**Before you start.** A callback URL registered for your bridge and reachable from the public internet.
+
+**What happens.** ABDM posts with the `REQUEST-ID`, `TIMESTAMP` and `X-HIP-ID` headers. The body carries `acknowledgement`, `response` and, on failure, `error`.
+
+**When it goes wrong.** `ABDM-1024` (Dependent service unavailable): the message was not sent. Send the notify call again later.
+</AgentOnly>
+
+## The outcome of the SMS notify call you made {/* #m2-on-sms-notify-result */}
+
+`acknowledgement.status` is `SUCCESS` when the message was accepted for sending, and `ERRORED` when it was not. Accepted is not delivered: this callback does not report whether the patient received the message. Match it to your call by `response.requestId`.
+
+<AgentOnly>
+**Before you start.** Store the `REQUEST-ID` of the notify call before you send it.
+
+**How you know it worked.** A callback with `acknowledgement.status` of `SUCCESS` and a `requestId` equal to your stored `REQUEST-ID`. Answer it with 200 OK.
+
+**When it goes wrong.** No callback arrives: check that the callback URL is public, registered and quick to answer. An `error` object is the answer, not a delivery fault: read the code before you call again.
+</AgentOnly>

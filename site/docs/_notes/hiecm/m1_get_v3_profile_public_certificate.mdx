@@ -1,0 +1,9 @@
+## Get the public certificate {/* #m1-get-public-certificate */}
+
+Every Aadhaar number, mobile number, [OTP](/docs/hiecm/v3/getting-started/glossary#otp) and other sensitive value you send to the [ABHA](/docs/hiecm/v3/getting-started/glossary#abha) service is encrypted first. This call returns the key to encrypt with in `publicKey`, and the transformation to use in `encryptionAlgorithm`, currently `RSA/ECB/OAEPWithSHA-1AndMGF1Padding`. Read the algorithm from the response rather than hard coding a padding, so a change of key or scheme does not break you.
+
+<AgentOnly>
+**What happens.** `publicKey` is base64 DER with no PEM armour. Wrap it in BEGIN PUBLIC KEY and END PUBLIC KEY lines, 64 characters to a line, before your crypto library loads it.
+
+**When it goes wrong.** A 400 with `ABDM-1016` and `Invalid Timestamp` means the `TIMESTAMP` was refused. Send it in UTC, ISO 8601 with milliseconds, for example `2022-10-06T15:10:00.587Z`. A value that encrypts cleanly but is refused later usually means a different padding: use exactly the one `encryptionAlgorithm` names.
+</AgentOnly>
