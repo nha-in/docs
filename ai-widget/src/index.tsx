@@ -1023,7 +1023,7 @@ function Panel({
               the assistant no longer has. */}
           {index === cut && (
             <p class="ask-ai__cut" role="separator">
-              <span>Messages above this line are no longer sent with your questions</span>
+              <span>Earlier turns are no longer sent</span>
             </p>
           )}
           {/* An answer with nothing in it yet is not a bubble. The thinking
@@ -1270,7 +1270,7 @@ function Panel({
             is fine: the oldest exchanges simply stop being sent. */}
         {memory.full && !busy && continued !== conversation.current && (
           <div class="ask-ai__window-offer" role="status">
-            <p>Context window has expired. Past turns will no longer be part of this session.</p>
+            <p>Context window full. Earlier turns are no longer sent.</p>
             <div class="ask-ai__window-offer-actions">
               <button type="button" class="ask-ai__window-offer-new" onClick={reset}>
                 Start a new chat
