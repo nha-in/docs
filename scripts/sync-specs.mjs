@@ -1,5 +1,5 @@
 // Copies the catalogue's OpenAPI files into the site's static
-// directory so the Scalar plugin can serve them. The catalogue is the only
+// directory, where each endpoint page offers them to download. The catalogue is the only
 // place specs are edited; site/static/specs is a build output.
 import { cpSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { parse } from "yaml";
@@ -15,8 +15,8 @@ mkdirSync(dest, { recursive: true });
 
 // The catalogue nests specs by gateway and version; the site serves them flat,
 // so they are copied by file name. That makes the file name the site wide
-// identity of a specification: it is the served path and the Scalar route
-// (/reference/<stem>). Two gateways using one name would silently serve one
+// identity of a specification: it is the served path (/specs/<name>) and the
+// old /reference/<stem> route that redirects to its module. Two gateways using one name would silently serve one
 // specification in both places, so the clash is refused here rather than
 // discovered by a reader looking at the wrong API.
 const specs = listSpecs();
@@ -31,7 +31,7 @@ for (const spec of specs) {
         `  ${seen.path.slice(root.length + 1)}`,
         `  ${spec.path.slice(root.length + 1)}`,
         "",
-        "A specification's file name is its route (/reference/<name>) across",
+        "A specification's file name is its download path (/specs/<name>) across",
         "the whole site, so it has to be unique. Prefix it with its gateway,",
         `for example ${spec.path.split("/").slice(-3, -2)[0]}-${spec.name}.`,
         "",
@@ -41,8 +41,7 @@ for (const spec of specs) {
   }
   byName.set(spec.name, spec);
   cpSync(spec.path, join(dest, spec.name));
-  // A JSON copy beside each YAML one, so a reference page offers both, the
-  // way Scalar's own download does. Scalar converts in the browser; these
+  // A JSON copy beside each YAML one, so an endpoint page offers both. The
   // pages are static, so the conversion happens here, once.
   if (/\.ya?ml$/.test(spec.name)) {
     const doc = parse(readFileSync(spec.path, "utf8"));
@@ -52,13 +51,3 @@ for (const spec of specs) {
 console.log(
   `Synced ${specs.length} spec(s) to site/static/specs: ${specs.map((s) => s.name).join(", ")}`,
 );
-
-// Vendor the Scalar API reference browser bundle so the site loads it from
-// our own origin instead of cdn.jsdelivr.net. Self-hosted means no runtime
-// dependency on any third-party CDN.
-const scalarSrc = join(root, "node_modules", "@scalar", "api-reference", "dist", "browser");
-const scalarDest = join(root, "site", "static", "vendor", "scalar");
-rmSync(scalarDest, { recursive: true, force: true });
-mkdirSync(scalarDest, { recursive: true });
-cpSync(scalarSrc, scalarDest, { recursive: true });
-console.log("Vendored @scalar/api-reference browser bundle to site/static/vendor/scalar");

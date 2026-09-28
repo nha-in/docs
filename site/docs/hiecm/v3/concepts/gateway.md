@@ -32,12 +32,12 @@ One exception. In the health information flow the HIU supplies a data push URL, 
 
 ## What moves through it
 
-| Module | What the gateway routes | Reference |
-|---|---|---|
-| [M1](/docs/hiecm/v3/api/m1) | Session tokens, and the calls that create and authenticate an ABHA identity | [M1 API reference](/reference/hiecm-m1) |
-| [M2](/docs/hiecm/v3/api/m2) | [Discovery](/docs/hiecm/v3/getting-started/glossary#discovery), care context linking, health information requests to a HIP | [M2 API reference](/reference/hiecm-m2) |
-| [M3](/docs/hiecm/v3/api/m3) | Consent requests, consent notifications, artefact fetches, data flow requests | [M3 API reference](/reference/hiecm-m3) |
-| [M4](/docs/hiecm/v3/api/m4) | The [HPR](/docs/hiecm/v3/getting-started/glossary#hpr) and [HFR](/docs/hiecm/v3/getting-started/glossary#hfr) registry calls, which carry their own bearer token rather than the gateway session | [M4 API reference](/reference/hiecm-m4) |
+| Module | What the gateway routes |
+|---|---|
+| [M1](/docs/hiecm/v3/api/m1) | Session tokens, and the calls that create and authenticate an ABHA identity |
+| [M2](/docs/hiecm/v3/api/m2) | [Discovery](/docs/hiecm/v3/getting-started/glossary#discovery), care context linking, health information requests to a HIP |
+| [M3](/docs/hiecm/v3/api/m3) | Consent requests, consent notifications, artefact fetches, data flow requests |
+| [M4](/docs/hiecm/v3/api/m4) | The [HPR](/docs/hiecm/v3/getting-started/glossary#hpr) and [HFR](/docs/hiecm/v3/getting-started/glossary#hfr) registry calls, which carry their own bearer token rather than the gateway session |
 
 The gateway holds no health record. It routes the permission and the metadata.
 
@@ -84,7 +84,7 @@ Response shape:
 
 The response carries the token in `accessToken`.
 
-Send the token back as `Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>` on every other call. Headers per call, and the second token M1 login issues, are on [authentication](/docs/hiecm/v3/reference/authentication). Interactive: [gateway API reference](/reference/hiecm-gateway).
+Send the token back as `Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>` on every other call. Headers per call, and the second token M1 login issues, are on [authentication](/docs/hiecm/v3/reference/authentication). The calls are in the [gateway API reference](/docs/hiecm/v3/api/gateway/).
 
 ## Which host
 

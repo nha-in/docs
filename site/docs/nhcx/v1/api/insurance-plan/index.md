@@ -40,4 +40,4 @@ The exchange posts these to the `endpoint_url` you registered. Answer each with 
 - [Insurance plan request](/docs/nhcx/v1/reference/fhir/insurance-plan-request)
 - [Insurance plan response](/docs/nhcx/v1/reference/fhir/insurance-plan-response-overview)
 
-The whole specification, with a request you can send from the page, is the [Insurance plan API reference](/reference/nhcx-insurance-plan).
+Each call has its own page in the sidebar, with a request you can send from it. The whole specification downloads as [YAML](/specs/nhcx-insurance-plan.yaml) or [JSON](/specs/nhcx-insurance-plan.json).

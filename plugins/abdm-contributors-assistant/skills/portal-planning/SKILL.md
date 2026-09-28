@@ -1,9 +1,9 @@
 ---
 name: portal-planning
 description: The ABDM Developer Portal schedule, workstreams, ownership split, two-day shipping increments, definition of done, and risk register. Use whenever someone asks what ships when, what is blocked, who owns a piece of work, whether V1 is on track, what counts as finished, how to sequence a task, or wants a standup, a status update, or a re-plan. Also use when scope is being added or cut so the trade is made against the schedule rather than in the abstract.
-plan_version: 2026.09.23
+plan_version: 2026.09.26
 plan_source: abdm-v1-phase1-architecture-and-plan.md
-plan_hash: sha256:0900f96d7600aff9a92db957d6104e5a313ef59d171adea8bb1ad85236b4fee5
+plan_hash: sha256:857014992d8ab82910a27c11e51a890b55b6c4c9087990e6baf57f783033a2b7
 compiled_from_plan: true
 ---
 
@@ -16,7 +16,7 @@ Five workstreams, two owners, two-day increments, targeting a usable V1 in the f
 | Stream | Produces |
 |---|---|
 | Catalogue | The atoms, the schema, the writing guide, the glossary |
-| Site and MCP | The self-hosted Docusaurus + Scalar reference site, and the Docs MCP server and indexer |
+| Site and MCP | The self-hosted Docusaurus site with its generated API reference, and the Docs MCP server and indexer |
 | Skills | The compiler, the validator, the index, the plugin |
 | Pipeline | The watcher, the pull request bot, CI, the publishers |
 | Proof | The support agent, the eval set, the first-day developer test |
@@ -73,7 +73,7 @@ Each risk carries the decision it needs, because an unowned risk is just anxiety
 |---|---|---|
 | Verification lags authoring badly, and the gap has widened. 57 atoms are written and none has been run against sandbox, while the plan promises dummy proof and recorded responses | Credentials, then a verification sweep across M1 to M3 before ship. Evidence lands in `catalogue/verification/`, and a wrong atom is corrected through an issue keyed by its id | The long pole, and authoring has moved three times since it was written. If credentials slip, ship atoms that state what the specification says and nothing more |
 | NHA swagger is inconsistent or incomplete, with known 403s on some V3 sandbox endpoints | Ingest, hand-correct, record both the NHA file and the correction in `sources`, record the correction and leave the atom stating what the specification carries | Accept that some endpoints ship without a recorded sandbox response |
-| Docusaurus guides and Scalar references are two rendering systems on one site | Keep prose in plain markdown, avoid MDX beyond callouts and steps, so it ports anywhere; specs stay the single source under `catalogue/openapi/` | Decided: fully self-hosted from day one, no hosted-Scalar phase |
+| The generated API reference ties the site to its own build script and components | Keep prose in plain markdown, avoid MDX beyond callouts and steps, so it ports anywhere; specs stay the single source under `catalogue/openapi/`, and any OpenAPI viewer can render the copies in `site/static/specs/` | Decided: fully self-hosted from day one. Scalar's reference is retired and the generated reference is the only one |
 | An existing community docs site overlaps heavily | Reach out early, propose the Catalogue as shared upstream | Product makes the call and the call |
 | The time available is not enough for three gateways at full depth | Atom depth is HIE-CM only, and since the 16 September 2026 reset no HIE-CM module carries atoms. Every HIE-CM module, UHI and NHCX stay at specification or site page depth, with no atoms written against them yet | Needs sign-off, already decided in the plan |
 | The prose pass invents facts | `scripts/validate-skills.mjs` fails the build on a cited atom id the Catalogue does not define and on a curl target recorded on no atom. It does not diff every token | Residual. A fabricated sentence carrying no identifier passes, which is why the compiled skills still need a reader |

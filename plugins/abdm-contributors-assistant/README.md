@@ -2,7 +2,7 @@
 
 The plugin for building the ABDM Developer Portal.
 
-This plugin does not integrate anyone with ABDM. It builds the thing that does. Every skill here serves one of the five workstreams in the architecture and execution plan: Catalogue, Scalar, Skills, Pipeline, Proof.
+This plugin does not integrate anyone with ABDM. It builds the thing that does. Every skill here serves one of the five workstreams in the architecture and execution plan: Catalogue, Site and MCP, Skills, Pipeline, Proof.
 
 ## Install
 
@@ -55,7 +55,7 @@ The first three are compiled from `plan/abdm-v1-phase1-architecture-and-plan.md`
 
 **Rendering and compiling**
 
-- `scalar-docs` project setup, generated navigation, versions, the two MCP surfaces
+- `scalar-docs` the Docusaurus site, the generated API reference, generated navigation, versions, the two MCP surfaces
 - `skill-compiler` how atoms become skills, and the validator that stops invented facts
 - `ooda-skill-authoring` how to write a skill that loops instead of reciting a recipe
 - `update-pipeline` the watcher, the pull request bot, and the build on merge

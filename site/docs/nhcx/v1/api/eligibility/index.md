@@ -40,4 +40,4 @@ The exchange posts these to the `endpoint_url` you registered. Answer each with 
 - [Coverage eligibility request](/docs/nhcx/v1/reference/fhir/coverage-eligibility-request)
 - [Coverage eligibility response](/docs/nhcx/v1/reference/fhir/coverage-eligibility-response)
 
-The whole specification, with a request you can send from the page, is the [Coverage eligibility API reference](/reference/nhcx-eligibility).
+Each call has its own page in the sidebar, with a request you can send from it. The whole specification downloads as [YAML](/specs/nhcx-eligibility.yaml) or [JSON](/specs/nhcx-eligibility.json).

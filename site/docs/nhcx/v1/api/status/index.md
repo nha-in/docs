@@ -43,4 +43,4 @@ The exchange posts these to the `endpoint_url` you registered. Answer each with 
 - [Accepted with 202, and no callback arrives](/docs/nhcx/v1/troubleshooting/accepted-then-no-callback)
 - [Responses arrive against the wrong request](/docs/nhcx/v1/troubleshooting/responses-arrive-against-the-wrong-request)
 
-The whole specification, with a request you can send from the page, is the [Status and search API reference](/reference/nhcx-status).
+Each call has its own page in the sidebar, with a request you can send from it. The whole specification downloads as [YAML](/specs/nhcx-status.yaml) or [JSON](/specs/nhcx-status.json).

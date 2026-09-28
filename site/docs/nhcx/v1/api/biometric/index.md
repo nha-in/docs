@@ -41,4 +41,4 @@ If fingerprint works and every face call fails, check the base before you check 
 
 - [Biometric authentication](/docs/nhcx/v1/roles/provider/biometric-authentication)
 
-The whole specification, with a request you can send from the page, is the [ABHA biometric authentication API reference](/reference/nhcx-biometric).
+Each call has its own page in the sidebar, with a request you can send from it. The whole specification downloads as [YAML](/specs/nhcx-biometric.yaml) or [JSON](/specs/nhcx-biometric.json).

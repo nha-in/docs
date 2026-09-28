@@ -46,4 +46,4 @@ The exchange posts these to the `endpoint_url` you registered. Answer each with 
 - [Notifications and patient apps](/docs/nhcx/v1/reference/notifications-and-patient-apps)
 - [Accepted with 202, and no callback arrives](/docs/nhcx/v1/troubleshooting/accepted-then-no-callback)
 
-The whole specification, with a request you can send from the page, is the [Other API reference](/reference/nhcx-other).
+Each call has its own page in the sidebar, with a request you can send from it. The whole specification downloads as [YAML](/specs/nhcx-other.yaml) or [JSON](/specs/nhcx-other.json).

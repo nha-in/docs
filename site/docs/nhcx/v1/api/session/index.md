@@ -29,4 +29,4 @@ The token does not come from NHCX.
 - [Session token](/docs/nhcx/v1/getting-started/session-token)
 - [Quickstart](/docs/nhcx/v1/getting-started/quickstart)
 
-The whole specification, with a request you can send from the page, is the [Session API reference](/reference/nhcx-session).
+Each call has its own page in the sidebar, with a request you can send from it. The whole specification downloads as [YAML](/specs/nhcx-session.yaml) or [JSON](/specs/nhcx-session.json).

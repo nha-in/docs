@@ -1,106 +1,106 @@
 [
   {
     "label": "Gateway session",
-    "to": "/reference/hiecm-gateway"
+    "to": "/docs/hiecm/v3/api/gateway/"
   },
   {
     "label": "M1 Identity",
-    "to": "/reference/hiecm-m1"
+    "to": "/docs/hiecm/v3/api/m1/"
   },
   {
     "label": "M2 Health Information Provider",
-    "to": "/reference/hiecm-m2"
+    "to": "/docs/hiecm/v3/api/m2/"
   },
   {
     "label": "M3 Health Information User",
-    "to": "/reference/hiecm-m3"
+    "to": "/docs/hiecm/v3/api/m3/"
   },
   {
     "label": "M4 Registry Integration",
-    "to": "/reference/hiecm-m4"
+    "to": "/docs/hiecm/v3/api/m4/"
   },
   {
     "label": "P1 Registration and login",
-    "to": "/reference/hiecm-p1"
+    "to": "/docs/hiecm/v3/api/p1/"
   },
   {
     "label": "P2 Consents Management",
-    "to": "/reference/hiecm-p2"
+    "to": "/docs/hiecm/v3/api/p2/"
   },
   {
     "label": "P3 Subscription",
-    "to": "/reference/hiecm-p3"
+    "to": "/docs/hiecm/v3/api/p3/"
   },
   {
     "label": "P4 Locker",
-    "to": "/reference/hiecm-p4"
+    "to": "/docs/hiecm/v3/api/p4/"
   },
   {
     "label": "Scan and Register",
-    "to": "/reference/hiecm-scan-and-register"
+    "to": "/docs/hiecm/v3/api/scan-and-register/"
   },
   {
     "label": "Patient scan and record share",
-    "to": "/reference/hiecm-record-share"
+    "to": "/docs/hiecm/v3/api/record-share/"
   },
   {
     "label": "Scan and Pay",
-    "to": "/reference/hiecm-scan-and-pay"
+    "to": "/docs/hiecm/v3/api/scan-and-pay/"
   },
   {
     "label": "Session",
-    "to": "/reference/nhcx-session"
+    "to": "/docs/nhcx/v1/api/session/"
   },
   {
     "label": "Participant registry",
-    "to": "/reference/nhcx-registry"
+    "to": "/docs/nhcx/v1/api/registry/"
   },
   {
     "label": "Coverage eligibility",
-    "to": "/reference/nhcx-eligibility"
+    "to": "/docs/nhcx/v1/api/eligibility/"
   },
   {
     "label": "Insurance plan",
-    "to": "/reference/nhcx-insurance-plan"
+    "to": "/docs/nhcx/v1/api/insurance-plan/"
   },
   {
     "label": "Pre-authorisation",
-    "to": "/reference/nhcx-preauth"
+    "to": "/docs/nhcx/v1/api/preauth/"
   },
   {
     "label": "Claim",
-    "to": "/reference/nhcx-claim"
+    "to": "/docs/nhcx/v1/api/claim/"
   },
   {
     "label": "Reprocess, cancel and shortfall",
-    "to": "/reference/nhcx-task"
+    "to": "/docs/nhcx/v1/api/task/"
   },
   {
     "label": "Payment notice",
-    "to": "/reference/nhcx-payment-notice"
+    "to": "/docs/nhcx/v1/api/payment-notice/"
   },
   {
     "label": "Communication",
-    "to": "/reference/nhcx-communication"
+    "to": "/docs/nhcx/v1/api/communication/"
   },
   {
     "label": "Status and search",
-    "to": "/reference/nhcx-status"
+    "to": "/docs/nhcx/v1/api/status/"
   },
   {
     "label": "Onboarding",
-    "to": "/reference/nhcx-onboarding"
+    "to": "/docs/nhcx/v1/api/onboarding/"
   },
   {
     "label": "PMJAY adjudicator",
-    "to": "/reference/nhcx-adjudicator"
+    "to": "/docs/nhcx/v1/api/adjudicator/"
   },
   {
     "label": "ABHA biometric authentication",
-    "to": "/reference/nhcx-biometric"
+    "to": "/docs/nhcx/v1/api/biometric/"
   },
   {
     "label": "Other",
-    "to": "/reference/nhcx-other"
+    "to": "/docs/nhcx/v1/api/other/"
   }
 ]

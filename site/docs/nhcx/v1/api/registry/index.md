@@ -59,4 +59,4 @@ The rows run in the order the calls happen: your token and your own record, then
 - [Quickstart](/docs/nhcx/v1/getting-started/quickstart)
 - [The recipient cannot decrypt your message](/docs/nhcx/v1/troubleshooting/the-recipient-cannot-decrypt)
 
-The whole specification, with a request you can send from the page, is the [Participant registry API reference](/reference/nhcx-registry).
+Each call has its own page in the sidebar, with a request you can send from it. The whole specification downloads as [YAML](/specs/nhcx-registry.yaml) or [JSON](/specs/nhcx-registry.json).

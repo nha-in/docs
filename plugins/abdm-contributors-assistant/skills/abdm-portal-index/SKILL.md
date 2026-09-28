@@ -1,9 +1,9 @@
 ---
 name: abdm-portal-index
 description: Router for all ABDM Developer Portal build work. Use this FIRST whenever anyone asks about building, planning, writing, reviewing, compiling, publishing or testing the ABDM Catalogue, the self-hosted docs site, the agent skills, the Docs MCP server, the update pipeline, or the portal's schedule and scope. Triggers include "write an atom", "review this page", "the catalogue", "lint failed", "compile the skills", "which milestone am I on", "what ships Friday", "is this DPG compliant", "ingest NHA swagger", "the support agent", and any mention of HIE-CM or ABDM documentation work. Route from here rather than guessing which skill applies.
-plan_version: 2026.09.23
+plan_version: 2026.09.26
 plan_source: abdm-v1-phase1-architecture-and-plan.md
-plan_hash: sha256:0900f96d7600aff9a92db957d6104e5a313ef59d171adea8bb1ad85236b4fee5
+plan_hash: sha256:857014992d8ab82910a27c11e51a890b55b6c4c9087990e6baf57f783033a2b7
 compiled_from_plan: true
 ---
 
@@ -39,7 +39,7 @@ The only skill an agent needs loaded to know what else exists. Read the decision
    - Running an atom's curl and recording the evidence: `/atom-verify`
 
 3. **Rendering it for humans**
-   - Docusaurus site, self-hosted Scalar references, local search, footer version stamp: `scalar-docs`
+   - Docusaurus site, the generated API reference and its Try it console, local search, footer version stamp: `scalar-docs`
    - Site structure, the five tabs, the module page ladder, page placement: `docs-ux`
    - The Docs MCP server and what it is for: `scalar-docs`, then `support-agent`
 
@@ -114,7 +114,7 @@ Dispatch these for work that is long, repetitive, or better done with a fresh co
 | `/catalogue-lint` | Runs every lint rule and explains each failure |
 | `/catalogue-status` | Coverage by gateway and milestone, and which atoms have evidence recorded |
 | `/skills-compile` | Compiles, validates and reports which atoms fed which skill |
-| `/docs-publish` | Generates navigation, previews, and publishes the Scalar site |
+| `/docs-publish` | Generates navigation, previews, and publishes the docs site |
 | `/source-check` | Checks the recorded source hashes for drift and reports it. Nothing opens a pull request today |
 | `/eval-run` | Runs the six eval tasks and records the score |
 | `/firstday-test` | Sets up and scores the first-day developer test |

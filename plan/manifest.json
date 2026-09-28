@@ -1,13 +1,13 @@
 {
-  "plan_version": "2026.09.23",
-  "plan_hash": "sha256:0900f96d7600aff9a92db957d6104e5a313ef59d171adea8bb1ad85236b4fee5",
+  "plan_version": "2026.09.26",
+  "plan_hash": "sha256:857014992d8ab82910a27c11e51a890b55b6c4c9087990e6baf57f783033a2b7",
   "plan_path": "plan/abdm-v1-phase1-architecture-and-plan.md",
   "plan_url": "https://raw.githubusercontent.com/nha-in/docs/main/plan/abdm-v1-phase1-architecture-and-plan.md",
   "plan_page_url": "https://github.com/nha-in/docs/blob/main/plan/abdm-v1-phase1-architecture-and-plan.md",
   "changelog_url": "https://github.com/nha-in/docs/commits/main/plan/abdm-v1-phase1-architecture-and-plan.md",
   "history_path": "plan/plan-history/",
   "section_ids": "pN-slug, declared inline in the plan as anchor tags. Skills cite plan#<id>.",
-  "breaking": true,
+  "breaking": false,
   "compiled_skills": [
     "portal-architecture",
     "portal-planning",
