@@ -20,7 +20,7 @@ export function moduleErrorList(spec, where) {
   const module = spec?.info?.['x-portal']?.module;
   const platform = where?.platform ?? spec?.info?.['x-abdm-gateway'];
   if (!module || !platform) return null;
-  const versions = where?.version ? [where.version] : existsSync(join(OPENAPI, platform)) ? readdirSync(join(OPENAPI, platform)).sort() : [];
+  const versions = where?.version ? [where.version] : existsSync(join(OPENAPI, platform)) ? readdirSync(join(OPENAPI, platform)).sort((a, b) => a.localeCompare(b, undefined, {numeric: true})) : [];
   const file = versions.map((v) => join(OPENAPI, platform, v, 'errors', `${module}.yaml`)).find((f) => existsSync(f));
   if (!file) return null;
   const list = parse(readFileSync(file, 'utf8')) ?? {};

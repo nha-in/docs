@@ -31,7 +31,7 @@ test('in a UHI set a name is a person only under a person-shaped parent', () => 
       "  name: 'Manish Pravin Kahane'",
       '',
     ].join('\n');
-    const md = '{"descriptor": {"name": "Commercial Terms"}, "agent": {"id": "x", "name": "Santosh Ramchandra Jagtap"}, "category": {"descriptor": {"name": "Whole Blood"}}}\n';
+    const md = '{"descriptor": {"name": "Commercial Terms"}, "agent": {"id": "x", "name": "Santosh Ramchandra Jagtap"}, "category": {"descriptor": {"name": "Whole Blood"}}, "person": [{"name": "Kushal Pandita"}]}\n';
     writeFileSync(join(uhi, 'spec.yaml'), yaml);
     writeFileSync(join(uhi, 'doc.md'), md);
     execFileSync('node', [join(root, 'scripts', 'redact-nha-raw.mjs')], {
@@ -45,6 +45,7 @@ test('in a UHI set a name is a person only under a person-shaped parent', () => 
     assert.match(outMd, /"name": "Commercial Terms"/);
     assert.match(outMd, /"name": "Whole Blood"/);
     assert.doesNotMatch(outMd, /Santosh/);
+    assert.doesNotMatch(outMd, /Kushal/, 'a person inside an array under a person-shaped key');
   } finally {
     rmSync(uhi, {recursive: true, force: true});
   }

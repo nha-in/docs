@@ -331,7 +331,7 @@ function requestFor(operation) {
     value:
       header.name.toLowerCase() === 'authorization'
         // UHI signs every request with the sender's Ed25519 key rather than
-        // presenting a session token (see /docs/uhi/v1/network/signing).
+        // presenting a session token (see /docs/uhi/v1/concepts/signing).
         ? operation.gateway === 'uhi' ? '<SIGNED_AUTHORIZATION_HEADER>' : 'Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
         : header.example ?? `<${header.name.toUpperCase().replace(/-/g, '_')}>`,
   }));

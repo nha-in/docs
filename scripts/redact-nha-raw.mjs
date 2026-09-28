@@ -20,7 +20,7 @@ const MANIFEST = join(RAW, 'MANIFEST.md');
 // Binary documents are hashed and never rewritten: the text rules would
 // corrupt them, so their personal data is removed from a text conversion
 // committed beside them, and the originals stay outside git.
-const redacted = (rel) => !/\.(docx|pdf|zip|png|jpe?g)$/i.test(rel);
+const redacted = (rel) => !/\.(docx|xlsx|pptx|pdf|zip|tgz|png|jpe?g|gif|webp)$/i.test(rel);
 
 
 // Aadhaar carries a Verhoeff check digit, which is what separates a real number
@@ -125,7 +125,7 @@ const namesNobody = (parent) => NAME_BY_PARENT && !PERSON_PARENT.test(parent ?? 
 const jsonParent = (s, at) => {
   for (let i = at - 1, depth = 0; i >= 0 && i > at - 4000; i--) {
     if (s[i] === '}') depth++;
-    else if (s[i] === '{' && depth-- === 0) return s.slice(Math.max(0, i - 80), i).match(/([\w$@-]+)\\?"?\s*:\s*$/)?.[1] ?? '';
+    else if (s[i] === '{' && depth-- === 0) return s.slice(Math.max(0, i - 80), i).match(/([\w$@-]+)\\?"?\s*:\s*(?:\[\s*)?$/)?.[1] ?? '';
   }
   return '';
 };

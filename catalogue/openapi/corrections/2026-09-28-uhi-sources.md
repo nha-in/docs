@@ -23,7 +23,7 @@ Each row was checked against the redacted files on 28 September 2026. A section 
 | PM-JAY HEM | GPS search | Paired with a state (7.6, TC-B06) | No state needed (guide, settled points; spec example) | No state. TC-B06 is reworded to match |
 | PM-JAY HEM | Numeric field types | Integers (6.5) | The guide's open point says the onboarding document uses strings | Integers, as the spec examples send. The guide's open point misreads the onboarding document |
 | PM-JAY HEM | provider `short_desc` | "State-level empanelment context" (6.6) | Spec tag: ownership; spec example: "State." | Left for NHA to confirm |
-| Blood Bank | State and district codes | DELHI and SOUTH with 83; Pune 521 (7.3, 7.4) | Maharashtra 311, Pune 022 (guide, settled points; spec) | The spec's codes |
+| Blood Bank | State and district codes | DELHI and SOUTH with 83 in the search sample (7.3) | Maharashtra 311, Pune 022 in the search (guide, settled points; spec). The spec's on_search examples return Pune as 521, as the onboarding response sample (7.4) does | Search with the spec's codes; show what on_search returns |
 | Blood Bank | HSPA path | `.../api/v1/bloodbank` (7.4) | `.../api/v1/hspa/bloodbank` (spec) | The spec's path |
 | Blood Bank | Whole blood component name | `WholeBlood` | `Whole Blood` (spec search examples) | `Whole Blood` |
 | Ambulance | PTA and MVA categories | "IGNORE ANY RESPONSE FOR PTA, NOT IN SCOPE" (7.3) | Render any category code (guide 2.4) | Render any code, noting PTA is out of Phase 1 scope |
