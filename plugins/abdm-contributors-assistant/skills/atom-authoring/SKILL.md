@@ -139,3 +139,11 @@ if you only have the repository open.
 - Fixing lint failures: `catalogue-linting`
 - Where atoms come from: `openapi-ingest`
 - Scaffold a new one: `/atom-new`
+
+## Migrated atoms are edited on their page
+
+An atom listed in `catalogue/map.yaml` has no hand-written file. Its words are
+the page section named by its `page` and `heading`, and its rules for agents are
+the `<AgentOnly>` notes in that section. Edit the page, then run
+`npm run build:sections`. Never edit `catalogue/generated/`. Only an atom that is
+not in the map yet is edited as a file under `catalogue/`.

@@ -4238,8 +4238,10 @@
     "id": "shared.glossary.link-token",
     "type": "glossary",
     "gateway": "shared",
-    "source": "file",
-    "file": "catalogue/shared/glossary/link-token.md"
+    "source": "page",
+    "page": "site/docs/_glossary/_hiecm.mdx",
+    "heading": "link-token",
+    "url": "/docs/hiecm/v3/getting-started/glossary#link-token"
   },
   {
     "id": "shared.glossary.m1",

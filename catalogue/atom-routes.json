@@ -5456,7 +5456,7 @@
       "route": "/docs/hiecm/v3/getting-started/glossary",
       "anchor": "link-token",
       "link": "/docs/hiecm/v3/getting-started/glossary#link-token",
-      "rule": "term defined under its own heading on glossary",
+      "rule": "named by catalogue/map.yaml",
       "confidence": "derived"
     },
     {
