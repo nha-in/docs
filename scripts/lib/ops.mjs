@@ -8,7 +8,7 @@ import {parse} from 'yaml';
 // side, so a callback atom can name its operationId too. They come after the
 // paths, so a path operation is listed before a webhook on the same path.
 export function loadOps(root) {
-  const specDir = join(root, 'catalogue', 'openapi', 'hiecm', 'v3');
+  const specDir = join(root, 'catalogue', 'hiecm', 'openapi', 'v3');
   return readdirSync(specDir).filter((f) => f.endsWith('.yaml')).flatMap((f) => {
     const spec = parse(readFileSync(join(specDir, f), 'utf8'));
     return [spec.paths, spec.webhooks].flatMap((group) => Object.entries(group ?? {}).flatMap(([p, item]) =>

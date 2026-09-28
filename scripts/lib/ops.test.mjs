@@ -7,7 +7,7 @@ import {loadOps} from './ops.mjs';
 
 test('callbacks, declared as webhooks, are operations too, keyed by their path', () => {
   const root = mkdtempSync(join(tmpdir(), 'ops-'));
-  const dir = join(root, 'catalogue', 'openapi', 'hiecm', 'v3');
+  const dir = join(root, 'catalogue', 'hiecm', 'openapi', 'v3');
   mkdirSync(dir, {recursive: true});
   writeFileSync(join(dir, 'hiecm-m2.yaml'), [
     'openapi: 3.1.0',

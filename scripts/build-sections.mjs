@@ -12,7 +12,7 @@ import {stringify} from 'yaml';
 import {loadAtoms} from './lib/atoms.mjs';
 import {sectionsById, literals, plainMarkdown} from './lib/sections.mjs';
 import {loadMap} from './lib/map.mjs';
-import {FOLDER} from './lib/paths.mjs';
+import {FOLDER, specRoots} from './lib/paths.mjs';
 
 // The folder per type that scripts/lint-atoms.mjs requires.
 const SECTIONS = [['In plain words', (s, e) => plainMarkdown(s.text, e.url).text], ['Before you start', (s) => s.agent.before], ['What happens', (s) => s.agent.happens], ['How you know it worked', (s) => s.agent.worked], ['When it goes wrong', (s) => s.agent.wrong]];
@@ -74,7 +74,7 @@ function walkFiles(dir) {
 }
 
 function specText(root) {
-  return walkFiles(join(root, 'catalogue', 'openapi')).filter((f) => f.endsWith('.yaml') && !f.includes('/.raw/')).map((f) => readFileSync(f, 'utf8')).join('\n');
+  return specRoots(root).flatMap((r) => walkFiles(r.dir)).filter((f) => f.endsWith('.yaml') && !f.includes('/.raw/')).map((f) => readFileSync(f, 'utf8')).join('\n');
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

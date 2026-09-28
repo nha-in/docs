@@ -87,6 +87,16 @@ func TestRunSkipsOpenapiMarkdown(t *testing.T) {
 		[]byte("This is plain prose with no frontmatter.\n"), 0o644); err != nil {
 		t.Fatal(err)
 	}
+	// A gateway's own correction log sits under <gateway>/openapi/ and is
+	// skipped the same way.
+	corrections := filepath.Join(dir, "hiecm", "openapi", "corrections")
+	if err := os.MkdirAll(corrections, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(corrections, "2026-09-16-final-set.md"),
+		[]byte("# Corrections\n\nPlain prose.\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
 
 	concepts := filepath.Join(dir, "hiecm", "concepts")
 	if err := os.MkdirAll(concepts, 0o755); err != nil {
@@ -219,11 +229,17 @@ func TestRunSkipsNestedReadme(t *testing.T) {
 
 func TestIsSpecPath(t *testing.T) {
 	for path, want := range map[string]bool{
-		"openapi/hiecm/v3/hiecm-m1.yaml":    true,
-		"openapi/hiecm/v3/journeys/m1.yaml": false,
-		"openapi/.raw/x/y.yaml":             false,
-		"openapi/corrections/hiecm-m1.yaml": false,
-		"openapi/hiecm-v3.yaml":             false,
+		"hiecm/openapi/v3/hiecm-m1.yaml":          true,
+		"openapi/nhcx/v1/nhcx-claim.yaml":         true,
+		"hiecm/openapi/v3/journeys/m1.yaml":       false,
+		"hiecm/openapi/v3/errors/m1.yaml":         false,
+		"openapi/nhcx/v1/journeys/x.yaml":         false,
+		"hiecm/map/m1.yaml":                       false,
+		"hiecm/openapi/.raw/x/y.yaml":             false,
+		"openapi/.raw/x/y.yaml":                   false,
+		"openapi/nrces/PINNED":                    false,
+		"hiecm/openapi/corrections/hiecm-m1.yaml": false,
+		"openapi/hiecm-v3.yaml":                   false,
 	} {
 		if got := isSpecPath(filepath.FromSlash(path)); got != want {
 			t.Errorf("isSpecPath(%q) = %v, want %v", path, got, want)

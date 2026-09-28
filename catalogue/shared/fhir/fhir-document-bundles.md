@@ -31,7 +31,7 @@ sources:
     note: >
       The published FHIR page: eight record types, Invoice included, and the
       hiType code for each.
-  - file: catalogue/openapi/hiecm/v3/hiecm-m2.yaml
+  - file: catalogue/hiecm/openapi/v3/hiecm-m2.yaml
     status: read-from-spec-2026-09-23
     note: >
       The hiType enum on the M2 and M3 requests carries eight values,

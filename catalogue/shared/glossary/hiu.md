@@ -9,7 +9,7 @@ summary: >
   The role held by a system that asks a patient for consent and then
   fetches records held elsewhere.
 sources:
-  - file: catalogue/openapi/.raw/nha-2026-09-16/hiecm/consent-management-data-flow.yaml
+  - file: catalogue/hiecm/openapi/.raw/nha-2026-09-16/hiecm/consent-management-data-flow.yaml
     fetched: 2026-09-16
     hash: sha256:4b0af51af2e2b5bfbf08f5e8745a940f59c550f8a1e4600c970c526f27bc8718
 related: {}

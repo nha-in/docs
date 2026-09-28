@@ -12,7 +12,8 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 // The raw set to redact. NHA's final set of 16 September is the default; a
 // later drop names its own dated folder: RAW_SET=nha-2026-09-22.
 const SET = process.env.RAW_SET ?? 'nha-2026-09-16';
-const RAW = join(root, 'catalogue', 'openapi', '.raw', SET);
+// A UHI set lives in UHI's folder, every other NHA set in HIE-CM's.
+const RAW = join(root, 'catalogue', /-uhi$/.test(SET) ? 'uhi' : 'hiecm', 'openapi', '.raw', SET);
 const MANIFEST = join(RAW, 'MANIFEST.md');
 // One policy for the whole raw set. The shapes that carried personal data in
 // the three files redacted first also sat in files the manifest had called

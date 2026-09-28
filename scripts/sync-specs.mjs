@@ -33,7 +33,7 @@ for (const spec of specs) {
         "",
         "A specification's file name is its route (/reference/<name>) across",
         "the whole site, so it has to be unique. Prefix it with its gateway,",
-        `for example ${spec.path.split("/").slice(-3, -2)[0]}-${spec.name}.`,
+        `for example ${spec.path.split("/").find((seg) => ["hiecm", "nhcx", "uhi"].includes(seg))}-${spec.name}.`,
         "",
       ].join("\n"),
     );

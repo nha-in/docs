@@ -18,9 +18,9 @@ import { readdirSync, readFileSync, statSync } from "node:fs";
 import { basename, join, relative, sep } from "node:path";
 import { parse } from "yaml";
 import { loadAtoms, root } from "./lib/atoms.mjs";
+import { rawDirs } from "./lib/paths.mjs";
+import { listSpecTree } from "./specs.mjs";
 
-const rawDir = join(root, "catalogue", "openapi", ".raw");
-const openapiDir = join(root, "catalogue", "openapi");
 
 // ---------------------------------------------------------------- raw hashes
 // Map: path relative to .raw/ (posix separators) -> sha256 hex.
@@ -34,11 +34,17 @@ function walkFiles(dir) {
   return out;
 }
 
+// Upstream sets sit under catalogue/openapi/.raw (NHCX, NRCeS) and under each
+// gateway's own openapi/.raw; a set's name is unique across them.
 const rawHashes = new Map();
-for (const file of walkFiles(rawDir)) {
-  const rel = relative(rawDir, file).split(sep).join("/");
-  if (rel === ".gitkeep") continue;
-  rawHashes.set(rel, createHash("sha256").update(readFileSync(file)).digest("hex"));
+const rawPaths = new Map();
+for (const rawDir of rawDirs(root)) {
+  for (const file of walkFiles(rawDir)) {
+    const rel = relative(rawDir, file).split(sep).join("/");
+    if (rel === ".gitkeep") continue;
+    rawHashes.set(rel, createHash("sha256").update(readFileSync(file)).digest("hex"));
+    rawPaths.set(rel, relative(root, file));
+  }
 }
 
 // ------------------------------------------------------- recorded references
@@ -57,26 +63,19 @@ function record(entry, consumer) {
   refs.push({ file: String(entry.file), hash, status: entry.status, consumer });
 }
 
-// Specs: same glob the spec linter uses, catalogue/openapi/*/*/*.yaml.
-for (const gateway of readdirSync(openapiDir)) {
-  const gdir = join(openapiDir, gateway);
-  if (gateway.startsWith(".") || !statSync(gdir).isDirectory()) continue;
-  for (const version of readdirSync(gdir)) {
-    const vdir = join(gdir, version);
-    if (!statSync(vdir).isDirectory()) continue;
-    for (const name of readdirSync(vdir)) {
-      if (!name.endsWith(".yaml")) continue;
-      const specPath = join(vdir, name);
-      let doc;
-      try { doc = parse(readFileSync(specPath, "utf8")); }
-      catch (e) {
-        console.error(`ERROR ${relative(root, specPath)} is not parseable YAML: ${e.message}`);
-        process.exitCode = 1;
-        continue;
-      }
-      for (const entry of doc?.["x-abdm-sources"] ?? []) {
-        record(entry, relative(root, specPath));
-      }
+// Specs: every gateway's <version>/*.yaml, through specs.mjs.
+for (const { files } of listSpecTree()) {
+  for (const { path: specPath } of files) {
+    if (!specPath.endsWith(".yaml")) continue;
+    let doc;
+    try { doc = parse(readFileSync(specPath, "utf8")); }
+    catch (e) {
+      console.error(`ERROR ${relative(root, specPath)} is not parseable YAML: ${e.message}`);
+      process.exitCode = 1;
+      continue;
+    }
+    for (const entry of doc?.["x-abdm-sources"] ?? []) {
+      record(entry, relative(root, specPath));
     }
   }
 }
@@ -148,7 +147,7 @@ for (const ref of refs) {
 const short = (hex) => hex.slice(0, 12);
 
 for (const m of mismatches) {
-  console.log(`MISMATCH catalogue/openapi/.raw/${m.raw} recorded sha256:${short(m.recordedHex)}... current sha256:${short(m.currentHex)}... by ${m.consumer}`);
+  console.log(`MISMATCH ${rawPaths.get(m.raw)} recorded sha256:${short(m.recordedHex)}... current sha256:${short(m.currentHex)}... by ${m.consumer}`);
 }
 for (const [file, consumers] of missing) {
   // A recorded source can be an in-repo document (a conventions file, a site

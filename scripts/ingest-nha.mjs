@@ -1,5 +1,5 @@
 // scripts/ingest-nha.mjs
-// NHA's final set (catalogue/openapi/.raw/nha-2026-09-16) to the eleven module
+// NHA's final set (catalogue/hiecm/openapi/.raw/nha-2026-09-16) to the eleven module
 // specs. Deterministic. Only the edits listed in the design spec, each one
 // appended to the correction log this script writes.
 //   node scripts/ingest-nha.mjs          write the specs and the log
@@ -11,9 +11,9 @@ import {createHash} from 'node:crypto';
 import {parse, stringify, Document, visit} from 'yaml';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const RAW = join(root, 'catalogue', 'openapi', '.raw', 'nha-2026-09-16');
-const OUT = join(root, 'catalogue', 'openapi', 'hiecm', 'v3');
-const LOG = join(root, 'catalogue', 'openapi', 'corrections', '2026-09-16-final-set.md');
+const RAW = join(root, 'catalogue', 'hiecm', 'openapi', '.raw', 'nha-2026-09-16');
+const OUT = join(root, 'catalogue', 'hiecm', 'openapi', 'v3');
+const LOG = join(root, 'catalogue', 'hiecm', 'openapi', 'corrections', '2026-09-16-final-set.md');
 const check = process.argv.includes('--check');
 const journeysMode = process.argv.includes('--journeys');
 const METHODS = ['get', 'post', 'put', 'patch', 'delete'];
@@ -320,14 +320,14 @@ for (const {file, place, set = 'nha-2026-09-16', fetched = '2026-09-16', titlesF
         specs[module].components[kind][name] = def;
       }
     }
-    specs[module]['x-abdm-sources'].push({file: `catalogue/openapi/.raw/${set}/${file}`, role: 'upstream', hash: sha(full), fetched});
+    specs[module]['x-abdm-sources'].push({file: `catalogue/hiecm/openapi/.raw/${set}/${file}`, role: 'upstream', hash: sha(full), fetched});
   }
 }
 
 // 8. The M1 info.description is not published (wrong cipher, wrong certificate path, third-party tool).
 specs.m1.info.description = 'Encrypt Aadhaar numbers, mobile numbers, OTP values and passwords under the certificate from GET /abha/api/v3/profile/public/certificate. See /docs/hiecm/v3/concepts/encryption.';
 note('m1', 'info', 'description replaced: NHA\'s text names RSA/ECB/PKCS1Padding, /v3/auth/cert and a third-party encryption site; the original is in the raw file');
-specs.m1['x-abdm-sources'].push({file: 'catalogue/openapi/.raw/nha-2026-09-16/abha/M1 ABHA Collection.json', role: 'upstream', hash: sha(join(RAW, 'abha/M1 ABHA Collection.json')), fetched: '2026-09-15', note: 'Used for the order of M1 calls only. See journeys/m1.yaml.'});
+specs.m1['x-abdm-sources'].push({file: 'catalogue/hiecm/openapi/.raw/nha-2026-09-16/abha/M1 ABHA Collection.json', role: 'upstream', hash: sha(join(RAW, 'abha/M1 ABHA Collection.json')), fetched: '2026-09-15', note: 'Used for the order of M1 calls only. See journeys/m1.yaml.'});
 
 // 9. NHA's review of the M3 API pages, 15 September 2026. On consent request
 // init the HIP block is optional and neither the HIP nor the HIU name is
@@ -816,7 +816,7 @@ for (const [id, m] of Object.entries(MODULES)) {
 }
 
 if (journeysMode) {
-  const JOURNEYS = join(root, 'catalogue', 'openapi', 'hiecm', 'v3', 'journeys');
+  const JOURNEYS = join(root, 'catalogue', 'hiecm', 'openapi', 'v3', 'journeys');
   const journeySlug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
   let written = 0;
   for (const module of Object.keys(MODULES)) {

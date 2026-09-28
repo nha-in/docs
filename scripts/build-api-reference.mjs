@@ -1,7 +1,7 @@
 // Builds the API reference from the OpenAPI files: one page per operation,
 // one sidebar entry per operation, and the data each page renders.
 //
-// The spec tree is the source of structure: a YAML at catalogue/openapi/
+// The spec tree is the source of structure: a YAML at catalogue/<gateway>/openapi/
 // <platform>/<version>/<spec>.yaml renders under site/docs/<platform>/
 // <version>/api. Each spec names its module in info.x-portal ({module, label,
 // position}); the filename stem is the Scalar route (/reference/<stem>).
@@ -54,7 +54,7 @@ const METHODS = ['get', 'put', 'post', 'delete', 'patch', 'options', 'head'];
 // names nothing a rule can rescue. Kept outside the specifications because
 // ingest-nha.mjs rewrites those on every NHA drop. See the file's own header.
 const titleOverrides = (() => {
-  // At the catalogue root, outside catalogue/openapi entirely: listSpecTree
+  // At the catalogue root, outside every openapi folder: listSpecTree
   // treats a YAML under <platform>/<version> as a module, and lint:agent reads
   // every YAML anywhere under openapi/ as a specification. This is neither.
   const file = join(root, 'catalogue', 'titles.yaml');
@@ -599,7 +599,7 @@ for (const {platform, version, files} of tree) {
   // gateway without one never links to pages or claims atoms that do not exist.
   const features = platformFeatures(platform, version);
   // The journey order is defined in exactly one place: the journey files under
-  // catalogue/openapi/<platform>/<version>/journeys. Each names its steps as
+  // the gateway's <version>/journeys (see specs.mjs). Each names its steps as
   // operationIds, in the order a reader walks them, so the sidebar follows the
   // journey without the order being copied anywhere else. They are read per
   // gateway version, so one gateway's module never takes another's journeys.

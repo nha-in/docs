@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "sync-specs": "node scripts/sync-specs.mjs",
-    "lint:specs": "spectral lint \"catalogue/openapi/*/*/*.yaml\" --fail-severity=error",
+    "lint:specs": "spectral lint \"catalogue/*/openapi/*/*.yaml\" \"catalogue/openapi/*/*/*.yaml\" --fail-severity=error",
     "build:specs": "node scripts/ingest-nha.mjs && node scripts/ingest-uhi.mjs",
     "check:specs": "node scripts/ingest-nha.mjs --check && node scripts/ingest-uhi.mjs --check",
     "start": "npm start --workspace site",

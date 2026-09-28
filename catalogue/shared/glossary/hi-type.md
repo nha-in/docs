@@ -29,7 +29,7 @@ sources:
     note: >
       The published FHIR page: eight record types, Invoice included, and
       that implementing all of them is mandatory for an HMIS.
-  - file: catalogue/openapi/hiecm/v3/hiecm-m2.yaml
+  - file: catalogue/hiecm/openapi/v3/hiecm-m2.yaml
     status: read-from-spec-2026-09-23
     note: The hiType enum on M2 and M3 requests carries eight values, Invoice included.
   - file: catalogue/openapi/.raw/nrces-ndhm.in-6.5.0.tgz

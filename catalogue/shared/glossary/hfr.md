@@ -9,7 +9,7 @@ summary: >
   The registry of health facilities, which is where a facility is
   searched for, onboarded and linked to software.
 sources:
-  - file: catalogue/openapi/.raw/nha-2026-09-16/M4/M4-HFR.json
+  - file: catalogue/hiecm/openapi/.raw/nha-2026-09-16/M4/M4-HFR.json
     fetched: 2026-09-16
     hash: sha256:25291734dd3782857bc3e012c7fa1881a069b49fdb3701e1657c514f43b590f5
 related:
