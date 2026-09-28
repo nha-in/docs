@@ -36,12 +36,13 @@ export function fileNames(recs) {
   });
 }
 
-// Every HIE-CM operation in the specifications, as {operationId, method, path}.
+// Every operation in one platform's specifications (HIE-CM unless named), as
+// {operationId, method, path}.
 // Callbacks are OpenAPI 3.1 webhooks keyed by the path ABDM posts to on your
 // side, so a callback atom can name its operationId too. They come after the
 // paths so a recorded gateway call still matches a path operation first.
-export function loadOps(root) {
-  const specDir = join(root, 'catalogue', 'openapi', 'hiecm', 'v3');
+export function loadOps(root, platform = 'hiecm', version = 'v3') {
+  const specDir = join(root, 'catalogue', 'openapi', platform, version);
   return readdirSync(specDir).filter((f) => f.endsWith('.yaml')).flatMap((f) => {
     const spec = parse(readFileSync(join(specDir, f), 'utf8'));
     return [spec.paths, spec.webhooks].flatMap((group) => Object.entries(group ?? {}).flatMap(([p, item]) =>

@@ -81,3 +81,9 @@ test('a generated atom carries the map entry contract v2 fields', () => {
   assert.match(md, /\nfacts:\n/);
   assert.doesNotMatch(renderAtom('shared.glossary.link-token', entry, {text: 'x', agent: {before: '', happens: '', worked: '', wrong: ''}}), /operation:/);
 });
+
+test('a map entry that names its version carries it; the rest stay abdm-v3', () => {
+  const blank = {text: 'x', agent: {before: '', happens: '', worked: '', wrong: ''}};
+  assert.match(renderAtom('uhi.concept.x', {...entry, type: 'concept', gateway: 'uhi', version: 'uhi-v1'}, blank), /\nversion: uhi-v1\n/);
+  assert.match(renderAtom('shared.glossary.link-token', entry, blank), /\nversion: abdm-v3\n/);
+});
