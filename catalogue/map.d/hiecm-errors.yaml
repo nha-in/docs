@@ -1,0 +1,343 @@
+hiecm.error.900900:
+  type: error
+  gateway: hiecm
+  milestone: M1
+  title: 900900, authentication failed without a reason
+  summary: The ABHA service refused the call as an unclassified authentication failure,
+    so check both the access token and the person's token.
+  page: site/docs/_notes/hiecm/errors/m1.mdx
+  heading: '900900'
+  url: /docs/hiecm/v3/api/m1/errors#900900
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.error.900901:
+  type: error
+  gateway: hiecm
+  milestone: M1
+  title: 900901, the credentials are not valid
+  summary: The ABHA service rejected the token or client credential you sent, so check
+    the credentials for this environment and get a fresh token.
+  page: site/docs/_notes/hiecm/errors/m1.mdx
+  heading: '900901'
+  url: /docs/hiecm/v3/api/m1/errors#900901
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.error.abdm-1016:
+  type: error
+  gateway: hiecm
+  milestone: M1
+  title: ABDM-1016, the timestamp is not valid
+  summary: The TIMESTAMP header is not in the accepted format, so send it as ISO 8601
+    UTC with milliseconds and the Z suffix.
+  page: site/docs/_notes/hiecm/errors/m1.mdx
+  heading: abdm-1016
+  url: /docs/hiecm/v3/api/m1/errors#abdm-1016
+  related:
+    errors:
+    - hiecm.error.abdm-2402
+    glossary:
+    - shared.glossary.timestamp-header
+hiecm.error.abdm-1094:
+  type: error
+  gateway: hiecm
+  milestone: M1
+  title: ABDM-1094, access to this feature is refused
+  summary: Your client or the person's token is not allowed to do what the call tried,
+    and the message says which of three cases applies.
+  page: site/docs/_notes/hiecm/errors/m1.mdx
+  heading: abdm-1094
+  url: /docs/hiecm/v3/api/m1/errors#abdm-1094
+  related:
+    endpoints:
+    - hiecm.endpoint.m1-benefit-get-by-abha
+hiecm.error.abdm-1013:
+  type: error
+  gateway: hiecm
+  milestone: M2
+  title: ABDM-1013, the ABHA number is not valid
+  summary: ABDM does not accept the ABHA number you sent, usually because it is not
+    14 plain digits.
+  page: site/docs/_notes/hiecm/errors/m2.mdx
+  heading: abdm-1013
+  url: /docs/hiecm/v3/api/m2/errors#abdm-1013
+  related:
+    concepts:
+    - hiecm.concept.abha-number-and-address
+    glossary:
+    - shared.glossary.abha-number
+hiecm.error.abdm-1022:
+  type: error
+  gateway: hiecm
+  milestone: M2
+  title: ABDM-1022, too many requests
+  summary: You are sending more requests than ABDM accepts from your client, so back
+    off before you are blocked.
+  page: site/docs/_notes/hiecm/errors/m2.mdx
+  heading: abdm-1022
+  url: /docs/hiecm/v3/api/m2/errors#abdm-1022
+  related:
+    concepts:
+    - hiecm.concept.asynchronous-callbacks
+hiecm.error.abdm-1026:
+  type: error
+  gateway: hiecm
+  milestone: M2
+  title: ABDM-1026, the link token is not valid
+  summary: The link token you sent cannot authorise this link, so generate a new one
+    rather than retrying.
+  page: site/docs/_notes/hiecm/errors/m2.mdx
+  heading: abdm-1026
+  url: /docs/hiecm/v3/api/m2/errors#abdm-1026
+  related:
+    concepts:
+    - hiecm.concept.care-context
+hiecm.error.abdm-1032:
+  type: error
+  gateway: hiecm
+  milestone: M2
+  title: ABDM-1032, a required header is missing or malformed
+  summary: A required header is absent or unusable, and the response does not say
+    which one.
+  page: site/docs/_notes/hiecm/errors/m2.mdx
+  heading: abdm-1032
+  url: /docs/hiecm/v3/api/m2/errors#abdm-1032
+  related:
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2403
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+hiecm.error.abdm-1035:
+  type: error
+  gateway: hiecm
+  milestone: M2
+  title: ABDM-1035, the HIP id is not recognised
+  summary: ABDM does not recognise the health information provider id on the call,
+    which is a registration problem rather than a request problem.
+  page: site/docs/_notes/hiecm/errors/m2.mdx
+  heading: abdm-1035
+  url: /docs/hiecm/v3/api/m2/errors#abdm-1035
+  related:
+    glossary:
+    - shared.glossary.hip
+    - shared.glossary.hfr
+hiecm.error.abdm-1040:
+  type: error
+  gateway: hiecm
+  milestone: M3
+  title: ABDM-1040, the HIU id is not recognised
+  summary: ABDM does not recognise the health information user id on the request,
+    which is a registration problem rather than a request problem.
+  page: site/docs/_notes/hiecm/errors/m2.mdx
+  heading: abdm-1040
+  url: /docs/hiecm/v3/api/m2/errors#abdm-1040
+  related:
+    glossary:
+    - shared.glossary.hiu
+hiecm.error.abdm-1056:
+  type: error
+  gateway: hiecm
+  milestone: M2
+  title: ABDM-1056, already linked, or an invalid link reference
+  summary: The care context is already linked, or the link reference number matches
+    nothing in this link flow.
+  page: site/docs/_notes/hiecm/errors/m2.mdx
+  heading: abdm-1056
+  url: /docs/hiecm/v3/api/m2/errors#abdm-1056
+  related:
+    flows:
+    - hiecm.flow.m2-link-care-context
+    concepts:
+    - hiecm.concept.care-context
+hiecm.error.abdm-1062:
+  type: error
+  gateway: hiecm
+  milestone: M2
+  title: ABDM-1062, ABHA number mismatch, or consent not granted
+  summary: In linking the ABHA number does not match the link token, and in a consent
+    flow the consent has not been granted.
+  page: site/docs/_notes/hiecm/errors/m2.mdx
+  heading: abdm-1062
+  url: /docs/hiecm/v3/api/m2/errors#abdm-1062
+  related:
+    flows:
+    - hiecm.flow.m2-link-care-context
+hiecm.error.abdm-1063:
+  type: error
+  gateway: hiecm
+  milestone: M2
+  title: ABDM-1063, HIP id mismatch, or an invalid date range
+  summary: In linking the provider id does not match the link token, and in a consent
+    flow the date range is not valid.
+  page: site/docs/_notes/hiecm/errors/m2.mdx
+  heading: abdm-1063
+  url: /docs/hiecm/v3/api/m2/errors#abdm-1063
+  related:
+    flows:
+    - hiecm.flow.m2-link-care-context
+hiecm.error.abdm-1064:
+  type: error
+  gateway: hiecm
+  milestone: M2
+  title: ABDM-1064, a repeated request id, or a missing body
+  summary: The request id was already used, or the call needed a body and none arrived.
+  page: site/docs/_notes/hiecm/errors/m2.mdx
+  heading: abdm-1064
+  url: /docs/hiecm/v3/api/m2/errors#abdm-1064
+  related: {}
+hiecm.error.abdm-1112:
+  type: error
+  gateway: hiecm
+  milestone: M3
+  title: ABDM-1112, the consent artefact is invalid or expired
+  summary: The consent artefact you presented is unknown or expired, so raise a new
+    consent request rather than retrying.
+  page: site/docs/_notes/hiecm/errors/m2.mdx
+  heading: abdm-1112
+  url: /docs/hiecm/v3/api/m2/errors#abdm-1112
+  related:
+    concepts:
+    - hiecm.concept.consent-artefact
+hiecm.error.abdm-1170:
+  type: error
+  gateway: hiecm
+  milestone: M2
+  title: ABDM-1170, the ABHA address is not valid
+  summary: ABDM does not accept the ABHA address you sent, usually because it does
+    not match the address pattern.
+  page: site/docs/_notes/hiecm/errors/m2.mdx
+  heading: abdm-1170
+  url: /docs/hiecm/v3/api/m2/errors#abdm-1170
+  related:
+    concepts:
+    - hiecm.concept.abha-number-and-address
+    glossary:
+    - shared.glossary.abha-address
+hiecm.error.abdm-1407:
+  type: error
+  gateway: hiecm
+  milestone: M2
+  title: ABDM-1407, the ABHA number is deactivated
+  summary: The ABHA number behind the address is deactivated, and only the person
+    can reactivate it.
+  page: site/docs/_notes/hiecm/errors/m2.mdx
+  heading: abdm-1407
+  url: /docs/hiecm/v3/api/m2/errors#abdm-1407
+  related:
+    glossary:
+    - shared.glossary.abha-number
+hiecm.error.abdm-2401:
+  type: error
+  gateway: hiecm
+  milestone: M2
+  title: ABDM-2401, the X Auth token is not valid
+  summary: The token that identifies the patient was rejected, not your application's
+    access token.
+  page: site/docs/_notes/hiecm/errors/m2.mdx
+  heading: abdm-2401
+  url: /docs/hiecm/v3/api/m2/errors#abdm-2401
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.error.abdm-2402:
+  type: error
+  gateway: hiecm
+  milestone: M2
+  title: ABDM-2402, the timestamp is not valid
+  summary: ABDM refused the TIMESTAMP header, so send it as ISO 8601 UTC with milliseconds
+    from a synchronised clock.
+  page: site/docs/_notes/hiecm/errors/m2.mdx
+  heading: abdm-2402
+  url: /docs/hiecm/v3/api/m2/errors#abdm-2402
+  related:
+    glossary:
+    - shared.glossary.timestamp-header
+hiecm.error.abdm-2403:
+  type: error
+  gateway: hiecm
+  milestone: M2
+  title: ABDM-2403, the X-CM-ID is not valid
+  summary: The consent manager header does not match the environment you are calling.
+  page: site/docs/_notes/hiecm/errors/m2.mdx
+  heading: abdm-2403
+  url: /docs/hiecm/v3/api/m2/errors#abdm-2403
+  related:
+    glossary:
+    - shared.glossary.x-cm-id
+hiecm.error.abdm-2404:
+  type: error
+  gateway: hiecm
+  milestone: M2
+  title: ABDM-2404, the REQUEST-ID is not valid
+  summary: The request id header is missing or is not a universally unique identifier,
+    which also breaks matching the callback to your call.
+  page: site/docs/_notes/hiecm/errors/m2.mdx
+  heading: abdm-2404
+  url: /docs/hiecm/v3/api/m2/errors#abdm-2404
+  related:
+    glossary:
+    - shared.glossary.request-id
+    concepts:
+    - hiecm.concept.asynchronous-callbacks
+hiecm.error.abdm-2406:
+  type: error
+  gateway: hiecm
+  milestone: M2
+  title: ABDM-2406, the calls are out of order
+  summary: Your call does not fit where the gateway believes the flow has reached.
+  page: site/docs/_notes/hiecm/errors/m2.mdx
+  heading: abdm-2406
+  url: /docs/hiecm/v3/api/m2/errors#abdm-2406
+  related:
+    flows:
+    - hiecm.flow.m2-link-care-context
+hiecm.error.abdm-2500:
+  type: error
+  gateway: hiecm
+  milestone: M2
+  title: ABDM-2500, no Authorization header, or no matching request
+  summary: The call carried no access token, or a callback answered a request the
+    gateway is not waiting on.
+  page: site/docs/_notes/hiecm/errors/m2.mdx
+  heading: abdm-2500
+  url: /docs/hiecm/v3/api/m2/errors#abdm-2500
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    endpoints:
+    - hiecm.endpoint.gateway-sessions
+hiecm.error.abdm-9999:
+  type: error
+  gateway: hiecm
+  milestone: M2
+  title: ABDM-9999, a catch-all, so read the message
+  summary: ABDM-9999 covers request problems and unavailability alike, so the message
+    decides what to do.
+  page: site/docs/_notes/hiecm/errors/m2.mdx
+  heading: abdm-9999
+  url: /docs/hiecm/v3/api/m2/errors#abdm-9999
+  related:
+    errors:
+    - hiecm.error.abdm-1022
+    glossary:
+    - shared.glossary.request-id
+hiecm.error.abdm-1107:
+  type: error
+  gateway: hiecm
+  milestone: P1
+  title: ABDM-1107, the combination of scopes is not valid
+  summary: The scope array you sent is not the combination this call accepts, or not
+    the one the one-time password request used.
+  page: site/docs/_notes/hiecm/errors/p1.mdx
+  heading: abdm-1107
+  url: /docs/hiecm/v3/api/p1/errors#abdm-1107
+  related:
+    endpoints:
+    - hiecm.endpoint.m1-login-request-otp
+    - hiecm.endpoint.m1-login-verify
+    - hiecm.endpoint.m1-enrolment-request-otp
+    - hiecm.endpoint.m1-enrolment-verify-abdm-otp
+    concepts:
+    - hiecm.concept.m1-journey-design
