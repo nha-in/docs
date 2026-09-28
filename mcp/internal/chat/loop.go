@@ -707,7 +707,7 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 	}).Shape)
 	prefix := passagesPrefix + skillPrefix
 	if gateway != "" {
-		prefix += gatewayNote(gateway) + "\n\n"
+		prefix += gatewayNote(gateway, cmd.Gateway != "") + "\n\n"
 	}
 	if page.attached() {
 		// The page is not run through MaskPII the way the reader's own text

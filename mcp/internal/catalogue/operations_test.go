@@ -8,6 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/getkin/kin-openapi/openapi3"
 )
 
 func TestParseOperations(t *testing.T) {
@@ -463,5 +465,43 @@ func TestParsedOperationsCarryWhatTheirChunkNeeds(t *testing.T) {
 	}
 	if withParams == 0 || withResponses == 0 || withErrors == 0 {
 		t.Errorf("params on %d, responses on %d, error codes on %d of %d operations; want each on some", withParams, withResponses, withErrors, len(data.Operations))
+	}
+}
+
+// A path key carrying a #suffix, as M1's per-use-case split and UHI's two
+// directions of on_update use, is reported as the real endpoint.
+func TestActualPath(t *testing.T) {
+	withExt := &openapi3.Operation{Extensions: map[string]any{"x-actual-path": "/on_update"}}
+	if got := actualPath("/on_update#to-eua", withExt); got != "/on_update" {
+		t.Fatalf("x-actual-path: got %q", got)
+	}
+	if got := actualPath("/v3/otp#aadhaar-otp", &openapi3.Operation{}); got != "/v3/otp" {
+		t.Fatalf("suffix without extension: got %q", got)
+	}
+	if got := actualPath("/search", &openapi3.Operation{}); got != "/search" {
+		t.Fatalf("plain path: got %q", got)
+	}
+}
+
+// Every specification in the catalogue parses and marshals. A schema that
+// refers to itself, as NHA's UHI Ack does, must not send the indexer round
+// the cycle until the stack overflows.
+func TestParseSpecEveryCatalogueSpec(t *testing.T) {
+	specs, err := filepath.Glob(filepath.Join("..", "..", "..", "catalogue", "openapi", "*", "*", "*.yaml"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	n := 0
+	for _, spec := range specs {
+		if strings.Contains(spec, string(filepath.Separator)+".raw"+string(filepath.Separator)) {
+			continue
+		}
+		if _, err := ParseSpec(spec); err != nil {
+			t.Fatalf("%s: %v", spec, err)
+		}
+		n++
+	}
+	if n < 20 {
+		t.Fatalf("parsed only %d specs; the glob is wrong", n)
 	}
 }

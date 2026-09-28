@@ -27,6 +27,6 @@
   "expected_behaviour": "decline",
   "derived_from": null,
   "source_row": "annexure#sandbox-faq-general",
-  "catalogue_version": "2026.08.24",
-  "notes": "catalogue/openapi/uhi/v1 holds a conventions README and no specification file, so no payload exists to quote; the UHI orientation page is the honest neighbouring ground."
+  "catalogue_version": "2026.09.16",
+  "notes": "The portal documents UHI Physical Consultation only, so no teleconsultation payload exists to quote. The fail is a teleconsultation body built from the Physical Consultation calls; the UHI pages are the honest neighbouring ground."
 }

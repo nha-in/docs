@@ -1,0 +1,48 @@
+# Physical Consultation, in the order of the UHI developer guide as of 22
+# September 2026, Part 3.1. Discovery goes through the Gateway, then a second
+# search goes straight to the chosen HSPA for slots; everything after it is
+# direct between EUA and HSPA, with the HSPA sending an audit copy of each
+# on_confirm, on_status, on_update and on_cancel to the Gateway. select and
+# on_select are in the spec but not in this flow, so no journey names them.
+- id: uhi-consultation-discovery
+  title: Discovery
+  steps:
+    - op: uhi_network_gateway_search
+      example: consultation-search-doctor-by-name-and-speciality-physicalconsultation
+    - op: uhi_network_search
+      example: consultation-search-doctor-by-name-and-speciality-physicalconsultation
+    - op: uhi_network_gateway_on_search
+      example: consultation-1st-on-search-for-search-by-doctor-and-specialty-physicalcon
+    - op: uhi_network_on_search
+      example: consultation-1st-on-search-for-search-by-doctor-and-specialty-physicalcon
+    - op: uhi_network_search
+      example: consultation-second-search-hpr-address
+      title: Search the chosen HSPA for slots
+    - op: uhi_network_on_search
+      example: consultation-2nd-on-search-response
+      title: Send the doctor's slots
+- id: uhi-consultation-order
+  title: Order
+  steps:
+    - op: uhi_consultation_init
+    - op: uhi_consultation_on_init
+    - op: uhi_consultation_confirm
+    - op: uhi_consultation_on_confirm
+    - op: uhi_consultation_on_confirm_audit
+- id: uhi-consultation-fulfilment
+  title: Fulfilment
+  steps:
+    - op: uhi_consultation_status
+    - op: uhi_consultation_on_status
+    - op: uhi_consultation_on_status_audit
+    - op: uhi_consultation_on_update_to_hspa
+    - op: uhi_consultation_on_update_to_eua
+    - op: uhi_consultation_on_update_audit
+- id: uhi-consultation-post-fulfilment
+  title: Post-fulfilment
+  steps:
+    - op: uhi_consultation_cancel
+    - op: uhi_consultation_on_cancel
+    - op: uhi_consultation_on_cancel_audit
+    - op: uhi_consultation_on_message_to_hspa
+    - op: uhi_consultation_on_message_to_eua

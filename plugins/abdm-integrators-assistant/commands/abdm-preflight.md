@@ -1,6 +1,6 @@
 ---
 description: Check what must be true before any ABDM call, so a later failure is about the flow.
-argument-hint: '[m1|m2|m3|m4|p1|p2|p3]'
+argument-hint: '[gateway|m1|m2|m3|m4|p1|p2|p3|p4|scan-and-register|scan-and-pay|record-share]'
 ---
 
 Check the preconditions for `$ARGUMENTS` before building anything. With no argument, check what every module needs.
@@ -28,7 +28,7 @@ Each item below can fail in a way that reads as something else, which is why the
 
 ## M4
 
-- **The M4 token**, from `POST /getManagementToken`.
+- **The bearer token the registry calls carry**, in `Authorization: Bearer`. The M4 skill's journeys carry the gateway session token, and a professional's own HPR login is `POST /api/v1/auth/authPassword` in the M4 specification. No `/getManagementToken` exists.
 - **The M4 certificate** from `/api/v1/auth/cert`. Do not reuse an M1 encryption path here.
 
 ## Output

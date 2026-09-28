@@ -1,9 +1,40 @@
 // Run after `node scripts/build-api-reference.mjs`: reads the page data it writes.
 import {test} from 'node:test';
 import assert from 'node:assert';
-import {readFileSync} from 'node:fs';
+import {readFileSync, readdirSync} from 'node:fs';
 
 const page = (name) => JSON.parse(readFileSync(new URL(`../site/src/data/api/${name}.json`, import.meta.url), 'utf8'));
+const uhiPages = () => readdirSync(new URL('../site/src/data/api/', import.meta.url)).filter((f) => f.startsWith('uhi-')).map((f) => page(f.replace(/\.json$/, '')));
+const mdx = (path) => readFileSync(new URL(`../site/docs/uhi/v1/api/${path}.mdx`, import.meta.url), 'utf8');
+
+test('uhi samples are signed and point at a real host', () => {
+  const pages = uhiPages();
+  assert.ok(pages.length > 0);
+  for (const op of pages) {
+    const url = op.curl.match(/--url (\S+)/)?.[1] ?? '';
+    for (const bad of ['(', '#', '{provider_uri}', '{consumer_uri}', 'uhigatewaybeta']) {
+      assert.ok(!url.includes(bad) && !op.path.includes(bad) && !op.server.includes(bad), `${op.id}: the URL, path or server carries ${bad}`);
+    }
+    assert.ok(!op.curl.includes('Bearer'), `${op.id}: a Bearer token`);
+    assert.doesNotMatch(JSON.stringify(op.samples), /\{(provider|consumer)_uri\}|Bearer/, `${op.id}: a raw server variable or a Bearer token in the samples`);
+    assert.match(op.curl, /Authorization: <SIGNED_AUTHORIZATION_HEADER>/, `${op.id}: the signed header`);
+  }
+});
+
+test('uhi pages offer no try-it console', () => {
+  for (const op of uhiPages()) assert.equal(op.tryIt, false, op.id);
+  assert.equal(page('m2-post-v3-link-on-carecontext').tryIt, undefined);
+});
+
+test('a uhi page says who serves the call and pairs within its journey', () => {
+  const init = mdx('consultation/endpoints/uhi-consultation-order/01-uhi-consultation-init');
+  assert.match(init, /The HSPA serves this call/);
+  assert.match(init, /\(\/docs\/uhi\/v1\/api\/consultation\/endpoints\/uhi-consultation-order\/02-uhi-consultation-on-init\)/);
+  const bloodAnswer = mdx('network/endpoints/uhi-blood-bank/04-uhi-network-on-search');
+  assert.match(bloodAnswer, /\(\/docs\/uhi\/v1\/api\/network\/endpoints\/uhi-blood-bank\/02-uhi-network-search\)/);
+  const second = mdx('consultation/endpoints/uhi-consultation-discovery/06-uhi-network-on-search');
+  assert.match(second, /\(\/docs\/uhi\/v1\/api\/consultation\/endpoints\/uhi-consultation-discovery\/05-uhi-network-search\)/);
+});
 
 test('a P2 gateway call renders against the gateway, not the ABHA service', () => {
   const op = page('p2-get-consent-v3-request');

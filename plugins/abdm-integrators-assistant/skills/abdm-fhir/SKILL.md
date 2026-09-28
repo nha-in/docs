@@ -1,6 +1,18 @@
 ---
 name: abdm-fhir
 description: Use when producing or checking FHIR for ABDM: building NRCES compliant document bundle generation into a codebase, or auditing the bundles an existing FHIR store already emits. Covers the resource profiles ABDM requires, the Composition rules, and the validator to check against.
+type: skill
+domain: fhir
+agent_consumers:
+  - abdm-integration-agent
+  - abdm-call-debugger
+  - fhir-compliance-agent
+requires:
+  - abdm-docs-mcp
+produces:
+  - nrces-document-bundle
+can_execute: true
+can_orchestrate: false
 ---
 
 # ABDM FHIR
@@ -19,8 +31,8 @@ Open one when the work calls for it. This file is the map, not the material.
 
 ## Before anything else
 
-- No call in this skill has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.
-- The design section is the exception. Its rules come from building a working front desk against the sandbox, and each atom it cites names what was observed and the date it was seen.
+- Treat every request and response shape in this skill as unconfirmed until the sandbox has answered you. Check a response before you rely on its shape.
+- The design section is different in kind. Its rules come from building a working front desk against the sandbox, and each atom it cites names what was observed and the date it was seen.
 - A bundle that validates is not a bundle ABDM accepts. The NRCES profiles are the floor, and the milestone the bundle travels under adds its own rules on top.
 
 ## Practices that hold across every call

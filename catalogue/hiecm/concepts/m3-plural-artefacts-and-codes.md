@@ -67,12 +67,13 @@ one and a link token mismatch in another. Whichever you choose to display, you
 will be wrong for the other module, and the message ABDM sent is the only part
 that names the actual cause.
 
-Expect these calls to be asynchronous. Consent status and consent fetch both
-return `202` with an empty body, while the specification documents them as
-synchronous responses carrying a status and an artefact array. Treat the
-acknowledgement as an acknowledgement. This was observed against ids that do not
-exist, so it is weaker evidence than a run against a real consent would be, and
-it is worth confirming on your own data before building on it.
+Handle two answers from consent status and consent fetch. The specification
+documents them as synchronous responses carrying a status and an artefact
+array. One run against ids that did not exist returned `202` with an empty
+body instead. That single observation is not a rule: check the status before
+you read the body, treat a `200` as the documented answer, treat a `202` with
+no body as an acknowledgement whose answer arrives on the callback, and confirm
+which you get on your own data before building on either.
 
 ## How you know it worked
 
@@ -88,5 +89,5 @@ and no wording of your own has replaced it.
   Something took the first artefact and discarded the rest.
 - A displayed explanation contradicts what ABDM sent. A code was translated
   locally instead of the message being carried through.
-- A `202` with an empty body is read as a failure. It is an acknowledgement, and
-  the answer arrives on the callback.
+- A `202` with an empty body is read as a failure, or a `200` with a body is
+  parsed as if it were empty. The status decides which answer you hold.

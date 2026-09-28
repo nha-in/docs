@@ -17,7 +17,10 @@ const MANIFEST = join(RAW, 'MANIFEST.md');
 // One policy for the whole raw set. The shapes that carried personal data in
 // the three files redacted first also sat in files the manifest had called
 // byte-exact, so every file the walker finds goes through the same rules.
-const redacted = () => true;
+// Binary documents are hashed and never rewritten: the text rules would
+// corrupt them, so their personal data is removed from a text conversion
+// committed beside them, and the originals stay outside git.
+const redacted = (rel) => !/\.(docx|xlsx|pptx|pdf|zip|tgz|png|jpe?g|gif|webp)$/i.test(rel);
 
 
 // Aadhaar carries a Verhoeff check digit, which is what separates a real number
@@ -61,6 +64,8 @@ const RULES = [
   ['token', /\beyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}(?:\.[A-Za-z0-9_-]+)?/g, '<TOKEN>'],
   ['token', /\b[A-Za-z0-9+/_=-]*eyJ[A-Za-z0-9+/_=-]{200,}/g, '<TOKEN>'],
   ['abha-address', /\b[a-z0-9][a-z0-9._*-]{2,}@(?:sbx|abdm)\b/gi, '<ABHA_ADDRESS>'],
+  // An HPR address keeps its suffix so a doctor's id still reads as one.
+  ['hpr-address', /\b[a-z0-9][a-z0-9._-]*@hpr\.ndhm\b/gi, '<HPR_ADDRESS>@hpr.ndhm'],
   ['email', /\b[\w.+*-]+@[\w-]+\.[\w.-]+\b/g, '<EMAIL>'],
   ['abha-number', /\b91-\d{4}-\d{4}-\d{4}\b/g, '<ABHA_NUMBER>'],
   ['abha-number', /\b91\d{12}\b/g, '<ABHA_NUMBER>'],
@@ -78,6 +83,11 @@ const RULES = [
   ['internal-host', /https?:\/\/[a-z0-9.-]+\.abdm\.gov\.internal(?::\d+)?/g, 'https://abhasbx.abdm.gov.in'],
   ['third-party-url', /https?:\/\/webhook\.site(?:\/[A-Za-z0-9-]*)?/g, '<YOUR_CALLBACK_URL>'],
 ];
+// People the structure does not mark, such as a name in a table cell or beside
+// a mailbox, are named at run time: REDACT_NAMES="First Last|Surname". The list
+// is never written to the repository; the manifest records only the count.
+const EXTRA_NAMES = (process.env.REDACT_NAMES ?? '').split('|').map((n) => n.trim()).filter(Boolean);
+if (EXTRA_NAMES.length) RULES.push(['name', new RegExp(`(?<![\\w<])(?:${EXTRA_NAMES.map((n) => n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/ /g, '\\s*')).join('|')})(?![\\w>])`, 'gi'), '<NAME>']);
 
 // Personal identity: names, dates of birth, addresses, pincodes and ABHA
 // addresses written without a suffix. Matched by the key that holds the value,
@@ -104,6 +114,30 @@ const NOT_A_PERSON = new Set('abc abcd abha abdm aadhaar address and api apis au
 // the JSON files hold LGD district lists under the same key.
 const personName = (v, yaml) => (yaml ? /^(?:\p{Lu}\p{Ll}+|\p{Lo}[\p{Lo}\p{M}]*|[\p{L}\p{M}.']+(?: [\p{L}\p{M}.']+){1,3})$/u : /^[\p{L}\p{M}.']+(?: [\p{L}\p{M}.']+){1,3}$/u).test(v) && !v.toLowerCase().split(/[ .]+/).some((w) => NOT_A_PERSON.has(w) || /andaman|nursing/.test(w));
 let inYaml = false;
+// A UHI set carries Beckn messages, where `name` labels a service, a place, a
+// code or a header far more often than a person. There a name is a person's
+// only inside one of these objects.
+const NAME_BY_PARENT = /-uhi$/.test(SET);
+const PERSON_PARENT = /^(?:agent|person|billing|customer|patient|doctor)$/;
+const namesNobody = (parent) => NAME_BY_PARENT && !PERSON_PARENT.test(parent ?? '');
+// The key of the object that encloses offset `at`: the nearest unclosed `{`
+// in JSON, or the nearest shallower `key:` line in YAML.
+const jsonParent = (s, at) => {
+  for (let i = at - 1, depth = 0; i >= 0 && i > at - 4000; i--) {
+    if (s[i] === '}') depth++;
+    else if (s[i] === '{' && depth-- === 0) return s.slice(Math.max(0, i - 80), i).match(/([\w$@-]+)\\?"?\s*:\s*(?:\[\s*)?$/)?.[1] ?? '';
+  }
+  return '';
+};
+const yamlParent = (s, at, line) => {
+  const lines = s.slice(0, at).split('\n');
+  const indent = (lines.at(-1) + line).match(/^[ \t]*(?:- )?/)[0].length;
+  for (let i = lines.length - 2; i >= 0; i--) {
+    const m = lines[i].match(/^([ \t]*)(?:- )?['"]?([\w$@\/.-]+)['"]?:/);
+    if (m && m[1].length < indent) return m[2];
+  }
+  return '';
+};
 const identifies = (key, v) => {
   if (KEEP.test(v)) return false;
   const n = Number(v);
@@ -122,7 +156,7 @@ const redactIdentity = (text, yaml, counts) => {
   const hit = (key) => { const c = CATEGORY[key]; counts[c] = (counts[c] ?? 0) + 1; return PLACEHOLDER[c]; };
   // "key": "value", \"key\": \"value\", key: "value"
   text = text.replace(new RegExp(`(?<![\\w$])(${KEYS})(\\\\?"?\\s*:\\s*)(\\\\?")([^"\\\\\\r\\n]*)\\3`, 'g'),
-    (m, k, sep, q, v) => (identifies(k, v) ? `${k}${sep}${q}${hit(k)}${q}` : m));
+    (m, k, sep, q, v, at, s) => (!(k === 'name' && namesNobody(jsonParent(s, at))) && identifies(k, v) ? `${k}${sep}${q}${hit(k)}${q}` : m));
   // "key": 1990, \"key\": 110001
   text = text.replace(new RegExp(`(?<![\\w$])(${KEYS})(\\\\?)("\\s*:\\s*)(\\d+)(?=\\s*[,}\\r\\n\\\\])`, 'g'),
     (m, k, bs, sep, v) => (k !== 'name' && identifies(k, v) ? `${k}${bs}${sep}${bs}"${hit(k)}${bs}"` : m));
@@ -141,7 +175,7 @@ const redactIdentity = (text, yaml, counts) => {
   if (!yaml) return text;
   // key: 'value', which YAML lets run over several lines
   text = text.replace(new RegExp(`^([ \\t]*(?:- )?(?:${KEYS}):[ \\t]+)'((?:[^']|'')*)'`, 'gm'),
-    (m, pre, v) => { const k = pre.trim().replace(/^- /, '').slice(0, -1); return identifies(k, v.replace(/\s+/g, ' ')) ? `${pre}'${hit(k)}'` : m; });
+    (m, pre, v, at, s) => { const k = pre.trim().replace(/^- /, '').slice(0, -1); return !(k === 'name' && namesNobody(yamlParent(s, at, pre))) && identifies(k, v.replace(/\s+/g, ' ')) ? `${pre}'${hit(k)}'` : m; });
   // key: value, example: value under a key of that name, and list items
   const stack = [];
   const redactList = (body) => body.replace(/(["'])([^"'\r\n]*)\1/g, (e, q, v) => (identifies('abhaAddress', v) ? `${q}${hit('abhaAddress')}${q}` : e));
@@ -161,9 +195,11 @@ const redactIdentity = (text, yaml, counts) => {
     // An OpenAPI parameter, `- name: abhaAddress`, names the key its sibling
     // `example:` belongs to; recorded one column shallower so siblings keep it.
     const param = m[2] && m[3] === 'name' && CATEGORY[m[5].trim()] ? m[5].trim() : null;
+    const nameParent = (example ? stack.at(-2) : stack.at(-1))?.key;
     stack.push(param ? {indent: indent - 1, key: param} : {indent, key});
     const at = (v) => `${m[1]}${m[2] ?? ''}${m[3]}:${m[4]}${v}${m[6]}`;
     if (!key || !CATEGORY[key] || !m[5]) return line;
+    if (key === 'name' && namesNobody(nameParent)) return line;
     if (m[5].startsWith('[')) {
       if (CATEGORY[key] !== 'abha-address') return line;
       inList = !m[5].includes(']');
@@ -235,6 +271,7 @@ for (const file of walk(RAW).sort()) {
 const TITLES = {
   'nha-2026-09-16': ['# NHA final set, 16 September 2026', 'The M1 collection of 15 September sits beside the set because it supplies the order of M1 calls, and nothing else.'],
   'nha-2026-09-22': ['# NHA M1 swagger, use-case split, 22 September 2026', 'One file: the M1 swagger NHA reissued with one operation per use case, tags following the M1 Postman collection, and the real URL of each operation in x-actual-path. It replaces abha/M1 ABHA Swagger 1.yaml of the 16 September set as the M1 source.'],
+  'nha-2026-09-28-uhi': ['# NHA UHI set, 28 September 2026', 'The UHI developer guide as of 22 September 2026, the Gateway spec v2.0.2 in two shapes, and eight per-service onboarding documents of 3 August 2026. `UHI Documentation Requirements.yaml` is the Gateway spec itself, despite its name, and the contract comes from it. `UHI Gateway Service.yaml` is NHA\'s service-grouped copy of the same spec and is used only to assign examples to services. The guide and the onboarding documents are committed as redacted text conversions (DOCX with markitdown, PDF with pdftotext -layout, images dropped); their originals are held outside git and listed here by sha256. In this set a `name` is redacted only under a person-shaped parent, because Beckn messages use `name` for services, places, codes and headers, and people named elsewhere were removed by a run-time list that is not stored. Where an onboarding document and the guide or spec disagree, the resolution is in `catalogue/openapi/corrections/2026-09-28-uhi-sources.md`.\n\n| Original held outside git | sha256 |\n| --- | --- |\n| `UHI Documentation Requirements.docx` | `c58a5a95690f0a3a38993c535b554fab6ec9ac89b460ebcdaff7e4c9ab0f89d5` |\n| `ABDM Sandbox Sept 28 2026.zip` | `66e0315d94b0c86e1def69d3c19aa72023318508bc18de6ca053d44f6b110dba` |\n| `UHI Physical Consultation v2.0 - Onboarding Document.docx` | `87cee26657fbe7b9982ae64f5a34890c60148fc69b321e6f2e3fa347adc065ef` |\n| `UHI_PMJAY_HEM_Onboarding_v1.4.docx` | `86ad4d13abaf969def4c85537de5a675715753b4b059a5e29be4288f47806866` |\n| `UHI_BloodBank_Onboarding_v1.0.pdf` | `13746a3ab6afa4b48809cc4d7533dfb208e08de9510230cd12120404455da0e7` |\n| `UHI_AmbulanceBooking_Onboarding_v1.1-July2026.pdf` | `0ce1e08262ad9cb785ff0cab363af98ad155f65dfd4843da60653d5f2568dd03` |\n| `UHI_JanAushadhiKendra_OnboardingDoc_v1.0.docx` | `b660d77d8815ae496a76618d64ce25acee89e43ac441eb5880d7387ad50a5d9d` |\n| `UHI_JanAushadhiKendra_search_v0.3.docx` | `b00dcdea371a0fb41083f38c776321a89c741de4bc5c5b65719885fce53221f1` |\n| `JanAushadhiKendra_medicineSearch_v0.3.docx` | `0ae0b693e8b461897fed69c187fe2229d21512870a7732520938ebf5505b9585` |\n| `UHI_AMRIT_Pharmacy_OnboardingDoc_v1.0.docx` | `36cf2806e851d50505b70d8a6cafd2d3de4676c85137bf97b83a3c38a1198732` |'],
   'nha-2026-09-24': ['# NHA M4 swagger, published sandbox groups, 24 September 2026', 'The three groups the sandbox Swagger page at https://apihspsbx.abdm.gov.in/v4/int/swagger-ui-ext/index.html publishes, downloaded from /v4/int/v3/api-docs/HFR, /HPR and /HPID on 24 September 2026. They replace the M4 files of the 16 September set as the M4 source. The original sha256 is of the bytes as served, a single line of JSON; the committed file is the same JSON indented by four spaces, as the 16 September files are, and then redacted.'],
 };
 const [title, extra] = TITLES[SET] ?? [`# NHA raw set ${SET}`, ''];

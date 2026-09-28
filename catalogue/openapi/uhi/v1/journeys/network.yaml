@@ -1,0 +1,71 @@
+# The discovery-only services, in the order of the UHI developer guide as of
+# 22 September 2026, Part 3.2: search from the EUA to the Gateway, the search
+# the Gateway forwards to each HSPA, on_search from the HSPA to the Gateway,
+# and on_search from the Gateway to the EUA. Each journey names its service's
+# examples from the Gateway spec v2.0.2.
+- id: uhi-pmjay-hem
+  title: PM-JAY HEM hospital discovery
+  steps:
+    - op: uhi_network_gateway_search
+      example: pmjay-hem-search-pmjay-hem-with-gps
+    - op: uhi_network_search
+      example: pmjay-hem-search-pmjay-hem-with-gps
+    - op: uhi_network_gateway_on_search
+      example: pmjay-hem-1st-on-search-for-pmjay-hem
+    - op: uhi_network_on_search
+      example: pmjay-hem-1st-on-search-for-pmjay-hem
+- id: uhi-blood-bank
+  title: Blood stock discovery
+  steps:
+    - op: uhi_network_gateway_search
+      example: blood-bank-search-blood-available-in-blood-banks-blood-bank
+    - op: uhi_network_search
+      example: blood-bank-search-blood-available-in-blood-banks-blood-bank
+    - op: uhi_network_gateway_on_search
+      example: blood-bank-1st-on-search-for-search-specific-blood-group-and-component
+    - op: uhi_network_on_search
+      example: blood-bank-1st-on-search-for-search-specific-blood-group-and-component
+- id: uhi-jan-aushadhi-kendra-search
+  title: Jan Aushadhi, Kendra search
+  steps:
+    - op: uhi_network_gateway_search
+      example: jan-aushadhi-search-jan-aushadi-kendra-with-gps
+    - op: uhi_network_search
+      example: jan-aushadhi-search-jan-aushadi-kendra-with-gps
+    - op: uhi_network_gateway_on_search
+      example: jan-aushadhi-1st-on-search-for-jan-aushadi-kendra
+    - op: uhi_network_on_search
+      example: jan-aushadhi-1st-on-search-for-jan-aushadi-kendra
+- id: uhi-jan-aushadhi-medicine-search
+  title: Jan Aushadhi, medicine search
+  steps:
+    - op: uhi_network_gateway_search
+      example: jan-aushadhi-search-medicine-by-medicine-name
+    - op: uhi_network_search
+      example: jan-aushadhi-search-medicine-by-medicine-name
+    - op: uhi_network_gateway_on_search
+      example: jan-aushadhi-1st-on-search-for-medicine-search
+    - op: uhi_network_on_search
+      example: jan-aushadhi-1st-on-search-for-medicine-search
+- id: uhi-jan-aushadhi-medicine-stock
+  title: Jan Aushadhi, Kendras for a selected medicine
+  steps:
+    - op: uhi_network_gateway_search
+      example: jan-aushadhi-search-jan-aushadi-kendra-for-selected-medicine
+    - op: uhi_network_search
+      example: jan-aushadhi-search-jan-aushadi-kendra-for-selected-medicine
+    - op: uhi_network_gateway_on_search
+      example: jan-aushadhi-1st-on-search-for-jan-aushadi-kendra-for-selected-medicine
+    - op: uhi_network_on_search
+      example: jan-aushadhi-1st-on-search-for-jan-aushadi-kendra-for-selected-medicine
+- id: uhi-notto
+  title: NOTTO hospital discovery
+  steps:
+    - op: uhi_network_gateway_search
+      example: notto-search-notto-by-organ-tissue
+    - op: uhi_network_search
+      example: notto-search-notto-by-organ-tissue
+    - op: uhi_network_gateway_on_search
+      example: notto-1st-on-search-for-notto
+    - op: uhi_network_on_search
+      example: notto-1st-on-search-for-notto

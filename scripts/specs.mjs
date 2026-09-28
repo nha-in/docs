@@ -46,3 +46,17 @@ export function listSpecTree() {
   }
   return [...pairs.values()];
 }
+
+/**
+ * What the generated reference offers for one gateway version: journey order,
+ * links into a troubleshooting section, the HIE-CM index wording, and the
+ * concept atom an errors page relates to. A version not listed gets none.
+ */
+const FEATURES = {
+  'hiecm/v3': {journeys: true, troubleshooting: true, hiecmCopy: true, errorConcept: 'hiecm.concept.error-codes'},
+  'nhcx/v1': {journeys: false, troubleshooting: false, hiecmCopy: false, errorConcept: 'nhcx.concept.error-code-spaces'},
+  'uhi/v1': {journeys: true, troubleshooting: false, hiecmCopy: false, errorConcept: null},
+};
+export function platformFeatures(platform, version) {
+  return {...(FEATURES[`${platform}/${version}`] ?? {journeys: false, troubleshooting: false, hiecmCopy: false, errorConcept: null})};
+}
