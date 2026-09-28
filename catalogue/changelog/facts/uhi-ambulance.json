@@ -1,0 +1,76 @@
+{
+  "errors": [],
+  "file": "uhi-ambulance.yaml",
+  "gateway": "uhi",
+  "label": "Ambulance Booking",
+  "module": "ambulance",
+  "operations": {
+    "POST /init": {
+      "encrypted": [],
+      "id": "uhi_ambulance_init",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization!"
+      ],
+      "path": "/init",
+      "properties": [
+        "context",
+        "message"
+      ],
+      "required": [
+        "context",
+        "message"
+      ],
+      "responses": [
+        "200"
+      ],
+      "security": [],
+      "server": "https://{provider_uri}",
+      "servers": [
+        "https://{provider_uri}"
+      ]
+    },
+    "POST /on_init": {
+      "encrypted": [],
+      "id": "uhi_ambulance_on_init",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization!"
+      ],
+      "path": "/on_init",
+      "properties": [
+        "context",
+        "error",
+        "message"
+      ],
+      "required": [
+        "context"
+      ],
+      "responses": [
+        "200"
+      ],
+      "security": [],
+      "server": "https://{consumer_uri}",
+      "servers": [
+        "https://{consumer_uri}"
+      ]
+    }
+  },
+  "roles": [
+    "eua",
+    "hspa"
+  ],
+  "sources": {
+    "catalogue/openapi/.raw/nha-2026-09-28-uhi/gateway/UHI Documentation Requirements.yaml": {
+      "fetched": "2026-09-28",
+      "hash": "sha256:af065b1acc1032286c5b10ba43a39c048bfd8ce8afe1017b92e11b783a43d158"
+    },
+    "catalogue/openapi/.raw/nha-2026-09-28-uhi/gateway/UHI Gateway Service.yaml": {
+      "fetched": "2026-09-28",
+      "hash": "sha256:a04a7a18f19f9fb448f747d84b19aa10908b9118ac32a4bf84cf330440984d47"
+    }
+  },
+  "version": "v1"
+}
