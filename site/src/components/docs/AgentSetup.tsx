@@ -29,6 +29,7 @@ import {AGENTS, AgentId, guarded} from './agents';
 const SETS = {
   abdm: {plugin: 'abdm-integrators-assistant', label: 'ABDM', prompt: 'prompt.md'},
   nhcx: {plugin: 'nhcx', label: 'NHCX', prompt: 'nhcx.md'},
+  uhi: {plugin: 'uhi-integrators-assistant', label: 'UHI', prompt: 'uhi.md'},
 } as const;
 
 /** Everything a line here is built from: where this site is published, and

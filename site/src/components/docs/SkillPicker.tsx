@@ -109,15 +109,49 @@ const NHCX_CHOICES: Choice[] = [
   },
 ];
 
-const SETS: Record<string, Choice[]> = {abdm: CHOICES, nhcx: NHCX_CHOICES};
+// One skill per UHI service. Each is a folder that installs and runs alone.
+const UHI_CHOICES: Choice[] = [
+  {
+    slug: 'uhi-consultation',
+    label: 'Physical consultation',
+    note: 'Lets patients in your app book a physical consultation, as an EUA or an HSPA.',
+  },
+  {
+    slug: 'uhi-ambulance',
+    label: 'Ambulance',
+    note: 'Adds ambulance search and a quote to your app, as an EUA or an HSPA.',
+  },
+  {
+    slug: 'uhi-pmjay-hem',
+    label: 'PM-JAY HEM',
+    note: 'Shows PM-JAY empanelled hospitals near the patient.',
+  },
+  {
+    slug: 'uhi-blood-bank',
+    label: 'Blood bank',
+    note: 'Shows blood banks near the patient that hold the group they need.',
+  },
+  {
+    slug: 'uhi-jan-aushadhi',
+    label: 'Jan Aushadhi',
+    note: 'Lets patients find a Jan Aushadhi Kendra that stocks their medicine.',
+  },
+  {
+    slug: 'uhi-notto',
+    label: 'NOTTO',
+    note: 'Shows hospitals authorised for a transplant in a state.',
+  },
+];
+
+const SETS: Record<string, Choice[]> = {abdm: CHOICES, nhcx: NHCX_CHOICES, uhi: UHI_CHOICES};
 
 /** A skill of more than one file downloads as its archive, not its SKILL.md. */
 const isFolder = (slug: string) =>
   (manifest as Record<string, {folder?: boolean}>)[slug]?.folder === true;
 
 type SkillPickerProps = {
-  /** Which gateway's skills to offer: ABDM's by default, or NHCX's. */
-  set?: 'abdm' | 'nhcx';
+  /** Which gateway's skills to offer: ABDM's by default, or NHCX's or UHI's. */
+  set?: 'abdm' | 'nhcx' | 'uhi';
 };
 
 export default function SkillPicker({set = 'abdm'}: SkillPickerProps): React.ReactNode {

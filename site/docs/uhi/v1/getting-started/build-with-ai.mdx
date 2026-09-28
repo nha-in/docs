@@ -9,6 +9,8 @@ sidebar_class_name: sidebar-icon sidebar-icon--bot
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import {useLocation} from '@docusaurus/router';
+import AgentSetup from '@site/src/components/docs/AgentSetup';
+import SkillPicker from '@site/src/components/docs/SkillPicker';
 import McpInstall from '@site/src/components/docs/McpInstall';
 import {Button} from '@site/src/components/ui/button';
 import {FileText, Sparkles} from 'lucide-react';
@@ -23,11 +25,17 @@ the API reference and the concept pages while you build.
 Review all AI-generated code against the UHI documentation and run it in the sandbox.
 :::
 
-Every fact on this site is a public URL. There are three ways to put it in front of your agent.
+Every fact on this site is a public URL. There are five ways to put it in front of your agent, and they combine.
 
 <CardGroup cols={3}>
   <Card title="Docs MCP server" tag="Recommended" icon="server" href="#connect-the-docs-mcp-server">
     This documentation live, queried a paragraph at a time as your agent works, including every UHI operation.
+  </Card>
+  <Card title="AI plugin" icon="puzzle" href="#install-the-plugin">
+    All six UHI skills in one install, updated in place, with three commands and two agents.
+  </Card>
+  <Card title="Agent skills" icon="file-text" href="#install-a-skill">
+    One folder per UHI service. Works offline, and ages until you update it.
   </Card>
   <Card title="Read this site as an agent" icon="file-text" href="#read-this-site-as-an-agent">
     Every page as markdown, with an index for the whole site and one for each UHI API module.
@@ -48,6 +56,26 @@ an operation and checks a request body against the specification as it works.
 
 Tell the agent to look an operation up here before it writes the call. It then
 reads the UHI message shape rather than recalling another protocol's.
+
+## Install the plugin
+
+The `uhi-integrators-assistant` plugin installs all six service skills in one
+step, updated in place, and connects the abdm-docs MCP server with them. It
+also carries three commands, `/uhi-preflight`, `/uhi-prove-signing` and
+`/uhi-decode-response`, and two agents. `uhi-integration-agent` plans a goal
+across the skills. `uhi-call-debugger` takes one failing call to a fix.
+
+An EUA completes Milestone 2 on HIE-CM before it can be onboarded onto any UHI
+service. The `abdm-integrators-assistant` plugin carries that work.
+
+<AgentSetup set="uhi" />
+
+## Install a skill
+
+There is one skill per UHI service. Each installs and runs alone, so install
+only the ones your integration needs.
+
+<SkillPicker set="uhi" />
 
 ## Read this site as an agent
 
