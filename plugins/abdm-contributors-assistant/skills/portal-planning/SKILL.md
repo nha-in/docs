@@ -1,9 +1,9 @@
 ---
 name: portal-planning
 description: The ABDM Developer Portal schedule, workstreams, ownership split, two-day shipping increments, definition of done, and risk register. Use whenever someone asks what ships when, what is blocked, who owns a piece of work, whether V1 is on track, what counts as finished, how to sequence a task, or wants a standup, a status update, or a re-plan. Also use when scope is being added or cut so the trade is made against the schedule rather than in the abstract.
-plan_version: 2026.09.28-3
+plan_version: 2026.09.28-4
 plan_source: abdm-v1-phase1-architecture-and-plan.md
-plan_hash: sha256:ec9710c1273f0f49daac058922d93a27e09d8cc36d23bea1a948f5ab64f12695
+plan_hash: sha256:50a10f8dc1ecb0200ce26a61ad95aa327792d10126cf0da68380742707e0ff79
 compiled_from_plan: true
 ---
 
@@ -27,7 +27,7 @@ The split is by kind of judgement, not by convenience.
 
 | Stream | Functional and strategic owner | Technical owner |
 |---|---|---|
-| Catalogue | Atom schema decisions, writing guide, every body's five sections, dummy-proofness review, glossary | OpenAPI ingestion and cleanup, callbacks as webhooks per module file, endpoint stubs, sandbox runs, evidence under `catalogue/verification/` |
+| Catalogue | Atom schema decisions, writing guide, every body's sections, dummy-proofness review, glossary | OpenAPI ingestion and cleanup, callbacks as webhooks per module file, endpoint stubs, sandbox runs, evidence under `catalogue/verification/` |
 | Site and MCP | Information architecture mirroring developer.eka.care flows, theme, landing copy, depth labels | Docusaurus and Scalar setup, spec conventions, the docs-mcp server and indexer, domains, deploys |
 | Skills | Template prose, index decision tree, trigger descriptions, what each skill must refuse to guess | Compiler, validator, plugin manifest, per-agent adapters |
 | Pipeline | Source inventory, review rota | Watcher, PR bot, CI, publishers |
@@ -53,7 +53,7 @@ When a checkpoint is at risk, cut depth, not the checkpoint. A checkpoint that s
 
 Every item is checkable. None is a judgement call. This is the list to run before anyone says the word ship.
 
-1. Catalogue lint passes on main: schema valid, five sections present on every hand-written atom and `In plain words` on every generated one, no em dash, every `related` id resolves and none names its own atom, every source has a hash, and `npm run check:sections` finds no missing heading id, no atom in two places and no stale generated file
+1. Catalogue lint passes on main: schema valid, the sections each type requires present on every hand-written atom and `In plain words` on every generated one, every endpoint and callback `operation` resolving (NHCX excepted until its source is decided), no em dash, every `related` id resolves and none names its own atom, every source has a hash, and `npm run check:sections` finds no missing heading id, no atom in two places and no stale generated file
 2. Every HIE-CM M1 to M3 endpoint atom has a curl that was run against sandbox and the response recorded in the atom
 3. Every NHA functional test case for M1 to M3 exists as a test atom and is referenced by a test skill
 4. All skills compile, validate and install individually; the plugin installs as one unit

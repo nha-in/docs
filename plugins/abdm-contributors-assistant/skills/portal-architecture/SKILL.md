@@ -1,9 +1,9 @@
 ---
 name: portal-architecture
 description: 'The architecture of the ABDM Developer Portal: the four building blocks, how the Catalogue compiles into docs, skills and MCP surfaces, the seven binding principles, the atom model, and what is deliberately excluded from V1. Use whenever someone asks how the portal fits together, why a design decision was made, whether something belongs in V1, where a new capability should live, or proposes a change to the structure. Also use before designing any new component so it lands in the right layer instead of beside it.'
-plan_version: 2026.09.28-3
+plan_version: 2026.09.28-4
 plan_source: abdm-v1-phase1-architecture-and-plan.md
-plan_hash: sha256:ec9710c1273f0f49daac058922d93a27e09d8cc36d23bea1a948f5ab64f12695
+plan_hash: sha256:50a10f8dc1ecb0200ce26a61ad95aa327792d10126cf0da68380742707e0ff79
 compiled_from_plan: true
 ---
 
@@ -57,7 +57,9 @@ When someone proposes something that breaks a principle, name the principle and 
 
 ## The atom model
 
-An atom is one markdown file. Frontmatter is the machine half. The body is the human half with five mandatory sections. Structured facts inside the body live in fenced blocks with a declared schema so the compiler lifts them without parsing prose.
+An atom is one markdown file. Frontmatter is the machine half. The body is the human half: five dummy-proof sections, of which each type must carry the ones it needs (a glossary term needs only In plain words, a flow all five). Structured facts inside the body live in fenced blocks with a declared schema so the compiler lifts them without parsing prose.
+
+Atom contract v2 adds `operation` (required on endpoint and callback atoms, NHCX excepted until its source is decided), `side`, `status` with `superseded_by`, and `facts`. Search hides a deprecated atom unless asked.
 
 An atom's words live in one place, never two. Either it is a hand-written file under `catalogue/`, or it is a page section: `catalogue/map.yaml` maps its id to a page and an explicit heading id (`{#id}` in `.md`, `{/* #id */}` in `.mdx`), its rules for agents sit in `<AgentOnly>` on that page, and `scripts/build-sections.mjs` builds its file in `catalogue/generated/` and lists every atom in `catalogue/registry.json`. Content moves onto pages one class at a time; the repository is coherent if that stops at any commit. NHCX waits on the NHCX source decision. NHA's corrections go to pages, by `docs/runbook-nha-corrections.md`.
 
@@ -72,7 +74,7 @@ draft -> published -> checked, and from either back through an issue
 ```
 
 - `draft` a stub, generated from OpenAPI or hand-created
-- `published` five sections written, lint passes, merged. This is what every reader sees, stated as ABDM's own account, with no status label anywhere
+- `published` its type's sections written, lint passes, merged. This is what every reader sees, stated as ABDM's own account, with no status label anywhere
 - `checked` `npm run verify:atoms` ran the atom's curl and the scrubbed request and response sit in `catalogue/verification/`, named by operation id and marked `outcome: succeeded` or `failed`. Only a success is evidence. Contributors only
 - `issue` the sandbox disagreed, found by the script or by an integrator. A GitHub issue keyed by the atom id, then the atom is corrected citing it, on its page if it has migrated, and the skills recompile
 

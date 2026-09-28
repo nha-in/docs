@@ -1,6 +1,6 @@
 ---
 name: atom-authoring
-description: 'How to write one atom for the ABDM Catalogue: the mandatory frontmatter schema, the ten atom types, the five dummy-proof body sections, structured fenced blocks, and the related graph. Use whenever creating or editing a unit of Catalogue knowledge, whether it is a concept, flow, endpoint, callback, error, test, decision, glossary, FHIR or sandbox page. Also use when someone asks how to document an NHA endpoint, what fields a page needs, how to link pages together, or why an atom failed schema lint.'
+description: 'How to write one atom for the ABDM Catalogue: the mandatory frontmatter schema, the ten atom types, the dummy-proof body sections each type requires, structured fenced blocks, and the related graph. Use whenever creating or editing a unit of Catalogue knowledge, whether it is a concept, flow, endpoint, callback, error, test, decision, glossary, FHIR or sandbox page. Also use when someone asks how to document an NHA endpoint, what fields a page needs, how to link pages together, or why an atom failed schema lint.'
 ---
 
 # Atom Authoring
@@ -75,7 +75,14 @@ them.
 
 ## The five body sections
 
-All five headings are required, in this order, on every atom. The compiler checks presence. A reviewer checks honesty.
+The five headings always appear in this order, and each type must carry the ones it needs. A section a type does not need is left out rather than filled with boilerplate: identical paragraphs across hundreds of atoms compete in search. The compiler checks presence. A reviewer checks honesty.
+
+| Type | Sections it must carry |
+|---|---|
+| glossary, concept, decision, sandbox, fhir | In plain words |
+| error | In plain words, When it goes wrong |
+| troubleshooting | In plain words, What happens, When it goes wrong |
+| flow, endpoint, callback, test | all five |
 
 ### 1. In plain words
 
