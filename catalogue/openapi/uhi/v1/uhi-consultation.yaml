@@ -50,9 +50,9 @@ paths:
       summary: /select (EUA → HSPA)
       operationId: uhi_consultation_select
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
-
         Select items from the catalog and build your order <br> <b><i>*Currently not being used for doctor search will be used in vaccination search</i></b>
+
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
       servers: &a1
         - url: https://{provider_uri}
           description: The HSPA's provider_uri, taken from context.provider_uri in its on_search.
@@ -152,9 +152,9 @@ paths:
       summary: /on_select (HSPA → EUA)
       operationId: uhi_consultation_on_select
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
-
         Send draft order object with quoted price for selected items<br> <b><i>*Currently not being used for doctor search will be used in vaccination search</i></b>
+
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
 
         Retry behaviour: not yet published.
       servers: &a2
@@ -282,9 +282,9 @@ paths:
       summary: /init (EUA → HSPA)
       operationId: uhi_consultation_init
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
-
         Initialize an order by providing billing and/or shipping details<br>
+
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
       servers: *a1
       requestBody:
         description: Initialization of the order once quote is agreed
@@ -439,11 +439,11 @@ paths:
       summary: /on_init (HSPA → EUA)
       operationId: uhi_consultation_on_init
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
-
         Send order object with payment details updated
 
         The header Authorization is passed by HSPA to EUA
+
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
 
         Retry behaviour: not yet published.
       servers: *a2
@@ -673,9 +673,9 @@ paths:
       summary: /confirm (EUA → HSPA)
       operationId: uhi_consultation_confirm
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
-
         Confirms the order by agreeing to the fullfillment terms
+
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
       servers: *a1
       requestBody:
         description: Confirmation of the order once fulfillment terms are agreed <br>
@@ -906,11 +906,11 @@ paths:
       summary: /on_confirm (HSPA → EUA)
       operationId: uhi_consultation_on_confirm
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
-
         Send active order object
 
         The header Authorization is passed by HSPA to EUA
+
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
 
         Retry behaviour: not yet published.
       servers: *a2
@@ -1349,9 +1349,9 @@ paths:
       summary: /status (EUA → HSPA)
       operationId: uhi_consultation_status
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
-
         Requests current status of the order.
+
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
       servers: *a1
       requestBody:
         description: Describes the contents of the message
@@ -1429,11 +1429,11 @@ paths:
       summary: /on_status (HSPA → EUA)
       operationId: uhi_consultation_on_status
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
-
         Send order object's current status
 
         The header Authorization is passed by HSPA to EUA
+
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
 
         Retry behaviour: not yet published.
       servers: *a2
@@ -2153,9 +2153,9 @@ paths:
       summary: /cancel (EUA → HSPA)
       operationId: uhi_consultation_cancel
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
-
         Sends the cancellation request to other party.
+
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
       servers: *a1
       requestBody:
         description: Describes the contents of the message
@@ -2238,11 +2238,11 @@ paths:
       summary: /on_cancel (HSPA → EUA)
       operationId: uhi_consultation_on_cancel
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
-
         Receives the cancellation request from other party.
 
         The header Authorization is passed by HSPA to EUA
+
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
 
         Retry behaviour: not yet published.
       servers: *a2
@@ -2614,10 +2614,10 @@ paths:
       summary: /on_update (HSPA → EUA)
       operationId: uhi_consultation_on_update_to_eua
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
-
         Order status update API between consumer and provider <br><b><i>(Both HSPA and EUA will be consuming the same on_update API)</i></b><br>
         The header Authorization is passed by HSPA to EUA
+
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
 
         Retry behaviour: not yet published.
       servers: *a2
@@ -3341,10 +3341,10 @@ paths:
       summary: /on_update (EUA → HSPA)
       operationId: uhi_consultation_on_update_to_hspa
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
-
         Order status update API between consumer and provider <br><b><i>(Both HSPA and EUA will be consuming the same on_update API)</i></b><br>
         The header Authorization is passed by EUA to HSPA
+
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
 
         Retry behaviour: not yet published.
       servers: *a1
@@ -3560,11 +3560,11 @@ paths:
       summary: /on_message (HSPA → EUA)
       operationId: uhi_consultation_on_message_to_eua
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
-
         Inter-operable communication API between consumer and provider <br><b><i>(Both HSPA and EUA will be consuming the same on_message API)</i></b>
 
         The header Authorization is passed by HSPA to EUA
+
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
 
         Retry behaviour: not yet published.
       servers: *a2
@@ -3701,9 +3701,9 @@ paths:
       summary: /on_message (EUA → HSPA)
       operationId: uhi_consultation_on_message_to_hspa
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
-
         Inter-operable communication API between consumer and provider <br><b><i>(Both HSPA and EUA will be consuming the same on_message API)</i></b>
+
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
 
         Retry behaviour: not yet published.
       servers: *a1
@@ -3840,9 +3840,9 @@ paths:
       summary: "/api/v1/uhi/on_confirm_audit (HSPA → Gateway (audit)): Accepter for all the on_confirm_audit response from the HSPAs"
       operationId: uhi_consultation_on_confirm_audit
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
-
         Accepter for all the on_confirm_audit response from the HSPAs
+
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
 
         Retry behaviour: not yet published.
       requestBody:
@@ -4281,9 +4281,9 @@ paths:
       summary: "/api/v1/uhi/on_status_audit (HSPA → Gateway (audit)): Accepter for all the on_status_audit response from the HSPAs"
       operationId: uhi_consultation_on_status_audit
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
-
         Accepter for all the on_status_audit response from the HSPAs
+
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
 
         Retry behaviour: not yet published.
       requestBody:
@@ -5001,9 +5001,9 @@ paths:
       summary: "/api/v1/uhi/on_update_audit (HSPA → Gateway (audit)): Accepter for all the on_update_audit response from the HSPAs"
       operationId: uhi_consultation_on_update_audit
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
-
         Accepter for all the on_update_audit response from the HSPAs
+
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
 
         Retry behaviour: not yet published.
       requestBody:
@@ -5560,9 +5560,9 @@ paths:
       summary: "/api/v1/uhi/on_cancel_audit (HSPA → Gateway (audit)): Accepter for all the on_cancel_audit response from the HSPAs"
       operationId: uhi_consultation_on_cancel_audit
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
-
         Accepter for all the on_cancel_audit response from the HSPAs
+
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
 
         Retry behaviour: not yet published.
       requestBody:

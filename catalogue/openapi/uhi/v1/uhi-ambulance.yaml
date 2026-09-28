@@ -50,9 +50,9 @@ paths:
       summary: /init (EUA → HSPA)
       operationId: uhi_ambulance_init
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
-
         Initialize an order by providing billing and/or shipping details<br>
+
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
       servers:
         - url: https://{provider_uri}
           description: The HSPA's provider_uri, taken from context.provider_uri in its on_search.
@@ -223,11 +223,11 @@ paths:
       summary: /on_init (HSPA → EUA)
       operationId: uhi_ambulance_on_init
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
-
         Send order object with payment details updated
 
         The header Authorization is passed by HSPA to EUA
+
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
 
         Retry behaviour: not yet published.
       servers:

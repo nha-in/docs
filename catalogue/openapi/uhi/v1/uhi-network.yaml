@@ -58,9 +58,9 @@ paths:
       summary: "/api/v1/uhi/search (EUA → Gateway): Search requestor to broadcast the message over HSPAs"
       operationId: uhi_network_gateway_search
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
-
         Search for services by intent
+
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
       parameters:
         - name: Authorization
           in: header
@@ -1178,9 +1178,9 @@ paths:
       summary: "/api/v1/uhi/on_search (HSPA → Gateway): Accepter for all the on_search response from the HSPAs"
       operationId: uhi_network_gateway_on_search
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
-
         Accepter for all the on_search response from the HSPAs
+
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
       requestBody:
         content:
           application/json:
@@ -3526,9 +3526,9 @@ paths:
       summary: /search (Gateway / EUA → HSPA)
       operationId: uhi_network_search
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
-
         Search for services by intent<br> <b><i>First search coming from UHI gateway will include header(X-Gateway-Authorization)<br> Second search will be a peer to peer connection and will now contain contain the header Authorization</i></b>
+
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
       servers:
         - url: https://{provider_uri}
           description: The HSPA's provider_uri, taken from context.provider_uri in its on_search.
@@ -4652,13 +4652,13 @@ paths:
       summary: /on_search (Gateway / HSPA → EUA)
       operationId: uhi_network_on_search
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
-
         Sends catalog.
 
         The header X-Gateway-Authorization is sent only by UHI gateway during first onsearch only. 
         The header Authorization is passed by HSPA to EUA during second onsearch and following APIs.
         Both headers are required on respective calls as mentioned above.
+
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
 
         Retry behaviour: not yet published.
       servers:
@@ -7012,12 +7012,12 @@ paths:
       summary: lookup
       operationId: uhi_network_registry_lookup
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
-
         The network participant will trigger the subscribe call to the registry to register its public key.
 
         The header Authorization is accepted and verified by the /lookup api. 
         Use your header generation details to generate header and payload should contain details of partner on whom lookup is intended.
+
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
       requestBody:
         content:
           application/json:

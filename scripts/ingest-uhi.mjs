@@ -208,7 +208,7 @@ for (const [module, meta] of Object.entries(MODULES)) {
       tags: theirTags,
       summary,
       operationId: o.id,
-      description: [SIGN, said, isCallback(o) ? RETRY : ''].filter(Boolean).join('\n\n'),
+      description: [said, SIGN, isCallback(o) ? RETRY : ''].filter(Boolean).join('\n\n'),
       ...(o.host === 'gateway' ? {} : {servers: PARTICIPANT[o.host]}),
       ...rest,
       ...(o.path !== o.actual ? {'x-actual-path': o.actual} : {}),
@@ -219,7 +219,7 @@ for (const [module, meta] of Object.entries(MODULES)) {
       ...(nhaId ? {'x-abdm-nha-operation-id': nhaId} : {}),
     };
     if (o.path !== o.role) note(module, o.id, `path \`${o.role}\` becomes \`${o.path}\`, with the real endpoint \`${o.actual}\` in x-actual-path`);
-    note(module, o.id, `summary from ${SERVICE_FILE}; description opens with the signing link${isCallback(o) ? ' and closes with the retry line' : ''}`);
+    note(module, o.id, `summary from ${SERVICE_FILE}; description is NHA's, followed by the signing link${isCallback(o) ? ' and the retry line' : ''}`);
     paths[o.path] = {post: out};
   }
   const infoDescription = module === 'network' ? byRole.info.description : byService.tags.find((t) => t.name === meta.tag)?.description;
