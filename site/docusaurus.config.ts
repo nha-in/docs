@@ -622,6 +622,7 @@ const config: Config = {
         docsRouteBasePath: '/docs',
         highlightSearchTermsOnTargetPage: true,
         searchResultLimits: 10,
+        ignoreCssSelectors: ['.agent-only'],
       },
     ],
     '@docusaurus/theme-mermaid',
