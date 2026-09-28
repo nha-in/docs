@@ -1,9 +1,9 @@
 ---
 name: portal-planning
 description: The ABDM Developer Portal schedule, workstreams, ownership split, two-day shipping increments, definition of done, and risk register. Use whenever someone asks what ships when, what is blocked, who owns a piece of work, whether V1 is on track, what counts as finished, how to sequence a task, or wants a standup, a status update, or a re-plan. Also use when scope is being added or cut so the trade is made against the schedule rather than in the abstract.
-plan_version: 2026.09.28-2
+plan_version: 2026.09.28-3
 plan_source: abdm-v1-phase1-architecture-and-plan.md
-plan_hash: sha256:40ba882bf88aeb085956e055654b99896992b9e1a92030fe3b457515e0fd1fee
+plan_hash: sha256:ec9710c1273f0f49daac058922d93a27e09d8cc36d23bea1a948f5ab64f12695
 compiled_from_plan: true
 ---
 
@@ -58,7 +58,7 @@ Every item is checkable. None is a judgement call. This is the list to run befor
 3. Every NHA functional test case for M1 to M3 exists as a test atom and is referenced by a test skill
 4. All skills compile, validate and install individually; the plugin installs as one unit
 5. The index skill is generated from the graph and lists every skill, agent and tool
-6. Docs site live (GitHub Pages first, custom domain when ready) with search and the module references; docs-mcp deployed with its nine tools answering over the current snapshot, `/healthz` reporting the catalogue version
+6. Docs site live (GitHub Pages first, custom domain when ready) with search and the module references; docs-mcp deployed with its six tools answering over the current snapshot, `/healthz` reporting the catalogue version
 7. The watcher has opened at least one real pull request from a real source change
 8. The support agent answered the six eval tasks from the Catalogue, citing atom ids, with the score recorded
 9. The first-day developer test passes: no ABDM exposure, docs URL and sandbox credentials only, successful M1 ABHA verification call in under two hours with no human asked
