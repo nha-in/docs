@@ -18,8 +18,8 @@ const SET = 'nha-2026-09-28-uhi';
 const RAW = join(root, 'catalogue', 'openapi', '.raw', SET);
 const OUT = join(root, 'catalogue', 'openapi', 'uhi', 'v1');
 const LOG = join(root, 'catalogue', 'openapi', 'corrections', '2026-09-28-uhi-ingest.md');
-const ROLE_FILE = 'UHI Documentation Requirements.yaml';
-const SERVICE_FILE = 'UHI Gateway Service.yaml';
+const ROLE_FILE = 'gateway/UHI Documentation Requirements.yaml';
+const SERVICE_FILE = 'gateway/UHI Gateway Service.yaml';
 const check = process.argv.includes('--check');
 
 const byRole = parse(readFileSync(join(RAW, ROLE_FILE), 'utf8'));

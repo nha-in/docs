@@ -29,11 +29,11 @@ info:
     - eua
     - hspa
 x-abdm-sources:
-  - file: catalogue/openapi/.raw/nha-2026-09-28-uhi/UHI Documentation Requirements.yaml
+  - file: catalogue/openapi/.raw/nha-2026-09-28-uhi/gateway/UHI Documentation Requirements.yaml
     role: upstream
     hash: sha256:af065b1acc1032286c5b10ba43a39c048bfd8ce8afe1017b92e11b783a43d158
     fetched: "2026-09-28"
-  - file: catalogue/openapi/.raw/nha-2026-09-28-uhi/UHI Gateway Service.yaml
+  - file: catalogue/openapi/.raw/nha-2026-09-28-uhi/gateway/UHI Gateway Service.yaml
     role: upstream
     hash: sha256:a04a7a18f19f9fb448f747d84b19aa10908b9118ac32a4bf84cf330440984d47
     fetched: "2026-09-28"
