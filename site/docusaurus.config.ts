@@ -6,6 +6,7 @@ import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 import type {ScalarOptions} from '@scalar/docusaurus';
 import apiTree from './src/data/api-sidebar.json';
+import uhiRedirects from './redirects-uhi.json';
 import {sandboxLinks} from './src/data/sandboxLinks';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
@@ -540,9 +541,8 @@ const config: Config = {
           {from: '/docs/abdm/v3/phr', to: '/docs/hiecm/v3/concepts/participants/phr'},
           {from: '/docs/abdm/v3/registries/hpr', to: '/docs/hiecm/v3/registries/nhpr/hpr'},
           {from: '/docs/abdm/v3/registries/hfr', to: '/docs/hiecm/v3/registries/nhpr/hfr'},
-          {from: '/docs/uhi/v1/onboarding', to: '/docs/uhi/v1/getting-started/onboarding'},
-          {from: '/docs/uhi/v1/glossary', to: '/docs/uhi/v1/getting-started/glossary'},
-          {from: '/docs/uhi/v1/network-and-protocol', to: '/docs/uhi/v1/concepts/network-and-protocol'},
+          // UHI's moved pages, one explicit entry per old URL.
+          ...uhiRedirects,
           {from: '/docs/nhcx/v1/glossary', to: '/docs/nhcx/v1/getting-started/glossary'},
           // The NHCX landing page is the claim journey; its old address still works.
           {from: '/docs/nhcx/v1/concepts/how-claims-move-on-nhcx', to: '/docs/nhcx/v1'},
@@ -600,11 +600,6 @@ const config: Config = {
           const hiecm = to.match(/^\/docs\/hiecm\/(.+)$/);
           if (hiecm) {
             aliases.push(`/docs/abdm/${hiecm[1]}`);
-          }
-          // Every UHI service page moved down into concepts/.
-          const service = to.match(/^\/docs\/uhi\/v1\/concepts\/services\/(.+)$/);
-          if (service) {
-            aliases.push(`/docs/uhi/v1/services/${service[1]}`);
           }
           return aliases.length > 0 ? aliases : undefined;
         },

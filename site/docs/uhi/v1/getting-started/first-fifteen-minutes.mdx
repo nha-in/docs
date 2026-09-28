@@ -1,0 +1,57 @@
+---
+title: Quickstart
+sidebar_label: Quickstart
+description: Find PM-JAY hospitals near a point in four steps. Enter your IDs, sign the search with your own key, send it, and see the hospitals on your callback.
+source: UHI developer guide as of 22 September 2026, section 1.3
+sidebar_position: 3
+sidebar_class_name: sidebar-icon sidebar-icon--zap
+---
+
+import UhiQuickstart from '@site/src/components/docs/UhiQuickstart';
+
+# Quickstart
+
+You find [PM-JAY](/docs/uhi/v1/getting-started/glossary#pm-jay-hem) empanelled
+hospitals near a point here, in four steps: enter your IDs, sign, send, and see
+the hospitals arrive on your callback.
+
+## Before you start
+
+- **Your sandbox registration.** Your subscriber ID and public key ID, from
+  [sandbox registration](/docs/uhi/v1/getting-started/sandbox).
+- **The Header Generation Utility**, with your private key, on your own machine.
+- **A callback.** Expose `POST <your consumer_uri>/on_search` on a public HTTPS
+  URL. It replies 200 with this body at once, then stores the request:
+
+  ```json
+  { "message": { "ack": { "status": "ACK" } }, "error": {} }
+  ```
+
+<UhiQuickstart />
+
+## How this fits your product
+
+Every UHI service your app adds later follows this exchange.
+
+- **Signing, step 2.** Every outbound call carries a fresh signature. See
+  [Signing](/docs/uhi/v1/concepts/signing).
+- **The `ACK`, step 3.** The response to your call is only a receipt. See
+  [Messages and callbacks](/docs/uhi/v1/concepts/messages).
+- **The callback, step 4.** Results arrive on your
+  [`consumer_uri`](/docs/uhi/v1/getting-started/glossary#consumer-uri), matched
+  by `transaction_id`. Some services answer from many
+  [HSPAs](/docs/uhi/v1/getting-started/glossary#hspa), so you aggregate.
+- **Other services** change the domain and the filters. Physical Consultation
+  and Ambulance Booking add
+  [direct calls](/docs/uhi/v1/getting-started/glossary#direct-call-p2p) after
+  `on_search`. See [Routes](/docs/uhi/v1/concepts/routes).
+
+## If a call fails
+
+Step 4 carries the symptom table. A `200` whose `error` is not empty carries
+the reason: [Errors on UHI](/docs/uhi/v1/concepts/errors) sets out the object
+and what to log.
+
+## Next
+
+[Build with AI](/docs/uhi/v1/getting-started/build-with-ai).

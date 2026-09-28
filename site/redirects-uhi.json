@@ -1,0 +1,21 @@
+[
+  {"from": "/docs/uhi/v1/getting-started", "to": "/docs/uhi/v1"},
+  {"from": "/docs/uhi/v1/onboarding", "to": "/docs/uhi/v1/getting-started/sandbox"},
+  {"from": "/docs/uhi/v1/getting-started/onboarding", "to": "/docs/uhi/v1/getting-started/sandbox"},
+  {"from": "/docs/uhi/v1/getting-started/quick-start", "to": "/docs/uhi/v1/getting-started/first-fifteen-minutes"},
+  {"from": "/docs/uhi/v1/glossary", "to": "/docs/uhi/v1/getting-started/glossary"},
+  {"from": "/docs/uhi/v1/network-and-protocol", "to": "/docs/uhi/v1/concepts/routes"},
+  {"from": "/docs/uhi/v1/concepts/network-and-protocol", "to": "/docs/uhi/v1/concepts/routes"},
+  {"from": "/docs/uhi/v1/concepts/services/physical-consultation", "to": "/docs/uhi/v1/services/consultation"},
+  {"from": "/docs/uhi/v1/concepts/services/ambulance-booking", "to": "/docs/uhi/v1/services/ambulance"},
+  {"from": "/docs/uhi/v1/concepts/services/jan-aushadhi-kendra", "to": "/docs/uhi/v1/services/jan-aushadhi"},
+  {"from": "/docs/uhi/v1/concepts/services/jan-aushadhi-medicine-search", "to": "/docs/uhi/v1/services/jan-aushadhi"},
+  {"from": "/docs/uhi/v1/concepts/services/blood-bank", "to": "/docs/uhi/v1/services/blood-bank"},
+  {"from": "/docs/uhi/v1/concepts/services/pmjay-hem", "to": "/docs/uhi/v1/services/pmjay-hem"},
+  {"from": "/docs/uhi/v1/concepts/services/amrit-pharmacy", "to": "/docs/uhi/v1/services"},
+  {"from": "/docs/uhi/v1/services/physical-consultation", "to": "/docs/uhi/v1/services/consultation"},
+  {"from": "/docs/uhi/v1/services/ambulance-booking", "to": "/docs/uhi/v1/services/ambulance"},
+  {"from": "/docs/uhi/v1/services/jan-aushadhi-kendra", "to": "/docs/uhi/v1/services/jan-aushadhi"},
+  {"from": "/docs/uhi/v1/services/jan-aushadhi-medicine-search", "to": "/docs/uhi/v1/services/jan-aushadhi"},
+  {"from": "/docs/uhi/v1/services/amrit-pharmacy", "to": "/docs/uhi/v1/services"}
+]
