@@ -24,20 +24,18 @@ accepted, and check its current state rather than only waiting: the
 [M3 API reference](/docs/hiecm/v3/api/m3) documents the consent request
 status call.
 
-## Work through these in order
+## Work through these in order {/* #consent-stuck-requested */}
 
 1. **Does the patient's app show the request at all?** The gateway
    notifies the patient through the ABHA App when a consent request is
    raised. If the patient uses a third party PHR app instead, that app
    needs an approved subscription with the gateway to be notified of a
    new consent request; without one, the request can sit unseen even
-   though it was accepted. Whether the ABHA App itself needs anything
-   set up beyond the patient having an address is not something we have
-   confirmed.
+   though it was accepted.
 2. **Has the request expired?** A consent request carries a window the
    requester sets for the patient to respond, separate from how long
    access lasts once granted. See
-   [Consent](/docs/hiecm/v3/concepts/consent#the-states-a-consent-moves-through)
+   [Consent](/docs/hiecm/v3/concepts/consent#consent-artefact)
    for the two clocks. Running out of the request window moves the state
    to Expired, not Requested, so checking the current status tells you
    if this has already happened.
@@ -48,14 +46,14 @@ status call.
    seen, just by the wrong person, not the one you meant. Getting the
    address right matters more than passing validation.
 
-## How you know it worked
+### How you know it worked
 
 The consent request status reports Granted or Denied rather than
 Requested. A Granted result also carries the id of at least one consent
 artefact, and a granted request can produce more than
 one.
 
-## When it goes wrong
+### When it goes wrong
 
 If the patient's app shows the request, it has not expired, and the
 address is correct, and the state is still Requested after a reasonable
@@ -69,6 +67,18 @@ format.
 
 This symptom can surface as an invalid or non-existent ABHA address on
 the [error codes reference](/docs/hiecm/v3/reference/error-codes).
+
+<AgentOnly>
+**Before you start.** Confirm the consent request was accepted and hold its consent request id. Read the current state from the consent request status call rather than waiting on the next callback.
+
+**What happens.** Check in order: the patient's app shows the request, the request window has not run out, and the ABHA address is the patient you meant. A third party PHR app sees a new consent request only through an approved subscription.
+
+**How you know it worked.** The status call reports Granted or Denied. A grant carries at least one consent artefact id; store every one.
+
+**When it goes wrong.** Requested with all three checks passing means the patient has not decided, and no call makes them decide. Do not raise a second request for the same need. If the patient says they acted and the state has not moved, hand the person the support report: the consent request id, the init call's `REQUEST-ID`, the `TIMESTAMP` and the status response.
+</AgentOnly>
+
+## Next
 
 <a class="next-step" href="/docs/hiecm/v3/concepts/consent">
 <span class="next-step__eyebrow">Next</span>

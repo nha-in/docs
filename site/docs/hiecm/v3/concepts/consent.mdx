@@ -28,7 +28,7 @@ One request can produce more than one artefact. A granted request returns the id
 - **The HIU holds an id, not a right.** It can stop working at any time.
 - **The [HIP](/docs/hiecm/v3/getting-started/glossary#hip) holds the check.** Before sending a record it validates that the artefact is active and that the dates asked for sit inside the dates it allows.
 
-## The states a consent moves through
+## The states a consent moves through {/* #consent-artefact */}
 
 There are five states, in the two sections a PHR app shows: Requests holds Requested, Denied and Expired; Approved holds Granted and Revoked.
 
@@ -52,13 +52,25 @@ stateDiagram-v2
 
 Two clocks run here. The **request window** is how long the patient has to answer, set by the HIU, and running out produces Expired. The **consent validity period** is how long access lasts once granted, set by the patient as they grant, with a defined expiry date and time. Neither is the **date range**, which says which records are in scope by when the care happened: a consent granted today can cover records from 2019.
 
+Granted is not permanent. Revoked and Expired are ordinary destinations, not faults, and your system will meet both in production.
+
+<AgentOnly>
+**Before you start.** A gateway session, and your system acting as the HIU for this request. A consent request names four things: whose records, which HI types, which date range, and the purpose code.
+
+**What happens.** Store the consent request id from the init callback, then every consent artefact id a grant returns. Before each fetch, check the artefact is still usable: the patient can revoke at any time, and the validity period ends on its own.
+
+**How you know it worked.** A granted request returns at least one artefact id, and a fetch under it is accepted while the artefact is within its validity period and not revoked.
+
+**When it goes wrong.** A fetch that worked last week fails today because the patient revoked or the validity period ended; that is the system working. `ABDM-1062` is consent not granted, and `ABDM-1112` is an artefact id that is invalid or already expired. Records kept past the consent window are a legal problem, not a technical one.
+</AgentOnly>
+
 ## What the patient sees, and can change
 
 A consent request must display the requesting HIU, the purpose of data access, the data types requested, the date range, the consent validity period and the request status. Where permitted, the patient may modify four of those before approving: access duration, record date range, data categories and validity period. The consent you get back can be narrower than the one you asked for, so read the artefact.
 
-## The five things a PHR app must let a person do
+## The five things a PHR app must let a person do {/* #consent-in-a-phr-app */}
 
-Consent is granted by a person, and the PHR app is where they do it. NHA sets
+Consent is granted by a person, and the PHR app is where they do it. There is
 a floor of five capabilities, and an app missing one leaves a person able to
 give access they cannot inspect, change or withdraw.
 
@@ -77,6 +89,16 @@ give access they cannot inspect, change or withdraw.
 5. **Take it back** at any time. Two things follow: the status updates at the
    consent manager, and sharing under that consent stops immediately, not at
    the end of the period.
+
+<AgentOnly>
+**Before you start.** The app receives consent requests only through an approved subscription. See [P3 Subscription](/docs/hiecm/v3/milestones/p3).
+
+**What happens.** Build a screen for each of the five. Approving posts to `/api/hiecm/consent/v3/request/{consentRequestId}/approve`, denying to `/api/hiecm/consent/v3/request/{consentRequestId}/deny`, and revoking a granted consent to `/api/hiecm/consent/v3/revoke`. Show Expired as its own state, never as Denied, because the person refused nothing.
+
+**How you know it worked.** One request goes through the whole arc in the app: seen, its date range narrowed, allowed, found in the list of live consents, and revoked. A fetch attempted under it afterwards fails.
+
+**When it goes wrong.** A screen that lists requests but not live consents leaves the person unable to revoke what they cannot see. Revocation shown as expiry hides a decision the person made. Leaving out modification turns consent into a notice.
+</AgentOnly>
 
 ## Purpose of use codes
 

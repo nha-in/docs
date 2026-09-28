@@ -21,7 +21,7 @@ call's own error code on the
 Read the response body too, not only the status: the gateway returns a
 code that names the real reason.
 
-## Work through these in order
+## Work through these in order {/* #everything-returns-401 */}
 
 1. **Has your session token expired?** Session tokens are short lived.
    Read `expiresIn` from the sessions call response rather than assuming
@@ -43,14 +43,14 @@ code that names the real reason.
    manager you are pointed at, and the wrong value fails every call the
    same way a missing session token does.
 
-## How you know it worked
+### How you know it worked
 
 A call that was returning 401 now returns its normal response, and stays
 that way across more than one call in a row. A single success right
 after several failures can be a token that was about to expire anyway;
 confirm with a second call a minute or more later.
 
-## When it goes wrong
+### When it goes wrong
 
 If you have re-run the session call, confirmed the environment, fixed
 the clock, and confirmed `X-CM-ID`, and calls still return 401 with no
@@ -63,6 +63,18 @@ The codes this symptom can surface are on the
 [error codes reference](/docs/hiecm/v3/reference/error-codes): an
 invalid timestamp, the wrong consent manager id, a missing session
 token, or a required header that is absent or malformed.
+
+<AgentOnly>
+**Before you start.** Confirm that more than one endpoint fails the same way, and keep the full response body. If one call fails and others succeed, this page does not apply: read that call's error code.
+
+**What happens.** Check in order and stop at the first that fails: a fresh session token from `POST /api/hiecm/gateway/v3/sessions`, the same host for the session call and the failing call, a `TIMESTAMP` from a synchronised clock in ISO 8601 UTC, and the literal `X-CM-ID` value, `sbx` on the sandbox and `abdm` in production. Read `expiresIn` from the session response rather than assuming a lifetime.
+
+**How you know it worked.** Two calls a minute or more apart both return their normal response.
+
+**When it goes wrong.** After all four checks pass, stop retrying and hand the person the support report: the API called, `REQUEST-ID`, `TIMESTAMP` and the full response body. Never include the token or the client secret.
+</AgentOnly>
+
+## Next
 
 <a class="next-step" href="/docs/hiecm/v3/reference/authentication">
 <span class="next-step__eyebrow">Next</span>
