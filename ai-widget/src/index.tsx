@@ -337,31 +337,6 @@ function ResizeGrip({dialog}: {dialog: {current: HTMLDialogElement | null}}) {
   );
 }
 
-/** How much of the conversation the next question takes with it. See memoryOf. */
-function MemoryLine({turns}: {turns: Turn[]}) {
-  const {earlier, window, percent, full} = memoryOf(turns);
-  if (!earlier) return null;
-  const said = full
-    ? `The last ${window} exchanges go with each question. Earlier ones are no longer sent; New starts afresh.`
-    : `${earlier} of ${window} exchanges go with each question. Very long answers go shortened.`;
-  return (
-    <p class={`ask-ai__memory${full ? ' ask-ai__memory--full' : ''}`} title={said}>
-      <span class="ask-ai__memory-label">Context window</span>
-      <span
-        class="ask-ai__memory-bar"
-        role="progressbar"
-        aria-label="Context window"
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-valuenow={percent}
-        aria-valuetext={said}>
-        <span style={{width: `${percent}%`}} />
-      </span>
-      <span class="ask-ai__memory-percent">{percent}%</span>
-    </p>
-  );
-}
-
 function Panel({
   apiBase,
   docsOrigin,
@@ -1276,8 +1251,6 @@ function Panel({
 
       </div>
 
-      <MemoryLine turns={turns} />
-
       <Composer
         draft={draft}
         onDraft={setDraft}
@@ -1300,6 +1273,7 @@ function Panel({
         onRemovePage={onDetach}
         command={command}
         onCommand={setCommand}
+        memory={memoryOf(turns)}
       />
       </>
       )}

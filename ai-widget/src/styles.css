@@ -786,6 +786,10 @@
 
 /* The foot: the chat bar card, and the commands under it. */
 .ask-ai__foot {
+  /* Above the thread, so a tip rising out of the chat bar (the context
+     window's) is drawn over the conversation rather than under it. */
+  position: relative;
+  z-index: 2;
   display: grid;
   gap: 0.625rem;
   padding: 0.5rem 0.875rem 0.875rem;
@@ -1410,43 +1414,94 @@
   }
 }
 
-/* How much of the conversation the next question takes with it: a thin bar
-   and a count, quiet until the oldest exchanges stop being sent. */
-.ask-ai__memory {
-  display: flex;
+/* The context window: a ring beside the send button, filling as the
+   conversation grows, with the numbers in a tip on hover or focus. */
+.ask-ai__ring {
+  position: relative;
+  flex: 0 0 auto;
+  display: inline-flex;
+}
+
+.ask-ai__ring-mark {
+  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  margin: 0 0.875rem 0.375rem;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  cursor: default;
+}
+
+.ask-ai__ring-mark:focus-visible {
+  outline: 2px solid var(--aa-accent);
+  outline-offset: 2px;
+}
+
+.ask-ai__ring svg {
+  transform: rotate(-90deg);
+}
+
+.ask-ai__ring-track,
+.ask-ai__ring-fill {
+  fill: none;
+  stroke-width: 2.5;
+}
+
+.ask-ai__ring-track {
+  stroke: var(--aa-fill-soft);
+}
+
+.ask-ai__ring-fill {
+  stroke: var(--aa-faint);
+  stroke-linecap: round;
+  transition: stroke-dashoffset 250ms ease-out;
+}
+
+.ask-ai__ring--full .ask-ai__ring-fill {
+  stroke: #c07a12;
+}
+
+.ask-ai__ring-tip {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 0.5rem);
+  z-index: 3;
+  display: grid;
+  gap: 0.25rem;
+  width: 15rem;
+  padding: 0.5rem 0.625rem;
+  border: 1px solid var(--aa-border-strong);
+  border-radius: 0.5rem;
+  background: var(--aa-surface);
+  box-shadow: 0 8px 24px -12px rgb(0 0 0 / 0.3);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--aa-faint);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(2px);
+  transition: opacity 120ms ease-out, transform 120ms ease-out, visibility 0s linear 120ms;
+  pointer-events: none;
+}
+
+.ask-ai__ring-tip strong {
+  color: var(--aa-heading);
+  font-weight: 600;
+}
+
+.ask-ai__ring:hover .ask-ai__ring-tip,
+.ask-ai__ring-mark:focus-visible + .ask-ai__ring-tip {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition-delay: 0s;
+}
+
+/* The disclaimer under the chat bar, quiet and always there. */
+.ask-ai__disclaimer {
+  margin: 0.125rem 0 0;
   font-size: 0.6875rem;
+  line-height: 1.4;
+  text-align: center;
   color: var(--aa-faint);
 }
-
-.ask-ai__memory-bar {
-  flex: 0 0 4rem;
-  height: 3px;
-  border-radius: 999px;
-  background: var(--aa-fill-soft);
-  overflow: hidden;
-}
-
-.ask-ai__memory-bar > span {
-  display: block;
-  height: 100%;
-  background: var(--aa-accent);
-  opacity: 0.6;
-  transition: width 200ms ease-out;
-}
-
-.ask-ai__memory-percent {
-  font-variant-numeric: tabular-nums;
-}
-
-.ask-ai__memory--full .ask-ai__memory-percent {
-  color: #c07a12;
-}
-
-.ask-ai__memory--full .ask-ai__memory-bar > span {
-  background: #c07a12;
-  opacity: 1;
-}
-

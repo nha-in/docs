@@ -51,7 +51,51 @@ type Props = {
   onRemovePage: () => void;
   command: CommandId | null;
   onCommand: (command: CommandId | null) => void;
+  /** How much of the conversation the next question takes. See memoryOf. */
+  memory: {earlier: number; window: number; percent: number; full: boolean};
 };
+
+/**
+ * The context window, as a ring beside the send button that fills as the
+ * conversation grows, the way Claude shows it. The numbers are one hover or
+ * one tab stop away rather than a line of text under every exchange.
+ */
+function ContextRing({earlier, window, percent, full}: Props['memory']) {
+  const r = 7;
+  const around = 2 * Math.PI * r;
+  const detail = full
+    ? `The last ${window} exchanges go with your next question. Earlier ones are no longer sent; New starts afresh.`
+    : `${earlier} of ${window} earlier exchanges go with your next question. Very long answers go shortened.`;
+  return (
+    <span class={`ask-ai__ring${full ? ' ask-ai__ring--full' : ''}`}>
+      <span
+        class="ask-ai__ring-mark"
+        tabIndex={0}
+        role="progressbar"
+        aria-label="Context window"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={percent}
+        aria-describedby="ask-ai-ring-tip">
+        <svg viewBox="0 0 18 18" width="18" height="18" aria-hidden="true">
+          <circle class="ask-ai__ring-track" cx="9" cy="9" r={r} />
+          <circle
+            class="ask-ai__ring-fill"
+            cx="9"
+            cy="9"
+            r={r}
+            stroke-dasharray={around}
+            stroke-dashoffset={around * (1 - percent / 100)}
+          />
+        </svg>
+      </span>
+      <span class="ask-ai__ring-tip" id="ask-ai-ring-tip" role="tooltip">
+        <strong>Context window: {percent}%</strong>
+        <span>{detail}</span>
+      </span>
+    </span>
+  );
+}
 
 export function Composer(props: Props) {
   const {draft, busy, menu, onMenu, page, file, fileNote, fileError, attaching} = props;
@@ -224,6 +268,8 @@ export function Composer(props: Props) {
             aria-label="Ask the assistant"
           />
 
+          {props.memory.earlier > 0 && <ContextRing {...props.memory} />}
+
           {busy ? (
             <button
               class="ask-ai__send ask-ai__send--stop"
@@ -258,6 +304,13 @@ export function Composer(props: Props) {
           </button>
         ))}
       </div>
+
+      {/* Said once, under the chat bar, where it is seen before anything is
+          asked and after every answer. */}
+      <p class="ask-ai__disclaimer">
+        Answers are AI generated and can be wrong. Check the sources listed
+        under each one.
+      </p>
     </div>
   );
 }
