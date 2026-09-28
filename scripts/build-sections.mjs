@@ -33,7 +33,14 @@ export function renderAtom(id, e, s) {
 
 export function problems({map, pages, handIds, specText}) {
   const out = [];
+  const known = new Set([...handIds, ...Object.keys(map)]);
   for (const [id, e] of Object.entries(map)) {
+    for (const ids of Object.values(e.related ?? {})) {
+      for (const ref of ids ?? []) {
+        if (ref === id) out.push(`${id} lists itself as related. Remove it from its related list in catalogue/map.yaml`);
+        else if (!known.has(ref)) out.push(`${id}: related names ${ref}, which no atom defines. Fix the id or remove it from catalogue/map.yaml`);
+      }
+    }
     if (handIds.has(id)) out.push(`${id} is both a hand-written file and a map entry. Delete the hand-written file once its words are on the page`);
     if (!FOLDER[e.type]) out.push(`${id}: type "${e.type}" is not an atom type`);
     const raw = pages[e.page];

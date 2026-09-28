@@ -52,3 +52,15 @@ test('the registry lists page-sourced and hand-written atoms, with no prose', ()
   assert.deepEqual(r.map((e) => [e.id, e.source]), [['nhcx.error.payr-1107', 'file'], ['shared.glossary.link-token', 'page']]);
   assert.equal(JSON.stringify(r).includes('six months'), false);
 });
+
+test('a map entry that lists itself as related fails', () => {
+  const self = {...entry, related: {concepts: ['shared.glossary.link-token']}};
+  const p = problems({map: {'shared.glossary.link-token': self}, pages: {'g.mdx': page}, handIds: new Set(), specText: ''});
+  assert.ok(p.some((x) => x.includes('lists itself as related')));
+});
+
+test('a map entry whose related names an unknown id fails', () => {
+  const dangling = {...entry, related: {concepts: ['shared.glossary.nowhere']}};
+  const p = problems({map: {'shared.glossary.link-token': dangling}, pages: {'g.mdx': page}, handIds: new Set(), specText: ''});
+  assert.ok(p.some((x) => x.includes('related names shared.glossary.nowhere, which no atom defines')));
+});

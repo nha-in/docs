@@ -110,6 +110,11 @@ for (const [id, atom] of atoms) {
 
   for (const [kind, ids] of Object.entries(fm.related ?? {})) {
     for (const ref of ids ?? []) {
+      // ponytail: NHCX atoms are exempt until owner decision 1 (whether NHCX
+      // stays merged in from NHA's fork). Eight of them list themselves, and an
+      // edit here would be lost or conflict on the next merge. Drop the gateway
+      // guard once that is decided and those eight are fixed at their source.
+      if (ref === fm.id && fm.gateway !== "nhcx") fail(file, `related.${kind} lists the atom itself; remove "${ref}"`);
       if (!atoms.has(ref)) fail(file, `related.${kind} points at "${ref}", which no atom defines`);
     }
   }
