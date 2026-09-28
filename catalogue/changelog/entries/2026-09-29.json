@@ -248,24 +248,6 @@
     ]
   },
   {
-    "id": "8a5916a9ce20",
-    "date": "2026-09-29",
-    "kind": "plugin-version",
-    "gateway": "site",
-    "version": "",
-    "module": "site",
-    "label": "Site",
-    "link": null,
-    "count": 1,
-    "items": [
-      {
-        "name": "abdm-contributors-assistant",
-        "from": "0.3.4",
-        "to": "0.4.0"
-      }
-    ]
-  },
-  {
     "id": "2cedb59fd565",
     "date": "2026-09-29",
     "kind": "plugin-version",
@@ -278,7 +260,7 @@
     "items": [
       {
         "name": "abdm-contributors-assistant",
-        "from": "0.4.0",
+        "from": "0.3.4",
         "to": "0.4.1"
       }
     ]
