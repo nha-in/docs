@@ -1,7 +1,7 @@
 // scripts/lib/sections.test.mjs
 import {test} from 'node:test';
 import assert from 'node:assert';
-import {sectionsById, literals} from './sections.mjs';
+import {sectionsById, literals, plainMarkdown} from './sections.mjs';
 
 const page = [
   '{/* partial */}', '',
@@ -53,4 +53,24 @@ test('headings without an explicit id, and headings inside code fences, are not 
 
 test('literals are the backticked spans', () => {
   assert.deepEqual(literals('Send `linkToken` to `/v3/link` now.'), ['linkToken', '/v3/link']);
+});
+
+test('[rev] relative anchors become absolute page links', () => {
+  const {text} = plainMarkdown('Links to [HIP](#hip) and [care contexts](#care-context).', '/docs/hiecm/v3/getting-started/glossary#link-token');
+  assert.equal(text, 'Links to [HIP](/docs/hiecm/v3/getting-started/glossary#hip) and [care contexts](/docs/hiecm/v3/getting-started/glossary#care-context).');
+});
+
+test('[rev] imports go, admonitions unwrap, other JSX is a problem', () => {
+  const {text, problems} = plainMarkdown("import X from './x';\n\n:::note\nKeep this.\n:::\n\n<Expandable title=\"t\">inner</Expandable>\n\nValue is {props.v}.", '/docs/p#s');
+  assert.doesNotMatch(text, /import X/);
+  assert.match(text, /Keep this\./);
+  assert.doesNotMatch(text, /:::/);
+  assert.ok(problems.some((p) => p.includes('<Expandable')));
+  assert.ok(problems.some((p) => p.includes('{props.v}')));
+});
+
+test('[rev] code fences are left alone', () => {
+  const {text, problems} = plainMarkdown('```json\n{"a": 1}\n```', '/docs/p#s');
+  assert.equal(text, '```json\n{"a": 1}\n```');
+  assert.deepEqual(problems, []);
 });

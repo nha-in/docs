@@ -10,11 +10,11 @@ import {join, dirname, relative} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {parse, stringify} from 'yaml';
 import {loadAtoms} from './lib/atoms.mjs';
-import {sectionsById, literals} from './lib/sections.mjs';
+import {sectionsById, literals, plainMarkdown} from './lib/sections.mjs';
 
 // The folder per type that scripts/lint-atoms.mjs requires.
 const FOLDER = {concept: 'concepts', flow: 'flows', endpoint: 'endpoints', callback: 'callbacks', error: 'errors', test: 'tests', decision: 'decisions', glossary: 'glossary', fhir: 'fhir', sandbox: 'sandbox', troubleshooting: 'troubleshooting'};
-const SECTIONS = [['In plain words', (s) => s.text], ['Before you start', (s) => s.agent.before], ['What happens', (s) => s.agent.happens], ['How you know it worked', (s) => s.agent.worked], ['When it goes wrong', (s) => s.agent.wrong]];
+const SECTIONS = [['In plain words', (s, e) => plainMarkdown(s.text, e.url).text], ['Before you start', (s) => s.agent.before], ['What happens', (s) => s.agent.happens], ['How you know it worked', (s) => s.agent.worked], ['When it goes wrong', (s) => s.agent.wrong]];
 
 export const generatedPath = (id, e) => `catalogue/generated/${e.gateway}/${FOLDER[e.type]}/${id.split('.')[2]}.md`;
 
@@ -27,7 +27,7 @@ export function renderAtom(id, e, s) {
   };
   // A section with nothing in it is left out: the indexer makes one chunk per
   // "## " section, and identical filler chunks would crowd search results.
-  const body = SECTIONS.map(([h, get]) => [h, (get(s) ?? '').trim()]).filter(([, t]) => t).map(([h, t]) => `## ${h}\n\n${t}`).join('\n\n');
+  const body = SECTIONS.map(([h, get]) => [h, (get(s, e) ?? '').trim()]).filter(([, t]) => t).map(([h, t]) => `## ${h}\n\n${t}`).join('\n\n');
   return `---\n${stringify(fm).trimEnd()}\n---\n\n# ${e.title}\n\n${body}\n`;
 }
 
@@ -48,6 +48,7 @@ export function problems({map, pages, handIds, specText}) {
     const s = sectionsById(raw).get(e.heading);
     if (!s) { out.push(`${id}: heading id "${e.heading}" is missing from ${e.page}. Put {#${e.heading}} back on the heading that holds its words, or point the atom at the section that now does`); continue; }
     for (const para of s.unlabelled) out.push(`${id}: ${e.page}#${e.heading} has agent text without a label: "${para.slice(0, 60)}". Start the paragraph with **Before you start.**, **What happens.**, **How you know it worked.** or **When it goes wrong.**`);
+    for (const tag of plainMarkdown(s.text, e.url).problems) out.push(`${id}: ${e.page}#${e.heading} carries page markup the bot would quote: ${tag}. Move it out of the mapped section or replace it with plain markdown`);
     const visible = raw.replace(/<AgentOnly>[\s\S]*?<\/AgentOnly>/g, '');
     for (const lit of literals(Object.values(s.agent).join('\n'))) {
       if (!visible.includes(lit) && !specText.includes(lit)) out.push(`${id}: agent note introduces \`${lit}\`, which neither ${e.page} nor any specification states. Put it on the page, or take it out of the note`);

@@ -56,3 +56,25 @@ export function sectionsById(raw) {
   });
   return out;
 }
+
+// A mapped section's text becomes what the bot reads and quotes, so it must be
+// plain markdown: anchors made absolute, MDX-only syntax removed or reported.
+// Fenced code and inline code are left exactly as written.
+export function plainMarkdown(text, sectionUrl) {
+  const page = String(sectionUrl).split('#')[0];
+  const problems = [];
+  const out = [];
+  let fenced = false;
+  for (const line of text.split('\n')) {
+    if (FENCE_RE.test(line)) { fenced = !fenced; out.push(line); continue; }
+    if (fenced) { out.push(line); continue; }
+    if (/^\s*(import|export)\s/.test(line)) continue;
+    // An admonition keeps its inner text and loses its ::: fences.
+    if (/^:::(note|tip|info|warning|danger|caution)\b/.test(line) || /^:::\s*$/.test(line)) continue;
+    const prose = line.replace(/`[^`\n]*`/g, '');
+    for (const m of prose.matchAll(/<([A-Z][A-Za-z0-9]*)\b/g)) if (m[1] !== 'AgentOnly') problems.push(`<${m[1]}>`);
+    for (const m of prose.matchAll(/\{[^}\n]*\}/g)) if (!m[0].startsWith('{#')) problems.push(m[0]);
+    out.push(line.replace(/\]\(#([^)]+)\)/g, `](${page}#$1)`));
+  }
+  return {text: out.join('\n').replace(/\n{3,}/g, '\n\n').trim(), problems};
+}

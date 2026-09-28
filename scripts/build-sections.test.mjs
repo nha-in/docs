@@ -64,3 +64,9 @@ test('a map entry whose related names an unknown id fails', () => {
   const p = problems({map: {'shared.glossary.link-token': dangling}, pages: {'g.mdx': page}, handIds: new Set(), specText: ''});
   assert.ok(p.some((x) => x.includes('related names shared.glossary.nowhere, which no atom defines')));
 });
+
+test('[rev] a section with JSX fails the build naming the atom and the tag', () => {
+  const jsx = page.replace('Valid for six months.', 'Valid for <Expandable>six</Expandable> months.');
+  const p = problems({map: {'shared.glossary.link-token': entry}, pages: {'g.mdx': jsx}, handIds: new Set(), specText: ''});
+  assert.ok(p.some((x) => x.includes('shared.glossary.link-token') && x.includes('<Expandable')));
+});
