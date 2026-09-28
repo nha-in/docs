@@ -421,6 +421,78 @@
   gap: 0.5rem;
 }
 
+/* A response is a fold per status, shut until opened. The status carries the
+   colour of its class, as Scalar marks it. */
+.api-response__head {
+  cursor: pointer;
+  list-style: none;
+}
+
+.api-response__head::-webkit-details-marker {
+  display: none;
+}
+
+.api-response__chevron {
+  color: var(--text-faint);
+  transform: rotate(-90deg);
+  transition: transform 150ms ease;
+}
+
+.api-response[open] > .api-response__head .api-response__chevron {
+  transform: none;
+}
+
+.api-response[open] > .api-response__head {
+  margin-bottom: 0.5rem;
+}
+
+.api-page .api-field__name.api-response__status--2xx { color: var(--method-post); }
+.api-page .api-field__name.api-response__status--3xx { color: var(--method-get); }
+.api-page .api-field__name.api-response__status--4xx { color: var(--method-put); }
+.api-page .api-field__name.api-response__status--5xx { color: var(--method-delete); }
+
+/* The pills and the download over an endpoint's title. */
+.api-spec {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.375rem 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.api-spec__pill {
+  padding: 0.125rem 0.5rem;
+  border: 1px solid var(--border-strong, var(--border));
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.api-spec__download {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-left: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--text-muted, var(--text-faint));
+}
+
+.api-spec__download a {
+  padding: 0.0625rem 0.375rem;
+  border-radius: var(--radius-chip, 0.25rem);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.api-spec__download a:hover {
+  text-decoration: underline;
+}
+
 .api-page .api-field__name {
   font-family: var(--font-mono);
   font-size: 0.8125rem;
@@ -719,6 +791,7 @@
   border-bottom: 1px solid var(--border);
 }
 
+
 .api-console__title {
   flex: 0 0 auto;
   max-width: 14rem;
@@ -745,6 +818,55 @@
   overflow-x: auto;
   white-space: nowrap;
   scrollbar-width: none;
+}
+
+/* The request in flight: the bar fills from the left in the method's colour.
+   While the call is out it eases most of the way across and waits there; when
+   the response lands it runs to the end and fades, so a fast call still reads
+   as done. Drawn under the URL, which stays on top of it. */
+.api-console__url {
+  position: relative;
+  isolation: isolate;
+}
+
+.api-console__url > * {
+  position: relative;
+}
+
+.api-console__url::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  z-index: -1;
+  width: 100%;
+  background: color-mix(in srgb, var(--progress, var(--accent)) 24%, transparent);
+  opacity: 0;
+  pointer-events: none;
+  transition: width 200ms ease-out, opacity 400ms ease 200ms;
+}
+
+.api-console__url--running::before {
+  opacity: 1;
+  transition: none;
+  animation: api-console-progress 2.4s cubic-bezier(0.1, 0.6, 0.3, 1) forwards;
+}
+
+@keyframes api-console-progress {
+  from { width: 0; }
+  to   { width: 85%; }
+}
+
+.api-console__url--get    { --progress: var(--method-get); }
+.api-console__url--post   { --progress: var(--method-post); }
+.api-console__url--put    { --progress: var(--method-put); }
+.api-console__url--patch  { --progress: var(--method-patch); }
+.api-console__url--delete { --progress: var(--method-delete); }
+
+@media (prefers-reduced-motion: reduce) {
+  .api-console__url--running::before {
+    width: 100%;
+    animation: none;
+  }
 }
 
 .api-console__url::-webkit-scrollbar {
