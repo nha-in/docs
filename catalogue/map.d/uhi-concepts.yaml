@@ -1,0 +1,357 @@
+# UHI concepts, decisions, troubleshooting and tests on the concept pages and
+# the getting-started pages. Words live on the pages named by `page`.
+uhi.concept.context-block:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: The context block every UHI call carries
+  summary: Every UHI call starts with a context block naming the service, the sender, the callback URL and the ids that match an answer to its request.
+  page: site/docs/uhi/v1/concepts/messages.mdx
+  heading: the-context-block
+  url: /docs/uhi/v1/concepts/messages#the-context-block
+  related:
+    concepts: [uhi.concept.match-transaction-id, uhi.concept.ack-then-answer]
+    glossary: [uhi.glossary.context-domain, uhi.glossary.consumer-uri]
+uhi.concept.ack-then-answer:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: ACK now, answer later on UHI
+  summary: The HTTP response to a UHI call is only an ACK receipt; the business answer arrives later as a separate call to your callback URL.
+  page: site/docs/uhi/v1/concepts/messages.mdx
+  heading: ack-now-answer-later
+  url: /docs/uhi/v1/concepts/messages#ack-now-answer-later
+  related:
+    concepts: [uhi.concept.context-block, uhi.concept.match-transaction-id, uhi.concept.timeouts]
+    troubleshooting: [uhi.troubleshooting.http-statuses]
+uhi.concept.match-transaction-id:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Matching a UHI callback on transaction_id and message_id
+  summary: Store transaction_id and message_id before you send, and look each callback up by transaction_id first; a mismatch hides every result.
+  page: site/docs/uhi/v1/concepts/messages.mdx
+  heading: match-on-transaction-id-and-message-id
+  url: /docs/uhi/v1/concepts/messages#match-on-transaction-id-and-message-id
+  related:
+    concepts: [uhi.concept.context-block, uhi.concept.aggregate-answers]
+    callbacks: [uhi.callback.network-on-search]
+uhi.concept.timeouts:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Timeouts for a UHI search with no end signal
+  summary: A UHI search has no end signal, so set a configurable timeout, render each on_search as it arrives, and offer a retry when nothing comes.
+  page: site/docs/uhi/v1/concepts/messages.mdx
+  heading: timeouts
+  url: /docs/uhi/v1/concepts/messages#timeouts
+  related:
+    concepts: [uhi.concept.render-as-results-arrive, uhi.concept.aggregate-answers, uhi.concept.paginate-client-side]
+    endpoints: [uhi.endpoint.network-gateway-search]
+uhi.concept.signing-headers:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: The signature headers on a UHI call
+  summary: The EUA and HSPA sign every outbound call in Authorization; the UHI Gateway adds X-Gateway-Authorization to everything it forwards.
+  page: site/docs/uhi/v1/concepts/signing.mdx
+  heading: the-headers
+  url: /docs/uhi/v1/concepts/signing#the-headers
+  related:
+    concepts: [uhi.concept.signature-construction, uhi.concept.verifying-signatures]
+    endpoints: [uhi.endpoint.network-registry-lookup]
+uhi.concept.signature-construction:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: How a UHI request signature is built
+  summary: A BLAKE-512 digest of the exact body bytes, signed with Ed25519 over (created) (expires) digest, fresh for every request.
+  page: site/docs/uhi/v1/concepts/signing.mdx
+  heading: how-the-signature-is-built
+  url: /docs/uhi/v1/concepts/signing#how-the-signature-is-built
+  related:
+    concepts: [uhi.concept.signing-headers, uhi.concept.key-generation]
+    troubleshooting: [uhi.troubleshooting.http-statuses]
+uhi.concept.key-generation:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Generating UHI signing keys and headers
+  summary: The Header Generation Utility creates your Ed25519 key pair and signs each payload; share only the public key and keep the private key on your server.
+  page: site/docs/uhi/v1/concepts/signing.mdx
+  heading: generate-your-keys-and-headers
+  url: /docs/uhi/v1/concepts/signing#generate-your-keys-and-headers
+  related:
+    concepts: [uhi.concept.signature-construction]
+uhi.concept.verifying-signatures:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Checking the signature on a UHI call you receive
+  summary: Check X-Gateway-Authorization against the Gateway's key on a forwarded call, and the sender's Authorization against its registry key on a direct call.
+  page: site/docs/uhi/v1/concepts/signing.mdx
+  heading: checking-a-signature-you-receive
+  url: /docs/uhi/v1/concepts/signing#checking-a-signature-you-receive
+  related:
+    concepts: [uhi.concept.signing-headers, uhi.concept.registry-lookup, uhi.concept.direct-calls]
+    endpoints: [uhi.endpoint.network-registry-lookup]
+uhi.concept.whole-exchange:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: The whole UHI exchange, from search to direct booking
+  summary: Search and on_search pass through the UHI Gateway; from init onwards the EUA and HSPA call each other directly, with audit copies for Physical Consultation.
+  page: site/docs/uhi/v1/concepts/routes.mdx
+  heading: the-whole-exchange
+  url: /docs/uhi/v1/concepts/routes#the-whole-exchange
+  related:
+    concepts: [uhi.concept.gateway-routes, uhi.concept.direct-calls, uhi.concept.audit-copies]
+    endpoints: [uhi.endpoint.network-gateway-search]
+uhi.concept.gateway-routes:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Calls routed through the UHI Gateway
+  summary: Discovery is the only stage the UHI Gateway routes, broadcasting a search to every HSPA in the domain and relaying each on_search to the EUA.
+  page: site/docs/uhi/v1/concepts/routes.mdx
+  heading: through-the-gateway
+  url: /docs/uhi/v1/concepts/routes#through-the-gateway
+  related:
+    endpoints: [uhi.endpoint.network-gateway-search]
+    callbacks: [uhi.callback.network-gateway-on-search]
+    concepts: [uhi.concept.gateway-role, uhi.concept.direct-calls]
+uhi.concept.direct-calls:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Direct calls between the EUA and the HSPA
+  summary: From init onwards the EUA calls the HSPA's provider_uri and the HSPA calls back on the consumer_uri, each signing with its own key.
+  page: site/docs/uhi/v1/concepts/routes.mdx
+  heading: direct-between-eua-and-hspa
+  url: /docs/uhi/v1/concepts/routes#direct-between-eua-and-hspa
+  related:
+    endpoints: [uhi.endpoint.network-search, uhi.endpoint.consultation-init]
+    concepts: [uhi.concept.registry-lookup, uhi.concept.audit-copies]
+    glossary: [uhi.glossary.direct-call-p2p]
+uhi.concept.audit-copies:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Audit copies a Physical Consultation HSPA sends the Gateway
+  summary: A Physical Consultation HSPA sends the UHI Gateway an exact copy of each on_confirm, on_status, on_update and on_cancel it sends the EUA.
+  page: site/docs/uhi/v1/concepts/routes.mdx
+  heading: audit-copies
+  url: /docs/uhi/v1/concepts/routes#audit-copies
+  related:
+    endpoints: [uhi.endpoint.consultation-on-confirm-audit, uhi.endpoint.consultation-on-status-audit, uhi.endpoint.consultation-on-update-audit, uhi.endpoint.consultation-on-cancel-audit]
+    glossary: [uhi.glossary.audit-copy]
+uhi.concept.registry-lookup:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: When to call the UHI network registry lookup
+  summary: Look up a participant in the network registry before a direct call and before acting on one, to get the public key that checks its signature.
+  page: site/docs/uhi/v1/concepts/registry-lookup.mdx
+  heading: when-to-call-it
+  url: /docs/uhi/v1/concepts/registry-lookup#when-to-call-it
+  related:
+    endpoints: [uhi.endpoint.network-registry-lookup]
+    concepts: [uhi.concept.verifying-signatures]
+    troubleshooting: [uhi.troubleshooting.registry-lookup]
+    glossary: [uhi.glossary.network-registry]
+uhi.troubleshooting.registry-lookup:
+  type: troubleshooting
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: When the UHI network registry lookup fails
+  summary: A 401 means your own header is wrong, a 403 means your registration is not active, and a 404 means no participant matches the body.
+  page: site/docs/uhi/v1/concepts/registry-lookup.mdx
+  heading: when-it-goes-wrong
+  url: /docs/uhi/v1/concepts/registry-lookup#when-it-goes-wrong
+  related:
+    endpoints: [uhi.endpoint.network-registry-lookup]
+    concepts: [uhi.concept.registry-lookup, uhi.concept.signature-construction, uhi.concept.error-object]
+uhi.concept.error-object:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: The UHI error object
+  summary: A UHI error is one object with type, code, path and message, carried beside the ACK or in the body of an error response.
+  page: site/docs/uhi/v1/concepts/errors.mdx
+  heading: the-error-object
+  url: /docs/uhi/v1/concepts/errors#the-error-object
+  related:
+    concepts: [uhi.concept.error-send-and-log, uhi.concept.ack-then-answer]
+    troubleshooting: [uhi.troubleshooting.http-statuses]
+uhi.troubleshooting.http-statuses:
+  type: troubleshooting
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: UHI HTTP statuses that arrive before any error object
+  summary: A 401 points to signing, a 403 to registration, and a 200 ACK with no callback to an unreachable callback URL or an endpoint that did not answer 200.
+  page: site/docs/uhi/v1/concepts/errors.mdx
+  heading: http-statuses-before-the-body
+  url: /docs/uhi/v1/concepts/errors#http-statuses-before-the-body
+  related:
+    concepts: [uhi.concept.signature-construction, uhi.concept.ack-then-answer, uhi.concept.error-object]
+    troubleshooting: [uhi.troubleshooting.registry-lookup]
+uhi.concept.error-send-and-log:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: What to send and log when a UHI call fails
+  summary: Send all four error fields when you reject a call, and log all four with the call's transaction_id and message_id when you receive one.
+  page: site/docs/uhi/v1/concepts/errors.mdx
+  heading: send-and-log
+  url: /docs/uhi/v1/concepts/errors#send-and-log
+  related:
+    concepts: [uhi.concept.error-object, uhi.concept.match-transaction-id]
+uhi.concept.participants:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Who takes part in the UHI network
+  summary: Three parties take part in UHI, the patient app (EUA), the provider platform (HSPA) and the UHI Gateway.
+  page: site/docs/uhi/v1/getting-started/index.mdx
+  heading: who-takes-part
+  url: /docs/uhi/v1#who-takes-part
+  related:
+    glossary: [shared.glossary.eua, shared.glossary.hspa, shared.glossary.gateway]
+    concepts: [uhi.concept.gateway-role]
+    decisions: [uhi.decision.choose-role]
+uhi.concept.gateway-role:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: What the UHI Gateway does
+  summary: The UHI Gateway passes a patient's search to every provider offering the service and relays each answer back; booking goes direct.
+  page: site/docs/uhi/v1/getting-started/index.mdx
+  heading: what-the-uhi-gateway-does
+  url: /docs/uhi/v1#what-the-uhi-gateway-does
+  related:
+    concepts: [uhi.concept.gateway-routes, uhi.concept.direct-calls]
+    glossary: [shared.glossary.gateway]
+uhi.concept.dofp-stages:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: The four UHI stages, DOFP
+  summary: A UHI service takes a patient through up to four stages, Discovery, Order, Fulfilment and Post-fulfilment.
+  page: site/docs/uhi/v1/getting-started/index.mdx
+  heading: the-four-stages-dofp
+  url: /docs/uhi/v1#the-four-stages-dofp
+  related:
+    concepts: [uhi.concept.service-reach]
+    flows: [uhi.flow.consultation-discovery, uhi.flow.consultation-order, uhi.flow.consultation-fulfilment, uhi.flow.consultation-post-fulfilment]
+uhi.concept.service-reach:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: How far each UHI service goes, and who answers its search
+  summary: Physical Consultation covers all four stages, Ambulance Booking reaches a quote, and the other services stop at discovery.
+  page: site/docs/uhi/v1/getting-started/index.mdx
+  heading: how-far-each-service-goes
+  url: /docs/uhi/v1#how-far-each-service-goes
+  related:
+    concepts: [uhi.concept.dofp-stages]
+    decisions: [uhi.decision.choose-role, uhi.decision.first-service]
+uhi.decision.choose-role:
+  type: decision
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Choosing your UHI role, EUA or HSPA
+  summary: Build an EUA for a patient-facing app or an HSPA for a provider system; HSPA is open only for Physical Consultation, Blood Bank and Ambulance.
+  page: site/docs/uhi/v1/getting-started/index.mdx
+  heading: choose-your-role
+  url: /docs/uhi/v1#choose-your-role
+  related:
+    concepts: [uhi.concept.participants, uhi.concept.service-reach]
+    decisions: [uhi.decision.first-service]
+    glossary: [shared.glossary.eua, shared.glossary.hspa]
+uhi.concept.aggregate-answers:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Aggregating the on_search answers to one UHI search
+  summary: Each matching HSPA answers a search separately, so group the on_search answers by their shared transaction_id.
+  page: site/docs/uhi/v1/getting-started/build-it-well.mdx
+  heading: aggregate-the-answers
+  url: /docs/uhi/v1/getting-started/build-it-well#aggregate-the-answers
+  related:
+    concepts: [uhi.concept.match-transaction-id, uhi.concept.timeouts]
+    callbacks: [uhi.callback.network-gateway-on-search]
+uhi.concept.render-as-results-arrive:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Timing out a UHI search and rendering results as they arrive
+  summary: Render each on_search as it arrives, keep the timeout configurable, and show a fallback or retry instead of a screen left loading.
+  page: site/docs/uhi/v1/getting-started/build-it-well.mdx
+  heading: time-out-and-render-as-results-arrive
+  url: /docs/uhi/v1/getting-started/build-it-well#time-out-and-render-as-results-arrive
+  related:
+    concepts: [uhi.concept.timeouts, uhi.concept.paginate-client-side]
+uhi.concept.paginate-client-side:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Paginating UHI search results on your side
+  summary: on_search is not paginated, so handle a large payload without blocking the screen and page through it in your own UI.
+  page: site/docs/uhi/v1/getting-started/build-it-well.mdx
+  heading: paginate-on-your-side
+  url: /docs/uhi/v1/getting-started/build-it-well#paginate-on-your-side
+  related:
+    concepts: [uhi.concept.render-as-results-arrive]
+    callbacks: [uhi.callback.network-gateway-on-search]
+uhi.concept.screen-requirements:
+  type: concept
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: What UHI app screens must do
+  summary: Screen rules checked at sign-off, from branding and disclaimers to showing terms before confirm and keeping the PIN out of storage.
+  page: site/docs/uhi/v1/getting-started/build-it-well.mdx
+  heading: what-the-screens-must-do
+  url: /docs/uhi/v1/getting-started/build-it-well#what-the-screens-must-do
+  related:
+    tests: [uhi.test.every-service-checks, uhi.test.consultation-go-live-checklist]
+    concepts: [uhi.concept.pmjay-hem-limits, uhi.concept.blood-bank-limits]
+uhi.test.every-service-checks:
+  type: test
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Go-live checks every UHI service carries
+  summary: Eight items every UHI go-live checklist carries, from Milestone 2 and key registration to signing, async handling and passed test cases.
+  page: site/docs/uhi/v1/getting-started/build-it-well.mdx
+  heading: checked-for-every-service
+  url: /docs/uhi/v1/getting-started/build-it-well#checked-for-every-service
+  related:
+    tests: [uhi.test.run-test-cases, uhi.test.consultation-go-live-checklist]
+    concepts: [uhi.concept.screen-requirements]
+    decisions: [uhi.decision.choose-role]
