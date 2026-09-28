@@ -32,7 +32,9 @@ test('a clean map has no problems', () => {
 
 test('a heading id the map needs, gone from the page, fails and names the atom', () => {
   const p = problems({map: {'shared.glossary.link-token': entry}, pages: {'g.mdx': page.replace(' {#link-token}', '')}, handIds: new Set(), specText: ''});
-  assert.deepEqual(p, ['shared.glossary.link-token: heading id "link-token" is missing from g.mdx. Put {#link-token} back on the heading that holds its words, or point the atom at the section that now does']);
+  assert.deepEqual(p, ['shared.glossary.link-token: heading id "link-token" is missing from g.mdx. Put {/* #link-token */} back on the heading that holds its words, or point the atom at the section that now does']);
+  const md = problems({map: {'shared.glossary.link-token': {...entry, page: 'g.md'}}, pages: {'g.md': page.replace(' {#link-token}', '')}, handIds: new Set(), specText: ''});
+  assert.match(md[0], /Put \{#link-token\} back/);
 });
 
 test('an atom written in two places fails', () => {

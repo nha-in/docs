@@ -25,7 +25,8 @@ to the docs pages, and only to the pages: every other surface is built from them
    npm run build:sections && npm run check:sections && npm run lint:content
    ```
 
-6. Open a pull request. CI names anything the edit broke and how to fix it.
+6. Commit the page and every file `build:sections` changed under `catalogue/`,
+   then open a pull request. CI names anything the edit broke and how to fix it.
 
 ## If a check fails
 

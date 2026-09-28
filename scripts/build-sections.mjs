@@ -46,7 +46,9 @@ export function problems({map, pages, handIds, specText}) {
     const raw = pages[e.page];
     if (raw === undefined) { out.push(`${id}: page ${e.page} does not exist`); continue; }
     const s = sectionsById(raw).get(e.heading);
-    if (!s) { out.push(`${id}: heading id "${e.heading}" is missing from ${e.page}. Put {#${e.heading}} back on the heading that holds its words, or point the atom at the section that now does`); continue; }
+    // MDX reads a bare {#id} as an expression, so an .mdx page takes the comment form.
+    const idText = e.page.endsWith('.mdx') ? `{/* #${e.heading} */}` : `{#${e.heading}}`;
+    if (!s) { out.push(`${id}: heading id "${e.heading}" is missing from ${e.page}. Put ${idText} back on the heading that holds its words, or point the atom at the section that now does`); continue; }
     for (const para of s.unlabelled) out.push(`${id}: ${e.page}#${e.heading} has agent text without a label: "${para.slice(0, 60)}". Start the paragraph with **Before you start.**, **What happens.**, **How you know it worked.** or **When it goes wrong.**`);
     for (const tag of plainMarkdown(s.text, e.url).problems) out.push(`${id}: ${e.page}#${e.heading} carries page markup the bot would quote: ${tag}. Move it out of the mapped section or replace it with plain markdown`);
     const visible = raw.replace(/<AgentOnly>[\s\S]*?<\/AgentOnly>/g, '');
@@ -84,7 +86,8 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const genDir = join(root, 'catalogue', 'generated');
   if (process.argv.includes('--check')) {
     for (const [p, body] of want) if (!existsSync(join(root, p)) || readFileSync(join(root, p), 'utf8') !== body) found.push(`${p} is stale; run npm run build:sections`);
-    for (const f of walkFiles(genDir)) if (!want.has(relative(root, f))) found.push(`${relative(root, f)} has no map entry; run npm run build:sections`);
+    const mapped = new Set(Object.entries(map).map(([id, e]) => generatedPath(id, e)));
+    for (const f of walkFiles(genDir)) if (!mapped.has(relative(root, f))) found.push(`${relative(root, f)} has no map entry; run npm run build:sections`);
     const regPath = join(root, 'catalogue', 'registry.json');
     if (!existsSync(regPath) || readFileSync(regPath, 'utf8') !== reg) found.push('catalogue/registry.json is stale; run npm run build:sections');
     for (const p of found) console.error(p);

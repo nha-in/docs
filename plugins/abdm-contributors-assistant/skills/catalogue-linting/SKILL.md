@@ -41,7 +41,7 @@ Builds every atom listed in `catalogue/map.yaml` from its page section and compa
 
 | Fails on | Message (verbatim) | Fix |
 |---|---|---|
-| A mapped heading id is gone from its page | `<id>: heading id "<heading>" is missing from <page>. Put {#<heading>} back on the heading that holds its words, or point the atom at the section that now does` | Put the id back, as `{/* #<heading> */}` in an `.mdx` page, or repoint the map entry. |
+| A mapped heading id is gone from its page | `<id>: heading id "<heading>" is missing from <page>. Put {#<heading>} back on the heading that holds its words, or point the atom at the section that now does`, with `{/* #<heading> */}` in place of `{#<heading>}` for an `.mdx` page | Put the id back in the form the message names, or repoint the map entry. |
 | An id is both a hand-written file and a map entry | `<id> is both a hand-written file and a map entry. Delete the hand-written file once its words are on the page` | Delete the file. |
 | An agent paragraph has no label | `<id>: <page>#<heading> has agent text without a label: "<text>". Start the paragraph with ...` | Start it with one of the four labels. |
 | An agent note states a literal no page or specification does | `` <id>: agent note introduces `<literal>`, which neither <page> nor any specification states. Put it on the page, or take it out of the note `` | Put it on the page, or take it out. |
