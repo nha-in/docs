@@ -15,6 +15,8 @@ The HIE-CM module skills compile from the specifications and the journey files, 
 2. `node scripts/compile-skills.mjs` writes the guided loops under `skills-src/`: `hiecm-<module>-build` for a module with journeys, and `hiecm-<module>-debug` for a module whose specification's response examples return error codes.
 3. `node scripts/build-skills.mjs` writes one folder per module, `abdm-gateway`, `abdm-m1` to `abdm-m4`, `abdm-p1` to `abdm-p4` and `abdm-scan-and-pay`, plus `abdm-fhir`, to `site/static/skills/` and to the integrators plugin. It folds the loops in as `references/scaffold.md` and `references/debug.md`, writes `references/integrate.md` from the specifications and `references/design.md` from atoms, adds the module's call facts held in the script, and injects the practices from `shared.concept.integration-practices`.
 
+UHI keeps its own plugin, `plugins/uhi-integrators-assistant/`, one skill per service. `compile-skills.mjs` writes `uhi-<service>-build` from the UHI journeys and `uhi-<service>-debug` from the troubleshooting and flow atoms, and `scripts/lib/uhi-skills.mjs` assembles each folder from the UHI atoms: design from the service's concept atoms, integrate from the step data and the signing atoms, test from the test and go-live atoms. It carries no practices and no codebase survey, because both are written for HIE-CM.
+
 `npm run validate:skills` checks the output. The selector, templates, prose pass and identifier diff described below are the design for atom-fed skills, and the parts of it that run today are the three below.
 
 ## What atoms already feed

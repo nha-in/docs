@@ -16,9 +16,10 @@
     "validate_request"
   ],
   "plugins": {
-    "abdm-contributors-assistant": "0.3.5",
+    "abdm-contributors-assistant": "0.3.6",
     "abdm-integrators-assistant": "0.9.2",
-    "nhcx": "1.0.1"
+    "nhcx": "1.0.1",
+    "uhi-integrators-assistant": "0.1.0"
   },
   "procedures": {},
   "skills": [
@@ -46,6 +47,18 @@
     "nhcx-full",
     "nhcx-payment",
     "nhcx-preauth",
-    "nhcx-reprocess"
+    "nhcx-reprocess",
+    "uhi-ambulance-build",
+    "uhi-ambulance-debug",
+    "uhi-blood-bank-build",
+    "uhi-blood-bank-debug",
+    "uhi-consultation-build",
+    "uhi-consultation-debug",
+    "uhi-jan-aushadhi-build",
+    "uhi-jan-aushadhi-debug",
+    "uhi-notto-build",
+    "uhi-notto-debug",
+    "uhi-pmjay-hem-build",
+    "uhi-pmjay-hem-debug"
   ]
 }
