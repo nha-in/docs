@@ -7,8 +7,7 @@ agent_consumers:
   - abdm-integration-agent
   - abdm-call-debugger
 requires:
-  - management-token
-  - encryption-certificate
+  - gateway-session-token
 produces:
   - hpid
   - facility-id
@@ -43,7 +42,7 @@ This file is the map. Each line above is a file beside it, opened one at a time 
 
 ## Before anything else
 
-- No call in this skill has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.
+- Treat every request and response shape in this skill as unconfirmed until the sandbox has answered you. Check a response before you rely on its shape.
 - Neither registry moves a health record. M4 establishes who the professional is and what the facility is, so every record flow has a verified provider behind it.
 - The register professional call carries an `hprToken` in its payload, beside the practitioner.
 - The facility calls are keyed to a `trackingId`, and the facility status values in the examples include `Draft` and `Submitted`. Read the status rather than assuming a facility is complete.

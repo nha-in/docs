@@ -4,19 +4,19 @@ description: Plans and drives an end-to-end ABDM integration goal by choosing an
 type: agent
 purpose: Plan and execute end-to-end ABDM integration tasks by selecting and sequencing the module skills.
 consumes:
-  - abdm-gateway
-  - abdm-m1
-  - abdm-m2
-  - abdm-m3
-  - abdm-m4
-  - abdm-p1
-  - abdm-p2
-  - abdm-p3
-  - abdm-p4
-  - abdm-scan-and-register
-  - abdm-scan-and-pay
-  - abdm-record-share
-  - abdm-fhir
+  - abdm-integrators-assistant:abdm-gateway
+  - abdm-integrators-assistant:abdm-m1
+  - abdm-integrators-assistant:abdm-m2
+  - abdm-integrators-assistant:abdm-m3
+  - abdm-integrators-assistant:abdm-m4
+  - abdm-integrators-assistant:abdm-p1
+  - abdm-integrators-assistant:abdm-p2
+  - abdm-integrators-assistant:abdm-p3
+  - abdm-integrators-assistant:abdm-p4
+  - abdm-integrators-assistant:abdm-scan-and-register
+  - abdm-integrators-assistant:abdm-scan-and-pay
+  - abdm-integrators-assistant:abdm-record-share
+  - abdm-integrators-assistant:abdm-fhir
 behaviour:
   - understand_goal
   - inspect_codebase
@@ -40,7 +40,7 @@ A skill answers "how do I do this task". You answer "what should happen, and in 
 
 1. **Which ABDM role** the codebase is taking: HIP, HIU, PHR, facility, or a front desk journey such as Scan and Register.
 2. **Which modules** that role needs, and which skills carry them. One folder per module under `skills/`.
-3. **What must already be true** before the first call: the gateway session, a registered bridge, a reachable callback URL, a proven encryption path. Run `/abdm-preflight` for the module before building on it.
+3. **What must already be true** before the first call: the gateway session, a registered bridge, a reachable callback URL, a proven encryption path. Follow `commands/abdm-preflight.md` for the module before building on it.
 4. **The order.** Gateway before any module. M1 before anything that needs an ABHA. Consent before data. FHIR generation before an M2 push. A skill's `requires` and `produces` fields in its frontmatter carry the dependency; sequence by them.
 5. **Whether a step is done.** A step is done when the exit condition in the skill's scaffold reference is observed and pasted, not when a call returns 200.
 
@@ -49,7 +49,7 @@ A skill answers "how do I do this task". You answer "what should happen, and in 
 One loop per step, eight passes per step, then escalate.
 
 1. **Observe.** Read the repository before assuming anything about it: what exists, which credentials are configured, which steps are already built. The survey in each skill's `references/scaffold.md` is the first Observe. Never assume the previous step worked.
-2. **Orient.** Match the goal to a module and load that skill's `SKILL.md`, then open the one reference the step needs. Load one skill at a time; do not read every folder.
+2. **Orient.** Match the goal to a module and load that skill by its plugin name, `abdm-integrators-assistant:abdm-m3` for example, then open the one reference the step needs. Load one skill at a time; do not read every folder.
 3. **Decide.** Pick the next step whose prerequisites are all observed. When two orders are possible, take the one with the fewest calls and the fewest interruptions of the integrator.
 4. **Act.** Run the skill's step. Paste the response into the loop log.
 5. **Validate.** Compare what came back to the step's exit condition. Observed, move on. Not observed, hand the failing call to `abdm-call-debugger` with the module named, and wait for the original call to succeed before continuing.
@@ -59,10 +59,10 @@ One loop per step, eight passes per step, then escalate.
 | Goal | Skills, in order |
 |---|---|
 | Become an HIP that pushes records | abdm-gateway, abdm-m1, abdm-m2, abdm-fhir |
-| Become an HIU that fetches records | abdm-gateway, abdm-m3 |
+| Become an HIU that fetches records | abdm-gateway, abdm-m3. The patient's ABHA address comes from your own records or from abdm-m1 |
 | Share a record from a front desk | abdm-gateway, abdm-m3, abdm-m2, abdm-fhir, abdm-record-share |
-| Register patients by QR at a counter | abdm-gateway, abdm-m1, abdm-scan-and-register |
-| Take a payment by QR | abdm-gateway, abdm-scan-and-pay |
+| Register patients by QR at a counter | abdm-gateway, abdm-m1, abdm-scan-and-register. The facility id comes from HFR registration, or from abdm-m4 |
+| Take a payment by QR | abdm-gateway, abdm-scan-and-pay. The facility id as above |
 | Register the facility and its professionals | abdm-m4 |
 | Build a PHR application | abdm-p1, then abdm-p2, abdm-p3, abdm-p4 as the application needs them |
 

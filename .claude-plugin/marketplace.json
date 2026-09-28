@@ -10,7 +10,7 @@
     {
       "name": "abdm-integrators-assistant",
       "source": "./plugins/abdm-integrators-assistant",
-      "description": "Build and debug an ABDM integration. Build skills scaffold a milestone flow by flow against the sandbox, M1 to M4 on the provider side and P1 to P3 inside a PHR application. Debug skills walk a failed call to a named fix, citing the Catalogue atom behind every step. fhir-generate and fhir-audit build or audit NRCES compliant FHIR document bundles against the Docs MCP validator.",
+      "description": "Build and debug an ABDM integration. One skill per module, gateway, M1 to M4 on the provider side, P1 to P4 inside a PHR application, Scan and Register, Scan and Pay, Record Share and FHIR, each with scaffold, integrate and debug references. Three agents plan above them: an integration agent that sequences skills toward a goal, a call debugger that takes one failing call to a fix proved by the original call succeeding, and a FHIR compliance agent that validates bundles against the Docs MCP validator.",
       "category": "documentation",
       "keywords": [
         "abdm",

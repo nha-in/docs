@@ -10,11 +10,10 @@ requires:
   - gateway-session-token
   - hiu-registration
   - callback-url
-  - patient-abha-address
+  - abha-address
 produces:
   - consent-request-id
   - consent-artefact
-  - health-information
 can_execute: true
 can_orchestrate: false
 ---
@@ -46,8 +45,8 @@ This file is the map. Each line above is a file beside it, opened one at a time 
 
 ## Before anything else
 
-- No call in this skill has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.
-- The design section is the exception. Its rules come from building a working front desk against the sandbox, and each atom it cites names what was observed and the date it was seen.
+- Treat every request and response shape in this skill as unconfirmed until the sandbox has answered you. Check a response before you rely on its shape.
+- The design section is different in kind. Its rules come from building a working front desk against the sandbox, and each atom it cites names what was observed and the date it was seen.
 - One consent request produces one artefact per HIP, so store the request id and every artefact id. Taking the first element is the bug that silently drops half a fetch.
 - You act as the HIU. The HIE-CM holds the consent and asks the patient on your behalf. No artefact, no records.
 - The patient must be known to you by ABHA address before you can raise a request.

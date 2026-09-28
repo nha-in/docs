@@ -20,7 +20,7 @@ Read `error.code` first and fall back to a top level `code`. A numeric code with
 
 ## Then match it
 
-Load the module's skill. Each module skill's `references/debug.md` lists the codes its specification's examples return, with message, status and operation. The module skills are `abdm-gateway`, `abdm-m1` through `abdm-m4`, `abdm-p1` through `abdm-p4` and `abdm-scan-and-pay`.
+Load the module's skill by its plugin name, `abdm-integrators-assistant:abdm-m1` for example. Each module skill's `references/debug.md` lists the codes its specification's examples return, with message, status and operation, and no fix per code. The module skills are `abdm-gateway`, `abdm-m1` through `abdm-m4`, `abdm-p1` through `abdm-p4`, `abdm-scan-and-register`, `abdm-scan-and-pay` and `abdm-record-share`. Where the file says the specification returns no code for the module, use the error codes reference on the portal at `/docs/hiecm/v3/reference/error-codes` and say so.
 
 ## What a field validation body does not tell you
 
@@ -30,7 +30,7 @@ A body naming a field is reporting the field, not the cause. When the field carr
 
 1. The shape, and where the code was found
 2. The code, its message, and the operation that returns it
-3. The named fix
+3. The most likely fix, and the second hypothesis it has to be separated from
 4. The exit condition: the original call succeeding, not the fix being applied
 
 Where no listed code matches, say so and name the two most likely causes rather than picking one. Do not invent a code.

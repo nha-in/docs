@@ -61,12 +61,12 @@ const skillUrl = (slug, url) =>
 // skill that had been run, and a reader who discounts it loses the rules that
 // stop a journey asking twice.
 const UNVERIFIED =
-  'No call in this skill has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.';
+  'Treat every request and response shape in this skill as unconfirmed until the sandbox has answered you. Check a response before you rely on its shape.';
 
 // Added only where a design section exists, immediately after UNVERIFIED, so
 // the two claims are read together rather than a page apart.
 const DESIGN_OBSERVED =
-  'The design section is the exception. Its rules come from building a working front desk against the sandbox, and each atom it cites names what was observed and the date it was seen.';
+  'The design section is different in kind. Its rules come from building a working front desk against the sandbox, and each atom it cites names what was observed and the date it was seen.';
 
 // Practices, as distinct from rules. A rule is a fact about one module. A
 // practice is how to work so a wrong assumption surfaces in a minute rather
@@ -351,11 +351,11 @@ const MODULES = [
 // behind, not endpoints. `can_orchestrate` is false for every skill, because a
 // skill is a known procedure and the planning lives in agents/.
 const CONTRACT = {
-  gateway: {requires: ['sandbox-client-credentials'], produces: ['gateway-session-token', 'bridge-registration']},
-  m1: {requires: ['gateway-session-token', 'encryption-certificate'], produces: ['abha-number', 'abha-address', 'user-token', 'abha-profile']},
-  m2: {requires: ['gateway-session-token', 'hip-registration', 'callback-url'], produces: ['care-context', 'link-token', 'health-information-push']},
-  m3: {requires: ['gateway-session-token', 'hiu-registration', 'callback-url', 'patient-abha-address'], produces: ['consent-request-id', 'consent-artefact', 'health-information']},
-  m4: {requires: ['management-token', 'encryption-certificate'], produces: ['hpid', 'facility-id', 'bridge-facility-link']},
+  gateway: {requires: ['sandbox-client-credentials'], produces: ['gateway-session-token', 'bridge-url']},
+  m1: {requires: ['gateway-session-token'], produces: ['abha-number', 'abha-address', 'user-token', 'abha-profile']},
+  m2: {requires: ['gateway-session-token', 'hip-registration', 'callback-url', 'nrces-document-bundle'], produces: ['care-context', 'link-token', 'health-information-push']},
+  m3: {requires: ['gateway-session-token', 'hiu-registration', 'callback-url', 'abha-address'], produces: ['consent-request-id', 'consent-artefact']},
+  m4: {requires: ['gateway-session-token'], produces: ['hpid', 'facility-id', 'bridge-facility-link']},
   p1: {requires: ['gateway-session-token'], produces: ['phr-login', 'abha-profile']},
   p2: {requires: ['phr-login'], produces: ['consent-decision']},
   p3: {requires: ['phr-login'], produces: ['subscription']},
@@ -363,8 +363,24 @@ const CONTRACT = {
   'scan-and-register': {requires: ['gateway-session-token', 'facility-id'], produces: ['abha-profile', 'registration']},
   'scan-and-pay': {requires: ['gateway-session-token', 'facility-id', 'callback-url'], produces: ['order', 'payment-status']},
   'record-share': {requires: ['gateway-session-token', 'hip-registration', 'callback-url'], produces: ['shared-record']},
-  fhir: {requires: [], produces: ['nrces-document-bundle']},
+  fhir: {requires: ['abdm-docs-mcp'], produces: ['nrces-document-bundle']},
 };
+
+// Labels an integrator brings from outside the plugin: portal registration,
+// credentials, a deployment, a connected server. Every other `requires` must
+// be some skill's `produces`, or an agent is told to sequence a step nothing
+// can satisfy. The build fails rather than shipping that plan.
+const EXTERNAL = new Set(['sandbox-client-credentials', 'hip-registration', 'hiu-registration', 'callback-url', 'abdm-docs-mcp']);
+{
+  const produced = new Set(Object.values(CONTRACT).flatMap((c) => c.produces));
+  for (const [id, {requires}] of Object.entries(CONTRACT)) {
+    for (const label of requires) {
+      if (!produced.has(label) && !EXTERNAL.has(label)) {
+        throw new Error(`CONTRACT: ${id} requires "${label}", which no skill produces and EXTERNAL does not list`);
+      }
+    }
+  }
+}
 
 const yamlList = (key, items) => (items.length ? [`${key}:`, ...items.map((i) => `  - ${i}`)] : [`${key}: []`]);
 
