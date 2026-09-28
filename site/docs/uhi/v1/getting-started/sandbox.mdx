@@ -22,7 +22,7 @@ both.
 - Registration gives you a subscriber ID and sandbox access.
 - Every answer arrives later on your own public HTTPS callback URL.
 
-## From sandbox to production
+## From sandbox to production {/* #from-sandbox-to-production */}
 
 Onboarding runs in six steps. This page covers the first three. The last three
 are on [Go live](/docs/uhi/v1/getting-started/going-live).
@@ -43,7 +43,7 @@ are on [Go live](/docs/uhi/v1/getting-started/going-live).
 - **An Ed25519 key pair.** You generate it in step 2 and share only the public key.
 - **Async handling.** Your code must accept an `ACK` now and the real answer later, matched by `transaction_id`. See [Messages and callbacks](/docs/uhi/v1/concepts/messages).
 
-## 1. Express intent
+## 1. Express intent {/* #1-express-intent */}
 
 Tell your [NHA](/docs/uhi/v1/getting-started/glossary#nha) point of contact
 which service you want to integrate, and in which role.
@@ -52,7 +52,7 @@ open to.
 
 **You get:** the onboarding kick-off.
 
-## 2. Generate your key pair
+## 2. Generate your key pair {/* #2-generate-your-key-pair */}
 
 Clone the
 [Header Generation Utility](https://github.com/NHA-ABDM/UHI/tree/main/header_generator_utility)
@@ -63,7 +63,7 @@ Keep the private key on your server. You share only the public key.
 
 **You get:** a public key and a private key. See [Signing](/docs/uhi/v1/concepts/signing).
 
-## 3. Submit the sandbox registration form
+## 3. Submit the sandbox registration form {/* #3-submit-the-sandbox-registration-form */}
 
 Submit the sandbox registration form with three things:
 
@@ -73,12 +73,14 @@ Submit the sandbox registration form with three things:
 | Callback URL | Your public HTTPS `consumer_uri`, or `provider_uri` for an HSPA |
 | Public key | The public half of the key pair from step 2 |
 
-<SandboxAction action="register">Open the sandbox registration form</SandboxAction>
-
 **You get:** a subscriber ID, a public key ID and sandbox access. The utility
 signs with both IDs, so keep them.
 
-## 4. Note the base URLs
+### Open the form {/* #open-the-registration-form */}
+
+<SandboxAction action="register">Open the sandbox registration form</SandboxAction>
+
+## 4. Note the base URLs {/* #4-note-the-base-urls */}
 
 | Environment | [UHI Gateway](/docs/uhi/v1/getting-started/glossary#uhi-gateway) base URL | Reference apps |
 | --- | --- | --- |

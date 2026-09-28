@@ -1,0 +1,411 @@
+# UHI onboarding, go-live, test cases and glossary. Words live on the
+# getting-started pages, the resources test pages and _glossary/_uhi.mdx.
+uhi.sandbox.sandbox-to-production:
+  type: sandbox
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: The six onboarding steps from sandbox to production
+  summary: UHI onboarding runs in six steps, from expressing intent and registering in the sandbox to sign-off and the switch to production.
+  page: site/docs/uhi/v1/getting-started/sandbox.mdx
+  heading: from-sandbox-to-production
+  url: /docs/uhi/v1/getting-started/sandbox#from-sandbox-to-production
+  related:
+    sandbox: [uhi.sandbox.express-intent, uhi.sandbox.key-pair, uhi.sandbox.registration-form, uhi.sandbox.demo-sign-off, uhi.sandbox.production-switch]
+uhi.sandbox.express-intent:
+  type: sandbox
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Express intent to join UHI
+  summary: Tell your NHA point of contact which UHI service you want to integrate, and in which role, to start onboarding.
+  page: site/docs/uhi/v1/getting-started/sandbox.mdx
+  heading: 1-express-intent
+  url: /docs/uhi/v1/getting-started/sandbox#1-express-intent
+  related:
+    decisions: [uhi.decision.choose-role, uhi.decision.first-service]
+    concepts: [uhi.concept.participants]
+    sandbox: [uhi.sandbox.key-pair]
+uhi.sandbox.key-pair:
+  type: sandbox
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Generate your UHI key pair
+  summary: The Header Generation Utility generates your Ed25519 key pair and later signs each payload. Only the public key leaves your server.
+  page: site/docs/uhi/v1/getting-started/sandbox.mdx
+  heading: 2-generate-your-key-pair
+  url: /docs/uhi/v1/getting-started/sandbox#2-generate-your-key-pair
+  related:
+    concepts: [uhi.concept.key-generation, uhi.concept.signing-headers]
+    sandbox: [uhi.sandbox.registration-form]
+uhi.sandbox.registration-form:
+  type: sandbox
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Register in the UHI sandbox
+  summary: The sandbox registration form takes your role, callback URL and public key, and returns a subscriber ID, a public key ID and sandbox access.
+  page: site/docs/uhi/v1/getting-started/sandbox.mdx
+  heading: 3-submit-the-sandbox-registration-form
+  url: /docs/uhi/v1/getting-started/sandbox#3-submit-the-sandbox-registration-form
+  related:
+    sandbox: [uhi.sandbox.key-pair, uhi.sandbox.base-urls]
+    glossary: [uhi.glossary.consumer-uri]
+    concepts: [uhi.concept.ack-then-answer]
+uhi.sandbox.base-urls:
+  type: sandbox
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: UHI Gateway base URLs for sandbox and production
+  summary: The UHI Gateway base URL for the sandbox and for production, and the reference EUA and HSPA apps in the sandbox.
+  page: site/docs/uhi/v1/getting-started/sandbox.mdx
+  heading: 4-note-the-base-urls
+  url: /docs/uhi/v1/getting-started/sandbox#4-note-the-base-urls
+  related:
+    concepts: [uhi.concept.gateway-routes, uhi.concept.gateway-role]
+    sandbox: [uhi.sandbox.production-switch]
+    glossary: [shared.glossary.gateway]
+uhi.troubleshooting.first-search:
+  type: troubleshooting
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: When the first UHI search fails
+  summary: What a 401, a 403, an ACK with no callback, an unmatched callback or an empty provider list means on your first search.
+  page: site/docs/uhi/v1/getting-started/first-fifteen-minutes.mdx
+  heading: if-a-call-fails
+  url: /docs/uhi/v1/getting-started/first-fifteen-minutes#if-a-call-fails
+  related:
+    concepts: [uhi.concept.signing-headers, uhi.concept.match-transaction-id, uhi.concept.error-object]
+    troubleshooting: [uhi.troubleshooting.http-statuses]
+    endpoints: [uhi.endpoint.network-gateway-search]
+uhi.test.run-test-cases:
+  type: test
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Run your UHI service's test cases
+  summary: Build against the sample payloads and the UHI API reference, then pass every test case for your service in the sandbox.
+  page: site/docs/uhi/v1/getting-started/going-live.mdx
+  heading: 1-build-and-run-your-services-test-cases
+  url: /docs/uhi/v1/getting-started/going-live#1-build-and-run-your-services-test-cases
+  related:
+    tests: [uhi.test.every-service-checks, uhi.test.consultation-go-live-checklist, uhi.test.pmjay-hem-context, uhi.test.ambulance-context]
+    sandbox: [uhi.sandbox.demo-sign-off]
+uhi.sandbox.demo-sign-off:
+  type: sandbox
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Record a demo and request UHI sign-off
+  summary: Record your app running the service's flow and send it to your NHA point of contact. Sign-off arrives in writing.
+  page: site/docs/uhi/v1/getting-started/going-live.mdx
+  heading: 2-record-a-demo-and-request-sign-off
+  url: /docs/uhi/v1/getting-started/going-live#2-record-a-demo-and-request-sign-off
+  related:
+    tests: [uhi.test.run-test-cases]
+    concepts: [uhi.concept.screen-requirements]
+    sandbox: [uhi.sandbox.production-switch]
+uhi.sandbox.production-switch:
+  type: sandbox
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Switch your UHI integration to production
+  summary: Change your IDs and callback URL to production values and point your calls at the production UHI Gateway.
+  page: site/docs/uhi/v1/getting-started/going-live.mdx
+  heading: 3-switch-to-production
+  url: /docs/uhi/v1/getting-started/going-live#3-switch-to-production
+  related:
+    sandbox: [uhi.sandbox.base-urls, uhi.sandbox.demo-sign-off]
+    glossary: [uhi.glossary.consumer-uri]
+    troubleshooting: [uhi.troubleshooting.go-live]
+uhi.troubleshooting.go-live:
+  type: troubleshooting
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: When a UHI search fails after the switch to production
+  summary: A search that worked in the sandbox fails in production. Check the Gateway host, then your production IDs and callback URL.
+  page: site/docs/uhi/v1/getting-started/going-live.mdx
+  heading: when-it-goes-wrong
+  url: /docs/uhi/v1/getting-started/going-live#when-it-goes-wrong
+  related:
+    sandbox: [uhi.sandbox.production-switch, uhi.sandbox.base-urls]
+    troubleshooting: [uhi.troubleshooting.http-statuses]
+    concepts: [uhi.concept.signing-headers]
+uhi.test.ambulance-context:
+  type: test
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Ambulance Booking test cases for the context block
+  summary: AMB-A-01 to AMB-A-04 check the search context fields, a missing callback address, a mismatched transaction and where init is sent.
+  page: site/docs/uhi/v1/resources/ambulance.md
+  heading: a-context
+  url: /docs/uhi/v1/resources/ambulance#a-context
+  related:
+    concepts: [uhi.concept.context-block, uhi.concept.match-transaction-id]
+    flows: [uhi.flow.ambulance-discovery, uhi.flow.ambulance-order]
+uhi.test.ambulance-search-filters:
+  type: test
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Ambulance Booking test cases for search filters
+  summary: AMB-B-01 to AMB-B-06 check emergency and non-emergency searches, pickup and drop-off, ambulance class and additional services.
+  page: site/docs/uhi/v1/resources/ambulance.md
+  heading: b-search-filters
+  url: /docs/uhi/v1/resources/ambulance#b-search-filters
+  related:
+    flows: [uhi.flow.ambulance-discovery]
+    concepts: [uhi.concept.ambulance-service-identity]
+    endpoints: [uhi.endpoint.network-gateway-search]
+    glossary: [uhi.glossary.fulfillment-type]
+uhi.test.ambulance-on-search:
+  type: test
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Ambulance Booking test cases for on_search
+  summary: AMB-C-01 to AMB-C-05 check fulfillment ids and types, price links, the case type, no driver details and the transaction id.
+  page: site/docs/uhi/v1/resources/ambulance.md
+  heading: c-on-search-response
+  url: /docs/uhi/v1/resources/ambulance#c-on-search-response
+  related:
+    callbacks: [uhi.callback.network-gateway-on-search]
+    flows: [uhi.flow.ambulance-discovery]
+    concepts: [uhi.concept.match-transaction-id]
+uhi.test.ambulance-init:
+  type: test
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Ambulance Booking test cases for init and on_init
+  summary: AMB-D-01 to AMB-D-07 check the order id, the itemised quote, all five terms, locations and an ABHA address as customer id.
+  page: site/docs/uhi/v1/resources/ambulance.md
+  heading: d-init-and-on-init
+  url: /docs/uhi/v1/resources/ambulance#d-init-and-on-init
+  related:
+    endpoints: [uhi.endpoint.ambulance-init]
+    callbacks: [uhi.callback.ambulance-on-init]
+    flows: [uhi.flow.ambulance-order]
+    glossary: [uhi.glossary.direct-call-p2p]
+uhi.test.ambulance-eua-screens:
+  type: test
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Ambulance Booking test cases for EUA screens
+  summary: AMB-E-01 to AMB-E-05 check that the EUA shows the operator, arrival window, price and terms, and never driver or vehicle details.
+  page: site/docs/uhi/v1/resources/ambulance.md
+  heading: e-eua-screens
+  url: /docs/uhi/v1/resources/ambulance#e-eua-screens
+  related:
+    concepts: [uhi.concept.screen-requirements]
+    flows: [uhi.flow.ambulance-discovery, uhi.flow.ambulance-order]
+    tests: [uhi.test.every-service-checks]
+uhi.test.ambulance-edge-cases:
+  type: test
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Ambulance Booking test cases for edge cases
+  summary: AMB-F-01 to AMB-F-04 check no answer, an empty provider list, a repeated search and an advance payment requirement.
+  page: site/docs/uhi/v1/resources/ambulance.md
+  heading: f-edge-cases
+  url: /docs/uhi/v1/resources/ambulance#f-edge-cases
+  related:
+    concepts: [uhi.concept.timeouts, uhi.concept.render-as-results-arrive]
+    flows: [uhi.flow.ambulance-discovery, uhi.flow.ambulance-order]
+uhi.test.pmjay-hem-context:
+  type: test
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: PM-JAY HEM test cases for the context block
+  summary: TC-A01 to TC-A03 check that the Gateway accepts your search, results match its transaction id, and the domain is nic2004:85112.
+  page: site/docs/uhi/v1/resources/pmjay-hem.md
+  heading: a-the-context-block
+  url: /docs/uhi/v1/resources/pmjay-hem#a-the-context-block
+  related:
+    concepts: [uhi.concept.context-block, uhi.concept.match-transaction-id]
+    glossary: [uhi.glossary.context-domain]
+    flows: [uhi.flow.pmjay-hem-discovery]
+uhi.test.pmjay-hem-search-filters:
+  type: test
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: PM-JAY HEM test cases for search filters
+  summary: TC-B01 to TC-B06 check search by state, district, speciality, hospital name, pincode, and GPS with a radius and no state.
+  page: site/docs/uhi/v1/resources/pmjay-hem.md
+  heading: b-search-filters
+  url: /docs/uhi/v1/resources/pmjay-hem#b-search-filters
+  related:
+    concepts: [uhi.concept.pmjay-hem-search-variants]
+    flows: [uhi.flow.pmjay-hem-discovery]
+    endpoints: [uhi.endpoint.network-gateway-search]
+uhi.test.pmjay-hem-on-search:
+  type: test
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: PM-JAY HEM test cases for on_search
+  summary: TC-C01 to TC-C09 check that results arrive and every hospital carries its id, core details, dates, location, nodal officer and specialities.
+  page: site/docs/uhi/v1/resources/pmjay-hem.md
+  heading: c-the-on-search-response
+  url: /docs/uhi/v1/resources/pmjay-hem#c-the-on-search-response
+  related:
+    callbacks: [uhi.callback.network-gateway-on-search]
+    concepts: [uhi.concept.pmjay-hem-service-identity, uhi.concept.pmjay-hem-limits]
+    flows: [uhi.flow.pmjay-hem-discovery]
+uhi.test.pmjay-hem-user-experience:
+  type: test
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: PM-JAY HEM test cases for your app's screens
+  summary: TC-D01 to TC-D08 check how a beneficiary reaches the search, the label, branding, location search, empty results and the disclaimer.
+  page: site/docs/uhi/v1/resources/pmjay-hem.md
+  heading: d-user-experience
+  url: /docs/uhi/v1/resources/pmjay-hem#d-user-experience
+  related:
+    concepts: [uhi.concept.screen-requirements]
+    tests: [uhi.test.every-service-checks]
+    flows: [uhi.flow.pmjay-hem-discovery]
+uhi.test.pmjay-hem-edge-cases:
+  type: test
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: PM-JAY HEM test cases for edge cases
+  summary: TC-E01 to TC-E03 check a very long result list, a search that matches no hospital, and an on_search that never arrives.
+  page: site/docs/uhi/v1/resources/pmjay-hem.md
+  heading: e-edge-cases
+  url: /docs/uhi/v1/resources/pmjay-hem#e-edge-cases
+  related:
+    concepts: [uhi.concept.timeouts, uhi.concept.paginate-client-side, uhi.concept.pmjay-hem-limits]
+    flows: [uhi.flow.pmjay-hem-discovery]
+uhi.glossary.audit-copy:
+  type: glossary
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Audit copy, the callback copy a Physical Consultation HSPA sends the Gateway
+  summary: An exact copy of on_confirm, on_status, on_update or on_cancel that a Physical Consultation HSPA sends to the UHI Gateway.
+  page: site/docs/_glossary/_uhi.mdx
+  heading: audit-copy
+  url: /docs/uhi/v1/getting-started/glossary#audit-copy
+  related:
+    concepts: [uhi.concept.audit-copies]
+    endpoints: [uhi.endpoint.consultation-on-confirm-audit, uhi.endpoint.consultation-on-update-audit]
+    glossary: [uhi.glossary.direct-call-p2p]
+uhi.glossary.consumer-uri:
+  type: glossary
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: consumer_uri and provider_uri, the UHI callback base URLs
+  summary: The public HTTPS callback base URLs in a UHI call's context block, consumer_uri for the EUA and provider_uri for the HSPA.
+  page: site/docs/_glossary/_uhi.mdx
+  heading: consumer-uri
+  url: /docs/uhi/v1/getting-started/glossary#consumer-uri
+  related:
+    concepts: [uhi.concept.context-block, uhi.concept.ack-then-answer]
+    glossary: [shared.glossary.eua, shared.glossary.hspa]
+uhi.glossary.context-domain:
+  type: glossary
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: context.domain, the field that names a UHI service
+  summary: The context field that names the UHI service a call belongs to. The Gateway sends a search to every HSPA registered for it.
+  page: site/docs/_glossary/_uhi.mdx
+  heading: context-domain
+  url: /docs/uhi/v1/getting-started/glossary#context-domain
+  related:
+    concepts: [uhi.concept.context-block]
+    glossary: [uhi.glossary.fulfillment-type, shared.glossary.gateway]
+uhi.glossary.direct-call-p2p:
+  type: glossary
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Direct call (P2P), a call between EUA and HSPA without the Gateway
+  summary: A signed call the EUA and HSPA make to each other without the UHI Gateway. Every call from init onwards goes this way.
+  page: site/docs/_glossary/_uhi.mdx
+  heading: direct-call-p2p
+  url: /docs/uhi/v1/getting-started/glossary#direct-call-p2p
+  related:
+    concepts: [uhi.concept.direct-calls, uhi.concept.gateway-routes]
+    glossary: [uhi.glossary.audit-copy, uhi.glossary.consumer-uri]
+uhi.glossary.fulfillment-type:
+  type: glossary
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: fulfillment.type, the kind of service a UHI search asks for
+  summary: The field in a search's intent that names the kind of service asked for, such as PMJAYHEM, Physical or EMERGENCY.
+  page: site/docs/_glossary/_uhi.mdx
+  heading: fulfillment-type
+  url: /docs/uhi/v1/getting-started/glossary#fulfillment-type
+  related:
+    glossary: [uhi.glossary.context-domain]
+    concepts: [uhi.concept.pmjay-hem-service-identity, uhi.concept.consultation-service-identity, uhi.concept.ambulance-service-identity]
+uhi.glossary.notto:
+  type: glossary
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: NOTTO, the organisation behind NOTTO Hospital Discovery
+  summary: The National Organ and Tissue Transplant Organisation runs the HSPA for NOTTO Hospital Discovery, backed by its registry of authorised hospitals.
+  page: site/docs/_glossary/_uhi.mdx
+  heading: notto
+  url: /docs/uhi/v1/getting-started/glossary#notto
+  related:
+    concepts: [uhi.concept.notto-service-identity]
+    flows: [uhi.flow.notto-discovery]
+    glossary: [shared.glossary.hspa]
+uhi.glossary.pm-jay-hem:
+  type: glossary
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: PM-JAY HEM, the system that knows which hospitals are empanelled
+  summary: PM-JAY Hospital Empanelment Management knows which hospitals are empanelled under PM-JAY today. Its HSPA searches it live.
+  page: site/docs/_glossary/_uhi.mdx
+  heading: pm-jay-hem
+  url: /docs/uhi/v1/getting-started/glossary#pm-jay-hem
+  related:
+    concepts: [uhi.concept.pmjay-hem-service-identity]
+    flows: [uhi.flow.pmjay-hem-discovery]
+    tests: [uhi.test.pmjay-hem-context]
+uhi.glossary.pmbi:
+  type: glossary
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: PMBI, the organisation behind Jan Aushadhi
+  summary: The Pharmaceuticals and Medical Devices Bureau of India runs the HSPA for Jan Aushadhi, backed by its Kendra and medicine database.
+  page: site/docs/_glossary/_uhi.mdx
+  heading: pmbi
+  url: /docs/uhi/v1/getting-started/glossary#pmbi
+  related:
+    concepts: [uhi.concept.jan-aushadhi-service-identity]
+    flows: [uhi.flow.jan-aushadhi-find-kendra, uhi.flow.jan-aushadhi-find-medicine]
+uhi.glossary.network-registry:
+  type: glossary
+  gateway: uhi
+  milestone: n/a
+  version: uhi-v1
+  title: Network registry, the register of UHI participants and their keys
+  summary: The register of UHI participants and their public keys. Its lookup returns another participant's key so you can check its signature.
+  page: site/docs/_glossary/_uhi.mdx
+  heading: network-registry
+  url: /docs/uhi/v1/getting-started/glossary#network-registry
+  related:
+    endpoints: [uhi.endpoint.network-registry-lookup]
+    concepts: [uhi.concept.registry-lookup, uhi.concept.verifying-signatures]

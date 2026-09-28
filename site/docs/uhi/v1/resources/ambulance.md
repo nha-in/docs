@@ -15,7 +15,7 @@ apply to the calls between an
 [HSPA](/docs/uhi/v1/getting-started/glossary#hspa). Category E applies to the
 EUA's screens.
 
-## A. Context
+## A. Context {#a-context}
 
 | ID | In plain words | Passes when |
 | --- | --- | --- |
@@ -24,7 +24,7 @@ EUA's screens.
 | AMB-A-03 | The EUA catches a quote that belongs to another transaction. | An `on_init` whose `transaction_id` differs from the originating `init` is rejected or flagged as mismatched by the EUA. |
 | AMB-A-04 | The EUA sends `init` to the provider that answered the search. | An `init` carrying `provider_id` and `provider_uri` from `on_search` reaches the HSPA, which returns ACK. |
 
-## B. Search filters
+## B. Search filters {#b-search-filters}
 
 | ID | In plain words | Passes when |
 | --- | --- | --- |
@@ -35,7 +35,7 @@ EUA's screens.
 | AMB-B-05 | Asking for all classes returns every class. | A search with no category code, or `ALL`, gets an `on_search` catalog holding every available fulfillment type. |
 | AMB-B-06 | Requested extra services show up in the answer. | A search with the `additional_services` tag gets fulfillments that include or acknowledge `additional_services`. |
 
-## C. on_search response
+## C. on_search response {#c-on-search-response}
 
 | ID | In plain words | Passes when |
 | --- | --- | --- |
@@ -45,7 +45,7 @@ EUA's screens.
 | AMB-C-04 | No driver or vehicle details come back with the search. | No `on_search` fulfillment contains an `agent` block. |
 | AMB-C-05 | The answer belongs to the search that asked for it. | `transaction_id` in `on_search` equals the one in the `search`. |
 
-## D. init and on_init
+## D. init and on_init {#d-init-and-on-init}
 
 | ID | In plain words | Passes when |
 | --- | --- | --- |
@@ -57,7 +57,7 @@ EUA's screens.
 | AMB-D-06 | The quote keeps the locations the EUA sent. | The locations in `on_init` match the `SOURCE` and `DESTINATION` sent in `init`. |
 | AMB-D-07 | The HSPA accepts the patient identified by ABHA address. | An `init` with `customer.id` as an ABHA address is accepted and processed, and `on_init` is returned. |
 
-## E. EUA screens
+## E. EUA screens {#e-eua-screens}
 
 | ID | In plain words | Passes when |
 | --- | --- | --- |
@@ -67,7 +67,7 @@ EUA's screens.
 | AMB-E-04 | The user reads the terms before going further. | The full `on_init` terms, cancellation and payment, are on screen, and the confirm action is enabled only after review. |
 | AMB-E-05 | The user never sees driver or vehicle details. | No search, listing or `init` review screen shows driver or vehicle details. |
 
-## F. Edge cases
+## F. Edge cases {#f-edge-cases}
 
 | ID | In plain words | Passes when |
 | --- | --- | --- |
