@@ -1,9 +1,9 @@
 ---
 name: abdm-portal-index
 description: Router for all ABDM Developer Portal build work. Use this FIRST whenever anyone asks about building, planning, writing, reviewing, compiling, publishing or testing the ABDM Catalogue, the self-hosted docs site, the agent skills, the Docs MCP server, the update pipeline, or the portal's schedule and scope. Triggers include "write an atom", "review this page", "the catalogue", "lint failed", "compile the skills", "which milestone am I on", "what ships Friday", "is this DPG compliant", "ingest NHA swagger", "the support agent", and any mention of HIE-CM or ABDM documentation work. Route from here rather than guessing which skill applies.
-plan_version: 2026.09.28
+plan_version: 2026.09.28-2
 plan_source: abdm-v1-phase1-architecture-and-plan.md
-plan_hash: sha256:b504e9424235906f7ad60616c3dfae402ac5e71d62b8aaa30ab582c7affac368
+plan_hash: sha256:40ba882bf88aeb085956e055654b99896992b9e1a92030fe3b457515e0fd1fee
 compiled_from_plan: true
 ---
 
@@ -30,6 +30,8 @@ The only skill an agent needs loaded to know what else exists. Read the decision
 2. **Writing or changing knowledge**
    - Creating a new atom, catalogue knowledge under `catalogue/`: `atom-authoring`, then `/atom-new`
    - Writing or editing a documentation page, under `site/docs/`: `page-authoring`
+   - Editing an atom listed in `catalogue/map.yaml`: it lives on its page, so `page-authoring`, then `npm run build:sections`. Never edit `catalogue/generated/`
+   - Applying a correction NHA sent: `docs/runbook-nha-corrections.md`, on the page only
    - Getting the prose right, or a lint failure about style: `writing-guide`
    - Writing as ABDM rather than about it, or a draft that cites NHA: `nha-voice`
    - Deciding whether a change deserves a What's New entry, or writing one: `changelog`
@@ -130,7 +132,7 @@ The repository's actual scripts are under `scripts/` and reachable as npm target
 
 ## Rules that apply no matter which skill you load
 
-1. The Catalogue is the source. Never hand-edit a compiled skill, a navigation file, or llms.txt. Fix the atom and recompile. `portal-architecture`, `portal-planning`, `dpg-governance` and this index are compiled from the plan; edit the plan, not them.
+1. The Catalogue is the source. Never hand-edit a compiled skill, a navigation file, llms.txt, `catalogue/generated/` or `catalogue/registry.json`. Fix the atom, or the page a migrated atom lives on, and recompile. `portal-architecture`, `portal-planning`, `dpg-governance` and this index are compiled from the plan; edit the plan, not them.
 2. Never write an em dash. Not in atoms, not in skills, not in commit messages.
 3. Never claim a call was checked when it was not. Atoms carry no status, so the honest move is to state what the specification says and stop there.
 4. If an atom does not exist for what you are being asked, say so and offer to create it. Do not improvise the answer.

@@ -1,9 +1,9 @@
 ---
 name: portal-planning
 description: The ABDM Developer Portal schedule, workstreams, ownership split, two-day shipping increments, definition of done, and risk register. Use whenever someone asks what ships when, what is blocked, who owns a piece of work, whether V1 is on track, what counts as finished, how to sequence a task, or wants a standup, a status update, or a re-plan. Also use when scope is being added or cut so the trade is made against the schedule rather than in the abstract.
-plan_version: 2026.09.28
+plan_version: 2026.09.28-2
 plan_source: abdm-v1-phase1-architecture-and-plan.md
-plan_hash: sha256:b504e9424235906f7ad60616c3dfae402ac5e71d62b8aaa30ab582c7affac368
+plan_hash: sha256:40ba882bf88aeb085956e055654b99896992b9e1a92030fe3b457515e0fd1fee
 compiled_from_plan: true
 ---
 
@@ -53,7 +53,7 @@ When a checkpoint is at risk, cut depth, not the checkpoint. A checkpoint that s
 
 Every item is checkable. None is a judgement call. This is the list to run before anyone says the word ship.
 
-1. Catalogue lint passes on main: schema valid, five sections present, no em dash, every `related` id resolves, every source has a hash
+1. Catalogue lint passes on main: schema valid, five sections present on every hand-written atom and `In plain words` on every generated one, no em dash, every `related` id resolves and none names its own atom, every source has a hash, and `npm run check:sections` finds no missing heading id, no atom in two places and no stale generated file
 2. Every HIE-CM M1 to M3 endpoint atom has a curl that was run against sandbox and the response recorded in the atom
 3. Every NHA functional test case for M1 to M3 exists as a test atom and is referenced by a test skill
 4. All skills compile, validate and install individually; the plugin installs as one unit
@@ -76,6 +76,10 @@ Each risk carries the decision it needs, because an unowned risk is just anxiety
 | Docusaurus guides and Scalar references are two rendering systems on one site | Keep prose in plain markdown, avoid MDX beyond callouts and steps, so it ports anywhere; specs stay the single source under `catalogue/openapi/` | Decided: fully self-hosted from day one, no hosted-Scalar phase |
 | An existing community docs site overlaps heavily | Reach out early, propose the Catalogue as shared upstream | Product makes the call and the call |
 | The time available is not enough for three gateways at full depth | Atom depth is HIE-CM only, and since the 16 September 2026 reset no HIE-CM module carries atoms. Every HIE-CM module, UHI and NHCX stay at specification or site page depth, with no atoms written against them yet | Needs sign-off, already decided in the plan |
+| Notes for AI agents are hidden from readers and NHA does not review them | `check:sections` fails an agent note stating an API literal neither its page nor a specification states; the runbook tells whoever applies a correction to read the note under it | Never relax that rule |
+| The page-canonical migration stops halfway | Every atom is a file or a map entry, `registry.json` says which, and both kinds keep working | Owner to name a deadline and an owner: if class 3 has not merged by then, no further class migrates |
+| NHCX atoms, 536 of 627 on 28 September 2026, are merged in from NHA's fork | No NHCX class migrates, and the self-link lint rule skips NHCX, until the source is decided | Owner decision 1: this repository becomes the NHCX source, or heading ids and agent notes go upstream. Unanswered, NHCX stays as it is |
+| Nobody is named to apply NHA's corrections | The runbook holds the steps; its owner fields are empty | Owner decision 2: a person and hours a week, before handover |
 | The prose pass invents facts | `scripts/validate-skills.mjs` fails the build on a cited atom id the Catalogue does not define and on a curl target recorded on no atom. It does not diff every token | Residual. A fabricated sentence carrying no identifier passes, which is why the compiled skills still need a reader |
 | The Docs MCP is public with no auth in V1 | Read-only server over public docs; rate limiting at the reverse proxy; Ollama sidecar never exposed | Add auth and quotas only when abuse is observed |
 | Ollama sidecar down at query time | Search degrades to keyword-only by design; `/healthz` reports `embeddings: false` | None, the degradation is tested |
