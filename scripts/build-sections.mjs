@@ -12,9 +12,9 @@ import {stringify} from 'yaml';
 import {loadAtoms} from './lib/atoms.mjs';
 import {sectionsById, literals, plainMarkdown} from './lib/sections.mjs';
 import {loadMap} from './lib/map.mjs';
+import {FOLDER} from './lib/paths.mjs';
 
 // The folder per type that scripts/lint-atoms.mjs requires.
-const FOLDER = {concept: 'concepts', flow: 'flows', endpoint: 'endpoints', callback: 'callbacks', error: 'errors', test: 'tests', decision: 'decisions', glossary: 'glossary', fhir: 'fhir', sandbox: 'sandbox', troubleshooting: 'troubleshooting'};
 const SECTIONS = [['In plain words', (s, e) => plainMarkdown(s.text, e.url).text], ['Before you start', (s) => s.agent.before], ['What happens', (s) => s.agent.happens], ['How you know it worked', (s) => s.agent.worked], ['When it goes wrong', (s) => s.agent.wrong]];
 
 export const generatedPath = (id, e) => `catalogue/generated/${e.gateway}/${FOLDER[e.type]}/${id.split('.')[2]}.md`;

@@ -6,17 +6,11 @@ import { dirname, join, relative } from "node:path";
 import { loadAtoms, root } from "./lib/atoms.mjs";
 import { contractProblems } from "./lib/contract.mjs";
 import { loadOps } from "./lib/ops.mjs";
+import { FOLDER } from "./lib/paths.mjs";
 
 const TYPES = ["concept", "flow", "endpoint", "callback", "error", "test",
                "decision", "glossary", "fhir", "sandbox", "troubleshooting"];
 const GATEWAYS = ["hiecm", "uhi", "nhcx", "shared"];
-// Folder name per type, so an atom cannot claim a type it is not filed under.
-const FOLDER = {
-  concept: "concepts", flow: "flows", endpoint: "endpoints",
-  callback: "callbacks", error: "errors", test: "tests",
-  decision: "decisions", glossary: "glossary", fhir: "fhir", sandbox: "sandbox",
-  troubleshooting: "troubleshooting",
-};
 
 const problems = [];
 
