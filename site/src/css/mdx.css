@@ -1124,7 +1124,7 @@ li.docs-step:last-child {
 }
 
 .abha-art--play .abha-art__pen-done {
-  animation: abha-art-settle 0.4s ease var(--delay) forwards;
+  animation: abha-art-settle 0.3s ease var(--delay) forwards;
 }
 
 .abha-art--still .abha-art__pen path {
