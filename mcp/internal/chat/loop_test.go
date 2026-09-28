@@ -1295,3 +1295,32 @@ func TestSystemPromptIsStableAndShapeAndPageRideInTheUserTurn(t *testing.T) {
 			shapeIdx1, questionIdx1, lastUsers[1])
 	}
 }
+
+func TestRespondAnswersAQuestionAboutItselfWithoutLookingItUp(t *testing.T) {
+	// "how many languages do you understand" retrieved header and certificate
+	// atoms and cited them under an answer that said the documentation did
+	// not specify.
+	var sawTurn string
+	m := &fakeModel{next: func(msgs []Message) Reply {
+		sawTurn = msgs[len(msgs)-1].Text
+		return Reply{Text: "I read and reply in the language you write in."}
+	}}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			t.Fatal("a question about the assistant was looked up")
+			return nil, nil, guard.PackFacts{}, nil
+		},
+	}
+	emit, evs := collectEvents()
+	if err := svc.RespondCommand(context.Background(), []Turn{{Role: "user", Text: "how many languages do you understand"}}, nil, Command{Gateway: "hiecm"}, emit); err != nil {
+		t.Fatal(err)
+	}
+	for _, e := range *evs {
+		if e.name == "sources" {
+			t.Errorf("a question about the assistant cited sources: %v", e.data)
+		}
+	}
+	if !strings.Contains(sawTurn, `name="self"`) {
+		t.Errorf("the self shape did not reach the model: %q", sawTurn)
+	}
+}
