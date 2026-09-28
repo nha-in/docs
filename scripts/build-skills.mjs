@@ -729,7 +729,11 @@ function withSurvey(scaffold) {
 const FOLD = Object.fromEntries(
   MODULES.map((module) => [
     module.slug,
-    {scaffold: `hiecm-${module.id}-build`, debug: `hiecm-${module.id}-debug`},
+    {
+      scaffold: `hiecm-${module.id}-build`,
+      debug: `hiecm-${module.id}-debug`,
+      test: `hiecm-${module.id}-test`,
+    },
   ]),
 );
 
@@ -849,6 +853,17 @@ for (const module of MODULES) {
         : `- **Debug.** ${
             debugLoop ? 'The loop from a failed call to a named fix. ' : ''
           }The specification's examples return no error code for this module. [references/debug.md](references/debug.md)`,
+    );
+  }
+
+  // Test after debug: the functional test cases are what an integrator walks
+  // once the build runs, and each case names the evidence a reviewer can
+  // check against the gateway rather than a screenshot.
+  const test = fold.test ? guided(fold.test) : '';
+  if (test) {
+    files['references/test.md'] = test;
+    covers.push(
+      `- **Test.** The functional test cases, one loop each, with the evidence the sandbox can vouch for and the manifest that replaces a screenshot report. [references/test.md](references/test.md)`,
     );
   }
 
