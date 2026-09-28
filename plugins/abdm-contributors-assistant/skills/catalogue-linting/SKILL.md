@@ -28,11 +28,38 @@ Checks every atom's frontmatter and body: mandatory fields, id format, gateway a
 | A `sources` entry has neither `url` nor `file` | `sources[<i>] needs a url or a file` | Add one. |
 | A `sources` entry has neither `status` nor `hash` | `sources[<i>] needs a status or a hash` | Add one. Ingestion records a hash; if hand-added, run `/source-check`. |
 | A `verified` block is present | `verified is no longer a field; drop it. Sandbox evidence lives in catalogue/verification/` | Delete the block. Atoms carry no verification status; `npm run verify:atoms` writes evidence outside the atom. |
-| One of the five mandatory sections is missing | `missing mandatory section: ## <heading>`. Headings, in order: `In plain words`, `Before you start`, `What happens`, `How you know it worked`, `When it goes wrong`. | Add it. Glossary atoms may write "Nothing" under a heading, but the heading stays. |
+| One of the five mandatory sections is missing (a file marked `generated: true` needs only `In plain words`) | `missing mandatory section: ## <heading>`. Headings, in order: `In plain words`, `Before you start`, `What happens`, `How you know it worked`, `When it goes wrong`. | Add it. Glossary atoms may write "Nothing" under a heading, but the heading stays. |
 | The five sections are present but out of order | `sections are out of order at "## <heading>"` | Reorder. |
 | An em dash (U+2014) appears anywhere in the file | `em dash found. Use a full stop, a comma or a colon.` | Replace it. No exceptions, including code comments and commit messages. |
 | A relative markdown link points at a file that does not exist | `link points at "<path>", which does not exist` | Fix the link or create the target. Never leave a dangling link. |
 | A `related.<kind>` entry names an id no atom defines | `related.<kind> points at "<id>", which no atom defines` | Create the atom or remove the link. |
+| A `related.<kind>` entry names the atom itself | `related.<kind> lists the atom itself; remove "<id>"` | Remove it. NHCX atoms are exempt until the NHCX source is decided; eight of them list themselves. |
+
+## `npm run check:sections` (`scripts/build-sections.mjs --check`)
+
+Builds every atom listed in `catalogue/map.yaml` from its page section and compares the result with `catalogue/generated/` and `catalogue/registry.json`. `npm run build:sections` rewrites both.
+
+| Fails on | Message (verbatim) | Fix |
+|---|---|---|
+| A mapped heading id is gone from its page | `<id>: heading id "<heading>" is missing from <page>. Put {#<heading>} back on the heading that holds its words, or point the atom at the section that now does` | Put the id back, as `{/* #<heading> */}` in an `.mdx` page, or repoint the map entry. |
+| An id is both a hand-written file and a map entry | `<id> is both a hand-written file and a map entry. Delete the hand-written file once its words are on the page` | Delete the file. |
+| An agent paragraph has no label | `<id>: <page>#<heading> has agent text without a label: "<text>". Start the paragraph with ...` | Start it with one of the four labels. |
+| An agent note states a literal no page or specification does | `` <id>: agent note introduces `<literal>`, which neither <page> nor any specification states. Put it on the page, or take it out of the note `` | Put it on the page, or take it out. |
+| The section carries page markup | `<id>: <page>#<heading> carries page markup the bot would quote: <tag>. Move it out of the mapped section or replace it with plain markdown` | Replace it with plain markdown. |
+| A map entry's `related` names itself or an unknown id | `<id> lists itself as related. ...` or `<id>: related names <ref>, which no atom defines. ...` | Fix `catalogue/map.yaml`. |
+| Output is out of date | `<file> is stale; run npm run build:sections`, `<file> has no map entry; run npm run build:sections`, `catalogue/registry.json is stale; run npm run build:sections` | Run it and commit the result. |
+
+## `npm run check:plugin-version` (`scripts/check-plugin-version.mjs`)
+
+Runs on pull requests. A plugin whose files changed since the base branch must change its version, or nobody who installed it receives the change.
+
+| Fails on | Message (verbatim) | Fix |
+|---|---|---|
+| Files under `plugins/<dir>/` changed, version did not | `plugins/<dir> changed but its version is still <v>. Bump "version" in plugins/<dir>/.claude-plugin/plugin.json, then run npm run build:plugins` | Bump it and run `npm run build:plugins`. |
+
+## `npm run test:scripts`
+
+The scripts' own `node:test` suites, `scripts/*.test.mjs` and `scripts/lib/*.test.mjs`. The postman and API sample tests read gitignored build outputs, so run `node scripts/build-api-reference.mjs && node scripts/build-postman.mjs` first in a fresh checkout, as CI does.
 
 ## `npm run lint:content` (`scripts/lint-content.mjs`)
 
@@ -154,6 +181,8 @@ Run the script for the job that is red. There is no single npm script that runs 
 
 ```
 npm run lint:atoms
+npm run check:sections
+npm run test:scripts
 npm run lint:content
 npm run lint:agent
 npm run lint:sources

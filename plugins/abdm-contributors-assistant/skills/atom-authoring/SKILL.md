@@ -5,7 +5,7 @@ description: 'How to write one atom for the ABDM Catalogue: the mandatory frontm
 
 # Atom Authoring
 
-An atom is one markdown file. The frontmatter is the machine half. The body is the human half. Both come from the same file, which is the only reason the docs and the skills cannot drift.
+An atom is one markdown file, hand-written here or built from a page section (see "Migrated atoms are edited on their page" below). The frontmatter is the machine half. The body is the human half. Both come from the same file, which is the only reason the docs and the skills cannot drift.
 
 ## Before you write anything
 
@@ -132,14 +132,6 @@ directly, without this skill installed; it does not add rules beyond what
 this skill states. Read this skill for the rules, and `catalogue/README.md`
 if you only have the repository open.
 
-## Related
-
-- The prose rules: `writing-guide`
-- Reviewing before merge: `atom-review`
-- Fixing lint failures: `catalogue-linting`
-- Where atoms come from: `openapi-ingest`
-- Scaffold a new one: `/atom-new`
-
 ## Migrated atoms are edited on their page
 
 An atom listed in `catalogue/map.yaml` has no hand-written file. Its words are
@@ -147,3 +139,22 @@ the page section named by its `page` and `heading`, and its rules for agents are
 the `<AgentOnly>` notes in that section. Edit the page, then run
 `npm run build:sections`. Never edit `catalogue/generated/`. Only an atom that is
 not in the map yet is edited as a file under `catalogue/`.
+
+How a section becomes an atom:
+
+- The heading carries an explicit id that never changes when the words do: `### Link token {#link-token}` in a `.md` page, `### Link token {/* #link-token */}` in an `.mdx` page. MDX reads a bare `{#id}` as an expression and the site build fails.
+- The section's visible text is `In plain words`. It must be plain markdown: no JSX other than `<AgentOnly>`, no `{expression}`. Relative anchors like `[HIP](#hip)` become absolute links on their own.
+- Every paragraph inside `<AgentOnly>` starts with one of four labels, `**Before you start.**`, `**What happens.**`, `**How you know it worked.**` or `**When it goes wrong.**`, and becomes that section of the atom. A section with no paragraph is left out, never filled with placeholder text.
+- An agent note may narrow or restate the page and the specifications. It never adds an API literal, anything in backticks, that neither states. NHA does not review the notes, so CI is their only guard.
+- The map entry holds `type`, `gateway`, `milestone`, `title`, `summary`, `page`, `heading`, `url` and `related`, and no prose. No `related` list names its own atom.
+- `<AgentOnly>` is JSX, so a page gains one only if it is `.mdx`. Convert a page in its own commit, and build the site before any content moves.
+
+Moving a class of atoms onto pages follows the checklist in the page-canonical plan: heading ids first, words onto the page, map entries added and files deleted in the same PR, `npm run report:migration -- <ids>` pasted into the PR, and a before and after keyword ranking. NHCX atoms do not move until the NHCX source is decided.
+
+## Related
+
+- The prose rules: `writing-guide`
+- Reviewing before merge: `atom-review`
+- Fixing lint failures: `catalogue-linting`
+- Where atoms come from: `openapi-ingest`
+- Scaffold a new one: `/atom-new`

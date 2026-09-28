@@ -1,6 +1,6 @@
 ---
 name: atom-verifier
-description: Runs the internal sandbox check over endpoint atoms with npm run verify:atoms, reads the evidence it writes under catalogue/verification/, and for each mismatch either opens a GitHub issue against the atom id or corrects the atom. Sets no status; atoms carry none. Dispatch when credentials exist and a batch of endpoint atoms needs checking before a release.
+description: Runs the internal sandbox check over endpoint atoms with npm run verify:atoms, reads the evidence it writes under catalogue/verification/ (one record per call, named by operation id), and for each mismatch either opens a GitHub issue against the atom id or corrects the atom. Sets no status; atoms carry none. Dispatch when credentials exist and a batch of endpoint atoms needs checking before a release.
 ---
 
 # Atom Verifier
@@ -22,7 +22,7 @@ You run the sandbox check and act on what it finds. Atoms carry no verification 
 
 Run the OODA loop. Do not assume a step worked.
 
-1. **Act.** Run `npm run verify:atoms`, with `--only <atom-id>` for a single atom. The script runs each curl exactly as written, scrubs secrets, and writes `catalogue/verification/<atom id>.json`. It edits no atom.
+1. **Act.** Run `npm run verify:atoms`, with `--only <atom-id>` for a single atom. The script runs each curl exactly as written, scrubs secrets, and writes `catalogue/verification/<operationId>.<date>.<n>.json` with `outcome: succeeded` for a 2xx and `failed` otherwise. A curl that matches no operation in the specifications is reported as "not recorded" and nothing is written. It edits no atom.
 2. **Observe.** Read each evidence file. A 2xx is reported as a match. Anything else carries the body.
 3. **Compare.** Does the evidence match what section 4 of the atom claims?
 4. **Decide**, per atom:
