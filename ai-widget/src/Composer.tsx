@@ -63,9 +63,12 @@ type Props = {
 function ContextRing({earlier, window, percent, full}: Props['memory']) {
   const r = 7;
   const around = 2 * Math.PI * r;
-  const detail = full
-    ? `The last ${window} exchanges go with your next question. Earlier ones are no longer sent; New starts afresh.`
-    : `${earlier} of ${window} earlier exchanges go with your next question. Very long answers go shortened.`;
+  const detail =
+    earlier > window
+      ? `The last ${window} of ${earlier} exchanges go with your next question. Earlier ones are no longer sent; New starts afresh.`
+      : full
+        ? `All ${window} exchanges go with your next question. From here, the oldest stop being sent.`
+        : `${earlier} of ${window} earlier exchanges go with your next question. Very long answers go shortened.`;
   return (
     <span class={`ask-ai__ring${full ? ' ask-ai__ring--full' : ''}`}>
       <span

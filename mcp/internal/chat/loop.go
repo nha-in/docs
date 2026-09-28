@@ -107,12 +107,13 @@ type Service struct {
 
 const (
 	// MaxTurns bounds how many turns (user + assistant messages together) a
-	// single request may carry: the question and the eight exchanges before
-	// it. Four was too few to hold a working conversation, and readers said
-	// the panel forgot what they had asked. Seventeen turns at the caps below
-	// is about fifty thousand characters, and a real conversation is a small
-	// part of that.
-	MaxTurns = 17
+	// single request may carry: the question and the fifteen exchanges
+	// before it. Four was too few to hold a working conversation, and readers
+	// said the panel forgot what they had asked. Thirty one turns at the caps
+	// below is about ninety thousand characters of text, and a real
+	// conversation is a small part of that. The panel's MAX_TURNS
+	// (ai-widget/src/transcript.ts) is the same number.
+	MaxTurns = 31
 	// MaxInputLen bounds the length of any one user turn's text.
 	MaxInputLen = 2000
 	// MaxAttachmentLen bounds one attachment's text. A failing bundle or a

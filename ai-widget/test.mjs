@@ -15,7 +15,7 @@ await build({
                export {titleOf, remember, whenSaid, forgetOne, resumable} from './src/history';
                export {ABOUT, isAboutQuestion} from './src/about';
                export {startersFrom, DEFAULT_STARTERS} from './src/starters';
-               export {forModel, memoryOf} from './src/transcript';
+               export {forModel, memoryOf, sentFrom} from './src/transcript';
                export {parseLlms, searchPages, pageUrl, markdownUrl, isHtmlDocument} from './src/pages';
                export {moduleLabel, skillNote, COMMANDS} from './src/commands';`,
     resolveDir: import.meta.dirname,
@@ -38,7 +38,7 @@ await build({
 const {
   toBlocks, absolute, headings, readStream, revealStep, THINKING_HOLD, THINKING_BURST,
   say, answer, wantsTools, needsAgent, TOOLS, AGENTS,
-  titleOf, remember, whenSaid, forgetOne, resumable, ABOUT, isAboutQuestion, memoryOf,
+  titleOf, remember, whenSaid, forgetOne, resumable, ABOUT, isAboutQuestion, memoryOf, sentFrom,
   startersFrom, DEFAULT_STARTERS, forModel, parseLlms, searchPages, pageUrl, markdownUrl, isHtmlDocument,
   moduleLabel, skillNote, COMMANDS,
 } = await import(out);
@@ -56,11 +56,18 @@ assert.equal(resumable(held, 'gone'), null);
 // Memory: counts the exchanges the next question takes, not the panel's own.
 const turn = (from, text, extra = {}) => ({from, text, ...extra});
 const ex = (n) => Array.from({length: n}, (_, i) => [turn('you', `q${i}`), turn('assistant', `a${i}`)]).flat();
-assert.deepEqual(memoryOf([]), {earlier: 0, window: 8, percent: 0, full: false});
-assert.deepEqual(memoryOf(ex(1)), {earlier: 1, window: 8, percent: 13, full: false});
-assert.deepEqual(memoryOf(ex(3)), {earlier: 3, window: 8, percent: 38, full: false});
-assert.equal(memoryOf(ex(9)).full, true, 'past the window, the oldest are not sent');
-assert.equal(memoryOf(ex(9)).percent, 100, 'never over 100');
+assert.deepEqual(memoryOf([]), {earlier: 0, window: 15, percent: 0, full: false});
+assert.deepEqual(memoryOf(ex(3)), {earlier: 3, window: 15, percent: 20, full: false});
+assert.equal(memoryOf(ex(15)).full, true, 'fifteen exchanges fill the window');
+assert.equal(memoryOf(ex(20)).percent, 100, 'never over 100');
+// The line sits above the oldest message still carried, and only once
+// something is no longer carried.
+assert.equal(sentFrom(ex(15)), -1, 'all fifteen still go');
+const long = ex(17);
+assert.equal(sentFrom(long), 4, 'two exchanges (four turns) have dropped');
+assert.equal(long[sentFrom(long)].text, 'q2');
+const withOwn = [turn('you', 'What can you do?'), turn('assistant', 'I answer', {local: true}), ...ex(16)];
+assert.equal(withOwn[sentFrom(withOwn)].text, 'q1', "the panel's own answers are not counted");
 assert.equal(memoryOf([...ex(2), turn('you', 'What can you do?'), turn('assistant', 'I answer', {local: true})]).earlier, 2, "the panel's own answer takes no memory");
 
 // About: the panel answers questions about itself, and only those.

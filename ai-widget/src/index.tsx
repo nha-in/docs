@@ -1,4 +1,4 @@
-import {render} from 'preact';
+import {Fragment, render} from 'preact';
 import {useEffect, useRef, useState} from 'preact/hooks';
 import ChatMarkdown, {CopyButton, absolute, headings} from './markdown';
 import {ArrowUp, ChevronRight, FileText, Paperclip, Plus, Sparkles, X} from './icons';
@@ -17,6 +17,7 @@ import {
 import {revealStep} from './pacing';
 import {
   clearCurrentId,
+  continuedId,
   currentId,
   forget,
   forgetOne,
@@ -24,6 +25,7 @@ import {
   remember,
   resumable,
   save as saveHistory,
+  setContinuedId,
   setCurrentId,
   titleOf,
   type Session,
@@ -34,7 +36,7 @@ import {HistoryList} from './HistoryList';
 import {Welcome} from './Welcome';
 import {ThinkingOrb} from './orb/frosted-orb';
 import {startersFrom, type Starter} from './starters';
-import {forModel, MAX_TURNS, memoryOf} from './transcript';
+import {forModel, MAX_TURNS, memoryOf, sentFrom} from './transcript';
 import {isHtmlDocument, markdownUrl, pageUrl, type PageEntry} from './pages';
 import {moduleLabel, skillNote, type CommandId, type SkillUse} from './commands';
 import type {Attached, PageAttachment} from './types';
@@ -386,6 +388,9 @@ function Panel({
   const [menu, setMenu] = useState<Menu>('closed');
   const [attaching, setAttaching] = useState<string | null>(null);
   const conversation = useRef(newId());
+  // The conversation the reader chose to carry on past the window with, so
+  // the offer to start a new one is made once per conversation.
+  const [continued, setContinued] = useState<string | null>(continuedId);
   const autoAsked = useRef<string | null>(null);
   const dialog = useRef<HTMLDialogElement>(null);
   const thread = useRef<HTMLDivElement>(null);
@@ -397,6 +402,8 @@ function Panel({
   // as a failure, because a reader who asked for the page to be attached has
   // to be told it was not.
   const attached = page !== null && page.markdown !== '';
+  const memory = memoryOf(turns);
+  const cut = sentFrom(turns);
 
   // Text that has arrived but has not been shown yet, and the frame loop that
   // shows it. Both are refs: the loop runs from a callback the browser holds,
@@ -1009,12 +1016,20 @@ function Panel({
             onPick={(prompt) => void ask(prompt)}
           />
         )}
-        {turns.map((turn, index) =>
-          // An answer with nothing in it yet is not a bubble. The thinking
-          // indicator below stands in its place until the first word.
-          turn.from === 'assistant' && turn.text === '' ? null : (
+        {turns.map((turn, index) => (
+          <Fragment key={index}>
+          {/* Above the oldest message the next question still carries, once
+              the conversation is longer than that: what is above the line,
+              the assistant no longer has. */}
+          {index === cut && (
+            <p class="ask-ai__cut" role="separator">
+              <span>Messages above this line are no longer sent with your questions</span>
+            </p>
+          )}
+          {/* An answer with nothing in it yet is not a bubble. The thinking
+              indicator below stands in its place until the first word. */}
+          {turn.from === 'assistant' && turn.text === '' ? null : (
           <div
-            key={index}
             class={`ask-ai__turn ask-ai__turn--${turn.from}${
               phase === 'streaming' && index === turns.length - 1
                 ? ' ask-ai__turn--streaming'
@@ -1240,13 +1255,41 @@ function Panel({
               </button>
             )}
           </div>
-          ),
-        )}
+          )}
+          </Fragment>
+        ))}
         {showActivity && (
           <p class="ask-ai__activity">
             <ThinkingOrb />
             {activity ?? 'Thinking'}
           </p>
+        )}
+
+        {/* Once the conversation fills what a question carries, the reader
+            is asked, once, whether to go on here or start afresh. Going on
+            is fine: the oldest exchanges simply stop being sent. */}
+        {memory.full && !busy && continued !== conversation.current && (
+          <div class="ask-ai__window-offer" role="status">
+            <p>
+              This chat has reached the {memory.window} exchanges I carry with each
+              question. If it goes on, the oldest stop being sent. For a new topic,
+              a new chat keeps everything in view.
+            </p>
+            <div class="ask-ai__window-offer-actions">
+              <button type="button" class="ask-ai__window-offer-new" onClick={reset}>
+                Start a new chat
+              </button>
+              <button
+                type="button"
+                class="ask-ai__window-offer-stay"
+                onClick={() => {
+                  setContinued(conversation.current);
+                  setContinuedId(conversation.current);
+                }}>
+                Continue here
+              </button>
+            </div>
+          </div>
         )}
 
       </div>
@@ -1273,7 +1316,7 @@ function Panel({
         onRemovePage={onDetach}
         command={command}
         onCommand={setCommand}
-        memory={memoryOf(turns)}
+        memory={memory}
       />
       </>
       )}

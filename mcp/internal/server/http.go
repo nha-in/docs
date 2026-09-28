@@ -21,7 +21,7 @@ import (
 
 // chatBodyLimit bounds how much of a POST /api/chat request body gets
 // decoded, so a client cannot force the server to buffer an unbounded
-// payload. 512 KiB covers MaxTurns turns of text (about 50 KB) alongside an
+// payload. 512 KiB covers MaxTurns turns of text (about 90 KB) alongside an
 // attached page at MaxPageChars (24 KB) and, on every user turn, an attachment
 // at MaxAttachmentLen, since the whole conversation is re-sent each request.
 // Turn count and per-field limits are still enforced by ValidateTurns; this
