@@ -192,5 +192,59 @@
       "eua",
       "hspa"
     ]
+  },
+  {
+    "id": "d394f8023f7a",
+    "date": "2026-09-29",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "abdm-contributors-assistant",
+        "from": "0.3.0",
+        "to": "0.3.4"
+      }
+    ]
+  },
+  {
+    "id": "21c529102e1d",
+    "date": "2026-09-29",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "abdm-integrators-assistant",
+        "from": "0.9.0",
+        "to": "0.9.2"
+      }
+    ]
+  },
+  {
+    "id": "909c4cd8b134",
+    "date": "2026-09-29",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "nhcx",
+        "from": "1.0.0",
+        "to": "1.0.1"
+      }
+    ]
   }
 ]
