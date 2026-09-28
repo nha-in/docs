@@ -494,7 +494,9 @@ function ResponsePanel({operation}: {operation: Operation}) {
   );
 }
 
-export default function ApiEndpoint({operation}: {operation: Operation}) {
+// children: a hand-written notes partial the generated page passes in
+// (scripts/lib/notes.mjs), shown between the request bar and the tabs.
+export default function ApiEndpoint({operation, children}: {operation: Operation; children?: React.ReactNode}) {
   const heading = operation.title || operation.summary;
   const [opening, rest] = splitLede(operation.description);
   // A lede that only repeats the heading is noise between the title and the call.
@@ -695,6 +697,8 @@ export default function ApiEndpoint({operation}: {operation: Operation}) {
             </Dialog>
           )}
         </div>
+
+        {children ? <div className="api-page__body">{children}</div> : null}
 
         {panels.length ? (
           <Tabs.Root className="api-tabs" value={tab} onValueChange={setTab}>
