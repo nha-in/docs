@@ -102,4 +102,4 @@ Blood Bank's figure is 10 to 15 seconds. Aggregate its answers by `transaction_i
 - [Routes](/docs/uhi/v1/concepts/routes): which calls go through the Gateway and which go direct.
 - [Signing](/docs/uhi/v1/concepts/signing): the header every call needs.
 - [Errors](/docs/uhi/v1/concepts/errors): the `error` object beside the `ACK`.
-- [Quick start](/docs/uhi/v1/getting-started/quick-start): send one search and read the callback.
+- [Quickstart](/docs/uhi/v1/getting-started/first-fifteen-minutes): send one search and read the callback.

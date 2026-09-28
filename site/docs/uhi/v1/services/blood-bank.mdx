@@ -46,7 +46,7 @@ The service is discovery: `search` and `on_search`.
 | Ed25519 key pair, every call signed | Required. See [Signing](/docs/uhi/v1/concepts/signing). | Required |
 | Asynchronous handling | Accept an ACK now and the answer later, matched by `transaction_id` | Answer each `search` with a correctly structured `on_search` within an acceptable latency window |
 | Blood bank database | None | An independent database comparable to e-RaktKosh, with real-time or near real-time stock by blood group and component |
-| Sign-off | Sandbox integration, then sign-off. See [Onboarding](/docs/uhi/v1/getting-started/onboarding). | The same |
+| Sign-off | Sandbox integration, then sign-off. See [Go live](/docs/uhi/v1/getting-started/going-live). | The same |
 
 An EUA must also have completed [HIE-CM](/docs/uhi/v1/getting-started/glossary#hie-cm) [Milestone 2](/docs/hiecm/v3/milestones/m2). An app without M2 cannot be onboarded onto any UHI service. As an HSPA, manually maintained or infrequently updated records are not approved for production.
 
@@ -369,4 +369,4 @@ The test cases for this service are on [Blood Bank test cases](/docs/uhi/v1/reso
 
 - The other services on the network: [Services](/docs/uhi/v1/services).
 - Signing each call: [Signing](/docs/uhi/v1/concepts/signing).
-- When every test case passes: [record a demo and request sign-off](/docs/uhi/v1/getting-started/onboarding#5-record-a-demo-and-request-sign-off).
+- When every test case passes: [record a demo and request sign-off](/docs/uhi/v1/getting-started/going-live#2-record-a-demo-and-request-sign-off).

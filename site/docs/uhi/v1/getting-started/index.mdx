@@ -1,0 +1,89 @@
+---
+title: Get started
+sidebar_label: Get started
+sidebar_position: 0
+description: Connect your app to the UHI network, from sandbox registration and your first signed search to going live.
+source: UHI developer guide as of 22 September 2026, sections 1.1 to 1.4
+---
+
+# Get started
+
+Connect your app to the Unified Health Interface
+([UHI](/docs/uhi/v1/getting-started/glossary#uhi)) network.
+
+UHI is an open network under the Ayushman Bharat Digital Mission
+([ABDM](/docs/uhi/v1/getting-started/glossary#abdm)). A patient app built once
+can discover health services from every compliant provider platform, and book
+some of them. Every exchange is asynchronous: you send a signed request, get an
+`ACK` at once, and receive the answer later on your own callback URL.
+
+You build one of two sides. A patient-facing app is an
+[EUA](/docs/uhi/v1/getting-started/glossary#eua). A provider system that
+answers searches is an [HSPA](/docs/uhi/v1/getting-started/glossary#hspa).
+[Introduction to UHI](/docs/uhi/v1) sets out the parties, the six live services
+and how to choose.
+
+An EUA must complete [Milestone 2](/docs/hiecm/v3/milestones/m2) on
+[HIE-CM](/docs/uhi/v1/getting-started/glossary#hie-cm) before it can be
+onboarded onto any UHI service.
+
+## Start building
+
+<CardGroup cols={3}>
+  <Card title="Get your sandbox credentials" icon="key-round" href="/docs/uhi/v1/getting-started/sandbox">
+    Generate your key pair and register for a subscriber ID.
+  </Card>
+  <Card title="Quickstart" icon="terminal" href="/docs/uhi/v1/getting-started/first-fifteen-minutes">
+    Build, sign and send your first PM-JAY hospital search.
+  </Card>
+  <Card title="Services" icon="milestone" href="/docs/uhi/v1/services">
+    The six services on the network and which role each one takes.
+  </Card>
+  <Card title="Build with AI" icon="sparkles" href="/docs/uhi/v1/getting-started/build-with-ai">
+    The Docs MCP server and Ask AI for your coding agent.
+  </Card>
+  <Card title="Build it well" icon="hard-hat" href="/docs/uhi/v1/getting-started/build-it-well">
+    Matching callbacks, fresh signatures, timeouts and screens.
+  </Card>
+  <Card title="Go live" icon="rocket" href="/docs/uhi/v1/getting-started/going-live">
+    Test cases, the sign-off demo and the switch to production.
+  </Card>
+</CardGroup>
+
+## Common use cases
+
+<CardGroup cols={3}>
+  <Card title="I want to find PM-JAY hospitals" href="/docs/uhi/v1/services/pmjay-hem">
+    Empanelled hospitals by location and speciality.
+  </Card>
+  <Card title="I want to book a doctor's appointment" href="/docs/uhi/v1/services/consultation">
+    Discover, book, and check in with a PIN.
+  </Card>
+  <Card title="I want to find blood in stock" href="/docs/uhi/v1/services/blood-bank">
+    Blood banks by group and component.
+  </Card>
+  <Card title="I want to find an ambulance" href="/docs/uhi/v1/services/ambulance">
+    Emergency ambulances with arrival window and price.
+  </Card>
+  <Card title="I want to find a generic medicine" href="/docs/uhi/v1/services/jan-aushadhi">
+    Jan Aushadhi Kendras and the medicines they stock.
+  </Card>
+  <Card title="I want to find a transplant hospital" href="/docs/uhi/v1/services/notto">
+    NOTTO registered hospitals by organ or tissue.
+  </Card>
+</CardGroup>
+
+## More resources
+
+<CardGroup cols={3}>
+  <Card title="Explore every API" href="/docs/uhi/v1/api">
+    The UHI Gateway and service calls, one page each.
+  </Card>
+  <Card title="How messages and callbacks work" href="/docs/uhi/v1/concepts/messages">
+    The `context` block, the `ACK`, and matching the answer.
+  </Card>
+</CardGroup>
+
+## Next
+
+[Get your sandbox credentials](/docs/uhi/v1/getting-started/sandbox).

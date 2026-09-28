@@ -60,4 +60,4 @@ Some failures stop a call before any error object is built. Read the status firs
 
 - [Signing](/docs/uhi/v1/concepts/signing): the cause of most `401` responses.
 - [Network registry lookup](/docs/uhi/v1/concepts/registry-lookup): the `404` and how to avoid it.
-- [Quick start](/docs/uhi/v1/getting-started/quick-start): the full troubleshooting table for a first search.
+- [Quickstart](/docs/uhi/v1/getting-started/first-fifteen-minutes): the full troubleshooting table for a first search.

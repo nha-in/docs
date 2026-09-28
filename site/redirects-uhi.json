@@ -1,5 +1,7 @@
 [
-  {"from": "/docs/uhi/v1/onboarding", "to": "/docs/uhi/v1/getting-started/onboarding"},
+  {"from": "/docs/uhi/v1/onboarding", "to": "/docs/uhi/v1/getting-started/sandbox"},
+  {"from": "/docs/uhi/v1/getting-started/onboarding", "to": "/docs/uhi/v1/getting-started/sandbox"},
+  {"from": "/docs/uhi/v1/getting-started/quick-start", "to": "/docs/uhi/v1/getting-started/first-fifteen-minutes"},
   {"from": "/docs/uhi/v1/glossary", "to": "/docs/uhi/v1/getting-started/glossary"},
   {"from": "/docs/uhi/v1/network-and-protocol", "to": "/docs/uhi/v1/concepts/routes"},
   {"from": "/docs/uhi/v1/concepts/network-and-protocol", "to": "/docs/uhi/v1/concepts/routes"},

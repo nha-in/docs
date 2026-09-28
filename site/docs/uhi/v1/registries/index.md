@@ -20,7 +20,7 @@ source: UHI developer guide as of 22 September 2026, sections 1.1 and 1.2; UHI G
 
 The network registry holds the public key each participant registered at onboarding. Look a participant up before you check the signature on a direct call it sent you. See [Network registry lookup](/docs/uhi/v1/concepts/registry-lookup).
 
-The sandbox registration form asks for your role, your callback URL and your public key. See [Onboarding](/docs/uhi/v1/getting-started/onboarding).
+The sandbox registration form asks for your role, your callback URL and your public key. See [Get your sandbox credentials](/docs/uhi/v1/getting-started/sandbox).
 
 ## Next steps
 

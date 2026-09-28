@@ -3,7 +3,7 @@ title: Introduction to UHI
 sidebar_label: Introduction
 description: What UHI is, the three parties in every exchange, the six services live on the network, and how to choose whether you build an EUA or an HSPA.
 source: UHI developer guide as of 22 September 2026, section 1.1
-sidebar_position: 1
+sidebar_position: 0
 sidebar_class_name: sidebar-icon sidebar-icon--compass
 ---
 
@@ -55,6 +55,6 @@ You can be an HSPA only for Physical Consultation, Blood Bank Discovery and Ambu
 
 ## Next steps
 
-- [Onboarding](/docs/uhi/v1/getting-started/onboarding): the six steps from sandbox to production.
-- [Quick start](/docs/uhi/v1/getting-started/quick-start): send one signed search and read the callback.
+- [Get started](/docs/uhi/v1/getting-started): the six steps from sandbox to production, and your first search.
+- [Quickstart](/docs/uhi/v1/getting-started/first-fifteen-minutes): send one signed search and read the callback.
 - [Routes](/docs/uhi/v1/concepts/routes): which calls go through the Gateway and which go direct.
