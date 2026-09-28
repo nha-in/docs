@@ -1,15 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import CodeBlock from '@theme/CodeBlock';
-import {Check, CircleAlert, RefreshCw} from 'lucide-react';
+import Details from '@theme/Details';
 import {Button} from '@site/src/components/ui/button';
 import {StepCard, Stepper, type StepDef} from './QuickstartStepper';
-import {
-  curlCommand,
-  localDate,
-  pastedTransactionId,
-  searchBody,
-  whatIsWrong,
-} from './uhi-quickstart-values';
+import {curlCommand, localDate, searchBody, signedHeaders, whatIsWrong} from './uhi-quickstart-values';
 
 /**
  * The UHI quickstart: a PM-JAY HEM GPS search, built here and sent by you.
@@ -17,26 +11,23 @@ import {
  * It makes no network call, and cannot. A UHI request is signed with the
  * integrator's own Ed25519 private key, which a web page must never ask for,
  * and the answer arrives later on the integrator's own consumer_uri, never in
- * this browser. So the page builds the exact body, takes the two header
- * values the Header Generation Utility returns for it, and hands back the curl.
+ * this browser. So the page builds the exact body, reads the two header values
+ * out of what the Header Generation Utility prints, and hands back the curl.
  *
  * Nothing touches window or crypto at render: the UUID and the clock are read
  * in an effect, so the server render and the first client render agree.
  */
 
-type Step = 'callback' | 'build' | 'sign' | 'send' | 'read';
+type Step = 'ids' | 'sign' | 'send' | 'see';
 
 const STEPS: StepDef<Step>[] = [
-  {key: 'callback', n: 1, title: 'Stand up your callback'},
-  {key: 'build', n: 2, title: 'Build the search'},
-  {key: 'sign', n: 3, title: 'Sign it'},
-  {key: 'send', n: 4, title: 'Send it'},
-  {key: 'read', n: 5, title: 'Read the callback'},
+  {key: 'ids', n: 1, title: 'Enter your IDs'},
+  {key: 'sign', n: 2, title: 'Sign it'},
+  {key: 'send', n: 3, title: 'Send it'},
+  {key: 'see', n: 4, title: 'See the hospitals'},
 ];
 
 const UTILITY = 'https://github.com/NHA-ABDM/UHI/tree/main/header_generator_utility';
-
-const ACK = '{ "message": { "ack": { "status": "ACK" } }, "error": {} }';
 
 const SAMPLE_PROVIDER = `{
   "id": "HOSP27G13867",
@@ -51,14 +42,12 @@ const SAMPLE_PROVIDER = `{
 }`;
 
 const SYMPTOMS: [string, string][] = [
-  ['401 on step 4', 'Header signed over a different body, a reused or expired signature, or the wrong keyId'],
-  ['403 on step 4', 'Public key not registered, or registration not yet active'],
+  ['401 on step 3', 'Header signed over a different body, a reused or expired signature, or the wrong keyId'],
+  ['403 on step 3', 'Public key not registered, or registration not yet active'],
   ['ACK but no callback', 'consumer_uri not publicly reachable over HTTPS, or your endpoint did not return 200'],
   ['Callback arrives but is not matched', 'Your code looked up the wrong transaction_id'],
-  ['Empty providers[]', 'No empanelled hospital inside the radius. Widen the radius in step 2'],
+  ['Empty providers[]', 'No empanelled hospital inside the radius. Widen it under Change location in step 1'],
 ];
-
-type Progress = {kind: 'idle' | 'ok' | 'error'; text: string};
 
 function newUuid(): string {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') return crypto.randomUUID();
@@ -104,8 +93,7 @@ function Field({
 }
 
 export default function UhiQuickstart() {
-  const [active, setActive] = useState<Step>('callback');
-  const [callbackReady, setCallbackReady] = useState(false);
+  const [active, setActive] = useState<Step>('ids');
   const [subscriberId, setSubscriberId] = useState('');
   const [consumerUri, setConsumerUri] = useState('');
   const [latitude, setLatitude] = useState('17.3787973');
@@ -113,20 +101,15 @@ export default function UhiQuickstart() {
   const [radiusKm, setRadiusKm] = useState('13.0');
   const [uuid, setUuid] = useState('');
   const [now, setNow] = useState<Date | null>(null);
-  const [authorization, setAuthorization] = useState('');
-  const [digest, setDigest] = useState('');
+  const [printed, setPrinted] = useState('');
   const [sent, setSent] = useState(false);
-  const [pasted, setPasted] = useState('');
-  const [status, setStatus] = useState<Progress>({kind: 'idle', text: ''});
-
-  function refresh() {
-    setUuid(newUuid());
-    setNow(new Date());
-  }
 
   // Client only, after the first render, so nothing here differs from the
   // server render.
-  useEffect(refresh, []);
+  useEffect(() => {
+    setUuid(newUuid());
+    setNow(new Date());
+  }, []);
 
   const inputs = {subscriberId, consumerUri, latitude, longitude, radiusKm};
   const problem = whatIsWrong(inputs);
@@ -134,49 +117,18 @@ export default function UhiQuickstart() {
     !problem && uuid && now
       ? searchBody({...inputs, uuid, timestamp: now.toISOString(), today: localDate(now)})
       : '';
+  const {authorization, digest} = signedHeaders(printed);
+  const signed = Boolean(body && authorization);
   const curl = curlCommand(body || '<THE_BODY_FROM_STEP_2>', authorization, digest);
-  const signed = Boolean(authorization.trim());
 
-  const received = pastedTransactionId(pasted);
-  const matches = Boolean(received) && received === uuid;
-
-  const done: Record<Step, boolean> = {
-    callback: callbackReady,
-    build: Boolean(body),
-    sign: Boolean(body) && signed,
-    send: sent,
-    read: matches,
-  };
-
-  const callbackUrl = consumerUri.trim()
-    ? `${consumerUri.trim().replace(/\/+$/, '')}/on_search`
-    : '<your consumer_uri>/on_search';
-
-  function newSearch() {
-    // A new body invalidates the signature over the old one.
-    refresh();
-    setAuthorization('');
-    setDigest('');
-    setSent(false);
-    setPasted('');
-    setStatus({kind: 'idle', text: 'New message_id, transaction_id and timestamp. Sign the new body in step 3.'});
-  }
+  const done: Record<Step, boolean> = {ids: Boolean(body), sign: signed, send: sent, see: false};
 
   return (
     <div className="quickstart quickstart--fit">
-      <div className="quickstart__status-row" role="status" aria-live="polite">
-        {status.text ? (
-          <p className={`quickstart__status quickstart__status--${status.kind}`}>
-            <span className="quickstart__status-dot" aria-hidden="true" />
-            <span>{status.text}</span>
-          </p>
-        ) : null}
-      </div>
-
       <div className="quickstart__card">
         <Stepper
           steps={STEPS}
-          label="The five steps of a first UHI search"
+          label="The four steps of a first UHI search"
           active={active}
           done={done}
           onSelect={setActive}
@@ -184,45 +136,13 @@ export default function UhiQuickstart() {
 
         <div className="quickstart__panes">
           <StepCard
-            step="callback"
+            step="ids"
             active={active}
-            title="Stand up your callback"
-            lede="The hospitals never come back on your request. They arrive later as a POST to your callback, which must answer at once.">
-            <div className="quickstart__panel">
-              <p className="quickstart__panel-label">Expose this endpoint</p>
-              <CodeBlock language="http">{`POST ${callbackUrl}`}</CodeBlock>
-            </div>
-            <div className="quickstart__panel">
-              <p className="quickstart__panel-label">Reply 200 with this body, then store the request</p>
-              <CodeBlock language="json">{ACK}</CodeBlock>
-            </div>
-            <div className="quickstart__form">
-              <Button
-                type="button"
-                variant={callbackReady ? 'outline' : 'default'}
-                onClick={() => {
-                  setCallbackReady(true);
-                  setActive('build');
-                  setStatus({kind: 'ok', text: 'Step 1 done. Your callback answers with the ACK.'});
-                }}>
-                My callback is ready
-              </Button>
-            </div>
-          </StepCard>
-
-          <StepCard
-            step="build"
-            active={active}
-            title="Build the search"
-            lede="Your IDs and a location go in. Out comes the exact body to sign and send, with a fresh UUID and today's time window.">
+            title="Enter your IDs"
+            lede="Type the two values your sandbox registration gave you.">
             <div className="quickstart__form">
               <div className="quickstart__fields">
-                <Field
-                  label="Subscriber ID"
-                  hint="From your sandbox registration. Sent as consumer_id."
-                  value={subscriberId}
-                  onValue={setSubscriberId}
-                />
+                <Field label="Subscriber ID" value={subscriberId} onValue={setSubscriberId} />
                 <Field
                   label="consumer_uri"
                   hint="Your public HTTPS callback base URL."
@@ -232,152 +152,106 @@ export default function UhiQuickstart() {
                   onValue={setConsumerUri}
                 />
               </div>
-              <div className="quickstart__fields">
-                <Field label="Latitude" inputMode="decimal" value={latitude} onValue={setLatitude} />
-                <Field label="Longitude" inputMode="decimal" value={longitude} onValue={setLongitude} />
-                <Field
-                  label="Radius, km"
-                  inputMode="decimal"
-                  value={radiusKm}
-                  onValue={setRadiusKm}
-                />
-              </div>
-            </div>
-            {body ? (
-              <>
-                <div className="quickstart__panel">
-                  <p className="quickstart__panel-label">Exact body to sign and send, one line</p>
-                  <CodeBlock language="json">{body}</CodeBlock>
+              <Details summary={<summary>Change location</summary>}>
+                <div className="quickstart__fields">
+                  <Field label="Latitude" inputMode="decimal" value={latitude} onValue={setLatitude} />
+                  <Field label="Longitude" inputMode="decimal" value={longitude} onValue={setLongitude} />
+                  <Field label="Radius, km" inputMode="decimal" value={radiusKm} onValue={setRadiusKm} />
                 </div>
-                <div className="quickstart__go">
-                  <Button type="button" variant="outline" onClick={newSearch}>
-                    <RefreshCw className="size-4" aria-hidden="true" />
-                    New UUID and timestamp
-                  </Button>
-                  <Button type="button" onClick={() => setActive('sign')}>
-                    Continue
-                  </Button>
-                </div>
-                <p className="quickstart__hint">
-                  message_id and transaction_id carry the same UUID, {uuid}. Keep it: the callback
-                  in step 5 carries it back.
-                </p>
-              </>
-            ) : (
-              <p className="quickstart__held">{problem || 'Generating a UUID.'}</p>
-            )}
-          </StepCard>
-
-          <StepCard
-            step="sign"
-            active={active}
-            title="Sign it"
-            lede={
-              <>
-                Run the{' '}
-                <a href={UTILITY} target="_blank" rel="noreferrer">
-                  Header Generation Utility
-                </a>{' '}
-                on your own machine, with your subscriber ID, your public key ID and the exact body
-                from step 2. Paste the two values it returns.
-              </>
-            }>
-            <p className="quickstart__held">
-              Your private key stays with the utility. This page never asks for it.
-            </p>
-            <div className="quickstart__form">
-              <div className="quickstart__fields">
-                <Field
-                  label="Authorization"
-                  hint="The signature header value. A signature expires, so sign again for every send."
-                  value={authorization}
-                  onValue={setAuthorization}
-                />
-                <Field
-                  label="Digest"
-                  hint="The BLAKE-512 hash of the body, with or without the BLAKE-512= prefix."
-                  value={digest}
-                  onValue={setDigest}
-                />
-              </div>
+              </Details>
               <div className="quickstart__go">
-                <Button type="button" disabled={!body || !signed} onClick={() => setActive('send')}>
+                <Button type="button" disabled={!body} onClick={() => setActive('sign')}>
                   Continue
                 </Button>
-                {!body ? (
-                  <span className="quickstart__hint">Build the search in step 2 first.</span>
-                ) : !signed ? (
-                  <span className="quickstart__hint">Paste the Authorization value.</span>
+                {problem && (subscriberId || consumerUri) ? (
+                  <span className="quickstart__hint">{problem}</span>
                 ) : null}
               </div>
             </div>
           </StepCard>
 
           <StepCard
-            step="send"
+            step="sign"
             active={active}
-            title="Send it"
-            lede="Run this from a terminal. The body is inline, byte for byte as you signed it, because reformatting it breaks the digest.">
+            title="Sign it"
+            lede="Copy this body, sign it on your own machine, and paste what the utility prints.">
+            {body ? (
+              <>
+                <div className="quickstart__panel">
+                  <p className="quickstart__panel-label">The exact body, one line</p>
+                  <CodeBlock language="json">{body}</CodeBlock>
+                </div>
+                <p className="quickstart__hint">
+                  Sign it with the{' '}
+                  <a href={UTILITY} target="_blank" rel="noreferrer">
+                    Header Generation Utility
+                  </a>
+                  , using your subscriber ID and public key ID. Your private key never leaves your machine.
+                </p>
+                <div className="quickstart__form">
+                  <div className="quickstart__fields">
+                    <label className="quickstart__field">
+                      <span className="quickstart__label">What the utility printed</span>
+                      <textarea
+                        className="quickstart__input"
+                        // The shared input height is one line; this box takes a few.
+                        style={{height: 'auto'}}
+                        rows={4}
+                        autoComplete="off"
+                        spellCheck={false}
+                        value={printed}
+                        onChange={(event) => setPrinted(event.target.value)}
+                      />
+                    </label>
+                  </div>
+                  <div className="quickstart__go">
+                    <Button type="button" disabled={!signed} onClick={() => setActive('send')}>
+                      Continue
+                    </Button>
+                    {signed && !digest ? (
+                      <span className="quickstart__hint">
+                        No Digest found. Paste the Digest line too, or fill it in the curl.
+                      </span>
+                    ) : null}
+                  </div>
+                </div>
+              </>
+            ) : (
+              <p className="quickstart__held">Enter your IDs in step 1 first.</p>
+            )}
+          </StepCard>
+
+          <StepCard step="send" active={active} title="Send it" lede="Run this in a terminal.">
             <div className="quickstart__panel">
-              <p className="quickstart__panel-label">To the sandbox UHI Gateway</p>
               <CodeBlock language="bash">{curl}</CodeBlock>
             </div>
-            <p className="quickstart__held">
-              You receive 200 with <code>"ack": {'{'} "status": "ACK" {'}'}</code> straight away. That
-              is only a receipt.
-            </p>
-            <div className="quickstart__form">
+            <p className="quickstart__held">You get 200 and ACK straight away.</p>
+            <div className="quickstart__go">
               <Button
                 type="button"
-                variant={sent ? 'outline' : 'default'}
-                disabled={!body || !signed}
+                disabled={!signed}
                 onClick={() => {
                   setSent(true);
-                  setActive('read');
-                  setStatus({kind: 'ok', text: 'Step 4 done. Watch your callback for on_search.'});
+                  setActive('see');
                 }}>
-                I received the ACK
+                I got the ACK
               </Button>
             </div>
           </StepCard>
 
           <StepCard
-            step="read"
+            step="see"
             active={active}
-            title="Read the callback"
-            lede="Within seconds the UHI Gateway posts on_search to your endpoint. Check its transaction_id, then read message.catalog.providers[].">
-            <div className="quickstart__form">
-              <div className="quickstart__fields">
-                <Field
-                  label="The on_search body your endpoint stored, or its transaction_id"
-                  value={pasted}
-                  onValue={setPasted}
-                />
-              </div>
-              {pasted.trim() ? (
-                matches ? (
-                  <p className="quickstart__created-head">
-                    <Check className="size-4" aria-hidden="true" />
-                    transaction_id matches your search.
-                  </p>
-                ) : (
-                  <p className="quickstart__held">
-                    <CircleAlert className="size-4" aria-hidden="true" />{' '}
-                    {received
-                      ? `That is ${received}. Your search sent ${uuid || 'no id yet'}.`
-                      : 'No context.transaction_id in what you pasted.'}
-                  </p>
-                )
-              ) : null}
-            </div>
+            title="See the hospitals"
+            lede="Within seconds your callback receives on_search, with the hospitals in message.catalog.providers[].">
+            <p className="quickstart__held">
+              Check <code>context.transaction_id</code> is <code>{uuid || 'your id'}</code>.
+            </p>
             <div className="quickstart__panel">
-              <p className="quickstart__panel-label">
-                One provider record. The values are illustrative, and sandbox data differs
-              </p>
+              <p className="quickstart__panel-label">One hospital, as it arrives. Sandbox data differs</p>
               <CodeBlock language="json">{SAMPLE_PROVIDER}</CodeBlock>
             </div>
-            <div className="quickstart__panel">
-              <p className="quickstart__panel-label">If it does not work</p>
+            <Details summary={<summary>If it does not work</summary>}>
               <table>
                 <thead>
                   <tr>
@@ -394,7 +268,7 @@ export default function UhiQuickstart() {
                   ))}
                 </tbody>
               </table>
-            </div>
+            </Details>
           </StepCard>
         </div>
       </div>

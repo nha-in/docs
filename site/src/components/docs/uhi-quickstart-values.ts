@@ -114,16 +114,29 @@ export function curlCommand(body: string, authorization: string, digest: string)
 }
 
 /**
- * The transaction_id in what the reader pasted: a whole on_search body, or
- * the bare id. '' when a body was pasted that carries none.
+ * The two header values out of whatever the Header Generation Utility printed:
+ * "Authorization: ..." and "Digest: ..." lines, or a JSON object with those
+ * keys. Anything else is taken as the Authorization value on its own.
  */
-export function pastedTransactionId(pasted: string): string {
+export function signedHeaders(pasted: string): {authorization: string; digest: string} {
   const text = pasted.trim();
-  if (!text.startsWith('{')) return text;
-  try {
-    const id = JSON.parse(text)?.context?.transaction_id;
-    return typeof id === 'string' ? id.trim() : '';
-  } catch {
-    return '';
+  if (!text) return {authorization: '', digest: ''};
+  if (text.startsWith('{')) {
+    try {
+      const parsed = JSON.parse(text);
+      const pick = (name: string) => {
+        const key = Object.keys(parsed ?? {}).find((k) => k.toLowerCase() === name);
+        return key && typeof parsed[key] === 'string' ? parsed[key].trim() : '';
+      };
+      const authorization = pick('authorization');
+      if (authorization) return {authorization, digest: pick('digest')};
+    } catch {
+      // Not JSON after all: read it as lines.
+    }
   }
+  const line = (name: string) =>
+    text.match(new RegExp(`^[\\s"']*${name}[\\s"']*:\\s*(.+?)[\\s,]*$`, 'im'))?.[1].trim() ?? '';
+  const authorization = line('Authorization');
+  if (authorization) return {authorization, digest: line('Digest')};
+  return {authorization: text, digest: ''};
 }

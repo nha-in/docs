@@ -65,10 +65,16 @@ test('the curl sends the body byte for byte, quotes included', () => {
   assert.match(curl, /Authorization: Signature keyId="k",signature="s"/);
 });
 
-test('the transaction id is read from a pasted body or taken as pasted', () => {
-  const body = JSON.stringify({context: {transaction_id: INPUTS.uuid}, message: {}});
-  assert.equal(v.pastedTransactionId(body), INPUTS.uuid);
-  assert.equal(v.pastedTransactionId(`  ${INPUTS.uuid}\n`), INPUTS.uuid);
-  assert.equal(v.pastedTransactionId('{"context": {}}'), '');
-  assert.equal(v.pastedTransactionId('{not json'), '');
+test('the utility output yields both header values, however it was printed', () => {
+  const auth = 'Signature keyId="my-eua|k1|ed25519",algorithm="ed25519",signature="s=="';
+  const both = {authorization: auth, digest: 'BLAKE-512=abc=='};
+  assert.deepEqual(v.signedHeaders(`Authorization: ${auth}\nDigest: BLAKE-512=abc==\n`), both);
+  assert.deepEqual(v.signedHeaders(`  digest: BLAKE-512=abc==\r\nauthorization: ${auth}`), both);
+  assert.deepEqual(v.signedHeaders(JSON.stringify({Authorization: auth, Digest: 'BLAKE-512=abc=='}, null, 2)), both);
+  assert.deepEqual(v.signedHeaders(JSON.stringify({authorization: auth})), {authorization: auth, digest: ''});
+  assert.deepEqual(v.signedHeaders(`  ${auth}\n`), {authorization: auth, digest: ''});
+  assert.deepEqual(v.signedHeaders(''), {authorization: '', digest: ''});
+  // Whatever is parsed goes into the curl as the headers.
+  const {authorization, digest} = v.signedHeaders(`Authorization: ${auth}\nDigest: abc==`);
+  assert.match(v.curlCommand('{}', authorization, digest), /-H 'Digest: BLAKE-512=abc=='/);
 });

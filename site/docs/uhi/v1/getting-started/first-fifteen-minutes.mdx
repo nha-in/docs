@@ -1,7 +1,7 @@
 ---
 title: Quickstart
 sidebar_label: Quickstart
-description: Build one PM-JAY HEM GPS search here, sign it with your own key, send it to the sandbox UHI Gateway and read the hospitals on your callback.
+description: Find PM-JAY hospitals near a point in four steps. Enter your IDs, sign the search with your own key, send it, and see the hospitals on your callback.
 source: UHI developer guide as of 22 September 2026, section 1.3
 sidebar_position: 3
 sidebar_class_name: sidebar-icon sidebar-icon--zap
@@ -11,58 +11,46 @@ import UhiQuickstart from '@site/src/components/docs/UhiQuickstart';
 
 # Quickstart
 
-You find PM-JAY empanelled hospitals near a point here, in one signed search to
-the sandbox [UHI Gateway](/docs/uhi/v1/getting-started/glossary#uhi-gateway).
-The exchange touches every part of the
-[UHI](/docs/uhi/v1/getting-started/glossary#uhi) network with the smallest
-payload: signing, the Gateway, an
-[HSPA](/docs/uhi/v1/getting-started/glossary#hspa) and an asynchronous callback.
-
-This page builds the exact request with you. You sign and send it from your own
-machine, because the signature needs your private key and the answer arrives on
-your own callback URL.
+You find [PM-JAY](/docs/uhi/v1/getting-started/glossary#pm-jay-hem) empanelled
+hospitals near a point here, in four steps: enter your IDs, sign, send, and see
+the hospitals arrive on your callback.
 
 ## Before you start
 
-Have these from [sandbox registration](/docs/uhi/v1/getting-started/sandbox):
+- **Your sandbox registration.** Your subscriber ID and public key ID, from
+  [sandbox registration](/docs/uhi/v1/getting-started/sandbox).
+- **The Header Generation Utility**, with your private key, on your own machine.
+- **A callback.** Expose `POST <your consumer_uri>/on_search` on a public HTTPS
+  URL. It replies 200 with this body at once, then stores the request:
 
-- your subscriber ID and public key ID;
-- your private key, in the Header Generation Utility on your own machine;
-- a public HTTPS URL for callbacks, your
-  [`consumer_uri`](/docs/uhi/v1/getting-started/glossary#consumer-uri).
-
-A [PM-JAY HEM](/docs/uhi/v1/getting-started/glossary#pm-jay-hem) GPS search
-needs no state.
+  ```json
+  { "message": { "ack": { "status": "ACK" } }, "error": {} }
+  ```
 
 <UhiQuickstart />
 
 ## How this fits your product
 
-Every UHI service your app adds later follows this exchange. Your app sends a
-signed search, shows a waiting state, and renders results as your callback
-receives them.
+Every UHI service your app adds later follows this exchange.
 
-- **Signing, step 3.** Every outbound call carries a fresh signature. See
+- **Signing, step 2.** Every outbound call carries a fresh signature. See
   [Signing](/docs/uhi/v1/concepts/signing).
-- **The `ACK`, step 4.** The response to your call is only a receipt. See
+- **The `ACK`, step 3.** The response to your call is only a receipt. See
   [Messages and callbacks](/docs/uhi/v1/concepts/messages).
-- **The callback, step 5.** Results arrive on your `consumer_uri`, matched by
-  `transaction_id`. Some services answer from many HSPAs, so you aggregate.
-- **Discovery services** change the domain and the filters. Physical
-  Consultation and Ambulance Booking add
-  [direct calls](/docs/uhi/v1/getting-started/glossary#direct-call-p2p)
-  between your app and the HSPA after `on_search`. See
-  [Routes](/docs/uhi/v1/concepts/routes).
-
-[Services](/docs/uhi/v1/services) sets out each service and which to build first.
+- **The callback, step 4.** Results arrive on your
+  [`consumer_uri`](/docs/uhi/v1/getting-started/glossary#consumer-uri), matched
+  by `transaction_id`. Some services answer from many
+  [HSPAs](/docs/uhi/v1/getting-started/glossary#hspa), so you aggregate.
+- **Other services** change the domain and the filters. Physical Consultation
+  and Ambulance Booking add
+  [direct calls](/docs/uhi/v1/getting-started/glossary#direct-call-p2p) after
+  `on_search`. See [Routes](/docs/uhi/v1/concepts/routes).
 
 ## If a call fails
 
-Step 5 carries the symptom table for this search. A `401` or `403` on step 4
-comes before any body, so start with [Signing](/docs/uhi/v1/concepts/signing)
-and your registration. A `200` whose `error` is not empty carries the reason:
-[Errors on UHI](/docs/uhi/v1/concepts/errors) sets out the object and what to
-log.
+Step 4 carries the symptom table. A `200` whose `error` is not empty carries
+the reason: [Errors on UHI](/docs/uhi/v1/concepts/errors) sets out the object
+and what to log.
 
 ## Next
 
