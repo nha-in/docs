@@ -225,12 +225,36 @@ func TestScopeFor(t *testing.T) {
 		{"nhcx", "how do I build the JWE", "nhcx"},
 		{"nhcx", "where does HIE-CM send the consent", ""},
 		{"nhcx", "what does NHCX return here", "nhcx"},
-		{"", "anything", ""},
+		// A page that belongs to no gateway (the landing page, support,
+		// What's New) infers the scope from the question: searching the
+		// whole catalogue there let NHCX, most of it, answer HIE-CM
+		// questions.
+		{"", "anything", "hiecm"},
+		{"", "Scaffolding skill", "hiecm"},
+		{"", "what is a care context", "hiecm"},
+		{"", "how do I scramble the aadhaar number before sending it", "hiecm"},
+		{"", "the insurer says it could not decrypt the claim message", "nhcx"},
+		{"", "the exchange rejected my retry saying the correlation id was already used", "nhcx"},
+		{"", "should we get a pre-auth before surgery", "nhcx"},
+		{"", "how does an NHCX claim work", "nhcx"},
+		{"", "where does HIE-CM send the consent", "hiecm"},
+		{"", "is the NHCX session token the same as the HIE-CM one", ""},
 		{"someothergateway", "anything", ""},
 	} {
 		if got := scopeFor(tc.page, tc.question); got != tc.want {
 			t.Errorf("scopeFor(%q, %q) = %q, want %q", tc.page, tc.question, got, tc.want)
 		}
+	}
+}
+
+// An inferred scope must not tell the model the reader is on a page they
+// are not on.
+func TestGatewayNoteSaysWhereTheScopeCameFrom(t *testing.T) {
+	if n := gatewayNote("hiecm", true); !strings.Contains(n, "reading the HIE-CM documentation") {
+		t.Errorf("page scope note = %q", n)
+	}
+	if n := gatewayNote("hiecm", false); strings.Contains(n, "reading the") || !strings.Contains(n, "HIE-CM") {
+		t.Errorf("inferred scope note = %q", n)
 	}
 }
 
@@ -764,7 +788,9 @@ func TestRespondRetriesWithoutPuttingWordsInTheReadersMouth(t *testing.T) {
 	// The second call sees the lookFirst instruction ahead of the shape
 	// block and the reader's own words, and nothing else: no apology, no
 	// mention of the first attempt.
-	want := lookFirst + "\n\n" + ShapeBlock("define") + "\n\n" + "jhhjjk"
+	// Asked with no page, the question's scope is inferred, and its note
+	// rides with the retry in the same place a page's would.
+	want := lookFirst + "\n\n" + gatewayNote("hiecm", false) + "\n\n" + ShapeBlock("define") + "\n\n" + "jhhjjk"
 	if got := fm.gotMsgs[1]; len(got) != 1 || got[0].Text != want {
 		t.Errorf("the retry changed the conversation: %+v", got)
 	}
