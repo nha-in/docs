@@ -1,0 +1,82 @@
+{
+  "errors": [],
+  "file": "nhcx-eligibility.yaml",
+  "gateway": "nhcx",
+  "label": "Coverage eligibility",
+  "module": "eligibility",
+  "operations": {
+    "POST /v1/coverageeligibility/check": {
+      "encrypted": [],
+      "id": "eligibility_webhook_v1_coverageeligibility_check",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:bearer_auth!"
+      ],
+      "path": "/v1/coverageeligibility/check",
+      "properties": [
+        "payload"
+      ],
+      "required": [],
+      "responses": [
+        "202"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/hcx",
+      "servers": [
+        "https://apisbx.abdm.gov.in/hcx",
+        "https://apisprod.nha.gov.in/hcx"
+      ]
+    },
+    "POST /v1/coverageeligibility/on_check": {
+      "encrypted": [],
+      "id": "eligibility_webhook_v1_coverageeligibility_on_check",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:bearer_auth!"
+      ],
+      "path": "/v1/coverageeligibility/on_check",
+      "properties": [
+        "payload",
+        "type"
+      ],
+      "required": [
+        "payload",
+        "type"
+      ],
+      "responses": [
+        "202"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/hcx",
+      "servers": [
+        "https://apisbx.abdm.gov.in/hcx",
+        "https://apisprod.nha.gov.in/hcx"
+      ]
+    }
+  },
+  "roles": [
+    "payer",
+    "provider"
+  ],
+  "sources": {
+    "nhcx-package/apis/02-eligibility": {
+      "fetched": null,
+      "hash": "sha256:e42e738c449e98effd44ddef6394558cb87c97fc073c3ddb7d9662895f6afe51"
+    },
+    "nhcx-package/baseurl.yaml": {
+      "fetched": null,
+      "hash": "sha256:88515b7b29c6b349a131e016c80774436ea16a29738db743b4cc3a24cbd42453"
+    },
+    "nhcx-package/nhcx-error.yaml": {
+      "fetched": null,
+      "hash": "sha256:d24ac927ed4dd722e60d7bd1d6fed15de370cc29f750d68999ee56fac93c941b"
+    }
+  },
+  "version": "v1"
+}

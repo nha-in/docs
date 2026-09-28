@@ -34,7 +34,8 @@ Watched sources (daily)
        from catalogue/openapi) -> compile skills -> validate -> build index
        -> generate llms.txt -> bump catalogue_version -> index the catalogue
        into catalogue.db (keyword-only on PRs, no Ollama in CI; the deploy
-       build embeds via the Ollama sidecar)
+       build embeds via the Ollama sidecar) -> check What's New against the
+       facts snapshot (npm run check:changelog)
         |
    Publish: static site + docs-mcp image with the new snapshot | plugin
    release | Context7 refresh
@@ -77,6 +78,7 @@ In order, because the order matters:
 6. **Build the index.** Because it walks everything above.
 7. **Generate llms.txt and the full variant.** For agents that fetch rather than use MCP.
 8. **Bump `catalogue_version` and index the catalogue into `catalogue.db`.** Keyword-only on pull requests because CI has no Ollama; the deploy build embeds via the sidecar.
+9. **Check What's New.** `npm run check:changelog` fails when the facts snapshot under `catalogue/changelog/facts/` or the rendered pages are behind the catalogue; `npm run changelog` writes the entries. See `changelog`.
 
 Then publish: the static site plus a `docs-mcp` image built with the new snapshot, the plugin release with a git tag, and the Context7 refresh.
 

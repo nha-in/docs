@@ -59,6 +59,7 @@ The first three are compiled from `plan/abdm-v1-phase1-architecture-and-plan.md`
 - `skill-compiler` how atoms become skills, and the validator that stops invented facts
 - `ooda-skill-authoring` how to write a skill that loops instead of reciting a recipe
 - `update-pipeline` the watcher, the pull request bot, and the build on merge
+- `changelog` what earns a What's New entry, and the generator behind it: `npm run changelog` writes entries from the catalogue's facts diff, `npm run check:changelog` is the CI gate
 - `support-agent` the internal support agent on the Docs MCP
 
 **Proving it works**

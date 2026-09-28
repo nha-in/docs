@@ -1,0 +1,1241 @@
+{
+  "errors": [],
+  "file": "hiecm-p2.yaml",
+  "gateway": "hiecm",
+  "label": "P2 Consents Management",
+  "module": "p2",
+  "operations": {
+    "GET /abha/api/v3/phr/app/login/profile": {
+      "encrypted": [],
+      "id": "p2_get_v3_phr_app_login_profile",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-token!"
+      ],
+      "path": "/abha/api/v3/phr/app/login/profile",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "401",
+        "403"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://abhasbx.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in"
+      ]
+    },
+    "GET /abha/api/v3/phr/app/login/profile/phrCard": {
+      "encrypted": [],
+      "id": "p2_get_v3_phr_app_login_profile_phrcard",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-token!"
+      ],
+      "path": "/abha/api/v3/phr/app/login/profile/phrCard",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "202",
+        "401",
+        "403"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://abhasbx.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in"
+      ]
+    },
+    "GET /abha/api/v3/phr/app/login/profile/qrCode": {
+      "encrypted": [],
+      "id": "p2_get_v3_phr_app_login_profile_qrcode",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-token!"
+      ],
+      "path": "/abha/api/v3/phr/app/login/profile/qrCode",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "202",
+        "401",
+        "403"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://abhasbx.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in"
+      ]
+    },
+    "GET /abha/api/v3/phr/app/login/profile/request/logout": {
+      "encrypted": [],
+      "id": "p2_get_v3_phr_app_login_profile_request_logout",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-token!"
+      ],
+      "path": "/abha/api/v3/phr/app/login/profile/request/logout",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "401",
+        "403"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://abhasbx.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in"
+      ]
+    },
+    "GET /abha/api/v3/phr/app/login/profile/request/token": {
+      "encrypted": [],
+      "id": "p2_get_v3_phr_app_login_profile_request_token",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:R-token!",
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!"
+      ],
+      "path": "/abha/api/v3/phr/app/login/profile/request/token",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "401",
+        "403"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://abhasbx.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in"
+      ]
+    },
+    "GET /abha/api/v3/phr/app/login/profile/switch-profile": {
+      "encrypted": [],
+      "id": "p2_get_v3_phr_app_login_profile_switch_profile",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-token!"
+      ],
+      "path": "/abha/api/v3/phr/app/login/profile/switch-profile",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "403"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://abhasbx.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in"
+      ]
+    },
+    "GET /api/hiecm/consent/v3/artefact": {
+      "encrypted": [],
+      "id": "p2_get_consent_v3_artefact",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-CM-ID!",
+        "query:limit!",
+        "query:offset",
+        "query:status"
+      ],
+      "path": "/api/hiecm/consent/v3/artefact",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "GET /api/hiecm/consent/v3/artefact/request/{}": {
+      "encrypted": [],
+      "id": "p2_get_consent_v3_artefact_request_request_id",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-CM-ID!",
+        "path:{}!"
+      ],
+      "path": "/api/hiecm/consent/v3/artefact/request/{consentRequestId}",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "GET /api/hiecm/consent/v3/artefact/{}": {
+      "encrypted": [],
+      "id": "p2_get_consent_v3_artefact_artefact_id",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-CM-ID!",
+        "path:{}!"
+      ],
+      "path": "/api/hiecm/consent/v3/artefact/{consentId}",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "GET /api/hiecm/consent/v3/request": {
+      "encrypted": [],
+      "id": "p2_get_consent_v3_request",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-CM-ID!",
+        "query:limit!",
+        "query:offset",
+        "query:status"
+      ],
+      "path": "/api/hiecm/consent/v3/request",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "GET /api/hiecm/consent/v3/request/{}": {
+      "encrypted": [],
+      "id": "p2_get_consent_v3_request_request_id",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-CM-ID!",
+        "path:{}!"
+      ],
+      "path": "/api/hiecm/consent/v3/request/{consentRequestId}",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "GET /api/hiecm/gateway/v3/govt-programs": {
+      "encrypted": [],
+      "id": "p2_get_gateway_v3_govt_programs",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-CM-ID!"
+      ],
+      "path": "/api/hiecm/gateway/v3/govt-programs",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "204",
+        "400",
+        "401",
+        "403",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "GET /api/hiecm/gateway/v3/providers": {
+      "encrypted": [],
+      "id": "p2_get_gateway_v3_providers",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-CM-ID!",
+        "query:districtCode",
+        "query:name",
+        "query:stateCode"
+      ],
+      "path": "/api/hiecm/gateway/v3/providers",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "204",
+        "400",
+        "401",
+        "403",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "GET /api/hiecm/gateway/v3/providers/{}": {
+      "encrypted": [],
+      "id": "p2_get_gateway_v3_providers_provider_id",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-CM-ID!",
+        "path:{}!"
+      ],
+      "path": "/api/hiecm/gateway/v3/providers/{hip-id}",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "204",
+        "400",
+        "401",
+        "403",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "GET /api/hiecm/hip/v3/link/patient/links": {
+      "encrypted": [],
+      "id": "p2_get_hip_v3_link_patient_links",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-CM-ID!",
+        "query:limit!"
+      ],
+      "path": "/api/hiecm/hip/v3/link/patient/links",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "GET /api/hiecm/patient-share/v3/profile/getTokenDetails": {
+      "encrypted": [],
+      "id": "p2_get_patient_share_v3_profile_gettokendetails",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-CM-ID!",
+        "query:limit!"
+      ],
+      "path": "/api/hiecm/patient-share/v3/profile/getTokenDetails",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "408",
+        "429",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /abha/api/v3/phr/app/login/profile/link": {
+      "encrypted": [],
+      "id": "p2_post_v3_phr_app_login_profile_link",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-token!"
+      ],
+      "path": "/abha/api/v3/phr/app/login/profile/link",
+      "properties": [
+        "action",
+        "transactionId"
+      ],
+      "required": [
+        "action",
+        "transactionId"
+      ],
+      "responses": [
+        "200",
+        "400",
+        "403"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://abhasbx.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in"
+      ]
+    },
+    "POST /abha/api/v3/phr/app/login/profile/request/otp": {
+      "encrypted": [],
+      "id": "p2_post_v3_phr_app_login_profile_request_otp",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-token!"
+      ],
+      "path": "/abha/api/v3/phr/app/login/profile/request/otp",
+      "properties": [
+        "loginHint",
+        "loginId",
+        "otpSystem",
+        "scope"
+      ],
+      "required": [
+        "loginHint",
+        "loginId",
+        "otpSystem",
+        "scope"
+      ],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://abhasbx.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in"
+      ]
+    },
+    "POST /abha/api/v3/phr/app/login/profile/updateProfile": {
+      "encrypted": [],
+      "id": "p2_post_v3_phr_app_login_profile_updateprofile",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-token!"
+      ],
+      "path": "/abha/api/v3/phr/app/login/profile/updateProfile",
+      "properties": [
+        "address",
+        "dayOfBirth",
+        "districtCode",
+        "districtName",
+        "email",
+        "firstName",
+        "gender",
+        "lastName",
+        "middleName",
+        "mobile",
+        "monthOfBirth",
+        "pinCode",
+        "profilePhoto",
+        "stateCode",
+        "stateName",
+        "yearOfBirth"
+      ],
+      "required": [
+        "address",
+        "dayOfBirth",
+        "districtCode",
+        "districtName",
+        "email",
+        "firstName",
+        "gender",
+        "lastName",
+        "middleName",
+        "mobile",
+        "monthOfBirth",
+        "pinCode",
+        "profilePhoto",
+        "stateCode",
+        "stateName",
+        "yearOfBirth"
+      ],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://abhasbx.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in"
+      ]
+    },
+    "POST /abha/api/v3/phr/app/login/profile/verify": {
+      "encrypted": [],
+      "id": "p2_post_v3_phr_app_login_profile_verify",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-token!"
+      ],
+      "path": "/abha/api/v3/phr/app/login/profile/verify",
+      "properties": [
+        "authData",
+        "scope"
+      ],
+      "required": [
+        "authData",
+        "scope"
+      ],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://abhasbx.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in"
+      ]
+    },
+    "POST /abha/api/v3/phr/app/login/profile/verify/switch-profile/user": {
+      "encrypted": [],
+      "id": "p2_post_v3_phr_app_login_profile_verify_switch_profile_user",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:T-token!",
+        "header:TIMESTAMP!"
+      ],
+      "path": "/abha/api/v3/phr/app/login/profile/verify/switch-profile/user",
+      "properties": [
+        "abhaAddress",
+        "txnId"
+      ],
+      "required": [
+        "abhaAddress",
+        "txnId"
+      ],
+      "responses": [
+        "200",
+        "400",
+        "403"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://abhasbx.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in"
+      ]
+    },
+    "POST /api/hiecm/consent/v3/auto/approve": {
+      "encrypted": [],
+      "id": "p2_post_consent_v3_auto_approve",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-CM-ID!"
+      ],
+      "path": "/api/hiecm/consent/v3/auto/approve",
+      "properties": [
+        "excludedSources",
+        "hiu",
+        "includedSources",
+        "isApplicableForAllHIPs"
+      ],
+      "required": [
+        "hiu",
+        "includedSources",
+        "isApplicableForAllHIPs"
+      ],
+      "responses": [
+        "202",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/hiecm/consent/v3/auto/approve/{}/disable": {
+      "encrypted": [],
+      "id": "p2_post_consent_v3_auto_approve_auto_approval_id_disable",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-CM-ID!",
+        "path:{}!"
+      ],
+      "path": "/api/hiecm/consent/v3/auto/approve/{consentId}/disable",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "202",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/hiecm/consent/v3/auto/approve/{}/enable": {
+      "encrypted": [],
+      "id": "p2_post_consent_v3_auto_approve_auto_approval_id_enable",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-CM-ID!",
+        "path:{}!"
+      ],
+      "path": "/api/hiecm/consent/v3/auto/approve/{consentId}/enable",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "202",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/hiecm/consent/v3/request/{}/approve": {
+      "encrypted": [],
+      "id": "p2_post_consent_v3_request_request_id_approve",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-CM-ID!",
+        "path:{}!"
+      ],
+      "path": "/api/hiecm/consent/v3/request/{consentRequestId}/approve",
+      "properties": [
+        "consents"
+      ],
+      "required": [
+        "consents"
+      ],
+      "responses": [
+        "202",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/hiecm/consent/v3/request/{}/deny": {
+      "encrypted": [],
+      "id": "p2_post_consent_v3_request_request_id_deny",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-CM-ID!",
+        "path:{}!"
+      ],
+      "path": "/api/hiecm/consent/v3/request/{consentRequestId}/deny",
+      "properties": [
+        "reason"
+      ],
+      "required": [
+        "reason"
+      ],
+      "responses": [
+        "202",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/hiecm/consent/v3/revoke": {
+      "encrypted": [],
+      "id": "p2_post_consent_v3_revoke",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-CM-ID!"
+      ],
+      "path": "/api/hiecm/consent/v3/revoke",
+      "properties": [
+        "consents"
+      ],
+      "required": [
+        "consents"
+      ],
+      "responses": [
+        "202",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/hiecm/patient-share/v3/share": {
+      "encrypted": [],
+      "id": "p2_post_patient_share_v3_share",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-CM-ID!",
+        "header:X-HIU-ID!"
+      ],
+      "path": "/api/hiecm/patient-share/v3/share",
+      "properties": [
+        "intent",
+        "metaData",
+        "profile"
+      ],
+      "required": [
+        "intent",
+        "metaData",
+        "profile"
+      ],
+      "responses": [
+        "202",
+        "400",
+        "401",
+        "403",
+        "404",
+        "408",
+        "429",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/hiecm/user-initiated-linking/v3/link/care-context/confirm": {
+      "encrypted": [],
+      "id": "p2_post_user_initiated_linking_v3_link_care_context_confirm",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-CM-ID!",
+        "header:X-HIU-ID!"
+      ],
+      "path": "/api/hiecm/user-initiated-linking/v3/link/care-context/confirm",
+      "properties": [
+        "linkRefNumber",
+        "token"
+      ],
+      "required": [
+        "linkRefNumber",
+        "token"
+      ],
+      "responses": [
+        "202",
+        "400",
+        "401",
+        "403",
+        "500"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/hiecm/user-initiated-linking/v3/link/care-context/init": {
+      "encrypted": [],
+      "id": "p2_post_user_initiated_linking_v3_link_care_context_init",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-CM-ID!",
+        "header:X-HIU-ID!"
+      ],
+      "path": "/api/hiecm/user-initiated-linking/v3/link/care-context/init",
+      "properties": [
+        "patient",
+        "transactionId"
+      ],
+      "required": [
+        "patient",
+        "transactionId"
+      ],
+      "responses": [
+        "202",
+        "400",
+        "401",
+        "403",
+        "500"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/hiecm/user-initiated-linking/v3/patient/care-context/discover": {
+      "encrypted": [],
+      "id": "p2_post_user_initiated_linking_v3_patient_care_context_discover",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-CM-ID!",
+        "header:X-HIU-ID!"
+      ],
+      "path": "/api/hiecm/user-initiated-linking/v3/patient/care-context/discover",
+      "properties": [
+        "hip",
+        "unverifiedIdentifiers"
+      ],
+      "required": [
+        "hip",
+        "unverifiedIdentifiers"
+      ],
+      "responses": [
+        "202",
+        "400",
+        "401",
+        "403",
+        "500"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/v3/hiu/patient/care-context/on-confirm": {
+      "encrypted": [],
+      "id": "p2_post_v3_hiu_patient_care_context_on_confirm",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-HIU-ID!"
+      ],
+      "path": "/api/v3/hiu/patient/care-context/on-confirm",
+      "properties": [
+        "error",
+        "patient",
+        "response"
+      ],
+      "required": [
+        "patient",
+        "response"
+      ],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "500"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/v3/hiu/patient/care-context/on-discover": {
+      "encrypted": [],
+      "id": "p2_post_v3_hiu_patient_care_context_on_discover",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-HIU-ID!"
+      ],
+      "path": "/api/v3/hiu/patient/care-context/on-discover",
+      "properties": [
+        "createdAt",
+        "error",
+        "patient",
+        "response",
+        "transactionId"
+      ],
+      "required": [
+        "createdAt",
+        "patient",
+        "response",
+        "transactionId"
+      ],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "500"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/v3/hiu/patient/care-context/on-init": {
+      "encrypted": [],
+      "id": "p2_post_v3_hiu_patient_care_context_on_init",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-HIU-ID!"
+      ],
+      "path": "/api/v3/hiu/patient/care-context/on-init",
+      "properties": [
+        "error",
+        "link",
+        "response",
+        "transactionId"
+      ],
+      "required": [
+        "link",
+        "response",
+        "transactionId"
+      ],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "500"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/v3/hiu/patient/on-share": {
+      "encrypted": [],
+      "id": "p2_post_v3_hiu_patient_on_share",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-HIU-ID!"
+      ],
+      "path": "/api/v3/hiu/patient/on-share",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "408",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://abhasbx.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    }
+  },
+  "roles": [
+    "phr"
+  ],
+  "sources": {
+    "catalogue/openapi/.raw/nha-2026-09-16/hiecm/consent-management-data-flow.yaml": {
+      "fetched": "2026-09-16",
+      "hash": "sha256:4b0af51af2e2b5bfbf08f5e8745a940f59c550f8a1e4600c970c526f27bc8718"
+    },
+    "catalogue/openapi/.raw/nha-2026-09-16/hiecm/gateway.yaml": {
+      "fetched": "2026-09-16",
+      "hash": "sha256:d3bc599054c2570a50818ca54906c44cf652ad6f813473e8ac243667da4e9300"
+    },
+    "catalogue/openapi/.raw/nha-2026-09-16/hiecm/hip-initiated-linking.yaml": {
+      "fetched": "2026-09-16",
+      "hash": "sha256:8c4036b49028e243d0687d5ddcde6fa025d21d63fdaf90826eb8159f8485382b"
+    },
+    "catalogue/openapi/.raw/nha-2026-09-16/hiecm/patient-share.yaml": {
+      "fetched": "2026-09-16",
+      "hash": "sha256:8de274b417bbb860e87718adc299bf626c093cd91435fdcd095fa8748b28523a"
+    },
+    "catalogue/openapi/.raw/nha-2026-09-16/hiecm/user-initiated-linking.yaml": {
+      "fetched": "2026-09-16",
+      "hash": "sha256:848439c9e1fd123e706b7d42b7cc1db365a7d779ff65d298301dfb5fbf7a3e66"
+    },
+    "catalogue/openapi/.raw/nha-2026-09-16/phr/PHR and Locker Swagger.yaml": {
+      "fetched": "2026-09-16",
+      "hash": "sha256:a7e1b7e0b56b75297623057678cf307f21ecdbfbc9ebdb022dc67df78540f6d5"
+    }
+  },
+  "version": "v3"
+}

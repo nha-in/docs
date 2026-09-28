@@ -1,0 +1,507 @@
+{
+  "errors": [],
+  "file": "hiecm-p3.yaml",
+  "gateway": "hiecm",
+  "label": "P3 Subscription",
+  "module": "p3",
+  "operations": {
+    "GET /api/hiecm/subscription-requests/v3/request/{}": {
+      "encrypted": [],
+      "id": "p3_get_subscription_requests_v3_request_request_id",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-CM-ID!",
+        "path:{}!"
+      ],
+      "path": "/api/hiecm/subscription-requests/v3/request/{subscriptionRequestId}",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "GET /api/hiecm/subscription-requests/v3/requests": {
+      "encrypted": [],
+      "id": "p3_get_subscription_requests_v3_requests",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-CM-ID!",
+        "query:limit!",
+        "query:offset!",
+        "query:status!"
+      ],
+      "path": "/api/hiecm/subscription-requests/v3/requests",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "GET /api/hiecm/subscription-requests/v3/{}": {
+      "encrypted": [],
+      "id": "p3_get_subscription_requests_v3_subscription_id",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-CM-ID!",
+        "path:{}!"
+      ],
+      "path": "/api/hiecm/subscription-requests/v3/{subscriptionID}",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/hiecm/subscription-requests/v3/disable/{}": {
+      "encrypted": [],
+      "id": "p3_post_subscription_requests_v3_disable_subscription_id",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-CM-ID!",
+        "path:{}!"
+      ],
+      "path": "/api/hiecm/subscription-requests/v3/disable/{subscriptionID}",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/hiecm/subscription-requests/v3/enable/{}": {
+      "encrypted": [],
+      "id": "p3_post_subscription_requests_v3_enable_subscription_id",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-CM-ID!",
+        "path:{}!"
+      ],
+      "path": "/api/hiecm/subscription-requests/v3/enable/{subscriptionID}",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/hiecm/subscription-requests/v3/hiu/care-context/on-notify": {
+      "encrypted": [],
+      "id": "p3_post_subscription_requests_v3_hiu_care_context_on_notify",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-CM-ID!"
+      ],
+      "path": "/api/hiecm/subscription-requests/v3/hiu/care-context/on-notify",
+      "properties": [
+        "acknowledgement",
+        "error",
+        "response"
+      ],
+      "required": [
+        "acknowledgement",
+        "response"
+      ],
+      "responses": [
+        "202",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/hiecm/subscription-requests/v3/hiu/on-notify": {
+      "encrypted": [],
+      "id": "p3_post_subscription_requests_v3_hiu_on_notify",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-CM-ID!"
+      ],
+      "path": "/api/hiecm/subscription-requests/v3/hiu/on-notify",
+      "properties": [
+        "acknowledgement",
+        "error",
+        "response"
+      ],
+      "required": [
+        "acknowledgement",
+        "response"
+      ],
+      "responses": [
+        "202",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/hiecm/subscription-requests/v3/init": {
+      "encrypted": [],
+      "id": "p3_post_subscription_requests_v3_init",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-CM-ID!"
+      ],
+      "path": "/api/hiecm/subscription-requests/v3/init",
+      "properties": [
+        "subscription"
+      ],
+      "required": [
+        "subscription"
+      ],
+      "responses": [
+        "202",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/hiecm/subscription-requests/v3/{}/approve": {
+      "encrypted": [],
+      "id": "p3_post_subscription_requests_v3_request_id_approve",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-CM-ID!",
+        "path:{}!"
+      ],
+      "path": "/api/hiecm/subscription-requests/v3/{subscriptionRequestId}/approve",
+      "properties": [
+        "excludedSources",
+        "includedSources",
+        "isApplicableForAllHIPs"
+      ],
+      "required": [
+        "includedSources",
+        "isApplicableForAllHIPs"
+      ],
+      "responses": [
+        "202",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/hiecm/subscription-requests/v3/{}/deny": {
+      "encrypted": [],
+      "id": "p3_post_subscription_requests_v3_request_id_deny",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-CM-ID!",
+        "path:{}!"
+      ],
+      "path": "/api/hiecm/subscription-requests/v3/{subscriptionRequestId}/deny",
+      "properties": [
+        "reason"
+      ],
+      "required": [
+        "reason"
+      ],
+      "responses": [
+        "202",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/v3/hiu/hiecm/subscription-requests/on-init": {
+      "encrypted": [],
+      "id": "p3_post_v3_hiu_hiecm_subscription_requests_on_init",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-HIU-ID!"
+      ],
+      "path": "/api/v3/hiu/hiecm/subscription-requests/on-init",
+      "properties": [
+        "error",
+        "response",
+        "subscriptionRequest"
+      ],
+      "required": [
+        "response",
+        "subscriptionRequest"
+      ],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/v3/hiu/subscription-requests/hiu/notify": {
+      "encrypted": [],
+      "id": "p3_post_v3_hiu_subscription_requests_hiu_notify",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-HIU-ID!"
+      ],
+      "path": "/api/v3/hiu/subscription-requests/hiu/notify",
+      "properties": [
+        "notification"
+      ],
+      "required": [
+        "notification"
+      ],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/v3/hiu/subscription/notify": {
+      "encrypted": [],
+      "id": "p3_post_v3_hiu_subscription_notify",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-HIU-ID!"
+      ],
+      "path": "/api/v3/hiu/subscription/notify",
+      "properties": [
+        "event"
+      ],
+      "required": [
+        "event"
+      ],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "PUT /api/hiecm/subscription-requests/v3/patients/{}": {
+      "encrypted": [],
+      "id": "p3_put_subscription_requests_v3_patients_subscription_id",
+      "kind": "call",
+      "method": "PUT",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-CM-ID!",
+        "path:{}!"
+      ],
+      "path": "/api/hiecm/subscription-requests/v3/patients/{subscriptionID}",
+      "properties": [
+        "hiuId",
+        "subscriptionEditAndApprovalRequest"
+      ],
+      "required": [
+        "hiuId",
+        "subscriptionEditAndApprovalRequest"
+      ],
+      "responses": [
+        "202",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://dev.abdm.gov.in"
+      ]
+    }
+  },
+  "roles": [
+    "phr"
+  ],
+  "sources": {
+    "catalogue/openapi/.raw/nha-2026-09-16/hiecm/subscription.yaml": {
+      "fetched": "2026-09-16",
+      "hash": "sha256:19e2be6557790fecf8f9b5e2374ee25bb5e432b6aa11a9f673d93a0228eb61b0"
+    }
+  },
+  "version": "v3"
+}

@@ -1,0 +1,183 @@
+{
+  "errors": [],
+  "file": "hiecm-p4.yaml",
+  "gateway": "hiecm",
+  "label": "P4 Locker",
+  "module": "p4",
+  "operations": {
+    "GET /api/hiecm/gateway/v3/health-lockers": {
+      "encrypted": [],
+      "id": "p4_get_gateway_v3_health_lockers",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-CM-ID!",
+        "query:name"
+      ],
+      "path": "/api/hiecm/gateway/v3/health-lockers",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "204",
+        "400",
+        "401",
+        "403",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "GET /api/hiecm/subscription-requests/v3/patients/lockers": {
+      "encrypted": [],
+      "id": "p4_get_subscription_requests_v3_patients_lockers",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-CM-ID!",
+        "query:includeInactive!"
+      ],
+      "path": "/api/hiecm/subscription-requests/v3/patients/lockers",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "GET /api/hiecm/subscription-requests/v3/patients/lockers/{}": {
+      "encrypted": [],
+      "id": "p4_get_subscription_requests_v3_patients_lockers_lockerid",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-CM-ID!",
+        "path:{}!"
+      ],
+      "path": "/api/hiecm/subscription-requests/v3/patients/lockers/{locker-id}",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "GET /api/hiecm/subscription-requests/v3/patients/requests": {
+      "encrypted": [],
+      "id": "p4_get_subscription_requests_v3_patients_requests",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-CM-ID!",
+        "query:consentLimit!",
+        "query:consentOffset!",
+        "query:status!",
+        "query:subscriptionLimit!",
+        "query:subscriptionOffset!"
+      ],
+      "path": "/api/hiecm/subscription-requests/v3/patients/requests",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/hiecm/subscription-requests/v3/setup-locker": {
+      "encrypted": [],
+      "id": "p4_post_subscription_requests_v3_setup_locker",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-CM-ID!",
+        "header:X-LOCKER-ID!"
+      ],
+      "path": "/api/hiecm/subscription-requests/v3/setup-locker",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://dev.abdm.gov.in"
+      ]
+    }
+  },
+  "roles": [
+    "phr"
+  ],
+  "sources": {
+    "catalogue/openapi/.raw/nha-2026-09-16/hiecm/gateway.yaml": {
+      "fetched": "2026-09-16",
+      "hash": "sha256:d3bc599054c2570a50818ca54906c44cf652ad6f813473e8ac243667da4e9300"
+    },
+    "catalogue/openapi/.raw/nha-2026-09-16/hiecm/subscription.yaml": {
+      "fetched": "2026-09-16",
+      "hash": "sha256:19e2be6557790fecf8f9b5e2374ee25bb5e432b6aa11a9f673d93a0228eb61b0"
+    }
+  },
+  "version": "v3"
+}
