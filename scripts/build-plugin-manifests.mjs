@@ -58,6 +58,17 @@ const STOREFRONT = {
     ],
     capabilities: ['Read', 'Write'],
   },
+  'uhi-integrators-assistant': {
+    shortDescription: 'Build a UHI integration, one service at a time.',
+    longDescription:
+      "India's open network for finding and booking health services, written as skills an agent reads before it writes code. One skill per service, from PM-JAY hospital search to physical consultation. Each builds its journeys as loops against the sandbox, signs every call, and walks a missing callback to a named fix.",
+    defaultPrompt: [
+      'Add PM-JAY empanelled hospital search to this patient app.',
+      'Make this clinic system bookable for physical consultations on UHI.',
+      'My UHI search returns ACK but no results arrive. Find out why.',
+    ],
+    capabilities: ['Read', 'Write'],
+  },
   nhcx: {
     shortDescription: 'Build an NHCX claims integration, one use case at a time.',
     longDescription:
@@ -145,6 +156,9 @@ const CLAUDE_ONLY = {
   // The same case as the integrators' assistant: NHCX is its seven skills, and
   // the commands and the call debugger are entry points into them.
   nhcx: ['commands', 'agents'],
+  // The same case again: UHI is its six service skills, and the commands and
+  // the two agents are entry points into them.
+  'uhi-integrators-assistant': ['commands', 'agents'],
 };
 
 const COMPONENTS = ['commands', 'agents', 'hooks'];
