@@ -101,7 +101,7 @@
 .quickstart .quickstart__stepper {
   position: relative;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(var(--quickstart-steps, 4), minmax(0, 1fr));
   margin: 0 0 1.75rem;
   padding: 0;
   list-style: none;
@@ -113,25 +113,26 @@
 }
 
 /* The track, and how much of it has been covered. Both run from the centre of
-   the first marker to the centre of the last, which across four equal columns
-   is 12.5% to 87.5%. The fill is a plain multiple of that 75%, which is why
-   the progress custom property is a unitless fraction. */
+   the first marker to the centre of the last: half a column in from each
+   edge, so 12.5% to 87.5% across four columns and 10% to 90% across five.
+   The fill is a plain multiple of that span, which is why the progress custom
+   property is a unitless fraction. --quickstart-steps is set by the stepper. */
 .quickstart__stepper::before,
 .quickstart__stepper::after {
   position: absolute;
   top: calc(0.875rem - 1px);
-  left: 12.5%;
+  left: calc(50% / var(--quickstart-steps, 4));
   height: 2px;
   content: '';
 }
 
 .quickstart__stepper::before {
-  width: 75%;
+  width: calc(100% - 100% / var(--quickstart-steps, 4));
   background: var(--border);
 }
 
 .quickstart__stepper::after {
-  width: calc(75% * var(--quickstart-progress, 0));
+  width: calc((100% - 100% / var(--quickstart-steps, 4)) * var(--quickstart-progress, 0));
   background: var(--accent);
   transition: width 240ms ease;
 }
@@ -660,4 +661,20 @@
 
 .quickstart__log-entry > .quickstart__panels {
   margin-top: 0.75rem;
+}
+
+/* A runner whose steps differ a lot in height, the UHI search builder, sizes
+   the card by the open step at every width. Held at its tallest step, the
+   one button of step 1 sat in a card built for step 5's sample and table. */
+@media (min-width: 768px) {
+  .quickstart--fit .quickstart__pane--hidden {
+    display: none;
+  }
+
+  /* The one line search body is wider than the card. Without a zero minimum
+     the grid track grows to fit it and the fields run off the card's edge;
+     with one the code block scrolls inside the card instead. */
+  .quickstart--fit .quickstart__panes {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
