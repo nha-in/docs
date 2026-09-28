@@ -66575,9 +66575,176 @@ The P2 reference is [P2 Consents Management](/docs/main/reference/hiecm-p2). Its
 
 ---
 
+# 25 September 2026
+
+31 changes
+
+### Reprocess, cancel and shortfall has an API reference
+
+Two callbacks, for payers and providers, each on its own page with a request you can send. [Open the Reprocess, cancel and shortfall reference](/docs/main/docs/nhcx/v1/api/task/).
+
+### PMJAY adjudicator is documented for payers
+
+The PMJAY adjudicator calls now say what payers send and receive. [Open the PMJAY adjudicator reference](/docs/main/docs/nhcx/v1/api/adjudicator/).
+
+### M4 Registry Integration follows the specification of 24 September 2026
+
+The M4 Registry Integration reference is built from the specification published on 24 September 2026. Headers or parameters changed on 85 calls, and required fields on five calls. [Open the M4 Registry Integration reference](/docs/main/docs/hiecm/v3/api/m4/) and check the calls you make.
+
+### PMJAY adjudicator: required fields corrected on two calls
+
+`POST /pmjay/hcx/nhcxpayerservice/wrapper/process/case` requires `action`, `casenumber`, `correlationid`, `memberid` and 4 more; `POST /pmjay/sbxhcx/nhcxpayerservice/v1/get/user-role` requires `caseid`, `payerid`. If you built against the earlier reference, check these calls. [Open the PMJAY adjudicator reference](/docs/main/docs/nhcx/v1/api/adjudicator/).
+
+### Other: three calls corrected
+
+`POST /v1/error` no longer takes `x-hcx-api_call_id`, `x-hcx-correlation_id`, `x-hcx-recipient_code`, `x-hcx-sender_code` and 2 more, and can return `202` and no longer returns `200`; `POST /v1/notification/subscribe` no longer takes `x-hcx-correlation_id`, `x-hcx-recipient_code`, `x-hcx-sender_code`, `x-hcx-timestamp`; `POST /v1/on_status` no longer takes `x-hcx-api_call_id`, `x-hcx-correlation_id`, `x-hcx-recipient_code`, `x-hcx-sender_code` and 2 more, and can return `202` and no longer returns `200`. If you built against the earlier reference, check these calls. [Open the Other reference](/docs/main/docs/nhcx/v1/api/other/).
+
+### Participant registry: response codes corrected on two calls
+
+`POST /participant/getProductIdName` can return `400`, `404`, `500`; `POST /product/getowner` can return `400`, `404`, `500`. If you built against the earlier reference, check these calls. [Open the Participant registry reference](/docs/main/docs/nhcx/v1/api/registry/).
+
+### Status and search: headers or parameters corrected on three calls
+
+`POST /v1/search/on_submit` no longer takes `x-hcx-api_call_id`, `x-hcx-ben-abha-id`, `x-hcx-correlation_id`, `x-hcx-recipient_code` and 4 more; `POST /v1/search/submit` no longer takes `x-hcx-api_call_id`, `x-hcx-ben-abha-id`, `x-hcx-correlation_id`, `x-hcx-recipient_code` and 4 more; `POST /v1/status` no longer takes `x-hcx-api_call_id`, `x-hcx-ben-abha-id`, `x-hcx-correlation_id`, `x-hcx-recipient_code` and 4 more. If you built against the earlier reference, check these calls. [Open the Status and search reference](/docs/main/docs/nhcx/v1/api/status/).
+
+### NHCX: 24 calls take Accept
+
+Each of these calls requires `Accept`, across adjudicator, onboarding, registry: `POST /pmjay/hcx/nhcxpayerservice/wrapper/process/case`, `POST /pmjay/sbxhcx/nhcxpayerservice/v1/get/user-role`, `GET /update/validate` and 21 more. If you built against the earlier reference, check them. [Open the NHCX reference](/docs/main/docs/nhcx/v1/api/).
+
+### NHCX: four calls no longer take x-hcx-api\_call\_id, x-hcx-ben-abha-id and 8 more as headers
+
+Each of these calls no longer takes `x-hcx-api_call_id`, `x-hcx-ben-abha-id`, `x-hcx-correlation_id`, `x-hcx-debug_flag` and 6 more, across claim, eligibility, payment-notice, preauth: `POST /v1/claim/on_submit`, `POST /v1/coverageeligibility/on_check`, `POST /v1/paymentnotice/on_request` and 1 more. If you built against the earlier reference, check them. [Open the NHCX reference](/docs/main/docs/nhcx/v1/api/).
+
+### NHCX: eight calls require payload and type
+
+Each of these calls requires `payload`, `type`, across claim, communication, eligibility, insurance-plan, other, payment-notice, preauth, status: `POST /v1/claim/on_submit`, `POST /v1/communication/on_request`, `POST /v1/coverageeligibility/on_check` and 5 more. If you built against the earlier reference, check them. [Open the NHCX reference](/docs/main/docs/nhcx/v1/api/).
+
+### NHCX: two calls no longer take x-hcx-api\_call\_id, x-hcx-ben-abha-id and 8 more as headers
+
+Each of these calls no longer takes `x-hcx-api_call_id`, `x-hcx-ben-abha-id`, `x-hcx-correlation_id`, `x-hcx-recipient_code` and 6 more, across claim, preauth: `POST /v1/claim/submit`, `POST /v1/preauth/submit`. If you built against the earlier reference, check them. [Open the NHCX reference](/docs/main/docs/nhcx/v1/api/).
+
+### NHCX: six calls no longer take x-hcx-api\_call\_id, x-hcx-ben-abha-id and 7 more as headers
+
+Each of these calls no longer takes `x-hcx-api_call_id`, `x-hcx-ben-abha-id`, `x-hcx-correlation_id`, `x-hcx-recipient_code` and 5 more, across communication, eligibility, insurance-plan, payment-notice: `POST /v1/communication/on_request`, `POST /v1/communication/request`, `POST /v1/coverageeligibility/check` and 3 more. If you built against the earlier reference, check them. [Open the NHCX reference](/docs/main/docs/nhcx/v1/api/).
+
+### NHCX: four calls go to apisprod.nha.gov.in/pmjay/hcx/participanthcxservice
+
+Each of these calls goes to `https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice`, not `https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice`, across onboarding, registry: `GET /update/validate`, `GET /validate`, `POST /v2/participant/create` and 1 more. If you built against the earlier reference, check them. [Open the NHCX reference](/docs/main/docs/nhcx/v1/api/).
+
+### Participant registry: three calls changed address
+
+`POST /V2/participant/delink/abha/policy` is now `POST /v2/participant/delink/abha/policy`, `POST /V2/participant/get/policies` is now `POST /v2/participant/get/policies`, `POST /V2/participant/link/abha/policy` is now `POST /v2/participant/link/abha/policy`. If your code sends the old address, change it. [Open the Participant registry reference](/docs/main/docs/nhcx/v1/api/registry/).
+
+### One call moved from Participant registry to PMJAY adjudicator
+
+`POST /update/abhanumber`, now in PMJAY adjudicator rather than Participant registry. The calls are unchanged; their pages moved. [Open the PMJAY adjudicator reference](/docs/main/docs/nhcx/v1/api/adjudicator/).
+
+### Two callbacks moved from Other to Reprocess, cancel and shortfall
+
+`POST /v1/task/on_submit`, `POST /v1/task/submit`, now in Reprocess, cancel and shortfall rather than Other. The calls are unchanged; their pages moved. [Open the Reprocess, cancel and shortfall reference](/docs/main/docs/nhcx/v1/api/task/).
+
+### M4 Registry Integration: 15 calls withdrawn
+
+`POST /FacilityManagement/v1.5/facility/bygeoLocation/searchFacilityAndInfrastructureWithinRadiusWithFilter`, `POST /fetchProfessionalFacility`, `POST /getFacilityCreatedByHprId`, `POST /getFacilityDeclaredByHprId` and 11 more. If you call these, stop: the reference no longer carries them. [Open the M4 Registry Integration reference](/docs/main/docs/hiecm/v3/api/m4/).
+
+### Two Claim calls withdrawn
+
+`POST /internal/v1/claim/on_submit`, `POST /internal/v1/claim/submit`. If you call these, stop: the reference no longer carries them. [Open the Claim reference](/docs/main/docs/nhcx/v1/api/claim/).
+
+### Two Communication calls withdrawn
+
+`POST /internal/v1/communication/on_request`, `POST /internal/v1/communication/request`. If you call these, stop: the reference no longer carries them. [Open the Communication reference](/docs/main/docs/nhcx/v1/api/communication/).
+
+### Two Coverage eligibility calls withdrawn
+
+`POST /internal/v1/coverageeligibility/check`, `POST /internal/v1/coverageeligibility/on_check`. If you call these, stop: the reference no longer carries them. [Open the Coverage eligibility reference](/docs/main/docs/nhcx/v1/api/eligibility/).
+
+### Two Insurance plan calls withdrawn
+
+`POST /internal/v1/insuranceplan/on_request`, `POST /internal/v1/insuranceplan/request`. If you call these, stop: the reference no longer carries them. [Open the Insurance plan reference](/docs/main/docs/nhcx/v1/api/insurance-plan/).
+
+### Two Other calls withdrawn
+
+`POST /internal/v1/task/on_submit`, `POST /internal/v1/task/submit`. If you call these, stop: the reference no longer carries them. [Open the Other reference](/docs/main/docs/nhcx/v1/api/other/).
+
+### Two Payment notice calls withdrawn
+
+`POST /internal/v1/paymentnotice/on_request`, `POST /internal/v1/paymentnotice/request`. If you call these, stop: the reference no longer carries them. [Open the Payment notice reference](/docs/main/docs/nhcx/v1/api/payment-notice/).
+
+### Two Pre-authorisation calls withdrawn
+
+`POST /internal/v1/preauth/on_submit`, `POST /internal/v1/preauth/submit`. If you call these, stop: the reference no longer carries them. [Open the Pre-authorisation reference](/docs/main/docs/nhcx/v1/api/preauth/).
+
+### Two Predetermination calls withdrawn
+
+`POST /v1/predetermination/on_submit`, `POST /v1/predetermination/submit`. If you call these, stop: the reference no longer carries them. [Open the Predetermination reference](/docs/main/docs/nhcx/v1/api/).
+
+### One Participant registry call withdrawn
+
+`POST /get/linked/registry/mst`. If you call it, stop: the reference no longer carries it. [Open the Participant registry reference](/docs/main/docs/nhcx/v1/api/registry/).
+
+### Two M4 Registry Integration calls added
+
+`POST /FacilityManagement/v1.5/facility/bygeoLocation/searchWithinRadiusWithFilter`, `POST /v1.0/facility/search-facilities`. [Open the M4 Registry Integration reference](/docs/main/docs/hiecm/v3/api/m4/).
+
+### Postman collections for every HIE-CM module
+
+Each module's reference page offers its collection and the sandbox environment they share, with the session token fetched for you. [Open the API reference](/docs/main/docs/hiecm/v3/api/).
+
+### The nhcx-full skill is published
+
+Install it with your agent, alongside the others. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
+
+### The nhcx plugin is 1.0.0
+
+Reinstall to move from 0.1.0. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
+
+### Two skills withdrawn: hiecm-subscription-build, nhcx-insurance
+
+They are no longer published; remove them from your agent. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
+
+
+---
+
 # What's new
 
 Changes that affect what you can build against, newest first. Each entry links to what you can now read, run or consume.
+
+## 25 September 2026
+
+31 changes
+
+- [Reprocess, cancel and shortfall has an API reference](/docs/main/docs/whats-new/2026-09-25#reprocess-cancel-and-shortfall-has-an-api-reference)
+- [PMJAY adjudicator is documented for payers](/docs/main/docs/whats-new/2026-09-25#pmjay-adjudicator-is-documented-for-payers)
+- [M4 Registry Integration follows the specification of 24 September 2026](/docs/main/docs/whats-new/2026-09-25#m4-registry-integration-follows-the-specification-of-24-september-2026)
+- [PMJAY adjudicator: required fields corrected on two calls](/docs/main/docs/whats-new/2026-09-25#pmjay-adjudicator-required-fields-corrected-on-two-calls)
+- [Other: three calls corrected](/docs/main/docs/whats-new/2026-09-25#other-three-calls-corrected)
+- [Participant registry: response codes corrected on two calls](/docs/main/docs/whats-new/2026-09-25#participant-registry-response-codes-corrected-on-two-calls)
+- [Status and search: headers or parameters corrected on three calls](/docs/main/docs/whats-new/2026-09-25#status-and-search-headers-or-parameters-corrected-on-three-calls)
+- [NHCX: 24 calls take Accept](/docs/main/docs/whats-new/2026-09-25#nhcx-24-calls-take-accept)
+- [NHCX: four calls no longer take x-hcx-api\_call\_id, x-hcx-ben-abha-id and 8 more as headers](/docs/main/docs/whats-new/2026-09-25#nhcx-four-calls-no-longer-take-x-hcx-api_call_id-x-hcx-ben-abha-id-and-8-more-as-headers)
+- [NHCX: eight calls require payload and type](/docs/main/docs/whats-new/2026-09-25#nhcx-eight-calls-require-payload-and-type)
+- [NHCX: two calls no longer take x-hcx-api\_call\_id, x-hcx-ben-abha-id and 8 more as headers](/docs/main/docs/whats-new/2026-09-25#nhcx-two-calls-no-longer-take-x-hcx-api_call_id-x-hcx-ben-abha-id-and-8-more-as-headers)
+- [NHCX: six calls no longer take x-hcx-api\_call\_id, x-hcx-ben-abha-id and 7 more as headers](/docs/main/docs/whats-new/2026-09-25#nhcx-six-calls-no-longer-take-x-hcx-api_call_id-x-hcx-ben-abha-id-and-7-more-as-headers)
+- [NHCX: four calls go to apisprod.nha.gov.in/pmjay/hcx/participanthcxservice](/docs/main/docs/whats-new/2026-09-25#nhcx-four-calls-go-to-apisprodnhagovinpmjayhcxparticipanthcxservice)
+- [Participant registry: three calls changed address](/docs/main/docs/whats-new/2026-09-25#participant-registry-three-calls-changed-address)
+- [One call moved from Participant registry to PMJAY adjudicator](/docs/main/docs/whats-new/2026-09-25#one-call-moved-from-participant-registry-to-pmjay-adjudicator)
+- [Two callbacks moved from Other to Reprocess, cancel and shortfall](/docs/main/docs/whats-new/2026-09-25#two-callbacks-moved-from-other-to-reprocess-cancel-and-shortfall)
+- [M4 Registry Integration: 15 calls withdrawn](/docs/main/docs/whats-new/2026-09-25#m4-registry-integration-15-calls-withdrawn)
+- [Two Claim calls withdrawn](/docs/main/docs/whats-new/2026-09-25#two-claim-calls-withdrawn)
+- [Two Communication calls withdrawn](/docs/main/docs/whats-new/2026-09-25#two-communication-calls-withdrawn)
+- [Two Coverage eligibility calls withdrawn](/docs/main/docs/whats-new/2026-09-25#two-coverage-eligibility-calls-withdrawn)
+- [Two Insurance plan calls withdrawn](/docs/main/docs/whats-new/2026-09-25#two-insurance-plan-calls-withdrawn)
+- [Two Other calls withdrawn](/docs/main/docs/whats-new/2026-09-25#two-other-calls-withdrawn)
+- [Two Payment notice calls withdrawn](/docs/main/docs/whats-new/2026-09-25#two-payment-notice-calls-withdrawn)
+- [Two Pre-authorisation calls withdrawn](/docs/main/docs/whats-new/2026-09-25#two-pre-authorisation-calls-withdrawn)
+- [Two Predetermination calls withdrawn](/docs/main/docs/whats-new/2026-09-25#two-predetermination-calls-withdrawn)
+- [One Participant registry call withdrawn](/docs/main/docs/whats-new/2026-09-25#one-participant-registry-call-withdrawn)
+- [Two M4 Registry Integration calls added](/docs/main/docs/whats-new/2026-09-25#two-m4-registry-integration-calls-added)
+- [Postman collections for every HIE-CM module](/docs/main/docs/whats-new/2026-09-25#postman-collections-for-every-hie-cm-module)
+- [The nhcx-full skill is published](/docs/main/docs/whats-new/2026-09-25#the-nhcx-full-skill-is-published)
+- [The nhcx plugin is 1.0.0](/docs/main/docs/whats-new/2026-09-25#the-nhcx-plugin-is-100)
+- [Two skills withdrawn: hiecm-subscription-build, nhcx-insurance](/docs/main/docs/whats-new/2026-09-25#two-skills-withdrawn-hiecm-subscription-build-nhcx-insurance)
 
 ## 23 September 2026
 
@@ -66614,6 +66781,17 @@ Changes that affect what you can build against, newest first. Each entry links t
 - [The API reference follows the specifications of 16 September 2026](/docs/main/docs/whats-new/2026-09-16#the-api-reference-follows-the-specifications-of-16-september-2026)
 - [Each ABHA creation and login method is its own sequence](/docs/main/docs/whats-new/2026-09-16#each-abha-creation-and-login-method-is-its-own-sequence)
 - [Error pages list the codes the specifications return](/docs/main/docs/whats-new/2026-09-16#error-pages-list-the-codes-the-specifications-return)
+
+## 15 September 2026
+
+6 changes
+
+- [NHCX has API references](/docs/main/docs/whats-new/2026-09-15#nhcx-has-api-references)
+- [Point your agent at NHCX](/docs/main/docs/whats-new/2026-09-15#point-your-agent-at-nhcx)
+- [Seven NHCX agent skills](/docs/main/docs/whats-new/2026-09-15#seven-nhcx-agent-skills)
+- [Start on the NHCX sandbox](/docs/main/docs/whats-new/2026-09-15#start-on-the-nhcx-sandbox)
+- [The NHCX security audit has a page](/docs/main/docs/whats-new/2026-09-15#the-nhcx-security-audit-has-a-page)
+- [Troubleshooting NHCX by what you see](/docs/main/docs/whats-new/2026-09-15#troubleshooting-nhcx-by-what-you-see)
 
 ## What gets an entry
 
