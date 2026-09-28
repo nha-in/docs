@@ -11,7 +11,7 @@ import {existsSync, readdirSync, readFileSync, writeFileSync, mkdirSync, rmSync}
 import {join, dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {parse} from 'yaml';
-import {listSpecTree} from './specs.mjs';
+import {listSpecTree, platformFeatures} from './specs.mjs';
 import {joinKey, hostOf} from './lib/api-join.mjs';
 import {loadJourneys, operationIndex, stepDataName} from './lib/journeys.mjs';
 import {errorsFromSpec, moduleErrorList} from './lib/spec-errors.mjs';
@@ -330,7 +330,9 @@ function requestFor(operation) {
     name: header.name,
     value:
       header.name.toLowerCase() === 'authorization'
-        ? 'Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
+        // UHI signs every request with the sender's Ed25519 key rather than
+        // presenting a session token (see /docs/uhi/v1/concepts/signing).
+        ? operation.gateway === 'uhi' ? '<SIGNED_AUTHORIZATION_HEADER>' : 'Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
         : header.example ?? `<${header.name.toUpperCase().replace(/-/g, '_')}>`,
   }));
   if (operation.requestExample !== undefined) {
@@ -558,15 +560,8 @@ const tree = listSpecTree();
 const sidebar = [];
 let count = 0;
 
-// The journey order is defined in exactly one place: the journey files under
-// catalogue/openapi/hiecm/v3/journeys. Each names its steps as operationIds,
-// in the order a reader walks them, so the sidebar follows the journey
-// without the order being copied anywhere else.
-const journeys = loadJourneys();
-
 // The group for what a module's journeys do not name.
 const LEFTOVERS = 'APIs';
-const opIndex = operationIndex();
 
 for (const {platform, version, files} of tree) {
   // A spec places itself: info.x-portal names the module folder, the sidebar
@@ -598,9 +593,17 @@ for (const {platform, version, files} of tree) {
     .sort((a, b) => (a.position ?? 999) - (b.position ?? 999) || a.file.localeCompare(b.file));
 
   const docsDir = join(root, 'site', 'docs', platform, version, 'api');
-  // Only HIE-CM v3 has a troubleshooting section and the callback atoms today;
-  // the other gateways would link to pages and claim atoms that do not exist.
-  const isHiecmV3 = platform === 'hiecm' && version === 'v3';
+  // What this gateway version has: journeys, a troubleshooting section, the
+  // HIE-CM index wording, an error-code concept atom (scripts/specs.mjs). A
+  // gateway without one never links to pages or claims atoms that do not exist.
+  const features = platformFeatures(platform, version);
+  // The journey order is defined in exactly one place: the journey files under
+  // catalogue/openapi/<platform>/<version>/journeys. Each names its steps as
+  // operationIds, in the order a reader walks them, so the sidebar follows the
+  // journey without the order being copied anywhere else. They are read per
+  // gateway version, so one gateway's module never takes another's journeys.
+  const journeys = features.journeys ? loadJourneys({platform, version}) : new Map();
+  const opIndex = operationIndex({platform, version});
   for (const module of modules) {
     rmSync(join(docsDir, module.dir, 'endpoints'), {recursive: true, force: true});
   }
@@ -632,7 +635,7 @@ for (const {platform, version, files} of tree) {
   // first step that names it, in the order the journey files list them.
   const operationPage = (moduleDir, id) => {
     const base = `/docs/${platform}/${version}/api/${moduleDir}/endpoints`;
-    for (const journey of isHiecmV3 ? journeys.get(moduleDir) ?? [] : []) {
+    for (const journey of journeys.get(moduleDir) ?? []) {
       const i = journey.steps.findIndex((step) => step.op === id);
       if (i >= 0) return `${base}/${journey.id}/${String(i + 1).padStart(2, '0')}-${slug(id)}`;
     }
@@ -646,7 +649,7 @@ for (const {platform, version, files} of tree) {
   // Only HIE-CM v3 has those pages, so only it gets the links.
   const SYNCHRONOUS_202 = new Set(['gateway_post_gateway_v3_sessions']);
   const helpFor = (status, moduleDir, operationId) => {
-    if (!isHiecmV3) return undefined;
+    if (!features.troubleshooting) return undefined;
     const troubleshooting = (name) => `/docs/${platform}/${version}/troubleshooting/${name}`;
     if (status === '401') {
       return {label: 'Everything returns 401', href: troubleshooting('everything-returns-401')};
@@ -718,7 +721,7 @@ for (const {platform, version, files} of tree) {
           // A journey that walks a call before this callback places it after
           // its trigger, which is documentation enough to leave it off the list.
           const placed = [...journeys.values()].flat().some((journey) => journey.steps.findIndex((step) => step.op === id) > 0);
-          if (!(isHiecmV3 && placed)) unpairedCallbacks.push(entry);
+          if (!(features.journeys && placed)) unpairedCallbacks.push(entry);
           continue;
         }
         entry.relation = triggeredBy ? 'triggered-by' : 'answered-by';
@@ -888,6 +891,42 @@ for (const {platform, version, files} of tree) {
     ];
   }
 
+  // A UHI call is a path whichever side serves it: on_init is the EUA's and
+  // init the HSPA's. So its page says who serves it and links the request or
+  // callback it pairs with, inside the journey the reader is walking when
+  // there is one. Only a call carrying x-abdm-hosted-by gets this section.
+  const HOSTS = {gateway: 'UHI Gateway', eua: 'EUA', hspa: 'HSPA'};
+  function hostedSection(op, path, at) {
+    const host = op['x-abdm-hosted-by'];
+    if (!host) return undefined;
+    const routeTo = (target, after) => {
+      if (at) {
+        const steps = at.journey.steps;
+        const j = after
+          ? steps.findIndex((s, k) => k > at.index && s.op === target)
+          : steps.findLastIndex((s, k) => k < at.index && s.op === target);
+        if (j >= 0) return `/docs/${platform}/${version}/api/${at.moduleDir}/endpoints/${at.journey.id}/${String(j + 1).padStart(2, '0')}-${slug(target)}`;
+      }
+      return operations.get(target)?.route;
+    };
+    const about = (id) => {
+      const target = opIndex.get(id);
+      return {title: operations.get(id)?.title ?? id, path: target?.op['x-actual-path'] ?? target?.path, host: HOSTS[target?.op['x-abdm-hosted-by']]};
+    };
+    const lines = ['## Where this fits', '', `The ${HOSTS[host]} serves this call at \`${path}\`.`, ''];
+    const answer = op['x-abdm-answered-by'];
+    const trigger = op['x-abdm-triggered-by'];
+    if (answer) {
+      const t = about(answer);
+      lines.push(`The answer comes back as [${t.title}](${routeTo(answer, true)}), on \`${t.path}\`, which the ${t.host} serves.`, '');
+    }
+    if (trigger) {
+      const t = about(trigger);
+      lines.push(`This call answers [${t.title}](${routeTo(trigger, false)}), sent to \`${t.path}\`, which the ${t.host} serves.`, '');
+    }
+    return lines;
+  }
+
   for (const [moduleIndex, module] of modules.entries()) {
     const spec = module.spec;
     const servers = (spec.servers ?? []).map((s) => ({
@@ -995,8 +1034,10 @@ for (const {platform, version, files} of tree) {
       // An operation's own `servers` override the specification's, as OpenAPI
       // says they do. Without this the page joined the module's first server
       // to a path served elsewhere and printed an address that does not exist.
+      // A server variable, such as a UHI participant's {provider_uri}, is
+      // shown as a placeholder to fill in, never as raw braces a curl sends.
       const opServers = (op.servers ?? []).map((s) => ({
-        url: s.url,
+        url: s.url.replace(/\{(\w+)\}/g, '<$1>'),
         description: s.description ?? '',
       }));
       const served = opServers.length ? opServers : servers;
@@ -1052,6 +1093,9 @@ for (const {platform, version, files} of tree) {
         // Which gateway the page belongs to, for what the page says around
         // the samples.
         gateway: platform,
+        // A UHI call is signed with the sender's private key, which a browser
+        // console cannot hold, so its page offers no Try it.
+        ...(platform === 'uhi' ? {tryIt: false} : {}),
         // The file the page came from and what it declares, for the pills
         // over the title and the download beside them. The file is served
         // flat under /specs/ by sync-specs.mjs, beside a JSON copy.
@@ -1123,9 +1167,10 @@ for (const {platform, version, files} of tree) {
         // every webhook the gateway has. An operation shows the callbacks a
         // specification ties to it; a callback shows the call it pairs with,
         // or says that no specification names one.
-        ...(entry.kind === 'callback'
-          ? callbackOriginSection(id, module.file)
-          : callbackSection(id, module.dir)),
+        ...(hostedSection(op, operation.path) ??
+          (entry.kind === 'callback'
+            ? callbackOriginSection(id, module.file)
+            : callbackSection(id, module.dir))),
       ].join('\n');
       writeFileSync(join(endpointsDir, `${name}.mdx`), frontMatter);
 
@@ -1205,7 +1250,10 @@ for (const {platform, version, files} of tree) {
           "import ApiEndpoint from '@site/src/components/api/ApiEndpoint';",
           `import operation from '@site/src/data/api/${dataName}.json';`,
           '', '<ApiEndpoint operation={operation} />', '',
-          ...(step.say ? ['## Where this fits', '', step.say, ''] : entry.kind === 'callback' ? callbackOriginSection(step.op, module.file) : callbackSection(step.op, module.dir)),
+          ...(step.say
+            ? ['## Where this fits', '', step.say, '']
+            : hostedSection(entry.op, stepped.path, {journey, index: i, moduleDir: module.dir}) ??
+              (entry.kind === 'callback' ? callbackOriginSection(step.op, module.file) : callbackSection(step.op, module.dir))),
         ].join('\n'));
         items.push({type: 'doc', id: `${platform}/${version}/api/${module.dir}/endpoints/${journey.id}/${nn}-${slug(step.op)}`, label: title, className: `api-method api-method--${stepped.method.toLowerCase()}`});
         count += 1;
@@ -1358,7 +1406,7 @@ for (const {platform, version, files} of tree) {
     '',
     '# API references',
     '',
-    ...(isHiecmV3
+    ...(features.hiecmCopy
       ? [
           'The ABDM API Reference section provides comprehensive technical documentation for integrating with various ABDM building blocks and services. These APIs enable healthcare providers, health applications, technology partners, and other ecosystem participants to securely exchange health information and deliver ABDM-compliant digital health services.',
           '',
@@ -1392,7 +1440,7 @@ for (const {platform, version, files} of tree) {
         ]),
   ];
   // Under the Core ABDM API modules heading, each module sits one level down.
-  const moduleHeading = isHiecmV3 ? '###' : '##';
+  const moduleHeading = features.hiecmCopy ? '###' : '##';
 
   for (const module of modules) {
     const entry = sidebar.find(
@@ -1411,7 +1459,7 @@ for (const {platform, version, files} of tree) {
         : `${moduleHeading} ${module.label}`,
     );
     indexLines.push('');
-    const copy = isHiecmV3 && hiecmCopy[module.id];
+    const copy = features.hiecmCopy && hiecmCopy[module.id];
     if (copy) {
       indexLines.push(copy.text, '');
       if (copy.list) indexLines.push(`**${copy.list}**`, '', ...copy.items.map((item) => `- ${item}`), '');
@@ -1424,7 +1472,7 @@ for (const {platform, version, files} of tree) {
         : total
         ? `${total} endpoint${total === 1 ? '' : 's'} across ${
             entry.groups.length
-          } ${isHiecmV3 ? 'use case' : 'group'}${entry.groups.length === 1 ? '' : 's'}: ${entry.groups
+          } ${features.journeys ? 'use case' : 'group'}${entry.groups.length === 1 ? '' : 's'}: ${entry.groups
             .map((g) => g.label)
             .join(', ')}. Each endpoint has its own page in the sidebar.`
         : 'No endpoint is published in this specification yet.',
@@ -1437,7 +1485,7 @@ for (const {platform, version, files} of tree) {
     );
     indexLines.push('');
   }
-  if (isHiecmV3) {
+  if (features.hiecmCopy) {
     indexLines.push(
       'This API Reference section serves as the central repository for all ABDM integration specifications, helping ecosystem participants build secure, interoperable, and standards-compliant digital health solutions.',
       '',
@@ -1646,7 +1694,7 @@ for (const {platform, version, files} of tree) {
         'Error codes',
         'Every error code the specifications carry, with its message and what to do.',
         3,
-        [platform === 'nhcx' ? 'nhcx.concept.error-code-spaces' : 'hiecm.concept.error-codes'],
+        features.errorConcept ? [features.errorConcept] : [],
         'circle-alert',
       ),
       '# Error codes',
@@ -1654,7 +1702,7 @@ for (const {platform, version, files} of tree) {
       // Only hiecm/v3 has a troubleshooting section today; other platforms
       // and other versions of hiecm would link to a page that does not
       // exist.
-      ...(isHiecmV3
+      ...(features.troubleshooting
         ? [`Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/${platform}/${version}/troubleshooting/).`, '']
         : []),
       // The list cannot show that one code means two things from two payers.
@@ -1736,12 +1784,12 @@ for (const {platform, version, files} of tree) {
       '',
       `# ${module.label} errors`,
       '',
-      ...(isHiecmV3
+      ...(features.troubleshooting
         ? [`Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/${platform}/${version}/troubleshooting/).`, '']
         : []),
     ];
 
-    const list = moduleErrorList(spec);
+    const list = moduleErrorList(spec, {platform, version});
     if (list?.intro) lines.push(list.intro, '');
     if (codes.length) {
       lines.push('## Codes', '', '| Code | HTTP | Message | Returned by |', '| --- | --- | --- | --- |');

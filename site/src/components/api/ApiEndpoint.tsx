@@ -75,8 +75,11 @@ export type Operation = {
   /** NHCX: the fields of the JWE protected header of `payload`. Never HTTP
       headers, so never in the samples or sent by Try it. */
   protectedHeader?: Field[];
-  /** The gateway the page belongs to: hiecm, nhcx. */
+  /** The gateway the page belongs to: hiecm, nhcx, uhi. */
   gateway?: string;
+  /** False where this site cannot make the call: a UHI request is signed
+      with the sender's private key, which a browser console cannot hold. */
+  tryIt?: boolean;
   /** The specification the page was generated from: its served file name,
       the OpenAPI version it declares, and the gateway version folder. */
   spec?: {file: string; openapi: string; version: string};
@@ -673,7 +676,7 @@ export default function ApiEndpoint({operation}: {operation: Operation}) {
           {/* A callback is an endpoint the integrator implements and NHA calls
               into, not one this site can call. A Try it console would be
               inviting the reader to send a request nobody is listening for. */}
-          {operation.kind === 'callback' ? null : (
+          {operation.kind === 'callback' || operation.tryIt === false ? null : (
             <Dialog>
               <DialogTrigger className="api-try-trigger">
                 <Play className="size-3.5" aria-hidden="true" />

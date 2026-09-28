@@ -102,5 +102,17 @@
   {
     "label": "Other",
     "to": "/reference/nhcx-other"
+  },
+  {
+    "label": "Network and discovery",
+    "to": "/reference/uhi-network"
+  },
+  {
+    "label": "Physical Consultation",
+    "to": "/reference/uhi-consultation"
+  },
+  {
+    "label": "Ambulance Booking",
+    "to": "/reference/uhi-ambulance"
   }
 ]
