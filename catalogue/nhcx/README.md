@@ -1,7 +1,7 @@
 # NHCX atoms
 
 The knowledge base for the NHCX gateway: one Markdown atom per fact, with
-frontmatter (`id`, `type`, `gateway: nhcx`, verification status). Atoms feed the
+frontmatter (`id`, `type`, `gateway: nhcx`, sources). Atoms feed the
 MCP index and compile into agent skills; they are not site pages.
 
 | Folder | Holds |
