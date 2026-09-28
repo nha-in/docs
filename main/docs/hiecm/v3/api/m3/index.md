@@ -12,6 +12,4 @@ Request patient consent, track its status, and fetch the health records a grante
 
 Postman, Insomnia, Hoppscotch and Bruno take this through Import, as a link or as the downloaded file.
 
-The full operation list is in the [M3 API reference](/docs/main/reference/hiecm-m3).
-
 New to this? Start with [M3 Health Information User](/docs/main/docs/hiecm/v3/milestones/m3).

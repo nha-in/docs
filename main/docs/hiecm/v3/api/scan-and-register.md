@@ -19,6 +19,4 @@ Postman, Insomnia, Hoppscotch and Bruno take this through Import, as a link or a
 | Scan and Register calls | Sandbox     | `https://dev.abdm.gov.in`  |
 | Scan and Register calls | Production  | `https://apis.abdm.gov.in` |
 
-The full operation list is in the [Scan and Register API reference](/docs/main/reference/hiecm-scan-and-register).
-
 New to this? Start with [Scan and Register](/docs/main/docs/hiecm/v3/use-cases/scan-and-register).

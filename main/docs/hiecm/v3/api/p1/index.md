@@ -20,6 +20,4 @@ Postman, Insomnia, Hoppscotch and Bruno take this through Import, as a link or a
 | Aadhaar flow, creating an ABHA number | Sandbox     | `https://abhasbx.abdm.gov.in/abha/api/v3/`        |
 | Session token                         | Sandbox     | `https://dev.abdm.gov.in`                         |
 
-The full operation list is in the [P1 Registration and login API reference](/docs/main/reference/hiecm-p1).
-
 New to this? Start with [P1 Registration and login](/docs/main/docs/hiecm/v3/milestones/p1).

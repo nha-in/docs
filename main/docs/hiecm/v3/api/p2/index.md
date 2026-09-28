@@ -19,6 +19,4 @@ Postman, Insomnia, Hoppscotch and Bruno take this through Import, as a link or a
 | Profile and link ABHA number calls | Sandbox     | `https://abhasbx.abdm.gov.in/abha/api/v3/phr/app` |
 | Linking, sharing and consent calls | Sandbox     | `https://dev.abdm.gov.in`                         |
 
-The full operation list is in the [P2 Consents Management API reference](/docs/main/reference/hiecm-p2).
-
 New to this? Start with [P2 Consents Management](/docs/main/docs/hiecm/v3/milestones/p2).

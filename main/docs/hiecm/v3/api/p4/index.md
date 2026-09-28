@@ -18,6 +18,4 @@ Postman, Insomnia, Hoppscotch and Bruno take this through Import, as a link or a
 | ------------------- | ----------- | ------------------------- |
 | Health locker calls | Sandbox     | `https://dev.abdm.gov.in` |
 
-The full operation list is in the [P4 Locker API reference](/docs/main/reference/hiecm-p4).
-
 New to this? Start with [P4 Locker](/docs/main/docs/hiecm/v3/milestones/p4).

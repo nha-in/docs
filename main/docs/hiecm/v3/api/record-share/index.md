@@ -38,5 +38,3 @@ Each side makes its calls in this order. A callback is a POST from the HIE-CM to
 | 4    | `POST /api/hiecm/patient-record/v3/notify`, session status `TRANSFERRED`, `PARTIAL_TRANSFERRED` or `FAILED` | `POST /api/hiecm/patient-record/v3/notify`, session status `RECEIVED`, `PARTIAL_RECEIVED` or `FAILED` |
 | 5    | Receives the other side's status on `/api/v3/patient-record/on-notify`                                      | Receives the other side's status on `/api/v3/patient-record/on-notify`                                |
 | 6    | `GET /api/hiecm/patient-record/v3/audit-history` for the sharing history                                    |                                                                                                       |
-
-The full operation list is in the [record share API reference](/docs/main/reference/hiecm-record-share).

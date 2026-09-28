@@ -18,6 +18,4 @@ Postman, Insomnia, Hoppscotch and Bruno take this through Import, as a link or a
 | ----------------- | ----------- | --------------------------------------- |
 | HPR and HFR calls | Sandbox     | `https://apihspsbx.abdm.gov.in/v4/int/` |
 
-The full operation list is in the [M4 API reference](/docs/main/reference/hiecm-m4).
-
 New to this? Start with [M4 Registry Integration](/docs/main/docs/hiecm/v3/milestones/m4).
