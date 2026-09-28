@@ -231,6 +231,18 @@ func (r *Reader) searchAtoms(ctx context.Context, query string, f Filter,
 	if err != nil {
 		return nil, err
 	}
+	// A question asking what something is adds a glossary-only list to the
+	// fusion, so the entry that defines a term is not outranked by errors
+	// and callbacks that merely repeat it.
+	var glossary []SearchHit
+	if f.Type == "" && definitionShaped(query) {
+		g := f
+		g.Type = "glossary"
+		if glossary, err = r.ftsSearchF(definitionTerm(query), g, limit); err != nil {
+			return nil, err
+		}
+		ftsHits = fuse(limit, ftsHits, glossary)
+	}
 	useVectors := emb != nil && r.EmbeddingsEnabled()
 	if emb != nil && r.EmbeddingsEnabled() && emb.Model() != r.EmbeddingModel() {
 		return nil, fmt.Errorf("embedding model mismatch: index built with %q, server configured with %q",
@@ -241,6 +253,13 @@ func (r *Reader) searchAtoms(ctx context.Context, query string, f Filter,
 			ftsHits = []SearchHit{}
 		}
 		return ftsHits, nil
+	}
+	if len(glossary) > 0 || (f.Type == "" && definitionShaped(query)) {
+		g := f
+		g.Type = "glossary"
+		if gv, err := r.vectorSearch(ctx, definitionTerm(query), g, limit, emb); err == nil {
+			glossary = append(glossary, gv...)
+		}
 	}
 	vecHits, err := r.vectorSearch(ctx, query, f, limit, emb)
 	if err != nil {
@@ -253,7 +272,33 @@ func (r *Reader) searchAtoms(ctx context.Context, query string, f Filter,
 		}
 		return ftsHits, nil
 	}
-	return fuse(limit, ftsHits, vecHits), nil
+	return fuse(limit, ftsHits, vecHits, glossary), nil
+}
+
+// definitionRe is a question asking what something is.
+var definitionRe = regexp.MustCompile(`(?i)^\s*(what\s+(is|are)\b|what's\b|define\b|meaning\s+of\b|what\s+does\s+\S+\s+(mean|stand\s+for)\b)`)
+
+// definitionTerm is the term a definition question asks about: "what is an
+// HIU in ABDM?" asks about "HIU". Keyword search requires every word, and the
+// question's own words are in no glossary entry.
+var definitionNoise = regexp.MustCompile(`(?i)\b(what('s)?|is|are|does|do|define|meaning|mean|stand|for|of|a|an|the|in|abdm|milestone)\b|[?.,!]`)
+
+func definitionTerm(query string) string {
+	if t := strings.Join(strings.Fields(definitionNoise.ReplaceAllString(query, " ")), " "); t != "" {
+		return t
+	}
+	return query
+}
+
+// definitionShaped is a question asking what a term of one or two words is,
+// or that bare term alone, which readers type when they want the definition.
+// "What are the tests required before exiting the sandbox" is not: its
+// subject is a request, not a term, and the glossary must not crowd it.
+func definitionShaped(query string) bool {
+	if len(strings.Fields(definitionTerm(query))) > 2 {
+		return false
+	}
+	return definitionRe.MatchString(query) || len(strings.Fields(query)) <= 2
 }
 
 // fuse merges ranked lists by reciprocal rank fusion: each list adds
