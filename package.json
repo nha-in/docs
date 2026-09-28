@@ -40,6 +40,7 @@
     "test:widget": "npm test --workspace ai-widget",
     "test:postman": "node --test scripts/postman.test.mjs site/src/components/api/carry.test.mjs",
     "test:changelog": "node --test scripts/changelog.test.mjs",
+    "test:scripts": "node --test scripts/lib/journeys.test.mjs scripts/redact-nha-raw.test.mjs scripts/api-samples.test.mjs",
     "changelog": "node scripts/build-whats-new.mjs",
     "check:changelog": "node scripts/build-whats-new.mjs --check",
     "eval:askai:run": "cd mcp && go run ./cmd/askai-eval run -cases ../evals/askai/cases -out ../evals/askai/runs/$(date +%Y-%m-%d)-$(cat ../catalogue/VERSION)",

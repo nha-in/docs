@@ -164,6 +164,10 @@ jobs:
       # The build wrote the Postman collections; this checks what it wrote.
       - run: npm run test:postman
       - run: npm run test:changelog
+      # The generator and redactor tests: journeys and error lists stay within
+      # their own gateway version, and the samples the build wrote carry no
+      # suffix or raw server variable.
+      - run: npm run test:scripts
       # What's New is a function of the catalogue. A change a reader can act
       # on without its entry fails here; npm run changelog writes it.
       - run: npm run check:changelog

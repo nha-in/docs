@@ -11,7 +11,7 @@ import {existsSync, readdirSync, readFileSync, writeFileSync, mkdirSync, rmSync}
 import {join, dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {parse} from 'yaml';
-import {listSpecTree} from './specs.mjs';
+import {listSpecTree, platformFeatures} from './specs.mjs';
 import {joinKey, hostOf} from './lib/api-join.mjs';
 import {loadJourneys, operationIndex, stepDataName} from './lib/journeys.mjs';
 import {errorsFromSpec, moduleErrorList} from './lib/spec-errors.mjs';
@@ -558,15 +558,8 @@ const tree = listSpecTree();
 const sidebar = [];
 let count = 0;
 
-// The journey order is defined in exactly one place: the journey files under
-// catalogue/openapi/hiecm/v3/journeys. Each names its steps as operationIds,
-// in the order a reader walks them, so the sidebar follows the journey
-// without the order being copied anywhere else.
-const journeys = loadJourneys();
-
 // The group for what a module's journeys do not name.
 const LEFTOVERS = 'APIs';
-const opIndex = operationIndex();
 
 for (const {platform, version, files} of tree) {
   // A spec places itself: info.x-portal names the module folder, the sidebar
@@ -598,9 +591,17 @@ for (const {platform, version, files} of tree) {
     .sort((a, b) => (a.position ?? 999) - (b.position ?? 999) || a.file.localeCompare(b.file));
 
   const docsDir = join(root, 'site', 'docs', platform, version, 'api');
-  // Only HIE-CM v3 has a troubleshooting section and the callback atoms today;
-  // the other gateways would link to pages and claim atoms that do not exist.
-  const isHiecmV3 = platform === 'hiecm' && version === 'v3';
+  // What this gateway version has: journeys, a troubleshooting section, the
+  // HIE-CM index wording, an error-code concept atom (scripts/specs.mjs). A
+  // gateway without one never links to pages or claims atoms that do not exist.
+  const features = platformFeatures(platform, version);
+  // The journey order is defined in exactly one place: the journey files under
+  // catalogue/openapi/<platform>/<version>/journeys. Each names its steps as
+  // operationIds, in the order a reader walks them, so the sidebar follows the
+  // journey without the order being copied anywhere else. They are read per
+  // gateway version, so one gateway's module never takes another's journeys.
+  const journeys = features.journeys ? loadJourneys({platform, version}) : new Map();
+  const opIndex = operationIndex({platform, version});
   for (const module of modules) {
     rmSync(join(docsDir, module.dir, 'endpoints'), {recursive: true, force: true});
   }
@@ -632,7 +633,7 @@ for (const {platform, version, files} of tree) {
   // first step that names it, in the order the journey files list them.
   const operationPage = (moduleDir, id) => {
     const base = `/docs/${platform}/${version}/api/${moduleDir}/endpoints`;
-    for (const journey of isHiecmV3 ? journeys.get(moduleDir) ?? [] : []) {
+    for (const journey of journeys.get(moduleDir) ?? []) {
       const i = journey.steps.findIndex((step) => step.op === id);
       if (i >= 0) return `${base}/${journey.id}/${String(i + 1).padStart(2, '0')}-${slug(id)}`;
     }
@@ -646,7 +647,7 @@ for (const {platform, version, files} of tree) {
   // Only HIE-CM v3 has those pages, so only it gets the links.
   const SYNCHRONOUS_202 = new Set(['gateway_post_gateway_v3_sessions']);
   const helpFor = (status, moduleDir, operationId) => {
-    if (!isHiecmV3) return undefined;
+    if (!features.troubleshooting) return undefined;
     const troubleshooting = (name) => `/docs/${platform}/${version}/troubleshooting/${name}`;
     if (status === '401') {
       return {label: 'Everything returns 401', href: troubleshooting('everything-returns-401')};
@@ -718,7 +719,7 @@ for (const {platform, version, files} of tree) {
           // A journey that walks a call before this callback places it after
           // its trigger, which is documentation enough to leave it off the list.
           const placed = [...journeys.values()].flat().some((journey) => journey.steps.findIndex((step) => step.op === id) > 0);
-          if (!(isHiecmV3 && placed)) unpairedCallbacks.push(entry);
+          if (!(features.journeys && placed)) unpairedCallbacks.push(entry);
           continue;
         }
         entry.relation = triggeredBy ? 'triggered-by' : 'answered-by';
@@ -1358,7 +1359,7 @@ for (const {platform, version, files} of tree) {
     '',
     '# API references',
     '',
-    ...(isHiecmV3
+    ...(features.hiecmCopy
       ? [
           'The ABDM API Reference section provides comprehensive technical documentation for integrating with various ABDM building blocks and services. These APIs enable healthcare providers, health applications, technology partners, and other ecosystem participants to securely exchange health information and deliver ABDM-compliant digital health services.',
           '',
@@ -1392,7 +1393,7 @@ for (const {platform, version, files} of tree) {
         ]),
   ];
   // Under the Core ABDM API modules heading, each module sits one level down.
-  const moduleHeading = isHiecmV3 ? '###' : '##';
+  const moduleHeading = features.hiecmCopy ? '###' : '##';
 
   for (const module of modules) {
     const entry = sidebar.find(
@@ -1411,7 +1412,7 @@ for (const {platform, version, files} of tree) {
         : `${moduleHeading} ${module.label}`,
     );
     indexLines.push('');
-    const copy = isHiecmV3 && hiecmCopy[module.id];
+    const copy = features.hiecmCopy && hiecmCopy[module.id];
     if (copy) {
       indexLines.push(copy.text, '');
       if (copy.list) indexLines.push(`**${copy.list}**`, '', ...copy.items.map((item) => `- ${item}`), '');
@@ -1424,7 +1425,7 @@ for (const {platform, version, files} of tree) {
         : total
         ? `${total} endpoint${total === 1 ? '' : 's'} across ${
             entry.groups.length
-          } ${isHiecmV3 ? 'use case' : 'group'}${entry.groups.length === 1 ? '' : 's'}: ${entry.groups
+          } ${features.journeys ? 'use case' : 'group'}${entry.groups.length === 1 ? '' : 's'}: ${entry.groups
             .map((g) => g.label)
             .join(', ')}. Each endpoint has its own page in the sidebar.`
         : 'No endpoint is published in this specification yet.',
@@ -1437,7 +1438,7 @@ for (const {platform, version, files} of tree) {
     );
     indexLines.push('');
   }
-  if (isHiecmV3) {
+  if (features.hiecmCopy) {
     indexLines.push(
       'This API Reference section serves as the central repository for all ABDM integration specifications, helping ecosystem participants build secure, interoperable, and standards-compliant digital health solutions.',
       '',
@@ -1646,7 +1647,7 @@ for (const {platform, version, files} of tree) {
         'Error codes',
         'Every error code the specifications carry, with its message and what to do.',
         3,
-        [platform === 'nhcx' ? 'nhcx.concept.error-code-spaces' : 'hiecm.concept.error-codes'],
+        features.errorConcept ? [features.errorConcept] : [],
         'circle-alert',
       ),
       '# Error codes',
@@ -1654,7 +1655,7 @@ for (const {platform, version, files} of tree) {
       // Only hiecm/v3 has a troubleshooting section today; other platforms
       // and other versions of hiecm would link to a page that does not
       // exist.
-      ...(isHiecmV3
+      ...(features.troubleshooting
         ? [`Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/${platform}/${version}/troubleshooting/).`, '']
         : []),
       // The list cannot show that one code means two things from two payers.
@@ -1736,12 +1737,12 @@ for (const {platform, version, files} of tree) {
       '',
       `# ${module.label} errors`,
       '',
-      ...(isHiecmV3
+      ...(features.troubleshooting
         ? [`Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/${platform}/${version}/troubleshooting/).`, '']
         : []),
     ];
 
-    const list = moduleErrorList(spec);
+    const list = moduleErrorList(spec, {platform, version});
     if (list?.intro) lines.push(list.intro, '');
     if (codes.length) {
       lines.push('## Codes', '', '| Code | HTTP | Message | Returned by |', '| --- | --- | --- | --- |');
