@@ -1,0 +1,19 @@
+# Ambulance Booking, Phase 1, in the order of the UHI developer guide as of
+# 22 September 2026, Part 3.3: discovery through the Gateway, then init and
+# on_init direct between EUA and HSPA.
+- id: uhi-ambulance-discovery
+  title: Ambulance Booking, discovery
+  steps:
+    - op: uhi_network_gateway_search
+      example: ambulance-search-ambulance-with-source-location
+    - op: uhi_network_search
+      example: ambulance-search-ambulance-with-source-location
+    - op: uhi_network_gateway_on_search
+      example: ambulance-1st-on-search-for-ambulance
+    - op: uhi_network_on_search
+      example: ambulance-1st-on-search-for-ambulance
+- id: uhi-ambulance-order
+  title: Ambulance Booking, order
+  steps:
+    - op: uhi_ambulance_init
+    - op: uhi_ambulance_on_init
