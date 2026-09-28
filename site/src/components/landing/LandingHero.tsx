@@ -4,6 +4,7 @@ import Heading from '@theme/Heading';
 import BrowserOnly from '@docusaurus/BrowserOnly';
 import NetworkWeb from '@site/src/components/landing/NetworkWeb';
 import FlapBoard from '@site/src/components/landing/FlapBoard';
+import {PATHWAYS} from '@site/src/components/landing/pathways';
 import BrandMark from '@site/src/components/chrome/BrandMark';
 import {unfiltered} from '@site/src/config/roles';
 import {
@@ -80,7 +81,21 @@ const CELLS = Math.max(
   ...Object.values(DELIVERED)
     .flat()
     .map((line) => line.length),
+  ...Object.values(PATHWAYS).flatMap(({stages}) => stages.map(({line}) => line.length)),
 );
+
+/**
+ * How long a card is pointed at before the network answers, and how long it
+ * waits after the pointer leaves.
+ *
+ * The first is long on purpose. The pathway is an easter egg rather than the
+ * card's hover state: a reader heading for the link never sees the ring move,
+ * and one who lingers over a card finds the network rearrange around it. The
+ * second lets a reader go from one card to the next without the network
+ * falling back to rest in the gap between them.
+ */
+const ASK_MS = 6000;
+const RELEASE_MS = 250;
 
 /**
  * The statement, the one control and the three gateways.
@@ -115,6 +130,31 @@ export default function LandingHero(): React.ReactNode {
   const announced = useRef<string | null>(null);
   /** How many times each participant has been called at, for the two liners. */
   const visits = useRef<Record<string, number>>({});
+  /**
+   * The gateway card being asked about, by hover or by keyboard focus. The
+   * network leans towards that journey and the board speaks its steps. A
+   * click is still the card's link: the preview is the question, following
+   * the link into the documentation is the answer.
+   */
+  const [intent, setIntent] = useState<string | null>(null);
+  const asking = useRef<string | null>(null);
+  const askTimer = useRef<number>(0);
+  const ask = useCallback((id: string | null) => {
+    window.clearTimeout(askTimer.current);
+    askTimer.current = window.setTimeout(
+      () => {
+        asking.current = id;
+        setIntent(id);
+        if (id === null) {
+          // Back to the network's own voice, from the name it rests on.
+          announced.current = null;
+          setMessage(RESTING);
+        }
+      },
+      id ? ASK_MS : RELEASE_MS,
+    );
+  }, []);
+  useEffect(() => () => window.clearTimeout(askTimer.current), []);
 
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -142,6 +182,8 @@ export default function LandingHero(): React.ReactNode {
    * commentary on the journey.
    */
   const carrying = useCallback((id: string | null) => {
+    // A card is being asked about: the board belongs to its journey.
+    if (asking.current) return;
     // The same participant twice running is the same line, and a board already
     // showing a message does not turn for it again. This is also what
     // collapses the repeated releases a moving pointer sends.
@@ -180,6 +222,8 @@ export default function LandingHero(): React.ReactNode {
             <NetworkWeb
               onArrive={still ? undefined : carrying}
               onPoint={still ? undefined : carrying}
+              intent={intent}
+              onStage={setMessage}
             />
           )}
         </BrowserOnly>
@@ -221,7 +265,15 @@ export default function LandingHero(): React.ReactNode {
               {gateways.map(({intent, short, full, to}) => (
                 <Tooltip key={to}>
                   <TooltipTrigger asChild>
-                    <Link to={unfiltered(to)} className="landing-hero__goal">
+                    <Link
+                      to={unfiltered(to)}
+                      className="landing-hero__goal"
+                      // Pointer, not mouse: Docusaurus's Link sets its own
+                      // onMouseEnter for prefetching, after ours, and drops it.
+                      onPointerEnter={() => ask(short)}
+                      onPointerLeave={() => ask(null)}
+                      onFocus={() => ask(short)}
+                      onBlur={() => ask(null)}>
                       <span className="landing-hero__goal-intent">{intent}</span>
                       <span className="landing-hero__goal-short">{short}</span>
                     </Link>
@@ -234,6 +286,19 @@ export default function LandingHero(): React.ReactNode {
         </div>
       </div>
 
+      {/* Said while a journey is drawn on the network, because the drawing
+          simplifies it: the steps, who they pass through and their order are
+          there to explain, not to specify. On the hero's bottom edge, clear of
+          the network, as a footnote to the whole screen. Always in the page,
+          so it fades rather than appears. */}
+      <p
+        className="landing-hero__disclaimer"
+        data-on={intent && !compact ? '' : undefined}
+        aria-hidden={!(intent && !compact)}>
+        Illustrative representation only. Actual system interactions, message
+        sequences and participants may vary and are governed by the applicable
+        ABDM specifications.
+      </p>
     </section>
   );
 }

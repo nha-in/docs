@@ -1,0 +1,185 @@
+{
+  "errors": [],
+  "file": "nhcx-onboarding.yaml",
+  "gateway": "nhcx",
+  "label": "Onboarding",
+  "module": "onboarding",
+  "operations": {
+    "GET /update/validate": {
+      "encrypted": [],
+      "id": "onboarding_update_validate",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Accept!",
+        "header:bearer_auth!",
+        "query:passcode!",
+        "query:transactionId!"
+      ],
+      "path": "/update/validate",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice",
+      "servers": [
+        "https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice"
+      ]
+    },
+    "GET /validate": {
+      "encrypted": [],
+      "id": "onboarding_validate",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:Accept!",
+        "header:bearer_auth!",
+        "query:passcode!",
+        "query:transactionId!"
+      ],
+      "path": "/validate",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice",
+      "servers": [
+        "https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice"
+      ]
+    },
+    "POST /participant/create": {
+      "encrypted": [],
+      "id": "onboarding_participant_create",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Accept!",
+        "header:bearer_auth!",
+        "header:source!"
+      ],
+      "path": "/participant/create",
+      "properties": [
+        "district",
+        "encryption_cert",
+        "endpoint_url",
+        "linked_registry_codes",
+        "participant_name",
+        "phone",
+        "primaryEmail",
+        "primaryMobile",
+        "registryid",
+        "roles",
+        "scheme_code",
+        "signing_cert_path",
+        "state"
+      ],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+      "servers": [
+        "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice"
+      ]
+    },
+    "POST /v2/participant/create": {
+      "encrypted": [],
+      "id": "onboarding_v2_participant_create",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Accept!",
+        "header:bearer_auth!"
+      ],
+      "path": "/v2/participant/create",
+      "properties": [
+        "email",
+        "endpointurl",
+        "mobilenumber",
+        "registryid",
+        "registrytype",
+        "role"
+      ],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice",
+      "servers": [
+        "https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice"
+      ]
+    },
+    "POST /v2/participant/hementity/create": {
+      "encrypted": [],
+      "id": "onboarding_v2_participant_hementity_create",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Accept!",
+        "header:bearer_auth!"
+      ],
+      "path": "/v2/participant/hementity/create",
+      "properties": [
+        "bankdetails",
+        "district",
+        "encryption_cert",
+        "endpoint_url",
+        "entityid",
+        "hospitalbedstrength",
+        "hospitaltype",
+        "incentiveCode",
+        "lab_yn",
+        "participant_name",
+        "participantcode",
+        "primaryEmail",
+        "primaryMobile",
+        "roles",
+        "scheme_code",
+        "specialityList",
+        "state",
+        "taxdetails"
+      ],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+      "servers": [
+        "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
+        "https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice"
+      ]
+    }
+  },
+  "roles": [
+    "payer",
+    "provider"
+  ],
+  "sources": {
+    "nhcx-package/apis/11-onboarding": {
+      "fetched": null,
+      "hash": "sha256:41195ab9975347123e36e509ad940f4fe77c467855d32dad802e46eb78e9c10e"
+    },
+    "nhcx-package/baseurl.yaml": {
+      "fetched": null,
+      "hash": "sha256:88515b7b29c6b349a131e016c80774436ea16a29738db743b4cc3a24cbd42453"
+    }
+  },
+  "version": "v1"
+}

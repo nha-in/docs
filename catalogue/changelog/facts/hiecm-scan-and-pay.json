@@ -1,0 +1,667 @@
+{
+  "errors": [],
+  "file": "hiecm-scan-and-pay.yaml",
+  "gateway": "hiecm",
+  "label": "Scan and Pay",
+  "module": "scan-and-pay",
+  "operations": {
+    "GET /api/hiecm/scan-gateway/v3/patient/scan-pay/details": {
+      "encrypted": [],
+      "id": "scan-and-pay_get_scan_gateway_v3_patient_scan_pay_details",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-CM-ID!",
+        "query:endDate!",
+        "query:limit!",
+        "query:offset!",
+        "query:startDate!",
+        "query:status!"
+      ],
+      "path": "/api/hiecm/scan-gateway/v3/patient/scan-pay/details",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "PATCH /api/hiecm/gateway/v3/scanPay/updateVersion": {
+      "encrypted": [],
+      "id": "scan-and-pay_patch_gateway_v3_scanpay_updateversion",
+      "kind": "call",
+      "method": "PATCH",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-CM-ID!"
+      ],
+      "path": "/api/hiecm/gateway/v3/scanPay/updateVersion",
+      "properties": [
+        "recordShareEnabled",
+        "scanPayEnabled",
+        "scanPayVersion",
+        "serviceId"
+      ],
+      "required": [
+        "recordShareEnabled",
+        "scanPayEnabled",
+        "scanPayVersion",
+        "serviceId"
+      ],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/hiecm/scan-gateway/v3/patient/on-selection": {
+      "encrypted": [],
+      "id": "scan-and-pay_post_scan_gateway_v3_patient_on_selection",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-CM-ID!"
+      ],
+      "path": "/api/hiecm/scan-gateway/v3/patient/on-selection",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "202",
+        "400",
+        "401",
+        "403",
+        "404",
+        "429",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/hiecm/scan-gateway/v3/patient/on-share/open-order": {
+      "encrypted": [],
+      "id": "scan-and-pay_post_scan_gateway_v3_patient_on_share_open_order",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-CM-ID!"
+      ],
+      "path": "/api/hiecm/scan-gateway/v3/patient/on-share/open-order",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "202",
+        "400",
+        "401",
+        "403",
+        "404",
+        "429",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/hiecm/scan-gateway/v3/patient/scan-pay/notify": {
+      "encrypted": [],
+      "id": "scan-and-pay_post_scan_gateway_v3_patient_scan_pay_notify",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-CM-ID!",
+        "header:X-HIP-ID!"
+      ],
+      "path": "/api/hiecm/scan-gateway/v3/patient/scan-pay/notify",
+      "properties": [
+        "acknowledgement"
+      ],
+      "required": [
+        "acknowledgement"
+      ],
+      "responses": [
+        "202",
+        "400",
+        "401",
+        "403",
+        "404",
+        "429",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/hiecm/scan-gateway/v3/patient/scan-pay/on-notify": {
+      "encrypted": [],
+      "id": "scan-and-pay_post_scan_gateway_v3_patient_scan_pay_on_notify",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-CM-ID!"
+      ],
+      "path": "/api/hiecm/scan-gateway/v3/patient/scan-pay/on-notify",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "202",
+        "400",
+        "401",
+        "403",
+        "404",
+        "429",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/hiecm/scan-gateway/v3/patient/scan-pay/on-order-status": {
+      "encrypted": [],
+      "id": "scan-and-pay_post_scan_gateway_v3_patient_scan_pay_on_ord_21f376",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-CM-ID!"
+      ],
+      "path": "/api/hiecm/scan-gateway/v3/patient/scan-pay/on-order-status",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "202",
+        "400",
+        "401",
+        "403",
+        "404",
+        "429",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/hiecm/scan-gateway/v3/patient/scan-pay/order-status": {
+      "encrypted": [],
+      "id": "scan-and-pay_post_scan_gateway_v3_patient_scan_pay_order_status",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-CM-ID!",
+        "header:X-HIU-ID!"
+      ],
+      "path": "/api/hiecm/scan-gateway/v3/patient/scan-pay/order-status",
+      "properties": [
+        "queryStatus"
+      ],
+      "required": [
+        "queryStatus"
+      ],
+      "responses": [
+        "202",
+        "400",
+        "401",
+        "403",
+        "404",
+        "429",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/hiecm/scan-gateway/v3/patient/selection": {
+      "encrypted": [],
+      "id": "scan-and-pay_post_scan_gateway_v3_patient_selection",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-CM-ID!",
+        "header:X-HIU-ID!"
+      ],
+      "path": "/api/hiecm/scan-gateway/v3/patient/selection",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "202",
+        "400",
+        "401",
+        "403",
+        "404",
+        "429",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/hiecm/scan-gateway/v3/patient/share/open-order": {
+      "encrypted": [],
+      "id": "scan-and-pay_post_scan_gateway_v3_patient_share_open_order",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-AUTH-TOKEN!",
+        "header:X-CM-ID!",
+        "header:X-HIU-ID!"
+      ],
+      "path": "/api/hiecm/scan-gateway/v3/patient/share/open-order",
+      "properties": [
+        "intent",
+        "metaData",
+        "profile"
+      ],
+      "required": [
+        "intent",
+        "metaData",
+        "profile"
+      ],
+      "responses": [
+        "202",
+        "400",
+        "401",
+        "403",
+        "404",
+        "429",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /v3/patient/on-selection": {
+      "encrypted": [],
+      "id": "scan-and-pay_post_v3_patient_on_selection",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-HIU-ID!"
+      ],
+      "path": "/v3/patient/on-selection",
+      "properties": [
+        "abhaAddress",
+        "intent",
+        "openOrderRequestId",
+        "paymentBundle",
+        "procedures",
+        "response"
+      ],
+      "required": [
+        "abhaAddress",
+        "intent",
+        "openOrderRequestId",
+        "paymentBundle",
+        "procedures",
+        "response"
+      ],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /v3/patient/on-share/open-order": {
+      "encrypted": [],
+      "id": "scan-and-pay_post_v3_patient_on_share_open_order",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-HIU-ID!"
+      ],
+      "path": "/v3/patient/on-share/open-order",
+      "properties": [
+        "abhaAddress",
+        "intent",
+        "patientUid",
+        "procedures",
+        "response"
+      ],
+      "required": [
+        "abhaAddress",
+        "intent",
+        "patientUid",
+        "procedures",
+        "resp"
+      ],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /v3/patient/scan-pay/notify": {
+      "encrypted": [],
+      "id": "scan-and-pay_post_v3_patient_scan_pay_notify",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-HIU-ID!"
+      ],
+      "path": "/v3/patient/scan-pay/notify",
+      "properties": [
+        "acknowledgement"
+      ],
+      "required": [
+        "acknowledgement",
+        "resp"
+      ],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /v3/patient/scan-pay/on-notify": {
+      "encrypted": [],
+      "id": "scan-and-pay_post_v3_patient_scan_pay_on_notify",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-HIP-ID!"
+      ],
+      "path": "/v3/patient/scan-pay/on-notify",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /v3/patient/scan-pay/on-order-status": {
+      "encrypted": [],
+      "id": "scan-and-pay_post_v3_patient_scan_pay_on_order_status",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-HIU-ID!"
+      ],
+      "path": "/v3/patient/scan-pay/on-order-status",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /v3/patient/scan-pay/order-status": {
+      "encrypted": [],
+      "id": "scan-and-pay_post_v3_patient_scan_pay_order_status",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-HIP-ID!"
+      ],
+      "path": "/v3/patient/scan-pay/order-status",
+      "properties": [
+        "queryStatus"
+      ],
+      "required": [
+        "queryStatus"
+      ],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /v3/patient/selection": {
+      "encrypted": [],
+      "id": "scan-and-pay_post_v3_patient_selection",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-HIP-ID!"
+      ],
+      "path": "/v3/patient/selection",
+      "properties": [
+        "abhaAddress",
+        "intent",
+        "openOrderRequestId",
+        "procedures"
+      ],
+      "required": [
+        "abhaAddress",
+        "intent",
+        "openOrderRequestId",
+        "procedures"
+      ],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /v3/patient/share/open-order": {
+      "encrypted": [],
+      "id": "scan-and-pay_post_v3_patient_share_open_order",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-HIP-ID!"
+      ],
+      "path": "/v3/patient/share/open-order",
+      "properties": [
+        "intent",
+        "metaData",
+        "profile"
+      ],
+      "required": [
+        "intent",
+        "metaData",
+        "profile"
+      ],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    }
+  },
+  "roles": [
+    "his"
+  ],
+  "sources": {
+    "catalogue/openapi/.raw/nha-2026-09-16/hiecm/scan-and-pay.yaml": {
+      "fetched": "2026-09-16",
+      "hash": "sha256:fe6c61d73f40d1ceb5d5d3835a031521f4ab227a52830fdbe52ab5a549b5cc7e"
+    }
+  },
+  "version": "v3"
+}

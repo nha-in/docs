@@ -1,0 +1,82 @@
+{
+  "errors": [],
+  "file": "nhcx-insurance-plan.yaml",
+  "gateway": "nhcx",
+  "label": "Insurance plan",
+  "module": "insurance-plan",
+  "operations": {
+    "POST /v1/insuranceplan/on_request": {
+      "encrypted": [],
+      "id": "insurance_plan_webhook_v1_insuranceplan_on_request",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:bearer_auth!"
+      ],
+      "path": "/v1/insuranceplan/on_request",
+      "properties": [
+        "payload",
+        "type"
+      ],
+      "required": [
+        "payload",
+        "type"
+      ],
+      "responses": [
+        "202"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/hcx",
+      "servers": [
+        "https://apisbx.abdm.gov.in/hcx",
+        "https://apisprod.nha.gov.in/hcx"
+      ]
+    },
+    "POST /v1/insuranceplan/request": {
+      "encrypted": [],
+      "id": "insurance_plan_webhook_v1_insuranceplan_request",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:bearer_auth!"
+      ],
+      "path": "/v1/insuranceplan/request",
+      "properties": [
+        "payload"
+      ],
+      "required": [],
+      "responses": [
+        "202"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/hcx",
+      "servers": [
+        "https://apisbx.abdm.gov.in/hcx",
+        "https://apisprod.nha.gov.in/hcx"
+      ]
+    }
+  },
+  "roles": [
+    "payer",
+    "provider"
+  ],
+  "sources": {
+    "nhcx-package/apis/09-insurance-plan": {
+      "fetched": null,
+      "hash": "sha256:a4d48ce98594530d1f58959c966bfc5b0cc4f94910a37853a45f1f63ecf0456b"
+    },
+    "nhcx-package/baseurl.yaml": {
+      "fetched": null,
+      "hash": "sha256:88515b7b29c6b349a131e016c80774436ea16a29738db743b4cc3a24cbd42453"
+    },
+    "nhcx-package/nhcx-error.yaml": {
+      "fetched": null,
+      "hash": "sha256:d24ac927ed4dd722e60d7bd1d6fed15de370cc29f750d68999ee56fac93c941b"
+    }
+  },
+  "version": "v1"
+}

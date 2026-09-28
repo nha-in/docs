@@ -1,0 +1,458 @@
+{
+  "errors": [],
+  "file": "hiecm-m3.yaml",
+  "gateway": "hiecm",
+  "label": "M3 Health Information User",
+  "module": "m3",
+  "operations": {
+    "GET /api/hiecm/data-flow/v3/health-information/request/status/{}": {
+      "encrypted": [],
+      "id": "m3_get_data_flow_v3_health_information_request_status_tra_550104",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-CM-ID!",
+        "path:{}!"
+      ],
+      "path": "/api/hiecm/data-flow/v3/health-information/request/status/{transaction-id}",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/hiecm/consent/v3/fetch": {
+      "encrypted": [],
+      "id": "m3_post_consent_v3_fetch",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-CM-ID!",
+        "header:X-HIU-ID!"
+      ],
+      "path": "/api/hiecm/consent/v3/fetch",
+      "properties": [
+        "consentId"
+      ],
+      "required": [
+        "consentId"
+      ],
+      "responses": [
+        "202",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/hiecm/consent/v3/request/hiu/on-notify": {
+      "encrypted": [],
+      "id": "m3_post_consent_v3_request_hiu_on_notify",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-CM-ID!"
+      ],
+      "path": "/api/hiecm/consent/v3/request/hiu/on-notify",
+      "properties": [
+        "acknowledgement",
+        "error",
+        "response"
+      ],
+      "required": [
+        "acknowledgement",
+        "response"
+      ],
+      "responses": [
+        "202",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/hiecm/consent/v3/request/init": {
+      "encrypted": [],
+      "id": "m3_post_consent_v3_request_init",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-CM-ID!"
+      ],
+      "path": "/api/hiecm/consent/v3/request/init",
+      "properties": [
+        "consent"
+      ],
+      "required": [
+        "consent"
+      ],
+      "responses": [
+        "202",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/hiecm/consent/v3/request/status": {
+      "encrypted": [],
+      "id": "m3_post_consent_v3_request_status",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-CM-ID!",
+        "header:X-HIU-ID!"
+      ],
+      "path": "/api/hiecm/consent/v3/request/status",
+      "properties": [
+        "consentRequestId"
+      ],
+      "required": [
+        "consentRequestId"
+      ],
+      "responses": [
+        "202",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/hiecm/data-flow/v3/health-information/notify": {
+      "encrypted": [],
+      "id": "m3_post_data_flow_v3_health_information_notify",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-CM-ID!"
+      ],
+      "path": "/api/hiecm/data-flow/v3/health-information/notify",
+      "properties": [
+        "notification"
+      ],
+      "required": [
+        "notification"
+      ],
+      "responses": [
+        "202",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/hiecm/data-flow/v3/health-information/request": {
+      "encrypted": [],
+      "id": "m3_post_data_flow_v3_health_information_request",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-CM-ID!",
+        "header:X-HIU-ID!"
+      ],
+      "path": "/api/hiecm/data-flow/v3/health-information/request",
+      "properties": [
+        "hiRequest"
+      ],
+      "required": [
+        "hiRequest"
+      ],
+      "responses": [
+        "202",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/v3/hiu/consent/on-fetch": {
+      "encrypted": [],
+      "id": "m3_post_v3_hiu_consent_on_fetch",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-HIU-ID!"
+      ],
+      "path": "/api/v3/hiu/consent/on-fetch",
+      "properties": [
+        "consent",
+        "error",
+        "resp",
+        "response"
+      ],
+      "required": [
+        "consent",
+        "error",
+        "response"
+      ],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/v3/hiu/consent/request/notify": {
+      "encrypted": [],
+      "id": "m3_post_v3_hiu_consent_request_notify",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-HIU-ID!"
+      ],
+      "path": "/api/v3/hiu/consent/request/notify",
+      "properties": [
+        "notification"
+      ],
+      "required": [
+        "notification"
+      ],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/v3/hiu/consent/request/on-init": {
+      "encrypted": [],
+      "id": "m3_post_v3_hiu_consent_request_on_init",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-HIU-ID!"
+      ],
+      "path": "/api/v3/hiu/consent/request/on-init",
+      "properties": [
+        "consentRequest",
+        "error",
+        "response"
+      ],
+      "required": [
+        "consentRequest",
+        "error",
+        "response"
+      ],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/v3/hiu/consent/request/on-status": {
+      "encrypted": [],
+      "id": "m3_post_v3_hiu_consent_request_on_status",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-HIU-ID!"
+      ],
+      "path": "/api/v3/hiu/consent/request/on-status",
+      "properties": [
+        "consentRequest",
+        "error",
+        "resp",
+        "response"
+      ],
+      "required": [
+        "consentRequest",
+        "error",
+        "resp",
+        "response"
+      ],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "500",
+        "503"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    },
+    "POST /api/v3/hiu/health-information/on-request": {
+      "encrypted": [],
+      "id": "m3_post_v3_hiu_health_information_on_request",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:X-HIU-ID!"
+      ],
+      "path": "/api/v3/hiu/health-information/on-request",
+      "properties": [
+        "error",
+        "hiRequest",
+        "response"
+      ],
+      "required": [
+        "hiRequest",
+        "response"
+      ],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://dev.abdm.gov.in",
+      "servers": [
+        "https://apis.abdm.gov.in",
+        "https://dev.abdm.gov.in"
+      ]
+    }
+  },
+  "roles": [
+    "his"
+  ],
+  "sources": {
+    "catalogue/openapi/.raw/nha-2026-09-16/hiecm/consent-management-data-flow.yaml": {
+      "fetched": "2026-09-16",
+      "hash": "sha256:4b0af51af2e2b5bfbf08f5e8745a940f59c550f8a1e4600c970c526f27bc8718"
+    }
+  },
+  "version": "v3"
+}

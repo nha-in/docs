@@ -1,0 +1,103 @@
+{
+  "errors": [],
+  "file": "nhcx-status.yaml",
+  "gateway": "nhcx",
+  "label": "Status and search",
+  "module": "status",
+  "operations": {
+    "POST /v1/search/on_submit": {
+      "encrypted": [],
+      "id": "status_webhook_v1_search_on_submit",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:bearer_auth!"
+      ],
+      "path": "/v1/search/on_submit",
+      "properties": [
+        "payload",
+        "type"
+      ],
+      "required": [
+        "payload",
+        "type"
+      ],
+      "responses": [
+        "202"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/hcx",
+      "servers": [
+        "https://apisbx.abdm.gov.in/hcx",
+        "https://apisprod.nha.gov.in/hcx"
+      ]
+    },
+    "POST /v1/search/submit": {
+      "encrypted": [],
+      "id": "status_webhook_v1_search_submit",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:bearer_auth!"
+      ],
+      "path": "/v1/search/submit",
+      "properties": [
+        "payload"
+      ],
+      "required": [],
+      "responses": [
+        "202"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/hcx",
+      "servers": [
+        "https://apisbx.abdm.gov.in/hcx",
+        "https://apisprod.nha.gov.in/hcx"
+      ]
+    },
+    "POST /v1/status": {
+      "encrypted": [],
+      "id": "status_webhook_v1_status",
+      "kind": "callback",
+      "method": "POST",
+      "params": [
+        "header:bearer_auth!"
+      ],
+      "path": "/v1/status",
+      "properties": [
+        "payload"
+      ],
+      "required": [],
+      "responses": [
+        "202"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "server": "https://apisbx.abdm.gov.in/hcx",
+      "servers": [
+        "https://apisbx.abdm.gov.in/hcx",
+        "https://apisprod.nha.gov.in/hcx"
+      ]
+    }
+  },
+  "roles": [
+    "payer",
+    "provider"
+  ],
+  "sources": {
+    "nhcx-package/apis/08-status": {
+      "fetched": null,
+      "hash": "sha256:e5e337293f9f33700c21ac9873f20c627e22a26e0cbb9338ef46acb6ac3cbfe2"
+    },
+    "nhcx-package/baseurl.yaml": {
+      "fetched": null,
+      "hash": "sha256:88515b7b29c6b349a131e016c80774436ea16a29738db743b4cc3a24cbd42453"
+    }
+  },
+  "version": "v1"
+}

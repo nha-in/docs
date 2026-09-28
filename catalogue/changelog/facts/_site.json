@@ -1,0 +1,51 @@
+{
+  "corrections": {},
+  "mcpTools": [
+    "catalogue_info",
+    "decode_error",
+    "get_atom",
+    "get_fhir_example",
+    "get_fhir_profile",
+    "get_operation",
+    "list_atoms",
+    "list_fhir_profiles",
+    "list_operations",
+    "related_atoms",
+    "search_docs",
+    "validate_fhir",
+    "validate_request"
+  ],
+  "plugins": {
+    "abdm-contributors-assistant": "0.3.0",
+    "abdm-integrators-assistant": "0.5.0",
+    "nhcx": "1.0.0"
+  },
+  "procedures": {},
+  "skills": [
+    "fhir-audit",
+    "fhir-generate",
+    "hiecm-gateway-build",
+    "hiecm-m1-build",
+    "hiecm-m1-debug",
+    "hiecm-m2-build",
+    "hiecm-m2-debug",
+    "hiecm-m3-build",
+    "hiecm-m4-build",
+    "hiecm-p1-build",
+    "hiecm-p1-debug",
+    "hiecm-p2-build",
+    "hiecm-p2-debug",
+    "hiecm-p3-build",
+    "hiecm-p4-build",
+    "hiecm-record-share-build",
+    "hiecm-scan-and-pay-build",
+    "hiecm-scan-and-register-build",
+    "nhcx-claim",
+    "nhcx-communication",
+    "nhcx-coverage",
+    "nhcx-full",
+    "nhcx-payment",
+    "nhcx-preauth",
+    "nhcx-reprocess"
+  ]
+}

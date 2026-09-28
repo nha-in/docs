@@ -1,0 +1,169 @@
+{
+  "errors": [],
+  "file": "nhcx-biometric.yaml",
+  "gateway": "nhcx",
+  "label": "ABHA biometric authentication",
+  "module": "biometric",
+  "operations": {
+    "GET /hcx/abha/biometric/auth/refresh/token": {
+      "encrypted": [],
+      "id": "biometric_hcx_abha_biometric_auth_refresh_token",
+      "kind": "call",
+      "method": "GET",
+      "params": [
+        "header:R-token!",
+        "header:payerid!",
+        "header:process!"
+      ],
+      "path": "/hcx/abha/biometric/auth/refresh/token",
+      "properties": [],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [],
+      "server": "https://apisbx.abdm.gov.in",
+      "servers": [
+        "https://apisbx.abdm.gov.in"
+      ]
+    },
+    "POST /hcx/abha/biometric/auth/init": {
+      "encrypted": [],
+      "id": "biometric_hcx_abha_biometric_auth_init",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:payerid!",
+        "header:process!"
+      ],
+      "path": "/hcx/abha/biometric/auth/init",
+      "properties": [
+        "authMode",
+        "loginHint",
+        "loginId",
+        "otpSystem",
+        "scope"
+      ],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [],
+      "server": "https://apisbx.abdm.gov.in",
+      "servers": [
+        "https://apisbx.abdm.gov.in"
+      ]
+    },
+    "POST /hcx/abha/biometric/auth/verify": {
+      "encrypted": [],
+      "id": "biometric_hcx_abha_biometric_auth_verify",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:payerid!",
+        "header:process!"
+      ],
+      "path": "/hcx/abha/biometric/auth/verify",
+      "properties": [
+        "authData",
+        "authMode",
+        "scope"
+      ],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [],
+      "server": "https://apisbx.abdm.gov.in",
+      "servers": [
+        "https://apisbx.abdm.gov.in"
+      ]
+    },
+    "POST /pmjay/sbxhcx/abdmproxy/abha/biometric/capture/pid": {
+      "encrypted": [],
+      "id": "biometric_pmjay_sbxhcx_abdmproxy_abha_biometric_capture_pid",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!"
+      ],
+      "path": "/pmjay/sbxhcx/abdmproxy/abha/biometric/capture/pid",
+      "properties": [
+        "txnId"
+      ],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [],
+      "server": "https://apisbx.abdm.gov.in",
+      "servers": [
+        "https://apisbx.abdm.gov.in"
+      ]
+    },
+    "POST /pmjay/sbxhcx/abdmproxy/abha/biometric/faceauth/init": {
+      "encrypted": [],
+      "id": "biometric_pmjay_sbxhcx_abdmproxy_abha_biometric_faceauth_init",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!"
+      ],
+      "path": "/pmjay/sbxhcx/abdmproxy/abha/biometric/faceauth/init",
+      "properties": [
+        "scope"
+      ],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [],
+      "server": "https://apisbx.abdm.gov.in",
+      "servers": [
+        "https://apisbx.abdm.gov.in"
+      ]
+    },
+    "POST /pmjay/sbxhcx/abdmproxy/abha/biometric/v2/auth/verify": {
+      "encrypted": [],
+      "id": "biometric_pmjay_sbxhcx_abdmproxy_abha_biometric_v2_auth_verify",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:REQUEST-ID!",
+        "header:TIMESTAMP!",
+        "header:payerid!",
+        "header:process!"
+      ],
+      "path": "/pmjay/sbxhcx/abdmproxy/abha/biometric/v2/auth/verify",
+      "properties": [
+        "authData",
+        "authMode"
+      ],
+      "required": [],
+      "responses": [
+        "200"
+      ],
+      "security": [],
+      "server": "https://apisbx.abdm.gov.in",
+      "servers": [
+        "https://apisbx.abdm.gov.in"
+      ]
+    }
+  },
+  "roles": [
+    "provider"
+  ],
+  "sources": {
+    "nhcx-package/apis/14-biometric": {
+      "fetched": null,
+      "hash": "sha256:67a84b282e192889df0e71793d38df1c4e3615dce1337beb40f13737036b8100"
+    },
+    "nhcx-package/baseurl.yaml": {
+      "fetched": null,
+      "hash": "sha256:88515b7b29c6b349a131e016c80774436ea16a29738db743b4cc3a24cbd42453"
+    }
+  },
+  "version": "v1"
+}
