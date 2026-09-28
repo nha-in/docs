@@ -154,6 +154,12 @@ A Laboratory Information Management System (LIMS), also referred to in some cont
 
 The token that authorises a [Health Information Provider](#hip) to link [care contexts](#care-context) to a patient's [ABHA Address](#abha-address). It is generated through the link token API and is valid for six months.
 
+Notes for AI agents
+
+**How you know it worked.** You can say how long a link token lasts and what to do when it has expired.
+
+**When it goes wrong.** A stored link token is used without checking that it is still valid. Validate it before every link. If it has expired, generate a new one through demographic authentication, then link.
+
 ### M1
 
 Milestone 1 (M1 Identity), Create and verify ABHA, covers ABHA-related functions implemented within an integrated application, including creation of an [ABHA Number](#abha-number) through supported methods, creation of an [ABHA Address](#abha-address), verification during patient registration, download of the ABHA Card and other role-specific functions prescribed in the current test cases. See [M1 Identity](/docs/main/docs/hiecm/v3/milestones/m1).

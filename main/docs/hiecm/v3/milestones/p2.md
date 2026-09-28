@@ -25,6 +25,18 @@ The facility displays a QR code holding a URL with two parameters: the HIP ID an
 
 Counter names arrive in the QR code: 1 to 250 characters, letters, digits and spaces, with `.`, `-` and `_` allowed between them. A counter name cannot be the facility ID, the [HPID](/docs/main/docs/hiecm/v3/getting-started/glossary#hpid), the HIP ID or the HIP name.
 
+Records from that visit are linked to the person from the start, so discovery is never needed for them.
+
+Notes for AI agents
+
+**Before you start.** The person is signed in and holds an ABHA address. Your app can read a QR code and take the HIP ID and the counter context out of its URL.
+
+**What happens.** Show what will be shared and take consent in the specified wording. Call `/api/hiecm/patient-share/v3/share` with `intent` set to `PROFILE_SHARE` and `metaData` carrying the `hipId` and the counter `context`. The facility's answer arrives on `/api/v3/hiu/patient/on-share`.
+
+**How you know it worked.** The acknowledgement arrives with status SUCCESS and a `profile` block carrying `tokenNumber` and `expiry`. Show the token number, because it is what the person needs at the counter, and treat its validity as the facility's to set.
+
+**When it goes wrong.** No answer within 30 seconds needs a screen that says so, not a spinner that never ends. A counter name that is really the facility ID or the HIP name leaves the person unable to tell counters apart. Consent taken in your own wording rather than the specified wording is a certification problem.
+
 ## Discovery and user initiated linking
 
 The user searches for the facility by name. Only participating facilities appear, and the facility must be a HIP linked to an [HRP](/docs/main/docs/hiecm/v3/getting-started/glossary#hrp). Your app sends a discovery request carrying the HIP ID and unverified identifiers of type `MR`, `MOBILE`, `ABHA_NUMBER` or `ABHA_ADDRESS`.
@@ -42,6 +54,16 @@ Three failures have specified copy.
 | Everything is already linked        | "No new health record to link: Records of all visits are already linked and there is nothing new to link" |
 
 Records should arrive within 2 hours.
+
+Notes for AI agents
+
+**Before you start.** The person is signed in and holds an ABHA address. Your search lists only facilities that are HIPs with an active bridge link. Discovery answers on a callback, so your app holds the request open across it.
+
+**What happens.** Discover with `/api/hiecm/user-initiated-linking/v3/patient/care-context/discover`, carrying the `hip` and the `unverifiedIdentifiers`; the care contexts arrive on `/api/v3/hiu/patient/care-context/on-discover`. Show only those not already linked. Start the link with `/api/hiecm/user-initiated-linking/v3/link/care-context/init`, answered on `/api/v3/hiu/patient/care-context/on-init`, then confirm with the OTP at `/api/hiecm/user-initiated-linking/v3/link/care-context/confirm`, answered on `/api/v3/hiu/patient/care-context/on-confirm`.
+
+**How you know it worked.** The on-confirm callback lists the linked care contexts, and discovery against the same facility now returns them as already linked rather than as new. A linked care context is not a record in hand: fetching it is a consent flow, see [P3](/docs/main/docs/hiecm/v3/milestones/p3#p3-fetch-records).
+
+**When it goes wrong.** The facility does not answer: show the specified unreachable message. Nothing comes back, often because the name or date of birth given at the facility differs from the profile. Everything comes back already linked: that is the third specified message, not an error. The OTP goes to the mobile the facility registered, which the person may no longer use.
 
 ## Where the citizen is the HIP
 

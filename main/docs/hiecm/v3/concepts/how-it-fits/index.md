@@ -47,18 +47,30 @@ Both roles are both, and it changes call by call:
 
 Neither is a thing you can build once and be. See [HIP and HIU](/docs/main/docs/hiecm/v3/concepts/hip-hiu).
 
+So the milestones you build follow the direction your records move, not the kind of product you sell. A PHR app that lets a citizen push a record publishes as the HIP, and builds the M2 linking and transfer calls as well. See [where the citizen is the HIP](/docs/main/docs/hiecm/v3/milestones/p2#where-the-citizen-is-the-hip). Records never pass through the consent manager: it routes the request and holds the consent, and the record goes from the system that holds it to the system that asked.
+
+Notes for AI agents
+
+**Before you start.** Know which entity the software acts for, a care provider or a care seeker. That fixes the role for the life of the product.
+
+**What happens.** Decide the role once, IMS or PHR, from the entity. Then list every direction a record moves through the product: publishing a record is HIP behaviour, fetching one it did not create is HIU behaviour. Build the milestones for each direction the product uses.
+
+**How you know it worked.** For a hospital system that also pulls a patient's history, you can name the role, IMS, both directions, and the milestones: M1, M2 and M3. For a PHR app that uploads a scanned prescription, you can say the citizen is the HIP for that record.
+
+**When it goes wrong.** HIP, HIU, health repository and health locker are chosen as though they were one list of company types: two are directions, one is custody, one is a product. A PHR app is built for P1 alone and then cannot publish the first record a citizen pushes. A fetch is designed against the consent manager, which holds no records.
+
 ## One bridge, many facilities
 
 Two levels of configuration exist and they are easy to confuse. Your integration registers once, as a bridge. The facilities it serves register separately and are linked to that bridge. One bridge serves every facility linked to it, whether that is one facility or a hundred.
 
 Decide which level a setting belongs to before you build a settings screen for it. Nothing about your integration is configured per facility, and nothing about a facility is configured in your integration's own credentials.
 
-| Setting                       | Level                                      | Where it is set                                                                                           |
-| ----------------------------- | ------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
-| Client id and client secret   | Your integration, one of each              | [Sandbox registration](/docs/main/docs/hiecm/v3/getting-started/sandbox)                                  |
-| Bridge callback URL           | Your integration, one                      | [Sandbox registration](/docs/main/docs/hiecm/v3/getting-started/sandbox#3-register-your-callback-url)     |
-| Facility ID                   | Each facility                              | [HFR onboarding](/docs/main/docs/hiecm/v3/milestones/m4#journey-3-a-facility-onboards-to-the-hfr)         |
-| `bridgeId`, `hipName`, `type` | Each facility, once per bridge it links to | [The bridge linkage call](/docs/main/docs/hiecm/v3/milestones/m4#journey-4-linking-bridges-to-a-facility) |
+| Setting                       | Level                                      | Where it is set                                                                                       |
+| ----------------------------- | ------------------------------------------ | ----------------------------------------------------------------------------------------------------- |
+| Client id and client secret   | Your integration, one of each              | [Sandbox registration](/docs/main/docs/hiecm/v3/getting-started/sandbox)                              |
+| Bridge callback URL           | Your integration, one                      | [Sandbox registration](/docs/main/docs/hiecm/v3/getting-started/sandbox#3-register-your-callback-url) |
+| Facility ID                   | Each facility                              | [HFR onboarding](/docs/main/docs/hiecm/v3/milestones/m4#journey-3-a-facility-onboards-to-the-hfr)     |
+| `bridgeId`, `hipName`, `type` | Each facility, once per bridge it links to | [The bridge linkage call](/docs/main/docs/hiecm/v3/milestones/m4#m4-link-bridge)                      |
 
 Every callback for every facility arrives at the one bridge URL. The header says which facility it belongs to: `X-HIP-ID` in [M2](/docs/main/docs/hiecm/v3/api/m2), and `X-HIU-ID` in [M3](/docs/main/docs/hiecm/v3/api/m3). That header is what your handler routes a callback on, and the facility ID is what your records key to.
 

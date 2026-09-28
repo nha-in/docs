@@ -90,28 +90,24 @@ How to use it
 
 ## Journey 1: raising a consent request
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant S as Application/System
-    participant CM as HIE-CM
-    actor P as Patient (PHR app)
-    Note over S: Every call carries REQUEST-ID, TIMESTAMP,<br/>X-CM-ID and the gateway access token.<br/>Status, fetch and the health information request<br/>also carry X-HIU-ID
-    S->>CM: POST /api/hiecm/consent/v3/request/init<br/>consent {purpose.code, patient.id (ABHA address),<br/>hiu.id, requester {name, identifier}, hiTypes,<br/>permission {accessMode, dateRange, dataEraseAt,
-    CM-->>S: 202 Accepted
-    CM-)S: callback POST {bridgeUrl}/api/v3/hiu/consent/request/on-init<br/>consentRequest.id, response.requestId
-    Note over S: Store consentRequest.id against<br/>the requester and the patient
-    CM-)P: Consent request shown in the PHR app
-    S->>CM: POST /api/hiecm/consent/v3/request/status<br/>consentRequestId, to poll while the patient decides
-    CM-)S: callback POST {bridgeUrl}/api/v3/hiu/consent/request/on-status<br/>consentRequest {id, status REQUESTED, GRANTED,<br/>DENIED, REVOKED or EXPIRED}
-```
-
 - An HIU requests access to a patient's health data by sending a consent request with the patient's ABHA address via the HIE-CM.
 - The HIE-CM acknowledges the request and returns a Consent Request ID through the Gateway.
 - The patient is notified by the HIE-CM and can review, approve, or deny the consent request.
 - The HIE-CM then communicates the patient's consent status back to the HIU through the Gateway.
 
 The consent request ID is the handle for everything that follows. Store it against the requester and the patient.
+
+The patient's decision arrives later, on your bridge, as described in Journey 2.
+
+Notes for AI agents
+
+**Before you start.** A gateway session token, a bridge linked with type HIU for your facility, a callback URL reachable over public HTTPS, the patient's ABHA address, and a purpose of use code: an insurer checking a claim uses `HPAYMT`.
+
+**What happens.** Init the request with the ABHA address, the HI types, the date range the records must fall in, the purpose, and the expiry of the request itself, which is how long the patient has to answer. Store `consentRequest.id` from the on-init callback. Poll the status call only to show progress. On the notify callback, store every id in `consentArtefacts`, then acknowledge with `/api/hiecm/consent/v3/request/hiu/on-notify` so delivery stops.
+
+**How you know it worked.** A POST reaches `/api/v3/hiu/consent/request/notify` with status GRANTED and at least one consent artefact id. The window the patient has to act is the one you set on init, not a gateway timeout.
+
+**When it goes wrong.** The request stays in REQUESTED: see [consent stuck in Requested](/docs/main/docs/hiecm/v3/troubleshooting/consent-stuck-requested). The on-init or notify callback never lands: see [the callback never arrives](/docs/main/docs/hiecm/v3/troubleshooting/callback-never-arrives). DENIED is an answer, not a fault, and no retry changes it.
 
 ## Journey 2: the patient grants or denies
 
@@ -145,6 +141,43 @@ sequenceDiagram
 
 ## Journey 3: fetching the records
 
+Using the consent artefact ID, the HIU fetches the consent artefact and requests the health information covered under that consent. The requested health data is then securely delivered to the data push URL provided by the HIU.
+
+A decrypted bundle today is not a standing right to fetch again tomorrow. Every fetch is a fresh permission check against an artefact the patient can revoke.
+
+Notes for AI agents
+
+**Before you start.** A granted consent request with at least one artefact id, a gateway session token, and a `dataPushUrl` endpoint of your own that accepts the encrypted FHIR bundles. Use a maintained implementation of the key exchange rather than writing it yourself: see [how a record travels](/docs/main/docs/hiecm/v3/concepts/data-flow).
+
+**What happens.** Fetch the artefact and store what arrives on `/api/v3/hiu/consent/on-fetch`: the care contexts, HI types and date range it allows. Generate an ECDH key pair on `Curve25519` and a nonce for this transaction. Send the health information request with the consent id, a date range inside the artefact's, your `dataPushUrl` and your public key in `keyMaterial`. The on-request callback carries the `transactionId`. The HIP posts the pages to your `dataPushUrl` directly, not through the gateway. Derive the shared key from the HIP's `keyMaterial`, decrypt, then send the notify call.
+
+**How you know it worked.** Every entry for every care context decrypts, and your notify call reports `sessionStatus` `RECEIVED`.
+
+**When it goes wrong.** The chain stops between fetch, request and push: find the missing step on [accepted, then nothing](/docs/main/docs/hiecm/v3/troubleshooting/accepted-then-nothing), and check the `dataPushUrl` you sent rather than your registered callback URL. `ABDM-1062`, consent not granted: the patient revoked or the grant lapsed mid flow. `ABDM-1112`: the artefact id is invalid or already expired. A transfer that never arrives can be checked with the status call against its `transactionId`.
+
+## Next
+
+- The calls, callbacks and error codes: [M3 API reference](/docs/main/docs/hiecm/v3/api/m3).
+- The cases M3 is tested against: the certification pack NHA issues. Certification runs once, for the whole integration: [Go live](/docs/main/docs/hiecm/v3/getting-started/going-live).
+- Receive records a patient pushes from their app: [Patient record share](/docs/main/docs/hiecm/v3/use-cases/patient-record-share).
+- The next milestone: [M4 Registry Integration](/docs/main/docs/hiecm/v3/milestones/m4).
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant S as Application/System
+    participant CM as HIE-CM
+    actor P as Patient (PHR app)
+    Note over S: Every call carries REQUEST-ID, TIMESTAMP,<br/>X-CM-ID and the gateway access token.<br/>Status, fetch and the health information request<br/>also carry X-HIU-ID
+    S->>CM: POST /api/hiecm/consent/v3/request/init<br/>consent {purpose.code, patient.id (ABHA address),<br/>hiu.id, requester {name, identifier}, hiTypes,<br/>permission {accessMode, dateRange, dataEraseAt,
+    CM-->>S: 202 Accepted
+    CM-)S: callback POST {bridgeUrl}/api/v3/hiu/consent/request/on-init<br/>consentRequest.id, response.requestId
+    Note over S: Store consentRequest.id against<br/>the requester and the patient
+    CM-)P: Consent request shown in the PHR app
+    S->>CM: POST /api/hiecm/consent/v3/request/status<br/>consentRequestId, to poll while the patient decides
+    CM-)S: callback POST {bridgeUrl}/api/v3/hiu/consent/request/on-status<br/>consentRequest {id, status REQUESTED, GRANTED,<br/>DENIED, REVOKED or EXPIRED}
+```
+
 ```mermaid
 sequenceDiagram
     autonumber
@@ -162,12 +195,3 @@ sequenceDiagram
     S->>CM: POST /api/hiecm/data-flow/v3/health-information/notify<br/>notification {consentId, transactionId,<br/>notifier {type HIU, id},<br/>statusNotification {sessionStatus RECEIVED or FAILED,
     S->>CM: GET /api/hiecm/data-flow/v3/health-information/request/status/{transaction-id}<br/>to check a transfer that has not arrived
 ```
-
-Using the consent artefact ID, the HIU fetches the consent artefact and requests the health information covered under that consent. The requested health data is then securely delivered to the data push URL provided by the HIU.
-
-## Next
-
-- The calls, callbacks and error codes: [M3 API reference](/docs/main/docs/hiecm/v3/api/m3).
-- The cases M3 is tested against: the certification pack NHA issues. Certification runs once, for the whole integration: [Go live](/docs/main/docs/hiecm/v3/getting-started/going-live).
-- Receive records a patient pushes from their app: [Patient record share](/docs/main/docs/hiecm/v3/use-cases/patient-record-share).
-- The next milestone: [M4 Registry Integration](/docs/main/docs/hiecm/v3/milestones/m4).

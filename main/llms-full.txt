@@ -13117,7 +13117,57 @@ Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/main/docs/
 
 Every code above is recorded in the specification that owns it. The aggregated list across modules is at [error codes](/docs/main/docs/hiecm/v3/reference/error-codes).
 
-[Next Still stuck? Ask for help Where to file what you hit, so the answer lands back in these pages.](/docs/main/docs/support)
+## What the codes mean
+
+### 900900: authentication failed without a reason
+
+The [ABHA](/docs/main/docs/hiecm/v3/getting-started/glossary#abha) service returns `900900` with HTTP 500 and the message "Unclassified Authentication Failure". The `description` field names the API that refused the call. Authentication failed, and the response does not say which credential was at fault.
+
+Notes for AI agents
+
+**What happens.** The M1 examples return it where the access token is not valid. Many M1 calls take two tokens, the access token in `Authorization` and the person's token in `X-token`, so either can be the cause.
+
+**When it goes wrong.** Check both tokens. `Authorization` must carry a current access token from the session call. `X-token`, where the call takes one, must be the token issued when this person logged in. If both are current, confirm your client is allowed to call this API.
+
+### 900901: the credentials are not valid
+
+The [ABHA](/docs/main/docs/hiecm/v3/getting-started/glossary#abha) service returns `900901` with HTTP 401 and the message "Invalid Credentials". The token or client credential you sent was rejected outright. `900902`, "Missing Credentials", means no credential arrived at all.
+
+Notes for AI agents
+
+**What happens.** The `description` reads "Invalid JWT token. Make sure you have provided the correct security credentials" or "Invalid Credentials. Make sure you have provided the correct security credentials".
+
+**When it goes wrong.** Check the client id and secret against the environment you are calling. A production client id against a sandbox host, or the reverse, fails. Then get a fresh access token from the session call and use it at once.
+
+### ABDM-1016: the timestamp is not valid
+
+The service refused the `TIMESTAMP` header before it read the rest of the request. The message is "Invalid Timestamp". The profile calls return it with HTTP 404, and the public certificate call with HTTP 400.
+
+Send `TIMESTAMP` as ISO 8601 in UTC, with milliseconds and the `Z` suffix, for example `2022-10-06T15:10:00.587Z`. The code arrives as `ABDM-1016:` followed by a space, inside an `error` object.
+
+Notes for AI agents
+
+**What happens.** A 404 here does not mean the path is wrong. Match on the code in the body, not on the HTTP status. Trim the code, or match on its prefix, because an exact match on `ABDM-1016` misses the trailing colon and space.
+
+**How you know it worked.** The same request, with only `TIMESTAMP` corrected, returns its normal response.
+
+**When it goes wrong.** Generate the value with a date library, never by hand. If a well formed UTC value still fails, compare your host clock with a time server, and see [ABDM-2402](/docs/main/docs/hiecm/v3/api/m2/errors#abdm-2402).
+
+### ABDM-1094: access to this feature is refused
+
+Your client, or the person's token, is not allowed to do what the call tried. The M1 calls return `ABDM-1094` with HTTP 401 and one of three messages:
+
+- "X-token expired", on child ABHA enrolment. The parent's `X-token` has expired.
+- "Invalid Benefit Name", on benefit link and de-link. The `BENEFIT_NAME` header does not name a benefit programme your client can use.
+- "Access to this feature is restricted. Please contact NHA to enable it.", on benefit link and de-link. Your client is not enabled for this feature.
+
+Notes for AI agents
+
+**What happens.** This code arrives with `code` at the top level beside a `timestamp`, while other M1 errors wrap it in an `error` object. Read the `code` inside `error` when it is present, and fall back to the top level `code`.
+
+**When it goes wrong.** Retrying does not help. For "X-token expired", have the parent log in again and send the new `X-token`. For "Invalid Benefit Name", send the benefit name exactly as registered, as in the example `healthid api`. For the restricted message, stop calling the feature until NHA enables it for your client.
+
+[NextStill stuck? Ask for helpWhere to file what you hit, so the answer lands back in these pages.](/docs/support)
 
 
 ---
@@ -15045,7 +15095,7 @@ During ABDM integration, systems may encounter issues across discovery, linking,
 | `ABDM-9999` |      | User not found                                                                                                                                             |             |
 | `ABDM-9999` |      | Cannot process the request at the moment, please try later.                                                                                                |             |
 | `ABDM-9001` |      | No open order against ABHA. Please ensure a minimum of one open order                                                                                      |             |
-| `ABDM-9002` |      | No registration found at <>. Contact counter support                                                                                                       |             |
+| `ABDM-9002` |      | No registration found at <\<hospital name>>. Contact counter support                                                                                       |             |
 | `ABDM-9003` |      | Hospital services temporarily unavailable. Please try again after some time.                                                                               |             |
 | `ABDM-9004` |      | Services disrupted, please try again.                                                                                                                      |             |
 | `ABDM-9005` |      | Bank server not responding. Please try again later                                                                                                         |             |
@@ -15059,7 +15109,238 @@ A row with no HTTP status and no call is one NHA lists for this module (Sandbox2
 
 Every code above is recorded in the specification that owns it. The aggregated list across modules is at [error codes](/docs/main/docs/hiecm/v3/reference/error-codes).
 
-[Next Still stuck? Ask for help Where to file what you hit, so the answer lands back in these pages.](/docs/main/docs/support)
+## What the codes mean
+
+### ABDM-1013: the ABHA number is not valid
+
+ABDM does not accept the [ABHA number](/docs/main/docs/hiecm/v3/getting-started/glossary#abha-number) you sent. The message is "Invalid ABHA Number". In the [HIP](/docs/main/docs/hiecm/v3/getting-started/glossary#hip) initiated link request, `abhaNumber` is 14 digits and nothing else, matching `^\d{14}$`.
+
+Notes for AI agents
+
+**When it goes wrong.** Send the 14 digits with no hyphens or spaces. Check that the field carries a number, not an [ABHA address](/docs/main/docs/hiecm/v3/getting-started/glossary#abha-address). If the format is right, the account may not exist in the environment you are calling.
+
+### ABDM-1022: too many requests
+
+You are sending more requests than ABDM accepts from your client, and it has started refusing them. The message is "Too many requests", and the patient share calls return it with HTTP 429.
+
+`ABDM-2429`, "Too many requests found", means the same, so handle both. `ABDM-1027` goes further: "You are blocked. Please try again after 24 hours."
+
+Notes for AI agents
+
+**What happens.** Bulk jobs and retry loops without backoff are the usual causes. A loop that retries at once can turn one refusal into a 24 hour block.
+
+**When it goes wrong.** Back off exponentially, add jitter, and cap the number of attempts. If it happens in normal use, batch your work, cache what does not change, and stop polling anything that has a callback.
+
+### ABDM-1026: the link token is not valid
+
+Linking a [care context](/docs/main/docs/hiecm/v3/getting-started/glossary#care-context) needs a [link token](/docs/main/docs/hiecm/v3/getting-started/glossary#link-token), and the one you sent is not usable. The message is "Invalid Link Token". A mismatch has its own code:
+
+- `ABDM-1038`, "ABHA address and Link token mismatch"
+- `ABDM-1062`, "ABHA number mismatch with Link token"
+- `ABDM-1063`, "HIP Id mismatch with Link token"
+
+Notes for AI agents
+
+**When it goes wrong.** A link token is valid for six months, so check it before you use it. If it has expired, or was issued for another patient or facility, generate a new one through the [link token call](/docs/main/docs/hiecm/v3/api/m2/endpoints/m2-abdm-link-token-hip/01-m2-post-v3-token-generate-token). Do not retry with the old token.
+
+### ABDM-1032: a required header is missing or malformed
+
+A required header is absent or unusable, and the response does not say which. The message is "Invalid header". Some headers have a code of their own, so check these first:
+
+- `ABDM-2402`, "Invalid Timestamp", for `TIMESTAMP`
+- `ABDM-2403`, "Invalid X-CM-ID", for `X-CM-ID`
+- `ABDM-2404`, "Invalid Request Id", for `REQUEST-ID`
+- `ABDM-2500`, "Authorization header is missing", for `Authorization`
+
+Notes for AI agents
+
+**Before you start.** The gateway calls take `REQUEST-ID`, `TIMESTAMP`, `X-CM-ID` and `Authorization`. Many M2 and M3 calls also take `X-HIP-ID` or `X-HIU-ID`.
+
+**When it goes wrong.** Check that each header is present, spelled exactly, with its hyphens and case, and carries a well formed value. Log the full header set on every failed request, so the next failure is a comparison rather than a hunt.
+
+### ABDM-1035: the HIP id is not recognised
+
+ABDM does not recognise the [Health Information Provider](/docs/main/docs/hiecm/v3/getting-started/glossary#hip) (HIP) id on this call. The message is "Invalid HIP ID", and the link token call returns it with HTTP 400. This is a registration problem, not a request problem, so retrying does not change it.
+
+Notes for AI agents
+
+**What happens.** The facility is not registered, your software is not linked to it, or the id belongs to the other environment.
+
+**When it goes wrong.** Confirm the facility exists in the [Health Facility Registry](/docs/main/docs/hiecm/v3/getting-started/glossary#hfr) and that your software is linked to it as a bridge, as [M4 Registry Integration](/docs/main/docs/hiecm/v3/milestones/m4) describes. Send that facility's id in `X-HIP-ID`.
+
+### ABDM-1040: the HIU id is not recognised
+
+ABDM does not recognise the [Health Information User](/docs/main/docs/hiecm/v3/getting-started/glossary#hiu) (HIU) id on this request. The message is "Invalid HIU ID". Like the [HIP](/docs/main/docs/hiecm/v3/getting-started/glossary#hip) case, this is a registration problem, so retrying does not change it.
+
+Notes for AI agents
+
+**When it goes wrong.** Confirm the entity is registered in the HIU role and that `X-HIU-ID` carries the HIU id, not the HIP id. If you hold both ids, keep them in separate configuration values so they cannot be swapped.
+
+### ABDM-1056: already linked, or an invalid link reference
+
+The code carries two messages, and the message tells you which case you are in:
+
+- "This care contexts has been already linked": the [care context](/docs/main/docs/hiecm/v3/getting-started/glossary#care-context) is already linked to this patient.
+- "Invalid Link Reference Number": the link reference number you sent matches nothing issued in this link flow.
+
+In user initiated linking, the link init exchange can carry it in an `error` object. The message there is "This care context has already been linked".
+
+Notes for AI agents
+
+**Before you start.** Keep your own record of the care contexts you have linked and the reference numbers you used. This code usually means your state and the gateway's state disagree.
+
+**When it goes wrong.** Already linked: treat it as done once you have confirmed the care context is linked, and do not retry the link. Invalid reference number: restart the link flow for a fresh reference rather than guessing the value.
+
+### ABDM-1062: ABHA number mismatch, or consent not granted
+
+One code, two messages, so read the message as well as the code:
+
+- "ABHA number mismatch with Link token": in linking, the [ABHA number](/docs/main/docs/hiecm/v3/getting-started/glossary#abha-number) in your request is not the one the link token was issued for.
+- "Consent Not granted": the patient has not granted the consent you are acting on.
+
+`ABDM-1061` and `ABDM-1063` also carry two messages each.
+
+Notes for AI agents
+
+**When it goes wrong.** Linking: generate a link token for this patient and link with the ABHA number it was issued for. Consent: check the consent's status before you request data. A denied or expired consent does not start working on retry.
+
+### ABDM-1063: HIP id mismatch, or an invalid date range
+
+One code, two messages:
+
+- "HIP Id mismatch with Link token": the [HIP](/docs/main/docs/hiecm/v3/getting-started/glossary#hip) id sending the link is not the one the link token was issued for.
+- "Date Range given is invalid": the date range you asked for is not valid.
+
+Notes for AI agents
+
+**What happens.** The mismatch appears when one system serves several facilities and mixes their identities between steps. The date range fails when its end comes before its start, or when it falls outside what the consent grants.
+
+**When it goes wrong.** Linking: generate the link token under the same `X-HIP-ID` that will send the link. Consent: read the date range the consent artefact grants, and request inside it.
+
+### ABDM-1064: a repeated request id, or a missing body
+
+One code, two messages:
+
+- "request with this request id already exists": you sent a request id that was already used.
+- "Request body was missing": the call needs a JSON body and none arrived.
+
+`ABDM-1067`, "Request body not required", is the opposite case: a body arrived where none is wanted.
+
+Notes for AI agents
+
+**What happens.** A request id hardcoded during testing works once and fails afterwards. A missing body usually comes from a client that sends a POST without one, a missing `Content-Type`, or a proxy that strips the body.
+
+**When it goes wrong.** Generate a fresh UUID for every request, retries included. Send the JSON body the operation documents, with a `Content-Type` of `application/json`. If your client looks right, log the request as it leaves your process, which is where a proxy shows up.
+
+### ABDM-1112: the consent artefact is invalid or expired
+
+The [consent artefact](/docs/main/docs/hiecm/v3/getting-started/glossary#consent-artefact) you presented is unknown or has expired. The message is "Invalid or already expired consent artefact id". An expired artefact is often not a bug: a consent window is allowed to end.
+
+Notes for AI agents
+
+**How you know it worked.** A fetch against an artefact that is still valid is accepted.
+
+**When it goes wrong.** Check the artefact's validity before you fetch. If you still need the data, raise a new consent request. Do not retry against the old artefact.
+
+### ABDM-1170: the ABHA address is not valid
+
+ABDM does not accept the [ABHA address](/docs/main/docs/hiecm/v3/getting-started/glossary#abha-address) you sent. The message is "Invalid ABHA address". An ABHA address matches `^[a-zA-Z0-9][a-zA-Z0-9_.]+[a-zA-Z0-9]@(abdm|sbx)$`. It starts and ends with a letter or digit, may carry dots and underscores in between, and ends with `@abdm` or `@sbx`.
+
+Notes for AI agents
+
+**When it goes wrong.** Check the address against the pattern, suffix included. If it matches, confirm the account exists in the environment you are calling before you link against it.
+
+### ABDM-1407: the ABHA number is deactivated
+
+The [ABHA number](/docs/main/docs/hiecm/v3/getting-started/glossary#abha-number) behind this [ABHA address](/docs/main/docs/hiecm/v3/getting-started/glossary#abha-address) exists, but it is deactivated. The message is "The ABHA Number associated with this ABHA Address is currently deactivated. Please reactivate it." Nothing about your request is wrong.
+
+Notes for AI agents
+
+**When it goes wrong.** There is no fix on your side. The person has to reactivate the ABHA number before this call can succeed. Tell them so plainly rather than showing a generic failure, because they are the only one who can resolve it.
+
+### ABDM-2401: the X Auth token is not valid
+
+The token that identifies the patient was rejected, not your application's access token. The message is "The X Auth token is invalid." It is the user token issued when the patient logged in, sent as `X-AUTH-TOKEN`.
+
+`ABDM-1065`, "Invalid X Auth token", reports the same problem. `ABDM-1084` to `ABDM-1086` report a token that does not match the ABHA address, ABHA number or profile in the request.
+
+Notes for AI agents
+
+**What happens.** The token has expired, belongs to a different person from the one in the request, or was never obtained because the login did not finish.
+
+**When it goes wrong.** Have the person log in again for a fresh token, or use the `refreshToken` issued at login. Never send your application's access token in `X-AUTH-TOKEN`: the two are not interchangeable.
+
+### ABDM-2402: the timestamp is not valid
+
+ABDM refused the `TIMESTAMP` header, with the message "Invalid Timestamp". Send it as ISO 8601 in UTC, with milliseconds and the `Z` suffix, for example `2022-10-06T15:10:00.587Z`. [ABDM-1016](/docs/main/docs/hiecm/v3/api/m1/errors#abdm-1016), "Invalid TimeStamp", reports the same header.
+
+Notes for AI agents
+
+**How you know it worked.** The same request, with only `TIMESTAMP` corrected, returns its normal response.
+
+**When it goes wrong.** Generate the value from a synchronised clock with a date library, never by hand. If a well formed UTC value still fails, compare your host clock with a time server.
+
+### ABDM-2403: the X-CM-ID is not valid
+
+The `X-CM-ID` header does not name a consent manager the gateway recognises. The message is "Invalid X-CM-ID". In the sandbox, at `https://dev.abdm.gov.in`, the value is `sbx`. The usual cause is a host from one environment with a value meant for the other.
+
+Notes for AI agents
+
+**When it goes wrong.** Take the host and the `X-CM-ID` value from one environment setting, so they cannot disagree.
+
+### ABDM-2404: the REQUEST-ID is not valid
+
+The `REQUEST-ID` header is missing or is not a universally unique identifier (UUID). The message is "Invalid Request Id". In the asynchronous flows this value is how a callback is matched to your call, so a bad one breaks that match too. A request id that was already used returns [ABDM-1064](#abdm-1064) instead.
+
+Notes for AI agents
+
+**How you know it worked.** The call returns its normal response, and in an asynchronous flow the callback's `requestId` matches the `REQUEST-ID` you sent.
+
+**When it goes wrong.** Generate a fresh UUID for every request and log it before sending. A retry is a new request and takes a new value.
+
+### ABDM-2406: the calls are out of order
+
+The gateway tracks where you are in a flow, and your call does not fit. The messages are:
+
+- "Invalid API sequence flow, please follow logical flow"
+- "The status is invalid. Please follow the logical status flow or transition."
+
+A step you depend on has not happened yet, or the flow has moved past the state your call assumes.
+
+Notes for AI agents
+
+**What happens.** Skipping a step, replaying an earlier step after the flow has moved on, or sending the next step before the previous step's callback arrived all produce it.
+
+**When it goes wrong.** Work out which step the gateway believes you are on. Find your last confirmed callback and resume from the step after it. Do not retry the rejected call in place. If the flow has diverged, restart it from its first step.
+
+### ABDM-2500: no Authorization header, or no matching request
+
+One code, two messages:
+
+- "Authorization header is missing": the call arrived without an access token, so the gateway does not know which application is calling.
+- "No mapping found for": a callback's `resp.requestId` matches no request the gateway is waiting on.
+
+Every gateway call except the session call itself needs `Authorization`, carrying `Bearer` and the access token.
+
+Notes for AI agents
+
+**What happens.** The header was never set, or a token refresh failed and your client sent an empty value.
+
+**When it goes wrong.** Get an access token from the [session call](/docs/main/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions) and send it on every call. Refresh it before `expiresIn` runs out rather than waiting for a failure. In a callback, set `resp.requestId` to the `REQUEST-ID` of the request you are answering.
+
+### ABDM-9999: a catch-all, so read the message
+
+`ABDM-9999` covers many failures, and the message carries the meaning. Some messages report a problem in your request, for example "Invalid Transaction Id", "Invalid LoginId" or "RequestId cannot be NULL or Blank". Others mean ABDM or the [HIP](/docs/main/docs/hiecm/v3/getting-started/glossary#hip) could not process it, for example "Unknown exception" or "Cannot process the request at the moment, please try later."
+
+Notes for AI agents
+
+**What happens.** The code may arrive bare or followed by a colon and a space. Match on the code, then branch on the message. More specific codes exist for an unavailable service: `ABDM-1019` and `ABDM-1024` for a dependent service, `ABDM-1028` for the HIP and `ABDM-1033` for the HIU.
+
+**How you know it worked.** After a request problem, the corrected request succeeds. After an unavailability message, the same request succeeds later, unchanged.
+
+**When it goes wrong.** For a request problem, fix the field the message names, because a retry repeats the mistake. For an unavailability message, retry with exponential backoff and a cap on attempts, so the loop does not end in [ABDM-1022](#abdm-1022). If it persists for hours, report it through [Support](/docs/main/docs/support) with your `REQUEST-ID` and `TIMESTAMP`.
+
+[NextStill stuck? Ask for helpWhere to file what you hit, so the answer lands back in these pages.](/docs/support)
 
 
 ---
@@ -25186,7 +25467,30 @@ Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/main/docs/
 
 Every code above is recorded in the specification that owns it. The aggregated list across modules is at [error codes](/docs/main/docs/hiecm/v3/reference/error-codes).
 
-[Next Still stuck? Ask for help Where to file what you hit, so the answer lands back in these pages.](/docs/main/docs/support)
+## What the codes mean
+
+### ABDM-1107: the combination of scopes is not valid
+
+`scope` is an array, and the call checks the combination rather than any one value in it. The personal health record (PHR) app login verification returns `ABDM-1107` with HTTP 400 and the message "Invalid combinations of scopes". The combination you sent is not one this call accepts, or not the one the one-time password (OTP) request opened the transaction with.
+
+A login sends the same pair on the OTP request and on its verification:
+
+| Logging in with | `scope`                            |
+| --------------- | ---------------------------------- |
+| A mobile OTP    | `["abha-login", "mobile-verify"]`  |
+| An Aadhaar OTP  | `["abha-login", "aadhaar-verify"]` |
+
+In the linking callbacks, the same code means "Duplicate On init request".
+
+Notes for AI agents
+
+**Before you start.** Have the scope the OTP request carried, and the scope in the example for the operation you are calling now.
+
+**How you know it worked.** The verification returns its success response instead of this code.
+
+**When it goes wrong.** You changed the scope between the OTP request and the verification: send the same array on both. You reused one scope across a whole journey: read the scope from the example for the operation you are calling, not from the one before it. You reused a `txnId` from another journey: start a new transaction for the new journey.
+
+[NextStill stuck? Ask for helpWhere to file what you hit, so the answer lands back in these pages.](/docs/support)
 
 
 ---
@@ -35422,75 +35726,144 @@ New to this? Start with [Scan and Register](/docs/main/docs/hiecm/v3/use-cases/s
 
 ---
 
-# Proving a callback came from ABDM
+# Designing the ABHA journey
+
+ABDM publishes operations, not a user experience. How your registration screen looks and what it asks first is yours to decide. This page gives one default that gets a person through a desk, and the facts that constrain any design you build instead.
 
 ## In short
 
-- Your callback URL is a public address. Anything on the internet can post to it, and a POST arriving there tells you nothing about who sent it.
-- ABDM callbacks declare bearer authentication. The gateway publishes the public keys at `/api/hiecm/gateway/v3/certs`, as a JSON Web Key Set, and that endpoint needs an access token.
-- Verify every callback before your handler does any work. Pin the algorithm to `RS256` and fail closed.
-- The token arrives in the `Authorization` header as a bearer token.
+- Put the ABHA step before your registration form, and let the profile fill it.
+- Send every identifier to login first. Creation is the branch taken only when no account comes back.
+- Exchange the login token for the user token before any profile call.
+- Never block care on an ABHA.
 
-## Why this one matters
+## A suggested journey, and what holds regardless
 
-To receive callbacks you register a URL that ABDM can reach. Reachable by ABDM means reachable by everyone, because it is an ordinary address on the public internet.
+A front desk adopts ABHA because the receptionist stops typing. A verified ABHA profile already carries the name, date of birth, gender, mobile, address and photograph. So the ABHA step comes before your registration form, and fills it.
+
+The suggested journey, in five steps:
+
+1. **Start registering the patient** in your own system, under your own number.
+2. **Ask whether they have an ABHA.** No means the form is typed by hand, and the patient is treated exactly the same.
+3. **Take one identifier.** Aadhaar is the one to recommend, because it is the only route that ends in a KYC verified ABHA number. Mobile sits beside it. Under Aadhaar only, ask how they prove it: an OTP, a face scan, or a fingerprint or iris reader.
+4. **Log in or create, decided by the answer.** Every identifier starts on the login path. One account signs the person in. Several need a chooser. None offers creation.
+5. **Fill your form from what came back,** and let the receptionist confirm it rather than type it.
+
+Whatever journey you build, these hold:
+
+- **Look before you create.** Creating an ABHA for a person who already holds one leaves them with two ABHA numbers, and nothing in M1 merges them.
+- **The login token is not the profile token.** Login verify returns a short lived token, which the verify user call exchanges for the `X-token` that profile calls accept.
+- **An ABHA is optional to your record.** ABDM does not require a person to hold an ABHA to be treated. A journey that cannot finish without one blocks care.
+- **The profile is what ABDM holds**, not what is in front of your clinician. Present the filled form for confirmation rather than saving it unseen.
+
+Notes for AI agents
+
+**Before you start.** A gateway session, the M1 certificate for encrypting identifiers, and a decision on what the desk does when the person has no ABHA and does not want one today.
+
+**What happens.** Send every identifier, Aadhaar included, to the login OTP request first, never straight to enrolment. Read `accounts` on the verify response: one account, call verify user with its `ABHANumber` and the same `txnId`; several, show a chooser and do the same with the chosen one; none, offer creation. Then read the profile at `/abha/api/v3/profile/account` with the `X-token` and fill the form.
+
+**How you know it worked.** A person with an ABHA registers with their details arriving from the profile and the receptionist correcting at most one field. A person who declines is still registered, with no error, and can be offered ABHA again from their chart. A person who already holds an ABHA, run through the path a new patient takes, ends signed in to the account they had.
+
+**When it goes wrong.** Two ABHA numbers for one person: the journey branched into creation without reading `accounts`. The desk types everything and then links an ABHA: the order is wrong, fetch the profile first. A refused encrypted field shown to the person as a wrong number: check the padding before you blame the number, see [encryption](/docs/main/docs/hiecm/v3/concepts/encryption).
+
+## Next
+
+- [M1 Identity](/docs/main/docs/hiecm/v3/milestones/m1), every journey drawn call by call.
+- [ABHA Registry](/docs/main/docs/hiecm/v3/registries/abha), the number and the address.
+- [Build it well](/docs/main/docs/hiecm/v3/getting-started/build-it-well), the screens and the profile fields to map.
+
+
+---
+
+# The API specifications
+
+Every HIE-CM call is published as an OpenAPI 3.1 specification. The [API reference](/docs/main/docs/hiecm/v3/api) renders them, and the files are yours to download, generate a client from, or hand to a coding agent.
+
+## One file per module
+
+Each module has a specification of its own: the gateway, M1 to M4, P1 to P4, and the three use cases. A module's file is complete on its own, so an integration that builds one milestone reads one file. Each is published in YAML and JSON, for example `/specs/hiecm-m2.yaml` and `/specs/hiecm-m2.json`.
+
+The headers every call carries, such as `REQUEST-ID` and `TIMESTAMP`, are declared again in each file, so no file depends on another.
+
+Notes for AI agents
+
+**Before you start.** Know which milestones your role builds. See [milestones](/docs/main/docs/hiecm/v3/milestones).
+
+**What happens.** Load only the files for the modules you build, and treat each as independent. A header declared in one file is declared again in every other, so do not merge the files into one document.
+
+**How you know it worked.** Every call your integration makes is found in the file of the module it belongs to, with no reference into another file.
+
+## Callbacks are webhooks in the same file
+
+Many HIE-CM calls answer later, as a POST from the gateway to your registered URL. Each module's specification describes those callbacks under `webhooks`, the OpenAPI 3.1 section for requests your system receives, beside the calls that cause them. One file tells you what you call, what comes back at once, and what arrives later.
+
+Your system serves each webhook at its path on your bridge URL. For example, the outcome of linking a care context arrives at `/api/v3/link/on_carecontext`. Why the answer arrives this way is on [a 200 means accepted, not done](/docs/main/docs/hiecm/v3/concepts/gateway#asynchronous-callbacks).
+
+Notes for AI agents
+
+**What happens.** Read `webhooks` alongside `paths` for every module you build. An entry under `paths` is a call your system makes. An entry under `webhooks` is an endpoint your system serves, and its request body is what the gateway posts to you.
+
+**How you know it worked.** For every call your system makes that answers 202, you can name the webhook that carries its result and the handler that serves it.
+
+**When it goes wrong.** A client generated from `paths` alone has no callback handlers, and the integration waits on answers it has no endpoint for. Read `webhooks` as well.
+
+## Next
+
+- [The API reference](/docs/main/docs/hiecm/v3/api), every call and callback rendered.
+- [Proving a callback came from ABDM](/docs/main/docs/hiecm/v3/concepts/callback-authenticity), before your handler acts.
+- [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai), to give the files to a coding agent.
+
+
+---
+
+# Proving a callback came from ABDM
+
+To receive callbacks you register a URL that ABDM can reach. Reachable by ABDM means reachable by everyone, because it is an ordinary address on the public internet. A POST arriving there tells you nothing about who sent it.
 
 The callbacks you host carry instructions about a named person's health records: a request to discover what you hold, a [consent artefact](/docs/main/docs/hiecm/v3/concepts/consent) saying somebody agreed, an instruction to transfer records to a given address. A system that acts on whatever arrives will act on whatever an attacker sends.
 
-ABDM callbacks declare bearer authentication, and the gateway publishes the public keys that verify the token. You fetch the keys once, cache them, and check the signature on every callback before your handler does anything.
+## In short
 
-Two different signatures
+- Anything can post to your callback URL, so check every callback before your handler acts.
+- Require a bearer token in `Authorization`, and a `response.requestId` that matches a request you sent.
+- Fail closed. A check that is skipped on error is worse than none.
 
-The signature inside a [consent artefact](/docs/main/docs/hiecm/v3/concepts/consent) is a different thing. It signs the artefact's contents and proves the artefact was not altered. The one on this page signs the delivery and proves who sent it. Verifying one does not verify the other.
+## Check every callback before you act on it
 
-## Before you start
+Every callback in the specifications declares bearer authentication. The token arrives in the `Authorization` header as `Bearer <token>`. Check two things before your handler does any work:
 
-You need a callback URL registered with ABDM, and an understanding of why a 200 is not an answer, which is on [how a record travels](/docs/main/docs/hiecm/v3/concepts/data-flow).
+1. **A bearer token is present.** Reject a callback without one, and log the rejection.
+2. **It answers a call you made.** Its `response.requestId` matches the `REQUEST-ID` of a request you sent. A callback that answers nothing you sent is not yours to act on.
 
-You need an access token for this. The certificates endpoint declares bearer authentication and a required `X-CM-ID` header in the specification.
+The keys that verify the token's signature are not among the published gateway calls. Confirm at onboarding how to verify the token, and meanwhile hold the two checks above.
 
-## Fetch the key set
+The signature inside a consent artefact is a different thing. It signs the artefact's contents and proves the artefact was not altered. Checking the delivery does not check the artefact, and checking the artefact does not check the delivery.
 
-```bash
-curl --request GET \  --url https://dev.abdm.gov.in/api/hiecm/gateway/v3/certs \  --header 'Authorization: Bearer <ACCESS_TOKEN>' \  --header 'REQUEST-ID: <REQUEST_ID>' \  --header 'TIMESTAMP: <TIMESTAMP>' \  --header 'X-CM-ID: sbx'
-```
+### How you know it worked
 
-Each key carries a `kid` that identifies it, `kty: RSA`, `use: sig`, and an `alg` the specification gives as `RS256`. The `n` and `e` fields are the RSA modulus and exponent, Base64URL encoded, and some keys also carry `x5c`, a certificate chain.
+A callback carrying a bearer token and a request id you sent is processed. The same body with the `Authorization` header removed is rejected before your handler reads the payload, and the rejection is logged. The second is the test worth writing, because it is the only one that fails loudly when the check is silently skipped.
 
-The same key set is discoverable through the OIDC document at `/api/hiecm/gateway/v3/.well-known/openid-configuration`, which names it in `jwks_uri`. Reading the discovery document first survives the key set moving.
+### When it goes wrong
 
-Cache the keys rather than fetching them per callback, and key your cache by `kid`. When a callback presents a `kid` you have not seen, refetch once before rejecting it. That is what key rotation looks like from your side.
-
-Verification is then the ordinary JWT check your library already does: signature against the key named by `kid`, algorithm pinned to `RS256`, and the expiry and issuer claims if the token carries them.
-
-## Which header carries the token
-
-The header is declared
-
-Every webhook definition in the M2 and M3 specifications declares bearer authentication. The token arrives in the `Authorization` header as `Bearer <token>`.
-
-Pin the algorithm to `RS256` when you verify, and reject `none`. A verifier that accepts whatever algorithm the token names accepts a token an attacker signed, and that is a defect in the verifier rather than in ABDM.
-
-## How you know it worked
-
-You can fetch the certificates endpoint and get back a `keys` array whose entries carry `kid`, `kty: RSA` and `use: sig`.
-
-Then, on your own handler, both of these hold:
-
-1. A callback carrying a valid signature is processed, and its `response.requestId` matches the `REQUEST-ID` of a request you sent.
-2. The same callback body, replayed with the signature altered by one character, is rejected before your handler reads the payload, and the rejection is logged.
-
-The second is the one worth writing a test for. It is the only one that fails loudly when verification is silently skipped.
-
-## When it goes wrong
-
-**The `kid` is not in your cache.** That is key rotation. Refetch the key set once, then reject if it is still absent, rather than refetching on every callback and handing an attacker a way to make you call the gateway.
-
-**You cannot find a token on the request.** The webhook definitions declare bearer authentication, so read the `Authorization` header. Do not fall back to processing unverified requests while you work it out.
-
-**Verification is skipped under load.** A handler that verifies inside a try block and continues on failure is worse than one that never verified, because it reads as safe. Fail closed.
+**The check is skipped under load.** A handler that checks inside a try block and continues on failure is worse than one that never checked, because it reads as safe. Fail closed.
 
 **Nothing arrives at all**, which is a different problem. See [the callback never arrives](/docs/main/docs/hiecm/v3/troubleshooting/callback-never-arrives).
+
+Notes for AI agents
+
+**Before you start.** A callback URL registered for your bridge, and the understanding that a 202 on your own call is not the answer. See [a 200 means accepted, not done](/docs/main/docs/hiecm/v3/concepts/gateway#asynchronous-callbacks).
+
+**What happens.** In the handler, before parsing the body for action: require the `Authorization` header with a bearer token, then require that `response.requestId` matches a `REQUEST-ID` your system sent and has not already handled. Reject otherwise. Do not invent a signature check against a key source the specifications do not publish.
+
+**How you know it worked.** A test posts a valid callback body without `Authorization` and sees it rejected and logged before any handler work.
+
+**When it goes wrong.** Never fall back to processing a callback that failed a check while you investigate. A callback whose request id is unknown to you is logged and dropped, not retried.
+
+## Next
+
+- [A 200 means accepted, not done](/docs/main/docs/hiecm/v3/concepts/gateway#asynchronous-callbacks), why answers arrive as callbacks.
+- [The API specifications](/docs/main/docs/hiecm/v3/concepts/api-specifications), where every callback is described.
+- [Consent](/docs/main/docs/hiecm/v3/concepts/consent), the artefact whose own signature this page does not cover.
 
 
 ---
@@ -35515,7 +35888,7 @@ Each care context contains only two pieces of information:
 - **Reference ID.** A unique internal identifier assigned by the [HRP](/docs/main/docs/hiecm/v3/getting-started/glossary#hrp) (HMIS/LMIS). Used to link and retrieve the associated health records.
 - **Display Name.** A user-friendly description to help identify the group of records. Must not include any sensitive or confidential information such as test results or diagnoses. Example: "OPD records (X-Ray, Prescription) from 3rd March 2023".
 
-## Recommended approach for structuring care contexts
+### Recommended approach for structuring care contexts
 
 To ensure clarity and usability, it is recommended to organise patient data as follows:
 
@@ -35524,11 +35897,21 @@ To ensure clarity and usability, it is recommended to organise patient data as f
 
 This approach provides a clear and event-based grouping of health records.
 
-## JSON structure of care contexts
+### JSON structure of care contexts
 
 ```json
-{  "patient": {    "referenceNumber": "TMH-PUID-001",    "display": "TMH records for Kiran Kumar",    "careContexts": [      {        "referenceNumber": "2375639",        "display": "OPD records for O3 Oct 2022"      }    ]  }}
+{  "patient": {    "referenceNumber": "TMH-PUID-001",    "display": "TMH records for Kiran Kumar",    "careContexts": [      {        "referenceNumber": "2375639",        "display": "OPD records for 03 Oct 2022"      }    ]  }}
 ```
+
+Notes for AI agents
+
+**Before you start.** Your system acts as the HIP for the records it groups, and the facility holds a facility ID. Linking is how a care context reaches the patient: see [linking](/docs/main/docs/hiecm/v3/concepts/linking).
+
+**What happens.** Give each care context a `referenceNumber` your own system resolves to the records behind it, and a `display` a person recognises months later. Group by encounter: one per outpatient visit, one per inpatient admission, not one per test or document.
+
+**How you know it worked.** Three tests in one visit are one care context. A display name reads like "OPD records for 03 Oct 2022" and carries no diagnosis or result.
+
+**When it goes wrong.** A diagnosis or result in `display` leaks clinical information into a system built never to hold it, visible to anyone who can list the patient's care contexts. One care context per record produces a list no person can navigate.
 
 ## Next steps
 
@@ -35561,16 +35944,6 @@ One request can produce more than one artefact. A granted request returns the id
 
 ## The states a consent moves through
 
-```mermaid
-stateDiagram-v2
-    [*] --> Requested: HIU raises a consent request
-    Requested --> Granted: Patient approves
-    Requested --> Denied: Patient refuses
-    Requested --> Expired: Patient does not act in time
-    Granted --> Revoked: Patient withdraws access
-    Granted --> [*]: Validity period ends
-```
-
 There are five states, in the two sections a PHR app shows: Requests holds Requested, Denied and Expired; Approved holds Granted and Revoked.
 
 | State     | What it means                                                         | What your system does                                                  |
@@ -35583,19 +35956,41 @@ There are five states, in the two sections a PHR app shows: Requests holds Reque
 
 Two clocks run here. The **request window** is how long the patient has to answer, set by the HIU, and running out produces Expired. The **consent validity period** is how long access lasts once granted, set by the patient as they grant, with a defined expiry date and time. Neither is the **date range**, which says which records are in scope by when the care happened: a consent granted today can cover records from 2019.
 
+Granted is not permanent. Revoked and Expired are ordinary destinations, not faults, and your system will meet both in production.
+
+Notes for AI agents
+
+**Before you start.** A gateway session, and your system acting as the HIU for this request. A consent request names four things: whose records, which HI types, which date range, and the purpose code.
+
+**What happens.** Store the consent request id from the init callback, then every consent artefact id a grant returns. Before each fetch, check the artefact is still usable: the patient can revoke at any time, and the validity period ends on its own.
+
+**How you know it worked.** A granted request returns at least one artefact id, and a fetch under it is accepted while the artefact is within its validity period and not revoked.
+
+**When it goes wrong.** A fetch that worked last week fails today because the patient revoked or the validity period ended; that is the system working. `ABDM-1062` is consent not granted, and `ABDM-1112` is an artefact id that is invalid or already expired. Records kept past the consent window are a legal problem, not a technical one.
+
 ## What the patient sees, and can change
 
 A consent request must display the requesting HIU, the purpose of data access, the data types requested, the date range, the consent validity period and the request status. Where permitted, the patient may modify four of those before approving: access duration, record date range, data categories and validity period. The consent you get back can be narrower than the one you asked for, so read the artefact.
 
 ## The five things a PHR app must let a person do
 
-Consent is granted by a person, and the PHR app is where they do it. NHA sets a floor of five capabilities, and an app missing one leaves a person able to give access they cannot inspect, change or withdraw.
+Consent is granted by a person, and the PHR app is where they do it. There is a floor of five capabilities, and an app missing one leaves a person able to give access they cannot inspect, change or withdraw.
 
 1. **See the request**, with the HIU asking, the purpose, the record types, the date range of records, how long the consent would last, and its status.
 2. **Change it before allowing it**, where the request permits: the access duration, the record date range, the categories shared, and the validity period. This is the one most often left out, and the one that turns a consent screen into a negotiation rather than a demand.
 3. **Allow or refuse it.** The consent flow has three outcomes, not two: approve, reject and ignore. An ignored request expires on the requester's window, and the interface has to show that state.
 4. **See what is already allowed**, so the person can tell which organisations hold access right now. A list of past decisions is not the same thing.
 5. **Take it back** at any time. Two things follow: the status updates at the consent manager, and sharing under that consent stops immediately, not at the end of the period.
+
+Notes for AI agents
+
+**Before you start.** The app receives consent requests only through an approved subscription. See [P3 Subscription](/docs/main/docs/hiecm/v3/milestones/p3).
+
+**What happens.** Build a screen for each of the five. Approving posts to `/api/hiecm/consent/v3/request/{consentRequestId}/approve`, denying to `/api/hiecm/consent/v3/request/{consentRequestId}/deny`, and revoking a granted consent to `/api/hiecm/consent/v3/revoke`. Show Expired as its own state, never as Denied, because the person refused nothing.
+
+**How you know it worked.** One request goes through the whole arc in the app: seen, its date range narrowed, allowed, found in the list of live consents, and revoked. A fetch attempted under it afterwards fails.
+
+**When it goes wrong.** A screen that lists requests but not live consents leaves the person unable to revoke what they cannot see. Revocation shown as expiry hides a decision the person made. Leaving out modification turns consent into a notice.
 
 ## Purpose of use codes
 
@@ -35649,6 +36044,16 @@ An auto approval policy works like this: the patient authorises the app once, th
 - [M3 Health Information User: Fetch data with consent](/docs/main/docs/hiecm/v3/api/m3), the requesting side.
 - [M2 Health Information Provider: Create and link records](/docs/main/docs/hiecm/v3/api/m2), what a record holder validates.
 - [How a record travels](/docs/main/docs/hiecm/v3/concepts/data-flow), what happens next.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Requested: HIU raises a consent request
+    Requested --> Granted: Patient approves
+    Requested --> Denied: Patient refuses
+    Requested --> Expired: Patient does not act in time
+    Granted --> Revoked: Patient withdraws access
+    Granted --> [*]: Validity period ends
+```
 
 
 ---
@@ -35803,6 +36208,18 @@ Six kinds of value never travel raw in an M1 request body.
 
 Each is encrypted with RSA using the ABDM public certificate, and the base64 of the ciphertext goes in the field.
 
+The padding belongs to the certificate. M1 and PHR calls use RSA OAEP with SHA-1 for both the digest and the mask generation function, which the certificate names as `RSA/ECB/OAEPWithSHA-1AndMGF1Padding`. The [M4](/docs/main/docs/hiecm/v3/milestones/m4) registries use `RSA/ECB/PKCS1Padding` under a certificate of their own. An integration that calls both holds both keys and never crosses them.
+
+Notes for AI agents
+
+**Before you start.** A gateway access token, and the current certificate for the family you are calling: `GET /abha/api/v3/profile/public/certificate` for M1.
+
+**What happens.** Encrypt each value in the table in your own process and send the standard base64 of the ciphertext. In most libraries OAEP defaults to SHA-256, so pass SHA-1 explicitly: in Node, the OAEP padding constant with the OAEP hash set to sha1; in Java, the transformation the certificate names. The certificate arrives as base64 DER with no PEM armour, so add the armour before your library loads it. Cache the certificate with a validity window, not forever.
+
+**How you know it worked.** A value your code encrypted is accepted by a real M1 call: the OTP request returns a `txnId` instead of a validation refusal.
+
+**When it goes wrong.** A wrong padding or digest does not fail when you encrypt. It fails at the API as a validation refusal that names the business field, which reads as a wrong Aadhaar or mobile number. Check the padding, the digest and the key before you doubt the plaintext. A stale cached certificate fails every encrypted call at once.
+
 ## What shape the plaintext must be
 
 The service validates the plaintext after it decrypts, so the shape you encrypt matters and a wrong shape is rejected as though the value were wrong.
@@ -35820,6 +36237,75 @@ Aadhaar, mobile and OTP values follow the validation patterns given on each call
 
 ## How the model works
 
+We publish the public half of a key pair. You encrypt with it. Only our private half can decrypt. Your system never holds a secret to do this, only the current certificate.
+
+There is nothing ABDM specific in the mechanics. Your platform's standard RSA library does the work. Both keys use `RSA/ECB/OAEPWithSHA-1AndMGF1Padding`. The one thing to confirm is which key you are using.
+
+Read `encryptionAlgorithm` from the certificate response and encrypt with what it names. Code that reads the field survives a change of algorithm. Code that cannot recognise what the field names should refuse to encrypt rather than fall back to a default.
+
+Notes for AI agents
+
+**Before you start.** The certificate from `GET /abha/api/v3/profile/public/certificate`, which carries `publicKey` and `encryptionAlgorithm`.
+
+**What happens.** Put the plaintext in the shape the service validates after it decrypts, from the table above: an ABHA number keeps its dashes. Encrypt with the algorithm the response names and send the base64 result as the field value, for example `loginId`.
+
+**How you know it worked.** The raw Aadhaar or mobile number exists only inside your own process, for the length of the call, and never reaches a log. A call carrying your ciphertext passes validation.
+
+**When it goes wrong.** `400 {"loginId": "LoginId is invalid"}` means the value decrypted and the plaintext failed a format rule, usually an ABHA number sent without its dashes. Logging the plain value before encryption is the same leak, moved into your log store.
+
+## Where to do it
+
+**Encrypt inside your own system, against the published ABDM public key.** This is the production path.
+
+|                          | Encrypt locally   | Call a remote helper          |
+| ------------------------ | ----------------- | ----------------------------- |
+| Where the raw value goes | Your process only | Over the network to that host |
+| Depends on               | The public key    | A live third party service    |
+| Suitable for production  | Yes               | No                            |
+
+Sending an Aadhaar number to a remote service so that it can be encrypted defeats the purpose of encrypting it.
+
+Notes for AI agents
+
+**What happens.** Fetch the public certificate and encrypt in process. There is no migration from a remote helper, only a change of where one function runs.
+
+**How you know it worked.** The raw Aadhaar or mobile number never leaves your process and never reaches your logs. Search your logging for the field names before you call it done.
+
+**When it goes wrong.** If a remote helper has already been used in a production path, treat every value that passed through it as disclosed, and move encryption in process before the next release.
+
+## Fetching the public key
+
+A [PHR](/docs/main/docs/hiecm/v3/getting-started/glossary#phr) application fetches its own key from `GET /abha/api/v3/phr/app/login/public/certificate`, the first call in [P1](/docs/main/docs/hiecm/v3/api/p1/endpoints/p1-certificate-and-session/01-p1-get-v3-phr-app-login-public-certificate). It is a different key from the ABHA service's, so never encrypt a PHR call with the M1 certificate.
+
+M1 has a `public/certificate` API for fetching the public key. Its URL, headers and response shape are on [the certificate call](/docs/main/docs/hiecm/v3/api/m1/endpoints/m1-access-tokens-encryption/02-m1-get-v3-profile-public-certificate).
+
+## Prove your padding first
+
+Every M1 journey begins with a call that carries an encrypted value, so a wrong padding stops you on your first request. Prove it once, before you build a flow, so that every later failure is about the flow rather than the padding.
+
+Encrypt a 10 digit mobile number that you hold and that is registered against an ABHA, then send it to the login OTP request:
+
+```bash
+curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/request/otp' \  -H 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \  -H 'REQUEST-ID: <FRESH_UUID>' \  -H 'TIMESTAMP: <UTC_ISO_8601_WITH_MILLISECONDS_AND_Z>' \  -H 'Content-Type: application/json' \  -d '{  "scope": ["abha-login", "mobile-verify"],  "loginHint": "mobile",  "loginId": "<MOBILE_ENCRYPTED_WITH_THE_CERTIFICATE>",  "otpSystem": "abdm"}'
+```
+
+You receive 200 with a `txnId` and a message naming the last four digits of the mobile, and an OTP arrives on that phone. The padding and the certificate are right. Build the rest of M1 on that code path.
+
+Notes for AI agents
+
+**Before you start.** A gateway access token, the M1 certificate with PEM armour added, and a mobile number that is both in your hands and registered against an ABHA. A number nobody has registered cannot tell a right padding from a wrong one.
+
+**What happens.** Encrypt the mobile number with OAEP and SHA-1 for both the digest and the mask generation function, base64 the ciphertext, and send it as `loginId` with `loginHint` set to `mobile`. The test needs the 200, not the OTP.
+
+**How you know it worked.** 200 with a `txnId`, and a message naming the masked mobile.
+
+**When it goes wrong.** A refusal for a number you know is registered points at the padding first: PKCS#1 v1.5 and OAEP with SHA-256 are both wrong for M1. The same refusal with OAEP and SHA-1 means the wrong key: use the M1 certificate, not the PHR one. A library that will not load the key needs the PEM armour.
+
+## Where to go next
+
+- [Gateway](/docs/main/docs/hiecm/v3/concepts/gateway) for the session token every call needs.
+- [M1 user journeys](/docs/main/docs/hiecm/v3/milestones/m1), where the encrypted identifier appears in the search and login steps.
+
 ```mermaid
 sequenceDiagram
     autonumber
@@ -35831,25 +36317,6 @@ sequenceDiagram
     S->>A: The Base64 result as the field value,<br/>for example loginId or otp.otpValue
     A->>A: Decrypts with its private key
 ```
-
-We publish the public half of a key pair. You encrypt with it. Only our private half can decrypt. Your system never holds a secret to do this, only the current certificate.
-
-There is nothing ABDM specific in the mechanics. Your platform's standard RSA library does the work. Both keys use `RSA/ECB/OAEPWithSHA-1AndMGF1Padding`. The one thing to confirm is which key you are using.
-
-## Where to do it
-
-**Encrypt inside your own system, against the published ABDM public key.** This is the production path.
-
-## Fetching the public key
-
-A [PHR](/docs/main/docs/hiecm/v3/getting-started/glossary#phr) application fetches its own key from `GET /abha/api/v3/phr/app/login/public/certificate`, the first call in [P1](/docs/main/docs/hiecm/v3/api/p1/endpoints/p1-certificate-and-session/01-p1-get-v3-phr-app-login-public-certificate). It is a different key from the ABHA service's, so never encrypt a PHR call with the M1 certificate.
-
-M1 has a `public/certificate` API for fetching the public key. Its URL, headers and response shape are on [the certificate call](/docs/main/docs/hiecm/v3/api/m1/endpoints/m1-access-tokens-encryption/02-m1-get-v3-profile-public-certificate).
-
-## Where to go next
-
-- [Gateway](/docs/main/docs/hiecm/v3/concepts/gateway) for the session token every call needs.
-- [M1 user journeys](/docs/main/docs/hiecm/v3/milestones/m1), where the encrypted identifier appears in the search and login steps.
 
 
 ---
@@ -35968,14 +36435,26 @@ The gateway is its front door. It authenticates you, validates your headers, and
 
 It never holds a patient's health record, only identifiers, metadata about where records live, and consent artefacts. Once consent exists the record goes straight from the system that holds it to the system that asked, encrypted. Your system keeps the data. HIE-CM keeps the permission.
 
-## Nothing goes participant to participant
+## A 200 means accepted, not done
 
-Every request is addressed to the gateway, which forwards it. Two things follow.
+Nothing goes participant to participant. Every request is addressed to the gateway, which forwards it. Two things follow.
 
 - **You get an acknowledgement, not an answer.** In the [M3](/docs/main/docs/hiecm/v3/getting-started/glossary#m3) consent flow the [HIU](/docs/main/docs/hiecm/v3/getting-started/glossary#hiu) asks, the HIE-CM returns the consent request id on a callback, and the patient's decision comes back later. Each call's page in the [API reference](/docs/main/docs/hiecm/v3/api) names the callback it produces.
 - **You have to be reachable.** Half of [M2](/docs/main/docs/hiecm/v3/getting-started/glossary#m2) is endpoints the gateway calls on your system.
 
 One exception. In the health information flow the HIU supplies a data push URL, and the HIP encrypts the records and pushes them there. That URL may differ from the HIU's registered gateway URL, to improve privacy. The permission came through the gateway. The bytes do not.
+
+Match each callback to the call that caused it by `response.requestId`, which carries the `REQUEST-ID` you sent. Callbacks do not arrive in the order you sent the requests, and the same one can arrive twice, so a repeat must change nothing. Where each callback is described in the specifications is on [the API specifications](/docs/main/docs/hiecm/v3/concepts/api-specifications).
+
+Notes for AI agents
+
+**Before you start.** A callback URL registered for your bridge and reachable over public HTTPS. Without it, no answer can arrive.
+
+**What happens.** Send the call with a fresh `REQUEST-ID`, treat the 202 as receipt only, and wait for the callback. Key the handler on `response.requestId`, answer it quickly, and make a second delivery of the same request id a no-op.
+
+**How you know it worked.** A callback reaches your URL whose `response.requestId` equals the `REQUEST-ID` you sent. Given three calls and two callbacks, the call whose request id has no callback is the one outstanding.
+
+**When it goes wrong.** Nothing arrives: work through [the callback never arrives](/docs/main/docs/hiecm/v3/troubleshooting/callback-never-arrives). A retry is appended as a new event: key on the request id. The code waits on the response body for the result: it never comes there, so the integration hangs.
 
 ## What moves through it
 
@@ -36022,6 +36501,18 @@ Response shape:
 The response carries the token in `accessToken`.
 
 Send the token back as `Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>` on every other call. Headers per call, and the second token M1 login issues, are on [authentication](/docs/main/docs/hiecm/v3/reference/authentication). Interactive: [gateway API reference](/docs/main/reference/hiecm-gateway).
+
+The session token says which application is calling, not which person. [M1](/docs/main/docs/hiecm/v3/milestones/m1) profile calls also carry a user token in `X-token`, which login returns.
+
+Notes for AI agents
+
+**Before you start.** A client id and client secret from sandbox registration, held on your server. Never ship the secret in a mobile or browser build.
+
+**What happens.** Call the session endpoint with `clientId`, `clientSecret` and `grantType` set to `client_credentials`. Send the `accessToken` it returns as `Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>` on every other gateway call. Renew before `expiresIn` runs out rather than on a fixed timer.
+
+**How you know it worked.** The response carries `accessToken` and `expiresIn`, and the next gateway call with that token is not refused as unauthorised.
+
+**When it goes wrong.** Every call returns 401: see [everything returns 401](/docs/main/docs/hiecm/v3/troubleshooting/everything-returns-401). A profile call is refused while the session token is fresh: the `X-token` is missing, or it holds the short lived token from login verify, which the verify user call exchanges for the user token. `ABDM-1094` reads X-token expired, and the token sent is often the wrong kind rather than an old one.
 
 ## Which host
 
@@ -36193,18 +36684,30 @@ Both roles are both, and it changes call by call:
 
 Neither is a thing you can build once and be. See [HIP and HIU](/docs/main/docs/hiecm/v3/concepts/hip-hiu).
 
+So the milestones you build follow the direction your records move, not the kind of product you sell. A PHR app that lets a citizen push a record publishes as the HIP, and builds the M2 linking and transfer calls as well. See [where the citizen is the HIP](/docs/main/docs/hiecm/v3/milestones/p2#where-the-citizen-is-the-hip). Records never pass through the consent manager: it routes the request and holds the consent, and the record goes from the system that holds it to the system that asked.
+
+Notes for AI agents
+
+**Before you start.** Know which entity the software acts for, a care provider or a care seeker. That fixes the role for the life of the product.
+
+**What happens.** Decide the role once, IMS or PHR, from the entity. Then list every direction a record moves through the product: publishing a record is HIP behaviour, fetching one it did not create is HIU behaviour. Build the milestones for each direction the product uses.
+
+**How you know it worked.** For a hospital system that also pulls a patient's history, you can name the role, IMS, both directions, and the milestones: M1, M2 and M3. For a PHR app that uploads a scanned prescription, you can say the citizen is the HIP for that record.
+
+**When it goes wrong.** HIP, HIU, health repository and health locker are chosen as though they were one list of company types: two are directions, one is custody, one is a product. A PHR app is built for P1 alone and then cannot publish the first record a citizen pushes. A fetch is designed against the consent manager, which holds no records.
+
 ## One bridge, many facilities
 
 Two levels of configuration exist and they are easy to confuse. Your integration registers once, as a bridge. The facilities it serves register separately and are linked to that bridge. One bridge serves every facility linked to it, whether that is one facility or a hundred.
 
 Decide which level a setting belongs to before you build a settings screen for it. Nothing about your integration is configured per facility, and nothing about a facility is configured in your integration's own credentials.
 
-| Setting                       | Level                                      | Where it is set                                                                                           |
-| ----------------------------- | ------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
-| Client id and client secret   | Your integration, one of each              | [Sandbox registration](/docs/main/docs/hiecm/v3/getting-started/sandbox)                                  |
-| Bridge callback URL           | Your integration, one                      | [Sandbox registration](/docs/main/docs/hiecm/v3/getting-started/sandbox#3-register-your-callback-url)     |
-| Facility ID                   | Each facility                              | [HFR onboarding](/docs/main/docs/hiecm/v3/milestones/m4#journey-3-a-facility-onboards-to-the-hfr)         |
-| `bridgeId`, `hipName`, `type` | Each facility, once per bridge it links to | [The bridge linkage call](/docs/main/docs/hiecm/v3/milestones/m4#journey-4-linking-bridges-to-a-facility) |
+| Setting                       | Level                                      | Where it is set                                                                                       |
+| ----------------------------- | ------------------------------------------ | ----------------------------------------------------------------------------------------------------- |
+| Client id and client secret   | Your integration, one of each              | [Sandbox registration](/docs/main/docs/hiecm/v3/getting-started/sandbox)                              |
+| Bridge callback URL           | Your integration, one                      | [Sandbox registration](/docs/main/docs/hiecm/v3/getting-started/sandbox#3-register-your-callback-url) |
+| Facility ID                   | Each facility                              | [HFR onboarding](/docs/main/docs/hiecm/v3/milestones/m4#journey-3-a-facility-onboards-to-the-hfr)     |
+| `bridgeId`, `hipName`, `type` | Each facility, once per bridge it links to | [The bridge linkage call](/docs/main/docs/hiecm/v3/milestones/m4#m4-link-bridge)                      |
 
 Every callback for every facility arrives at the one bridge URL. The header says which facility it belongs to: `X-HIP-ID` in [M2](/docs/main/docs/hiecm/v3/api/m2), and `X-HIU-ID` in [M3](/docs/main/docs/hiecm/v3/api/m3). That header is what your handler routes a callback on, and the facility ID is what your records key to.
 
@@ -36757,6 +37260,16 @@ Every code in the [error code reference](/docs/main/docs/hiecm/v3/reference/erro
 
 Symptom first debugging, for the failures that produce no useful code at all, is in [troubleshooting](/docs/main/docs/hiecm/v3/troubleshooting).
 
+Read the code in the body before the HTTP status. A 404 can carry `ABDM-1016`, Invalid Timestamp: the route exists and the request was refused. A 404 whose body carries `Status report` and no code means no route matched the request. A code can arrive bare or with a trailing colon and space, as in `ABDM-1016: `, so match on the code itself.
+
+Notes for AI agents
+
+**What happens.** Parse the body for an error code before acting on the status. Strip a trailing colon and space from the code, then key the handling on the action column of the [error code reference](/docs/main/docs/hiecm/v3/reference/error-codes), not on a list maintained by hand.
+
+**How you know it worked.** Given a code, you can say what it means and which header or field it concerns: `ABDM-2403` is Invalid X-CM-ID, the consent manager header.
+
+**When it goes wrong.** A one line message is read as a diagnosis: Invalid header covers many causes. A code that is not in the reference is handled as Unclassified, not guessed at. A 404 is treated as a wrong path when its body carries a code.
+
 ## Retries, and the calls you must not repeat
 
 A retry is safe when repeating the call cannot create a second thing or burn a single use value. Most of M1 fails that test.
@@ -37276,6 +37789,12 @@ A Laboratory Information Management System (LIMS), also referred to in some cont
 ### Link token
 
 The token that authorises a [Health Information Provider](#hip) to link [care contexts](#care-context) to a patient's [ABHA Address](#abha-address). It is generated through the link token API and is valid for six months.
+
+Notes for AI agents
+
+**How you know it worked.** You can say how long a link token lasts and what to do when it has expired.
+
+**When it goes wrong.** A stored link token is used without checking that it is still valid. Validate it before every link. If it has expired, generate a new one through demographic authentication, then link.
 
 ### M1
 
@@ -37806,6 +38325,131 @@ How to use it
 
 ### ABHA creation by an Aadhaar OTP
 
+The individual provides their Aadhaar number. The ABHA service sends a one time password ([OTP](/docs/main/docs/hiecm/v3/getting-started/glossary#otp)) to the mobile number registered against that Aadhaar. Upon successful verification, the individual selects an ABHA address, and the ABHA number is issued.
+
+Every step answers in its own response, so nothing here waits on a callback. The enrolment call is the one with a lasting effect: it creates the account.
+
+Notes for AI agents
+
+**Before you start.** A gateway access token, the Aadhaar number encrypted with the M1 certificate, the person present to read the OTP, and their consent to create an ABHA.
+
+**What happens.** Request the OTP with scope `abha-enrol` and keep the `txnId`. Enrol with `enrol/byAadhaar`, sending the encrypted OTP, the communication mobile and the consent block. Optionally verify the communication mobile. Fetch suggestions with the `TRANSACTION_ID` header, and claim the chosen address with `preferred` set to 1.
+
+**How you know it worked.** The enrolment response carries `ABHAProfile` with an `ABHANumber`, and the address step returns the chosen address as `preferredAbhaAddress`. An account left with only its default address is a half finished job the person will not recognise later.
+
+**When it goes wrong.** The OTP goes only to the mobile registered against the Aadhaar, which may not be the phone in the room: see [the OTP never arrives](/docs/main/docs/hiecm/v3/troubleshooting/otp-never-arrives). Enrolment for an Aadhaar that already has an ABHA returns that account with `isNew` false, so read `isNew` before telling the person anything was created. Every call failing the same way is a session or header problem: see [everything returns 401](/docs/main/docs/hiecm/v3/troubleshooting/everything-returns-401).
+
+### ABHA creation by face authentication
+
+Individuals who are unable to use OTP-based authentication, including cases where the mobile number linked to Aadhaar is unavailable or inaccessible, may use face authentication as an alternative verification mechanism, subject to ABDM and UIDAI guidelines. Face authentication is performed through authorized Aadhaar Registered Device (RD) services using approved authentication workflows.
+
+ABDM documentation references biometric-based ABHA creation workflows, including face authentication and other supported biometric modalities where applicable. Organizations should implement authentication methods in accordance with the officially published specifications and follow them before proceeding with production deployment.
+
+The middle of this journey happens on the person's phone, not in your system. Show that you are waiting for them rather than a spinner.
+
+Notes for AI agents
+
+**Before you start.** Everything the Aadhaar OTP journey needs, the ABHA app on the person's phone, and a screen that can show a QR code.
+
+**What happens.** Call `enrol/auth/init` for a `txnId` and show it as a QR code. Poll `capturePID` every 5 to 10 seconds: its status moves through PENDING, VERIFIED, FAILED and COMPLETE. On COMPLETE, call `enrol/byAadhaar` with the face auth method and the same `txnId`, then claim an address as in the OTP journey.
+
+**How you know it worked.** `capturePID` reports COMPLETE and `enrol/byAadhaar` returns an `ABHAProfile` with an `ABHANumber`. The capture being accepted is the event, not the app saying the scan succeeded.
+
+**When it goes wrong.** The person has no ABHA app: installing it is part of the journey, not an error. The capture reports FAILED: capture again rather than resubmitting. Nothing pushes the result to you, so keep polling or continue once the person confirms.
+
+### ABHA creation by fingerprint or iris
+
+Aadhaar Biometric-Based ABHA Creation enables users to create an Ayushman Bharat Health Account (ABHA) by securely verifying their identity using biometric authentication through an Aadhaar Registered Device (RD). The RD Service captures the user's biometric data and generates an encrypted, digitally signed PID block, which is submitted along with the Aadhaar details for verification. Upon successful authentication and user consent, the user's profile is validated and a unique ABHA number is generated, enabling secure onboarding into the ABDM digital health ecosystem.
+
+The Registered Device (RD) List and information can be found on the following link: [uidai.gov.in](https://uidai.gov.in/en/ecosystem/authentication-devices-documents/biometric-devices.html).
+
+The calls, in order, are on the [M1 API reference](/docs/main/docs/hiecm/v3/api/m1) under ABHA creation, fingerprint and ABHA creation, iris.
+
+### ABHA creation by demographic authentication
+
+This onboarding pathway is intended for eligible government programme integrations in accordance with ABDM guidelines. Unlike OTP-based or biometric authentication workflows, demographic authentication relies on validation of Aadhaar demographic information, including name, date of birth, and gender, through the prescribed verification process.
+
+The `enrol/byAadhaar` API is invoked with the appropriate authentication method and encrypted demographic details as specified in the implementation guidelines. Implementers should account for the response structure defined for this workflow, including user token handling and ABHA address generation behaviour. A system-generated ABHA address may be assigned during account creation, and organizations may provide users with the option to configure a more user-friendly ABHA address where permitted. Any demographic verification failures should be handled in accordance with the error codes and response specifications published by ABDM.
+
+Notes for AI agents
+
+**Before you start.** Approval for this route, the gateway access token, the M1 certificate, the `Benefit-Name` header value, and the person's name exactly as Aadhaar holds it, with date of birth and gender. A near miss on any of them is a refusal, not a warning.
+
+**What happens.** One call creates the account: `enrol/byAadhaar` with `authMethods` set to `demo_auth` and a `demo_auth` block carrying the encrypted `aadhaarNumber`, `name`, `dateOfBirth`, `gender`, `stateCode` and `districtCode`. If an ABHA already exists for the Aadhaar, the call returns it rather than creating a second.
+
+**How you know it worked.** The response carries the ABHA number and a user token, and the profile read with that token returns the same account. The response has two shapes: the token is either `tokens.token` or a top level `token` beside `healthIdNumber`. Parse both.
+
+**When it goes wrong.** Parsing only `tokens.token` reads nothing from the other shape. The account arrives with a default address nobody can remember, so offer a readable one from the address suggestions.
+
+### Create a child ABHA
+
+ABDM supports guardian-based management of ABHA accounts for eligible children in accordance with applicable policies and implementation guidelines. This functionality is currently made available only to select government integrators, subject to approval by the National Health Authority (NHA). The workflow includes creation of a child ABHA linked to a verified parent or guardian account, updating child profile information, and retrieval of child accounts associated with the parent or guardian.
+
+Notes for AI agents
+
+**Before you start.** Approval for this route, the parent or guardian logged in so you hold their `X-token`, and the child's name, date of birth and gender.
+
+**What happens.** Create with `enrol/byAadhaar`, `authMethods` set to `child`, and a `child` block carrying `name`, `dayOfBirth`, `monthOfBirth`, `yearOfBirth`, `gender` and `parentConsent`, sent with the parent's `X-token` and the `Benefit-Name` header. Correct a child's details through `PATCH /abha/api/v3/profile/account`; a child ABHA without KYC can be updated once. List the children with `/abha/api/v3/enrollment/profile/children`.
+
+**How you know it worked.** The create response carries the child's `ABHANumber`, and listing the parent's children returns that child. The listing is the proof that the account hangs off the right parent.
+
+**When it goes wrong.** The parent's account has reached its limit of child accounts, and the next create is refused. The parent's token has expired, which reads as an authorisation failure rather than a validation one.
+
+## ABHA login via mobile number
+
+ABHA login using a registered mobile number enables individuals to securely access their ABHA-linked profile and services through a mobile OTP-based authentication process. Since a single mobile number may be associated with multiple ABHA accounts, the user may be required to select the appropriate ABHA account after successful verification. Upon completion of the authentication process, authorized access is granted to the individual's ABHA profile and associated services in accordance with ABDM guidelines.
+
+Notes for AI agents
+
+**Before you start.** A gateway access token, the mobile number encrypted with the M1 certificate, and the person present to read the OTP.
+
+**What happens.** Request the OTP with scope `abha-login` and `mobile-verify` and `loginHint` set to `mobile`. Verify it: the response carries a short lived token and `accounts`. Always call `/abha/api/v3/profile/login/verify/user` with the chosen `ABHANumber`, the same `txnId` and that token in the `T-token` header, even when `accounts` holds one entry. It returns the `X-token` profile calls need.
+
+**How you know it worked.** A profile read with the `X-token` returns the account the person expected. With several accounts on one mobile, the account read back is the check, not the presence of a token.
+
+**When it goes wrong.** Several accounts are normal on a shared family phone, so show a chooser. A profile call refused with `ABDM-1094`, X-token expired, on a new token usually means the token from login verify was sent instead of the one from verify user. Never send the gateway session token in `X-token`.
+
+## Find ABHA from mobile number
+
+This workflow enables discovery of an existing ABHA using a registered mobile number when an individual does not readily know their ABHA details. Upon successful verification of the mobile number, the system may return limited, non-sensitive information such as the individual's name, gender, and masked ABHA number, allowing confirmation of whether an ABHA has already been created.
+
+Access to complete profile information and sensitive account details requires successful authentication through approved mechanisms such as OTP, biometric authentication, or face authentication. All identifiers and personal information must be encrypted and processed within the integrating system in accordance with ABDM security, privacy, and data protection requirements. See [encryption](/docs/main/docs/hiecm/v3/concepts/encryption) for how to do it locally.
+
+Notes for AI agents
+
+**Before you start.** A gateway access token, the mobile number the person remembers, encrypted with the M1 certificate, and the person present to read the OTP.
+
+**What happens.** Search with scope `search-abha`. The response carries a `txnId` and the accounts on that mobile, each with an `index`, a masked ABHA number, name and gender. Show those and let the person pick. Request the OTP with `loginHint` set to `index`, the encrypted index as `loginId` and the same `txnId`, then verify it.
+
+**How you know it worked.** Verification succeeds and returns the account the person recognised from the masked details.
+
+**When it goes wrong.** The search finds nothing: the number may hold no ABHA, or the ABHA may sit in the other environment. The person does not recognise any account: stop, because continuing would disclose somebody else's. Never skip the OTP because the search already returned an account: search alone is a lookup of somebody's identity.
+
+## ABHA Profile Management
+
+This functionality enables retrieval and management of an individual's ABHA profile following successful authentication. Authorized users can access profile information, view their ABHA card, and retrieve the associated Quick Response (QR) code, which serves as a digital representation of the ABHA identifier for use across ABDM-enabled healthcare services.
+
+The workflow also supports profile updates in accordance with applicable ABDM guidelines, ensuring that health identity information remains accurate and up to date while complying with prescribed security, privacy, and authentication requirements.
+
+Changing the mobile number is two calls with an OTP to the new number between them: `POST /abha/api/v3/profile/account/request/otp` with scope `abha-profile` and `mobile-verify`, then `POST /abha/api/v3/profile/account/verify` with the same scope and the OTP. Both carry the person's `X-token`.
+
+Notes for AI agents
+
+**Before you start.** The person logged in, so you hold their `X-token`, the new mobile number encrypted with the M1 certificate, and the person holding the new phone.
+
+**What happens.** Request the OTP with scope `abha-profile` and `mobile-verify`, `loginHint` set to `mobile` and the encrypted new number as `loginId`. Verify with the same scope, the `txnId` and the encrypted OTP.
+
+**How you know it worked.** Verify answers with `authResult` success, and a profile read afterwards shows the new number.
+
+**When it goes wrong.** The OTP goes to the new number, not the old one, so a person who cannot receive it there cannot change it. A scope on the verify call that differs from the request is refused: send the same array on both.
+
+## Next
+
+- Register a patient who scanned your counter QR code: [Scan and Register](/docs/main/docs/hiecm/v3/use-cases/scan-and-register).
+- The calls, base URLs and error shapes: [M1 API reference](/docs/main/docs/hiecm/v3/api/m1).
+- Certification runs once, for the whole integration: [Go live](/docs/main/docs/hiecm/v3/getting-started/going-live).
+- The next milestone: [M2 Health Information Provider](/docs/main/docs/hiecm/v3/milestones/m2).
+
 ```mermaid
 sequenceDiagram
     autonumber
@@ -37834,10 +38478,6 @@ sequenceDiagram
     A-->>S: healthIdNumber, preferredAbhaAddress
 ```
 
-The individual provides their Aadhaar number. The ABHA service sends a one time password ([OTP](/docs/main/docs/hiecm/v3/getting-started/glossary#otp)) to the mobile number registered against that Aadhaar. Upon successful verification, the individual selects an ABHA address, and the ABHA number is issued.
-
-### ABHA creation by face authentication
-
 ```mermaid
 sequenceDiagram
     autonumber
@@ -37864,20 +38504,6 @@ sequenceDiagram
     A-->>S: healthIdNumber, preferredAbhaAddress
 ```
 
-Individuals who are unable to use OTP-based authentication, including cases where the mobile number linked to Aadhaar is unavailable or inaccessible, may use face authentication as an alternative verification mechanism, subject to ABDM and UIDAI guidelines. Face authentication is performed through authorized Aadhaar Registered Device (RD) services using approved authentication workflows.
-
-ABDM documentation references biometric-based ABHA creation workflows, including face authentication and other supported biometric modalities where applicable. Organizations should implement authentication methods in accordance with the officially published specifications and follow them before proceeding with production deployment.
-
-### ABHA creation by fingerprint or iris
-
-Aadhaar Biometric-Based ABHA Creation enables users to create an Ayushman Bharat Health Account (ABHA) by securely verifying their identity using biometric authentication through an Aadhaar Registered Device (RD). The RD Service captures the user's biometric data and generates an encrypted, digitally signed PID block, which is submitted along with the Aadhaar details for verification. Upon successful authentication and user consent, the user's profile is validated and a unique ABHA number is generated, enabling secure onboarding into the ABDM digital health ecosystem.
-
-The Registered Device (RD) List and information can be found on the following link: [uidai.gov.in](https://uidai.gov.in/en/ecosystem/authentication-devices-documents/biometric-devices.html).
-
-The calls, in order, are on the [M1 API reference](/docs/main/docs/hiecm/v3/api/m1) under ABHA creation, fingerprint and ABHA creation, iris.
-
-### ABHA creation by demographic authentication
-
 ```mermaid
 sequenceDiagram
     autonumber
@@ -37892,16 +38518,6 @@ sequenceDiagram
     S->>A: GET /abha/api/v3/profile/account<br/>header X-token tokens.token
     A-->>S: ABHANumber, preferredAbhaAddress, profile fields
 ```
-
-This onboarding pathway is intended for eligible government programme integrations in accordance with ABDM guidelines. Unlike OTP-based or biometric authentication workflows, demographic authentication relies on validation of Aadhaar demographic information, including name, date of birth, and gender, through the prescribed verification process.
-
-The `enrol/byAadhaar` API is invoked with the appropriate authentication method and encrypted demographic details as specified in the implementation guidelines. Implementers should account for the response structure defined for this workflow, including user token handling and ABHA address generation behaviour. A system-generated ABHA address may be assigned during account creation, and organizations may provide users with the option to configure a more user-friendly ABHA address where permitted. Any demographic verification failures should be handled in accordance with the error codes and response specifications published by ABDM.
-
-### Create a child ABHA
-
-ABDM supports guardian-based management of ABHA accounts for eligible children in accordance with applicable policies and implementation guidelines. This functionality is currently made available only to select government integrators, subject to approval by the National Health Authority (NHA). The workflow includes creation of a child ABHA linked to a verified parent or guardian account, updating child profile information, and retrieval of child accounts associated with the parent or guardian.
-
-## ABHA login via mobile number
 
 ```mermaid
 sequenceDiagram
@@ -37920,10 +38536,6 @@ sequenceDiagram
     S->>A: POST /abha/api/v3/profile/login/verify/user<br/>header T-token, ABHANumber, txnId
     A-->>S: token (X-token), expiresIn, refreshToken,<br/>refreshExpiresIn
 ```
-
-ABHA login using a registered mobile number enables individuals to securely access their ABHA-linked profile and services through a mobile OTP-based authentication process. Since a single mobile number may be associated with multiple ABHA accounts, the user may be required to select the appropriate ABHA account after successful verification. Upon completion of the authentication process, authorized access is granted to the individual's ABHA profile and associated services in accordance with ABDM guidelines.
-
-## Find ABHA from mobile number
 
 ```mermaid
 sequenceDiagram
@@ -37944,12 +38556,6 @@ sequenceDiagram
     A-->>S: authResult success, token (X-token), accounts
 ```
 
-This workflow enables discovery of an existing ABHA using a registered mobile number when an individual does not readily know their ABHA details. Upon successful verification of the mobile number, the system may return limited, non-sensitive information such as the individual's name, gender, and masked ABHA number, allowing confirmation of whether an ABHA has already been created.
-
-Access to complete profile information and sensitive account details requires successful authentication through approved mechanisms such as OTP, biometric authentication, or face authentication. All identifiers and personal information must be encrypted and processed within the integrating system in accordance with ABDM security, privacy, and data protection requirements. See [encryption](/docs/main/docs/hiecm/v3/concepts/encryption) for how to do it locally.
-
-## ABHA Profile Management
-
 ```mermaid
 sequenceDiagram
     autonumber
@@ -37963,17 +38569,6 @@ sequenceDiagram
     S->>A: GET /abha/api/v3/profile/account/qrCode<br/>header X-token
     A-->>S: QR code image
 ```
-
-This functionality enables retrieval and management of an individual's ABHA profile following successful authentication. Authorized users can access profile information, view their ABHA card, and retrieve the associated Quick Response (QR) code, which serves as a digital representation of the ABHA identifier for use across ABDM-enabled healthcare services.
-
-The workflow also supports profile updates in accordance with applicable ABDM guidelines, ensuring that health identity information remains accurate and up to date while complying with prescribed security, privacy, and authentication requirements.
-
-## Next
-
-- Register a patient who scanned your counter QR code: [Scan and Register](/docs/main/docs/hiecm/v3/use-cases/scan-and-register).
-- The calls, base URLs and error shapes: [M1 API reference](/docs/main/docs/hiecm/v3/api/m1).
-- Certification runs once, for the whole integration: [Go live](/docs/main/docs/hiecm/v3/getting-started/going-live).
-- The next milestone: [M2 Health Information Provider](/docs/main/docs/hiecm/v3/milestones/m2).
 
 
 ---
@@ -38065,28 +38660,6 @@ This section explains the key Milestone 2 (M2) workflows using sequence diagrams
 
 ## Journey 1: HIP initiated linking
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant S as Your system (HIP)
-    participant G as ABDM Gateway
-    participant P as ABHA / PHR app
-    Note over S,G: Step 1: generate link token
-    S->>G: POST /api/hiecm/v3/token/generate-token<br/>abhaNumber, abhaAddress, name, gender, yearOfBirth
-    G-->>S: 202 Accepted
-    Note over S,G: Step 2: ABDM responds asynchronously with token details
-    G-)S: POST /api/v3/hip/token/on-generate-token<br/>abhaAddress, linkToken
-    S-->>G: 202 Accepted
-    Note over S,G: Step 3: push care contexts
-    S->>G: POST /api/hiecm/hip/v3/link/carecontext<br/>Authorization: Bearer accessToken, X-Link-Token: linkToken<br/>abhaNumber, abhaAddress, patient [referenceNumber, display,<br/>careContexts [referenceNumber, display], hiType, count]
-    G-->>S: 202 Accepted, care contexts queued
-    Note over S,G: Step 4: ABDM responds asynchronously with the status of linking
-    G-)S: POST /api/v3/link/on_carecontext<br/>status
-    S-->>G: 202 Accepted
-    G-)P: Push notification, record linked
-    P->>P: Patient sees a new record linked
-```
-
 The HIP generates a linking token using the patient's ABHA address and demographic details for authentication. After successful verification, a linking token valid for 6 months is created, and the patient's care context is linked to the ABHA Address.
 
 The steps, as drawn:
@@ -38101,6 +38674,18 @@ The steps, as drawn:
 8. Your system answers 202 Accepted.
 9. The gateway pushes a notification to the patient's ABHA or PHR app that a record is linked.
 10. The patient sees the new record linked in the app.
+
+When a linked care context changes, tell ABDM with `POST /api/hiecm/hip/v3/link/context/notify`. The outcome arrives on your bridge at `/api/v3/links/context/on-notify`.
+
+Notes for AI agents
+
+**Before you start.** The facility holds a facility ID and a bridge linked with type HIP: see [Journey 4 on M4](/docs/main/docs/hiecm/v3/milestones/m4#m4-link-bridge). You hold a gateway session token, and the patient has an ABHA address.
+
+**What happens.** Generate the link token; the 202 carries nothing, and the token arrives on `/api/v3/hip/token/on-generate-token`. Store it against the patient and reuse it: it is valid for six months. Link with `X-Link-Token` set to it, and wait for `/api/v3/link/on_carecontext`.
+
+**How you know it worked.** A POST reaches `/api/v3/link/on_carecontext` whose `response.requestId` matches the `REQUEST-ID` of your link call and whose status reads Successfully Linked care context. The care context then appears when the patient runs discovery against your facility. The 202 on the link call is receipt, not success.
+
+**When it goes wrong.** `ABDM-1056`: the care context is already linked. `ABDM-1038`: the ABHA address does not match the link token. `ABDM-1026`: the link token is invalid, so generate a fresh one. `ABDM-2406`: calls made out of the logical sequence. No callback at all: see [the callback never arrives](/docs/main/docs/hiecm/v3/troubleshooting/callback-never-arrives).
 
 ## Journey 2: user initiated linking
 
@@ -38240,6 +38825,28 @@ The codes an M2 integration may meet across discovery, linking, consent, encrypt
 - The calls, callbacks and error codes: [M2 API reference](/docs/main/docs/hiecm/v3/api/m2).
 - The next milestone: [M3 Health Information User](/docs/main/docs/hiecm/v3/milestones/m3).
 
+```mermaid
+sequenceDiagram
+    autonumber
+    participant S as Your system (HIP)
+    participant G as ABDM Gateway
+    participant P as ABHA / PHR app
+    Note over S,G: Step 1: generate link token
+    S->>G: POST /api/hiecm/v3/token/generate-token<br/>abhaNumber, abhaAddress, name, gender, yearOfBirth
+    G-->>S: 202 Accepted
+    Note over S,G: Step 2: ABDM responds asynchronously with token details
+    G-)S: POST /api/v3/hip/token/on-generate-token<br/>abhaAddress, linkToken
+    S-->>G: 202 Accepted
+    Note over S,G: Step 3: push care contexts
+    S->>G: POST /api/hiecm/hip/v3/link/carecontext<br/>Authorization: Bearer accessToken, X-Link-Token: linkToken<br/>abhaNumber, abhaAddress, patient [referenceNumber, display,<br/>careContexts [referenceNumber, display], hiType, count]
+    G-->>S: 202 Accepted, care contexts queued
+    Note over S,G: Step 4: ABDM responds asynchronously with the status of linking
+    G-)S: POST /api/v3/link/on_carecontext<br/>status
+    S-->>G: 202 Accepted
+    G-)P: Push notification, record linked
+    P->>P: Patient sees a new record linked
+```
+
 
 ---
 
@@ -38335,28 +38942,24 @@ How to use it
 
 ## Journey 1: raising a consent request
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant S as Application/System
-    participant CM as HIE-CM
-    actor P as Patient (PHR app)
-    Note over S: Every call carries REQUEST-ID, TIMESTAMP,<br/>X-CM-ID and the gateway access token.<br/>Status, fetch and the health information request<br/>also carry X-HIU-ID
-    S->>CM: POST /api/hiecm/consent/v3/request/init<br/>consent {purpose.code, patient.id (ABHA address),<br/>hiu.id, requester {name, identifier}, hiTypes,<br/>permission {accessMode, dateRange, dataEraseAt,
-    CM-->>S: 202 Accepted
-    CM-)S: callback POST {bridgeUrl}/api/v3/hiu/consent/request/on-init<br/>consentRequest.id, response.requestId
-    Note over S: Store consentRequest.id against<br/>the requester and the patient
-    CM-)P: Consent request shown in the PHR app
-    S->>CM: POST /api/hiecm/consent/v3/request/status<br/>consentRequestId, to poll while the patient decides
-    CM-)S: callback POST {bridgeUrl}/api/v3/hiu/consent/request/on-status<br/>consentRequest {id, status REQUESTED, GRANTED,<br/>DENIED, REVOKED or EXPIRED}
-```
-
 - An HIU requests access to a patient's health data by sending a consent request with the patient's ABHA address via the HIE-CM.
 - The HIE-CM acknowledges the request and returns a Consent Request ID through the Gateway.
 - The patient is notified by the HIE-CM and can review, approve, or deny the consent request.
 - The HIE-CM then communicates the patient's consent status back to the HIU through the Gateway.
 
 The consent request ID is the handle for everything that follows. Store it against the requester and the patient.
+
+The patient's decision arrives later, on your bridge, as described in Journey 2.
+
+Notes for AI agents
+
+**Before you start.** A gateway session token, a bridge linked with type HIU for your facility, a callback URL reachable over public HTTPS, the patient's ABHA address, and a purpose of use code: an insurer checking a claim uses `HPAYMT`.
+
+**What happens.** Init the request with the ABHA address, the HI types, the date range the records must fall in, the purpose, and the expiry of the request itself, which is how long the patient has to answer. Store `consentRequest.id` from the on-init callback. Poll the status call only to show progress. On the notify callback, store every id in `consentArtefacts`, then acknowledge with `/api/hiecm/consent/v3/request/hiu/on-notify` so delivery stops.
+
+**How you know it worked.** A POST reaches `/api/v3/hiu/consent/request/notify` with status GRANTED and at least one consent artefact id. The window the patient has to act is the one you set on init, not a gateway timeout.
+
+**When it goes wrong.** The request stays in REQUESTED: see [consent stuck in Requested](/docs/main/docs/hiecm/v3/troubleshooting/consent-stuck-requested). The on-init or notify callback never lands: see [the callback never arrives](/docs/main/docs/hiecm/v3/troubleshooting/callback-never-arrives). DENIED is an answer, not a fault, and no retry changes it.
 
 ## Journey 2: the patient grants or denies
 
@@ -38390,6 +38993,43 @@ sequenceDiagram
 
 ## Journey 3: fetching the records
 
+Using the consent artefact ID, the HIU fetches the consent artefact and requests the health information covered under that consent. The requested health data is then securely delivered to the data push URL provided by the HIU.
+
+A decrypted bundle today is not a standing right to fetch again tomorrow. Every fetch is a fresh permission check against an artefact the patient can revoke.
+
+Notes for AI agents
+
+**Before you start.** A granted consent request with at least one artefact id, a gateway session token, and a `dataPushUrl` endpoint of your own that accepts the encrypted FHIR bundles. Use a maintained implementation of the key exchange rather than writing it yourself: see [how a record travels](/docs/main/docs/hiecm/v3/concepts/data-flow).
+
+**What happens.** Fetch the artefact and store what arrives on `/api/v3/hiu/consent/on-fetch`: the care contexts, HI types and date range it allows. Generate an ECDH key pair on `Curve25519` and a nonce for this transaction. Send the health information request with the consent id, a date range inside the artefact's, your `dataPushUrl` and your public key in `keyMaterial`. The on-request callback carries the `transactionId`. The HIP posts the pages to your `dataPushUrl` directly, not through the gateway. Derive the shared key from the HIP's `keyMaterial`, decrypt, then send the notify call.
+
+**How you know it worked.** Every entry for every care context decrypts, and your notify call reports `sessionStatus` `RECEIVED`.
+
+**When it goes wrong.** The chain stops between fetch, request and push: find the missing step on [accepted, then nothing](/docs/main/docs/hiecm/v3/troubleshooting/accepted-then-nothing), and check the `dataPushUrl` you sent rather than your registered callback URL. `ABDM-1062`, consent not granted: the patient revoked or the grant lapsed mid flow. `ABDM-1112`: the artefact id is invalid or already expired. A transfer that never arrives can be checked with the status call against its `transactionId`.
+
+## Next
+
+- The calls, callbacks and error codes: [M3 API reference](/docs/main/docs/hiecm/v3/api/m3).
+- The cases M3 is tested against: the certification pack NHA issues. Certification runs once, for the whole integration: [Go live](/docs/main/docs/hiecm/v3/getting-started/going-live).
+- Receive records a patient pushes from their app: [Patient record share](/docs/main/docs/hiecm/v3/use-cases/patient-record-share).
+- The next milestone: [M4 Registry Integration](/docs/main/docs/hiecm/v3/milestones/m4).
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant S as Application/System
+    participant CM as HIE-CM
+    actor P as Patient (PHR app)
+    Note over S: Every call carries REQUEST-ID, TIMESTAMP,<br/>X-CM-ID and the gateway access token.<br/>Status, fetch and the health information request<br/>also carry X-HIU-ID
+    S->>CM: POST /api/hiecm/consent/v3/request/init<br/>consent {purpose.code, patient.id (ABHA address),<br/>hiu.id, requester {name, identifier}, hiTypes,<br/>permission {accessMode, dateRange, dataEraseAt,
+    CM-->>S: 202 Accepted
+    CM-)S: callback POST {bridgeUrl}/api/v3/hiu/consent/request/on-init<br/>consentRequest.id, response.requestId
+    Note over S: Store consentRequest.id against<br/>the requester and the patient
+    CM-)P: Consent request shown in the PHR app
+    S->>CM: POST /api/hiecm/consent/v3/request/status<br/>consentRequestId, to poll while the patient decides
+    CM-)S: callback POST {bridgeUrl}/api/v3/hiu/consent/request/on-status<br/>consentRequest {id, status REQUESTED, GRANTED,<br/>DENIED, REVOKED or EXPIRED}
+```
+
 ```mermaid
 sequenceDiagram
     autonumber
@@ -38407,15 +39047,6 @@ sequenceDiagram
     S->>CM: POST /api/hiecm/data-flow/v3/health-information/notify<br/>notification {consentId, transactionId,<br/>notifier {type HIU, id},<br/>statusNotification {sessionStatus RECEIVED or FAILED,
     S->>CM: GET /api/hiecm/data-flow/v3/health-information/request/status/{transaction-id}<br/>to check a transfer that has not arrived
 ```
-
-Using the consent artefact ID, the HIU fetches the consent artefact and requests the health information covered under that consent. The requested health data is then securely delivered to the data push URL provided by the HIU.
-
-## Next
-
-- The calls, callbacks and error codes: [M3 API reference](/docs/main/docs/hiecm/v3/api/m3).
-- The cases M3 is tested against: the certification pack NHA issues. Certification runs once, for the whole integration: [Go live](/docs/main/docs/hiecm/v3/getting-started/going-live).
-- Receive records a patient pushes from their app: [Patient record share](/docs/main/docs/hiecm/v3/use-cases/patient-record-share).
-- The next milestone: [M4 Registry Integration](/docs/main/docs/hiecm/v3/milestones/m4).
 
 
 ---
@@ -38586,25 +39217,17 @@ If no HP-ID exists, the mobile number must be verified before creating the HP-ID
 
 Create HPID returns a `token`. The register professional call carries an `hprToken` in its payload.
 
-## Journey 2: registering a professional on HPR
+Notes for AI agents
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant S as Your system
-    participant H as HPR service
-    Note over S: Holds the HPR token from Journey 1
-    S->>H: GET /apis/v1/masters/medical-councils, courses,<br/>colleges, universites, states, district, languages
-    H-->>S: Code lists
-    S->>H: POST /apis/v1/doctors/register-professional-new<br/>hprToken, practitioner {healthProfessionalType,<br/>officialMobile, officialEmail, personal,<br/>qualification,
-    H-->>S: hprId, referenceNumber, status
-    S->>H: POST /apis/v1/doctors/fetch-documents-list<br/>hprid
-    H-->>S: documentList {profileDetails, qualificationDetails,<br/>registrationDetails}
-    S->>H: POST /apis/v1/uploads/upload-document<br/>hpr_token, document [document_id, document_type,<br/>fileType, data]
-    H-->>S: degreeCertificate, registrationCertificate,<br/>proofOfWorkCertificate {status, msg}
-    S->>H: POST /apis/v1/doctors/fetch-professional-info<br/>practitioner {id}
-    H-->>S: practitioners [identifier, registrations,<br/>qualifications, hpr_id]
-```
+**Before you start.** A gateway session token for `Authorization`, a way to redirect the professional to a URL and bring them back, and the HPR certificate from `/v4/int/api/v1/auth/cert`. Mobile numbers and passwords here are encrypted with `RSA/ECB/PKCS1Padding` under that certificate, not with the M1 key and padding.
+
+**What happens.** Generate the Aadhaar link and redirect to its URL. `/aadhaar/isAuthenticated` answers a bare `true` or `false`, not an object. Verify, then check whether an HP-ID already exists for the Aadhaar and stop there if it does. Match the mobile with `/v2/registration/aadhaar/demographicAuthViaMobile`; when `verified` is false, verify it by OTP. Take a suggestion and create the HP-ID. Keep the token it returns for the next journeys.
+
+**How you know it worked.** The create call returns the HP-ID and a token, and checking the same Aadhaar again returns that HP-ID rather than none. An HP-ID is an identity, not a professional profile: Journey 2 creates the profile.
+
+**When it goes wrong.** The redirect URL is valid for five minutes, so a slow professional needs a fresh link rather than a retry. An existing HP-ID for the Aadhaar means login, not creation. A client that parses the status poll as an object fails on the bare boolean.
+
+## Journey 2: registering a professional on HPR
 
 The HP-ID is an identity, not a professional profile. The professional profile is created through the registration process, which captures details such as qualifications, council registration, and current work information. Professional registration requires the HPR Token returned from Journey 1.
 
@@ -38612,28 +39235,17 @@ The following documents are mandatory for upload: the qualification degree certi
 
 The registration API requires codes rather than names. Therefore, the application must first fetch the relevant master data through the respective master APIs and use the corresponding codes during registration. Master data includes council, course, college, university, state, district and language.
 
-## Journey 3: onboarding a facility to the HFR
+Notes for AI agents
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor M as Facility manager (HP-ID)
-    participant S as Your system
-    participant H as HFR service
-    M->>S: Logs in with HPR credentials
-    Note over S: Holds the HPR token, sent as x-hprid-auth
-    S->>H: POST /search/address/filter/deduplicate<br/>name, address, district, subDistrict, village,<br/>geolocation
-    H-->>S: Matching facilities, if any
-    Note over S,H: Stop here if the facility is already registered
-    S->>H: POST /v1.5/facility/basic-information<br/>header x-hprid-auth,<br/>facilityInformation {facilityName,<br/>facilityAddressDetails (LGD codes),
-    H-->>S: trackingId (the Facility ID,<br/>masked until submission), status
-    S->>H: POST /v1.5/facility/additional-information<br/>trackingId, linkedProgramIds {nin, abpmjayId,<br/>rohiniId, echsId, cghsId},<br/>generalInformation {hasPharmacy, hasBloodBank,
-    H-->>S: trackingId, status
-    S->>H: POST /v1.5/facility/detailed-information<br/>trackingId, specialities [systemOfMedicineCode,<br/>specialities],<br/>medicalInfrastructure (bed and ventilator counts)
-    H-->>S: trackingId, status
-    S->>H: POST /v1.5/facility/submit-facility<br/>headers x-hprid-auth, x-hprid-auth-verifier,<br/>trackingId, sourceOfInformation, facilitySuperUser
-    H-->>S: Facility submitted for verification,<br/>Facility ID visible once approved
-```
+**Before you start.** The professional holds an HP-ID from Journey 1, you hold the `hprToken`, and you hold a gateway session token.
+
+**What happens.** Fetch the master lists first and send codes, never names. Call `/apis/v1/doctors/register-professional-new` with the `hprToken` in the payload. Fetch the document list, then upload one document per call to `/apis/v1/uploads/upload-document`. Corrections later go to `/apis/v1/doctors/update-professional-new`.
+
+**How you know it worked.** Registration returns the `hprId` and a status, the uploads report each certificate's status, and `/apis/v1/doctors/fetch-professional-info` shows the qualification and registration you sent. A registration with a mandatory document missing is not finished, even though the register call was accepted.
+
+**When it goes wrong.** A code that is not on the current master list reads as a validation failure on a field you believed was right: fetch the list again rather than trusting a cached value. A professional who is already registered is a state to read, not an error to retry.
+
+## Journey 3: onboarding a facility to the HFR
 
 Onboarding consists of one search, three updates, and a final submission, with each update adding another layer of facility details. If you stop before submission, the facility remains in Draft status and is not visible on ABDM.
 
@@ -38664,6 +39276,16 @@ sequenceDiagram
 ```
 
 A shorter verification flow is available for government programmes. An OTP is sent to the contact number registered against the Facility ID, which is then validated to complete verification.
+
+Notes for AI agents
+
+**Before you start.** Someone at the facility holds an HP-ID, so you hold the HPR token that goes in `x-hprid-auth`. You hold a gateway session token and the LGD codes for the facility's address.
+
+**What happens.** Search with `/search/address/filter/deduplicate` and stop if the facility exists. Send basic information and keep the `trackingId` it returns: every later call carries it. Send additional information, then detailed information, then submit with `x-hprid-auth` and `x-hprid-auth-verifier`.
+
+**How you know it worked.** Submit accepts the same `trackingId` and reports the facility submitted for verification, and a search afterwards returns it. A facility written but never submitted stays in Draft and is invisible to ABDM, whatever the three writes returned.
+
+**When it goes wrong.** A duplicate facility: the search step is what prevents it. A field refused on detailed information, because which sections are mandatory depends on the facility type, the service type and the system of medicine rather than on the field itself.
 
 ## Journey 4: linking bridges to a facility
 
@@ -38699,11 +39321,60 @@ A facility with a Facility ID and a linked HIP bridge can perform [M2](/docs/mai
 
 Next: [M4 API reference](/docs/main/docs/hiecm/v3/api/m4).
 
+Notes for AI agents
+
+**Before you start.** The facility is submitted and holds its Facility ID, 12 characters beginning with IN. A facility still in Draft has no ID to link. You hold the `bridgeId` of the software that will act for it.
+
+**What happens.** Call `/v1/bridges/MutipleHRPAddUpdateServices` with `facilityId`, `facilityName` and one entry per bridge carrying `bridgeId`, `hipName`, `type` and `active`. A facility that publishes and fetches needs one entry of type HIP and one of type HIU, not one entry that claims both.
+
+**How you know it worked.** The linkage result lists the bridge as active for the facility. The proof that it works is the flow it unblocks: a facility with an active HIP link completes [linking a care context](/docs/main/docs/hiecm/v3/milestones/m2#m2-link-care-context), and one with an active HIU link can raise a consent request.
+
+**When it goes wrong.** A `hipName` longer than 15 characters or carrying a special character is refused as validation. A name already used by another bridge on the same facility is refused, which is common on a facility's second bridge.
+
 ## Next
 
 - The base URLs and the operation list: [M4 API reference](/docs/main/docs/hiecm/v3/api/m4).
 - The patient side of all four: [P1 Registration and login](/docs/main/docs/hiecm/v3/milestones/p1).
 - Take your integration to production: [Go live](/docs/main/docs/hiecm/v3/getting-started/going-live).
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant S as Your system
+    participant H as HPR service
+    Note over S: Holds the HPR token from Journey 1
+    S->>H: GET /apis/v1/masters/medical-councils, courses,<br/>colleges, universites, states, district, languages
+    H-->>S: Code lists
+    S->>H: POST /apis/v1/doctors/register-professional-new<br/>hprToken, practitioner {healthProfessionalType,<br/>officialMobile, officialEmail, personal,<br/>qualification,
+    H-->>S: hprId, referenceNumber, status
+    S->>H: POST /apis/v1/doctors/fetch-documents-list<br/>hprid
+    H-->>S: documentList {profileDetails, qualificationDetails,<br/>registrationDetails}
+    S->>H: POST /apis/v1/uploads/upload-document<br/>hpr_token, document [document_id, document_type,<br/>fileType, data]
+    H-->>S: degreeCertificate, registrationCertificate,<br/>proofOfWorkCertificate {status, msg}
+    S->>H: POST /apis/v1/doctors/fetch-professional-info<br/>practitioner {id}
+    H-->>S: practitioners [identifier, registrations,<br/>qualifications, hpr_id]
+```
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor M as Facility manager (HP-ID)
+    participant S as Your system
+    participant H as HFR service
+    M->>S: Logs in with HPR credentials
+    Note over S: Holds the HPR token, sent as x-hprid-auth
+    S->>H: POST /search/address/filter/deduplicate<br/>name, address, district, subDistrict, village,<br/>geolocation
+    H-->>S: Matching facilities, if any
+    Note over S,H: Stop here if the facility is already registered
+    S->>H: POST /v1.5/facility/basic-information<br/>header x-hprid-auth,<br/>facilityInformation {facilityName,<br/>facilityAddressDetails (LGD codes),
+    H-->>S: trackingId (the Facility ID,<br/>masked until submission), status
+    S->>H: POST /v1.5/facility/additional-information<br/>trackingId, linkedProgramIds {nin, abpmjayId,<br/>rohiniId, echsId, cghsId},<br/>generalInformation {hasPharmacy, hasBloodBank,
+    H-->>S: trackingId, status
+    S->>H: POST /v1.5/facility/detailed-information<br/>trackingId, specialities [systemOfMedicineCode,<br/>specialities],<br/>medicalInfrastructure (bed and ventilator counts)
+    H-->>S: trackingId, status
+    S->>H: POST /v1.5/facility/submit-facility<br/>headers x-hprid-auth, x-hprid-auth-verifier,<br/>trackingId, sourceOfInformation, facilitySuperUser
+    H-->>S: Facility submitted for verification,<br/>Facility ID visible once approved
+```
 
 
 ---
@@ -38726,22 +39397,6 @@ Registration and login. The profile the patient reads and edits is [P2](/docs/ma
 
 ## Creating an ABHA address
 
-```mermaid
-flowchart TD
-    A["User picks a path"] --> B{"Mobile number, ABHA number or Aadhaar number?"}
-    B -- "Mobile number" --> C["Verify by mobile OTP"]
-    C --> D["User types first name, year of birth, gender, address, state, district, pin code"]
-    B -- "ABHA number" --> E["Verify by Aadhaar OTP or ABHA OTP"]
-    E --> F["Profile details come back from the ABHA system"]
-    B -- "Aadhaar number" --> K["Create an ABHA number by Aadhaar OTP"]
-    K --> F
-    D --> G["Show the ABHA addresses already linked to this mobile or number"]
-    F --> G
-    G --> H{"An address already exists?"}
-    H -- "Yes" --> I["User picks one"]
-    H -- "No" --> J["User creates a new address"]
-```
-
 A person does not need an [ABHA number](/docs/main/docs/hiecm/v3/getting-started/glossary#abha-number), and does not need Aadhaar, to get an ABHA address here. A mobile number and the OTP sent to it are enough. What that buys is a Self-Declared profile: an address the network can route to, with no [KYC](/docs/main/docs/hiecm/v3/getting-started/glossary#kyc) behind it and no ABHA number until the person links one later.
 
 | Path                                    | Validated by                                                        | Profile details             | Result                                                                         |
@@ -38753,6 +39408,16 @@ A person does not need an [ABHA number](/docs/main/docs/hiecm/v3/getting-started
 After validation on any path, show the ABHA addresses already linked to that mobile number or ABHA number. The user then picks one instead of creating a duplicate.
 
 A Self-Declared profile needs a "Link ABHA number" action. The user enters the 14 digit number and validates by Aadhaar OTP or ABHA OTP. Profile details then follow the ABHA number, and the status changes to KYC Verified.
+
+Notes for AI agents
+
+**Before you start.** A gateway session token, the PHR certificate from `GET /abha/api/v3/phr/app/login/public/certificate`, and secure storage for the refresh token, because login follows at once.
+
+**What happens.** Request the OTP at `/abha/api/v3/phr/app/enrollment/request/otp`, with scope `abha-address-enroll` and `mobile-verify` on the mobile path, and verify it at `/abha/api/v3/phr/app/enrollment/verify`. List the addresses already linked and let the person pick one. Only when there is none, offer suggestions from `/abha/api/v3/phr/app/enrollment/suggestion`, check the choice with `/abha/api/v3/phr/app/enrollment/isExists`, and create it with `/abha/api/v3/phr/app/enrollment/enrol`.
+
+**How you know it worked.** The person holds an address such as `name@abdm`, the profile shows Self-Declared or KYC Verified by the path taken, and listing the addresses on that mobile or ABHA number now returns it.
+
+**When it goes wrong.** A duplicate address, because the existing addresses were not shown first. A mandatory field missing on the mobile path, refused as validation: first name, year of birth, gender, address, state, district and pin code are the mandatory set, and day and month of birth are not in it. An expired OTP: resend unlocks after 60 seconds, so say so on the screen.
 
 ## Login
 
@@ -38768,6 +39433,16 @@ Sign a user in to a PHR application by any of these routes. Every route is manda
 Every OTP route returns the ABHA addresses linked to that identifier. The user picks the one to sign in as, and you confirm the choice with the verify user call.
 
 Resend OTP unlocks after 60 seconds in every flow. You also need a reset password screen behind login, secure storage of the refresh token, and more than one user profile per install with sign in and sign out.
+
+Notes for AI agents
+
+**Before you start.** The person holds an ABHA address, and you hold a gateway session token and the PHR certificate.
+
+**What happens.** For an address, read the auth methods it supports with `/abha/api/v3/phr/app/login/search` and offer only those. Request the OTP at `/abha/api/v3/phr/app/login/request/otp` and verify at `/abha/api/v3/phr/app/login/verify`; the scope and login hint say which route a call belongs to. When the verify response lists addresses, let the person choose and confirm with `/abha/api/v3/phr/app/login/verify/user`. Store the refresh token securely.
+
+**How you know it worked.** The app holds a session for one named ABHA address, and signing out and back in returns the person to that address without repeating the choice.
+
+**When it goes wrong.** A password is asked of an address that has none, because the auth methods were not read. A mobile carrying several addresses signs the person in as the wrong one, because no chooser was shown. Resend offered before 60 seconds, or with no word that the wait is deliberate.
 
 ## Tokens and base URLs
 
@@ -38787,6 +39462,22 @@ Encrypt the Aadhaar number, mobile number, OTP and password with the PHR public 
 
 - The calls and base URLs: [P1 API reference](/docs/main/reference/hiecm-p1).
 - The next milestone: [P2 Consents Management](/docs/main/docs/hiecm/v3/milestones/p2).
+
+```mermaid
+flowchart TD
+    A["User picks a path"] --> B{"Mobile number, ABHA number or Aadhaar number?"}
+    B -- "Mobile number" --> C["Verify by mobile OTP"]
+    C --> D["User types first name, year of birth, gender, address, state, district, pin code"]
+    B -- "ABHA number" --> E["Verify by Aadhaar OTP or ABHA OTP"]
+    E --> F["Profile details come back from the ABHA system"]
+    B -- "Aadhaar number" --> K["Create an ABHA number by Aadhaar OTP"]
+    K --> F
+    D --> G["Show the ABHA addresses already linked to this mobile or number"]
+    F --> G
+    G --> H{"An address already exists?"}
+    H -- "Yes" --> I["User picks one"]
+    H -- "No" --> J["User creates a new address"]
+```
 
 
 ---
@@ -38818,6 +39509,18 @@ The facility displays a QR code holding a URL with two parameters: the HIP ID an
 
 Counter names arrive in the QR code: 1 to 250 characters, letters, digits and spaces, with `.`, `-` and `_` allowed between them. A counter name cannot be the facility ID, the [HPID](/docs/main/docs/hiecm/v3/getting-started/glossary#hpid), the HIP ID or the HIP name.
 
+Records from that visit are linked to the person from the start, so discovery is never needed for them.
+
+Notes for AI agents
+
+**Before you start.** The person is signed in and holds an ABHA address. Your app can read a QR code and take the HIP ID and the counter context out of its URL.
+
+**What happens.** Show what will be shared and take consent in the specified wording. Call `/api/hiecm/patient-share/v3/share` with `intent` set to `PROFILE_SHARE` and `metaData` carrying the `hipId` and the counter `context`. The facility's answer arrives on `/api/v3/hiu/patient/on-share`.
+
+**How you know it worked.** The acknowledgement arrives with status SUCCESS and a `profile` block carrying `tokenNumber` and `expiry`. Show the token number, because it is what the person needs at the counter, and treat its validity as the facility's to set.
+
+**When it goes wrong.** No answer within 30 seconds needs a screen that says so, not a spinner that never ends. A counter name that is really the facility ID or the HIP name leaves the person unable to tell counters apart. Consent taken in your own wording rather than the specified wording is a certification problem.
+
 ## Discovery and user initiated linking
 
 The user searches for the facility by name. Only participating facilities appear, and the facility must be a HIP linked to an [HRP](/docs/main/docs/hiecm/v3/getting-started/glossary#hrp). Your app sends a discovery request carrying the HIP ID and unverified identifiers of type `MR`, `MOBILE`, `ABHA_NUMBER` or `ABHA_ADDRESS`.
@@ -38835,6 +39538,16 @@ Three failures have specified copy.
 | Everything is already linked        | "No new health record to link: Records of all visits are already linked and there is nothing new to link" |
 
 Records should arrive within 2 hours.
+
+Notes for AI agents
+
+**Before you start.** The person is signed in and holds an ABHA address. Your search lists only facilities that are HIPs with an active bridge link. Discovery answers on a callback, so your app holds the request open across it.
+
+**What happens.** Discover with `/api/hiecm/user-initiated-linking/v3/patient/care-context/discover`, carrying the `hip` and the `unverifiedIdentifiers`; the care contexts arrive on `/api/v3/hiu/patient/care-context/on-discover`. Show only those not already linked. Start the link with `/api/hiecm/user-initiated-linking/v3/link/care-context/init`, answered on `/api/v3/hiu/patient/care-context/on-init`, then confirm with the OTP at `/api/hiecm/user-initiated-linking/v3/link/care-context/confirm`, answered on `/api/v3/hiu/patient/care-context/on-confirm`.
+
+**How you know it worked.** The on-confirm callback lists the linked care contexts, and discovery against the same facility now returns them as already linked rather than as new. A linked care context is not a record in hand: fetching it is a consent flow, see [P3](/docs/main/docs/hiecm/v3/milestones/p3#p3-fetch-records).
+
+**When it goes wrong.** The facility does not answer: show the specified unreachable message. Nothing comes back, often because the name or date of birth given at the facility differs from the profile. Everything comes back already linked: that is the third specified message, not an error. The OTP goes to the mobile the facility registered, which the person may no longer use.
 
 ## Where the citizen is the HIP
 
@@ -38884,12 +39597,36 @@ Ask the user for consent before you create a subscription. An approved subscript
 
 You need screens to list subscriptions, approve them, deny them and edit them. Editing covers health information types, purpose, categories and the time period.
 
+A subscription tells you a record exists. It is not consent, and it gives nobody the record: reading it still needs a consent request, which is why a subscription usually runs beside an auto approval policy.
+
+Notes for AI agents
+
+**Before you start.** A callback URL registered and reachable, and the person's explicit agreement to the subscription. Signing in does not imply it.
+
+**What happens.** Raise the subscription with `/api/hiecm/subscription-requests/v3/init`; the request id arrives on `/api/v3/hiu/hiecm/subscription-requests/on-init`. The person approves it with `/api/hiecm/subscription-requests/v3/{subscriptionRequestId}/approve` or denies it. Once approved, notifications arrive on `/api/v3/hiu/subscription/notify`, in the categories `LINK` and `DATA`, and you acknowledge each with `/api/hiecm/subscription-requests/v3/hiu/care-context/on-notify`. Set one up when you create an address and when a person signs in with an address the install has not seen.
+
+**How you know it worked.** The subscription shows as approved, and linking a care context to that address from a facility produces a notification on your callback without any call from you.
+
+**When it goes wrong.** Nothing arrives: the checks are those for any callback, see [the callback never arrives](/docs/main/docs/hiecm/v3/troubleshooting/callback-never-arrives). A subscription created without asking the person is a consent failure that certification looks for. A notification acted on as though it were permission reads a record with no consent behind it.
+
 ## Auto approval: subscribe once, approve every time
 
 1. Ask the user to confirm your app may retrieve new linked records automatically.
 2. Set up an auto approval policy with the [HIE-CM](/docs/main/docs/hiecm/v3/getting-started/glossary#hie-cm).
 
 While the policy is active, the consent request you raise on a new or updated care context notification is granted immediately, and you fetch and store the record. Disable the policy and a request arrives for each record instead.
+
+The user must be able to disable the policy at any time, as easily as they enabled it.
+
+Notes for AI agents
+
+**Before you start.** The person is signed in, a subscription is approved, and the app can surface device notifications.
+
+**What happens.** Ask the two questions separately: whether to subscribe, and whether new records may be retrieved automatically. Set the policy with `/api/hiecm/consent/v3/auto/approve`, naming the `hiu` and whether it applies to all HIPs; it answers 202 Accepted. The policy is later switched with `/api/hiecm/consent/v3/auto/approve/{consentId}/disable` and `/api/hiecm/consent/v3/auto/approve/{consentId}/enable`, where `consentId` is the auto approval id.
+
+**How you know it worked.** The next new care context produces a consent request that is granted without the person being asked, and the record is fetched.
+
+**When it goes wrong.** The app keeps no auto approval id, so the person cannot turn the policy off. A request arriving for each record after the policy is disabled is the system working, not failing.
 
 ## Consent management
 
@@ -38913,6 +39650,18 @@ Once a care context is linked to the user's ABHA address:
 4. It raises a health information request with the approved [consent artefact](/docs/main/docs/hiecm/v3/getting-started/glossary#consent-artefact).
 5. The [HIP](/docs/main/docs/hiecm/v3/getting-started/glossary#hip) sends the records across the network.
 6. Your app stores them for long term access and displays them, preferably in chronological order.
+
+A grant on its own is not the end. A granted consent with no health information request behind it leaves the person with permission and no records.
+
+Notes for AI agents
+
+**Before you start.** The care context is linked to the person's address, a subscription tells you when it appears or changes, and the app implements the consent and data flow calls as an HIU. See [M3 Journey 3](/docs/main/docs/hiecm/v3/milestones/m3#m3-fetch-records) for the fetch itself.
+
+**What happens.** On the notification, raise a consent request for that care context, wait for the grant, then raise the health information request with the granted artefact, and decrypt what the HIP pushes. Store every record for the long term.
+
+**How you know it worked.** The records for the notified care context are stored and shown in date order, and reopening them needs no new request.
+
+**When it goes wrong.** `ABDM-1112`: the artefact is invalid or already expired. Revocation is the person exercising a right, so handle it as a state, not as an error. Records fetched but not stored disappear when the consent window closes. Test every HI type the app may receive, structured and unstructured, not only one.
 
 ## Next
 
@@ -39264,6 +40013,16 @@ The ABHA Address is a unique and user-friendly identifier in the format: `user@a
 - A default ABHA Address is generated along with every ABHA Number.
 - Users may subsequently create a personalized ABHA Address.
 
+The number answers who the person is. The address answers where their records are routed, and it is the identifier care contexts are linked to and consent requests are raised against. One number can carry more than one address, and one mobile number can carry several ABHA numbers, which is common in a family. That is why a login by mobile can return a list of accounts to choose from.
+
+Notes for AI agents
+
+**What happens.** Store the ABHA number as the patient's stable identity and the address as the routing handle beside it. Use the address wherever a call routes to the person: linking and consent.
+
+**How you know it worked.** You can answer two questions. An address a patient gives you routes to an existing account; it does not create one. Your patient record keys on the ABHA number, because a person can hold several addresses and add more later.
+
+**When it goes wrong.** An address stored as the primary key breaks when the person adds or changes one. A sandbox address does not exist in production, and the refusal reads as not found rather than as the wrong environment.
+
 ## Identity Verification Mechanisms
 
 ABHA creation and authentication are performed through ABDM-approved verification methods.
@@ -39315,6 +40074,18 @@ ABHA Addresses must comply with defined validation standards.
 - Mobile numbers cannot be used directly as ABHA Addresses.
 
 Organizations should rely on ABDM validation services to verify address eligibility.
+
+Every ABHA number is issued a default address built from its 14 digits. A person cannot create that address themselves, and can create a readable one beside it. Offer addresses built from the person's name rather than an empty field.
+
+Notes for AI agents
+
+**Before you start.** Know whether the address is being created against an ABHA number or against a mobile number with a self declared profile. See [P1 Registration and login](/docs/main/docs/hiecm/v3/milestones/p1).
+
+**What happens.** Validate the rules above in your own form before you submit, so a refused address becomes an inline message. Offer the suggestions the service returns from `/abha/api/v3/enrollment/enrol/suggestion` during M1 enrolment. Send the chosen address without the `@` suffix where the call asks for it.
+
+**How you know it worked.** The address is created and the person can sign in with it. Before that, your form refuses an address that begins with a digit, begins or ends with a dot, or is a mobile number.
+
+**When it goes wrong.** The address is taken: show alternatives rather than an error alone. The person expects to use their mobile number as their address: say in the form that this is not allowed, rather than letting them find out on submission.
 
 ## Information Associated with an ABHA
 
@@ -39692,45 +40463,71 @@ Before working through the checks, know which flow you are in. [Discovery](/docs
 
 Before assuming any step above is genuinely missing, rule out a callback URL problem first: [the callback never arrives](/docs/main/docs/hiecm/v3/troubleshooting/callback-never-arrives) covers registration and reachability, which is more common than the gateway itself failing to send.
 
-## How you know it worked
+### How you know it worked
 
 For linking, the care context appears when the patient's PHR app runs discovery against your facility, after the link confirm callback reports success. For discovery, your system answers the inbound discovery callback with the care contexts you hold for that patient.
 
-## When it goes wrong
+### When it goes wrong
 
 If you have identified which callback in the chain is missing and ruled out a callback URL problem, raise a request on the [support ticketing platform](https://sandboxsupport.abdm.gov.in/). Report which step of the chain stopped, the `REQUEST-ID` from the call that started it, the `TIMESTAMP`, and every response and callback body you did receive up to the point it stalled. See [what to put in a support request](/docs/main/docs/hiecm/v3/troubleshooting#what-to-put-in-a-support-request) for the full report format.
 
 This symptom can surface as a duplicate or invalid link reference, or a call made out of the logical sequence, both on the [M2 errors reference](/docs/main/docs/hiecm/v3/api/m2/errors).
 
-[Next Still stuck? Check the M2 user journey Confirm exactly where your call sits in the sequence, and which callback should follow it.](/docs/main/docs/hiecm/v3/milestones/m2)
+Notes for AI agents
+
+**Before you start.** Know which chain you are in, discovery or linking, and hold the `REQUEST-ID` of the call that started it.
+
+**What happens.** Walk the chain in order and find the first callback that did not arrive: the discovery request on your bridge, then link init, then link confirm. Rule out the callback URL first, using the checks on [the callback never arrives](/docs/main/docs/hiecm/v3/troubleshooting/callback-never-arrives). Generate a fresh `REQUEST-ID` for every call, because a reused one makes callbacks impossible to tell apart.
+
+**How you know it worked.** For linking, the link confirm callback reports success and the care context appears when the patient runs discovery. For discovery, your system answers the inbound discovery request with the care contexts it holds.
+
+**When it goes wrong.** Once the missing step is named and the callback URL is ruled out, stop and hand the person the support report: which step stopped, the starting `REQUEST-ID`, the `TIMESTAMP`, and every response and callback body received so far.
+
+## Next
+
+[NextStill stuck? Check the M2 user journeyConfirm exactly where your call sits in the sequence, and which callback should follow it.](/docs/hiecm/v3/milestones/m2)
 
 
 ---
 
 # The callback never arrives
 
-You made a call, it came back with a 202 or a 200, and nothing else has happened since. This is a common report in [HIE-CM](/docs/main/docs/hiecm/v3/getting-started/glossary#hie-cm) integration. The checks below are in the order we recommend, not a record of how often each has turned out to be the actual cause.
+You made a call, it came back with a 202 or a 200, and nothing else has happened since. This is a common report in [HIE-CM](/docs/main/docs/hiecm/v3/getting-started/glossary#hie-cm) integration.
 
-That early response only means the [NHA](/docs/main/docs/hiecm/v3/getting-started/glossary#nha) gateway accepted your request. In M2 and M3 the real answer arrives later, as a POST from the gateway to a URL you registered in advance. See [the gateway](/docs/main/docs/hiecm/v3/concepts/gateway) for why this is the normal shape of these flows, and the [API reference](/docs/main/docs/hiecm/v3/api), where each call names the callback it produces.
+That early response only means the gateway accepted your request. In M2 and M3 the real answer arrives later, as a POST from the gateway to a URL you registered in advance. See [a 200 means accepted, not done](/docs/main/docs/hiecm/v3/concepts/gateway#asynchronous-callbacks) for why this is the normal shape of these flows, and the [API reference](/docs/main/docs/hiecm/v3/api), where each call names the callback it produces.
 
 ## Work through these in order
 
+The checks are in the order we recommend, not a record of how often each has turned out to be the cause.
+
 1. **Is the callback URL registered with the gateway?** Confirm it with the [update bridge callback URL](/docs/main/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/03-gateway-patch-gateway-v3-bridge-url) call. Setting a URL in a console once is not the same as confirming the gateway has it.
 2. **Is that URL reachable from the public internet over HTTPS?** ABDM posts to it from outside your network. A URL that only answers on your local machine or behind a VPN will never receive anything, and the original call gives you no signal that this is wrong.
-3. **Did the request expire before the other party answered?** How long a request stays live before ABDM gives up is not documented yet. If you have waited what feels like a long time, say so when you escalate rather than assuming a fixed window.
-4. **Is your endpoint returning a non success status?** A handler that errors, times out, or is slow is a real problem. Whether and when delivery attempts stop is not documented yet. Deliveries can repeat, so your handler has to treat every one as possibly a retry of one it already handled. Respond quickly with a success status even before you have finished processing the callback body.
+3. **Did the request expire before the other party answered?** How long a request stays live before ABDM gives up is not published. If you have waited what feels like a long time, say so when you escalate rather than assuming a fixed window.
+4. **Is your endpoint returning a non success status?** A handler that errors, times out, or is slow is a real problem. Deliveries can repeat, so your handler has to treat every one as possibly a retry of one it already handled. Respond quickly with a success status, even before you have finished processing the callback body.
 
-## How you know it worked
+### How you know it worked
 
 Your handler receives a POST at your registered URL, carrying the exact `REQUEST-ID` you generated for the original call. Until you have observed that once, the callback path is unproven, even if the registration call itself succeeded.
 
-## When it goes wrong
+### When it goes wrong
 
 If all four checks pass and the callback still has not arrived, raise a request on the [support ticketing platform](https://sandboxsupport.abdm.gov.in/). Report the API you called, the `REQUEST-ID`, the `TIMESTAMP`, and the response you got. See [what to put in a support request](/docs/main/docs/hiecm/v3/troubleshooting#what-to-put-in-a-support-request) for the full report format.
 
 This symptom can surface as [ABDM-9999](/docs/main/docs/hiecm/v3/reference/error-codes), the catch-all for a failure the gateway does not explain further.
 
-[Next Still stuck? Check the M2 user journey Confirm which step of the sequence your call sits in, so you know which callback should follow it.](/docs/main/docs/hiecm/v3/milestones/m2)
+Notes for AI agents
+
+**Before you start.** Confirm the original call returned 202 or 200. If it returned an error, the callback was never going to come: read that error instead.
+
+**What happens.** Run the four checks in order and stop at the first that fails: the bridge URL is registered, it answers over public HTTPS, the request had time to be answered, and your handler returns a success status fast. Do not resend the original call while checking, because a resend with a new `REQUEST-ID` starts a second exchange.
+
+**How you know it worked.** A POST reaches the registered URL and its request id matches the `REQUEST-ID` of the call that caused it.
+
+**When it goes wrong.** After the four checks pass, stop and hand the person the support report: the API called, `REQUEST-ID`, `TIMESTAMP` and the response body. Never put an access token, a client secret or a patient identifier in it.
+
+## Next
+
+[NextStill stuck? Check the M2 user journeyConfirm which step of the sequence your call sits in, so you know which callback should follow it.](/docs/hiecm/v3/milestones/m2)
 
 
 ---
@@ -39743,21 +40540,33 @@ Before working through the checks, confirm the request itself was accepted, and 
 
 ## Work through these in order
 
-1. **Does the patient's app show the request at all?** The gateway notifies the patient through the ABHA App when a consent request is raised. If the patient uses a third party PHR app instead, that app needs an approved subscription with the gateway to be notified of a new consent request; without one, the request can sit unseen even though it was accepted. Whether the ABHA App itself needs anything set up beyond the patient having an address is not something we have confirmed.
-2. **Has the request expired?** A consent request carries a window the requester sets for the patient to respond, separate from how long access lasts once granted. See [Consent](/docs/main/docs/hiecm/v3/concepts/consent#the-states-a-consent-moves-through) for the two clocks. Running out of the request window moves the state to Expired, not Requested, so checking the current status tells you if this has already happened.
+1. **Does the patient's app show the request at all?** The gateway notifies the patient through the ABHA App when a consent request is raised. If the patient uses a third party PHR app instead, that app needs an approved subscription with the gateway to be notified of a new consent request; without one, the request can sit unseen even though it was accepted.
+2. **Has the request expired?** A consent request carries a window the requester sets for the patient to respond, separate from how long access lasts once granted. See [Consent](/docs/main/docs/hiecm/v3/concepts/consent#consent-artefact) for the two clocks. Running out of the request window moves the state to Expired, not Requested, so checking the current status tells you if this has already happened.
 3. **Was it raised against the right ABHA address?** An address that is malformed or does not exist produces an error and the request goes nowhere. A syntactically valid address that belongs to a different real patient will not error at all: the request is delivered and seen, just by the wrong person, not the one you meant. Getting the address right matters more than passing validation.
 
-## How you know it worked
+### How you know it worked
 
 The consent request status reports Granted or Denied rather than Requested. A Granted result also carries the id of at least one consent artefact, and a granted request can produce more than one.
 
-## When it goes wrong
+### When it goes wrong
 
 If the patient's app shows the request, it has not expired, and the address is correct, and the state is still Requested after a reasonable wait, this is expected: Requested means the patient has not decided yet, and there is no call that makes them decide faster. If you believe the patient acted and the state did not change, raise a request on the [support ticketing platform](https://sandboxsupport.abdm.gov.in/). Report the consent request id, the `REQUEST-ID` from the init call, the `TIMESTAMP`, and the status response. See [what to put in a support request](/docs/main/docs/hiecm/v3/troubleshooting#what-to-put-in-a-support-request) for the full report format.
 
 This symptom can surface as an invalid or non-existent ABHA address on the [error codes reference](/docs/main/docs/hiecm/v3/reference/error-codes).
 
-[Next Still stuck? Read Consent end to end The full state model, the two clocks, and who holds what.](/docs/main/docs/hiecm/v3/concepts/consent)
+Notes for AI agents
+
+**Before you start.** Confirm the consent request was accepted and hold its consent request id. Read the current state from the consent request status call rather than waiting on the next callback.
+
+**What happens.** Check in order: the patient's app shows the request, the request window has not run out, and the ABHA address is the patient you meant. A third party PHR app sees a new consent request only through an approved subscription.
+
+**How you know it worked.** The status call reports Granted or Denied. A grant carries at least one consent artefact id; store every one.
+
+**When it goes wrong.** Requested with all three checks passing means the patient has not decided, and no call makes them decide. Do not raise a second request for the same need. If the patient says they acted and the state has not moved, hand the person the support report: the consent request id, the init call's `REQUEST-ID`, the `TIMESTAMP` and the status response.
+
+## Next
+
+[NextStill stuck? Read Consent end to endThe full state model, the two clocks, and who holds what.](/docs/hiecm/v3/concepts/consent)
 
 
 ---
@@ -39775,17 +40584,29 @@ Before working through the checks, confirm more than one endpoint is actually fa
 3. **Is your clock wrong?** The `TIMESTAMP` header has to be close to the gateway's own clock, in ISO 8601 UTC. A container host that was suspended and resumed is the usual cause, because its clock resumes behind. See [authentication](/docs/main/docs/hiecm/v3/reference/authentication).
 4. **Is `X-CM-ID` missing or wrong for this environment?** Look at the literal value you sent, not the value you meant to send: `sbx` on the sandbox, `abdm` in production. This header names the consent manager you are pointed at, and the wrong value fails every call the same way a missing session token does.
 
-## How you know it worked
+### How you know it worked
 
 A call that was returning 401 now returns its normal response, and stays that way across more than one call in a row. A single success right after several failures can be a token that was about to expire anyway; confirm with a second call a minute or more later.
 
-## When it goes wrong
+### When it goes wrong
 
 If you have re-run the session call, confirmed the environment, fixed the clock, and confirmed `X-CM-ID`, and calls still return 401 with no matching code, raise a request on the [support ticketing platform](https://sandboxsupport.abdm.gov.in/). Report the API you called, the `REQUEST-ID`, the `TIMESTAMP`, and the full response body. See [what to put in a support request](/docs/main/docs/hiecm/v3/troubleshooting#what-to-put-in-a-support-request) for the full report format.
 
 The codes this symptom can surface are on the [error codes reference](/docs/main/docs/hiecm/v3/reference/error-codes): an invalid timestamp, the wrong consent manager id, a missing session token, or a required header that is absent or malformed.
 
-[Next Still stuck? Read authentication end to end Every header a call needs, and what the gateway does when one is wrong.](/docs/main/docs/hiecm/v3/reference/authentication)
+Notes for AI agents
+
+**Before you start.** Confirm that more than one endpoint fails the same way, and keep the full response body. If one call fails and others succeed, this page does not apply: read that call's error code.
+
+**What happens.** Check in order and stop at the first that fails: a fresh session token from `POST /api/hiecm/gateway/v3/sessions`, the same host for the session call and the failing call, a `TIMESTAMP` from a synchronised clock in ISO 8601 UTC, and the literal `X-CM-ID` value, `sbx` on the sandbox and `abdm` in production. Read `expiresIn` from the session response rather than assuming a lifetime.
+
+**How you know it worked.** Two calls a minute or more apart both return their normal response.
+
+**When it goes wrong.** After all four checks pass, stop retrying and hand the person the support report: the API called, `REQUEST-ID`, `TIMESTAMP` and the full response body. Never include the token or the client secret.
+
+## Next
+
+[NextStill stuck? Read authentication end to endEvery header a call needs, and what the gateway does when one is wrong.](/docs/hiecm/v3/reference/authentication)
 
 
 ---
@@ -39833,17 +40654,29 @@ Before working through the checks, confirm the request call itself succeeded and
 2. **Have you requested an OTP for this transaction more than a few times in a short window?** You may have been rate limited. A retry loop that fires the request call again on every failure can trigger this without the failure showing clearly in your own logs, because a rate limit response can read like a plain timeout depending on how your client surfaces it.
 3. **Has the transaction expired before you tried to verify it?** How long a `txnId` stays valid is not documented yet. A failed enrolment call should not be retried blindly: start a fresh OTP request rather than reuse an old `txnId` if enough time has passed that you are unsure it is still live.
 
-## How you know it worked
+### How you know it worked
 
 The phone registered against the identifier you sent receives an SMS carrying an OTP, and verifying it with that `txnId` succeeds. Receiving a `txnId` from the request call alone does not confirm the SMS was sent.
 
-## When it goes wrong
+### When it goes wrong
 
 If you have confirmed the receiving number, are not rate limited, and the transaction is fresh, and the OTP still has not arrived, raise a request on the [support ticketing platform](https://sandboxsupport.abdm.gov.in/) rather than requesting again. Report the API you called, the `REQUEST-ID`, the `TIMESTAMP`, and the full response body including the `txnId`. See [what to put in a support request](/docs/main/docs/hiecm/v3/troubleshooting#what-to-put-in-a-support-request) for the full report format.
 
 This symptom can surface as a rate limit code or the catch-all failure code, both on the [error codes reference](/docs/main/docs/hiecm/v3/reference/error-codes).
 
-[Next Still stuck? Walk the M1 user journey See exactly where the OTP request sits among the calls that create an ABHA.](/docs/main/docs/hiecm/v3/milestones/m1)
+Notes for AI agents
+
+**Before you start.** Confirm the request call returned a `txnId`. A failed request call is a different problem.
+
+**What happens.** Check in order: in the Aadhaar OTP enrolment flow, only the mobile registered against that Aadhaar receives the OTP, so ask which phone that is; then whether repeated requests have been rate limited; then whether the transaction is still live. Never loop the request call on failure, because each retry counts against the limit.
+
+**How you know it worked.** The SMS arrives on the registered phone and verifying it against the same `txnId` succeeds. A `txnId` alone does not prove the SMS was sent.
+
+**When it goes wrong.** Once the number, the rate limit and the transaction are ruled out, stop requesting and hand the person the support report: the API called, `REQUEST-ID`, `TIMESTAMP` and the full response body including the `txnId`.
+
+## Next
+
+[NextStill stuck? Walk the M1 user journeySee exactly where the OTP request sits among the calls that create an ABHA.](/docs/hiecm/v3/milestones/m1)
 
 
 ---
@@ -40050,7 +40883,7 @@ The patient's app holds its screen open for 30 seconds. Send the acknowledgement
 
 `profile.patient` carries the ABHA number, the ABHA address, name, gender, date of birth, mobile number, address and a KYC photo. Match on the ABHA address. The counter context is yours to define: up to 20 alphanumeric characters, and never the facility id, the HIP id or the HIP name.
 
-The two calls: [receive a patient's shared profile](/docs/main/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/01-scan-and-register-post-v3-hip-patient-share) and [send the share acknowledgement](/docs/main/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/02-scan-and-register-post-patient-share-v3-on-share). The patient's side is [P2 Consents Management](/docs/main/docs/hiecm/v3/milestones/p2#scan-and-register-at-a-facility).
+The two calls: [receive a patient's shared profile](/docs/main/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/01-scan-and-register-post-v3-hip-patient-share) and [send the share acknowledgement](/docs/main/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/02-scan-and-register-post-patient-share-v3-on-share). The patient's side is [P2 Consents Management](/docs/main/docs/hiecm/v3/milestones/p2#p2-scan-and-share).
 
 
 ---
@@ -78401,7 +79234,7 @@ They are no longer published; remove them from your agent. [Build with AI](/docs
 
 # 29 September 2026
 
-4 changes
+7 changes
 
 ### Ambulance Booking has an API reference
 
@@ -78419,6 +79252,18 @@ Five calls, for EUAs and HSPAs, each on its own page with a request you can send
 
 Reinstall to move from 0.5.0. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
 
+### The abdm-contributors-assistant plugin is 0.3.4
+
+Reinstall to move from 0.3.0. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
+
+### The abdm-integrators-assistant plugin is 0.9.2
+
+Reinstall to move from 0.9.0. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
+
+### The nhcx plugin is 1.0.1
+
+Reinstall to move from 1.0.0. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
+
 
 ---
 
@@ -78428,12 +79273,15 @@ Changes that affect what you can build against, newest first. Each entry links t
 
 ## 29 September 2026
 
-4 changes
+7 changes
 
 - [Ambulance Booking has an API reference](/docs/main/docs/whats-new/2026-09-29#ambulance-booking-has-an-api-reference)
 - [Physical Consultation has an API reference](/docs/main/docs/whats-new/2026-09-29#physical-consultation-has-an-api-reference)
 - [Network and discovery has an API reference](/docs/main/docs/whats-new/2026-09-29#network-and-discovery-has-an-api-reference)
 - [The abdm-integrators-assistant plugin is 0.9.0](/docs/main/docs/whats-new/2026-09-29#the-abdm-integrators-assistant-plugin-is-090)
+- [The abdm-contributors-assistant plugin is 0.3.4](/docs/main/docs/whats-new/2026-09-29#the-abdm-contributors-assistant-plugin-is-034)
+- [The abdm-integrators-assistant plugin is 0.9.2](/docs/main/docs/whats-new/2026-09-29#the-abdm-integrators-assistant-plugin-is-092)
+- [The nhcx plugin is 1.0.1](/docs/main/docs/whats-new/2026-09-29#the-nhcx-plugin-is-101)
 
 ## 25 September 2026
 

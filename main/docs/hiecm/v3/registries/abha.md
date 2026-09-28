@@ -33,6 +33,16 @@ The ABHA Address is a unique and user-friendly identifier in the format: `user@a
 - A default ABHA Address is generated along with every ABHA Number.
 - Users may subsequently create a personalized ABHA Address.
 
+The number answers who the person is. The address answers where their records are routed, and it is the identifier care contexts are linked to and consent requests are raised against. One number can carry more than one address, and one mobile number can carry several ABHA numbers, which is common in a family. That is why a login by mobile can return a list of accounts to choose from.
+
+Notes for AI agents
+
+**What happens.** Store the ABHA number as the patient's stable identity and the address as the routing handle beside it. Use the address wherever a call routes to the person: linking and consent.
+
+**How you know it worked.** You can answer two questions. An address a patient gives you routes to an existing account; it does not create one. Your patient record keys on the ABHA number, because a person can hold several addresses and add more later.
+
+**When it goes wrong.** An address stored as the primary key breaks when the person adds or changes one. A sandbox address does not exist in production, and the refusal reads as not found rather than as the wrong environment.
+
 ## Identity Verification Mechanisms
 
 ABHA creation and authentication are performed through ABDM-approved verification methods.
@@ -84,6 +94,18 @@ ABHA Addresses must comply with defined validation standards.
 - Mobile numbers cannot be used directly as ABHA Addresses.
 
 Organizations should rely on ABDM validation services to verify address eligibility.
+
+Every ABHA number is issued a default address built from its 14 digits. A person cannot create that address themselves, and can create a readable one beside it. Offer addresses built from the person's name rather than an empty field.
+
+Notes for AI agents
+
+**Before you start.** Know whether the address is being created against an ABHA number or against a mobile number with a self declared profile. See [P1 Registration and login](/docs/main/docs/hiecm/v3/milestones/p1).
+
+**What happens.** Validate the rules above in your own form before you submit, so a refused address becomes an inline message. Offer the suggestions the service returns from `/abha/api/v3/enrollment/enrol/suggestion` during M1 enrolment. Send the chosen address without the `@` suffix where the call asks for it.
+
+**How you know it worked.** The address is created and the person can sign in with it. Before that, your form refuses an address that begins with a digit, begins or ends with a dot, or is a mobile number.
+
+**When it goes wrong.** The address is taken: show alternatives rather than an error alone. The person expects to use their mobile number as their address: say in the form that this is not allowed, rather than letting them find out on submission.
 
 ## Information Associated with an ABHA
 

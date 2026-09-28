@@ -1,6 +1,6 @@
 # 29 September 2026
 
-4 changes
+7 changes
 
 ### Ambulance Booking has an API reference
 
@@ -17,3 +17,15 @@ Five calls, for EUAs and HSPAs, each on its own page with a request you can send
 ### The abdm-integrators-assistant plugin is 0.9.0
 
 Reinstall to move from 0.5.0. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
+
+### The abdm-contributors-assistant plugin is 0.3.4
+
+Reinstall to move from 0.3.0. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
+
+### The abdm-integrators-assistant plugin is 0.9.2
+
+Reinstall to move from 0.9.0. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
+
+### The nhcx plugin is 1.0.1
+
+Reinstall to move from 1.0.0. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).

@@ -164,25 +164,17 @@ If no HP-ID exists, the mobile number must be verified before creating the HP-ID
 
 Create HPID returns a `token`. The register professional call carries an `hprToken` in its payload.
 
-## Journey 2: registering a professional on HPR
+Notes for AI agents
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant S as Your system
-    participant H as HPR service
-    Note over S: Holds the HPR token from Journey 1
-    S->>H: GET /apis/v1/masters/medical-councils, courses,<br/>colleges, universites, states, district, languages
-    H-->>S: Code lists
-    S->>H: POST /apis/v1/doctors/register-professional-new<br/>hprToken, practitioner {healthProfessionalType,<br/>officialMobile, officialEmail, personal,<br/>qualification,
-    H-->>S: hprId, referenceNumber, status
-    S->>H: POST /apis/v1/doctors/fetch-documents-list<br/>hprid
-    H-->>S: documentList {profileDetails, qualificationDetails,<br/>registrationDetails}
-    S->>H: POST /apis/v1/uploads/upload-document<br/>hpr_token, document [document_id, document_type,<br/>fileType, data]
-    H-->>S: degreeCertificate, registrationCertificate,<br/>proofOfWorkCertificate {status, msg}
-    S->>H: POST /apis/v1/doctors/fetch-professional-info<br/>practitioner {id}
-    H-->>S: practitioners [identifier, registrations,<br/>qualifications, hpr_id]
-```
+**Before you start.** A gateway session token for `Authorization`, a way to redirect the professional to a URL and bring them back, and the HPR certificate from `/v4/int/api/v1/auth/cert`. Mobile numbers and passwords here are encrypted with `RSA/ECB/PKCS1Padding` under that certificate, not with the M1 key and padding.
+
+**What happens.** Generate the Aadhaar link and redirect to its URL. `/aadhaar/isAuthenticated` answers a bare `true` or `false`, not an object. Verify, then check whether an HP-ID already exists for the Aadhaar and stop there if it does. Match the mobile with `/v2/registration/aadhaar/demographicAuthViaMobile`; when `verified` is false, verify it by OTP. Take a suggestion and create the HP-ID. Keep the token it returns for the next journeys.
+
+**How you know it worked.** The create call returns the HP-ID and a token, and checking the same Aadhaar again returns that HP-ID rather than none. An HP-ID is an identity, not a professional profile: Journey 2 creates the profile.
+
+**When it goes wrong.** The redirect URL is valid for five minutes, so a slow professional needs a fresh link rather than a retry. An existing HP-ID for the Aadhaar means login, not creation. A client that parses the status poll as an object fails on the bare boolean.
+
+## Journey 2: registering a professional on HPR
 
 The HP-ID is an identity, not a professional profile. The professional profile is created through the registration process, which captures details such as qualifications, council registration, and current work information. Professional registration requires the HPR Token returned from Journey 1.
 
@@ -190,28 +182,17 @@ The following documents are mandatory for upload: the qualification degree certi
 
 The registration API requires codes rather than names. Therefore, the application must first fetch the relevant master data through the respective master APIs and use the corresponding codes during registration. Master data includes council, course, college, university, state, district and language.
 
-## Journey 3: onboarding a facility to the HFR
+Notes for AI agents
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor M as Facility manager (HP-ID)
-    participant S as Your system
-    participant H as HFR service
-    M->>S: Logs in with HPR credentials
-    Note over S: Holds the HPR token, sent as x-hprid-auth
-    S->>H: POST /search/address/filter/deduplicate<br/>name, address, district, subDistrict, village,<br/>geolocation
-    H-->>S: Matching facilities, if any
-    Note over S,H: Stop here if the facility is already registered
-    S->>H: POST /v1.5/facility/basic-information<br/>header x-hprid-auth,<br/>facilityInformation {facilityName,<br/>facilityAddressDetails (LGD codes),
-    H-->>S: trackingId (the Facility ID,<br/>masked until submission), status
-    S->>H: POST /v1.5/facility/additional-information<br/>trackingId, linkedProgramIds {nin, abpmjayId,<br/>rohiniId, echsId, cghsId},<br/>generalInformation {hasPharmacy, hasBloodBank,
-    H-->>S: trackingId, status
-    S->>H: POST /v1.5/facility/detailed-information<br/>trackingId, specialities [systemOfMedicineCode,<br/>specialities],<br/>medicalInfrastructure (bed and ventilator counts)
-    H-->>S: trackingId, status
-    S->>H: POST /v1.5/facility/submit-facility<br/>headers x-hprid-auth, x-hprid-auth-verifier,<br/>trackingId, sourceOfInformation, facilitySuperUser
-    H-->>S: Facility submitted for verification,<br/>Facility ID visible once approved
-```
+**Before you start.** The professional holds an HP-ID from Journey 1, you hold the `hprToken`, and you hold a gateway session token.
+
+**What happens.** Fetch the master lists first and send codes, never names. Call `/apis/v1/doctors/register-professional-new` with the `hprToken` in the payload. Fetch the document list, then upload one document per call to `/apis/v1/uploads/upload-document`. Corrections later go to `/apis/v1/doctors/update-professional-new`.
+
+**How you know it worked.** Registration returns the `hprId` and a status, the uploads report each certificate's status, and `/apis/v1/doctors/fetch-professional-info` shows the qualification and registration you sent. A registration with a mandatory document missing is not finished, even though the register call was accepted.
+
+**When it goes wrong.** A code that is not on the current master list reads as a validation failure on a field you believed was right: fetch the list again rather than trusting a cached value. A professional who is already registered is a state to read, not an error to retry.
+
+## Journey 3: onboarding a facility to the HFR
 
 Onboarding consists of one search, three updates, and a final submission, with each update adding another layer of facility details. If you stop before submission, the facility remains in Draft status and is not visible on ABDM.
 
@@ -242,6 +223,16 @@ sequenceDiagram
 ```
 
 A shorter verification flow is available for government programmes. An OTP is sent to the contact number registered against the Facility ID, which is then validated to complete verification.
+
+Notes for AI agents
+
+**Before you start.** Someone at the facility holds an HP-ID, so you hold the HPR token that goes in `x-hprid-auth`. You hold a gateway session token and the LGD codes for the facility's address.
+
+**What happens.** Search with `/search/address/filter/deduplicate` and stop if the facility exists. Send basic information and keep the `trackingId` it returns: every later call carries it. Send additional information, then detailed information, then submit with `x-hprid-auth` and `x-hprid-auth-verifier`.
+
+**How you know it worked.** Submit accepts the same `trackingId` and reports the facility submitted for verification, and a search afterwards returns it. A facility written but never submitted stays in Draft and is invisible to ABDM, whatever the three writes returned.
+
+**When it goes wrong.** A duplicate facility: the search step is what prevents it. A field refused on detailed information, because which sections are mandatory depends on the facility type, the service type and the system of medicine rather than on the field itself.
 
 ## Journey 4: linking bridges to a facility
 
@@ -277,8 +268,57 @@ A facility with a Facility ID and a linked HIP bridge can perform [M2](/docs/mai
 
 Next: [M4 API reference](/docs/main/docs/hiecm/v3/api/m4).
 
+Notes for AI agents
+
+**Before you start.** The facility is submitted and holds its Facility ID, 12 characters beginning with IN. A facility still in Draft has no ID to link. You hold the `bridgeId` of the software that will act for it.
+
+**What happens.** Call `/v1/bridges/MutipleHRPAddUpdateServices` with `facilityId`, `facilityName` and one entry per bridge carrying `bridgeId`, `hipName`, `type` and `active`. A facility that publishes and fetches needs one entry of type HIP and one of type HIU, not one entry that claims both.
+
+**How you know it worked.** The linkage result lists the bridge as active for the facility. The proof that it works is the flow it unblocks: a facility with an active HIP link completes [linking a care context](/docs/main/docs/hiecm/v3/milestones/m2#m2-link-care-context), and one with an active HIU link can raise a consent request.
+
+**When it goes wrong.** A `hipName` longer than 15 characters or carrying a special character is refused as validation. A name already used by another bridge on the same facility is refused, which is common on a facility's second bridge.
+
 ## Next
 
 - The base URLs and the operation list: [M4 API reference](/docs/main/docs/hiecm/v3/api/m4).
 - The patient side of all four: [P1 Registration and login](/docs/main/docs/hiecm/v3/milestones/p1).
 - Take your integration to production: [Go live](/docs/main/docs/hiecm/v3/getting-started/going-live).
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant S as Your system
+    participant H as HPR service
+    Note over S: Holds the HPR token from Journey 1
+    S->>H: GET /apis/v1/masters/medical-councils, courses,<br/>colleges, universites, states, district, languages
+    H-->>S: Code lists
+    S->>H: POST /apis/v1/doctors/register-professional-new<br/>hprToken, practitioner {healthProfessionalType,<br/>officialMobile, officialEmail, personal,<br/>qualification,
+    H-->>S: hprId, referenceNumber, status
+    S->>H: POST /apis/v1/doctors/fetch-documents-list<br/>hprid
+    H-->>S: documentList {profileDetails, qualificationDetails,<br/>registrationDetails}
+    S->>H: POST /apis/v1/uploads/upload-document<br/>hpr_token, document [document_id, document_type,<br/>fileType, data]
+    H-->>S: degreeCertificate, registrationCertificate,<br/>proofOfWorkCertificate {status, msg}
+    S->>H: POST /apis/v1/doctors/fetch-professional-info<br/>practitioner {id}
+    H-->>S: practitioners [identifier, registrations,<br/>qualifications, hpr_id]
+```
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor M as Facility manager (HP-ID)
+    participant S as Your system
+    participant H as HFR service
+    M->>S: Logs in with HPR credentials
+    Note over S: Holds the HPR token, sent as x-hprid-auth
+    S->>H: POST /search/address/filter/deduplicate<br/>name, address, district, subDistrict, village,<br/>geolocation
+    H-->>S: Matching facilities, if any
+    Note over S,H: Stop here if the facility is already registered
+    S->>H: POST /v1.5/facility/basic-information<br/>header x-hprid-auth,<br/>facilityInformation {facilityName,<br/>facilityAddressDetails (LGD codes),
+    H-->>S: trackingId (the Facility ID,<br/>masked until submission), status
+    S->>H: POST /v1.5/facility/additional-information<br/>trackingId, linkedProgramIds {nin, abpmjayId,<br/>rohiniId, echsId, cghsId},<br/>generalInformation {hasPharmacy, hasBloodBank,
+    H-->>S: trackingId, status
+    S->>H: POST /v1.5/facility/detailed-information<br/>trackingId, specialities [systemOfMedicineCode,<br/>specialities],<br/>medicalInfrastructure (bed and ventilator counts)
+    H-->>S: trackingId, status
+    S->>H: POST /v1.5/facility/submit-facility<br/>headers x-hprid-auth, x-hprid-auth-verifier,<br/>trackingId, sourceOfInformation, facilitySuperUser
+    H-->>S: Facility submitted for verification,<br/>Facility ID visible once approved
+```

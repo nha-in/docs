@@ -13,7 +13,7 @@ Ask the user which of these this project needs, and install only what they name:
 - `abdm-m4`: M4, register facilities and professionals. Sections: scaffold, integrate, debug.
 - `abdm-p1`: P1, PHR registration and login. Sections: scaffold, integrate, debug.
 - `abdm-p2`: P2, Consents Management. Sections: scaffold, integrate, debug.
-- `abdm-p3`: P3, PHR subscriptions. Sections: scaffold, integrate, debug.
+- `abdm-p3`: P3, PHR subscriptions. Sections: scaffold, design, integrate, debug.
 - `abdm-p4`: P4, health lockers. Sections: scaffold, integrate, debug.
 - `abdm-scan-and-register`: Scan and register. Sections: scaffold, integrate, debug.
 - `abdm-scan-and-pay`: Scan and pay. Sections: scaffold, integrate, debug.

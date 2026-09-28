@@ -43,6 +43,16 @@ Every code in the [error code reference](/docs/main/docs/hiecm/v3/reference/erro
 
 Symptom first debugging, for the failures that produce no useful code at all, is in [troubleshooting](/docs/main/docs/hiecm/v3/troubleshooting).
 
+Read the code in the body before the HTTP status. A 404 can carry `ABDM-1016`, Invalid Timestamp: the route exists and the request was refused. A 404 whose body carries `Status report` and no code means no route matched the request. A code can arrive bare or with a trailing colon and space, as in `ABDM-1016: `, so match on the code itself.
+
+Notes for AI agents
+
+**What happens.** Parse the body for an error code before acting on the status. Strip a trailing colon and space from the code, then key the handling on the action column of the [error code reference](/docs/main/docs/hiecm/v3/reference/error-codes), not on a list maintained by hand.
+
+**How you know it worked.** Given a code, you can say what it means and which header or field it concerns: `ABDM-2403` is Invalid X-CM-ID, the consent manager header.
+
+**When it goes wrong.** A one line message is read as a diagnosis: Invalid header covers many causes. A code that is not in the reference is handled as Unclassified, not guessed at. A 404 is treated as a wrong path when its body carries a code.
+
 ## Retries, and the calls you must not repeat
 
 A retry is safe when repeating the call cannot create a second thing or burn a single use value. Most of M1 fails that test.

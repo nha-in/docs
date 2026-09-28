@@ -13,14 +13,26 @@ Before working through the checks, know which flow you are in. [Discovery](/docs
 
 Before assuming any step above is genuinely missing, rule out a callback URL problem first: [the callback never arrives](/docs/main/docs/hiecm/v3/troubleshooting/callback-never-arrives) covers registration and reachability, which is more common than the gateway itself failing to send.
 
-## How you know it worked
+### How you know it worked
 
 For linking, the care context appears when the patient's PHR app runs discovery against your facility, after the link confirm callback reports success. For discovery, your system answers the inbound discovery callback with the care contexts you hold for that patient.
 
-## When it goes wrong
+### When it goes wrong
 
 If you have identified which callback in the chain is missing and ruled out a callback URL problem, raise a request on the [support ticketing platform](https://sandboxsupport.abdm.gov.in/). Report which step of the chain stopped, the `REQUEST-ID` from the call that started it, the `TIMESTAMP`, and every response and callback body you did receive up to the point it stalled. See [what to put in a support request](/docs/main/docs/hiecm/v3/troubleshooting#what-to-put-in-a-support-request) for the full report format.
 
 This symptom can surface as a duplicate or invalid link reference, or a call made out of the logical sequence, both on the [M2 errors reference](/docs/main/docs/hiecm/v3/api/m2/errors).
 
-[Next Still stuck? Check the M2 user journey Confirm exactly where your call sits in the sequence, and which callback should follow it.](/docs/main/docs/hiecm/v3/milestones/m2)
+Notes for AI agents
+
+**Before you start.** Know which chain you are in, discovery or linking, and hold the `REQUEST-ID` of the call that started it.
+
+**What happens.** Walk the chain in order and find the first callback that did not arrive: the discovery request on your bridge, then link init, then link confirm. Rule out the callback URL first, using the checks on [the callback never arrives](/docs/main/docs/hiecm/v3/troubleshooting/callback-never-arrives). Generate a fresh `REQUEST-ID` for every call, because a reused one makes callbacks impossible to tell apart.
+
+**How you know it worked.** For linking, the link confirm callback reports success and the care context appears when the patient runs discovery. For discovery, your system answers the inbound discovery request with the care contexts it holds.
+
+**When it goes wrong.** Once the missing step is named and the callback URL is ruled out, stop and hand the person the support report: which step stopped, the starting `REQUEST-ID`, the `TIMESTAMP`, and every response and callback body received so far.
+
+## Next
+
+[NextStill stuck? Check the M2 user journeyConfirm exactly where your call sits in the sequence, and which callback should follow it.](/docs/hiecm/v3/milestones/m2)

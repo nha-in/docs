@@ -11,14 +11,26 @@ Before working through the checks, confirm more than one endpoint is actually fa
 3. **Is your clock wrong?** The `TIMESTAMP` header has to be close to the gateway's own clock, in ISO 8601 UTC. A container host that was suspended and resumed is the usual cause, because its clock resumes behind. See [authentication](/docs/main/docs/hiecm/v3/reference/authentication).
 4. **Is `X-CM-ID` missing or wrong for this environment?** Look at the literal value you sent, not the value you meant to send: `sbx` on the sandbox, `abdm` in production. This header names the consent manager you are pointed at, and the wrong value fails every call the same way a missing session token does.
 
-## How you know it worked
+### How you know it worked
 
 A call that was returning 401 now returns its normal response, and stays that way across more than one call in a row. A single success right after several failures can be a token that was about to expire anyway; confirm with a second call a minute or more later.
 
-## When it goes wrong
+### When it goes wrong
 
 If you have re-run the session call, confirmed the environment, fixed the clock, and confirmed `X-CM-ID`, and calls still return 401 with no matching code, raise a request on the [support ticketing platform](https://sandboxsupport.abdm.gov.in/). Report the API you called, the `REQUEST-ID`, the `TIMESTAMP`, and the full response body. See [what to put in a support request](/docs/main/docs/hiecm/v3/troubleshooting#what-to-put-in-a-support-request) for the full report format.
 
 The codes this symptom can surface are on the [error codes reference](/docs/main/docs/hiecm/v3/reference/error-codes): an invalid timestamp, the wrong consent manager id, a missing session token, or a required header that is absent or malformed.
 
-[Next Still stuck? Read authentication end to end Every header a call needs, and what the gateway does when one is wrong.](/docs/main/docs/hiecm/v3/reference/authentication)
+Notes for AI agents
+
+**Before you start.** Confirm that more than one endpoint fails the same way, and keep the full response body. If one call fails and others succeed, this page does not apply: read that call's error code.
+
+**What happens.** Check in order and stop at the first that fails: a fresh session token from `POST /api/hiecm/gateway/v3/sessions`, the same host for the session call and the failing call, a `TIMESTAMP` from a synchronised clock in ISO 8601 UTC, and the literal `X-CM-ID` value, `sbx` on the sandbox and `abdm` in production. Read `expiresIn` from the session response rather than assuming a lifetime.
+
+**How you know it worked.** Two calls a minute or more apart both return their normal response.
+
+**When it goes wrong.** After all four checks pass, stop retrying and hand the person the support report: the API called, `REQUEST-ID`, `TIMESTAMP` and the full response body. Never include the token or the client secret.
+
+## Next
+
+[NextStill stuck? Read authentication end to endEvery header a call needs, and what the gateway does when one is wrong.](/docs/hiecm/v3/reference/authentication)

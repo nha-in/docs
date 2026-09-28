@@ -20,16 +20,6 @@ One request can produce more than one artefact. A granted request returns the id
 
 ## The states a consent moves through
 
-```mermaid
-stateDiagram-v2
-    [*] --> Requested: HIU raises a consent request
-    Requested --> Granted: Patient approves
-    Requested --> Denied: Patient refuses
-    Requested --> Expired: Patient does not act in time
-    Granted --> Revoked: Patient withdraws access
-    Granted --> [*]: Validity period ends
-```
-
 There are five states, in the two sections a PHR app shows: Requests holds Requested, Denied and Expired; Approved holds Granted and Revoked.
 
 | State     | What it means                                                         | What your system does                                                  |
@@ -42,19 +32,41 @@ There are five states, in the two sections a PHR app shows: Requests holds Reque
 
 Two clocks run here. The **request window** is how long the patient has to answer, set by the HIU, and running out produces Expired. The **consent validity period** is how long access lasts once granted, set by the patient as they grant, with a defined expiry date and time. Neither is the **date range**, which says which records are in scope by when the care happened: a consent granted today can cover records from 2019.
 
+Granted is not permanent. Revoked and Expired are ordinary destinations, not faults, and your system will meet both in production.
+
+Notes for AI agents
+
+**Before you start.** A gateway session, and your system acting as the HIU for this request. A consent request names four things: whose records, which HI types, which date range, and the purpose code.
+
+**What happens.** Store the consent request id from the init callback, then every consent artefact id a grant returns. Before each fetch, check the artefact is still usable: the patient can revoke at any time, and the validity period ends on its own.
+
+**How you know it worked.** A granted request returns at least one artefact id, and a fetch under it is accepted while the artefact is within its validity period and not revoked.
+
+**When it goes wrong.** A fetch that worked last week fails today because the patient revoked or the validity period ended; that is the system working. `ABDM-1062` is consent not granted, and `ABDM-1112` is an artefact id that is invalid or already expired. Records kept past the consent window are a legal problem, not a technical one.
+
 ## What the patient sees, and can change
 
 A consent request must display the requesting HIU, the purpose of data access, the data types requested, the date range, the consent validity period and the request status. Where permitted, the patient may modify four of those before approving: access duration, record date range, data categories and validity period. The consent you get back can be narrower than the one you asked for, so read the artefact.
 
 ## The five things a PHR app must let a person do
 
-Consent is granted by a person, and the PHR app is where they do it. NHA sets a floor of five capabilities, and an app missing one leaves a person able to give access they cannot inspect, change or withdraw.
+Consent is granted by a person, and the PHR app is where they do it. There is a floor of five capabilities, and an app missing one leaves a person able to give access they cannot inspect, change or withdraw.
 
 1. **See the request**, with the HIU asking, the purpose, the record types, the date range of records, how long the consent would last, and its status.
 2. **Change it before allowing it**, where the request permits: the access duration, the record date range, the categories shared, and the validity period. This is the one most often left out, and the one that turns a consent screen into a negotiation rather than a demand.
 3. **Allow or refuse it.** The consent flow has three outcomes, not two: approve, reject and ignore. An ignored request expires on the requester's window, and the interface has to show that state.
 4. **See what is already allowed**, so the person can tell which organisations hold access right now. A list of past decisions is not the same thing.
 5. **Take it back** at any time. Two things follow: the status updates at the consent manager, and sharing under that consent stops immediately, not at the end of the period.
+
+Notes for AI agents
+
+**Before you start.** The app receives consent requests only through an approved subscription. See [P3 Subscription](/docs/main/docs/hiecm/v3/milestones/p3).
+
+**What happens.** Build a screen for each of the five. Approving posts to `/api/hiecm/consent/v3/request/{consentRequestId}/approve`, denying to `/api/hiecm/consent/v3/request/{consentRequestId}/deny`, and revoking a granted consent to `/api/hiecm/consent/v3/revoke`. Show Expired as its own state, never as Denied, because the person refused nothing.
+
+**How you know it worked.** One request goes through the whole arc in the app: seen, its date range narrowed, allowed, found in the list of live consents, and revoked. A fetch attempted under it afterwards fails.
+
+**When it goes wrong.** A screen that lists requests but not live consents leaves the person unable to revoke what they cannot see. Revocation shown as expiry hides a decision the person made. Leaving out modification turns consent into a notice.
 
 ## Purpose of use codes
 
@@ -108,3 +120,13 @@ An auto approval policy works like this: the patient authorises the app once, th
 - [M3 Health Information User: Fetch data with consent](/docs/main/docs/hiecm/v3/api/m3), the requesting side.
 - [M2 Health Information Provider: Create and link records](/docs/main/docs/hiecm/v3/api/m2), what a record holder validates.
 - [How a record travels](/docs/main/docs/hiecm/v3/concepts/data-flow), what happens next.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Requested: HIU raises a consent request
+    Requested --> Granted: Patient approves
+    Requested --> Denied: Patient refuses
+    Requested --> Expired: Patient does not act in time
+    Granted --> Revoked: Patient withdraws access
+    Granted --> [*]: Validity period ends
+```
