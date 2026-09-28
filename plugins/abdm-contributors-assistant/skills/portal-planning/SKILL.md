@@ -1,9 +1,9 @@
 ---
 name: portal-planning
 description: The ABDM Developer Portal schedule, workstreams, ownership split, two-day shipping increments, definition of done, and risk register. Use whenever someone asks what ships when, what is blocked, who owns a piece of work, whether V1 is on track, what counts as finished, how to sequence a task, or wants a standup, a status update, or a re-plan. Also use when scope is being added or cut so the trade is made against the schedule rather than in the abstract.
-plan_version: 2026.09.28-5
+plan_version: 2026.09.28-6
 plan_source: abdm-v1-phase1-architecture-and-plan.md
-plan_hash: sha256:67d822c0faef8927e57151bb341daa70de19d801f4a02a74f88eb828ee10eda1
+plan_hash: sha256:b9e3b542624ff5182e918813994e7039c0e6a8d1e2cbe713ee3eb0c403a0e258
 compiled_from_plan: true
 ---
 
@@ -71,11 +71,11 @@ Each risk carries the decision it needs, because an unowned risk is just anxiety
 
 | Risk | Mitigation | Decision needed |
 |---|---|---|
-| Verification lags authoring badly, and the gap has widened. 57 atoms are written and none has been run against sandbox, while the plan promises dummy proof and recorded responses | Credentials, then a verification sweep across M1 to M3 before ship. Evidence lands in `catalogue/verification/`, and a wrong atom is corrected through an issue keyed by its id | The long pole, and authoring has moved three times since it was written. If credentials slip, ship atoms that state what the specification says and nothing more |
+| Verification lags authoring badly, and the gap has widened. 247 HIE-CM atoms are written and none has been run against sandbox, while the plan promises dummy proof and recorded responses | Credentials, then a verification sweep across M1 to M3 before ship. Evidence lands in `catalogue/verification/`, and a wrong atom is corrected through an issue keyed by its id | The long pole, and authoring has moved three times since it was written. If credentials slip, ship atoms that state what the specification says and nothing more |
 | NHA swagger is inconsistent or incomplete, with known 403s on some V3 sandbox endpoints | Ingest, hand-correct, record both the NHA file and the correction in `sources`, record the correction and leave the atom stating what the specification carries | Accept that some endpoints ship without a recorded sandbox response |
 | Docusaurus guides and Scalar references are two rendering systems on one site | Keep prose in plain markdown, avoid MDX beyond callouts and steps, so it ports anywhere; specs stay the single source under `catalogue/openapi/` | Decided: fully self-hosted from day one, no hosted-Scalar phase |
 | An existing community docs site overlaps heavily | Reach out early, propose the Catalogue as shared upstream | Product makes the call and the call |
-| The time available is not enough for three gateways at full depth | Atom depth is HIE-CM only, and since the 16 September 2026 reset no HIE-CM module carries atoms. Every HIE-CM module, UHI and NHCX stay at specification or site page depth, with no atoms written against them yet | Needs sign-off, already decided in the plan |
+| The time available is not enough for three gateways at full depth | Atom depth is HIE-CM only: M1 to M4 and P1 to P3 carry atoms, rebuilt on 29 September 2026 after the 16 September reset deleted them. P4, subscriptions, Scan and Pay, UHI and NHCX stay at specification or site page depth, with no atoms written against them yet | Needs sign-off, already decided in the plan |
 | Notes for AI agents are hidden from readers and NHA does not review them | `check:sections` fails an agent note stating an API literal neither its page nor a specification states; the runbook tells whoever applies a correction to read the note under it | Never relax that rule |
 | The page-canonical migration stops halfway | Every atom is a file or a map entry, `registry.json` says which, and both kinds keep working | Owner to name a deadline and an owner: if class 3 has not merged by then, no further class migrates |
 | NHCX atoms, 536 of 627 on 28 September 2026, are merged in from NHA's fork | No NHCX class migrates, and the self-link lint rule skips NHCX, until the source is decided | Owner decision 1: this repository becomes the NHCX source, or heading ids and agent notes go upstream. Unanswered, NHCX stays as it is |
