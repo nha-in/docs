@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"regexp"
 	"sort"
 	"strings"
 
@@ -43,6 +44,57 @@ func (r *Reader) ftsSearch(query, atomType, milestone, gateway string, limit int
 		// a syntax error.
 		return nil, nil
 	}
+	hits, err := r.ftsRun(match, atomType, milestone, gateway, limit)
+	ids := identifiers(query)
+	if err != nil || len(hits) >= limit || len(ids) == 0 || len(ids) == len(strings.Fields(query)) {
+		return hits, err
+	}
+	// Every token required found too few, and the query names an exact
+	// identifier: a stray word must not hide it, so retry on the identifiers
+	// alone, any of them, since each names one thing precisely ("is txnId the
+	// same as REQUEST-ID?" is answered by two atoms, one per name). A question
+	// in plain words is left to the vector leg, because a looser keyword match
+	// on "call" or "my" crowds its answers out of the fusion (the retrieval
+	// gate measured 12 cases falling when it did). AND rows keep their places
+	// first.
+	more, err := r.ftsRun(strings.Join(strings.Fields(ftsQuote(strings.Join(ids, " "))), " OR "), atomType, milestone, gateway, limit)
+	if err != nil {
+		return nil, err
+	}
+	seen := make(map[string]bool, len(hits))
+	for _, h := range hits {
+		seen[h.ID] = true
+	}
+	for _, h := range more {
+		if len(hits) >= limit {
+			break
+		}
+		if !seen[h.ID] {
+			hits = append(hits, h)
+			seen[h.ID] = true
+		}
+	}
+	return hits, nil
+}
+
+// identifierRe matches a token that names something exactly: letters with
+// digits (ABDM-1035, M1), an underscore or slash (m1_post_profile_verify,
+// /v3/link), hyphenated capitals (X-CM-ID), or camelCase (txnId).
+var identifierRe = regexp.MustCompile(`^(?:.*[A-Za-z].*[0-9].*|.*[0-9].*[A-Za-z].*|.*[_/].*|[A-Z]+(?:-[A-Z]+)+|[a-z]+[A-Z][A-Za-z]*)$`)
+
+// identifiers returns the identifier-shaped tokens of a query, in order.
+func identifiers(query string) []string {
+	var out []string
+	for _, f := range strings.Fields(query) {
+		if f = strings.Trim(f, `"'?.,;:()`); identifierRe.MatchString(f) {
+			out = append(out, f)
+		}
+	}
+	return out
+}
+
+// ftsRun runs one FTS5 MATCH expression, bm25-ordered, with the filters.
+func (r *Reader) ftsRun(match, atomType, milestone, gateway string, limit int) ([]SearchHit, error) {
 	rows, err := r.db.Query(`
         SELECT a.id, a.type, a.milestone, a.title, a.summary,
                a.doc_url, a.doc_anchor,

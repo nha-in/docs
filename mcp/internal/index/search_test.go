@@ -194,9 +194,10 @@ func TestQuestionsChunkWinDoesNotLeakIntoSnippet(t *testing.T) {
 	}
 	defer r.Close()
 
-	// "zzqqxx" appears nowhere in the fixture, so the keyword leg matches
-	// nothing (FTS is an AND across terms) and only the vector leg, scored
-	// against the questions chunk, can surface this atom.
+	// "zzqqxx" appears nowhere in the fixture. The keyword leg still finds
+	// the atom through its other words (an unknown token narrows keyword
+	// results, it does not empty them), and the vector leg scores the
+	// questions chunk. Whichever leg wins, the snippet shows atom text.
 	hits, err := r.Search(context.Background(), "how do i fix bridge not recognising my clinic zzqqxx", "", "", 5, f)
 	if err != nil {
 		t.Fatal(err)
@@ -207,7 +208,42 @@ func TestQuestionsChunkWinDoesNotLeakIntoSnippet(t *testing.T) {
 	if strings.Contains(hits[0].Snippet, catalogue.QuestionsHeading) {
 		t.Errorf("snippet leaked the questions chunk: %q", hits[0].Snippet)
 	}
-	if hits[0].Snippet != hits[0].Summary {
-		t.Errorf("snippet = %q, want the atom summary %q", hits[0].Snippet, hits[0].Summary)
+	for _, q := range qs["hiecm.error.abdm-1035"].Questions {
+		if strings.Contains(hits[0].Snippet, q) {
+			t.Errorf("snippet carries a generated question %q: %q", q, hits[0].Snippet)
+		}
+	}
+}
+
+// One unknown word must narrow keyword results, not empty them: exact
+// identifiers are what keyword search is for on API docs.
+func TestKeywordSearchSurvivesOneUnknownToken(t *testing.T) {
+	r := openFixture(t, false)
+	hits, err := r.ftsSearch("ABDM-1035 zzqx", "", "", "", 10)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(hits) == 0 || hits[0].ID != "hiecm.error.abdm-1035" {
+		t.Fatalf("an unknown extra token emptied the keyword results: %+v", hits)
+	}
+}
+
+// A question in plain words keeps every word required: a looser keyword
+// match would crowd the vector leg's answers out. Only an exact identifier
+// is retried without its stray words.
+func TestKeywordFallbackIsForIdentifiersOnly(t *testing.T) {
+	r := openFixture(t, false)
+	if alone, _ := r.ftsSearch("gateway", "", "", "", 10); len(alone) == 0 {
+		t.Fatal("fixture has no atom matching gateway, so this test proves nothing")
+	}
+	hits, err := r.ftsSearch("gateway zzqx", "", "", "", 10)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(hits) != 0 {
+		t.Fatalf("a plain-words query fell back to a looser match: %+v", hits)
+	}
+	if got := identifiers(`why does ABDM-1035 fail on m1_post_profile_verify at /v3/link with X-CM-ID and txnId?`); strings.Join(got, " ") != "ABDM-1035 m1_post_profile_verify /v3/link X-CM-ID txnId" {
+		t.Errorf("identifiers = %q", got)
 	}
 }
