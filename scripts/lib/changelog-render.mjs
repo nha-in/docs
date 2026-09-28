@@ -112,7 +112,7 @@ const lastSegment = (route) => cap(route.split('/').filter(Boolean).at(-1).repla
 const BUILD_WITH_AI = '/docs/hiecm/v3/getting-started/build-with-ai';
 
 /** A role as the page names it: the acronyms stay, the words take a plural. */
-const ROLES = {his: 'HIS integrators', phr: 'PHR apps', payer: 'payers', provider: 'providers'};
+const ROLES = {his: 'HIS integrators', phr: 'PHR apps', payer: 'payers', provider: 'providers', eua: 'EUAs', hspa: 'HSPAs'};
 const roleName = (r) => ROLES[r] ?? `${r}s`;
 
 /** The `###` heading of an entry, the change stated as a fact. */
