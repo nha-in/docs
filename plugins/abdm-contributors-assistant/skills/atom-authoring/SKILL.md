@@ -48,7 +48,7 @@ skills:
 Field rules that catch people out:
 
 - `id` is `gateway.type.slug`, lowercase, stable, and never reused. Renaming an id is a breaking change and needs a redirect.
-- `gateway` is one of `hiecm`, `uhi`, `nhcx`, `shared`. Shared atoms have no milestone; use `n/a`. All four lint clean. `uhi` carries no atoms yet because Phase 1's time went to HIE-CM, not because anything rejects it. Write one when you have the time to prove it.
+- `gateway` is one of `hiecm`, `uhi`, `nhcx`, `shared`. Shared atoms have no milestone; use `n/a`. All four lint clean. `uhi` atoms are page sections mapped in `catalogue/map.d/uhi-*.yaml`, with `milestone: n/a` and `version: uhi-v1`; endpoint and callback atoms name their `operation` from `catalogue/openapi/uhi/v1/`.
 - `version` is the NHA spec version this is true for, not the Catalogue version. The Catalogue version is stamped by the build.
 - `summary` is one sentence a new developer understands with no acronyms. It is what the index and the search result show. Write it last, after the body, when you know what the atom actually says.
 - There is no `verified` field. Lint fails an atom that carries one. The Catalogue is published as ABDM's statement of how ABDM works; sandbox checks are internal, run by `npm run verify:atoms`, and their evidence lives under `catalogue/verification/`, never in the atom.

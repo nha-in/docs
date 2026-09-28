@@ -94,7 +94,7 @@ Descend by choice, never by listing everything flat:
 3. Choose your module: M1, M2, M3
 4. Then the module ladder below
 
-Phase scope renders honestly: HIE-CM M1 to M3 carry content. UHI has a generated API reference for three modules, network, Physical Consultation and Ambulance Booking, ordered by twelve journeys; UHI atoms and a UHI agent skill are Phase 2, so UHI pages stop at what the specification and journeys carry. M4 pages say Phase 2 and stop. NHCX says out of scope. See the phase table in `abdm-portal-index`.
+Phase scope renders honestly: HIE-CM M1 to M3 carry content. UHI has a generated API reference for three modules, network, Physical Consultation and Ambulance Booking, ordered by twelve journeys; UHI atoms are page sections on those pages and a notes partial per operation; a UHI agent skill is Phase 2. M4 pages say Phase 2 and stop. NHCX says out of scope. See the phase table in `abdm-portal-index`.
 
 ### Tab 3: Developer resources
 
