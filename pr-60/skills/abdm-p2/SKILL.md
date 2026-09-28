@@ -1,6 +1,17 @@
 ---
 name: abdm-p2
 description: Use when building, debugging or testing ABDM P2 in a PHR app: the PHR profile, linking an ABHA number, switching profiles, and linking, sharing and consent for the patient.
+type: skill
+domain: p2
+agent_consumers:
+  - abdm-integration-agent
+  - abdm-call-debugger
+requires:
+  - phr-login
+produces:
+  - consent-decision
+can_execute: true
+can_orchestrate: false
 ---
 
 # ABDM P2, Consents Management
@@ -35,7 +46,7 @@ This file is the map. Each line above is a file beside it, opened one at a time 
 
 ## Before anything else
 
-- No call in this skill has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.
+- Treat every request and response shape in this skill as unconfirmed until the sandbox has answered you. Check a response before you rely on its shape.
 
 ## Practices that hold across every call
 

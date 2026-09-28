@@ -1,6 +1,22 @@
 ---
 name: abdm-m2
 description: Use when building, debugging or testing ABDM Milestone 2: care contexts, HIP initiated linking, discovery, and pushing encrypted health records to a requester. Carries the endpoints and the encryption parameters. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.
+type: skill
+domain: m2
+agent_consumers:
+  - abdm-integration-agent
+  - abdm-call-debugger
+requires:
+  - gateway-session-token
+  - hip-registration
+  - callback-url
+  - nrces-document-bundle
+produces:
+  - care-context
+  - link-token
+  - health-information-push
+can_execute: true
+can_orchestrate: false
 ---
 
 # ABDM M2, create and link records
@@ -30,8 +46,8 @@ This file is the map. Each line above is a file beside it, opened one at a time 
 
 ## Before anything else
 
-- No call in this skill has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.
-- The design section is the exception. Its rules come from building a working front desk against the sandbox, and each atom it cites names what was observed and the date it was seen.
+- Treat every request and response shape in this skill as unconfirmed until the sandbox has answered you. Check a response before you rely on its shape.
+- The design section is different in kind. Its rules come from building a working front desk against the sandbox, and each atom it cites names what was observed and the date it was seen.
 - You act as the HIP.
 - Before M2, three things must hold: the facility is registered in the HFR with a valid HFR ID, that HIP ID is linked to your client ID (through the NHPR portal or the M4 software linkage APIs), and a callback URL is set for the client ID with the Update Bridge API.
 - You are the side that encrypts, and the parameters arrive from the requester rather than from you. The health information request carries `keyMaterial` with `cryptoAlg`, `curve: Curve25519`, the requester's `dhPublicKey` and a `nonce`. Generate your own Curve25519 pair and your own nonce, and send your public key and nonce back with the data so the requester can derive the same secret.

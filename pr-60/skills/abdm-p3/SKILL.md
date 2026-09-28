@@ -1,6 +1,17 @@
 ---
 name: abdm-p3
 description: Use when building, debugging or testing ABDM P3 in a PHR app: reading, approving, denying, enabling, disabling and updating the patient's subscriptions and subscription requests, and the subscription request and notifications on the health locker side.
+type: skill
+domain: p3
+agent_consumers:
+  - abdm-integration-agent
+  - abdm-call-debugger
+requires:
+  - phr-login
+produces:
+  - subscription
+can_execute: true
+can_orchestrate: false
 ---
 
 # ABDM P3, PHR subscriptions
@@ -27,7 +38,7 @@ This file is the map. Each line above is a file beside it, opened one at a time 
 
 ## Before anything else
 
-- No call in this skill has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.
+- Treat every request and response shape in this skill as unconfirmed until the sandbox has answered you. Check a response before you rely on its shape.
 
 ## Practices that hold across every call
 

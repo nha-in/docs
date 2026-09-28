@@ -1,6 +1,20 @@
 ---
 name: abdm-m1
 description: Use when building, debugging or testing ABDM Milestone 1: creating an ABHA number or address, ABHA login, profile management, or the gateway session token. Carries the endpoints, the required headers, the two token rule, the encryption rule and the error codes its specification's examples return. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.
+type: skill
+domain: m1
+agent_consumers:
+  - abdm-integration-agent
+  - abdm-call-debugger
+requires:
+  - gateway-session-token
+produces:
+  - abha-number
+  - abha-address
+  - user-token
+  - abha-profile
+can_execute: true
+can_orchestrate: false
 ---
 
 # ABDM M1, create and verify ABHA
@@ -32,8 +46,8 @@ This file is the map. Each line above is a file beside it, opened one at a time 
 
 ## Before anything else
 
-- No call in this skill has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.
-- The design section is the exception. Its rules come from building a working front desk against the sandbox, and each atom it cites names what was observed and the date it was seen.
+- Treat every request and response shape in this skill as unconfirmed until the sandbox has answered you. Check a response before you rely on its shape.
+- The design section is different in kind. Its rules come from building a working front desk against the sandbox, and each atom it cites names what was observed and the date it was seen.
 - ABDM publishes operations, not a user experience. The journey is the integrator's to design, so offer the shape below as a suggestion and build what they ask for instead when they have a view of their own counter.
 - The ABHA step comes before the registration form and fills it. A verified profile carries the whole form, so a journey that registers the patient first and offers ABHA afterwards has already spent the keystrokes it existed to save.
 - Two ways the profile reaches the desk. The patient scans a QR and consents in their own app, and ABDM posts the profile to your callback, so nobody types or asks anything. Or the desk runs the identifier journey. The filled form is the destination either way.

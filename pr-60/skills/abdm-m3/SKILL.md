@@ -1,6 +1,21 @@
 ---
 name: abdm-m3
 description: Use when building, debugging or testing ABDM Milestone 3: raising a consent request, tracking its status, reading consent artefacts, and fetching encrypted health records as an HIU. Carries the endpoints and the consent rules. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.
+type: skill
+domain: m3
+agent_consumers:
+  - abdm-integration-agent
+  - abdm-call-debugger
+requires:
+  - gateway-session-token
+  - hiu-registration
+  - callback-url
+  - abha-address
+produces:
+  - consent-request-id
+  - consent-artefact
+can_execute: true
+can_orchestrate: false
 ---
 
 # ABDM M3, fetch data with consent
@@ -30,8 +45,8 @@ This file is the map. Each line above is a file beside it, opened one at a time 
 
 ## Before anything else
 
-- No call in this skill has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.
-- The design section is the exception. Its rules come from building a working front desk against the sandbox, and each atom it cites names what was observed and the date it was seen.
+- Treat every request and response shape in this skill as unconfirmed until the sandbox has answered you. Check a response before you rely on its shape.
+- The design section is different in kind. Its rules come from building a working front desk against the sandbox, and each atom it cites names what was observed and the date it was seen.
 - One consent request produces one artefact per HIP, so store the request id and every artefact id. Taking the first element is the bug that silently drops half a fetch.
 - You act as the HIU. The HIE-CM holds the consent and asks the patient on your behalf. No artefact, no records.
 - The patient must be known to you by ABHA address before you can raise a request.

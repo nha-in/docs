@@ -1,6 +1,18 @@
 ---
 name: abdm-gateway
 description: Use when building, debugging or testing the ABDM gateway: the gateway session and bridge registry.
+type: skill
+domain: gateway
+agent_consumers:
+  - abdm-integration-agent
+  - abdm-call-debugger
+requires:
+  - sandbox-client-credentials
+produces:
+  - gateway-session-token
+  - bridge-url
+can_execute: true
+can_orchestrate: false
 ---
 
 # ABDM Gateway, sessions and the bridge registry
@@ -27,7 +39,7 @@ This file is the map. Each line above is a file beside it, opened one at a time 
 
 ## Before anything else
 
-- No call in this skill has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.
+- Treat every request and response shape in this skill as unconfirmed until the sandbox has answered you. Check a response before you rely on its shape.
 
 ## Practices that hold across every call
 
