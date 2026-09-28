@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/getkin/kin-openapi/openapi3"
@@ -436,5 +437,28 @@ func TestActualPath(t *testing.T) {
 	}
 	if got := actualPath("/search", &openapi3.Operation{}); got != "/search" {
 		t.Fatalf("plain path: got %q", got)
+	}
+}
+
+// Every specification in the catalogue parses and marshals. A schema that
+// refers to itself, as NHA's UHI Ack does, must not send the indexer round
+// the cycle until the stack overflows.
+func TestParseSpecEveryCatalogueSpec(t *testing.T) {
+	specs, err := filepath.Glob(filepath.Join("..", "..", "..", "catalogue", "openapi", "*", "*", "*.yaml"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	n := 0
+	for _, spec := range specs {
+		if strings.Contains(spec, string(filepath.Separator)+".raw"+string(filepath.Separator)) {
+			continue
+		}
+		if _, err := ParseSpec(spec); err != nil {
+			t.Fatalf("%s: %v", spec, err)
+		}
+		n++
+	}
+	if n < 20 {
+		t.Fatalf("parsed only %d specs; the glob is wrong", n)
 	}
 }

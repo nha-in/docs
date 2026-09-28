@@ -276,33 +276,44 @@ func listedErrorCodes(path, module string) ([]SpecErrorCode, error) {
 	return out, nil
 }
 
-// inlineRefs clears $ref markers recursively (depth-capped against
-// cycles) so the schema marshals with component contents inlined and can
-// be validated standalone at query time.
+// inlineRefs clears $ref markers recursively (depth-capped) so the schema
+// marshals with component contents inlined and can be validated standalone
+// at query time. A reference back to a schema already on the current path,
+// such as NHA's UHI Ack whose ack property refers to Ack, keeps its $ref:
+// clearing it would leave a pointer cycle that json.Marshal never leaves.
 func inlineRefs(ref *openapi3.SchemaRef, depth int) {
+	inlineRefsOn(ref, depth, map[*openapi3.Schema]bool{})
+}
+
+func inlineRefsOn(ref *openapi3.SchemaRef, depth int, path map[*openapi3.Schema]bool) {
 	if ref == nil || depth > 10 {
 		return
 	}
-	ref.Ref = ""
 	s := ref.Value
+	if s != nil && path[s] {
+		return
+	}
+	ref.Ref = ""
 	if s == nil {
 		return
 	}
+	path[s] = true
+	defer delete(path, s)
 	for _, p := range s.Properties {
-		inlineRefs(p, depth+1)
+		inlineRefsOn(p, depth+1, path)
 	}
-	inlineRefs(s.Items, depth+1)
+	inlineRefsOn(s.Items, depth+1, path)
 	for _, sub := range s.AllOf {
-		inlineRefs(sub, depth+1)
+		inlineRefsOn(sub, depth+1, path)
 	}
 	for _, sub := range s.AnyOf {
-		inlineRefs(sub, depth+1)
+		inlineRefsOn(sub, depth+1, path)
 	}
 	for _, sub := range s.OneOf {
-		inlineRefs(sub, depth+1)
+		inlineRefsOn(sub, depth+1, path)
 	}
 	if s.AdditionalProperties.Schema != nil {
-		inlineRefs(s.AdditionalProperties.Schema, depth+1)
+		inlineRefsOn(s.AdditionalProperties.Schema, depth+1, path)
 	}
 }
 
