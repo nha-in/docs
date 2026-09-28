@@ -318,7 +318,7 @@ The plugin now describes the target, so **this branch does not merge until Task 
   ```
 
   Expect no output.
-- [ ] **Step 3:** `npm run -s lint:content && grep -rn '—' catalogue/*/README.md catalogue/README.md CLAUDE.md`. Expect PASS and no output.
+- [ ] **Step 3:** `npm run -s lint:content && grep -rnP '\x{2014}' catalogue/*/README.md catalogue/README.md CLAUDE.md`. Expect PASS and no output.
 - [ ] **Step 4: Commit.** `docs(catalogue): every description of the catalogue names the per-gateway tree`
 
 ### Task 7: Parity gate and the whole-branch check
