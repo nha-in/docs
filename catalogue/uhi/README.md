@@ -1,19 +1,17 @@
 # UHI atoms
 
-The knowledge base for the UHI gateway: one Markdown atom per fact, with
-frontmatter (`id`, `type`, `gateway: uhi`, verification status). Atoms feed the
-MCP index and compile into agent skills; they are not site pages.
+UHI atoms live on the docs pages, not in this folder. Each atom is a page
+section with an explicit heading id, and `catalogue/map.d/uhi-*.yaml` maps the
+atom id to that section:
 
-| Folder | Holds |
+| Map fragment | Pages |
 | --- | --- |
-| `concepts/` | One atom per concept a developer must hold: what it is, why it exists, how it behaves. |
-| `endpoints/` | One atom per API operation: request, response, and the observed behaviour. |
-| `callbacks/` | One atom per webhook the gateway sends back to your system. |
-| `errors/` | One atom per error code or family: what it means and what to do. |
-| `flows/` | One atom per end-to-end journey, stitching endpoints and callbacks in call order. |
-| `decisions/` | One atom per integration decision: the options, the trade-off, the recommendation. |
-| `tests/` | One atom per test case: what it proves functionally, and its exact pass and fail conditions. |
+| `uhi-network.yaml`, `uhi-consultation.yaml`, `uhi-ambulance.yaml` | One notes partial per operation, `site/docs/_notes/uhi/<operationId>.mdx`, rendered on that operation's API page |
+| `uhi-concepts.yaml` | `site/docs/uhi/v1/concepts/`, and the Get started and Build it well pages |
+| `uhi-services.yaml` | `site/docs/uhi/v1/services/` |
+| `uhi-pages.yaml` | Sandbox, Go live, the Quickstart, the test case pages and `site/docs/_glossary/_uhi.mdx` |
 
-Scaffold a new atom with the `atom-new` skill so the frontmatter and the five
-mandatory sections come out right. READMEs like this one are contributor
-notes, never indexed.
+`npm run build:sections` writes the atom files every consumer reads into
+`catalogue/generated/uhi/`. Never edit those: edit the page, then rebuild. The
+folders here stay empty; an atom is either a page section or a file, never
+both, and UHI's are all page sections.
