@@ -85,6 +85,18 @@ snapshot, so nothing that documents how this catalogue is built can be
 returned to somebody asking about ABDM. Absent means integrator, so an atom
 is integrator-facing unless it says otherwise.
 
+## Discovery
+
+The site publishes `/.well-known/mcp.json`: this server's `/mcp` endpoint,
+streamable HTTP, no authentication, and the six tool names. A test fails if
+the file names a tool the server does not register.
+
+Agents that read pages rather than call tools can fetch any page's markdown
+copy by adding `.md` to its URL (`/docs/hiecm/v3/getting-started/glossary.md`),
+built by `scripts/emit-page-markdown.mjs` and served as `text/markdown`. The
+host does not negotiate on an `Accept: text/markdown` header; use the `.md`
+URL.
+
 ## Skills
 
 The tools answer a question an agent already knows how to ask. The compiled

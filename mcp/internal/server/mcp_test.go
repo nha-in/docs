@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -426,5 +427,43 @@ func TestSearchWithNoQueryLists(t *testing.T) {
 	sess := connect(t, false, nil)
 	if txt := callText(t, sess, "search", map[string]any{"type": "error"}); !strings.Contains(txt, "hiecm.error.abdm-1035") {
 		t.Errorf("an empty query with a type filter must list atoms: %s", txt)
+	}
+}
+
+// The discovery file names the tools a client will find: it must list the
+// six new tools, never a deprecated alias.
+func TestWellKnownMCPListsTheSixTools(t *testing.T) {
+	raw, err := os.ReadFile("../../../site/static/.well-known/mcp.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var doc struct {
+		Endpoints []struct{ URL, Transport string }
+		Tools     []string
+	}
+	if err := json.Unmarshal(raw, &doc); err != nil {
+		t.Fatal(err)
+	}
+	sess := connect(t, false, nil)
+	res, err := sess.ListTools(context.Background(), nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	live := map[string]bool{}
+	for _, tl := range res.Tools {
+		if !strings.HasPrefix(tl.Description, "Deprecated") {
+			live[tl.Name] = true
+		}
+	}
+	if len(doc.Tools) != len(live) {
+		t.Errorf(".well-known/mcp.json lists %d tools, the server registers %d that are not deprecated", len(doc.Tools), len(live))
+	}
+	for _, n := range doc.Tools {
+		if !live[n] {
+			t.Errorf(".well-known/mcp.json names %q, which is not a current tool", n)
+		}
+	}
+	if len(doc.Endpoints) != 1 || doc.Endpoints[0].URL != "/mcp" || doc.Endpoints[0].Transport != "streamable-http" {
+		t.Errorf("endpoint = %+v, want /mcp over streamable-http", doc.Endpoints)
 	}
 }
