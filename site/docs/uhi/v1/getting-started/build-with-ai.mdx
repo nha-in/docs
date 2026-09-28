@@ -1,0 +1,139 @@
+---
+title: Build with AI
+sidebar_label: Build with AI
+sidebar_position: 4
+description: Set a coding agent up to build your UHI integration, with live retrieval over the Docs MCP server, this site as markdown, and Ask AI.
+source: UHI developer guide as of 22 September 2026; portal tooling as on the HIE-CM Build with AI page
+sidebar_class_name: sidebar-icon sidebar-icon--bot
+---
+
+import useBaseUrl from '@docusaurus/useBaseUrl';
+import {useLocation} from '@docusaurus/router';
+import McpInstall from '@site/src/components/docs/McpInstall';
+import {Button} from '@site/src/components/ui/button';
+import {FileText, Sparkles} from 'lucide-react';
+
+# Build with AI
+
+Use the [UHI](/docs/uhi/v1/getting-started/glossary#uhi) documentation with
+AI-assisted development tools. Your coding agent can search the service guides,
+the API reference and the concept pages while you build.
+
+:::note
+Review all AI-generated code against the UHI documentation and run it in the sandbox.
+:::
+
+Every fact on this site is a public URL. There are three ways to put it in front of your agent.
+
+<CardGroup cols={3}>
+  <Card title="Docs MCP server" tag="Recommended" icon="server" href="#connect-the-docs-mcp-server">
+    This documentation live, queried a paragraph at a time as your agent works, including every UHI operation.
+  </Card>
+  <Card title="Read this site as an agent" icon="file-text" href="#read-this-site-as-an-agent">
+    Every page as markdown, with an index for the whole site and one for each UHI API module.
+  </Card>
+  <Card title="Ask AI" icon="sparkles" href="#ask-ai">
+    Ask this documentation a question directly, without setting anything up.
+  </Card>
+</CardGroup>
+
+## Connect the Docs MCP server
+
+The Docs MCP server is this documentation live, queried a paragraph at a time
+instead of loaded whole. It indexes the UHI operations alongside the rest of
+[ABDM](/docs/uhi/v1/getting-started/glossary#abdm). The agent searches it, reads
+an operation and checks a request body against the specification as it works.
+
+<McpInstall />
+
+Tell the agent to look an operation up here before it writes the call. It then
+reads the UHI message shape rather than recalling another protocol's.
+
+## Read this site as an agent
+
+export const ReadAsAgent = () => {
+  const llmsTxt = useBaseUrl('/llms.txt');
+  const llmsFullTxt = useBaseUrl('/llms-full.txt');
+  const {pathname} = useLocation();
+  const pageAsMarkdown = `${pathname.replace(/\/$/, '')}/index.md`;
+  return (
+    <div className="docs-cta-row">
+      <Button asChild variant="outline" size="sm">
+        <a href={llmsTxt}>
+          <FileText className="size-3.5" aria-hidden="true" />
+          View llms.txt
+        </a>
+      </Button>
+      <Button asChild variant="outline" size="sm">
+        <a href={llmsFullTxt}>
+          <FileText className="size-3.5" aria-hidden="true" />
+          View llms-full.txt
+        </a>
+      </Button>
+      <Button asChild variant="outline" size="sm">
+        <a href={pageAsMarkdown}>
+          <FileText className="size-3.5" aria-hidden="true" />
+          This page as Markdown
+        </a>
+      </Button>
+    </div>
+  );
+};
+
+`llms.txt` is a map of every page here; `llms-full.txt` is every page's text in
+one file. Each UHI API module also has its own index at
+`/docs/uhi/v1/api/<module>/llms.txt`, and [the UHI API reference](/docs/uhi/v1/api)
+names the modules. Add `/index.md` to any URL on this site to get that page as
+plain Markdown, no scraping required.
+
+<ReadAsAgent />
+
+## Ask AI
+
+Ask this documentation a question directly, without setting anything up.
+
+export const AskAiButton = () => (
+  <Button
+    size="sm"
+    onClick={() => window.dispatchEvent(new CustomEvent('abdm:ask-ai'))}>
+    <Sparkles className="size-3.5" aria-hidden="true" />
+    Ask AI
+  </Button>
+);
+
+<AskAiButton />
+
+The same assistant sits in the search box at the top of every page, labelled "Search or ask AI".
+
+### Attaching a file
+
+Ask AI takes a file with your question: a failing request body, a callback you
+received, a log, a CSV, a PDF, or a screenshot. The paperclip is on the left of
+the box. At most 20,000 characters of text, 256KB for a text file and 8MB for a
+PDF or an image.
+
+What happens to it is worth knowing before you attach one.
+
+- The file is read in your own browser and only the text it gives up travels
+  with your question. A screenshot is read by a text recognition engine your
+  browser downloads once, from this site, and runs on your own machine. Nothing
+  is uploaded and nothing is stored: the conversation lives in the panel and is
+  gone when you close it.
+- A PDF that is only pictures of text, a scan, gives up nothing. Screenshot
+  the part you mean instead and that will be read.
+- Personal data is removed before the file reaches the model. Aadhaar, ABHA,
+  PAN, passport, voter, mobile, email and bearer tokens are matched by pattern
+  anywhere in the file, and a JSON file is also masked by its field names.
+- What none of that catches is a name written in running prose, with nothing
+  marking it as a name. Redact those yourself, the same way you would in a
+  support request.
+- Your question is logged, masked, to improve the answers. The file is not
+  logged.
+
+Never paste your private key into Ask AI or into any agent. Signing happens on
+your own server.
+
+## Next steps
+
+- The handling rules to hold your agent to: [Build it well](/docs/uhi/v1/getting-started/build-it-well).
+- The service you are building: [Services](/docs/uhi/v1/services).
