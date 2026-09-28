@@ -33,7 +33,18 @@ func ftsQuote(q string) string {
 	return strings.Join(parts, " ")
 }
 
+// Filter narrows atom search. Side keeps atoms for that side and those for
+// both; a deprecated atom is left out unless IncludeDeprecated is set.
+type Filter struct {
+	Type, Milestone, Gateway, Side string
+	IncludeDeprecated              bool
+}
+
 func (r *Reader) ftsSearch(query, atomType, milestone, gateway string, limit int) ([]SearchHit, error) {
+	return r.ftsSearchF(query, Filter{Type: atomType, Milestone: milestone, Gateway: gateway}, limit)
+}
+
+func (r *Reader) ftsSearchF(query string, f Filter, limit int) ([]SearchHit, error) {
 	match := ftsQuery(query, r.vocab)
 	if expansions := r.vocab.Expand(query); len(expansions) > 0 {
 		// Logged so a miss can be diagnosed against what the expander
@@ -47,7 +58,7 @@ func (r *Reader) ftsSearch(query, atomType, milestone, gateway string, limit int
 		// a syntax error.
 		return nil, nil
 	}
-	hits, err := r.ftsRun(match, atomType, milestone, gateway, limit)
+	hits, err := r.ftsRun(match, f, limit)
 	ids := identifiers(query)
 	if err != nil || len(hits) >= limit || len(ids) == 0 || len(ids) == len(strings.Fields(query)) {
 		return hits, err
@@ -60,7 +71,7 @@ func (r *Reader) ftsSearch(query, atomType, milestone, gateway string, limit int
 	// on "call" or "my" crowds its answers out of the fusion (the retrieval
 	// gate measured 12 cases falling when it did). AND rows keep their places
 	// first.
-	more, err := r.ftsRun(strings.Join(strings.Fields(ftsQuote(strings.Join(ids, " "))), " OR "), atomType, milestone, gateway, limit)
+	more, err := r.ftsRun(strings.Join(strings.Fields(ftsQuote(strings.Join(ids, " "))), " OR "), f, limit)
 	if err != nil {
 		return nil, err
 	}
@@ -97,7 +108,7 @@ func identifiers(query string) []string {
 }
 
 // ftsRun runs one FTS5 MATCH expression, bm25-ordered, with the filters.
-func (r *Reader) ftsRun(match, atomType, milestone, gateway string, limit int) ([]SearchHit, error) {
+func (r *Reader) ftsRun(match string, f Filter, limit int) ([]SearchHit, error) {
 	rows, err := r.db.Query(`
         SELECT a.id, a.type, a.milestone, a.title, a.summary,
                a.doc_url, a.doc_anchor,
@@ -108,9 +119,11 @@ func (r *Reader) ftsRun(match, atomType, milestone, gateway string, limit int) (
           AND (? = '' OR a.type = ?)
           AND (? = '' OR a.milestone = ?)
           AND (? = '' OR a.gateway = ? OR a.gateway = 'shared')
+          AND (? = '' OR a.side = ? OR a.side = 'both')
+          AND (? OR a.status != 'deprecated')
         ORDER BY bm25(atoms_fts, 0.0, 5.0, 3.0, 1.0, 8.0, 6.0)
         LIMIT ?`,
-		match, atomType, atomType, milestone, milestone, gateway, gateway, limit)
+		match, f.Type, f.Type, f.Milestone, f.Milestone, f.Gateway, f.Gateway, f.Side, f.Side, f.IncludeDeprecated, limit)
 	if err != nil {
 		return nil, err
 	}
@@ -127,7 +140,7 @@ func (r *Reader) ftsRun(match, atomType, milestone, gateway string, limit int) (
 	return hits, rows.Err()
 }
 
-func (r *Reader) vectorSearch(ctx context.Context, query, atomType, milestone, gateway string,
+func (r *Reader) vectorSearch(ctx context.Context, query string, f Filter,
 	limit int, emb embed.Embedder) ([]SearchHit, error) {
 	qv, err := emb.Embed(ctx, []string{query})
 	if err != nil {
@@ -141,8 +154,10 @@ func (r *Reader) vectorSearch(ctx context.Context, query, atomType, milestone, g
         WHERE c.embedding IS NOT NULL
           AND (? = '' OR a.type = ?)
           AND (? = '' OR a.milestone = ?)
-          AND (? = '' OR a.gateway = ? OR a.gateway = 'shared')`,
-		atomType, atomType, milestone, milestone, gateway, gateway)
+          AND (? = '' OR a.gateway = ? OR a.gateway = 'shared')
+          AND (? = '' OR a.side = ? OR a.side = 'both')
+          AND (? OR a.status != 'deprecated')`,
+		f.Type, f.Type, f.Milestone, f.Milestone, f.Gateway, f.Gateway, f.Side, f.Side, f.IncludeDeprecated)
 	if err != nil {
 		return nil, err
 	}
@@ -201,13 +216,18 @@ func (r *Reader) Search(ctx context.Context, query, atomType, milestone string,
 // belong to every gateway. An empty gateway is no scope.
 func (r *Reader) SearchIn(ctx context.Context, query, atomType, milestone, gateway string,
 	limit int, emb embed.Embedder) ([]SearchHit, error) {
+	return r.searchAtoms(ctx, query, Filter{Type: atomType, Milestone: milestone, Gateway: gateway}, limit, emb)
+}
+
+func (r *Reader) searchAtoms(ctx context.Context, query string, f Filter,
+	limit int, emb embed.Embedder) ([]SearchHit, error) {
 	if limit <= 0 {
 		limit = 10
 	}
 	if limit > 25 {
 		limit = 25
 	}
-	ftsHits, err := r.ftsSearch(query, atomType, milestone, gateway, limit)
+	ftsHits, err := r.ftsSearchF(query, f, limit)
 	if err != nil {
 		return nil, err
 	}
@@ -222,7 +242,7 @@ func (r *Reader) SearchIn(ctx context.Context, query, atomType, milestone, gatew
 		}
 		return ftsHits, nil
 	}
-	vecHits, err := r.vectorSearch(ctx, query, atomType, milestone, gateway, limit, emb)
+	vecHits, err := r.vectorSearch(ctx, query, f, limit, emb)
 	if err != nil {
 		// Search must never hard-depend on the embedding sidecar: fall
 		// back to the FTS hits already computed rather than failing the
@@ -281,9 +301,16 @@ func fuse(limit int, lists ...[]SearchHit) []SearchHit {
 }
 
 // SearchKind searches atoms ("atom"), API operations ("operation"), or both
-// (""). Both is fused by rank; a type or milestone filter, or a gateway with
-// no operations indexed, means atoms only, since operations carry neither.
+// (""), with the type, milestone and gateway filters.
 func (r *Reader) SearchKind(ctx context.Context, query, kind, atomType, milestone, gateway string,
+	limit int, emb embed.Embedder) ([]SearchHit, error) {
+	return r.SearchFiltered(ctx, query, kind, Filter{Type: atomType, Milestone: milestone, Gateway: gateway}, limit, emb)
+}
+
+// SearchFiltered is SearchKind with the full filter. Both kinds are fused by
+// rank; a type, milestone or side filter, or a gateway with no operations
+// indexed, means atoms only, since operations carry none of them.
+func (r *Reader) SearchFiltered(ctx context.Context, query, kind string, f Filter,
 	limit int, emb embed.Embedder) ([]SearchHit, error) {
 	if limit <= 0 {
 		limit = 10
@@ -293,12 +320,12 @@ func (r *Reader) SearchKind(ctx context.Context, query, kind, atomType, mileston
 	}
 	switch kind {
 	case "atom":
-		return r.SearchIn(ctx, query, atomType, milestone, gateway, limit, emb)
+		return r.searchAtoms(ctx, query, f, limit, emb)
 	case "operation":
 		return r.SearchOperations(ctx, query, limit, emb)
 	case "":
-		atoms, err := r.SearchIn(ctx, query, atomType, milestone, gateway, limit, emb)
-		if err != nil || atomType != "" || milestone != "" || (gateway != "" && gateway != "hiecm") {
+		atoms, err := r.searchAtoms(ctx, query, f, limit, emb)
+		if err != nil || f.Type != "" || f.Milestone != "" || f.Side != "" || (f.Gateway != "" && f.Gateway != "hiecm") {
 			return atoms, err
 		}
 		ops, err := r.SearchOperations(ctx, query, limit, emb)

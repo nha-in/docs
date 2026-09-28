@@ -12,7 +12,12 @@ CREATE TABLE atoms (
     body TEXT NOT NULL,
     source_path TEXT NOT NULL,
     doc_url TEXT NOT NULL,
-    doc_anchor TEXT NOT NULL
+    doc_anchor TEXT NOT NULL,
+    operation TEXT NOT NULL DEFAULT '',
+    side TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'current',
+    superseded_by TEXT NOT NULL DEFAULT '',
+    facts_json TEXT NOT NULL DEFAULT '[]'
 );
 CREATE VIRTUAL TABLE atoms_fts USING fts5(
     id UNINDEXED, title, summary, body, error_codes, questions

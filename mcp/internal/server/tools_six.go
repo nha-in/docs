@@ -11,13 +11,15 @@ import (
 )
 
 type searchSixIn struct {
-	Query          string `json:"query,omitempty" jsonschema:"what you are looking for, in your words; leave empty with filters to list"`
-	Kind           string `json:"kind,omitempty" jsonschema:"atom (default), operation or fhir_profile"`
-	Type           string `json:"type,omitempty" jsonschema:"atom type filter, one of: concept, flow, endpoint, callback, error, test, glossary, decision, fhir, sandbox, troubleshooting"`
-	Milestone      string `json:"milestone,omitempty" jsonschema:"atom milestone filter, M1 to M4"`
-	Module         string `json:"module,omitempty" jsonschema:"operation module filter, one of gateway, m1, m2, m3, m4, p1, p2, p3, p4, scan-and-register, scan-and-pay, record-share"`
-	Limit          int    `json:"limit,omitempty" jsonschema:"max results, default 10, cap 25"`
-	ResponseFormat string `json:"response_format,omitempty" jsonschema:"concise (default): id, type, title, url, short summary; detailed: adds snippet and milestone"`
+	Query             string `json:"query,omitempty" jsonschema:"what you are looking for, in your words; leave empty with filters to list"`
+	Kind              string `json:"kind,omitempty" jsonschema:"atom (default), operation or fhir_profile"`
+	Type              string `json:"type,omitempty" jsonschema:"atom type filter, one of: concept, flow, endpoint, callback, error, test, glossary, decision, fhir, sandbox, troubleshooting"`
+	Milestone         string `json:"milestone,omitempty" jsonschema:"atom milestone filter, M1 to M4"`
+	Module            string `json:"module,omitempty" jsonschema:"operation module filter, one of gateway, m1, m2, m3, m4, p1, p2, p3, p4, scan-and-register, scan-and-pay, record-share"`
+	Side              string `json:"side,omitempty" jsonschema:"atom side filter: provider, payer, hip or hiu; atoms for both sides always match"`
+	IncludeDeprecated bool   `json:"include_deprecated,omitempty" jsonschema:"also return atoms marked deprecated, which are hidden by default"`
+	Limit             int    `json:"limit,omitempty" jsonschema:"max results, default 10, cap 25"`
+	ResponseFormat    string `json:"response_format,omitempty" jsonschema:"concise (default): id, type, title, url, short summary; detailed: adds snippet and milestone"`
 }
 
 type getSixIn struct {
@@ -79,7 +81,8 @@ func (t *Tools) Search(ctx context.Context, in searchSixIn) (map[string]any, err
 			}
 			return t.versioned(map[string]any{"atoms": atomRefsJSON(refs)}), nil
 		}
-		return format(t.SearchDocs(ctx, searchIn{Query: in.Query, Type: in.Type, Milestone: in.Milestone, Limit: in.Limit, Kind: "atom"}))
+		return format(t.SearchDocs(ctx, searchIn{Query: in.Query, Type: in.Type, Milestone: in.Milestone, Limit: in.Limit, Kind: "atom",
+			Side: in.Side, IncludeDeprecated: in.IncludeDeprecated}))
 	case "operation":
 		// An intent finds operations by what they do; a module, or no query,
 		// lists them as list_operations did.

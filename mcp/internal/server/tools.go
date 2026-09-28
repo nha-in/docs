@@ -57,6 +57,10 @@ type searchIn struct {
 	Milestone string `json:"milestone,omitempty" jsonschema:"optional milestone filter, M1 to M4"`
 	Limit     int    `json:"limit,omitempty" jsonschema:"max results, default 10, cap 25"`
 	Kind      string `json:"kind,omitempty" jsonschema:"atom or operation; empty searches both"`
+	Side      string `json:"side,omitempty" jsonschema:"optional side filter: provider, payer, hip or hiu; atoms for both sides always match"`
+	// IncludeDeprecated returns atoms marked status: deprecated, which are
+	// left out by default so a retired atom is never cited unless asked for.
+	IncludeDeprecated bool `json:"include_deprecated,omitempty" jsonschema:"also return deprecated atoms"`
 }
 
 type getAtomIn struct {
@@ -181,7 +185,8 @@ func (t *Tools) versioned(fields map[string]any) map[string]any {
 }
 
 func (t *Tools) SearchDocs(ctx context.Context, in searchIn) (map[string]any, error) {
-	hits, err := t.r.SearchKind(ctx, in.Query, in.Kind, in.Type, in.Milestone, "", in.Limit, t.emb)
+	hits, err := t.r.SearchFiltered(ctx, in.Query, in.Kind,
+		index.Filter{Type: in.Type, Milestone: in.Milestone, Side: in.Side, IncludeDeprecated: in.IncludeDeprecated}, in.Limit, t.emb)
 	if err != nil {
 		return nil, err
 	}
@@ -200,6 +205,23 @@ func (t *Tools) GetAtom(ctx context.Context, in getAtomIn) (map[string]any, erro
 		// The page a reader is sent to. Empty when the atom has no
 		// published page, which callers must treat as not citable.
 		"doc_url": index.DocLink(a.DocURL, a.DocAnchor),
+	}
+	// Contract v2 fields, only when the atom carries them, so an atom
+	// without them reads exactly as it did.
+	if a.Operation != "" {
+		fields["operation"] = a.Operation
+	}
+	if len(a.Facts) > 0 {
+		fields["facts"] = a.Facts
+	}
+	if a.Side != "" {
+		fields["side"] = a.Side
+	}
+	if a.Status != "" && a.Status != "current" {
+		fields["status"] = a.Status
+	}
+	if a.SupersededBy != "" {
+		fields["superseded_by"] = a.SupersededBy
 	}
 	return t.versioned(fields), nil
 }
@@ -318,7 +340,7 @@ func (t *Tools) DecodeError(ctx context.Context, in decodeIn) (map[string]any, e
 	codes := catalogue.ExtractErrorCodes(in.Input)
 	if len(codes) == 0 {
 		return t.versioned(map[string]any{
-			"message": "no error codes found in the input; try search_docs with the response text",
+			"message": "no error codes found in the input; try search with the response text",
 			"codes":   []string{},
 		}), nil
 	}
@@ -458,6 +480,8 @@ func (t *Tools) CatalogueInfo(ctx context.Context, in emptyIn) (map[string]any, 
 			"by_type":      stats.ByType,
 		},
 		"operations": stats.Operations,
+		"facts":      stats.Facts,
+		"deprecated": stats.Deprecated,
 	}), nil
 }
 

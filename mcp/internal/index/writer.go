@@ -1,6 +1,7 @@
 package index
 
 import (
+	"cmp"
 	"database/sql"
 	"encoding/json"
 	"fmt"
@@ -55,9 +56,19 @@ func Build(dbPath string, atoms []catalogue.Atom, questions map[string]catalogue
 	}
 	defer tx.Rollback()
 	for _, a := range atoms {
-		if _, err := tx.Exec(`INSERT INTO atoms VALUES (?,?,?,?,?,?,?,?,?,?)`,
+		facts, err := json.Marshal(a.Facts)
+		if err != nil {
+			return fmt.Errorf("atom %s facts: %w", a.ID, err)
+		}
+		if a.Facts == nil {
+			facts = []byte("[]")
+		}
+		if _, err := tx.Exec(`INSERT INTO atoms (id, type, gateway, milestone, title, summary,
+            body, source_path, doc_url, doc_anchor, operation, side, status, superseded_by, facts_json)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
 			a.ID, a.Type, a.Gateway, a.Milestone, a.Title, a.Summary,
-			a.Body, a.SourcePath, a.DocURL, a.DocAnchor); err != nil {
+			a.Body, a.SourcePath, a.DocURL, a.DocAnchor,
+			a.Operation, a.Side, cmp.Or(a.Status, "current"), a.SupersededBy, string(facts)); err != nil {
 			return fmt.Errorf("atom %s: %w", a.ID, err)
 		}
 		qs := strings.Join(questions[a.ID].Questions, "\n")

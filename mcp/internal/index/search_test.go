@@ -326,3 +326,60 @@ func TestFuseBreaksATieForTheAtom(t *testing.T) {
 		t.Fatalf("tie went to %+v, want the atom first", got[0])
 	}
 }
+
+func contractFixture(t *testing.T) *Reader {
+	t.Helper()
+	atoms := append(fixtureAtoms(),
+		catalogue.Atom{ID: "nhcx.concept.old-claim-flow", Type: "concept", Gateway: "nhcx", Milestone: "n/a", Title: "Old claim flow", Summary: "Superseded claim flow.", Body: "## In plain words\n\nThe zzclaim flow before v2.", Status: "deprecated", Side: "provider", Related: map[string][]string{}},
+		catalogue.Atom{ID: "nhcx.concept.claim-flow", Type: "concept", Gateway: "nhcx", Milestone: "n/a", Title: "Claim flow", Summary: "The claim flow.", Body: "## In plain words\n\nThe zzclaim flow a hospital runs.", Status: "current", Side: "provider", Related: map[string][]string{}},
+		catalogue.Atom{ID: "nhcx.concept.adjudication", Type: "concept", Gateway: "nhcx", Milestone: "n/a", Title: "Adjudication", Summary: "What the payer does.", Body: "## In plain words\n\nThe payer's zzclaim review.", Status: "current", Side: "payer", Related: map[string][]string{}},
+	)
+	dbPath := filepath.Join(t.TempDir(), "catalogue.db")
+	if err := Build(dbPath, atoms, nil, fixtureOps(), fixtureSpecErrors(), nil, nil, nil, Meta{CatalogueVersion: "v", BuiltAt: "t"}); err != nil {
+		t.Fatal(err)
+	}
+	r, err := Open(dbPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { r.Close() })
+	return r
+}
+
+func ids(hits []SearchHit) map[string]bool {
+	out := map[string]bool{}
+	for _, h := range hits {
+		out[h.ID] = true
+	}
+	return out
+}
+
+func TestDeprecatedAtomsAreHiddenByDefault(t *testing.T) {
+	r := contractFixture(t)
+	ctx := context.Background()
+	hits, err := r.SearchFiltered(ctx, "zzclaim", "atom", Filter{}, 10, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := ids(hits); got["nhcx.concept.old-claim-flow"] || !got["nhcx.concept.claim-flow"] {
+		t.Fatalf("default search = %v, want the current atom and not the deprecated one", got)
+	}
+	hits, err = r.SearchFiltered(ctx, "zzclaim", "atom", Filter{IncludeDeprecated: true}, 10, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !ids(hits)["nhcx.concept.old-claim-flow"] {
+		t.Fatal("include_deprecated did not return the deprecated atom")
+	}
+}
+
+func TestSideFilter(t *testing.T) {
+	r := contractFixture(t)
+	hits, err := r.SearchFiltered(context.Background(), "zzclaim", "atom", Filter{Side: "payer"}, 10, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := ids(hits); !got["nhcx.concept.adjudication"] || got["nhcx.concept.claim-flow"] {
+		t.Fatalf("side payer = %v, want the payer atom only", got)
+	}
+}
