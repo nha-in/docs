@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log/slog"
 	"strings"
+	"sync"
 
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/google/jsonschema-go/jsonschema"
@@ -117,6 +118,55 @@ type ToolDef struct {
 type Tools struct {
 	r   *index.Reader
 	emb embed.Embedder
+
+	// Every indexed FHIR profile digest, loaded once: digests are immutable
+	// per snapshot, and validate would otherwise re-read them on every call.
+	digestsOnce  sync.Once
+	digestsCache map[string]*fhir.ProfileDigest
+	digestsErr   error
+}
+
+type validateFhirIn struct {
+	BundleJSON string `json:"bundle_json" jsonschema:"the FHIR document bundle to check, as a JSON string"`
+	RecordType string `json:"record_type,omitempty" jsonschema:"optional expected ABDM hiType, for example OPConsultation"`
+}
+
+func (t *Tools) digests() (map[string]*fhir.ProfileDigest, error) {
+	t.digestsOnce.Do(func() {
+		summaries, err := t.r.ListFHIRProfiles()
+		if err != nil {
+			t.digestsErr = err
+			return
+		}
+		m := make(map[string]*fhir.ProfileDigest, len(summaries))
+		for _, sm := range summaries {
+			d, err := t.r.GetFHIRProfile(sm.ProfileName)
+			if err != nil {
+				t.digestsErr = err
+				return
+			}
+			m[sm.ProfileName] = d
+		}
+		t.digestsCache = m
+	})
+	return t.digestsCache, t.digestsErr
+}
+
+// ValidateFHIR is the structural pre-flight check of a FHIR document bundle,
+// moved here from the validate_fhir handler so validate and the alias share it.
+func (t *Tools) ValidateFHIR(ctx context.Context, in validateFhirIn) (map[string]any, error) {
+	if len(in.BundleJSON) > 2<<20 {
+		return t.versioned(map[string]any{"error": "bundle exceeds the 2 MiB limit"}), nil
+	}
+	digests, err := t.digests()
+	if err != nil {
+		return nil, err
+	}
+	findings := fhir.Validate([]byte(in.BundleJSON), in.RecordType, digests)
+	return t.versioned(map[string]any{
+		"findings": findings,
+		"limits":   fmt.Sprintf(fhir.LimitsTemplate, t.r.FHIRIGVersion()),
+	}), nil
 }
 
 // NewTools builds a Tools bound to the given snapshot reader and embedder.
@@ -157,6 +207,7 @@ func (t *Tools) GetAtom(ctx context.Context, in getAtomIn) (map[string]any, erro
 type lookupIn struct {
 	Query     string `json:"query" jsonschema:"what the reader asked, in their words"`
 	Milestone string `json:"milestone,omitempty" jsonschema:"M1..M4, P1..P3 to narrow, else empty"`
+	Kind      string `json:"kind,omitempty" jsonschema:"atom (default) or operation: use operation to find an endpoint by what it does or its path"`
 }
 
 type Passage struct {
@@ -480,131 +531,55 @@ func ChatTools(defs []ToolDef) []chat.ToolDef {
 // get_fhir_example. validate_fhir is deliberately not here: it is
 // registered MCP-only, in mcp.go, so it never reaches the chat tool set.
 func (t *Tools) Defs() []ToolDef {
+	def := func(name, desc string, schema *jsonschema.Schema, call func(context.Context, json.RawMessage) (map[string]any, error)) ToolDef {
+		return ToolDef{Name: name, Description: desc, InputSchema: schema, Call: call}
+	}
 	return []ToolDef{
-		{
-			Name:        "search_docs",
-			Description: searchDocsDescription,
-			InputSchema: schemaWithAtomTypeEnum[searchIn](),
-			Call: func(ctx context.Context, raw json.RawMessage) (map[string]any, error) {
-				var in searchIn
-				if err := json.Unmarshal(raw, &in); err != nil {
-					return nil, err
-				}
-				return t.SearchDocs(ctx, in)
-			},
-		},
-		{
-			Name:        "get_atom",
-			Description: getAtomDescription,
-			InputSchema: mustSchemaFor[getAtomIn](),
-			Call: func(ctx context.Context, raw json.RawMessage) (map[string]any, error) {
-				var in getAtomIn
-				if err := json.Unmarshal(raw, &in); err != nil {
-					return nil, err
-				}
-				return t.GetAtom(ctx, in)
-			},
-		},
-		{
-			Name:        "related_atoms",
-			Description: relatedAtomsDescription,
-			InputSchema: mustSchemaFor[getAtomIn](),
-			Call: func(ctx context.Context, raw json.RawMessage) (map[string]any, error) {
-				var in getAtomIn
-				if err := json.Unmarshal(raw, &in); err != nil {
-					return nil, err
-				}
-				return t.RelatedAtoms(ctx, in)
-			},
-		},
-		{
-			Name:        "decode_error",
-			Description: decodeErrorDescription,
-			InputSchema: mustSchemaFor[decodeIn](),
-			Call: func(ctx context.Context, raw json.RawMessage) (map[string]any, error) {
-				var in decodeIn
-				if err := json.Unmarshal(raw, &in); err != nil {
-					return nil, err
-				}
-				return t.DecodeError(ctx, in)
-			},
-		},
-		{
-			Name:        "list_operations",
-			Description: listOperationsDescription,
-			InputSchema: mustSchemaFor[listOpsIn](),
-			Call: func(ctx context.Context, raw json.RawMessage) (map[string]any, error) {
-				var in listOpsIn
-				if err := json.Unmarshal(raw, &in); err != nil {
-					return nil, err
-				}
-				return t.ListOperations(ctx, in)
-			},
-		},
-		{
-			Name:        "get_operation",
-			Description: getOperationDescription,
-			InputSchema: mustSchemaFor[getOpIn](),
-			Call: func(ctx context.Context, raw json.RawMessage) (map[string]any, error) {
-				var in getOpIn
-				if err := json.Unmarshal(raw, &in); err != nil {
-					return nil, err
-				}
-				return t.GetOperation(ctx, in)
-			},
-		},
-		{
-			Name:        "catalogue_info",
-			Description: catalogueInfoDescription,
-			InputSchema: mustSchemaFor[emptyIn](),
-			Call: func(ctx context.Context, raw json.RawMessage) (map[string]any, error) {
-				var in emptyIn
-				if err := json.Unmarshal(raw, &in); err != nil {
-					return nil, err
-				}
-				return t.CatalogueInfo(ctx, in)
-			},
-		},
-		{
-			Name:        "list_fhir_profiles",
-			Description: listFhirProfilesDescription,
-			InputSchema: mustSchemaFor[emptyFhirIn](),
-			Call: func(ctx context.Context, raw json.RawMessage) (map[string]any, error) {
-				var in emptyFhirIn
-				if err := json.Unmarshal(raw, &in); err != nil {
-					return nil, err
-				}
-				return t.ListFHIRProfiles(ctx, in)
-			},
-		},
-		{
-			Name:        "get_fhir_profile",
-			Description: getFhirProfileDescription,
-			InputSchema: mustSchemaFor[getFhirProfileIn](),
-			Call: func(ctx context.Context, raw json.RawMessage) (map[string]any, error) {
-				var in getFhirProfileIn
-				if err := json.Unmarshal(raw, &in); err != nil {
-					return nil, err
-				}
-				return t.GetFHIRProfile(ctx, in)
-			},
-		},
-		{
-			Name:        "get_fhir_example",
-			Description: getFhirExampleDescription,
-			InputSchema: mustSchemaFor[getFhirExampleIn](),
-			Call: func(ctx context.Context, raw json.RawMessage) (map[string]any, error) {
-				var in getFhirExampleIn
-				if err := json.Unmarshal(raw, &in); err != nil {
-					return nil, err
-				}
-				return t.GetFHIRExample(ctx, in)
-			},
-		},
+		def("search", searchDescription, schemaWithAtomTypeEnum[searchSixIn](), func(ctx context.Context, raw json.RawMessage) (map[string]any, error) {
+			var in searchSixIn
+			if err := json.Unmarshal(raw, &in); err != nil {
+				return nil, err
+			}
+			// Concise keeps MCP clients inside their context budgets. The
+			// chat's own model needs the snippets: its guard lets an answer
+			// state only what a tool result carried.
+			if in.ResponseFormat == "" {
+				in.ResponseFormat = "detailed"
+			}
+			return t.Search(ctx, in)
+		}),
+		def("get", getDescription, mustSchemaFor[getSixIn](), func(ctx context.Context, raw json.RawMessage) (map[string]any, error) {
+			var in getSixIn
+			if err := json.Unmarshal(raw, &in); err != nil {
+				return nil, err
+			}
+			return t.Get(ctx, in)
+		}),
+		def("related", relatedAtomsDescription, mustSchemaFor[getAtomIn](), func(ctx context.Context, raw json.RawMessage) (map[string]any, error) {
+			var in getAtomIn
+			if err := json.Unmarshal(raw, &in); err != nil {
+				return nil, err
+			}
+			return t.RelatedAtoms(ctx, in)
+		}),
+		def("decode_error", decodeErrorDescription, mustSchemaFor[decodeIn](), func(ctx context.Context, raw json.RawMessage) (map[string]any, error) {
+			var in decodeIn
+			if err := json.Unmarshal(raw, &in); err != nil {
+				return nil, err
+			}
+			return t.DecodeError(ctx, in)
+		}),
+		def("catalogue_info", catalogueInfoDescription, mustSchemaFor[emptyIn](), func(ctx context.Context, raw json.RawMessage) (map[string]any, error) {
+			var in emptyIn
+			if err := json.Unmarshal(raw, &in); err != nil {
+				return nil, err
+			}
+			return t.CatalogueInfo(ctx, in)
+		}),
 	}
 }
 
-const chatSearchDescription = "Call this when the answer is not already in the passages you were given, or the reader asks a follow-up that needs something new. It searches this portal's documentation and returns the matching pages in full, with their related pages named. Send the reader's own words as the query."
+const chatSearchDescription = "Call this when the answer is not already in the passages you were given, or the reader asks a follow-up that needs something new. It searches this portal's documentation and returns the matching pages in full, with their related pages named. Send the reader's own words as the query. Use kind: operation to find an endpoint by what it does or its path."
 
 // ChatToolsFor is the chat loop's view of the tools: only the names the
 // router chose, and search_docs bound to Lookup rather than to the
@@ -617,14 +592,17 @@ func (t *Tools) ChatToolsFor(names []string) []chat.ToolDef {
 	}
 	var out []chat.ToolDef
 	for _, n := range names {
-		if n == "search_docs" {
+		if n == "search" {
 			out = append(out, chat.ToolDef{
-				Name: "search_docs", Description: chatSearchDescription,
+				Name: "search", Description: chatSearchDescription,
 				InputSchema: mustSchemaFor[lookupIn](),
 				Call: func(ctx context.Context, raw json.RawMessage) (map[string]any, error) {
 					var in lookupIn
 					if err := json.Unmarshal(raw, &in); err != nil {
 						return nil, err
+					}
+					if in.Kind == "operation" {
+						return t.Search(ctx, searchSixIn{Query: in.Query, Kind: "operation", ResponseFormat: "detailed"})
 					}
 					pack, err := t.Lookup(ctx, in)
 					if err != nil {
@@ -635,9 +613,9 @@ func (t *Tools) ChatToolsFor(names []string) []chat.ToolDef {
 			})
 			continue
 		}
-		if n == "validate_request" {
+		if n == "validate" {
 			out = append(out, chat.ToolDef{
-				Name: "validate_request", Description: validateRequestDescription,
+				Name: "validate", Description: validateRequestDescription,
 				InputSchema: mustSchemaFor[validateIn](),
 				Call: func(ctx context.Context, raw json.RawMessage) (map[string]any, error) {
 					var in validateIn

@@ -345,3 +345,86 @@ func TestListAtomsAndGetOperation(t *testing.T) {
 		t.Errorf("get_operation: %s", out)
 	}
 }
+
+func TestSixToolsAndTheirAliases(t *testing.T) {
+	sess := connect(t, false, nil)
+	res, err := sess.ListTools(context.Background(), nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	byName := map[string]*mcp.Tool{}
+	for _, tl := range res.Tools {
+		byName[tl.Name] = tl
+	}
+	for _, n := range []string{"search", "get", "related", "decode_error", "validate", "catalogue_info"} {
+		tl, ok := byName[n]
+		if !ok {
+			t.Errorf("missing tool %s", n)
+			continue
+		}
+		if strings.HasPrefix(tl.Description, "Deprecated") {
+			t.Errorf("%s is a new tool but reads as deprecated", n)
+		}
+		if tl.Annotations == nil || !tl.Annotations.ReadOnlyHint {
+			t.Errorf("%s is not marked read-only", n)
+		}
+	}
+	for old, repl := range map[string]string{
+		"search_docs": "search", "list_atoms": "search", "list_operations": "search", "list_fhir_profiles": "search",
+		"get_atom": "get", "get_operation": "get", "get_fhir_profile": "get", "get_fhir_example": "get",
+		"related_atoms": "related", "validate_request": "validate", "validate_fhir": "validate",
+	} {
+		tl, ok := byName[old]
+		if !ok {
+			t.Errorf("alias %s is gone; it must stay for one release", old)
+			continue
+		}
+		if want := "Deprecated alias for `" + repl + "`;"; !strings.HasPrefix(tl.Description, want) {
+			t.Errorf("%s description does not start with %q", old, want)
+		}
+	}
+	if len(res.Tools) != 17 {
+		t.Errorf("registered %d tools, want 17 (6 new, 11 aliases) for this release", len(res.Tools))
+	}
+}
+
+func TestGetReturnsWhatTheOldToolReturned(t *testing.T) {
+	sess := connect(t, false, nil)
+	a := callText(t, sess, "get", map[string]any{"id": "hiecm.error.abdm-1035"})
+	b := callText(t, sess, "get_atom", map[string]any{"id": "hiecm.error.abdm-1035"})
+	if a != b {
+		t.Errorf("get and get_atom differ:\n%s\n---\n%s", a, b)
+	}
+}
+
+func TestGetAnUnknownIDNamesTheFix(t *testing.T) {
+	sess := connect(t, false, nil)
+	res, err := sess.CallTool(context.Background(), &mcp.CallToolParams{Name: "get", Arguments: map[string]any{"id": "hiecm.error.nope-9999"}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !res.IsError {
+		t.Fatal("an unknown id must be an isError result")
+	}
+	if txt := res.Content[0].(*mcp.TextContent).Text; !strings.Contains(txt, "Use search to find valid ids") {
+		t.Errorf("error does not name the fix: %q", txt)
+	}
+}
+
+func TestConciseSearchStaysUnderTheBudget(t *testing.T) {
+	sess := connect(t, false, nil)
+	txt := callText(t, sess, "search", map[string]any{"query": "ABDM", "limit": 10})
+	if len(txt) >= 4000 {
+		t.Errorf("concise search is %d characters, want under 4000", len(txt))
+	}
+	if !strings.Contains(txt, "hiecm.error.abdm-1035") {
+		t.Errorf("concise search lost the hit: %s", txt)
+	}
+}
+
+func TestSearchWithNoQueryLists(t *testing.T) {
+	sess := connect(t, false, nil)
+	if txt := callText(t, sess, "search", map[string]any{"type": "error"}); !strings.Contains(txt, "hiecm.error.abdm-1035") {
+		t.Errorf("an empty query with a type filter must list atoms: %s", txt)
+	}
+}

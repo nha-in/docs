@@ -81,21 +81,17 @@ func Route(in Input) Result {
 		r.Shape = HowDoI
 	}
 
-	r.Tools = []string{"search_docs"}
+	r.Tools = []string{"search"}
 	if len(r.ErrorCodes) > 0 || (r.Shape == Diagnose && r.OperationRef == "") {
 		r.Tools = append(r.Tools, "decode_error")
 	}
-	if strings.HasPrefix(r.OperationRef, "/") {
-		// A path-shaped ref ("/api/hiecm/gateway/v3/sessions") is not an
-		// operationId: get_operation only resolves exact ids, so handing it
-		// out here would give the model a tool it can only call by
-		// guessing. list_operations can search by path instead.
-		r.Tools = append(r.Tools, "list_operations")
-	} else if r.OperationRef != "" {
-		r.Tools = append(r.Tools, "get_operation")
+	// A path-shaped ref is found with search, kind operation; an exact
+	// operationId is read with get.
+	if r.OperationRef != "" && !strings.HasPrefix(r.OperationRef, "/") {
+		r.Tools = append(r.Tools, "get")
 	}
 	if in.HasAttachment {
-		r.Tools = append(r.Tools, "validate_request")
+		r.Tools = append(r.Tools, "validate")
 	}
 	return r
 }

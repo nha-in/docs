@@ -15,9 +15,7 @@ import (
 func TestToolDefsMatchMCP(t *testing.T) {
 	r := fixtureReader(t, false)
 	defs := NewTools(r, nil).Defs()
-	want := []string{"search_docs", "get_atom", "related_atoms", "decode_error",
-		"list_operations", "get_operation", "catalogue_info",
-		"list_fhir_profiles", "get_fhir_profile", "get_fhir_example"}
+	want := []string{"search", "get", "related", "decode_error", "catalogue_info"}
 	if len(defs) != len(want) {
 		t.Fatalf("got %d defs, want %d", len(defs), len(want))
 	}
@@ -65,8 +63,8 @@ func keys(m map[string]any) []string {
 
 func TestChatToolsForBindsSearchDocsToLookup(t *testing.T) {
 	tools := newTestTools(t)
-	defs := tools.ChatToolsFor([]string{"search_docs", "decode_error", "list_operations"})
-	if len(defs) != 3 || defs[0].Name != "search_docs" || defs[1].Name != "decode_error" || defs[2].Name != "list_operations" {
+	defs := tools.ChatToolsFor([]string{"search", "decode_error", "get"})
+	if len(defs) != 3 || defs[0].Name != "search" || defs[1].Name != "decode_error" || defs[2].Name != "get" {
 		t.Fatalf("got %+v", defs)
 	}
 	out, err := defs[0].Call(context.Background(), json.RawMessage(`{"query":"link care contexts"}`))
@@ -74,7 +72,7 @@ func TestChatToolsForBindsSearchDocsToLookup(t *testing.T) {
 		t.Fatal(err)
 	}
 	if _, ok := out["passages"]; !ok {
-		t.Errorf("chat search_docs must return a passage pack, got keys %v", keys(out))
+		t.Errorf("chat search must return a passage pack, got keys %v", keys(out))
 	}
 	if !strings.Contains(defs[0].Description, "Call this when") {
 		t.Errorf("description must state when to call it, got %q", defs[0].Description)
@@ -84,8 +82,8 @@ func TestChatToolsForBindsSearchDocsToLookup(t *testing.T) {
 func TestChatToolsForBindsValidateRequest(t *testing.T) {
 	r := fixtureReader(t, false)
 	tools := NewTools(r, nil)
-	defs := tools.ChatToolsFor([]string{"search_docs", "validate_request"})
-	if len(defs) != 2 || defs[0].Name != "search_docs" || defs[1].Name != "validate_request" {
+	defs := tools.ChatToolsFor([]string{"search", "validate"})
+	if len(defs) != 2 || defs[0].Name != "search" || defs[1].Name != "validate" {
 		t.Fatalf("got %+v", defs)
 	}
 	out, err := defs[1].Call(context.Background(), json.RawMessage(
@@ -97,7 +95,7 @@ func TestChatToolsForBindsValidateRequest(t *testing.T) {
 		t.Errorf("valid body rejected: %v", out)
 	}
 	if _, ok := out["required_parameters"]; !ok {
-		t.Errorf("chat validate_request must return required_parameters, got keys %v", keys(out))
+		t.Errorf("chat validate must return required_parameters, got keys %v", keys(out))
 	}
 }
 
@@ -115,7 +113,7 @@ func defByName(t *testing.T, defs []ToolDef, name string) ToolDef {
 func TestToolDefCallListFHIRProfiles(t *testing.T) {
 	r := fixtureReader(t, false)
 	defs := NewTools(r, nil).Defs()
-	out, err := defByName(t, defs, "list_fhir_profiles").Call(context.Background(), json.RawMessage(`{}`))
+	out, err := defByName(t, defs, "search").Call(context.Background(), json.RawMessage(`{"kind":"fhir_profile"}`))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -131,9 +129,9 @@ func TestToolDefCallListFHIRProfiles(t *testing.T) {
 func TestToolDefCallGetFHIRProfile(t *testing.T) {
 	r := fixtureReader(t, false)
 	defs := NewTools(r, nil).Defs()
-	def := defByName(t, defs, "get_fhir_profile")
+	def := defByName(t, defs, "get")
 
-	out, err := def.Call(context.Background(), json.RawMessage(`{"profile":"OPConsultRecord"}`))
+	out, err := def.Call(context.Background(), json.RawMessage(`{"id":"fhir:OPConsultRecord"}`))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -142,7 +140,7 @@ func TestToolDefCallGetFHIRProfile(t *testing.T) {
 	}
 
 	// Same digest, looked up by its ABDM hiType instead of its profile name.
-	out, err = def.Call(context.Background(), json.RawMessage(`{"profile":"OPConsultation"}`))
+	out, err = def.Call(context.Background(), json.RawMessage(`{"id":"fhir:OPConsultation"}`))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -150,7 +148,7 @@ func TestToolDefCallGetFHIRProfile(t *testing.T) {
 		t.Fatalf("get_fhir_profile by hiType = %v", out)
 	}
 
-	if _, err := def.Call(context.Background(), json.RawMessage(`{"profile":"NoSuchProfile"}`)); err == nil {
+	if _, err := def.Call(context.Background(), json.RawMessage(`{"id":"fhir:NoSuchProfile"}`)); err == nil {
 		t.Fatal("want an error for an unknown profile")
 	}
 }
@@ -158,9 +156,9 @@ func TestToolDefCallGetFHIRProfile(t *testing.T) {
 func TestToolDefCallGetFHIRExample(t *testing.T) {
 	r := fixtureReader(t, false)
 	defs := NewTools(r, nil).Defs()
-	def := defByName(t, defs, "get_fhir_example")
+	def := defByName(t, defs, "get")
 
-	out, err := def.Call(context.Background(), json.RawMessage(`{"record_type":"OPConsultation"}`))
+	out, err := def.Call(context.Background(), json.RawMessage(`{"id":"fhir-example:OPConsultation"}`))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -175,7 +173,7 @@ func TestToolDefCallGetFHIRExample(t *testing.T) {
 		t.Fatalf("get_fhir_example example missing bundle content: %s", exJSON)
 	}
 
-	if _, err := def.Call(context.Background(), json.RawMessage(`{"record_type":"NoSuchType"}`)); err == nil {
+	if _, err := def.Call(context.Background(), json.RawMessage(`{"id":"fhir-example:NoSuchType"}`)); err == nil {
 		t.Fatal("want an error for an unknown record type")
 	}
 }
