@@ -19,37 +19,69 @@ Connect your app to the Unified Health Interface
 <div className="intro-split">
 <UhiServicesArt />
 
-UHI is an open network under the Ayushman Bharat Digital Mission
-([ABDM](/docs/uhi/v1/getting-started/glossary#abdm)). Any compliant patient app
-can discover health services from any compliant provider platform through one
-integration, and book some of them.
+UHI stands for Unified Health Interface. It is an open network under the
+Ayushman Bharat Digital Mission ([ABDM](/docs/uhi/v1/getting-started/glossary#abdm)) that connects patient apps
+to health service providers.
 
-Every exchange is asynchronous. Your app sends a signed request, gets an `ACK`
-at once, and receives the real answer later as a callback on its own URL.
+A patient opens one app and finds a doctor, a PM-JAY hospital, blood, an
+ambulance, a Jan Aushadhi Kendra or an organ transplant hospital. The app does
+not need a separate deal with each provider. It joins the network once, and
+every provider on the network can answer it.
 
 </div>
 
-Every exchange has three parties.
+### Who takes part
 
-| Party | Who runs it | What it does |
+- **The patient app**, called an End User Application ([EUA](/docs/uhi/v1/getting-started/glossary#eua)). It is
+  the app a patient or caregiver uses, such as Aarogya Setu or the
+  [ABHA](/docs/uhi/v1/getting-started/glossary#abha) app.
+- **The provider platform**, called a Health Service Provider Application
+  ([HSPA](/docs/uhi/v1/getting-started/glossary#hspa)). It is the system behind a hospital network, a blood bank,
+  a Jan Aushadhi Kendra or an ambulance fleet.
+- **The [UHI Gateway](/docs/uhi/v1/getting-started/glossary#uhi-gateway)**, run by the National Health Authority
+  ([NHA](/docs/uhi/v1/getting-started/glossary#nha)).
+
+### What the UHI Gateway does
+
+The Gateway works like a switchboard for searches. When a patient searches, the
+app sends one request to the Gateway. The Gateway checks who sent it, passes it
+to every provider that offers that service, and passes each answer back. The
+patient sees results from many providers at once.
+
+The Gateway only helps the patient find. Once the patient picks a provider, the
+app and that provider talk to each other directly to book, track and cancel.
+
+### The four stages: DOFP
+
+A service can take a patient through up to four stages: Discovery, Order,
+Fulfilment and Post-fulfilment, or DOFP.
+
+| Stage | What happens | In Physical Consultation |
 | --- | --- | --- |
-| [EUA](/docs/uhi/v1/getting-started/glossary#eua), End User Application | [PHR](/docs/uhi/v1/getting-started/glossary#phr) and consumer apps, such as Aarogya Setu or the [ABHA](/docs/uhi/v1/getting-started/glossary#abha) app | Takes the patient's query and sends `search`, and later booking calls. Receives callbacks on its `consumer_uri` and renders results |
-| [UHI Gateway](/docs/uhi/v1/getting-started/glossary#uhi-gateway) | [NHA](/docs/uhi/v1/getting-started/glossary#nha) | Validates and signs requests, routes `search` to the right HSPAs, and relays `on_search` back to the EUA |
-| [HSPA](/docs/uhi/v1/getting-started/glossary#hspa), Health Service Provider Application | The service owner, such as a hospital network, NOTTO, PMBI or an ambulance aggregator | Queries its own registry and returns a signed catalog in `on_search`. Sends booking callbacks where the service supports them |
+| Discovery | The patient finds what they need | Doctors near home, with fees and free slots |
+| Order | The patient chooses and books | A slot is held, the terms are agreed and a PIN is issued |
+| Fulfilment | The service is delivered | The patient checks in with the PIN and the visit is marked complete |
+| Post-fulfilment | What comes after | Cancelling the appointment, or messaging the clinic |
 
-## Six services
+### How far each service goes
 
-A service is named by the `context.domain` value inside each call, not by a
-different endpoint.
+Some services stop at discovery: the patient finds what they need, then calls
+ahead or visits. Physical Consultation goes all the way.
 
-| Service | `context.domain` | Your role | Who runs the HSPA | Scope today |
-| --- | --- | --- | --- | --- |
-| [Physical Consultation](/docs/uhi/v1/services/consultation) | `nic2004:85111` | EUA or HSPA | Any registered provider platform | Discovery, booking, check-in, cancellation |
-| [PM-JAY HEM Hospital Discovery](/docs/uhi/v1/services/pmjay-hem) | `nic2004:85112` | EUA | NHA | Discovery |
-| [Blood Bank Discovery](/docs/uhi/v1/services/blood-bank) | `nic2008:86906` | EUA or HSPA | e-RaktKosh, and any approved blood bank system | Discovery |
-| [Ambulance Booking](/docs/uhi/v1/services/ambulance) | `nic2008:86909` | EUA or HSPA | Any registered ambulance platform | Discovery and quote, in Phase 1 |
-| [Jan Aushadhi](/docs/uhi/v1/services/jan-aushadhi) | `nic2008:47721` | EUA | PMBI | Kendra and medicine discovery |
-| [NOTTO Hospital Discovery](/docs/uhi/v1/services/notto) | `nic2004:86100` | EUA | NOTTO | Discovery |
+| Service | Discovery | Order | Fulfilment | Post-fulfilment | Who answers the search |
+| --- | --- | --- | --- | --- | --- |
+| [Physical Consultation](/docs/uhi/v1/services/consultation) | Yes | Yes | Yes | Yes | Any registered provider platform |
+| [Ambulance Booking](/docs/uhi/v1/services/ambulance) | Yes | A quote, in Phase 1 | Phase 2 | Phase 2 | Any registered ambulance platform |
+| [PM-JAY HEM](/docs/uhi/v1/services/pmjay-hem) | Yes | No | No | No | NHA |
+| [Blood Bank](/docs/uhi/v1/services/blood-bank) | Yes | No | No | No | e-RaktKosh, and any approved blood bank system |
+| [Jan Aushadhi](/docs/uhi/v1/services/jan-aushadhi) | Yes | No | No | No | PMBI |
+| [NOTTO](/docs/uhi/v1/services/notto) | Yes | No | No | No | NOTTO |
+
+A discovery-only service still does real work. PM-JAY HEM, for example, shows
+which hospitals are empanelled today and the PM-JAY contact at each one, so the
+patient knows where to go and whom to call.
+
+The technical identity of each service is on its [service page](/docs/uhi/v1/services).
 
 ## Choose your role
 
