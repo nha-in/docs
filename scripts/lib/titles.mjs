@@ -61,8 +61,10 @@ export function acronyms(dir = catalogueDir) {
   return cached;
 }
 
-// The address of a markdown link, `](/docs/...)`. It is a route, not prose.
-const LINK_TARGET = /(\]\([^)\s]*\))/;
+// The address of a markdown link, `](/docs/...)`, and an inline code span.
+// Neither is prose: a route cased is a page that does not exist, and a value
+// cased is a value the API rejects (`abha-enrol` came out `ABHA-enrol`).
+const LINK_TARGET = /(\]\([^)\s]*\)|`[^`\n]*`)/;
 
 /**
  * Cases every acronym and proper noun in `text`, whatever case it arrived in.
@@ -75,7 +77,7 @@ const LINK_TARGET = /(\]\([^)\s]*\))/;
 export function caseTerms(text, vocab = acronyms()) {
   return String(text)
     .split(LINK_TARGET)
-    .map((part) => (LINK_TARGET.test(part) ? part : caseProse(part, vocab)))
+    .map((part, i) => (i % 2 ? part : caseProse(part, vocab)))
     .join('');
 }
 

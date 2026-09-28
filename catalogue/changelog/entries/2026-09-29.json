@@ -192,5 +192,23 @@
       "eua",
       "hspa"
     ]
+  },
+  {
+    "id": "4bf8048a3c39",
+    "date": "2026-09-29",
+    "kind": "withdrawn",
+    "gateway": "hiecm",
+    "version": "v3",
+    "module": "m1",
+    "label": "M1 Identity",
+    "link": "/docs/hiecm/v3/api/m1/",
+    "count": 1,
+    "items": [
+      {
+        "method": "PATCH",
+        "path": "/abha/api/v3/profile/account#profile-photo",
+        "kind": "call"
+      }
+    ]
   }
 ]

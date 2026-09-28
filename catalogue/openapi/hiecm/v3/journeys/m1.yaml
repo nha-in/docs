@@ -118,10 +118,6 @@
     - op: m1_get_v3_profile_account
     - op: m1_get_v3_profile_account_download_abha_card
     - op: m1_get_v3_profile_account_request_token
-- id: m1-profile-update-photo
-  title: Profile, Update Photo
-  steps:
-    - op: m1_patch_v3_profile_account_profile_photo
 - id: m1-find-abha-mobile-otp
   title: Find ABHA, Mobile OTP
   steps:
