@@ -5,7 +5,7 @@
 # on_confirm, on_status, on_update and on_cancel to the Gateway. select and
 # on_select are in the spec but not in this flow, so no journey names them.
 - id: uhi-consultation-discovery
-  title: Physical Consultation, discovery
+  title: Discovery
   steps:
     - op: uhi_network_gateway_search
       example: consultation-search-doctor-by-name-and-speciality-physicalconsultation
@@ -22,7 +22,7 @@
       example: consultation-2nd-on-search-response
       title: Send the doctor's slots
 - id: uhi-consultation-order
-  title: Physical Consultation, order
+  title: Order
   steps:
     - op: uhi_consultation_init
     - op: uhi_consultation_on_init
@@ -30,7 +30,7 @@
     - op: uhi_consultation_on_confirm
     - op: uhi_consultation_on_confirm_audit
 - id: uhi-consultation-fulfilment
-  title: Physical Consultation, fulfilment
+  title: Fulfilment
   steps:
     - op: uhi_consultation_status
     - op: uhi_consultation_on_status
@@ -39,7 +39,7 @@
     - op: uhi_consultation_on_update_to_eua
     - op: uhi_consultation_on_update_audit
 - id: uhi-consultation-post-fulfilment
-  title: Physical Consultation, post-fulfilment
+  title: Post-fulfilment
   steps:
     - op: uhi_consultation_cancel
     - op: uhi_consultation_on_cancel
