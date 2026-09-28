@@ -66,11 +66,20 @@ export default function ApiLinks({module, platform = 'hiecm', version = 'v3'}: P
   return (
     <CardGroup cols={2}>
       {entry && (
-        <Card title={`Try the ${name} APIs`} icon="book-open" href={entry}>
-          Every call in {name}, one page each: the headers it needs, the payload
-          it takes, the callback it triggers, and a request builder you can fire
-          at the sandbox.
-        </Card>
+        platform === 'uhi' ? (
+          // UHI endpoint pages carry signed sample requests and no Try it.
+          <Card title={`The ${name} APIs`} icon="book-open" href={entry}>
+            Every call in {name}, one page each: the headers it needs, the
+            payload it takes, the callback it triggers, and a signed sample
+            request. There is no request builder: sign each call yourself.
+          </Card>
+        ) : (
+          <Card title={`Try the ${name} APIs`} icon="book-open" href={entry}>
+            Every call in {name}, one page each: the headers it needs, the payload
+            it takes, the callback it triggers, and a request builder you can fire
+            at the sandbox.
+          </Card>
+        )
       )}
       {errors && (
         <Card title="Error codes" icon="triangle-alert" href={errors}>

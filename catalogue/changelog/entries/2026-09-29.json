@@ -7,7 +7,7 @@
     "version": "v1",
     "module": "ambulance",
     "label": "Ambulance Booking",
-    "link": "/docs/uhi/v1/api/#ambulance-booking",
+    "link": "/docs/uhi/v1/api/ambulance",
     "count": 2,
     "items": [
       {
@@ -34,7 +34,7 @@
     "version": "v1",
     "module": "consultation",
     "label": "Physical Consultation",
-    "link": "/docs/uhi/v1/api/#physical-consultation",
+    "link": "/docs/uhi/v1/api/consultation",
     "count": 18,
     "items": [
       {
@@ -141,7 +141,7 @@
     "version": "v1",
     "module": "network",
     "label": "Network and discovery",
-    "link": "/docs/uhi/v1/api/#network-and-discovery",
+    "link": "/docs/uhi/v1/api/network",
     "count": 5,
     "items": [
       {
