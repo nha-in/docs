@@ -2,13 +2,15 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** `catalogue/` has one folder per gateway (`hiecm/`, `nhcx/`, `uhi/`), plus `shared/` and `annexure/`. Each gateway folder holds everything that gateway has: its content map, its OpenAPI specs with their corrections and upstream sources, and one folder per atom type with every atom file for that gateway in it, glossary included. A term stays in `shared/` only when it means the same thing on every gateway.
+**Scope, set 29 September 2026:** HIE-CM and UHI only. NHCX is not restructured: its atoms under `catalogue/nhcx/`, its specifications, corrections and sources under `catalogue/openapi/`, and its rows in `catalogue/titles.yaml` stay exactly where they are. The shared `CONVENTIONS.md`, `extensions.md` and NRCeS package stay beside them. The only NHCX edit is 17 `related` lines that cite a glossary id Task 6 renames.
+
+**Goal:** `catalogue/hiecm/` and `catalogue/uhi/` each hold everything their gateway has: its content map, its OpenAPI specs with their corrections and upstream sources, and one folder per atom type with every atom file for that gateway in it, glossary included. A term stays in `shared/` only when it means the same thing on every gateway.
 
 **Architecture:** This is a move, not a rewrite. The page is still where an atom's words are written. `scripts/build-sections.mjs` writes the atom file into `catalogue/<gateway>/<type>/<slug>.md`, not into `catalogue/generated/`. A written file is told apart from a hand-written one by `generated: true` in its frontmatter, not by the folder it sits in. One module, `scripts/lib/paths.mjs`, owns every catalogue path the Node scripts use. The Go indexer gets the same three rules. Atom ids, page URLs, operation ids and every published output stay byte-identical. The parity snapshot proves that.
 
 **Tech Stack:** Node 24 ESM scripts (`node:test`), Go indexer (`mcp/`), Docusaurus site, GitHub Actions.
 
-**Spec:** `plan/abdm-v1-phase1-architecture-and-plan.md` §3.2 (`p3-2-atom`) at plan version `2026.09.29-9`, which carries the target tree below. Background: `docs/superpowers/plans/2026-09-28-page-canonical-knowledge-atoms.md` (why pages are the source) and `2026-09-29-hiecm-atoms-rebuild.md` (the 227 HIE-CM atoms this moves).
+**Spec:** `plan/abdm-v1-phase1-architecture-and-plan.md` §3.2 (`p3-2-atom`) at plan version `2026.09.29-10`, which carries the target tree below. Background: `docs/superpowers/plans/2026-09-28-page-canonical-knowledge-atoms.md` (why pages are the source) and `2026-09-29-hiecm-atoms-rebuild.md` (the 227 HIE-CM atoms this moves).
 
 ## The target tree
 
@@ -24,17 +26,10 @@ catalogue/
       v3/              hiecm-*.yaml, README.md, journeys/, errors/
       corrections/     2026-09-16-final-set.md, 2026-09-21-record-share-ingest.md
       .raw/            nha-2026-09-15-review, -16, -21-record-share, -21-review, -22, -23, -24
-    titles.yaml        HIE-CM rows of the old catalogue/titles.yaml
+    titles.yaml        HIE-CM rows split out of catalogue/titles.yaml
     postman.json       was catalogue/postman.json (HIE-CM collections only)
     callbacks/ concepts/ decisions/ endpoints/ errors/ flows/ glossary/ tests/ troubleshooting/
-  nhcx/
-    README.md
-    openapi/
-      v1/              nhcx-*.yaml, README.md
-      corrections/     2026-09-15-nhcx-ingest.md, 2026-09-24-nhcx-review.md, 2026-09-24-nhcx-review-exchange.md
-      .raw/            nhcx-site-2026-09-14, nhcx-package-2026-09-15
-    titles.yaml        NHCX rows of the old catalogue/titles.yaml
-    callbacks/ concepts/ decisions/ endpoints/ errors/ fhir/ flows/ glossary/ sandbox/ tests/ troubleshooting/
+  nhcx/                unchanged: README.md and the hand-written atom type folders
   uhi/
     README.md
     openapi/
@@ -43,30 +38,31 @@ catalogue/
       .raw/            nha-2026-09-28-uhi
     glossary/          eua.md, hspa.md
   shared/
-    openapi/           CONVENTIONS.md, extensions.md, nrces/ (PINNED, README.md),
-                       .raw/nrces-ndhm.in-6.5.0.tgz
     vocabulary.yaml
     concepts/ decisions/ fhir/ glossary/ sandbox/   glossary/ keeps only terms every gateway shares
+  openapi/             unchanged for NHCX: CONVENTIONS.md, extensions.md, nhcx/v1/, nrces/,
+                       corrections/ (the three NHCX logs), .raw/ (nhcx-site-2026-09-14,
+                       nhcx-package-2026-09-15, nrces-ndhm.in-6.5.0.tgz)
+  titles.yaml          NHCX rows only
   annexure/            sources atoms cite, not atoms
   changelog/           What's New facts and entries
   registry.json        built: every atom and where its words live
   atom-routes.json     built: every atom's page route
 ```
 
-Gone: `catalogue/generated/`, `catalogue/map.yaml`, `catalogue/map.d/`, `catalogue/openapi/`, `catalogue/titles.yaml`, `catalogue/postman.json`, and the empty `.gitkeep` type folders under `uhi/`. A folder exists when it holds a file. Each gateway's `README.md` lists the whole shape, so an empty gateway still says what goes where.
+Gone: `catalogue/generated/`, `catalogue/map.yaml`, `catalogue/map.d/`, `catalogue/openapi/hiecm/`, `catalogue/openapi/uhi/`, the HIE-CM and UHI drops and correction logs under `catalogue/openapi/`, `catalogue/postman.json`, and the empty `.gitkeep` type folders under `uhi/`. A folder exists when it holds a file. Each gateway's `README.md` lists the whole shape, so an empty gateway still says what goes where.
 
 **File moves at a glance** (Tasks 2 to 5; every move is `git mv` so history follows):
 
 | From | To |
 |---|---|
-| `openapi/<gw>/<ver>/**` | `<gw>/openapi/<ver>/**` |
-| `openapi/corrections/<f>` | `<gw>/openapi/corrections/<f>`, gateway per the tree |
-| `openapi/.raw/<drop>` | `<gw>/openapi/.raw/<drop>`, gateway per the tree |
-| `openapi/.raw/nrces-ndhm.in-6.5.0.tgz`, `openapi/nrces/`, `openapi/CONVENTIONS.md`, `openapi/extensions.md` | `shared/openapi/...` |
+| `openapi/hiecm/v3/**`, `openapi/uhi/v1/**` | `hiecm/openapi/v3/**`, `uhi/openapi/v1/**` |
+| `openapi/corrections/<f>`, HIE-CM and UHI logs only | `<gw>/openapi/corrections/<f>`, gateway per the tree |
+| `openapi/.raw/<drop>`, HIE-CM and UHI drops only | `<gw>/openapi/.raw/<drop>`, gateway per the tree |
 | `map.yaml` | `hiecm/map/glossary.yaml` (its one entry, link token, becomes `hiecm.glossary.link-token` in Task 6) |
 | `map.d/hiecm-<name>.yaml` | `hiecm/map/<name>.yaml` |
 | `generated/<gw>/<type>/<slug>.md` | `<gw>/<type>/<slug>.md` |
-| `titles.yaml` | `hiecm/titles.yaml` and `nhcx/titles.yaml`, split by operationId prefix |
+| `titles.yaml`, HIE-CM rows | `hiecm/titles.yaml`; NHCX rows stay in `titles.yaml` |
 | `postman.json` | `hiecm/postman.json` |
 | `shared/fhir/fhir-document-bundles.md` | `shared/fhir/document-bundles.md` (the one hand atom whose filename is not its id slug) |
 | `shared/glossary/<term>.md`, 22 HIE-CM terms | `hiecm/glossary/<term>.md`, id `hiecm.glossary.<term>` (Task 6) |
@@ -122,8 +118,8 @@ The plugin now describes the target, so **this branch does not merge until Task 
   - `GATEWAYS = ['hiecm','nhcx','uhi','shared']`
   - `FOLDER` (type to folder, the map now in lint-atoms)
   - `atomPath(id: string, type: string, gateway: string): string`, returning `catalogue/${gateway}/${FOLDER[type]}/${slug}.md`, where `slug = id.split('.').slice(2).join('.')`
-  - `specRoots(root: string): {gateway: string, dir: string}[]`: each existing `catalogue/<gw>/openapi`, `dir` absolute
-  - `rawDirs(root: string): string[]`: each existing `catalogue/<gw>/openapi/.raw`, absolute
+  - `specRoots(root: string): {gateway: string, dir: string}[]`: for each gateway, `catalogue/<gw>/openapi` if it exists, else `catalogue/openapi/<gw>` if that exists (NHCX), `dir` absolute. `dir` holds `<version>/<file>.yaml` in both cases
+  - `rawDirs(root: string): string[]`: `catalogue/openapi/.raw` and each existing `catalogue/<gw>/openapi/.raw`, absolute
   - `mapFiles(root: string): string[]`: `catalogue/*/map/*.yaml`, absolute, sorted by relative path
   - `TOP_LEVEL` and `GATEWAY_LEVEL`: the allowed names from the tree
 
@@ -131,16 +127,16 @@ The plugin now describes the target, so **this branch does not merge until Task 
   - `atomPath('shared.glossary.link-token','glossary','shared') === 'catalogue/shared/glossary/link-token.md'`
   - `atomPath('hiecm.endpoint.m2-generate-link-token','endpoint','hiecm') === 'catalogue/hiecm/endpoints/m2-generate-link-token.md'`
   - `mapFiles(tmp)` on a temp tree holding `catalogue/hiecm/map/b.yaml`, `catalogue/hiecm/map/a.yaml` and `catalogue/shared/map/x.yaml` returns them in the order `hiecm/map/a`, `hiecm/map/b`, `shared/map/x`
-  - `specRoots(tmp)` lists only gateways that have an `openapi/` folder
+  - `specRoots(tmp)` on a tree with `catalogue/hiecm/openapi/v3/` and `catalogue/openapi/nhcx/v1/` returns `hiecm` at `catalogue/hiecm/openapi` and `nhcx` at `catalogue/openapi/nhcx`, and nothing for `uhi`
 - [ ] **Step 2:** `node --test scripts/lib/paths.test.mjs`. Expect FAIL (module not found).
 - [ ] **Step 3:** Implement `paths.mjs`. Import `FOLDER` from it in lint-atoms and build-sections.
 - [ ] **Step 4:** `node --test scripts/lib/paths.test.mjs && npm run -s lint:atoms && npm run -s check:sections`. Expect PASS, and `854 atoms`.
 - [ ] **Step 5: Commit.** `feat(catalogue): one module owns the catalogue's paths`
 
-### Task 2: Specs, corrections and upstream sources move into their gateway
+### Task 2: HIE-CM and UHI specs, corrections and upstream sources move into their gateway
 
 **Files:**
-- Move: every row of the moves table whose source starts with `openapi/`
+- Move: every row of the moves table whose source starts with `openapi/`. NHCX's files, `CONVENTIONS.md`, `extensions.md` and `nrces` stay.
 - Modify (Node):
   - `scripts/specs.mjs`: `listSpecs` walks `specRoots()`. `listSpecTree` reads `<gw>/openapi/<ver>/<file>` and keeps its return shape.
   - `scripts/lib/journeys.mjs:32`, `scripts/lib/spec-errors.mjs:11,23-24`: `catalogue/<platform>/openapi/<version>/...`
@@ -155,7 +151,6 @@ The plugin now describes the target, so **this branch does not merge until Task 
   - `site/docusaurus.config.ts:41-60`: delete `listSpecFiles`, import `listSpecs` from `../scripts/specs.mjs`
   - `package.json` `lint:specs`: `catalogue/*/openapi/*/*.yaml`
   - `.github/workflows/publish-postman.yml:18`: `catalogue/hiecm/openapi/**`
-  - `tools/nhcx-editor/index.php:40,46`: specs root `catalogue/nhcx/openapi`. The atoms root denies `openapi/`.
 - Modify (Go):
   - `mcp/cmd/indexer/main.go:46,65-85`
   - `mcp/internal/catalogue/load.go:43`
@@ -168,40 +163,39 @@ The plugin now describes the target, so **this branch does not merge until Task 
 - Consumes: `specRoots`, `rawDirs` (Task 1)
 - Produces:
   - `sourceKey(file: string): string` in `scripts/lib/changelog-facts.mjs`. It returns the part after the last `/.raw/`, or `file` unchanged.
-  - `isSpecPath(rel string) bool` in Go: exactly 4 segments, `segs[1] == "openapi"`, no segment starting with `.`, suffix `.yaml`
-  - `specGateway(path string) string` in Go: the segment before the last `openapi` segment
+  - `isSpecPath(rel string) bool` in Go: exactly 4 segments, suffix `.yaml`, no segment starting with `.`, and either `segs[1] == "openapi"` (`<gw>/openapi/<ver>/<f>`) or `segs[0] == "openapi"` (`openapi/<gw>/<ver>/<f>`, NHCX)
+  - `specGateway(path string) string` in Go: for the last `openapi` segment, the segment before it when that is a gateway name, otherwise the one after it
 
 - [ ] **Step 1: Write the failing tests.**
   - `scripts/changelog.test.mjs`, a source that only moved folders is not a republish: `republish()` gets a previous module citing `catalogue/openapi/.raw/nha-2026-09-16/a.yaml` (hash `h`) and a next module citing `catalogue/hiecm/openapi/.raw/nha-2026-09-16/a.yaml` (hash `h`). Expect `null`. Export `republish` if it is not exported.
   - `main_test.go` `TestIsSpecPath` rows:
     - `hiecm/openapi/v3/hiecm-m1.yaml` true
-    - `openapi/hiecm/v3/hiecm-m1.yaml` false
+    - `openapi/nhcx/v1/nhcx-claim.yaml` true
+    - `openapi/nhcx/v1/journeys/x.yaml` false
     - `hiecm/openapi/v3/journeys/m1.yaml` false
     - `hiecm/openapi/v3/errors/m1.yaml` false
     - `hiecm/map/m1.yaml` false
     - `hiecm/openapi/.raw/x/y.yaml` false
-    - `shared/openapi/nrces/PINNED` false
-  - `main_test.go:82` writes `hiecm/openapi/CONVENTIONS.md` and still expects it skipped.
-  - `operations_test.go:447-453` opens `../../../catalogue/hiecm/openapi/v3/hiecm-m1.yaml` and asserts `op.Gateway == "hiecm"`.
+    - `openapi/nrces/PINNED` false
+  - `main_test.go:82` writes `hiecm/openapi/corrections/x.md` and still expects it skipped.
+  - `operations_test.go:447-453` opens `../../../catalogue/hiecm/openapi/v3/hiecm-m1.yaml` and asserts `op.Gateway == "hiecm"`; a second case opens `../../../catalogue/openapi/nhcx/v1/nhcx-claim.yaml` and asserts `"nhcx"`.
 - [ ] **Step 2:** `node --test scripts/changelog.test.mjs; (cd mcp && go test ./cmd/indexer ./internal/catalogue)`. Expect FAIL on the new rows.
 - [ ] **Step 3: Implement.** Do the Node and Go changes in the Files list:
   - `sourceKey` is applied where facts are built (`changelog-facts.mjs:117`) and to both sides inside `republish()`.
   - `load.go` skips a `.md` when any path segment is `openapi`.
-  - The indexer's `-nrces` default is `../catalogue/shared/openapi/.raw/nrces-ndhm.in-6.5.0.tgz`.
-- [ ] **Step 4: Move the files** with `git mv`, following the moves table. Remove `catalogue/openapi/.raw/.gitkeep`, then confirm `catalogue/openapi` is gone.
+- [ ] **Step 4: Move the files** with `git mv`, following the moves table. Confirm `catalogue/openapi/` holds only `CONVENTIONS.md`, `extensions.md`, `nhcx/`, `nrces/`, the three NHCX correction logs and the NHCX and NRCeS sets.
 - [ ] **Step 5: Rewrite the path strings.** Use a one-off `$SCRATCH/rewrite-paths.mjs`, not committed. It walks a list of roots, skips `node_modules`, `.git`, `plan/plan-history`, `scripts/fixtures` and any path containing `/.raw/`, and in every `.md`, `.mdx`, `.yaml`, `.json`, `.ts`, `.tsx`, `.mjs`, `.go`, `.php` and `.py` file applies these replacements in order:
-  - `catalogue/openapi/.raw/<drop>` becomes `catalogue/<gw>/openapi/.raw/<drop>`. Use the drop-to-gateway table from the tree; the nrces tgz goes to `shared`.
-  - `catalogue/openapi/corrections/<file>` becomes `catalogue/<gw>/openapi/corrections/<file>`, using the corrections table.
-  - `catalogue/openapi/(hiecm|nhcx|uhi)/` becomes `catalogue/$1/openapi/`.
-  - `catalogue/openapi/(nrces/|CONVENTIONS.md|extensions.md)` becomes `catalogue/shared/openapi/$1`.
+  - `catalogue/openapi/.raw/<drop>` becomes `catalogue/<gw>/openapi/.raw/<drop>`, for the HIE-CM and UHI drops in the tree only.
+  - `catalogue/openapi/corrections/<file>` becomes `catalogue/<gw>/openapi/corrections/<file>`, for the four HIE-CM and UHI logs only.
+  - `catalogue/openapi/(hiecm|uhi)/` becomes `catalogue/$1/openapi/`.
 
-  Run it on `catalogue/` only in this task, and print the per-file count. Fix `shared/openapi/extensions.md`'s link to `../../../CONTRIBUTING.md`.
+  Run it on `catalogue/` only in this task, skipping `catalogue/nhcx/` and `catalogue/openapi/nhcx/`, and print the per-file count.
 - [ ] **Step 6:** `npm run -s build:specs && npm run -s check:specs`. Expect PASS. The spec diff is only `x-abdm-sources` path strings: `git diff --stat -- catalogue/*/openapi/*/*.yaml` shows only those lines.
 - [ ] **Step 7:** `npm run -s changelog`. Expect `0 entries`. The facts files may re-key; the entries files must not change. If an entry is written, stop: `sourceKey` is not applied on one side.
-- [ ] **Step 8:** `(cd mcp && go vet ./... && go test ./... -v 2>&1 | grep -E '^--- SKIP' | grep -iE 'nrces|digest|validate')`. Expect no FHIR skip lines, which shows the NRCeS package was found at its new path.
+- [ ] **Step 8:** `(cd mcp && go vet ./... && go test ./...)`. Expect PASS.
 - [ ] **Step 9:** Take the parity snapshot (Task 8, Step 1) into `$SCRATCH/parity-task2` and diff it against `$SCRATCH/parity-base`. Expect no difference.
 - [ ] **Step 10:** Run the CI check list (Task 8, Step 2). Expect all PASS.
-- [ ] **Step 11: Commit.** `refactor(catalogue): each gateway holds its own specs, corrections and upstream sources`
+- [ ] **Step 11: Commit.** `refactor(catalogue): HIE-CM and UHI hold their own specs, corrections and upstream sources`
 
 ### Task 3: Content maps move into their gateway
 
@@ -262,9 +256,9 @@ The plugin now describes the target, so **this branch does not merge until Task 
 ### Task 5: Titles and Postman ids move; lint holds the shape
 
 **Files:**
-- Move: `catalogue/postman.json` to `catalogue/hiecm/postman.json`. Split `catalogue/titles.yaml` by operationId prefix into `hiecm/titles.yaml` and `nhcx/titles.yaml`. Delete the `.gitkeep` type folders under `catalogue/uhi/`.
+- Move: `catalogue/postman.json` to `catalogue/hiecm/postman.json`. Move the HIE-CM rows of `catalogue/titles.yaml` (operationIds not starting `nhcx`) into `hiecm/titles.yaml`; the NHCX rows stay. Delete the `.gitkeep` type folders under `catalogue/uhi/`.
 - Modify:
-  - `scripts/build-api-reference.mjs:60`: merge every `catalogue/*/titles.yaml`
+  - `scripts/build-api-reference.mjs:60`: merge `catalogue/titles.yaml` and every `catalogue/*/titles.yaml`
   - `scripts/build-postman.mjs:25`, `scripts/publish-postman.mjs:24-25,68,72`: `catalogue/hiecm/postman.json`
   - `.github/workflows/publish-postman.yml:19`
   - `scripts/lint-atoms.mjs`: add the layout rule
@@ -280,12 +274,12 @@ The plugin now describes the target, so **this branch does not merge until Task 
   Then in lint-atoms: an atom at `catalogue/nhcx/concepts/x.md` with `gateway: hiecm` fails with `expected at catalogue/hiecm/concepts/x.md`.
 - [ ] **Step 2:** `node --test scripts/lib/paths.test.mjs`. Expect FAIL.
 - [ ] **Step 3: Implement.**
-  - `layoutProblems` allows `TOP_LEVEL` at `catalogue/`. At `catalogue/<gw>/` it allows `GATEWAY_LEVEL` plus the `FOLDER` values.
+  - `layoutProblems` allows `TOP_LEVEL` at `catalogue/`, which keeps `openapi` and `titles.yaml` for NHCX. At `catalogue/<gw>/` it allows `GATEWAY_LEVEL` plus the `FOLDER` values.
   - lint-atoms fails on any `layoutProblems`, and on any atom whose repo-relative path is not `atomPath(fm.id, fm.type, fm.gateway)`.
   - Then make the other script changes and `git mv` the files.
 - [ ] **Step 4:** `npm run -s lint:atoms && npm run -s check:nhcx-stamp`. Expect PASS, `854 atoms`, and no layout problem.
 - [ ] **Step 5:** Run the parity snapshot and the CI check list. Expect no difference and all PASS.
-- [ ] **Step 6: Commit.** `refactor(catalogue): titles and Postman ids live with their gateway, and lint holds the shape`
+- [ ] **Step 6: Commit.** `refactor(catalogue): HIE-CM titles and Postman ids live in hiecm/, and lint holds the shape`
 
 ### Task 6: Gateway-specific glossary terms move to their gateway
 
@@ -301,7 +295,7 @@ A term stays `shared.glossary.*` only when it means the same thing on every gate
 **Files:**
 - Move: 22 files `catalogue/shared/glossary/<slug>.md` to `catalogue/hiecm/glossary/`, 2 to `catalogue/uhi/glossary/`. `link-token` has no hand file; its map entry in `catalogue/hiecm/map/glossary.yaml` changes id and `gateway`, and `build:sections` writes `catalogue/hiecm/glossary/link-token.md`.
 - Rewrite: every citation of the 24 old ids, by a one-off `$SCRATCH/rename-glossary.mjs`. It holds the table above as `{old: new}` and replaces `shared\.glossary\.(<slug>)(?![\w-])` in every text file under `catalogue/` (not `.raw/`), `evals/`, `mcp/eval/`, `scripts/*.test.mjs`, `mcp/internal/**/*_test.go` that read the real catalogue (`../../../catalogue`), `site/`, `skills-src/` and `plugins/` (not generated skill folders). It leaves alone Go tests that define the atom themselves, `plan/plan-history/`, `docs/superpowers/plans/` and `scripts/fixtures/`.
-- Modify: each moved atom's frontmatter `id` and `gateway`, by the same script.
+- Modify: each moved atom's frontmatter `id` and `gateway`, by the same script. In `catalogue/nhcx/`, the script changes only the renamed ids inside `related` lists, in 17 files; nothing else in NHCX changes.
 
 **Interfaces:** Consumes `atomPath` and the layout lint (Tasks 1, 5). Produces no code.
 
@@ -331,7 +325,7 @@ A term stays `shared.glossary.*` only when it means the same thing on every gate
   - `mcp/README.md`, `mcp/support-agent-playbook.md:338,347`
   - `site/src/components/docs/quickstart-values.ts:47`, `quickstart-values.test.mjs:4`, `Quickstart.tsx:31`
   - `scripts/verify-nhcx.sh:23`
-  - `tools/nhcx-editor/README.md`, `evals/askai/cases/**` `notes` fields
+  - `evals/askai/cases/**` `notes` fields
   - the `source:` frontmatter of the hand-written site pages listed in the site inventory, including `hiecm/v3/troubleshooting/index.md`, which becomes `catalogue/hiecm/troubleshooting`
 - [ ] **Step 1:** Run `$SCRATCH/rewrite-paths.mjs` on those files, plus these extra replacements:
   - `catalogue/map.yaml` becomes `catalogue/<gateway>/map/`
@@ -344,7 +338,7 @@ A term stays `shared.glossary.*` only when it means the same thing on every gate
 - [ ] **Step 2:** Check for leftovers:
 
   ```bash
-  grep -rnE 'catalogue/(openapi|generated|map\.d|map\.yaml|verification|titles\.yaml|postman\.json)' --exclude-dir={node_modules,.git,plan-history,fixtures,.raw} . | grep -v docs/superpowers/plans
+  grep -rnE 'catalogue/(openapi/(hiecm|uhi)|generated|map\.d|map\.yaml|verification|postman\.json)' --exclude-dir={node_modules,.git,plan-history,fixtures,.raw} . | grep -v docs/superpowers/plans
   ```
 
   Expect no output.
@@ -389,6 +383,7 @@ A term stays `shared.glossary.*` only when it means the same thing on every gate
 ## Not in this plan
 
 - **An alias for the 24 renamed glossary ids.** `get` on an old id returns not found after Task 6. Add an alias table to the indexer only if an outside caller is found to depend on one.
+- **Restructuring NHCX.** Its specifications, corrections, sources and title rows move into `catalogue/nhcx/` in a later plan, with `CONVENTIONS.md`, `extensions.md` and NRCeS finding a home then.
 - **NHCX atoms moving onto pages.** The 536 NHCX atom files stay hand-written until the page-canonical migration reaches NHCX (plan §3.2). They already sit at their target paths.
 - **The 29 HIE-CM atoms not rebuilt** (see `2026-09-29-hiecm-atoms-rebuild.md`).
 - **`catalogue/generated/enrich/`** from the retrieval plan. It was never built. If it ever is, its home is decided then, and `layoutProblems` makes that a deliberate change.
