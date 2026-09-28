@@ -43,7 +43,7 @@ The service is discovery: `search` and `on_search`.
 4. Your code accepts an ACK now and the answer later, matched by `transaction_id`. See [Messages](/docs/uhi/v1/concepts/messages).
 5. You hold a subscriber ID from sandbox registration. See [Get your sandbox credentials](/docs/uhi/v1/getting-started/sandbox).
 
-## Service identity
+## Service identity {/* #service-identity */}
 
 Set these values exactly. They are case sensitive.
 
@@ -57,7 +57,7 @@ Set these values exactly. They are case sensitive.
 | `message.intent.item.descriptor.flag` | `false` |
 | Gateway endpoint | `POST /api/v1/uhi/search` |
 
-## Search variants
+## Search variants {/* #search-variants */}
 
 | Search | Location and filter fields | Use it for |
 | --- | --- | --- |
@@ -83,7 +83,7 @@ curl --location 'https://apisbeta.nha.gov.in/pmjay/payer/hbp/get/scheme/speciali
   --data '{"schemecode": "PMJAY", "hosptype": "H"}'
 ```
 
-### Sample search, state and district
+### Sample search, state and district {/* #sample-search-state-and-district */}
 
 Use a fresh `message_id` and `transaction_id` for each search.
 
@@ -143,7 +143,7 @@ The `context` block is the same. The intent carries no state.
 }
 ```
 
-## Journey
+## Journey {/* #journey */}
 
 A beneficiary searches for PM-JAY empanelled hospitals.
 
@@ -168,6 +168,16 @@ sequenceDiagram
 The optional filter is one of district, speciality, facility name or pincode. If step 7 does not arrive within your timeout, stop waiting and offer a retry. If the catalog is empty, suggest a wider search.
 
 The first call in the reference is [search](/docs/uhi/v1/api/network/endpoints/uhi-pmjay-hem/01-uhi-network-gateway-search).
+
+<AgentOnly>
+**Before you start.** The EUA has a public HTTPS `consumer_uri`, a subscriber ID, and signs every call. Set `nic2004:85112`, `PMJAYHEM` and `PMJAY` exactly. Send a state, or GPS with all three radius fields.
+
+**What happens.** The EUA sends `POST /api/v1/uhi/search`, and the Gateway answers HTTP 200 ACK. The Gateway forwards the search to the single PM-JAY HEM HSPA, which queries the HEM database. Its `on_search` reaches your `consumer_uri` through the Gateway. Answer it with HTTP 200 ACK. Expect one `on_search` per search.
+
+**How you know it worked.** An `on_search` arrives with your `transaction_id`, and each record in `catalog.providers[]` is one empanelled hospital.
+
+**When it goes wrong.** A wrong case in `PMJAYHEM` or `PMJAY` means no HSPA responds. If no `on_search` arrives within your timeout, stop waiting and offer a retry. If the catalog is empty, suggest a wider search. GPS search can miss hospitals, so offer district or pincode next to it.
+</AgentOnly>
 
 ## What comes back
 
@@ -267,7 +277,7 @@ Trimmed to one hospital.
 - **GPS gaps.** GPS search can miss hospitals in low density areas. Offer district or pincode alongside it.
 - **UX rules checked at sign-off.** Reach the feature within 3 taps, under a health or insurance category. Show "Powered by UHI" with PM-JAY and [ABDM](/docs/uhi/v1/getting-started/glossary#abdm) branding, and a fallback message on empty results. Display the disclaimer "Please confirm the hospital location by calling ahead, as details may change."
 
-### Limits to code against
+### Limits to code against {/* #limits-to-code-against */}
 
 | Limit | What to do |
 | --- | --- |

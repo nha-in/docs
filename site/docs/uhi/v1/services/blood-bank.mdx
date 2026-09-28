@@ -50,7 +50,7 @@ The service is discovery: `search` and `on_search`.
 
 An EUA must also have completed [HIE-CM](/docs/uhi/v1/getting-started/glossary#hie-cm) [Milestone 2](/docs/hiecm/v3/milestones/m2). An app without M2 cannot be onboarded onto any UHI service. As an HSPA, manually maintained or infrequently updated records are not approved for production.
 
-## Service identity
+## Service identity {/* #service-identity */}
 
 | Field | Value |
 | --- | --- |
@@ -63,7 +63,7 @@ An EUA must also have completed [HIE-CM](/docs/uhi/v1/getting-started/glossary#h
 
 A wrong `domain` means no HSPA responds to your search.
 
-## Search variants
+## Search variants {/* #search-variants */}
 
 | Mode | Location fields | Blood filters |
 | --- | --- | --- |
@@ -100,7 +100,7 @@ Send these in `category.descriptor.code`, with the name in `category.descriptor.
 | `18` | Single Donor Plasma | `30` | Leukoreduced RBC |
 | `19` | Plasma | | |
 
-### Sample search, GPS
+### Sample search, GPS {/* #sample-search-gps */}
 
 Use a fresh `message_id` and `transaction_id` for each search.
 
@@ -153,7 +153,7 @@ The `context` block, `category`, `fulfillment` and `item` are the same. Replace 
 }
 ```
 
-## Journey
+## Journey {/* #journey */}
 
 A patient's family searches for blood of a given group and component.
 
@@ -180,6 +180,16 @@ sequenceDiagram
 Steps 4 to 8 happen once per registered Blood Bank HSPA. Aggregate results by `transaction_id` as they arrive, and close the window after 10 to 15 seconds.
 
 The first call in the reference is [search](/docs/uhi/v1/api/network/endpoints/uhi-blood-bank/01-uhi-network-gateway-search).
+
+<AgentOnly>
+**Before you start.** The EUA has a public HTTPS `consumer_uri` and signs every call. Set `nic2008:86906` and `BloodStock`. Send the blood group in `item.descriptor`, the component in `category.descriptor`, and one location mode.
+
+**What happens.** The EUA sends `POST /api/v1/uhi/search`, and the Gateway answers HTTP 200 ACK. The Gateway forwards the search to every registered Blood Bank HSPA. Each HSPA answers with its own `on_search` on your `consumer_uri`. Answer each with HTTP 200 ACK and aggregate them by `transaction_id`.
+
+**How you know it worked.** At least one `on_search` arrives with your `transaction_id`. Each blood group item carries `quantity.count` and a `fulfillment_id` that points to its availability.
+
+**When it goes wrong.** A wrong `domain` means no HSPA responds. No end signal arrives, so close the window after 10 to 15 seconds. The unavailable status arrives as `NotAvailable` or `Not Available`, so match both. Counts are indicative: show the phone number and a call to confirm.
+</AgentOnly>
 
 ## What comes back
 
@@ -270,7 +280,7 @@ Trimmed to one blood bank. Item `0` points to fulfillment `1`, so O+Ve is availa
 - **HSPA quality bar.** A new HSPA runs its own blood bank database at a standard comparable to e-RaktKosh, with real-time or near real-time stock.
 - **Discovery, not reservation.** There is no hold on units. The phone number is the handoff, so place it prominently.
 
-### Limits to code against
+### Limits to code against {/* #limits-to-code-against */}
 
 | Limit | What to do |
 | --- | --- |
