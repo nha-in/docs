@@ -8,13 +8,13 @@
   title: Physical Consultation, discovery
   steps:
     - op: uhi_network_gateway_search
-      example: consultation-search-doctor-by-speciality-physicalconsultation
+      example: consultation-search-doctor-by-name-and-speciality-physicalconsultation
     - op: uhi_network_search
-      example: consultation-search-doctor-by-speciality-physicalconsultation
+      example: consultation-search-doctor-by-name-and-speciality-physicalconsultation
     - op: uhi_network_gateway_on_search
-      example: consultation-1st-onsearch-for-search-with-specialty-physicalconsultation
+      example: consultation-1st-on-search-for-search-by-doctor-and-specialty-physicalcon
     - op: uhi_network_on_search
-      example: consultation-1st-onsearch-for-search-with-specialty-physicalconsultation
+      example: consultation-1st-on-search-for-search-by-doctor-and-specialty-physicalcon
     - op: uhi_network_search
       example: consultation-second-search-hpr-address
       title: Search the chosen HSPA for slots

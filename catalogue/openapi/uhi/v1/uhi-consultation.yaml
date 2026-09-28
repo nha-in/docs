@@ -5958,8 +5958,10 @@ components:
       title: Ack
       type: object
       properties:
-        ack:
-          $ref: "#/components/schemas/Ack"
+        status:
+          type: string
+          description: "ACK: the request was received. The answer arrives later on a callback."
+          example: ACK
     Address:
       description: Describes an address
       type: object

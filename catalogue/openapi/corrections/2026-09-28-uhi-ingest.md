@@ -32,6 +32,7 @@ Written by `scripts/ingest-uhi.mjs` from `gateway/UHI Documentation Requirements
 | consultation | `uhi_consultation_on_update_audit` | 5 example(s) titled Teleconsultation left out: the portal documents Physical Consultation only |
 | consultation | `uhi_consultation_on_cancel` | 2 example(s) titled Teleconsultation left out: the portal documents Physical Consultation only |
 | consultation | `uhi_consultation_on_cancel_audit` | 2 example(s) titled Teleconsultation left out: the portal documents Physical Consultation only |
+| all | `Ack` | Ack.properties.ack referred to Ack itself; it becomes status, the ACK the guide shows in {"ack": {"status": "ACK"}} |
 | network | `uhi_network_gateway_search` | operationId was `searchUsingPOST`; kept in x-abdm-nha-operation-id |
 | network | `uhi_network_gateway_search` | summary from gateway/UHI Gateway Service.yaml; description is NHA's, followed by the signing link |
 | network | `uhi_network_gateway_on_search` | operationId was `searchUsingPOST_1`; kept in x-abdm-nha-operation-id |

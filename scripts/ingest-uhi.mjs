@@ -160,6 +160,17 @@ const schemasFor = (paths) => {
   return Object.fromEntries(Object.keys(all).filter((n) => want.has(n)).map((n) => [n, all[n]]));
 };
 
+// NHA's Ack gives its one property as a reference to Ack itself, a schema
+// that never ends. The guide's acknowledgement is {"ack": {"status": "ACK"}}.
+const fixAck = (schemas) => {
+  const ack = schemas.Ack;
+  if (ack?.properties?.ack?.$ref === '#/components/schemas/Ack') {
+    schemas.Ack = {...ack, properties: {status: {type: 'string', description: 'ACK: the request was received. The answer arrives later on a callback.', example: 'ACK'}}};
+  }
+  return schemas;
+};
+note('all', 'Ack', 'Ack.properties.ack referred to Ack itself; it becomes status, the ACK the guide shows in {"ack": {"status": "ACK"}}');
+
 // ---- servers -----------------------------------------------------------------
 const ORDER = ['https://uhigatewaysandbox.abdm.gov.in', 'https://uhigateway.abdm.gov.in', 'https://uhigatewaybeta.abdm.gov.in'];
 const DESCRIBE = {
@@ -241,7 +252,7 @@ for (const [module, meta] of Object.entries(MODULES)) {
     servers: gatewayServers,
     tags: [...tags].map((name) => ({name})),
     paths,
-    components: {schemas: schemasFor(paths)},
+    components: {schemas: fixAck(schemasFor(paths))},
   };
 }
 note('all', 'info', 'termsOfService `termsOfServiceUrl` and license `https://licenseUrl.com` are NHA\'s placeholders and are left out');
