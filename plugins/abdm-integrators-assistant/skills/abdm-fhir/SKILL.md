@@ -1,6 +1,17 @@
 ---
 name: abdm-fhir
 description: Use when producing or checking FHIR for ABDM: building NRCES compliant document bundle generation into a codebase, or auditing the bundles an existing FHIR store already emits. Covers the resource profiles ABDM requires, the Composition rules, and the validator to check against.
+type: skill
+domain: fhir
+agent_consumers:
+  - abdm-integration-agent
+  - abdm-call-debugger
+  - fhir-compliance-agent
+requires: []
+produces:
+  - nrces-document-bundle
+can_execute: true
+can_orchestrate: false
 ---
 
 # ABDM FHIR

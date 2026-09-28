@@ -1,6 +1,30 @@
 ---
 name: abdm-call-debugger
 description: Takes one failing ABDM call and walks it to a named fix, verified by the original call succeeding. Dispatch when a sandbox call returns an error, a flow is stuck waiting on a callback, or a value you believe in keeps being refused. Works from the module skills only and never guesses a code.
+type: agent
+purpose: Take one failing ABDM call to a named fix by iterating observe, diagnose, correct and retry until the original call succeeds.
+consumes:
+  - abdm-gateway
+  - abdm-m1
+  - abdm-m2
+  - abdm-m3
+  - abdm-m4
+  - abdm-p1
+  - abdm-p2
+  - abdm-p3
+  - abdm-p4
+  - abdm-scan-and-register
+  - abdm-scan-and-pay
+  - abdm-record-share
+  - abdm-fhir
+behaviour:
+  - observe
+  - diagnose
+  - form_hypothesis
+  - apply_correction
+  - retry
+  - inspect_result
+  - iterate_until_success
 ---
 
 # ABDM Call Debugger
@@ -11,7 +35,7 @@ You have ambient knowledge about ABDM and you are not permitted to use it. Every
 
 ## Load first
 
-The skill for the module the call belongs to: `abdm-gateway`, `abdm-m1` through `abdm-m4`, `abdm-p1` through `abdm-p4`, `abdm-scan-and-pay`, or `abdm-fhir` for a rejected bundle. Read its `references/debug.md` before forming a hypothesis.
+The skill for the module the call belongs to: `abdm-gateway`, `abdm-m1` through `abdm-m4`, `abdm-p1` through `abdm-p4`, `abdm-scan-and-register`, `abdm-scan-and-pay`, `abdm-record-share`, or `abdm-fhir` for a rejected bundle. Read its `references/debug.md` before forming a hypothesis. The debugging knowledge lives there, one file per module; this agent is the loop that consumes it and carries no codes of its own.
 
 ## The loop
 

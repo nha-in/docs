@@ -345,6 +345,44 @@ const MODULES = [
 // that walks it, so a gateway call used by four journeys counted four times
 // over. Dedupe by operationId first, keeping the base file (no `journey`
 // field) when one exists, so every operation appears here exactly once.
+// Each skill declares its role. An agent sequences skills by `requires` and
+// `produces`, so these are the handles a plan is written in, coarse on purpose:
+// they name what an integrator must already hold and what the module leaves
+// behind, not endpoints. `can_orchestrate` is false for every skill, because a
+// skill is a known procedure and the planning lives in agents/.
+const CONTRACT = {
+  gateway: {requires: ['sandbox-client-credentials'], produces: ['gateway-session-token', 'bridge-registration']},
+  m1: {requires: ['gateway-session-token', 'encryption-certificate'], produces: ['abha-number', 'abha-address', 'user-token', 'abha-profile']},
+  m2: {requires: ['gateway-session-token', 'hip-registration', 'callback-url'], produces: ['care-context', 'link-token', 'health-information-push']},
+  m3: {requires: ['gateway-session-token', 'hiu-registration', 'callback-url', 'patient-abha-address'], produces: ['consent-request-id', 'consent-artefact', 'health-information']},
+  m4: {requires: ['management-token', 'encryption-certificate'], produces: ['hpid', 'facility-id', 'bridge-facility-link']},
+  p1: {requires: ['gateway-session-token'], produces: ['phr-login', 'abha-profile']},
+  p2: {requires: ['phr-login'], produces: ['consent-decision']},
+  p3: {requires: ['phr-login'], produces: ['subscription']},
+  p4: {requires: ['phr-login'], produces: ['locker-record']},
+  'scan-and-register': {requires: ['gateway-session-token', 'facility-id'], produces: ['abha-profile', 'registration']},
+  'scan-and-pay': {requires: ['gateway-session-token', 'facility-id', 'callback-url'], produces: ['order', 'payment-status']},
+  'record-share': {requires: ['gateway-session-token', 'hip-registration', 'callback-url'], produces: ['shared-record']},
+  fhir: {requires: [], produces: ['nrces-document-bundle']},
+};
+
+const yamlList = (key, items) => (items.length ? [`${key}:`, ...items.map((i) => `  - ${i}`)] : [`${key}: []`]);
+
+function roleFrontmatter(id, consumers) {
+  const {requires, produces} = CONTRACT[id];
+  return [
+    'type: skill',
+    `domain: ${id}`,
+    ...yamlList('agent_consumers', consumers),
+    ...yamlList('requires', requires),
+    ...yamlList('produces', produces),
+    'can_execute: true',
+    'can_orchestrate: false',
+  ];
+}
+
+const MODULE_CONSUMERS = ['abdm-integration-agent', 'abdm-call-debugger'];
+
 const byOperationId = new Map();
 for (const file of readdirSync(dataDir)) {
   if (!file.endsWith('.json')) continue;
@@ -388,6 +426,7 @@ function build(module, url) {
   lines.push('---');
   lines.push(`name: ${module.slug}`);
   lines.push(`description: ${module.description}`);
+  lines.push(...roleFrontmatter(module.id, MODULE_CONSUMERS));
   lines.push('---');
   lines.push('');
   lines.push(`# ABDM ${module.title}`);
@@ -932,6 +971,7 @@ const fhirSkillMd = (url) =>
     '---',
     'name: abdm-fhir',
     'description: Use when producing or checking FHIR for ABDM: building NRCES compliant document bundle generation into a codebase, or auditing the bundles an existing FHIR store already emits. Covers the resource profiles ABDM requires, the Composition rules, and the validator to check against.',
+    ...roleFrontmatter('fhir', [...MODULE_CONSUMERS, 'fhir-compliance-agent']),
     '---',
     '',
     '# ABDM FHIR',

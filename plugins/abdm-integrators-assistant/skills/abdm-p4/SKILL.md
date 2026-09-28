@@ -1,6 +1,17 @@
 ---
 name: abdm-p4
 description: Use when building, debugging or testing ABDM P4, health lockers: setting up a locker and listing the lockers and requests on an ABHA address.
+type: skill
+domain: p4
+agent_consumers:
+  - abdm-integration-agent
+  - abdm-call-debugger
+requires:
+  - phr-login
+produces:
+  - locker-record
+can_execute: true
+can_orchestrate: false
 ---
 
 # ABDM P4, health lockers

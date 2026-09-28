@@ -1,6 +1,20 @@
 ---
 name: abdm-m4
 description: Use when building, debugging or testing ABDM Milestone 4, the NHPR: creating an HPID, registering a healthcare professional on the HPR, onboarding a facility to the HFR, and linking that facility to a bridge. Carries the operations, their hosts and headers.
+type: skill
+domain: m4
+agent_consumers:
+  - abdm-integration-agent
+  - abdm-call-debugger
+requires:
+  - management-token
+  - encryption-certificate
+produces:
+  - hpid
+  - facility-id
+  - bridge-facility-link
+can_execute: true
+can_orchestrate: false
 ---
 
 # ABDM M4, register facilities and professionals

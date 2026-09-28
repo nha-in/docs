@@ -1,6 +1,17 @@
 ---
 name: abdm-p3
 description: Use when building, debugging or testing ABDM P3 in a PHR app: reading, approving, denying, enabling, disabling and updating the patient's subscriptions and subscription requests, and the subscription request and notifications on the health locker side.
+type: skill
+domain: p3
+agent_consumers:
+  - abdm-integration-agent
+  - abdm-call-debugger
+requires:
+  - phr-login
+produces:
+  - subscription
+can_execute: true
+can_orchestrate: false
 ---
 
 # ABDM P3, PHR subscriptions

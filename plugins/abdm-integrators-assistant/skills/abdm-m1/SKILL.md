@@ -1,6 +1,21 @@
 ---
 name: abdm-m1
 description: Use when building, debugging or testing ABDM Milestone 1: creating an ABHA number or address, ABHA login, profile management, or the gateway session token. Carries the endpoints, the required headers, the two token rule, the encryption rule and the error codes its specification's examples return. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.
+type: skill
+domain: m1
+agent_consumers:
+  - abdm-integration-agent
+  - abdm-call-debugger
+requires:
+  - gateway-session-token
+  - encryption-certificate
+produces:
+  - abha-number
+  - abha-address
+  - user-token
+  - abha-profile
+can_execute: true
+can_orchestrate: false
 ---
 
 # ABDM M1, create and verify ABHA

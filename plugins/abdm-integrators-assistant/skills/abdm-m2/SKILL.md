@@ -1,6 +1,21 @@
 ---
 name: abdm-m2
 description: Use when building, debugging or testing ABDM Milestone 2: care contexts, HIP initiated linking, discovery, and pushing encrypted health records to a requester. Carries the endpoints and the encryption parameters. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.
+type: skill
+domain: m2
+agent_consumers:
+  - abdm-integration-agent
+  - abdm-call-debugger
+requires:
+  - gateway-session-token
+  - hip-registration
+  - callback-url
+produces:
+  - care-context
+  - link-token
+  - health-information-push
+can_execute: true
+can_orchestrate: false
 ---
 
 # ABDM M2, create and link records

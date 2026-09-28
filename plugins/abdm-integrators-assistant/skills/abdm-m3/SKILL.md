@@ -1,6 +1,22 @@
 ---
 name: abdm-m3
 description: Use when building, debugging or testing ABDM Milestone 3: raising a consent request, tracking its status, reading consent artefacts, and fetching encrypted health records as an HIU. Carries the endpoints and the consent rules. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.
+type: skill
+domain: m3
+agent_consumers:
+  - abdm-integration-agent
+  - abdm-call-debugger
+requires:
+  - gateway-session-token
+  - hiu-registration
+  - callback-url
+  - patient-abha-address
+produces:
+  - consent-request-id
+  - consent-artefact
+  - health-information
+can_execute: true
+can_orchestrate: false
 ---
 
 # ABDM M3, fetch data with consent

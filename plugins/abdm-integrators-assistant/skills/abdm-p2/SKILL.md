@@ -1,6 +1,17 @@
 ---
 name: abdm-p2
 description: Use when building, debugging or testing ABDM P2 in a PHR app: the PHR profile, linking an ABHA number, switching profiles, and linking, sharing and consent for the patient.
+type: skill
+domain: p2
+agent_consumers:
+  - abdm-integration-agent
+  - abdm-call-debugger
+requires:
+  - phr-login
+produces:
+  - consent-decision
+can_execute: true
+can_orchestrate: false
 ---
 
 # ABDM P2, Consents Management

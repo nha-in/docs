@@ -1,6 +1,19 @@
 ---
 name: abdm-scan-and-register
 description: Use when building, debugging or testing ABDM scan and register: receiving the profile a patient shares by QR code at a counter and answering with a queue token.
+type: skill
+domain: scan-and-register
+agent_consumers:
+  - abdm-integration-agent
+  - abdm-call-debugger
+requires:
+  - gateway-session-token
+  - facility-id
+produces:
+  - abha-profile
+  - registration
+can_execute: true
+can_orchestrate: false
 ---
 
 # ABDM Scan and register

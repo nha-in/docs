@@ -1,6 +1,18 @@
 ---
 name: abdm-p1
 description: Use when building, debugging or testing ABDM P1 in a PHR app: creating an ABHA address and logging in to it.
+type: skill
+domain: p1
+agent_consumers:
+  - abdm-integration-agent
+  - abdm-call-debugger
+requires:
+  - gateway-session-token
+produces:
+  - phr-login
+  - abha-profile
+can_execute: true
+can_orchestrate: false
 ---
 
 # ABDM P1, PHR registration and login
