@@ -248,7 +248,7 @@
     ]
   },
   {
-    "id": "2cedb59fd565",
+    "id": "4a7fdbaf97c8",
     "date": "2026-09-29",
     "kind": "plugin-version",
     "gateway": "site",
@@ -261,7 +261,25 @@
       {
         "name": "abdm-contributors-assistant",
         "from": "0.3.4",
-        "to": "0.4.1"
+        "to": "0.4.2"
+      }
+    ]
+  },
+  {
+    "id": "ef0bf9d54feb",
+    "date": "2026-09-29",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "nhcx",
+        "from": "1.0.1",
+        "to": "1.0.2"
       }
     ]
   }

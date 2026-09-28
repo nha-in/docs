@@ -113,7 +113,7 @@ Runs after the prose pass. Failures here are build blockers.
 | Exit conditions | Every loop in a build, test or debug skill has an exit condition traceable to an atom's section 4. |
 | Loop limits | Every loop declares a limit and an escalation. |
 
-**When the identifier diff fails, the system worked.** The prose pass invented something. Regenerate. Never add the invented token to the Catalogue to make the build pass, unless it turns out to be real, in which case it needs a source and a verification like any other fact.
+**When the identifier diff fails, the system worked.** The prose pass invented something. Regenerate. Never add the invented token to the Catalogue to make the build pass, unless it turns out to be real, in which case it needs a source like any other fact.
 
 ## The index
 

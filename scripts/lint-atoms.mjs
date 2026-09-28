@@ -5,7 +5,7 @@ import { statSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { loadAtoms, root } from "./lib/atoms.mjs";
 import { contractProblems } from "./lib/contract.mjs";
-import { loadOps } from "./rekey-verification.mjs";
+import { loadOps } from "./lib/ops.mjs";
 
 const TYPES = ["concept", "flow", "endpoint", "callback", "error", "test",
                "decision", "glossary", "fhir", "sandbox", "troubleshooting"];
@@ -65,8 +65,7 @@ for (const [id, atom] of atoms) {
   });
 
   // No verification field: the Catalogue is published as ABDM's statement of how ABDM works.
-  // Sandbox evidence lives in catalogue/verification/, internal to contributors.
-  if (fm.verified !== undefined) fail(file, "verified is no longer a field; drop it. Sandbox evidence lives in catalogue/verification/");
+  if (fm.verified !== undefined) fail(file, "verified is not a field; delete it");
 
   // Atom contract v2: sections per type, the operation join, facts, side
   // and status (scripts/lib/contract.mjs).

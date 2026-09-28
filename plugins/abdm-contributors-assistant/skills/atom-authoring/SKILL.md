@@ -51,7 +51,7 @@ Field rules that catch people out:
 - `gateway` is one of `hiecm`, `uhi`, `nhcx`, `shared`. Shared atoms have no milestone; use `n/a`. All four lint clean. `uhi` carries no atoms yet because Phase 1's time went to HIE-CM, not because anything rejects it. Write one when you have the time to prove it.
 - `version` is the NHA spec version this is true for, not the Catalogue version. The Catalogue version is stamped by the build.
 - `summary` is one sentence a new developer understands with no acronyms. It is what the index and the search result show. Write it last, after the body, when you know what the atom actually says.
-- There is no `verified` field. Lint fails an atom that carries one. The Catalogue is published as ABDM's statement of how ABDM works; sandbox checks are internal, run by `npm run verify:atoms`, and their evidence lives under `catalogue/<gateway>/verification/`, never in the atom.
+- There is no `verified` field. Lint fails an atom that carries one. The Catalogue is published as ABDM's statement of how ABDM works.
 - `related` ids must all resolve. Lint fails on a dangling id.
 - `skills` declares which compiled skills consume this atom. The compiler reads it. An atom with no `skills` entry renders in the docs but never reaches an agent, which is sometimes correct (glossary, decision) and sometimes a mistake.
 
@@ -123,7 +123,7 @@ Read the file for the type you are writing: `references/atom-types.md`.
 | Two flows in one atom | The graph cannot link to half a file | Split, link with `related` |
 | Section 4 says "you get a 200" | 200 means the request was accepted, not that the work happened | Name the callback and its payload |
 | Curl with `-H "Authorization: Bearer TOKEN"` | The reader does not know where TOKEN came from | `<ACCESS_TOKEN_FROM_SESSIONS_CALL>` and link the atom |
-| `verified:` in the frontmatter | The field no longer exists and lint fails on it | Drop it. Evidence lives in `catalogue/<gateway>/verification/` |
+| `verified:` in the frontmatter | The field no longer exists and lint fails on it | Drop it |
 | Fix described inline in section 5 | Skills compile error atoms separately | Create the error atom, link it |
 | Em dash anywhere | CI blocks U+2014 | Full stop, comma or colon |
 

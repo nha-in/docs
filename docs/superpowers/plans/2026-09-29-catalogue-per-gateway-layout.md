@@ -2,13 +2,13 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** `catalogue/` has one folder per gateway (`hiecm/`, `nhcx/`, `uhi/`), plus `shared/` and `annexure/`. Each gateway folder holds everything that gateway has: its content map, its OpenAPI specs with their corrections and upstream sources, its sandbox records, and one folder per atom type with every atom file for that gateway in it, glossary included. A term stays in `shared/` only when it means the same thing on every gateway.
+**Goal:** `catalogue/` has one folder per gateway (`hiecm/`, `nhcx/`, `uhi/`), plus `shared/` and `annexure/`. Each gateway folder holds everything that gateway has: its content map, its OpenAPI specs with their corrections and upstream sources, and one folder per atom type with every atom file for that gateway in it, glossary included. A term stays in `shared/` only when it means the same thing on every gateway.
 
 **Architecture:** This is a move, not a rewrite. The page is still where an atom's words are written. `scripts/build-sections.mjs` writes the atom file into `catalogue/<gateway>/<type>/<slug>.md`, not into `catalogue/generated/`. A written file is told apart from a hand-written one by `generated: true` in its frontmatter, not by the folder it sits in. One module, `scripts/lib/paths.mjs`, owns every catalogue path the Node scripts use. The Go indexer gets the same three rules. Atom ids, page URLs, operation ids and every published output stay byte-identical. The parity snapshot proves that.
 
 **Tech Stack:** Node 24 ESM scripts (`node:test`), Go indexer (`mcp/`), Docusaurus site, GitHub Actions.
 
-**Spec:** `plan/abdm-v1-phase1-architecture-and-plan.md` §3.2 (`p3-2-atom`) at plan version `2026.09.29-8`, which carries the target tree below. Background: `docs/superpowers/plans/2026-09-28-page-canonical-knowledge-atoms.md` (why pages are the source) and `2026-09-29-hiecm-atoms-rebuild.md` (the 227 HIE-CM atoms this moves).
+**Spec:** `plan/abdm-v1-phase1-architecture-and-plan.md` §3.2 (`p3-2-atom`) at plan version `2026.09.29-9`, which carries the target tree below. Background: `docs/superpowers/plans/2026-09-28-page-canonical-knowledge-atoms.md` (why pages are the source) and `2026-09-29-hiecm-atoms-rebuild.md` (the 227 HIE-CM atoms this moves).
 
 ## The target tree
 
@@ -24,7 +24,6 @@ catalogue/
       v3/              hiecm-*.yaml, README.md, journeys/, errors/
       corrections/     2026-09-16-final-set.md, 2026-09-21-record-share-ingest.md
       .raw/            nha-2026-09-15-review, -16, -21-record-share, -21-review, -22, -23, -24
-    verification/      sandbox records, one per call, and retired/
     titles.yaml        HIE-CM rows of the old catalogue/titles.yaml
     postman.json       was catalogue/postman.json (HIE-CM collections only)
     callbacks/ concepts/ decisions/ endpoints/ errors/ flows/ glossary/ tests/ troubleshooting/
@@ -54,7 +53,7 @@ catalogue/
   atom-routes.json     built: every atom's page route
 ```
 
-Gone: `catalogue/generated/`, `catalogue/map.yaml`, `catalogue/map.d/`, `catalogue/openapi/`, `catalogue/verification/`, `catalogue/titles.yaml`, `catalogue/postman.json`, and the empty `.gitkeep` type folders under `uhi/`. A folder exists when it holds a file. Each gateway's `README.md` lists the whole shape, so an empty gateway still says what goes where.
+Gone: `catalogue/generated/`, `catalogue/map.yaml`, `catalogue/map.d/`, `catalogue/openapi/`, `catalogue/titles.yaml`, `catalogue/postman.json`, and the empty `.gitkeep` type folders under `uhi/`. A folder exists when it holds a file. Each gateway's `README.md` lists the whole shape, so an empty gateway still says what goes where.
 
 **File moves at a glance** (Tasks 2 to 5; every move is `git mv` so history follows):
 
@@ -67,7 +66,6 @@ Gone: `catalogue/generated/`, `catalogue/map.yaml`, `catalogue/map.d/`, `catalog
 | `map.yaml` | `hiecm/map/glossary.yaml` (its one entry, link token, becomes `hiecm.glossary.link-token` in Task 6) |
 | `map.d/hiecm-<name>.yaml` | `hiecm/map/<name>.yaml` |
 | `generated/<gw>/<type>/<slug>.md` | `<gw>/<type>/<slug>.md` |
-| `verification/**` | `hiecm/verification/**` (all 55 records and 10 retired are HIE-CM operation ids) |
 | `titles.yaml` | `hiecm/titles.yaml` and `nhcx/titles.yaml`, split by operationId prefix |
 | `postman.json` | `hiecm/postman.json` |
 | `shared/fhir/fhir-document-bundles.md` | `shared/fhir/document-bundles.md` (the one hand atom whose filename is not its id slug) |
@@ -82,7 +80,7 @@ Gone: `catalogue/generated/`, `catalogue/map.yaml`, `catalogue/map.d/`, `catalog
 - Every commit leaves every CI check green. The list is in Task 8, Step 2.
 - A move changes no published output. The parity snapshot before Task 1 must equal the one after each task (Task 8 defines both).
 - No em dash anywhere: code, prose, commit messages.
-- A plugin whose files change bumps its version (`check:plugin-version`). `nhcx` goes 1.0.1 to 1.0.2 in Task 5. `abdm-contributors-assistant` already went to 0.4.0 with the plan (Task 0).
+- A plugin whose files change bumps its version (`check:plugin-version`). Task 0 took `abdm-contributors-assistant` to 0.4.2 and `nhcx` to 1.0.2; a task that changes either again bumps it again.
 - `plan/` does not move in this plan beyond Task 0. `./scripts/plan-check.sh` stays green.
 - Commit with explicit paths (`git add <paths>`). Never `git add -A`, never force-push.
 
@@ -108,6 +106,7 @@ Landed in the same commit as this document:
 - The gantt `PLAN_VERSION` is restamped.
 - The contributors' plugin skills, commands and agents name the new paths, at version 0.4.0.
 - A second plan edit, `2026.09.29-8`, records the glossary split: `hiecm/glossary/` and `uhi/glossary/` in the tree, UHI's two glossary atoms in §7 and in the index. Contributors' plugin 0.4.1.
+- A third, `2026.09.29-9`, removes the internal sandbox verification process, done before Task 1 on this branch: `catalogue/verification/` (55 records, 10 retired), `scripts/verify-atoms.mjs`, `scripts/rekey-verification.mjs` and its test, `scripts/verify-pending.sh`, `npm run verify:atoms`, the `atom-verifier` agent and `/atom-verify` command, done criterion 2 (every M1 to M3 curl run against sandbox) and the sandbox-coverage risk. `loadOps` moved to `scripts/lib/ops.mjs` with its test. `stamp-nhcx-skills.mjs` counts NHCX atoms through `loadAtoms()` and no longer mentions records. The Ask AI prompt keeps only "Never claim a call was run." Contributors' plugin 0.4.2, `nhcx` 1.0.2.
 - The What's New plugin entry is regenerated.
 
 The plugin now describes the target, so **this branch does not merge until Task 8 passes.**
@@ -126,7 +125,6 @@ The plugin now describes the target, so **this branch does not merge until Task 
   - `specRoots(root: string): {gateway: string, dir: string}[]`: each existing `catalogue/<gw>/openapi`, `dir` absolute
   - `rawDirs(root: string): string[]`: each existing `catalogue/<gw>/openapi/.raw`, absolute
   - `mapFiles(root: string): string[]`: `catalogue/*/map/*.yaml`, absolute, sorted by relative path
-  - `verificationDir(gateway: string): string`, returning `catalogue/${gateway}/verification`
   - `TOP_LEVEL` and `GATEWAY_LEVEL`: the allowed names from the tree
 
 - [ ] **Step 1: Write the failing tests** in `scripts/lib/paths.test.mjs`:
@@ -151,7 +149,7 @@ The plugin now describes the target, so **this branch does not merge until Task 
   - `scripts/ingest-nha.mjs:14-16,224,323,330,819`: RAW, OUT, LOG and the written source string under `catalogue/hiecm/openapi/`
   - `scripts/ingest-uhi.mjs:17-20,189` and `scripts/ingest-uhi.test.mjs:13,51,62`: the same under `catalogue/uhi/openapi/`
   - `scripts/redact-nha-raw.mjs:14-15,274` and its test `:13,17,55`: a drop ending `-uhi` lives in `uhi/openapi/.raw`, any other in `hiecm/openapi/.raw`
-  - `scripts/rekey-verification.mjs:44`, `scripts/compile-skills.mjs:13,96`, `scripts/build-skills.mjs:29,423`: `catalogue/hiecm/openapi/v3`
+  - `scripts/lib/ops.mjs` (`loadOps`), `scripts/compile-skills.mjs:13,96`, `scripts/build-skills.mjs:29,423`: `catalogue/hiecm/openapi/v3`
   - `scripts/build-sections.mjs:77` (`specText`): walk `listSpecs()`
   - `scripts/sync-specs.mjs:36`: gateway is `slice(-4,-3)`
   - `site/docusaurus.config.ts:41-60`: delete `listSpecFiles`, import `listSpecs` from `../scripts/specs.mjs`
@@ -261,25 +259,21 @@ The plugin now describes the target, so **this branch does not merge until Task 
 - [ ] **Step 7:** Run the parity snapshot and the CI check list. Expect no difference and all PASS.
 - [ ] **Step 8: Commit.** `refactor(catalogue): written atom files sit in their gateway's type folders`
 
-### Task 5: Sandbox records, titles and Postman ids move; lint holds the shape
+### Task 5: Titles and Postman ids move; lint holds the shape
 
 **Files:**
-- Move: `catalogue/verification/` to `catalogue/hiecm/verification/`; `catalogue/postman.json` to `catalogue/hiecm/postman.json`. Split `catalogue/titles.yaml` by operationId prefix into `hiecm/titles.yaml` and `nhcx/titles.yaml`. Delete the `.gitkeep` type folders under `catalogue/uhi/`.
+- Move: `catalogue/postman.json` to `catalogue/hiecm/postman.json`. Split `catalogue/titles.yaml` by operationId prefix into `hiecm/titles.yaml` and `nhcx/titles.yaml`. Delete the `.gitkeep` type folders under `catalogue/uhi/`.
 - Modify:
-  - `scripts/verify-atoms.mjs:31` (`verificationDir(fm.gateway)`)
-  - `scripts/rekey-verification.mjs:55-59` (`verificationDir('hiecm')`)
-  - `scripts/stamp-nhcx-skills.mjs:36-51,76-77`: atoms from `loadAtoms()` filtered to `gateway === 'nhcx'`; records from `verificationDir('nhcx')`, where a missing folder counts 0; template path
   - `scripts/build-api-reference.mjs:60`: merge every `catalogue/*/titles.yaml`
   - `scripts/build-postman.mjs:25`, `scripts/publish-postman.mjs:24-25,68,72`: `catalogue/hiecm/postman.json`
   - `.github/workflows/publish-postman.yml:19`
   - `scripts/lint-atoms.mjs`: add the layout rule
-  - `plugins/nhcx/.claude-plugin/plugin.json`: version 1.0.2
-- Regenerate: `npm run stamp:nhcx` (7 NHCX SKILL.md), `npm run build:plugins`
 
-**Interfaces:** Consumes `verificationDir`, `TOP_LEVEL`, `GATEWAY_LEVEL`, `FOLDER` and `atomPath` (Task 1). Produces `layoutProblems(root): string[]` in `scripts/lib/paths.mjs`.
+**Interfaces:** Consumes `TOP_LEVEL`, `GATEWAY_LEVEL`, `FOLDER` and `atomPath` (Task 1). Produces `layoutProblems(root): string[]` in `scripts/lib/paths.mjs`.
 
 - [ ] **Step 1: Write the failing tests** in `paths.test.mjs`, `layoutProblems` on a temp tree:
   - `catalogue/generated/` present: one problem naming it
+  - `catalogue/verification/` present: one problem naming it
   - `catalogue/hiecm/stuff/` present: one problem naming it
   - a clean tree built from the target tree: `[]`
 
@@ -289,9 +283,9 @@ The plugin now describes the target, so **this branch does not merge until Task 
   - `layoutProblems` allows `TOP_LEVEL` at `catalogue/`. At `catalogue/<gw>/` it allows `GATEWAY_LEVEL` plus the `FOLDER` values.
   - lint-atoms fails on any `layoutProblems`, and on any atom whose repo-relative path is not `atomPath(fm.id, fm.type, fm.gateway)`.
   - Then make the other script changes and `git mv` the files.
-- [ ] **Step 4:** `npm run -s lint:atoms && npm run -s stamp:nhcx && npm run -s check:nhcx-stamp && npm run -s build:plugins && npm run -s check:plugin-version`. Expect PASS. `854 atoms`, and no layout problem.
-- [ ] **Step 5:** Run the parity snapshot and the CI check list. Expect no difference and all PASS. `npm run changelog` writes only the `nhcx` plugin 1.0.2 entry.
-- [ ] **Step 6: Commit.** `refactor(catalogue): records, titles and Postman ids live with their gateway, and lint holds the shape`
+- [ ] **Step 4:** `npm run -s lint:atoms && npm run -s check:nhcx-stamp`. Expect PASS, `854 atoms`, and no layout problem.
+- [ ] **Step 5:** Run the parity snapshot and the CI check list. Expect no difference and all PASS.
+- [ ] **Step 6: Commit.** `refactor(catalogue): titles and Postman ids live with their gateway, and lint holds the shape`
 
 ### Task 6: Gateway-specific glossary terms move to their gateway
 
@@ -343,7 +337,6 @@ A term stays `shared.glossary.*` only when it means the same thing on every gate
   - `catalogue/map.yaml` becomes `catalogue/<gateway>/map/`
   - `catalogue/map.d/` becomes `catalogue/<gateway>/map/`
   - `catalogue/generated/` becomes `catalogue/<gateway>/<type>/`
-  - `catalogue/verification/` becomes `catalogue/hiecm/verification/`
   - `catalogue/titles.yaml` becomes `catalogue/<gateway>/titles.yaml`
   - `catalogue/postman.json` becomes `catalogue/hiecm/postman.json`
 

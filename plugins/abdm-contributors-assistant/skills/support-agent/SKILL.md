@@ -1,6 +1,6 @@
 ---
 name: support-agent
-description: The internal support agent that answers integrator questions strictly from the ABDM Catalogue over the Docs MCP, citing atom ids, carrying verification status, and opening a GitHub issue when no atom matches. Use when answering an integrator's question or a pasted error, when configuring or debugging the support agent, or when deciding what the agent may and may not say. Also use when a support answer needs to become Catalogue content.
+description: The internal support agent that answers integrator questions strictly from the ABDM Catalogue over the Docs MCP, citing atom ids and opening a GitHub issue when no atom matches. Use when answering an integrator's question or a pasted error, when configuring or debugging the support agent, or when deciding what the agent may and may not say. Also use when a support answer needs to become Catalogue content.
 ---
 
 # Support Agent

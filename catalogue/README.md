@@ -89,7 +89,5 @@ reader must meet before deciding whether to open the design section. The
 body carries five
 sections: In plain words, Before you start, What happens, How you know it
 worked, When it goes wrong. No em dash anywhere. Atoms carry no
-verification status: the Catalogue states how ABDM works, and sandbox
-evidence is kept for contributors under `catalogue/verification/` by
-`npm run verify:atoms`. The abdm-portal plugin's atom-authoring skill
-carries the full rules.
+verification status: the Catalogue states how ABDM works. The abdm-portal
+plugin's atom-authoring skill carries the full rules.

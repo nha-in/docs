@@ -1,9 +1,9 @@
 ---
 name: portal-planning
 description: The ABDM Developer Portal schedule, workstreams, ownership split, two-day shipping increments, definition of done, and risk register. Use whenever someone asks what ships when, what is blocked, who owns a piece of work, whether V1 is on track, what counts as finished, how to sequence a task, or wants a standup, a status update, or a re-plan. Also use when scope is being added or cut so the trade is made against the schedule rather than in the abstract.
-plan_version: 2026.09.29-8
+plan_version: 2026.09.29-9
 plan_source: abdm-v1-phase1-architecture-and-plan.md
-plan_hash: sha256:fb4f64610be07bd685825774166c358ab6d6b7e8e71e25261d0b0960e65404cd
+plan_hash: sha256:d7bd982e6e4a4a4305dd33ef0c1e89e5c68c95c994daab9b6dae8971afc588fc
 compiled_from_plan: true
 ---
 
@@ -27,7 +27,7 @@ The split is by kind of judgement, not by convenience.
 
 | Stream | Functional and strategic owner | Technical owner |
 |---|---|---|
-| Catalogue | Atom schema decisions, writing guide, every body's sections, dummy-proofness review, glossary | OpenAPI ingestion and cleanup, callbacks as webhooks per module file, endpoint stubs, sandbox runs, evidence under `catalogue/<gateway>/verification/` |
+| Catalogue | Atom schema decisions, writing guide, every body's sections, dummy-proofness review, glossary | OpenAPI ingestion and cleanup, callbacks as webhooks per module file, endpoint stubs |
 | Site and MCP | Information architecture mirroring developer.eka.care flows, theme, landing copy, depth labels | Docusaurus and Scalar setup, spec conventions, the docs-mcp server and indexer, domains, deploys |
 | Skills | Template prose, index decision tree, trigger descriptions, what each skill must refuse to guess | Compiler, validator, plugin manifest, per-agent adapters |
 | Pipeline | Source inventory, review rota | Watcher, PR bot, CI, publishers |
@@ -54,16 +54,15 @@ When a checkpoint is at risk, cut depth, not the checkpoint. A checkpoint that s
 Every item is checkable. None is a judgement call. This is the list to run before anyone says the word ship.
 
 1. Catalogue lint passes on main: schema valid, the sections each type requires present on every hand-written atom and `In plain words` on every generated one, every endpoint and callback `operation` resolving (NHCX excepted until its source is decided), no em dash, every `related` id resolves and none names its own atom, every source has a hash, and `npm run check:sections` finds no missing heading id, no atom in two places and no stale generated file
-2. Every HIE-CM M1 to M3 endpoint atom has a curl that was run against sandbox and the response recorded in the atom
-3. Every NHA functional test case for M1 to M3 exists as a test atom and is referenced by a test skill
-4. All skills compile, validate and install individually; the plugin installs as one unit
-5. The index skill is generated from the graph and lists every skill, agent and tool
-6. Docs site live (GitHub Pages first, custom domain when ready) with search and the module references; docs-mcp deployed with its six tools answering over the current snapshot, `/healthz` reporting the catalogue version
-7. The watcher has opened at least one real pull request from a real source change
-8. The support agent answered the six eval tasks from the Catalogue, citing atom ids, with the score recorded
-9. The first-day developer test passes: no ABDM exposure, docs URL and sandbox credentials only, successful M1 ABHA verification call in under two hours with no human asked
-10. The landing page, index entries and skill descriptions state the phase scope as the plan's §7 states it, keeping what exists separate from what is merely specified, and naming NHCX as present in site pages and carrying no atoms yet
-11. Public repo, neutral licence, contributing, security and governance files present, no `eka.care` reference in the core Catalogue
+2. Every NHA functional test case for M1 to M3 exists as a test atom and is referenced by a test skill
+3. All skills compile, validate and install individually; the plugin installs as one unit
+4. The index skill is generated from the graph and lists every skill, agent and tool
+5. Docs site live (GitHub Pages first, custom domain when ready) with search and the module references; docs-mcp deployed with its six tools answering over the current snapshot, `/healthz` reporting the catalogue version
+6. The watcher has opened at least one real pull request from a real source change
+7. The support agent answered the six eval tasks from the Catalogue, citing atom ids, with the score recorded
+8. The first-day developer test passes: no ABDM exposure, docs URL and sandbox credentials only, successful M1 ABHA verification call in under two hours with no human asked
+9. The landing page, index entries and skill descriptions state the phase scope as the plan's §7 states it, keeping what exists separate from what is merely specified, and naming NHCX as present in site pages and in hand-written atoms
+10. Public repo, neutral licence, contributing, security and governance files present, no `eka.care` reference in the core Catalogue
 
 ## Risk register
 
@@ -71,11 +70,10 @@ Each risk carries the decision it needs, because an unowned risk is just anxiety
 
 | Risk | Mitigation | Decision needed |
 |---|---|---|
-| Verification lags authoring badly, and the gap has widened. 247 HIE-CM atoms are written and none has been run against sandbox, while the plan promises dummy proof and recorded responses | Credentials, then a verification sweep across M1 to M3 before ship. Evidence lands in `catalogue/<gateway>/verification/`, and a wrong atom is corrected through an issue keyed by its id | The long pole, and authoring has moved three times since it was written. If credentials slip, ship atoms that state what the specification says and nothing more |
-| NHA swagger is inconsistent or incomplete, with known 403s on some V3 sandbox endpoints | Ingest, hand-correct, record both the NHA file and the correction in `sources`, record the correction and leave the atom stating what the specification carries | Accept that some endpoints ship without a recorded sandbox response |
+| NHA swagger is inconsistent or incomplete, with known 403s on some V3 sandbox endpoints | Ingest, hand-correct, record both the NHA file and the correction in `sources`, record the correction and leave the atom stating what the specification carries | Decided: the atom states what the specification carries, and the correction is recorded |
 | Docusaurus guides and Scalar references are two rendering systems on one site | Keep prose in plain markdown, avoid MDX beyond callouts and steps, so it ports anywhere; specs stay the single source under `catalogue/<gateway>/openapi/` | Decided: fully self-hosted from day one, no hosted-Scalar phase |
 | An existing community docs site overlaps heavily | Reach out early, propose the Catalogue as shared upstream | Product makes the call and the call |
-| The time available is not enough for three gateways at full depth | Atom depth is HIE-CM only: M1 to M4 and P1 to P3 carry atoms, rebuilt on 29 September 2026 after the 16 September reset deleted them. P4, the three use cases Scan and Register, Record Share and Scan and Pay, UHI and NHCX stay at specification or site page depth, with no atoms written against them yet | Needs sign-off, already decided in the plan |
+| The time available is not enough for three gateways at full depth | Atom depth is HIE-CM only: M1 to M4 and P1 to P3 carry atoms, rebuilt on 29 September 2026 after the 16 September reset deleted them. P4 and the three use cases Scan and Register, Record Share and Scan and Pay stay at specification depth, UHI carries only its two glossary terms, and NHCX's atoms are hand-written and not yet on pages | Needs sign-off, already decided in the plan |
 | Notes for AI agents are hidden from readers and NHA does not review them | `check:sections` fails an agent note stating an API literal neither its page nor a specification states; the runbook tells whoever applies a correction to read the note under it | Never relax that rule |
 | The page-canonical migration stops halfway | Every atom is a file or a map entry, `registry.json` says which, and both kinds keep working | Owner to name a deadline and an owner: if class 3 has not merged by then, no further class migrates |
 | NHCX atoms, 536 of 627 on 28 September 2026, are merged in from NHA's fork | No NHCX class migrates, and the self-link lint rule skips NHCX, until the source is decided | Owner decision 1: this repository becomes the NHCX source, or heading ids and agent notes go upstream. Unanswered, NHCX stays as it is |

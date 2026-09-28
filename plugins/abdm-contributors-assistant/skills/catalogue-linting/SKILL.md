@@ -27,7 +27,7 @@ Checks every atom's frontmatter and body: mandatory fields, id format, gateway a
 | `sources` is missing or empty | `sources must list at least one entry` | Add at least one source. If it is our own analysis, say so and mark `docs-only`. |
 | A `sources` entry has neither `url` nor `file` | `sources[<i>] needs a url or a file` | Add one. |
 | A `sources` entry has neither `status` nor `hash` | `sources[<i>] needs a status or a hash` | Add one. Ingestion records a hash; if hand-added, run `/source-check`. |
-| A `verified` block is present | `verified is no longer a field; drop it. Sandbox evidence lives in catalogue/<gateway>/verification/` | Delete the block. Atoms carry no verification status; `npm run verify:atoms` writes evidence outside the atom. |
+| A `verified` block is present | `verified is no longer a field; drop it` | Delete the block. The field does not exist. |
 | A section the atom's type requires is missing (glossary, concept, decision, sandbox and fhir need In plain words; error adds When it goes wrong; troubleshooting adds What happens; flow, endpoint, callback and test need all five; a `generated: true` file needs only In plain words) | `missing mandatory section: ## <heading>`. Headings, in order: `In plain words`, `Before you start`, `What happens`, `How you know it worked`, `When it goes wrong`. | Add it. Glossary atoms may write "Nothing" under a heading, but the heading stays. |
 | The sections present are out of order | `sections are out of order at "## <heading>"` | Reorder. |
 | An em dash (U+2014) appears anywhere in the file | `em dash found. Use a full stop, a comma or a colon.` | Replace it. No exceptions, including code comments and commit messages. |
@@ -144,7 +144,7 @@ Runs after `compile:skills` and validates the compiled output in `plugins/abdm-i
 | No loop states a limit (`Loop limit: N passes per ...`) | `<skill>: no loop limit stated` | Add one so an agent following it can terminate. |
 | A `### ` block has no matching `Exit condition` | `<skill>: <N> loop(s) but only <M> exit condition(s)` | Name what arrives and within how long. |
 
-There is no check that a gateway has some minimum count of sandbox-checked atoms. Atoms carry no status to count, and nothing refuses to build on coverage. P1's phasing is held by review, not by CI. Do not cite it as a build gate.
+There is no check that a gateway has some minimum atom count. Nothing refuses to build on coverage. P1's phasing is held by review, not by CI. Do not cite it as a build gate.
 
 ## `./scripts/plan-check.sh`
 

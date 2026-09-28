@@ -141,8 +141,8 @@ Uncertainty is not permission to guess, and confidence is not permission to
 invent. When a fact is unresolved, walk this ladder and stop at the first rung
 that holds.
 
-1. **Resolve it.** Run the call against sandbox, or ask the team that owns the
-   endpoint. Most unresolved facts are one request away.
+1. **Resolve it.** Confirm it with the team that owns the API. Most
+   unresolved facts are one request away.
 2. **State the operative rule that holds under either reading.** When two
    published tables disagree on a code, the instruction that survives both is
    the one to publish: fetch the codes from the master data call rather than
@@ -183,11 +183,8 @@ When the disagreement is about a code or an enum, the instruction is almost
 always the same: fetch it from the master data call rather than hard coding
 either table.
 
-**The atom carries no verification status.** The field was removed from the
-schema. Sandbox checks run internally through `npm run verify:atoms` and their
-evidence lives under `catalogue/<gateway>/verification/`, outside the atom, which is what
-makes an authoritative sentence safe to write: the check exists, the reader is
-not told about it.
+**The atom carries no verification status.** The field does not exist in the
+schema.
 
 ## What does not change
 

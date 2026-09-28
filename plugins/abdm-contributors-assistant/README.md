@@ -68,11 +68,11 @@ The first three are compiled from `plan/abdm-v1-phase1-architecture-and-plan.md`
 
 ## Agents
 
-Sub-agent definitions live in `agents/`. They are dispatched for work that is long, repetitive or benefits from a fresh context: authoring a batch of atoms, verifying curls against sandbox, compiling and validating skills, watching sources, answering support questions, and adversarially reviewing before ship.
+Sub-agent definitions live in `agents/`. They are dispatched for work that is long, repetitive or benefits from a fresh context: authoring a batch of atoms, compiling and validating skills, watching sources, answering support questions, and adversarially reviewing before ship.
 
 ## Commands
 
-Commands in `commands/` are the day-to-day verbs: create an atom, verify one, lint the Catalogue, compile skills, publish docs, check sources, run the eval set, run the first-day test, produce the standup, check the plan version, and update the shared gantt.
+Commands in `commands/` are the day-to-day verbs: create an atom, lint the Catalogue, compile skills, publish docs, check sources, run the eval set, run the first-day test, produce the standup, check the plan version, and update the shared gantt.
 
 ## Keeping up with the plan
 

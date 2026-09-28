@@ -24,7 +24,7 @@ Section ordering, whitespace, em dash replacement with the correct punctuation, 
 
 ## What `--fix` will never do
 
-Write prose, resolve a dangling link, change a verification status, add a source, or invent an identifier. Anything that touches meaning is yours.
+Write prose, resolve a dangling link, add a source, or invent an identifier. Anything that touches meaning is yours.
 
 ## Output
 
@@ -32,7 +32,7 @@ Grouped by rule, with the file, line and the specific fix. Failures first, warni
 
 Two failures deserve special attention when you see them:
 
-- `verified is no longer a field; drop it` means an atom carries a `verified` block. Delete it; sandbox evidence lives in `catalogue/<gateway>/verification/`.
+- `verified is no longer a field; drop it` means an atom carries a `verified` block. The field does not exist; delete it.
 - `compile.identifier-diff` means the prose pass invented something. Regenerate. Do not add the token to the Catalogue to clear the build.
 
 Full rule reference and fixes: `catalogue-linting` skill.
