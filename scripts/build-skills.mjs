@@ -21,7 +21,8 @@ import {fileURLToPath} from 'node:url';
 import {parse} from 'yaml';
 import {cleanDescription} from './lib/titles.mjs';
 import {errorsFromSpec} from './lib/spec-errors.mjs';
-import {loadJourneys} from './lib/journeys.mjs';
+import {loadJourneys, stepDataName} from './lib/journeys.mjs';
+import {UHI_SERVICES, skillFolder, uhiHostedBy} from './lib/uhi-skills.mjs';
 import {loadAtoms} from './lib/atoms.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -1171,6 +1172,63 @@ writeFileSync(
   )}\n`,
 );
 
+// UHI keeps its own integrators plugin, one skill per service, compiled here
+// from the UHI atoms, journeys and step data by scripts/lib/uhi-skills.mjs,
+// with the two loops compile-skills.mjs wrote into skills-src/. Each ships at
+// /skills/<name>/ and as /skills/<name>.tar.gz, as NHCX's do, and is set up
+// through its own prompt, so an ABDM integrator is never offered UHI skills.
+const uhiPluginDir = join(root, 'plugins', 'uhi-integrators-assistant', 'skills');
+rmSync(uhiPluginDir, {recursive: true, force: true});
+mkdirSync(uhiPluginDir, {recursive: true});
+const uhiCtx = {
+  journeys: loadJourneys({platform: 'uhi', version: 'v1'}),
+  // A journey step has its own data file; the registry lookup, named by no
+  // journey, is read from its operation's own.
+  stepData: (op, journeyId, i) => {
+    const name = journeyId ? stepDataName(op, journeyId, i) : op.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    const file = join(dataDir, `${name}.json`);
+    if (!existsSync(file)) throw new Error(`run build-api-reference first: ${file} missing`);
+    return JSON.parse(readFileSync(file, 'utf8'));
+  },
+  hostedBy: uhiHostedBy(join(root, 'catalogue', 'openapi', 'uhi', 'v1')),
+  atoms: loadAtoms().atoms,
+  // No practices: shared.concept.integration-practices is written for
+  // HIE-CM (certificates, REQUEST-ID, its TIMESTAMP), and a UHI integrator
+  // told another gateway's rule is worse off than one told nothing.
+  buildDate,
+  catalogueVersion,
+};
+const uhiSlugs = [];
+for (const service of UHI_SERVICES) {
+  const common = {...uhiCtx, scaffold: guided(`${service.slug}-build`), debug: guided(`${service.slug}-debug`)};
+  const {files, manifest: entry} = skillFolder(service, {...common, skillUrl: skillUrl(service.slug, siteUrl)});
+  const {files: pluginFiles} = skillFolder(service, {...common, skillUrl: skillUrl(service.slug, null)});
+  for (const [base, entries] of [[outDir, files], [uhiPluginDir, pluginFiles]]) {
+    mkdirSync(join(base, service.slug, 'references'), {recursive: true});
+    for (const [path, body] of Object.entries(entries)) writeFileSync(join(base, service.slug, path), body.endsWith('\n') ? body : `${body}\n`);
+  }
+  // Archived from the site's folder, so the archive and the folder beside it
+  // carry the same SKILL.md.
+  execFileSync('tar', ['-czf', join(outDir, `${service.slug}.tar.gz`), '-C', outDir, service.slug], {
+    env: {...process.env, COPYFILE_DISABLE: '1'},
+  });
+  manifest[service.slug] = {...entry, folder: true, files: Object.keys(files).length};
+  uhiSlugs.push(service.slug);
+  console.log(`Built ${service.slug}: ${files['SKILL.md'].split('\n').length} line router, ${Object.keys(files).length - 1} reference(s).`);
+}
+writeFileSync(
+  join(outDir, 'uhi-index.json'),
+  `${JSON.stringify(
+    {
+      catalogue_version: catalogueVersion,
+      built: buildDate,
+      skills: uhiSlugs.map((slug) => ({name: slug, title: manifest[slug].title, archive: `${slug}.tar.gz`, files: filesUnder(join(uhiPluginDir, slug))})),
+    },
+    null,
+    2,
+  )}\n`,
+);
+
 // Written here rather than after the ABDM skills, because the NHCX entries are
 // added above and the page reads one manifest for both gateways. Writing it
 // earlier shipped a skills.json with no NHCX slug in it, which made
@@ -1389,4 +1447,68 @@ const nhcxPromptLines = [
   '',
 ];
 writeFileSync(join(promptDir, 'nhcx.md'), `${nhcxPromptLines.join('\n')}\n`);
+
+// The UHI setup prompt, fetched by the UHI Build with AI page's one line setup.
+// UHI keeps its own integrators plugin, so the prompt installs that plugin and
+// only UHI skills, from the same repository and marketplace as the others.
+const uhiPromptLines = [
+  `These are official instructions from the ABDM Developer Portal (catalogue version ${catalogueVersion}) to set up an AI development environment for integrating with UHI, the Unified Health Interface.`,
+  '',
+  'Complete the steps yourself by running the commands directly. Ask the user only the questions in step 1.',
+  '',
+  '## 1. Establish scope',
+  '',
+  'There is one skill per UHI service. Ask the user which services this project builds, and whether it is the patient app (EUA) or the provider system (HSPA), and install only those skills:',
+  '',
+  ...uhiSlugs.map((slug) => `- \`${slug}\`: ${manifest[slug].title}. ${manifest[slug].example}.`),
+  '',
+  'Each skill installs and runs alone. An EUA completes Milestone 2 on HIE-CM before any UHI onboarding, which the `abdm-integrators-assistant` plugin carries as `abdm-m2`.',
+  '',
+  '## 2. Install the skills',
+  '',
+  'The plugin carries all six and updates in place, so prefer it wherever it installs.',
+  '',
+  '### Claude Code',
+  '',
+  '```',
+  `claude plugin marketplace add ${pluginRepo} && claude plugin install uhi-integrators-assistant@${marketplaceName}`,
+  '```',
+  '',
+  '### Codex',
+  '',
+  '```',
+  `codex plugin marketplace add ${pluginRepo}`,
+  '```',
+  '',
+  'Then open /plugins in Codex and install `uhi-integrators-assistant`.',
+  '',
+  '### Every other agent',
+  '',
+  'Cursor, GitHub Copilot and the others install plugins only from their own marketplaces, where this plugin is not listed yet. Install the skills one at a time instead, which is also the fallback anywhere the marketplace add above fails:',
+  '',
+  '```',
+  `npx skills add ${pluginRepo}/plugins/uhi-integrators-assistant/skills/uhi-pmjay-hem`,
+  '```',
+  '',
+  ...uhiSlugs.map((slug) => `- \`${pluginRepo}/plugins/uhi-integrators-assistant/skills/${slug}\``),
+  '',
+  `\`${promptRef('/skills/uhi-index.json')}\` lists every UHI skill, its archive and the exact files it is made of, so take the archive rather than fetching files one at a time.`,
+  '',
+  '## 3. Connect the Docs MCP server',
+  '',
+  'A live MCP server over the documentation. Register it with your agent:',
+  '',
+  '```',
+  `claude mcp add --transport http abdm-docs ${mcpUrl}`,
+  '```',
+  '',
+  `For other agents, add an HTTP MCP server named \`abdm-docs\` at \`${mcpUrl}\` using their config format.`,
+  '',
+  '## 4. Report back',
+  '',
+  'Tell the user what you installed and where you suggest starting.',
+  `The skills are snapshots. The current documentation lives at ${promptRef('/docs/uhi/v1')}; prefer it, and the MCP server when connected, over any downloaded copy that has aged.`,
+  '',
+];
+writeFileSync(join(promptDir, 'uhi.md'), `${uhiPromptLines.join('\n')}\n`);
 console.log('Wrote agent-setup/nhcx.md.');

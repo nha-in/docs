@@ -34,8 +34,10 @@ for (const a of atoms.values()) {
 // rule is stated once and applies to every milestone the compiler emits.
 // Naming them one by one is how a new milestone ships unchecked.
 function requiredSections(name) {
-  if (/^hiecm-[a-z0-9-]+-build$/.test(name)) return ["## Journeys"];
+  if (/^(hiecm|uhi)-[a-z0-9-]+-build$/.test(name)) return ["## Journeys"];
   if (/^hiecm-[a-z0-9-]+-debug$/.test(name)) return ["## Errors"];
+  // UHI publishes no error codes, so its debug loops walk symptoms instead.
+  if (/^uhi-[a-z0-9-]+-debug$/.test(name)) return ["## Symptoms"];
   return null;
 }
 
@@ -63,7 +65,7 @@ for (const name of readdirSync(skillsDir)) {
   }
 
   // Every atom id the skill cites must exist in the Catalogue.
-  for (const m2 of body.matchAll(/`((?:hiecm|shared)\.[a-z]+\.[a-z0-9-]+)`/g)) {
+  for (const m2 of body.matchAll(/`((?:hiecm|uhi|shared)\.[a-z]+\.[a-z0-9-]+)`/g)) {
     if (!atoms.has(m2[1])) fail(name, `cites atom "${m2[1]}", which the Catalogue does not define`);
   }
 
@@ -142,9 +144,41 @@ for (const slug of nhcxSlugs) {
   }
 }
 
+// The UHI plugin's compiled folders: well formed, every atom they cite
+// defined, every relative link landing inside the folder. Site paths
+// (/docs/...) are the portal's own and are not files in the folder.
+const uhiDir = join(root, "plugins", "uhi-integrators-assistant", "skills");
+const uhiSlugs = existsSync(uhiDir)
+  ? readdirSync(uhiDir).filter((n) => existsSync(join(uhiDir, n, "SKILL.md"))).sort()
+  : [];
+for (const slug of uhiSlugs) {
+  const raw = readFileSync(join(uhiDir, slug, "SKILL.md"), "utf8");
+  const m = raw.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+  if (!m) { fail(slug, "no frontmatter block"); continue; }
+  let fm;
+  try { fm = parse(m[1]); } catch (e) { fail(slug, `frontmatter is not valid YAML: ${e.message}`); continue; }
+  if (fm.name !== slug) fail(slug, `frontmatter name "${fm.name}" does not match directory`);
+  if (!fm.description) fail(slug, "missing description");
+  for (const [rel] of folderFiles(join(uhiDir, slug))) {
+    const text = readFileSync(join(uhiDir, slug, rel), "utf8");
+    if (text.includes("\u2014")) fail(slug, `em dash found in ${rel}`);
+    for (const [, id] of text.matchAll(/`((?:hiecm|uhi|shared)\.[a-z]+\.[a-z0-9-]+)`/g)) {
+      if (!atoms.has(id)) fail(slug, `${rel} cites atom "${id}", which the Catalogue does not define`);
+    }
+    for (const [, target] of text.matchAll(/\]\(([^)\s]+)\)/g)) {
+      if (/^(https?:|mailto:|#|\/)/.test(target)) continue;
+      const path = target.split("#")[0];
+      if (!path) continue;
+      const resolved = join(uhiDir, slug, dirname(rel), path);
+      if (!resolved.startsWith(join(uhiDir, slug))) fail(slug, `${rel} links out of the folder: ${target}`);
+      else if (!existsSync(resolved)) fail(slug, `${rel} links to a missing file: ${target}`);
+    }
+  }
+}
+
 if (failures.length) {
   console.error(`${failures.length} problem(s):`);
   for (const f of failures) console.error(`  ${f}`);
   process.exit(1);
 }
-console.log(`All compiled skills trace back to the Catalogue. ${nhcxSlugs.length} NHCX skill(s) are well formed, stamped, and every link in them resolves.`);
+console.log(`All compiled skills trace back to the Catalogue. ${nhcxSlugs.length} NHCX skill(s) are well formed, stamped, and every link in them resolves. ${uhiSlugs.length} UHI skill(s) cite only atoms that exist and link only inside their folders.`);
