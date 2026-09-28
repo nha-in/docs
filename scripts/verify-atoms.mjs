@@ -17,10 +17,11 @@
 // A 2xx is reported as "matches". Anything else is recorded with its body so
 // the atom can be corrected. Nothing is inferred and no atom is edited.
 import { execFileSync } from "node:child_process";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { randomUUID } from "node:crypto";
 import { loadAtoms, root, section } from "./lib/atoms.mjs";
+import { fileNames, loadOps, rekey } from "./rekey-verification.mjs";
 
 const args = process.argv.slice(2);
 const list = args.includes("--list");
@@ -31,6 +32,7 @@ const evidenceDir = join(root, "catalogue", "verification");
 mkdirSync(evidenceDir, { recursive: true });
 
 const { atoms } = loadAtoms();
+const ops = loadOps(root);
 const endpoints = [...atoms.values()].filter((a) => a.fm.type === "endpoint" && (!only || a.fm.id === only));
 const curlOf = (a) => (section(a.body, "What happens").match(/```bash\n([\s\S]*?)```/) || [])[1];
 // Bridge writes change where the sandbox sends every callback for the client id, so they are never a verification.
@@ -110,9 +112,15 @@ for (const a of endpoints) {
   const nl = out.lastIndexOf("\n");
   const body = out.slice(0, nl).trim(), code = Number(out.slice(nl + 1).trim());
   const host = (cmd.match(/https?:\/\/[^/'" ]+/) || ["unknown"])[0];
-  const rel = `catalogue/verification/${a.fm.id}.json`;
-  const evidence = { atom: a.fm.id, on: today, against: host, request: scrub(cmd.replace(/^curl/, "curl")), status: code, body: scrub(body).slice(0, 4000) };
-  writeFileSync(join(root, rel), JSON.stringify(evidence, null, 2) + "\n");
+  // A record is keyed to the operation it called, never to the atom, and named
+  // after the records already there so two runs on one day never overwrite.
+  let evidence;
+  try {
+    evidence = rekey({ on: today, against: host, request: scrub(cmd.replace(/^curl/, "curl")), status: code, body: scrub(body).slice(0, 4000) }, ops);
+  } catch (e) { rows.push([a.fm.id, "not recorded", e.message]); continue; }
+  const existing = readdirSync(evidenceDir).filter((f) => f.endsWith(".json")).map((f) => { const [operation, on] = f.split("."); return { operation, on }; });
+  const name = fileNames([...existing, evidence]).at(-1);
+  writeFileSync(join(evidenceDir, name), JSON.stringify(evidence, null, 2) + "\n");
   const ok = code >= 200 && code < 300;
   rows.push([a.fm.id, ok ? "matches" : `HTTP ${code}`, ok ? "" : scrub(body).slice(0, 120).replace(/\s+/g, " ")]);
   // An error code coming back is evidence for its error atom too, so note it.

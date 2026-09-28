@@ -381,6 +381,17 @@
   display: none;
 }
 
+/* A note for AI agents, when shown, spans the whole row, so the heading and
+   paragraph pairs after it stay in their own columns. */
+.markdown .glossary .agent-only {
+  grid-column: 1 / -1;
+}
+
+.markdown .glossary .agent-only p {
+  padding: 0;
+  border-bottom: 0;
+}
+
 .markdown .glossary h3:target,
 .markdown .glossary h3:target + p {
   background: var(--accent-soft);

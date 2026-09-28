@@ -1,0 +1,9 @@
+## Find an ABHA for somebody who does not know theirs {/* #m1-find-abha-search */}
+
+The first step of Find [ABHA](/docs/hiecm/v3/getting-started/glossary#abha). Send the person's encrypted mobile number with `scope` set to `["search-abha"]`. The response carries a `txnId` and the accounts held against that number. Each account shows a masked ABHA number, name, gender and the sign in methods it allows. Let the person pick an account, then send an [OTP](/docs/hiecm/v3/getting-started/glossary#otp) or start a biometric check to continue.
+
+<AgentOnly>
+**Before you start.** Encrypt the mobile number with the key from the public certificate call. Only the encrypted value is accepted.
+
+**When it goes wrong.** A 400 with `Invalid mobile number` means the value was refused. A 404 with `ABDM-1114` means no account holds that number.
+</AgentOnly>

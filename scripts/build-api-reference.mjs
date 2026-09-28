@@ -19,6 +19,7 @@ import {loadAtoms, section} from './lib/atoms.mjs';
 import {cleanTitle, cleanGroupLabel, caseTerms, imperative, cleanDescription} from './lib/titles.mjs';
 import {htmlToMarkdown} from './lib/prose.mjs';
 import {fixProse} from './lib/prose.mjs';
+import {notesFor, toMdx} from './lib/notes.mjs';
 
 /**
  * Write a page this script owns, refusing to destroy one a person wrote.
@@ -642,6 +643,17 @@ for (const {platform, version, files} of tree) {
     return `${base}/${slug(id)}`;
   };
 
+  // A hand-written notes partial (scripts/lib/notes.mjs) renders inside the
+  // reference, after the method and path and before the request and response
+  // tabs. Only on the operation's own page: a journey can name a call twice,
+  // and one heading id on two pages would give its atom two homes.
+  const apiEndpoint = (id, canonical) => {
+    const notes = canonical ? notesFor(root, platform, id) : null;
+    return notes
+      ? [`import Notes from '${notes}';`, '', '<ApiEndpoint operation={operation}>', '', '<Notes />', '', '</ApiEndpoint>', '']
+      : ['', '<ApiEndpoint operation={operation} />', ''];
+  };
+
   // A status code on a reference page was a dead end. The troubleshooting
   // section already knows what a blanket 401 means and what a 202 followed by
   // silence means, and each module's errors page lists the codes it returns,
@@ -1160,9 +1172,7 @@ for (const {platform, version, files} of tree) {
         '',
         "import ApiEndpoint from '@site/src/components/api/ApiEndpoint';",
         `import operation from '@site/src/data/api/${name}.json';`,
-        '',
-        '<ApiEndpoint operation={operation} />',
-        '',
+        ...apiEndpoint(id, true),
         // The callback belongs with the call, not on a page of its own listing
         // every webhook the gateway has. An operation shows the callbacks a
         // specification ties to it; a callback shows the call it pairs with,
@@ -1249,7 +1259,7 @@ for (const {platform, version, files} of tree) {
           '---', '',
           "import ApiEndpoint from '@site/src/components/api/ApiEndpoint';",
           `import operation from '@site/src/data/api/${dataName}.json';`,
-          '', '<ApiEndpoint operation={operation} />', '',
+          ...apiEndpoint(step.op, operationPage(entry.module, step.op) === `/docs/${platform}/${version}/api/${module.dir}/endpoints/${journey.id}/${nn}-${slug(step.op)}`),
           ...(step.say
             ? ['## Where this fits', '', step.say, '']
             : hostedSection(entry.op, stepped.path, {journey, index: i, moduleDir: module.dir}) ??
@@ -1764,8 +1774,9 @@ for (const {platform, version, files} of tree) {
     if (!codes.length && !Object.keys(spec.webhooks ?? {}).length) {
       // An errors page an earlier specification produced would otherwise
       // outlive it and keep publishing codes this one does not return.
-      const stale = join(docsDir, module.dir, 'errors.md');
-      if (existsSync(stale) && /^generated: true$/m.test(readFileSync(stale, 'utf8'))) rmSync(stale);
+      for (const stale of [join(docsDir, module.dir, 'errors.md'), join(docsDir, module.dir, 'errors.mdx')]) {
+        if (existsSync(stale) && /^generated: true$/m.test(readFileSync(stale, 'utf8'))) rmSync(stale);
+      }
       continue;
     }
 
@@ -1831,6 +1842,12 @@ for (const {platform, version, files} of tree) {
     );
     lines.push('');
 
+    // Hand-written notes on this module's codes (scripts/lib/notes.mjs) sit
+    // after the table. Importing them makes the page MDX, so it is written as
+    // errors.mdx and its text escaped; without notes it stays CommonMark.
+    const notes = notesFor(root, platform, `errors/${module.dir}`);
+    if (notes) lines.push('<Notes />', '');
+
     // The ladder's next rung, as plain HTML so the page stays CommonMark. The
     // classes are the same next-step card the hand written pages render through
     // the PathForward component; hub.css styles both.
@@ -1845,7 +1862,9 @@ for (const {platform, version, files} of tree) {
 
     const dir = join(docsDir, module.dir);
     mkdirSync(dir, {recursive: true});
-    writeGenerated(join(dir, 'errors.md'), `${lines.join('\n')}\n`);
+    const [page, other] = notes ? ['errors.mdx', 'errors.md'] : ['errors.md', 'errors.mdx'];
+    if (existsSync(join(dir, other)) && /^generated: true$/m.test(readFileSync(join(dir, other), 'utf8'))) rmSync(join(dir, other));
+    writeGenerated(join(dir, page), `${(notes ? toMdx(lines, notes) : lines).join('\n')}\n`);
   }
 
   // ---- the base URLs partial each module's conventions page renders ----

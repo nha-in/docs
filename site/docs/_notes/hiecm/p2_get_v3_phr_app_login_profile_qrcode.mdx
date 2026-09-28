@@ -1,0 +1,7 @@
+## Get User QR Code {/* #p1-get-user-qr-code */}
+
+Fetches a QR code for the person signed in to a [PHR](/docs/hiecm/v3/getting-started/glossary#phr) app. Scanning it gives the person's details, such as name, gender and address. Send the user token in `X-token` and `X-AUTH-TOKEN`. The call takes no body and answers `202`.
+
+<AgentOnly>
+**When it goes wrong.** A `401` with `900902` and `Missing Credentials` means a token header is missing.
+</AgentOnly>

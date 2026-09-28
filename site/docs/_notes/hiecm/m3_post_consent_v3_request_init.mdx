@@ -1,0 +1,18 @@
+## Initiate a consent request {/* #m3-consent-request-init */}
+
+Ask a patient for consent to read their health records. The call returns 202 Accepted. The consent request id arrives on [consent request on-init](/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/01-m3-post-v3-hiu-consent-request-on-init), and the patient's decision on [the consent notification](/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/03-m3-post-v3-hiu-consent-request-notify).
+
+Key fields:
+
+- `purpose.code`: `CAREMGT`, `BTG`, `PUBHLTH`, `HPAYMT`, `DSRCH` or `PATRQT`
+- `hiTypes`: the health information types you want
+- `permission.accessMode`: `VIEW`, `STORE`, `STREAM` or `QUERY`
+- `permission.dataEraseAt`: when you must erase the data
+
+<AgentOnly>
+**Before you start.** A gateway session token, your HIU id and the patient's ABHA address. Send the `REQUEST-ID`, `TIMESTAMP` and `X-CM-ID` headers.
+
+**What happens.** `hip` and `careContexts` are optional and narrow the request. `frequency` needs `unit`, `value` and `repeats`. Dates are UTC.
+
+**When it goes wrong.** An `error` on the on-init callback means the request was refused. Check the patient id, HIU id, purpose, types, dates and permission. `ABDM-2402` (Invalid Timestamp): check `TIMESTAMP` against your clock. `ABDM-2404` (Invalid Request Id): send a fresh UUID in `REQUEST-ID`. `ABDM-2500` (Authorization header is missing): send the session token. `ABDM-9999` (Unknown exception) gives no cause.
+</AgentOnly>

@@ -20,7 +20,8 @@ Work in this order. Stop and request changes as soon as you hit a blocker; do no
 The highest-severity failure in this repo.
 
 - Atoms carry no `verified` field and lint fails one that does. The check is on the body: does the recorded response come from an actual run, or from the spec?
-- If `catalogue/verification/<atom id>.json` exists, does the atom's section 4 agree with it?
+- If there is the record for the operation its curl calls: `catalogue/verification/<operationId>.<date>.<n>.json`, where `outcome` says `succeeded` (a 2xx) or `failed`, does the atom's section 4 agree with a `succeeded` one? A `failed` record is never evidence that the call works.
+- If the atom is in `catalogue/map.yaml`, review the page section and its `<AgentOnly>` note, not `catalogue/generated/`. Does every agent paragraph carry one of the four labels, and does the note state nothing the page and the specifications do not?
 - If the source hash has changed since the atom was written, has the atom been re-read against the new source?
 
 A response body presented as observed when it was never observed fails review immediately, regardless of how good the rest is.
@@ -68,7 +69,7 @@ Run the `writing-guide` checklist. Most commonly caught: banned words, unnamed p
 
 - Is this one atom or two? Two flows, two types, or two milestones in one file means split.
 - Is anything here Eka-specific? It does not belong in the core Catalogue. See `dpg-governance`.
-- Is the scope right? V1 atoms are HIE-CM M1 to M3 (120 atoms), plus 20 gateway-agnostic shared atoms and 2 HIE-CM decision atoms carrying `milestone: n/a` (`npm run lint:atoms`: 142 total, 122 `hiecm` of which 2 are `n/a`, 20 `shared`). An atom for M4 does not belong in this Catalogue yet, however good it is. `uhi` and `nhcx` are legal gateways that lint clean and carry zero atoms, because nobody has written one, not because anything rejects one. An atom for M4, UHI or NHCX raises a scheduling question rather than a scope violation: ask whether the time exists to prove it, not whether the gateway is allowed.
+- Is the scope right? HIE-CM atoms cover M1 to M4 and P1 to P3; `npm run lint:atoms` prints the current count, so quote that rather than a number here. An atom for P4, subscriptions, Scan and Pay or UHI raises a scheduling question rather than a scope violation: every gateway lints clean, so ask whether the time exists to prove it, not whether the gateway is allowed.
 
 ## Failure modes reviewers miss
 

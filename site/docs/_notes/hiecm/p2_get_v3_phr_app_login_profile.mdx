@@ -1,0 +1,9 @@
+## Get User Profile {/* #p1-get-user-profile */}
+
+Returns the profile of the person signed in to a [PHR](/docs/hiecm/v3/getting-started/glossary#phr) app, identified by the user token in `X-token` and `X-AUTH-TOKEN`. Use it to show the [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address), the name, the masked mobile number, the linked [ABHA number](/docs/hiecm/v3/getting-started/glossary#abha-number) and the `kycStatus`.
+
+<AgentOnly>
+**How you know it worked.** The response carries `abhaAddress`, `fullName`, `mobile`, `abhaNumber`, `authMethods`, `status` and `kycStatus`.
+
+**When it goes wrong.** A `401` with `900902` and `Missing Credentials` means a token header is missing.
+</AgentOnly>

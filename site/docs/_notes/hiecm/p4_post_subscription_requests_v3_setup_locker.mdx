@@ -1,0 +1,11 @@
+## Set up a health locker {/* #p3-setup-locker */}
+
+Sets up a health locker for the logged-in person. Name the locker in the `X-LOCKER-ID` header. The response carries a `consentAutoApprovalId`: keep it, because the auto approval disable and enable calls take an auto approval id.
+
+<AgentOnly>
+**Before you start.** The person's `X-AUTH-TOKEN` and the locker id.
+
+**How you know it worked.** You receive `200` with `consentAutoApprovalId`.
+
+**When it goes wrong.** `400` with `ABDM-1066` means the token is invalid: log the person in again.
+</AgentOnly>

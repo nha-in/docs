@@ -26,7 +26,7 @@ For each atom, in order:
 
 1. Read the source material for this specific atom. Do not work from memory of the gateway.
 2. Fill frontmatter completely. There is no `verified` field; lint fails one.
-3. Write the five sections in order.
+3. Write the sections the atom's type requires, in order (see `atom-authoring`).
 4. Populate `related` with ids you have confirmed exist. If a needed atom does not exist, note it as a dependency rather than inventing an id.
 5. Add structured blocks where the compiler needs facts, particularly the exit condition block in section 4.
 6. Self-check against the `writing-guide` checklist.

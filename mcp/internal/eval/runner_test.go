@@ -20,7 +20,7 @@ func (m *toolThenAnswer) Stream(ctx context.Context, system string, tools []chat
 	msgs []chat.Message, maxTokens int, onText func(string)) (chat.Reply, error) {
 	m.round++
 	if m.round == 1 {
-		return chat.Reply{ToolCalls: []chat.ToolCall{{ID: "1", Name: "search_docs",
+		return chat.Reply{ToolCalls: []chat.ToolCall{{ID: "1", Name: "search",
 			Input: json.RawMessage(`{"query":"ABDM-1035"}`)}}, StopReason: "tool_use"}, nil
 	}
 	onText("`ABDM-1035` means the `X-HIP-ID` header is not registered.\n\n")
@@ -49,7 +49,7 @@ func TestRunWritesATranscriptWithToolsAndSources(t *testing.T) {
 	if tr.Answer == "" || len(tr.Sources) == 0 || tr.Sources[0].ID != "hiecm.error.abdm-1035" {
 		t.Fatalf("transcript incomplete: %+v", tr)
 	}
-	if len(tr.Calls) != 2 || len(tr.Calls[0].ToolResults) != 1 || tr.Calls[0].ToolResults[0].Name != "search_docs" {
+	if len(tr.Calls) != 2 || len(tr.Calls[0].ToolResults) != 1 || tr.Calls[0].ToolResults[0].Name != "search" {
 		t.Fatalf("tool trace missing: %+v", tr.Calls)
 	}
 	if tr.Corpus == "" {
@@ -101,7 +101,7 @@ func (m *twoCallsThenAnswer) Stream(ctx context.Context, system string, tools []
 	m.round++
 	if m.round == 1 {
 		return chat.Reply{ToolCalls: []chat.ToolCall{
-			{ID: "1", Name: "search_docs", Input: json.RawMessage(`{"query":"ABDM-1035"}`)},
+			{ID: "1", Name: "search", Input: json.RawMessage(`{"query":"ABDM-1035"}`)},
 			{ID: "2", Name: "catalogue_info", Input: json.RawMessage(`{}`)},
 		}, StopReason: "tool_use"}, nil
 	}
@@ -131,7 +131,7 @@ func TestRunPairsToolResultsWithTheCallThatMadeThem(t *testing.T) {
 		t.Fatalf("calls = %d, want 2", len(tr.Calls))
 	}
 	got := tr.Calls[0].ToolResults
-	if len(got) != 2 || got[0].Name != "search_docs" || got[1].Name != "catalogue_info" {
+	if len(got) != 2 || got[0].Name != "search" || got[1].Name != "catalogue_info" {
 		t.Fatalf("tool results out of order or missing: %+v", got)
 	}
 	if len(tr.Calls[1].ToolResults) != 0 {

@@ -1,0 +1,494 @@
+[
+ {
+  "query": "am I a HIP or a HIU?",
+  "expect": [
+   "shared.glossary.hip",
+   "shared.glossary.hiu"
+  ]
+ },
+ {
+  "query": "is the link token the access token?",
+  "expect": [
+   "shared.glossary.link-token"
+  ]
+ },
+ {
+  "query": "which host do I call?",
+  "expect": [
+   "shared.sandbox.going-live"
+  ]
+ },
+ {
+  "query": "is txnId the same as REQUEST-ID?",
+  "expect": [
+   "shared.glossary.request-id",
+   "shared.glossary.txn-id"
+  ]
+ },
+ {
+  "query": "What is an ABHA ID?",
+  "expect": [
+   "shared.glossary.abha"
+  ]
+ },
+ {
+  "query": "What can the Ask AI assistant do?",
+  "expect": [
+   "shared.concept.ask-ai-assistant"
+  ]
+ },
+ {
+  "query": "What is discovery in ABDM?",
+  "expect": [
+   "shared.glossary.discovery"
+  ]
+ },
+ {
+  "query": "What is a DSC?",
+  "expect": [
+   "shared.glossary.dsc"
+  ]
+ },
+ {
+  "query": "What is the elliptic curve step in ABDM's data flow?",
+  "expect": [
+   "shared.glossary.ecdh"
+  ]
+ },
+ {
+  "query": "What is the gateway in ABDM?",
+  "expect": [
+   "shared.glossary.gateway"
+  ]
+ },
+ {
+  "query": "What is a health professional ID in ABDM?",
+  "expect": [
+   "shared.glossary.hpid"
+  ]
+ },
+ {
+  "query": "What is a health records provider in ABDM?",
+  "expect": [
+   "shared.glossary.hrp"
+  ]
+ },
+ {
+  "query": "What is HIMS in the ABDM context?",
+  "expect": [
+   "shared.glossary.hmis"
+  ]
+ },
+ {
+  "query": "What is HIP?",
+  "expect": [
+   "shared.glossary.hip"
+  ]
+ },
+ {
+  "query": "What is HIU?",
+  "expect": [
+   "shared.glossary.hiu"
+  ]
+ },
+ {
+  "query": "What is a linktoken in ABDM?",
+  "expect": [
+   "shared.glossary.link-token"
+  ]
+ },
+ {
+  "query": "What is LIS?",
+  "expect": [
+   "shared.glossary.lims"
+  ]
+ },
+ {
+  "query": "how to integrate in sandbox?",
+  "expect": [
+   "shared.sandbox.first-fifteen-minutes"
+  ]
+ },
+ {
+  "query": "how I can integrate my digital health solution into sandbox?",
+  "expect": [
+   "shared.sandbox.first-fifteen-minutes"
+  ]
+ },
+ {
+  "query": "sandbox integration",
+  "expect": [
+   "shared.sandbox.first-fifteen-minutes"
+  ]
+ },
+ {
+  "query": "is functional testing mandatory?",
+  "expect": [
+   "shared.sandbox.going-live"
+  ]
+ },
+ {
+  "query": "is it must to do the functional testing?",
+  "expect": [
+   "shared.sandbox.going-live"
+  ]
+ },
+ {
+  "query": "functional testing",
+  "expect": [
+   "shared.sandbox.going-live"
+  ]
+ },
+ {
+  "query": "how do i get started as a developer?",
+  "expect": [
+   "shared.sandbox.first-fifteen-minutes"
+  ]
+ },
+ {
+  "query": "as developer, how I get started to build health repository?",
+  "expect": [
+   "shared.sandbox.first-fifteen-minutes"
+  ]
+ },
+ {
+  "query": "getting started",
+  "expect": [
+   "shared.sandbox.first-fifteen-minutes"
+  ]
+ },
+ {
+  "query": "what is patient app?",
+  "expect": [
+   "shared.glossary.phr"
+  ]
+ },
+ {
+  "query": "what is meaning of Patient App?",
+  "expect": [
+   "shared.glossary.phr"
+  ]
+ },
+ {
+  "query": "patient app",
+  "expect": [
+   "shared.glossary.phr"
+  ]
+ },
+ {
+  "query": "can one wasa cover all modules?",
+  "expect": [
+   "shared.sandbox.wasa"
+  ]
+ },
+ {
+  "query": "what if I require only one WASA for the all modules?",
+  "expect": [
+   "shared.sandbox.wasa"
+  ]
+ },
+ {
+  "query": "wasa coverage",
+  "expect": [
+   "shared.sandbox.wasa"
+  ]
+ },
+ {
+  "query": "what are abdm sandbox milestones?",
+  "expect": [
+   "shared.glossary.m1",
+   "shared.glossary.m2",
+   "shared.glossary.m3"
+  ]
+ },
+ {
+  "query": "what are the different milestones present in ABDM Sandbox?",
+  "expect": [
+   "shared.glossary.m1",
+   "shared.glossary.m2",
+   "shared.glossary.m3"
+  ]
+ },
+ {
+  "query": "sandbox milestones",
+  "expect": [
+   "shared.glossary.m1",
+   "shared.glossary.m2",
+   "shared.glossary.m3"
+  ]
+ },
+ {
+  "query": "what is m2?",
+  "expect": [
+   "shared.glossary.hip"
+  ]
+ },
+ {
+  "query": "what is meaning of milestone M2?",
+  "expect": [
+   "shared.glossary.hip"
+  ]
+ },
+ {
+  "query": "m2",
+  "expect": [
+   "shared.glossary.hip"
+  ]
+ },
+ {
+  "query": "who can be a hip?",
+  "expect": [
+   "shared.glossary.hip"
+  ]
+ },
+ {
+  "query": "who all can become HIP?",
+  "expect": [
+   "shared.glossary.hip"
+  ]
+ },
+ {
+  "query": "hip eligibility",
+  "expect": [
+   "shared.glossary.hip"
+  ]
+ },
+ {
+  "query": "what fetch modes are there?",
+  "expect": [
+   "shared.glossary.auth-modes"
+  ]
+ },
+ {
+  "query": "what are different fetch modes which are available?",
+  "expect": [
+   "shared.glossary.auth-modes"
+  ]
+ },
+ {
+  "query": "fetch modes",
+  "expect": [
+   "shared.glossary.auth-modes"
+  ]
+ },
+ {
+  "query": "what is a hiu?",
+  "expect": [
+   "shared.glossary.hiu"
+  ]
+ },
+ {
+  "query": "what is the meaning of HIU?",
+  "expect": [
+   "shared.glossary.hiu"
+  ]
+ },
+ {
+  "query": "hiu",
+  "expect": [
+   "shared.glossary.hiu"
+  ]
+ },
+ {
+  "query": "where are fhir bundle samples?",
+  "expect": [
+   "shared.fhir.document-bundle",
+   "shared.glossary.hi-type"
+  ]
+ },
+ {
+  "query": "from where I can get FHIR bundle samples in Sandbox documentation?",
+  "expect": [
+   "shared.fhir.document-bundle",
+   "shared.glossary.hi-type"
+  ]
+ },
+ {
+  "query": "fhir samples",
+  "expect": [
+   "shared.fhir.document-bundle",
+   "shared.glossary.hi-type"
+  ]
+ },
+ {
+  "query": "Is it mandatory to show the security audit report to get the production keys?",
+  "expect": [
+   "shared.sandbox.going-live",
+   "shared.sandbox.wasa"
+  ]
+ },
+ {
+  "query": "How to integrate digital health solutions in the sandbox?",
+  "expect": [
+   "shared.sandbox.first-fifteen-minutes"
+  ]
+ },
+ {
+  "query": "What are the tests required to be passed before exiting the ABDM Sandbox and before entering the production environment?",
+  "expect": [
+   "shared.sandbox.going-live",
+   "shared.sandbox.wasa"
+  ]
+ },
+ {
+  "query": "What should I do if I have some technical query for my integration?",
+  "expect": [
+   "shared.sandbox.going-live"
+  ]
+ },
+ {
+  "query": "What is ABDM Sandbox?",
+  "expect": [
+   "shared.glossary.sandbox",
+   "shared.sandbox.going-live"
+  ]
+ },
+ {
+  "query": "What to do when my integration is completed? What are the next steps?",
+  "expect": [
+   "shared.sandbox.going-live"
+  ]
+ },
+ {
+  "query": "Is it mandatory to get the functional testing done?",
+  "expect": [
+   "shared.sandbox.going-live"
+  ]
+ },
+ {
+  "query": "I am a developer, and want to build a health repository. How do I get started?",
+  "expect": [
+   "shared.sandbox.first-fifteen-minutes"
+  ]
+ },
+ {
+  "query": "What is Patient App?",
+  "expect": [
+   "shared.glossary.phr"
+  ]
+ },
+ {
+  "query": "What if I require one WASA for all the modules?",
+  "expect": [
+   "shared.sandbox.wasa"
+  ]
+ },
+ {
+  "query": "Is the WASA required post any changes done in the module(s)/code?",
+  "expect": [
+   "shared.sandbox.wasa"
+  ]
+ },
+ {
+  "query": "Is WASA required for entire application or specific module?",
+  "expect": [
+   "shared.sandbox.wasa"
+  ]
+ },
+ {
+  "query": "Where should I get WASA done?",
+  "expect": [
+   "shared.sandbox.wasa"
+  ]
+ },
+ {
+  "query": "Who can participate in the ABDM Sandbox?",
+  "expect": [
+   "shared.glossary.hmis",
+   "shared.glossary.phr"
+  ]
+ },
+ {
+  "query": "What are the different Milestones in ABDM Sandbox?",
+  "expect": [
+   "shared.glossary.m1",
+   "shared.glossary.m2",
+   "shared.glossary.m3"
+  ]
+ },
+ {
+  "query": "Do I require WASA if I have Safe-to-host certificate for the application?",
+  "expect": [
+   "shared.sandbox.wasa"
+  ]
+ },
+ {
+  "query": "What is milestone-M2?",
+  "expect": [
+   "shared.glossary.hip"
+  ]
+ },
+ {
+  "query": "Who can become a HIP?",
+  "expect": [
+   "shared.glossary.hip"
+  ]
+ },
+ {
+  "query": "What is a PHR application?",
+  "expect": [
+   "shared.glossary.phr"
+  ]
+ },
+ {
+  "query": "What is X-HIP ID / X-HIU-ID / X-CM-ID and how to generate them?",
+  "expect": [
+   "shared.sandbox.going-live"
+  ]
+ },
+ {
+  "query": "What are the different fetch modes available?",
+  "expect": [
+   "shared.glossary.auth-modes"
+  ]
+ },
+ {
+  "query": "How FHIR and SNOMED CT linked?",
+  "expect": [
+   "shared.glossary.hi-type"
+  ]
+ },
+ {
+  "query": "What is milestone-M3?",
+  "expect": [
+   "shared.glossary.hiu"
+  ]
+ },
+ {
+  "query": "What is HIU (Health Information User)?",
+  "expect": [
+   "shared.glossary.hiu"
+  ]
+ },
+ {
+  "query": "Where can I get FHIR bundle samples on Sandbox documentation?",
+  "expect": [
+   "shared.fhir.document-bundle",
+   "shared.glossary.hi-type"
+  ]
+ },
+ {
+  "query": "Will HIP or HIU have to store the public / private key at their end?",
+  "expect": [
+   "shared.glossary.key-material"
+  ]
+ },
+ {
+  "query": "Does HIP send the public key to HIU?",
+  "expect": [
+   "shared.glossary.key-material"
+  ]
+ },
+ {
+  "query": "Where can I find some reference to health standards (FHIR formats/SNOMED CT) as specified for implementation of ABDM?",
+  "expect": [
+   "shared.fhir.document-bundle"
+  ]
+ },
+ {
+  "query": "what is the NHCX claim API endpoint",
+  "expect": [
+   "nhcx.endpoint.claim-submit"
+  ]
+ }
+]

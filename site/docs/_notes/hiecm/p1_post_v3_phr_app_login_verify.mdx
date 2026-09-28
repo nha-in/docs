@@ -1,0 +1,11 @@
+## Verify the login OTP {/* #p1-login-verify-otp */}
+
+Verifies the one time password ([OTP](/docs/hiecm/v3/getting-started/glossary#otp)), or the password, and ends the sign in. Send the same `scope` the request used. When one number carries several [ABHA addresses](/docs/hiecm/v3/getting-started/glossary#abha-address), `users` lists them, the person picks one, and the verify user call signs them in as that address.
+
+<AgentOnly>
+**Before you start.** The `txnId` from the login request and the code, encrypted as `otpValue`. For a password login, `authMethods` is `password` and the `password` object in `authData` carries the `abhaAddress` and the encrypted `password`.
+
+**How you know it worked.** `authResult` is `success`. `tokens` carries a `token` and a `refreshToken`. Store the refresh token securely, because it is what survives the app restarting.
+
+**When it goes wrong.** `ABDM-1107` with `Invalid combinations of scopes` means the `scope` does not match the request. `ABDM-1006` with `Invalid Password` means a wrong password. `ABDM-9999` with `Invalid Transaction Id` means the `txnId` is wrong or spent.
+</AgentOnly>

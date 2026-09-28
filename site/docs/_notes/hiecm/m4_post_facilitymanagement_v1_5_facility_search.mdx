@@ -1,0 +1,13 @@
+## Search the facility registry before creating anything {/* #m4-hfr-search-facility */}
+
+Search the [HFR](/docs/hiecm/v3/getting-started/glossary#hfr), the Health Facility Registry, before you register a facility, so the same facility is never registered twice. A match means the facility already exists: use its `facilityId` instead of creating a new record.
+
+Narrow the search by `facilityName` and by location. Location fields take Local Government Directory (LGD) codes: `stateLGDCode`, `districtLGDCode` and `subDistrictLGDCode`. Results are paged with `page` and `resultsPerPage`.
+
+<AgentOnly>
+**Before you start.** A session token for the `Authorization` header. The state, district and sub district LGD codes, fetched from the HFR LGD master data calls rather than typed by hand.
+
+**What happens.** You send the search criteria. The response lists matching facilities in `facilities`, with `totalFacilities` and `numberOfPages` so you can page through the rest.
+
+**How you know it worked.** An empty `facilities` list means no match, and onboarding can go ahead. When the list has entries, compare `facilityName`, `address` and `facilityStatus`. If one of them is the facility, use its `facilityId` and stop.
+</AgentOnly>

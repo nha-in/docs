@@ -1,0 +1,11 @@
+## Acknowledge a subscription decision {/* #p3-subscription-request-hiu-on-notify */}
+
+Your answer to a subscription request notification. After ABDM tells you the person approved or denied your request, send this call so ABDM knows you received it.
+
+<AgentOnly>
+**What happens.** Send `status`, for example `OK`, and the notification's `subscriptionRequestId`, both in `acknowledgement`. Set `response.requestId` to the `REQUEST-ID` of the notification.
+
+**How you know it worked.** You receive `202`.
+
+**When it goes wrong.** `400` with `ABDM-1015` means the acknowledgement was rejected. Check the ids against the notification.
+</AgentOnly>

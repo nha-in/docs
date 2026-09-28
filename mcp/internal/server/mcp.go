@@ -8,13 +8,12 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
-	"sync"
+	"strings"
 	"time"
 
 	"github.com/google/jsonschema-go/jsonschema"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	"github.com/nha-in/docs/mcp/internal/embed"
-	"github.com/nha-in/docs/mcp/internal/fhir"
 	"github.com/nha-in/docs/mcp/internal/index"
 )
 
@@ -43,7 +42,9 @@ func schemaWithAtomTypeEnum[In any]() *jsonschema.Schema {
 // kilobytes.
 const maxUnfilteredOperations = 60
 
-// NewMCPServer wires the thirteen tools. emb may be nil (keyword-only).
+// NewMCPServer wires six tools and, for one release, eleven deprecated
+// aliases: the old names, each delegating as before. emb may be nil
+// (keyword-only).
 func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 	s := mcp.NewServer(&mcp.Implementation{Name: "abdm-docs", Version: serverVersion}, nil)
 	s.AddReceivingMiddleware(toolCallLoggingMiddleware)
@@ -53,10 +54,47 @@ func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 	}
 
 	tools := NewTools(r, emb)
+	readOnly := &mcp.ToolAnnotations{ReadOnlyHint: true}
+
+	mcp.AddTool(s, &mcp.Tool{Name: "search", Annotations: readOnly, InputSchema: schemaWithAtomTypeEnum[searchSixIn](),
+		Description: searchDescription,
+	}, func(ctx context.Context, req *mcp.CallToolRequest, in searchSixIn) (*mcp.CallToolResult, any, error) {
+		out, err := tools.Search(ctx, in)
+		if err != nil {
+			return notFoundOrErr(err)
+		}
+		return jsonResult(out)
+	})
+	mcp.AddTool(s, &mcp.Tool{Name: "get", Annotations: readOnly, InputSchema: mustSchemaFor[getSixIn](),
+		Description: getDescription,
+	}, func(ctx context.Context, req *mcp.CallToolRequest, in getSixIn) (*mcp.CallToolResult, any, error) {
+		out, err := tools.Get(ctx, in)
+		if err != nil {
+			return notFoundOrErr(err)
+		}
+		return jsonResult(out)
+	})
+	mcp.AddTool(s, &mcp.Tool{Name: "related", Annotations: readOnly, Description: relatedAtomsDescription},
+		func(ctx context.Context, req *mcp.CallToolRequest, in getAtomIn) (*mcp.CallToolResult, any, error) {
+			out, err := tools.RelatedAtoms(ctx, in)
+			if err != nil {
+				return notFoundOrErr(err)
+			}
+			return jsonResult(out)
+		})
+	mcp.AddTool(s, &mcp.Tool{Name: "validate", Annotations: readOnly, InputSchema: mustSchemaFor[validateSixIn](),
+		Description: validateDescription,
+	}, func(ctx context.Context, req *mcp.CallToolRequest, in validateSixIn) (*mcp.CallToolResult, any, error) {
+		out, err := tools.Validate(ctx, in)
+		if err != nil {
+			return notFoundOrErr(err)
+		}
+		return jsonResult(out)
+	})
 
 	mcp.AddTool(s, &mcp.Tool{
 		Name:        "search_docs",
-		Description: searchDocsDescription,
+		Description: deprecated("search", searchDocsDescription),
 		InputSchema: schemaWithAtomTypeEnum[searchIn](),
 	}, func(ctx context.Context, req *mcp.CallToolRequest, in searchIn) (*mcp.CallToolResult, any, error) {
 		out, err := tools.SearchDocs(ctx, in)
@@ -68,7 +106,7 @@ func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 
 	mcp.AddTool(s, &mcp.Tool{
 		Name:        "get_atom",
-		Description: getAtomDescription,
+		Description: deprecated("get", getAtomDescription),
 	}, func(ctx context.Context, req *mcp.CallToolRequest, in getAtomIn) (*mcp.CallToolResult, any, error) {
 		out, err := tools.GetAtom(ctx, in)
 		if err != nil {
@@ -79,7 +117,7 @@ func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 
 	mcp.AddTool(s, &mcp.Tool{
 		Name:        "related_atoms",
-		Description: relatedAtomsDescription,
+		Description: deprecated("related", relatedAtomsDescription),
 	}, func(ctx context.Context, req *mcp.CallToolRequest, in getAtomIn) (*mcp.CallToolResult, any, error) {
 		out, err := tools.RelatedAtoms(ctx, in)
 		if err != nil {
@@ -90,6 +128,7 @@ func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 
 	mcp.AddTool(s, &mcp.Tool{
 		Name:        "decode_error",
+		Annotations: readOnly,
 		Description: decodeErrorDescription,
 	}, func(ctx context.Context, req *mcp.CallToolRequest, in decodeIn) (*mcp.CallToolResult, any, error) {
 		out, err := tools.DecodeError(ctx, in)
@@ -104,9 +143,8 @@ func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 		Milestone string `json:"milestone,omitempty" jsonschema:"optional milestone filter"`
 	}
 	mcp.AddTool(s, &mcp.Tool{
-		Name: "list_atoms",
-		Description: "Enumerate catalogue atoms by type and milestone, for example all M2 test cases. " +
-			"Use this to enumerate what the catalogue covers; use search_docs when you have an intent rather than a category.",
+		Name:        "list_atoms",
+		Description: deprecated("search", listAtomsDescription),
 		InputSchema: schemaWithAtomTypeEnum[listAtomsIn](),
 	}, func(ctx context.Context, req *mcp.CallToolRequest, in listAtomsIn) (*mcp.CallToolResult, any, error) {
 		refs, err := r.ListAtoms(in.Type, in.Milestone)
@@ -118,6 +156,7 @@ func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 
 	mcp.AddTool(s, &mcp.Tool{
 		Name:        "catalogue_info",
+		Annotations: readOnly,
 		Description: catalogueInfoDescription,
 	}, func(ctx context.Context, req *mcp.CallToolRequest, in emptyIn) (*mcp.CallToolResult, any, error) {
 		out, err := tools.CatalogueInfo(ctx, in)
@@ -129,7 +168,7 @@ func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 
 	mcp.AddTool(s, &mcp.Tool{
 		Name:        "list_operations",
-		Description: listOperationsDescription,
+		Description: deprecated("search", listOperationsDescription),
 	}, func(ctx context.Context, req *mcp.CallToolRequest, in listOpsIn) (*mcp.CallToolResult, any, error) {
 		out, err := tools.ListOperations(ctx, in)
 		if err != nil {
@@ -140,7 +179,7 @@ func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 
 	mcp.AddTool(s, &mcp.Tool{
 		Name:        "get_operation",
-		Description: getOperationDescription,
+		Description: deprecated("get", getOperationDescription),
 	}, func(ctx context.Context, req *mcp.CallToolRequest, in getOpIn) (*mcp.CallToolResult, any, error) {
 		out, err := tools.GetOperation(ctx, in)
 		if err != nil {
@@ -151,7 +190,7 @@ func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 
 	mcp.AddTool(s, &mcp.Tool{
 		Name:        "list_fhir_profiles",
-		Description: listFhirProfilesDescription,
+		Description: deprecated("search", listFhirProfilesDescription),
 	}, func(ctx context.Context, req *mcp.CallToolRequest, in emptyFhirIn) (*mcp.CallToolResult, any, error) {
 		out, err := tools.ListFHIRProfiles(ctx, in)
 		if err != nil {
@@ -162,7 +201,7 @@ func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 
 	mcp.AddTool(s, &mcp.Tool{
 		Name:        "get_fhir_profile",
-		Description: getFhirProfileDescription,
+		Description: deprecated("get", getFhirProfileDescription),
 	}, func(ctx context.Context, req *mcp.CallToolRequest, in getFhirProfileIn) (*mcp.CallToolResult, any, error) {
 		out, err := tools.GetFHIRProfile(ctx, in)
 		if err != nil {
@@ -173,7 +212,7 @@ func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 
 	mcp.AddTool(s, &mcp.Tool{
 		Name:        "get_fhir_example",
-		Description: getFhirExampleDescription,
+		Description: deprecated("get", getFhirExampleDescription),
 	}, func(ctx context.Context, req *mcp.CallToolRequest, in getFhirExampleIn) (*mcp.CallToolResult, any, error) {
 		out, err := tools.GetFHIRExample(ctx, in)
 		if err != nil {
@@ -184,7 +223,7 @@ func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 
 	mcp.AddTool(s, &mcp.Tool{
 		Name:        "validate_request",
-		Description: validateRequestDescription,
+		Description: deprecated("validate", validateRequestDescription),
 	}, func(ctx context.Context, req *mcp.CallToolRequest, in validateIn) (*mcp.CallToolResult, any, error) {
 		out, err := tools.ValidateRequest(ctx, in)
 		if err != nil {
@@ -193,58 +232,15 @@ func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 		return jsonResult(out)
 	})
 
-	// loadAllDigests loads every indexed profile digest once and caches it
-	// for the lifetime of this server: digests are immutable per snapshot,
-	// and validate_fhir would otherwise re-read every profile digest from
-	// the reader on every call.
-	var (
-		digestsOnce  sync.Once
-		digestsCache map[string]*fhir.ProfileDigest
-		digestsErr   error
-	)
-	loadAllDigests := func(r *index.Reader) (map[string]*fhir.ProfileDigest, error) {
-		digestsOnce.Do(func() {
-			summaries, err := r.ListFHIRProfiles()
-			if err != nil {
-				digestsErr = err
-				return
-			}
-			m := make(map[string]*fhir.ProfileDigest, len(summaries))
-			for _, sm := range summaries {
-				d, err := r.GetFHIRProfile(sm.ProfileName)
-				if err != nil {
-					digestsErr = err
-					return
-				}
-				m[sm.ProfileName] = d
-			}
-			digestsCache = m
-		})
-		return digestsCache, digestsErr
-	}
-
-	type validateFhirIn struct {
-		BundleJSON string `json:"bundle_json" jsonschema:"the FHIR document bundle to check, as a JSON string"`
-		RecordType string `json:"record_type,omitempty" jsonschema:"optional expected ABDM hiType, for example OPConsultation"`
-	}
 	mcp.AddTool(s, &mcp.Tool{
-		Name: "validate_fhir",
-		Description: "Structural pre-flight check of a FHIR document bundle against the pinned NRCES profiles and ABDM transport rules. " +
-			"Returns findings with locations and concrete fixes, never a bare pass or fail. " +
-			"This is tier 1: it does not validate terminology and does not replace the official HL7 validator, whose recipe the catalogue carries.",
+		Name:        "validate_fhir",
+		Description: deprecated("validate", validateFhirDescription),
 	}, func(ctx context.Context, req *mcp.CallToolRequest, in validateFhirIn) (*mcp.CallToolResult, any, error) {
-		if len(in.BundleJSON) > 2<<20 {
-			return jsonResult(versioned(map[string]any{"error": "bundle exceeds the 2 MiB limit"}))
-		}
-		digests, err := loadAllDigests(r)
+		out, err := tools.ValidateFHIR(ctx, in)
 		if err != nil {
-			return nil, nil, err
+			return notFoundOrErr(err)
 		}
-		findings := fhir.Validate([]byte(in.BundleJSON), in.RecordType, digests)
-		return jsonResult(versioned(map[string]any{
-			"findings": findings,
-			"limits":   fmt.Sprintf(fhir.LimitsTemplate, r.FHIRIGVersion()),
-		}))
+		return jsonResult(out)
 	})
 
 	// The compiled skills, as one resource per section and one prompt per
@@ -261,7 +257,7 @@ func searchHitsJSON(hits []index.SearchHit) []map[string]any {
 	out := []map[string]any{}
 	for _, h := range hits {
 		out = append(out, map[string]any{
-			"id": h.ID, "type": h.Type, "milestone": h.Milestone,
+			"kind": h.Kind, "id": h.ID, "type": h.Type, "milestone": h.Milestone,
 			"title": h.Title, "summary": h.Summary,
 			"snippet": h.Snippet,
 			"doc_url": index.DocLink(h.DocURL, h.DocAnchor),
@@ -324,12 +320,15 @@ func jsonResult(v any) (*mcp.CallToolResult, any, error) {
 }
 
 func notFoundOrErr(err error) (*mcp.CallToolResult, any, error) {
+	if strings.HasPrefix(err.Error(), "kind ") {
+		return &mcp.CallToolResult{IsError: true, Content: []mcp.Content{&mcp.TextContent{Text: err.Error()}}}, nil, nil
+	}
 	var nf *index.NotFoundError
 	if errors.As(err, &nf) {
 		return &mcp.CallToolResult{
 			IsError: true,
 			Content: []mcp.Content{&mcp.TextContent{
-				Text: fmt.Sprintf("%s. Use search_docs, list_atoms or list_operations to find valid ids.", nf.Error()),
+				Text: fmt.Sprintf("%s. Use search to find valid ids, then get with an id from its results.", nf.Error()),
 			}},
 		}, nil, nil
 	}

@@ -17,7 +17,7 @@ Run all seven. Report findings even when they are uncomfortable.
 
 ### 1. Fabricated verification
 
-Atoms carry no `verified` field. Sample endpoint atoms whose section 4 shows a response body. For each, find `catalogue/verification/<atom id>.json`. No evidence file means the body came from the spec and must not be presented as observed. Check the evidence date against when credentials actually existed.
+Atoms carry no `verified` field. Sample endpoint atoms whose section 4 shows a response body. For each, find the record for the operation its curl calls: `catalogue/verification/<operationId>.<date>.<n>.json`, where `outcome` says `succeeded` (a 2xx) or `failed`. No `succeeded` record means the body came from the spec and must not be presented as observed. Check the evidence date against when credentials actually existed.
 
 ### 2. Unobservable exit conditions
 

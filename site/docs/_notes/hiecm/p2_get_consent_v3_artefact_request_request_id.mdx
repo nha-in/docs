@@ -1,0 +1,11 @@
+## Get the consent artefacts of one consent request {/* #p3-get-all-consent-artefact-details-by-request-id */}
+
+Returns every [consent artefact](/docs/hiecm/v3/getting-started/glossary#consent-artefact) created from one consent request. One request can produce several artefacts, so the response is an array.
+
+<AgentOnly>
+**Before you start.** The person's `X-AUTH-TOKEN` and the `consentRequestId`.
+
+**How you know it worked.** You receive `200` with an array. Each entry has a `status` and a `consentDetail` with its `consentId`.
+
+**When it goes wrong.** `404` with `ABDM-1001` means no artefact exists for that request, for example because it was not granted.
+</AgentOnly>

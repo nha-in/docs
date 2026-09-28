@@ -1,0 +1,13 @@
+## Acknowledge a health information data request {/* #m2-hip-health-information-on-request */}
+
+Call this when a [health information request](/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/09-m2-post-v3-hip-health-information-request) reaches your bridge. Return its `transactionId` with `sessionStatus` of `ACKNOWLEDGED`, and its request id in `response.requestId`. Then encrypt the records and push them to the `dataPushUrl`.
+
+The requester's `keyMaterial` uses [ECDH](/docs/hiecm/v3/getting-started/glossary#ecdh) on `Curve25519`, with a public key and a 32 byte nonce. Generate your own key pair and nonce for the transaction. Derive the shared key, combine the two nonces, and encrypt each entry with AES-GCM. Send your public key and nonce with the data.
+
+<AgentOnly>
+**Before you start.** A gateway session token and the health information request. Send the `REQUEST-ID`, `TIMESTAMP` and `X-CM-ID` headers.
+
+**What happens.** The call returns 202 Accepted. The push goes to the `dataPushUrl` directly, not through the gateway. `/health-information/transfer` documents that push.
+
+**When it goes wrong.** `ABDM-1031` (Invalid request): check the body. Never push data for a consent artefact that has expired or been revoked. `ABDM-2402` (Invalid Timestamp): check `TIMESTAMP` against your clock. `ABDM-2404` (Invalid Request Id): send a fresh UUID in `REQUEST-ID`. `ABDM-2500` (Authorization header is missing): send the session token. `ABDM-9999` (Unknown exception) gives no cause.
+</AgentOnly>

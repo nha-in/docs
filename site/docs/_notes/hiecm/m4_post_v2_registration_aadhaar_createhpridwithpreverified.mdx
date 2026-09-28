@@ -1,0 +1,9 @@
+## Create the HPID {/* #m4-hpr-create-hprid */}
+
+The last call in creating an [HPID](/docs/hiecm/v3/getting-started/glossary#hpid), the identity a healthcare professional holds in the [HPR](/docs/hiecm/v3/getting-started/glossary#hpr). It takes the `txnId` of the Aadhaar transaction the earlier steps verified, the `hprId` the professional chose, a `password`, and the category and subcategory codes. The response carries the new `hprIdNumber`, the `hprId` and a `token`.
+
+<AgentOnly>
+**Before you start.** The `txnId` from the verified Aadhaar steps earlier in the journey. `email` and `txnId` are required. Offer `hprId` candidates from the HPID suggestion call. Take `hpCategoryCode` and `hpSubCategoryCode` from the HPID categories and subcategories calls rather than hard coding them.
+
+**How you know it worked.** The response carries `hprIdNumber`, `hprId` and a non empty `token`. Keep the `token`: registering the professional's profile sends it as `hprToken`.
+</AgentOnly>

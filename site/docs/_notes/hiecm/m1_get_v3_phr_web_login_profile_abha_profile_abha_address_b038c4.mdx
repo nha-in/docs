@@ -1,0 +1,9 @@
+## Get PHR profile {/* #m1-get-phr-profile */}
+
+Returns the profile behind the [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address) the person signed in with: name, date of birth, gender, contact details, address, ABHA number and [KYC](/docs/hiecm/v3/getting-started/glossary#kyc) status. It follows the verify step of ABHA address login and needs the `X-token` that step returned.
+
+<AgentOnly>
+**Before you start.** The `tokens.token` from the ABHA address verify call, sent in the `X-token` header as `Bearer <token>`.
+
+**When it goes wrong.** A 400 with `ABDM-1006` and `Invalid X-token` means the token is missing, wrong or from another login. A 401 with `900902` means the access token was not sent.
+</AgentOnly>

@@ -1,0 +1,11 @@
+## Profile share result callback {/* #p2-profile-on-share-callback */}
+
+ABDM posts the facility's answer to a profile share here. On success, `acknowledgement.profile.tokenNumber` is the token number the person shows at the counter. `acknowledgement.profile.expiry` says how long it stays valid.
+
+<AgentOnly>
+**What happens.** Either `acknowledgement` or `error` is present, and `response` always is. `response.requestId` is the request id of the share call.
+
+**How you know it worked.** `acknowledgement.profile.tokenNumber` is present. Show it to the person. Answer with `200`.
+
+**When it goes wrong.** An `error` object instead of `acknowledgement` means the share failed. Show the error `message` and let the person scan again.
+</AgentOnly>
