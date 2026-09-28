@@ -27,6 +27,10 @@ var Commands = []string{"scaffold", "design", "integrate", "debug"}
 type Command struct {
 	Name   string
 	Module string
+	// Gateway is the gateway of the page the panel is hosted on, hiecm or
+	// nhcx, or empty. It is not a command: it rides here because this is the
+	// struct of per-request options the HTTP layer hands the loop.
+	Gateway string
 }
 
 var moduleNameRe = regexp.MustCompile(`^abdm-[a-z0-9]+(?:-[a-z0-9]+)*$`)

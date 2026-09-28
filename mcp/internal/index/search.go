@@ -29,7 +29,7 @@ func ftsQuote(q string) string {
 	return strings.Join(parts, " ")
 }
 
-func (r *Reader) ftsSearch(query, atomType, milestone string, limit int) ([]SearchHit, error) {
+func (r *Reader) ftsSearch(query, atomType, milestone, gateway string, limit int) ([]SearchHit, error) {
 	match := ftsQuery(query, r.vocab)
 	if expansions := r.vocab.Expand(query); len(expansions) > 0 {
 		// Logged so a miss can be diagnosed against what the expander
@@ -52,9 +52,10 @@ func (r *Reader) ftsSearch(query, atomType, milestone string, limit int) ([]Sear
         WHERE atoms_fts MATCH ?
           AND (? = '' OR a.type = ?)
           AND (? = '' OR a.milestone = ?)
+          AND (? = '' OR a.gateway = ? OR a.gateway = 'shared')
         ORDER BY bm25(atoms_fts, 0.0, 5.0, 3.0, 1.0, 8.0, 6.0)
         LIMIT ?`,
-		match, atomType, atomType, milestone, milestone, limit)
+		match, atomType, atomType, milestone, milestone, gateway, gateway, limit)
 	if err != nil {
 		return nil, err
 	}
@@ -71,7 +72,7 @@ func (r *Reader) ftsSearch(query, atomType, milestone string, limit int) ([]Sear
 	return hits, rows.Err()
 }
 
-func (r *Reader) vectorSearch(ctx context.Context, query, atomType, milestone string,
+func (r *Reader) vectorSearch(ctx context.Context, query, atomType, milestone, gateway string,
 	limit int, emb embed.Embedder) ([]SearchHit, error) {
 	qv, err := emb.Embed(ctx, []string{query})
 	if err != nil {
@@ -84,8 +85,9 @@ func (r *Reader) vectorSearch(ctx context.Context, query, atomType, milestone st
         FROM chunks c JOIN atoms a ON a.id = c.atom_id
         WHERE c.embedding IS NOT NULL
           AND (? = '' OR a.type = ?)
-          AND (? = '' OR a.milestone = ?)`,
-		atomType, atomType, milestone, milestone)
+          AND (? = '' OR a.milestone = ?)
+          AND (? = '' OR a.gateway = ? OR a.gateway = 'shared')`,
+		atomType, atomType, milestone, milestone, gateway, gateway)
 	if err != nil {
 		return nil, err
 	}
@@ -137,13 +139,20 @@ func (r *Reader) vectorSearch(ctx context.Context, query, atomType, milestone st
 
 func (r *Reader) Search(ctx context.Context, query, atomType, milestone string,
 	limit int, emb embed.Embedder) ([]SearchHit, error) {
+	return r.SearchIn(ctx, query, atomType, milestone, "", limit, emb)
+}
+
+// SearchIn is Search scoped to one gateway's atoms and the shared ones, which
+// belong to every gateway. An empty gateway is no scope.
+func (r *Reader) SearchIn(ctx context.Context, query, atomType, milestone, gateway string,
+	limit int, emb embed.Embedder) ([]SearchHit, error) {
 	if limit <= 0 {
 		limit = 10
 	}
 	if limit > 25 {
 		limit = 25
 	}
-	ftsHits, err := r.ftsSearch(query, atomType, milestone, limit)
+	ftsHits, err := r.ftsSearch(query, atomType, milestone, gateway, limit)
 	if err != nil {
 		return nil, err
 	}
@@ -158,7 +167,7 @@ func (r *Reader) Search(ctx context.Context, query, atomType, milestone string,
 		}
 		return ftsHits, nil
 	}
-	vecHits, err := r.vectorSearch(ctx, query, atomType, milestone, limit, emb)
+	vecHits, err := r.vectorSearch(ctx, query, atomType, milestone, gateway, limit, emb)
 	if err != nil {
 		// Search must never hard-depend on the embedding sidecar: fall
 		// back to the FTS hits already computed rather than failing the

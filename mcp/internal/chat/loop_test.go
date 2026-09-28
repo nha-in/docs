@@ -121,27 +121,116 @@ func TestValidateTurnsRejectsBadShapes(t *testing.T) {
 	}
 }
 
-func TestValidateTurnsCapsAssistantLen(t *testing.T) {
-	// Only user turns were length-capped; an oversized assistant turn (the
-	// wire format lets a client submit one directly, not just the model's
-	// own prior reply) must be rejected too, or a single request can carry
-	// unbounded assistant text into every Bedrock round.
+func TestALongEarlierAnswerIsCutNotRefused(t *testing.T) {
+	// An answer may run to CHAT_MAX_TOKENS, longer than MaxAssistantLen, and
+	// the panel sends it back as history with the next question. Refusing it
+	// broke the conversation: every follow-up after a long answer was a 400.
+	// It is cut instead, so the request still cannot carry unbounded
+	// assistant text into every Bedrock round.
 	svc := &Service{}
-	tooLong := []Turn{
-		{Role: "user", Text: "hi"},
-		{Role: "assistant", Text: strings.Repeat("x", MaxAssistantLen+1)},
-		{Role: "user", Text: "and then?"},
+	long := strings.Repeat("é", MaxAssistantLen+2000)
+	turns := []Turn{
+		{Role: "user", Text: "scaffold M1"},
+		{Role: "assistant", Text: long},
+		{Role: "user", Text: "and the second call?"},
 	}
-	if err := svc.ValidateTurns(tooLong); err == nil {
-		t.Error("oversized assistant turn accepted, want rejection")
+	if err := svc.ValidateTurns(turns); err != nil {
+		t.Fatalf("a long earlier answer was refused: %v", err)
 	}
-	ok := []Turn{
-		{Role: "user", Text: "hi"},
-		{Role: "assistant", Text: strings.Repeat("x", MaxAssistantLen)},
-		{Role: "user", Text: "and then?"},
+	msgs := toMessages(turns)
+	got := msgs[1].Text
+	if n := utf8.RuneCountInString(got); n != MaxAssistantLen {
+		t.Errorf("cut answer is %d runes, want exactly %d", n, MaxAssistantLen)
 	}
-	if err := svc.ValidateTurns(ok); err != nil {
-		t.Errorf("assistant turn at exactly MaxAssistantLen rejected: %v", err)
+	if !strings.HasSuffix(got, clippedNote) {
+		t.Errorf("cut answer does not say it was cut: ...%q", got[len(got)-60:])
+	}
+	if !utf8.ValidString(got) {
+		t.Error("cut split a multibyte character")
+	}
+	short := toMessages([]Turn{{Role: "user", Text: "q"}, {Role: "assistant", Text: "a short answer"}, {Role: "user", Text: "q2"}})
+	if short[1].Text != "a short answer" {
+		t.Errorf("a short answer was changed: %q", short[1].Text)
+	}
+}
+
+func TestRespondAnswersAGreetingWithoutLookingItUp(t *testing.T) {
+	// "hi" retrieved HI type, HIU and HIP. The fix was lost once in a merge
+	// conflict while its unit test on route.IsGreeting kept passing, so this
+	// test goes through RespondCommand, where the check has to be.
+	m := &fakeModel{next: func([]Message) Reply {
+		t.Fatal("the model was called for a greeting")
+		return Reply{}
+	}}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			t.Fatal("a greeting was looked up")
+			return nil, nil, guard.PackFacts{}, nil
+		},
+	}
+	for _, tc := range []struct{ gateway, want string }{
+		{"", "what an error code is telling you"},
+		{"hiecm", "creating an ABHA"},
+		{"nhcx", "a claim or a pre-authorisation"},
+	} {
+		emit, evs := collectEvents()
+		if err := svc.RespondCommand(context.Background(), []Turn{{Role: "user", Text: "Hi"}}, nil, Command{Gateway: tc.gateway}, emit); err != nil {
+			t.Fatal(err)
+		}
+		var text string
+		for _, e := range *evs {
+			if e.name == "sources" {
+				t.Errorf("a greeting cited sources: %v", e.data)
+			}
+			if e.name == "text" {
+				text += e.data.(map[string]string)["delta"]
+			}
+		}
+		if !strings.Contains(text, tc.want) {
+			t.Errorf("gateway %q: greeting = %q, want it to mention %q", tc.gateway, text, tc.want)
+		}
+	}
+}
+
+func TestRespondScopesTheLookupToTheReadersGateway(t *testing.T) {
+	var scoped, sawTurn string
+	m := &fakeModel{
+		replies:  []Reply{{Text: "Raise it with the consent request init call.", StopReason: "end_turn"}},
+		onStream: func(_ string, _ []ToolDef, msgs []Message) { sawTurn = msgs[len(msgs)-1].Text },
+	}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			scoped = GatewayFrom(ctx)
+			return nil, nil, guard.PackFacts{}, nil
+		},
+	}
+	emit, _ := collectEvents()
+	if err := svc.RespondCommand(context.Background(), []Turn{{Role: "user", Text: "how does an HIU raise a consent request"}}, nil, Command{Gateway: "hiecm"}, emit); err != nil {
+		t.Fatal(err)
+	}
+	if scoped != "hiecm" {
+		t.Errorf("lookup scope = %q, want hiecm", scoped)
+	}
+	if !strings.Contains(sawTurn, "reading the HIE-CM documentation") {
+		t.Errorf("the model was not told which documentation the reader is in: %q", sawTurn)
+	}
+}
+
+func TestScopeFor(t *testing.T) {
+	for _, tc := range []struct{ page, question, want string }{
+		{"hiecm", "how does an HIU raise a consent request", "hiecm"},
+		{"hiecm", "what can the Ask AI assistant do?", "hiecm"},
+		{"hiecm", "how does an NHCX claim work", ""},
+		{"hiecm", "is this the same on the health claims exchange", ""},
+		{"nhcx", "how do I build the JWE", "nhcx"},
+		{"nhcx", "where does HIE-CM send the consent", ""},
+		{"nhcx", "what does NHCX return here", "nhcx"},
+		{"", "anything", ""},
+		{"someothergateway", "anything", ""},
+	} {
+		if got := scopeFor(tc.page, tc.question); got != tc.want {
+			t.Errorf("scopeFor(%q, %q) = %q, want %q", tc.page, tc.question, got, tc.want)
+		}
 	}
 }
 

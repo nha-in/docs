@@ -105,6 +105,24 @@ func TestSearchTypeFilter(t *testing.T) {
 	}
 }
 
+func TestSearchInKeepsTheGatewayAndSharedAtoms(t *testing.T) {
+	// The fixture's atoms are all HIE-CM. Scoped to hiecm they are found;
+	// scoped to nhcx they are not; with no scope, Search is unchanged.
+	r := openFixture(t, false)
+	for _, tc := range []struct {
+		gateway string
+		want    bool
+	}{{"", true}, {"hiecm", true}, {"nhcx", false}} {
+		hits, err := r.SearchIn(context.Background(), "ABDM-1035", "", "", tc.gateway, 10, nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if got := len(hits) > 0; got != tc.want {
+			t.Errorf("gateway %q: found = %v, want %v (%d hits)", tc.gateway, got, tc.want, len(hits))
+		}
+	}
+}
+
 func TestNaivePhrasingFindsAtomThroughQuestions(t *testing.T) {
 	// Build the index the way the existing tests do, but pass a questions
 	// map for one atom that carries a phrasing its body never uses.

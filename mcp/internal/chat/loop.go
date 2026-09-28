@@ -107,8 +107,12 @@ type Service struct {
 
 const (
 	// MaxTurns bounds how many turns (user + assistant messages together) a
-	// single request may carry.
-	MaxTurns = 10
+	// single request may carry: the question and the eight exchanges before
+	// it. Four was too few to hold a working conversation, and readers said
+	// the panel forgot what they had asked. Seventeen turns at the caps below
+	// is about fifty thousand characters, and a real conversation is a small
+	// part of that.
+	MaxTurns = 17
 	// MaxInputLen bounds the length of any one user turn's text.
 	MaxInputLen = 2000
 	// MaxAttachmentLen bounds one attachment's text. A failing bundle or a
@@ -116,12 +120,19 @@ const (
 	// data dump, and it is the reader's whole conversation being re-sent on
 	// every round that pays for it.
 	MaxAttachmentLen = 20000
-	// MaxAssistantLen bounds the length of any one assistant turn's text. An
-	// assistant turn is normally the model's own prior reply, but the wire
-	// format lets a client submit one directly as conversation history, so it
-	// needs its own cap: without one, a single request could carry roughly a
-	// megabyte of assistant text into every Bedrock round for the life of the
-	// conversation.
+	// MaxAssistantLen bounds how much of any one assistant turn reaches the
+	// model. An assistant turn is normally the model's own prior reply, but
+	// the wire format lets a client submit one directly as conversation
+	// history, so it needs its own cap: without one, a single request could
+	// carry roughly a megabyte of assistant text into every Bedrock round for
+	// the life of the conversation.
+	//
+	// A longer turn is cut to this length, not refused. An answer may run to
+	// CHAT_MAX_TOKENS, about five to six thousand characters at the default,
+	// so refusing here turned every long answer into a broken conversation:
+	// the next question came back as a 400 the panel could only report as
+	// "could not reach the assistant". The start of an answer is what a
+	// follow-up refers to, and the body limit still bounds the request.
 	MaxAssistantLen = 4000
 	// MaxPageChars bounds the attached page's Markdown. 24000 characters is
 	// roughly 6000 tokens, and it takes 98% of this site's pages whole: the
@@ -241,8 +252,9 @@ A <skill> block is the skill section the reader chose: follow it, and name what 
 
 // ValidateTurns checks the shape the HTTP layer (Task 6) must also enforce
 // before it even opens the SSE stream: 1..MaxTurns turns, roles alternating
-// starting and ending with "user", each user turn's text within MaxInputLen,
-// and each assistant turn's text within MaxAssistantLen. It returns a plain
+// starting and ending with "user", and each user turn's text within
+// MaxInputLen. An assistant turn over MaxAssistantLen is cut, not refused
+// (see toMessages). It returns a plain
 // error describing the violation; the HTTP layer turns that into a 400.
 func (s *Service) ValidateTurns(turns []Turn) error {
 	if len(turns) < 1 || len(turns) > MaxTurns {
@@ -255,9 +267,6 @@ func (s *Service) ValidateTurns(turns []Turn) error {
 		}
 		if t.Role == "user" && utf8.RuneCountInString(t.Text) > MaxInputLen {
 			return fmt.Errorf("chat: turn %d: user text exceeds %d characters", i, MaxInputLen)
-		}
-		if t.Role == "assistant" && utf8.RuneCountInString(t.Text) > MaxAssistantLen {
-			return fmt.Errorf("chat: turn %d: assistant text exceeds %d characters", i, MaxAssistantLen)
 		}
 		if t.Attachment != nil {
 			if t.Role != "user" {
@@ -320,10 +329,26 @@ func toMessages(turns []Turn) []Message {
 				slog.Info("pii_masked", "kinds", strings.Join(found, ","))
 			}
 			text = masked
+		} else {
+			text = clipAssistant(text)
 		}
 		msgs = append(msgs, Message{Role: t.Role, Text: text})
 	}
 	return msgs
+}
+
+// clippedNote ends an earlier answer that was cut to MaxAssistantLen, so the
+// model knows the rest existed rather than reading the cut as where it ended.
+const clippedNote = "\n[The rest of this earlier answer is not repeated here.]"
+
+// clipAssistant cuts an earlier answer to MaxAssistantLen runes, on a rune
+// boundary so a multibyte character is never split.
+func clipAssistant(text string) string {
+	if utf8.RuneCountInString(text) <= MaxAssistantLen {
+		return text
+	}
+	runes := []rune(text)
+	return string(runes[:MaxAssistantLen-utf8.RuneCountInString(clippedNote)]) + clippedNote
 }
 
 // attachmentBlock renders a masked attachment into the question that carried
@@ -504,6 +529,23 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 		return err
 	}
 	msgs := toMessages(turns)
+	question := lastUserText(turns)
+	// A greeting or a thanks carries nothing to look up: "hi" retrieved HI
+	// type, HIU and HIP and the panel defined them. It gets a fixed reply,
+	// with no lookup, no model call and no sources. This check was lost once
+	// in a merge conflict; TestRespondAnswersAGreetingWithoutLookingItUp
+	// exercises it through this function so that cannot happen quietly again.
+	if route.IsGreeting(question) && lastUserAttachment(turns) == nil {
+		if err := emit("text", map[string]string{"delta": greetingFor(cmd.Gateway)}); err != nil {
+			return err
+		}
+		return s.finish(nil, emit)
+	}
+	// The gateway the reader's page belongs to scopes every search this
+	// question makes, the pre-retrieval and the model's own, unless the
+	// question names another gateway. See scopeFor.
+	gateway := scopeFor(cmd.Gateway, question)
+	ctx = WithGateway(ctx, gateway)
 	// The system prompt is a cached core: byte identical on every question
 	// and with or without a page, so the Bedrock cache point after it
 	// (bedrock.go:systemBlocksFor) is actually hit. Everything that used to
@@ -528,7 +570,6 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 			textErr = err
 		}
 	}
-	question := lastUserText(turns)
 	// An attached page is a source the answer legitimately draws on, and the
 	// reader can see it named in the panel, so it counts towards the
 	// grounding check the same way a retrieved atom does. Without this, an
@@ -654,6 +695,9 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 		Question: question, HasAttachment: lastUserAttachment(turns) != nil,
 	}).Shape)
 	prefix := passagesPrefix + skillPrefix
+	if gateway != "" {
+		prefix += gatewayNote(gateway) + "\n\n"
+	}
 	if page.attached() {
 		// The page is not run through MaskPII the way the reader's own text
 		// is (see line 305): it is a page this site published, not
