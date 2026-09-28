@@ -25,7 +25,7 @@ Three sections, in this order, kept short.
 
 ## Numbers worth reporting
 
-- Endpoint atoms on the dummy-proof paths with a `succeeded` record under `catalogue/verification/` for the operation they call, which is the number the definition of done actually turns on
+- Endpoint atoms on the dummy-proof paths with a `succeeded` record under `catalogue/<gateway>/verification/` for the operation they call, which is the number the definition of done actually turns on
 - Open issues filed against atom ids
 - Eval score, if it has been run since the last standup
 - Days until the next checkpoint

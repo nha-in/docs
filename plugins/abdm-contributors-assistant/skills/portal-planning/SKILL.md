@@ -1,9 +1,9 @@
 ---
 name: portal-planning
 description: The ABDM Developer Portal schedule, workstreams, ownership split, two-day shipping increments, definition of done, and risk register. Use whenever someone asks what ships when, what is blocked, who owns a piece of work, whether V1 is on track, what counts as finished, how to sequence a task, or wants a standup, a status update, or a re-plan. Also use when scope is being added or cut so the trade is made against the schedule rather than in the abstract.
-plan_version: 2026.09.29-6
+plan_version: 2026.09.29-7
 plan_source: abdm-v1-phase1-architecture-and-plan.md
-plan_hash: sha256:ed181bb4e7e6a26c6dd04124d34d8cb2f03c3b10c0dba0ecceef6292f2fedfd1
+plan_hash: sha256:4327f1aaa71a690624b9a3f7fcb86b30a4b2f8fc9c229c1e57a8ac70f5338b5f
 compiled_from_plan: true
 ---
 
@@ -27,7 +27,7 @@ The split is by kind of judgement, not by convenience.
 
 | Stream | Functional and strategic owner | Technical owner |
 |---|---|---|
-| Catalogue | Atom schema decisions, writing guide, every body's sections, dummy-proofness review, glossary | OpenAPI ingestion and cleanup, callbacks as webhooks per module file, endpoint stubs, sandbox runs, evidence under `catalogue/verification/` |
+| Catalogue | Atom schema decisions, writing guide, every body's sections, dummy-proofness review, glossary | OpenAPI ingestion and cleanup, callbacks as webhooks per module file, endpoint stubs, sandbox runs, evidence under `catalogue/<gateway>/verification/` |
 | Site and MCP | Information architecture mirroring developer.eka.care flows, theme, landing copy, depth labels | Docusaurus and Scalar setup, spec conventions, the docs-mcp server and indexer, domains, deploys |
 | Skills | Template prose, index decision tree, trigger descriptions, what each skill must refuse to guess | Compiler, validator, plugin manifest, per-agent adapters |
 | Pipeline | Source inventory, review rota | Watcher, PR bot, CI, publishers |
@@ -71,9 +71,9 @@ Each risk carries the decision it needs, because an unowned risk is just anxiety
 
 | Risk | Mitigation | Decision needed |
 |---|---|---|
-| Verification lags authoring badly, and the gap has widened. 247 HIE-CM atoms are written and none has been run against sandbox, while the plan promises dummy proof and recorded responses | Credentials, then a verification sweep across M1 to M3 before ship. Evidence lands in `catalogue/verification/`, and a wrong atom is corrected through an issue keyed by its id | The long pole, and authoring has moved three times since it was written. If credentials slip, ship atoms that state what the specification says and nothing more |
+| Verification lags authoring badly, and the gap has widened. 247 HIE-CM atoms are written and none has been run against sandbox, while the plan promises dummy proof and recorded responses | Credentials, then a verification sweep across M1 to M3 before ship. Evidence lands in `catalogue/<gateway>/verification/`, and a wrong atom is corrected through an issue keyed by its id | The long pole, and authoring has moved three times since it was written. If credentials slip, ship atoms that state what the specification says and nothing more |
 | NHA swagger is inconsistent or incomplete, with known 403s on some V3 sandbox endpoints | Ingest, hand-correct, record both the NHA file and the correction in `sources`, record the correction and leave the atom stating what the specification carries | Accept that some endpoints ship without a recorded sandbox response |
-| Docusaurus guides and Scalar references are two rendering systems on one site | Keep prose in plain markdown, avoid MDX beyond callouts and steps, so it ports anywhere; specs stay the single source under `catalogue/openapi/` | Decided: fully self-hosted from day one, no hosted-Scalar phase |
+| Docusaurus guides and Scalar references are two rendering systems on one site | Keep prose in plain markdown, avoid MDX beyond callouts and steps, so it ports anywhere; specs stay the single source under `catalogue/<gateway>/openapi/` | Decided: fully self-hosted from day one, no hosted-Scalar phase |
 | An existing community docs site overlaps heavily | Reach out early, propose the Catalogue as shared upstream | Product makes the call and the call |
 | The time available is not enough for three gateways at full depth | Atom depth is HIE-CM only: M1 to M4 and P1 to P3 carry atoms, rebuilt on 29 September 2026 after the 16 September reset deleted them. P4, the three use cases Scan and Register, Record Share and Scan and Pay, UHI and NHCX stay at specification or site page depth, with no atoms written against them yet | Needs sign-off, already decided in the plan |
 | Notes for AI agents are hidden from readers and NHA does not review them | `check:sections` fails an agent note stating an API literal neither its page nor a specification states; the runbook tells whoever applies a correction to read the note under it | Never relax that rule |

@@ -7,7 +7,7 @@ Check whether the sources the Catalogue records still match what the repository 
 
 ## What actually runs
 
-`npm run lint:sources`, which is `scripts/check-source-freshness.mjs`. It hashes everything under `catalogue/openapi/.raw/`, collects every source reference the Catalogue records (a spec's `x-abdm-sources` list, an atom's frontmatter `sources` list), and reports three buckets:
+`npm run lint:sources`, which is `scripts/check-source-freshness.mjs`. It hashes everything under `catalogue/<gateway>/openapi/.raw/`, collects every source reference the Catalogue records (a spec's `x-abdm-sources` list, an atom's frontmatter `sources` list), and reports three buckets:
 
 - `MISMATCH`, a recorded sha256 differs from the current `.raw` hash. CI fails on this.
 - `MISSING`, a recorded file is nowhere under `.raw/`. A warning, not a failure.

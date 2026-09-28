@@ -185,7 +185,7 @@ either table.
 
 **The atom carries no verification status.** The field was removed from the
 schema. Sandbox checks run internally through `npm run verify:atoms` and their
-evidence lives under `catalogue/verification/`, outside the atom, which is what
+evidence lives under `catalogue/<gateway>/verification/`, outside the atom, which is what
 makes an authoritative sentence safe to write: the check exists, the reader is
 not told about it.
 

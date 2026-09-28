@@ -27,7 +27,7 @@ Atoms carry no verification field and readers never see one. The Catalogue is pu
 1. Runs `npm run verify:atoms`, passing `--only <atom-id>` when one was given
 2. For each endpoint atom, runs the curl in section 3 exactly as written, with placeholders filled
 3. Scrubs credentials, tokens, Aadhaar numbers, OTPs and full mobile numbers, replacing each with a named placeholder so the shape stays readable
-4. Writes the request and response to `catalogue/verification/<operationId>.<date>.<n>.json`, named for the operation the curl calls, with `outcome: succeeded` or `failed`
+4. Writes the request and response to `catalogue/<gateway>/verification/<operationId>.<date>.<n>.json`, named for the operation the curl calls, with `outcome: succeeded` or `failed`
 5. Reports: a 2xx is "matches"; anything else is recorded with its body
 
 ## What to do with a mismatch

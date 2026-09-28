@@ -20,9 +20,9 @@ Anyone dispatching you expecting a sweep of NHA's live pages, an atom edited, or
 ## Procedure
 
 1. Run `npm run lint:sources`.
-2. Read the three buckets: `MISMATCH` (a recorded hash differs from the current file under `catalogue/openapi/.raw/`, CI fails on it), `MISSING` (recorded but not stored), `UNHASHED` (recorded with a status instead of a hash).
+2. Read the three buckets: `MISMATCH` (a recorded hash differs from the current file under `catalogue/<gateway>/openapi/.raw/`, CI fails on it), `MISSING` (recorded but not stored), `UNHASHED` (recorded with a status instead of a hash).
 3. For each `MISMATCH`, list every atom and spec that recorded the old hash.
-4. Report. Do not edit the atoms and do not touch `catalogue/openapi/.raw/`.
+4. Report. Do not edit the atoms and do not touch `catalogue/<gateway>/openapi/.raw/`.
 
 If you are asked to check one live URL, fetch it and print its sha256 so a person can compare it by eye. That is a one-off hash, not a sweep, and you must label it as one.
 

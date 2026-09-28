@@ -20,8 +20,8 @@ Work in this order. Stop and request changes as soon as you hit a blocker; do no
 The highest-severity failure in this repo.
 
 - Atoms carry no `verified` field and lint fails one that does. The check is on the body: does the recorded response come from an actual run, or from the spec?
-- If there is the record for the operation its curl calls: `catalogue/verification/<operationId>.<date>.<n>.json`, where `outcome` says `succeeded` (a 2xx) or `failed`, does the atom's section 4 agree with a `succeeded` one? A `failed` record is never evidence that the call works.
-- If the atom is in `catalogue/map.yaml`, review the page section and its `<AgentOnly>` note, not `catalogue/generated/`. Does every agent paragraph carry one of the four labels, and does the note state nothing the page and the specifications do not?
+- If there is the record for the operation its curl calls: `catalogue/<gateway>/verification/<operationId>.<date>.<n>.json`, where `outcome` says `succeeded` (a 2xx) or `failed`, does the atom's section 4 agree with a `succeeded` one? A `failed` record is never evidence that the call works.
+- If the atom is in a content map, `catalogue/<gateway>/map/`, review the page section and its `<AgentOnly>` note, not its file, which carries `generated: true`. Does every agent paragraph carry one of the four labels, and does the note state nothing the page and the specifications do not?
 - If the source hash has changed since the atom was written, has the atom been re-read against the new source?
 
 A response body presented as observed when it was never observed fails review immediately, regardless of how good the rest is.

@@ -32,7 +32,7 @@ Grouped by rule, with the file, line and the specific fix. Failures first, warni
 
 Two failures deserve special attention when you see them:
 
-- `verified is no longer a field; drop it` means an atom carries a `verified` block. Delete it; sandbox evidence lives in `catalogue/verification/`.
+- `verified is no longer a field; drop it` means an atom carries a `verified` block. Delete it; sandbox evidence lives in `catalogue/<gateway>/verification/`.
 - `compile.identifier-diff` means the prose pass invented something. Regenerate. Do not add the token to the Catalogue to clear the build.
 
 Full rule reference and fixes: `catalogue-linting` skill.
