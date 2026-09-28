@@ -125,6 +125,12 @@ for (const p of pages) {
   for (const id of [].concat(covers)) claimed.set(String(id).trim(), p);
 }
 
+// ---------- Rule -1: the atom registry names the section ----------
+// An atom whose words live on a page is listed in catalogue/map.yaml with the
+// published URL of its section, so its route is known exactly and wins.
+const mapPath = join(root, "catalogue", "map.yaml");
+const registryMap = existsSync(mapPath) ? (parse(readFileSync(mapPath, "utf8")) ?? {}) : {};
+
 // ---------- Rule 1: same spec operation ----------
 const apiPageByOperation = new Map();
 for (const p of pages) {
@@ -213,7 +219,13 @@ for (const [id, atom] of atoms) {
   const title = String(fm.title ?? "");
   let route = null, anchor = null, rule = null, confidence = null;
 
-  const claim = claimed.get(id);
+  const reg = registryMap[id];
+  if (reg?.url) {
+    const [r, a] = String(reg.url).split("#");
+    route = r; anchor = a ?? null;
+    rule = "named by catalogue/map.yaml"; confidence = "derived";
+  }
+  const claim = route ? null : claimed.get(id);
   if (claim) {
     const subject = title.split(",")[0].trim();
     const h = headingFor(claim.body, subject)

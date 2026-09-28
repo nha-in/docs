@@ -61,13 +61,19 @@ for (const [id, atom] of atoms) {
   // Sandbox evidence lives in catalogue/verification/, internal to contributors.
   if (fm.verified !== undefined) fail(file, "verified is no longer a field; drop it. Sandbox evidence lives in catalogue/verification/");
 
-  // The five sections, present and in order.
+  // The five sections, present and in order. A generated atom leaves out
+  // any section its page has nothing for, and build-sections.mjs writes the
+  // rest in order, so it needs only the first.
   const headings = [...body.matchAll(/^##\s+(.+?)\s*$/gm)].map((h) => h[1]);
   const found = SECTIONS.map((s) => headings.indexOf(s));
-  SECTIONS.forEach((s, i) => { if (found[i] === -1) fail(file, `missing mandatory section: ## ${s}`); });
-  if (found.every((i) => i !== -1)) {
-    for (let i = 1; i < found.length; i++) {
-      if (found[i] < found[i - 1]) { fail(file, `sections are out of order at "## ${SECTIONS[i]}"`); break; }
+  if (fm.generated === true) {
+    if (found[0] === -1) fail(file, "missing mandatory section: ## In plain words");
+  } else {
+    SECTIONS.forEach((s, i) => { if (found[i] === -1) fail(file, `missing mandatory section: ## ${s}`); });
+    if (found.every((i) => i !== -1)) {
+      for (let i = 1; i < found.length; i++) {
+        if (found[i] < found[i - 1]) { fail(file, `sections are out of order at "## ${SECTIONS[i]}"`); break; }
+      }
     }
   }
 

@@ -1,0 +1,54 @@
+// scripts/build-sections.test.mjs
+import {test} from 'node:test';
+import assert from 'node:assert';
+import {renderAtom, generatedPath, problems, registry} from './build-sections.mjs';
+
+const entry = {type: 'glossary', gateway: 'shared', milestone: 'n/a', title: 'Link token, the token that authorises linking', summary: 'Authorises linking.', page: 'g.mdx', heading: 'link-token', url: '/docs/g#link-token', related: {}};
+const page = '### Link token {#link-token}\n\nValid for six months.\n\n<AgentOnly>\n**When it goes wrong.** Validate it before every link.\n</AgentOnly>\n';
+
+test('a generated atom carries the page text and only the sections that have content', () => {
+  const md = renderAtom('shared.glossary.link-token', entry, {text: 'Valid for six months.', agent: {before: '', happens: '', worked: '', wrong: 'Validate it before every link.'}});
+  assert.match(md, /^---\nid: shared\.glossary\.link-token\n/);
+  assert.match(md, /generated: true/);
+  assert.match(md, /## In plain words\n\nValid for six months\./);
+  assert.match(md, /## When it goes wrong\n\nValidate it before every link\./);
+  for (const h of ['Before you start', 'What happens', 'How you know it worked']) assert.doesNotMatch(md, new RegExp(`## ${h}`));
+  assert.doesNotMatch(md, /Nothing beyond/);
+});
+
+test('agent text without a label fails, naming the atom and the fix', () => {
+  const unlabelled = page.replace('**When it goes wrong.** ', '');
+  const p = problems({map: {'shared.glossary.link-token': entry}, pages: {'g.mdx': unlabelled}, handIds: new Set(), specText: ''});
+  assert.ok(p.some((x) => x.includes('has agent text without a label')));
+});
+
+test('the generated file sits in the folder lint-atoms expects for its type', () => {
+  assert.equal(generatedPath('shared.glossary.link-token', entry), 'catalogue/generated/shared/glossary/link-token.md');
+});
+
+test('a clean map has no problems', () => {
+  assert.deepEqual(problems({map: {'shared.glossary.link-token': entry}, pages: {'g.mdx': page}, handIds: new Set(), specText: ''}), []);
+});
+
+test('a heading id the map needs, gone from the page, fails and names the atom', () => {
+  const p = problems({map: {'shared.glossary.link-token': entry}, pages: {'g.mdx': page.replace(' {#link-token}', '')}, handIds: new Set(), specText: ''});
+  assert.deepEqual(p, ['shared.glossary.link-token: heading id "link-token" is missing from g.mdx. Put {#link-token} back on the heading that holds its words, or point the atom at the section that now does']);
+});
+
+test('an atom written in two places fails', () => {
+  const p = problems({map: {'shared.glossary.link-token': entry}, pages: {'g.mdx': page}, handIds: new Set(['shared.glossary.link-token']), specText: ''});
+  assert.ok(p.some((x) => x.includes('is both a hand-written file and a map entry')));
+});
+
+test('an agent note that introduces a literal no page or spec states fails', () => {
+  const bad = page.replace('Validate it before every link.', 'Send `X-LINK-SECRET` on every link.');
+  // stays labelled: the replacement keeps the "**When it goes wrong.**" prefix
+  const p = problems({map: {'shared.glossary.link-token': entry}, pages: {'g.mdx': bad}, handIds: new Set(), specText: 'REQUEST-ID'});
+  assert.ok(p.some((x) => x.includes('agent note introduces `X-LINK-SECRET`')));
+});
+
+test('the registry lists page-sourced and hand-written atoms, with no prose', () => {
+  const r = registry({map: {'shared.glossary.link-token': entry}, hand: [{id: 'nhcx.error.payr-1107', type: 'error', gateway: 'nhcx', file: 'catalogue/nhcx/errors/payr-1107.md'}]});
+  assert.deepEqual(r.map((e) => [e.id, e.source]), [['nhcx.error.payr-1107', 'file'], ['shared.glossary.link-token', 'page']]);
+  assert.equal(JSON.stringify(r).includes('six months'), false);
+});

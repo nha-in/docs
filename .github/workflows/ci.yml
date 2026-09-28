@@ -49,6 +49,7 @@ jobs:
         env:
           DOCUSAURUS_URL: ''
       - run: npm run test:scripts
+      - run: npm run check:sections
       - run: npm run lint:questions
 
   lint-sources:

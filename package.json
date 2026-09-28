@@ -36,6 +36,8 @@
     "check:icons": "node scripts/build-sidebar-icons.mjs --check",
     "build:routes": "node scripts/build-atom-routes.mjs",
     "check:routes": "node scripts/build-atom-routes.mjs --check",
+    "build:sections": "node scripts/build-sections.mjs",
+    "check:sections": "node scripts/build-sections.mjs --check",
     "build:widget": "npm run build --workspace ai-widget",
     "test:widget": "npm test --workspace ai-widget",
     "test:postman": "node --test scripts/postman.test.mjs site/src/components/api/carry.test.mjs",

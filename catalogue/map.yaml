@@ -1,0 +1,3 @@
+# The atom registry: each atom id and the page section that holds its words.
+# An atom listed here has no hand-written file; its file in catalogue/generated/
+# is built from the page by scripts/build-sections.mjs.
