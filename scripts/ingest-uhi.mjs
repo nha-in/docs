@@ -35,9 +35,9 @@ const note = (module, op, what) => log.push(`| ${module} | \`${op}\` | ${what} |
 // NHA's role-grouped file, `host` who serves the call, `answer` the callback
 // that answers it.
 const MODULES = {
-  network: {label: 'Network and discovery', position: 1, title: 'UHI network and discovery', summary: 'The Gateway search, the discovery pair every service answers, and the network registry lookup.'},
-  consultation: {label: 'Physical Consultation', position: 2, title: 'UHI Physical Consultation', summary: 'Book, fulfil and cancel a physical consultation, directly between EUA and HSPA after discovery.', tag: 'Consultation (Tele + Physical)'},
-  ambulance: {label: 'Ambulance Booking', position: 3, title: 'UHI Ambulance Booking', summary: 'Send a patient\'s details to the chosen ambulance provider and get a quote and terms back.', tag: 'Ambulance'},
+  network: {label: 'Network and discovery', position: 1, icon: 'globe', title: 'UHI network and discovery', summary: 'The Gateway search, the discovery pair every service answers, and the network registry lookup.'},
+  consultation: {label: 'Physical Consultation', position: 2, icon: 'stethoscope', title: 'UHI Physical Consultation', summary: 'Book, fulfil and cancel a physical consultation, directly between EUA and HSPA after discovery.', tag: 'Consultation (Tele + Physical)'},
+  ambulance: {label: 'Ambulance Booking', position: 3, icon: 'ambulance', title: 'UHI Ambulance Booking', summary: 'Send a patient\'s details to the chosen ambulance provider and get a quote and terms back.', tag: 'Ambulance'},
 };
 const op = (module, name, path, host, extra = {}) => ({module, name, id: `uhi_${module}_${name}`, path, actual: extra.actual ?? path, role: extra.role ?? path, host, answer: extra.answer});
 const OPS = [
@@ -178,7 +178,7 @@ const sha = (file) => createHash('sha256').update(readFileSync(join(RAW, file)))
 const SOURCES = [ROLE_FILE, SERVICE_FILE].map((file) => ({file: `catalogue/openapi/.raw/${SET}/${file}`, role: 'upstream', hash: `sha256:${sha(file)}`, fetched: '2026-09-28'}));
 
 // ---- build -------------------------------------------------------------------
-const SIGN = 'Sign this request first: [Signing](/docs/uhi/v1/network/signing).';
+const SIGN = 'Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).';
 const RETRY = 'Retry behaviour: not yet published.';
 const isCallback = (o) => /^on_/.test(o.name);
 const clone = (v) => JSON.parse(JSON.stringify(v));
@@ -226,7 +226,7 @@ for (const [module, meta] of Object.entries(MODULES)) {
   specs[module] = {
     openapi: '3.1.1',
     info: {
-      'x-portal': {module, label: meta.label, position: meta.position},
+      'x-portal': {module, label: meta.label, position: meta.position, icon: meta.icon},
       title: meta.title,
       summary: meta.summary,
       description: infoDescription,

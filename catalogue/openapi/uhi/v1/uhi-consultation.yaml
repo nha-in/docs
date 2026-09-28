@@ -4,6 +4,7 @@ info:
     module: consultation
     label: Physical Consultation
     position: 2
+    icon: stethoscope
   title: UHI Physical Consultation
   summary: Book, fulfil and cancel a physical consultation, directly between EUA and HSPA after discovery.
   description: |-
@@ -49,7 +50,7 @@ paths:
       summary: /select (EUA → HSPA)
       operationId: uhi_consultation_select
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/network/signing).
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
 
         Select items from the catalog and build your order <br> <b><i>*Currently not being used for doctor search will be used in vaccination search</i></b>
       servers: &a1
@@ -151,7 +152,7 @@ paths:
       summary: /on_select (HSPA → EUA)
       operationId: uhi_consultation_on_select
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/network/signing).
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
 
         Send draft order object with quoted price for selected items<br> <b><i>*Currently not being used for doctor search will be used in vaccination search</i></b>
 
@@ -281,7 +282,7 @@ paths:
       summary: /init (EUA → HSPA)
       operationId: uhi_consultation_init
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/network/signing).
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
 
         Initialize an order by providing billing and/or shipping details<br>
       servers: *a1
@@ -438,7 +439,7 @@ paths:
       summary: /on_init (HSPA → EUA)
       operationId: uhi_consultation_on_init
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/network/signing).
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
 
         Send order object with payment details updated
 
@@ -672,7 +673,7 @@ paths:
       summary: /confirm (EUA → HSPA)
       operationId: uhi_consultation_confirm
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/network/signing).
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
 
         Confirms the order by agreeing to the fullfillment terms
       servers: *a1
@@ -905,7 +906,7 @@ paths:
       summary: /on_confirm (HSPA → EUA)
       operationId: uhi_consultation_on_confirm
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/network/signing).
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
 
         Send active order object
 
@@ -1348,7 +1349,7 @@ paths:
       summary: /status (EUA → HSPA)
       operationId: uhi_consultation_status
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/network/signing).
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
 
         Requests current status of the order.
       servers: *a1
@@ -1428,7 +1429,7 @@ paths:
       summary: /on_status (HSPA → EUA)
       operationId: uhi_consultation_on_status
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/network/signing).
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
 
         Send order object's current status
 
@@ -2152,7 +2153,7 @@ paths:
       summary: /cancel (EUA → HSPA)
       operationId: uhi_consultation_cancel
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/network/signing).
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
 
         Sends the cancellation request to other party.
       servers: *a1
@@ -2237,7 +2238,7 @@ paths:
       summary: /on_cancel (HSPA → EUA)
       operationId: uhi_consultation_on_cancel
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/network/signing).
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
 
         Receives the cancellation request from other party.
 
@@ -2613,7 +2614,7 @@ paths:
       summary: /on_update (HSPA → EUA)
       operationId: uhi_consultation_on_update_to_eua
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/network/signing).
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
 
         Order status update API between consumer and provider <br><b><i>(Both HSPA and EUA will be consuming the same on_update API)</i></b><br>
         The header Authorization is passed by HSPA to EUA
@@ -3340,7 +3341,7 @@ paths:
       summary: /on_update (EUA → HSPA)
       operationId: uhi_consultation_on_update_to_hspa
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/network/signing).
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
 
         Order status update API between consumer and provider <br><b><i>(Both HSPA and EUA will be consuming the same on_update API)</i></b><br>
         The header Authorization is passed by EUA to HSPA
@@ -3559,7 +3560,7 @@ paths:
       summary: /on_message (HSPA → EUA)
       operationId: uhi_consultation_on_message_to_eua
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/network/signing).
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
 
         Inter-operable communication API between consumer and provider <br><b><i>(Both HSPA and EUA will be consuming the same on_message API)</i></b>
 
@@ -3700,7 +3701,7 @@ paths:
       summary: /on_message (EUA → HSPA)
       operationId: uhi_consultation_on_message_to_hspa
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/network/signing).
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
 
         Inter-operable communication API between consumer and provider <br><b><i>(Both HSPA and EUA will be consuming the same on_message API)</i></b>
 
@@ -3839,7 +3840,7 @@ paths:
       summary: "/api/v1/uhi/on_confirm_audit (HSPA → Gateway (audit)): Accepter for all the on_confirm_audit response from the HSPAs"
       operationId: uhi_consultation_on_confirm_audit
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/network/signing).
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
 
         Accepter for all the on_confirm_audit response from the HSPAs
 
@@ -4280,7 +4281,7 @@ paths:
       summary: "/api/v1/uhi/on_status_audit (HSPA → Gateway (audit)): Accepter for all the on_status_audit response from the HSPAs"
       operationId: uhi_consultation_on_status_audit
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/network/signing).
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
 
         Accepter for all the on_status_audit response from the HSPAs
 
@@ -5000,7 +5001,7 @@ paths:
       summary: "/api/v1/uhi/on_update_audit (HSPA → Gateway (audit)): Accepter for all the on_update_audit response from the HSPAs"
       operationId: uhi_consultation_on_update_audit
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/network/signing).
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
 
         Accepter for all the on_update_audit response from the HSPAs
 
@@ -5559,7 +5560,7 @@ paths:
       summary: "/api/v1/uhi/on_cancel_audit (HSPA → Gateway (audit)): Accepter for all the on_cancel_audit response from the HSPAs"
       operationId: uhi_consultation_on_cancel_audit
       description: |-
-        Sign this request first: [Signing](/docs/uhi/v1/network/signing).
+        Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).
 
         Accepter for all the on_cancel_audit response from the HSPAs
 
