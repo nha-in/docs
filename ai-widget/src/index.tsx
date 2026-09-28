@@ -1270,11 +1270,7 @@ function Panel({
             is fine: the oldest exchanges simply stop being sent. */}
         {memory.full && !busy && continued !== conversation.current && (
           <div class="ask-ai__window-offer" role="status">
-            <p>
-              This chat has reached the {memory.window} exchanges I carry with each
-              question. If it goes on, the oldest stop being sent. For a new topic,
-              a new chat keeps everything in view.
-            </p>
+            <p>Context window has expired. Past turns will no longer be part of this session.</p>
             <div class="ask-ai__window-offer-actions">
               <button type="button" class="ask-ai__window-offer-new" onClick={reset}>
                 Start a new chat

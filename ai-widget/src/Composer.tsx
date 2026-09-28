@@ -310,10 +310,7 @@ export function Composer(props: Props) {
 
       {/* Said once, under the chat bar, where it is seen before anything is
           asked and after every answer. */}
-      <p class="ask-ai__disclaimer">
-        Answers are AI generated and can be wrong. Check the sources listed
-        under each one.
-      </p>
+      <p class="ask-ai__disclaimer">This bot is AI, it can make mistakes.</p>
     </div>
   );
 }
