@@ -23,6 +23,8 @@ export function renderAtom(id, e, s) {
   const fm = {
     id, type: e.type, gateway: e.gateway, milestone: e.milestone, version: 'abdm-v3',
     title: e.title, summary: e.summary, generated: true,
+    // Atom contract v2 fields travel from the map entry when it sets them.
+    ...Object.fromEntries(['operation', 'side', 'status', 'superseded_by', 'facts'].filter((k) => e[k] !== undefined).map((k) => [k, e[k]])),
     sources: [{url: `https://github.com/nha-in/docs/blob/main/${e.page}`, status: 'page', note: `Generated from ${e.page}#${e.heading}. Edit the page, never this file.`}],
     related: e.related ?? {},
   };
