@@ -46,8 +46,15 @@ Agents and commands are hand-written, as HIE-CM's are, and carry no endpoint fac
 
 ## Tasks
 
-- [ ] **P1. Generator.** UHI loops in `compile-skills.mjs`; `scripts/lib/uhi-skills.mjs` assembles the six folders; `build-skills.mjs` emits them to the plugin and the site; `validate-skills.mjs` checks them. Tests first.
-- [ ] **P2. Plugin shell.** Manifest, MCP config, README, two agents, three commands.
-- [ ] **P3. Registration.** Marketplace, cross-client manifests, version check, CI.
-- [ ] **P4. Site.** UHI skills on the Build with AI page, install prompt and index.
-- [ ] **P5. Plan and contributor plugin.** A UHI skill is built; the plan says where.
+- [x] **P1. Generator.** UHI loops in `compile-skills.mjs`; `scripts/lib/uhi-skills.mjs` assembles the six folders; `build-skills.mjs` emits them to the plugin and the site; `validate-skills.mjs` checks them. Tests first.
+- [x] **P2. Plugin shell.** Manifest, MCP config, README, two agents, three commands.
+- [x] **P3. Registration.** Marketplace, cross-client manifests, version check, CI.
+- [x] **P4. Site.** UHI skills on the Build with AI page, install prompt and index.
+- [x] **P5. Plan and contributor plugin.** A UHI skill is built; the plan says where.
+
+## As built
+
+- Six skills, each a router and five references, compiled by `scripts/lib/uhi-skills.mjs` and folded in by `build-skills.mjs`. Every journey's exit condition is its flow atom's "How you know it worked"; a missing one fails the build.
+- **Left out on purpose.** The HIE-CM practices (`shared.concept.integration-practices`) and codebase survey (`shared.concept.survey-an-existing-codebase`): both are written for HIE-CM, with its certificates, `REQUEST-ID`, `TIMESTAMP` and ABHA columns. The scaffold opens with UHI's four registration steps instead.
+- **Checks.** `validate-skills` runs the loop rules on `uhi-*-build` (`## Journeys`) and `uhi-*-debug` (`## Symptoms`), and checks every UHI folder cites only atoms that exist and links only inside itself. `check-build-assets` reads `uhi-index.json` and `agent-setup/uhi.md`. CI validates the plugin and diffs its skills against a fresh compile.
+- **Site.** The UHI Build with AI page installs the plugin and each skill; `SkillInstall` describes a UHI skill's sections in UHI terms rather than NHCX's.
