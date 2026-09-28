@@ -1,21 +1,67 @@
 ---
-title: Physical consultation
-sidebar_label: Physical consultation
+title: 'Physical Consultation: Find, book and visit a doctor'
+sidebar_label: Physical Consultation
 sidebar_position: 1
-description: Doctor discovery, appointment booking, PIN check-in and the full appointment lifecycle on UHI.
-source: UHI__UHI_Physical_Consultation_v2.0_-_Onboarding_Document.md
+sidebar_custom_props:
+  roles: [eua, hspa]
+description: A patient finds a doctor, books a slot, receives a 4-digit PIN and checks in at the clinic, through one UHI integration.
+source: UHI developer guide of 22 September 2026, sections 2.1 and 3.1; UHI Physical Consultation v2.0 Onboarding Document (June 2026), sections 6 to 9 and Appendix A
 sidebar_class_name: sidebar-icon sidebar-icon--stethoscope
 ---
 
-# Physical consultation
+import ApiLinks from '@site/src/components/docs/ApiLinks';
 
-Physical consultation is the fullest service on [UHI](/docs/uhi/v1/getting-started/glossary#uhi). A patient searches for a doctor, then sees real slots and fees from clinics they have no prior relationship with. They book one, and receive a 4-digit PIN to present at the clinic. After this page you will know the four stages, the endpoints each role exposes, and the fields on every call, as [NHA](/docs/uhi/v1/getting-started/glossary#nha) documents them.
+# Physical Consultation: Find, book and visit a doctor
 
-Read [UHI services](/docs/uhi/v1) first, for the `context` block, the acknowledgement model, signing and the two transports.
+Physical Consultation is the one end-to-end service on the
+[Unified Health Interface](/docs/uhi/v1/getting-started/glossary#uhi) (UHI).
+A patient finds a doctor, picks a slot, books it, receives a 4-digit PIN and
+checks in at the clinic with it. Discovery, booking, fulfilment and
+post-fulfilment run as one transaction between an
+[End User Application](/docs/uhi/v1/getting-started/glossary#eua) (EUA) and a
+[Health Service Provider Application](/docs/uhi/v1/getting-started/glossary#hspa)
+(HSPA).
 
-## Where this service stands
+<ApiLinks platform="uhi" version="v1" module="consultation" />
 
-The full consultation lifecycle is the first phase, live and open for onboarding. Online payment and refunds are the second phase, in ideation. Today the only payment model is pay on visit.
+## In short
+
+- Only discovery goes through the UHI Gateway. From `init` onwards, the EUA and
+  the HSPA call each other directly, point to point (P2P).
+- There are two searches. The first is broadcast and returns doctors. The second
+  goes to the chosen HSPA and returns that doctor's slots.
+- Booking is `init`, `on_init`, `confirm`, `on_confirm`. The HSPA holds the slot
+  for 15 minutes and sends five terms, which the EUA returns as `AGREED`.
+- `on_confirm` carries a 4-digit PIN. Keep it in memory only, never in a
+  database or a log.
+- The HSPA sends an exact copy of every `on_confirm`, `on_status`, `on_update`
+  and `on_cancel` to the matching Gateway `_audit` endpoint.
+
+## Physical Consultation functionalities
+
+Any EUA or HSPA can integrate. An HSPA represents one or more Health Service
+Providers (HSPs): hospitals, clinics or individual doctors.
+
+| In scope today | Not in scope today |
+| --- | --- |
+| Doctor discovery by name, [HPR](/docs/uhi/v1/getting-started/glossary#hpr) ID, speciality, city, pincode, GPS or facility name | Online payment before booking |
+| Real-time slot selection | Refunds through the UHI flow |
+| Booking with terms the patient accepts | |
+| PIN-based check-in at the facility | |
+| Status tracking and cancellation | |
+| Pay on visit | |
+
+## Prerequisites
+
+1. Complete [Milestone 2](/docs/hiecm/v3/milestones/m2) of [HIE-CM](/docs/uhi/v1/getting-started/glossary#hie-cm). An
+   application without M2 cannot be onboarded onto any UHI service.
+2. Expose a public HTTPS callback URL. Results arrive later on this URL:
+   `consumer_uri` for an EUA, `provider_uri` for an HSPA.
+3. Generate an Ed25519 key pair with the
+   [header generator utility](https://github.com/NHA-ABDM/UHI/tree/main/header_generator_utility)
+   and share only the public key. See [Signing](/docs/uhi/v1/concepts/signing).
+4. Handle calls asynchronously. Accept an ACK now, and match the real answer,
+   which arrives later, by `transaction_id`.
 
 ## Service identity
 
@@ -25,574 +71,378 @@ Every call in this service carries these fixed values.
 | --- | --- |
 | `context.domain` | `nic2004:85111` |
 | `context.core_version` | `0.7.1` |
-| `message.intent.fulfillment.type` | `Physical` (case sensitive) |
+| `message.intent.fulfillment.type` | `Physical`, case sensitive |
 | `message.intent.item.descriptor.code` | `Consultation` |
 | `message.intent.item.descriptor.name` | `Consultation` |
 
-## Who is involved
+## Workflow overview
 
-| Actor | Role here |
+The calls run in this order.
+
+| Use case | # | Call | Route |
+| --- | --- | --- | --- |
+| 1. Discovery | 1 | `search` (first, broadcast) | EUA to UHI Gateway |
+| | 2 | `search` (forwarded) | UHI Gateway to HSPA |
+| | 3 | `on_search` (doctor catalog) | HSPA to UHI Gateway |
+| | 4 | `on_search` | UHI Gateway to EUA |
+| | 5 | `search` (second, for slots) | EUA to HSPA |
+| | 6 | `on_search` (slots) | HSPA to EUA |
+| 2. Order | 1 | `init` | EUA to HSPA |
+| | 2 | `on_init` (`order.id`, quote, terms) | HSPA to EUA |
+| | 3 | `confirm` (terms `AGREED`) | EUA to HSPA |
+| | 4 | `on_confirm` (`CONFIRMED`, PIN) | HSPA to EUA |
+| | 5 | `on_confirm_audit` | HSPA to UHI Gateway |
+| 3. Fulfilment | 1 | `status` | EUA to HSPA |
+| | 2 | `on_status` | HSPA to EUA |
+| | 3 | `on_status_audit` | HSPA to UHI Gateway |
+| | 4 | `on_update` (`DOCTOR_NO_SHOW`) | EUA to HSPA |
+| | 5 | `on_update` (lifecycle states) | HSPA to EUA |
+| | 6 | `on_update_audit` | HSPA to UHI Gateway |
+| 4. Post-fulfilment | 1 | `cancel` | EUA to HSPA |
+| | 2 | `on_cancel` | HSPA to EUA |
+| | 3 | `on_cancel_audit` | HSPA to UHI Gateway |
+| | 4 | `on_message` | EUA to HSPA |
+| | 5 | `on_message` | HSPA to EUA |
+
+The specification also lists `select` and `on_select`. Do not implement them
+for this service: go from the second `on_search` straight to `init`.
+
+Each role exposes these endpoints.
+
+| Role | Endpoints |
 | --- | --- |
-| [EUA](/docs/uhi/v1/getting-started/glossary#eua) | The patient facing app. Searches, books, shows the PIN and the status. |
-| [HSPA](/docs/uhi/v1/getting-started/glossary#hspa) | The provider platform. Holds doctor profiles and slots, confirms bookings, generates the PIN, drives the lifecycle. |
-| HSP | The hospital, clinic or doctor. The HSPA is its digital interface. |
-| [Gateway](/docs/uhi/v1/getting-started/glossary#gateway) | The routing layer. Involved in discovery only. |
-| NHA | Network operator. Governs onboarding, compliance and the protocol. |
+| HSPA | `/search`, `/init`, `/confirm`, `/status`, `/cancel`, `/on_update`, `/on_message` |
+| EUA | `/on_search`, `/on_init`, `/on_confirm`, `/on_status`, `/on_update`, `/on_cancel`, `/on_message` |
 
-## The flow end to end
+`/on_message` is mandatory for an EUA and optional for an HSPA.
+
+## Journey 1: discovery
+
+The patient searches by doctor, speciality or location. The Gateway broadcasts
+the first search to every HSPA in the domain, and each matching HSPA answers
+with its own catalog. The EUA then asks the chosen HSPA directly for the
+doctor's slots.
 
 ```mermaid
 sequenceDiagram
+    autonumber
     participant P as Patient
-    participant EUA as Your EUA
-    participant GW as HIE-CM gateway
+    participant E as EUA
+    participant G as UHI Gateway
     participant H as HSPA
-    P->>EUA: Search for a cardiologist
-    EUA->>GW: search (broadcast)
-    GW->>H: search
-    H->>GW: on_search (doctor catalog)
-    GW->>EUA: on_search
-    P->>EUA: Pick Dr Mehra
-    EUA->>H: search (direct, for that doctor's slots)
-    H->>EUA: on_search (slots)
-    P->>EUA: Pick a slot
-    EUA->>H: init
-    H->>EUA: on_init (order id, quote, 5 terms)
-    P->>EUA: Agree to terms
-    EUA->>H: confirm (all terms AGREED)
-    H->>EUA: on_confirm (CONFIRMED, 4-digit PIN)
-    Note over P,H: Patient visits the clinic and shows the PIN
-    H->>EUA: on_update (APPOINTMENT_STARTED)
-    H->>EUA: on_update (COMPLETED)
+    P->>E: Search filters (doctor, speciality, location)
+    E->>G: search (first, broadcast)
+    G->>H: search
+    H->>G: on_search (doctor catalog, provider_uri)
+    G->>E: on_search
+    P->>E: Selects doctor
+    E->>H: search (second, direct)
+    H->>E: on_search (time slots)
 ```
 
-## Stage by stage
+The first search filters are all optional, on top of the service identity and
+the time window.
 
-| Stage | Calls | Transport |
-| --- | --- | --- |
-| 1. Discovery | `search` and `on_search`, twice | First pair via the gateway, second pair direct |
-| 2. Booking | `init`, `on_init`, `confirm`, `on_confirm` | Direct |
-| 3. Fulfilment | `status`, `on_status`, `on_update` | Direct |
-| 4. Post-fulfilment | `cancel`, `on_cancel`, `on_message` | Direct |
+| Filter | Field |
+| --- | --- |
+| Doctor name | `fulfillment.agent.name` |
+| HPR ID | `fulfillment.agent.id` |
+| Speciality | `category.descriptor` |
+| City | `location.city` |
+| Pincode | `address.area_code` |
+| Facility name | `provider.descriptor.name` |
+| GPS with radius | `location.gps` and `location.radius` |
 
-## Endpoints you expose
+A GPS search needs all three radius fields: `type: CONSTANT`, `value`, and
+`unit: km`. If one is missing, the filter is ignored without an error.
 
-An HSPA exposes these. Everything except the first `search` is called by an EUA directly.
+Start with the first call:
+[search](/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-discovery/01-uhi-network-gateway-search).
 
-| Endpoint | Called by | What you do |
-| --- | --- | --- |
-| `/search` (first) | Gateway broadcast, with `X-Gateway-Authorization` | Query your doctor catalog, answer via `on_search` |
-| `/search` (second) | EUA, direct | Return slots for the selected doctor |
-| `/init` | EUA, direct | Hold the slot, answer with terms via `on_init` |
-| `/confirm` | EUA, direct | Confirm the appointment, return the PIN via `on_confirm` |
-| `/status` | EUA, direct | Return the current order state via `on_status` |
-| `/cancel` | EUA, direct | Process the cancellation, answer via `on_cancel` |
-| `/on_update` | EUA, direct | Receive a `DOCTOR_NO_SHOW` state from the EUA |
-| `/on_message` | EUA, direct | Receive a chat message or file from the patient |
+## Journey 2: order
 
-An EUA exposes these. Everything except the first `on_search` is called by the HSPA directly.
+The EUA sends the patient and the slot. The HSPA holds the slot, assigns the
+order id and returns the quote and five terms. Once the patient agrees, the HSPA
+confirms and issues the PIN.
 
-| Endpoint | Called by | What you do |
-| --- | --- | --- |
-| `/on_search` (first) | Gateway, with `X-Gateway-Authorization` | Aggregate catalogs, store each `provider_uri` |
-| `/on_search` (second) | HSPA, direct | Show the slots for the chosen doctor |
-| `/on_init` | HSPA, direct | Show all terms to the patient, store `order.id` |
-| `/on_confirm` | HSPA, direct | Show the PIN, store the order |
-| `/on_status` | HSPA, direct | Replace your stored order state |
-| `/on_update` | HSPA, direct | Update state and notify the patient |
-| `/on_cancel` | HSPA, direct | Mark the appointment cancelled |
-| `/on_message` | HSPA, direct | Show the message from the provider. Mandatory for an EUA |
-
-## Stage 1: discovery
-
-### First search, broadcast
-
-Your EUA posts to the gateway. The gateway validates your signature and the domain, then forwards to every registered HSPA in that domain. Search filters go in `message.intent`.
-
-```http
-POST https://uhigatewaysandbox.abdm.gov.in/api/v1/uhi/search
+```mermaid
+sequenceDiagram
+    autonumber
+    participant P as Patient
+    participant E as EUA
+    participant G as UHI Gateway
+    participant H as HSPA
+    P->>E: Selects slot
+    E->>H: init (patient, slot)
+    H->>E: on_init (order.id, quote, terms)
+    P->>E: Agrees to terms
+    E->>H: confirm (terms AGREED)
+    H->>E: on_confirm (CONFIRMED, PIN)
+    H->>G: on_confirm_audit (exact copy of on_confirm)
 ```
 
-
-| Field | Type | Required | What it is |
-| --- | --- | --- | --- |
-| `fulfillment.type` | string | Yes | `Physical`. Case sensitive |
-| `fulfillment.agent.name` | string | No | Doctor name, for a name search |
-| `fulfillment.agent.id` | string | No | Doctor [HPR](/docs/uhi/v1/getting-started/glossary#hpr) address, for example `<HPR_ADDRESS>` |
-| `fulfillment.start.time.timestamp` | datetime | Yes | Start of the search window |
-| `fulfillment.end.time.timestamp` | datetime | Yes | End of the search window |
-| `item.descriptor.code` | string | Yes | `Consultation` |
-| `item.descriptor.name` | string | Yes | `Consultation` |
-| `category.descriptor.code` | string | No | Speciality code, for example `CARDIOLOGY` |
-| `category.descriptor.name` | string | No | Speciality name, for example `Cardiology` |
-| `location.gps` | string | Conditional | `latitude,longitude` for a proximity search |
-| `location.radius.type` | string | Conditional | `CONSTANT` when using GPS |
-| `location.radius.value` | string | Conditional | Radius in km, for example `"10"` |
-| `location.radius.unit` | string | Conditional | `km` |
-| `location.city.name` | string | No | City name |
-| `location.city.code` | string | No | City STD code |
-| `address.area_code` | string | No | 6-digit pincode |
-| `provider.descriptor.name` | string | No | Facility name |
-| `provider.id` | string | No | Provider ID, used in the second search |
-
-A search by state and district:
+An excerpt of a confirmed `on_confirm`:
 
 ```json
 {
-  "context": {
-    "action": "search",
-    "city": "std:011",
-    "consumer_id": "<YOUR_EUA_ID_FROM_NHA_ONBOARDING>",
-    "consumer_uri": "<YOUR_HTTPS_CALLBACK_URL>",
-    "core_version": "0.7.1",
-    "country": "IND",
-    "domain": "nic2004:85111",
-    "message_id": "e9a19230-f951-11ec-b135-53aea776f66b",
-    "timestamp": "2026-06-18T06:52:13.969464Z",
-    "transaction_id": "e9a19230-f951-11ec-b135-53aea776f66b"
-  },
-  "message": {
-    "intent": {
-      "fulfillment": {
-        "type": "Physical",
-        "start": { "time": { "timestamp": "2026-06-18T10:37:32" } },
-        "end": { "time": { "timestamp": "2026-06-18T23:59:59" } }
-      },
-      "item": {
-        "descriptor": { "code": "Consultation", "name": "Consultation" }
-      },
-      "location": {
-        "state": { "name": "MAHARASHTRA", "code": "27" },
-        "district": { "name": "PUNE", "code": "490" }
+  "order": {
+    "id": "3714-330853-9384",
+    "state": "CONFIRMED",
+    "fulfillment": {
+      "id": "79db6b5b-afe4-4297-b9b1-5148ed45372c",
+      "type": "Physical",
+      "tags": {
+        "@abdm/gov.in/slot_id": "79db6b5b-afe4-4297-b9b1-5148ed45372c",
+        "@abdm/gov.in/messaging_support": "true",
+        "@abdm/gov.in/helpline_number": ""
       }
+    },
+    "authorization": {
+      "type": "PIN",
+      "token": "3774",
+      "valid_from": "2026-06-18T00:00:00",
+      "valid_to": "2026-06-18T23:59:00",
+      "status": "GENERATED"
     }
   }
 }
 ```
 
-Three warnings apply to this call:
+Start with the first call:
+[init](/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-order/01-uhi-consultation-init).
 
-- A GPS search needs all three radius fields. Omit any one and the GPS filter is ignored without an error.
-- The `transaction_id` in `search` must match the one in the `on_search` that answers it, or you cannot correlate the response.
-- More filter combinations exist. The Swagger spec is the list.
+## Journey 3: fulfilment
 
-### First on_search, the catalog
+The patient shows the PIN at the facility. The HSPA pushes each state change to
+the EUA with `on_update`. The EUA calls `status` only when an expected update
+never arrives.
 
-Each matching HSPA answers independently, so you receive several. Aggregate them on `transaction_id`.
-
-| Field | Required | What it is |
-| --- | --- | --- |
-| `context.provider_uri` | Yes | The HSPA base URL. Store this. Every later call goes here |
-| `message.catalog.descriptor.name` | Yes | HSPA name |
-| `catalog.providers[].id` | Yes | Provider or hospital ID within this HSPA |
-| `catalog.providers[].descriptor.name` | Yes | Hospital or clinic name |
-| `catalog.providers[].categories[].descriptor.name` | Yes | Speciality name |
-| `catalog.providers[].categories[].descriptor.code` | Yes | Speciality code |
-| `catalog.providers[].fulfillments[].id` | Yes | Slot UUID. This becomes `fulfillment.id` in `init` |
-| `catalog.providers[].fulfillments[].type` | Yes | `Physical` |
-| `catalog.providers[].fulfillments[].agent.id` | Yes | Doctor HPR ID |
-| `catalog.providers[].fulfillments[].agent.name` | Yes | Doctor's registered name |
-| `catalog.providers[].fulfillments[].agent.gender` | No | `M` or `F` |
-| `catalog.providers[].fulfillments[].agent.tags` | No | `@abdm/gov.in/experience`, `/languages`, `/education`, `/hpr_id`, `/hfr_id`, `/hip_id` |
-| `catalog.providers[].fulfillments[].start.time.timestamp` | Yes | Slot start |
-| `catalog.providers[].fulfillments[].end.time.timestamp` | Yes | Slot end |
-| `catalog.providers[].items[].id` | Yes | Item ID. This becomes `order.item.id` in `init` |
-| `catalog.providers[].items[].price.value` | Yes | Fee in INR, as a decimal string |
-| `catalog.providers[].items[].fulfillment_id` | Yes | Links the item to its slot |
-| `catalog.providers[].location.gps` | No | Provider coordinates |
-| `catalog.providers[].location.address` | No | Provider street address |
-
-Trimmed to one provider:
-
-```json
-{
-  "context": {
-    "domain": "nic2004:85111",
-    "action": "on_search",
-    "consumer_id": "<YOUR_EUA_ID_FROM_NHA_ONBOARDING>",
-    "provider_id": "hspa-nha",
-    "provider_uri": "https://hspasbx.abdm.gov.in/api/v1/hspa",
-    "transaction_id": "a1b2c3d4-f951-11ec-b135-53aea776f66b",
-    "message_id": "b2c3d4e5-f951-11ec-b135-53aea776f66b"
-  },
-  "message": {
-    "catalog": {
-      "descriptor": { "name": "ABDM Reference HSPA" },
-      "providers": [
-        {
-          "id": "1",
-          "descriptor": { "name": "Safdarjung Medical Centre" },
-          "categories": [
-            { "id": "201", "parent_category_id": "101", "descriptor": { "name": "Cardiology", "code": "CARDIOLOGY" } },
-            { "id": "101", "descriptor": { "name": "Allopathy", "code": "ALLOPATHY" } }
-          ],
-          "fulfillments": [
-            {
-              "id": "slot-uuid-a1b2c3d4-abcd-1234-efgh-567890abcdef",
-              "type": "Physical",
-              "agent": {
-                "id": "<HPR_ADDRESS>",
-                "name": "Dr. Priya Mehra",
-                "gender": "F",
-                "tags": {
-                  "@abdm/gov.in/experience": "8.0",
-                  "@abdm/gov.in/languages": "Hindi, English",
-                  "@abdm/gov.in/education": "MBBS, MD Cardiology",
-                  "@abdm/gov.in/hpr_id": "<HPR_ID>"
-                }
-              },
-              "start": { "time": { "timestamp": "2026-04-16T10:00:00" } },
-              "end": { "time": { "timestamp": "2026-04-16T10:20:00" } }
-            }
-          ],
-          "items": [
-            {
-              "id": "0",
-              "descriptor": { "name": "Consultation", "code": "CONSULTATION" },
-              "price": { "currency": "INR", "value": "500.0" },
-              "fulfillment_id": "slot-uuid-a1b2c3d4-abcd-1234-efgh-567890abcdef"
-            }
-          ],
-          "location": {
-            "gps": "28.635308,77.224960",
-            "address": "Safdarjung Enclave, New Delhi 110029",
-            "city": { "name": "Delhi", "code": "011" }
-          }
-        }
-      ]
-    }
-  }
-}
+```mermaid
+sequenceDiagram
+    autonumber
+    participant P as Patient
+    participant E as EUA
+    participant G as UHI Gateway
+    participant H as HSPA
+    P->>H: Presents PIN at facility
+    H->>E: on_update (APPOINTMENT_STARTED)
+    H->>G: on_update_audit
+    H->>E: on_update (COMPLETED)
+    H->>G: on_update_audit
+    opt An expected on_update never arrives
+        E->>H: status
+        H->>E: on_status
+        H->>G: on_status_audit
+    end
+    opt The doctor does not appear
+        E->>H: on_update (DOCTOR_NO_SHOW)
+    end
 ```
 
-An HSPA sends the full `agent.tags` set including `@abdm/gov.in/hip_id`. That ID is what lets records generated at the visit be pulled later.
+The appointment moves through these states. Only `DOCTOR_NO_SHOW` starts from
+the EUA. Every other state change comes from the HSPA.
 
-### Second search, direct
-
-After the patient picks a doctor, your EUA sends a second `search` straight to the HSPA's `provider_uri`, asking for that doctor's slots in a time window. It carries `provider_id` and `provider_uri` in the context, and echoes the `provider`, `fulfillments` and `items` blocks from the first `on_search`. The HSPA answers with a second `on_search` scoped to that doctor.
-
-## Stage 2: booking
-
-### init
-
-Direct to the HSPA. You send the patient's details and the chosen slot. The HSPA holds the slot temporarily.
-
-| Field | Required | What it is |
-| --- | --- | --- |
-| `order.provider.id` | Yes | Provider ID from the catalog |
-| `order.item.id` | Yes | Item ID from the catalog |
-| `order.item.descriptor.code` | Yes | `Consultation` |
-| `order.item.descriptor.name` | Yes | `Consultation` |
-| `order.item.price.currency` | No | `INR` |
-| `order.item.price.value` | No | Fee as a decimal string |
-| `order.item.fulfillment_id` | Yes | Slot UUID from the catalog |
-| `order.fulfillment.id` | Yes | The same slot UUID |
-| `order.fulfillment.type` | Yes | `Physical` |
-| `order.fulfillment.agent.id` | Yes | Doctor HPR ID |
-| `order.fulfillment.agent.name` | Yes | Doctor's registered name |
-| `order.fulfillment.start.time.timestamp` | Yes | Slot start |
-| `order.fulfillment.end.time.timestamp` | Yes | Slot end |
-| `order.fulfillment.tags` | Conditional | `@abdm/gov.in/slot_id` is mandatory and holds the slot UUID |
-| `order.billing.name` | Yes | Patient billing name |
-| `order.billing.address` | Yes | Object with `door`, `name`, `locality`, `city`, `state`, `country`, `area_code` |
-| `order.billing.phone` | Yes | 10-digit contact number |
-| `order.billing.email` | No | Patient email |
-| `order.customer.id` | Yes | Patient [ABHA](/docs/uhi/v1/getting-started/glossary#abha) address, for example `rahul.k001@sbx` |
-| `order.customer.person.gender` | No | `M` or `F` |
-| `order.customer.person.dob` | No | `YYYY-MM-DD` |
-| `order.payment.type` | Yes | `ON-ORDER` for pay on visit. Other values: `PRE-FULFILLMENT`, `ON-FULFILLMENT` |
-| `order.payment.params.redirect_url` | No | Payment callback URL |
-
-```json
-{
-  "context": {
-    "domain": "nic2004:85111",
-    "country": "IND",
-    "city": "std:011",
-    "action": "init",
-    "core_version": "0.7.1",
-    "consumer_id": "<YOUR_EUA_ID_FROM_NHA_ONBOARDING>",
-    "consumer_uri": "<YOUR_HTTPS_CALLBACK_URL>",
-    "provider_id": "hspa-nha",
-    "provider_uri": "https://hspasbx.abdm.gov.in/api/v1/hspa",
-    "transaction_id": "a1b2c3d4-f951-11ec-b135-53aea776f66b",
-    "message_id": "d4e5f6a7-32af-11ef-bcbe-590b07ce8c90",
-    "timestamp": "2026-04-15T09:10:00Z"
-  },
-  "message": {
-    "order": {
-      "provider": { "id": "1" },
-      "item": {
-        "id": "0",
-        "descriptor": { "name": "Consultation", "code": "CONSULTATION" },
-        "price": { "currency": "INR", "value": "500.0" },
-        "fulfillment_id": "slot-uuid-a1b2c3d4-abcd-1234-efgh-567890abcdef"
-      },
-      "fulfillment": {
-        "id": "slot-uuid-a1b2c3d4-abcd-1234-efgh-567890abcdef",
-        "type": "Physical",
-        "agent": { "id": "<HPR_ADDRESS>", "name": "Dr. Priya Mehra" },
-        "start": { "time": { "timestamp": "2026-04-16T10:00:00" } },
-        "end": { "time": { "timestamp": "2026-04-16T10:20:00" } }
-      },
-      "billing": {
-        "name": "Rahul Kumar Sharma",
-        "address": {
-          "door": "B-204",
-          "name": "Rahul Kumar Sharma",
-          "locality": "Rohini Sector 14",
-          "city": "Delhi",
-          "state": "Delhi",
-          "country": "INDIA",
-          "area_code": "110085"
-        },
-        "phone": "<MOBILE_NUMBER>",
-        "email": "patient@example.org"
-      },
-      "customer": {
-        "id": "rahul.k001@sbx",
-        "person": { "gender": "M", "dob": "1990-05-15", "dayOfBirth": 15, "monthOfBirth": 5, "yearOfBirth": 1990 }
-      },
-      "payment": {
-        "type": "ON-ORDER",
-        "params": { "redirect_url": "<YOUR_PAYMENT_REDIRECT_URL>" }
-      }
-    }
-  }
-}
+```mermaid
+stateDiagram-v2
+    [*] --> CONFIRMED: on_confirm
+    [*] --> FAILED: on_confirm
+    CONFIRMED --> APPOINTMENT_STARTED: HSPA on_update
+    APPOINTMENT_STARTED --> COMPLETED: HSPA on_update
+    CONFIRMED --> CANCELLED: cancel / on_cancel
+    CONFIRMED --> NO_SHOW: HSPA on_update
+    CONFIRMED --> DOCTOR_NO_SHOW: EUA on_update
 ```
 
-Two warnings:
+Start with the first call:
+[status](/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-fulfilment/01-uhi-consultation-status).
 
-- `fulfillment.id` must be exactly the slot UUID from `on_search`. A mismatch makes the HSPA reject the call or fail to hold the slot without telling you.
-- The hold is short, typically 15 minutes. If `confirm` does not arrive in time the slot is released and you start again at `init`.
+## Journey 4: post-fulfilment
 
-### on_init, the terms
+A cancellation takes the place of fulfilment. The patient cancels through the
+EUA, or the doctor cancels through the HSPA. Either side sends the other a
+message with `on_message`.
 
-The HSPA answers with the order ID, an itemised quote, and five term objects the patient has to accept.
-
-| Field added by the HSPA | What it is |
-| --- | --- |
-| `order.id` | The HSPA's order ID, generated here. Send it in every later call. Use an alphanumeric string, for example `AHS12345` |
-| `order.terms[]` | Five term objects, each with `termsState: "INITIATED"` |
-| `order.quote` | Price breakup: consultation, SGST, CGST, registration |
-| `order.payment.type` | `ON-ORDER`, `FREE` or `PRE-ORDER` |
-| `order.payment.status` | `NOT_PAID` or `FREE` |
-
-Each term object:
-
-| Field | Required | What it is |
-| --- | --- | --- |
-| `terms[].type` | Yes | `Commercial`, `Settlement`, `Cancellation`, `Refund` or `Payment` |
-| `terms[].descriptor.name` | Yes | Term title |
-| `terms[].descriptor.short_desc` | No | Brief description |
-| `terms[].descriptor.long_desc` | No | Full text. Show this to the patient |
-| `terms[].reasonRequired` | Yes | If true, a reason is needed when this term is actioned |
-| `terms[].timePeriod` | Yes | Validity. Copy unchanged into `confirm` |
-| `terms[].reason` | Conditional | Required in `confirm` when `reasonRequired` is true |
-| `terms[].termsState` | Yes | `INITIATED` here. You set `AGREED` in `confirm` |
-
-Store every term object exactly as received. Change only `termsState`, and `reason` where it is required.
-
-### confirm
-
-Send the whole order back with every term at `AGREED`. Any term still at `INITIATED` and the HSPA rejects the call. Use the `order.id` the HSPA assigned in `on_init`, not any ID you generated.
-
-### on_confirm, the PIN
-
-The HSPA sets `order.state` to `CONFIRMED` and returns a 4-digit PIN.
-
-| Field | What it is |
-| --- | --- |
-| `order.state` | `CONFIRMED`, or `FAILED` on a payment or system error |
-| `order.id` | The HSPA's order ID |
-| `order.authorization.type` | `PIN` |
-| `order.authorization.token` | The 4-digit PIN |
-| `order.authorization.valid_from` | PIN validity start |
-| `order.authorization.valid_to` | PIN validity end, usually end of the appointment day |
-| `order.authorization.status` | `GENERATED` here |
-| `order.fulfillment.tags.@abdm/gov.in/slot_id` | The confirmed slot UUID |
-
-```json
-{
-  "authorization": {
-    "type": "PIN",
-    "token": "3774",
-    "valid_from": "2026-06-18T00:00:00",
-    "valid_to": "2026-06-18T23:59:00",
-    "status": "GENERATED"
-  }
-}
+```mermaid
+sequenceDiagram
+    autonumber
+    participant E as EUA
+    participant G as UHI Gateway
+    participant H as HSPA
+    E->>H: cancel (reason code, cancelledby patient)
+    H->>E: on_cancel (CANCELLED)
+    H->>G: on_cancel_audit
+    opt The doctor cancels
+        H->>E: on_cancel (CANCELLED, cancelledby doctor)
+        H->>G: on_cancel_audit
+    end
+    E->>H: on_message
+    H->>E: on_message
 ```
 
-The PIN is security sensitive. Hold it in memory or secure session storage on the EUA. Do not write it to a database or to application logs.
+Start with the first call:
+[cancel](/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-post-fulfilment/01-uhi-consultation-cancel).
 
-The HSPA has two more obligations here. It sends an exact copy of the `on_confirm` payload to the gateway audit endpoint listed under [gateway endpoints](#gateway-endpoints), and it sets the communication tags on the fulfilment:
+## Concepts explored
 
-```json
-{
-  "tags": {
-    "@abdm/gov.in/slot_id": "79db6b5b-afe4-4297-b9b1-5148ed45372c",
-    "@abdm/gov.in/messaging_support": "true",
-    "@abdm/gov.in/deep_link": "",
-    "@abdm/gov.in/helpline_number": "",
-    "@abdm/gov.in/chatbot_link": ""
-  }
-}
-```
+- **Broadcast, then direct.** The Gateway handles only `search` and
+  `on_search`. From the first `on_search`, store `context.provider_uri` and
+  `provider_id`, and call the HSPA directly.
+- **Look up the other side's key.** Before each direct call, both sides fetch
+  the counterparty's public key from `/api/v1/networkregistry/lookup`.
+- **Many answers to one search.** Each matching HSPA replies separately. Group
+  the replies by their shared `transaction_id`.
+- **The slot UUID is the link.** Send `fulfillments[].id` from `on_search` as
+  the fulfillment id in `init`. A mismatch means the HSPA rejects the request or
+  fails to hold the slot.
+- **`order.id` comes from `on_init`.** Use the HSPA's `order.id` in `confirm`
+  and in every call after it.
+- **Five terms, returned unchanged.** `on_init` sends Commercial, Settlement,
+  Cancellation, Refund and Payment terms as `INITIATED`. Show all five, then
+  send them back in `confirm` with only `termsState` changed to `AGREED`. One
+  `INITIATED` term causes rejection.
+- **The PIN.** `on_confirm` returns `authorization.type: PIN` with a 4-digit
+  token, valid to the end of the appointment day. Its status moves from
+  `GENERATED` to `VERIFIED` at check-in, or to `HSPAOVERRIDE` when staff bypass
+  it with an override reason.
+- **Payment.** Pay on visit is the only model. An unpaid order carries
+  `payment.status: NOT_PAID`.
+- **Who owns which state.** The HSPA sets `CONFIRMED`, `APPOINTMENT_STARTED`,
+  `COMPLETED`, `NO_SHOW` and `FAILED`. The EUA sets only `DOCTOR_NO_SHOW`.
+  `CANCELLED` comes through `cancel` and `on_cancel`.
+- **Cancellation tags.** `@abdm/gov.in/cancelledby`, set to `patient` or
+  `doctor`, is mandatory, so the right terms apply. The reason goes in
+  `@abdm/gov.in/cancel_reason`.
+- **Health records afterwards.** The HSPA sends doctor tags including
+  `@abdm/gov.in/hip_id`, so the EUA can fetch prescriptions later.
+- **The care context id.** It travels as `@abdm/gov.in/care_context_id` in
+  `on_status`, `on_update` and their audit copies. `on_update_audit` is the copy
+  that counts for the Digital Health Incentive Scheme (DHIS).
+- **Communication tags.** `on_confirm` carries `@abdm/gov.in/messaging_support`
+  and a helpline or facility number in `@abdm/gov.in/helpline_number`.
 
-`messaging_support` and a helpline number are mandatory in `on_confirm`.
+The order tags from `init` onwards:
 
-## Stage 3: fulfilment
-
-### status and on_status
-
-`status` carries only `order.id`. The HSPA answers with the full order object, and you replace your stored state with it. This is reconciliation, not a polling loop.
-
-### Order states
-
-| State | Set by | Meaning |
+| Tag | Carries | Sent in |
 | --- | --- | --- |
-| `CONFIRMED` | HSPA, in `on_confirm` | Booked. PIN generated |
-| `APPOINTMENT_STARTED` | HSPA, in `on_update` | The doctor has begun the consultation |
-| `COMPLETED` | HSPA, in `on_update` | The doctor has marked the consultation complete |
-| `CANCELLED` | HSPA or EUA | Cancelled under the agreed terms |
-| `NO_SHOW` | HSPA, in `on_update` | The patient did not appear |
-| `DOCTOR_NO_SHOW` | EUA, in `on_update` to the HSPA | The doctor did not appear |
-| `FAILED` | HSPA, in `on_confirm` | Payment or system failure at confirmation |
+| `@abdm/gov.in/abha_number` | The patient's [ABHA number](/docs/uhi/v1/getting-started/glossary#abha-number) | From `init` |
+| `@abdm/gov.in/slot_id` | The chosen slot | From `init` |
+| `@abdm/gov.in/cancelledby` | `patient` or `doctor` | `cancel`, `on_cancel` |
+| `@abdm/gov.in/cancel_reason` | The reason code | `cancel`, `on_cancel` |
+| `@abdm/gov.in/messaging_support` | Whether messaging is supported | From `on_confirm` |
+| `@abdm/gov.in/helpline_number` | Helpline or facility number | From `on_confirm` |
+| `@abdm/gov.in/care_context_id` | The care context id | `on_status`, `on_update` |
 
-`DOCTOR_NO_SHOW` is the only state an EUA may set. Everything else is the HSPA's.
+## Terms content
 
-### PIN states
+`on_init` carries the text the patient reads before confirming. Keep it plain
+and patient friendly. You may add detail, but keep the substance of every
+clause below. Replace each value in brackets with your own.
 
-| State | Meaning |
+| Term | What it must say |
 | --- | --- |
-| `GENERATED` | Set when the PIN is created at confirmation |
-| `VERIFIED` | The provider checked the PIN before the consultation |
-| `HSPA_OVERRIDE` | The PIN was not checked and the HSPA overrode the check |
+| Commercial | UHI is a technology gateway only. It does not control or supervise any provider, and carries no liability for the availability, quality, safety, timeliness or outcome of the service. It does not collect, hold or route any payment. This clause is mandatory. |
+| Commercial | Every payment, billing arrangement, refund, cancellation charge and pricing dispute is between the patient and the provider. UHI and [EUA name] carry no liability for them. |
+| Commercial | The consultation is with [doctor's name, qualifications and HPR ID] at [facility], on [date and slot]. If the doctor has an emergency, the facility may offer a substitute or a reschedule. |
+| Commercial | Expect up to 30 minutes of waiting beyond the booked slot. If a doctor's emergency causes a longer delay, the patient may wait, accept a substitute or reschedule. |
+| Cancellation | Rescheduling, cancellation, refund and compensation follow the provider's own policies. UHI and [EUA name] are not liable for them. |
+| Cancellation | Cancel at least 4 hours before the appointment starts. The facility aims to notify the patient at least 2 hours before the start, with a reason. |
+| Payment | The patient pays at the facility on the day of the visit, by the modes it accepts. The fee is set by the facility. UHI and [EUA name] do not collect, hold, settle or refund it. |
+| Payment | [Total payable, GST included.] This is the final amount and does not change at the desk. Any change is the facility's responsibility. |
+| Settlement | Your own text. Online payment is not part of the flow today. |
+| Refund | Your own text. Refunds are not part of the flow today. |
 
-### on_update
+## Cancellation and override reason codes
 
-The HSPA pushes state changes to your `/on_update` as they happen. This is the main real-time channel, not `status`. Update your local state and notify the patient.
+Send the reason codes exactly as listed. The labels are yours to choose.
 
-## Stage 4: post-fulfilment
+Patient cancellations are sent in `cancel` with `@abdm/gov.in/cancelledby: patient`.
 
-### cancel and on_cancel
-
-| Field | Required | What it is |
+| # | Reason code | Label |
 | --- | --- | --- |
-| `order.id` | Yes | The order to cancel |
-| `order.state` | Yes | `CANCELLED` |
-| `order.fulfillment.tags.@abdm/gov.in/cancelledby` | Yes | `patient` or `doctor` |
+| P1 | `PATIENT_PERSONAL_EMERGENCY` | Personal or family emergency |
+| P2 | `PATIENT_HEALTH_IMPROVED` | Condition resolved, no longer required |
+| P3 | `PATIENT_UNABLE_TO_VISIT_PHYSICALLY` | Scheduling conflict or unable to visit |
+| P4 | `DOCTOR_ASKED_TO_CANCEL` | Doctor requested cancellation |
+| P5 | `PATIENT_BOOKED_IN_ERROR` | Booked by mistake |
+| P6 | `PATIENT_SEEKING_ALTERNATIVE` | Seeking another doctor or provider |
+| P7 | `PATIENT_OTHER` | Other. The EUA must capture free text |
 
-```json
-{
-  "message": {
-    "order": {
-      "id": "0415-234567-8901",
-      "state": "CANCELLED",
-      "fulfillment": {
-        "tags": { "@abdm/gov.in/cancelledby": "patient" }
-      }
-    }
-  }
-}
-```
+Doctor and facility cancellations are sent in `on_cancel` with
+`@abdm/gov.in/cancelledby: doctor`.
 
-The `cancelledby` tag is mandatory. Without it the HSPA cannot tell which set of cancellation terms applies.
-
-Your `/on_cancel` handler has to cope with both directions: the HSPA's acknowledgement of a patient cancellation, and an HSPA-initiated cancellation when a doctor cancels. Read the `cancelledby` tag to tell them apart.
-
-### on_message
-
-Optional for an HSPA, mandatory for an EUA. Both sides consume the same shape. Content sits under `message.intent.chat`.
-
-| Field | Required | What it is |
+| # | Reason code | Label |
 | --- | --- | --- |
-| `chat.sender.person.id` | Yes | ABHA address of the sender, or HPR ID when the doctor sends |
-| `chat.sender.person.name` | Yes | Sender's name |
-| `chat.receiver.person.id` | Yes | HPR ID of the doctor, or ABHA address of the patient |
-| `chat.receiver.person.name` | Yes | Receiver's name |
-| `chat.content.content_id` | Yes | UUID for this message |
-| `chat.content.content_value` | Yes | Base64-encoded text or file |
-| `chat.content.content_type` | Yes | `text` or `media` |
-| `chat.content.content_mimeType` | Conditional | MIME type when `content_type` is `media` |
-| `chat.content.content_fileName` | Conditional | File name when `content_type` is `media` |
-| `chat.content.hiType` | Conditional | Health information type, for example `prescription`, `labReport` |
-| `chat.time.timestamp` | Yes | Message time |
+| D1 | `DOCTOR_PERSONAL_EMERGENCY` | Doctor personal emergency |
+| D2 | `DOCTOR_UNAVAILABLE` | Doctor unavailable, or a patient medical emergency |
+| D3 | `DOCTOR_SCHEDULE_CHANGE` | Schedule or slot change |
+| D4 | `FACILITY_CLOSURE` | Facility or clinic closure |
+| D5 | `TECHNICAL_SYSTEM_ISSUE` | Technical or system issue |
+| D6 | `DOCTOR_OTHER` | Other. The HSPA must provide free text |
 
-## Gateway endpoints
+Facility staff use an override reason when a confirmed patient cannot check in
+with the PIN.
 
-You do not build these. NHA operates them.
-
-| Endpoint | Called by | Purpose |
+| # | Reason code | Label |
 | --- | --- | --- |
-| `POST /api/v1/uhi/search` | EUA | Broadcast a search to all registered HSPAs |
-| `POST /api/v1/uhi/on_search` | HSPA | Deliver a catalog, which the gateway forwards to the EUA |
-| `POST /api/v1/uhi/on_confirm_audit` | HSPA | Exact copy of every `on_confirm` |
-| `POST /api/v1/uhi/on_update_audit` | HSPA | Exact copy of every `on_update`. The care context ID goes here |
-| `POST /api/v1/uhi/on_cancel_audit` | HSPA | Exact copy of every `on_cancel` |
-| `POST /api/v1/uhi/on_status_audit` | HSPA | Exact copy of every `on_status` |
-| `POST /api/v1/networkregistry/lookup` | Either | Look up a counterparty's public key |
+| O1 | `OVERRIDE_EMERGENCY_CONSULTATION` | Medical emergency at the facility |
+| O2 | `OVERRIDE_PIN_TECH_FAILURE` | The app cannot show the PIN. Identity checked another way |
+| O3 | `OVERRIDE_PIN_DELIVERY_FAILURE` | The PIN never reached the patient |
+| O4 | `OVERRIDE_VULNERABLE_PATIENT` | Elderly, differently abled or low digital literacy patient |
+| O5 | `OVERRIDE_EUA_OUTAGE` | The EUA platform is down |
+| O6 | `OVERRIDE_MISMATCH` | PIN mismatch after 3 attempts |
+| O6 | `OVERRIDE_OTHER` | Other. The HSPA must provide free text |
 
-The audit copies are an HSPA obligation for compliance traceability, not optional.
+## Go-live checklist
 
-## Cancellation reason codes
+Work through this list before you request sign-off for production.
 
-The reason codes are fixed. You choose the labels your users see.
-
-### Patient-initiated, sent in `cancel` with `cancelledby: patient`
-
-| Code | Meaning |
+| # | Item |
 | --- | --- |
-| `PATIENT_PERSONAL_EMERGENCY` | Patient or family emergency |
-| `PATIENT_HEALTH_IMPROVED` | Condition resolved, consultation no longer needed |
-| `PATIENT_UNABLE_TO_VISIT_PHYSICALLY` | Scheduling conflict or inability to reach the facility |
-| `DOCTOR_ASKED_TO_CANCEL` | The doctor asked the patient to cancel |
-| `PATIENT_BOOKED_IN_ERROR` | Wrong doctor, speciality, date or time |
-| `PATIENT_SEEKING_ALTERNATIVE` | Patient has decided to see someone else |
-| `PATIENT_OTHER` | Anything else. Your EUA must capture free text |
+| 1 | [ABDM](/docs/uhi/v1/getting-started/glossary#abdm) M2 milestone with HIE-CM completed |
+| 2 | Ed25519 key pair generated with the header generator utility; public key submitted |
+| 3 | Sandbox onboarding form completed |
+| 4 | Sandbox access received and environment configured |
+| 5 | HTTPS `consumer_uri` callback URL live and reachable |
+| 6 | Direct EUA endpoints `/on_init`, `/on_confirm`, `/on_status` and `/on_update` exposed and exercised |
+| 7 | Request signing implemented: Ed25519 and BLAKE-512 |
+| 8 | Discovery run for every filter type: doctor name, GPS, city, pincode |
+| 9 | Booking run: `init`, `on_init`, `confirm`, `on_confirm` |
+| 10 | PIN received in `on_confirm` and shown to the user correctly |
+| 11 | Status run: `status`, `on_status` |
+| 12 | `on_update` handled for `APPOINTMENT_STARTED`, `COMPLETED` and `CANCELLED` |
+| 13 | `DOCTOR_NO_SHOW` sent from the EUA |
+| 14 | Edge cases handled: empty `on_search`, slot unavailable, cancellation terms |
+| 15 | Terms shown before `confirm`; confirmed only with every term `AGREED` |
+| 16 | Caching policy in place: TTL compliance, a parallel live search, 48 hours at most |
+| 17 | All test cases passed in sandbox |
+| 18 | Sign-off requested with sandbox evidence |
+| 19 | Production `consumer_uri` and direct endpoints updated |
+| 20 | Integration promoted to the production UHI network |
 
-### Doctor or facility-initiated, sent in `on_cancel` with `cancelledby: doctor`
+## Confirm at onboarding
 
-| Code | Meaning |
-| --- | --- |
-| `DOCTOR_PERSONAL_EMERGENCY` | Unplanned personal or medical emergency |
-| `DOCTOR_UNAVAILABLE` | Unexpected surgery, patient emergency or high footfall |
-| `DOCTOR_SCHEDULE_CHANGE` | Session timings changed |
-| `FACILITY_CLOSURE` | Facility temporarily closed |
-| `TECHNICAL_SYSTEM_ISSUE` | HSPA platform failure or downtime |
-| `DOCTOR_OTHER` | Anything else. The HSPA must provide free text |
+- **The two O6 codes.** `OVERRIDE_MISMATCH` and `OVERRIDE_OTHER` share the
+  number O6. Key your handling on the reason code string, never on the number.
+- **`NOT_VERIFIED` as a PIN status.** Build for `GENERATED`, `VERIFIED` and
+  `HSPAOVERRIDE`. Do not send or depend on `NOT_VERIFIED` until it is confirmed.
+- **Where `@abdm/gov.in/slot_id` sits in `on_confirm`.** Send and read it in
+  `order.fulfillment.tags`, as every specification example does. Confirm before
+  you read it from anywhere else.
+- **How long to wait for `on_search`.** No timeout is set for this service.
+  Show results as they arrive, and agree a timeout at onboarding.
 
-### PIN override, used by facility staff
+## Error codes
 
-| Code | When it applies |
-| --- | --- |
-| `OVERRIDE_EMERGENCY_CONSULTATION` | Patient arrives in acute distress |
-| `OVERRIDE_PIN_TECH_FAILURE` | The app cannot show the PIN. Identity verified another way |
-| `OVERRIDE_PIN_DELIVERY_FAILURE` | The PIN never reached the patient |
-| `OVERRIDE_VULNERABLE_PATIENT` | Elderly, differently-abled or low digital literacy patient |
-| `OVERRIDE_EUA_OUTAGE` | The EUA platform is down |
-| `OVERRIDE_MISMATCH` | PIN could not be validated after three attempts |
-| `OVERRIDE_OTHER` | Anything else. The HSPA must provide free text |
+Every call can return an error object with `type` and `code`, and optionally
+`path` and `message`. See [UHI error codes](/docs/uhi/v1/concepts/errors).
 
-## Terms and conditions text
+## Certification
 
-The `on_init` terms array carries the text the patient reads before confirming. Sample clauses are published. Two points carry through all of them.
-
-- UHI is a technology gateway. It does not supervise providers, does not guarantee outcomes, and does not collect, hold or route any payment.
-- Every payment, refund, cancellation charge and pricing dispute is between the patient and the facility.
-
-## Field and error reference
-
-The tables above carry the fields you send and receive most. For the complete order field list, use the [Swagger spec](https://uhigatewaysandbox.abdm.gov.in/swagger-ui/index.html?urls.primaryName=v2.0.2#/).
-
-Error codes for this service are not published as a list. The error object carries `type` and `code`, both mandatory, with `path` and `message` optional.
+Find the test cases this service is certified against on
+[Physical Consultation test cases](/docs/uhi/v1/resources/consultation).
 
 ## Next
 
-- [UHI services](/docs/uhi/v1) for the shared protocol
-- [Ambulance booking](/docs/uhi/v1/concepts/services/ambulance-booking)
-- [Blood bank](/docs/uhi/v1/concepts/services/blood-bank)
-- [M2](/docs/hiecm/v3/api/m2), the prerequisite
-- [Support](/docs/support)
+- The calls, one page each: [Physical Consultation API reference](/docs/uhi/v1/api/consultation).
+- How every call is signed: [Signing](/docs/uhi/v1/concepts/signing).
+- From sandbox registration to production: [Onboarding to UHI](/docs/uhi/v1/getting-started/onboarding).

@@ -1,85 +1,80 @@
 ---
-title: PM-JAY HEM hospital discovery
+title: 'PM-JAY HEM: Find empanelled hospitals'
 sidebar_label: PM-JAY HEM
 sidebar_position: 2
-description: Find PM-JAY empanelled hospitals over UHI by state, district, speciality, facility name, pincode or GPS.
-source: UHI__UHI_PMJAY_HEM_Onboarding_v1.4.md
+sidebar_custom_props:
+  roles: [eua]
+description: Find PM-JAY empanelled hospitals over UHI by state, district, speciality, facility name, pincode or GPS, from one search and on_search pair.
+source: UHI Services Developer Guide of 22 September 2026 (sections 1.1, 2.2, 3.2), UHI_PMJAY_HEM_Onboarding_v1.4, uhi-network.yaml (pmjay-hem examples), corrections/2026-09-28-uhi-sources.md
 sidebar_class_name: sidebar-icon sidebar-icon--hospital
 ---
 
-# PM-JAY HEM hospital discovery
+import ApiLinks from '@site/src/components/docs/ApiLinks';
 
-PM-JAY is India's national health insurance scheme, and HEM is the Hospital Empanelment Management system that knows which hospitals are empanelled right now. After this page you will know the six ways to search HEM over UHI, and every field that comes back.
+# PM-JAY HEM: Find empanelled hospitals
 
-## Who does what
+PM-JAY HEM discovery lets a beneficiary find hospitals empanelled under the Pradhan Mantri Jan Arogya Yojana (PM-JAY), filtered by location and speciality. Results come live from the PM-JAY Hospital Empanelment Management (HEM) system, so the list reflects empanelment status today. You build the [EUA](/docs/uhi/v1/getting-started/glossary#eua) side on the [UHI](/docs/uhi/v1/getting-started/glossary#uhi) network. The single [HSPA](/docs/uhi/v1/getting-started/glossary#hspa) is already running.
 
-This is an [EUA](/docs/uhi/v1/getting-started/glossary#eua) side integration. [NHA](/docs/uhi/v1/getting-started/glossary#nha) runs the single [HSPA](/docs/uhi/v1/getting-started/glossary#hspa). No third party builds one for this service.
+<ApiLinks platform="uhi" version="v1" module="network" />
 
-| Party | Who runs it | What it does here |
-| --- | --- | --- |
-| EUA | You, or any [PHR](/docs/uhi/v1/getting-started/glossary#phr) app | Sends the `search`. Receives the `on_search`. Renders the hospital list. |
-| [UHI](/docs/uhi/v1/getting-started/glossary#uhi) Gateway | NHA | Validates and routes the `search`. Relays the `on_search` back to you. |
-| PM-JAY HEM HSPA | NHA | Queries the HEM database. Builds the `on_search` catalog. |
+## In short
 
-Signing, onboarding and Gateway base URLs are shared across UHI. See [UHI services](/docs/uhi/v1).
+- **One call pair.** Your app sends `search` to the UHI Gateway. The PM-JAY HEM HSPA answers with `on_search` on your callback.
+- **State is mandatory, except in GPS search.** Every other filter sits on top of state. A GPS search sends coordinates and radius only.
+- **Fixed identifiers are case sensitive.** A wrong `fulfillment.type` or item code means no HSPA responds at all.
+- **No end signal and no pagination.** Render results as they arrive and paginate on the client.
+- **The service is discovery.** Keep booking and referral out of your UI.
 
-## Before you onboard
+## PM-JAY HEM functionalities
 
-Your application must have completed [HIE-CM](/docs/uhi/v1/getting-started/glossary#hie-cm) Milestone 2 as an [ABDM](/docs/uhi/v1/getting-started/glossary#abdm) compliant application. The network's document states that applications without M2 cannot be onboarded onto UHI services, PM-JAY HEM included. If you have not done that, start at [M2](/docs/hiecm/v3/api/m2).
+The service is discovery: `search` and `on_search`.
 
-You also need:
+| In scope | Out of scope |
+| --- | --- |
+| Hospital search by state, district, speciality, facility name, pincode or GPS | Booking and referral |
+| Hospital name, type, specialities, empanelment date, location and contacts | Provider dashboards, kiosk search and voice search |
+| The PM-JAY nodal officer number for each hospital | Discharge summaries and voice bots |
 
-- A publicly reachable HTTPS callback URL for `on_search` responses.
-- UHI request signing in place, Ed25519 signatures over a BLAKE-512 body hash.
-- Code that treats `search` as fire and forget. Do not block waiting for a synchronous reply.
+## Prerequisites
 
-## Message flow
-
-Two calls, discovery only. Booking and referral are a later phase. The HTTP 200 from the Gateway confirms receipt, nothing more.
-
-| Step | Who acts | What happens |
-| --- | --- | --- |
-| 1 | Your system | POST `/search` to the Gateway with state, plus any optional filters. |
-| 2 | Gateway | Returns HTTP 200 ACK immediately. |
-| 3 | Gateway | POSTs the `search` to the PM-JAY HEM HSPA. |
-| 4 | PM-JAY HEM HSPA | Queries the HEM database. |
-| 5 | PM-JAY HEM HSPA | POSTs `on_search` to the Gateway with matching hospital records. |
-| 6 | Gateway | POSTs the `on_search` to your `consumer_uri`. |
-| 7 | Your system | ACKs the `on_search` and renders the hospital list. |
-
-Both calls can return NACK as well as ACK. Match a response to its request by `context.transaction_id`.
+1. Your app has completed [HIE-CM](/docs/uhi/v1/getting-started/glossary#hie-cm) [Milestone 2](/docs/hiecm/v3/milestones/m2). An app without M2 cannot be onboarded onto any UHI service.
+2. You have a public HTTPS callback URL. It is your `consumer_uri`, and `on_search` arrives there.
+3. You have an Ed25519 key pair and sign every call. See [Signing](/docs/uhi/v1/concepts/signing).
+4. Your code accepts an ACK now and the answer later, matched by `transaction_id`. See [Messages](/docs/uhi/v1/concepts/messages).
+5. You hold a subscriber ID from sandbox registration. See [Onboarding](/docs/uhi/v1/getting-started/onboarding).
 
 ## Service identity
 
-These values are case sensitive. If any of them is wrong, no HSPA answers your search and you get nothing back.
+Set these values exactly. They are case sensitive.
 
-| Parameter | Value | Where it goes |
+| Field | Value |
+| --- | --- |
+| `context.domain` | `nic2004:85112` |
+| `context.core_version` | `0.7.1` |
+| `message.intent.fulfillment.type` | `PMJAYHEM` |
+| `message.intent.item.descriptor.code` | `PMJAY` |
+| `message.intent.item.descriptor.name` | `PMJAY` |
+| `message.intent.item.descriptor.flag` | `false` |
+| Gateway endpoint | `POST /api/v1/uhi/search` |
+
+## Search variants
+
+| Search | Location and filter fields | Use it for |
 | --- | --- | --- |
-| `domain` | `nic2004:85112` | `context.domain` in every call |
-| `fulfillment.type` | `PMJAYHEM` | `message.intent.fulfillment.type` |
-| `item.descriptor.code` | `PMJAY` | `message.intent.item.descriptor.code` |
-| `item.descriptor.name` | `PMJAY` | `message.intent.item.descriptor.name` |
-| `item.descriptor.flag` | `false` | `message.intent.item.descriptor.flag` |
+| State only | `location.state.name` in capitals, `location.state.code` numeric | Every empanelled hospital in a state |
+| State and district | State, plus `location.district.name` in capitals and `location.district.code` | One district |
+| State and speciality | State, plus `category.descriptor.name` and `.code`, for example Cardiology, `100002` | A clinical speciality |
+| State and facility name | State, plus `provider.descriptor.name` | A known hospital |
+| State and pincode | State, plus `address.area_code`, a sibling of `fulfillment` and not inside `location` | A pincode area |
+| GPS, no state | `location.gps`, `radius.type: CONSTANT`, `radius.value` such as `13.0`, `radius.unit: km` | Nearby hospitals |
 
-## Search filters
+Send district code, pincode and speciality code as numbers, not strings. State names go in capitals with a numeric code, for example `ANDHRA PRADESH` and `28`.
 
-State is mandatory in every search. The other five filters are optional and stack on top of it.
+### Speciality codes
 
-| Search type | Mandatory | Optional fields added | Use case |
-| --- | --- | --- | --- |
-| State only | `state.name`, `state.code` | none | Every empanelled hospital in a state |
-| State and district | `state.name`, `state.code` | `district.name`, `district.code` | Narrow to one district |
-| State and speciality | `state.name`, `state.code` | `category.descriptor.name`, `category.descriptor.code` | Filter by clinical speciality |
-| State and facility name | `state.name`, `state.code` | `provider.descriptor.name` | Find a hospital by name |
-| State and pincode | `state.name`, `state.code` | `address.area_code` | Search a pincode area |
-| State and GPS | `state.name`, `state.code` | `location.gps`, `radius.type`, `radius.value`, `radius.unit` | Proximity search |
-
-State and district names go in capitals, for example `ANDHRA PRADESH`. Note that `address` is a sibling of `fulfillment` inside `message.intent`, not a child of `location`.
-
-To get the speciality codes for `category.descriptor.code`, call the PM-JAY speciality list endpoint.
+Take speciality codes from the PM-JAY speciality list API, not from a static list. Sandbox uses `apisbeta.nha.gov.in` and production uses `apisprod.nha.gov.in`. The rest of the call is the same.
 
 ```bash
-# Sandbox
 curl --location 'https://apisbeta.nha.gov.in/pmjay/payer/hbp/get/scheme/specialities' \
   --header 'Accept: application/json' \
   --header 'source: internal' \
@@ -88,208 +83,199 @@ curl --location 'https://apisbeta.nha.gov.in/pmjay/payer/hbp/get/scheme/speciali
   --data '{"schemecode": "PMJAY", "hosptype": "H"}'
 ```
 
-Swap the host for `https://apisprod.nha.gov.in` in production. The rest of the call is the same.
+### Sample search, state and district
 
-## Sample payloads
+Use a fresh `message_id` and `transaction_id` for each search.
 
-These samples use an abbreviated field listing with dotted paths rather than literal JSON request bodies. Build your JSON from the field reference underneath, where the nesting is explicit.
-
-The `context` block is identical across all six variants. Only `message.intent` changes.
-
-### context
-
-```yaml
-context:
-  domain: 'nic2004:85112'          # Fixed for PM-JAY HEM
-  country: IND
-  city: 'std:011'
-  action: search
-  core_version: 0.7.1
-  consumer_id: <YOUR_EUA_ID_FROM_NHA_ONBOARDING>
-  consumer_uri: <YOUR_HTTPS_CALLBACK_URL>
-  message_id: dfa04e10-63ec-11ed-9f98-49dd5c7c4d8a   # Fresh UUID per call
-  timestamp: '2022-11-14T07:20:54.005277Z'
-  transaction_id: dfa04e10-63ec-11ed-9f98-49dd5c7c4d8a   # Links on_search back to this search
+```json
+{
+  "context": {
+    "domain": "nic2004:85112",
+    "country": "IND",
+    "city": "std:011",
+    "action": "search",
+    "core_version": "0.7.1",
+    "consumer_id": "<YOUR_SUBSCRIBER_ID_FROM_REGISTRATION>",
+    "consumer_uri": "<YOUR_PUBLIC_HTTPS_CALLBACK_URL>",
+    "message_id": "dfa04e10-63ec-11ed-9f98-49dd5c7c4d8a",
+    "timestamp": "2022-11-14T07:20:54.005277Z",
+    "transaction_id": "dfa04e10-63ec-11ed-9f98-49dd5c7c4d8a"
+  },
+  "message": {
+    "intent": {
+      "fulfillment": {
+        "start": { "time": { "timestamp": "2022-07-22T13:21:41" } },
+        "end": { "time": { "timestamp": "2022-07-22T23:59:59" } },
+        "type": "PMJAYHEM"
+      },
+      "item": {
+        "descriptor": { "code": "PMJAY", "name": "PMJAY", "flag": false }
+      },
+      "location": {
+        "state": { "name": "ANDHRA PRADESH", "code": "28" },
+        "district": { "name": "ANAKAPALLI", "code": 744 }
+      }
+    }
+  }
+}
 ```
 
-### Search by state
+### Sample search, GPS
 
-The base case. Every other variant adds to this one.
+The `context` block is the same. The intent carries no state.
 
-```yaml
-message:
-  intent:
-    fulfillment:
-      type: 'PMJAYHEM'
-      start.time.timestamp: '2022-07-22T13:21:41'
-      end.time.timestamp: '2022-07-22T23:59:59'
-    item.descriptor:
-      code: 'PMJAY'
-      name: 'PMJAY'
-      flag: false
-    location:
-      state.name: 'ANDHRA PRADESH'
-      state.code: '28'
+```json
+{
+  "intent": {
+    "fulfillment": {
+      "start": { "time": { "timestamp": "2022-07-22T13:21:41" } },
+      "end": { "time": { "timestamp": "2022-07-22T23:59:59" } },
+      "type": "PMJAYHEM"
+    },
+    "item": {
+      "descriptor": { "code": "PMJAY", "name": "PMJAY", "flag": false }
+    },
+    "location": {
+      "gps": "17.3787973,78.4368433",
+      "radius": { "type": "CONSTANT", "value": "13.0", "unit": "km" }
+    }
+  }
+}
 ```
 
-### Search by state and district
+## Journey
 
-```yaml
-message:
-  intent:
-    fulfillment:
-      type: 'PMJAYHEM'
-      start.time.timestamp: '2022-07-22T13:21:41'
-      end.time.timestamp: '2022-07-22T23:59:59'
-    item.descriptor:
-      code: 'PMJAY'
-      name: 'PMJAY'
-      flag: false
-    location:
-      state.name: 'ANDHRA PRADESH'
-      state.code: '28'
-      district.name: 'ANAKAPALLI'
-      district.code: 744
+A beneficiary searches for PM-JAY empanelled hospitals.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor B as Beneficiary
+    participant E as EUA (your app)
+    participant G as UHI Gateway
+    participant H as PM-JAY HEM HSPA
+    B->>E: State + optional filter, or GPS
+    E->>G: POST /api/v1/uhi/search
+    G-->>E: HTTP 200 ACK
+    G->>H: POST /search
+    H->>H: Query the HEM database
+    H->>G: POST /api/v1/uhi/on_search (hospital records)
+    G->>E: POST /on_search to consumer_uri
+    E-->>G: HTTP 200 ACK
+    E->>B: Hospital list
 ```
 
-### Search by state and speciality
+The optional filter is one of district, speciality, facility name or pincode. If step 7 does not arrive within your timeout, stop waiting and offer a retry. If the catalog is empty, suggest a wider search.
 
-Add a `category` block inside `intent`.
+The first call in the reference is [search](/docs/uhi/v1/api/network/endpoints/uhi-pmjay-hem/01-uhi-network-gateway-search).
 
-```yaml
-message:
-  intent:
-    fulfillment:
-      type: 'PMJAYHEM'
-      start.time.timestamp: '2022-07-22T13:21:41'
-      end.time.timestamp: '2022-07-22T23:59:59'
-    category:
-      descriptor.name: Cardiology
-      descriptor.code: 100002
-    item.descriptor:
-      code: 'PMJAY'
-      name: 'PMJAY'
-      flag: false
-    location:
-      state.name: 'ANDHRA PRADESH'
-      state.code: '28'
-      district.name: 'ANAKAPALLI'
-      district.code: 744
+## What comes back
+
+Each provider record is one empanelled hospital.
+
+| What | Where |
+| --- | --- |
+| Hospital ID, for example `HOSP27G13867` | `providers[].id` |
+| Name | `providers[].descriptor.name` |
+| Type: `G` Government, `P` Private | `providers[].descriptor.code` |
+| Specialities with codes | `providers[].categories[].descriptor` |
+| Year established | `providers[].fulfillments[]` with `type: Establishment Date` |
+| Date empanelled under PM-JAY | `providers[].fulfillments[]` with `type: Empaneled Date` |
+| GPS, address, city, district, state | `providers[].location` |
+| Phone and email | `providers[].contact` |
+| PM-JAY nodal officer | `providers[].contact.tags.nodalOfficerNumber` |
+
+### Sample on_search
+
+Trimmed to one hospital.
+
+```json
+{
+  "context": {
+    "domain": "nic2004:85112",
+    "country": "IND",
+    "city": "std:011",
+    "action": "on_search",
+    "timestamp": "2022-07-05T15:24:35",
+    "core_version": "0.7.1",
+    "consumer_id": "eua-nha",
+    "consumer_uri": "http://100.65.158.41:8901/api/v1/euaService",
+    "provider_id": "hspa-nha",
+    "provider_uri": "https://hspasbx.abdm.gov.in/api/v1/hspa",
+    "transaction_id": "e9a19230-f951-11ec-b135-53aea776f66b",
+    "message_id": "e9"
+  },
+  "message": {
+    "catalog": {
+      "descriptor": {
+        "name": "PMJAY HSPA",
+        "images": "PMJAY logo IMAGE",
+        "short_desc": "Pradhan Mantri Jan Arogya Yojana - Hospital Engagement Module",
+        "long_desc": "PMJAY - HEM"
+      },
+      "providers": [
+        {
+          "id": "HOSP27G13867",
+          "descriptor": {
+            "name": "General Hospital Wardha",
+            "short_desc": "State.",
+            "long_desc": "Empanelled.",
+            "symbol": "Hospital",
+            "code": "G",
+            "flag": false
+          },
+          "categories": [
+            { "id": "1", "descriptor": { "name": "Cardiology", "code": 100002 } },
+            { "id": "2", "descriptor": { "name": "General Medicine", "code": 100005 } }
+          ],
+          "fulfillments": [
+            { "id": "1", "type": "Establishment Date", "start": { "time": { "timestamp": "1915" } } },
+            { "id": "2", "type": "Empaneled Date", "start": { "time": { "timestamp": "2018-09-14 16:03:16.0" } } }
+          ],
+          "location": {
+            "id": "1",
+            "descriptor": { "name": "General Hospital Wardha" },
+            "city": { "name": "ONGOLE", "code": "517001" },
+            "district": { "name": "PRAKASAM", "code": "517" },
+            "state": { "name": "Andhra Pradesh", "code": 28 },
+            "country": { "name": "INDIA", "code": 91 },
+            "gps": "15.497097,80.048688",
+            "address": "<ADDRESS>"
+          },
+          "contact": {
+            "phone": "<MOBILE_NUMBER>",
+            "email": "<EMAIL>",
+            "tags": {
+              "contact": "<MOBILE_NUMBER>",
+              "nodalOfficerNumber": "<MOBILE_NUMBER>"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
 ```
 
-### Search by state and facility name
+## Concepts explored
 
-Add a `provider` block inside `intent`.
+- **Single HSPA, single database.** There is no broadcast to many providers. Expect one `on_search` per search.
+- **State as the anchor.** Every variant except GPS is state plus one more filter. GPS search stands alone.
+- **Two dates, two meanings.** Establishment Date is the year the hospital opened. Empaneled Date is when it joined PM-JAY. Show the second, because it is what beneficiaries care about.
+- **The nodal officer.** `nodalOfficerNumber` is the PM-JAY point of contact at that hospital, separate from the general phone number. Surface it.
+- **Fields not to trust as filters.** `descriptor.flag`, the NABH accreditation flag, is not reliably populated. Show it as information only.
+- **GPS gaps.** GPS search can miss hospitals in low density areas. Offer district or pincode alongside it.
+- **UX rules checked at sign-off.** Reach the feature within 3 taps, under a health or insurance category. Show "Powered by UHI" with PM-JAY and [ABDM](/docs/uhi/v1/getting-started/glossary#abdm) branding, and a fallback message on empty results. Display the disclaimer "Please confirm the hospital location by calling ahead, as details may change."
 
-```yaml
-message:
-  intent:
-    provider:
-      descriptor.name: General Hospital
-    fulfillment:
-      type: 'PMJAYHEM'
-      start.time.timestamp: '2022-07-22T13:21:41'
-      end.time.timestamp: '2022-07-22T23:59:59'
-    item.descriptor:
-      code: 'PMJAY'
-      name: 'PMJAY'
-      flag: false
-    location:
-      state.name: 'ANDHRA PRADESH'
-      state.code: '28'
-```
+### Limits to code against
 
-### Search by state and pincode
-
-`address` sits beside `fulfillment`, not inside `location`.
-
-```yaml
-message:
-  intent:
-    fulfillment:
-      type: 'PMJAYHEM'
-      start.time.timestamp: '2022-07-22T13:21:41'
-      end.time.timestamp: '2022-07-22T23:59:59'
-    item.descriptor:
-      code: 'PMJAY'
-      name: 'PMJAY'
-      flag: false
-    location:
-      state.name: 'ANDHRA PRADESH'
-      state.code: '28'
-    address:
-      area_code: 523303
-```
-
-### Search by state and GPS
-
-```yaml
-message:
-  intent:
-    fulfillment:
-      type: 'PMJAYHEM'
-      start.time.timestamp: '2022-07-22T13:21:41'
-      end.time.timestamp: '2022-07-22T23:59:59'
-    item.descriptor:
-      code: 'PMJAY'
-      name: 'PMJAY'
-      flag: false
-    location:
-      state.name: 'ANDHRA PRADESH'
-      state.code: '28'
-      gps: 17.3787973,78.4368433
-      radius.type: CONSTANT
-      radius.value: 13.0
-      radius.unit: km
-```
-
-### on_search response
-
-One `providers[]` entry per empanelled hospital. Note that the establishment date and the empanelment date both arrive as `fulfillments[]` entries, told apart by their `type`.
-
-```yaml
-context:
-  domain: 'nic2004:85112'
-  action: on_search
-  consumer_id: eua-nha
-  consumer_uri: <YOUR_HTTPS_CALLBACK_URL>
-  provider_id: hspa-nha
-  provider_uri: https://hspasbx.abdm.gov.in/api/v1/hspa
-  transaction_id: dfa04e10-63ec-11ed-9f98-49dd5c7c4d8a   # Matches the originating search
-  message_id: <RESPONSE_MESSAGE_ID>
-message:
-  catalog:
-    descriptor.name: PMJAY HSPA
-    descriptor.short_desc: Pradhan Mantri Jan Arogya Yojana - Hospital Engagement Module
-    providers:
-      - id: 'HOSP27G13867'
-        descriptor.name: General Hospital Wardha
-        descriptor.code: G                # G government, P private
-        descriptor.flag: false            # NABH accreditation, may be unpopulated
-        categories:
-          - descriptor.name: Cardiology
-            descriptor.code: 100002
-          - descriptor.name: General Medicine
-            descriptor.code: 100005
-        fulfillments:
-          - type: 'Establishment Date'
-            start.time.timestamp: '1915'
-          - type: 'Empaneled Date'
-            start.time.timestamp: '2018-09-14 16:03:16.0'
-        location:
-          gps: '15.497097,80.048688'
-          address: '37-1-382-6'
-          city.name: ONGOLE
-          district.name: PRAKASAM
-          district.code: '517'
-          state.name: Andhra Pradesh
-          state.code: 28
-          country.name: INDIA
-        contact:
-          phone: <MOBILE_NUMBER>
-          email: contact@example.org
-          tags.nodalOfficerNumber: <MOBILE_NUMBER>
-```
+| Limit | What to do |
+| --- | --- |
+| GPS search can return incomplete results where hospital density is low | Offer district or pincode search next to GPS |
+| `descriptor.flag` is not consistently populated | Do not filter on it. Show it when present. |
+| `on_search` has no end of results signal | Close your wait with a timeout and render results as they arrive. See [Messages](/docs/uhi/v1/concepts/messages). |
+| `on_search` is not paginated | Handle large payloads without blocking the UI. Paginate on the client. |
+| The covered procedure list can lag package changes | Show a disclaimer and link to pmjay.gov.in for package and eligibility information |
 
 ## Field reference
 
@@ -305,9 +291,9 @@ All fields are mandatory.
 | `action` | string | `search`, fixed |
 | `core_version` | string | `0.7.1` |
 | `consumer_id` | string | Your registered EUA identifier |
-| `consumer_uri` | string | Your HTTPS callback URL |
-| `message_id` | UUID | Fresh per call. Never reuse. |
-| `transaction_id` | UUID | Fresh per search session. The `on_search` copies it. |
+| `consumer_uri` | string | Your HTTPS callback URL for `on_search` |
+| `message_id` | UUID | Unique per call. Never reuse it. |
+| `transaction_id` | UUID | Unique per search session. The `on_search` carries the same value. |
 | `timestamp` | ISO 8601 | Request time |
 
 ### search: message.intent
@@ -320,18 +306,28 @@ All fields are mandatory.
 | `item.descriptor.code` | string | Yes | `PMJAY`, fixed |
 | `item.descriptor.name` | string | Yes | `PMJAY`, fixed |
 | `item.descriptor.flag` | boolean | Yes | `false`, fixed |
-| `location.state.name` | string | Yes | State name in capitals, for example `ANDHRA PRADESH` |
-| `location.state.code` | string | Yes | Numeric state code, for example `28` |
+| `location.state.name` | string | Yes, except in GPS search | State name in capitals, for example `ANDHRA PRADESH` |
+| `location.state.code` | string | Yes, except in GPS search | Numeric state code, for example `28` |
 | `location.district.name` | string | No | District name in capitals |
 | `location.district.code` | integer | No | Numeric district code |
 | `location.gps` | string | No | `lat,long`, for example `17.378,78.436` |
-| `location.radius.type` | string | No | `CONSTANT`. Required with a GPS search. |
-| `location.radius.value` | float | No | Radius in km, for example `13.0` |
-| `location.radius.unit` | string | No | `km` |
+| `location.radius.type` | string | With GPS | `CONSTANT` |
+| `location.radius.value` | float | With GPS | Radius in km, for example `13.0` |
+| `location.radius.unit` | string | With GPS | `km` |
 | `address.area_code` | integer | No | 6 digit pincode |
 | `category.descriptor.name` | string | No | Speciality name, for example `Cardiology` |
 | `category.descriptor.code` | integer | No | Speciality code, for example `100002` |
 | `provider.descriptor.name` | string | No | Hospital or facility name |
+
+### on_search: context
+
+| Field | Description |
+| --- | --- |
+| `domain` | `nic2004:85112`, the same as the search |
+| `action` | `on_search`, fixed |
+| `consumer_uri` | Your callback URL, the endpoint that receives the response |
+| `provider_id` | Identifier of the responding HSPA |
+| `transaction_id` | The `transaction_id` of the originating search |
 
 ### on_search: provider records
 
@@ -339,12 +335,12 @@ All fields are mandatory.
 | --- | --- | --- |
 | `catalog.providers[].id` | string | PM-JAY HEM hospital ID, for example `HOSP27G13867` |
 | `catalog.providers[].descriptor.name` | string | Hospital name |
-| `catalog.providers[].descriptor.code` | string | `G` government, `P` private |
+| `catalog.providers[].descriptor.code` | string | `G` Government, `P` Private |
 | `catalog.providers[].descriptor.flag` | boolean | NABH accreditation. May be unpopulated. |
-| `catalog.providers[].descriptor.short_desc` | string | State level empanelment context |
+| `catalog.providers[].descriptor.short_desc` | string | See [Confirm at onboarding](#confirm-at-onboarding) |
 | `catalog.providers[].descriptor.long_desc` | string | Empanelment status description |
-| `catalog.providers[].categories[].descriptor.name` | string | Speciality name |
-| `catalog.providers[].categories[].descriptor.code` | integer | Speciality code |
+| `catalog.providers[].categories[].descriptor.name` | string | Speciality name, for example `Cardiology` |
+| `catalog.providers[].categories[].descriptor.code` | integer | Speciality code, for example `100002` |
 | `catalog.providers[].fulfillments[]` with `type: Establishment Date` | string | Year the hospital was established |
 | `catalog.providers[].fulfillments[]` with `type: Empaneled Date` | string | Date of PM-JAY empanelment |
 | `catalog.providers[].location.gps` | string | `lat,long` of the hospital |
@@ -356,40 +352,22 @@ All fields are mandatory.
 | `catalog.providers[].location.state.code` | integer | State code |
 | `catalog.providers[].contact.phone` | string | Hospital phone number |
 | `catalog.providers[].contact.email` | string | Hospital email |
-| `catalog.providers[].contact.tags.nodalOfficerNumber` | string | Nodal officer number for PM-JAY questions |
+| `catalog.providers[].contact.tags.nodalOfficerNumber` | string | PM-JAY nodal officer number |
 
-## Known limitations
+## Confirm at onboarding
 
-These apply to the current phase.
+- **The meaning of provider `descriptor.short_desc`.** It arrives as `State.` in the sample, and may describe ownership or empanelment context. Show it as plain text and do not build logic on it until confirmed.
 
-| Limitation | What to do |
-| --- | --- |
-| GPS search can return incomplete results where hospital density is low | Offer district or pincode search as a fallback next to GPS |
-| `descriptor.flag`, the NABH accreditation flag, is not consistently populated | Do not filter on it. Show it when present, otherwise say nothing. |
-| `on_search` responses arrive asynchronously with no end of results signal | Set a timeout window. Show results as they arrive. |
-| No pagination on `on_search` | Handle large payloads without blocking the UI. Paginate on the client for display. |
-| No booking or referral | Scope your UI to discovery |
-| The covered procedure list can lag real package changes | Show a disclaimer and link to pmjay.gov.in for the authoritative package list |
+## Error codes
 
-## Testing before go-live
+Both `search` and `on_search` can be answered with a NACK instead of an ACK. The error object it carries, and what to log, are on [Errors on UHI](/docs/uhi/v1/concepts/errors).
 
-There are 29 test cases across five categories, to be run against the UHI sandbox before you request production sign off.
+## Certification
 
-| Category | What it checks |
-| --- | --- |
-| A, context validation | All mandatory `context` fields present. `transaction_id` in `on_search` matches the originating `search`. `domain` mirrors correctly. |
-| B, search filters | One test per supported filter variant, checking that results honour the filter. |
-| C, on_search response | Provider ID present and non null. Core fields present. Empanelment and establishment dates present. GPS parseable. Nodal officer number present. Specialities returned. |
-| D, user experience | The feature is reachable in three taps or fewer. UHI, PM-JAY and ABDM branding on the search screen. A fallback message when there are no results. A disclaimer on the results screen asking the user to call ahead. |
-| E, edge cases | A large result set from a high density state renders. An empty `providers[]` array shows a fallback and does not crash. A missing `on_search` times out and offers a retry rather than spinning forever. |
-
-Ask for the full test case sheet and the UHI Postman collection when you onboard.
-
-## Phase scope
-
-The plan has three phases, and only the first, discovery, is open for onboarding. Booking and referral workflows, provider dashboards and CSC kiosk search are named as the second phase. [ABHA](/docs/uhi/v1/getting-started/glossary#abha) linked discharge summaries and multilingual voice are named as the third. Dates for either are not yet published.
+Run the PM-JAY HEM test cases in sandbox before you request sign-off. Each one is stated in plain words and as its exact success condition: [PM-JAY HEM test cases](/docs/uhi/v1/resources/pmjay-hem).
 
 ## Next
 
-- Shared UHI protocol, signing and onboarding: [UHI services](/docs/uhi/v1)
-- The M2 prerequisite: [HIE-CM M2](/docs/hiecm/v3/api/m2)
+- The other services on the network: [Services](/docs/uhi/v1/services).
+- Signing each call: [Signing](/docs/uhi/v1/concepts/signing).
+- Registration, sandbox and sign-off: [Onboarding](/docs/uhi/v1/getting-started/onboarding).

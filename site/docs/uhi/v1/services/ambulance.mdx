@@ -1,40 +1,75 @@
 ---
-title: Ambulance booking
-sidebar_label: Ambulance booking
+title: 'Ambulance Booking: Find an ambulance and get a quote'
+sidebar_label: Ambulance Booking
 sidebar_position: 4
-description: Find an ambulance nearby and get a quote from the provider, using the two call pairs live in this service today.
-source: UHI__UHI_AmbulanceBooking_Onboarding_v1.1-July2026.md
+sidebar_custom_props:
+  roles: [eua, hspa]
+description: A caregiver finds nearby private ambulances with an arrival window and a price, then sends the patient's details to the chosen provider.
+source: UHI developer guide of 22 September 2026, sections 2.4 and 3.3; UHI Ambulance Booking Onboarding Document v1.1 (July 2026), sections 4, 6, 8 and 10
 sidebar_class_name: sidebar-icon sidebar-icon--ambulance
 ---
 
-# Ambulance booking
+import ApiLinks from '@site/src/components/docs/ApiLinks';
 
-Ambulance booking on [UHI](/docs/uhi/v1/getting-started/glossary#uhi) lets a patient or a caregiver find ambulances near them across every registered provider, see arrival windows and indicative charges, and start a booking with the one they pick. After this page you will know the four calls that are live today, their fields, and what [NHA](/docs/uhi/v1/getting-started/glossary#nha) tests your app for.
+# Ambulance Booking: Find an ambulance and get a quote
 
-Read [UHI services](/docs/uhi/v1) first, for the `context` block, the acknowledgement model, signing and the two transports.
+Ambulance Booking on the
+[Unified Health Interface](/docs/uhi/v1/getting-started/glossary#uhi) (UHI)
+lets a caregiver find nearby private ambulances, each with an arrival window
+and an indicative price. The caregiver picks one and sends the patient's
+details to that provider, which calls back to arrange dispatch. Any compliant
+ambulance platform becomes visible in every compliant health app, without
+bilateral agreements.
 
-## What is live, and what is not
+<ApiLinks platform="uhi" version="v1" module="ambulance" />
 
-This service is released in two phases.
+## In short
 
-| Phase | Calls | Status |
+- There are four calls. `search` and `on_search` go through the UHI Gateway.
+  `init` and `on_init` go directly between the two applications.
+- The service handles emergencies. Send `fulfillment.type: EMERGENCY`, the
+  pickup (`SOURCE`) GPS and address, and ideally class `ALL`.
+- `on_init` is a quote, not a booking. It returns `order.id`, a price breakup
+  and five terms for review.
+- Driver and vehicle details appear nowhere. An `agent` block in any payload
+  fails testing.
+- Silence is not an error. A provider answers only for areas it serves.
+
+## Ambulance Booking functionalities
+
+Both roles are open. An
+[End User Application](/docs/uhi/v1/getting-started/glossary#eua) (EUA) is a
+health app. A
+[Health Service Provider Application](/docs/uhi/v1/getting-started/glossary#hspa)
+(HSPA) is an ambulance service platform.
+
+| In scope | Not in scope |
+| --- | --- |
+| `search` and `on_search`: emergency ambulances by class, `ALS`, `BLS` or `ALL` | `confirm` and `on_confirm`: order creation, driver and vehicle details |
+| `init` and `on_init`: patient details sent, quote and terms returned | `status`, `on_status` and `on_update`: dispatch updates and live tracking |
+| The provider calls the caregiver to arrange dispatch | `cancel` and `on_cancel` |
+| | Non-emergency, scheduled trips with a drop-off |
+| | State-run networks such as 108, 102 and 112 |
+
+Booking confirmation, dispatch updates, tracking and cancellation are not part
+of this service today.
+
+## Prerequisites
+
+| Prerequisite | EUA | HSPA |
 | --- | --- | --- |
-| First | `search`, `on_search`, `init`, `on_init` | Current |
-| Second | `confirm`, `on_confirm`, `status`, `on_status`, `cancel`, `on_cancel`, `on_update` | Upcoming |
+| [Milestone 2](/docs/hiecm/v3/milestones/m2) of [HIE-CM](/docs/uhi/v1/getting-started/glossary#hie-cm) completed | Required | |
+| A public HTTPS callback URL | `consumer_uri`, for `on_search` and `on_init` | For `search` from the Gateway and `init` from EUAs |
+| Request signing: Ed25519 and BLAKE-512, see [Signing](/docs/uhi/v1/concepts/signing) | Required | Required, on every outbound response |
+| Asynchronous handling: never block on a reply to `search` or `init` | Required | |
+| Support for the `EMERGENCY` flow | Required | |
+| Show the `on_init` cancellation and payment terms before any confirm action | Required | |
+| Real-time or near-real-time fleet availability | | Required. Manually maintained records are not approved |
+| No driver or vehicle details in any payload | | Required |
 
-Today the flow ends at a quote. The patient discovers ambulances, picks one, sends their details with `init`, and receives a quote with terms in `on_init`. There is no `confirm`. The outcome is the patient requesting a callback from the provider they chose.
-
-Two limits follow from that.
-
-- **The `agent` block must not appear in any current-phase payload.** Driver name, vehicle number and driver phone are post-confirmation data. Their absence is tested in `on_search` and `on_init`, and tests that your EUA shows no driver or vehicle UI at any point before confirmation.
-- **Live tracking and dispatch updates are not available.** They arrive with the second phase.
-
-## Out of scope right now
-
-- The `NON_EMERGENCY` flow, which is future scope. Build `EMERGENCY` first.
-- Booking confirmation and order creation from the EUA.
-- State-operated ambulance networks. 108, 102 and 112 services are not on UHI today.
-- Patient transport ambulances. An HSPA may return a `PTA` category in its catalog. Ignore it.
+Generate your key pair with the
+[header generator utility](https://github.com/NHA-ABDM/UHI/tree/main/header_generator_utility)
+and share only the public key.
 
 ## Service identity
 
@@ -43,301 +78,237 @@ Two limits follow from that.
 | `context.domain` | `nic2008:86909` |
 | `context.core_version` | `0.7.1` |
 | `message.intent.item.descriptor.code` | `AMBULANCE` |
-| `message.intent.fulfillment.type` | `EMERGENCY` or `NON_EMERGENCY` |
+| `message.intent.fulfillment.type` | `EMERGENCY` |
+| `message.intent.category.descriptor.code` | `ALS`, `BLS` or `ALL` |
 
-## Who is involved
+## Workflow overview
 
-| Role | What it does here |
+| Use case | # | Call | Route | What the payload carries |
+| --- | --- | --- | --- | --- |
+| 1. Discovery | 1 | `search` | EUA to UHI Gateway | Case type, class, pickup time, `SOURCE` GPS and address, optional `additional_services` tag |
+| | 2 | `search` (forwarded) | UHI Gateway to every ambulance HSPA | The same search |
+| | 3 | `on_search` | HSPA to UHI Gateway | One fulfillment per ambulance with its arrival window, plus items with prices |
+| | 4 | `on_search` | UHI Gateway to EUA | The same catalog, at the EUA's `consumer_uri` |
+| 2. Order | 1 | `init` | EUA to HSPA | Chosen provider, item and fulfillment ids; billing; the patient's ABHA address; pickup location |
+| | 2 | `on_init` | HSPA to EUA | `order.id`, total price with breakup, payment type and status, five terms, `terms_reference`, echoed locations |
+
+Each role exposes these endpoints.
+
+| Role | Endpoints |
 | --- | --- |
-| [EUA](/docs/uhi/v1/getting-started/glossary#eua) | The patient or caregiver app. Sends the search, shows options, sends `init`, shows the quote and terms |
-| [HSPA](/docs/uhi/v1/getting-started/glossary#hspa) | The ambulance operator's platform. Answers searches with live availability, answers `init` with a quote |
-| [Gateway](/docs/uhi/v1/getting-started/glossary#gateway) | The routing layer. Broadcasts the search. Not involved from `init` onwards |
+| HSPA | `/search`, `/init` |
+| EUA | `/on_search`, `/on_init` |
 
-## The four calls
+## Journey 1: discovery
 
-| # | Call | Direction | What happens |
-| --- | --- | --- | --- |
-| 1 | `search` | EUA to gateway to HSPAs | The patient searches by case type, ambulance class and pickup location |
-| 2 | `on_search` | HSPA to gateway to EUA | Each HSPA with availability returns a catalog with arrival windows and indicative pricing |
-| 3 | `init` | EUA to HSPA, direct | The EUA sends patient details, billing and the chosen fulfilment |
-| 4 | `on_init` | HSPA to EUA, direct | The HSPA returns a quote, payment terms and a cancellation policy |
+The caregiver gives the case type, the class, the pickup location and any extra
+services. The Gateway broadcasts the search to every ambulance HSPA. Only
+providers that serve the pickup area answer.
 
-Every one returns an acknowledgement synchronously. The real answer arrives later at the callback URL.
+```mermaid
+sequenceDiagram
+    autonumber
+    participant C as Caregiver
+    participant E as EUA
+    participant G as UHI Gateway
+    participant H as Ambulance HSPAs
+    C->>E: Case type, class, pickup location, optional services
+    E->>G: search (EMERGENCY, SOURCE)
+    G-->>E: HTTP 200 ACK
+    G->>H: Broadcasts search to all ambulance HSPAs
+    H->>G: on_search (ambulances, arrival window, indicative price)
+    G->>E: on_search to consumer_uri
+    E->>C: Available ambulance options
+```
 
-Silence is not an error. An HSPA answers only for areas it covers, so no response from a given HSPA tells you nothing about network health.
+| Case type | Location fields |
+| --- | --- |
+| `EMERGENCY` | `SOURCE`, with pickup GPS and address, is mandatory. `DESTINATION` is optional |
 
-## Search filters
-
-| Case type | Ambulance class codes | Location fields required |
-| --- | --- | --- |
-| `EMERGENCY` | `ALS`, `BLS`, `ALL` | `SOURCE` only: pickup GPS and address |
-| `NON_EMERGENCY` | `ALS`, `BLS`, `ALL` | `SOURCE` and `DESTINATION`, both GPS and address |
-
-`ALS` is advanced life support, `BLS` is basic life support. For an emergency search, set the class to `ALL` so nothing available is filtered out.
-
-## search
-
-`context` is the standard UHI block. The service-specific parts live in `message.intent`.
-
-| Field | Type | Required | What it is |
-| --- | --- | --- | --- |
-| `category.descriptor.code` | string | Optional | Ambulance class: `ALS`, `BLS`, or `ALL` for every class |
-| `fulfillment.type` | string | Mandatory | `EMERGENCY` or `NON_EMERGENCY` |
-| `fulfillment.start.time.timestamp` | ISO 8601 | Mandatory | Requested pickup time. Use the current time for an emergency |
-| `fulfillment.end.time.timestamp` | ISO 8601 | Optional | End of the acceptable window. Used for non-emergency only |
-| `fulfillment.tags.additional_services` | string | Optional | Comma-separated extras, for example an oxygen cylinder |
-| `locations[SOURCE].gps` | string | Mandatory | Pickup coordinates as `latitude,longitude` |
-| `locations[SOURCE].address` | string | Mandatory | Pickup address text |
-| `locations[DESTINATION].gps` | string | Conditional | Drop-off coordinates. Non-emergency only |
-| `locations[DESTINATION].address` | string | Conditional | Drop-off address. Non-emergency only |
-| `item.descriptor.code` | string | Mandatory | `AMBULANCE` |
-
-### Sample, emergency
-
-With your identifiers substituted.
+An excerpt of `on_search`, with one ambulance and its price:
 
 ```json
 {
-  "context": {
-    "domain": "nic2008:86909",
-    "country": "IND",
-    "city": "std:011",
-    "action": "search",
-    "core_version": "0.7.1",
-    "consumer_id": "<YOUR_EUA_ID_FROM_NHA_ONBOARDING>",
-    "consumer_uri": "<YOUR_HTTPS_CALLBACK_URL>",
-    "message_id": "e9a19230-f951-11ec-b135-53aea776f66b",
-    "timestamp": "2026-03-23T15:24:35",
-    "transaction_id": "e9a19230-f951-11ec-b135-53aea776f66b"
-  },
-  "message": {
-    "intent": {
-      "category": {
-        "descriptor": { "code": "ALS", "name": "ALS" }
-      },
-      "fulfillment": {
-        "type": "EMERGENCY",
-        "start": { "time": { "timestamp": "2026-01-05T15:24:35" } },
-        "end": { "time": { "timestamp": "2026-01-05T23:59:59" } },
-        "tags": { "additional_services": "oxygen cylinder, etc" }
-      },
-      "locations": [
-        {
-          "descriptor": { "code": "SOURCE", "name": "SOURCE" },
-          "gps": "12.423423,77.325647",
-          "address": "SHIVAJI MARG, PUNE"
-        }
-      ],
-      "item": {
-        "descriptor": { "code": "AMBULANCE", "name": "AMBULANCE" }
+  "categories": [
+    { "id": "1", "descriptor": { "code": "ALS", "name": "Advanced Life Support(ALS)" } }
+  ],
+  "fulfillments": [
+    {
+      "id": "ML-ALS-01",
+      "type": "EMERGENCY",
+      "tracking": true,
+      "start": { "time": { "timestamp": "2026-01-05T12:30:00" } },
+      "end": { "time": { "timestamp": "2026-01-05T12:35:00" } }
+    }
+  ],
+  "items": [
+    {
+      "id": "1",
+      "category_id": "1",
+      "fulfillment_id": "ML-ALS-01",
+      "descriptor": { "flag": true, "name": "Charges" },
+      "price": {
+        "currency": "INR",
+        "value": "500",
+        "estimated_Value": "500",
+        "minimum_Value": "200",
+        "maximum_Value": "1500"
       }
     }
-  }
+  ]
 }
 ```
 
-## on_search
+Start with the first call:
+[search](/docs/uhi/v1/api/ambulance/endpoints/uhi-ambulance-discovery/01-uhi-network-gateway-search).
 
-| Field | Type | Required | What it is |
-| --- | --- | --- | --- |
-| `context.provider_id` | string | Mandatory | HSPA identifier. You need this for `init` |
-| `context.provider_uri` | string | Mandatory | HSPA callback URL. You need this for `init` |
-| `context.transaction_id` | string | Mandatory | Matches your search |
-| `catalog.descriptor.name` | string | Mandatory | HSPA name |
-| `catalog.descriptor.images` | string | Optional | HSPA logo, preferably base64 |
-| `catalog.descriptor.flag` | boolean | Mandatory | `false` means the service is active, `true` means paused |
-| `providers[].id` | string | Mandatory | Provider identifier |
-| `providers[].categories[].code` | string | Mandatory | Ambulance class: `ALS` or `BLS` |
-| `providers[].fulfillments[].id` | string | Mandatory | Fulfilment ID, for example `ML-ALS-01` |
-| `providers[].fulfillments[].type` | string | Mandatory | Case type. Must match the search |
-| `providers[].fulfillments[].tracking` | boolean | Mandatory | Whether live tracking is supported for this option |
-| `providers[].fulfillments[].start.time.timestamp` | ISO 8601 | Mandatory | Earliest estimated arrival |
-| `providers[].fulfillments[].end.time.timestamp` | ISO 8601 | Mandatory | Latest estimated arrival |
-| `providers[].fulfillments[].tags.additional_services` | string | Optional | Extras available on this option |
-| `providers[].fulfillments[].tags.deeplink_url` | string | Optional | Deep link into the HSPA app |
-| `providers[].items[].id` | string | Mandatory | Item identifier |
-| `providers[].items[].descriptor.flag` | boolean | Mandatory | `true` means payment is required |
-| `providers[].items[].price.value` | string | Mandatory | Base indicative price in INR |
-| `providers[].items[].price.estimated_Value` | string | Optional | Estimated total charge |
-| `providers[].items[].price.minimum_Value` | string | Optional | Minimum or advance charge |
-| `providers[].items[].price.maximum_Value` | string | Optional | Maximum expected charge |
-| `providers[].items[].fulfillment_id` | string | Mandatory | Links this price to a fulfilment |
+## Journey 2: order
 
-### How the pieces link
+The caregiver picks an ambulance. The EUA sends the patient's details directly
+to that HSPA, which returns a quote and terms. The provider then calls the
+caregiver to arrange dispatch.
 
-Each fulfilment ID appears twice: once where the fulfilment is declared, and once as `items[].fulfillment_id`. The item also carries `category_id`. The chain is category, then fulfilment, then item, joined through the item object. Walk it to show "ALS ambulance, arriving 12:30 to 12:35, around 500 rupees".
-
-### Sample, trimmed
-
-```json
-{
-  "context": {
-    "domain": "nic2008:86909",
-    "action": "on_search",
-    "core_version": "0.7.1",
-    "consumer_id": "<YOUR_EUA_ID_FROM_NHA_ONBOARDING>",
-    "consumer_uri": "<YOUR_HTTPS_CALLBACK_URL>",
-    "provider_id": "<HSPA_ID_FROM_THIS_RESPONSE>",
-    "provider_uri": "<HSPA_CALLBACK_URL_FROM_THIS_RESPONSE>",
-    "transaction_id": "e9a19230-f951-11ec-b135-53aea776f66b",
-    "message_id": "e9a19230-f951-11ec-b135-53aea776f66b"
-  },
-  "message": {
-    "catalog": {
-      "descriptor": {
-        "name": "Medulance HSPA",
-        "flag": false,
-        "short_desc": "Medulance: Ambulance Provider HSPA"
-      },
-      "providers": [
-        {
-          "id": "1",
-          "descriptor": { "name": "Medulance", "flag": false },
-          "categories": [
-            { "id": "1", "descriptor": { "name": "Advanced Life Support (ALS)", "code": "ALS", "flag": false } },
-            { "id": "2", "descriptor": { "name": "Basic Life Support (BLS)", "code": "BLS", "flag": false } }
-          ],
-          "fulfillments": [
-            {
-              "id": "ML-ALS-01",
-              "type": "EMERGENCY",
-              "tracking": true,
-              "start": { "time": { "timestamp": "2026-01-05T12:30:00" } },
-              "end": { "time": { "timestamp": "2026-01-05T12:35:00" } },
-              "tags": {
-                "additional_services": "oxygen cylinder, etc",
-                "deeplink_url": "https://deeplinkurl.com"
-              }
-            }
-          ],
-          "items": [
-            {
-              "id": "1",
-              "descriptor": { "name": "Charges", "flag": true },
-              "price": {
-                "currency": "INR",
-                "value": "500",
-                "estimated_Value": "500",
-                "minimum_Value": "200",
-                "maximum_Value": "1500"
-              },
-              "category_id": "1",
-              "fulfillment_id": "ML-ALS-01"
-            }
-          ]
-        }
-      ]
-    }
-  }
-}
+```mermaid
+sequenceDiagram
+    autonumber
+    participant C as Caregiver
+    participant E as EUA
+    participant H as Ambulance HSPA
+    C->>E: Selects an ambulance (fulfillment)
+    E->>H: init (order, patient details, fulfillment ID)
+    H->>E: on_init (order.id, quote, terms)
+    E->>C: Quote and terms for review
+    H->>C: Calls back to arrange dispatch
 ```
 
-## init
+Start with the first call:
+[init](/docs/uhi/v1/api/ambulance/endpoints/uhi-ambulance-order/01-uhi-ambulance-init).
 
-Direct to the HSPA, at the `provider_uri` you took from `on_search`.
+## Concepts explored
 
-| Field | Type | Required | What it is |
-| --- | --- | --- | --- |
-| `context.provider_id` | string | Mandatory | Carried from `on_search` |
-| `context.provider_uri` | string | Mandatory | Carried from `on_search` |
-| `order.provider.id` | string | Mandatory | The provider the user picked |
-| `order.item.id` | string | Mandatory | The item the user picked |
-| `order.item.fulfillment_id` | string | Mandatory | The fulfilment the user picked |
-| `order.fulfillment.id` | string | Mandatory | Matches `item.fulfillment_id` |
-| `order.fulfillment.type` | string | Mandatory | `EMERGENCY` or `NON_EMERGENCY` |
-| `order.fulfillment.tracking` | boolean | Mandatory | Carried from `on_search` |
-| `order.fulfillment.tags.additional_services` | string | Optional | Extras the patient asked for |
-| `order.fulfillment.tags.deeplink_url` | string | Optional | Carried from `on_search` if present |
-| `order.billing.name` | string | Mandatory | Patient or responsible person |
-| `order.billing.address` | object | Mandatory | Pickup address: `locality`, `state`, `country`, `area_code` |
-| `order.billing.phone` | string | Mandatory | Contact number |
-| `order.customer.id` | string | Mandatory | Patient [ABHA](/docs/uhi/v1/getting-started/glossary#abha) address, for example `91XXXXXXXXXX@sbx` |
-| `order.customer.person.dob` | string | Optional | `YYYY-MM-DD` |
-| `order.customer.person.gender` | string | Optional | `M`, `F` or `O` |
-| `order.locations[SOURCE]` | object | Mandatory | Pickup GPS and address |
-| `order.locations[DESTINATION]` | object | Conditional | Required for non-emergency, optional for emergency |
+- **Category, fulfillment, item.** In `on_search`, `categories[]` is the
+  ambulance class. Each `fulfillments[]` entry is one ambulance. Each `items[]`
+  entry is its price, linked back by `items[].fulfillment_id`.
+- **Send the ids back exactly.** `init` carries the chosen item id and
+  fulfillment id as `on_search` gave them.
+- **Render any category code.** The example `on_search` also returns `PTA`,
+  Patient Transport Ambulances, and `MVA`, Mortuary Van/Ambulance. `PTA` is
+  not in scope for this service.
+- **An arrival window, not one time.** `fulfillments[].start` and `.end` are the
+  earliest and latest expected arrival. Show both.
+- **Indicative, then confirmed price.** `on_search` prices are indicative:
+  `price.value`, with optional estimated, minimum and maximum values. `on_init`
+  gives the confirmed total and its breakup.
+- **Service paused.** `catalog.descriptor.flag: true` means that HSPA has
+  paused service. Do not list its ambulances as bookable.
+- **Payment flag per item.** `items[].descriptor.flag: true` means payment is
+  required.
+- **The patient by ABHA.** `order.customer.id` carries the patient's
+  [ABHA address](/docs/uhi/v1/getting-started/glossary#abha-address).
+- **Terms gate the next step.** Show the cancellation and payment terms from
+  `on_init` before you enable any confirm action.
+- **No agent block.** Driver name, vehicle number and driver phone must not
+  appear in any payload or on any screen.
+- **No answer means no coverage.** An HSPA answers only for areas it serves. An
+  empty result is not a network fault.
 
-## on_init
+## Field reference
 
-The HSPA answers with the order ID, a quote and the terms.
+### search
 
-| Field | Type | Required | What it is |
-| --- | --- | --- | --- |
-| `order.id` | string | Mandatory | The HSPA's order ID. Carry it into every call in the second phase |
-| `order.fulfillment.tags.terms_reference` | string (URL) | Mandatory | Link to the HSPA's versioned terms document |
-| `order.quote.price.value` | string | Mandatory | Total confirmed price in INR |
-| `order.quote.breakup[].title` | string | Mandatory | Line item name, for example `Ambulance Base Charge` |
-| `order.quote.breakup[].price.value` | string | Mandatory | Line item amount |
-| `order.payment.type` | string | Mandatory | `ON-ORDER` at booking, or `PRE-ORDER` in advance |
-| `order.payment.status` | string | Mandatory | For example `NOT_PAID` |
-| `order.terms[].type` | string | Mandatory | `Commercial`, `Settlement`, `Cancellation`, `Refund` or `Payment` |
-| `order.terms[].termsState` | string | Mandatory | `INITIATED`, awaiting EUA review |
-| `order.locations[SOURCE]` | object | Mandatory | Echoed from `init` |
-| `order.locations[DESTINATION]` | object | Conditional | Echoed from `init` for non-emergency |
+| Field | Required | What it is |
+| --- | --- | --- |
+| `message.intent.category.descriptor.code` | Optional | Class filter: `ALS`, `BLS`, or `ALL` for every class |
+| `message.intent.fulfillment.type` | Mandatory | `EMERGENCY` |
+| `message.intent.fulfillment.start.time.timestamp` | Mandatory | Requested pickup time. Use the current time for `EMERGENCY` |
+| `message.intent.fulfillment.tags.additional_services` | Optional | Comma-separated services, for example oxygen cylinder |
+| `message.intent.locations[SOURCE].gps` | Mandatory | Pickup coordinates, `lat,long` |
+| `message.intent.locations[SOURCE].address` | Mandatory | Pickup address |
+| `message.intent.locations[DESTINATION]` | Optional | Drop-off GPS and address |
+| `message.intent.item.descriptor.code` | Mandatory | `AMBULANCE` |
 
-Three terms apply in the current phase: `Commercial`, `Cancellation` and `Payment`, each at `INITIATED`.
+### on_search
 
-```json
-{
-  "quote": {
-    "price": { "currency": "INR", "value": "500.0" },
-    "breakup": [
-      { "title": "Ambulance Base Charge", "price": { "currency": "INR", "value": "400.0" } },
-      { "title": "Consumable Charges", "price": { "currency": "INR", "value": "100.0" } }
-    ]
-  },
-  "payment": { "type": "ON-ORDER", "status": "NOT_PAID" }
-}
-```
+| Field | Required | What it is |
+| --- | --- | --- |
+| `context.provider_id`, `context.provider_uri` | Mandatory | The HSPA's id and URL. Store both for `init` |
+| `context.transaction_id`, `context.message_id` | Mandatory | Match the values in the search |
+| `catalog.descriptor.name` | Mandatory | HSPA name |
+| `catalog.descriptor.images` | Optional | HSPA logo URL |
+| `catalog.descriptor.flag` | Mandatory | `false` means active, `true` means paused |
+| `providers[].id` | Mandatory | Provider id |
+| `providers[].categories[].code` | Mandatory | Ambulance class code |
+| `providers[].fulfillments[].id` | Mandatory | Unique ambulance id, for example `ML-ALS-01` |
+| `providers[].fulfillments[].type` | Mandatory | Matches the search type |
+| `providers[].fulfillments[].tracking` | Mandatory | `true` if real-time tracking is supported |
+| `providers[].fulfillments[].start.time.timestamp` | Mandatory | Earliest expected arrival |
+| `providers[].fulfillments[].end.time.timestamp` | Mandatory | Latest expected arrival |
+| `providers[].fulfillments[].tags.additional_services` | Optional | Extra services available |
+| `providers[].fulfillments[].tags.deeplink_url` | Optional | Deep link into the HSPA app |
+| `providers[].items[].id` | Mandatory | Item id |
+| `providers[].items[].descriptor.flag` | Mandatory | `true` means payment is required |
+| `providers[].items[].price.value` | Mandatory | Indicative base price in INR |
+| `providers[].items[].price.estimated_Value` | Optional | Estimated total charge |
+| `providers[].items[].price.minimum_Value` | Optional | Minimum advance or base charge |
+| `providers[].items[].price.maximum_Value` | Optional | Maximum expected charge |
+| `providers[].items[].fulfillment_id` | Mandatory | The ambulance this price belongs to |
 
-Most of `on_init` exists for the second phase. You may receive these fields now without showing all of them to the user yet.
+### init
 
-## What your EUA has to show
+| Field | Required | What it is |
+| --- | --- | --- |
+| `context.provider_id`, `context.provider_uri` | Mandatory | Carried from `on_search` |
+| `order.provider.id` | Mandatory | Provider chosen by the user |
+| `order.item.id` | Mandatory | Item chosen by the user |
+| `order.item.fulfillment_id` | Mandatory | Ambulance chosen by the user |
+| `order.fulfillment.id` | Mandatory | Matches `item.fulfillment_id` |
+| `order.fulfillment.type` | Mandatory | `EMERGENCY` |
+| `order.fulfillment.tracking` | Mandatory | Carried from `on_search` |
+| `order.fulfillment.tags.additional_services` | Optional | Services the patient asked for |
+| `order.fulfillment.tags.deeplink_url` | Optional | Deep link, if the HSPA gave one |
+| `order.billing.name` | Mandatory | Patient or responsible person |
+| `order.billing.address` | Mandatory | Pickup address: locality, state, country, `area_code` |
+| `order.billing.phone` | Mandatory | Contact number |
+| `order.customer.id` | Mandatory | The patient's ABHA address |
+| `order.customer.person.dob` | Optional | Date of birth, `YYYY-MM-DD` |
+| `order.customer.person.gender` | Optional | `M`, `F` or `O` |
+| `order.locations[SOURCE]` | Mandatory | Pickup GPS and address |
+| `order.locations[DESTINATION]` | Optional | Drop-off GPS and address |
 
-| ID | Requirement |
-| --- | --- |
-| `AMB-E-01` | Show the HSPA name and logo from `catalog.descriptor` in the listing, whenever they arrive in the response |
-| `AMB-E-02` | Show the estimated arrival window from `fulfillment.start` and `fulfillment.end` for each option |
-| `AMB-E-03` | Show the indicative price from `item.price.value` before the user selects |
-| `AMB-E-04` | Show the full `on_init` cancellation and payment terms before enabling any confirm action |
-| `AMB-E-05` | Show no driver or vehicle detail anywhere before confirmation |
+### on_init
 
-## Edge cases to handle
+| Field | Required | What it is |
+| --- | --- | --- |
+| `order.id` | Mandatory | Order id generated by the HSPA |
+| `order.fulfillment.tags.terms_reference` | Mandatory | URL of the HSPA's versioned terms |
+| `order.quote.price.value` | Mandatory | Total confirmed price in INR |
+| `order.quote.breakup[].title` | Mandatory | Line item, for example Ambulance Base Charge |
+| `order.quote.breakup[].price.value` | Mandatory | Line item amount in INR |
+| `order.payment.type` | Mandatory | `ON-ORDER`, at booking, or `PRE-ORDER`, in advance |
+| `order.payment.status` | Mandatory | For example `NOT_PAID` |
+| `order.terms[]` | Mandatory | Commercial, Settlement, Cancellation, Refund and Payment |
+| `order.terms[].termsState` | Mandatory | `INITIATED`, awaiting EUA review |
+| `order.locations[SOURCE]` | Mandatory | Pickup, echoed from `init` |
+| `order.locations[DESTINATION]` | Conditional | Drop-off, echoed from `init` when sent |
 
-| Case | What your system does |
-| --- | --- |
-| No HSPA answers within your window | Show the user a clear empty result. Do not present it as a failure |
-| An HSPA returns an empty `providers` array | Handle it without a crash or a display error |
-| A duplicate `search` with the same `transaction_id` | Expect the gateway or the HSPA to deduplicate |
-| `on_init` with `payment.type: PRE-ORDER` and a non-zero `minimum_Value` | Show the advance payment requirement to the user |
+## Confirm at onboarding
 
-## Prerequisites
+- **How long to wait for `on_search`.** An HSPA must answer within a response
+  time that ABDM sets. Agree the value at onboarding, and set your EUA's wait to
+  match it.
 
-For an EUA:
+## Error codes
 
-- [ABDM](/docs/uhi/v1/getting-started/glossary#abdm) [M2](/docs/hiecm/v3/api/m2) with [HIE-CM](/docs/uhi/v1/getting-started/glossary#hie-cm) completed. This is the hard prerequisite for production access.
-- A publicly reachable HTTPS `consumer_uri` for `on_search` and `on_init`.
-- Ed25519 signing with BLAKE-512 body hashing.
-- Asynchronous handling. Do not block on a synchronous reply to `search` or `init`.
-- `EMERGENCY` support at minimum. `NON_EMERGENCY` is recommended, not required.
+Every call can return an error object with `type` and `code`, and optionally
+`path` and `message`. See [UHI error codes](/docs/uhi/v1/concepts/errors).
 
-For an HSPA:
+## Certification
 
-- A publicly reachable HTTPS callback URL for `search` from the gateway and `init` from EUAs.
-- Ed25519 signing on every outbound response.
-- Real-time or near real-time availability data. Integrations relying only on manually maintained records are not approved for production.
-- An `on_init` that carries a confirmed quote, payment terms and a cancellation policy.
-- No `agent` block in any current-phase payload.
-
-## What is missing here
-
-- The calls in the second phase have no field reference yet.
-- A Postman collection for this service is available from your onboarding contact.
-- Error codes for this service are not enumerated in the source document.
+Each test case is stated in plain words and as its exact success condition on
+[Ambulance Booking test cases](/docs/uhi/v1/resources/ambulance).
 
 ## Next
 
-- [UHI services](/docs/uhi/v1) for the shared protocol
-- [Physical consultation](/docs/uhi/v1/concepts/services/physical-consultation), the service with the full lifecycle
-- [Blood bank](/docs/uhi/v1/concepts/services/blood-bank)
-- [Support](/docs/support)
+- The calls, one page each: [Ambulance Booking API reference](/docs/uhi/v1/api/ambulance).
+- How every call is signed: [Signing](/docs/uhi/v1/concepts/signing).
+- From sandbox registration to production: [Onboarding to UHI](/docs/uhi/v1/getting-started/onboarding).
