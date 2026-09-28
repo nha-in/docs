@@ -1,0 +1,30 @@
+---
+id: hiecm.endpoint.p1-get-user-phr-card
+type: endpoint
+gateway: hiecm
+milestone: P1
+version: abdm-v3
+title: Get User PHR Card
+summary: Fetches the PHR card of the person signed in.
+generated: true
+operation: p2_get_v3_phr_app_login_profile_phrcard
+sources:
+  - url: https://github.com/nha-in/docs/blob/main/site/docs/_notes/hiecm/p2_get_v3_phr_app_login_profile_phrcard.mdx
+    status: page
+    note: Generated from
+      site/docs/_notes/hiecm/p2_get_v3_phr_app_login_profile_phrcard.mdx#p1-get-user-phr-card.
+      Edit the page, never this file.
+related:
+  concepts:
+    - hiecm.concept.gateway-session
+---
+
+# Get User PHR Card
+
+## In plain words
+
+Fetches the [PHR](/docs/hiecm/v3/getting-started/glossary#phr) card of the person signed in. Send the user token from login in both `X-token` and `X-AUTH-TOKEN`. The call takes no body and answers `202`.
+
+## When it goes wrong
+
+A `401` with `900902` and `Missing Credentials` means a token header is missing.
