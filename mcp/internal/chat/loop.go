@@ -1202,9 +1202,19 @@ func previousUserText(turns []Turn) string {
 // index to find anything: at most four words with an earlier user turn to
 // draw on, the query is the previous turn's text plus this one, so "and the
 // address?" after "how do I create an ABHA" still retrieves the flow.
+// refersBackRe marks a follow-up that leans on the turn before it: a word
+// pointing back ("that callback", "it", "both"), or an opening that carries
+// on from the last answer ("ok", "and", "now"). Such a turn names nothing the
+// search can find alone at any length; follow-ups scored 0.20 recall at 3 on
+// the first recorded run, when only turns of four words or fewer carried the
+// previous question. A standalone question that happens to say "this" gets
+// the previous question as well, which costs some precision on that one
+// lookup and never loses the question's own words.
+var refersBackRe = regexp.MustCompile(`(?i)\b(?:that|this|those|these|it|its|they|them|their|both|same|above|previous|earlier)\b|^\s*(?:ok|okay|and|so|then|now|also|but)\b`)
+
 func lookupQuery(turns []Turn) string {
 	last := lastUserText(turns)
-	if len(strings.Fields(last)) > 4 {
+	if len(strings.Fields(last)) > 4 && !refersBackRe.MatchString(last) {
 		return last
 	}
 	if prev := previousUserText(turns); prev != "" {
