@@ -1400,3 +1400,35 @@ func TestSourcesComeFromTheNewToolNames(t *testing.T) {
 		t.Fatalf("get must cite atoms and only atoms: %+v", got)
 	}
 }
+
+// "thanks" used to match the greeting and got "Hi. What are you building?"
+// back, so a reader closing a conversation was greeted as if they had just
+// arrived. It now gets its own fixed line, still with no lookup and no model.
+func TestRespondAnswersThanksWithoutGreetingBack(t *testing.T) {
+	m := &fakeModel{next: func([]Message) Reply {
+		t.Fatal("the model was called for thanks")
+		return Reply{}
+	}}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			t.Fatal("thanks was looked up")
+			return nil, nil, guard.PackFacts{}, nil
+		},
+	}
+	emit, evs := collectEvents()
+	if err := svc.RespondCommand(context.Background(), []Turn{{Role: "user", Text: "thanks!"}}, nil, Command{Gateway: "hiecm"}, emit); err != nil {
+		t.Fatal(err)
+	}
+	var text string
+	for _, e := range *evs {
+		if e.name == "text" {
+			text += e.data.(map[string]string)["delta"]
+		}
+	}
+	if text != thanksReply {
+		t.Errorf("thanks got %q, want %q", text, thanksReply)
+	}
+	if strings.Contains(text, "What are you building") {
+		t.Error("thanks was answered with the greeting")
+	}
+}

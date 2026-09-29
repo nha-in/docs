@@ -101,6 +101,11 @@ func gatewayNote(gateway string, fromPage bool) string {
 		" unless they ask about another gateway, and do not bring in another gateway's calls or fields.</reader_context>"
 }
 
+// thanksReply is the fixed reply to thanks or an acknowledgement. It is not
+// the greeting: a reader closing a conversation is not asked what they are
+// building.
+const thanksReply = "You're welcome. Ask again whenever the next call gives you trouble."
+
 // greetingFor is the fixed reply to a greeting, pointed at what the reader's
 // gateway covers.
 func greetingFor(gateway string) string {

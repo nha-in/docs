@@ -39,14 +39,27 @@ func TestRoute(t *testing.T) {
 }
 
 func TestIsGreeting(t *testing.T) {
-	for _, q := range []string{"hi", "Hi!", "hello there", "thanks", "ok"} {
+	for _, q := range []string{"hi", "Hi!", "hello there"} {
 		if !IsGreeting(q) {
 			t.Errorf("%q should be a greeting", q)
 		}
 	}
-	for _, q := range []string{"hip", "HIU", "hi, what is an ABHA", "ok so how do I link"} {
+	for _, q := range []string{"hip", "HIU", "hi, what is an ABHA", "ok so how do I link", "thanks", "ok"} {
 		if IsGreeting(q) {
 			t.Errorf("%q should not be a greeting", q)
+		}
+	}
+}
+
+func TestIsThanks(t *testing.T) {
+	for _, q := range []string{"thanks", "Thank you!", "ok", "cool", "got it.", "thanks a lot"} {
+		if !IsThanks(q) {
+			t.Errorf("%q should be thanks", q)
+		}
+	}
+	for _, q := range []string{"hi", "ok so how do I link", "thanks, but what about M3", "great question"} {
+		if IsThanks(q) {
+			t.Errorf("%q should not be thanks", q)
 		}
 	}
 }

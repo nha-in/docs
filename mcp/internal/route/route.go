@@ -34,14 +34,15 @@ type Result struct {
 }
 
 var (
-	pathRe  = regexp.MustCompile(`(?i)\b(?:GET|POST|PUT|PATCH|DELETE)?\s*(/(?:api|v3|v3\.1|hiecm|abha|phr)[A-Za-z0-9/_{}.\-]*)`)
-	opIDRe  = regexp.MustCompile(`\b([a-z][a-z0-9]*(?:_[a-z0-9]+){2,})\b`)
-	failRe  = regexp.MustCompile(`(?i)\b(fail|failing|error|returns? \d{3}|got \d{3}|\b4\d\d\b|\b5\d\d\b|not working|stuck|rejected|invalid)\b`)
-	compRe  = regexp.MustCompile(`(?i)\b(difference|differ|vs\.?|versus|same as|the same as|compare|which one)\b`)
-	metaRe  = regexp.MustCompile(`(?i)\b(catalogue version|which version|how (?:old|current)|last updated|built)\b`)
-	greetRe = regexp.MustCompile(`(?i)^(hi+|hello|hey|hiya|yo|namaste|good (?:morning|afternoon|evening)|thanks?|thank you|ty|ok(?:ay)?|cool|great)(?: there| all| team)?[\s.!?]*$`)
-	selfRe  = regexp.MustCompile(`(?i)\b(?:who|what) are you\b|\bwhat can you (?:do|help)|\b(?:how many |which |what )languages?\b.*\byou\b|\bdo you (?:understand|speak|remember)\b|\bcan you (?:speak|understand)\b|\bare you (?:an? )?(?:bot|ai|human|robot|real|person|chatgpt|gpt|claude|llm)\b|\bwho (?:made|built|created|trained|runs) you\b|\bwhat (?:model|llm) (?:are|is) (?:you|this)\b|\byour (?:name|capabilit\w*|limit\w*)\b|\babout yourself\b|\bhow (?:do|does) (?:you|this assistant) work\b`)
-	whRe    = regexp.MustCompile(`(?i)^(what is|what's|whats|what are|what makes|define|meaning of|explain)\b`)
+	pathRe   = regexp.MustCompile(`(?i)\b(?:GET|POST|PUT|PATCH|DELETE)?\s*(/(?:api|v3|v3\.1|hiecm|abha|phr)[A-Za-z0-9/_{}.\-]*)`)
+	opIDRe   = regexp.MustCompile(`\b([a-z][a-z0-9]*(?:_[a-z0-9]+){2,})\b`)
+	failRe   = regexp.MustCompile(`(?i)\b(fail|failing|error|returns? \d{3}|got \d{3}|\b4\d\d\b|\b5\d\d\b|not working|stuck|rejected|invalid)\b`)
+	compRe   = regexp.MustCompile(`(?i)\b(difference|differ|vs\.?|versus|same as|the same as|compare|which one)\b`)
+	metaRe   = regexp.MustCompile(`(?i)\b(catalogue version|which version|how (?:old|current)|last updated|built)\b`)
+	greetRe  = regexp.MustCompile(`(?i)^(hi+|hello|hey|hiya|yo|namaste|good (?:morning|afternoon|evening))(?: there| all| team)?[\s.!?]*$`)
+	thanksRe = regexp.MustCompile(`(?i)^(thanks?|thank you|thank you (?:so|very) much|ty|ok(?:ay)?|cool|great|got it|perfect|nice)(?: there| all| team| a lot)?[\s.!?]*$`)
+	selfRe   = regexp.MustCompile(`(?i)\b(?:who|what) are you\b|\bwhat can you (?:do|help)|\b(?:how many |which |what )languages?\b.*\byou\b|\bdo you (?:understand|speak|remember)\b|\bcan you (?:speak|understand)\b|\bare you (?:an? )?(?:bot|ai|human|robot|real|person|chatgpt|gpt|claude|llm)\b|\bwho (?:made|built|created|trained|runs) you\b|\bwhat (?:model|llm) (?:are|is) (?:you|this)\b|\byour (?:name|capabilit\w*|limit\w*)\b|\babout yourself\b|\bhow (?:do|does) (?:you|this assistant) work\b`)
+	whRe     = regexp.MustCompile(`(?i)^(what is|what's|whats|what are|what makes|define|meaning of|explain)\b`)
 )
 
 // imperativeVerbs are bare how-to imperatives ("link record", "reset
@@ -104,6 +105,11 @@ func Route(in Input) Result {
 // them.
 func IsAboutAssistant(q string) bool { return selfRe.MatchString(q) }
 
-// IsGreeting reports whether a message is only a greeting or thanks. Those
-// carry nothing to retrieve on, and "hi" retrieves HI type, HIU and HIP.
+// IsGreeting reports whether a message is only a greeting. Those carry
+// nothing to retrieve on, and "hi" retrieves HI type, HIU and HIP.
 func IsGreeting(q string) bool { return greetRe.MatchString(strings.TrimSpace(q)) }
+
+// IsThanks reports whether a message is only thanks or an acknowledgement.
+// It used to count as a greeting, so a reader closing with "thanks" was
+// asked what they were building as if they had just arrived.
+func IsThanks(q string) bool { return thanksRe.MatchString(strings.TrimSpace(q)) }
