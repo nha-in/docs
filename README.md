@@ -91,9 +91,9 @@ through an IAM role with no long-lived credentials stored anywhere.
 
 ```bash
 npm install
-npm start          # dev server; syncs specs from catalogue/openapi first
+npm start          # dev server; syncs specs from each gateway's openapi/ first
 npm run build      # production build
-npm run lint:specs # Spectral lint over catalogue/openapi
+npm run lint:specs # Spectral lint over every gateway's specs
 ```
 
 ### The Docs MCP server
@@ -117,7 +117,7 @@ infrastructure it runs on is defined in the `nha-in/sandbox-tofu` repository.
 ## Rules
 
 - The catalogue is the source. Fix the atom or the spec, then rebuild.
-- Corrections to NHA files are recorded in `catalogue/openapi/corrections/`,
+- Corrections to NHA files are recorded in the gateway's `openapi/corrections/` (`catalogue/hiecm/openapi/corrections/`),
   never applied silently.
 - Never claim verification that was not observed against the sandbox.
 

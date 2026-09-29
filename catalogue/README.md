@@ -6,38 +6,48 @@ downstream is hand-maintained: fix content here, then rebuild.
 
 ## Directory map
 
+HIE-CM and UHI each own one folder holding everything they have. NHCX's
+atoms are in `nhcx/`; its specifications, corrections and sources are still
+under `openapi/` until NHCX is restructured. `npm run lint:atoms` fails on any
+name outside this tree, and on any atom not at
+`<gateway>/<type folder>/<id slug>.md`.
+
 ```
-hiecm/                One folder per atom type for the HIE-CM gateway
-  concepts/           What things are (care-context.md)
-  flows/              Step by step journeys (m2-link-care-context.md)
-  endpoints/          One atom per API operation, prose around the contract
-  callbacks/          Webhook narratives
-  errors/             Error code, cause and fix (abdm-1062.md)
-  tests/              NHA functional test cases, one atom each
-  decisions/          Recorded decisions and why
-uhi/                  Same atom-type folders for the UHI gateway, empty until
-nhcx/                 authored; same again for NHCX
-shared/               Gateway neutral atoms
-  glossary/           Terms (abha.md)
-  decisions/          Recorded decisions that hold across every gateway
-  fhir/               FHIR bundle atoms per hi_type
-  sandbox/            Registration, credentials, callback URL guides
-openapi/              Machine contracts, one folder per gateway and version,
-                      one self-contained file per module
-  CONVENTIONS.md      The binding rules for every spec file below
-  hiecm/v3/           hiecm-gateway.yaml plus one file per module; callbacks
-                      live inside the module file that owns them as
-                      OpenAPI 3.1 webhooks
-  uhi/v1/             Empty until UHI specs are authored
-  nhcx/v1/            Empty until NHCX specs are authored
-  .raw/               Upstream NHA files, stored untouched
-  corrections/        Recorded patches to upstream files, never silent
+README.md             This map
 VERSION               The catalogue version stamp, read into every build
+hiecm/                HIE-CM, everything it has
+  map/                Content map: atom id to page and heading id, no prose
+  openapi/
+    v3/               One self-contained spec per module; callbacks live in
+                      the module file that owns them as OpenAPI 3.1 webhooks.
+                      journeys/ holds call order, errors/ each module's codes
+    corrections/      Recorded patches to upstream files, never silent
+    .raw/             Upstream NHA files, stored untouched
+  titles.yaml         Reference page title overrides, by operationId
+  postman.json        The published Postman collection ids
+  concepts/ flows/ endpoints/ callbacks/ errors/ glossary/ tests/
+  decisions/ troubleshooting/
+                      Atom files, one per atom. A file marked generated: true
+                      is written from its page section; never edit it
+uhi/                  UHI: openapi/ as for HIE-CM, and glossary/
+nhcx/                 NHCX's hand-written atoms, one folder per type
+shared/               Atoms that belong to no single gateway: concepts/,
+                      decisions/, fhir/, glossary/, sandbox/, and
+                      vocabulary.yaml. A glossary term stays here only when it
+                      means the same thing on every gateway
+openapi/              Not yet moved: NHCX's specs (nhcx/v1/), corrections and
+                      sets, CONVENTIONS.md (the rules every spec follows),
+                      extensions.md, and the pinned NRCeS package
+titles.yaml           NHCX's title overrides, until the same move
+annexure/             The sources atoms cite, not atoms
+changelog/            What's New facts and entries
+registry.json         Every atom and where its words live (built)
+atom-routes.json      Every atom's page route (built)
 ```
 
-Prose about ABDM goes in an atom markdown file under the matching type
-folder. Machine contracts go in the module's YAML under `openapi/`.
-There is no third place.
+An atom's words are written on its docs page when it is in a content map,
+and in its file when it is not. Machine contracts go in the module's YAML
+under the gateway's `openapi/`. There is no third place.
 
 ## How this tree is indexed
 
@@ -45,17 +55,19 @@ The MCP indexer (`mcp/cmd/indexer`) compiles this tree into one SQLite
 snapshot the docs-mcp server serves. Its rules are strict and fail loud:
 
 1. `.raw/` directories are skipped entirely. Sources, not content.
-2. Every `.md` file OUTSIDE `openapi/` is parsed as an atom, with one
-   exception: `README.md` files are contributor notes for the folder
-   they sit in and are skipped wherever they are. An atom must carry
-   valid frontmatter with an `id`, or the whole build fails naming the
-   file. Do not drop stray notes into the atom folders; any other
+2. Every `.md` file outside any `openapi/` folder is parsed as an atom,
+   with one exception: `README.md` files are contributor notes for the
+   folder they sit in and are skipped wherever they are. An atom must
+   carry valid frontmatter with an `id`, or the whole build fails naming
+   the file. Do not drop stray notes into the atom folders; any other
    frontmatter-less `.md` fails the build by design.
-3. `.md` files INSIDE `openapi/` (like `CONVENTIONS.md`) are spec-area
-   documentation and are skipped silently.
-4. Every `openapi/*.yaml` outside `corrections/` is parsed as an OpenAPI
-   document. Every operation must carry an `operationId` or the build
-   fails. Each file's sha256 is recorded in the snapshot.
+3. `.md` files inside an `openapi/` folder (`CONVENTIONS.md`, the
+   correction logs) are spec-area documentation and are skipped silently.
+4. Every `<gateway>/openapi/<version>/*.yaml`, and NHCX's
+   `openapi/nhcx/v1/*.yaml`, is parsed as an OpenAPI document; journeys/,
+   errors/ and corrections/ are not. Every operation must carry an
+   `operationId` or the build fails. Each file's sha256 is recorded in the
+   snapshot.
 5. The extension must be `.yaml`. A `.yml` file is silently ignored
    today, so never use it.
 6. `VERSION` must exist; its content stamps every MCP response.

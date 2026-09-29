@@ -10,7 +10,7 @@ it on every pull request.
 | You are adding | You write | It goes in |
 | --- | --- | --- |
 | A documentation page | Markdown (`.md`, or `.mdx` for components) | `site/docs/<platform>/<version>/...` |
-| API reference | OpenAPI 3.1 YAML | `catalogue/openapi/<platform>/<version>/<spec>.yaml` |
+| API reference | OpenAPI 3.1 YAML | `catalogue/<gateway>/openapi/<version>/<spec>.yaml` (NHCX: `catalogue/openapi/nhcx/v1/`) |
 
 ## The contributor's assistant
 
@@ -69,7 +69,7 @@ and are never rendered either.
 
 ## API references (YAML)
 
-Drop an OpenAPI 3.1 file at `catalogue/openapi/<platform>/<version>/<name>.yaml`.
+Drop an OpenAPI 3.1 file at `catalogue/<gateway>/openapi/<version>/<name>.yaml` (NHCX: `catalogue/openapi/nhcx/v1/<name>.yaml` until NHCX is restructured).
 The build generates, per spec:
 
 - one documentation page per operation and webhook, grouped by tag, under

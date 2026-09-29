@@ -50,7 +50,7 @@ for (const rawDir of rawDirs(root)) {
 // ------------------------------------------------------- recorded references
 // Every reference is { file, hash|status, consumer }. `file` values are
 // relative names such as "abha/M1 ABHA Collection.json" or
-// "catalogue/openapi/.raw/nha-2026-09-16/hiecm/gateway.yaml";
+// "catalogue/hiecm/openapi/.raw/nha-2026-09-16/hiecm/gateway.yaml";
 // they are matched to .raw contents by path suffix. Entries carrying only a
 // url record a source that was never stored as a file; nothing to hash.
 const refs = [];
@@ -94,7 +94,7 @@ for (const { file, fm } of atoms.values()) {
 // A recorded file matches a raw file when their path segments agree from the
 // end: "abha/M1 ABHA Collection.json" matches .raw's
 // "nha-2026-09-16/abha/M1 ABHA Collection.json", and a recorded
-// "catalogue/openapi/.raw/nha-2026-09-16/hiecm/gateway.yaml" matches .raw's
+// "catalogue/hiecm/openapi/.raw/nha-2026-09-16/hiecm/gateway.yaml" matches .raw's
 // "nha-2026-09-16/hiecm/gateway.yaml". With several candidates the longest shared
 // segment suffix wins.
 function sharedSuffix(a, b) {

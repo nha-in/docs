@@ -36,7 +36,7 @@ to the docs pages, and only to the pages: every other surface is built from them
 
 - "heading id ... is missing": you removed or renamed a `{#...}` or
   `{/* #... */}`. Put it back,
-  or move the atom in `catalogue/map.yaml` to the section that now holds its words.
+  or move the atom in its content map, `catalogue/<gateway>/map/`, to the section that now holds its words.
 - "agent note introduces `...`": a note states an API detail the page and the
   specifications do not. Put it on the page, or take it out of the note.
 

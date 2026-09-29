@@ -1,7 +1,7 @@
 // scripts/build-sections.mjs
 // The content maps, catalogue/<gateway>/map/*.yaml, are the atom registry: each
-// atom id and the page section that holds its words. This script builds, from the map and the pages, the
-// atom-shaped files every consumer already reads (catalogue/generated/), and
+// atom id and the page section that holds its words. This script writes, from the map and the pages, each
+// atom's file into catalogue/<gateway>/<type folder>/, marked generated: true, and
 // catalogue/registry.json, the list of every atom and where its words live.
 //   npm run build:sections
 //   npm run check:sections      CI: fails on any problem or stale output
