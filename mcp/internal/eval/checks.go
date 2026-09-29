@@ -151,6 +151,11 @@ func Check(c Case, t Transcript) CheckResult {
 			}
 		}
 	case "decline":
+		// Two sentences and a link to the portal's support page are the
+		// panel's decline shape; an MCP agent declines in its own words.
+		if agent {
+			break
+		}
 		if n := sentences(answer); n > 2 {
 			add("decline: %d sentences", n)
 		}

@@ -274,3 +274,16 @@ func TestCheckSkipsPanelShapesForAnMCPAgent(t *testing.T) {
 		t.Fatal("a panel answer must still be held to its shape")
 	}
 }
+
+func TestCheckSkipsThePanelDeclineShapeForAnMCPAgent(t *testing.T) {
+	c := answerCase()
+	c.ExpectedBehaviour, c.ExpectedSources = "decline", nil
+	tr := Transcript{Surface: SurfaceMCPAgent, Answer: "That is outside ABDM. I cannot help. Try elsewhere. Sorry."}
+	if r := Check(c, tr); len(r.Failures) != 0 {
+		t.Fatalf("an MCP agent decline was held to the panel's shape: %v", r.Failures)
+	}
+	tr.Surface = ""
+	if r := Check(c, tr); len(r.Failures) == 0 {
+		t.Fatal("a panel decline must still be held to its shape")
+	}
+}
