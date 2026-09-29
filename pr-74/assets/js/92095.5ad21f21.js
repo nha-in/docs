@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["92095"],{54402(e,c,t){t.r(c),t.d(c,{__iconNode:()=>d,default:()=>s});var a=t(34438);let d=[["path",{d:"M12 3v6",key:"1holv5"}],["circle",{cx:"12",cy:"12",r:"3",key:"1v7zrd"}],["path",{d:"M12 15v6",key:"a9ows0"}]],s=(0,a.A)("git-commit-vertical",d)}}]);
