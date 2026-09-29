@@ -1,5 +1,6 @@
-// One Postman collection per HIE-CM module, and one sandbox environment they
-// share, written to site/static/postman. A build output: edit the specs or the
+// One Postman collection per HIE-CM module and one per UHI service, each
+// gateway with the sandbox environment its collections share, written to
+// site/static/postman. A build output: edit the specs or the
 // journeys, never the collections.
 //
 // It reads the per-call data build-api-reference.mjs writes rather than the
@@ -243,9 +244,122 @@ const environment = {
   _postman_variable_scope: 'environment',
 };
 writeFileSync(join(outDir, manifest.environment), `${JSON.stringify(environment, null, 2)}\n`);
+
+// ---------------------------------------------------------------------------
+// UHI: one collection per service, and one sandbox environment they share.
+//
+// UHI is peer to peer, so a collection carries every call in the journey, the
+// ones a provider system sends included: an HSPA tests its on_search and
+// on_init by sending them. Physical Consultation's select and on_select are in
+// the specification but not in a journey, and are not implemented, so no
+// collection sends them. Every collection ends with the registry lookup,
+// which every service needs to check a signature.
+//
+// Every UHI call is signed with the sender's Ed25519 key over the exact body.
+// Postman holds no such key, so the collection sends the Authorization header
+// the integrator generates for the body shown, with the Header Generation
+// Utility, and refuses to send one whose expires has passed.
+const UHI_HOSTS = {
+  'https://uhigatewaysandbox.abdm.gov.in': 'gatewayUrl',
+  'https://<consumer_uri>': 'consumerUri',
+  'https://<provider_uri>': 'providerUri',
+};
+const UHI_SERVICES = [
+  {id: 'consultation', label: 'Physical Consultation', journeys: (all) => all.get('consultation') ?? []},
+  {id: 'ambulance', label: 'Ambulance Booking', journeys: (all) => all.get('ambulance') ?? []},
+  {id: 'pmjay-hem', label: 'PM-JAY HEM hospital discovery', journeys: (all) => (all.get('network') ?? []).filter((j) => j.id === 'uhi-pmjay-hem')},
+  {id: 'blood-bank', label: 'Blood Bank discovery', journeys: (all) => (all.get('network') ?? []).filter((j) => j.id === 'uhi-blood-bank')},
+  {id: 'jan-aushadhi', label: 'Jan Aushadhi', journeys: (all) => (all.get('network') ?? []).filter((j) => j.id.startsWith('uhi-jan-aushadhi-'))},
+  {id: 'notto', label: 'NOTTO hospital discovery', journeys: (all) => (all.get('network') ?? []).filter((j) => j.id === 'uhi-notto')},
+];
+
+function uhiRequest(op) {
+  const host = UHI_HOSTS[op.server];
+  if (!host) throw new Error(`build-postman: UHI host ${op.server} has no variable. Add it to UHI_HOSTS.`);
+  const path = op.path.split('#')[0];
+  return {
+    method: op.method,
+    header: [
+      {key: 'Authorization', value: '{{authorization}}'},
+      {key: 'Content-Type', value: 'application/json'},
+    ],
+    url: {raw: `{{${host}}}${path}`, host: [`{{${host}}}`], path: path.split('/').filter(Boolean)},
+    // Compact, so the bytes Postman sends are the bytes you paste into the
+    // Header Generation Utility.
+    body: {mode: 'raw', raw: JSON.stringify(op.requestExample), options: {raw: {language: 'json'}}},
+    description: op.description ?? '',
+  };
+}
+
+const uhiScript = `// Refuses to send a UHI request whose Authorization header is missing or has
+// expired. A header is signed over one body and lasts a few seconds, so sign
+// the body shown again, with the Header Generation Utility, before each send.
+(function () {
+const pasted = pm.variables.get('authorization');
+if (!pasted) throw new Error('Paste the Authorization header you generated for this exact body into the authorization variable.');
+let header;
+try { header = JSON.parse(pasted); } catch (error) { return; }
+const expires = Number(header.expires || 0);
+if (expires && expires * 1000 < Date.now()) {
+  throw new Error('The Authorization header expired at ' + new Date(expires * 1000).toISOString() + '. Sign this body again and paste the new header.');
+}
+})();`;
+
+const UHI_DESCRIPTION = [
+  'Generated from the UHI Gateway specification v2.0.2 and its journeys. Import uhi-sandbox.postman_environment.json beside it.',
+  '',
+  'Every UHI call is signed. Generate your key pair and a header for each body with the Header Generation Utility, https://github.com/NHA-ABDM/UHI/tree/main/header_generator_utility. Sign the body exactly as shown, paste the header into the authorization variable, and send. Change one byte of the body and the header no longer matches it.',
+  '',
+  'A call answers only with an ACK. The results arrive later at your consumer_uri, so set consumerUri to a public HTTPS endpoint you can watch. From init onwards, calls go straight to the other side, at providerUri or consumerUri.',
+  '',
+  'Folders follow the order a journey is built in. Signing: https://docs.abdm.gov.in/docs/uhi/v1/concepts/signing',
+].join('\n');
+
+const uhiJourneys = loadJourneys({platform: 'uhi', version: 'v1'});
+const uhiLookup = read('uhi-network-registry-lookup');
+manifest.uhi = {environment: 'uhi-sandbox.postman_environment.json', services: {}};
+for (const service of UHI_SERVICES) {
+  const folders = service.journeys(uhiJourneys).map((journey) => ({
+    name: journey.title,
+    item: journey.steps.map((step, i) => {
+      const op = read(stepDataName(step.op, journey.id, i));
+      return {name: `${i + 1}. ${op.title}`, request: uhiRequest(op)};
+    }),
+  }));
+  if (!folders.length) throw new Error(`build-postman: UHI ${service.id} has no journey`);
+  folders.push({name: 'Look up a signing key', item: [{name: uhiLookup.title, request: uhiRequest(uhiLookup)}]});
+  const file = `uhi-${service.id}.postman_collection.json`;
+  const collection = {
+    info: {name: `UHI ${service.label}`, description: UHI_DESCRIPTION, schema: SCHEMA},
+    event: [{listen: 'prerequest', script: {type: 'text/javascript', exec: uhiScript.split('\n')}}],
+    item: folders,
+  };
+  writeFileSync(join(outDir, file), `${JSON.stringify(collection, null, 2)}\n`);
+  manifest.uhi.services[service.id] = {file, label: service.label, requests: folders.reduce((n, f) => n + f.item.length, 0)};
+}
+writeFileSync(
+  join(outDir, manifest.uhi.environment),
+  `${JSON.stringify(
+    {
+      name: 'UHI sandbox',
+      values: [
+        ...Object.entries(UHI_HOSTS).map(([server, key]) => ({key, value: server.includes('<') ? '' : server, enabled: true})),
+        {key: 'authorization', value: '', type: 'secret', enabled: true},
+      ],
+      _postman_variable_scope: 'environment',
+    },
+    null,
+    2,
+  )}\n`,
+);
+
 writeFileSync(manifestFile, `${JSON.stringify(manifest, null, 2)}\n`);
 
 console.log(
   `Built ${Object.keys(manifest.modules).length} Postman collection(s) to site/static/postman: ` +
     Object.entries(manifest.modules).map(([m, v]) => `${m} (${v.requests})`).join(', '),
+);
+console.log(
+  `Built ${Object.keys(manifest.uhi.services).length} UHI Postman collection(s): ` +
+    Object.entries(manifest.uhi.services).map(([m, v]) => `${m} (${v.requests})`).join(', '),
 );

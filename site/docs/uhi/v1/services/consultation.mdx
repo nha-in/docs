@@ -10,6 +10,7 @@ sidebar_class_name: sidebar-icon sidebar-icon--stethoscope
 ---
 
 import ApiLinks from '@site/src/components/docs/ApiLinks';
+import PostmanCollection from '@site/src/components/docs/PostmanCollection';
 
 # Physical Consultation: Find, book and visit a doctor
 
@@ -487,6 +488,12 @@ Every call can return an error object with `type` and `code`, and optionally
 
 Find the test cases this service is certified against on
 [Physical Consultation test cases](/docs/uhi/v1/resources/consultation).
+
+## Try it in Postman
+
+Every call in this service's journeys, in order. Sign each body with the [Header Generation Utility](https://github.com/NHA-ABDM/UHI/tree/main/header_generator_utility) and paste the header into `authorization` before you send.
+
+<PostmanCollection service="consultation" />
 
 ## Next
 
