@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"regexp"
 	"strings"
 	"sync"
 
@@ -377,8 +378,16 @@ func (t *Tools) RelatedAtoms(ctx context.Context, in getAtomIn) (map[string]any,
 	return t.versioned(map[string]any{"id": in.ID, "related": out}), nil
 }
 
+var bareGatewayCodeRe = regexp.MustCompile(`^9\d{5}$`)
+
 func (t *Tools) DecodeError(ctx context.Context, in decodeIn) (map[string]any, error) {
 	codes := catalogue.ExtractErrorCodes(in.Input)
+	// A bare six-digit number is read as a gateway code only in context (a
+	// JSON "code" value, or after "error"), so an OTP is never taken for one.
+	// An input that is nothing but the code has no other reading.
+	if bare := strings.TrimSpace(in.Input); len(codes) == 0 && bareGatewayCodeRe.MatchString(bare) {
+		codes = []string{bare}
+	}
 	if len(codes) == 0 {
 		return t.versioned(map[string]any{
 			"message": "no error codes found in the input; try search with the response text",

@@ -259,3 +259,19 @@ func TestPinErrorAtomsPutsTheCodesErrorAtomFirst(t *testing.T) {
 		t.Errorf("a question with no code must keep search order, got %v", got)
 	}
 }
+
+// An agent that read "900901" in a response passes exactly that. The code
+// alone was not read as one, because a bare six-digit number is only a code
+// in a JSON "code" value or after a word like "error"; an input that is
+// nothing but the code has no other reading.
+func TestDecodeErrorReadsABareGatewayCode(t *testing.T) {
+	tools := NewTools(fixtureReader(t, false), nil)
+	out, err := tools.DecodeError(context.Background(), decodeIn{Input: " 900901 "})
+	if err != nil {
+		t.Fatal(err)
+	}
+	codes, _ := out["codes"].([]string)
+	if len(codes) != 1 || codes[0] != "900901" {
+		t.Errorf("codes = %v, want [900901]", out["codes"])
+	}
+}
