@@ -15,7 +15,7 @@ const tree = (files) => {
 };
 
 test('an atom sits at catalogue/<gateway>/<type folder>/<id slug>.md', () => {
-  assert.equal(atomPath('shared.glossary.link-token', 'glossary', 'shared'), 'catalogue/shared/glossary/link-token.md');
+  assert.equal(atomPath('shared.glossary.abha', 'glossary', 'shared'), 'catalogue/shared/glossary/abha.md');
   assert.equal(atomPath('hiecm.endpoint.m2-generate-link-token', 'endpoint', 'hiecm'), 'catalogue/hiecm/endpoints/m2-generate-link-token.md');
 });
 
@@ -38,12 +38,15 @@ test('upstream sets are read from catalogue/openapi/.raw and every gateway .raw'
 });
 
 test('a name outside the tree is a layout problem, naming it', () => {
-  const clean = tree(['catalogue/README.md', 'catalogue/VERSION', 'catalogue/hiecm/map/a.yaml', 'catalogue/hiecm/concepts/x.md', 'catalogue/openapi/CONVENTIONS.md', 'catalogue/titles.yaml', 'catalogue/uhi/glossary/eua.md']);
+  const clean = tree(['catalogue/.DS_Store', 'catalogue/hiecm/openapi/v3/x.yaml', 'catalogue/hiecm/openapi/.raw/a/b', 'catalogue/openapi/nhcx/v1/x.yaml', 'catalogue/openapi/.raw/x', 'catalogue/README.md', 'catalogue/VERSION', 'catalogue/hiecm/map/a.yaml', 'catalogue/hiecm/concepts/x.md', 'catalogue/openapi/CONVENTIONS.md', 'catalogue/titles.yaml', 'catalogue/uhi/glossary/eua.md']);
   assert.deepEqual(layoutProblems(clean), []);
   for (const [stray, named] of [
     ['catalogue/generated/hiecm/x.md', 'catalogue/generated'],
     ['catalogue/verification/x.json', 'catalogue/verification'],
     ['catalogue/hiecm/stuff/x.md', 'catalogue/hiecm/stuff'],
+    ['catalogue/openapi/hiecm/v3/hiecm-m1.yaml', 'catalogue/openapi/hiecm'],
+    ['catalogue/hiecm/openapi/journeys/x.yaml', 'catalogue/hiecm/openapi/journeys'],
+    ['catalogue/.hidden/concepts/x.md', 'catalogue/.hidden'],
   ]) {
     const problems = layoutProblems(tree(['catalogue/VERSION', stray]));
     assert.equal(problems.length, 1, `${stray}: ${problems}`);

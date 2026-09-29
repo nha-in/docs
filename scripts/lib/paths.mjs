@@ -50,13 +50,26 @@ export function mapFiles(root) {
   }).sort((a, b) => relative(root, a).localeCompare(relative(root, b)));
 }
 
-/** Every name at catalogue/ or catalogue/<gateway>/ that the tree does not allow. */
+// catalogue/openapi/ holds only what has not moved into a gateway yet.
+export const OPENAPI_LEVEL = ['CONVENTIONS.md', 'extensions.md', 'nhcx', 'nrces', 'corrections', '.raw'];
+
+/**
+ * Every name at catalogue/, catalogue/<gateway>/, catalogue/openapi/ or
+ * catalogue/<gateway>/openapi/ that the tree does not allow. A dot-file such
+ * as .DS_Store is ignored; a dot-folder is not, except a gateway's .raw.
+ */
 export function layoutProblems(root) {
   const cat = join(root, 'catalogue');
-  const stray = (dir, allowed) => readdirSync(dir).filter((n) => !n.startsWith('.') && !allowed.includes(n));
-  const out = stray(cat, TOP_LEVEL).map((n) => `catalogue/${n}`);
+  const stray = (dir, ok) => readdirSync(dir, {withFileTypes: true})
+    .filter((e) => !(e.name.startsWith('.') && !e.isDirectory()) && !ok(e.name))
+    .map((e) => e.name);
+  const out = stray(cat, (n) => TOP_LEVEL.includes(n)).map((n) => `catalogue/${n}`);
+  if (existsSync(join(cat, 'openapi'))) out.push(...stray(join(cat, 'openapi'), (n) => OPENAPI_LEVEL.includes(n)).map((n) => `catalogue/openapi/${n}`));
   for (const g of GATEWAYS) {
-    if (existsSync(join(cat, g))) out.push(...stray(join(cat, g), GATEWAY_LEVEL).map((n) => `catalogue/${g}/${n}`));
+    if (!existsSync(join(cat, g))) continue;
+    out.push(...stray(join(cat, g), (n) => GATEWAY_LEVEL.includes(n)).map((n) => `catalogue/${g}/${n}`));
+    const spec = join(cat, g, 'openapi');
+    if (existsSync(spec)) out.push(...stray(spec, (n) => /^v\d+$/.test(n) || n === 'corrections' || n === '.raw').map((n) => `catalogue/${g}/openapi/${n}`));
   }
   return out.map((p) => `${p} is not part of the catalogue tree (catalogue/README.md)`);
 }

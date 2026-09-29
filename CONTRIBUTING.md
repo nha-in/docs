@@ -16,7 +16,7 @@ it on every pull request.
 
 This repo ships a Claude Code plugin, `plugins/abdm-contributors-assistant`,
 holding the skills, commands and agents for working on the portal: authoring an
-atom, verifying one against the sandbox, linting, ingesting OpenAPI, compiling
+atom, linting, ingesting OpenAPI, compiling
 skills, and the plan and gantt checks. Changes here are meant to go through it,
 as [CLAUDE.md](CLAUDE.md) says. It is not the plugin ABDM integrators install.
 

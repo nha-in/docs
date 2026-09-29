@@ -97,11 +97,13 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const root = join(fileURLToPath(import.meta.url), '..', '..');
   const {map, problems: mapProblems} = loadMap(root);
   const pages = Object.fromEntries([...new Set(Object.values(map).map((e) => e.page))].filter((p) => existsSync(join(root, p))).map((p) => [p, readFileSync(join(root, p), 'utf8')]));
-  const {atoms, duplicates} = loadAtoms();
+  const {atoms, duplicates, problems: unreadable} = loadAtoms();
   const hand = [...atoms.values()].filter((a) => a.fm.generated !== true).map((a) => ({id: a.fm.id, type: a.fm.type, gateway: a.fm.gateway, file: relative(root, a.file)}));
-  const found = [...mapProblems, ...duplicates.map((d) => `two files carry one id, ${d}`), ...problems({map, pages, handIds: new Set(hand.map((a) => a.id)), specText: specText(root)})];
+  // A file whose frontmatter does not parse is still somebody's work: it
+  // fails the build, and counts as hand-written so nothing overwrites it.
+  const found = [...mapProblems, ...unreadable.map((u) => `${relative(root, u.file)}: ${u.msg}`), ...duplicates.map((d) => `two files carry one id, ${d}`), ...problems({map, pages, handIds: new Set(hand.map((a) => a.id)), specText: specText(root)})];
   const want = new Map(Object.entries(map).filter(([, e]) => pages[e.page] && sectionsById(pages[e.page]).get(e.heading)).map(([id, e]) => [generatedPath(id, e), renderAtom(id, e, sectionsById(pages[e.page]).get(e.heading))]));
-  const onDisk = new Map([...atoms.values()].map((a) => [relative(root, a.file), {generated: a.fm.generated === true}]));
+  const onDisk = new Map([...[...atoms.values()].map((a) => [relative(root, a.file), {generated: a.fm.generated === true}]), ...unreadable.map((u) => [relative(root, u.file), {generated: false}])]);
   const plan = writePlan(want, onDisk);
   found.push(...plan.problems);
   const reg = `${JSON.stringify(registry({map, hand}), null, 2)}\n`;

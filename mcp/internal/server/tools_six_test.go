@@ -5,7 +5,7 @@ import "testing"
 func TestIDKindPicksTheToolFromTheIDShape(t *testing.T) {
 	for id, want := range map[string]string{
 		"hiecm.error.abdm-1062":       "atom",
-		"shared.glossary.link-token":  "atom",
+		"hiecm.glossary.link-token":   "atom",
 		"nhcx.endpoint.claim-submit":  "atom",
 		"m1_post_profile_verify":      "operation",
 		"fhir:OPConsultRecord":        "fhir_profile",

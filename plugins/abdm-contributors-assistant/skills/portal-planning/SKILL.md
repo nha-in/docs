@@ -1,9 +1,9 @@
 ---
 name: portal-planning
 description: The ABDM Developer Portal schedule, workstreams, ownership split, two-day shipping increments, definition of done, and risk register. Use whenever someone asks what ships when, what is blocked, who owns a piece of work, whether V1 is on track, what counts as finished, how to sequence a task, or wants a standup, a status update, or a re-plan. Also use when scope is being added or cut so the trade is made against the schedule rather than in the abstract.
-plan_version: 2026.09.29-10
+plan_version: 2026.09.29-11
 plan_source: abdm-v1-phase1-architecture-and-plan.md
-plan_hash: sha256:31541eaccd173b2f460419df0fead5776055c69790b918a716ba3b4f2d3030b3
+plan_hash: sha256:b879ed542e32b9ad06a0094933754befade00bc0e380c5c7ddda1f4ecbeca6d4
 compiled_from_plan: true
 ---
 
@@ -71,7 +71,7 @@ Each risk carries the decision it needs, because an unowned risk is just anxiety
 | Risk | Mitigation | Decision needed |
 |---|---|---|
 | NHA swagger is inconsistent or incomplete, with known 403s on some V3 sandbox endpoints | Ingest, hand-correct, record both the NHA file and the correction in `sources`, record the correction and leave the atom stating what the specification carries | Decided: the atom states what the specification carries, and the correction is recorded |
-| Docusaurus guides and Scalar references are two rendering systems on one site | Keep prose in plain markdown, avoid MDX beyond callouts and steps, so it ports anywhere; specs stay the single source under `catalogue/<gateway>/openapi/` | Decided: fully self-hosted from day one, no hosted-Scalar phase |
+| Docusaurus guides and Scalar references are two rendering systems on one site | Keep prose in plain markdown, avoid MDX beyond callouts and steps, so it ports anywhere; specs stay the single source under each gateway's `openapi/` folder | Decided: fully self-hosted from day one, no hosted-Scalar phase |
 | An existing community docs site overlaps heavily | Reach out early, propose the Catalogue as shared upstream | Product makes the call and the call |
 | The time available is not enough for three gateways at full depth | Atom depth is HIE-CM only: M1 to M4 and P1 to P3 carry atoms, rebuilt on 29 September 2026 after the 16 September reset deleted them. P4 and the three use cases Scan and Register, Record Share and Scan and Pay stay at specification depth, UHI carries only its two glossary terms, and NHCX's atoms are hand-written and not yet on pages | Needs sign-off, already decided in the plan |
 | Notes for AI agents are hidden from readers and NHA does not review them | `check:sections` fails an agent note stating an API literal neither its page nor a specification states; the runbook tells whoever applies a correction to read the note under it | Never relax that rule |

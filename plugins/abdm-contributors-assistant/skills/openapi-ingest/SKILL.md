@@ -21,7 +21,7 @@ Every stored file is recorded with its sha256 in the manifest, and `npm run lint
 
 ## Module-per-file layout
 
-Every gateway keeps its specifications in its own folder, one file per module, under `catalogue/<gateway>/openapi/<version>/`, with that gateway's upstream sources and corrections beside the version folder. The rules every file follows are in `catalogue/openapi/CONVENTIONS.md`.
+Every gateway keeps its specifications in its own folder, one file per module, under `catalogue/<gateway>/openapi/<version>/`, with that gateway's upstream sources and corrections beside the version folder. NHCX is the exception until it is restructured: its specifications, corrections and sets are still under `catalogue/openapi/`, as the tree below shows. The rules every file follows are in `catalogue/openapi/CONVENTIONS.md`.
 
 ```
 catalogue/hiecm/openapi/
@@ -62,7 +62,7 @@ There is no AsyncAPI file anywhere in this stack. `CONVENTIONS.md` states the ru
 
 ## The ingestion sequence
 
-1. **Store** the supplied files under `catalogue/<gateway>/openapi/.raw/<set>/`, with a `MANIFEST.md` recording each file's sha256.
+1. **Store** the supplied files under `catalogue/<gateway>/openapi/.raw/<set>/` (an NHCX set: `catalogue/openapi/.raw/<set>/`), with a `MANIFEST.md` recording each file's sha256.
 2. **Generate** with `node scripts/ingest-nha.mjs`. It places every operation in its module by tag and path, folds callbacks in as OpenAPI 3.1 `webhooks`, asserts the per module counts, writes the eleven specs under `catalogue/hiecm/openapi/v3/`, and appends every edit it makes to the correction log under `catalogue/hiecm/openapi/corrections/`.
 3. **Scaffold journeys** with `node scripts/ingest-nha.mjs --journeys`, which writes a journey file, one journey per tag, for a module that has none, in the order the operations appear in NHA's files. An existing journey file is never overwritten, and `m1.yaml` is never scaffolded.
 4. **Check** with `node scripts/ingest-nha.mjs --check`, which fails when the committed specs differ from what the raw set generates. CI runs it as `check:specs`.

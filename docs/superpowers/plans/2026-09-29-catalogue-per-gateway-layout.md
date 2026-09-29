@@ -10,7 +10,7 @@
 
 **Tech Stack:** Node 24 ESM scripts (`node:test`), Go indexer (`mcp/`), Docusaurus site, GitHub Actions.
 
-**Spec:** `plan/abdm-v1-phase1-architecture-and-plan.md` §3.2 (`p3-2-atom`) at plan version `2026.09.29-10`, which carries the target tree below. Background: `docs/superpowers/plans/2026-09-28-page-canonical-knowledge-atoms.md` (why pages are the source) and `2026-09-29-hiecm-atoms-rebuild.md` (the 227 HIE-CM atoms this moves).
+**Spec:** `plan/abdm-v1-phase1-architecture-and-plan.md` §3.2 (`p3-2-atom`) at plan version `2026.09.29-11`, which carries the target tree below. Background: `docs/superpowers/plans/2026-09-28-page-canonical-knowledge-atoms.md` (why pages are the source) and `2026-09-29-hiecm-atoms-rebuild.md` (the 227 HIE-CM atoms this moves).
 
 ## The target tree
 
@@ -309,7 +309,7 @@ A term stays `shared.glossary.*` only when it means the same thing on every gate
   git grep -nE 'shared\.glossary\.(bridge|consent-manager|discovery|ecdh|emr|hi-type|hip|hiu|hmis|hrp|ims|lims|link-token|m1|m2|m3|m4|pms|purpose-of-use|auth-modes|key-material|x-cm-id|eua|hspa)([^a-z0-9-]|$)' -- ':!plan/plan-history' ':!docs/superpowers/plans' ':!scripts/fixtures' ':!**/.raw/**'
   ```
 
-  Expect only Go tests that define their own atoms.
+  Expect none. Tests that define their own fixture atoms were renamed too, so a grep finds no old id outside history.
 - [ ] **Step 6:** Take the parity snapshot, apply the rename map to `$SCRATCH/parity-pre-glossary/{registry,routes}.txt` with `sed`, and diff. Expect no difference beyond the Step 3 route list. Then `mcp/eval/gate.sh glossary` and `python3 mcp/eval/compare.py <pre-glossary run> <glossary run>`. A case whose expected source was renamed compares by new id. Expect no rank falls. A fall means a gateway filter now hides a term from a question scoped to another gateway: stop and report it rather than move the term back.
 - [ ] **Step 7:** Run the CI check list. Expect all PASS.
 - [ ] **Step 8: Commit.** `refactor(catalogue): HIE-CM and UHI glossary terms live with their gateway; shared keeps what every gateway shares`
@@ -387,3 +387,11 @@ A term stays `shared.glossary.*` only when it means the same thing on every gate
 - **NHCX atoms moving onto pages.** The 536 NHCX atom files stay hand-written until the page-canonical migration reaches NHCX (plan §3.2). They already sit at their target paths.
 - **The 29 HIE-CM atoms not rebuilt** (see `2026-09-29-hiecm-atoms-rebuild.md`).
 - **`catalogue/generated/enrich/`** from the retrieval plan. It was never built. If it ever is, its home is decided then, and `layoutProblems` makes that a deliberate change.
+
+## As built, 29 September 2026
+
+Tasks 0 to 7 landed on `feat/catalogue-layout`, each commit green on the CI list, with parity after each: same 853 indexed atoms and 388 operations, routes and registry differing only by the 24 glossary renames, site output unchanged except the published copies of the 15 HIE-CM and UHI specs, whose source paths moved. Retrieval gate across the glossary rename: no case fell, hit@1 57 to 60, MRR 0.607 to 0.622.
+
+The adversarial review (Task 8, Step 4) found, and this branch fixed: `build:sections` would overwrite a hand-written file whose frontmatter did not parse, because such a file never reached `writePlan` (now it fails the build and counts as hand-written); lint named `catalogue/openapi/<gateway>/` in its operation message; `layoutProblems` did not look inside `catalogue/openapi/` or a gateway's `openapi/`, and let a dot-folder through; skills gave NHCX's specs and sets a per-gateway path they do not have yet; the plan and skills counted 247 HIE-CM atoms where there are 269; CONTRIBUTING and the plugin description still named verification; synthetic test fixtures kept old glossary ids.
+
+NHCX edits beyond the plan's 17 related lines: 21 NHCX atoms also held relative markdown links to moved glossary terms, 22 links. 26 NHCX files change in all, 39 lines, each an exact gateway swap.

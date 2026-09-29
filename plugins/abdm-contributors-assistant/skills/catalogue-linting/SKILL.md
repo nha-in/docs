@@ -116,7 +116,7 @@ It needs a build first: `npx playwright install --with-deps chromium && npm run 
 
 ## `npm run lint:sources` (`scripts/check-source-freshness.mjs`)
 
-Hashes everything under `catalogue/<gateway>/openapi/.raw/` and compares against every recorded source reference (a spec's `x-abdm-sources`, an atom's `sources`). Only `MISMATCH` fails the build.
+Hashes everything under `catalogue/<gateway>/openapi/.raw/` (NHCX's sets and the NRCeS package: `catalogue/openapi/.raw/`) and compares against every recorded source reference (a spec's `x-abdm-sources`, an atom's `sources`). Only `MISMATCH` fails the build.
 
 | Finding | Message (verbatim) | Blocking? |
 |---|---|---|
