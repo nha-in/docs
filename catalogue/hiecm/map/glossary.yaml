@@ -1,6 +1,6 @@
-# The atom registry: each atom id and the page section that holds its words.
-# An atom listed here has no hand-written file; its file in catalogue/generated/
-# is built from the page by scripts/build-sections.mjs.
+# HIE-CM content map: each atom id and the page section that holds its words.
+# An atom listed here has no hand-written file; scripts/build-sections.mjs
+# writes its file from the page, marked generated: true.
 shared.glossary.link-token:
   type: glossary
   gateway: shared

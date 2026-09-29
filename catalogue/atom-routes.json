@@ -11,7 +11,7 @@
       "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/03-m2-post-v3-links-context-on-notify",
       "anchor": "m2-call-back-api-for-notify-care-context-update",
       "link": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/03-m2-post-v3-links-context-on-notify#m2-call-back-api-for-notify-care-context-update",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -20,7 +20,7 @@
       "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/04-m2-post-v3-patients-sms-on-notify",
       "anchor": "m2-callback-api-for-sms-notification-to-patients",
       "link": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/04-m2-post-v3-patients-sms-on-notify#m2-callback-api-for-sms-notification-to-patients",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -29,7 +29,7 @@
       "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token",
       "anchor": "m2-link-token-generation-call-back",
       "link": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-link-token-generation-call-back",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -38,7 +38,7 @@
       "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/02-m2-post-v3-link-on-carecontext",
       "anchor": "m2-linking-care-context-call-back",
       "link": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/02-m2-post-v3-link-on-carecontext#m2-linking-care-context-call-back",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -47,7 +47,7 @@
       "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/02-m2-post-v3-link-on-carecontext",
       "anchor": "m2-on-carecontext-result",
       "link": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/02-m2-post-v3-link-on-carecontext#m2-on-carecontext-result",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -56,7 +56,7 @@
       "route": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/03-m3-post-v3-hiu-consent-request-notify",
       "anchor": "m2-on-consent-notify-hiu",
       "link": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/03-m3-post-v3-hiu-consent-request-notify#m2-on-consent-notify-hiu",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -65,7 +65,7 @@
       "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/03-m2-post-v3-links-context-on-notify",
       "anchor": "m2-on-context-notify-result",
       "link": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/03-m2-post-v3-links-context-on-notify#m2-on-context-notify-result",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -74,7 +74,7 @@
       "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/10-m2-post-health-information-transfer",
       "anchor": "m2-on-data-notification",
       "link": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/10-m2-post-health-information-transfer#m2-on-data-notification",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -83,7 +83,7 @@
       "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/05-m2-post-v3-hip-patient-care-context-discover",
       "anchor": "m2-on-discovery-request",
       "link": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/05-m2-post-v3-hip-patient-care-context-discover#m2-on-discovery-request",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -92,7 +92,7 @@
       "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token",
       "anchor": "m2-on-generate-token-result",
       "link": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-on-generate-token-result",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -101,7 +101,7 @@
       "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/09-m2-post-v3-hip-health-information-request",
       "anchor": "m2-on-health-information-request",
       "link": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/09-m2-post-v3-hip-health-information-request#m2-on-health-information-request",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -110,7 +110,7 @@
       "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/07-m2-post-v3-hip-link-care-context-confirm",
       "anchor": "m2-on-link-confirm",
       "link": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/07-m2-post-v3-hip-link-care-context-confirm#m2-on-link-confirm",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -119,7 +119,7 @@
       "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/06-m2-post-v3-hip-link-care-context-init",
       "anchor": "m2-on-link-init",
       "link": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/06-m2-post-v3-hip-link-care-context-init#m2-on-link-init",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -128,7 +128,7 @@
       "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/04-m2-post-v3-patients-sms-on-notify",
       "anchor": "m2-on-sms-notify-result",
       "link": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/04-m2-post-v3-patients-sms-on-notify#m2-on-sms-notify-result",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -137,7 +137,7 @@
       "route": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/04-m3-post-v3-hiu-consent-on-fetch",
       "anchor": "m3-on-consent-fetch",
       "link": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/04-m3-post-v3-hiu-consent-on-fetch#m3-on-consent-fetch",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -146,7 +146,7 @@
       "route": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/01-m3-post-v3-hiu-consent-request-on-init",
       "anchor": "m3-on-consent-request-init",
       "link": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/01-m3-post-v3-hiu-consent-request-on-init#m3-on-consent-request-init",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -155,7 +155,7 @@
       "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/08-m2-post-v3-consent-request-hip-notify",
       "anchor": "m3-on-consent-request-notify-hip",
       "link": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/08-m2-post-v3-consent-request-hip-notify#m3-on-consent-request-notify-hip",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -164,7 +164,7 @@
       "route": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/03-m3-post-v3-hiu-consent-request-notify",
       "anchor": "m3-on-consent-request-notify-hiu",
       "link": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/03-m3-post-v3-hiu-consent-request-notify#m3-on-consent-request-notify-hiu",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -173,7 +173,7 @@
       "route": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/02-m3-post-v3-hiu-consent-request-on-status",
       "anchor": "m3-on-consent-request-status",
       "link": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/02-m3-post-v3-hiu-consent-request-on-status#m3-on-consent-request-status",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -182,7 +182,7 @@
       "route": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/05-m3-post-v3-hiu-health-information-on-request",
       "anchor": "m3-on-health-information-request",
       "link": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/05-m3-post-v3-hiu-health-information-on-request#m3-on-health-information-request",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -191,7 +191,7 @@
       "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/07-m2-post-v3-hip-link-care-context-confirm",
       "anchor": "p2-callback-for-health-record-confirmation",
       "link": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/07-m2-post-v3-hip-link-care-context-confirm#p2-callback-for-health-record-confirmation",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -200,7 +200,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/04-p2-post-v3-hiu-patient-care-context-on-discover",
       "anchor": "p2-callback-on-health-record-discover",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/04-p2-post-v3-hiu-patient-care-context-on-discover#p2-callback-on-health-record-discover",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -209,7 +209,7 @@
       "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/06-m2-post-v3-hip-link-care-context-init",
       "anchor": "p2-callback-on-health-record-link-init",
       "link": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/06-m2-post-v3-hip-link-care-context-init#p2-callback-on-health-record-link-init",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -218,7 +218,7 @@
       "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/05-m2-post-v3-hip-patient-care-context-discover",
       "anchor": "p2-callback-to-hip-discovery",
       "link": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/05-m2-post-v3-hip-patient-care-context-discover#p2-callback-to-hip-discovery",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -227,7 +227,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-hiecm-patient-share-phr/02-p2-post-v3-hiu-patient-on-share",
       "anchor": "p2-profile-on-share-callback",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-hiecm-patient-share-phr/02-p2-post-v3-hiu-patient-on-share#p2-profile-on-share-callback",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -236,7 +236,7 @@
       "route": "/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/01-scan-and-register-post-v3-hip-patient-share",
       "anchor": "p2-profile-share-callback",
       "link": "/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/01-scan-and-register-post-v3-hip-patient-share#p2-profile-share-callback",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -245,7 +245,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/06-p2-post-v3-hiu-patient-care-context-on-init",
       "anchor": "p2-response-on-health-record-link",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/06-p2-post-v3-hiu-patient-care-context-on-init#p2-response-on-health-record-link",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -254,7 +254,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/08-p2-post-v3-hiu-patient-care-context-on-confirm",
       "anchor": "p2-response-on-health-record-on-confirm",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/08-p2-post-v3-hiu-patient-care-context-on-confirm#p2-response-on-health-record-on-confirm",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -263,7 +263,7 @@
       "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/03-p3-post-v3-hiu-subscription-requests-hiu-notify",
       "anchor": "p3-approve-subscription-request-call-back",
       "link": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/03-p3-post-v3-hiu-subscription-requests-hiu-notify#p3-approve-subscription-request-call-back",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -272,7 +272,7 @@
       "route": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/05-m3-post-v3-hiu-health-information-on-request",
       "anchor": "p3-call-back-to-hiu",
       "link": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/05-m3-post-v3-hiu-health-information-on-request#p3-call-back-to-hiu",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -281,7 +281,7 @@
       "route": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/02-m3-post-v3-hiu-consent-request-on-status",
       "anchor": "p3-consent-request-on-status-callback",
       "link": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/02-m3-post-v3-hiu-consent-request-on-status#p3-consent-request-on-status-callback",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -290,7 +290,7 @@
       "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/03-p3-post-v3-hiu-subscription-requests-hiu-notify",
       "anchor": "p3-deny-subscription-call-back",
       "link": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/03-p3-post-v3-hiu-subscription-requests-hiu-notify#p3-deny-subscription-call-back",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -299,7 +299,7 @@
       "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/05-p3-post-v3-hiu-subscription-notify",
       "anchor": "p3-subscription-hiu-notify",
       "link": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/05-p3-post-v3-hiu-subscription-notify#p3-subscription-hiu-notify",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -308,7 +308,7 @@
       "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/02-p3-post-v3-hiu-hiecm-subscription-requests-on-init",
       "anchor": "p3-user-subscription-request-initiate-call-back",
       "link": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/02-p3-post-v3-hiu-hiecm-subscription-requests-on-init#p3-user-subscription-request-initiate-call-back",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -317,7 +317,7 @@
       "route": "/docs/hiecm/v3/registries/abha",
       "anchor": "abha-address-policy",
       "link": "/docs/hiecm/v3/registries/abha#abha-address-policy",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -326,7 +326,7 @@
       "route": "/docs/hiecm/v3/registries/abha",
       "anchor": "abha-number-and-address",
       "link": "/docs/hiecm/v3/registries/abha#abha-number-and-address",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -335,7 +335,7 @@
       "route": "/docs/hiecm/v3/concepts/gateway",
       "anchor": "asynchronous-callbacks",
       "link": "/docs/hiecm/v3/concepts/gateway#asynchronous-callbacks",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -344,7 +344,7 @@
       "route": "/docs/hiecm/v3/concepts/callback-authenticity",
       "anchor": "callback-authenticity",
       "link": "/docs/hiecm/v3/concepts/callback-authenticity#callback-authenticity",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -353,7 +353,7 @@
       "route": "/docs/hiecm/v3/concepts/care-context",
       "anchor": "care-context",
       "link": "/docs/hiecm/v3/concepts/care-context#care-context",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -362,7 +362,7 @@
       "route": "/docs/hiecm/v3/concepts/consent",
       "anchor": "consent-artefact",
       "link": "/docs/hiecm/v3/concepts/consent#consent-artefact",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -371,7 +371,7 @@
       "route": "/docs/hiecm/v3/concepts/consent",
       "anchor": "consent-in-a-phr-app",
       "link": "/docs/hiecm/v3/concepts/consent#consent-in-a-phr-app",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -380,7 +380,7 @@
       "route": "/docs/hiecm/v3/concepts/encryption",
       "anchor": "encrypted-identifiers",
       "link": "/docs/hiecm/v3/concepts/encryption#encrypted-identifiers",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -389,7 +389,7 @@
       "route": "/docs/hiecm/v3/getting-started/build-it-well",
       "anchor": "error-codes",
       "link": "/docs/hiecm/v3/getting-started/build-it-well#error-codes",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -398,7 +398,7 @@
       "route": "/docs/hiecm/v3/concepts/gateway",
       "anchor": "gateway-session",
       "link": "/docs/hiecm/v3/concepts/gateway#gateway-session",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -407,7 +407,7 @@
       "route": "/docs/hiecm/v3/concepts/encryption",
       "anchor": "input-encryption",
       "link": "/docs/hiecm/v3/concepts/encryption#input-encryption",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -479,7 +479,7 @@
       "route": "/docs/hiecm/v3/concepts/abha-journey",
       "anchor": "m1-journey-design",
       "link": "/docs/hiecm/v3/concepts/abha-journey#m1-journey-design",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -605,7 +605,7 @@
       "route": "/docs/hiecm/v3/milestones/p3",
       "anchor": "phr-subscriptions",
       "link": "/docs/hiecm/v3/milestones/p3#phr-subscriptions",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -614,7 +614,7 @@
       "route": "/docs/hiecm/v3/concepts/how-it-fits",
       "anchor": "roles",
       "link": "/docs/hiecm/v3/concepts/how-it-fits#roles",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -623,7 +623,7 @@
       "route": "/docs/hiecm/v3/concepts/api-specifications",
       "anchor": "callbacks-as-webhooks",
       "link": "/docs/hiecm/v3/concepts/api-specifications#callbacks-as-webhooks",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -632,7 +632,7 @@
       "route": "/docs/hiecm/v3/concepts/encryption",
       "anchor": "encrypt-locally",
       "link": "/docs/hiecm/v3/concepts/encryption#encrypt-locally",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -641,7 +641,7 @@
       "route": "/docs/hiecm/v3/concepts/api-specifications",
       "anchor": "spec-per-module",
       "link": "/docs/hiecm/v3/concepts/api-specifications#spec-per-module",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -650,7 +650,7 @@
       "route": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/02-gateway-get-gateway-v3-bridge-service-serviceid-service-id",
       "anchor": "gateway-get-bridge-service-by-id",
       "link": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/02-gateway-get-gateway-v3-bridge-service-serviceid-service-id#gateway-get-bridge-service-by-id",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -659,7 +659,7 @@
       "route": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/01-gateway-get-gateway-v3-bridge-services",
       "anchor": "gateway-list-bridge-services",
       "link": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/01-gateway-get-gateway-v3-bridge-services#gateway-list-bridge-services",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -668,7 +668,7 @@
       "route": "/docs/hiecm/v3/api/m4/endpoints/m4-multiple-hrp-api/01-m4-post-v1-bridges-mutiplehrpaddupdateservices",
       "anchor": "gateway-register-bridge-services",
       "link": "/docs/hiecm/v3/api/m4/endpoints/m4-multiple-hrp-api/01-m4-post-v1-bridges-mutiplehrpaddupdateservices#gateway-register-bridge-services",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -677,7 +677,7 @@
       "route": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions",
       "anchor": "gateway-sessions",
       "link": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions#gateway-sessions",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -686,7 +686,7 @@
       "route": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/03-gateway-patch-gateway-v3-bridge-url",
       "anchor": "gateway-update-bridge-url",
       "link": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/03-gateway-patch-gateway-v3-bridge-url#gateway-update-bridge-url",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -695,7 +695,7 @@
       "route": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions",
       "anchor": "m1-auth-token",
       "link": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions#m1-auth-token",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -704,7 +704,7 @@
       "route": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-search/03-m1-get-v3-profile-benefit-abha-abhanumber",
       "anchor": "m1-benefit-get-by-abha",
       "link": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-search/03-m1-get-v3-profile-benefit-abha-abhanumber#m1-benefit-get-by-abha",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -713,7 +713,7 @@
       "route": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/01-m1-post-v3-profile-benefit-linkanddelink-x-token",
       "anchor": "m1-benefit-link-or-delink",
       "link": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/01-m1-post-v3-profile-benefit-linkanddelink-x-token#m1-benefit-link-or-delink",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -722,7 +722,7 @@
       "route": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-search/01-m1-post-v3-profile-benefit-search-xmluid",
       "anchor": "m1-benefit-search",
       "link": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-search/01-m1-post-v3-profile-benefit-search-xmluid#m1-benefit-search",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -731,7 +731,7 @@
       "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/05-m1-get-v3-phr-web-login-profile-abha-phr-card-abha-addres-e1bae9",
       "anchor": "m1-download-phr-card",
       "link": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/05-m1-get-v3-phr-web-login-profile-abha-phr-card-abha-addres-e1bae9#m1-download-phr-card",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -740,7 +740,7 @@
       "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/06-m1-get-v3-phr-web-login-profile-abha-qr-code-abha-address-a48785",
       "anchor": "m1-download-phr-qr-code",
       "link": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/06-m1-get-v3-phr-web-login-profile-abha-qr-code-abha-address-a48785#m1-download-phr-qr-code",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -749,7 +749,7 @@
       "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/07-m1-get-v3-enrollment-enrol-suggestion-create-abha-aadhaar-otp",
       "anchor": "m1-enrolment-address-suggestions",
       "link": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/07-m1-get-v3-enrollment-enrol-suggestion-create-abha-aadhaar-otp#m1-enrolment-address-suggestions",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -758,7 +758,7 @@
       "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/02-m1-post-v3-enrollment-enrol-byaadhaar-otp",
       "anchor": "m1-enrolment-by-aadhaar",
       "link": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/02-m1-post-v3-enrollment-enrol-byaadhaar-otp#m1-enrolment-by-aadhaar",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -767,7 +767,7 @@
       "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-face-authentication/02-m1-post-v3-enrollment-enrol-capturepid-create-abha-face-a-417d5e",
       "anchor": "m1-enrolment-capture-pid",
       "link": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-face-authentication/02-m1-post-v3-enrollment-enrol-capturepid-create-abha-face-a-417d5e#m1-enrolment-capture-pid",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -776,7 +776,7 @@
       "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/08-m1-post-v3-enrollment-enrol-abha-address-create-abha-aadhaar-otp",
       "anchor": "m1-enrolment-claim-abha-address",
       "link": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/08-m1-post-v3-enrollment-enrol-abha-address-create-abha-aadhaar-otp#m1-enrolment-claim-abha-address",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -785,7 +785,7 @@
       "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-face-authentication/01-m1-post-v3-enrollment-enrol-auth-init-create-abha-face-au-4dea33",
       "anchor": "m1-enrolment-face-auth-init",
       "link": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-face-authentication/01-m1-post-v3-enrollment-enrol-auth-init-create-abha-face-au-4dea33#m1-enrolment-face-auth-init",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -794,7 +794,7 @@
       "route": "/docs/hiecm/v3/api/m1/endpoints/m1-child-abha/02-m1-get-v3-enrollment-profile-children-child-abha",
       "anchor": "m1-enrolment-list-children",
       "link": "/docs/hiecm/v3/api/m1/endpoints/m1-child-abha/02-m1-get-v3-enrollment-profile-children-child-abha#m1-enrolment-list-children",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -803,7 +803,7 @@
       "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/01-m1-post-v3-enrollment-request-otp-aadhaar-otp",
       "anchor": "m1-enrolment-request-otp",
       "link": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/01-m1-post-v3-enrollment-request-otp-aadhaar-otp#m1-enrolment-request-otp",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -812,7 +812,7 @@
       "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/04-m1-post-v3-enrollment-auth-byabdm-mobile-verify-create-ab-091285",
       "anchor": "m1-enrolment-verify-abdm-otp",
       "link": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/04-m1-post-v3-enrollment-auth-byabdm-mobile-verify-create-ab-091285#m1-enrolment-verify-abdm-otp",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -821,7 +821,7 @@
       "route": "/docs/hiecm/v3/api/m1/endpoints/m1-find-abha-mobile-otp/01-m1-post-v3-profile-account-abha-search-find-abha-mobile-otp",
       "anchor": "m1-find-abha-search",
       "link": "/docs/hiecm/v3/api/m1/endpoints/m1-find-abha-mobile-otp/01-m1-post-v3-profile-account-abha-search-find-abha-mobile-otp#m1-find-abha-search",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -830,7 +830,7 @@
       "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/04-m1-get-v3-phr-web-login-profile-abha-profile-abha-address-b038c4",
       "anchor": "m1-get-phr-profile",
       "link": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/04-m1-get-v3-phr-web-login-profile-abha-profile-abha-address-b038c4#m1-get-phr-profile",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -839,7 +839,7 @@
       "route": "/docs/hiecm/v3/api/m1/endpoints/m1-access-tokens-encryption/02-m1-get-v3-profile-public-certificate",
       "anchor": "m1-get-public-certificate",
       "link": "/docs/hiecm/v3/api/m1/endpoints/m1-access-tokens-encryption/02-m1-get-v3-profile-public-certificate#m1-get-public-certificate",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -848,7 +848,7 @@
       "route": "/docs/hiecm/v3/api/m1/endpoints/m1-login-mobile-number/01-m1-post-v3-profile-login-request-otp-mobile",
       "anchor": "m1-login-request-otp",
       "link": "/docs/hiecm/v3/api/m1/endpoints/m1-login-mobile-number/01-m1-post-v3-profile-login-request-otp-mobile#m1-login-request-otp",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -857,7 +857,7 @@
       "route": "/docs/hiecm/v3/api/m1/endpoints/m1-login-mobile-number/03-m1-post-v3-profile-login-verify-user",
       "anchor": "m1-login-select-account",
       "link": "/docs/hiecm/v3/api/m1/endpoints/m1-login-mobile-number/03-m1-post-v3-profile-login-verify-user#m1-login-select-account",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -866,7 +866,7 @@
       "route": "/docs/hiecm/v3/api/m1/endpoints/m1-login-mobile-number/02-m1-post-v3-profile-login-verify-mobile-otp",
       "anchor": "m1-login-verify",
       "link": "/docs/hiecm/v3/api/m1/endpoints/m1-login-mobile-number/02-m1-post-v3-profile-login-verify-mobile-otp#m1-login-verify",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -875,7 +875,7 @@
       "route": "/docs/hiecm/v3/api/m1/endpoints/m1-login-biometric-v3-1/01-m1-post-v3-1-profile-login-verify-fingerprint",
       "anchor": "m1-login-verify-v31",
       "link": "/docs/hiecm/v3/api/m1/endpoints/m1-login-biometric-v3-1/01-m1-post-v3-1-profile-login-verify-fingerprint#m1-login-verify-v31",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -884,7 +884,7 @@
       "route": "/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/02-scan-and-register-post-patient-share-v3-on-share",
       "anchor": "m1-on-share-acknowledgement",
       "link": "/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/02-scan-and-register-post-patient-share-v3-on-share#m1-on-share-acknowledgement",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -893,7 +893,7 @@
       "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/02-m1-post-v3-phr-web-login-abha-request-otp-mobile-otp",
       "anchor": "m1-phr-request-otp",
       "link": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/02-m1-post-v3-phr-web-login-abha-request-otp-mobile-otp#m1-phr-request-otp",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -902,7 +902,7 @@
       "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/01-m1-post-v3-phr-web-login-abha-search-abha-address-login-m-27a20f",
       "anchor": "m1-phr-search-abha-address",
       "link": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/01-m1-post-v3-phr-web-login-abha-search-abha-address-login-m-27a20f#m1-phr-search-abha-address",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -911,7 +911,7 @@
       "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/03-m1-post-v3-phr-web-login-abha-verify-mobile-otp",
       "anchor": "m1-phr-verify",
       "link": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/03-m1-post-v3-phr-web-login-abha-verify-mobile-otp#m1-phr-verify",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -920,7 +920,7 @@
       "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-card-profile/04-m1-get-v3-profile-account-download-abha-card",
       "anchor": "m1-profile-download-abha-card",
       "link": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-card-profile/04-m1-get-v3-profile-account-download-abha-card#m1-profile-download-abha-card",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -929,7 +929,7 @@
       "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-card-profile/02-m1-get-v3-profile-account-abha-card",
       "anchor": "m1-profile-get-abha-card",
       "link": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-card-profile/02-m1-get-v3-profile-account-abha-card#m1-profile-get-abha-card",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -938,7 +938,7 @@
       "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-card-profile/03-m1-get-v3-profile-account",
       "anchor": "m1-profile-get-account",
       "link": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-card-profile/03-m1-get-v3-profile-account#m1-profile-get-account",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -947,7 +947,7 @@
       "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-card-profile/01-m1-get-v3-profile-account-qrcode",
       "anchor": "m1-profile-get-qr-code",
       "link": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-card-profile/01-m1-get-v3-profile-account-qrcode#m1-profile-get-qr-code",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -956,7 +956,7 @@
       "route": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-update-mobile/01-m1-post-v3-profile-account-request-otp-update-mobile",
       "anchor": "m1-profile-request-otp",
       "link": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-update-mobile/01-m1-post-v3-profile-account-request-otp-update-mobile#m1-profile-request-otp",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -965,7 +965,7 @@
       "route": "/docs/hiecm/v3/api/m1/endpoints/m1-child-abha/03-m1-patch-v3-profile-account-child-child-abha",
       "anchor": "m1-profile-update-account",
       "link": "/docs/hiecm/v3/api/m1/endpoints/m1-child-abha/03-m1-patch-v3-profile-account-child-child-abha#m1-profile-update-account",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -974,7 +974,7 @@
       "route": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-update-mobile/02-m1-post-v3-profile-account-verify-update-mobile",
       "anchor": "m1-profile-verify-otp",
       "link": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-update-mobile/02-m1-post-v3-profile-account-verify-update-mobile#m1-profile-verify-otp",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -983,7 +983,7 @@
       "route": "/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/01-scan-and-register-post-v3-hip-patient-share",
       "anchor": "m1-receive-patient-share",
       "link": "/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/01-scan-and-register-post-v3-hip-patient-share#m1-receive-patient-share",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -992,7 +992,7 @@
       "route": "/docs/hiecm/v3/api/m4/endpoints/m4-multiple-hrp-api/01-m4-post-v1-bridges-mutiplehrpaddupdateservices",
       "anchor": "m1-register-hrp-services",
       "link": "/docs/hiecm/v3/api/m4/endpoints/m4-multiple-hrp-api/01-m4-post-v1-bridges-mutiplehrpaddupdateservices#m1-register-hrp-services",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1001,7 +1001,7 @@
       "route": "/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-number-aadhaar-otp/05-p1-post-v3-profile-account-request-emailverificationlink",
       "anchor": "m1-send-email-verification-link",
       "link": "/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-number-aadhaar-otp/05-p1-post-v3-profile-account-request-emailverificationlink#m1-send-email-verification-link",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1010,7 +1010,7 @@
       "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-card-profile/05-m1-get-v3-profile-account-request-token",
       "anchor": "m1-token-refresh",
       "link": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-card-profile/05-m1-get-v3-profile-account-request-token#m1-token-refresh",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1019,7 +1019,7 @@
       "route": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/01-m2-post-consent-v3-request-hip-on-notify",
       "anchor": "m2-consent-hip-on-notify",
       "link": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/01-m2-post-consent-v3-request-hip-on-notify#m2-consent-hip-on-notify",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1028,7 +1028,7 @@
       "route": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-link-token-hip/01-m2-post-v3-token-generate-token",
       "anchor": "m2-generate-link-token",
       "link": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-link-token-hip/01-m2-post-v3-token-generate-token#m2-generate-link-token",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1037,7 +1037,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-manager-hiu-hip/01-p2-get-hip-v3-link-patient-links",
       "anchor": "m2-get-all-link-records",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-manager-hiu-hip/01-p2-get-hip-v3-link-patient-links#m2-get-all-link-records",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1046,7 +1046,7 @@
       "route": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/03-m2-post-data-flow-v3-health-information-notify",
       "anchor": "m2-hip-data-flow-notify",
       "link": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/03-m2-post-data-flow-v3-health-information-notify#m2-hip-data-flow-notify",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1055,7 +1055,7 @@
       "route": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request",
       "anchor": "m2-hip-health-information-on-request",
       "link": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request#m2-hip-health-information-on-request",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1064,7 +1064,7 @@
       "route": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/01-m2-post-hip-v3-link-carecontext",
       "anchor": "m2-hip-link-care-context",
       "link": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/01-m2-post-hip-v3-link-carecontext#m2-hip-link-care-context",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1073,7 +1073,7 @@
       "route": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/02-m2-post-hip-v3-link-context-notify",
       "anchor": "m2-link-care-context-notify",
       "link": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/02-m2-post-hip-v3-link-context-notify#m2-link-care-context-notify",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1082,7 +1082,7 @@
       "route": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/01-m2-post-user-initiated-linking-v3-patient-care-context-on-8c9340",
       "anchor": "m2-on-discover-care-contexts",
       "link": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/01-m2-post-user-initiated-linking-v3-patient-care-context-on-8c9340#m2-on-discover-care-contexts",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1091,7 +1091,7 @@
       "route": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/03-m2-post-user-initiated-linking-v3-link-care-context-on-confirm",
       "anchor": "m2-on-link-confirm",
       "link": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/03-m2-post-user-initiated-linking-v3-link-care-context-on-confirm#m2-on-link-confirm",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1100,7 +1100,7 @@
       "route": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/02-m2-post-user-initiated-linking-v3-link-care-context-on-init",
       "anchor": "m2-on-link-init",
       "link": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/02-m2-post-user-initiated-linking-v3-link-care-context-on-init#m2-on-link-init",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1109,7 +1109,7 @@
       "route": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/03-m2-post-hip-v3-link-patient-links-sms-notify2",
       "anchor": "m2-sms-deep-link-notify",
       "link": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/03-m2-post-hip-v3-link-patient-links-sms-notify2#m2-sms-deep-link-notify",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1118,7 +1118,7 @@
       "route": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/04-m3-post-consent-v3-fetch",
       "anchor": "m3-consent-fetch",
       "link": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/04-m3-post-consent-v3-fetch#m3-consent-fetch",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1127,7 +1127,7 @@
       "route": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/03-m3-post-consent-v3-request-hiu-on-notify",
       "anchor": "m3-consent-hiu-on-notify",
       "link": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/03-m3-post-consent-v3-request-hiu-on-notify#m3-consent-hiu-on-notify",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1136,7 +1136,7 @@
       "route": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/01-m3-post-consent-v3-request-init",
       "anchor": "m3-consent-request-init",
       "link": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/01-m3-post-consent-v3-request-init#m3-consent-request-init",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1145,7 +1145,7 @@
       "route": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/02-m3-post-consent-v3-request-status",
       "anchor": "m3-consent-request-status",
       "link": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/02-m3-post-consent-v3-request-status#m3-consent-request-status",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1154,7 +1154,7 @@
       "route": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/06-m3-post-data-flow-v3-health-information-notify",
       "anchor": "m3-hiu-data-flow-notify",
       "link": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/06-m3-post-data-flow-v3-health-information-notify#m3-hiu-data-flow-notify",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1163,7 +1163,7 @@
       "route": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/05-m3-post-data-flow-v3-health-information-request",
       "anchor": "m3-hiu-health-information-request",
       "link": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/05-m3-post-data-flow-v3-health-information-request#m3-hiu-health-information-request",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1172,7 +1172,7 @@
       "route": "/docs/hiecm/v3/api/m4/endpoints/m4-search/02-m4-post-facilitymanagement-v1-5-facility-search",
       "anchor": "m4-hfr-search-facility",
       "link": "/docs/hiecm/v3/api/m4/endpoints/m4-search/02-m4-post-facilitymanagement-v1-5-facility-search#m4-hfr-search-facility",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1181,7 +1181,7 @@
       "route": "/docs/hiecm/v3/api/m4/endpoints/m4-registration-api-s-collection-via-aadhaar/09-m4-post-v2-registration-aadhaar-createhpridwithpreverified",
       "anchor": "m4-hpr-create-hprid",
       "link": "/docs/hiecm/v3/api/m4/endpoints/m4-registration-api-s-collection-via-aadhaar/09-m4-post-v2-registration-aadhaar-createhpridwithpreverified#m4-hpr-create-hprid",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1190,7 +1190,7 @@
       "route": "/docs/hiecm/v3/api/m4/endpoints/m4-registration-api-s-collection-via-aadhaar/04-m4-post-v2-registration-aadhaar-demographicauthviamobile",
       "anchor": "m4-hpr-demographic-auth-mobile",
       "link": "/docs/hiecm/v3/api/m4/endpoints/m4-registration-api-s-collection-via-aadhaar/04-m4-post-v2-registration-aadhaar-demographicauthviamobile#m4-hpr-demographic-auth-mobile",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1199,7 +1199,7 @@
       "route": "/docs/hiecm/v3/api/m4/endpoints/m4-enrollment/03-m4-post-v1-doctors-fetch-documents-list",
       "anchor": "m4-hpr-fetch-documents-list",
       "link": "/docs/hiecm/v3/api/m4/endpoints/m4-enrollment/03-m4-post-v1-doctors-fetch-documents-list#m4-hpr-fetch-documents-list",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1208,7 +1208,7 @@
       "route": "/docs/hiecm/v3/api/m4/endpoints/m4-enrollment/05-m4-post-v1-doctors-fetch-professional-info",
       "anchor": "m4-hpr-fetch-professional-info",
       "link": "/docs/hiecm/v3/api/m4/endpoints/m4-enrollment/05-m4-post-v1-doctors-fetch-professional-info#m4-hpr-fetch-professional-info",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1217,7 +1217,7 @@
       "route": "/docs/hiecm/v3/api/m4/endpoints/m4-enrollment/01-m4-post-v1-doctors-register-professional-new",
       "anchor": "m4-hpr-register-professional",
       "link": "/docs/hiecm/v3/api/m4/endpoints/m4-enrollment/01-m4-post-v1-doctors-register-professional-new#m4-hpr-register-professional",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1226,7 +1226,7 @@
       "route": "/docs/hiecm/v3/api/m4/endpoints/m4-enrollment/04-m4-post-v1-uploads-upload-document",
       "anchor": "m4-hpr-upload-document",
       "link": "/docs/hiecm/v3/api/m4/endpoints/m4-enrollment/04-m4-post-v1-uploads-upload-document#m4-hpr-upload-document",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1235,7 +1235,7 @@
       "route": "/docs/hiecm/v3/api/p1/endpoints/p1-certificate-and-session/01-p1-get-v3-phr-app-login-public-certificate",
       "anchor": "p1-encrypt-data-aadhaar-mobile-otp-password",
       "link": "/docs/hiecm/v3/api/p1/endpoints/p1-certificate-and-session/01-p1-get-v3-phr-app-login-public-certificate#p1-encrypt-data-aadhaar-mobile-otp-password",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1244,7 +1244,7 @@
       "route": "/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/04-p1-get-v3-phr-app-enrollment-isexists",
       "anchor": "p1-enrollment-address-exists",
       "link": "/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/04-p1-get-v3-phr-app-enrollment-isexists#p1-enrollment-address-exists",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1253,7 +1253,7 @@
       "route": "/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/03-p1-post-v3-phr-app-enrollment-suggestion",
       "anchor": "p1-enrollment-address-suggestion",
       "link": "/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/03-p1-post-v3-phr-app-enrollment-suggestion#p1-enrollment-address-suggestion",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1262,7 +1262,7 @@
       "route": "/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/05-p1-post-v3-phr-app-enrollment-enrol",
       "anchor": "p1-enrollment-enrol",
       "link": "/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/05-p1-post-v3-phr-app-enrollment-enrol#p1-enrollment-enrol",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1271,7 +1271,7 @@
       "route": "/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/01-p1-post-v3-phr-app-enrollment-request-otp",
       "anchor": "p1-enrollment-request-otp",
       "link": "/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/01-p1-post-v3-phr-app-enrollment-request-otp#p1-enrollment-request-otp",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1280,7 +1280,7 @@
       "route": "/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/02-p1-post-v3-phr-app-enrollment-verify",
       "anchor": "p1-enrollment-verify-otp",
       "link": "/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/02-p1-post-v3-phr-app-enrollment-verify#p1-enrollment-verify-otp",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1289,7 +1289,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-profile/05-p2-get-v3-phr-app-login-profile-request-token",
       "anchor": "p1-generate-refresh-token",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-profile/05-p2-get-v3-phr-app-login-profile-request-token#p1-generate-refresh-token",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1298,7 +1298,7 @@
       "route": "/docs/hiecm/v3/api/p1/endpoints/p1-certificate-and-session/01-p1-get-v3-phr-app-login-public-certificate",
       "anchor": "p1-get-certificate-public-key",
       "link": "/docs/hiecm/v3/api/p1/endpoints/p1-certificate-and-session/01-p1-get-v3-phr-app-login-public-certificate#p1-get-certificate-public-key",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1307,7 +1307,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-profile/03-p2-get-v3-phr-app-login-profile-phrcard",
       "anchor": "p1-get-user-phr-card",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-profile/03-p2-get-v3-phr-app-login-profile-phrcard#p1-get-user-phr-card",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1316,7 +1316,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-profile/01-p2-get-v3-phr-app-login-profile",
       "anchor": "p1-get-user-profile",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-profile/01-p2-get-v3-phr-app-login-profile#p1-get-user-profile",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1325,7 +1325,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-profile/02-p2-get-v3-phr-app-login-profile-qrcode",
       "anchor": "p1-get-user-qr-code",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-profile/02-p2-get-v3-phr-app-login-profile-qrcode#p1-get-user-qr-code",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1334,7 +1334,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/01-p2-post-v3-phr-app-login-profile-request-otp",
       "anchor": "p1-link-abha-number-via-aadhaar-request-otp",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/01-p2-post-v3-phr-app-login-profile-request-otp#p1-link-abha-number-via-aadhaar-request-otp",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1343,7 +1343,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/02-p2-post-v3-phr-app-login-profile-verify",
       "anchor": "p1-link-abha-number-via-aadhaar-verify-otp",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/02-p2-post-v3-phr-app-login-profile-verify#p1-link-abha-number-via-aadhaar-verify-otp",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1352,7 +1352,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/01-p2-post-v3-phr-app-login-profile-request-otp",
       "anchor": "p1-link-abha-number-via-mobile-request-otp",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/01-p2-post-v3-phr-app-login-profile-request-otp#p1-link-abha-number-via-mobile-request-otp",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1361,7 +1361,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/02-p2-post-v3-phr-app-login-profile-verify",
       "anchor": "p1-link-abha-number-via-mobile-verify-otp",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/02-p2-post-v3-phr-app-login-profile-verify#p1-link-abha-number-via-mobile-verify-otp",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1370,7 +1370,7 @@
       "route": "/docs/hiecm/v3/api/p1/endpoints/p1-login-mobile/01-p1-post-v3-phr-app-login-request-otp",
       "anchor": "p1-login-request-otp",
       "link": "/docs/hiecm/v3/api/p1/endpoints/p1-login-mobile/01-p1-post-v3-phr-app-login-request-otp#p1-login-request-otp",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1379,7 +1379,7 @@
       "route": "/docs/hiecm/v3/api/p1/endpoints/p1-login-abha-address-password/01-p1-post-v3-phr-app-login-search",
       "anchor": "p1-login-using-password-search-user",
       "link": "/docs/hiecm/v3/api/p1/endpoints/p1-login-abha-address-password/01-p1-post-v3-phr-app-login-search#p1-login-using-password-search-user",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1388,7 +1388,7 @@
       "route": "/docs/hiecm/v3/api/p1/endpoints/p1-login-mobile/02-p1-post-v3-phr-app-login-verify",
       "anchor": "p1-login-verify-otp",
       "link": "/docs/hiecm/v3/api/p1/endpoints/p1-login-mobile/02-p1-post-v3-phr-app-login-verify#p1-login-verify-otp",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1397,7 +1397,7 @@
       "route": "/docs/hiecm/v3/api/p1/endpoints/p1-login-mobile/03-p1-post-v3-phr-app-login-verify-user",
       "anchor": "p1-login-verify-user",
       "link": "/docs/hiecm/v3/api/p1/endpoints/p1-login-mobile/03-p1-post-v3-phr-app-login-verify-user#p1-login-verify-user",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1406,7 +1406,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-profile/06-p2-get-v3-phr-app-login-profile-request-logout",
       "anchor": "p1-logout-user",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-profile/06-p2-get-v3-phr-app-login-profile-request-logout#p1-logout-user",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1415,7 +1415,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-link-abha-number-abha-otp/03-p2-post-v3-phr-app-login-profile-link",
       "anchor": "p1-process-link-request-via-aadhaar-number",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-link-abha-number-abha-otp/03-p2-post-v3-phr-app-login-profile-link#p1-process-link-request-via-aadhaar-number",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1424,7 +1424,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-link-abha-number-abha-otp/03-p2-post-v3-phr-app-login-profile-link",
       "anchor": "p1-process-link-request-via-abha-number",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-link-abha-number-abha-otp/03-p2-post-v3-phr-app-login-profile-link#p1-process-link-request-via-abha-number",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1433,7 +1433,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-switch-profile/01-p2-get-v3-phr-app-login-profile-switch-profile",
       "anchor": "p1-switch-profile-request",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-switch-profile/01-p2-get-v3-phr-app-login-profile-switch-profile#p1-switch-profile-request",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1442,7 +1442,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-switch-profile/02-p2-post-v3-phr-app-login-profile-verify-switch-profile-user",
       "anchor": "p1-switch-profile-verify",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-switch-profile/02-p2-post-v3-phr-app-login-profile-verify-switch-profile-user#p1-switch-profile-verify",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1451,7 +1451,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/01-p2-post-v3-phr-app-login-profile-request-otp",
       "anchor": "p1-update-mobile-request-otp",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/01-p2-post-v3-phr-app-login-profile-request-otp#p1-update-mobile-request-otp",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1460,7 +1460,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/02-p2-post-v3-phr-app-login-profile-verify",
       "anchor": "p1-update-mobile-verify-otp",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/02-p2-post-v3-phr-app-login-profile-verify#p1-update-mobile-verify-otp",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1469,7 +1469,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/01-p2-get-gateway-v3-providers",
       "anchor": "p2-all-providers",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/01-p2-get-gateway-v3-providers#p2-all-providers",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1478,7 +1478,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/03-p2-post-user-initiated-linking-v3-patient-care-context-discover",
       "anchor": "p2-care-context-discover",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/03-p2-post-user-initiated-linking-v3-patient-care-context-discover#p2-care-context-discover",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1487,7 +1487,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/09-p2-get-gateway-v3-govt-programs",
       "anchor": "p2-govt-programs",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/09-p2-get-gateway-v3-govt-programs#p2-govt-programs",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1496,7 +1496,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/07-p2-post-user-initiated-linking-v3-link-care-context-confirm",
       "anchor": "p2-link-care-context-confirm",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/07-p2-post-user-initiated-linking-v3-link-care-context-confirm#p2-link-care-context-confirm",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1505,7 +1505,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/05-p2-post-user-initiated-linking-v3-link-care-context-init",
       "anchor": "p2-link-care-context-init",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/05-p2-post-user-initiated-linking-v3-link-care-context-init#p2-link-care-context-init",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1514,7 +1514,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-hiecm-patient-share-phr/01-p2-post-patient-share-v3-share",
       "anchor": "p2-patient-share",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-hiecm-patient-share-phr/01-p2-post-patient-share-v3-share#p2-patient-share",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1523,7 +1523,7 @@
       "route": "/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/02-scan-and-register-post-patient-share-v3-on-share",
       "anchor": "p2-profile-on-share",
       "link": "/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/02-scan-and-register-post-patient-share-v3-on-share#p2-profile-on-share",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1532,7 +1532,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/02-p2-get-gateway-v3-providers-provider-id",
       "anchor": "p2-provider-by-provider-id",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/02-p2-get-gateway-v3-providers-provider-id#p2-provider-by-provider-id",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1541,7 +1541,7 @@
       "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/01-p3-post-subscription-requests-v3-request-id-approve",
       "anchor": "p3-approve-subscription-request",
       "link": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/01-p3-post-subscription-requests-v3-request-id-approve#p3-approve-subscription-request",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1550,7 +1550,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/01-p2-post-consent-v3-auto-approve",
       "anchor": "p3-consent-auto-approve",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/01-p2-post-consent-v3-auto-approve#p3-consent-auto-approve",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1559,7 +1559,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/02-p2-post-consent-v3-auto-approve-auto-approval-id-disable",
       "anchor": "p3-consent-disable-auto-approve",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/02-p2-post-consent-v3-auto-approve-auto-approval-id-disable#p3-consent-disable-auto-approve",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1568,7 +1568,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/03-p2-post-consent-v3-auto-approve-auto-approval-id-enable",
       "anchor": "p3-consent-enable-auto-approve",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/03-p2-post-consent-v3-auto-approve-auto-approval-id-enable#p3-consent-enable-auto-approve",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1577,7 +1577,7 @@
       "route": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/04-m3-post-consent-v3-fetch",
       "anchor": "p3-consent-fetch",
       "link": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/04-m3-post-consent-v3-fetch#p3-consent-fetch",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1586,7 +1586,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/07-p2-post-consent-v3-request-request-id-deny",
       "anchor": "p3-deny-consent-request",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/07-p2-post-consent-v3-request-request-id-deny#p3-deny-consent-request",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1595,7 +1595,7 @@
       "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/02-p3-post-subscription-requests-v3-request-id-deny",
       "anchor": "p3-deny-subscription-request",
       "link": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/02-p3-post-subscription-requests-v3-request-id-deny#p3-deny-subscription-request",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1604,7 +1604,7 @@
       "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/07-p3-get-subscription-requests-v3-request-request-id",
       "anchor": "p3-details-by-request-id",
       "link": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/07-p3-get-subscription-requests-v3-request-request-id#p3-details-by-request-id",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1613,7 +1613,7 @@
       "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/08-p3-get-subscription-requests-v3-subscription-id",
       "anchor": "p3-details-by-subscription-id",
       "link": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/08-p3-get-subscription-requests-v3-subscription-id#p3-details-by-subscription-id",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1622,7 +1622,7 @@
       "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/04-p3-put-subscription-requests-v3-patients-subscription-id",
       "anchor": "p3-edit-subscription",
       "link": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/04-p3-put-subscription-requests-v3-patients-subscription-id#p3-edit-subscription",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1631,7 +1631,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/09-p2-get-consent-v3-artefact-request-request-id",
       "anchor": "p3-get-all-consent-artefact-details-by-request-id",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/09-p2-get-consent-v3-artefact-request-request-id#p3-get-all-consent-artefact-details-by-request-id",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1640,7 +1640,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/11-p2-get-consent-v3-artefact",
       "anchor": "p3-get-all-consent-artifact-details-for-an-abha-address",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/11-p2-get-consent-v3-artefact#p3-get-all-consent-artifact-details-for-an-abha-address",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1649,7 +1649,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/04-p2-get-consent-v3-request",
       "anchor": "p3-get-all-consent-request-for-an-abha-address",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/04-p2-get-consent-v3-request#p3-get-all-consent-request-for-an-abha-address",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1658,7 +1658,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-manager-hiu-hip/01-p2-get-hip-v3-link-patient-links",
       "anchor": "p3-get-all-links-records",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-manager-hiu-hip/01-p2-get-hip-v3-link-patient-links#p3-get-all-links-records",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1667,7 +1667,7 @@
       "route": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/04-p4-get-subscription-requests-v3-patients-requests",
       "anchor": "p3-get-all-subscription-request",
       "link": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/04-p4-get-subscription-requests-v3-patients-requests#p3-get-all-subscription-request",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1676,7 +1676,7 @@
       "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/03-p3-get-subscription-requests-v3-requests",
       "anchor": "p3-get-all-subscription-requests-for-an-abha-address",
       "link": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/03-p3-get-subscription-requests-v3-requests#p3-get-all-subscription-requests-for-an-abha-address",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1685,7 +1685,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/10-p2-get-consent-v3-artefact-artefact-id",
       "anchor": "p3-get-consent-artefact-details-by-artifact-id",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/10-p2-get-consent-v3-artefact-artefact-id#p3-get-consent-artefact-details-by-artifact-id",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1694,7 +1694,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/05-p2-get-consent-v3-request-request-id",
       "anchor": "p3-get-consent-request-details-by-consent-request-id",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/05-p2-get-consent-v3-request-request-id#p3-get-consent-request-details-by-consent-request-id",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1703,7 +1703,7 @@
       "route": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/02-p4-get-subscription-requests-v3-patients-lockers",
       "anchor": "p3-get-patient-subscribed-lockers",
       "link": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/02-p4-get-subscription-requests-v3-patients-lockers#p3-get-patient-subscribed-lockers",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1712,7 +1712,7 @@
       "route": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/03-p4-get-subscription-requests-v3-patients-lockers-lockerid",
       "anchor": "p3-patient-locker-details-by-locker-id",
       "link": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/03-p4-get-subscription-requests-v3-patients-lockers-lockerid#p3-patient-locker-details-by-locker-id",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1721,7 +1721,7 @@
       "route": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/07-m3-get-data-flow-v3-health-information-request-status-tra-550104",
       "anchor": "p3-request-status",
       "link": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/07-m3-get-data-flow-v3-health-information-request-status-tra-550104#p3-request-status",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1730,7 +1730,7 @@
       "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/08-p2-post-consent-v3-revoke",
       "anchor": "p3-revoke-consent-request",
       "link": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/08-p2-post-consent-v3-revoke#p3-revoke-consent-request",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1739,7 +1739,7 @@
       "route": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/01-p4-post-subscription-requests-v3-setup-locker",
       "anchor": "p3-setup-locker",
       "link": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/01-p4-post-subscription-requests-v3-setup-locker#p3-setup-locker",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1748,7 +1748,7 @@
       "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/06-p3-post-subscription-requests-v3-hiu-care-context-on-notify",
       "anchor": "p3-subscription-hiu-on-notify",
       "link": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/06-p3-post-subscription-requests-v3-hiu-care-context-on-notify#p3-subscription-hiu-on-notify",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1757,7 +1757,7 @@
       "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/01-p3-post-subscription-requests-v3-init",
       "anchor": "p3-subscription-init",
       "link": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/01-p3-post-subscription-requests-v3-init#p3-subscription-init",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1766,7 +1766,7 @@
       "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/04-p3-post-subscription-requests-v3-hiu-on-notify",
       "anchor": "p3-subscription-request-hiu-on-notify",
       "link": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/04-p3-post-subscription-requests-v3-hiu-on-notify#p3-subscription-request-hiu-on-notify",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1775,7 +1775,7 @@
       "route": "/docs/hiecm/v3/api/m1/errors",
       "anchor": "900900",
       "link": "/docs/hiecm/v3/api/m1/errors#900900",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1784,7 +1784,7 @@
       "route": "/docs/hiecm/v3/api/m1/errors",
       "anchor": "900901",
       "link": "/docs/hiecm/v3/api/m1/errors#900901",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1793,7 +1793,7 @@
       "route": "/docs/hiecm/v3/api/m2/errors",
       "anchor": "abdm-1013",
       "link": "/docs/hiecm/v3/api/m2/errors#abdm-1013",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1802,7 +1802,7 @@
       "route": "/docs/hiecm/v3/api/m1/errors",
       "anchor": "abdm-1016",
       "link": "/docs/hiecm/v3/api/m1/errors#abdm-1016",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1811,7 +1811,7 @@
       "route": "/docs/hiecm/v3/api/m2/errors",
       "anchor": "abdm-1022",
       "link": "/docs/hiecm/v3/api/m2/errors#abdm-1022",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1820,7 +1820,7 @@
       "route": "/docs/hiecm/v3/api/m2/errors",
       "anchor": "abdm-1026",
       "link": "/docs/hiecm/v3/api/m2/errors#abdm-1026",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1829,7 +1829,7 @@
       "route": "/docs/hiecm/v3/api/m2/errors",
       "anchor": "abdm-1032",
       "link": "/docs/hiecm/v3/api/m2/errors#abdm-1032",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1838,7 +1838,7 @@
       "route": "/docs/hiecm/v3/api/m2/errors",
       "anchor": "abdm-1035",
       "link": "/docs/hiecm/v3/api/m2/errors#abdm-1035",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1847,7 +1847,7 @@
       "route": "/docs/hiecm/v3/api/m2/errors",
       "anchor": "abdm-1040",
       "link": "/docs/hiecm/v3/api/m2/errors#abdm-1040",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1856,7 +1856,7 @@
       "route": "/docs/hiecm/v3/api/m2/errors",
       "anchor": "abdm-1056",
       "link": "/docs/hiecm/v3/api/m2/errors#abdm-1056",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1865,7 +1865,7 @@
       "route": "/docs/hiecm/v3/api/m2/errors",
       "anchor": "abdm-1062",
       "link": "/docs/hiecm/v3/api/m2/errors#abdm-1062",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1874,7 +1874,7 @@
       "route": "/docs/hiecm/v3/api/m2/errors",
       "anchor": "abdm-1063",
       "link": "/docs/hiecm/v3/api/m2/errors#abdm-1063",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1883,7 +1883,7 @@
       "route": "/docs/hiecm/v3/api/m2/errors",
       "anchor": "abdm-1064",
       "link": "/docs/hiecm/v3/api/m2/errors#abdm-1064",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1892,7 +1892,7 @@
       "route": "/docs/hiecm/v3/api/m1/errors",
       "anchor": "abdm-1094",
       "link": "/docs/hiecm/v3/api/m1/errors#abdm-1094",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1901,7 +1901,7 @@
       "route": "/docs/hiecm/v3/api/p1/errors",
       "anchor": "abdm-1107",
       "link": "/docs/hiecm/v3/api/p1/errors#abdm-1107",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1910,7 +1910,7 @@
       "route": "/docs/hiecm/v3/api/m2/errors",
       "anchor": "abdm-1112",
       "link": "/docs/hiecm/v3/api/m2/errors#abdm-1112",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1919,7 +1919,7 @@
       "route": "/docs/hiecm/v3/api/m2/errors",
       "anchor": "abdm-1170",
       "link": "/docs/hiecm/v3/api/m2/errors#abdm-1170",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1928,7 +1928,7 @@
       "route": "/docs/hiecm/v3/api/m2/errors",
       "anchor": "abdm-1407",
       "link": "/docs/hiecm/v3/api/m2/errors#abdm-1407",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1937,7 +1937,7 @@
       "route": "/docs/hiecm/v3/api/m2/errors",
       "anchor": "abdm-2401",
       "link": "/docs/hiecm/v3/api/m2/errors#abdm-2401",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1946,7 +1946,7 @@
       "route": "/docs/hiecm/v3/api/m2/errors",
       "anchor": "abdm-2402",
       "link": "/docs/hiecm/v3/api/m2/errors#abdm-2402",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1955,7 +1955,7 @@
       "route": "/docs/hiecm/v3/api/m2/errors",
       "anchor": "abdm-2403",
       "link": "/docs/hiecm/v3/api/m2/errors#abdm-2403",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1964,7 +1964,7 @@
       "route": "/docs/hiecm/v3/api/m2/errors",
       "anchor": "abdm-2404",
       "link": "/docs/hiecm/v3/api/m2/errors#abdm-2404",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1973,7 +1973,7 @@
       "route": "/docs/hiecm/v3/api/m2/errors",
       "anchor": "abdm-2406",
       "link": "/docs/hiecm/v3/api/m2/errors#abdm-2406",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1982,7 +1982,7 @@
       "route": "/docs/hiecm/v3/api/m2/errors",
       "anchor": "abdm-2500",
       "link": "/docs/hiecm/v3/api/m2/errors#abdm-2500",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -1991,7 +1991,7 @@
       "route": "/docs/hiecm/v3/api/m2/errors",
       "anchor": "abdm-9999",
       "link": "/docs/hiecm/v3/api/m2/errors#abdm-9999",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -2000,7 +2000,7 @@
       "route": "/docs/hiecm/v3/milestones/m1",
       "anchor": "m1-create-abha-aadhaar-otp",
       "link": "/docs/hiecm/v3/milestones/m1#m1-create-abha-aadhaar-otp",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -2009,7 +2009,7 @@
       "route": "/docs/hiecm/v3/milestones/m1",
       "anchor": "m1-create-abha-demographic-auth",
       "link": "/docs/hiecm/v3/milestones/m1#m1-create-abha-demographic-auth",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -2018,7 +2018,7 @@
       "route": "/docs/hiecm/v3/milestones/m1",
       "anchor": "m1-create-abha-face-auth",
       "link": "/docs/hiecm/v3/milestones/m1#m1-create-abha-face-auth",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -2027,7 +2027,7 @@
       "route": "/docs/hiecm/v3/milestones/m1",
       "anchor": "m1-create-child-abha",
       "link": "/docs/hiecm/v3/milestones/m1#m1-create-child-abha",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -2036,7 +2036,7 @@
       "route": "/docs/hiecm/v3/milestones/m1",
       "anchor": "m1-find-abha",
       "link": "/docs/hiecm/v3/milestones/m1#m1-find-abha",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -2045,7 +2045,7 @@
       "route": "/docs/hiecm/v3/milestones/m1",
       "anchor": "m1-login-by-mobile",
       "link": "/docs/hiecm/v3/milestones/m1#m1-login-by-mobile",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -2054,7 +2054,7 @@
       "route": "/docs/hiecm/v3/milestones/m1",
       "anchor": "m1-update-mobile",
       "link": "/docs/hiecm/v3/milestones/m1#m1-update-mobile",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -2063,7 +2063,7 @@
       "route": "/docs/hiecm/v3/milestones/m2",
       "anchor": "m2-link-care-context",
       "link": "/docs/hiecm/v3/milestones/m2#m2-link-care-context",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -2072,7 +2072,7 @@
       "route": "/docs/hiecm/v3/milestones/m3",
       "anchor": "m3-fetch-records",
       "link": "/docs/hiecm/v3/milestones/m3#m3-fetch-records",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -2081,7 +2081,7 @@
       "route": "/docs/hiecm/v3/milestones/m3",
       "anchor": "m3-request-consent",
       "link": "/docs/hiecm/v3/milestones/m3#m3-request-consent",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -2090,7 +2090,7 @@
       "route": "/docs/hiecm/v3/milestones/m4",
       "anchor": "m4-create-hpid",
       "link": "/docs/hiecm/v3/milestones/m4#m4-create-hpid",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -2099,7 +2099,7 @@
       "route": "/docs/hiecm/v3/milestones/m4",
       "anchor": "m4-link-bridge",
       "link": "/docs/hiecm/v3/milestones/m4#m4-link-bridge",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -2108,7 +2108,7 @@
       "route": "/docs/hiecm/v3/milestones/m4",
       "anchor": "m4-onboard-facility",
       "link": "/docs/hiecm/v3/milestones/m4#m4-onboard-facility",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -2117,7 +2117,7 @@
       "route": "/docs/hiecm/v3/milestones/m4",
       "anchor": "m4-register-professional",
       "link": "/docs/hiecm/v3/milestones/m4#m4-register-professional",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -2126,7 +2126,7 @@
       "route": "/docs/hiecm/v3/milestones/p1",
       "anchor": "p1-create-abha-address",
       "link": "/docs/hiecm/v3/milestones/p1#p1-create-abha-address",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -2135,7 +2135,7 @@
       "route": "/docs/hiecm/v3/milestones/p1",
       "anchor": "p1-login",
       "link": "/docs/hiecm/v3/milestones/p1#p1-login",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -2144,7 +2144,7 @@
       "route": "/docs/hiecm/v3/milestones/p2",
       "anchor": "p2-discover-and-link",
       "link": "/docs/hiecm/v3/milestones/p2#p2-discover-and-link",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -2153,7 +2153,7 @@
       "route": "/docs/hiecm/v3/milestones/p2",
       "anchor": "p2-scan-and-share",
       "link": "/docs/hiecm/v3/milestones/p2#p2-scan-and-share",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -2162,7 +2162,7 @@
       "route": "/docs/hiecm/v3/milestones/p3",
       "anchor": "p3-fetch-records",
       "link": "/docs/hiecm/v3/milestones/p3#p3-fetch-records",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -2171,7 +2171,7 @@
       "route": "/docs/hiecm/v3/milestones/p3",
       "anchor": "p3-subscribe-and-auto-approve",
       "link": "/docs/hiecm/v3/milestones/p3#p3-subscribe-and-auto-approve",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -2180,7 +2180,7 @@
       "route": "/docs/hiecm/v3/concepts/encryption",
       "anchor": "m1-encryption-padding",
       "link": "/docs/hiecm/v3/concepts/encryption#m1-encryption-padding",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -2189,7 +2189,7 @@
       "route": "/docs/hiecm/v3/troubleshooting/accepted-then-nothing",
       "anchor": "accepted-then-nothing",
       "link": "/docs/hiecm/v3/troubleshooting/accepted-then-nothing#accepted-then-nothing",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -2198,7 +2198,7 @@
       "route": "/docs/hiecm/v3/troubleshooting/callback-never-arrives",
       "anchor": "callback-never-arrives",
       "link": "/docs/hiecm/v3/troubleshooting/callback-never-arrives#callback-never-arrives",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -2207,7 +2207,7 @@
       "route": "/docs/hiecm/v3/troubleshooting/consent-stuck-requested",
       "anchor": "consent-stuck-requested",
       "link": "/docs/hiecm/v3/troubleshooting/consent-stuck-requested#consent-stuck-requested",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -2216,7 +2216,7 @@
       "route": "/docs/hiecm/v3/troubleshooting/everything-returns-401",
       "anchor": "everything-returns-401",
       "link": "/docs/hiecm/v3/troubleshooting/everything-returns-401#everything-returns-401",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -2225,7 +2225,7 @@
       "route": "/docs/hiecm/v3/troubleshooting/otp-never-arrives",
       "anchor": "otp-never-arrives",
       "link": "/docs/hiecm/v3/troubleshooting/otp-never-arrives#otp-never-arrives",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {
@@ -7499,7 +7499,7 @@
       "route": "/docs/hiecm/v3/getting-started/glossary",
       "anchor": "link-token",
       "link": "/docs/hiecm/v3/getting-started/glossary#link-token",
-      "rule": "named by catalogue/map.yaml",
+      "rule": "named by its content map",
       "confidence": "derived"
     },
     {

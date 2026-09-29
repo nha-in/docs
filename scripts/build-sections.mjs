@@ -1,5 +1,5 @@
 // scripts/build-sections.mjs
-// catalogue/map.yaml, with catalogue/map.d/*.yaml, is the atom registry: each
+// The content maps, catalogue/<gateway>/map/*.yaml, are the atom registry: each
 // atom id and the page section that holds its words. This script builds, from the map and the pages, the
 // atom-shaped files every consumer already reads (catalogue/generated/), and
 // catalogue/registry.json, the list of every atom and where its words live.
@@ -40,8 +40,8 @@ export function problems({map, pages, handIds, specText}) {
   for (const [id, e] of Object.entries(map)) {
     for (const ids of Object.values(e.related ?? {})) {
       for (const ref of ids ?? []) {
-        if (ref === id) out.push(`${id} lists itself as related. Remove it from its related list in catalogue/map.yaml`);
-        else if (!known.has(ref)) out.push(`${id}: related names ${ref}, which no atom defines. Fix the id or remove it from catalogue/map.yaml`);
+        if (ref === id) out.push(`${id} lists itself as related. Remove it from its related list in its content map, catalogue/<gateway>/map/`);
+        else if (!known.has(ref)) out.push(`${id}: related names ${ref}, which no atom defines. Fix the id or remove it from its content map, catalogue/<gateway>/map/`);
       }
     }
     if (handIds.has(id)) out.push(`${id} is both a hand-written file and a map entry. Delete the hand-written file once its words are on the page`);
