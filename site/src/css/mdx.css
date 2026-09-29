@@ -1052,11 +1052,11 @@ li.docs-step:last-child {
 [data-theme='dark'] .err-code--payer { color: oklch(87.9% 0.169 91.605); }
 [data-theme='dark'] .err-code--live { color: oklch(81.1% 0.111 293.571); }
 
-/* ---------- Get started: What is ABDM? ----------
+/* ---------- Get started: the opening drawing ----------
 
-   The ABHA card drawing floats right of NHA's two paragraphs. Two grid
-   columns squeezed the text under 400px beside the on-this-page rail, so the
-   section read taller, not lighter. Floated, the first paragraph wraps
+   The line drawing (HIE-CM's ABHA card, UHI's phone) floats right of the
+   opening paragraphs. Two grid columns squeezed the text under 400px beside
+   the on-this-page rail, so the section read taller, not lighter. Floated, the first paragraph wraps
    beside the drawing and the second runs the full measure under it. Below
    768px the drawing sits above the text, centred. */
 
@@ -1087,7 +1087,7 @@ li.docs-step:last-child {
 
 /* The drawing is revealed by the pen: each stroke of the line's centre is a
    white stroke in a mask over the traced ink, drawn out at a steady speed
-   from its own start time (AbhaCardArt.tsx carries the times). Wide enough
+   from its own start time (LineArt.tsx carries the times). Wide enough
    to cover the traced line's full weight, so the ink shows exactly as the
    pen passes. `pathLength="1"` makes the dash a fraction of each stroke, so
    no length is measured. */

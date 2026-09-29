@@ -17,6 +17,7 @@ import {
 } from '@site/src/components/api/session';
 import {encryptValue, paddingFromAlgorithm, type Padding} from '@site/src/components/api/rsa';
 import {field, mobileIsWellFormed, otpIsWellFormed} from './quickstart-values';
+import {StepCard, Stepper, type StepDef} from './QuickstartStepper';
 
 /**
  * The four calls that create an ABHA, run live from the reader's browser.
@@ -156,61 +157,12 @@ function Panel({exchange}: {exchange: Exchange}) {
 }
 
 /** The steps in the order they run. The stepper and the log both read this. */
-const STEPS: {key: Step; n: number; title: string}[] = [
+const STEPS: StepDef<Step>[] = [
   {key: 'session', n: 1, title: 'Create a gateway session'},
   {key: 'encrypt', n: 2, title: 'Encrypt the Aadhaar number'},
   {key: 'otp', n: 3, title: 'Request and enter the OTP'},
   {key: 'enrol', n: 4, title: 'Create the ABHA'},
 ];
-
-/**
- * All four steps, always, above the one card that is open.
- *
- * Showing them is not about progress. It is the claim the page is making: the
- * whole use case is four calls, and a reader should be able to see that before
- * they start rather than discover it a card at a time. Every step is reachable
- * at any point, so the fields of a step you have not reached yet are still
- * yours to read and fill. Running one out of order is what the toast refuses,
- * not opening it.
- */
-function Stepper({
-  active,
-  done,
-  onSelect,
-}: {
-  active: Step;
-  done: Record<Step, boolean>;
-  onSelect: (step: Step) => void;
-}) {
-  // The line runs between the first marker and the last, so it has three
-  // segments for four steps. Finishing a step fills the segment that leads to
-  // the next one, which is why a fourth finished step cannot add any more.
-  const finished = STEPS.filter(({key}) => done[key]).length;
-  const progress = Math.min(finished, STEPS.length - 1) / (STEPS.length - 1);
-  return (
-    <ol
-      className="quickstart__stepper"
-      aria-label="The four steps that create an ABHA"
-      style={{'--quickstart-progress': progress} as React.CSSProperties}>
-      {STEPS.map(({key, n, title}) => (
-        <li key={key}>
-          <button
-            type="button"
-            onClick={() => onSelect(key)}
-            aria-current={key === active ? 'step' : undefined}
-            className={`quickstart__stepper-step${
-              key === active ? ' quickstart__stepper-step--active' : ''
-            }${done[key] ? ' quickstart__stepper-step--done' : ''}`}>
-            <span className="quickstart__marker" aria-hidden="true">
-              {done[key] ? <Check className="size-4" /> : n}
-            </span>
-            <span className="quickstart__stepper-title">{title}</span>
-          </button>
-        </li>
-      ))}
-    </ol>
-  );
-}
 
 /**
  * Everything that was sent and everything that came back, under the row rather
@@ -252,49 +204,6 @@ function ExchangeLog({
     </section>
   );
 }
-
-/**
- * One step's form, rendered only when it is the step the stepper has open.
- *
- * Returning null for the other three is what lets the card be the size of its
- * own content. Sized as four cards in a grid they all took the height of
- * whichever one had the most fields, which on the widest layout left 892px of
- * the 1529px runner empty.
- */
-function StepCard({
-  step,
-  active,
-  title,
-  lede,
-  children,
-}: {
-  step: Step;
-  active: Step;
-  title: string;
-  lede: string;
-  children: React.ReactNode;
-}) {
-  // Every pane renders, and the three that are not open are hidden rather than
-  // dropped. They all sit in one grid cell, so the card is the height of the
-  // tallest of them at whatever width it is being read at, and moving between
-  // steps does not resize the card or shift the page under it. `visibility`
-  // rather than `display`, because a hidden pane must keep its size, and it
-  // takes the pane out of the tab order and the accessibility tree either way.
-  return (
-    <section
-      className={`quickstart__pane${step === active ? '' : ' quickstart__pane--hidden'}`}
-      aria-labelledby={`quickstart-step-${step}`}>
-      <div className="quickstart__step-head">
-        <h3 className="quickstart__step-title" id={`quickstart-step-${step}`}>
-          {title}
-        </h3>
-        <p className="quickstart__step-lede">{lede}</p>
-      </div>
-      <div className="quickstart__step-body">{children}</div>
-    </section>
-  );
-}
-
 
 /**
  * A field whose value is masked, with the usual way to check what you typed.
@@ -713,7 +622,13 @@ export default function Quickstart() {
       </div>
 
       <div className="quickstart__card">
-        <Stepper active={active} done={done} onSelect={setActive} />
+        <Stepper
+          steps={STEPS}
+          label="The four steps that create an ABHA"
+          active={active}
+          done={done}
+          onSelect={setActive}
+        />
 
         <div className="quickstart__panes">
           <StepCard
