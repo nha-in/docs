@@ -1,7 +1,7 @@
 ---
-id: shared.glossary.lims
+id: hiecm.glossary.lims
 type: glossary
-gateway: shared
+gateway: hiecm
 milestone: n/a
 version: abdm-v3
 title: LIMS, laboratory information management system, also written LMIS
@@ -15,7 +15,7 @@ sources:
       This portal's own published glossary, where the definition was
       written first. Moved here so it can be retrieved, not rewritten.
 related:
-  glossary: [shared.glossary.m2]
+  glossary: [hiecm.glossary.m2]
 ---
 
 # LIMS, laboratory information management system, also written LMIS

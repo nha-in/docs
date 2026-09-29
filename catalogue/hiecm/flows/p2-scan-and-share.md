@@ -25,7 +25,7 @@ related:
   glossary:
     - shared.glossary.abha-address
     - shared.glossary.hie-cm
-    - shared.glossary.hip
+    - hiecm.glossary.hip
     - shared.glossary.hpid
     - shared.glossary.phr
 ---

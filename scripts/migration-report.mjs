@@ -1,7 +1,7 @@
 // scripts/migration-report.mjs
 // Run in every migration PR, before committing: proves each atom's API details
 // reached its page, and prints the table the PR description carries.
-//   npm run report:migration -- shared.glossary.link-token [--drop "/v3/x=reason"]
+//   npm run report:migration -- hiecm.glossary.link-token [--drop "/v3/x=reason"]
 import {readFileSync, existsSync} from 'node:fs';
 import {execFileSync} from 'node:child_process';
 import {join} from 'node:path';

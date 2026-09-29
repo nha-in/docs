@@ -1,7 +1,7 @@
 ---
-id: shared.glossary.x-cm-id
+id: hiecm.glossary.x-cm-id
 type: glossary
-gateway: shared
+gateway: hiecm
 milestone: n/a
 version: abdm-v3
 title: X-CM-ID, the consent manager header

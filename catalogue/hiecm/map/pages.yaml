@@ -90,7 +90,7 @@ hiecm.concept.consent-artefact:
   url: /docs/hiecm/v3/concepts/consent#consent-artefact
   related:
     glossary:
-    - shared.glossary.hiu
+    - hiecm.glossary.hiu
     concepts:
     - hiecm.concept.roles
 hiecm.concept.consent-in-a-phr-app:
@@ -116,7 +116,7 @@ hiecm.concept.consent-in-a-phr-app:
     - hiecm.endpoint.p3-revoke-consent-request
     glossary:
     - shared.glossary.phr
-    - shared.glossary.hiu
+    - hiecm.glossary.hiu
 hiecm.concept.encrypted-identifiers:
   type: concept
   gateway: hiecm
@@ -226,7 +226,7 @@ hiecm.concept.phr-subscriptions:
     - hiecm.endpoint.p3-consent-auto-approve
     glossary:
     - shared.glossary.phr
-    - shared.glossary.hiu
+    - hiecm.glossary.hiu
 hiecm.concept.roles:
   type: concept
   gateway: hiecm
@@ -239,17 +239,17 @@ hiecm.concept.roles:
   url: /docs/hiecm/v3/concepts/how-it-fits#roles
   related:
     glossary:
-    - shared.glossary.hip
-    - shared.glossary.hiu
+    - hiecm.glossary.hip
+    - hiecm.glossary.hiu
     - shared.glossary.phr
-    - shared.glossary.hrp
+    - hiecm.glossary.hrp
     - shared.glossary.dsc
     - shared.glossary.hfr
     - shared.glossary.abha
-    - shared.glossary.hmis
-    - shared.glossary.lims
-    - shared.glossary.emr
-    - shared.glossary.pms
+    - hiecm.glossary.hmis
+    - hiecm.glossary.lims
+    - hiecm.glossary.emr
+    - hiecm.glossary.pms
     decisions:
     - shared.decision.role-model-two-axes
     concepts:
@@ -456,9 +456,9 @@ hiecm.flow.m2-link-care-context:
     - hiecm.concept.care-context
     - hiecm.concept.asynchronous-callbacks
     glossary:
-    - shared.glossary.m2
-    - shared.glossary.hip
-    - shared.glossary.hiu
+    - hiecm.glossary.m2
+    - hiecm.glossary.hip
+    - hiecm.glossary.hiu
     - shared.glossary.hfr
     - shared.glossary.phr
     - shared.glossary.abha-address
@@ -497,10 +497,10 @@ hiecm.flow.m3-fetch-records:
     - hiecm.error.abdm-2500
     - hiecm.error.abdm-9999
     glossary:
-    - shared.glossary.hiu
-    - shared.glossary.hip
-    - shared.glossary.ecdh
-    - shared.glossary.key-material
+    - hiecm.glossary.hiu
+    - hiecm.glossary.hip
+    - hiecm.glossary.ecdh
+    - hiecm.glossary.key-material
     - shared.glossary.fhir
 hiecm.flow.m3-request-consent:
   type: flow
@@ -533,13 +533,13 @@ hiecm.flow.m3-request-consent:
     - hiecm.error.abdm-2500
     - hiecm.error.abdm-9999
     glossary:
-    - shared.glossary.hiu
+    - hiecm.glossary.hiu
     - shared.glossary.hie-cm
     - shared.glossary.phr
     - shared.glossary.abha-address
-    - shared.glossary.purpose-of-use
-    - shared.glossary.hi-type
-    - shared.glossary.bridge
+    - hiecm.glossary.purpose-of-use
+    - hiecm.glossary.hi-type
+    - hiecm.glossary.bridge
 hiecm.flow.m4-create-hpid:
   type: flow
   gateway: hiecm
@@ -583,9 +583,9 @@ hiecm.flow.m4-link-bridge:
     concepts:
     - hiecm.concept.roles
     glossary:
-    - shared.glossary.bridge
-    - shared.glossary.hip
-    - shared.glossary.hiu
+    - hiecm.glossary.bridge
+    - hiecm.glossary.hip
+    - hiecm.glossary.hiu
     - shared.glossary.hfr
     - shared.glossary.phr
 hiecm.flow.m4-onboard-facility:
@@ -692,7 +692,7 @@ hiecm.flow.p1-login:
     glossary:
     - shared.glossary.abha-address
     - shared.glossary.abha-number
-    - shared.glossary.auth-modes
+    - hiecm.glossary.auth-modes
     - shared.glossary.otp
     - shared.glossary.phr
 hiecm.flow.p2-discover-and-link:
@@ -723,9 +723,9 @@ hiecm.flow.p2-discover-and-link:
     - hiecm.concept.asynchronous-callbacks
     glossary:
     - shared.glossary.abha-address
-    - shared.glossary.discovery
-    - shared.glossary.hip
-    - shared.glossary.hrp
+    - hiecm.glossary.discovery
+    - hiecm.glossary.hip
+    - hiecm.glossary.hrp
     - shared.glossary.otp
     - shared.glossary.phr
 hiecm.flow.p2-scan-and-share:
@@ -750,7 +750,7 @@ hiecm.flow.p2-scan-and-share:
     glossary:
     - shared.glossary.abha-address
     - shared.glossary.hie-cm
-    - shared.glossary.hip
+    - hiecm.glossary.hip
     - shared.glossary.hpid
     - shared.glossary.phr
 hiecm.flow.p3-fetch-records:
@@ -782,9 +782,9 @@ hiecm.flow.p3-fetch-records:
     errors:
     - hiecm.error.abdm-1112
     glossary:
-    - shared.glossary.hi-type
-    - shared.glossary.hip
-    - shared.glossary.hiu
+    - hiecm.glossary.hi-type
+    - hiecm.glossary.hip
+    - hiecm.glossary.hiu
     - shared.glossary.phr
 hiecm.flow.p3-subscribe-and-auto-approve:
   type: flow
@@ -860,7 +860,7 @@ hiecm.troubleshooting.accepted-then-nothing:
     - hiecm.error.abdm-2406
     glossary:
     - shared.glossary.request-id
-    - shared.glossary.hiu
+    - hiecm.glossary.hiu
     - shared.glossary.phr
 hiecm.troubleshooting.callback-never-arrives:
   type: troubleshooting
@@ -901,7 +901,7 @@ hiecm.troubleshooting.consent-stuck-requested:
     - hiecm.error.abdm-1170
     glossary:
     - shared.glossary.abha-address
-    - shared.glossary.hiu
+    - hiecm.glossary.hiu
 hiecm.troubleshooting.everything-returns-401:
   type: troubleshooting
   gateway: hiecm
@@ -923,7 +923,7 @@ hiecm.troubleshooting.everything-returns-401:
     - hiecm.error.abdm-2500
     - hiecm.error.abdm-1032
     glossary:
-    - shared.glossary.x-cm-id
+    - hiecm.glossary.x-cm-id
     - shared.glossary.timestamp-header
 hiecm.troubleshooting.otp-never-arrives:
   type: troubleshooting

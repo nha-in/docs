@@ -1,7 +1,7 @@
 ---
-id: shared.glossary.hspa
+id: uhi.glossary.hspa
 type: glossary
-gateway: shared
+gateway: uhi
 milestone: n/a
 version: abdm-v3
 title: HSPA, health service provider application

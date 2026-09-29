@@ -36,7 +36,7 @@
     "something a system does"
   ],
   "expected_sources": [
-    "shared.glossary.hiu"
+    "hiecm.glossary.hiu"
   ],
   "expected_shape": "define",
   "expected_behaviour": "answer",

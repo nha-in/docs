@@ -1,7 +1,7 @@
 ---
-id: shared.glossary.hmis
+id: hiecm.glossary.hmis
 type: glossary
-gateway: shared
+gateway: hiecm
 milestone: n/a
 version: abdm-v3
 title: HMIS, HIS or HIMS, the software a hospital runs
@@ -16,7 +16,7 @@ sources:
       This portal's own published glossary, where the definition was
       written first. Moved here so it can be retrieved, not rewritten.
 related:
-  glossary: [shared.glossary.hi-type, shared.glossary.ims, shared.glossary.m4]
+  glossary: [hiecm.glossary.hi-type, hiecm.glossary.ims, hiecm.glossary.m4]
 ---
 
 # HMIS, HIS or HIMS, the software a hospital runs

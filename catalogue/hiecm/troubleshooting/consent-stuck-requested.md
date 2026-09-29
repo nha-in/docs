@@ -23,7 +23,7 @@ related:
     - hiecm.error.abdm-1170
   glossary:
     - shared.glossary.abha-address
-    - shared.glossary.hiu
+    - hiecm.glossary.hiu
 ---
 
 # The consent request is stuck in Requested

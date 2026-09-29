@@ -1,7 +1,7 @@
 ---
-id: shared.glossary.hi-type
+id: hiecm.glossary.hi-type
 type: glossary
-gateway: shared
+gateway: hiecm
 milestone: n/a
 version: abdm-v3
 title: HI type, the kind of health information

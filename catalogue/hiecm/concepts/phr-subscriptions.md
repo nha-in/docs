@@ -25,7 +25,7 @@ related:
     - hiecm.endpoint.p3-consent-auto-approve
   glossary:
     - shared.glossary.phr
-    - shared.glossary.hiu
+    - hiecm.glossary.hiu
 ---
 
 # Subscriptions, and why a personal health record application needs one

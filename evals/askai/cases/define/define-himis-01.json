@@ -29,12 +29,12 @@
     "hmis is the hip"
   ],
   "expected_sources": [
-    "shared.glossary.hmis"
+    "hiecm.glossary.hmis"
   ],
   "expected_shape": "define",
   "expected_behaviour": "answer",
   "derived_from": null,
   "source_row": "annexure#glossary",
   "catalogue_version": "2026.08.24",
-  "notes": "reader spelled it HIMS; catalogue atom shared.glossary.hmis spells it HMIS (hospital management information system)."
+  "notes": "reader spelled it HIMS; catalogue atom hiecm.glossary.hmis spells it HMIS (hospital management information system)."
 }

@@ -1,7 +1,7 @@
 ---
-id: shared.glossary.hrp
+id: hiecm.glossary.hrp
 type: glossary
-gateway: shared
+gateway: hiecm
 milestone: n/a
 version: abdm-v3
 title: HRP, health repository provider

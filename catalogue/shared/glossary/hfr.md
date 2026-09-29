@@ -14,7 +14,7 @@ sources:
     hash: sha256:25291734dd3782857bc3e012c7fa1881a069b49fdb3701e1657c514f43b590f5
 related:
   concepts: []
-  glossary: [shared.glossary.hpr, shared.glossary.hip]
+  glossary: [shared.glossary.hpr, hiecm.glossary.hip]
 ---
 
 # HFR, Health Facility Registry

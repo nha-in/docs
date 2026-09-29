@@ -21,7 +21,7 @@ sources:
       NHA's PHR Framework page, which calls the gateway the hub that
       mediates and connects HIE-CMs, health repositories and HIUs.
 related:
-  glossary: [shared.glossary.bridge]
+  glossary: [hiecm.glossary.bridge]
 ---
 
 # Gateway, the routing layer between participants

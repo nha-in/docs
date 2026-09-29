@@ -1,7 +1,7 @@
 ---
-id: shared.glossary.auth-modes
+id: hiecm.glossary.auth-modes
 type: glossary
-gateway: shared
+gateway: hiecm
 milestone: n/a
 version: abdm-v3
 title: Auth modes, the four ways a patient proves who they are

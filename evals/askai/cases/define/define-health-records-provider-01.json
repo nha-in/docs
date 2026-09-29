@@ -26,7 +26,7 @@
     "atom"
   ],
   "expected_sources": [
-    "shared.glossary.hrp"
+    "hiecm.glossary.hrp"
   ],
   "expected_shape": "define",
   "expected_behaviour": "answer",

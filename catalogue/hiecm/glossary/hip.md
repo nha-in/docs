@@ -1,7 +1,7 @@
 ---
-id: shared.glossary.hip
+id: hiecm.glossary.hip
 type: glossary
-gateway: shared
+gateway: hiecm
 milestone: n/a
 version: abdm-v3
 title: HIP, health information provider

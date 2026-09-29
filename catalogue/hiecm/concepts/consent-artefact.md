@@ -15,7 +15,7 @@ sources:
       Edit the page, never this file.
 related:
   glossary:
-    - shared.glossary.hiu
+    - hiecm.glossary.hiu
   concepts:
     - hiecm.concept.roles
 ---

@@ -29,7 +29,7 @@ related:
   glossary:
     - shared.glossary.abha-address
     - shared.glossary.abha-number
-    - shared.glossary.auth-modes
+    - hiecm.glossary.auth-modes
     - shared.glossary.otp
     - shared.glossary.phr
 ---

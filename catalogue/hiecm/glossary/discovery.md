@@ -1,7 +1,7 @@
 ---
-id: shared.glossary.discovery
+id: hiecm.glossary.discovery
 type: glossary
-gateway: shared
+gateway: hiecm
 milestone: n/a
 version: abdm-v3
 title: Discovery, finding whether a facility holds records

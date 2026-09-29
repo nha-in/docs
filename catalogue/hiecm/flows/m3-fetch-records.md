@@ -35,10 +35,10 @@ related:
     - hiecm.error.abdm-2500
     - hiecm.error.abdm-9999
   glossary:
-    - shared.glossary.hiu
-    - shared.glossary.hip
-    - shared.glossary.ecdh
-    - shared.glossary.key-material
+    - hiecm.glossary.hiu
+    - hiecm.glossary.hip
+    - hiecm.glossary.ecdh
+    - hiecm.glossary.key-material
     - shared.glossary.fhir
 ---
 

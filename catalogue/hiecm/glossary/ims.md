@@ -1,7 +1,7 @@
 ---
-id: shared.glossary.ims
+id: hiecm.glossary.ims
 type: glossary
-gateway: shared
+gateway: hiecm
 milestone: n/a
 version: abdm-v3
 title: IMS, information management system
@@ -15,7 +15,7 @@ sources:
       The portal's own role selector calls one of its four readers an
       IMS vendor. Written here so that role has a definition behind it.
 related:
-  glossary: [shared.glossary.hmis, shared.glossary.emr, shared.glossary.lims, shared.glossary.pms]
+  glossary: [hiecm.glossary.hmis, hiecm.glossary.emr, hiecm.glossary.lims, hiecm.glossary.pms]
 ---
 
 # IMS, information management system

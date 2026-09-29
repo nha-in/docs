@@ -34,13 +34,13 @@ related:
     - hiecm.error.abdm-2500
     - hiecm.error.abdm-9999
   glossary:
-    - shared.glossary.hiu
+    - hiecm.glossary.hiu
     - shared.glossary.hie-cm
     - shared.glossary.phr
     - shared.glossary.abha-address
-    - shared.glossary.purpose-of-use
-    - shared.glossary.hi-type
-    - shared.glossary.bridge
+    - hiecm.glossary.purpose-of-use
+    - hiecm.glossary.hi-type
+    - hiecm.glossary.bridge
 ---
 
 # Request consent for a patient's health records

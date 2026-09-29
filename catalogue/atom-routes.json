@@ -2175,6 +2175,204 @@
       "confidence": "derived"
     },
     {
+      "atom": "hiecm.glossary.auth-modes",
+      "type": "glossary",
+      "route": null,
+      "anchor": null,
+      "link": null,
+      "rule": "no rule matched",
+      "confidence": "unmapped"
+    },
+    {
+      "atom": "hiecm.glossary.bridge",
+      "type": "glossary",
+      "route": "/docs/hiecm/v3/getting-started/glossary",
+      "anchor": "bridge",
+      "link": "/docs/hiecm/v3/getting-started/glossary#bridge",
+      "rule": "term defined under its own heading on glossary",
+      "confidence": "derived"
+    },
+    {
+      "atom": "hiecm.glossary.consent-manager",
+      "type": "glossary",
+      "route": "/docs/hiecm/v3/getting-started/glossary",
+      "anchor": "consent-manager",
+      "link": "/docs/hiecm/v3/getting-started/glossary#consent-manager",
+      "rule": "term defined under its own heading on glossary",
+      "confidence": "derived"
+    },
+    {
+      "atom": "hiecm.glossary.discovery",
+      "type": "glossary",
+      "route": "/docs/hiecm/v3/getting-started/glossary",
+      "anchor": "discovery",
+      "link": "/docs/hiecm/v3/getting-started/glossary#discovery",
+      "rule": "term defined under its own heading on glossary",
+      "confidence": "derived"
+    },
+    {
+      "atom": "hiecm.glossary.ecdh",
+      "type": "glossary",
+      "route": "/docs/hiecm/v3/getting-started/glossary",
+      "anchor": "ecdh",
+      "link": "/docs/hiecm/v3/getting-started/glossary#ecdh",
+      "rule": "term defined under its own heading on glossary",
+      "confidence": "derived"
+    },
+    {
+      "atom": "hiecm.glossary.emr",
+      "type": "glossary",
+      "route": "/docs/hiecm/v3/getting-started/glossary",
+      "anchor": "emr",
+      "link": "/docs/hiecm/v3/getting-started/glossary#emr",
+      "rule": "term defined under its own heading on glossary",
+      "confidence": "derived"
+    },
+    {
+      "atom": "hiecm.glossary.hi-type",
+      "type": "glossary",
+      "route": "/docs/hiecm/v3/getting-started/glossary",
+      "anchor": "hi-type",
+      "link": "/docs/hiecm/v3/getting-started/glossary#hi-type",
+      "rule": "term defined under its own heading on glossary",
+      "confidence": "derived"
+    },
+    {
+      "atom": "hiecm.glossary.hip",
+      "type": "glossary",
+      "route": "/docs/hiecm/v3/getting-started/glossary",
+      "anchor": "hip",
+      "link": "/docs/hiecm/v3/getting-started/glossary#hip",
+      "rule": "term defined under its own heading on glossary",
+      "confidence": "derived"
+    },
+    {
+      "atom": "hiecm.glossary.hiu",
+      "type": "glossary",
+      "route": "/docs/hiecm/v3/getting-started/glossary",
+      "anchor": "hiu",
+      "link": "/docs/hiecm/v3/getting-started/glossary#hiu",
+      "rule": "term defined under its own heading on glossary",
+      "confidence": "derived"
+    },
+    {
+      "atom": "hiecm.glossary.hmis",
+      "type": "glossary",
+      "route": "/docs/hiecm/v3/getting-started/glossary",
+      "anchor": "hmis",
+      "link": "/docs/hiecm/v3/getting-started/glossary#hmis",
+      "rule": "term defined under its own heading on glossary",
+      "confidence": "derived"
+    },
+    {
+      "atom": "hiecm.glossary.hrp",
+      "type": "glossary",
+      "route": "/docs/hiecm/v3/getting-started/glossary",
+      "anchor": "hrp",
+      "link": "/docs/hiecm/v3/getting-started/glossary#hrp",
+      "rule": "term defined under its own heading on glossary",
+      "confidence": "derived"
+    },
+    {
+      "atom": "hiecm.glossary.ims",
+      "type": "glossary",
+      "route": "/docs/hiecm/v3/getting-started/glossary",
+      "anchor": "ims",
+      "link": "/docs/hiecm/v3/getting-started/glossary#ims",
+      "rule": "term defined under its own heading on glossary",
+      "confidence": "derived"
+    },
+    {
+      "atom": "hiecm.glossary.key-material",
+      "type": "glossary",
+      "route": "/docs/nhcx/v1/getting-started/fetching-a-recipient-certificate",
+      "anchor": "what-comes-back",
+      "link": "/docs/nhcx/v1/getting-started/fetching-a-recipient-certificate#what-comes-back",
+      "rule": "term defined on fetching-a-recipient-certificate",
+      "confidence": "derived"
+    },
+    {
+      "atom": "hiecm.glossary.lims",
+      "type": "glossary",
+      "route": "/docs/hiecm/v3/getting-started/glossary",
+      "anchor": "lims",
+      "link": "/docs/hiecm/v3/getting-started/glossary#lims",
+      "rule": "term defined under its own heading on glossary",
+      "confidence": "derived"
+    },
+    {
+      "atom": "hiecm.glossary.link-token",
+      "type": "glossary",
+      "route": "/docs/hiecm/v3/getting-started/glossary",
+      "anchor": "link-token",
+      "link": "/docs/hiecm/v3/getting-started/glossary#link-token",
+      "rule": "named by its content map",
+      "confidence": "derived"
+    },
+    {
+      "atom": "hiecm.glossary.m1",
+      "type": "glossary",
+      "route": null,
+      "anchor": null,
+      "link": null,
+      "rule": "no rule matched",
+      "confidence": "unmapped"
+    },
+    {
+      "atom": "hiecm.glossary.m2",
+      "type": "glossary",
+      "route": "/docs/uhi/v1/getting-started/onboarding",
+      "anchor": "the-gate-before-any-of-this",
+      "link": "/docs/uhi/v1/getting-started/onboarding#the-gate-before-any-of-this",
+      "rule": "term defined on onboarding",
+      "confidence": "derived"
+    },
+    {
+      "atom": "hiecm.glossary.m3",
+      "type": "glossary",
+      "route": null,
+      "anchor": null,
+      "link": null,
+      "rule": "no rule matched",
+      "confidence": "unmapped"
+    },
+    {
+      "atom": "hiecm.glossary.m4",
+      "type": "glossary",
+      "route": null,
+      "anchor": null,
+      "link": null,
+      "rule": "no rule matched",
+      "confidence": "unmapped"
+    },
+    {
+      "atom": "hiecm.glossary.pms",
+      "type": "glossary",
+      "route": "/docs/hiecm/v3/getting-started/glossary",
+      "anchor": "pms",
+      "link": "/docs/hiecm/v3/getting-started/glossary#pms",
+      "rule": "term defined under its own heading on glossary",
+      "confidence": "derived"
+    },
+    {
+      "atom": "hiecm.glossary.purpose-of-use",
+      "type": "glossary",
+      "route": "/docs/hiecm/v3/getting-started/glossary",
+      "anchor": "purpose-of-use",
+      "link": "/docs/hiecm/v3/getting-started/glossary#purpose-of-use",
+      "rule": "term defined under its own heading on glossary",
+      "confidence": "derived"
+    },
+    {
+      "atom": "hiecm.glossary.x-cm-id",
+      "type": "glossary",
+      "route": "/docs/hiecm/v3/getting-started/build-it-well",
+      "anchor": "read-the-error-then-decide-error-codes",
+      "link": "/docs/hiecm/v3/getting-started/build-it-well#read-the-error-then-decide-error-codes",
+      "rule": "term defined on build-it-well",
+      "confidence": "derived"
+    },
+    {
       "atom": "hiecm.test.m1-encryption-padding",
       "type": "test",
       "route": "/docs/hiecm/v3/concepts/encryption",
@@ -7269,15 +7467,6 @@
       "confidence": "derived"
     },
     {
-      "atom": "shared.glossary.auth-modes",
-      "type": "glossary",
-      "route": null,
-      "anchor": null,
-      "link": null,
-      "rule": "no rule matched",
-      "confidence": "unmapped"
-    },
-    {
       "atom": "shared.glossary.ayushman-card",
       "type": "glossary",
       "route": null,
@@ -7287,66 +7476,12 @@
       "confidence": "unmapped"
     },
     {
-      "atom": "shared.glossary.bridge",
-      "type": "glossary",
-      "route": "/docs/hiecm/v3/getting-started/glossary",
-      "anchor": "bridge",
-      "link": "/docs/hiecm/v3/getting-started/glossary#bridge",
-      "rule": "term defined under its own heading on glossary",
-      "confidence": "derived"
-    },
-    {
-      "atom": "shared.glossary.consent-manager",
-      "type": "glossary",
-      "route": "/docs/hiecm/v3/getting-started/glossary",
-      "anchor": "consent-manager",
-      "link": "/docs/hiecm/v3/getting-started/glossary#consent-manager",
-      "rule": "term defined under its own heading on glossary",
-      "confidence": "derived"
-    },
-    {
-      "atom": "shared.glossary.discovery",
-      "type": "glossary",
-      "route": "/docs/hiecm/v3/getting-started/glossary",
-      "anchor": "discovery",
-      "link": "/docs/hiecm/v3/getting-started/glossary#discovery",
-      "rule": "term defined under its own heading on glossary",
-      "confidence": "derived"
-    },
-    {
       "atom": "shared.glossary.dsc",
       "type": "glossary",
       "route": "/docs/nhcx/v1/reference/fhir/codes-and-value-sets",
       "anchor": "supporting-info-categories",
       "link": "/docs/nhcx/v1/reference/fhir/codes-and-value-sets#supporting-info-categories",
       "rule": "term defined on codes-and-value-sets",
-      "confidence": "derived"
-    },
-    {
-      "atom": "shared.glossary.ecdh",
-      "type": "glossary",
-      "route": "/docs/hiecm/v3/getting-started/glossary",
-      "anchor": "ecdh",
-      "link": "/docs/hiecm/v3/getting-started/glossary#ecdh",
-      "rule": "term defined under its own heading on glossary",
-      "confidence": "derived"
-    },
-    {
-      "atom": "shared.glossary.emr",
-      "type": "glossary",
-      "route": "/docs/hiecm/v3/getting-started/glossary",
-      "anchor": "emr",
-      "link": "/docs/hiecm/v3/getting-started/glossary#emr",
-      "rule": "term defined under its own heading on glossary",
-      "confidence": "derived"
-    },
-    {
-      "atom": "shared.glossary.eua",
-      "type": "glossary",
-      "route": "/docs/uhi/v1/getting-started/glossary",
-      "anchor": "eua",
-      "link": "/docs/uhi/v1/getting-started/glossary#eua",
-      "rule": "term defined under its own heading on glossary",
       "confidence": "derived"
     },
     {
@@ -7377,47 +7512,11 @@
       "confidence": "derived"
     },
     {
-      "atom": "shared.glossary.hi-type",
-      "type": "glossary",
-      "route": "/docs/hiecm/v3/getting-started/glossary",
-      "anchor": "hi-type",
-      "link": "/docs/hiecm/v3/getting-started/glossary#hi-type",
-      "rule": "term defined under its own heading on glossary",
-      "confidence": "derived"
-    },
-    {
       "atom": "shared.glossary.hie-cm",
       "type": "glossary",
       "route": "/docs/hiecm/v3/getting-started/glossary",
       "anchor": "hie-cm",
       "link": "/docs/hiecm/v3/getting-started/glossary#hie-cm",
-      "rule": "term defined under its own heading on glossary",
-      "confidence": "derived"
-    },
-    {
-      "atom": "shared.glossary.hip",
-      "type": "glossary",
-      "route": "/docs/hiecm/v3/getting-started/glossary",
-      "anchor": "hip",
-      "link": "/docs/hiecm/v3/getting-started/glossary#hip",
-      "rule": "term defined under its own heading on glossary",
-      "confidence": "derived"
-    },
-    {
-      "atom": "shared.glossary.hiu",
-      "type": "glossary",
-      "route": "/docs/hiecm/v3/getting-started/glossary",
-      "anchor": "hiu",
-      "link": "/docs/hiecm/v3/getting-started/glossary#hiu",
-      "rule": "term defined under its own heading on glossary",
-      "confidence": "derived"
-    },
-    {
-      "atom": "shared.glossary.hmis",
-      "type": "glossary",
-      "route": "/docs/hiecm/v3/getting-started/glossary",
-      "anchor": "hmis",
-      "link": "/docs/hiecm/v3/getting-started/glossary#hmis",
       "rule": "term defined under its own heading on glossary",
       "confidence": "derived"
     },
@@ -7440,42 +7539,6 @@
       "confidence": "derived"
     },
     {
-      "atom": "shared.glossary.hrp",
-      "type": "glossary",
-      "route": "/docs/hiecm/v3/getting-started/glossary",
-      "anchor": "hrp",
-      "link": "/docs/hiecm/v3/getting-started/glossary#hrp",
-      "rule": "term defined under its own heading on glossary",
-      "confidence": "derived"
-    },
-    {
-      "atom": "shared.glossary.hspa",
-      "type": "glossary",
-      "route": "/docs/uhi/v1/getting-started/glossary",
-      "anchor": "hspa",
-      "link": "/docs/uhi/v1/getting-started/glossary#hspa",
-      "rule": "term defined under its own heading on glossary",
-      "confidence": "derived"
-    },
-    {
-      "atom": "shared.glossary.ims",
-      "type": "glossary",
-      "route": "/docs/hiecm/v3/getting-started/glossary",
-      "anchor": "ims",
-      "link": "/docs/hiecm/v3/getting-started/glossary#ims",
-      "rule": "term defined under its own heading on glossary",
-      "confidence": "derived"
-    },
-    {
-      "atom": "shared.glossary.key-material",
-      "type": "glossary",
-      "route": "/docs/nhcx/v1/getting-started/fetching-a-recipient-certificate",
-      "anchor": "what-comes-back",
-      "link": "/docs/nhcx/v1/getting-started/fetching-a-recipient-certificate#what-comes-back",
-      "rule": "term defined on fetching-a-recipient-certificate",
-      "confidence": "derived"
-    },
-    {
       "atom": "shared.glossary.kyc",
       "type": "glossary",
       "route": "/docs/hiecm/v3/getting-started/glossary",
@@ -7483,60 +7546,6 @@
       "link": "/docs/hiecm/v3/getting-started/glossary#kyc",
       "rule": "term defined under its own heading on glossary",
       "confidence": "derived"
-    },
-    {
-      "atom": "shared.glossary.lims",
-      "type": "glossary",
-      "route": "/docs/hiecm/v3/getting-started/glossary",
-      "anchor": "lims",
-      "link": "/docs/hiecm/v3/getting-started/glossary#lims",
-      "rule": "term defined under its own heading on glossary",
-      "confidence": "derived"
-    },
-    {
-      "atom": "shared.glossary.link-token",
-      "type": "glossary",
-      "route": "/docs/hiecm/v3/getting-started/glossary",
-      "anchor": "link-token",
-      "link": "/docs/hiecm/v3/getting-started/glossary#link-token",
-      "rule": "named by its content map",
-      "confidence": "derived"
-    },
-    {
-      "atom": "shared.glossary.m1",
-      "type": "glossary",
-      "route": null,
-      "anchor": null,
-      "link": null,
-      "rule": "no rule matched",
-      "confidence": "unmapped"
-    },
-    {
-      "atom": "shared.glossary.m2",
-      "type": "glossary",
-      "route": "/docs/uhi/v1/getting-started/onboarding",
-      "anchor": "the-gate-before-any-of-this",
-      "link": "/docs/uhi/v1/getting-started/onboarding#the-gate-before-any-of-this",
-      "rule": "term defined on onboarding",
-      "confidence": "derived"
-    },
-    {
-      "atom": "shared.glossary.m3",
-      "type": "glossary",
-      "route": null,
-      "anchor": null,
-      "link": null,
-      "rule": "no rule matched",
-      "confidence": "unmapped"
-    },
-    {
-      "atom": "shared.glossary.m4",
-      "type": "glossary",
-      "route": null,
-      "anchor": null,
-      "link": null,
-      "rule": "no rule matched",
-      "confidence": "unmapped"
     },
     {
       "atom": "shared.glossary.nha",
@@ -7580,24 +7589,6 @@
       "route": "/docs/hiecm/v3/getting-started/glossary",
       "anchor": "phr",
       "link": "/docs/hiecm/v3/getting-started/glossary#phr",
-      "rule": "term defined under its own heading on glossary",
-      "confidence": "derived"
-    },
-    {
-      "atom": "shared.glossary.pms",
-      "type": "glossary",
-      "route": "/docs/hiecm/v3/getting-started/glossary",
-      "anchor": "pms",
-      "link": "/docs/hiecm/v3/getting-started/glossary#pms",
-      "rule": "term defined under its own heading on glossary",
-      "confidence": "derived"
-    },
-    {
-      "atom": "shared.glossary.purpose-of-use",
-      "type": "glossary",
-      "route": "/docs/hiecm/v3/getting-started/glossary",
-      "anchor": "purpose-of-use",
-      "link": "/docs/hiecm/v3/getting-started/glossary#purpose-of-use",
       "rule": "term defined under its own heading on glossary",
       "confidence": "derived"
     },
@@ -7656,15 +7647,6 @@
       "confidence": "derived"
     },
     {
-      "atom": "shared.glossary.x-cm-id",
-      "type": "glossary",
-      "route": "/docs/hiecm/v3/getting-started/build-it-well",
-      "anchor": "read-the-error-then-decide-error-codes",
-      "link": "/docs/hiecm/v3/getting-started/build-it-well#read-the-error-then-decide-error-codes",
-      "rule": "term defined on build-it-well",
-      "confidence": "derived"
-    },
-    {
       "atom": "shared.sandbox.first-fifteen-minutes",
       "type": "sandbox",
       "route": "/docs/hiecm/v3/getting-started/first-fifteen-minutes",
@@ -7689,6 +7671,24 @@
       "anchor": null,
       "link": "/docs/hiecm/v3/getting-started/security-audit",
       "rule": "claimed by security-audit",
+      "confidence": "derived"
+    },
+    {
+      "atom": "uhi.glossary.eua",
+      "type": "glossary",
+      "route": "/docs/uhi/v1/getting-started/glossary",
+      "anchor": "eua",
+      "link": "/docs/uhi/v1/getting-started/glossary#eua",
+      "rule": "term defined under its own heading on glossary",
+      "confidence": "derived"
+    },
+    {
+      "atom": "uhi.glossary.hspa",
+      "type": "glossary",
+      "route": "/docs/uhi/v1/getting-started/glossary",
+      "anchor": "hspa",
+      "link": "/docs/uhi/v1/getting-started/glossary#hspa",
+      "rule": "term defined under its own heading on glossary",
       "confidence": "derived"
     }
   ]

@@ -25,7 +25,7 @@ related:
     - hiecm.error.abdm-2500
     - hiecm.error.abdm-1032
   glossary:
-    - shared.glossary.x-cm-id
+    - hiecm.glossary.x-cm-id
     - shared.glossary.timestamp-header
 ---
 

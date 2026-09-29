@@ -1,7 +1,7 @@
 ---
-id: shared.glossary.consent-manager
+id: hiecm.glossary.consent-manager
 type: glossary
-gateway: shared
+gateway: hiecm
 milestone: n/a
 version: abdm-v3
 title: Consent manager, the component that holds consent

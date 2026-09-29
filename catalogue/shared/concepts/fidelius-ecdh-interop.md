@@ -24,8 +24,8 @@ sources:
       the Fidelius CLI.
 related:
   glossary:
-    - shared.glossary.ecdh
-    - shared.glossary.key-material
+    - hiecm.glossary.ecdh
+    - hiecm.glossary.key-material
   endpoints:
   flows:
   concepts:
@@ -39,7 +39,7 @@ skills:
 ## In plain words
 
 Records travel between a HIP and a HIU encrypted with a key both derive
-from an [ECDH](shared.glossary.ecdh) exchange on Curve25519. The
+from an [ECDH](hiecm.glossary.ecdh) exchange on Curve25519. The
 reference implementation is Fidelius. An implementation in any language
 interoperates with a Fidelius peer only if it matches four things that
 the scheme's name does not tell you: how the curve point is encoded,
@@ -48,7 +48,7 @@ and how the shared secret becomes the AES key.
 
 ## Before you start
 
-- Who generates what, and who keeps what. See [key material](shared.glossary.key-material).
+- Who generates what, and who keeps what. See [key material](hiecm.glossary.key-material).
 
 ## What happens
 

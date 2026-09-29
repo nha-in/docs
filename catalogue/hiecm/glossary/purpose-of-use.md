@@ -1,7 +1,7 @@
 ---
-id: shared.glossary.purpose-of-use
+id: hiecm.glossary.purpose-of-use
 type: glossary
-gateway: shared
+gateway: hiecm
 milestone: n/a
 version: abdm-v3
 title: Purpose of use, why records are being requested

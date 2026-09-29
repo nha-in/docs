@@ -1,7 +1,7 @@
 ---
-id: shared.glossary.ecdh
+id: hiecm.glossary.ecdh
 type: glossary
-gateway: shared
+gateway: hiecm
 milestone: n/a
 version: abdm-v3
 title: ECDH, the key exchange that protects records in transit

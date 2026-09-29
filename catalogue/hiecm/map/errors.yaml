@@ -121,7 +121,7 @@ hiecm.error.abdm-1035:
   url: /docs/hiecm/v3/api/m2/errors#abdm-1035
   related:
     glossary:
-    - shared.glossary.hip
+    - hiecm.glossary.hip
     - shared.glossary.hfr
 hiecm.error.abdm-1040:
   type: error
@@ -135,7 +135,7 @@ hiecm.error.abdm-1040:
   url: /docs/hiecm/v3/api/m2/errors#abdm-1040
   related:
     glossary:
-    - shared.glossary.hiu
+    - hiecm.glossary.hiu
 hiecm.error.abdm-1056:
   type: error
   gateway: hiecm
@@ -265,7 +265,7 @@ hiecm.error.abdm-2403:
   url: /docs/hiecm/v3/api/m2/errors#abdm-2403
   related:
     glossary:
-    - shared.glossary.x-cm-id
+    - hiecm.glossary.x-cm-id
 hiecm.error.abdm-2404:
   type: error
   gateway: hiecm

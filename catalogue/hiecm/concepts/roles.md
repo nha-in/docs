@@ -15,17 +15,17 @@ sources:
       page, never this file.
 related:
   glossary:
-    - shared.glossary.hip
-    - shared.glossary.hiu
+    - hiecm.glossary.hip
+    - hiecm.glossary.hiu
     - shared.glossary.phr
-    - shared.glossary.hrp
+    - hiecm.glossary.hrp
     - shared.glossary.dsc
     - shared.glossary.hfr
     - shared.glossary.abha
-    - shared.glossary.hmis
-    - shared.glossary.lims
-    - shared.glossary.emr
-    - shared.glossary.pms
+    - hiecm.glossary.hmis
+    - hiecm.glossary.lims
+    - hiecm.glossary.emr
+    - hiecm.glossary.pms
   decisions:
     - shared.decision.role-model-two-axes
   concepts:

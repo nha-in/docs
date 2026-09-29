@@ -27,7 +27,7 @@ related:
     - hiecm.endpoint.p3-revoke-consent-request
   glossary:
     - shared.glossary.phr
-    - shared.glossary.hiu
+    - hiecm.glossary.hiu
 ---
 
 # The five things a personal health record application must let a person do with consent

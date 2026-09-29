@@ -10,7 +10,7 @@
     "one system can be both, and the role is per interaction"
   ],
   "must_not_contain": ["<MASKED", "i apologize", "i apologise", "let me ", "great question", "the catalogue", "atom", "HIP and HIU are the same"],
-  "expected_sources": ["shared.glossary.hip", "shared.glossary.hiu"],
+  "expected_sources": ["hiecm.glossary.hip", "hiecm.glossary.hiu"],
   "expected_shape": "compare",
   "expected_behaviour": "answer",
   "derived_from": null,

@@ -28,7 +28,7 @@ related:
     - hiecm.error.abdm-2406
   glossary:
     - shared.glossary.request-id
-    - shared.glossary.hiu
+    - hiecm.glossary.hiu
     - shared.glossary.phr
 ---
 

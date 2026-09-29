@@ -1,7 +1,7 @@
 ---
-id: shared.glossary.link-token
+id: hiecm.glossary.link-token
 type: glossary
-gateway: shared
+gateway: hiecm
 milestone: n/a
 version: abdm-v3
 title: Link token, the token that authorises linking

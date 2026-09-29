@@ -31,9 +31,9 @@ related:
     - hiecm.concept.asynchronous-callbacks
   glossary:
     - shared.glossary.abha-address
-    - shared.glossary.discovery
-    - shared.glossary.hip
-    - shared.glossary.hrp
+    - hiecm.glossary.discovery
+    - hiecm.glossary.hip
+    - hiecm.glossary.hrp
     - shared.glossary.otp
     - shared.glossary.phr
 ---

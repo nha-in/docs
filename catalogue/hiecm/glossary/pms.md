@@ -1,7 +1,7 @@
 ---
-id: shared.glossary.pms
+id: hiecm.glossary.pms
 type: glossary
-gateway: shared
+gateway: hiecm
 milestone: n/a
 version: abdm-v3
 title: PMS, pharmacy management system
@@ -16,7 +16,7 @@ sources:
       The portal's own role selector names this acronym. Written here so
       a pharmacy vendor searching for it finds the ABDM position.
 related:
-  glossary: [shared.glossary.ims]
+  glossary: [hiecm.glossary.ims]
 ---
 
 # PMS, pharmacy management system

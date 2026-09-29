@@ -26,7 +26,7 @@
     "atom"
   ],
   "expected_sources": [
-    "shared.glossary.discovery"
+    "hiecm.glossary.discovery"
   ],
   "expected_shape": "define",
   "expected_behaviour": "answer",

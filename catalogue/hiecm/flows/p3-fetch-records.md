@@ -32,9 +32,9 @@ related:
   errors:
     - hiecm.error.abdm-1112
   glossary:
-    - shared.glossary.hi-type
-    - shared.glossary.hip
-    - shared.glossary.hiu
+    - hiecm.glossary.hi-type
+    - hiecm.glossary.hip
+    - hiecm.glossary.hiu
     - shared.glossary.phr
 ---
 

@@ -1,7 +1,7 @@
 ---
-id: shared.glossary.eua
+id: uhi.glossary.eua
 type: glossary
-gateway: shared
+gateway: uhi
 milestone: n/a
 version: abdm-v3
 title: EUA, end user application

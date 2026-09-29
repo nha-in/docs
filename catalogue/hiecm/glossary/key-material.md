@@ -1,7 +1,7 @@
 ---
-id: shared.glossary.key-material
+id: hiecm.glossary.key-material
 type: glossary
-gateway: shared
+gateway: hiecm
 milestone: n/a
 version: abdm-v3
 title: Key material, who generates it and who keeps it

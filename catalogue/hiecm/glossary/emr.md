@@ -1,7 +1,7 @@
 ---
-id: shared.glossary.emr
+id: hiecm.glossary.emr
 type: glossary
-gateway: shared
+gateway: hiecm
 milestone: n/a
 version: abdm-v3
 title: EMR, the clinical system a provider runs, also written EHR
@@ -16,7 +16,7 @@ sources:
       This portal's own published glossary, where the definition was
       written first. Moved here so it can be retrieved, not rewritten.
 related:
-  glossary: [shared.glossary.m2, shared.glossary.m3]
+  glossary: [hiecm.glossary.m2, hiecm.glossary.m3]
 ---
 
 # EMR, the clinical system a provider runs, also written EHR

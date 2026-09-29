@@ -26,9 +26,9 @@ related:
     - hiecm.concept.care-context
     - hiecm.concept.asynchronous-callbacks
   glossary:
-    - shared.glossary.m2
-    - shared.glossary.hip
-    - shared.glossary.hiu
+    - hiecm.glossary.m2
+    - hiecm.glossary.hip
+    - hiecm.glossary.hiu
     - shared.glossary.hfr
     - shared.glossary.phr
     - shared.glossary.abha-address

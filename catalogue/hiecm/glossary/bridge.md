@@ -1,7 +1,7 @@
 ---
-id: shared.glossary.bridge
+id: hiecm.glossary.bridge
 type: glossary
-gateway: shared
+gateway: hiecm
 milestone: n/a
 version: abdm-v3
 title: Bridge, your callback endpoints

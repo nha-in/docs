@@ -1,7 +1,7 @@
 ---
-id: shared.glossary.hiu
+id: hiecm.glossary.hiu
 type: glossary
-gateway: shared
+gateway: hiecm
 milestone: n/a
 version: abdm-v3
 title: HIU, health information user

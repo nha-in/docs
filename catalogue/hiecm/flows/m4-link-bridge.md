@@ -21,9 +21,9 @@ related:
   concepts:
     - hiecm.concept.roles
   glossary:
-    - shared.glossary.bridge
-    - shared.glossary.hip
-    - shared.glossary.hiu
+    - hiecm.glossary.bridge
+    - hiecm.glossary.hip
+    - hiecm.glossary.hiu
     - shared.glossary.hfr
     - shared.glossary.phr
 ---

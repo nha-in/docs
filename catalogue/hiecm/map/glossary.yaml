@@ -1,9 +1,9 @@
 # HIE-CM content map: each atom id and the page section that holds its words.
 # An atom listed here has no hand-written file; scripts/build-sections.mjs
 # writes its file from the page, marked generated: true.
-shared.glossary.link-token:
+hiecm.glossary.link-token:
   type: glossary
-  gateway: shared
+  gateway: hiecm
   milestone: n/a
   title: Link token, the token that authorises linking
   summary: The token that authorises your system to link a care context to a patient's ABHA address.

@@ -94,8 +94,8 @@ which is not itself a record type. It fixes `Bundle.type` to
 the wrong (or no) record profile on its Composition is still rejected;
 the envelope and the record profile are two separate checks.
 
-Getting the bundle from your system to the [HIU](shared.glossary.hiu) is
-the M2/M3 data push: the [HIP](shared.glossary.hip) builds the bundle,
+Getting the bundle from your system to the [HIU](hiecm.glossary.hiu) is
+the M2/M3 data push: the [HIP](hiecm.glossary.hip) builds the bundle,
 encrypts it (ECDH, Curve25519, using a shared secret derived from the
 HIU's public key), and pushes the encrypted, base64 content to the
 HIU's `dataPushUrl`. `hiType` travels alongside so the receiving side
