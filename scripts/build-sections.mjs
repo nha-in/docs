@@ -12,12 +12,28 @@ import {stringify} from 'yaml';
 import {loadAtoms} from './lib/atoms.mjs';
 import {sectionsById, literals, plainMarkdown} from './lib/sections.mjs';
 import {loadMap} from './lib/map.mjs';
-import {FOLDER, specRoots} from './lib/paths.mjs';
+import {FOLDER, atomPath, specRoots} from './lib/paths.mjs';
 
-// The folder per type that scripts/lint-atoms.mjs requires.
 const SECTIONS = [['In plain words', (s, e) => plainMarkdown(s.text, e.url).text], ['Before you start', (s) => s.agent.before], ['What happens', (s) => s.agent.happens], ['How you know it worked', (s) => s.agent.worked], ['When it goes wrong', (s) => s.agent.wrong]];
 
-export const generatedPath = (id, e) => `catalogue/generated/${e.gateway}/${FOLDER[e.type]}/${id.split('.')[2]}.md`;
+// A written atom sits in its gateway's type folder beside hand-written ones,
+// told apart by `generated: true`.
+export const generatedPath = (id, e) => atomPath(id, e.type, e.gateway);
+
+/**
+ * What a build writes and removes, given the files it wants (path to body) and
+ * the atom files on disk (path to {generated}). It overwrites or removes only
+ * files marked generated: true; a hand-written file in the way is a problem.
+ */
+export function writePlan(want, onDisk) {
+  const write = [], remove = [], problems = [];
+  for (const p of want.keys()) {
+    if (onDisk.get(p)?.generated === false) problems.push(`${p} is hand-written; build:sections will not overwrite it`);
+    else write.push(p);
+  }
+  for (const [p, {generated}] of onDisk) if (generated && !want.has(p)) remove.push(p);
+  return {write, remove, problems};
+}
 
 export function renderAtom(id, e, s) {
   const fm = {
@@ -81,24 +97,26 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const root = join(fileURLToPath(import.meta.url), '..', '..');
   const {map, problems: mapProblems} = loadMap(root);
   const pages = Object.fromEntries([...new Set(Object.values(map).map((e) => e.page))].filter((p) => existsSync(join(root, p))).map((p) => [p, readFileSync(join(root, p), 'utf8')]));
-  const {atoms} = loadAtoms();
-  const hand = [...atoms.values()].filter((a) => !a.file.includes('/catalogue/generated/')).map((a) => ({id: a.fm.id, type: a.fm.type, gateway: a.fm.gateway, file: relative(root, a.file)}));
-  const found = [...mapProblems, ...problems({map, pages, handIds: new Set(hand.map((a) => a.id)), specText: specText(root)})];
+  const {atoms, duplicates} = loadAtoms();
+  const hand = [...atoms.values()].filter((a) => a.fm.generated !== true).map((a) => ({id: a.fm.id, type: a.fm.type, gateway: a.fm.gateway, file: relative(root, a.file)}));
+  const found = [...mapProblems, ...duplicates.map((d) => `two files carry one id, ${d}`), ...problems({map, pages, handIds: new Set(hand.map((a) => a.id)), specText: specText(root)})];
   const want = new Map(Object.entries(map).filter(([, e]) => pages[e.page] && sectionsById(pages[e.page]).get(e.heading)).map(([id, e]) => [generatedPath(id, e), renderAtom(id, e, sectionsById(pages[e.page]).get(e.heading))]));
+  const onDisk = new Map([...atoms.values()].map((a) => [relative(root, a.file), {generated: a.fm.generated === true}]));
+  const plan = writePlan(want, onDisk);
+  found.push(...plan.problems);
   const reg = `${JSON.stringify(registry({map, hand}), null, 2)}\n`;
-  const genDir = join(root, 'catalogue', 'generated');
+  const regPath = join(root, 'catalogue', 'registry.json');
   if (process.argv.includes('--check')) {
     for (const [p, body] of want) if (!existsSync(join(root, p)) || readFileSync(join(root, p), 'utf8') !== body) found.push(`${p} is stale; run npm run build:sections`);
-    const mapped = new Set(Object.entries(map).map(([id, e]) => generatedPath(id, e)));
-    for (const f of walkFiles(genDir)) if (!mapped.has(relative(root, f))) found.push(`${relative(root, f)} has no map entry; run npm run build:sections`);
-    const regPath = join(root, 'catalogue', 'registry.json');
+    for (const p of plan.remove) found.push(`${p} has no map entry; run npm run build:sections`);
     if (!existsSync(regPath) || readFileSync(regPath, 'utf8') !== reg) found.push('catalogue/registry.json is stale; run npm run build:sections');
     for (const p of found) console.error(p);
     process.exit(found.length ? 1 : 0);
   }
   if (found.length) { for (const p of found) console.error(p); process.exit(1); }
-  rmSync(genDir, {recursive: true, force: true});
-  for (const [p, body] of want) { mkdirSync(dirname(join(root, p)), {recursive: true}); writeFileSync(join(root, p), body); }
-  writeFileSync(join(root, 'catalogue', 'registry.json'), reg);
+  // Only files marked generated: true are ever removed or overwritten.
+  for (const p of plan.remove) rmSync(join(root, p));
+  for (const p of plan.write) { mkdirSync(dirname(join(root, p)), {recursive: true}); writeFileSync(join(root, p), want.get(p)); }
+  writeFileSync(regPath, reg);
   console.log(`sections: ${want.size} atoms from pages, ${hand.length} hand-written`);
 }

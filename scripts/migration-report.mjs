@@ -41,7 +41,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     const is = now.find((e) => e.id === id && e.source === 'page');
     if (!was || !is) { console.log(`| ${id} | not migrated in this change | | | |`); failed = true; continue; }
     const oldBody = body(execFileSync('git', ['show', `HEAD:${was.file}`], {cwd: root, encoding: 'utf8'}));
-    const genFile = join(root, 'catalogue', 'generated', id.split('.')[0], was.file.split('/').at(-2), `${id.split('.')[2]}.md`);
+    const genFile = join(root, 'catalogue', id.split('.')[0], was.file.split('/').at(-2), `${id.split('.')[2]}.md`);
     const newBody = existsSync(genFile) ? body(readFileSync(genFile, 'utf8')) : '';
     const r = compare(oldBody, newBody, dropped);
     if (r.missing.length) failed = true;

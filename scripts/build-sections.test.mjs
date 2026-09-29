@@ -1,7 +1,7 @@
 // scripts/build-sections.test.mjs
 import {test} from 'node:test';
 import assert from 'node:assert';
-import {renderAtom, generatedPath, problems, registry} from './build-sections.mjs';
+import {renderAtom, generatedPath, problems, registry, writePlan} from './build-sections.mjs';
 
 const entry = {type: 'glossary', gateway: 'shared', milestone: 'n/a', title: 'Link token, the token that authorises linking', summary: 'Authorises linking.', page: 'g.mdx', heading: 'link-token', url: '/docs/g#link-token', related: {}};
 const page = '### Link token {#link-token}\n\nValid for six months.\n\n<AgentOnly>\n**When it goes wrong.** Validate it before every link.\n</AgentOnly>\n';
@@ -23,7 +23,7 @@ test('agent text without a label fails, naming the atom and the fix', () => {
 });
 
 test('the generated file sits in the folder lint-atoms expects for its type', () => {
-  assert.equal(generatedPath('shared.glossary.link-token', entry), 'catalogue/generated/shared/glossary/link-token.md');
+  assert.equal(generatedPath('shared.glossary.link-token', entry), 'catalogue/shared/glossary/link-token.md');
 });
 
 test('a clean map has no problems', () => {
@@ -80,4 +80,22 @@ test('a generated atom carries the map entry contract v2 fields', () => {
   assert.match(md, /\nside: hip\n/);
   assert.match(md, /\nfacts:\n/);
   assert.doesNotMatch(renderAtom('shared.glossary.link-token', entry, {text: 'x', agent: {before: '', happens: '', worked: '', wrong: ''}}), /operation:/);
+});
+
+test('the build never overwrites a hand-written atom at a path the map wants', () => {
+  const plan = writePlan(new Map([['catalogue/hiecm/concepts/x.md', 'body']]), new Map([['catalogue/hiecm/concepts/x.md', {generated: false}]]));
+  assert.deepEqual(plan.write, []);
+  assert.deepEqual(plan.problems, ['catalogue/hiecm/concepts/x.md is hand-written; build:sections will not overwrite it']);
+});
+
+test('the build removes a written atom no map entry wants, and never a hand-written one', () => {
+  const onDisk = new Map([
+    ['catalogue/hiecm/concepts/gone.md', {generated: true}],
+    ['catalogue/hiecm/concepts/hand.md', {generated: false}],
+    ['catalogue/hiecm/concepts/kept.md', {generated: true}],
+  ]);
+  const plan = writePlan(new Map([['catalogue/hiecm/concepts/kept.md', 'body'], ['catalogue/hiecm/concepts/new.md', 'body']]), onDisk);
+  assert.deepEqual(plan.remove, ['catalogue/hiecm/concepts/gone.md']);
+  assert.deepEqual(plan.write.sort(), ['catalogue/hiecm/concepts/kept.md', 'catalogue/hiecm/concepts/new.md']);
+  assert.deepEqual(plan.problems, []);
 });

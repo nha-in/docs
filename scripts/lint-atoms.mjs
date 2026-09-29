@@ -18,7 +18,8 @@ function fail(file, msg) {
   problems.push(`${relative(root, file)}: ${msg}`);
 }
 
-const { atoms, problems: parseProblems } = loadAtoms();
+const { atoms, problems: parseProblems, duplicates } = loadAtoms();
+for (const d of duplicates) problems.push(`two files carry one id, ${d}`);
 for (const p of parseProblems) fail(p.file, p.msg);
 
 // Only HIE-CM has specifications in this repository; an operation on any
