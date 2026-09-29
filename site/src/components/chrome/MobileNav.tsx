@@ -79,8 +79,15 @@ export default function MobileNav() {
                     <SheetClose asChild>
                       <Link
                         to={tabHref(tab, pathname)}
-                        className={cn('mobile-nav-tab', isActive && 'mobile-nav-tab--active')}
+                        className={cn(
+                          'mobile-nav-tab',
+                          isActive && 'mobile-nav-tab--active',
+                          tab.icon && 'mobile-nav-tab--feature',
+                        )}
                         aria-current={isActive ? 'page' : undefined}>
+                        {tab.icon && (
+                          <tab.icon className="docs-tab__icon" aria-hidden="true" />
+                        )}
                         {tab.label}
                       </Link>
                     </SheetClose>

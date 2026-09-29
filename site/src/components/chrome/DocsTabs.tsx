@@ -27,12 +27,18 @@ export default function DocsTabs() {
     <nav className="docs-tabs" aria-label="Documentation sections">
       {visibleTabs(pathname).map((tab) => {
         const isActive = tab === current;
+        const Icon = tab.icon;
         return (
           <Link
             key={tab.to}
             to={tabHref(tab, pathname)}
-            className={cn('docs-tab', isActive && 'docs-tab--active')}
+            className={cn(
+              'docs-tab',
+              isActive && 'docs-tab--active',
+              Icon && 'docs-tab--feature',
+            )}
             aria-current={isActive ? 'page' : undefined}>
+            {Icon && <Icon className="docs-tab__icon" aria-hidden="true" />}
             {tab.label}
           </Link>
         );
