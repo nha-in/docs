@@ -135,7 +135,7 @@ function resultText(content) {
 function transcriptFor(c, prompt, run, server) {
   const calls = [];
   const byUseID = new Map();
-  let answer = "", modelID = model, cost = 0, flags = [];
+  let answer = "", modelID = model, cost = 0, flags = [], usage = null;
   let current = null;
   for (const line of run.stdout.split("\n")) {
     if (!line.trim()) continue;
@@ -169,6 +169,14 @@ function transcriptFor(c, prompt, run, server) {
     if (ev.type === "result") {
       answer = ev.result || "";
       cost = ev.total_cost_usd || 0;
+      // What the run actually used, as claude reports it. On a subscription
+      // total_cost_usd is the API-price equivalent, not a charge; the token
+      // counts are the real measure of how much a case takes.
+      const u = ev.usage || {};
+      usage = { input_tokens: u.input_tokens || 0, output_tokens: u.output_tokens || 0,
+        cache_read_input_tokens: u.cache_read_input_tokens || 0,
+        cache_creation_input_tokens: u.cache_creation_input_tokens || 0,
+        num_turns: ev.num_turns || 0, duration_ms: ev.duration_ms || 0, cost_usd_equivalent: cost };
       if (ev.is_error) flags.push(`agent error: ${ev.subtype || "unknown"}`);
     }
   }
@@ -200,6 +208,7 @@ function transcriptFor(c, prompt, run, server) {
       prompt_version: promptVersion, embed_provider: server.embed, db_path: server.db,
       calls, answer, sources: [...seen.values()], corpus: corpus.join("\n"),
       blocked: false, flags, class: "agent", surface: "mcp-agent", recorded_at: new Date().toISOString(),
+      usage,
     },
     cost,
   };
@@ -217,6 +226,7 @@ async function main() {
   console.error(`${cases.length} cases on ${model} against ${server.url} -> ${out}`);
 
   let next = 0, done = 0, totalCost = 0, failed = 0;
+  const totals = { input_tokens: 0, output_tokens: 0, cache_read_input_tokens: 0, cache_creation_input_tokens: 0, tool_calls: 0 };
   const worker = async () => {
     while (next < cases.length) {
       const c = cases[next++];
@@ -227,6 +237,8 @@ async function main() {
       if (transcript.flags.length) failed++;
       writeFileSync(join(dir, `${c.id}.json`), JSON.stringify(transcript, null, 2) + "\n");
       const calls = transcript.calls.reduce((n, m) => n + m.reply.ToolCalls.length, 0);
+      totals.tool_calls += calls;
+      for (const k of ["input_tokens", "output_tokens", "cache_read_input_tokens", "cache_creation_input_tokens"]) totals[k] += transcript.usage?.[k] || 0;
       console.error(`[${++done}/${cases.length}] ${c.id}: ${calls} tool calls${transcript.flags.length ? " FLAGGED " + transcript.flags[0] : ""}`);
     }
   };
@@ -235,7 +247,13 @@ async function main() {
   } finally {
     server.stop();
   }
-  console.error(`done: ${done} answered, ${failed} flagged, $${totalCost.toFixed(2)} reported by claude`);
+  const summary = { model, mcp_url: server.url, embed_provider: server.embed, catalogue_version: version,
+    prompt_version: promptVersion, cases: done, flagged: failed, ...totals,
+    cost_usd_equivalent: Number(totalCost.toFixed(2)), finished_at: new Date().toISOString() };
+  writeFileSync(join(out, "summary.json"), JSON.stringify(summary, null, 2) + "\n");
+  console.error(`done: ${done} answered, ${failed} flagged, ${totals.tool_calls} tool calls, ` +
+    `${totals.input_tokens + totals.cache_read_input_tokens + totals.cache_creation_input_tokens} input and ${totals.output_tokens} output tokens ` +
+    `($${totalCost.toFixed(2)} at API prices; on a subscription this counts against plan limits, not billed)`);
   console.error(`score it: cd mcp && go run ./cmd/askai-eval check -cases ../evals/askai/cases -run ${out}`);
 }
 
