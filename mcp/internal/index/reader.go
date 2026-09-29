@@ -214,6 +214,25 @@ func (r *Reader) AtomsByErrorCode(code string) ([]AtomRef, error) {
         ORDER BY id`, catalogue.NormalizeErrorCode(code))
 }
 
+// ErrorCodesOf returns the codes indexed for one atom, the same rows
+// AtomsByErrorCode reads in the other direction.
+func (r *Reader) ErrorCodesOf(id string) ([]string, error) {
+	rows, err := r.db.Query(`SELECT code FROM atom_error_codes WHERE atom_id = ? ORDER BY code`, id)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var codes []string
+	for rows.Next() {
+		var c string
+		if err := rows.Scan(&c); err != nil {
+			return nil, err
+		}
+		codes = append(codes, c)
+	}
+	return codes, rows.Err()
+}
+
 // RelatedGroup buckets related atoms by the related atom's own type
 // ("error", "flow", "endpoint", ...), never by the edge's relation name;
 // a reverse edge from a flow's "endpoints" list must file the flow under

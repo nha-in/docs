@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"regexp"
 	"strings"
 	"sync"
 
@@ -302,6 +303,7 @@ func (t *Tools) Lookup(ctx context.Context, in lookupIn) (PassagePack, error) {
 	if err != nil {
 		return PassagePack{}, err
 	}
+	hits = pinErrorAtoms(t.r, in.Query, hits, lookupHits)
 	var pack PassagePack
 	seenRelated := map[string]bool{}
 	for i, h := range hits {
@@ -324,6 +326,46 @@ func (t *Tools) Lookup(ctx context.Context, in lookupIn) (PassagePack, error) {
 	return pack, nil
 }
 
+// codeLookup is the one Reader method pinErrorAtoms needs.
+type codeLookup interface {
+	AtomsByErrorCode(code string) ([]index.AtomRef, error)
+}
+
+// pinErrorAtoms puts the error atom for each code the question names ahead
+// of the search hits. A code is the most specific thing a reader can type,
+// and the atom that explains it is the answer; search ranking weighs it
+// against every other word, and "401 with code 900901 Invalid Credentials"
+// lost to five M1 enrolment atoms. Only error atoms are pinned, never a flow
+// that merely mentions the code, and the pack stays at limit.
+func pinErrorAtoms(r codeLookup, query string, hits []index.SearchHit, limit int) []index.SearchHit {
+	var pinned []index.SearchHit
+	seen := map[string]bool{}
+	for _, code := range catalogue.ExtractErrorCodes(query) {
+		refs, err := r.AtomsByErrorCode(code)
+		if err != nil {
+			slog.Warn("lookup: error code lookup failed", "code", code, "error", err)
+			continue
+		}
+		for _, a := range refs {
+			if a.Type != "error" || seen[a.ID] {
+				continue
+			}
+			seen[a.ID] = true
+			pinned = append(pinned, index.SearchHit{Kind: "atom", ID: a.ID, Type: a.Type,
+				Milestone: a.Milestone, Title: a.Title, DocURL: a.DocURL, DocAnchor: a.DocAnchor})
+		}
+	}
+	if len(pinned) == 0 {
+		return hits
+	}
+	for _, h := range hits {
+		if !seen[h.ID] {
+			pinned = append(pinned, h)
+		}
+	}
+	return pinned[:min(len(pinned), limit)]
+}
+
 func (t *Tools) RelatedAtoms(ctx context.Context, in getAtomIn) (map[string]any, error) {
 	groups, err := t.r.RelatedAtoms(in.ID)
 	if err != nil {
@@ -336,8 +378,16 @@ func (t *Tools) RelatedAtoms(ctx context.Context, in getAtomIn) (map[string]any,
 	return t.versioned(map[string]any{"id": in.ID, "related": out}), nil
 }
 
+var bareGatewayCodeRe = regexp.MustCompile(`^9\d{5}$`)
+
 func (t *Tools) DecodeError(ctx context.Context, in decodeIn) (map[string]any, error) {
 	codes := catalogue.ExtractErrorCodes(in.Input)
+	// A bare six-digit number is read as a gateway code only in context (a
+	// JSON "code" value, or after "error"), so an OTP is never taken for one.
+	// An input that is nothing but the code has no other reading.
+	if bare := strings.TrimSpace(in.Input); len(codes) == 0 && bareGatewayCodeRe.MatchString(bare) {
+		codes = []string{bare}
+	}
 	if len(codes) == 0 {
 		return t.versioned(map[string]any{
 			"message": "no error codes found in the input; try search with the response text",
