@@ -15,9 +15,9 @@ import {parse, Document, visit} from 'yaml';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SET = 'nha-2026-09-28-uhi';
-const RAW = join(root, 'catalogue', 'openapi', '.raw', SET);
-const OUT = join(root, 'catalogue', 'openapi', 'uhi', 'v1');
-const LOG = join(root, 'catalogue', 'openapi', 'corrections', '2026-09-28-uhi-ingest.md');
+const RAW = join(root, 'catalogue', 'uhi', 'openapi', '.raw', SET);
+const OUT = join(root, 'catalogue', 'uhi', 'openapi', 'v1');
+const LOG = join(root, 'catalogue', 'uhi', 'openapi', 'corrections', '2026-09-28-uhi-ingest.md');
 const ROLE_FILE = 'gateway/UHI Documentation Requirements.yaml';
 const SERVICE_FILE = 'gateway/UHI Gateway Service.yaml';
 const check = process.argv.includes('--check');
@@ -186,7 +186,7 @@ const PARTICIPANT = {
 
 // ---- sources -----------------------------------------------------------------
 const sha = (file) => createHash('sha256').update(readFileSync(join(RAW, file))).digest('hex');
-const SOURCES = [ROLE_FILE, SERVICE_FILE].map((file) => ({file: `catalogue/openapi/.raw/${SET}/${file}`, role: 'upstream', hash: `sha256:${sha(file)}`, fetched: '2026-09-28'}));
+const SOURCES = [ROLE_FILE, SERVICE_FILE].map((file) => ({file: `catalogue/uhi/openapi/.raw/${SET}/${file}`, role: 'upstream', hash: `sha256:${sha(file)}`, fetched: '2026-09-28'}));
 
 // ---- build -------------------------------------------------------------------
 const SIGN = 'Sign this request first: [Signing](/docs/uhi/v1/concepts/signing).';

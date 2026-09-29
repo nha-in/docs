@@ -107,10 +107,10 @@ RANK_CASES = [
     # The rebuilt link token endpoint and its callback both state the
     # six-month lifetime, so either answers.
     ("how long can I keep using the token that lets me link a patient's records",
-     {"shared.glossary.link-token", "hiecm.endpoint.m2-generate-link-token",
+     {"hiecm.glossary.link-token", "hiecm.endpoint.m2-generate-link-token",
       "hiecm.callback.m2-on-generate-token-result"}),
     ("linking care contexts fails because my stored link token has expired",
-     {"shared.glossary.link-token"}),
+     {"hiecm.glossary.link-token"}),
     # -- UHI, phrased the way an app or provider developer asks ----------------
     ("my search goes through but no results ever come back to my app",
      {"uhi.troubleshooting.first-search", "uhi.troubleshooting.http-statuses",

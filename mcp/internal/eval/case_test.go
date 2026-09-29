@@ -20,7 +20,7 @@ func writeCase(t *testing.T, dir, slice, name, body string) {
 const goodCase = `{"id":"define-hmis-01","slice":"define","class":"define",
 "turns":[{"role":"user","text":"what is a HIMS"}],"attachment":null,"page":null,
 "must_contain":["software a hospital runs"],"must_not_contain":["let me "],
-"expected_sources":["shared.glossary.hmis"],"expected_shape":"define",
+"expected_sources":["hiecm.glossary.hmis"],"expected_shape":"define",
 "expected_behaviour":"answer","derived_from":null,"source_row":"annexure#glossary",
 "catalogue_version":"2026.08.24","notes":""}`
 

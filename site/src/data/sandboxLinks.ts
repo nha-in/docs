@@ -1,18 +1,16 @@
 // Every sandbox-app deep link on the site lives here and nowhere else.
 // The sandbox integration, when it lands, changes these values in one
-// place. Until then only `register` points at a real page on
-// sandbox.abdm.gov.in; every other entry lands behind the sandbox's login
-// and resolves to the sandbox root, same as `home`, because that screen
-// cannot be linked to directly pre-login. Do not inline sandbox URLs in
+// place. Every entry resolves to sbxai.abdm.gov.in, the sandbox front
+// door NHA names for registration, credentials and callback setup. Do not inline sandbox URLs in
 // pages, and do not label a link with a destination it does not reach.
-const BASE = 'https://sandbox.abdm.gov.in';
+const BASE = 'https://sbxai.abdm.gov.in';
 
 export const sandboxLinks = {
   // The generic "go to the sandbox" link used by chrome elements (the top
   // bar's sandbox mark and overflow menu) that are not pointing at any one
   // action, just the sandbox site itself.
-  home: 'https://sbxai.abdm.gov.in',
-  register: `${BASE}/sandbox/v3/sandbox-registration`, // ABDM sandbox request form
+  home: BASE,
+  register: BASE, // registration starts on the sandbox home
   // TODO(sandbox-integration): point at the credentials view in the logged-in
   // integrator dashboard once a durable path is confirmed (client id and
   // secret, issued post-approval, only appear after login). Until then,

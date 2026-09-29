@@ -10,7 +10,7 @@ summary: >
   read one real gateway session exchange and assemble your own first
   call, ready to paste the moment credentials arrive.
 sources:
-  - file: catalogue/openapi/.raw/nha-2026-09-16/hiecm/gateway.yaml
+  - file: catalogue/hiecm/openapi/.raw/nha-2026-09-16/hiecm/gateway.yaml
     hash: sha256:d3bc599054c2570a50818ca54906c44cf652ad6f813473e8ac243667da4e9300
     note: >
       The gateway session operation. The header and body values shown
@@ -22,7 +22,7 @@ sources:
       Sandbox category, "How to integrate digital health solutions in
       the sandbox?": application takes around 10 minutes, processed in
       a maximum of 5 working days.
-  - file: catalogue/openapi/hiecm/v3/hiecm-gateway.yaml
+  - file: catalogue/hiecm/openapi/v3/hiecm-gateway.yaml
     status: read-from-spec-2026-09-23
     note: The session call answers 202 Accepted with the token fields.
   - file: site/docs/hiecm/v3/getting-started/sandbox.mdx

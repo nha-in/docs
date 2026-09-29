@@ -51,7 +51,7 @@ flowchart TB
 | Block | What it is in V1 | Rule that keeps it honest |
 |---|---|---|
 | 01 Catalogue | NHA's HIE-CM M1 to M3 endpoints, written as atoms that a first-day developer can read and a compiler can parse (§3) | Nothing downstream is hand-maintained. CI fails if a skill names an endpoint or error the Catalogue does not have. |
-| 02 MCP | Our own Go Docs MCP server: six read tools over one indexed snapshot of the Catalogue, hybrid keyword plus semantic retrieval (§6) | Retrieval only. Nothing executes against NHA. Every response carries catalogue version and verification status. |
+| 02 MCP | Our own Go Docs MCP server: six read tools over one indexed snapshot of the Catalogue, hybrid keyword plus semantic retrieval (§6) | Retrieval only. Nothing executes against NHA. Every response carries the catalogue version. |
 | 03 Skills | Compiled from atoms. One index skill, per-milestone build/test/debug skills, one plugin bundle. Every skill runs an OODA loop (§4.2) | The compiler may reword, never add facts. |
 | 04 Docs | Docusaurus site with self-hosted Scalar API references, structured after developer.eka.care's flow pages | No page carries a status label. The watcher that would notice a changed source is designed and not built (§5). |
 
@@ -88,56 +88,69 @@ An atom is one markdown file with YAML frontmatter. The frontmatter is the machi
 Every fact is written once, and more and more that one place is a docs page. An atom's words live in one of two places, never both:
 
 - **A hand-written file** under `catalogue/<gateway>/<type folder>/`, as every atom was until 28 September 2026.
-- **A page section.** `catalogue/map.yaml` and its fragments in `catalogue/map.d/*.yaml` are the atom registry, one fragment per batch so batches do not collide, and an id defined in two of them fails `check:sections`. The registry maps an atom id to a page and an explicit heading id, `### Link token {#link-token}` in a `.md` page and `### Link token {/* #link-token */}` in an `.mdx` page, because MDX reads `{#id}` as an expression. The section's visible text is the atom's `In plain words`. Rules written only for agents sit in `<AgentOnly>` on the same page, hidden from readers and from site search until a footer link or `?agent-notes=1` shows them, but present in the page's `.md` copy and llms-full.txt. An endpoint, callback or error atom has no hand-written page to sit on, because API pages are generated, so its section lives in a hand-written notes partial: `site/docs/_notes/<gateway>/<operationId>.mdx` renders on that operation's generated API page, and `site/docs/_notes/<gateway>/errors/<module>.mdx` on the module's error page. A partial holds only sections with explicit heading ids, and `lint:content` holds it to the page rules as hard errors. `scripts/build-sections.mjs` builds the atom-shaped file in `catalogue/generated/` that every consumer already reads, and `catalogue/registry.json`, which lists every atom and where its words live. Both are build outputs.
+- **A page section.** Each gateway's content map, `catalogue/<gateway>/map/*.yaml`, is its part of the atom registry, one file per batch so batches do not collide, and an id defined in two of them fails `check:sections`. The registry maps an atom id to a page and an explicit heading id, `### Link token {#link-token}` in a `.md` page and `### Link token {/* #link-token */}` in an `.mdx` page, because MDX reads `{#id}` as an expression. The section's visible text is the atom's `In plain words`. Rules written only for agents sit in `<AgentOnly>` on the same page, hidden from readers and from site search until a footer link or `?agent-notes=1` shows them, but present in the page's `.md` copy and llms-full.txt. An endpoint, callback or error atom has no hand-written page to sit on, because API pages are generated, so its section lives in a hand-written notes partial: `site/docs/_notes/<gateway>/<operationId>.mdx` renders on that operation's generated API page, and `site/docs/_notes/<gateway>/errors/<module>.mdx` on the module's error page. A partial holds only sections with explicit heading ids, and `lint:content` holds it to the page rules as hard errors. `scripts/build-sections.mjs` writes the atom file into the same `catalogue/<gateway>/<type folder>/` a hand-written atom sits in, marked `generated: true`, and `catalogue/registry.json`, which lists every atom and where its words live. Both are build outputs: a file marked `generated: true` holds the section's words and metadata and is never edited, and the build deletes or overwrites only files carrying that mark.
 
-Content moves onto pages one class at a time, and a class is never in two places. Whatever has moved is edited on its page, whatever has not keeps its file, and the repository is coherent if the migration stops at any commit. `shared.glossary.link-token` moved first. HIE-CM went further on 29 September 2026: 227 of the 256 atoms the 16 September source reset deleted came back as page sections and notes partials, a class the migration list had no row for because it only moved atoms that still existed. NHCX classes wait for a decision on the NHCX source (§10), and NHA's corrections are applied to pages by the runbook in `docs/runbook-nha-corrections.md`.
+Content moves onto pages one class at a time, and a class is never in two places. Whatever has moved is edited on its page, whatever has not keeps its file, and the repository is coherent if the migration stops at any commit. The link token glossary term moved first. HIE-CM went further on 29 September 2026: 227 of the 256 atoms the 16 September source reset deleted came back as page sections and notes partials, a class the migration list had no row for because it only moved atoms that still existed. NHCX classes wait for a decision on the NHCX source (§10), and NHA's corrections are applied to pages by the runbook in `docs/runbook-nha-corrections.md`.
+
+HIE-CM and UHI each own one folder holding everything they have, so a reader finds a gateway's specifications, sources, content map and atoms in one place. `npm run lint:atoms` fails on any name outside this tree and on any atom not at `catalogue/<gateway>/<type folder>/<id slug>.md`. A folder exists when it holds a file; each gateway's `README.md` lists the whole shape.
 
 ```
 catalogue/
-  VERSION            the catalogue version stamp, read into the site footer
-  map.yaml           the atom registry: atom id to page and heading id, no prose
-  map.d/             registry fragments, one per batch, read beside map.yaml
-  registry.json      every atom and where its words live (built)
-  generated/         atom files built from page sections (built, never edited)
-  verification/      sandbox records, one per call, named by operation id
-  hiecm/            concepts/ holds the 20 design rules, the only HIE-CM atoms kept as
-                     files; every other HIE-CM atom is a page section or a notes
-                     partial section listed in map.d/hiecm-*.yaml
-  uhi/               (empty folders; every UHI atom is a page section or a notes partial
-                     section listed in map.d/uhi-*.yaml)
-  nhcx/              (folder structure only, no atom written yet)
+  README.md            the map of this tree
+  VERSION              the catalogue version stamp
+  hiecm/
+    map/               content map: atom id to page and heading id, no prose
+    openapi/
+      v3/              twelve specifications, one self-contained file per module:
+                       the gateway, M1 to M4, P1 to P4, Scan and Register, Record
+                       Share, Scan and Pay. Callbacks live inside the module file
+                       that owns them, as OpenAPI 3.1 webhooks. Eleven are
+                       generated by scripts/ingest-nha.mjs from NHA's sets of 16,
+                       22 and 24 September 2026, Record Share from NHA's document
+                       of 21 September. journeys/<module>.yaml holds the call
+                       order each module's reference and compiled skill follow;
+                       errors/<module>.yaml the codes each module returns
+      corrections/     recorded patches to upstream files, never silent fixes
+      .raw/            upstream NHA files, stored untouched
+    titles.yaml        HIE-CM reference page title overrides, by operationId
+    postman.json       the published Postman collection ids
+    concepts/ flows/ endpoints/ callbacks/ errors/ glossary/ tests/ decisions/ troubleshooting/
+                       atom files: the 20 design rules in concepts/ and 21
+                       glossary terms are hand-written; every other HIE-CM atom,
+                       link token included, is written from its
+                       page section or notes partial and marked generated: true
+  nhcx/
+    concepts/ flows/ endpoints/ callbacks/ errors/ tests/ decisions/ troubleshooting/
+    glossary/ fhir/ sandbox/
+                       hand-written atoms, not yet moved onto pages
+  uhi/
+    openapi/v1/        three specifications, generated by scripts/ingest-uhi.mjs
+                       from NHA's UHI set of 28 September 2026, with journeys/,
+                       and corrections/ and .raw/ beside v1/
+    map/               content map for UHI's page atoms, one file per batch
+    glossary/ concepts/ flows/ endpoints/ callbacks/ tests/ decisions/ sandbox/ troubleshooting/
+                       atom files: EUA and HSPA are hand-written; the other
+                       109 are written from their page sections and notes
+                       partials and marked generated: true
   shared/
-    concepts/        integration-practices.md
-    decisions/       role-model-two-axes.md, vocabulary-in-one-file.md
-    glossary/        abha.md, gateway.md, x-cm-id.md ...
-    fhir/            map-opconsultation.md, map-prescription.md, map-diagnosticreport.md ...
-    sandbox/         first-fifteen-minutes.md, going-live.md, wasa.md
-  openapi/
-    CONVENTIONS.md          (the rules every spec file follows)
-    hiecm/v3/hiecm-gateway.yaml   (session token, used by every module)
-    hiecm/v3/hiecm-m1.yaml        (one self-contained file per module; callbacks
-    hiecm/v3/hiecm-m2.yaml         live inside the module file that owns them, as
-    hiecm/v3/hiecm-m3.yaml         OpenAPI 3.1 webhooks, so one file is the whole
-    hiecm/v3/hiecm-m4.yaml         contract for that module)
-    hiecm/v3/hiecm-p1.yaml        (the PHR modules P1 to P4, with subscriptions
-    hiecm/v3/hiecm-p2.yaml         in P3, then the three use cases. Twelve files
-    hiecm/v3/hiecm-p3.yaml         in all: eleven generated by
-    hiecm/v3/hiecm-p4.yaml         scripts/ingest-nha.mjs from NHA's sets of 16,
-    hiecm/v3/hiecm-scan-and-register.yaml   22 and 24 September 2026, and Record
-    hiecm/v3/hiecm-record-share.yaml        Share from NHA's document of 21
-    hiecm/v3/hiecm-scan-and-pay.yaml        September. Endpoint, callback and
-                                            error atoms sit in notes partials on
-                                            the generated pages)
-    hiecm/v3/journeys/<module>.yaml     (the call order each module's reference
-                                         and compiled skill follow)
-    nhcx/v1/                (fourteen specifications, ported from the NHCX
-                             package's collection)
-    uhi/v1/uhi-network.yaml        (three specifications, generated by
-    uhi/v1/uhi-consultation.yaml    scripts/ingest-uhi.mjs from NHA's UHI set of
-    uhi/v1/uhi-ambulance.yaml       28 September 2026)
-    uhi/v1/journeys/<module>.yaml   (twelve journeys, one per service flow)
-    .raw/                   (upstream NHA files, stored untouched)
-    corrections/            (recorded patches, never silent fixes)
+    vocabulary.yaml
+    concepts/ decisions/ glossary/ fhir/ sandbox/
+                       atoms that belong to no single gateway. A glossary term
+                       stays here only when it means the same thing on every
+                       gateway; a term one gateway owns sits in that gateway's
+                       glossary/, as the site's glossary partials already split them
+  openapi/             what has not moved into a gateway folder yet: NHCX's
+                       fourteen specifications in nhcx/v1/, ported from the NHCX
+                       package's collection, with NHCX's corrections/ and .raw/
+                       sets; CONVENTIONS.md (the rules every specification
+                       follows) and extensions.md; the pinned NRCeS FHIR package
+                       in nrces/ and .raw/. NHCX moves into nhcx/ when NHCX is
+                       restructured
+  titles.yaml          NHCX reference page title overrides, until the same move
+  annexure/            the sources atoms cite, not atoms
+  changelog/           What's New facts and entries
+  registry.json        every atom and where its words live (built)
+  atom-routes.json     every atom's page route (built)
 ```
 
 <a id="p3-3-frontmatter"></a>
@@ -169,7 +182,7 @@ skills:                                  # which compiled skills consume this at
 
 Three optional fields exist beside the mandatory ones, each read by a script and each checked for shape by lint only when present. `audience: contributor` keeps an atom out of the MCP snapshot, for a note about how this catalogue is built rather than about how ABDM works; absent means integrator. `order`, a whole number from 1, places an atom within its compiled design section, where the default is to sort by id and design rules usually build on each other instead. `router`, a non-empty string, is the one line a compiled skill's always-loaded router carries for that atom, where its design section is loaded on demand.
 
-Atom contract v2 adds five more, checked by lint and read by the indexer. `operation`, the operationId an endpoint or callback atom documents, is required on those types and must resolve in `catalogue/openapi/<gateway>/`; NHCX atoms may leave it out until the NHCX source is decided. `side` (provider, payer, hip, hiu, both) is a search filter that means something for NHCX, where `milestone` is `n/a`. `status` (current, the default, deprecated or draft) retires an atom without deleting its id: search hides a deprecated atom unless asked, and `superseded_by` names what replaced it. `facts`, a list of `{key, value, source}`, holds values to quote exactly, such as `http_status: 202`, each citing its index into `sources`.
+Atom contract v2 adds five more, checked by lint and read by the indexer. `operation`, the operationId an endpoint or callback atom documents, is required on those types and must resolve in `catalogue/<gateway>/openapi/`; NHCX atoms may leave it out until the NHCX source is decided. `side` (provider, payer, hip, hiu, both) is a search filter that means something for NHCX, where `milestone` is `n/a`. `status` (current, the default, deprecated or draft) retires an atom without deleting its id: search hides a deprecated atom unless asked, and `superseded_by` names what replaced it. `facts`, a list of `{key, value, source}`, holds values to quote exactly, such as `http_status: 202`, each citing its index into `sources`.
 
 The `related` map is what turns the Catalogue into a graph. The index skill is generated by walking it.
 
@@ -263,16 +276,9 @@ stateDiagram-v2
     published --> corrected : source changes, or an issue names the atom
     corrected --> published : atom edited, lint and review pass again
     note right of published : no status is rendered on any reader surface
-    note right of corrected : sandbox evidence stays in catalogue/verification/
 ```
 
-Sandbox checks run through `npm run verify:atoms`, which writes scrubbed
-evidence under `catalogue/verification/` and edits no atom. A record is named
-after the operation it called, `<operationId>.<date>.<n>.json`, never after an
-atom, because atom files are deleted as they move onto pages. It says what
-happened: `outcome: succeeded` for a 2xx, `failed` for anything else, and only
-a success is evidence that a call works. A record that matches no operation in
-the specifications sits in `verification/retired/`. A wrong atom is fixed
+A wrong atom is fixed
 through a GitHub issue keyed by its id, then recompiled; a migrated atom is
 fixed on its page.
 
@@ -296,7 +302,7 @@ Five tabs:
 4. **What's New.** The changelog, generated from the catalogue by the update pipeline (§5): a facts snapshot of every operation contract, source hash, role, error list, skill and MCP tool is diffed against the working tree, each difference is mapped to one of the six entry kinds, and the entries are rendered from fixed templates. Wording, layout and navigation are never read, so they can never produce an entry.
 5. **Support.** Contact channels and links to connectors.
 
-The tab and sidebar tree is the specification the navigation generator (§3.6) targets. The API References sidebar is generated by `scripts/build-api-reference.mjs` from the specifications, ordered by the journey files under `catalogue/openapi/hiecm/v3/journeys/`, never hand-edited. Full detail lives in the `docs-ux` skill.
+The tab and sidebar tree is the specification the navigation generator (§3.6) targets. The API References sidebar is generated by `scripts/build-api-reference.mjs` from the specifications, ordered by the journey files under `catalogue/hiecm/openapi/v3/journeys/`, never hand-edited. Full detail lives in the `docs-ux` skill.
 
 ---
 
@@ -527,26 +533,26 @@ sequenceDiagram
 <a id="p7-coverage"></a>
 ## 7. Gateway coverage and phasing in V1 (honest scope)
 
-Scope is phased, and phase is not the only axis. Two claims run through this section and must never be read as one. **Exists** means a file is in the repository and a page renders from it. **Verified** means somebody made the call against the sandbox and recorded the response in an atom. A specification existing is not evidence that any operation in it works.
+Scope is phased. What this section counts is what exists: a file in the repository and a page that renders from it.
 
-What exists today, counted from the repository rather than from intent: `catalogue/openapi/hiecm/v3/` holds twelve OpenAPI specifications carrying 337 operations between them, 34 of them webhooks: the gateway plus M1, M2, M3, M4, P1, P2, P3, P4, and the use cases Scan and Register, Record Share and Scan and Pay. Subscriptions have no specification of their own: the ingest places those calls in P3 and the locker calls in P4. `catalogue/openapi/uhi/v1/` holds three, network, Physical Consultation and Ambulance Booking, carrying 5, 18 and 2 operations, generated by `scripts/ingest-uhi.mjs` from NHA's UHI set of 28 September 2026 and ordered by twelve journeys. `catalogue/openapi/nhcx/v1/` holds fourteen, carrying 79 operations, 19 of them webhooks. The site renders 459 HIE-CM pages, 405 of them under `api/` and 392 of those generated from the specifications, alongside 58 generated UHI reference pages, UHI's orientation pages, and NHCX's pages.
+What exists today, counted from the repository rather than from intent: `catalogue/hiecm/openapi/v3/` holds twelve OpenAPI specifications carrying 337 operations between them, 34 of them webhooks: the gateway plus M1, M2, M3, M4, P1, P2, P3, P4, and the use cases Scan and Register, Record Share and Scan and Pay. Subscriptions have no specification of their own: the ingest places those calls in P3 and the locker calls in P4. `catalogue/uhi/openapi/v1/` holds three, network, Physical Consultation and Ambulance Booking, carrying 5, 18 and 2 operations, generated by `scripts/ingest-uhi.mjs` from NHA's UHI set of 28 September 2026 and ordered by twelve journeys. `catalogue/openapi/nhcx/v1/` holds fourteen, carrying 79 operations, 19 of them webhooks. The site renders 459 HIE-CM pages, 405 of them under `api/` and 392 of those generated from the specifications, alongside 58 generated UHI reference pages, UHI's orientation pages, and NHCX's pages.
 
-What the Catalogue holds today, which is a smaller and different claim: `npm run lint:atoms` prints the count and the split by type, and that command is the only figure worth quoting, because this one moves with every merge. Two things about its shape matter more than the number. HIE-CM atoms document the operations as well as the journey: 20 design rules in `catalogue/hiecm/concepts/` say what an integration has to do around the calls, per milestone, and 227 page-sourced atoms carry the concepts, flows, troubleshooting, endpoints, callbacks and error codes, the last three in notes partials on the generated API pages. They are the atoms the 16 September 2026 reset deleted, rebuilt on 29 September 2026 against the final set; 29 were not rebuilt because that set has no such call or code. UHI atoms are all page-sourced too: 109 of them, 25 in notes partials on the generated API pages and the rest on UHI's concept, service, getting-started, test case and glossary pages. And no atom carries a status: sandbox evidence sits under `catalogue/verification/` where no reader sees it. Nothing in the paragraph above is counted unless it is counted in this one.
+What the Catalogue holds today, which is a smaller and different claim: `npm run lint:atoms` prints the count and the split by type, and that command is the only figure worth quoting, because this one moves with every merge. Two things about its shape matter more than the number. HIE-CM atoms document the operations as well as the journey: 20 design rules in `catalogue/hiecm/concepts/` say what an integration has to do around the calls, per milestone, 22 glossary terms in `catalogue/hiecm/glossary/` define what HIE-CM owns, and 227 page-sourced atoms carry the concepts, flows, troubleshooting, endpoints, callbacks and error codes, the last three in notes partials on the generated API pages. They are the atoms the 16 September 2026 reset deleted, rebuilt on 29 September 2026 against the final set; 29 were not rebuilt because that set has no such call or code. UHI atoms are page-sourced too: 109 of them, 25 in notes partials on the generated API pages and the rest on UHI's concept, service, getting-started, test case and glossary pages, beside the two hand-written terms, EUA and HSPA. And no atom carries a status. Nothing in the paragraph above is counted unless it is counted in this one.
 
-**NHCX, pages today and atoms open.** NHCX has site pages and no atoms, and the gap is a schedule rather than a rule. Pages: `site/docs/nhcx/` renders 5 pages covering what NHCX is, who is on it, its registries and its glossary. `catalogue/nhcx/` exists with the same folder structure the other gateways use and holds no atom, `catalogue/openapi/nhcx/v1/` holds fourteen NHCX specifications, and `CONTRIBUTING.md` documents the NHCX provider and payer roles. Atoms: there are none, because the ten days of Phase 1 went to HIE-CM M1 to M3. Nothing rejects one. `scripts/lint-atoms.mjs` accepts `gateway: nhcx` alongside `hiecm`, `uhi` and `shared`, so a contributor who writes an NHCX atom gets a clean lint and, once it carries a skill tag, a compiled skill. Read that in both directions: do read and write NHCX site pages, and do write NHCX atoms when someone has the time to write and prove them.
+**NHCX, pages and hand-written atoms.** NHCX has site pages under `site/docs/nhcx/` and atoms under `catalogue/nhcx/`: hand-written files, most citing NHA's NHCX site of 14 September 2026, which have not moved onto pages; `npm run lint:atoms` counts them. `catalogue/openapi/nhcx/v1/` holds fourteen NHCX specifications, and `CONTRIBUTING.md` documents the NHCX provider and payer roles. They move onto pages class by class, as HIE-CM did (§3.2), once the NHCX source is decided (§10). Until then an NHCX atom is edited in its file.
 
-Out of Phase 1 does not mean an empty page. UHI and NHCX have orientation pages built from NHA's own documents, saying what the gateway is, whether the reader needs it, and where NHA documents it. Every HIE-CM module, UHI's three modules and NHCX go further, because each has a specification file, so its reference pages are generated and every operation appears, and M1 to M4, P1 to P3 and UHI carry atoms on those pages. What NHCX, P4 and the three use cases lack is an atom, which is where the plain-words explanation and the agent rules live; no atom on any gateway yet carries a recorded sandbox response. A reader who lands on any of them leaves knowing where to go and knowing that nothing there has been proven. Depth and phase are stated on the landing page, in the index skill, and in frontmatter.
+Out of Phase 1 does not mean an empty page. UHI and NHCX have orientation pages built from NHA's own documents, saying what the gateway is, whether the reader needs it, and where NHA documents it. Every HIE-CM module, UHI's three modules and NHCX go further, because each has a specification file, so its reference pages are generated and every operation appears, and M1 to M4, P1 to P3 and UHI carry atoms on those pages. What NHCX, P4 and the three use cases lack is an atom on a page, which is where the plain-words explanation and the agent rules live. A reader who lands on any of them leaves knowing where to go. Depth and phase are stated on the landing page, in the index skill, and in frontmatter.
 
 | Gateway and module | Atoms and skills | What exists in the repository today | What "done" means |
 |---|---|---|---|
-| HIE-CM (ABDM V3) M1, M2, M3 | **Atoms rebuilt 29 September 2026** | `hiecm-m1.yaml`, `hiecm-m2.yaml` and `hiecm-m3.yaml`, 121, 20 and 12 operations, 14 of the M2 and M3 ones webhooks. 123, 21 and 13 generated pages, ordered by `journeys/m1.yaml` to `m3.yaml`. 74, 57 and 20 atoms: the 20 design rules and 131 page sections and notes partials. `abdm-m1`, `abdm-m2` and `abdm-m3` compile from the journeys and the specifications. | All five dummy-proof sections on every atom. Every endpoint curl run against sandbox. Every NHA functional test case is an atom. All nine skills compile and pass validation. First-day developer test passes for M1 (§9). |
-| HIE-CM M4 (HPR, HFR, bridge linkage) | **Atoms rebuilt 29 September 2026** | `hiecm-m4.yaml`, 87 operations. 87 generated pages under `api/m4/`. 11 atoms, 7 of them operation notes. `abdm-m4` compiles from its journeys and specification. | Atoms carry the registration order, the identifier formats, the recorded errors and NHA's test cases. One page maps every other M4 call NHA describes inside a screenshot, marked a map rather than a build guide. No M4 call has been made against the sandbox, so no M4 response is recorded. |
-| HIE-CM PHR modules P1, P2, P3, P4 | **Atoms rebuilt 29 September 2026 for P1 to P3** | `hiecm-p1.yaml`, `hiecm-p2.yaml`, `hiecm-p3.yaml` and `hiecm-p4.yaml`, 11, 35, 14 and 5 operations, 7 of them webhooks. 110 generated endpoint and errors pages. 29, 18 and 36 atoms for P1, P2 and P3, and none tagged P4. `abdm-p1` to `abdm-p4` compile from their journeys and specifications. | Atoms carry the patient-side flows, the wording NHA specifies for each outcome, and the AS error codes NHA records once for the whole patient side. No operation in them has been called against the sandbox. |
-| HIE-CM use cases: Scan and Register, Record Share, Scan and Pay | No atoms, phase not yet decided | `hiecm-scan-and-register.yaml`, `hiecm-record-share.yaml` and `hiecm-scan-and-pay.yaml`, 2, 8 and 18 operations, 13 of them webhooks. 34 generated endpoint and errors pages. Zero atoms. `abdm-scan-and-register`, `abdm-record-share` and `abdm-scan-and-pay` compile from their specifications, not from atoms. | The specification and its generated reference pages exist, and no call in them has been run. Nothing here is required to certify. |
-| UHI | Atoms now, skill Phase 2 | `uhi-network.yaml`, `uhi-consultation.yaml` and `uhi-ambulance.yaml`, 5, 18 and 2 operations, generated by `scripts/ingest-uhi.mjs` from NHA's UHI set of 28 September 2026 and ordered by twelve journeys under `journeys/`. 58 generated reference pages alongside the orientation pages under `site/docs/uhi/`. 109 atoms, all page sections, mapped in `catalogue/map.d/uhi-*.yaml`: 25 endpoints and callbacks in notes partials, one per operation, and 84 concepts, flows, decisions, tests, sandbox, troubleshooting and glossary atoms on the concept, service, getting-started, test case and glossary pages. No UHI error atom, because no UHI error code list is published. No UHI skill compiles. | The specifications and journeys exist and render, and no call in them has been run. Pages say what UHI is, which of the two roles to build, and that M2 on HIE-CM is the gate before any UHI onboarding. Every operation and every service journey has an atom. A UHI skill remains Phase 2. |
-| NHCX | Phase 2, no atoms yet, open to them | 5 pages under `site/docs/nhcx/`. `catalogue/nhcx/` is folder structure holding no atom. `catalogue/openapi/nhcx/v1/` holds fourteen specifications, 79 operations, 19 of them webhooks. | The pages say what NHCX is and who is on it, and its specifications render as reference pages. `gateway: nhcx` lints clean, so NHCX atoms may be written whenever the schedule allows, the same as UHI. |
+| HIE-CM (ABDM V3) M1, M2, M3 | **Atoms rebuilt 29 September 2026** | `hiecm-m1.yaml`, `hiecm-m2.yaml` and `hiecm-m3.yaml`, 121, 20 and 12 operations, 14 of the M2 and M3 ones webhooks. 123, 21 and 13 generated pages, ordered by `journeys/m1.yaml` to `m3.yaml`. 74, 57 and 20 atoms: the 20 design rules and 131 page sections and notes partials. `abdm-m1`, `abdm-m2` and `abdm-m3` compile from the journeys and the specifications. | All five dummy-proof sections on every atom. Every NHA functional test case is an atom. All nine skills compile and pass validation. First-day developer test passes for M1 (§9). |
+| HIE-CM M4 (HPR, HFR, bridge linkage) | **Atoms rebuilt 29 September 2026** | `hiecm-m4.yaml`, 87 operations. 87 generated pages under `api/m4/`. 11 atoms, 7 of them operation notes. `abdm-m4` compiles from its journeys and specification. | Atoms carry the registration order, the identifier formats, the recorded errors and NHA's test cases. One page maps every other M4 call NHA describes inside a screenshot, marked a map rather than a build guide. |
+| HIE-CM PHR modules P1, P2, P3, P4 | **Atoms rebuilt 29 September 2026 for P1 to P3** | `hiecm-p1.yaml`, `hiecm-p2.yaml`, `hiecm-p3.yaml` and `hiecm-p4.yaml`, 11, 35, 14 and 5 operations, 7 of them webhooks. 110 generated endpoint and errors pages. 29, 18 and 36 atoms for P1, P2 and P3, and none tagged P4. `abdm-p1` to `abdm-p4` compile from their journeys and specifications. | Atoms carry the patient-side flows, the wording NHA specifies for each outcome, and the AS error codes NHA records once for the whole patient side. |
+| HIE-CM use cases: Scan and Register, Record Share, Scan and Pay | No atoms, phase not yet decided | `hiecm-scan-and-register.yaml`, `hiecm-record-share.yaml` and `hiecm-scan-and-pay.yaml`, 2, 8 and 18 operations, 13 of them webhooks. 34 generated endpoint and errors pages. Zero atoms. `abdm-scan-and-register`, `abdm-record-share` and `abdm-scan-and-pay` compile from their specifications, not from atoms. | The specification and its generated reference pages exist. Nothing here is required to certify. |
+| UHI | Atoms now, skill Phase 2 | `uhi-network.yaml`, `uhi-consultation.yaml` and `uhi-ambulance.yaml`, 5, 18 and 2 operations, generated by `scripts/ingest-uhi.mjs` from NHA's UHI set of 28 September 2026 and ordered by twelve journeys under `journeys/`. 58 generated reference pages alongside the orientation pages under `site/docs/uhi/`. `catalogue/uhi/` holds the specifications and 111 atoms: EUA and HSPA written by hand, and 109 page sections mapped in `catalogue/uhi/map/`, 25 of them endpoints and callbacks in notes partials, one per operation, and 84 concepts, flows, decisions, tests, sandbox, troubleshooting and glossary atoms on the UHI pages. No UHI error atom, because no UHI error code list is published. No UHI skill compiles. | The specifications and journeys exist and render. Pages say what UHI is, which of the two roles to build, and that M2 on HIE-CM is the gate before any UHI onboarding. Every operation and every service journey has an atom. A UHI skill remains Phase 2. |
+| NHCX | Phase 2 for skills; atoms hand-written, not yet on pages | Pages under `site/docs/nhcx/`. Hand-written atoms under `catalogue/nhcx/`, counted by `npm run lint:atoms`. `catalogue/openapi/nhcx/v1/` holds fourteen specifications, 79 operations, 19 of them webhooks. | The pages say what NHCX is and who is on it, and its specifications render as reference pages. The atoms move onto pages once the NHCX source is decided. |
 
-Three gateways in ten days could never all be dummy proof. Generated reference pages are cheap, because they fall out of a specification file, which is why every HIE-CM module renders. Atoms are expensive, because each one is written and then proven. The HIE-CM writing came down with the 16 September reset and was rebuilt on 29 September against the final set, while the proving never moved past M1: none of the 247 HIE-CM atoms carries a recorded sandbox response. One gateway written out beats three gateways half-written, and a written atom is still not a proven one. A confident wrong page is harmful; a generated page that states only what the specification carries is honest, and the index says so out loud.
+Three gateways in ten days could never all be dummy proof. Generated reference pages are cheap, because they fall out of a specification file, which is why every HIE-CM module renders. Atoms are expensive, because each one is written by hand. The HIE-CM writing came down with the 16 September reset and was rebuilt on 29 September against the final set. One gateway written out beats three gateways half-written. A confident wrong page is harmful; a generated page that states only what the specification carries is honest.
 
 ---
 
@@ -592,7 +598,7 @@ gantt
 
 | Stream | Product (functional, strategic) | Shyamjith (technical) |
 |---|---|---|
-| Catalogue | Atom schema decisions, writing guide, every atom body's sections, review every PR for dummy-proofness, glossary | OpenAPI ingestion and cleanup, callbacks as webhooks per module file, endpoint atom stubs, sandbox runs, evidence under `catalogue/verification/` |
+| Catalogue | Atom schema decisions, writing guide, every atom body's sections, review every PR for dummy-proofness, glossary | OpenAPI ingestion and cleanup, callbacks as webhooks per module file, endpoint atom stubs |
 | Site and MCP | Information architecture mirroring developer.eka.care flows, theme, landing page copy, depth labels | Docusaurus and Scalar setup, spec conventions, the docs-mcp server and indexer, domains, deploys |
 | Skills | Skill templates' prose, index decision tree, trigger descriptions, what each skill must refuse to guess | Compiler, validator, plugin manifest, per-agent adapters (Claude Code first, Cursor and Copilot by manifest) |
 | Pipeline | Source inventory (which NHA URLs, which repos, who owns the manual drop folder), review rota | Watcher, PR bot, CI, publishers |
@@ -617,16 +623,15 @@ gantt
 Every item is checkable. None is a judgement call.
 
 1. Catalogue lint passes on main: schema valid, the sections each type requires present on every hand-written atom and `In plain words` on every generated one, every endpoint and callback `operation` resolving (NHCX excepted until its source is decided), no em dash, all `related` ids resolve and none names its own atom, all sources have hashes, and `npm run check:sections` finds no missing heading id, no atom in two places and no stale generated file.
-2. Every HIE-CM M1 to M3 endpoint atom has a curl that was run against sandbox on or after 28 August and the response recorded in the atom.
-3. Every NHA functional test case for M1 to M3 exists as a test atom and is referenced by a `-test` skill.
-4. All skills compile, validate, and install individually with the skills CLI into Claude Code; the plugin installs as one unit.
-5. `abdm-index` is generated from the graph and lists every skill, agent and tool.
-6. Docs site live (GitHub Pages first, custom domain when ready) with search and the module references; docs-mcp deployed with its six tools answering over the current snapshot, `/healthz` reporting the catalogue version.
-7. The watcher has opened at least one real PR from a real NHA source change (or a staged one if NHA is quiet that week).
-8. The support agent answered the six eval tasks (§9.1) from the Catalogue, citing atom ids, with the score recorded.
-9. **First-day developer test:** a developer with no ABDM exposure, given only the docs URL and sandbox credentials, reaches a successful M1 ABHA verification sandbox call in under two hours without asking a human. Where they got stuck is filed as Catalogue issues.
-10. The landing page, index entries and skill descriptions state the phase scope as §7 states it, keeping what exists separate from what is merely specified, and naming NHCX as present in site pages and carrying no atoms yet.
-11. Public repo, neutral licence, `CONTRIBUTING.md`, `SECURITY.md`, `GOVERNANCE.md`, and no `eka.care` reference in the core Catalogue.
+2. Every NHA functional test case for M1 to M3 exists as a test atom and is referenced by a `-test` skill.
+3. All skills compile, validate, and install individually with the skills CLI into Claude Code; the plugin installs as one unit.
+4. `abdm-index` is generated from the graph and lists every skill, agent and tool.
+5. Docs site live (GitHub Pages first, custom domain when ready) with search and the module references; docs-mcp deployed with its six tools answering over the current snapshot, `/healthz` reporting the catalogue version.
+6. The watcher has opened at least one real PR from a real NHA source change (or a staged one if NHA is quiet that week).
+7. The support agent answered the six eval tasks (§9.1) from the Catalogue, citing atom ids, with the score recorded.
+8. **First-day developer test:** a developer with no ABDM exposure, given only the docs URL and sandbox credentials, reaches a successful M1 ABHA verification sandbox call in under two hours without asking a human. Where they got stuck is filed as Catalogue issues.
+9. The landing page, index entries and skill descriptions state the phase scope as §7 states it, keeping what exists separate from what is merely specified, and naming NHCX as present in site pages and in hand-written atoms.
+10. Public repo, neutral licence, `CONTRIBUTING.md`, `SECURITY.md`, `GOVERNANCE.md`, and no `eka.care` reference in the core Catalogue.
 
 <a id="p9-1-evals"></a>
 ### 9.1 The six eval tasks
@@ -675,11 +680,10 @@ The gate runs on Ollama's `nomic-embed-text`, not production's Bedrock embedding
 
 | Risk | Mitigation | Decision needed |
 |---|---|---|
-| Sandbox coverage lags authoring badly. 247 HIE-CM atoms are written and none has been run against sandbox, while §7 promises dummy proof and §9 promises recorded responses | Credentials, then a sandbox sweep across M1 to M3 before ship. Evidence lands in `catalogue/verification/`, and a wrong atom is corrected through an issue keyed by its id | The long pole. If credentials slip, ship atoms that state what the specification says and nothing more |
-| NHA swagger YAMLs are inconsistent or incomplete (known 403s on some V3 endpoints in sandbox) | Ingest, then hand-correct with `sources` recording both the NHA file and our correction; record the correction and leave the atom stating what the specification carries | Accept that some endpoints ship without a recorded sandbox response in V1 |
-| Docusaurus guides and Scalar references are two rendering systems on one site | Keep prose in plain markdown, avoid MDX beyond callouts and steps, so it ports anywhere; specs stay the single source under `catalogue/openapi/` | Decided: fully self-hosted from day one, no hosted-Scalar phase |
+| NHA swagger YAMLs are inconsistent or incomplete (known 403s on some V3 endpoints in sandbox) | Ingest, then hand-correct with `sources` recording both the NHA file and our correction; record the correction and leave the atom stating what the specification carries | Decided: the atom states what the specification carries, and the correction is recorded |
+| Docusaurus guides and Scalar references are two rendering systems on one site | Keep prose in plain markdown, avoid MDX beyond callouts and steps, so it ports anywhere; specs stay the single source under each gateway's `openapi/` folder | Decided: fully self-hosted from day one, no hosted-Scalar phase |
 | abdm-docs.pages.dev overlaps heavily | Reach out to OHCN before 26 August; propose the Catalogue as the shared upstream | Product to make the call and the call |
-| Ten days is not enough for three gateways at full depth | Atom depth is HIE-CM and UHI: M1 to M4 and P1 to P3 carry atoms, rebuilt on 29 September 2026 after the 16 September reset deleted them, and UHI's 109 atoms were written the same day. P4, the three use cases Scan and Register, Record Share and Scan and Pay, and NHCX stay at specification or site page depth, with no atoms written against them yet (§7) | Already decided in this document, needs sign-off |
+| Ten days is not enough for three gateways at full depth | Atom depth is HIE-CM and UHI: M1 to M4 and P1 to P3 carry atoms, rebuilt on 29 September 2026 after the 16 September reset deleted them, and UHI's 109 page atoms were written the same day. P4 and the three use cases Scan and Register, Record Share and Scan and Pay stay at specification depth, and NHCX's atoms are hand-written and not yet on pages (§7) | Already decided in this document, needs sign-off |
 | LLM prose pass invents facts | `scripts/validate-skills.mjs` fails the build on any cited atom id the Catalogue does not define and any curl target recorded on no atom. It does not diff every token, so a fabricated sentence carrying no identifier still gets through | Residual, and it is why the compiled skills still need a reader |
 | The Docs MCP is public with no auth in V1 | Read-only server over public docs; rate limiting at the reverse proxy; Ollama sidecar never exposed | Add auth and quotas only when abuse is observed |
 | Ollama sidecar down at query time | Search degrades to keyword-only by design; `/healthz` reports `embeddings: false` | None, the degradation is tested |

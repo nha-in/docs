@@ -4,11 +4,11 @@
 //
 //   POSTMAN_API_KEY=... node scripts/publish-postman.mjs
 //
-// The workspace is catalogue/postman.json's `workspace`. A collection already
+// The workspace is catalogue/hiecm/postman.json's `workspace`. A collection already
 // in the workspace under the same name is replaced; one that is not is
 // created. Matching by name means a rerun never duplicates a collection, even
 // before its id is committed. The ids this prints go into
-// catalogue/postman.json, which is what turns on "Run in Postman".
+// catalogue/hiecm/postman.json, which is what turns on "Run in Postman".
 //
 // Without POSTMAN_API_KEY it says so and exits 0, so a fork or a self-hosted
 // copy runs the same workflow and publishes nothing.
@@ -21,8 +21,8 @@ if (!key) {
   console.log('POSTMAN_API_KEY is not set: nothing published.');
   process.exit(0);
 }
-const {workspace} = JSON.parse(readFileSync(join(root, 'catalogue', 'postman.json'), 'utf8'));
-if (!workspace) throw new Error('catalogue/postman.json has no workspace id to publish to');
+const {workspace} = JSON.parse(readFileSync(join(root, 'catalogue', 'hiecm', 'postman.json'), 'utf8'));
+if (!workspace) throw new Error('catalogue/hiecm/postman.json has no workspace id to publish to');
 
 const manifest = JSON.parse(readFileSync(join(root, 'site', 'src', 'data', 'postman.json'), 'utf8'));
 const read = (file) => JSON.parse(readFileSync(join(root, 'site', 'static', 'postman', file), 'utf8'));
@@ -65,10 +65,10 @@ const environment = read(manifest.environment);
 await publish('environment', environments, environment.name, environment);
 
 const record = JSON.stringify({workspace, collections: ids}, null, 2);
-console.log(`\ncatalogue/postman.json, to turn on Run in Postman:\n${record}`);
+console.log(`\ncatalogue/hiecm/postman.json, to turn on Run in Postman:\n${record}`);
 if (process.env.GITHUB_STEP_SUMMARY) {
   appendFileSync(
     process.env.GITHUB_STEP_SUMMARY,
-    `### Postman collections published\n\nCommit this as \`catalogue/postman.json\` if it differs:\n\n\`\`\`json\n${record}\n\`\`\`\n`,
+    `### Postman collections published\n\nCommit this as \`catalogue/hiecm/postman.json\` if it differs:\n\n\`\`\`json\n${record}\n\`\`\`\n`,
   );
 }

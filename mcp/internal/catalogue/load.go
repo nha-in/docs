@@ -40,8 +40,9 @@ func LoadAtoms(catDir string) ([]Atom, error) {
 		}
 		relSlash := filepath.ToSlash(rel)
 		switch {
-		case strings.HasSuffix(path, ".md") && (relSlash == "openapi" || strings.HasPrefix(relSlash, "openapi/")):
-			// Spec-area documentation (e.g. openapi/CONVENTIONS.md) is not an atom
+		case strings.HasSuffix(path, ".md") && (strings.HasPrefix(relSlash, "openapi/") || strings.Contains(relSlash, "/openapi/")):
+			// Spec-area documentation (openapi/CONVENTIONS.md, a gateway's
+			// openapi/corrections/*.md) is not an atom
 			// and is not hashed; skip it silently.
 			return nil
 		case strings.HasSuffix(path, string(os.PathSeparator)+"README.md") || relSlash == "README.md":

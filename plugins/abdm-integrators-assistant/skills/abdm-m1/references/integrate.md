@@ -9,7 +9,7 @@ The calls themselves: where they live, what they need in their headers, and one 
 - `https://apis.abdm.gov.in` ABDM gateway, production
 ## Endpoints
 
-125 operations, grouped by the journey they belong to.
+124 operations, grouped by the journey they belong to.
 
 ### Other operations
 
@@ -84,7 +84,6 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `GET` | `/abha/api/v3/profile/account` | Get ABHA profile |
 | `PATCH` | `/abha/api/v3/profile/account` | Update Child ABHA profile |
 | `PATCH` | `/abha/api/v3/profile/account` | Update Child ABHA profile |
-| `PATCH` | `/abha/api/v3/profile/account` | Update profile photo |
 | `GET` | `/abha/api/v3/profile/account/abha-card` | Retrieve ABHA card image |
 | `POST` | `/abha/api/v3/profile/account/abha/search` | Search ABHA by mobile |
 | `POST` | `/abha/api/v3/profile/account/abha/search` | Search ABHA by mobile |

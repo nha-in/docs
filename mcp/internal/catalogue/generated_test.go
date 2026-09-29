@@ -1,7 +1,6 @@
 package catalogue
 
 import (
-	"path/filepath"
 	"strings"
 	"testing"
 )
@@ -15,7 +14,7 @@ func TestGeneratedAtomsParseAndChunkCleanly(t *testing.T) {
 	}
 	found := 0
 	for _, a := range atoms {
-		if !strings.Contains("/"+filepath.ToSlash(a.SourcePath), "/generated/") {
+		if !a.Generated {
 			continue
 		}
 		found++
@@ -29,6 +28,6 @@ func TestGeneratedAtomsParseAndChunkCleanly(t *testing.T) {
 		}
 	}
 	if found == 0 {
-		t.Skip("no generated atoms yet")
+		t.Fatal("no atom carries generated: true; the page-written atoms did not load")
 	}
 }

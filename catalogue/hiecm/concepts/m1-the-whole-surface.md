@@ -11,7 +11,7 @@ summary: >
   that accounts for them from the start avoids meeting each one later as a
   change request.
 sources:
-  - file: catalogue/openapi/hiecm/v3/hiecm-m1.yaml
+  - file: catalogue/hiecm/openapi/v3/hiecm-m1.yaml
     status: read-from-spec-2026-09-20
     note: >
       The operations behind each placement below are in the M1 specification:

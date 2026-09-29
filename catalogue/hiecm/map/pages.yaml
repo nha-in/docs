@@ -1,0 +1,948 @@
+hiecm.concept.abha-address-policy:
+  type: concept
+  gateway: hiecm
+  milestone: M1
+  title: What an ABHA address is allowed to be
+  summary: The characters and shapes an ABHA address may take, and the default address
+    every ABHA number is issued.
+  page: site/docs/hiecm/v3/registries/abha.mdx
+  heading: abha-address-policy
+  url: /docs/hiecm/v3/registries/abha#abha-address-policy
+  related:
+    concepts:
+    - hiecm.concept.abha-number-and-address
+    endpoints:
+    - hiecm.endpoint.p1-enrollment-address-suggestion
+    - hiecm.endpoint.p1-enrollment-address-exists
+    glossary:
+    - shared.glossary.abha-address
+    - shared.glossary.abha-number
+    flows:
+    - hiecm.flow.p1-create-abha-address
+hiecm.concept.abha-number-and-address:
+  type: concept
+  gateway: hiecm
+  milestone: M1
+  title: ABHA number and ABHA address, and why there are two
+  summary: Two identifiers, the ABHA number for who the person is and the ABHA address
+    for where their records are routed.
+  page: site/docs/hiecm/v3/registries/abha.mdx
+  heading: abha-number-and-address
+  url: /docs/hiecm/v3/registries/abha#abha-number-and-address
+  related:
+    glossary:
+    - shared.glossary.abha-number
+    - shared.glossary.abha-address
+hiecm.concept.asynchronous-callbacks:
+  type: concept
+  gateway: hiecm
+  milestone: M2
+  title: Asynchronous calls and callbacks, why a 200 means very little
+  summary: Most HIE-CM calls answer 202 at once and deliver the real answer later
+    as a callback to your registered URL, matched by request id.
+  page: site/docs/hiecm/v3/concepts/gateway.mdx
+  heading: asynchronous-callbacks
+  url: /docs/hiecm/v3/concepts/gateway#asynchronous-callbacks
+  related:
+    glossary:
+    - shared.glossary.request-id
+    decisions:
+    - hiecm.decision.callbacks-as-webhooks
+hiecm.concept.callback-authenticity:
+  type: concept
+  gateway: hiecm
+  milestone: M2
+  title: Proving a callback really came from ABDM
+  summary: Anything can post to your callback URL, so require the bearer token and
+    a request id you sent before your handler acts.
+  page: site/docs/hiecm/v3/concepts/callback-authenticity.mdx
+  heading: callback-authenticity
+  url: /docs/hiecm/v3/concepts/callback-authenticity#callback-authenticity
+  related:
+    concepts:
+    - hiecm.concept.asynchronous-callbacks
+    - hiecm.concept.gateway-session
+    - hiecm.concept.consent-artefact
+    troubleshooting:
+    - hiecm.troubleshooting.callback-never-arrives
+hiecm.concept.care-context:
+  type: concept
+  gateway: hiecm
+  milestone: M2
+  title: Care contexts, how records are grouped so they can be found
+  summary: A care context is the unit a provider links to a patient's ABHA address,
+    carrying a reference number and a display name and nothing clinical.
+  page: site/docs/hiecm/v3/concepts/care-context.mdx
+  heading: care-context
+  url: /docs/hiecm/v3/concepts/care-context#care-context
+  related:
+    concepts:
+    - hiecm.concept.roles
+hiecm.concept.consent-artefact:
+  type: concept
+  gateway: hiecm
+  milestone: M3
+  title: Consent, what it authorises and how it ends
+  summary: Reading somebody else's records needs a consent artefact naming who, what
+    and for how long, and the patient can end it at any time.
+  page: site/docs/hiecm/v3/concepts/consent.mdx
+  heading: consent-artefact
+  url: /docs/hiecm/v3/concepts/consent#consent-artefact
+  related:
+    glossary:
+    - hiecm.glossary.hiu
+    concepts:
+    - hiecm.concept.roles
+hiecm.concept.consent-in-a-phr-app:
+  type: concept
+  gateway: hiecm
+  milestone: P3
+  title: The five things a personal health record application must let a person do
+    with consent
+  summary: A personal health record app must let a person see a consent request, change
+    it, allow or refuse it, see what is allowed, and take it back.
+  page: site/docs/hiecm/v3/concepts/consent.mdx
+  heading: consent-in-a-phr-app
+  url: /docs/hiecm/v3/concepts/consent#consent-in-a-phr-app
+  related:
+    concepts:
+    - hiecm.concept.consent-artefact
+    - hiecm.concept.phr-subscriptions
+    - hiecm.concept.care-context
+    flows:
+    - hiecm.flow.p3-fetch-records
+    endpoints:
+    - hiecm.endpoint.p3-deny-consent-request
+    - hiecm.endpoint.p3-revoke-consent-request
+    glossary:
+    - shared.glossary.phr
+    - hiecm.glossary.hiu
+hiecm.concept.encrypted-identifiers:
+  type: concept
+  gateway: hiecm
+  milestone: M1
+  title: Why identifiers are encrypted, and where to do it
+  summary: Identifiers are encrypted with the published certificate, using the algorithm
+    its response names, after being put in the shape the service validates.
+  page: site/docs/hiecm/v3/concepts/encryption.mdx
+  heading: encrypted-identifiers
+  url: /docs/hiecm/v3/concepts/encryption#encrypted-identifiers
+  related:
+    decisions:
+    - hiecm.decision.encrypt-locally
+    concepts:
+    - hiecm.concept.input-encryption
+    endpoints:
+    - hiecm.endpoint.m1-login-request-otp
+    - hiecm.endpoint.m1-get-public-certificate
+    tests:
+    - hiecm.test.m1-encryption-padding
+hiecm.concept.error-codes:
+  type: concept
+  gateway: hiecm
+  milestone: M2
+  title: Reading an ABDM error code
+  summary: Read the ABDM error code in the response body before the HTTP status, and
+    key your handling on it.
+  page: site/docs/hiecm/v3/getting-started/build-it-well.mdx
+  heading: error-codes
+  url: /docs/hiecm/v3/getting-started/build-it-well#error-codes
+  related: {}
+hiecm.concept.gateway-session:
+  type: concept
+  gateway: hiecm
+  milestone: M1
+  title: The gateway session, the first call in every integration
+  summary: Every gateway call carries a short lived bearer token from one session
+    endpoint, which identifies your application, not a person.
+  page: site/docs/hiecm/v3/concepts/gateway.mdx
+  heading: gateway-session
+  url: /docs/hiecm/v3/concepts/gateway#gateway-session
+  related:
+    endpoints:
+    - hiecm.endpoint.gateway-sessions
+    errors:
+    - hiecm.error.abdm-2500
+hiecm.concept.input-encryption:
+  type: concept
+  gateway: hiecm
+  milestone: M1
+  title: Encrypting sensitive inputs, Aadhaar, mobile, OTP and passwords
+  summary: Aadhaar numbers, mobile numbers, OTPs and passwords are encrypted with
+    the published certificate before they go in a request body.
+  page: site/docs/hiecm/v3/concepts/encryption.mdx
+  heading: input-encryption
+  url: /docs/hiecm/v3/concepts/encryption#input-encryption
+  related:
+    flows:
+    - hiecm.flow.m1-create-abha-aadhaar-otp
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.concept.m1-journey-design:
+  type: concept
+  gateway: hiecm
+  milestone: M1
+  title: A suggested ABHA journey, and what holds if you design your own
+  summary: One suggested ABHA journey for a registration desk, and the platform facts
+    that hold for any journey you design instead.
+  page: site/docs/hiecm/v3/concepts/abha-journey.mdx
+  heading: m1-journey-design
+  url: /docs/hiecm/v3/concepts/abha-journey#m1-journey-design
+  related:
+    concepts:
+    - hiecm.concept.abha-number-and-address
+    - hiecm.concept.abha-address-policy
+    - hiecm.concept.encrypted-identifiers
+    flows:
+    - hiecm.flow.m1-create-abha-aadhaar-otp
+    - hiecm.flow.m1-create-abha-face-auth
+    - hiecm.flow.m1-create-child-abha
+    - hiecm.flow.m1-login-by-mobile
+    - hiecm.flow.m1-find-abha
+    endpoints:
+    - hiecm.endpoint.m1-login-verify
+    - hiecm.endpoint.m1-login-select-account
+    errors:
+    - hiecm.error.abdm-1094
+hiecm.concept.phr-subscriptions:
+  type: concept
+  gateway: hiecm
+  milestone: P3
+  title: Subscriptions, and why a personal health record application needs one
+  summary: A subscription tells a personal health record app when a record is linked
+    to a person's address, and the person must agree to it first.
+  page: site/docs/hiecm/v3/milestones/p3.mdx
+  heading: phr-subscriptions
+  url: /docs/hiecm/v3/milestones/p3#phr-subscriptions
+  related:
+    concepts:
+    - hiecm.concept.care-context
+    - hiecm.concept.asynchronous-callbacks
+    - hiecm.concept.consent-artefact
+    flows:
+    - hiecm.flow.p3-subscribe-and-auto-approve
+    endpoints:
+    - hiecm.endpoint.p3-approve-subscription-request
+    - hiecm.endpoint.p3-consent-auto-approve
+    glossary:
+    - shared.glossary.phr
+    - hiecm.glossary.hiu
+hiecm.concept.roles:
+  type: concept
+  gateway: hiecm
+  milestone: M2
+  title: Roles, which entity your software acts for and which way the record moves
+  summary: Your role, IMS or PHR, is fixed by the entity your software acts for, while
+    HIP and HIU change with the direction each record moves.
+  page: site/docs/hiecm/v3/concepts/how-it-fits.mdx
+  heading: roles
+  url: /docs/hiecm/v3/concepts/how-it-fits#roles
+  related:
+    glossary:
+    - hiecm.glossary.hip
+    - hiecm.glossary.hiu
+    - shared.glossary.phr
+    - hiecm.glossary.hrp
+    - shared.glossary.dsc
+    - shared.glossary.hfr
+    - shared.glossary.abha
+    - hiecm.glossary.hmis
+    - hiecm.glossary.lims
+    - hiecm.glossary.emr
+    - hiecm.glossary.pms
+    decisions:
+    - shared.decision.role-model-two-axes
+    concepts:
+    - hiecm.concept.abha-number-and-address
+hiecm.decision.callbacks-as-webhooks:
+  type: decision
+  gateway: hiecm
+  milestone: n/a
+  title: Callbacks are described as OpenAPI webhooks in each module file
+  summary: Each module's OpenAPI file describes the callbacks your system receives
+    under webhooks, beside the calls that cause them.
+  page: site/docs/hiecm/v3/concepts/api-specifications.mdx
+  heading: callbacks-as-webhooks
+  url: /docs/hiecm/v3/concepts/api-specifications#callbacks-as-webhooks
+  related:
+    concepts:
+    - hiecm.concept.asynchronous-callbacks
+hiecm.decision.encrypt-locally:
+  type: decision
+  gateway: hiecm
+  milestone: M1
+  title: Encrypting identifiers locally rather than through a hosted helper
+  summary: Encrypt identifiers inside your own system against the published key, never
+    through a remote helper.
+  page: site/docs/hiecm/v3/concepts/encryption.mdx
+  heading: encrypt-locally
+  url: /docs/hiecm/v3/concepts/encryption#encrypt-locally
+  related:
+    concepts:
+    - hiecm.concept.encrypted-identifiers
+hiecm.decision.spec-per-module:
+  type: decision
+  gateway: hiecm
+  milestone: n/a
+  title: One OpenAPI file per module
+  summary: Each HIE-CM module is published as its own complete OpenAPI file, in YAML
+    and JSON.
+  page: site/docs/hiecm/v3/concepts/api-specifications.mdx
+  heading: spec-per-module
+  url: /docs/hiecm/v3/concepts/api-specifications#spec-per-module
+  related:
+    decisions:
+    - hiecm.decision.callbacks-as-webhooks
+hiecm.flow.m1-create-abha-aadhaar-otp:
+  type: flow
+  gateway: hiecm
+  milestone: M1
+  title: Create an ABHA using an Aadhaar OTP
+  summary: Verify a person against Aadhaar with an OTP, create their ABHA number,
+    then let them choose an address.
+  page: site/docs/hiecm/v3/milestones/m1.mdx
+  heading: m1-create-abha-aadhaar-otp
+  url: /docs/hiecm/v3/milestones/m1#m1-create-abha-aadhaar-otp
+  related:
+    endpoints:
+    - hiecm.endpoint.m1-enrolment-request-otp
+    - hiecm.endpoint.m1-enrolment-by-aadhaar
+    - hiecm.endpoint.m1-enrolment-verify-abdm-otp
+    - hiecm.endpoint.m1-enrolment-address-suggestions
+    - hiecm.endpoint.m1-enrolment-claim-abha-address
+    concepts:
+    - hiecm.concept.abha-number-and-address
+    - hiecm.concept.encrypted-identifiers
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-1170
+hiecm.flow.m1-create-abha-demographic-auth:
+  type: flow
+  gateway: hiecm
+  milestone: M1
+  title: Create an ABHA using Aadhaar demographic authentication
+  summary: Create an ABHA by matching name, date of birth and gender against Aadhaar
+    with no OTP, for approved integrators only.
+  page: site/docs/hiecm/v3/milestones/m1.mdx
+  heading: m1-create-abha-demographic-auth
+  url: /docs/hiecm/v3/milestones/m1#m1-create-abha-demographic-auth
+  related:
+    endpoints:
+    - hiecm.endpoint.m1-enrolment-by-aadhaar
+    - hiecm.endpoint.m1-get-public-certificate
+    - hiecm.endpoint.m1-profile-get-account
+    flows:
+    - hiecm.flow.m1-create-abha-aadhaar-otp
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.flow.m1-create-abha-face-auth:
+  type: flow
+  gateway: hiecm
+  milestone: M1
+  title: Create an ABHA using Aadhaar face authentication
+  summary: Create an ABHA for someone who cannot receive an Aadhaar OTP, using face
+    authentication in the ABHA app.
+  page: site/docs/hiecm/v3/milestones/m1.mdx
+  heading: m1-create-abha-face-auth
+  url: /docs/hiecm/v3/milestones/m1#m1-create-abha-face-auth
+  related:
+    endpoints:
+    - hiecm.endpoint.m1-enrolment-face-auth-init
+    - hiecm.endpoint.m1-enrolment-capture-pid
+    - hiecm.endpoint.m1-enrolment-by-aadhaar
+    - hiecm.endpoint.m1-enrolment-address-suggestions
+    - hiecm.endpoint.m1-enrolment-claim-abha-address
+    flows:
+    - hiecm.flow.m1-create-abha-aadhaar-otp
+hiecm.flow.m1-create-child-abha:
+  type: flow
+  gateway: hiecm
+  milestone: M1
+  title: Create a child ABHA under a parent's account
+  summary: A logged in parent or guardian creates a child ABHA, corrects its details
+    and lists the children on their account, for approved integrators only.
+  page: site/docs/hiecm/v3/milestones/m1.mdx
+  heading: m1-create-child-abha
+  url: /docs/hiecm/v3/milestones/m1#m1-create-child-abha
+  related:
+    endpoints:
+    - hiecm.endpoint.m1-enrolment-by-aadhaar
+    - hiecm.endpoint.m1-enrolment-list-children
+    - hiecm.endpoint.m1-profile-update-account
+    flows:
+    - hiecm.flow.m1-create-abha-aadhaar-otp
+    - hiecm.flow.m1-login-by-mobile
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.flow.m1-find-abha:
+  type: flow
+  gateway: hiecm
+  milestone: M1
+  title: Find somebody's ABHA when they do not know it
+  summary: Search for a forgotten ABHA by mobile number, then confirm with an OTP
+    so the person proves the account is theirs.
+  page: site/docs/hiecm/v3/milestones/m1.mdx
+  heading: m1-find-abha
+  url: /docs/hiecm/v3/milestones/m1#m1-find-abha
+  related:
+    endpoints:
+    - hiecm.endpoint.m1-find-abha-search
+    - hiecm.endpoint.m1-login-request-otp
+    - hiecm.endpoint.m1-login-verify
+    decisions:
+    - hiecm.decision.encrypt-locally
+    concepts:
+    - hiecm.concept.encrypted-identifiers
+hiecm.flow.m1-login-by-mobile:
+  type: flow
+  gateway: hiecm
+  milestone: M1
+  title: Log somebody in to their existing ABHA
+  summary: Send an OTP to a mobile number, verify it, choose the account, and get
+    the user token that profile calls need.
+  page: site/docs/hiecm/v3/milestones/m1.mdx
+  heading: m1-login-by-mobile
+  url: /docs/hiecm/v3/milestones/m1#m1-login-by-mobile
+  related:
+    endpoints:
+    - hiecm.endpoint.m1-login-request-otp
+    - hiecm.endpoint.m1-login-verify
+    - hiecm.endpoint.m1-login-select-account
+    errors:
+    - hiecm.error.abdm-2401
+    - hiecm.error.900900
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.flow.m1-update-mobile:
+  type: flow
+  gateway: hiecm
+  milestone: M1
+  title: Change the mobile number on an ABHA profile
+  summary: Change the mobile number on an ABHA profile with an OTP sent to the new
+    number.
+  page: site/docs/hiecm/v3/milestones/m1.mdx
+  heading: m1-update-mobile
+  url: /docs/hiecm/v3/milestones/m1#m1-update-mobile
+  related:
+    endpoints:
+    - hiecm.endpoint.m1-profile-request-otp
+    - hiecm.endpoint.m1-profile-verify-otp
+    - hiecm.endpoint.m1-profile-get-account
+    flows:
+    - hiecm.flow.m1-login-by-mobile
+    errors:
+    - hiecm.error.abdm-2401
+hiecm.flow.m2-link-care-context:
+  type: flow
+  gateway: hiecm
+  milestone: M2
+  title: Link a care context to a patient's ABHA
+  summary: Tell ABDM that this patient had a visit at your facility so their records
+    can be found and fetched later.
+  page: site/docs/hiecm/v3/milestones/m2.mdx
+  heading: m2-link-care-context
+  url: /docs/hiecm/v3/milestones/m2#m2-link-care-context
+  related:
+    endpoints:
+    - hiecm.endpoint.m2-generate-link-token
+    - hiecm.endpoint.m2-hip-link-care-context
+    - hiecm.endpoint.m2-link-care-context-notify
+    callbacks:
+    - hiecm.callback.m2-on-generate-token-result
+    - hiecm.callback.m2-on-carecontext-result
+    - hiecm.callback.m2-on-context-notify-result
+    concepts:
+    - hiecm.concept.care-context
+    - hiecm.concept.asynchronous-callbacks
+    glossary:
+    - hiecm.glossary.m2
+    - hiecm.glossary.hip
+    - hiecm.glossary.hiu
+    - shared.glossary.hfr
+    - shared.glossary.phr
+    - shared.glossary.abha-address
+    errors:
+    - hiecm.error.abdm-1056
+    - hiecm.error.abdm-2406
+hiecm.flow.m3-fetch-records:
+  type: flow
+  gateway: hiecm
+  milestone: M3
+  title: Fetch the records a granted consent artefact covers
+  summary: Fetch a granted consent artefact, request the records it covers, and decrypt
+    what the HIP pushes to your data push URL.
+  page: site/docs/hiecm/v3/milestones/m3.mdx
+  heading: m3-fetch-records
+  url: /docs/hiecm/v3/milestones/m3#m3-fetch-records
+  related:
+    endpoints:
+    - hiecm.endpoint.m3-consent-fetch
+    - hiecm.endpoint.m3-hiu-health-information-request
+    - hiecm.endpoint.m3-hiu-data-flow-notify
+    callbacks:
+    - hiecm.callback.m3-on-consent-fetch
+    - hiecm.callback.m3-on-health-information-request
+    concepts:
+    - hiecm.concept.consent-artefact
+    - hiecm.concept.gateway-session
+    troubleshooting:
+    - hiecm.troubleshooting.accepted-then-nothing
+    - hiecm.troubleshooting.callback-never-arrives
+    errors:
+    - hiecm.error.abdm-1062
+    - hiecm.error.abdm-1112
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+    glossary:
+    - hiecm.glossary.hiu
+    - hiecm.glossary.hip
+    - hiecm.glossary.ecdh
+    - hiecm.glossary.key-material
+    - shared.glossary.fhir
+hiecm.flow.m3-request-consent:
+  type: flow
+  gateway: hiecm
+  milestone: M3
+  title: Request consent for a patient's health records
+  summary: Ask a patient, by ABHA address, for permission to read records held elsewhere,
+    and collect the consent artefact ids once they grant it.
+  page: site/docs/hiecm/v3/milestones/m3.mdx
+  heading: m3-request-consent
+  url: /docs/hiecm/v3/milestones/m3#m3-request-consent
+  related:
+    endpoints:
+    - hiecm.endpoint.m3-consent-request-init
+    - hiecm.endpoint.m3-consent-hiu-on-notify
+    - hiecm.endpoint.m3-consent-request-status
+    callbacks:
+    - hiecm.callback.m3-on-consent-request-init
+    - hiecm.callback.m3-on-consent-request-notify-hiu
+    - hiecm.callback.m3-on-consent-request-status
+    concepts:
+    - hiecm.concept.consent-artefact
+    - hiecm.concept.gateway-session
+    troubleshooting:
+    - hiecm.troubleshooting.consent-stuck-requested
+    - hiecm.troubleshooting.callback-never-arrives
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-9999
+    glossary:
+    - hiecm.glossary.hiu
+    - shared.glossary.hie-cm
+    - shared.glossary.phr
+    - shared.glossary.abha-address
+    - hiecm.glossary.purpose-of-use
+    - hiecm.glossary.hi-type
+    - hiecm.glossary.bridge
+hiecm.flow.m4-create-hpid:
+  type: flow
+  gateway: hiecm
+  milestone: M4
+  title: Get a healthcare professional an HPID
+  summary: Take a healthcare professional through Aadhaar authentication and mobile
+    verification until the registry issues an HP-ID.
+  page: site/docs/hiecm/v3/milestones/m4.mdx
+  heading: m4-create-hpid
+  url: /docs/hiecm/v3/milestones/m4#m4-create-hpid
+  related:
+    endpoints:
+    - hiecm.endpoint.m4-hpr-demographic-auth-mobile
+    - hiecm.endpoint.m4-hpr-create-hprid
+    flows:
+    - hiecm.flow.m4-register-professional
+    - hiecm.flow.m4-onboard-facility
+    concepts:
+    - hiecm.concept.gateway-session
+    - hiecm.concept.input-encryption
+    glossary:
+    - shared.glossary.hpr
+    - shared.glossary.hpid
+    - shared.glossary.otp
+    - shared.glossary.txn-id
+hiecm.flow.m4-link-bridge:
+  type: flow
+  gateway: hiecm
+  milestone: M4
+  title: Link a facility to its bridge
+  summary: Connect an onboarded facility to the software that will act for it, say
+    whether the facility publishes records through it, fetches them, or both, and
+    name it as patients will see it.
+  page: site/docs/hiecm/v3/milestones/m4.mdx
+  heading: m4-link-bridge
+  url: /docs/hiecm/v3/milestones/m4#m4-link-bridge
+  related:
+    flows:
+    - hiecm.flow.m4-onboard-facility
+    - hiecm.flow.m2-link-care-context
+    concepts:
+    - hiecm.concept.roles
+    glossary:
+    - hiecm.glossary.bridge
+    - hiecm.glossary.hip
+    - hiecm.glossary.hiu
+    - shared.glossary.hfr
+    - shared.glossary.phr
+hiecm.flow.m4-onboard-facility:
+  type: flow
+  gateway: hiecm
+  milestone: M4
+  title: Onboard a facility to the HFR
+  summary: Search for the facility first, then create it in three writes and submit
+    it, so it leaves draft and becomes a facility ABDM can see.
+  page: site/docs/hiecm/v3/milestones/m4.mdx
+  heading: m4-onboard-facility
+  url: /docs/hiecm/v3/milestones/m4#m4-onboard-facility
+  related:
+    endpoints:
+    - hiecm.endpoint.m4-hfr-search-facility
+    flows:
+    - hiecm.flow.m4-create-hpid
+    - hiecm.flow.m4-link-bridge
+    concepts:
+    - hiecm.concept.gateway-session
+    glossary:
+    - shared.glossary.hfr
+    - shared.glossary.hpr
+hiecm.flow.m4-register-professional:
+  type: flow
+  gateway: hiecm
+  milestone: M4
+  title: Register a professional's profile on the HPR
+  summary: Turn a bare identity number into a registered professional by adding qualifications,
+    council registration and current work, then uploading the certificates that prove
+    them.
+  page: site/docs/hiecm/v3/milestones/m4.mdx
+  heading: m4-register-professional
+  url: /docs/hiecm/v3/milestones/m4#m4-register-professional
+  related:
+    endpoints:
+    - hiecm.endpoint.m4-hpr-register-professional
+    - hiecm.endpoint.m4-hpr-fetch-professional-info
+    - hiecm.endpoint.m4-hpr-fetch-documents-list
+    - hiecm.endpoint.m4-hpr-upload-document
+    flows:
+    - hiecm.flow.m4-create-hpid
+    - hiecm.flow.m4-onboard-facility
+    concepts:
+    - hiecm.concept.gateway-session
+    glossary:
+    - shared.glossary.hpr
+    - shared.glossary.hpid
+hiecm.flow.p1-create-abha-address:
+  type: flow
+  gateway: hiecm
+  milestone: P1
+  title: Create an ABHA address in a PHR application
+  summary: Register a person in your own health application by mobile number or by
+    an existing 14 digit health account number, and give them the address the rest
+    of the network will know them by.
+  page: site/docs/hiecm/v3/milestones/p1.mdx
+  heading: p1-create-abha-address
+  url: /docs/hiecm/v3/milestones/p1#p1-create-abha-address
+  related:
+    endpoints:
+    - hiecm.endpoint.p1-enrollment-request-otp
+    - hiecm.endpoint.p1-enrollment-verify-otp
+    - hiecm.endpoint.p1-enrollment-address-suggestion
+    - hiecm.endpoint.p1-enrollment-address-exists
+    - hiecm.endpoint.p1-enrollment-enrol
+    - hiecm.endpoint.p1-get-user-profile
+    flows:
+    - hiecm.flow.p1-login
+    - hiecm.flow.p2-discover-and-link
+    concepts:
+    - hiecm.concept.abha-number-and-address
+    - hiecm.concept.gateway-session
+    glossary:
+    - shared.glossary.abha
+    - shared.glossary.abha-address
+    - shared.glossary.abha-number
+    - shared.glossary.phr
+    - shared.glossary.kyc
+    - shared.glossary.otp
+hiecm.flow.p1-login:
+  type: flow
+  gateway: hiecm
+  milestone: P1
+  title: Sign a user in to a PHR application
+  summary: Sign a person in to a personal health record app by any of the mandatory
+    routes, and hold the session afterwards.
+  page: site/docs/hiecm/v3/milestones/p1.mdx
+  heading: p1-login
+  url: /docs/hiecm/v3/milestones/p1#p1-login
+  related:
+    endpoints:
+    - hiecm.endpoint.p1-login-request-otp
+    - hiecm.endpoint.p1-login-verify-otp
+    - hiecm.endpoint.p1-login-verify-user
+    - hiecm.endpoint.p1-login-using-password-search-user
+    - hiecm.endpoint.p1-generate-refresh-token
+    - hiecm.endpoint.p1-logout-user
+    flows:
+    - hiecm.flow.p1-create-abha-address
+    concepts:
+    - hiecm.concept.abha-number-and-address
+    - hiecm.concept.gateway-session
+    glossary:
+    - shared.glossary.abha-address
+    - shared.glossary.abha-number
+    - hiecm.glossary.auth-modes
+    - shared.glossary.otp
+    - shared.glossary.phr
+hiecm.flow.p2-discover-and-link:
+  type: flow
+  gateway: hiecm
+  milestone: P2
+  title: Find records held elsewhere and link them
+  summary: Let a person search for a facility they visited, discover the records it
+    holds for them, and attach those records to their health address after an OTP
+    confirms it is them.
+  page: site/docs/hiecm/v3/milestones/p2.mdx
+  heading: p2-discover-and-link
+  url: /docs/hiecm/v3/milestones/p2#p2-discover-and-link
+  related:
+    endpoints:
+    - hiecm.endpoint.p2-care-context-discover
+    - hiecm.endpoint.p2-link-care-context-init
+    - hiecm.endpoint.p2-link-care-context-confirm
+    - hiecm.endpoint.p2-all-providers
+    - hiecm.endpoint.p2-provider-by-provider-id
+    - hiecm.endpoint.p2-govt-programs
+    flows:
+    - hiecm.flow.p2-scan-and-share
+    - hiecm.flow.p3-fetch-records
+    - hiecm.flow.m2-link-care-context
+    concepts:
+    - hiecm.concept.care-context
+    - hiecm.concept.asynchronous-callbacks
+    glossary:
+    - shared.glossary.abha-address
+    - hiecm.glossary.discovery
+    - hiecm.glossary.hip
+    - hiecm.glossary.hrp
+    - shared.glossary.otp
+    - shared.glossary.phr
+hiecm.flow.p2-scan-and-share:
+  type: flow
+  gateway: hiecm
+  milestone: P2
+  title: Share a profile at a facility by scanning its code
+  summary: Let a person scan the code on a hospital counter and hand over their health
+    address and profile, so registration happens without a form and later records
+    find their way back to them.
+  page: site/docs/hiecm/v3/milestones/p2.mdx
+  heading: p2-scan-and-share
+  url: /docs/hiecm/v3/milestones/p2#p2-scan-and-share
+  related:
+    endpoints:
+    - hiecm.endpoint.p2-patient-share
+    - hiecm.endpoint.p2-profile-on-share
+    flows:
+    - hiecm.flow.p2-discover-and-link
+    concepts:
+    - hiecm.concept.care-context
+    glossary:
+    - shared.glossary.abha-address
+    - shared.glossary.hie-cm
+    - hiecm.glossary.hip
+    - shared.glossary.hpid
+    - shared.glossary.phr
+hiecm.flow.p3-fetch-records:
+  type: flow
+  gateway: hiecm
+  milestone: P3
+  title: Fetch and store the records a linked care context points at
+  summary: Turn a notification that a record exists into the record itself, by raising
+    a consent request, getting it granted, and asking for the health information the
+    grant covers.
+  page: site/docs/hiecm/v3/milestones/p3.mdx
+  heading: p3-fetch-records
+  url: /docs/hiecm/v3/milestones/p3#p3-fetch-records
+  related:
+    endpoints:
+    - hiecm.endpoint.p3-consent-fetch
+    - hiecm.endpoint.p3-get-all-consent-request-for-an-abha-address
+    - hiecm.endpoint.p3-get-consent-artefact-details-by-artifact-id
+    - hiecm.endpoint.p3-deny-consent-request
+    - hiecm.endpoint.p3-revoke-consent-request
+    - hiecm.endpoint.p3-request-status
+    flows:
+    - hiecm.flow.p3-subscribe-and-auto-approve
+    - hiecm.flow.p2-discover-and-link
+    - hiecm.flow.m3-fetch-records
+    concepts:
+    - hiecm.concept.consent-artefact
+    - hiecm.concept.care-context
+    errors:
+    - hiecm.error.abdm-1112
+    glossary:
+    - hiecm.glossary.hi-type
+    - hiecm.glossary.hip
+    - hiecm.glossary.hiu
+    - shared.glossary.phr
+hiecm.flow.p3-subscribe-and-auto-approve:
+  type: flow
+  gateway: hiecm
+  milestone: P3
+  title: Subscribe to a user's account and set an auto approval policy
+  summary: Ask a person's permission to hear about changes to their health account,
+    then set the policy that stops them approving a request every time a hospital
+    adds a record.
+  page: site/docs/hiecm/v3/milestones/p3.mdx
+  heading: p3-subscribe-and-auto-approve
+  url: /docs/hiecm/v3/milestones/p3#p3-subscribe-and-auto-approve
+  related:
+    endpoints:
+    - hiecm.endpoint.p3-subscription-init
+    - hiecm.endpoint.p3-consent-auto-approve
+    - hiecm.endpoint.p3-approve-subscription-request
+    - hiecm.endpoint.p3-consent-enable-auto-approve
+    - hiecm.endpoint.p3-consent-disable-auto-approve
+    - hiecm.endpoint.p3-get-all-subscription-requests-for-an-abha-address
+    flows:
+    - hiecm.flow.p3-fetch-records
+    - hiecm.flow.p1-create-abha-address
+    concepts:
+    - hiecm.concept.asynchronous-callbacks
+    - hiecm.concept.consent-artefact
+    glossary:
+    - shared.glossary.abha-address
+    - shared.glossary.hie-cm
+    - shared.glossary.phr
+hiecm.test.m1-encryption-padding:
+  type: test
+  gateway: hiecm
+  milestone: M1
+  title: Prove your encryption padding before you build anything else
+  summary: One login OTP request that proves your encryption padding and certificate
+    before you build anything else.
+  page: site/docs/hiecm/v3/concepts/encryption.mdx
+  heading: m1-encryption-padding
+  url: /docs/hiecm/v3/concepts/encryption#m1-encryption-padding
+  related:
+    concepts:
+    - hiecm.concept.encrypted-identifiers
+    - hiecm.concept.input-encryption
+    endpoints:
+    - hiecm.endpoint.m1-login-request-otp
+    - hiecm.endpoint.m1-get-public-certificate
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-2500
+hiecm.troubleshooting.accepted-then-nothing:
+  type: troubleshooting
+  gateway: hiecm
+  milestone: M2
+  title: Discovery or linking was accepted, then nothing happens
+  summary: Discovery or linking was accepted and then stalled, and you need to find
+    which callback in the chain is missing.
+  page: site/docs/hiecm/v3/troubleshooting/accepted-then-nothing.mdx
+  heading: accepted-then-nothing
+  url: /docs/hiecm/v3/troubleshooting/accepted-then-nothing#accepted-then-nothing
+  related:
+    concepts:
+    - hiecm.concept.asynchronous-callbacks
+    flows:
+    - hiecm.flow.m2-link-care-context
+    callbacks:
+    - hiecm.callback.m2-on-discovery-request
+    - hiecm.callback.m2-on-link-init
+    - hiecm.callback.m2-on-link-confirm
+    errors:
+    - hiecm.error.abdm-1056
+    - hiecm.error.abdm-2406
+    glossary:
+    - shared.glossary.request-id
+    - hiecm.glossary.hiu
+    - shared.glossary.phr
+hiecm.troubleshooting.callback-never-arrives:
+  type: troubleshooting
+  gateway: hiecm
+  milestone: M2
+  title: The callback never arrives
+  summary: A call returned 202 or 200 and the callback that should follow never reached
+    your registered URL.
+  page: site/docs/hiecm/v3/troubleshooting/callback-never-arrives.mdx
+  heading: callback-never-arrives
+  url: /docs/hiecm/v3/troubleshooting/callback-never-arrives#callback-never-arrives
+  related:
+    concepts:
+    - hiecm.concept.asynchronous-callbacks
+    endpoints:
+    - hiecm.endpoint.gateway-update-bridge-url
+    errors:
+    - hiecm.error.abdm-9999
+    glossary:
+    - shared.glossary.request-id
+hiecm.troubleshooting.consent-stuck-requested:
+  type: troubleshooting
+  gateway: hiecm
+  milestone: M3
+  title: The consent request is stuck in Requested
+  summary: A consent request has stayed in Requested and never moved to Granted or
+    Denied.
+  page: site/docs/hiecm/v3/troubleshooting/consent-stuck-requested.mdx
+  heading: consent-stuck-requested
+  url: /docs/hiecm/v3/troubleshooting/consent-stuck-requested#consent-stuck-requested
+  related:
+    concepts:
+    - hiecm.concept.consent-artefact
+    endpoints:
+    - hiecm.endpoint.m3-consent-request-init
+    - hiecm.endpoint.m3-consent-request-status
+    errors:
+    - hiecm.error.abdm-1170
+    glossary:
+    - shared.glossary.abha-address
+    - hiecm.glossary.hiu
+hiecm.troubleshooting.everything-returns-401:
+  type: troubleshooting
+  gateway: hiecm
+  milestone: M1
+  title: Everything returns 401
+  summary: Every call is rejected the same way, which points at the session or the
+    headers rather than any one operation.
+  page: site/docs/hiecm/v3/troubleshooting/everything-returns-401.mdx
+  heading: everything-returns-401
+  url: /docs/hiecm/v3/troubleshooting/everything-returns-401#everything-returns-401
+  related:
+    endpoints:
+    - hiecm.endpoint.gateway-sessions
+    concepts:
+    - hiecm.concept.gateway-session
+    errors:
+    - hiecm.error.abdm-2402
+    - hiecm.error.abdm-2403
+    - hiecm.error.abdm-2500
+    - hiecm.error.abdm-1032
+    glossary:
+    - hiecm.glossary.x-cm-id
+    - shared.glossary.timestamp-header
+hiecm.troubleshooting.otp-never-arrives:
+  type: troubleshooting
+  gateway: hiecm
+  milestone: M1
+  title: The OTP never arrives
+  summary: An OTP was requested and nothing reached the phone.
+  page: site/docs/hiecm/v3/troubleshooting/otp-never-arrives.mdx
+  heading: otp-never-arrives
+  url: /docs/hiecm/v3/troubleshooting/otp-never-arrives#otp-never-arrives
+  related:
+    flows:
+    - hiecm.flow.m1-create-abha-aadhaar-otp
+    endpoints:
+    - hiecm.endpoint.m1-enrolment-request-otp
+    errors:
+    - hiecm.error.abdm-1022
+    - hiecm.error.abdm-2404
+    - hiecm.error.abdm-9999
+    glossary:
+    - shared.glossary.otp
+    - shared.glossary.txn-id

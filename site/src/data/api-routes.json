@@ -955,21 +955,6 @@
     "callbacks": []
   },
   {
-    "key": "profile/account",
-    "hosts": [
-      "abhasbx.abdm.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "m1_patch_v3_profile_account_profile_photo",
-    "module": "M1 Identity",
-    "moduleDir": "m1",
-    "method": "PATCH",
-    "path": "/abha/api/v3/profile/account#profile-photo",
-    "summary": "Update profile photo",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-update-photo/01-m1-patch-v3-profile-account-profile-photo",
-    "callbacks": []
-  },
-  {
     "key": "v3.1/profile/login/verify",
     "hosts": [
       "abhasbx.abdm.gov.in"

@@ -48,10 +48,10 @@ skills:
 Field rules that catch people out:
 
 - `id` is `gateway.type.slug`, lowercase, stable, and never reused. Renaming an id is a breaking change and needs a redirect.
-- `gateway` is one of `hiecm`, `uhi`, `nhcx`, `shared`. Shared atoms have no milestone; use `n/a`. All four lint clean. `uhi` atoms are page sections mapped in `catalogue/map.d/uhi-*.yaml`, with `milestone: n/a` and `version: uhi-v1`; endpoint and callback atoms name their `operation` from `catalogue/openapi/uhi/v1/`.
+- `gateway` is one of `hiecm`, `uhi`, `nhcx`, `shared`. Shared atoms have no milestone; use `n/a`. All four lint clean. `uhi` atoms are page sections mapped in `catalogue/uhi/map/*.yaml`, with `milestone: n/a` and `version: uhi-v1`; endpoint and callback atoms name their `operation` from `catalogue/uhi/openapi/v1/`.
 - `version` is the NHA spec version this is true for, not the Catalogue version. The Catalogue version is stamped by the build.
 - `summary` is one sentence a new developer understands with no acronyms. It is what the index and the search result show. Write it last, after the body, when you know what the atom actually says.
-- There is no `verified` field. Lint fails an atom that carries one. The Catalogue is published as ABDM's statement of how ABDM works; sandbox checks are internal, run by `npm run verify:atoms`, and their evidence lives under `catalogue/verification/`, never in the atom.
+- There is no `verified` field. Lint fails an atom that carries one. The Catalogue is published as ABDM's statement of how ABDM works.
 - `related` ids must all resolve. Lint fails on a dangling id.
 - `skills` declares which compiled skills consume this atom. The compiler reads it. An atom with no `skills` entry renders in the docs but never reaches an agent, which is sometimes correct (glossary, decision) and sometimes a mistake.
 
@@ -123,14 +123,14 @@ Read the file for the type you are writing: `references/atom-types.md`.
 | Two flows in one atom | The graph cannot link to half a file | Split, link with `related` |
 | Section 4 says "you get a 200" | 200 means the request was accepted, not that the work happened | Name the callback and its payload |
 | Curl with `-H "Authorization: Bearer TOKEN"` | The reader does not know where TOKEN came from | `<ACCESS_TOKEN_FROM_SESSIONS_CALL>` and link the atom |
-| `verified:` in the frontmatter | The field no longer exists and lint fails on it | Drop it. Evidence lives in `catalogue/verification/` |
+| `verified:` in the frontmatter | The field no longer exists and lint fails on it | Drop it |
 | Fix described inline in section 5 | Skills compile error atoms separately | Create the error atom, link it |
 | Em dash anywhere | CI blocks U+2014 | Full stop, comma or colon |
 
 ## How the indexer reads your atom
 
-The Docs MCP indexer walks the catalogue and parses every `.md` outside
-`openapi/` as an atom, with one exception: a file named `README.md`, wherever
+The Docs MCP indexer walks the catalogue and parses every `.md` outside any
+`openapi/` folder as an atom, with one exception: a file named `README.md`, wherever
 in the tree it sits, not only at the catalogue root. A file that fails to parse fails the whole build,
 loudly, naming the file. Atom bodies are chunked per `##` heading and
 embedded for semantic search. `catalogue/README.md` restates the frontmatter
@@ -141,11 +141,12 @@ if you only have the repository open.
 
 ## Migrated atoms are edited on their page
 
-An atom listed in `catalogue/map.yaml` or a fragment in `catalogue/map.d/` has no hand-written file. Its words are
+An atom listed in a content map, `catalogue/<gateway>/map/*.yaml`, has no hand-written file. Its words are
 the page section named by its `page` and `heading`, and its rules for agents are
 the `<AgentOnly>` notes in that section. Edit the page, then run
-`npm run build:sections`. Never edit `catalogue/generated/`. Only an atom that is
-not in the map yet is edited as a file under `catalogue/`.
+`npm run build:sections`, which writes the atom file to `catalogue/<gateway>/<type folder>/<id slug>.md`
+marked `generated: true`. Never edit a file carrying that mark. Only an atom that is
+not in a map yet is edited as a file, at that same path.
 
 How a section becomes an atom:
 
@@ -156,7 +157,8 @@ How a section becomes an atom:
 - The map entry holds `type`, `gateway`, `milestone`, `title`, `summary`, `page`, `heading`, `url` and `related`, and no prose. No `related` list names its own atom.
 - `<AgentOnly>` is JSX, so a page gains one only if it is `.mdx`. Convert a page in its own commit, and build the site before any content moves.
 - Endpoint, callback and error atoms have no hand-written page, because API pages are generated. Their sections live in hand-written notes partials: `site/docs/_notes/<gateway>/<operationId>.mdx`, rendered on that operation's generated API page, and `site/docs/_notes/<gateway>/errors/<module>.mdx`, rendered after the module's error table on `/docs/<gateway>/<version>/api/<module>/errors`. A partial has no frontmatter and holds only sections with explicit heading ids, one per atom, nothing else. Endpoint and callback map entries also carry `operation` (contract v2).
-- A batch of new map entries goes in one fragment of its own, `catalogue/map.d/<gateway>-<batch>.yaml`, so batches do not conflict in `map.yaml`. An id defined in two map files fails `check:sections`.
+- A batch of new map entries goes in a file of its own, `catalogue/<gateway>/map/<batch>.yaml`, so batches do not conflict. An id defined in two map files fails `check:sections`.
+- Moving an atom onto its page means deleting its hand-written file in the same commit that adds its map entry: `build:sections` writes the new file at the same path and refuses to overwrite a file without `generated: true`.
 
 Moving a class of atoms onto pages follows the checklist in the page-canonical plan: heading ids first, words onto the page, map entries added and files deleted in the same PR, `npm run report:migration -- <ids>` pasted into the PR, and the retrieval gate run before and after with at least one question per migrated atom (`portal-proof`). NHCX atoms do not move until the NHCX source is decided.
 

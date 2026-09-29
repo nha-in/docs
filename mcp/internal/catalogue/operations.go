@@ -55,16 +55,24 @@ func ChunkOperation(op Operation) Chunk {
 	return Chunk{AtomID: op.OperationID, Heading: "operation", Text: b.String(), Kind: "operation"}
 }
 
-// specGateway is the directory under openapi/ a specification sits in.
+// specGateway is the gateway a specification belongs to: the folder holding
+// its openapi/ (catalogue/hiecm/openapi/v3/...), or, where a gateway's specs
+// have not moved yet, the folder under openapi/ (catalogue/openapi/nhcx/v1/...).
 func specGateway(specPath string) string {
 	parts := strings.Split(filepath.ToSlash(specPath), "/")
-	for i := 0; i+1 < len(parts); i++ {
-		if parts[i] == "openapi" {
-			return parts[i+1]
+	for i := len(parts) - 2; i >= 0; i-- {
+		if parts[i] != "openapi" {
+			continue
 		}
+		if i > 0 && gatewayNames[parts[i-1]] {
+			return parts[i-1]
+		}
+		return parts[i+1]
 	}
 	return ""
 }
+
+var gatewayNames = map[string]bool{"hiecm": true, "nhcx": true, "uhi": true, "shared": true}
 
 // SpecErrorCode is one error code found in a specification's 4xx/5xx
 // response examples: the code as the gateway returns it, the recorded

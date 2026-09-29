@@ -74,7 +74,7 @@ This is the sandbox create call. In production, call [`/v2/participant/create`](
 ## Before you start
 
 - A current access token from the [session call](session-token.md).
-- Your registry id. A [provider](../glossary/provider.md) uses its [HFR](../../shared/glossary/hfr.md) ID. A [payer](../glossary/payer.md) or [TPA](../glossary/tpa.md) uses its [IRDAI](../glossary/irdai.md) or other authority-issued ID. An [EUA](../../shared/glossary/eua.md) uses its client id.
+- Your registry id. A [provider](../glossary/provider.md) uses its [HFR](../../shared/glossary/hfr.md) ID. A [payer](../glossary/payer.md) or [TPA](../glossary/tpa.md) uses its [IRDAI](../glossary/irdai.md) or other authority-issued ID. An [EUA](../../uhi/glossary/eua.md) uses its client id.
 - Your public encryption certificate, Base64 encoded. See [generate and register a certificate](../flows/generate-and-register-certificate.md).
 - Your callback bridge URL, on a domain name, served from India. See [callback URL requirements](../sandbox/callback-url-requirements.md).
 

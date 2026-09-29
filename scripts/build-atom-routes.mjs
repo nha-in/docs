@@ -127,8 +127,8 @@ for (const p of pages) {
 }
 
 // ---------- Rule -1: the atom registry names the section ----------
-// An atom whose words live on a page is listed in catalogue/map.yaml or a
-// catalogue/map.d/ fragment with the published URL of its section, so its
+// An atom whose words live on a page is listed in its gateway's content map,
+// catalogue/<gateway>/map/, with the published URL of its section, so its
 // route is known exactly and wins. A duplicate id is check:sections' to report.
 const { map: registryMap } = loadMap(root);
 
@@ -224,7 +224,7 @@ for (const [id, atom] of atoms) {
   if (reg?.url) {
     const [r, a] = String(reg.url).split("#");
     route = r; anchor = a ?? null;
-    rule = "named by catalogue/map.yaml"; confidence = "derived";
+    rule = "named by its content map"; confidence = "derived";
   }
   const claim = route ? null : claimed.get(id);
   if (claim) {

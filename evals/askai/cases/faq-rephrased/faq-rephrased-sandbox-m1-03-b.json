@@ -25,9 +25,9 @@
     "atom"
   ],
   "expected_sources": [
-    "shared.glossary.m1",
-    "shared.glossary.m2",
-    "shared.glossary.m3"
+    "hiecm.glossary.m1",
+    "hiecm.glossary.m2",
+    "hiecm.glossary.m3"
   ],
   "expected_shape": "define",
   "expected_behaviour": "answer",

@@ -18,6 +18,7 @@ const (
 	Diagnose Shape = "diagnose"
 	Compare  Shape = "compare"
 	Meta     Shape = "meta"
+	Self     Shape = "self"
 )
 
 type Input struct {
@@ -39,6 +40,7 @@ var (
 	compRe  = regexp.MustCompile(`(?i)\b(difference|differ|vs\.?|versus|same as|the same as|compare|which one)\b`)
 	metaRe  = regexp.MustCompile(`(?i)\b(catalogue version|which version|how (?:old|current)|last updated|built)\b`)
 	greetRe = regexp.MustCompile(`(?i)^(hi+|hello|hey|hiya|yo|namaste|good (?:morning|afternoon|evening)|thanks?|thank you|ty|ok(?:ay)?|cool|great)(?: there| all| team)?[\s.!?]*$`)
+	selfRe  = regexp.MustCompile(`(?i)\b(?:who|what) are you\b|\bwhat can you (?:do|help)|\b(?:how many |which |what )languages?\b.*\byou\b|\bdo you (?:understand|speak|remember)\b|\bcan you (?:speak|understand)\b|\bare you (?:an? )?(?:bot|ai|human|robot|real|person|chatgpt|gpt|claude|llm)\b|\bwho (?:made|built|created|trained|runs) you\b|\bwhat (?:model|llm) (?:are|is) (?:you|this)\b|\byour (?:name|capabilit\w*|limit\w*)\b|\babout yourself\b|\bhow (?:do|does) (?:you|this assistant) work\b`)
 	whRe    = regexp.MustCompile(`(?i)^(what is|what's|whats|what are|what makes|define|meaning of|explain)\b`)
 )
 
@@ -95,6 +97,12 @@ func Route(in Input) Result {
 	}
 	return r
 }
+
+// IsAboutAssistant reports whether a message asks about the assistant
+// itself: who it is, what it can do, which languages it reads. The catalogue
+// holds nothing on that, so a lookup only retrieves unrelated atoms and cites
+// them.
+func IsAboutAssistant(q string) bool { return selfRe.MatchString(q) }
 
 // IsGreeting reports whether a message is only a greeting or thanks. Those
 // carry nothing to retrieve on, and "hi" retrieves HI type, HIU and HIP.

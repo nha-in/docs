@@ -48,7 +48,7 @@ related:
   - nhcx.concept.jwe-envelope
   glossary:
   - shared.glossary.sandbox
-  - shared.glossary.m1
+  - hiecm.glossary.m1
 ---
 
 # The session token every NHCX call carries

@@ -42,7 +42,7 @@ func ratchetCase() eval.Case {
 		ID: "define-hmis-01", Slice: "define", Class: "define",
 		Turns:             []eval.Turn{{Role: "user", Text: "what is a HIMS"}},
 		MustContain:       []string{"hospital software"},
-		ExpectedSources:   []string{"shared.glossary.hmis"},
+		ExpectedSources:   []string{"hiecm.glossary.hmis"},
 		ExpectedShape:     "define",
 		ExpectedBehaviour: "answer",
 		SourceRow:         "annexure#glossary",
@@ -154,7 +154,7 @@ func TestCheckIntoBaselineFailureStringDoesNotExcuseADifferentFailure(t *testing
 		CaseID:  "define-hmis-01",
 		Answer:  "Send X-Something-New with the call. HMIS is hospital software.",
 		Corpus:  "HMIS, hospital management information system",
-		Sources: []chat.Source{{ID: "shared.glossary.hmis"}},
+		Sources: []chat.Source{{ID: "hiecm.glossary.hmis"}},
 	}
 	if err := eval.WriteTranscript(filepath.Join(runDir, "transcripts"), tr); err != nil {
 		t.Fatal(err)

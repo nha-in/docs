@@ -1,7 +1,7 @@
 // The Quickstart's result reader, against the response shapes NHA's own
 // specification records. The bodies below are taken from the 200 and 4xx
 // examples for /abha/api/v3/enrollment/enrol/byAadhaar in
-// catalogue/openapi/hiecm/v3/hiecm-m1.yaml, not invented here.
+// catalogue/hiecm/openapi/v3/hiecm-m1.yaml, not invented here.
 //
 // The bug this guards: reading only the top level, and only strings, found
 // neither ABHANumber (nested under ABHAProfile) nor the address (a list), so a
