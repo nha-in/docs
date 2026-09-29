@@ -15,6 +15,6 @@
   "expected_behaviour": "answer",
   "derived_from": null,
   "source_row": "annexure#glossary",
-  "catalogue_version": "2026.08.24",
+  "catalogue_version": "2026.09.16",
   "notes": "Source lines: catalogue/shared/glossary/request-id.md, 'Every ABDM call carries a REQUEST-ID header holding a UUID you generate.'; catalogue/shared/glossary/txn-id.md, 'The first call returns a txnId, and the following calls send it back so ABDM knows which attempt they belong to. It is short lived and single purpose.'"
 }

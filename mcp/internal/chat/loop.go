@@ -541,6 +541,7 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 	if err := s.ValidatePage(page); err != nil {
 		return err
 	}
+	cmd = InferCommand(cmd, turns)
 	msgs := toMessages(turns)
 	question := lastUserText(turns)
 	// A greeting or a thanks carries nothing to look up: "hi" retrieved HI
@@ -809,12 +810,18 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 			// recall what is already on screen. Held text can still be thrown
 			// away and asked for again, once.
 			answer := held.String()
-			var failures []string
+			var failures, blocking []string
 			if strings.TrimSpace(answer) != "" {
 				failures = guard.CheckShape(shape, answer, facts)
 				if n, max, over := guard.OverBudget(shape, answer); over {
 					failures = append(failures, fmt.Sprintf("over budget: %d words, limit %d", n, max))
 				}
+				// A rule that would blank the whole answer gets the same one
+				// retry. Without it, an answer whose sources were right and
+				// whose one endpoint path was misremembered reached the
+				// reader as the blocked notice.
+				blocking = g.blockingFailures(answer)
+				failures = append(failures, blocking...)
 			}
 			// A retry costs a whole extra model call, and the handler's
 			// deadline (see server/http.go) has to cover it. With less than
@@ -828,10 +835,14 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 			} else if len(failures) > 0 && !retried && round < MaxToolCalls {
 				retried = true
 				slog.Info("answer_failed_shape_check", "shape", shape, "failures", failures)
+				fix := "Rewrite it once, inside the word budget, naming every route the passages carry."
+				if len(blocking) > 0 {
+					fix += " State only paths, headers and codes the documentation returned: look one up with your tools or leave it out. Do not write code."
+				}
 				msgs = append(msgs,
 					Message{Role: "assistant", Text: answer},
 					Message{Role: "user", Text: "Your answer failed these checks: " + strings.Join(failures, "; ") +
-						". Rewrite it once, inside the word budget, naming every route the passages carry. Do not apologise or mention the checks."})
+						". " + fix + " Do not apologise or mention the checks."})
 				held.Reset()
 				continue
 			}
@@ -1079,6 +1090,25 @@ func (g *answerGuard) flush() {
 	g.release(g.pending.String(), "", true)
 }
 
+// blockingFailures reports what in a whole held answer would make release
+// block it, so the loop can ask for one rewrite before a reader is handed
+// the blocked notice.
+func (g *answerGuard) blockingFailures(answer string) []string {
+	cited := 0
+	if g.cited != nil {
+		cited = g.cited()
+	}
+	vs := guard.CheckAnswer(answer)
+	vs = append(vs, guard.CheckGrounding(answer, g.corpus.String(), cited, true)...)
+	var out []string
+	for _, v := range vs {
+		if v.Blocking {
+			out = append(out, v.Detail)
+		}
+	}
+	return out
+}
+
 // release checks the answer as it would stand with candidate appended, and
 // either sends it or blocks the whole answer.
 func (g *answerGuard) release(candidate, keep string, final bool) {
@@ -1172,9 +1202,19 @@ func previousUserText(turns []Turn) string {
 // index to find anything: at most four words with an earlier user turn to
 // draw on, the query is the previous turn's text plus this one, so "and the
 // address?" after "how do I create an ABHA" still retrieves the flow.
+// refersBackRe marks a follow-up that leans on the turn before it: a word
+// pointing back ("that callback", "it", "both"), or an opening that carries
+// on from the last answer ("ok", "and", "now"). Such a turn names nothing the
+// search can find alone at any length; follow-ups scored 0.20 recall at 3 on
+// the first recorded run, when only turns of four words or fewer carried the
+// previous question. A standalone question that happens to say "this" gets
+// the previous question as well, which costs some precision on that one
+// lookup and never loses the question's own words.
+var refersBackRe = regexp.MustCompile(`(?i)\b(?:that|this|those|these|it|its|they|them|their|both|same|above|previous|earlier)\b|^\s*(?:ok|okay|and|so|then|now|also|but)\b`)
+
 func lookupQuery(turns []Turn) string {
 	last := lastUserText(turns)
-	if len(strings.Fields(last)) > 4 {
+	if len(strings.Fields(last)) > 4 && !refersBackRe.MatchString(last) {
 		return last
 	}
 	if prev := previousUserText(turns); prev != "" {

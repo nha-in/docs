@@ -15,6 +15,6 @@
   "expected_behaviour": "answer",
   "derived_from": null,
   "source_row": "annexure#glossary",
-  "catalogue_version": "2026.08.24",
+  "catalogue_version": "2026.09.16",
   "notes": "Source lines: catalogue/hiecm/concepts/roles.md, 'The entity publishing a record is the HIP... The entity fetching one is the HIU. This changes call by call, and either entity can take either role.'; catalogue/shared/glossary/hip.md, 'The role is per interaction, not per product and not per company.'"
 }

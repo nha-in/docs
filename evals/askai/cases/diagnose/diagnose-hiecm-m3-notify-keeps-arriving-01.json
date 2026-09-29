@@ -1,0 +1,37 @@
+{
+  "id": "diagnose-hiecm-m3-notify-keeps-arriving-01",
+  "slice": "diagnose",
+  "class": "diagnose",
+  "turns": [
+    {
+      "role": "user",
+      "text": "my HIU bridge keeps receiving the same consent notify callback over and over for one consent request. i return 200 every time. why wont it stop"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "Acknowledge the notification by calling /api/hiecm/consent/v3/request/hiu/on-notify so delivery stops.",
+    "The acknowledgement is an array with one entry per artefact carrying status and consentId, and response.requestId is the notification's request id."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom",
+    "/api/hiecm/consent/v3/request/hip/on-notify"
+  ],
+  "expected_sources": [
+    "hiecm.endpoint.m3-consent-hiu-on-notify",
+    "hiecm.flow.m3-request-consent"
+  ],
+  "expected_shape": "diagnose",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-hiecm-consent-management-data-flow-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "Returning 200 on the callback is not the acknowledgement; a separate call is. The HIP's acknowledgement takes a single object, which is the confusable sibling. Source lines: catalogue/hiecm/flows/m3-request-consent.md, 'On the notify callback, store every id in `consentArtefacts`, then acknowledge with `/api/hiecm/consent/v3/request/hiu/on-notify` so delivery stops.'; catalogue/hiecm/endpoints/m3-consent-hiu-on-notify.md, '`acknowledgement` is an array, with one entry per artefact carrying `status` and `consentId`. Put the notification's request id in `response.requestId`.' and 'The HIP acknowledgement takes a single object instead of an array.'"
+}

@@ -40,6 +40,6 @@
   "expected_behaviour": "answer",
   "derived_from": null,
   "source_row": "annexure#glossary",
-  "catalogue_version": "2026.08.24",
+  "catalogue_version": "2026.09.16",
   "notes": "follow-up asks for the M2 counterpart of an M1 answer; the second answer is m2.md's own summary and plain-words text."
 }

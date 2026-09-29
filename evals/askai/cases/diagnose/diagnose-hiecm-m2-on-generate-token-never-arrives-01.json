@@ -1,0 +1,35 @@
+{
+  "id": "diagnose-hiecm-m2-on-generate-token-never-arrives-01",
+  "slice": "diagnose",
+  "class": "diagnose",
+  "turns": [
+    {
+      "role": "user",
+      "text": "generate-token gives 202 but nothing ever comes on my on-generate-token endpoint"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "Confirm the callback URL is registered with the gateway through the update bridge callback URL call, and that it is reachable from the public internet over HTTPS.",
+    "Do not resend the original call while checking, because a resend with a new REQUEST-ID starts a second exchange."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.troubleshooting.callback-never-arrives"
+  ],
+  "expected_shape": "diagnose",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-hiecm-link-token-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "The most common way M2 stalls on day one. catalogue/hiecm/flows/m2-link-care-context.md routes it: 'No callback at all: see the callback never arrives'. Source lines: catalogue/hiecm/troubleshooting/callback-never-arrives.md, 'Is the callback URL registered with the gateway? Confirm it with the update bridge callback URL call'; 'Is that URL reachable from the public internet over HTTPS?'; 'Do not resend the original call while checking, because a resend with a new `REQUEST-ID` starts a second exchange.'"
+}

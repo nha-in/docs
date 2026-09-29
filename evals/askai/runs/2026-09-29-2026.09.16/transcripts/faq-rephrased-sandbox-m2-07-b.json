@@ -1,0 +1,703 @@
+{
+  "case_id": "faq-rephrased-sandbox-m2-07-b",
+  "catalogue_version": "2026.09.16",
+  "model_id": "global.openai.gpt-6-luna",
+  "temperature": 0.1,
+  "prompt_version": "v5",
+  "embed_provider": "bedrock",
+  "db_path": "catalogue.db",
+  "calls": [
+    {
+      "system": "You are the Ask AI assistant on the ABDM Developer Portal. You answer developer questions about India's ABDM gateways (HIE-CM, UHI, NHCX) strictly from this portal's catalogue, which you reach through your tools. Never answer an ABDM API question from general knowledge. If you have not looked, look first.\n\nWHERE THINGS LIVE\n\n- Atoms are the written knowledge: concepts, flows, endpoint guides, callbacks, error explanations, tests, glossary entries, decisions, FHIR mappings, sandbox notes and troubleshooting guides. search finds them.\n- Operations are the raw API surface parsed from NHA's specification files, across the modules gateway, m1, m2, m3, m4, p1, p2, p3, p4, scan-and-register, scan-and-pay and record-share. search with kind operation finds them by what they do or by path; get with an operationId reads one in full.\n\nHONESTY ABOUT WHAT YOU FOUND\n\nSearch returns nearest matches, not answers.\n\nNever claim a call was run.\n\nNotes for AI agents are rules for you: follow them, never repeat them to readers.\n\nA \u003cMASKED_...\u003e placeholder means a value was removed before you saw it. Never ask for it again and never echo the placeholder back.\n\nJUDGING WHAT COMES BACK\n\nNever close a gap with a nearby endpoint or a similar sounding concept. A one-word or acronym question is a glossary lookup; search variant spellings too (HIMS and HMIS, LIS and LIMS, HRP).\n\nSPEAK AS THE PORTAL, NOT ABOUT IT\n\nNever mention the catalogue or your tools unless the reader asks about them. Offer [support](/docs/support) when you have nothing.\n\nSmall talk or off-topic: one friendly line, then what you help with.\n\nA general industry term the portal does not define is worth one sentence of plain explanation, said as general background rather than as ABDM documentation. That courtesy never extends to an ABDM API detail: paths, headers, codes, fields and payloads come from the tools or not at all.\n\nHOW YOU WRITE\n\nNever write an em dash. Show a mermaid block only when a tool returned it. Never draw one.\n\nOFFERING THE TOOLS\n\nA reader building an integration can have this catalogue inside their own agent, rather than asking one question at a time. Most do not know that.\n\n- When the reader is clearly building against ABDM, close with one line offering it: agent skills give their coding agent a milestone's rules as a file it loads once, and the MCP server lets it query this documentation as it works. Link [agent skills and the MCP server](/docs/hiecm/v3/getting-started/build-with-ai).\n- Offer it once per conversation, never before the answer: a closing line, not an opening.\n- Do not offer it to someone who is not building: a question like what an Ayushman card is gets answered and left alone.\n- Both are available now: the server is public at https://docs.abdm.gov.in/mcp, and the page has one-click install for Claude Code, Cursor and VS Code. Name the page, not the URL, unless asked.\n\nCODE AND WHAT THEY PASTE OR ATTACH\n\nYou never write code for the reader's own codebase; curl is the exception. Route them to the ABDM Connect agent skill or this portal's MCP server.\n\nWRITING THE ANSWER\n\n- Lead with the answer. The reader is mid-task, usually with a failing call in front of them.\n- Never open by praising the question, apologising, restating the question back, or announcing what you are about to do. Start with the substance. Warmth is being useful quickly, not saying \"great question\".\n- Quote API literals exactly as the tools give them: endpoint paths, header names, error codes, timestamp formats, field names. Never paraphrase a literal, and never tidy its case or spacing.\n- Markdown renders in this panel. Use inline code for every literal, short bulleted or numbered lists for steps and options, and no headings.\n\nDo not invent portal URLs.\n\nHOW A QUESTION ARRIVES\n\nThe user turn may open with a \u003cpassages\u003e block: the documentation already retrieved for this question, with ids and page links. Answer from it first. It is followed by an \u003canswer_shape\u003e block naming the shape and word budget your answer must take. Call search only when the passages do not carry the answer.\n\nA \u003cskill\u003e block is the skill section the reader chose: follow it, and name what it omits.",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "\u003cpassages\u003e\n{\"passages\":[{\"id\":\"hiecm.glossary.auth-modes\",\"type\":\"glossary\",\"milestone\":\"n/a\",\"title\":\"Auth modes, the four ways a patient proves who they are\",\"doc_url\":\"\",\"body\":\"# Auth modes, the four ways a patient proves who they are\\n\\n## In plain words\\n\\nBefore records can be linked to a patient, the patient has to be\\nauthenticated. ABDM offers four ways, and which of them are on for a\\ngiven patient is not something you get to decide. You ask ABDM which\\nmodes that person supports, then pick from what comes back.\\n\\n## Before you start\\n\\nNothing, though the sequence makes more sense if you know that linking\\nruns through the consent manager rather than directly against the\\npatient.\\n\\n## What happens\\n\\nNHA's four modes:\\n\\n| Mode | What it means |\\n|---|---|\\n| `MOBILE_OTP` | Authentication starts with the user's registered mobile number |\\n| `AADHAAR_OTP` | Authentication starts with the mobile registered against Aadhaar |\\n| `DEMOGRAPHICS` | The provider sends the user's details exactly as registered with the ABHA number system |\\n| `DIRECT` | A direct means of authentication with the user |\\n\\nThe two OTP modes look alike and are not. `MOBILE_OTP` uses the number\\nthe person registered with ABDM. `AADHAAR_OTP` uses whichever number is\\nattached to their Aadhaar, which is often a different number and is\\nsometimes no number at all.\\n\\n`DEMOGRAPHICS` is the strictest of the four. The word NHA uses is\\n\\\"exactly\\\": the details you send have to match the ABHA record rather than\\nmerely resemble it, so a name spelled differently or a date of birth in\\nanother format fails.\\n\\nYou discover which modes apply by asking, through the fetch modes call,\\nand the answer arrives on your callback like every other asynchronous\\nreply in M2 and M3.\\n\\n## How you know it worked\\n\\nYou never hardcode a mode. Your flow asks which are supported, offers the\\nuser only those, and copes with a patient for whom the mode you would\\nhave preferred is unavailable.\\n\\n## When it goes wrong\\n\\nAssuming Aadhaar OTP is always available. A person whose Aadhaar carries\\nno mobile number cannot receive one, which is why the other modes exist.\\n\\nTreating `DEMOGRAPHICS` as fuzzy matching. It is not, and a near miss\\nreads as a failed authentication rather than as a data quality warning.\"},{\"id\":\"hiecm.endpoint.p3-consent-fetch\",\"type\":\"endpoint\",\"milestone\":\"P3\",\"title\":\"Fetch a consent artefact in full\",\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/04-m3-post-consent-v3-fetch#p3-consent-fetch\",\"body\":\"# Fetch a consent artefact in full\\n\\n## In plain words\\n\\nA consent artefact id says permission exists. This call asks for what the permission covers. Send the `consentId`. The artefact arrives on your consent on-fetch callback, not on this response.\\n\\n## Before you start\\n\\nYour `X-HIU-ID`, `X-CM-ID`, and the artefact id from a granted consent.\\n\\n## What happens\\n\\nYou receive `202`. The artefact arrives at `/api/v3/hiu/consent/on-fetch`.\\n\\n## How you know it worked\\n\\nThe on-fetch callback carries the artefact with its date range and HI types. Check its validity before requesting data under it.\\n\\n## When it goes wrong\\n\\n`404` with `ABDM-1001` means no artefact has that id.\"},{\"id\":\"hiecm.endpoint.m3-consent-fetch\",\"type\":\"endpoint\",\"milestone\":\"M3\",\"title\":\"Fetch the full consent artefact\",\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/04-m3-post-consent-v3-fetch#m3-consent-fetch\",\"body\":\"# Fetch the full consent artefact\\n\\n## In plain words\\n\\nFetch a [consent artefact](/docs/hiecm/v3/getting-started/glossary#consent-artefact) by its id after a `GRANTED` [consent notification](/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/03-m3-post-v3-hiu-consent-request-notify). The call returns 202 Accepted, and the artefact arrives on [consent on-fetch](/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/04-m3-post-v3-hiu-consent-on-fetch). It lists:\\n\\n- the care contexts approved\\n- the health information types permitted\\n- the date range, and the date to erase the data\\n- the [HIP](/docs/hiecm/v3/getting-started/glossary#hip) and [HIU](/docs/hiecm/v3/getting-started/glossary#hiu), and a signature\\n\\nStore the artefact. Your health information request needs its id.\\n\\n## Before you start\\n\\nA gateway session token and the artefact ids from the notification. Send the `REQUEST-ID`, `TIMESTAMP`, `X-CM-ID` and `X-HIU-ID` headers.\\n\\n## How you know it worked\\n\\nThe artefact arrives on `/api/v3/hiu/consent/on-fetch` with `status` of `GRANTED`.\\n\\n## When it goes wrong\\n\\n`ABDM-1001` (No data found): check `consentId`. Fetch every artefact id the notification listed, not only the first. `ABDM-2402` (Invalid Timestamp): check `TIMESTAMP` against your clock. `ABDM-2404` (Invalid Request Id): send a fresh UUID in `REQUEST-ID`. `ABDM-2500` (Authorization header is missing): send the session token. `ABDM-9999` (Unknown exception) gives no cause.\"},{\"id\":\"hiecm.glossary.m3\",\"type\":\"glossary\",\"milestone\":\"n/a\",\"title\":\"M3 Health Information User: Fetch data with consent\",\"doc_url\":\"\",\"body\":\"The milestone covering consent requests and fetching someone else's records.\"},{\"id\":\"hiecm.flow.m3-fetch-records\",\"type\":\"flow\",\"milestone\":\"M3\",\"title\":\"Fetch the records a granted consent artefact covers\",\"doc_url\":\"/docs/hiecm/v3/milestones/m3#m3-fetch-records\",\"body\":\"Fetch a granted consent artefact, request the records it covers, and decrypt what the HIP pushes to your data push URL.\"}],\"related\":[{\"id\":\"nhcx.concept.biometric-authentication\",\"title\":\"Biometric authentication of the beneficiary\",\"type\":\"concept\"},{\"id\":\"hiecm.flow.p1-login\",\"title\":\"Sign a user in to a PHR application\",\"type\":\"flow\"},{\"id\":\"hiecm.concept.gateway-session\",\"title\":\"The gateway session, the first call in every integration\",\"type\":\"concept\"},{\"id\":\"hiecm.endpoint.m3-consent-fetch\",\"title\":\"Fetch the full consent artefact\",\"type\":\"endpoint\"},{\"id\":\"hiecm.flow.p3-fetch-records\",\"title\":\"Fetch and store the records a linked care context points at\",\"type\":\"flow\"},{\"id\":\"hiecm.endpoint.p3-consent-fetch\",\"title\":\"Fetch a consent artefact in full\",\"type\":\"endpoint\"},{\"id\":\"hiecm.error.abdm-2402\",\"title\":\"ABDM-2402, the timestamp is not valid\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-2404\",\"title\":\"ABDM-2404, the REQUEST-ID is not valid\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-2500\",\"title\":\"ABDM-2500, no Authorization header, or no matching request\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-9999\",\"title\":\"ABDM-9999, a catch-all, so read the message\",\"type\":\"error\"},{\"id\":\"hiecm.flow.m3-fetch-records\",\"title\":\"Fetch the records a granted consent artefact covers\",\"type\":\"flow\"}]}\n\u003c/passages\u003e\n\n\u003creader_context\u003eThe question reads as a HIE-CM question. Answer for HIE-CM unless they ask about another gateway, and do not bring in another gateway's calls or fields.\u003c/reader_context\u003e\n\n\u003canswer_shape name=\"define\" budget=\"120 words\"\u003e\nSay what it is in one sentence, then who it matters to and the one thing people get wrong about it. No list, no headings, at most four sentences.\nExample:\nAn ABHA address is the readable handle, such as name@abdm on production or name@sbx on sandbox, that records are linked against and that a person shares at a facility. It is not the ABHA number: a person has one number and can hold several addresses. NHA also calls it the PHR address.\n\u003c/answer_shape\u003e\nIf the passages and your tools do not cover the question, drop this shape and decline in two sentences that name the nearest /docs/ page and the support route.\n\nwhat are different fetch modes which are available?",
+          "ToolUse": null,
+          "ToolResult": null
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "call_de1e036a2d4350dca5d55f381dc49b79",
+            "Name": "search",
+            "Input": {
+              "query": "what are different fetch modes which are available?",
+              "milestone": "M2",
+              "kind": "atom"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "what are different fetch modes which are available?",
+            "milestone": "M2",
+            "kind": "atom"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "passages": [
+              {
+                "id": "hiecm.error.abdm-1022",
+                "type": "error",
+                "milestone": "M2",
+                "title": "ABDM-1022, too many requests",
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1022",
+                "body": "# ABDM-1022, too many requests\n\n## In plain words\n\nYou are sending more requests than ABDM accepts from your client, and it has started refusing them. The message is \"Too many requests\", and the patient share calls return it with HTTP 429.\n\n`ABDM-2429`, \"Too many requests found\", means the same, so handle both. `ABDM-1027` goes further: \"You are blocked. Please try again after 24 hours.\"\n\n## What happens\n\nBulk jobs and retry loops without backoff are the usual causes. A loop that retries at once can turn one refusal into a 24 hour block.\n\n## When it goes wrong\n\nBack off exponentially, add jitter, and cap the number of attempts. If it happens in normal use, batch your work, cache what does not change, and stop polling anything that has a callback."
+              },
+              {
+                "id": "hiecm.concept.asynchronous-callbacks",
+                "type": "concept",
+                "milestone": "M2",
+                "title": "Asynchronous calls and callbacks, why a 200 means very little",
+                "doc_url": "/docs/hiecm/v3/concepts/gateway#asynchronous-callbacks",
+                "body": "# Asynchronous calls and callbacks, why a 200 means very little\n\n## In plain words\n\nNothing goes participant to participant. Every request is addressed to the gateway, which forwards it. Two things follow.\n\n- **You get an acknowledgement, not an answer.** In the [M3](/docs/hiecm/v3/getting-started/glossary#m3) consent flow the [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) asks, the HIE-CM returns the consent request id on a callback, and the patient's decision comes back later. Each call's page in the [API reference](/docs/hiecm/v3/api) names the callback it produces.\n- **You have to be reachable.** Half of [M2](/docs/hiecm/v3/getting-started/glossary#m2) is endpoints the gateway calls on your system.\n\nOne exception. In the health information flow the HIU supplies a data push URL, and the HIP encrypts the records and pushes them there. That URL may differ from the HIU's registered gateway URL, to improve privacy. The permission came through the gateway. The bytes do not.\n\nMatch each callback to the call that caused it by `response.requestId`, which carries the `REQUEST-ID` you sent. Callbacks do not arrive in the order you sent the requests, and the same one can arrive twice, so a repeat must change nothing. Where each callback is described in the specifications is on [the API specifications](/docs/hiecm/v3/concepts/api-specifications).\n\n## Before you start\n\nA callback URL registered for your bridge and reachable over public HTTPS. Without it, no answer can arrive.\n\n## What happens\n\nSend the call with a fresh `REQUEST-ID`, treat the 202 as receipt only, and wait for the callback. Key the handler on `response.requestId`, answer it quickly, and make a second delivery of the same request id a no-op.\n\n## How you know it worked\n\nA callback reaches your URL whose `response.requestId` equals the `REQUEST-ID` you sent. Given three calls and two callbacks, the call whose request id has no callback is the one outstanding.\n\n## When it goes wrong\n\nNothing arrives: work through [the callback never arrives](/docs/hiecm/v3/troubleshooting/callback-never-arrives). A retry is appended as a new event: key on the request id. The code waits on the response body for the result: it never comes there, so the integration hangs."
+              },
+              {
+                "id": "hiecm.error.abdm-9999",
+                "type": "error",
+                "milestone": "M2",
+                "title": "ABDM-9999, a catch-all, so read the message",
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-9999",
+                "body": "# ABDM-9999, a catch-all, so read the message\n\n## In plain words\n\n`ABDM-9999` covers many failures, and the message carries the meaning. Some messages report a problem in your request, for example \"Invalid Transaction Id\", \"Invalid LoginId\" or \"RequestId cannot be NULL or Blank\". Others mean ABDM or the [HIP](/docs/hiecm/v3/getting-started/glossary#hip) could not process it, for example \"Unknown exception\" or \"Cannot process the request at the moment, please try later.\"\n\n## What happens\n\nThe code may arrive bare or followed by a colon and a space. Match on the code, then branch on the message. More specific codes exist for an unavailable service: `ABDM-1019` and `ABDM-1024` for a dependent service, `ABDM-1028` for the HIP and `ABDM-1033` for the HIU.\n\n## How you know it worked\n\nAfter a request problem, the corrected request succeeds. After an unavailability message, the same request succeeds later, unchanged.\n\n## When it goes wrong\n\nFor a request problem, fix the field the message names, because a retry repeats the mistake. For an unavailability message, retry with exponential backoff and a cap on attempts, so the loop does not end in [ABDM-1022](#abdm-1022). If it persists for hours, report it through [Support](/docs/support) with your `REQUEST-ID` and `TIMESTAMP`."
+              },
+              {
+                "id": "hiecm.concept.m2-inbound-is-a-surface",
+                "type": "concept",
+                "milestone": "M2",
+                "title": "Inbound is a surface, and silence there is a failure state",
+                "doc_url": "",
+                "body": "ABDM asks your bridge questions and waits, most of them carry no documented payload, and a handler that only logs leaves records undiscoverable."
+              },
+              {
+                "id": "hiecm.concept.error-codes",
+                "type": "concept",
+                "milestone": "M2",
+                "title": "Reading an ABDM error code",
+                "doc_url": "/docs/hiecm/v3/getting-started/build-it-well#error-codes",
+                "body": "Read the ABDM error code in the response body before the HTTP status, and key your handling on it."
+              }
+            ],
+            "related": [
+              {
+                "id": "hiecm.concept.asynchronous-callbacks",
+                "title": "Asynchronous calls and callbacks, why a 200 means very little",
+                "type": "concept"
+              },
+              {
+                "id": "hiecm.error.abdm-9999",
+                "title": "ABDM-9999, a catch-all, so read the message",
+                "type": "error"
+              },
+              {
+                "id": "hiecm.troubleshooting.otp-never-arrives",
+                "title": "The OTP never arrives",
+                "type": "troubleshooting"
+              },
+              {
+                "id": "hiecm.callback.m2-call-back-api-for-notify-care-context-update",
+                "title": "Call back API for notify care context update",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.m2-callback-api-for-sms-notification-to-patients",
+                "title": "Callback API for SMS Notification to patients",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.m2-link-token-generation-call-back",
+                "title": "Link token generation – Call Back API",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.m2-linking-care-context-call-back",
+                "title": "Linking care context Call back API",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.m2-on-carecontext-result",
+                "title": "The outcome of the care context linking call you made",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.m2-on-consent-notify-hiu",
+                "title": "A consent notification to an HIU bridge",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.m2-on-context-notify-result",
+                "title": "The outcome of the care context notify call you made",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.m2-on-data-notification",
+                "title": "The provider pushes encrypted health information to the URL named in the request",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.m2-on-discovery-request",
+                "title": "A discovery request for a patient you may hold records for",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.m2-on-generate-token-result",
+                "title": "The link token you asked for, or why it was refused",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.m2-on-health-information-request",
+                "title": "A request for the records a consent covers",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.m2-on-link-confirm",
+                "title": "Confirmation of a link, carrying the token the patient approved",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.m2-on-link-init",
+                "title": "A request to start linking a care context",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.m2-on-sms-notify-result",
+                "title": "The outcome of the SMS notify call you made",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.m3-on-consent-fetch",
+                "title": "The consent artefact detail, fetched by artefact id",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.m3-on-consent-request-init",
+                "title": "The consent request was accepted, with its request id",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.m3-on-consent-request-notify-hip",
+                "title": "The patient's decision, sent to the record holder",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.m3-on-consent-request-notify-hiu",
+                "title": "The patient's decision, sent to the requester",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.m3-on-consent-request-status",
+                "title": "The consent manager reports the state of a consent request you asked about",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.m3-on-health-information-request",
+                "title": "Acknowledgement of a health information request",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.p2-callback-for-health-record-confirmation",
+                "title": "Link confirm request to the HIP",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.p2-callback-on-health-record-discover",
+                "title": "Discovery result callback",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.p2-callback-on-health-record-link-init",
+                "title": "Link init request to the HIP",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.p2-callback-to-hip-discovery",
+                "title": "Discovery request to the HIP",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.p2-profile-on-share-callback",
+                "title": "Profile share result callback",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.p2-profile-share-callback",
+                "title": "Profile share callback",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.p2-response-on-health-record-link",
+                "title": "Link init result callback",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.p2-response-on-health-record-on-confirm",
+                "title": "Link confirm result callback",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.p3-approve-subscription-request-call-back",
+                "title": "Subscription approved callback",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.p3-call-back-to-hiu",
+                "title": "Health information request acknowledgement",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.p3-consent-request-on-status-callback",
+                "title": "Consent request status callback",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.p3-deny-subscription-call-back",
+                "title": "Subscription denied callback",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.p3-subscription-hiu-notify",
+                "title": "New record notification callback",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.callback.p3-user-subscription-request-initiate-call-back",
+                "title": "Subscription request result callback",
+                "type": "callback"
+              },
+              {
+                "id": "hiecm.concept.callback-authenticity",
+                "title": "Proving a callback really came from ABDM",
+                "type": "concept"
+              },
+              {
+                "id": "hiecm.concept.phr-subscriptions",
+                "title": "Subscriptions, and why a personal health record application needs one",
+                "type": "concept"
+              },
+              {
+                "id": "hiecm.decision.callbacks-as-webhooks",
+                "title": "Callbacks are described as OpenAPI webhooks in each module file",
+                "type": "decision"
+              },
+              {
+                "id": "hiecm.error.abdm-1022",
+                "title": "ABDM-1022, too many requests",
+                "type": "error"
+              },
+              {
+                "id": "hiecm.error.abdm-2404",
+                "title": "ABDM-2404, the REQUEST-ID is not valid",
+                "type": "error"
+              },
+              {
+                "id": "hiecm.flow.m2-link-care-context",
+                "title": "Link a care context to a patient's ABHA",
+                "type": "flow"
+              },
+              {
+                "id": "hiecm.flow.p2-discover-and-link",
+                "title": "Find records held elsewhere and link them",
+                "type": "flow"
+              },
+              {
+                "id": "hiecm.flow.p3-subscribe-and-auto-approve",
+                "title": "Subscribe to a user's account and set an auto approval policy",
+                "type": "flow"
+              },
+              {
+                "id": "shared.glossary.request-id",
+                "title": "REQUEST-ID, the request correlation header",
+                "type": "glossary"
+              },
+              {
+                "id": "hiecm.troubleshooting.accepted-then-nothing",
+                "title": "Discovery or linking was accepted, then nothing happens",
+                "type": "troubleshooting"
+              },
+              {
+                "id": "hiecm.troubleshooting.callback-never-arrives",
+                "title": "The callback never arrives",
+                "type": "troubleshooting"
+              },
+              {
+                "id": "hiecm.endpoint.gateway-get-bridge-service-by-id",
+                "title": "Find a bridge service by its service id",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.gateway-list-bridge-services",
+                "title": "List the services registered on your bridge",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.gateway-register-bridge-services",
+                "title": "Register or update bridge services for an HIU",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.gateway-sessions",
+                "title": "Create a session and get an access token",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.gateway-update-bridge-url",
+                "title": "Update the bridge callback URL",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-benefit-get-by-abha",
+                "title": "Get the benefit record for an ABHA number",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-benefit-link-or-delink",
+                "title": "Link or unlink a benefit record from an ABHA",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-benefit-search",
+                "title": "Search benefit records for a person",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-download-phr-card",
+                "title": "Download PHR card",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-download-phr-qr-code",
+                "title": "Download PHR QR code",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-enrolment-address-suggestions",
+                "title": "Get suggested ABHA addresses for a new account",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-enrolment-by-aadhaar",
+                "title": "Create an ABHA from a verified Aadhaar OTP",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-enrolment-capture-pid",
+                "title": "Track face authentication status",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-enrolment-claim-abha-address",
+                "title": "Claim a chosen ABHA address",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-enrolment-face-auth-init",
+                "title": "Start face authentication and get a transaction id",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-enrolment-list-children",
+                "title": "List the child ABHA accounts linked to this account",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-enrolment-request-otp",
+                "title": "Send an OTP to begin or continue an enrolment",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-enrolment-verify-abdm-otp",
+                "title": "Verify an OTP that ABDM sent, during enrolment",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-find-abha-search",
+                "title": "Find an ABHA for somebody who does not know theirs",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-get-phr-profile",
+                "title": "Get PHR profile",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-get-public-certificate",
+                "title": "Get the public certificate",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-login-request-otp",
+                "title": "Send a login OTP",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-login-select-account",
+                "title": "Choose which ABHA to sign in to",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-login-verify",
+                "title": "Verify a login OTP",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-login-verify-v31",
+                "title": "Sign in with a biometric, v3.1",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-on-share-acknowledgement",
+                "title": "Send share acknowledgement",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-phr-request-otp",
+                "title": "Send an OTP for ABHA address login",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-phr-search-abha-address",
+                "title": "Search an ABHA address and get its sign in methods",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-phr-verify",
+                "title": "Verify OTP or biometric for ABHA address login",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-profile-download-abha-card",
+                "title": "Download the ABHA card as a file",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-profile-get-abha-card",
+                "title": "Get the ABHA card",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-profile-get-account",
+                "title": "Read the signed in person's ABHA profile",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-profile-get-qr-code",
+                "title": "Get the ABHA QR code",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-profile-request-otp",
+                "title": "Send an OTP to change something on the profile",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-profile-update-account",
+                "title": "Update fields on an ABHA profile",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-profile-verify-otp",
+                "title": "Verify the OTP for a profile change",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-receive-patient-share",
+                "title": "Receive a patient's shared profile",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-register-hrp-services",
+                "title": "Register or update HIP and HIU services for a facility",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-send-email-verification-link",
+                "title": "Send email verification link",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m1-token-refresh",
+                "title": "Get a new user token from a refresh token",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m2-consent-hip-on-notify",
+                "title": "Acknowledge a consent notification",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m2-generate-link-token",
+                "title": "Generate Link Token",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m2-hip-data-flow-notify",
+                "title": "Notify the gateway that a data transfer finished",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m2-hip-health-information-on-request",
+                "title": "Acknowledge a health information data request",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m2-hip-link-care-context",
+                "title": "Link care contexts to an ABHA address",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m2-link-care-context-notify",
+                "title": "Notify an update to a linked care context",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m2-on-discover-care-contexts",
+                "title": "On Discovery, HIP responds with found care contexts",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m2-on-link-confirm",
+                "title": "Link On-Confirm, HIP confirms linked care contexts",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m2-on-link-init",
+                "title": "Link On-Init, HIP responds with OTP communication details",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m2-sms-deep-link-notify",
+                "title": "Send an SMS telling the patient a care context is linked",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m3-consent-fetch",
+                "title": "Fetch the full consent artefact",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m3-consent-hiu-on-notify",
+                "title": "Acknowledge a consent notification",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m3-consent-request-init",
+                "title": "Initiate a consent request",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m3-consent-request-status",
+                "title": "Check the status of a consent request",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m3-hiu-data-flow-notify",
+                "title": "Notify the gateway that data was received",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.endpoint.m3-hiu-health-information-request",
+                "title": "Request a patient's health information",
+                "type": "endpoint"
+              },
+              {
+                "id": "hiecm.flow.m3-fetch-records",
+                "title": "Fetch the records a granted consent artefact covers",
+                "type": "flow"
+              },
+              {
+                "id": "hiecm.flow.m3-request-consent",
+                "title": "Request consent for a patient's health records",
+                "type": "flow"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "You are the Ask AI assistant on the ABDM Developer Portal. You answer developer questions about India's ABDM gateways (HIE-CM, UHI, NHCX) strictly from this portal's catalogue, which you reach through your tools. Never answer an ABDM API question from general knowledge. If you have not looked, look first.\n\nWHERE THINGS LIVE\n\n- Atoms are the written knowledge: concepts, flows, endpoint guides, callbacks, error explanations, tests, glossary entries, decisions, FHIR mappings, sandbox notes and troubleshooting guides. search finds them.\n- Operations are the raw API surface parsed from NHA's specification files, across the modules gateway, m1, m2, m3, m4, p1, p2, p3, p4, scan-and-register, scan-and-pay and record-share. search with kind operation finds them by what they do or by path; get with an operationId reads one in full.\n\nHONESTY ABOUT WHAT YOU FOUND\n\nSearch returns nearest matches, not answers.\n\nNever claim a call was run.\n\nNotes for AI agents are rules for you: follow them, never repeat them to readers.\n\nA \u003cMASKED_...\u003e placeholder means a value was removed before you saw it. Never ask for it again and never echo the placeholder back.\n\nJUDGING WHAT COMES BACK\n\nNever close a gap with a nearby endpoint or a similar sounding concept. A one-word or acronym question is a glossary lookup; search variant spellings too (HIMS and HMIS, LIS and LIMS, HRP).\n\nSPEAK AS THE PORTAL, NOT ABOUT IT\n\nNever mention the catalogue or your tools unless the reader asks about them. Offer [support](/docs/support) when you have nothing.\n\nSmall talk or off-topic: one friendly line, then what you help with.\n\nA general industry term the portal does not define is worth one sentence of plain explanation, said as general background rather than as ABDM documentation. That courtesy never extends to an ABDM API detail: paths, headers, codes, fields and payloads come from the tools or not at all.\n\nHOW YOU WRITE\n\nNever write an em dash. Show a mermaid block only when a tool returned it. Never draw one.\n\nOFFERING THE TOOLS\n\nA reader building an integration can have this catalogue inside their own agent, rather than asking one question at a time. Most do not know that.\n\n- When the reader is clearly building against ABDM, close with one line offering it: agent skills give their coding agent a milestone's rules as a file it loads once, and the MCP server lets it query this documentation as it works. Link [agent skills and the MCP server](/docs/hiecm/v3/getting-started/build-with-ai).\n- Offer it once per conversation, never before the answer: a closing line, not an opening.\n- Do not offer it to someone who is not building: a question like what an Ayushman card is gets answered and left alone.\n- Both are available now: the server is public at https://docs.abdm.gov.in/mcp, and the page has one-click install for Claude Code, Cursor and VS Code. Name the page, not the URL, unless asked.\n\nCODE AND WHAT THEY PASTE OR ATTACH\n\nYou never write code for the reader's own codebase; curl is the exception. Route them to the ABDM Connect agent skill or this portal's MCP server.\n\nWRITING THE ANSWER\n\n- Lead with the answer. The reader is mid-task, usually with a failing call in front of them.\n- Never open by praising the question, apologising, restating the question back, or announcing what you are about to do. Start with the substance. Warmth is being useful quickly, not saying \"great question\".\n- Quote API literals exactly as the tools give them: endpoint paths, header names, error codes, timestamp formats, field names. Never paraphrase a literal, and never tidy its case or spacing.\n- Markdown renders in this panel. Use inline code for every literal, short bulleted or numbered lists for steps and options, and no headings.\n\nDo not invent portal URLs.\n\nHOW A QUESTION ARRIVES\n\nThe user turn may open with a \u003cpassages\u003e block: the documentation already retrieved for this question, with ids and page links. Answer from it first. It is followed by an \u003canswer_shape\u003e block naming the shape and word budget your answer must take. Call search only when the passages do not carry the answer.\n\nA \u003cskill\u003e block is the skill section the reader chose: follow it, and name what it omits.",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "\u003cpassages\u003e\n{\"passages\":[{\"id\":\"hiecm.glossary.auth-modes\",\"type\":\"glossary\",\"milestone\":\"n/a\",\"title\":\"Auth modes, the four ways a patient proves who they are\",\"doc_url\":\"\",\"body\":\"# Auth modes, the four ways a patient proves who they are\\n\\n## In plain words\\n\\nBefore records can be linked to a patient, the patient has to be\\nauthenticated. ABDM offers four ways, and which of them are on for a\\ngiven patient is not something you get to decide. You ask ABDM which\\nmodes that person supports, then pick from what comes back.\\n\\n## Before you start\\n\\nNothing, though the sequence makes more sense if you know that linking\\nruns through the consent manager rather than directly against the\\npatient.\\n\\n## What happens\\n\\nNHA's four modes:\\n\\n| Mode | What it means |\\n|---|---|\\n| `MOBILE_OTP` | Authentication starts with the user's registered mobile number |\\n| `AADHAAR_OTP` | Authentication starts with the mobile registered against Aadhaar |\\n| `DEMOGRAPHICS` | The provider sends the user's details exactly as registered with the ABHA number system |\\n| `DIRECT` | A direct means of authentication with the user |\\n\\nThe two OTP modes look alike and are not. `MOBILE_OTP` uses the number\\nthe person registered with ABDM. `AADHAAR_OTP` uses whichever number is\\nattached to their Aadhaar, which is often a different number and is\\nsometimes no number at all.\\n\\n`DEMOGRAPHICS` is the strictest of the four. The word NHA uses is\\n\\\"exactly\\\": the details you send have to match the ABHA record rather than\\nmerely resemble it, so a name spelled differently or a date of birth in\\nanother format fails.\\n\\nYou discover which modes apply by asking, through the fetch modes call,\\nand the answer arrives on your callback like every other asynchronous\\nreply in M2 and M3.\\n\\n## How you know it worked\\n\\nYou never hardcode a mode. Your flow asks which are supported, offers the\\nuser only those, and copes with a patient for whom the mode you would\\nhave preferred is unavailable.\\n\\n## When it goes wrong\\n\\nAssuming Aadhaar OTP is always available. A person whose Aadhaar carries\\nno mobile number cannot receive one, which is why the other modes exist.\\n\\nTreating `DEMOGRAPHICS` as fuzzy matching. It is not, and a near miss\\nreads as a failed authentication rather than as a data quality warning.\"},{\"id\":\"hiecm.endpoint.p3-consent-fetch\",\"type\":\"endpoint\",\"milestone\":\"P3\",\"title\":\"Fetch a consent artefact in full\",\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/04-m3-post-consent-v3-fetch#p3-consent-fetch\",\"body\":\"# Fetch a consent artefact in full\\n\\n## In plain words\\n\\nA consent artefact id says permission exists. This call asks for what the permission covers. Send the `consentId`. The artefact arrives on your consent on-fetch callback, not on this response.\\n\\n## Before you start\\n\\nYour `X-HIU-ID`, `X-CM-ID`, and the artefact id from a granted consent.\\n\\n## What happens\\n\\nYou receive `202`. The artefact arrives at `/api/v3/hiu/consent/on-fetch`.\\n\\n## How you know it worked\\n\\nThe on-fetch callback carries the artefact with its date range and HI types. Check its validity before requesting data under it.\\n\\n## When it goes wrong\\n\\n`404` with `ABDM-1001` means no artefact has that id.\"},{\"id\":\"hiecm.endpoint.m3-consent-fetch\",\"type\":\"endpoint\",\"milestone\":\"M3\",\"title\":\"Fetch the full consent artefact\",\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/04-m3-post-consent-v3-fetch#m3-consent-fetch\",\"body\":\"# Fetch the full consent artefact\\n\\n## In plain words\\n\\nFetch a [consent artefact](/docs/hiecm/v3/getting-started/glossary#consent-artefact) by its id after a `GRANTED` [consent notification](/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/03-m3-post-v3-hiu-consent-request-notify). The call returns 202 Accepted, and the artefact arrives on [consent on-fetch](/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/04-m3-post-v3-hiu-consent-on-fetch). It lists:\\n\\n- the care contexts approved\\n- the health information types permitted\\n- the date range, and the date to erase the data\\n- the [HIP](/docs/hiecm/v3/getting-started/glossary#hip) and [HIU](/docs/hiecm/v3/getting-started/glossary#hiu), and a signature\\n\\nStore the artefact. Your health information request needs its id.\\n\\n## Before you start\\n\\nA gateway session token and the artefact ids from the notification. Send the `REQUEST-ID`, `TIMESTAMP`, `X-CM-ID` and `X-HIU-ID` headers.\\n\\n## How you know it worked\\n\\nThe artefact arrives on `/api/v3/hiu/consent/on-fetch` with `status` of `GRANTED`.\\n\\n## When it goes wrong\\n\\n`ABDM-1001` (No data found): check `consentId`. Fetch every artefact id the notification listed, not only the first. `ABDM-2402` (Invalid Timestamp): check `TIMESTAMP` against your clock. `ABDM-2404` (Invalid Request Id): send a fresh UUID in `REQUEST-ID`. `ABDM-2500` (Authorization header is missing): send the session token. `ABDM-9999` (Unknown exception) gives no cause.\"},{\"id\":\"hiecm.glossary.m3\",\"type\":\"glossary\",\"milestone\":\"n/a\",\"title\":\"M3 Health Information User: Fetch data with consent\",\"doc_url\":\"\",\"body\":\"The milestone covering consent requests and fetching someone else's records.\"},{\"id\":\"hiecm.flow.m3-fetch-records\",\"type\":\"flow\",\"milestone\":\"M3\",\"title\":\"Fetch the records a granted consent artefact covers\",\"doc_url\":\"/docs/hiecm/v3/milestones/m3#m3-fetch-records\",\"body\":\"Fetch a granted consent artefact, request the records it covers, and decrypt what the HIP pushes to your data push URL.\"}],\"related\":[{\"id\":\"nhcx.concept.biometric-authentication\",\"title\":\"Biometric authentication of the beneficiary\",\"type\":\"concept\"},{\"id\":\"hiecm.flow.p1-login\",\"title\":\"Sign a user in to a PHR application\",\"type\":\"flow\"},{\"id\":\"hiecm.concept.gateway-session\",\"title\":\"The gateway session, the first call in every integration\",\"type\":\"concept\"},{\"id\":\"hiecm.endpoint.m3-consent-fetch\",\"title\":\"Fetch the full consent artefact\",\"type\":\"endpoint\"},{\"id\":\"hiecm.flow.p3-fetch-records\",\"title\":\"Fetch and store the records a linked care context points at\",\"type\":\"flow\"},{\"id\":\"hiecm.endpoint.p3-consent-fetch\",\"title\":\"Fetch a consent artefact in full\",\"type\":\"endpoint\"},{\"id\":\"hiecm.error.abdm-2402\",\"title\":\"ABDM-2402, the timestamp is not valid\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-2404\",\"title\":\"ABDM-2404, the REQUEST-ID is not valid\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-2500\",\"title\":\"ABDM-2500, no Authorization header, or no matching request\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-9999\",\"title\":\"ABDM-9999, a catch-all, so read the message\",\"type\":\"error\"},{\"id\":\"hiecm.flow.m3-fetch-records\",\"title\":\"Fetch the records a granted consent artefact covers\",\"type\":\"flow\"}]}\n\u003c/passages\u003e\n\n\u003creader_context\u003eThe question reads as a HIE-CM question. Answer for HIE-CM unless they ask about another gateway, and do not bring in another gateway's calls or fields.\u003c/reader_context\u003e\n\n\u003canswer_shape name=\"define\" budget=\"120 words\"\u003e\nSay what it is in one sentence, then who it matters to and the one thing people get wrong about it. No list, no headings, at most four sentences.\nExample:\nAn ABHA address is the readable handle, such as name@abdm on production or name@sbx on sandbox, that records are linked against and that a person shares at a facility. It is not the ABHA number: a person has one number and can hold several addresses. NHA also calls it the PHR address.\n\u003c/answer_shape\u003e\nIf the passages and your tools do not cover the question, drop this shape and decline in two sentences that name the nearest /docs/ page and the support route.\n\nwhat are different fetch modes which are available?",
+          "ToolUse": null,
+          "ToolResult": null
+        },
+        {
+          "Role": "assistant",
+          "Text": "",
+          "ToolUse": {
+            "ID": "call_de1e036a2d4350dca5d55f381dc49b79",
+            "Name": "search",
+            "Input": {
+              "query": "what are different fetch modes which are available?",
+              "milestone": "M2",
+              "kind": "atom"
+            }
+          },
+          "ToolResult": null
+        },
+        {
+          "Role": "user",
+          "Text": "",
+          "ToolUse": null,
+          "ToolResult": {
+            "ID": "call_de1e036a2d4350dca5d55f381dc49b79",
+            "Content": "eyJjYXRhbG9ndWVfdmVyc2lvbiI6IjIwMjYuMDkuMTYiLCJwYXNzYWdlcyI6W3siaWQiOiJoaWVjbS5lcnJvci5hYmRtLTEwMjIiLCJ0eXBlIjoiZXJyb3IiLCJtaWxlc3RvbmUiOiJNMiIsInRpdGxlIjoiQUJETS0xMDIyLCB0b28gbWFueSByZXF1ZXN0cyIsImRvY191cmwiOiIvZG9jcy9oaWVjbS92My9hcGkvbTIvZXJyb3JzI2FiZG0tMTAyMiIsImJvZHkiOiIjIEFCRE0tMTAyMiwgdG9vIG1hbnkgcmVxdWVzdHNcblxuIyMgSW4gcGxhaW4gd29yZHNcblxuWW91IGFyZSBzZW5kaW5nIG1vcmUgcmVxdWVzdHMgdGhhbiBBQkRNIGFjY2VwdHMgZnJvbSB5b3VyIGNsaWVudCwgYW5kIGl0IGhhcyBzdGFydGVkIHJlZnVzaW5nIHRoZW0uIFRoZSBtZXNzYWdlIGlzIFwiVG9vIG1hbnkgcmVxdWVzdHNcIiwgYW5kIHRoZSBwYXRpZW50IHNoYXJlIGNhbGxzIHJldHVybiBpdCB3aXRoIEhUVFAgNDI5LlxuXG5gQUJETS0yNDI5YCwgXCJUb28gbWFueSByZXF1ZXN0cyBmb3VuZFwiLCBtZWFucyB0aGUgc2FtZSwgc28gaGFuZGxlIGJvdGguIGBBQkRNLTEwMjdgIGdvZXMgZnVydGhlcjogXCJZb3UgYXJlIGJsb2NrZWQuIFBsZWFzZSB0cnkgYWdhaW4gYWZ0ZXIgMjQgaG91cnMuXCJcblxuIyMgV2hhdCBoYXBwZW5zXG5cbkJ1bGsgam9icyBhbmQgcmV0cnkgbG9vcHMgd2l0aG91dCBiYWNrb2ZmIGFyZSB0aGUgdXN1YWwgY2F1c2VzLiBBIGxvb3AgdGhhdCByZXRyaWVzIGF0IG9uY2UgY2FuIHR1cm4gb25lIHJlZnVzYWwgaW50byBhIDI0IGhvdXIgYmxvY2suXG5cbiMjIFdoZW4gaXQgZ29lcyB3cm9uZ1xuXG5CYWNrIG9mZiBleHBvbmVudGlhbGx5LCBhZGQgaml0dGVyLCBhbmQgY2FwIHRoZSBudW1iZXIgb2YgYXR0ZW1wdHMuIElmIGl0IGhhcHBlbnMgaW4gbm9ybWFsIHVzZSwgYmF0Y2ggeW91ciB3b3JrLCBjYWNoZSB3aGF0IGRvZXMgbm90IGNoYW5nZSwgYW5kIHN0b3AgcG9sbGluZyBhbnl0aGluZyB0aGF0IGhhcyBhIGNhbGxiYWNrLiJ9LHsiaWQiOiJoaWVjbS5jb25jZXB0LmFzeW5jaHJvbm91cy1jYWxsYmFja3MiLCJ0eXBlIjoiY29uY2VwdCIsIm1pbGVzdG9uZSI6Ik0yIiwidGl0bGUiOiJBc3luY2hyb25vdXMgY2FsbHMgYW5kIGNhbGxiYWNrcywgd2h5IGEgMjAwIG1lYW5zIHZlcnkgbGl0dGxlIiwiZG9jX3VybCI6Ii9kb2NzL2hpZWNtL3YzL2NvbmNlcHRzL2dhdGV3YXkjYXN5bmNocm9ub3VzLWNhbGxiYWNrcyIsImJvZHkiOiIjIEFzeW5jaHJvbm91cyBjYWxscyBhbmQgY2FsbGJhY2tzLCB3aHkgYSAyMDAgbWVhbnMgdmVyeSBsaXR0bGVcblxuIyMgSW4gcGxhaW4gd29yZHNcblxuTm90aGluZyBnb2VzIHBhcnRpY2lwYW50IHRvIHBhcnRpY2lwYW50LiBFdmVyeSByZXF1ZXN0IGlzIGFkZHJlc3NlZCB0byB0aGUgZ2F0ZXdheSwgd2hpY2ggZm9yd2FyZHMgaXQuIFR3byB0aGluZ3MgZm9sbG93LlxuXG4tICoqWW91IGdldCBhbiBhY2tub3dsZWRnZW1lbnQsIG5vdCBhbiBhbnN3ZXIuKiogSW4gdGhlIFtNM10oL2RvY3MvaGllY20vdjMvZ2V0dGluZy1zdGFydGVkL2dsb3NzYXJ5I20zKSBjb25zZW50IGZsb3cgdGhlIFtISVVdKC9kb2NzL2hpZWNtL3YzL2dldHRpbmctc3RhcnRlZC9nbG9zc2FyeSNoaXUpIGFza3MsIHRoZSBISUUtQ00gcmV0dXJucyB0aGUgY29uc2VudCByZXF1ZXN0IGlkIG9uIGEgY2FsbGJhY2ssIGFuZCB0aGUgcGF0aWVudCdzIGRlY2lzaW9uIGNvbWVzIGJhY2sgbGF0ZXIuIEVhY2ggY2FsbCdzIHBhZ2UgaW4gdGhlIFtBUEkgcmVmZXJlbmNlXSgvZG9jcy9oaWVjbS92My9hcGkpIG5hbWVzIHRoZSBjYWxsYmFjayBpdCBwcm9kdWNlcy5cbi0gKipZb3UgaGF2ZSB0byBiZSByZWFjaGFibGUuKiogSGFsZiBvZiBbTTJdKC9kb2NzL2hpZWNtL3YzL2dldHRpbmctc3RhcnRlZC9nbG9zc2FyeSNtMikgaXMgZW5kcG9pbnRzIHRoZSBnYXRld2F5IGNhbGxzIG9uIHlvdXIgc3lzdGVtLlxuXG5PbmUgZXhjZXB0aW9uLiBJbiB0aGUgaGVhbHRoIGluZm9ybWF0aW9uIGZsb3cgdGhlIEhJVSBzdXBwbGllcyBhIGRhdGEgcHVzaCBVUkwsIGFuZCB0aGUgSElQIGVuY3J5cHRzIHRoZSByZWNvcmRzIGFuZCBwdXNoZXMgdGhlbSB0aGVyZS4gVGhhdCBVUkwgbWF5IGRpZmZlciBmcm9tIHRoZSBISVUncyByZWdpc3RlcmVkIGdhdGV3YXkgVVJMLCB0byBpbXByb3ZlIHByaXZhY3kuIFRoZSBwZXJtaXNzaW9uIGNhbWUgdGhyb3VnaCB0aGUgZ2F0ZXdheS4gVGhlIGJ5dGVzIGRvIG5vdC5cblxuTWF0Y2ggZWFjaCBjYWxsYmFjayB0byB0aGUgY2FsbCB0aGF0IGNhdXNlZCBpdCBieSBgcmVzcG9uc2UucmVxdWVzdElkYCwgd2hpY2ggY2FycmllcyB0aGUgYFJFUVVFU1QtSURgIHlvdSBzZW50LiBDYWxsYmFja3MgZG8gbm90IGFycml2ZSBpbiB0aGUgb3JkZXIgeW91IHNlbnQgdGhlIHJlcXVlc3RzLCBhbmQgdGhlIHNhbWUgb25lIGNhbiBhcnJpdmUgdHdpY2UsIHNvIGEgcmVwZWF0IG11c3QgY2hhbmdlIG5vdGhpbmcuIFdoZXJlIGVhY2ggY2FsbGJhY2sgaXMgZGVzY3JpYmVkIGluIHRoZSBzcGVjaWZpY2F0aW9ucyBpcyBvbiBbdGhlIEFQSSBzcGVjaWZpY2F0aW9uc10oL2RvY3MvaGllY20vdjMvY29uY2VwdHMvYXBpLXNwZWNpZmljYXRpb25zKS5cblxuIyMgQmVmb3JlIHlvdSBzdGFydFxuXG5BIGNhbGxiYWNrIFVSTCByZWdpc3RlcmVkIGZvciB5b3VyIGJyaWRnZSBhbmQgcmVhY2hhYmxlIG92ZXIgcHVibGljIEhUVFBTLiBXaXRob3V0IGl0LCBubyBhbnN3ZXIgY2FuIGFycml2ZS5cblxuIyMgV2hhdCBoYXBwZW5zXG5cblNlbmQgdGhlIGNhbGwgd2l0aCBhIGZyZXNoIGBSRVFVRVNULUlEYCwgdHJlYXQgdGhlIDIwMiBhcyByZWNlaXB0IG9ubHksIGFuZCB3YWl0IGZvciB0aGUgY2FsbGJhY2suIEtleSB0aGUgaGFuZGxlciBvbiBgcmVzcG9uc2UucmVxdWVzdElkYCwgYW5zd2VyIGl0IHF1aWNrbHksIGFuZCBtYWtlIGEgc2Vjb25kIGRlbGl2ZXJ5IG9mIHRoZSBzYW1lIHJlcXVlc3QgaWQgYSBuby1vcC5cblxuIyMgSG93IHlvdSBrbm93IGl0IHdvcmtlZFxuXG5BIGNhbGxiYWNrIHJlYWNoZXMgeW91ciBVUkwgd2hvc2UgYHJlc3BvbnNlLnJlcXVlc3RJZGAgZXF1YWxzIHRoZSBgUkVRVUVTVC1JRGAgeW91IHNlbnQuIEdpdmVuIHRocmVlIGNhbGxzIGFuZCB0d28gY2FsbGJhY2tzLCB0aGUgY2FsbCB3aG9zZSByZXF1ZXN0IGlkIGhhcyBubyBjYWxsYmFjayBpcyB0aGUgb25lIG91dHN0YW5kaW5nLlxuXG4jIyBXaGVuIGl0IGdvZXMgd3JvbmdcblxuTm90aGluZyBhcnJpdmVzOiB3b3JrIHRocm91Z2ggW3RoZSBjYWxsYmFjayBuZXZlciBhcnJpdmVzXSgvZG9jcy9oaWVjbS92My90cm91Ymxlc2hvb3RpbmcvY2FsbGJhY2stbmV2ZXItYXJyaXZlcykuIEEgcmV0cnkgaXMgYXBwZW5kZWQgYXMgYSBuZXcgZXZlbnQ6IGtleSBvbiB0aGUgcmVxdWVzdCBpZC4gVGhlIGNvZGUgd2FpdHMgb24gdGhlIHJlc3BvbnNlIGJvZHkgZm9yIHRoZSByZXN1bHQ6IGl0IG5ldmVyIGNvbWVzIHRoZXJlLCBzbyB0aGUgaW50ZWdyYXRpb24gaGFuZ3MuIn0seyJpZCI6ImhpZWNtLmVycm9yLmFiZG0tOTk5OSIsInR5cGUiOiJlcnJvciIsIm1pbGVzdG9uZSI6Ik0yIiwidGl0bGUiOiJBQkRNLTk5OTksIGEgY2F0Y2gtYWxsLCBzbyByZWFkIHRoZSBtZXNzYWdlIiwiZG9jX3VybCI6Ii9kb2NzL2hpZWNtL3YzL2FwaS9tMi9lcnJvcnMjYWJkbS05OTk5IiwiYm9keSI6IiMgQUJETS05OTk5LCBhIGNhdGNoLWFsbCwgc28gcmVhZCB0aGUgbWVzc2FnZVxuXG4jIyBJbiBwbGFpbiB3b3Jkc1xuXG5gQUJETS05OTk5YCBjb3ZlcnMgbWFueSBmYWlsdXJlcywgYW5kIHRoZSBtZXNzYWdlIGNhcnJpZXMgdGhlIG1lYW5pbmcuIFNvbWUgbWVzc2FnZXMgcmVwb3J0IGEgcHJvYmxlbSBpbiB5b3VyIHJlcXVlc3QsIGZvciBleGFtcGxlIFwiSW52YWxpZCBUcmFuc2FjdGlvbiBJZFwiLCBcIkludmFsaWQgTG9naW5JZFwiIG9yIFwiUmVxdWVzdElkIGNhbm5vdCBiZSBOVUxMIG9yIEJsYW5rXCIuIE90aGVycyBtZWFuIEFCRE0gb3IgdGhlIFtISVBdKC9kb2NzL2hpZWNtL3YzL2dldHRpbmctc3RhcnRlZC9nbG9zc2FyeSNoaXApIGNvdWxkIG5vdCBwcm9jZXNzIGl0LCBmb3IgZXhhbXBsZSBcIlVua25vd24gZXhjZXB0aW9uXCIgb3IgXCJDYW5ub3QgcHJvY2VzcyB0aGUgcmVxdWVzdCBhdCB0aGUgbW9tZW50LCBwbGVhc2UgdHJ5IGxhdGVyLlwiXG5cbiMjIFdoYXQgaGFwcGVuc1xuXG5UaGUgY29kZSBtYXkgYXJyaXZlIGJhcmUgb3IgZm9sbG93ZWQgYnkgYSBjb2xvbiBhbmQgYSBzcGFjZS4gTWF0Y2ggb24gdGhlIGNvZGUsIHRoZW4gYnJhbmNoIG9uIHRoZSBtZXNzYWdlLiBNb3JlIHNwZWNpZmljIGNvZGVzIGV4aXN0IGZvciBhbiB1bmF2YWlsYWJsZSBzZXJ2aWNlOiBgQUJETS0xMDE5YCBhbmQgYEFCRE0tMTAyNGAgZm9yIGEgZGVwZW5kZW50IHNlcnZpY2UsIGBBQkRNLTEwMjhgIGZvciB0aGUgSElQIGFuZCBgQUJETS0xMDMzYCBmb3IgdGhlIEhJVS5cblxuIyMgSG93IHlvdSBrbm93IGl0IHdvcmtlZFxuXG5BZnRlciBhIHJlcXVlc3QgcHJvYmxlbSwgdGhlIGNvcnJlY3RlZCByZXF1ZXN0IHN1Y2NlZWRzLiBBZnRlciBhbiB1bmF2YWlsYWJpbGl0eSBtZXNzYWdlLCB0aGUgc2FtZSByZXF1ZXN0IHN1Y2NlZWRzIGxhdGVyLCB1bmNoYW5nZWQuXG5cbiMjIFdoZW4gaXQgZ29lcyB3cm9uZ1xuXG5Gb3IgYSByZXF1ZXN0IHByb2JsZW0sIGZpeCB0aGUgZmllbGQgdGhlIG1lc3NhZ2UgbmFtZXMsIGJlY2F1c2UgYSByZXRyeSByZXBlYXRzIHRoZSBtaXN0YWtlLiBGb3IgYW4gdW5hdmFpbGFiaWxpdHkgbWVzc2FnZSwgcmV0cnkgd2l0aCBleHBvbmVudGlhbCBiYWNrb2ZmIGFuZCBhIGNhcCBvbiBhdHRlbXB0cywgc28gdGhlIGxvb3AgZG9lcyBub3QgZW5kIGluIFtBQkRNLTEwMjJdKCNhYmRtLTEwMjIpLiBJZiBpdCBwZXJzaXN0cyBmb3IgaG91cnMsIHJlcG9ydCBpdCB0aHJvdWdoIFtTdXBwb3J0XSgvZG9jcy9zdXBwb3J0KSB3aXRoIHlvdXIgYFJFUVVFU1QtSURgIGFuZCBgVElNRVNUQU1QYC4ifSx7ImlkIjoiaGllY20uY29uY2VwdC5tMi1pbmJvdW5kLWlzLWEtc3VyZmFjZSIsInR5cGUiOiJjb25jZXB0IiwibWlsZXN0b25lIjoiTTIiLCJ0aXRsZSI6IkluYm91bmQgaXMgYSBzdXJmYWNlLCBhbmQgc2lsZW5jZSB0aGVyZSBpcyBhIGZhaWx1cmUgc3RhdGUiLCJkb2NfdXJsIjoiIiwiYm9keSI6IkFCRE0gYXNrcyB5b3VyIGJyaWRnZSBxdWVzdGlvbnMgYW5kIHdhaXRzLCBtb3N0IG9mIHRoZW0gY2Fycnkgbm8gZG9jdW1lbnRlZCBwYXlsb2FkLCBhbmQgYSBoYW5kbGVyIHRoYXQgb25seSBsb2dzIGxlYXZlcyByZWNvcmRzIHVuZGlzY292ZXJhYmxlLiJ9LHsiaWQiOiJoaWVjbS5jb25jZXB0LmVycm9yLWNvZGVzIiwidHlwZSI6ImNvbmNlcHQiLCJtaWxlc3RvbmUiOiJNMiIsInRpdGxlIjoiUmVhZGluZyBhbiBBQkRNIGVycm9yIGNvZGUiLCJkb2NfdXJsIjoiL2RvY3MvaGllY20vdjMvZ2V0dGluZy1zdGFydGVkL2J1aWxkLWl0LXdlbGwjZXJyb3ItY29kZXMiLCJib2R5IjoiUmVhZCB0aGUgQUJETSBlcnJvciBjb2RlIGluIHRoZSByZXNwb25zZSBib2R5IGJlZm9yZSB0aGUgSFRUUCBzdGF0dXMsIGFuZCBrZXkgeW91ciBoYW5kbGluZyBvbiBpdC4ifV0sInJlbGF0ZWQiOlt7ImlkIjoiaGllY20uY29uY2VwdC5hc3luY2hyb25vdXMtY2FsbGJhY2tzIiwidGl0bGUiOiJBc3luY2hyb25vdXMgY2FsbHMgYW5kIGNhbGxiYWNrcywgd2h5IGEgMjAwIG1lYW5zIHZlcnkgbGl0dGxlIiwidHlwZSI6ImNvbmNlcHQifSx7ImlkIjoiaGllY20uZXJyb3IuYWJkbS05OTk5IiwidGl0bGUiOiJBQkRNLTk5OTksIGEgY2F0Y2gtYWxsLCBzbyByZWFkIHRoZSBtZXNzYWdlIiwidHlwZSI6ImVycm9yIn0seyJpZCI6ImhpZWNtLnRyb3VibGVzaG9vdGluZy5vdHAtbmV2ZXItYXJyaXZlcyIsInRpdGxlIjoiVGhlIE9UUCBuZXZlciBhcnJpdmVzIiwidHlwZSI6InRyb3VibGVzaG9vdGluZyJ9LHsiaWQiOiJoaWVjbS5jYWxsYmFjay5tMi1jYWxsLWJhY2stYXBpLWZvci1ub3RpZnktY2FyZS1jb250ZXh0LXVwZGF0ZSIsInRpdGxlIjoiQ2FsbCBiYWNrIEFQSSBmb3Igbm90aWZ5IGNhcmUgY29udGV4dCB1cGRhdGUiLCJ0eXBlIjoiY2FsbGJhY2sifSx7ImlkIjoiaGllY20uY2FsbGJhY2subTItY2FsbGJhY2stYXBpLWZvci1zbXMtbm90aWZpY2F0aW9uLXRvLXBhdGllbnRzIiwidGl0bGUiOiJDYWxsYmFjayBBUEkgZm9yIFNNUyBOb3RpZmljYXRpb24gdG8gcGF0aWVudHMiLCJ0eXBlIjoiY2FsbGJhY2sifSx7ImlkIjoiaGllY20uY2FsbGJhY2subTItbGluay10b2tlbi1nZW5lcmF0aW9uLWNhbGwtYmFjayIsInRpdGxlIjoiTGluayB0b2tlbiBnZW5lcmF0aW9uIOKAkyBDYWxsIEJhY2sgQVBJIiwidHlwZSI6ImNhbGxiYWNrIn0seyJpZCI6ImhpZWNtLmNhbGxiYWNrLm0yLWxpbmtpbmctY2FyZS1jb250ZXh0LWNhbGwtYmFjayIsInRpdGxlIjoiTGlua2luZyBjYXJlIGNvbnRleHQgQ2FsbCBiYWNrIEFQSSIsInR5cGUiOiJjYWxsYmFjayJ9LHsiaWQiOiJoaWVjbS5jYWxsYmFjay5tMi1vbi1jYXJlY29udGV4dC1yZXN1bHQiLCJ0aXRsZSI6IlRoZSBvdXRjb21lIG9mIHRoZSBjYXJlIGNvbnRleHQgbGlua2luZyBjYWxsIHlvdSBtYWRlIiwidHlwZSI6ImNhbGxiYWNrIn0seyJpZCI6ImhpZWNtLmNhbGxiYWNrLm0yLW9uLWNvbnNlbnQtbm90aWZ5LWhpdSIsInRpdGxlIjoiQSBjb25zZW50IG5vdGlmaWNhdGlvbiB0byBhbiBISVUgYnJpZGdlIiwidHlwZSI6ImNhbGxiYWNrIn0seyJpZCI6ImhpZWNtLmNhbGxiYWNrLm0yLW9uLWNvbnRleHQtbm90aWZ5LXJlc3VsdCIsInRpdGxlIjoiVGhlIG91dGNvbWUgb2YgdGhlIGNhcmUgY29udGV4dCBub3RpZnkgY2FsbCB5b3UgbWFkZSIsInR5cGUiOiJjYWxsYmFjayJ9LHsiaWQiOiJoaWVjbS5jYWxsYmFjay5tMi1vbi1kYXRhLW5vdGlmaWNhdGlvbiIsInRpdGxlIjoiVGhlIHByb3ZpZGVyIHB1c2hlcyBlbmNyeXB0ZWQgaGVhbHRoIGluZm9ybWF0aW9uIHRvIHRoZSBVUkwgbmFtZWQgaW4gdGhlIHJlcXVlc3QiLCJ0eXBlIjoiY2FsbGJhY2sifSx7ImlkIjoiaGllY20uY2FsbGJhY2subTItb24tZGlzY292ZXJ5LXJlcXVlc3QiLCJ0aXRsZSI6IkEgZGlzY292ZXJ5IHJlcXVlc3QgZm9yIGEgcGF0aWVudCB5b3UgbWF5IGhvbGQgcmVjb3JkcyBmb3IiLCJ0eXBlIjoiY2FsbGJhY2sifSx7ImlkIjoiaGllY20uY2FsbGJhY2subTItb24tZ2VuZXJhdGUtdG9rZW4tcmVzdWx0IiwidGl0bGUiOiJUaGUgbGluayB0b2tlbiB5b3UgYXNrZWQgZm9yLCBvciB3aHkgaXQgd2FzIHJlZnVzZWQiLCJ0eXBlIjoiY2FsbGJhY2sifSx7ImlkIjoiaGllY20uY2FsbGJhY2subTItb24taGVhbHRoLWluZm9ybWF0aW9uLXJlcXVlc3QiLCJ0aXRsZSI6IkEgcmVxdWVzdCBmb3IgdGhlIHJlY29yZHMgYSBjb25zZW50IGNvdmVycyIsInR5cGUiOiJjYWxsYmFjayJ9LHsiaWQiOiJoaWVjbS5jYWxsYmFjay5tMi1vbi1saW5rLWNvbmZpcm0iLCJ0aXRsZSI6IkNvbmZpcm1hdGlvbiBvZiBhIGxpbmssIGNhcnJ5aW5nIHRoZSB0b2tlbiB0aGUgcGF0aWVudCBhcHByb3ZlZCIsInR5cGUiOiJjYWxsYmFjayJ9LHsiaWQiOiJoaWVjbS5jYWxsYmFjay5tMi1vbi1saW5rLWluaXQiLCJ0aXRsZSI6IkEgcmVxdWVzdCB0byBzdGFydCBsaW5raW5nIGEgY2FyZSBjb250ZXh0IiwidHlwZSI6ImNhbGxiYWNrIn0seyJpZCI6ImhpZWNtLmNhbGxiYWNrLm0yLW9uLXNtcy1ub3RpZnktcmVzdWx0IiwidGl0bGUiOiJUaGUgb3V0Y29tZSBvZiB0aGUgU01TIG5vdGlmeSBjYWxsIHlvdSBtYWRlIiwidHlwZSI6ImNhbGxiYWNrIn0seyJpZCI6ImhpZWNtLmNhbGxiYWNrLm0zLW9uLWNvbnNlbnQtZmV0Y2giLCJ0aXRsZSI6IlRoZSBjb25zZW50IGFydGVmYWN0IGRldGFpbCwgZmV0Y2hlZCBieSBhcnRlZmFjdCBpZCIsInR5cGUiOiJjYWxsYmFjayJ9LHsiaWQiOiJoaWVjbS5jYWxsYmFjay5tMy1vbi1jb25zZW50LXJlcXVlc3QtaW5pdCIsInRpdGxlIjoiVGhlIGNvbnNlbnQgcmVxdWVzdCB3YXMgYWNjZXB0ZWQsIHdpdGggaXRzIHJlcXVlc3QgaWQiLCJ0eXBlIjoiY2FsbGJhY2sifSx7ImlkIjoiaGllY20uY2FsbGJhY2subTMtb24tY29uc2VudC1yZXF1ZXN0LW5vdGlmeS1oaXAiLCJ0aXRsZSI6IlRoZSBwYXRpZW50J3MgZGVjaXNpb24sIHNlbnQgdG8gdGhlIHJlY29yZCBob2xkZXIiLCJ0eXBlIjoiY2FsbGJhY2sifSx7ImlkIjoiaGllY20uY2FsbGJhY2subTMtb24tY29uc2VudC1yZXF1ZXN0LW5vdGlmeS1oaXUiLCJ0aXRsZSI6IlRoZSBwYXRpZW50J3MgZGVjaXNpb24sIHNlbnQgdG8gdGhlIHJlcXVlc3RlciIsInR5cGUiOiJjYWxsYmFjayJ9LHsiaWQiOiJoaWVjbS5jYWxsYmFjay5tMy1vbi1jb25zZW50LXJlcXVlc3Qtc3RhdHVzIiwidGl0bGUiOiJUaGUgY29uc2VudCBtYW5hZ2VyIHJlcG9ydHMgdGhlIHN0YXRlIG9mIGEgY29uc2VudCByZXF1ZXN0IHlvdSBhc2tlZCBhYm91dCIsInR5cGUiOiJjYWxsYmFjayJ9LHsiaWQiOiJoaWVjbS5jYWxsYmFjay5tMy1vbi1oZWFsdGgtaW5mb3JtYXRpb24tcmVxdWVzdCIsInRpdGxlIjoiQWNrbm93bGVkZ2VtZW50IG9mIGEgaGVhbHRoIGluZm9ybWF0aW9uIHJlcXVlc3QiLCJ0eXBlIjoiY2FsbGJhY2sifSx7ImlkIjoiaGllY20uY2FsbGJhY2sucDItY2FsbGJhY2stZm9yLWhlYWx0aC1yZWNvcmQtY29uZmlybWF0aW9uIiwidGl0bGUiOiJMaW5rIGNvbmZpcm0gcmVxdWVzdCB0byB0aGUgSElQIiwidHlwZSI6ImNhbGxiYWNrIn0seyJpZCI6ImhpZWNtLmNhbGxiYWNrLnAyLWNhbGxiYWNrLW9uLWhlYWx0aC1yZWNvcmQtZGlzY292ZXIiLCJ0aXRsZSI6IkRpc2NvdmVyeSByZXN1bHQgY2FsbGJhY2siLCJ0eXBlIjoiY2FsbGJhY2sifSx7ImlkIjoiaGllY20uY2FsbGJhY2sucDItY2FsbGJhY2stb24taGVhbHRoLXJlY29yZC1saW5rLWluaXQiLCJ0aXRsZSI6IkxpbmsgaW5pdCByZXF1ZXN0IHRvIHRoZSBISVAiLCJ0eXBlIjoiY2FsbGJhY2sifSx7ImlkIjoiaGllY20uY2FsbGJhY2sucDItY2FsbGJhY2stdG8taGlwLWRpc2NvdmVyeSIsInRpdGxlIjoiRGlzY292ZXJ5IHJlcXVlc3QgdG8gdGhlIEhJUCIsInR5cGUiOiJjYWxsYmFjayJ9LHsiaWQiOiJoaWVjbS5jYWxsYmFjay5wMi1wcm9maWxlLW9uLXNoYXJlLWNhbGxiYWNrIiwidGl0bGUiOiJQcm9maWxlIHNoYXJlIHJlc3VsdCBjYWxsYmFjayIsInR5cGUiOiJjYWxsYmFjayJ9LHsiaWQiOiJoaWVjbS5jYWxsYmFjay5wMi1wcm9maWxlLXNoYXJlLWNhbGxiYWNrIiwidGl0bGUiOiJQcm9maWxlIHNoYXJlIGNhbGxiYWNrIiwidHlwZSI6ImNhbGxiYWNrIn0seyJpZCI6ImhpZWNtLmNhbGxiYWNrLnAyLXJlc3BvbnNlLW9uLWhlYWx0aC1yZWNvcmQtbGluayIsInRpdGxlIjoiTGluayBpbml0IHJlc3VsdCBjYWxsYmFjayIsInR5cGUiOiJjYWxsYmFjayJ9LHsiaWQiOiJoaWVjbS5jYWxsYmFjay5wMi1yZXNwb25zZS1vbi1oZWFsdGgtcmVjb3JkLW9uLWNvbmZpcm0iLCJ0aXRsZSI6IkxpbmsgY29uZmlybSByZXN1bHQgY2FsbGJhY2siLCJ0eXBlIjoiY2FsbGJhY2sifSx7ImlkIjoiaGllY20uY2FsbGJhY2sucDMtYXBwcm92ZS1zdWJzY3JpcHRpb24tcmVxdWVzdC1jYWxsLWJhY2siLCJ0aXRsZSI6IlN1YnNjcmlwdGlvbiBhcHByb3ZlZCBjYWxsYmFjayIsInR5cGUiOiJjYWxsYmFjayJ9LHsiaWQiOiJoaWVjbS5jYWxsYmFjay5wMy1jYWxsLWJhY2stdG8taGl1IiwidGl0bGUiOiJIZWFsdGggaW5mb3JtYXRpb24gcmVxdWVzdCBhY2tub3dsZWRnZW1lbnQiLCJ0eXBlIjoiY2FsbGJhY2sifSx7ImlkIjoiaGllY20uY2FsbGJhY2sucDMtY29uc2VudC1yZXF1ZXN0LW9uLXN0YXR1cy1jYWxsYmFjayIsInRpdGxlIjoiQ29uc2VudCByZXF1ZXN0IHN0YXR1cyBjYWxsYmFjayIsInR5cGUiOiJjYWxsYmFjayJ9LHsiaWQiOiJoaWVjbS5jYWxsYmFjay5wMy1kZW55LXN1YnNjcmlwdGlvbi1jYWxsLWJhY2siLCJ0aXRsZSI6IlN1YnNjcmlwdGlvbiBkZW5pZWQgY2FsbGJhY2siLCJ0eXBlIjoiY2FsbGJhY2sifSx7ImlkIjoiaGllY20uY2FsbGJhY2sucDMtc3Vic2NyaXB0aW9uLWhpdS1ub3RpZnkiLCJ0aXRsZSI6Ik5ldyByZWNvcmQgbm90aWZpY2F0aW9uIGNhbGxiYWNrIiwidHlwZSI6ImNhbGxiYWNrIn0seyJpZCI6ImhpZWNtLmNhbGxiYWNrLnAzLXVzZXItc3Vic2NyaXB0aW9uLXJlcXVlc3QtaW5pdGlhdGUtY2FsbC1iYWNrIiwidGl0bGUiOiJTdWJzY3JpcHRpb24gcmVxdWVzdCByZXN1bHQgY2FsbGJhY2siLCJ0eXBlIjoiY2FsbGJhY2sifSx7ImlkIjoiaGllY20uY29uY2VwdC5jYWxsYmFjay1hdXRoZW50aWNpdHkiLCJ0aXRsZSI6IlByb3ZpbmcgYSBjYWxsYmFjayByZWFsbHkgY2FtZSBmcm9tIEFCRE0iLCJ0eXBlIjoiY29uY2VwdCJ9LHsiaWQiOiJoaWVjbS5jb25jZXB0LnBoci1zdWJzY3JpcHRpb25zIiwidGl0bGUiOiJTdWJzY3JpcHRpb25zLCBhbmQgd2h5IGEgcGVyc29uYWwgaGVhbHRoIHJlY29yZCBhcHBsaWNhdGlvbiBuZWVkcyBvbmUiLCJ0eXBlIjoiY29uY2VwdCJ9LHsiaWQiOiJoaWVjbS5kZWNpc2lvbi5jYWxsYmFja3MtYXMtd2ViaG9va3MiLCJ0aXRsZSI6IkNhbGxiYWNrcyBhcmUgZGVzY3JpYmVkIGFzIE9wZW5BUEkgd2ViaG9va3MgaW4gZWFjaCBtb2R1bGUgZmlsZSIsInR5cGUiOiJkZWNpc2lvbiJ9LHsiaWQiOiJoaWVjbS5lcnJvci5hYmRtLTEwMjIiLCJ0aXRsZSI6IkFCRE0tMTAyMiwgdG9vIG1hbnkgcmVxdWVzdHMiLCJ0eXBlIjoiZXJyb3IifSx7ImlkIjoiaGllY20uZXJyb3IuYWJkbS0yNDA0IiwidGl0bGUiOiJBQkRNLTI0MDQsIHRoZSBSRVFVRVNULUlEIGlzIG5vdCB2YWxpZCIsInR5cGUiOiJlcnJvciJ9LHsiaWQiOiJoaWVjbS5mbG93Lm0yLWxpbmstY2FyZS1jb250ZXh0IiwidGl0bGUiOiJMaW5rIGEgY2FyZSBjb250ZXh0IHRvIGEgcGF0aWVudCdzIEFCSEEiLCJ0eXBlIjoiZmxvdyJ9LHsiaWQiOiJoaWVjbS5mbG93LnAyLWRpc2NvdmVyLWFuZC1saW5rIiwidGl0bGUiOiJGaW5kIHJlY29yZHMgaGVsZCBlbHNld2hlcmUgYW5kIGxpbmsgdGhlbSIsInR5cGUiOiJmbG93In0seyJpZCI6ImhpZWNtLmZsb3cucDMtc3Vic2NyaWJlLWFuZC1hdXRvLWFwcHJvdmUiLCJ0aXRsZSI6IlN1YnNjcmliZSB0byBhIHVzZXIncyBhY2NvdW50IGFuZCBzZXQgYW4gYXV0byBhcHByb3ZhbCBwb2xpY3kiLCJ0eXBlIjoiZmxvdyJ9LHsiaWQiOiJzaGFyZWQuZ2xvc3NhcnkucmVxdWVzdC1pZCIsInRpdGxlIjoiUkVRVUVTVC1JRCwgdGhlIHJlcXVlc3QgY29ycmVsYXRpb24gaGVhZGVyIiwidHlwZSI6Imdsb3NzYXJ5In0seyJpZCI6ImhpZWNtLnRyb3VibGVzaG9vdGluZy5hY2NlcHRlZC10aGVuLW5vdGhpbmciLCJ0aXRsZSI6IkRpc2NvdmVyeSBvciBsaW5raW5nIHdhcyBhY2NlcHRlZCwgdGhlbiBub3RoaW5nIGhhcHBlbnMiLCJ0eXBlIjoidHJvdWJsZXNob290aW5nIn0seyJpZCI6ImhpZWNtLnRyb3VibGVzaG9vdGluZy5jYWxsYmFjay1uZXZlci1hcnJpdmVzIiwidGl0bGUiOiJUaGUgY2FsbGJhY2sgbmV2ZXIgYXJyaXZlcyIsInR5cGUiOiJ0cm91Ymxlc2hvb3RpbmcifSx7ImlkIjoiaGllY20uZW5kcG9pbnQuZ2F0ZXdheS1nZXQtYnJpZGdlLXNlcnZpY2UtYnktaWQiLCJ0aXRsZSI6IkZpbmQgYSBicmlkZ2Ugc2VydmljZSBieSBpdHMgc2VydmljZSBpZCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5nYXRld2F5LWxpc3QtYnJpZGdlLXNlcnZpY2VzIiwidGl0bGUiOiJMaXN0IHRoZSBzZXJ2aWNlcyByZWdpc3RlcmVkIG9uIHlvdXIgYnJpZGdlIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50LmdhdGV3YXktcmVnaXN0ZXItYnJpZGdlLXNlcnZpY2VzIiwidGl0bGUiOiJSZWdpc3RlciBvciB1cGRhdGUgYnJpZGdlIHNlcnZpY2VzIGZvciBhbiBISVUiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQuZ2F0ZXdheS1zZXNzaW9ucyIsInRpdGxlIjoiQ3JlYXRlIGEgc2Vzc2lvbiBhbmQgZ2V0IGFuIGFjY2VzcyB0b2tlbiIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5nYXRld2F5LXVwZGF0ZS1icmlkZ2UtdXJsIiwidGl0bGUiOiJVcGRhdGUgdGhlIGJyaWRnZSBjYWxsYmFjayBVUkwiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtYmVuZWZpdC1nZXQtYnktYWJoYSIsInRpdGxlIjoiR2V0IHRoZSBiZW5lZml0IHJlY29yZCBmb3IgYW4gQUJIQSBudW1iZXIiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtYmVuZWZpdC1saW5rLW9yLWRlbGluayIsInRpdGxlIjoiTGluayBvciB1bmxpbmsgYSBiZW5lZml0IHJlY29yZCBmcm9tIGFuIEFCSEEiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtYmVuZWZpdC1zZWFyY2giLCJ0aXRsZSI6IlNlYXJjaCBiZW5lZml0IHJlY29yZHMgZm9yIGEgcGVyc29uIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm0xLWRvd25sb2FkLXBoci1jYXJkIiwidGl0bGUiOiJEb3dubG9hZCBQSFIgY2FyZCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1kb3dubG9hZC1waHItcXItY29kZSIsInRpdGxlIjoiRG93bmxvYWQgUEhSIFFSIGNvZGUiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtZW5yb2xtZW50LWFkZHJlc3Mtc3VnZ2VzdGlvbnMiLCJ0aXRsZSI6IkdldCBzdWdnZXN0ZWQgQUJIQSBhZGRyZXNzZXMgZm9yIGEgbmV3IGFjY291bnQiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtZW5yb2xtZW50LWJ5LWFhZGhhYXIiLCJ0aXRsZSI6IkNyZWF0ZSBhbiBBQkhBIGZyb20gYSB2ZXJpZmllZCBBYWRoYWFyIE9UUCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1lbnJvbG1lbnQtY2FwdHVyZS1waWQiLCJ0aXRsZSI6IlRyYWNrIGZhY2UgYXV0aGVudGljYXRpb24gc3RhdHVzIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm0xLWVucm9sbWVudC1jbGFpbS1hYmhhLWFkZHJlc3MiLCJ0aXRsZSI6IkNsYWltIGEgY2hvc2VuIEFCSEEgYWRkcmVzcyIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1lbnJvbG1lbnQtZmFjZS1hdXRoLWluaXQiLCJ0aXRsZSI6IlN0YXJ0IGZhY2UgYXV0aGVudGljYXRpb24gYW5kIGdldCBhIHRyYW5zYWN0aW9uIGlkIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm0xLWVucm9sbWVudC1saXN0LWNoaWxkcmVuIiwidGl0bGUiOiJMaXN0IHRoZSBjaGlsZCBBQkhBIGFjY291bnRzIGxpbmtlZCB0byB0aGlzIGFjY291bnQiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtZW5yb2xtZW50LXJlcXVlc3Qtb3RwIiwidGl0bGUiOiJTZW5kIGFuIE9UUCB0byBiZWdpbiBvciBjb250aW51ZSBhbiBlbnJvbG1lbnQiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtZW5yb2xtZW50LXZlcmlmeS1hYmRtLW90cCIsInRpdGxlIjoiVmVyaWZ5IGFuIE9UUCB0aGF0IEFCRE0gc2VudCwgZHVyaW5nIGVucm9sbWVudCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1maW5kLWFiaGEtc2VhcmNoIiwidGl0bGUiOiJGaW5kIGFuIEFCSEEgZm9yIHNvbWVib2R5IHdobyBkb2VzIG5vdCBrbm93IHRoZWlycyIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1nZXQtcGhyLXByb2ZpbGUiLCJ0aXRsZSI6IkdldCBQSFIgcHJvZmlsZSIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1nZXQtcHVibGljLWNlcnRpZmljYXRlIiwidGl0bGUiOiJHZXQgdGhlIHB1YmxpYyBjZXJ0aWZpY2F0ZSIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1sb2dpbi1yZXF1ZXN0LW90cCIsInRpdGxlIjoiU2VuZCBhIGxvZ2luIE9UUCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1sb2dpbi1zZWxlY3QtYWNjb3VudCIsInRpdGxlIjoiQ2hvb3NlIHdoaWNoIEFCSEEgdG8gc2lnbiBpbiB0byIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1sb2dpbi12ZXJpZnkiLCJ0aXRsZSI6IlZlcmlmeSBhIGxvZ2luIE9UUCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1sb2dpbi12ZXJpZnktdjMxIiwidGl0bGUiOiJTaWduIGluIHdpdGggYSBiaW9tZXRyaWMsIHYzLjEiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtb24tc2hhcmUtYWNrbm93bGVkZ2VtZW50IiwidGl0bGUiOiJTZW5kIHNoYXJlIGFja25vd2xlZGdlbWVudCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1waHItcmVxdWVzdC1vdHAiLCJ0aXRsZSI6IlNlbmQgYW4gT1RQIGZvciBBQkhBIGFkZHJlc3MgbG9naW4iLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtcGhyLXNlYXJjaC1hYmhhLWFkZHJlc3MiLCJ0aXRsZSI6IlNlYXJjaCBhbiBBQkhBIGFkZHJlc3MgYW5kIGdldCBpdHMgc2lnbiBpbiBtZXRob2RzIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm0xLXBoci12ZXJpZnkiLCJ0aXRsZSI6IlZlcmlmeSBPVFAgb3IgYmlvbWV0cmljIGZvciBBQkhBIGFkZHJlc3MgbG9naW4iLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtcHJvZmlsZS1kb3dubG9hZC1hYmhhLWNhcmQiLCJ0aXRsZSI6IkRvd25sb2FkIHRoZSBBQkhBIGNhcmQgYXMgYSBmaWxlIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm0xLXByb2ZpbGUtZ2V0LWFiaGEtY2FyZCIsInRpdGxlIjoiR2V0IHRoZSBBQkhBIGNhcmQiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtcHJvZmlsZS1nZXQtYWNjb3VudCIsInRpdGxlIjoiUmVhZCB0aGUgc2lnbmVkIGluIHBlcnNvbidzIEFCSEEgcHJvZmlsZSIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1wcm9maWxlLWdldC1xci1jb2RlIiwidGl0bGUiOiJHZXQgdGhlIEFCSEEgUVIgY29kZSIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMS1wcm9maWxlLXJlcXVlc3Qtb3RwIiwidGl0bGUiOiJTZW5kIGFuIE9UUCB0byBjaGFuZ2Ugc29tZXRoaW5nIG9uIHRoZSBwcm9maWxlIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm0xLXByb2ZpbGUtdXBkYXRlLWFjY291bnQiLCJ0aXRsZSI6IlVwZGF0ZSBmaWVsZHMgb24gYW4gQUJIQSBwcm9maWxlIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm0xLXByb2ZpbGUtdmVyaWZ5LW90cCIsInRpdGxlIjoiVmVyaWZ5IHRoZSBPVFAgZm9yIGEgcHJvZmlsZSBjaGFuZ2UiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtcmVjZWl2ZS1wYXRpZW50LXNoYXJlIiwidGl0bGUiOiJSZWNlaXZlIGEgcGF0aWVudCdzIHNoYXJlZCBwcm9maWxlIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm0xLXJlZ2lzdGVyLWhycC1zZXJ2aWNlcyIsInRpdGxlIjoiUmVnaXN0ZXIgb3IgdXBkYXRlIEhJUCBhbmQgSElVIHNlcnZpY2VzIGZvciBhIGZhY2lsaXR5IiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm0xLXNlbmQtZW1haWwtdmVyaWZpY2F0aW9uLWxpbmsiLCJ0aXRsZSI6IlNlbmQgZW1haWwgdmVyaWZpY2F0aW9uIGxpbmsiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTEtdG9rZW4tcmVmcmVzaCIsInRpdGxlIjoiR2V0IGEgbmV3IHVzZXIgdG9rZW4gZnJvbSBhIHJlZnJlc2ggdG9rZW4iLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTItY29uc2VudC1oaXAtb24tbm90aWZ5IiwidGl0bGUiOiJBY2tub3dsZWRnZSBhIGNvbnNlbnQgbm90aWZpY2F0aW9uIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm0yLWdlbmVyYXRlLWxpbmstdG9rZW4iLCJ0aXRsZSI6IkdlbmVyYXRlIExpbmsgVG9rZW4iLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTItaGlwLWRhdGEtZmxvdy1ub3RpZnkiLCJ0aXRsZSI6Ik5vdGlmeSB0aGUgZ2F0ZXdheSB0aGF0IGEgZGF0YSB0cmFuc2ZlciBmaW5pc2hlZCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMi1oaXAtaGVhbHRoLWluZm9ybWF0aW9uLW9uLXJlcXVlc3QiLCJ0aXRsZSI6IkFja25vd2xlZGdlIGEgaGVhbHRoIGluZm9ybWF0aW9uIGRhdGEgcmVxdWVzdCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMi1oaXAtbGluay1jYXJlLWNvbnRleHQiLCJ0aXRsZSI6IkxpbmsgY2FyZSBjb250ZXh0cyB0byBhbiBBQkhBIGFkZHJlc3MiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTItbGluay1jYXJlLWNvbnRleHQtbm90aWZ5IiwidGl0bGUiOiJOb3RpZnkgYW4gdXBkYXRlIHRvIGEgbGlua2VkIGNhcmUgY29udGV4dCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMi1vbi1kaXNjb3Zlci1jYXJlLWNvbnRleHRzIiwidGl0bGUiOiJPbiBEaXNjb3ZlcnksIEhJUCByZXNwb25kcyB3aXRoIGZvdW5kIGNhcmUgY29udGV4dHMiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTItb24tbGluay1jb25maXJtIiwidGl0bGUiOiJMaW5rIE9uLUNvbmZpcm0sIEhJUCBjb25maXJtcyBsaW5rZWQgY2FyZSBjb250ZXh0cyIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMi1vbi1saW5rLWluaXQiLCJ0aXRsZSI6IkxpbmsgT24tSW5pdCwgSElQIHJlc3BvbmRzIHdpdGggT1RQIGNvbW11bmljYXRpb24gZGV0YWlscyIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMi1zbXMtZGVlcC1saW5rLW5vdGlmeSIsInRpdGxlIjoiU2VuZCBhbiBTTVMgdGVsbGluZyB0aGUgcGF0aWVudCBhIGNhcmUgY29udGV4dCBpcyBsaW5rZWQiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTMtY29uc2VudC1mZXRjaCIsInRpdGxlIjoiRmV0Y2ggdGhlIGZ1bGwgY29uc2VudCBhcnRlZmFjdCIsInR5cGUiOiJlbmRwb2ludCJ9LHsiaWQiOiJoaWVjbS5lbmRwb2ludC5tMy1jb25zZW50LWhpdS1vbi1ub3RpZnkiLCJ0aXRsZSI6IkFja25vd2xlZGdlIGEgY29uc2VudCBub3RpZmljYXRpb24iLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTMtY29uc2VudC1yZXF1ZXN0LWluaXQiLCJ0aXRsZSI6IkluaXRpYXRlIGEgY29uc2VudCByZXF1ZXN0IiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm0zLWNvbnNlbnQtcmVxdWVzdC1zdGF0dXMiLCJ0aXRsZSI6IkNoZWNrIHRoZSBzdGF0dXMgb2YgYSBjb25zZW50IHJlcXVlc3QiLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZW5kcG9pbnQubTMtaGl1LWRhdGEtZmxvdy1ub3RpZnkiLCJ0aXRsZSI6Ik5vdGlmeSB0aGUgZ2F0ZXdheSB0aGF0IGRhdGEgd2FzIHJlY2VpdmVkIiwidHlwZSI6ImVuZHBvaW50In0seyJpZCI6ImhpZWNtLmVuZHBvaW50Lm0zLWhpdS1oZWFsdGgtaW5mb3JtYXRpb24tcmVxdWVzdCIsInRpdGxlIjoiUmVxdWVzdCBhIHBhdGllbnQncyBoZWFsdGggaW5mb3JtYXRpb24iLCJ0eXBlIjoiZW5kcG9pbnQifSx7ImlkIjoiaGllY20uZmxvdy5tMy1mZXRjaC1yZWNvcmRzIiwidGl0bGUiOiJGZXRjaCB0aGUgcmVjb3JkcyBhIGdyYW50ZWQgY29uc2VudCBhcnRlZmFjdCBjb3ZlcnMiLCJ0eXBlIjoiZmxvdyJ9LHsiaWQiOiJoaWVjbS5mbG93Lm0zLXJlcXVlc3QtY29uc2VudCIsInRpdGxlIjoiUmVxdWVzdCBjb25zZW50IGZvciBhIHBhdGllbnQncyBoZWFsdGggcmVjb3JkcyIsInR5cGUiOiJmbG93In1dfQ==",
+            "IsError": false
+          }
+        }
+      ],
+      "reply": {
+        "Text": "The four patient authentication modes are `MOBILE_OTP`, `AADHAAR_OTP`, `DEMOGRAPHICS` and `DIRECT`; they matter when linking records to a patient. Don’t assume a mode is available: ask ABDM which modes that patient supports, then offer only those returned.",
+        "ToolCalls": null,
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "The four patient authentication modes are `MOBILE_OTP`, `AADHAAR_OTP`, `DEMOGRAPHICS` and `DIRECT`; they matter when linking records to a patient. Don’t assume a mode is available: ask ABDM which modes that patient supports, then offer only those returned.",
+  "sources": [
+    {
+      "id": "hiecm.glossary.auth-modes",
+      "title": "Auth modes, the four ways a patient proves who they are",
+      "url": ""
+    },
+    {
+      "id": "hiecm.endpoint.p3-consent-fetch",
+      "title": "Fetch a consent artefact in full",
+      "url": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/04-m3-post-consent-v3-fetch#p3-consent-fetch"
+    },
+    {
+      "id": "hiecm.endpoint.m3-consent-fetch",
+      "title": "Fetch the full consent artefact",
+      "url": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/04-m3-post-consent-v3-fetch#m3-consent-fetch"
+    },
+    {
+      "id": "hiecm.glossary.m3",
+      "title": "M3 Health Information User: Fetch data with consent",
+      "url": ""
+    },
+    {
+      "id": "hiecm.flow.m3-fetch-records",
+      "title": "Fetch the records a granted consent artefact covers",
+      "url": "/docs/hiecm/v3/milestones/m3#m3-fetch-records"
+    },
+    {
+      "id": "hiecm.error.abdm-1022",
+      "title": "ABDM-1022, too many requests",
+      "url": "/docs/hiecm/v3/api/m2/errors#abdm-1022"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"passages\":[{\"id\":\"hiecm.error.abdm-1022\",\"type\":\"error\",\"milestone\":\"M2\",\"title\":\"ABDM-1022, too many requests\",\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1022\",\"body\":\"# ABDM-1022, too many requests\\n\\n## In plain words\\n\\nYou are sending more requests than ABDM accepts from your client, and it has started refusing them. The message is \\\"Too many requests\\\", and the patient share calls return it with HTTP 429.\\n\\n`ABDM-2429`, \\\"Too many requests found\\\", means the same, so handle both. `ABDM-1027` goes further: \\\"You are blocked. Please try again after 24 hours.\\\"\\n\\n## What happens\\n\\nBulk jobs and retry loops without backoff are the usual causes. A loop that retries at once can turn one refusal into a 24 hour block.\\n\\n## When it goes wrong\\n\\nBack off exponentially, add jitter, and cap the number of attempts. If it happens in normal use, batch your work, cache what does not change, and stop polling anything that has a callback.\"},{\"id\":\"hiecm.concept.asynchronous-callbacks\",\"type\":\"concept\",\"milestone\":\"M2\",\"title\":\"Asynchronous calls and callbacks, why a 200 means very little\",\"doc_url\":\"/docs/hiecm/v3/concepts/gateway#asynchronous-callbacks\",\"body\":\"# Asynchronous calls and callbacks, why a 200 means very little\\n\\n## In plain words\\n\\nNothing goes participant to participant. Every request is addressed to the gateway, which forwards it. Two things follow.\\n\\n- **You get an acknowledgement, not an answer.** In the [M3](/docs/hiecm/v3/getting-started/glossary#m3) consent flow the [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) asks, the HIE-CM returns the consent request id on a callback, and the patient's decision comes back later. Each call's page in the [API reference](/docs/hiecm/v3/api) names the callback it produces.\\n- **You have to be reachable.** Half of [M2](/docs/hiecm/v3/getting-started/glossary#m2) is endpoints the gateway calls on your system.\\n\\nOne exception. In the health information flow the HIU supplies a data push URL, and the HIP encrypts the records and pushes them there. That URL may differ from the HIU's registered gateway URL, to improve privacy. The permission came through the gateway. The bytes do not.\\n\\nMatch each callback to the call that caused it by `response.requestId`, which carries the `REQUEST-ID` you sent. Callbacks do not arrive in the order you sent the requests, and the same one can arrive twice, so a repeat must change nothing. Where each callback is described in the specifications is on [the API specifications](/docs/hiecm/v3/concepts/api-specifications).\\n\\n## Before you start\\n\\nA callback URL registered for your bridge and reachable over public HTTPS. Without it, no answer can arrive.\\n\\n## What happens\\n\\nSend the call with a fresh `REQUEST-ID`, treat the 202 as receipt only, and wait for the callback. Key the handler on `response.requestId`, answer it quickly, and make a second delivery of the same request id a no-op.\\n\\n## How you know it worked\\n\\nA callback reaches your URL whose `response.requestId` equals the `REQUEST-ID` you sent. Given three calls and two callbacks, the call whose request id has no callback is the one outstanding.\\n\\n## When it goes wrong\\n\\nNothing arrives: work through [the callback never arrives](/docs/hiecm/v3/troubleshooting/callback-never-arrives). A retry is appended as a new event: key on the request id. The code waits on the response body for the result: it never comes there, so the integration hangs.\"},{\"id\":\"hiecm.error.abdm-9999\",\"type\":\"error\",\"milestone\":\"M2\",\"title\":\"ABDM-9999, a catch-all, so read the message\",\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-9999\",\"body\":\"# ABDM-9999, a catch-all, so read the message\\n\\n## In plain words\\n\\n`ABDM-9999` covers many failures, and the message carries the meaning. Some messages report a problem in your request, for example \\\"Invalid Transaction Id\\\", \\\"Invalid LoginId\\\" or \\\"RequestId cannot be NULL or Blank\\\". Others mean ABDM or the [HIP](/docs/hiecm/v3/getting-started/glossary#hip) could not process it, for example \\\"Unknown exception\\\" or \\\"Cannot process the request at the moment, please try later.\\\"\\n\\n## What happens\\n\\nThe code may arrive bare or followed by a colon and a space. Match on the code, then branch on the message. More specific codes exist for an unavailable service: `ABDM-1019` and `ABDM-1024` for a dependent service, `ABDM-1028` for the HIP and `ABDM-1033` for the HIU.\\n\\n## How you know it worked\\n\\nAfter a request problem, the corrected request succeeds. After an unavailability message, the same request succeeds later, unchanged.\\n\\n## When it goes wrong\\n\\nFor a request problem, fix the field the message names, because a retry repeats the mistake. For an unavailability message, retry with exponential backoff and a cap on attempts, so the loop does not end in [ABDM-1022](#abdm-1022). If it persists for hours, report it through [Support](/docs/support) with your `REQUEST-ID` and `TIMESTAMP`.\"},{\"id\":\"hiecm.concept.m2-inbound-is-a-surface\",\"type\":\"concept\",\"milestone\":\"M2\",\"title\":\"Inbound is a surface, and silence there is a failure state\",\"doc_url\":\"\",\"body\":\"ABDM asks your bridge questions and waits, most of them carry no documented payload, and a handler that only logs leaves records undiscoverable.\"},{\"id\":\"hiecm.concept.error-codes\",\"type\":\"concept\",\"milestone\":\"M2\",\"title\":\"Reading an ABDM error code\",\"doc_url\":\"/docs/hiecm/v3/getting-started/build-it-well#error-codes\",\"body\":\"Read the ABDM error code in the response body before the HTTP status, and key your handling on it.\"}],\"related\":[{\"id\":\"hiecm.concept.asynchronous-callbacks\",\"title\":\"Asynchronous calls and callbacks, why a 200 means very little\",\"type\":\"concept\"},{\"id\":\"hiecm.error.abdm-9999\",\"title\":\"ABDM-9999, a catch-all, so read the message\",\"type\":\"error\"},{\"id\":\"hiecm.troubleshooting.otp-never-arrives\",\"title\":\"The OTP never arrives\",\"type\":\"troubleshooting\"},{\"id\":\"hiecm.callback.m2-call-back-api-for-notify-care-context-update\",\"title\":\"Call back API for notify care context update\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.m2-callback-api-for-sms-notification-to-patients\",\"title\":\"Callback API for SMS Notification to patients\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.m2-link-token-generation-call-back\",\"title\":\"Link token generation – Call Back API\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.m2-linking-care-context-call-back\",\"title\":\"Linking care context Call back API\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.m2-on-carecontext-result\",\"title\":\"The outcome of the care context linking call you made\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.m2-on-consent-notify-hiu\",\"title\":\"A consent notification to an HIU bridge\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.m2-on-context-notify-result\",\"title\":\"The outcome of the care context notify call you made\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.m2-on-data-notification\",\"title\":\"The provider pushes encrypted health information to the URL named in the request\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.m2-on-discovery-request\",\"title\":\"A discovery request for a patient you may hold records for\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.m2-on-generate-token-result\",\"title\":\"The link token you asked for, or why it was refused\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.m2-on-health-information-request\",\"title\":\"A request for the records a consent covers\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.m2-on-link-confirm\",\"title\":\"Confirmation of a link, carrying the token the patient approved\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.m2-on-link-init\",\"title\":\"A request to start linking a care context\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.m2-on-sms-notify-result\",\"title\":\"The outcome of the SMS notify call you made\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.m3-on-consent-fetch\",\"title\":\"The consent artefact detail, fetched by artefact id\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.m3-on-consent-request-init\",\"title\":\"The consent request was accepted, with its request id\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.m3-on-consent-request-notify-hip\",\"title\":\"The patient's decision, sent to the record holder\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.m3-on-consent-request-notify-hiu\",\"title\":\"The patient's decision, sent to the requester\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.m3-on-consent-request-status\",\"title\":\"The consent manager reports the state of a consent request you asked about\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.m3-on-health-information-request\",\"title\":\"Acknowledgement of a health information request\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.p2-callback-for-health-record-confirmation\",\"title\":\"Link confirm request to the HIP\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.p2-callback-on-health-record-discover\",\"title\":\"Discovery result callback\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.p2-callback-on-health-record-link-init\",\"title\":\"Link init request to the HIP\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.p2-callback-to-hip-discovery\",\"title\":\"Discovery request to the HIP\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.p2-profile-on-share-callback\",\"title\":\"Profile share result callback\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.p2-profile-share-callback\",\"title\":\"Profile share callback\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.p2-response-on-health-record-link\",\"title\":\"Link init result callback\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.p2-response-on-health-record-on-confirm\",\"title\":\"Link confirm result callback\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.p3-approve-subscription-request-call-back\",\"title\":\"Subscription approved callback\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.p3-call-back-to-hiu\",\"title\":\"Health information request acknowledgement\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.p3-consent-request-on-status-callback\",\"title\":\"Consent request status callback\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.p3-deny-subscription-call-back\",\"title\":\"Subscription denied callback\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.p3-subscription-hiu-notify\",\"title\":\"New record notification callback\",\"type\":\"callback\"},{\"id\":\"hiecm.callback.p3-user-subscription-request-initiate-call-back\",\"title\":\"Subscription request result callback\",\"type\":\"callback\"},{\"id\":\"hiecm.concept.callback-authenticity\",\"title\":\"Proving a callback really came from ABDM\",\"type\":\"concept\"},{\"id\":\"hiecm.concept.phr-subscriptions\",\"title\":\"Subscriptions, and why a personal health record application needs one\",\"type\":\"concept\"},{\"id\":\"hiecm.decision.callbacks-as-webhooks\",\"title\":\"Callbacks are described as OpenAPI webhooks in each module file\",\"type\":\"decision\"},{\"id\":\"hiecm.error.abdm-1022\",\"title\":\"ABDM-1022, too many requests\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-2404\",\"title\":\"ABDM-2404, the REQUEST-ID is not valid\",\"type\":\"error\"},{\"id\":\"hiecm.flow.m2-link-care-context\",\"title\":\"Link a care context to a patient's ABHA\",\"type\":\"flow\"},{\"id\":\"hiecm.flow.p2-discover-and-link\",\"title\":\"Find records held elsewhere and link them\",\"type\":\"flow\"},{\"id\":\"hiecm.flow.p3-subscribe-and-auto-approve\",\"title\":\"Subscribe to a user's account and set an auto approval policy\",\"type\":\"flow\"},{\"id\":\"shared.glossary.request-id\",\"title\":\"REQUEST-ID, the request correlation header\",\"type\":\"glossary\"},{\"id\":\"hiecm.troubleshooting.accepted-then-nothing\",\"title\":\"Discovery or linking was accepted, then nothing happens\",\"type\":\"troubleshooting\"},{\"id\":\"hiecm.troubleshooting.callback-never-arrives\",\"title\":\"The callback never arrives\",\"type\":\"troubleshooting\"},{\"id\":\"hiecm.endpoint.gateway-get-bridge-service-by-id\",\"title\":\"Find a bridge service by its service id\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.gateway-list-bridge-services\",\"title\":\"List the services registered on your bridge\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.gateway-register-bridge-services\",\"title\":\"Register or update bridge services for an HIU\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.gateway-sessions\",\"title\":\"Create a session and get an access token\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.gateway-update-bridge-url\",\"title\":\"Update the bridge callback URL\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-benefit-get-by-abha\",\"title\":\"Get the benefit record for an ABHA number\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-benefit-link-or-delink\",\"title\":\"Link or unlink a benefit record from an ABHA\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-benefit-search\",\"title\":\"Search benefit records for a person\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-download-phr-card\",\"title\":\"Download PHR card\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-download-phr-qr-code\",\"title\":\"Download PHR QR code\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-enrolment-address-suggestions\",\"title\":\"Get suggested ABHA addresses for a new account\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-enrolment-by-aadhaar\",\"title\":\"Create an ABHA from a verified Aadhaar OTP\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-enrolment-capture-pid\",\"title\":\"Track face authentication status\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-enrolment-claim-abha-address\",\"title\":\"Claim a chosen ABHA address\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-enrolment-face-auth-init\",\"title\":\"Start face authentication and get a transaction id\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-enrolment-list-children\",\"title\":\"List the child ABHA accounts linked to this account\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-enrolment-request-otp\",\"title\":\"Send an OTP to begin or continue an enrolment\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-enrolment-verify-abdm-otp\",\"title\":\"Verify an OTP that ABDM sent, during enrolment\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-find-abha-search\",\"title\":\"Find an ABHA for somebody who does not know theirs\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-get-phr-profile\",\"title\":\"Get PHR profile\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-get-public-certificate\",\"title\":\"Get the public certificate\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-login-request-otp\",\"title\":\"Send a login OTP\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-login-select-account\",\"title\":\"Choose which ABHA to sign in to\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-login-verify\",\"title\":\"Verify a login OTP\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-login-verify-v31\",\"title\":\"Sign in with a biometric, v3.1\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-on-share-acknowledgement\",\"title\":\"Send share acknowledgement\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-phr-request-otp\",\"title\":\"Send an OTP for ABHA address login\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-phr-search-abha-address\",\"title\":\"Search an ABHA address and get its sign in methods\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-phr-verify\",\"title\":\"Verify OTP or biometric for ABHA address login\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-profile-download-abha-card\",\"title\":\"Download the ABHA card as a file\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-profile-get-abha-card\",\"title\":\"Get the ABHA card\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-profile-get-account\",\"title\":\"Read the signed in person's ABHA profile\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-profile-get-qr-code\",\"title\":\"Get the ABHA QR code\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-profile-request-otp\",\"title\":\"Send an OTP to change something on the profile\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-profile-update-account\",\"title\":\"Update fields on an ABHA profile\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-profile-verify-otp\",\"title\":\"Verify the OTP for a profile change\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-receive-patient-share\",\"title\":\"Receive a patient's shared profile\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-register-hrp-services\",\"title\":\"Register or update HIP and HIU services for a facility\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-send-email-verification-link\",\"title\":\"Send email verification link\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m1-token-refresh\",\"title\":\"Get a new user token from a refresh token\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m2-consent-hip-on-notify\",\"title\":\"Acknowledge a consent notification\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m2-generate-link-token\",\"title\":\"Generate Link Token\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m2-hip-data-flow-notify\",\"title\":\"Notify the gateway that a data transfer finished\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m2-hip-health-information-on-request\",\"title\":\"Acknowledge a health information data request\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m2-hip-link-care-context\",\"title\":\"Link care contexts to an ABHA address\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m2-link-care-context-notify\",\"title\":\"Notify an update to a linked care context\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m2-on-discover-care-contexts\",\"title\":\"On Discovery, HIP responds with found care contexts\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m2-on-link-confirm\",\"title\":\"Link On-Confirm, HIP confirms linked care contexts\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m2-on-link-init\",\"title\":\"Link On-Init, HIP responds with OTP communication details\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m2-sms-deep-link-notify\",\"title\":\"Send an SMS telling the patient a care context is linked\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m3-consent-fetch\",\"title\":\"Fetch the full consent artefact\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m3-consent-hiu-on-notify\",\"title\":\"Acknowledge a consent notification\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m3-consent-request-init\",\"title\":\"Initiate a consent request\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m3-consent-request-status\",\"title\":\"Check the status of a consent request\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m3-hiu-data-flow-notify\",\"title\":\"Notify the gateway that data was received\",\"type\":\"endpoint\"},{\"id\":\"hiecm.endpoint.m3-hiu-health-information-request\",\"title\":\"Request a patient's health information\",\"type\":\"endpoint\"},{\"id\":\"hiecm.flow.m3-fetch-records\",\"title\":\"Fetch the records a granted consent artefact covers\",\"type\":\"flow\"},{\"id\":\"hiecm.flow.m3-request-consent\",\"title\":\"Request consent for a patient's health records\",\"type\":\"flow\"}]}\n\u003cpassages\u003e\n{\"passages\":[{\"id\":\"hiecm.glossary.auth-modes\",\"type\":\"glossary\",\"milestone\":\"n/a\",\"title\":\"Auth modes, the four ways a patient proves who they are\",\"doc_url\":\"\",\"body\":\"# Auth modes, the four ways a patient proves who they are\\n\\n## In plain words\\n\\nBefore records can be linked to a patient, the patient has to be\\nauthenticated. ABDM offers four ways, and which of them are on for a\\ngiven patient is not something you get to decide. You ask ABDM which\\nmodes that person supports, then pick from what comes back.\\n\\n## Before you start\\n\\nNothing, though the sequence makes more sense if you know that linking\\nruns through the consent manager rather than directly against the\\npatient.\\n\\n## What happens\\n\\nNHA's four modes:\\n\\n| Mode | What it means |\\n|---|---|\\n| `MOBILE_OTP` | Authentication starts with the user's registered mobile number |\\n| `AADHAAR_OTP` | Authentication starts with the mobile registered against Aadhaar |\\n| `DEMOGRAPHICS` | The provider sends the user's details exactly as registered with the ABHA number system |\\n| `DIRECT` | A direct means of authentication with the user |\\n\\nThe two OTP modes look alike and are not. `MOBILE_OTP` uses the number\\nthe person registered with ABDM. `AADHAAR_OTP` uses whichever number is\\nattached to their Aadhaar, which is often a different number and is\\nsometimes no number at all.\\n\\n`DEMOGRAPHICS` is the strictest of the four. The word NHA uses is\\n\\\"exactly\\\": the details you send have to match the ABHA record rather than\\nmerely resemble it, so a name spelled differently or a date of birth in\\nanother format fails.\\n\\nYou discover which modes apply by asking, through the fetch modes call,\\nand the answer arrives on your callback like every other asynchronous\\nreply in M2 and M3.\\n\\n## How you know it worked\\n\\nYou never hardcode a mode. Your flow asks which are supported, offers the\\nuser only those, and copes with a patient for whom the mode you would\\nhave preferred is unavailable.\\n\\n## When it goes wrong\\n\\nAssuming Aadhaar OTP is always available. A person whose Aadhaar carries\\nno mobile number cannot receive one, which is why the other modes exist.\\n\\nTreating `DEMOGRAPHICS` as fuzzy matching. It is not, and a near miss\\nreads as a failed authentication rather than as a data quality warning.\"},{\"id\":\"hiecm.endpoint.p3-consent-fetch\",\"type\":\"endpoint\",\"milestone\":\"P3\",\"title\":\"Fetch a consent artefact in full\",\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/04-m3-post-consent-v3-fetch#p3-consent-fetch\",\"body\":\"# Fetch a consent artefact in full\\n\\n## In plain words\\n\\nA consent artefact id says permission exists. This call asks for what the permission covers. Send the `consentId`. The artefact arrives on your consent on-fetch callback, not on this response.\\n\\n## Before you start\\n\\nYour `X-HIU-ID`, `X-CM-ID`, and the artefact id from a granted consent.\\n\\n## What happens\\n\\nYou receive `202`. The artefact arrives at `/api/v3/hiu/consent/on-fetch`.\\n\\n## How you know it worked\\n\\nThe on-fetch callback carries the artefact with its date range and HI types. Check its validity before requesting data under it.\\n\\n## When it goes wrong\\n\\n`404` with `ABDM-1001` means no artefact has that id.\"},{\"id\":\"hiecm.endpoint.m3-consent-fetch\",\"type\":\"endpoint\",\"milestone\":\"M3\",\"title\":\"Fetch the full consent artefact\",\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/04-m3-post-consent-v3-fetch#m3-consent-fetch\",\"body\":\"# Fetch the full consent artefact\\n\\n## In plain words\\n\\nFetch a [consent artefact](/docs/hiecm/v3/getting-started/glossary#consent-artefact) by its id after a `GRANTED` [consent notification](/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/03-m3-post-v3-hiu-consent-request-notify). The call returns 202 Accepted, and the artefact arrives on [consent on-fetch](/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/04-m3-post-v3-hiu-consent-on-fetch). It lists:\\n\\n- the care contexts approved\\n- the health information types permitted\\n- the date range, and the date to erase the data\\n- the [HIP](/docs/hiecm/v3/getting-started/glossary#hip) and [HIU](/docs/hiecm/v3/getting-started/glossary#hiu), and a signature\\n\\nStore the artefact. Your health information request needs its id.\\n\\n## Before you start\\n\\nA gateway session token and the artefact ids from the notification. Send the `REQUEST-ID`, `TIMESTAMP`, `X-CM-ID` and `X-HIU-ID` headers.\\n\\n## How you know it worked\\n\\nThe artefact arrives on `/api/v3/hiu/consent/on-fetch` with `status` of `GRANTED`.\\n\\n## When it goes wrong\\n\\n`ABDM-1001` (No data found): check `consentId`. Fetch every artefact id the notification listed, not only the first. `ABDM-2402` (Invalid Timestamp): check `TIMESTAMP` against your clock. `ABDM-2404` (Invalid Request Id): send a fresh UUID in `REQUEST-ID`. `ABDM-2500` (Authorization header is missing): send the session token. `ABDM-9999` (Unknown exception) gives no cause.\"},{\"id\":\"hiecm.glossary.m3\",\"type\":\"glossary\",\"milestone\":\"n/a\",\"title\":\"M3 Health Information User: Fetch data with consent\",\"doc_url\":\"\",\"body\":\"The milestone covering consent requests and fetching someone else's records.\"},{\"id\":\"hiecm.flow.m3-fetch-records\",\"type\":\"flow\",\"milestone\":\"M3\",\"title\":\"Fetch the records a granted consent artefact covers\",\"doc_url\":\"/docs/hiecm/v3/milestones/m3#m3-fetch-records\",\"body\":\"Fetch a granted consent artefact, request the records it covers, and decrypt what the HIP pushes to your data push URL.\"}],\"related\":[{\"id\":\"nhcx.concept.biometric-authentication\",\"title\":\"Biometric authentication of the beneficiary\",\"type\":\"concept\"},{\"id\":\"hiecm.flow.p1-login\",\"title\":\"Sign a user in to a PHR application\",\"type\":\"flow\"},{\"id\":\"hiecm.concept.gateway-session\",\"title\":\"The gateway session, the first call in every integration\",\"type\":\"concept\"},{\"id\":\"hiecm.endpoint.m3-consent-fetch\",\"title\":\"Fetch the full consent artefact\",\"type\":\"endpoint\"},{\"id\":\"hiecm.flow.p3-fetch-records\",\"title\":\"Fetch and store the records a linked care context points at\",\"type\":\"flow\"},{\"id\":\"hiecm.endpoint.p3-consent-fetch\",\"title\":\"Fetch a consent artefact in full\",\"type\":\"endpoint\"},{\"id\":\"hiecm.error.abdm-2402\",\"title\":\"ABDM-2402, the timestamp is not valid\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-2404\",\"title\":\"ABDM-2404, the REQUEST-ID is not valid\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-2500\",\"title\":\"ABDM-2500, no Authorization header, or no matching request\",\"type\":\"error\"},{\"id\":\"hiecm.error.abdm-9999\",\"title\":\"ABDM-9999, a catch-all, so read the message\",\"type\":\"error\"},{\"id\":\"hiecm.flow.m3-fetch-records\",\"title\":\"Fetch the records a granted consent artefact covers\",\"type\":\"flow\"}]}\n\u003c/passages\u003e\n\n\u003creader_context\u003eThe question reads as a HIE-CM question. Answer for HIE-CM unless they ask about another gateway, and do not bring in another gateway's calls or fields.\u003c/reader_context\u003e\n\n\nIf the passages and your tools do not cover the question, drop this shape and decline in two sentences that name the nearest /docs/ page and the support route.\n\nwhat are different fetch modes which are available?",
+  "blocked": false,
+  "flags": null,
+  "class": "define",
+  "recorded_at": "2026-09-29T09:36:35Z"
+}

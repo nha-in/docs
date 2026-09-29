@@ -133,7 +133,7 @@ func Handler(r *index.Reader, emb embed.Embedder, allowOrigin string, chatSvc *c
 			writeJSON(w, 400, map[string]string{"error": err.Error()})
 			return
 		}
-		cmd := chat.Command{Name: in.Command, Module: in.Module, Gateway: in.Gateway}
+		cmd := chat.InferCommand(chat.Command{Name: in.Command, Module: in.Module, Gateway: in.Gateway}, in.Turns)
 		if err := chat.ValidateCommand(cmd); err != nil {
 			writeJSON(w, 400, map[string]string{"error": err.Error()})
 			return

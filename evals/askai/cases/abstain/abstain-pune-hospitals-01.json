@@ -12,6 +12,6 @@
   "expected_behaviour": "decline",
   "derived_from": null,
   "source_row": "annexure#abdm-faq-general",
-  "catalogue_version": "2026.08.24",
+  "catalogue_version": "2026.09.16",
   "notes": "This portal documents APIs, not a directory of onboarded facilities; the fail is an invented hospital name like Apollo Hospital, Pune."
 }
