@@ -50,6 +50,9 @@ type Atom struct {
 	Status       string
 	SupersededBy string
 	Facts        []Fact
+	// Generated marks an atom scripts/build-sections.mjs wrote from its page
+	// section; it sits beside hand-written atoms in its type folder.
+	Generated bool
 }
 
 // Fact is one value an answer should quote exactly, with the index into the
@@ -74,6 +77,7 @@ type frontmatter struct {
 	Side         string `yaml:"side"`
 	Status       string `yaml:"status"`
 	SupersededBy string `yaml:"superseded_by"`
+	Generated    bool   `yaml:"generated"`
 	Facts        []struct {
 		Key    string `yaml:"key"`
 		Value  any    `yaml:"value"`
@@ -159,5 +163,6 @@ func ParseAtom(sourcePath string, content []byte) (Atom, error) {
 		Status:       status,
 		SupersededBy: fm.SupersededBy,
 		Facts:        facts,
+		Generated:    fm.Generated,
 	}, nil
 }

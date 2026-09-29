@@ -85,7 +85,7 @@ curl -X POST 'https://dev.abdm.gov.in/api/hiecm/gateway/v3/sessions' \
 - `<YOUR_CLIENT_ID>` and `<YOUR_CLIENT_SECRET>` come from your ABDM sandbox registration.
 - [`REQUEST-ID`](../../shared/glossary/request-id.md) is a new UUID for this call. Do not copy one from an example.
 - [`TIMESTAMP`](../../shared/glossary/timestamp-header.md) is the current UTC time with milliseconds and a trailing `Z`, for example `2026-09-04T06:15:51.975Z`. Take it from the system clock.
-- [`X-CM-ID`](../../shared/glossary/x-cm-id.md) is `sbx` on the sandbox.
+- [`X-CM-ID`](../../hiecm/glossary/x-cm-id.md) is `sbx` on the sandbox.
 - `grantType` is always `client_credentials`.
 
 The earlier address, `https://dev.abdm.gov.in/gateway/v0.5/sessions`, takes the same `clientId`, `clientSecret` and `grantType` body. It also returns `accessToken` and `expiresIn`. [Choosing a session endpoint](../decisions/session-endpoint.md) compares both addresses with [`/get/session`](get-session.md).

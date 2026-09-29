@@ -29,7 +29,7 @@ related:
   - nhcx.concept.participant-roles
   glossary:
   - shared.glossary.phr
-  - shared.glossary.eua
+  - uhi.glossary.eua
   - shared.glossary.abha-address
   - nhcx.glossary.payment-notice
 ---

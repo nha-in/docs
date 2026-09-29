@@ -16,7 +16,7 @@ summary: >
   their own application, or because the desk ran an identifier journey, and
   which one a deployment can offer is a fact about the deployment.
 sources:
-  - file: catalogue/openapi/hiecm/v3/hiecm-m1.yaml
+  - file: catalogue/hiecm/openapi/v3/hiecm-m1.yaml
     status: read-from-spec-2026-09-20
     note: >
       Both routes are in the M1 specification. The share route delivers the

@@ -63,17 +63,19 @@ func main() {
 }
 
 // isSpecPath reports whether rel (a path relative to the catalogue root) is
-// an OpenAPI spec to parse: exactly openapi/<platform>/<version>/<name>.yaml,
-// four path segments, none starting with ".". This is what excludes
-// journeys/ (five segments, step lists read through lib/journeys.mjs, not
-// OpenAPI), corrections/ and asyncapi files (both live outside that shape
-// today), and catalogue/openapi/.raw (an untouched-download folder, and a
-// dot segment either way). Mirrors scripts/specs.mjs's listSpecTree, which
-// also only treats a three-segment-under-openapi file as spec-tree
-// structure.
+// an OpenAPI spec to parse: exactly <gateway>/openapi/<version>/<name>.yaml,
+// where HIE-CM and UHI keep theirs, or openapi/<gateway>/<version>/<name>.yaml,
+// where NHCX's still sit. Four path segments, none starting with ".". This is
+// what excludes journeys/ and errors/ (five segments, not OpenAPI),
+// corrections/, and every .raw folder (a dot segment). Mirrors
+// scripts/specs.mjs's listSpecTree.
 func isSpecPath(rel string) bool {
 	segs := strings.Split(filepath.ToSlash(rel), "/")
-	if len(segs) != 4 || segs[0] != "openapi" {
+	if len(segs) != 4 || (segs[0] != "openapi" && segs[1] != "openapi") {
+		return false
+	}
+	// A gateway's correction logs sit where a version folder would.
+	if segs[2] == "corrections" || segs[1] == "corrections" {
 		return false
 	}
 	for _, s := range segs {

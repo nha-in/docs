@@ -28,12 +28,12 @@
     "lims is the hip"
   ],
   "expected_sources": [
-    "shared.glossary.lims"
+    "hiecm.glossary.lims"
   ],
   "expected_shape": "define",
   "expected_behaviour": "answer",
   "derived_from": null,
   "source_row": "annexure#glossary",
   "catalogue_version": "2026.08.24",
-  "notes": "reader spelled it LIS; catalogue atom shared.glossary.lims spells it LIMS (laboratory information management system)."
+  "notes": "reader spelled it LIS; catalogue atom hiecm.glossary.lims spells it LIMS (laboratory information management system)."
 }

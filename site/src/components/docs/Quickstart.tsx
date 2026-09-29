@@ -28,7 +28,7 @@ import {field, mobileIsWellFormed, otpIsWellFormed} from './quickstart-values';
  * The gateway and the ABHA service sit on different hosts. `dev.abdm.gov.in`
  * serves the session call and answers 503 for the enrolment and certificate
  * paths, which are served from the M1 server in
- * catalogue/openapi/hiecm/v3/hiecm-m1.yaml. That server answers 401 for the
+ * catalogue/hiecm/openapi/v3/hiecm-m1.yaml. That server answers 401 for the
  * paths below and 404 for the alternatives, which is how the two were picked.
  */
 const GATEWAY = 'https://dev.abdm.gov.in/api/hiecm/gateway/v3';

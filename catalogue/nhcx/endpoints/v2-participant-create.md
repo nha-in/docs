@@ -102,7 +102,7 @@ Send all three headers on every participant service call: `Accept`, `Content-Typ
 | Field | What to send |
 |---|---|
 | `registrytype` | HFR `10001`, NIN `10002`, ROHINI `10003` or PAYER `10004`. Providers and EUAs use `10001`. Payers and TPAs use `10004`. |
-| `registryid` | HFR ID for a provider. IRDAI ID, without leading zeros, for a payer or TPA. Client id for an [EUA](../../shared/glossary/eua.md). |
+| `registryid` | HFR ID for a provider. IRDAI ID, without leading zeros, for a payer or TPA. Client id for an [EUA](../../uhi/glossary/eua.md). |
 | `role` | An array of role codes: PROVIDER `10001`, PAYER `10002`, AGENCY_TPA `10003`, AGENCY_REGULATOR `10004`, RESEARCH `10005`, MEMBER_ISNP `10006`, AGENCY_SPONSOR `10007`, HIE_HIO_HCX `10008`, EUA `10009`. |
 | `endpoint_url` | Your bridge URL. |
 | `mobilenumber` | The mobile number on record. |

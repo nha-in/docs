@@ -2330,15 +2330,15 @@
     "his"
   ],
   "sources": {
-    "catalogue/openapi/.raw/nha-2026-09-24/M4/M4-HFR.json": {
+    "nha-2026-09-24/M4/M4-HFR.json": {
       "fetched": "2026-09-24",
       "hash": "sha256:39a581bb31e74f48340703056258e31850788848220787814ffa49750d23d9ba"
     },
-    "catalogue/openapi/.raw/nha-2026-09-24/M4/M4-HPID.json": {
+    "nha-2026-09-24/M4/M4-HPID.json": {
       "fetched": "2026-09-24",
       "hash": "sha256:b673f1dc7d25958998a8be194c87df9b779fd80389f9c8970bdb28b53df30b12"
     },
-    "catalogue/openapi/.raw/nha-2026-09-24/M4/M4-HPR.json": {
+    "nha-2026-09-24/M4/M4-HPR.json": {
       "fetched": "2026-09-24",
       "hash": "sha256:2cbcab72692ada1b6b07bce3c6c6d3e3bd047bcaca0c5716ac1d691121025081"
     }

@@ -26,7 +26,7 @@ import {loadAtoms} from './lib/atoms.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dataDir = join(root, 'site', 'src', 'data', 'api');
-const specDir = join(root, 'catalogue', 'openapi', 'hiecm', 'v3');
+const specDir = join(root, 'catalogue', 'hiecm', 'openapi', 'v3');
 const outDir = join(root, 'site', 'static', 'skills');
 
 // Provenance for the snapshot header. A downloaded skill is frozen while the

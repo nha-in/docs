@@ -3978,11 +3978,11 @@
     "his"
   ],
   "sources": {
-    "catalogue/openapi/.raw/nha-2026-09-16/abha/M1 ABHA Collection.json": {
+    "nha-2026-09-16/abha/M1 ABHA Collection.json": {
       "fetched": "2026-09-15",
       "hash": "sha256:e121c850ed891b6d96c241be3616e15fddeb967a22f600cfc08561c99f81fc65"
     },
-    "catalogue/openapi/.raw/nha-2026-09-22/abha/ABHA Swagger split.yaml": {
+    "nha-2026-09-22/abha/ABHA Swagger split.yaml": {
       "fetched": "2026-09-22",
       "hash": "sha256:f635eaf1411d96dcf427773d45d3e6d67a57748612ca4b3217b101118620609c"
     }

@@ -26,7 +26,7 @@ func TestRealCatalogueRanksLinkToken(t *testing.T) {
 	for i, h := range hits {
 		t.Logf("%d. %s  %s#%s", i+1, h.ID, h.DocURL, h.DocAnchor)
 	}
-	if len(hits) == 0 || hits[0].ID != "shared.glossary.link-token" {
-		t.Fatalf("shared.glossary.link-token is not the top hit for \"link token\"")
+	if len(hits) == 0 || hits[0].ID != "hiecm.glossary.link-token" {
+		t.Fatalf("hiecm.glossary.link-token is not the top hit for \"link token\"")
 	}
 }

@@ -2129,6 +2129,162 @@
     "url": "/docs/hiecm/v3/milestones/p3#p3-subscribe-and-auto-approve"
   },
   {
+    "id": "hiecm.glossary.auth-modes",
+    "type": "glossary",
+    "gateway": "hiecm",
+    "source": "file",
+    "file": "catalogue/hiecm/glossary/auth-modes.md"
+  },
+  {
+    "id": "hiecm.glossary.bridge",
+    "type": "glossary",
+    "gateway": "hiecm",
+    "source": "file",
+    "file": "catalogue/hiecm/glossary/bridge.md"
+  },
+  {
+    "id": "hiecm.glossary.consent-manager",
+    "type": "glossary",
+    "gateway": "hiecm",
+    "source": "file",
+    "file": "catalogue/hiecm/glossary/consent-manager.md"
+  },
+  {
+    "id": "hiecm.glossary.discovery",
+    "type": "glossary",
+    "gateway": "hiecm",
+    "source": "file",
+    "file": "catalogue/hiecm/glossary/discovery.md"
+  },
+  {
+    "id": "hiecm.glossary.ecdh",
+    "type": "glossary",
+    "gateway": "hiecm",
+    "source": "file",
+    "file": "catalogue/hiecm/glossary/ecdh.md"
+  },
+  {
+    "id": "hiecm.glossary.emr",
+    "type": "glossary",
+    "gateway": "hiecm",
+    "source": "file",
+    "file": "catalogue/hiecm/glossary/emr.md"
+  },
+  {
+    "id": "hiecm.glossary.hi-type",
+    "type": "glossary",
+    "gateway": "hiecm",
+    "source": "file",
+    "file": "catalogue/hiecm/glossary/hi-type.md"
+  },
+  {
+    "id": "hiecm.glossary.hip",
+    "type": "glossary",
+    "gateway": "hiecm",
+    "source": "file",
+    "file": "catalogue/hiecm/glossary/hip.md"
+  },
+  {
+    "id": "hiecm.glossary.hiu",
+    "type": "glossary",
+    "gateway": "hiecm",
+    "source": "file",
+    "file": "catalogue/hiecm/glossary/hiu.md"
+  },
+  {
+    "id": "hiecm.glossary.hmis",
+    "type": "glossary",
+    "gateway": "hiecm",
+    "source": "file",
+    "file": "catalogue/hiecm/glossary/hmis.md"
+  },
+  {
+    "id": "hiecm.glossary.hrp",
+    "type": "glossary",
+    "gateway": "hiecm",
+    "source": "file",
+    "file": "catalogue/hiecm/glossary/hrp.md"
+  },
+  {
+    "id": "hiecm.glossary.ims",
+    "type": "glossary",
+    "gateway": "hiecm",
+    "source": "file",
+    "file": "catalogue/hiecm/glossary/ims.md"
+  },
+  {
+    "id": "hiecm.glossary.key-material",
+    "type": "glossary",
+    "gateway": "hiecm",
+    "source": "file",
+    "file": "catalogue/hiecm/glossary/key-material.md"
+  },
+  {
+    "id": "hiecm.glossary.lims",
+    "type": "glossary",
+    "gateway": "hiecm",
+    "source": "file",
+    "file": "catalogue/hiecm/glossary/lims.md"
+  },
+  {
+    "id": "hiecm.glossary.link-token",
+    "type": "glossary",
+    "gateway": "hiecm",
+    "source": "page",
+    "page": "site/docs/_glossary/_hiecm.mdx",
+    "heading": "link-token",
+    "url": "/docs/hiecm/v3/getting-started/glossary#link-token"
+  },
+  {
+    "id": "hiecm.glossary.m1",
+    "type": "glossary",
+    "gateway": "hiecm",
+    "source": "file",
+    "file": "catalogue/hiecm/glossary/m1.md"
+  },
+  {
+    "id": "hiecm.glossary.m2",
+    "type": "glossary",
+    "gateway": "hiecm",
+    "source": "file",
+    "file": "catalogue/hiecm/glossary/m2.md"
+  },
+  {
+    "id": "hiecm.glossary.m3",
+    "type": "glossary",
+    "gateway": "hiecm",
+    "source": "file",
+    "file": "catalogue/hiecm/glossary/m3.md"
+  },
+  {
+    "id": "hiecm.glossary.m4",
+    "type": "glossary",
+    "gateway": "hiecm",
+    "source": "file",
+    "file": "catalogue/hiecm/glossary/m4.md"
+  },
+  {
+    "id": "hiecm.glossary.pms",
+    "type": "glossary",
+    "gateway": "hiecm",
+    "source": "file",
+    "file": "catalogue/hiecm/glossary/pms.md"
+  },
+  {
+    "id": "hiecm.glossary.purpose-of-use",
+    "type": "glossary",
+    "gateway": "hiecm",
+    "source": "file",
+    "file": "catalogue/hiecm/glossary/purpose-of-use.md"
+  },
+  {
+    "id": "hiecm.glossary.x-cm-id",
+    "type": "glossary",
+    "gateway": "hiecm",
+    "source": "file",
+    "file": "catalogue/hiecm/glossary/x-cm-id.md"
+  },
+  {
     "id": "hiecm.test.m1-encryption-padding",
     "type": "test",
     "gateway": "hiecm",
@@ -6009,7 +6165,7 @@
     "type": "fhir",
     "gateway": "shared",
     "source": "file",
-    "file": "catalogue/shared/fhir/fhir-document-bundles.md"
+    "file": "catalogue/shared/fhir/document-bundles.md"
   },
   {
     "id": "shared.fhir.hl7-validator-recipe",
@@ -6103,13 +6259,6 @@
     "file": "catalogue/shared/glossary/abha-number.md"
   },
   {
-    "id": "shared.glossary.auth-modes",
-    "type": "glossary",
-    "gateway": "shared",
-    "source": "file",
-    "file": "catalogue/shared/glossary/auth-modes.md"
-  },
-  {
     "id": "shared.glossary.ayushman-card",
     "type": "glossary",
     "gateway": "shared",
@@ -6117,53 +6266,11 @@
     "file": "catalogue/shared/glossary/ayushman-card.md"
   },
   {
-    "id": "shared.glossary.bridge",
-    "type": "glossary",
-    "gateway": "shared",
-    "source": "file",
-    "file": "catalogue/shared/glossary/bridge.md"
-  },
-  {
-    "id": "shared.glossary.consent-manager",
-    "type": "glossary",
-    "gateway": "shared",
-    "source": "file",
-    "file": "catalogue/shared/glossary/consent-manager.md"
-  },
-  {
-    "id": "shared.glossary.discovery",
-    "type": "glossary",
-    "gateway": "shared",
-    "source": "file",
-    "file": "catalogue/shared/glossary/discovery.md"
-  },
-  {
     "id": "shared.glossary.dsc",
     "type": "glossary",
     "gateway": "shared",
     "source": "file",
     "file": "catalogue/shared/glossary/dsc.md"
-  },
-  {
-    "id": "shared.glossary.ecdh",
-    "type": "glossary",
-    "gateway": "shared",
-    "source": "file",
-    "file": "catalogue/shared/glossary/ecdh.md"
-  },
-  {
-    "id": "shared.glossary.emr",
-    "type": "glossary",
-    "gateway": "shared",
-    "source": "file",
-    "file": "catalogue/shared/glossary/emr.md"
-  },
-  {
-    "id": "shared.glossary.eua",
-    "type": "glossary",
-    "gateway": "shared",
-    "source": "file",
-    "file": "catalogue/shared/glossary/eua.md"
   },
   {
     "id": "shared.glossary.fhir",
@@ -6187,39 +6294,11 @@
     "file": "catalogue/shared/glossary/hfr.md"
   },
   {
-    "id": "shared.glossary.hi-type",
-    "type": "glossary",
-    "gateway": "shared",
-    "source": "file",
-    "file": "catalogue/shared/glossary/hi-type.md"
-  },
-  {
     "id": "shared.glossary.hie-cm",
     "type": "glossary",
     "gateway": "shared",
     "source": "file",
     "file": "catalogue/shared/glossary/hie-cm.md"
-  },
-  {
-    "id": "shared.glossary.hip",
-    "type": "glossary",
-    "gateway": "shared",
-    "source": "file",
-    "file": "catalogue/shared/glossary/hip.md"
-  },
-  {
-    "id": "shared.glossary.hiu",
-    "type": "glossary",
-    "gateway": "shared",
-    "source": "file",
-    "file": "catalogue/shared/glossary/hiu.md"
-  },
-  {
-    "id": "shared.glossary.hmis",
-    "type": "glossary",
-    "gateway": "shared",
-    "source": "file",
-    "file": "catalogue/shared/glossary/hmis.md"
   },
   {
     "id": "shared.glossary.hpid",
@@ -6236,83 +6315,11 @@
     "file": "catalogue/shared/glossary/hpr.md"
   },
   {
-    "id": "shared.glossary.hrp",
-    "type": "glossary",
-    "gateway": "shared",
-    "source": "file",
-    "file": "catalogue/shared/glossary/hrp.md"
-  },
-  {
-    "id": "shared.glossary.hspa",
-    "type": "glossary",
-    "gateway": "shared",
-    "source": "file",
-    "file": "catalogue/shared/glossary/hspa.md"
-  },
-  {
-    "id": "shared.glossary.ims",
-    "type": "glossary",
-    "gateway": "shared",
-    "source": "file",
-    "file": "catalogue/shared/glossary/ims.md"
-  },
-  {
-    "id": "shared.glossary.key-material",
-    "type": "glossary",
-    "gateway": "shared",
-    "source": "file",
-    "file": "catalogue/shared/glossary/key-material.md"
-  },
-  {
     "id": "shared.glossary.kyc",
     "type": "glossary",
     "gateway": "shared",
     "source": "file",
     "file": "catalogue/shared/glossary/kyc.md"
-  },
-  {
-    "id": "shared.glossary.lims",
-    "type": "glossary",
-    "gateway": "shared",
-    "source": "file",
-    "file": "catalogue/shared/glossary/lims.md"
-  },
-  {
-    "id": "shared.glossary.link-token",
-    "type": "glossary",
-    "gateway": "shared",
-    "source": "page",
-    "page": "site/docs/_glossary/_hiecm.mdx",
-    "heading": "link-token",
-    "url": "/docs/hiecm/v3/getting-started/glossary#link-token"
-  },
-  {
-    "id": "shared.glossary.m1",
-    "type": "glossary",
-    "gateway": "shared",
-    "source": "file",
-    "file": "catalogue/shared/glossary/m1.md"
-  },
-  {
-    "id": "shared.glossary.m2",
-    "type": "glossary",
-    "gateway": "shared",
-    "source": "file",
-    "file": "catalogue/shared/glossary/m2.md"
-  },
-  {
-    "id": "shared.glossary.m3",
-    "type": "glossary",
-    "gateway": "shared",
-    "source": "file",
-    "file": "catalogue/shared/glossary/m3.md"
-  },
-  {
-    "id": "shared.glossary.m4",
-    "type": "glossary",
-    "gateway": "shared",
-    "source": "file",
-    "file": "catalogue/shared/glossary/m4.md"
   },
   {
     "id": "shared.glossary.nha",
@@ -6348,20 +6355,6 @@
     "gateway": "shared",
     "source": "file",
     "file": "catalogue/shared/glossary/phr.md"
-  },
-  {
-    "id": "shared.glossary.pms",
-    "type": "glossary",
-    "gateway": "shared",
-    "source": "file",
-    "file": "catalogue/shared/glossary/pms.md"
-  },
-  {
-    "id": "shared.glossary.purpose-of-use",
-    "type": "glossary",
-    "gateway": "shared",
-    "source": "file",
-    "file": "catalogue/shared/glossary/purpose-of-use.md"
   },
   {
     "id": "shared.glossary.request-id",
@@ -6406,13 +6399,6 @@
     "file": "catalogue/shared/glossary/uhi.md"
   },
   {
-    "id": "shared.glossary.x-cm-id",
-    "type": "glossary",
-    "gateway": "shared",
-    "source": "file",
-    "file": "catalogue/shared/glossary/x-cm-id.md"
-  },
-  {
     "id": "shared.sandbox.first-fifteen-minutes",
     "type": "sandbox",
     "gateway": "shared",
@@ -6432,5 +6418,19 @@
     "gateway": "shared",
     "source": "file",
     "file": "catalogue/shared/sandbox/wasa.md"
+  },
+  {
+    "id": "uhi.glossary.eua",
+    "type": "glossary",
+    "gateway": "uhi",
+    "source": "file",
+    "file": "catalogue/uhi/glossary/eua.md"
+  },
+  {
+    "id": "uhi.glossary.hspa",
+    "type": "glossary",
+    "gateway": "uhi",
+    "source": "file",
+    "file": "catalogue/uhi/glossary/hspa.md"
   }
 ]

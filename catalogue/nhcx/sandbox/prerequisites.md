@@ -49,7 +49,7 @@ related:
   - nhcx.concept.encryption-certificate
   glossary:
   - shared.glossary.hfr
-  - shared.glossary.m1
+  - hiecm.glossary.m1
   - shared.glossary.abha
   - nhcx.glossary.irdai
   - nhcx.glossary.tpa
@@ -87,7 +87,7 @@ The review is semi-manual. It filters out repeat requests from the same organisa
 
 ### 3. Build Milestone 1
 
-Your software must support [Milestone 1](../../shared/glossary/m1.md). It creates an ABHA number through Aadhaar or a driving licence. It verifies an ABHA number or ABHA address at patient registration.
+Your software must support [Milestone 1](../../hiecm/glossary/m1.md). It creates an ABHA number through Aadhaar or a driving licence. It verifies an ABHA number or ABHA address at patient registration.
 
 ### 4. Register on the NHCX sandbox
 

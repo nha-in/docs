@@ -10,12 +10,12 @@ summary: >
   after a day. They are not facts about any one milestone, which is why they
   sit here and ship with every skill.
 sources:
-  - file: catalogue/openapi/.raw/nha-2026-09-16/abha/M1 ABHA Swagger 1.yaml
+  - file: catalogue/hiecm/openapi/.raw/nha-2026-09-16/abha/M1 ABHA Swagger 1.yaml
     hash: sha256:6ab5cfe77c29032fac5fbf25c8e28529f22951e459374fa618f570f15e25551b
     note: >
       The certificate response that carries the encryption algorithm beside
       the key, and the TIMESTAMP header format.
-  - file: catalogue/openapi/.raw/nha-2026-09-16/hiecm/gateway.yaml
+  - file: catalogue/hiecm/openapi/.raw/nha-2026-09-16/hiecm/gateway.yaml
     hash: sha256:d3bc599054c2570a50818ca54906c44cf652ad6f813473e8ac243667da4e9300
     note: >
       Error codes that may be returned bare or with a trailing ": "

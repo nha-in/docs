@@ -56,7 +56,7 @@ related:
   - nhcx.glossary.payer
   - nhcx.glossary.tpa
   - nhcx.glossary.irdai
-  - shared.glossary.eua
+  - uhi.glossary.eua
   - shared.glossary.hfr
   endpoints:
   - nhcx.endpoint.participant-create
@@ -96,7 +96,7 @@ You pass one of these codes in `role` when you create a participant.
 | `MEMBER_ISNP` | `10006` | Insurance self network platforms |
 | `AGENCY_SPONSOR` | `10007` | Scheme owners |
 | `HIE_HIO_HCX` | `10008` | Other exchange instances |
-| `EUA` | `10009` | [End user applications](../../shared/glossary/eua.md), such as patient apps |
+| `EUA` | `10009` | [End user applications](../../uhi/glossary/eua.md), such as patient apps |
 
 ### Who starts which exchange
 

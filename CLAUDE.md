@@ -26,7 +26,7 @@ Two things the index will not route for you, because they are repo-wide:
 
 - Generated files are never hand-edited. `site/docs/<gateway>/<version>/api/`,
   `site/static/specs/`, `plugins/abdm-integrators-assistant/skills/`, `site/static/llms.txt`,
-  `catalogue/generated/` and `catalogue/registry.json` are build outputs, except the `index.mdx` pages under `api/`, which are hand-written.
+  every catalogue atom file marked `generated: true`, and `catalogue/registry.json` are build outputs, except the `index.mdx` pages under `api/`, which are hand-written.
   If one is wrong, the catalogue or the generator is wrong.
 - Skills ship as one folder per module: a `SKILL.md` that routes, and the
   scaffold, integrate, debug and test sections under `references/`. The guided

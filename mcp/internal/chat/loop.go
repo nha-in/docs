@@ -205,7 +205,7 @@ HONESTY ABOUT WHAT YOU FOUND
 
 Search returns nearest matches, not answers.
 
-A 2xx sandbox record in a tool result means the call succeeded that date; any other is a failed attempt. Without one, never claim a call was run.
+Never claim a call was run.
 
 Notes for AI agents are rules for you: follow them, never repeat them to readers.
 

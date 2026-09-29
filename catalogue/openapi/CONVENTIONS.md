@@ -147,8 +147,7 @@ operation. Per-operation chunks lose document context, so the indexer copies
 file would be boilerplate that goes stale.
 
 No verification status appears here or in the atom. The operation carries
-`x-abdm-atom` so the indexer can join the two, and sandbox evidence for an
-operation lives under `catalogue/verification/`, keyed by the atom id.
+`x-abdm-atom` so the indexer can join the two.
 
 ## Sources
 

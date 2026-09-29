@@ -27,14 +27,14 @@ Checks every atom's frontmatter and body: mandatory fields, id format, gateway a
 | `sources` is missing or empty | `sources must list at least one entry` | Add at least one source. If it is our own analysis, say so and mark `docs-only`. |
 | A `sources` entry has neither `url` nor `file` | `sources[<i>] needs a url or a file` | Add one. |
 | A `sources` entry has neither `status` nor `hash` | `sources[<i>] needs a status or a hash` | Add one. Ingestion records a hash; if hand-added, run `/source-check`. |
-| A `verified` block is present | `verified is no longer a field; drop it. Sandbox evidence lives in catalogue/verification/` | Delete the block. Atoms carry no verification status; `npm run verify:atoms` writes evidence outside the atom. |
+| A `verified` block is present | `verified is no longer a field; drop it` | Delete the block. The field does not exist. |
 | A section the atom's type requires is missing (glossary, concept, decision, sandbox and fhir need In plain words; error adds When it goes wrong; troubleshooting adds What happens; flow, endpoint, callback and test need all five; a `generated: true` file needs only In plain words) | `missing mandatory section: ## <heading>`. Headings, in order: `In plain words`, `Before you start`, `What happens`, `How you know it worked`, `When it goes wrong`. | Add it. Glossary atoms may write "Nothing" under a heading, but the heading stays. |
 | The sections present are out of order | `sections are out of order at "## <heading>"` | Reorder. |
 | An em dash (U+2014) appears anywhere in the file | `em dash found. Use a full stop, a comma or a colon.` | Replace it. No exceptions, including code comments and commit messages. |
 | A relative markdown link points at a file that does not exist | `link points at "<path>", which does not exist` | Fix the link or create the target. Never leave a dangling link. |
 | A `related.<kind>` entry names an id no atom defines | `related.<kind> points at "<id>", which no atom defines` | Create the atom or remove the link. |
-| An endpoint or callback atom has no `operation` (NHCX excepted) | `<type> atoms need operation: the operationId this atom documents` | Add the operationId from `catalogue/openapi/<gateway>/`. |
-| `operation` does not resolve | `operation "<id>" is not an operationId in catalogue/openapi/<gateway>/` | Fix the id. |
+| An endpoint or callback atom has no `operation` (NHCX excepted) | `<type> atoms need operation: the operationId this atom documents` | Add the operationId from `catalogue/<gateway>/openapi/`. |
+| `operation` does not resolve | `operation "<id>" is not an operationId in catalogue/<gateway>/openapi/` | Fix the id. |
 | `side` or `status` has another value | `side must be one of provider, payer, hip, hiu, both`, `status must be one of current, deprecated, draft` | Use an allowed value. |
 | `superseded_by` names no atom | `superseded_by names "<id>", which no atom defines` | Fix the id. |
 | A fact is malformed | `facts[<i>] needs a key`, `facts[<i>] needs a value`, `facts[<i>].source <n> is not an index into sources (0 to <m>)` | `source` is the 0-based index of the `sources` entry that states the value. |
@@ -42,7 +42,7 @@ Checks every atom's frontmatter and body: mandatory fields, id format, gateway a
 
 ## `npm run check:sections` (`scripts/build-sections.mjs --check`)
 
-Builds every atom listed in `catalogue/map.yaml` and the fragments in `catalogue/map.d/*.yaml` from its page section and compares the result with `catalogue/generated/` and `catalogue/registry.json`. `npm run build:sections` rewrites both.
+Builds every atom listed in the content maps, `catalogue/<gateway>/map/*.yaml`, from its page section and compares the result with its file at `catalogue/<gateway>/<type folder>/<id slug>.md` and with `catalogue/registry.json`. `npm run build:sections` rewrites both, and only ever writes or deletes files carrying `generated: true`: a hand-written file at a path the map wants is an error, not an overwrite.
 
 | Fails on | Message (verbatim) | Fix |
 |---|---|---|
@@ -116,11 +116,11 @@ It needs a build first: `npx playwright install --with-deps chromium && npm run 
 
 ## `npm run lint:sources` (`scripts/check-source-freshness.mjs`)
 
-Hashes everything under `catalogue/openapi/.raw/` and compares against every recorded source reference (a spec's `x-abdm-sources`, an atom's `sources`). Only `MISMATCH` fails the build.
+Hashes everything under `catalogue/<gateway>/openapi/.raw/` (NHCX's sets and the NRCeS package: `catalogue/openapi/.raw/`) and compares against every recorded source reference (a spec's `x-abdm-sources`, an atom's `sources`). Only `MISMATCH` fails the build.
 
 | Finding | Message (verbatim) | Blocking? |
 |---|---|---|
-| A recorded hash disagrees with the file's current hash | `MISMATCH catalogue/openapi/.raw/<file> recorded sha256:<12 hex>... current sha256:<12 hex>... by <consumer>` | Yes |
+| A recorded hash disagrees with the file's current hash | `MISMATCH catalogue/<gateway>/openapi/.raw/<file> recorded sha256:<12 hex>... current sha256:<12 hex>... by <consumer>` | Yes |
 | A recorded file exists nowhere under `.raw/` | `MISSING <file> <"not under .raw/" or "in the repo but not under .raw/"> (recorded by <N> consumer(s): <list>)` | No, some sources (websites, packs never stored) are legitimately absent |
 | A source is recorded with a `status` instead of a `hash` | `UNHASHED <N> source reference(s) carry a status instead of a hash (coverage debt)` | No, counted only |
 | Any mismatch was found | `FAIL a raw source changed under the catalogue; re-derive the consumers listed above or update their recorded hashes` | This is what sets the exit code |
@@ -144,7 +144,7 @@ Runs after `compile:skills` and validates the compiled output in `plugins/abdm-i
 | No loop states a limit (`Loop limit: N passes per ...`) | `<skill>: no loop limit stated` | Add one so an agent following it can terminate. |
 | A `### ` block has no matching `Exit condition` | `<skill>: <N> loop(s) but only <M> exit condition(s)` | Name what arrives and within how long. |
 
-There is no check that a gateway has some minimum count of sandbox-checked atoms. Atoms carry no status to count, and nothing refuses to build on coverage. P1's phasing is held by review, not by CI. Do not cite it as a build gate.
+There is no check that a gateway has some minimum atom count. Nothing refuses to build on coverage. P1's phasing is held by review, not by CI. Do not cite it as a build gate.
 
 ## `./scripts/plan-check.sh`
 
@@ -159,7 +159,7 @@ Hashes `plan/abdm-v1-phase1-architecture-and-plan.md` and compares it against `p
 
 ## `npm run lint:specs` (Spectral, config in `.spectral.yaml`)
 
-This one is not a script you can read messages out of. It runs Spectral over `catalogue/openapi/*/*/*.yaml` with `--fail-severity=error`, so only `error`-severity violations fail CI. The ruleset, verbatim from `.spectral.yaml`:
+This one is not a script you can read messages out of. It runs Spectral over `catalogue/*/openapi/*/*.yaml` with `--fail-severity=error`, so only `error`-severity violations fail CI. The ruleset, verbatim from `.spectral.yaml`:
 
 ```yaml
 extends:

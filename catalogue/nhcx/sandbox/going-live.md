@@ -54,7 +54,7 @@ related:
   - nhcx.concept.participant-roles
   - nhcx.concept.encryption-certificate
   glossary:
-  - shared.glossary.m1
+  - hiecm.glossary.m1
   - shared.glossary.hfr
   - shared.glossary.otp
   - shared.glossary.nha
@@ -69,7 +69,7 @@ Going live moves your system from the sandbox to production, where claims are re
 ## Before you start
 
 - You hold the sandbox sign-off email. See [the sandbox exit process](sandbox-exit.md).
-- You hold production credentials for [Milestone 1](../../shared/glossary/m1.md). These follow Milestone 1 functional testing, the security audit ([WASA](../../shared/sandbox/wasa.md)) and the Health Tech Committee demo.
+- You hold production credentials for [Milestone 1](../../hiecm/glossary/m1.md). These follow Milestone 1 functional testing, the security audit ([WASA](../../shared/sandbox/wasa.md)) and the Health Tech Committee demo.
 - The mobile number on your [HFR](../../shared/glossary/hfr.md) record, or your payer record, is one you can receive messages on.
 - You have a production certificate and a production callback URL.
 
