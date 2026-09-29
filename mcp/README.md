@@ -145,7 +145,8 @@ the tool loop's choices stable, and 0 makes it as deterministic as the model
 allows. With an Anthropic or Amazon Nova model the system prompt is sent behind a
 cache point, so Bedrock charges that prefix at the read rate on every turn
 after the first; other model families reject cache points, so for them the
-prompt goes without one at the full input rate.
+prompt goes without one at the full input rate. OpenAI GPT-5 and GPT-6 models refuse
+a temperature, so for them it is not sent and `CHAT_TEMPERATURE` has no effect.
 
 Guardrails are environment-tunable: `CHAT_MAX_TOKENS` (default 1500),
 `CHAT_RATE_PER_MIN` (default 5) and `CHAT_RATE_PER_DAY` (default 100) cap

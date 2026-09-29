@@ -175,6 +175,20 @@ func promptCacheable(modelID string) bool {
 	return strings.Contains(modelID, "anthropic.") || strings.Contains(modelID, "amazon.nova")
 }
 
+// temperatureFor returns the sampling temperature to send, or nil for models
+// that refuse the field. OpenAI's GPT-5 and GPT-6 families are reasoning
+// models and reject any temperature with ValidationException "This model
+// doesn't support the temperature field", which fails every chat. For them
+// CHAT_TEMPERATURE is ignored and the model's own sampling applies. gpt-oss
+// accepts it and keeps it. The id may carry a cross-region prefix (global.,
+// in., us.), hence Contains.
+func temperatureFor(modelID string, t float32) *float32 {
+	if strings.Contains(modelID, "openai.gpt-5") || strings.Contains(modelID, "openai.gpt-6") {
+		return nil
+	}
+	return aws.Float32(t)
+}
+
 // Stream calls Bedrock's ConverseStream and drains the event stream into one
 // assembled Reply, invoking onText as text deltas arrive.
 func (b *bedrockModel) Stream(ctx context.Context, system string, tools []ToolDef,
@@ -194,7 +208,7 @@ func (b *bedrockModel) Stream(ctx context.Context, system string, tools []ToolDe
 		ToolConfig: toolConfig,
 		InferenceConfig: &types.InferenceConfiguration{
 			MaxTokens:   aws.Int32(int32(maxTokens)),
-			Temperature: aws.Float32(b.temperature),
+			Temperature: temperatureFor(b.modelID, b.temperature),
 		},
 	})
 	if err != nil {
