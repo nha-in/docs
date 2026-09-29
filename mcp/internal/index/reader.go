@@ -304,6 +304,15 @@ type OperationSummary struct {
 	Module      string `json:"module"`
 }
 
+// OperationRoute returns the method and path of one operation, or ok false
+// when the id is unknown. An endpoint atom names its operation but its body
+// does not repeat the path, so the passage built from it carries the route
+// from here; without it the reader's real path cannot be grounded.
+func (r *Reader) OperationRoute(id string) (method, path string, ok bool) {
+	err := r.db.QueryRow(`SELECT method, path FROM operations WHERE operation_id = ?`, id).Scan(&method, &path)
+	return method, path, err == nil
+}
+
 // ListOperations filters by exact tag, exact module, and a free
 // case-insensitive substring q over operation_id, summary and path.
 // Empty filters match everything.

@@ -260,6 +260,7 @@ const (
 type atomOpener interface {
 	GetAtom(id string) (catalogue.Atom, error)
 	RelatedAtoms(id string) ([]index.RelatedGroup, error)
+	OperationRoute(id string) (method, path string, ok bool)
 }
 
 // openPassage builds the full-body passage and its one-hop related atoms
@@ -278,6 +279,15 @@ func openPassage(r atomOpener, h index.SearchHit) (Passage, []map[string]string)
 		return p, nil
 	}
 	p.Body = a.Body
+	// An endpoint or callback atom's body describes the call and never
+	// repeats its path; the path lives on the operation it names. The pack
+	// is also the grounding corpus, so without this line the guard rejects
+	// the real path as invented and the reader sees no answer at all.
+	if a.Operation != "" {
+		if method, path, ok := r.OperationRoute(a.Operation); ok {
+			p.Body = method + " " + path + "\n\n" + a.Body
+		}
+	}
 	var related []map[string]string
 	groups, err := r.RelatedAtoms(h.ID)
 	if err == nil {
