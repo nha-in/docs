@@ -20,7 +20,7 @@ const METHODS = ['get', 'post', 'put', 'patch', 'delete'];
 
 const MODULES = {
   gateway: {label: 'Gateway session', position: 1, icon: 'key-round', roles: ['his', 'phr'], title: 'ABDM gateway, sessions and bridges', summary: 'The access token every call carries, and the bridge registry.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 4},
-  m1: {label: 'M1 Identity', position: 2, icon: 'id-card', roles: ['his'], title: 'ABDM M1, create and verify ABHA', summary: 'Create, find, log into and manage an ABHA.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}], expected: 121},
+  m1: {label: 'M1 Identity', position: 2, icon: 'id-card', roles: ['his'], title: 'ABDM M1, create and verify ABHA', summary: 'Create, find, log into and manage an ABHA.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}], expected: 120},
   m2: {label: 'M2 Health Information Provider', position: 3, icon: 'link', roles: ['his'], title: 'ABDM M2, create and link records', summary: 'Link care contexts to an ABHA address and share records when consent arrives.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 20},
   m3: {label: 'M3 Health Information User', position: 4, icon: 'file-check', roles: ['his'], title: 'ABDM M3, fetch data with consent', summary: 'Raise a consent request, fetch its artefacts, and receive records.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 12},
   m4: {label: 'M4 Registry Integration', position: 5, icon: 'building-2', roles: ['his'], title: 'ABDM M4, register facilities and professionals', summary: 'Register healthcare professionals and facilities on the NHPR.', servers: [{url: 'https://apihspsbx.abdm.gov.in/v4/int', description: 'NHPR, sandbox'}], expected: 87},
@@ -197,6 +197,21 @@ const slug = (s) => s.toLowerCase().replace(/\{([^}]+)\}/g, '$1').replace(/[^a-z
 const log = [];
 const note = (module, op, what) => log.push(`| ${module} | \`${op}\` | ${what} |`);
 
+// NHA's M1 sandbox observations of 28 September 2026. Operations NHA asked
+// to leave out, and value corrections NHA gave for one use case each. Every
+// entry is a string edit on the operation as parsed, recorded in the log.
+const M1_OBS = "NHA's M1 sandbox observations of 28 September 2026";
+const M1_LEFT_OUT = new Set(['PATCH /abha/api/v3/profile/account#profile-photo']);
+const OTP_TO_AADHAAR = [['"abdm"', '"aadhaar"'], ['`\\"abdm\\"` | yes', '`\\"aadhaar\\"` | yes'], ['otpSystem: abdm', 'otpSystem: aadhaar']];
+const M1_VALUES = {
+  'POST /abha/api/v3/profile/login/request/otp#biometric-fingerprint': {what: 'otpSystem `abdm` corrected to `aadhaar`', edits: OTP_TO_AADHAAR},
+  'POST /abha/api/v3/profile/login/request/otp#biometric-iris': {what: 'otpSystem `abdm` corrected to `aadhaar`', edits: OTP_TO_AADHAAR},
+  'POST /abha/api/v3/profile/login/request/otp#find-abha-face': {
+    what: 'scope `aadhaar-face-verify` corrected to `face-auth`, and the note asking to confirm it removed',
+    edits: [[/\n\n> \*\*Note:\*\* The Postman collection sends scope[^\n]*confirm with NHA\./g, ''], ['aadhaar-face-verify', 'face-auth']],
+  },
+};
+
 const specs = Object.fromEntries(Object.entries(MODULES).map(([id, m]) => [id, {
   openapi: '3.1.1',
   info: {
@@ -236,6 +251,11 @@ for (const {file, place, set = 'nha-2026-09-16', fetched = '2026-09-16', titlesF
       // one file may declare several use cases of one path.
       const key = `${method.toUpperCase()} ${path.replace(/#.*$/, '').replace(/^\/(abha\/api|api\/hiecm)/, '').replace(/\{[^}]+\}/g, '{}')}`;
       if (seenPath.has(key) && seenPath.get(key).file !== file) { const first = seenPath.get(key); note(first.module, key, `dropped from ${file}: already declared by ${first.file} in the ${first.module} module`); continue; }
+      if (module === 'm1' && M1_LEFT_OUT.has(`${method.toUpperCase()} ${path}`)) {
+        seenPath.set(key, {file, module});
+        note('m1', `${method.toUpperCase()} ${path}`, `left out of the reference, as ${M1_OBS} ask`);
+        continue;
+      }
       if (module === null) {
         seenPath.set(key, {file, module: 'gateway'});
         note('gateway', key, 'left out of the reference, as NHA\'s sandbox observations of 23 September 2026 ask');
@@ -275,6 +295,13 @@ for (const {file, place, set = 'nha-2026-09-16', fetched = '2026-09-16', titlesF
         if (method === 'patch' && path.endsWith('/profile/account') && !(copy.parameters ?? []).some((p) => p.name === 'X-token')) {
           copy.parameters = [{name: 'X-token', in: 'header', required: true, schema: {type: 'string'}, description: 'The user token from a login or enrolment response.'}, ...(copy.parameters ?? [])];
           note(module, id, 'X-token header added; the call updates the signed-in profile and NHA declared no user token on it');
+        }
+        const fix = M1_VALUES[`${method.toUpperCase()} ${path}`];
+        if (fix) {
+          let text = JSON.stringify(copy);
+          for (const [from, to] of fix.edits) text = typeof from === 'string' ? text.split(from).join(to) : text.replace(from, to);
+          Object.assign(copy, JSON.parse(text));
+          note(module, id, `${fix.what}, as ${M1_OBS} give`);
         }
         // 9. authMethods: type array, no sibling items; NHA gave only an example.
         const authMethods = copy.responses?.['200']?.content?.['application/json']?.schema?.items?.properties?.ABHA?.items?.properties?.authMethods;

@@ -764,37 +764,6 @@
         "https://abhasbx.abdm.gov.in"
       ]
     },
-    "PATCH /abha/api/v3/profile/account#profile-photo": {
-      "encrypted": [],
-      "id": "m1_patch_v3_profile_account_profile_photo",
-      "kind": "call",
-      "method": "PATCH",
-      "params": [
-        "header:REQUEST-ID!",
-        "header:TIMESTAMP!",
-        "header:X-token!"
-      ],
-      "path": "/abha/api/v3/profile/account#profile-photo",
-      "properties": [
-        "profilePhoto"
-      ],
-      "required": [],
-      "responses": [
-        "200",
-        "400",
-        "401",
-        "404",
-        "422",
-        "500"
-      ],
-      "security": [
-        "bearerAuth"
-      ],
-      "server": "https://abhasbx.abdm.gov.in",
-      "servers": [
-        "https://abhasbx.abdm.gov.in"
-      ]
-    },
     "POST /abha/api/v3.1/profile/login/verify#face-auth-qr": {
       "encrypted": [],
       "id": "m1_post_v3_1_profile_login_verify_face_auth_qr",
