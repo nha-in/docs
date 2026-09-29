@@ -468,5 +468,23 @@
         "version": "0.1.0"
       }
     ]
+  },
+  {
+    "id": "c83dff46ff16",
+    "date": "2026-09-29",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "abdm-contributors-assistant",
+        "from": "0.4.3",
+        "to": "0.4.4"
+      }
+    ]
   }
 ]
