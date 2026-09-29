@@ -784,6 +784,12 @@
   color: var(--aa-faint);
 }
 
+/* The orb keeps its size: as a flex item beside a long line it was shrunk to
+   an oval while the answer was being prepared. */
+.ask-ai__activity > [role='img'] {
+  flex: none;
+}
+
 /* The foot: the chat bar card, and the commands under it. */
 .ask-ai__foot {
   /* Above the thread, so a tip rising out of the chat bar (the context

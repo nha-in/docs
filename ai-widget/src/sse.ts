@@ -55,7 +55,7 @@ export async function readStream(
         break;
       case 'tool': {
         const tool = payload as {name: string; detail: string};
-        handlers.onTool(tool.detail || tool.name);
+        handlers.onTool(activityFor(tool.name));
         break;
       }
       case 'sources':
@@ -83,4 +83,30 @@ export async function readStream(
       dispatch(block);
     }
   }
+}
+
+/**
+ * What the activity line says while the assistant uses a tool. It names the
+ * action, never the tool's input: a search query is the reader's question
+ * reworded, and showing it read as the question repeated back to them.
+ */
+const ACTIVITY: Record<string, string> = {
+  search_docs: 'Searching the docs',
+  search: 'Searching the docs',
+  get_atom: 'Reading the docs',
+  related_atoms: 'Reading the docs',
+  list_atoms: 'Reading the docs',
+  get_operation: 'Reading the API reference',
+  list_operations: 'Reading the API reference',
+  decode_error: 'Looking up the error',
+  validate_request: 'Checking the request',
+  validate_fhir: 'Checking the FHIR bundle',
+  get_fhir_example: 'Reading the FHIR profiles',
+  get_fhir_profile: 'Reading the FHIR profiles',
+  list_fhir_profiles: 'Reading the FHIR profiles',
+  catalogue_info: 'Checking the catalogue',
+};
+
+export function activityFor(name: string): string {
+  return ACTIVITY[name] ?? 'Looking this up';
 }
