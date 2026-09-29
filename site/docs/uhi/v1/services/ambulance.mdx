@@ -10,6 +10,7 @@ sidebar_class_name: sidebar-icon sidebar-icon--ambulance
 ---
 
 import ApiLinks from '@site/src/components/docs/ApiLinks';
+import PostmanCollection from '@site/src/components/docs/PostmanCollection';
 
 # Ambulance Booking: Find an ambulance and get a quote
 
@@ -326,6 +327,12 @@ Every call can return an error object with `type` and `code`, and optionally
 
 Each test case is stated in plain words and as its exact success condition on
 [Ambulance Booking test cases](/docs/uhi/v1/resources/ambulance).
+
+## Try it in Postman
+
+Every call in this service's journeys, in order. Sign each body with the [Header Generation Utility](https://github.com/NHA-ABDM/UHI/tree/main/header_generator_utility) and paste the header into `authorization` before you send.
+
+<PostmanCollection service="ambulance" />
 
 ## Next
 

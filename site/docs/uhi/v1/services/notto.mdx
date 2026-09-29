@@ -10,6 +10,7 @@ sidebar_class_name: sidebar-icon sidebar-icon--hospital
 ---
 
 import ApiLinks from '@site/src/components/docs/ApiLinks';
+import PostmanCollection from '@site/src/components/docs/PostmanCollection';
 
 # NOTTO: Find transplant and retrieval hospitals
 
@@ -309,6 +310,12 @@ Both `search` and `on_search` can be answered with a NACK instead of an ACK. The
 ## Certification
 
 The test cases for this service are on [NOTTO test cases](/docs/uhi/v1/resources/notto).
+
+## Try it in Postman
+
+Every call in this service's journeys, in order. Sign each body with the [Header Generation Utility](https://github.com/NHA-ABDM/UHI/tree/main/header_generator_utility) and paste the header into `authorization` before you send.
+
+<PostmanCollection service="notto" />
 
 ## Next
 

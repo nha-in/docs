@@ -10,6 +10,7 @@ sidebar_class_name: sidebar-icon sidebar-icon--hospital
 ---
 
 import ApiLinks from '@site/src/components/docs/ApiLinks';
+import PostmanCollection from '@site/src/components/docs/PostmanCollection';
 
 # PM-JAY HEM: Find empanelled hospitals
 
@@ -375,6 +376,12 @@ Both `search` and `on_search` can be answered with a NACK instead of an ACK. The
 ## Certification
 
 Run the PM-JAY HEM test cases in sandbox before you request sign-off. Each one is stated in plain words and as its exact success condition: [PM-JAY HEM test cases](/docs/uhi/v1/resources/pmjay-hem).
+
+## Try it in Postman
+
+Every call in this service's journeys, in order. Sign each body with the [Header Generation Utility](https://github.com/NHA-ABDM/UHI/tree/main/header_generator_utility) and paste the header into `authorization` before you send.
+
+<PostmanCollection service="pmjay-hem" />
 
 ## Next
 

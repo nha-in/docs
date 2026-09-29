@@ -10,6 +10,7 @@ sidebar_class_name: sidebar-icon sidebar-icon--pill
 ---
 
 import ApiLinks from '@site/src/components/docs/ApiLinks';
+import PostmanCollection from '@site/src/components/docs/PostmanCollection';
 
 # Jan Aushadhi: Find Kendras and generic medicines
 
@@ -485,6 +486,12 @@ Both `search` and `on_search` can be answered with a NACK instead of an ACK. The
 ## Certification
 
 The test cases for this service are on [Jan Aushadhi test cases](/docs/uhi/v1/resources/jan-aushadhi).
+
+## Try it in Postman
+
+Every call in this service's journeys, in order. Sign each body with the [Header Generation Utility](https://github.com/NHA-ABDM/UHI/tree/main/header_generator_utility) and paste the header into `authorization` before you send.
+
+<PostmanCollection service="jan-aushadhi" />
 
 ## Next
 
