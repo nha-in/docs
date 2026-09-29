@@ -239,3 +239,38 @@ func TestToolCallsAndRetrievalHit(t *testing.T) {
 		t.Errorf("RetrievalHit should be false when no expected source was retrieved")
 	}
 }
+
+// An external agent answering through the MCP is not bound by the panel's
+// answer shapes or word budgets, which live in the chat loop, not in the
+// tools. Everything the tools are answerable for still applies: grounded
+// literals, forbidden phrases, expected sources.
+func TestCheckSkipsPanelShapesForAnMCPAgent(t *testing.T) {
+	long := "HMIS is the software a hospital runs day to day.\n\n1. One.\n2. Two.\n\nA. B. C. D. E. F."
+	tr := Transcript{CaseID: "define-hmis-01", Surface: SurfaceMCPAgent, Answer: long,
+		Corpus: "HMIS, hospital management information system", Sources: []chat.Source{{ID: "hiecm.glossary.hmis"}}}
+	if r := Check(answerCase(), tr); len(r.Failures) != 0 {
+		t.Fatalf("an MCP agent answer was held to the panel's shape: %v", r.Failures)
+	}
+	// The panel's voice and formatting are the panel's too: an em dash, a
+	// heading, "let me" and a path outside a code span say nothing about the
+	// tools. A case's own forbidden entry still applies.
+	tr.Answer = "## HMIS\n\nLet me explain \u2014 HMIS is the hospital software; see /docs/x. It lives at /api/v3/hmis/info."
+	tr.Corpus += " /api/v3/hmis/info"
+	if r := Check(answerCase(), tr); len(r.Failures) != 0 {
+		t.Fatalf("an MCP agent answer was held to the panel's voice: %v", r.Failures)
+	}
+	tr.Answer += " It maybe works."
+	if r := Check(answerCase(), tr); len(r.Failures) != 1 || r.Failures[0] != "forbidden: maybe" {
+		t.Fatalf("a case's own forbidden entry must still apply, got %v", r.Failures)
+	}
+	tr.Answer = long
+	tr.Answer = long + " Send X-Made-Up-Header."
+	if r := Check(answerCase(), tr); len(r.Failures) == 0 {
+		t.Fatal("grounding must still apply to an MCP agent answer")
+	}
+	tr.Surface = ""
+	tr.Answer = long
+	if r := Check(answerCase(), tr); len(r.Failures) == 0 {
+		t.Fatal("a panel answer must still be held to its shape")
+	}
+}
