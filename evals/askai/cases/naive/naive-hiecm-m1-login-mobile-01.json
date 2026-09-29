@@ -1,0 +1,38 @@
+{
+  "id": "naive-hiecm-m1-login-mobile-01",
+  "slice": "naive",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "patient already has abha, how do I log them in with their mobile no"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "Request the OTP with POST /abha/api/v3/profile/login/request/otp using scope abha-login and mobile-verify, loginHint mobile and the encrypted mobile number as loginId.",
+    "The login verify call returns a short lived token and a list of accounts, and that token is not the X-token.",
+    "Always call /abha/api/v3/profile/login/verify/user with the chosen ABHANumber, the same txnId and the verify token in the T-token header, even when accounts holds one entry, and it returns the X-token."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.flow.m1-login-by-mobile",
+    "hiecm.endpoint.m1-login-verify",
+    "hiecm.endpoint.m1-login-select-account"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-abha-m1-abha-collection-json",
+  "catalogue_version": "2026.09.16",
+  "notes": "The mobile login journey; the skipped account selection step when only one account comes back is the classic mistake. Source lines: catalogue/hiecm/flows/m1-login-by-mobile.md, 'POST /abha/api/v3/profile/login/request/otp<br/>scope [abha-login, mobile-verify], loginHint mobile,<br/>loginId (encrypted mobile)'; 'Always call `/abha/api/v3/profile/login/verify/user` with the chosen `ABHANumber`, the same `txnId` and that token in the `T-token` header, even when `accounts` holds one entry. It returns the `X-token` profile calls need.' catalogue/hiecm/endpoints/m1-login-verify.md, 'it returns a short lived `token` and, in `accounts`, every ABHA held against that mobile number. That token is not the `X-token`.'"
+}

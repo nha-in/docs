@@ -1,0 +1,35 @@
+{
+  "id": "diagnose-hiecm-m2-duplicate-link-token-01",
+  "slice": "diagnose",
+  "class": "diagnose",
+  "turns": [
+    {
+      "role": "user",
+      "text": "generate token first gave ABDM-9999 user not found, i retried and now it says ABDM-1092 duplicate link token request. so did the first one go through?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "The duplicate refusal does not mean the first request worked: ABDM refused it and remembered the refusal.",
+    "The first refusal, ABDM-9999 user not found, is the one that names the cause, and a retry inside the deduplication window cannot succeed."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.concept.m2-retry-is-a-duplicate"
+  ],
+  "expected_shape": "diagnose",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-hiecm-link-token-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "Observed on sandbox 2026-09-16 per the atom's source. The wrong answer reads 'duplicate' as success. Source lines: catalogue/hiecm/concepts/m2-retry-is-a-duplicate.md, 'ABDM records a link token request even when it refuses the patient, and deduplicates the next identical request against the one it refused. So a retry inside that window cannot succeed'; table rows '`400`, `ABDM-9999`, user not found' and '`400`, `ABDM-1092`, duplicate link token request'; 'A duplicate refusal is read as evidence that the first request succeeded. It is not. The first was refused, and ABDM remembered the refusal.'; 'say that the earlier refusal is the one that names the cause'."
+}

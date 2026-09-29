@@ -1,0 +1,38 @@
+{
+  "id": "confusable-hiecm-m3-request-id-vs-artefact-id-01",
+  "slice": "confusable",
+  "class": "compare",
+  "turns": [
+    {
+      "role": "user",
+      "text": "to fetch the consent do i pass the consentRequest.id i got on on-init? or is that a different id"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "The consent request id from on-init identifies the request, and the status call and the patient's decision refer to it.",
+    "Consent fetch takes a consent artefact id, which arrives in consentArtefacts on a GRANTED notification, and one request can produce several."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom",
+    "they are the same id"
+  ],
+  "expected_sources": [
+    "hiecm.callback.m3-on-consent-request-init",
+    "hiecm.callback.m3-on-consent-request-notify-hiu",
+    "hiecm.endpoint.m3-consent-fetch"
+  ],
+  "expected_shape": "compare",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-hiecm-consent-management-data-flow-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "The two ids are the M3 pair people mix up; sending the request id to fetch is the wrong answer. Source lines: catalogue/hiecm/callbacks/m3-on-consent-request-init.md, '`consentRequest.id` is the consent request id. Store it: the patient's decision and any status check refer to it.'; catalogue/hiecm/callbacks/m3-on-consent-request-notify-hiu.md, '`GRANTED`: `consentArtefacts` lists the id of every [consent artefact] created. Store all of them.' and 'fetch each one through `/api/hiecm/consent/v3/fetch`'; catalogue/hiecm/endpoints/m3-consent-fetch.md, 'Fetch a [consent artefact] by its id after a `GRANTED` [consent notification]' and 'the artefact ids from the notification'. Review: must_not_contain 'pass the consentRequest.id to fetch' removed: a correct 'do not pass the consentRequest.id to fetch' matched it."
+}

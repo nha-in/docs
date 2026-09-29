@@ -1,0 +1,36 @@
+{
+  "id": "naive-hiecm-m2-send-records-to-hiu-01",
+  "slice": "naive",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "how do i send the patient's records to the hiu after consent is given"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "ABDM posts a health information request to your bridge at /api/v3/hip/health-information/request carrying the dataPushUrl and the requester's keyMaterial.",
+    "You acknowledge it with sessionStatus ACKNOWLEDGED, then push the encrypted records to the dataPushUrl directly, not through the gateway."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.callback.m2-on-health-information-request",
+    "hiecm.endpoint.m2-hip-health-information-on-request"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-hiecm-consent-management-data-flow-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "The HIP half of the data flow. A wrong answer sends the records through the gateway. Source lines: catalogue/hiecm/callbacks/m2-on-health-information-request.md, 'ABDM posts the request to your HIP bridge at `/api/v3/hip/health-information/request`. It carries the consent artefact id, the date range, the `dataPushUrl` and the requester's `keyMaterial`.'; catalogue/hiecm/endpoints/m2-hip-health-information-on-request.md, 'Return its `transactionId` with `sessionStatus` of `ACKNOWLEDGED`'; 'Then encrypt the records and push them to the `dataPushUrl`'; 'The push goes to the `dataPushUrl` directly, not through the gateway.'"
+}

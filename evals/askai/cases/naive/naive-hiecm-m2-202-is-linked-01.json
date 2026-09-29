@@ -1,0 +1,36 @@
+{
+  "id": "naive-hiecm-m2-202-is-linked-01",
+  "slice": "naive",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "got 202 from link carecontext api, does that mean the record is linked?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "The 202 on the link call is only receipt, not the outcome of linking.",
+    "The care context is linked only when a callback reaches /api/v3/link/on_carecontext with status Successfully Linked care context and a requestId equal to the REQUEST-ID of your link call."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.endpoint.m2-hip-link-care-context",
+    "hiecm.callback.m2-on-carecontext-result"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-hiecm-hip-initiated-linking-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "A first-day developer reads 202 as success. Source lines: catalogue/hiecm/callbacks/m2-on-carecontext-result.md, 'Read `status` for the outcome: `Successfully Linked care context`'; 'Treat the care context as linked only when this callback says so'; 'A callback with `status` of `Successfully Linked care context` and a `requestId` equal to your stored `REQUEST-ID`'. The path /api/v3/link/on_carecontext is in the same atom's operation m2_post_v3_link_on_carecontext and verbatim in catalogue/hiecm/endpoints/m2-hip-link-care-context.md, 'A callback on `/api/v3/link/on_carecontext` with `status` of `Successfully Linked care context`. The 202 on this call is not the outcome.' Review: added hiecm.endpoint.m2-hip-link-care-context, which carries 'The 202 on this call is not the outcome' and the on_carecontext path; the callback atom carries neither."
+}
