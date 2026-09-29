@@ -42,6 +42,6 @@
   "expected_behaviour": "answer",
   "derived_from": null,
   "source_row": "annexure#glossary",
-  "catalogue_version": "2026.08.24",
+  "catalogue_version": "2026.09.16",
   "notes": "user corrects the assistant to the other role; the second answer is hiu.md's own plain-words text, not a rehash of the HIP answer. The seeded HIP turn keeps the entity as the subject, so the case never invites the assistant to carry the software-as-role error into its second answer."
 }

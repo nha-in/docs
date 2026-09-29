@@ -12,6 +12,6 @@
   "expected_behaviour": "decline",
   "derived_from": null,
   "source_row": "annexure#sandbox-faq-general",
-  "catalogue_version": "2026.08.24",
+  "catalogue_version": "2026.09.16",
   "notes": "No sandbox SLA figure is in the catalogue; the fail is an invented uptime percentage."
 }
