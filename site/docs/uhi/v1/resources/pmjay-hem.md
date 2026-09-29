@@ -17,7 +17,7 @@ plain words, then the exact condition that makes it pass.
 Every case is a positive, happy path case. Categories D and E check your app's
 behaviour as well as the calls.
 
-## A. The context block
+## A. The context block {#a-the-context-block}
 
 | ID | What it checks | Passes when |
 | --- | --- | --- |
@@ -25,7 +25,7 @@ behaviour as well as the calls.
 | TC-A02 | The results you receive belong to the search you sent. | `context.transaction_id` in the `on_search` at your `consumer_uri` equals the `transaction_id` of the originating `search` exactly. |
 | TC-A03 | The response is for PM-JAY HEM. | `context.domain` in the `on_search` is present and equals `nic2004:85112`. |
 
-## B. Search filters
+## B. Search filters {#b-search-filters}
 
 | ID | What it checks | Passes when |
 | --- | --- | --- |
@@ -36,7 +36,7 @@ behaviour as well as the calls.
 | TC-B05 | Adding a pincode returns hospitals in that area. | A state `search` with a valid 6 digit `address.area_code` returns results geographically consistent with the pincode. |
 | TC-B06 | Searching near a location returns hospitals within the chosen distance. | A `search` with `location.gps`, `radius.type: CONSTANT`, `radius.value` and `radius.unit: km`, and no state, returns hospitals whose GPS coordinates fall within the declared radius. |
 
-## C. The on_search response
+## C. The on_search response {#c-the-on-search-response}
 
 | ID | What it checks | Passes when |
 | --- | --- | --- |
@@ -50,7 +50,7 @@ behaviour as well as the calls.
 | TC-C08 | Every hospital lists its specialities. | Each provider has at least one `categories[]` entry with both `descriptor.name` and `descriptor.code`, and the code is a valid integer. |
 | TC-C09 | Every hospital says whether it is government or private. | `descriptor.code` on each provider is a non-null, single character string, for example `G` or `P`. |
 
-## D. User experience
+## D. User experience {#d-user-experience}
 
 Check these by walking through your app on a test device and inspecting the
 screens.
@@ -66,7 +66,7 @@ screens.
 | TC-D07 | The results carry the disclaimer. | The results screen shows "Please confirm the hospital location by calling ahead, as details may change." |
 | TC-D08 | The feature sits with health features. | PM-JAY hospital search appears under a health, hospital or insurance module, not under wellness, offers or lifestyle. |
 
-## E. Edge cases
+## E. Edge cases {#e-edge-cases}
 
 | ID | What it checks | Passes when |
 | --- | --- | --- |

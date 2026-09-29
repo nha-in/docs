@@ -49,7 +49,7 @@ The service is discovery: `search` and `on_search`. The three flows differ only 
 4. Your code accepts an ACK now and the answer later, matched by `transaction_id`. See [Messages](/docs/uhi/v1/concepts/messages).
 5. You hold a subscriber ID from sandbox registration. See [Get your sandbox credentials](/docs/uhi/v1/getting-started/sandbox).
 
-## Service identity
+## Service identity {/* #service-identity */}
 
 | Field | Flow A | Flow B | Flow C |
 | --- | --- | --- | --- |
@@ -66,7 +66,7 @@ The service is discovery: `search` and `on_search`. The three flows differ only 
 | Public key ID | `pmbi.hspapid.jak`, for checking the HSPA's signatures |
 | Gateway endpoint | `POST /api/v1/uhi/search` |
 
-## Search variants
+## Search variants {/* #search-variants */}
 
 ### Location filters, flows A and C
 
@@ -94,7 +94,7 @@ A Kendra's `descriptor.code` in flows A and C is its ownership type.
 
 The list is not closed. Display an unrecognised code as sent.
 
-### Sample search, flow A by Kendra code
+### Sample search, flow A by Kendra code {/* #sample-search-flow-a-by-kendra-code */}
 
 Use a fresh `message_id` and `transaction_id` for each search.
 
@@ -172,7 +172,7 @@ The `context` block is the same, with a new `transaction_id`. `76476` is a `medi
 }
 ```
 
-## Journey 1: find a Kendra
+## Journey 1: find a Kendra {/* #journey-1-find-a-kendra */}
 
 A citizen searches for Jan Aushadhi Kendras.
 
@@ -196,7 +196,17 @@ sequenceDiagram
 
 The first call in the reference is [search](/docs/uhi/v1/api/network/endpoints/uhi-jan-aushadhi-kendra-search/01-uhi-network-gateway-search).
 
-## Journey 2: find a medicine, then a Kendra that stocks it
+<AgentOnly>
+**Before you start.** The EUA has a public HTTPS `consumer_uri` and signs every call. Set `nic2008:47721`, and `JANAUSHADHI` as both the fulfillment type and the item code and name. Every location filter is optional.
+
+**What happens.** The EUA sends `POST /api/v1/uhi/search` with a location filter, or with a Kendra code in `category.descriptor.code` and `.name`. The Gateway answers HTTP 200 ACK and forwards it to `pmbi.hspa`. Its `on_search` reaches your `consumer_uri` through the Gateway.
+
+**How you know it worked.** An `on_search` arrives with your `transaction_id`. Each `providers[]` record is one Kendra, and its `id` is the Kendra code.
+
+**When it goes wrong.** A wrong `fulfillment.type` returns the wrong kind of catalog, or nothing. Empty city, email, `short_desc` or `long_desc` are not errors. Display an unrecognised ownership code as sent. Check the HSPA's signature with key ID `pmbi.hspapid.jak`.
+</AgentOnly>
+
+## Journey 2: find a medicine, then a Kendra that stocks it {/* #journey-2-find-a-medicine-then-a-kendra-that-stocks-it */}
 
 A citizen looks up a generic medicine by name, then searches for Kendras that stock it. Gateway ACKs are left out of this diagram.
 
@@ -223,6 +233,16 @@ sequenceDiagram
 The two searches are separate transactions. Only `medicineId` carries across from step 5 to step 7.
 
 The first call of each search in the reference: [medicine search](/docs/uhi/v1/api/network/endpoints/uhi-jan-aushadhi-medicine-search/01-uhi-network-gateway-search) and [Kendras for a selected medicine](/docs/uhi/v1/api/network/endpoints/uhi-jan-aushadhi-medicine-stock/01-uhi-network-gateway-search).
+
+<AgentOnly>
+**Before you start.** The EUA has a public HTTPS `consumer_uri` and signs every call, with `context.domain` set to `nic2008:47721`. The citizen has typed a medicine name.
+
+**What happens.** The first search uses `JANAUSHADHI_MEDICINE`, with the name in `item.descriptor.name` and the name without spaces in `item.descriptor.code`. Its `on_search` lists medicines, and each `providers[].id` is a `medicineId`. After the citizen picks one, the second search uses a new `transaction_id` and `JANAUSHADHI_KENDRA`. It carries the `medicineId` in `item.descriptor.code` and `.name`, plus any location filter.
+
+**How you know it worked.** The second `on_search` lists Kendras. Each carries the medicine in `items[]`, where `descriptor.flag` is `true` for in stock and `false` for out of stock.
+
+**When it goes wrong.** Never send a medicine name in the second search. Name matching is not fixed, so show every medicine returned and let the citizen choose. Render stock from `descriptor.flag`, and show a count from `quantity.measure.value` only when one arrives. `location.radius` carries a distance only when the search sent GPS.
+</AgentOnly>
 
 ## What comes back
 

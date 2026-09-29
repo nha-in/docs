@@ -24,10 +24,13 @@ for (const d of duplicates) problems.push(`two files carry one id, ${d}`);
 problems.push(...layoutProblems(root));
 for (const p of parseProblems) fail(p.file, p.msg);
 
-// Only HIE-CM has specifications in this repository; an operation on any
-// other gateway cannot resolve yet.
+// HIE-CM and UHI have specifications in this repository; an operation on
+// NHCX cannot resolve yet.
 const contractCtx = {
-  operations: { hiecm: new Set(loadOps(root).map((o) => o.operationId)) },
+  operations: {
+    hiecm: new Set(loadOps(root).map((o) => o.operationId)),
+    uhi: new Set(loadOps(root, "uhi", "v1").map((o) => o.operationId)),
+  },
   atomIds: new Set(atoms.keys()),
 };
 

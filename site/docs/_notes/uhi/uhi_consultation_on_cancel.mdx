@@ -1,0 +1,13 @@
+## Send the cancelled order {/* #consultation-on-cancel */}
+
+The [HSPA](/docs/uhi/v1/getting-started/glossary#hspa) sends the cancelled order to the [EUA](/docs/uhi/v1/getting-started/glossary#eua)'s [`consumer_uri`](/docs/uhi/v1/getting-started/glossary#consumer-uri). It answers a patient's `cancel`, or tells the EUA the doctor has cancelled. The tag `@abdm/gov.in/cancelledby` reads `patient` or `doctor`, and `@abdm/gov.in/cancel_reason` carries the reason code. The HSPA also sends an exact copy to the Gateway's `on_cancel_audit`. See [the reason codes](/docs/uhi/v1/services/consultation#cancellation-and-override-reason-codes).
+
+<AgentOnly>
+**Before you start.** As the HSPA, a confirmed order. Sign with your own `Authorization` header and keep the order's `transaction_id`.
+
+**What happens.** The order state is `CANCELLED`. When the doctor cancels, send a doctor reason code, D1 to D6, exactly as listed. D6, Other, needs free text from the HSPA.
+
+**How you know it worked.** The EUA returns HTTP 200 with `ACK` and shows the appointment as cancelled. The Gateway returns HTTP 200 with `ACK` to the audit copy.
+
+**When it goes wrong.** As the EUA, check the signature against the HSPA's key from the [registry lookup](/docs/uhi/v1/concepts/registry-lookup) before you release the appointment.
+</AgentOnly>

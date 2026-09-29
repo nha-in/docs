@@ -353,5 +353,23 @@
         "to": "1.0.2"
       }
     ]
+  },
+  {
+    "id": "b459aabe2082",
+    "date": "2026-09-29",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "abdm-contributors-assistant",
+        "from": "0.4.2",
+        "to": "0.4.3"
+      }
+    ]
   }
 ]

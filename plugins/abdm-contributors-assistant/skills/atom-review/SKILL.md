@@ -68,7 +68,7 @@ Run the `writing-guide` checklist. Most commonly caught: banned words, unnamed p
 
 - Is this one atom or two? Two flows, two types, or two milestones in one file means split.
 - Is anything here Eka-specific? It does not belong in the core Catalogue. See `dpg-governance`.
-- Is the scope right? HIE-CM atoms cover M1 to M4 and P1 to P3; `npm run lint:atoms` prints the current count, so quote that rather than a number here. An atom for P4, subscriptions, Scan and Pay or UHI raises a scheduling question rather than a scope violation: every gateway lints clean, so ask whether the time exists to prove it, not whether the gateway is allowed.
+- Is the scope right? HIE-CM atoms cover M1 to M4 and P1 to P3; `npm run lint:atoms` prints the current count, so quote that rather than a number here. An atom for P4, subscriptions or Scan and Pay raises a scheduling question rather than a scope violation: every gateway lints clean, so ask whether the time exists to prove it, not whether the gateway is allowed.
 
 ## Failure modes reviewers miss
 

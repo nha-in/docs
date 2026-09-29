@@ -43,7 +43,7 @@ The service is discovery: `search` and `on_search`.
 4. Your code accepts an ACK now and the answer later, matched by `transaction_id`. See [Messages](/docs/uhi/v1/concepts/messages).
 5. You hold a subscriber ID from sandbox registration. See [Get your sandbox credentials](/docs/uhi/v1/getting-started/sandbox).
 
-## Service identity
+## Service identity {/* #service-identity */}
 
 | Field | Value |
 | --- | --- |
@@ -55,7 +55,7 @@ The service is discovery: `search` and `on_search`.
 | HSPA provider ID | `notto.hspa` |
 | Gateway endpoints | `POST /api/v1/uhi/search`, `POST /api/v1/uhi/on_search` |
 
-## Search variants
+## Search variants {/* #search-variants */}
 
 | Filter | Field | Status |
 | --- | --- | --- |
@@ -85,7 +85,7 @@ State, district and city codes follow the Local Government Directory (LGD).
 | Tissue | Hand | `15` |
 | Tissue | Amnion | `17` |
 
-### Sample search, organ and state
+### Sample search, organ and state {/* #sample-search-organ-and-state */}
 
 Use a fresh `message_id` and `transaction_id` for each search. Leave out `location` for a national search.
 
@@ -124,7 +124,7 @@ Use a fresh `message_id` and `transaction_id` for each search. Leave out `locati
 }
 ```
 
-## Journey
+## Journey {/* #journey */}
 
 A patient's family searches for NOTTO registered hospitals for an organ or tissue type.
 
@@ -149,6 +149,16 @@ sequenceDiagram
 If step 7 does not arrive within your timeout, check that `consumer_uri` is publicly reachable and that `transaction_id` matches.
 
 The first call in the reference is [search](/docs/uhi/v1/api/network/endpoints/uhi-notto/01-uhi-network-gateway-search).
+
+<AgentOnly>
+**Before you start.** The EUA has a public HTTPS `consumer_uri` and signs every call. Set `nic2004:86100`, `NOTTO_HOSPITAL` and `NOTTO`. Send an organ or tissue code from the master list. State is optional, and district needs state.
+
+**What happens.** The EUA sends `POST /api/v1/uhi/search`, and the Gateway answers HTTP 200 ACK. The Gateway forwards it to `notto.hspa`, which queries the NOTTO hospital registry. Its `on_search` reaches your `consumer_uri` through the Gateway. Answer it with HTTP 200 ACK.
+
+**How you know it worked.** An `on_search` arrives with your `transaction_id`. Each hospital carries the four capability tags and the transplant coordinator's `contact.phone`.
+
+**When it goes wrong.** If no `on_search` arrives within your timeout, check that `consumer_uri` is publicly reachable and that `transaction_id` matches. An unknown organ or tissue code returns an error. GPS and radius search is not available yet. Store `providers[].id` as a string. Read the Gateway signature from `X-Gateway-Authorization`, and accept `Proxy-Authorization` as well.
+</AgentOnly>
 
 ## What comes back
 

@@ -34,7 +34,7 @@ callback up by `transaction_id` first.
 | `transaction_id` | One exchange, from `search` through `confirm` | Group every callback for one patient's search and booking |
 | `message_id` | One request and its callback | Tie one callback to the request that caused it |
 
-[Messages and callbacks](/docs/uhi/v1/concepts/messages#match-on-transaction_id-and-message_id)
+[Messages and callbacks](/docs/uhi/v1/concepts/messages#match-on-transaction-id-and-message-id)
 sets out the whole `context` block.
 
 ## Sign every request fresh
@@ -54,7 +54,7 @@ The [Header Generation Utility](https://github.com/NHA-ABDM/UHI/tree/main/header
 signs each payload, so you do not implement Ed25519 and BLAKE-512 from scratch.
 See [Signing](/docs/uhi/v1/concepts/signing).
 
-## Aggregate the answers
+## Aggregate the answers {/* #aggregate-the-answers */}
 
 The [UHI Gateway](/docs/uhi/v1/getting-started/glossary#uhi-gateway) broadcasts
 a search to every HSPA registered for the domain. Each matching HSPA replies
@@ -67,7 +67,7 @@ separately, so group them by the shared `transaction_id`.
 | Physical Consultation | One catalog per HSPA with doctors, fees and `provider_uri` |
 | Ambulance Booking | Only HSPAs that serve the pickup area answer. Silence means no coverage, not a network fault |
 
-## Time out, and render as results arrive
+## Time out, and render as results arrive {/* #time-out-and-render-as-results-arrive */}
 
 A search has no end signal. Nothing tells you the last answer has arrived.
 
@@ -79,15 +79,15 @@ A search has no end signal. Nothing tells you the last answer has arrived.
 Blood Bank's window is 10 to 15 seconds. No figure is set for the other
 services, so agree one at onboarding.
 
-## Paginate on your side
+## Paginate on your side {/* #paginate-on-your-side */}
 
 `on_search` is not paginated. Handle a large payload without blocking the
 screen, and page through it in your own UI.
 
-## What the screens must do
+## What the screens must do {/* #what-the-screens-must-do */}
 
-The service pages carry each service's own rules. These are the ones stated as
-checked at sign-off or required of every app.
+The service pages carry each service's own rules. The rules below are checked
+at sign-off or required of every app.
 
 | Rule | Service |
 | --- | --- |
@@ -102,7 +102,7 @@ checked at sign-off or required of every app.
 | Show the transplant coordinator's phone first | [NOTTO](/docs/uhi/v1/services/notto) |
 | Scope the screen to discovery. Do not build booking where the service has none | PM-JAY HEM, Blood Bank, Jan Aushadhi, NOTTO |
 
-## Checked for every service
+## Checked for every service {/* #checked-for-every-service */}
 
 Each service's go-live checklist carries these items. Work through them before
 you request sign-off.
@@ -120,6 +120,16 @@ you request sign-off.
 
 [Physical Consultation](/docs/uhi/v1/services/consultation#go-live-checklist)
 carries its full twenty item checklist.
+
+<AgentOnly>
+**Before you start.** Your service page, with its own test cases and go-live checklist, and your role for that service.
+
+**What happens.** Treat each row as a pass or fail item that needs evidence. Items 1 to 4 are set up before you build. Items 5 and 6 live in your code. Items 7 and 8 close the list.
+
+**How you know it worked.** Each row has evidence: the Milestone 2 completion, the submitted public key, the sandbox access, a callback received on your public HTTPS URL, a signed call that is not refused, and every test case passed.
+
+**When it goes wrong.** An EUA without Milestone 2 cannot be onboarded onto any service, so item 1 blocks the rest. A callback URL reachable only inside your network fails item 4. A handler that waits on the reply to `search` for results fails item 6. For Physical Consultation, pass its twenty item list as well.
+</AgentOnly>
 
 ## Next
 

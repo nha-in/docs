@@ -11,7 +11,7 @@ sidebar_class_name: sidebar-icon sidebar-icon--circle-alert
 
 A [UHI](/docs/uhi/v1/getting-started/glossary#uhi) error is described by one object with four fields. It travels in the `error` field beside the `ACK`, and in the body of an error response. After this page you will know its shape, what to send when you reject a call, and what to log.
 
-## The error object
+## The error object {/* #the-error-object */}
 
 ```json
 {
@@ -36,7 +36,7 @@ A [UHI](/docs/uhi/v1/getting-started/glossary#uhi) error is described by one obj
 | The `error` field of a `200` response | Beside `message.ack` in the receipt for any call. An accepted call carries an empty `error: {}` |
 | The body of a `404` from the [network registry lookup](/docs/uhi/v1/concepts/registry-lookup) | No participant matches the lookup |
 
-## HTTP statuses before the body
+## HTTP statuses before the body {/* #http-statuses-before-the-body */}
 
 Some failures stop a call before any error object is built. Read the status first.
 
@@ -46,11 +46,21 @@ Some failures stop a call before any error object is built. Read the status firs
 | `403` | Your public key is not registered, or your registration is not yet active |
 | `200` with `ACK`, then no callback | Your `consumer_uri` is not publicly reachable over HTTPS, or your endpoint did not return `200` |
 
-## Send and log
+<AgentOnly>
+**What happens.** A `401` or `403` stops the call before any error object is built. Branch on the status first, and parse `error` only when there is a body to parse.
+
+**When it goes wrong.** On `401`, fix the signature and send with a new header; the same header fails again. On `403`, finish or activate your registration before retrying. On `200` with `ACK` and no callback, call your `consumer_uri` from outside your network over HTTPS, and check that your endpoint returns `200` at once.
+</AgentOnly>
+
+## Send and log {/* #send-and-log */}
 
 **When you reject a call**, send all four fields. Fill `path` whenever the failure is a schema validation failure, so the sender can find the field.
 
-**When you receive an error**, log all four fields with the call's `transaction_id` and `message_id`. Those two values tie the error to the exchange. See [Messages and callbacks](/docs/uhi/v1/concepts/messages#match-on-transaction_id-and-message_id).
+**When you receive an error**, log all four fields with the call's `transaction_id` and `message_id`. Those two values tie the error to the exchange. See [Messages and callbacks](/docs/uhi/v1/concepts/messages#match-on-transaction-id-and-message-id).
+
+<AgentOnly>
+**What happens.** Act on the HTTP status and on whether `error` is empty. Never branch on a `code` value, because no code list is published.
+</AgentOnly>
 
 ## Confirm at onboarding
 

@@ -1,0 +1,13 @@
+## Send an order update to the HSPA {/* #consultation-on-update-to-hspa */}
+
+The [EUA](/docs/uhi/v1/getting-started/glossary#eua) tells the [HSPA](/docs/uhi/v1/getting-started/glossary#hspa) that the doctor did not appear, [directly](/docs/uhi/v1/getting-started/glossary#direct-call-p2p) at its [`provider_uri`](/docs/uhi/v1/getting-started/glossary#provider-uri). The body carries the `order.id` from `on_init` and the state `DOCTOR_NO_SHOW`, the only state the EUA sets. Every other state change comes from the HSPA, and a cancellation goes through `cancel`. See [Physical Consultation](/docs/uhi/v1/services/consultation#journey-3-fulfilment).
+
+Sign every request with a fresh `Authorization` header. See [Signing](/docs/uhi/v1/concepts/signing).
+
+<AgentOnly>
+**Before you start.** A confirmed order, and its `order.id` and `transaction_id`.
+
+**How you know it worked.** An HTTP 200 carrying `ACK` from the HSPA.
+
+**When it goes wrong.** Send no state here other than `DOCTOR_NO_SHOW`: every other state belongs to the HSPA. A 401 means the signature was built over a different body, was reused, or has expired.
+</AgentOnly>

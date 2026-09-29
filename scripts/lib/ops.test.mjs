@@ -23,3 +23,18 @@ test('callbacks, declared as webhooks, are operations too, keyed by their path',
     {operationId: 'm2_post_v3_link_on_carecontext', method: 'post', path: '/api/v3/link/on_carecontext'},
   ]);
 });
+
+test('another gateway\'s operations load from its own specification folder', () => {
+  const root = mkdtempSync(join(tmpdir(), 'ops-'));
+  const dir = join(root, 'catalogue', 'uhi', 'openapi', 'v1');
+  mkdirSync(dir, {recursive: true});
+  writeFileSync(join(dir, 'uhi-consultation.yaml'), [
+    'openapi: 3.1.0',
+    'paths:',
+    '  /on_update#to-eua:',
+    '    post: {operationId: uhi_consultation_on_update_to_eua}',
+  ].join('\n'));
+  assert.deepEqual(loadOps(root, 'uhi', 'v1'), [
+    {operationId: 'uhi_consultation_on_update_to_eua', method: 'post', path: '/on_update'},
+  ]);
+});

@@ -27,7 +27,7 @@ You hold a subscriber ID and sandbox access from
 first search works end to end in the
 [Quickstart](/docs/uhi/v1/getting-started/first-fifteen-minutes).
 
-## 1. Build and run your service's test cases
+## 1. Build and run your service's test cases {/* #1-build-and-run-your-services-test-cases */}
 
 Build against the sample payloads on your service's page and the
 [UHI API reference](/docs/uhi/v1/api). Then run every test case for that
@@ -47,7 +47,11 @@ lists what every service is checked against.
 
 **You get:** a passing sandbox integration.
 
-## 2. Record a demo and request sign-off
+<AgentOnly>
+**How you know it worked.** Every test case on your service's test case page passes in the sandbox, along with the checks every service shares. Request sign-off only after that.
+</AgentOnly>
+
+## 2. Record a demo and request sign-off {/* #2-record-a-demo-and-request-sign-off */}
 
 Record your app running the service's flow, and send it to your
 [NHA](/docs/uhi/v1/getting-started/glossary#nha) point of contact with a
@@ -60,7 +64,13 @@ sign-off demo follows the same flow.
 
 **You get:** written sign-off.
 
-## 3. Switch to production
+<AgentOnly>
+**Before you start.** Every test case for your service passes in the sandbox, and you have watched the recorded walkthrough for your service.
+
+**How you know it worked.** You hold written sign-off from your NHA point of contact. Do not switch to production values without it.
+</AgentOnly>
+
+## 3. Switch to production {/* #3-switch-to-production */}
 
 Change the IDs and callback URL your calls carry.
 
@@ -81,18 +91,30 @@ In production you use your own endpoints, not the sandbox reference apps.
 
 **You get:** a live integration on the production network.
 
+<AgentOnly>
+**Before you start.** You hold written sign-off from step 2.
+
+**How you know it worked.** A search sent to `https://uhigateway.abdm.gov.in` returns `200` with an `ACK`, and the answer arrives on your production callback URL, matched by `transaction_id`.
+</AgentOnly>
+
 ## What you see when it works
 
 A search your app sends to `https://uhigateway.abdm.gov.in` returns `200` with
 an `ACK`, and the answer arrives on your production callback URL, matched by
 `transaction_id`.
 
-## When it goes wrong
+## When it goes wrong {/* #when-it-goes-wrong */}
 
 If a search that worked in the sandbox fails in production, check the Gateway
 host first, then `consumer_id` and `consumer_uri` or their HSPA equivalents. A
 `401` or `403` comes before any body: see
 [Errors on UHI](/docs/uhi/v1/concepts/errors#http-statuses-before-the-body).
+
+<AgentOnly>
+**What happens.** A search that worked in the sandbox fails after the switch to production. Either a value still points at the sandbox, or the Gateway rejects the signature or the registration before it reads the body.
+
+**When it goes wrong.** Check in this order and stop at the first that fails. The host is `https://uhigateway.abdm.gov.in`, not `https://uhigatewaysandbox.abdm.gov.in`. An EUA sends production values in `consumer_id` and `consumer_uri`; an HSPA in `provider_id` and `provider_uri`. A `401` means the signature does not match the body sent, is reused or expired, or names the wrong key. A `403` means the public key is not registered or the registration is not yet active.
+</AgentOnly>
 
 ## Next steps
 
