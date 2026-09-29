@@ -248,7 +248,42 @@
     ]
   },
   {
-    "id": "4a7fdbaf97c8",
+    "id": "704b2402222e",
+    "date": "2026-09-29",
+    "kind": "artefact-added",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": "/docs/hiecm/v3/getting-started/build-with-ai",
+    "count": 1,
+    "items": [
+      {
+        "artefact": "skill",
+        "name": "hiecm-m1-test"
+      }
+    ]
+  },
+  {
+    "id": "55703b80165d",
+    "date": "2026-09-29",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "abdm-integrators-assistant",
+        "from": "0.9.2",
+        "to": "0.10.0"
+      }
+    ]
+  },
+  {
+    "id": "219d42399700",
     "date": "2026-09-29",
     "kind": "plugin-version",
     "gateway": "site",
