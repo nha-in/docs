@@ -1,0 +1,11 @@
+## Enable an auto approval policy {/* #p3-consent-enable-auto-approve */}
+
+Turns a disabled auto approval policy back on from the person's PHR app. Consent requests from that HIU are then approved automatically again. The path parameter is named `consentId`, but it takes the auto approval id.
+
+<AgentOnly>
+**Before you start.** The person's `X-AUTH-TOKEN` and the auto approval id of the policy.
+
+**How you know it worked.** You receive `202` with `message`. A `202` can carry an `error` with `ABDM-1001` instead: read the body, not only the status.
+
+**When it goes wrong.** `400` with `ABDM-1065` means the `X-AUTH-TOKEN` is invalid: log the person in again. `404` with `ABDM-1001` means no policy has that id.
+</AgentOnly>

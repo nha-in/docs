@@ -47,7 +47,7 @@ The first three are compiled from `plan/abdm-v1-phase1-architecture-and-plan.md`
 
 **Building the Catalogue**
 
-- `atom-authoring` how to write one atom: frontmatter schema and the five dummy-proof sections
+- `atom-authoring` how to write one atom: frontmatter schema and the dummy-proof sections each type requires
 - `writing-guide` the binding prose rules, including no em dashes
 - `atom-review` how to review an atom before it can be merged
 - `catalogue-linting` the CI rules and how to fix each failure

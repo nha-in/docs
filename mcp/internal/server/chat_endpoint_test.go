@@ -80,7 +80,7 @@ func TestChatEndpointDisabled(t *testing.T) {
 func TestChatEndpointStreams(t *testing.T) {
 	fm := &scriptedModel{
 		replies: []chat.Reply{
-			{ToolCalls: []chat.ToolCall{{ID: "t1", Name: "search_docs",
+			{ToolCalls: []chat.ToolCall{{ID: "t1", Name: "search",
 				Input: []byte(`{"query":"timestamp"}`)}}, StopReason: "tool_use"},
 			{Text: "It is ISO 8601 UTC.", StopReason: "end_turn"},
 		},

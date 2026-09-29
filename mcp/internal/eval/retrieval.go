@@ -9,7 +9,8 @@ type RetrievalResult struct {
 	RR      float64 `json:"reciprocal_rank"`
 }
 
-// Retrieval scores the first search_docs call of a transcript against the
+// Retrieval scores the first search call of a transcript (search_docs in
+// runs recorded before the six tools) against the
 // case's expected sources: recall at 3 is 1 when any expected id sits in the
 // first three hits, and the reciprocal rank is 1 over the best rank of any
 // expected id. Scored separately from the answer, because a wrong answer
@@ -26,7 +27,7 @@ func Retrieval(c Case, t Transcript) RetrievalResult {
 	}
 	for _, call := range t.Calls {
 		for _, tr := range call.ToolResults {
-			if tr.Name != "search_docs" {
+			if tr.Name != "search" && tr.Name != "search_docs" {
 				continue
 			}
 			var out struct {

@@ -1,0 +1,11 @@
+## Edit a subscription {/* #p3-edit-subscription */}
+
+Lets the person change an existing subscription, for example its date range. Send the HIU's id in `hiuId` and the whole new scope in `subscriptionEditAndApprovalRequest`.
+
+<AgentOnly>
+**Before you start.** The person's `X-AUTH-TOKEN` and the `subscriptionId` from the approve call or the subscription details. Every source carries a `status`.
+
+**How you know it worked.** You receive `202` with `subscriptionId`.
+
+**When it goes wrong.** `400` with `ABDM-1066` means the token is invalid: log the person in again.
+</AgentOnly>

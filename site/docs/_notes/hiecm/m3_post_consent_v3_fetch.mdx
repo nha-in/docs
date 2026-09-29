@@ -1,0 +1,32 @@
+## Fetch the full consent artefact {/* #m3-consent-fetch */}
+
+Fetch a [consent artefact](/docs/hiecm/v3/getting-started/glossary#consent-artefact) by its id after a `GRANTED` [consent notification](/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/03-m3-post-v3-hiu-consent-request-notify). The call returns 202 Accepted, and the artefact arrives on [consent on-fetch](/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/04-m3-post-v3-hiu-consent-on-fetch). It lists:
+
+- the care contexts approved
+- the health information types permitted
+- the date range, and the date to erase the data
+- the [HIP](/docs/hiecm/v3/getting-started/glossary#hip) and [HIU](/docs/hiecm/v3/getting-started/glossary#hiu), and a signature
+
+Store the artefact. Your health information request needs its id.
+
+<AgentOnly>
+**Before you start.** A gateway session token and the artefact ids from the notification. Send the `REQUEST-ID`, `TIMESTAMP`, `X-CM-ID` and `X-HIU-ID` headers.
+
+**How you know it worked.** The artefact arrives on `/api/v3/hiu/consent/on-fetch` with `status` of `GRANTED`.
+
+**When it goes wrong.** `ABDM-1001` (No data found): check `consentId`. Fetch every artefact id the notification listed, not only the first. `ABDM-2402` (Invalid Timestamp): check `TIMESTAMP` against your clock. `ABDM-2404` (Invalid Request Id): send a fresh UUID in `REQUEST-ID`. `ABDM-2500` (Authorization header is missing): send the session token. `ABDM-9999` (Unknown exception) gives no cause.
+</AgentOnly>
+
+## Fetch a consent artefact in full {/* #p3-consent-fetch */}
+
+A consent artefact id says permission exists. This call asks for what the permission covers. Send the `consentId`. The artefact arrives on your consent on-fetch callback, not on this response.
+
+<AgentOnly>
+**Before you start.** Your `X-HIU-ID`, `X-CM-ID`, and the artefact id from a granted consent.
+
+**What happens.** You receive `202`. The artefact arrives at `/api/v3/hiu/consent/on-fetch`.
+
+**How you know it worked.** The on-fetch callback carries the artefact with its date range and HI types. Check its validity before requesting data under it.
+
+**When it goes wrong.** `404` with `ABDM-1001` means no artefact has that id.
+</AgentOnly>

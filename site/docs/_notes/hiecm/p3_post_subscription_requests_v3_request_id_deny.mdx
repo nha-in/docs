@@ -1,0 +1,11 @@
+## Deny a subscription request {/* #p3-deny-subscription-request */}
+
+Lets the person refuse a subscription request from their [PHR](/docs/hiecm/v3/getting-started/glossary#phr) app. Send the person's reason in `reason`. The requesting [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) is told the request was denied.
+
+<AgentOnly>
+**Before you start.** The person's `X-AUTH-TOKEN` and the `subscriptionRequestId`, from the list of subscription requests.
+
+**How you know it worked.** You receive `202` with `message`. The requesting HIU is notified with `DENIED`.
+
+**When it goes wrong.** `400` with `ABDM-1066` means the token is invalid: log the person in again.
+</AgentOnly>

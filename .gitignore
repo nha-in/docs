@@ -50,6 +50,7 @@ mcp/catalogue.db
 site/docs/*/v*/api/*/endpoints/
 site/docs/*/v*/api/index.md
 site/docs/*/v*/api/*/errors.md
+site/docs/*/v*/api/*/errors.mdx
 site/docs/*/v*/api/*/_servers.md
 site/docs/*/v*/reference/authentication.md
 site/docs/*/v*/reference/callbacks.md

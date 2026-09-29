@@ -1,0 +1,13 @@
+## Request a subscription to a person's records {/* #p3-subscription-init */}
+
+A subscription lets a [Health Information User (HIU)](/docs/hiecm/v3/getting-started/glossary#hiu), such as a health locker, hear about a person's new records without polling. This call requests one. The person approves or denies it separately, from their [PHR](/docs/hiecm/v3/getting-started/glossary#phr) app.
+
+<AgentOnly>
+**Before you start.** The person's agreement, taken before the request is sent.
+
+**What happens.** You receive `202`. The request id arrives at `/api/v3/hiu/hiecm/subscription-requests/on-init`. The person's decision arrives later at `/api/v3/hiu/subscription-requests/hiu/notify`.
+
+**How you know it worked.** The on-init callback carries an `id` in `subscriptionRequest`. Once the person approves, each new or updated care context arrives at `/api/v3/hiu/subscription/notify`.
+
+**When it goes wrong.** The on-init callback carries an `error` instead of `subscriptionRequest`. Fix the request from the error `message` before sending it again.
+</AgentOnly>

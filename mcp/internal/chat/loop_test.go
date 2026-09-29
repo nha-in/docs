@@ -808,8 +808,8 @@ func TestRespondRetriesWithoutPuttingWordsInTheReadersMouth(t *testing.T) {
 	}
 }
 
-// TestCollectSourcesFromPassages covers the composite search_docs the chat
-// loop calls (server.Tools.ChatToolsFor binds search_docs to Lookup): its
+// TestCollectSourcesFromPassages covers the composite search the chat
+// loop calls (server.Tools.ChatToolsFor binds search to Lookup): its
 // result carries "passages" rather than "hits", and every passage must
 // still become a source.
 func TestCollectSourcesFromPassages(t *testing.T) {
@@ -822,7 +822,7 @@ func TestCollectSourcesFromPassages(t *testing.T) {
 				"doc_url": "/docs/glossary/abha-number"},
 		},
 	}
-	collectSources(&sources, "search_docs", result)
+	collectSources(&sources, "search", result)
 	if len(sources) != 2 {
 		t.Fatalf("got %d sources, want 2: %+v", len(sources), sources)
 	}
@@ -1322,5 +1322,14 @@ func TestRespondAnswersAQuestionAboutItselfWithoutLookingItUp(t *testing.T) {
 	}
 	if !strings.Contains(sawTurn, `name="self"`) {
 		t.Errorf("the self shape did not reach the model: %q", sawTurn)
+	}
+}
+
+func TestSourcesComeFromTheNewToolNames(t *testing.T) {
+	var got []Source
+	collectSources(&got, "get", map[string]any{"id": "hiecm.error.abdm-1035", "title": "T", "doc_url": "/d"})
+	collectSources(&got, "get", map[string]any{"id": "m1_post_profile_verify", "title": "Op"})
+	if len(got) != 1 || got[0].ID != "hiecm.error.abdm-1035" {
+		t.Fatalf("get must cite atoms and only atoms: %+v", got)
 	}
 }

@@ -1,0 +1,13 @@
+## Link or unlink a benefit record from an ABHA {/* #m1-benefit-link-or-delink */}
+
+One call does both. Send `scope` as `["link"]` to link the programme named in the `BENEFIT_NAME` header to the signed in person's [ABHA](/docs/hiecm/v3/getting-started/glossary#abha), or `["de-link"]` to remove it. The person's `X-token` identifies the account.
+
+The success response confirms the change in a readable `status` sentence. Match on the HTTP status and `benefitName`, not on that text.
+
+<AgentOnly>
+**Before you start.** The person's `X-token` from login, sent as `Bearer <token>`. Without a signed in person, the same path takes `loginHint` set to `abha-number` and the encrypted ABHA number in `loginId`.
+
+**How you know it worked.** A 200 whose `benefitName` is the programme you sent and whose `healthId` is the person's ABHA number.
+
+**When it goes wrong.** A 400 with `ABDM-1138` means the record is already in the state you asked for. A 401 covers an invalid programme name and a programme restricted from linking, as well as a bad access token.
+</AgentOnly>

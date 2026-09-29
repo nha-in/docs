@@ -4,12 +4,12 @@
 import { statSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { loadAtoms, root } from "./lib/atoms.mjs";
+import { contractProblems } from "./lib/contract.mjs";
+import { loadOps } from "./rekey-verification.mjs";
 
 const TYPES = ["concept", "flow", "endpoint", "callback", "error", "test",
                "decision", "glossary", "fhir", "sandbox", "troubleshooting"];
 const GATEWAYS = ["hiecm", "uhi", "nhcx", "shared"];
-const SECTIONS = ["In plain words", "Before you start", "What happens",
-                  "How you know it worked", "When it goes wrong"];
 // Folder name per type, so an atom cannot claim a type it is not filed under.
 const FOLDER = {
   concept: "concepts", flow: "flows", endpoint: "endpoints",
@@ -26,6 +26,13 @@ function fail(file, msg) {
 
 const { atoms, problems: parseProblems } = loadAtoms();
 for (const p of parseProblems) fail(p.file, p.msg);
+
+// Only HIE-CM has specifications in this repository; an operation on any
+// other gateway cannot resolve yet.
+const contractCtx = {
+  operations: { hiecm: new Set(loadOps(root).map((o) => o.operationId)) },
+  atomIds: new Set(atoms.keys()),
+};
 
 for (const [id, atom] of atoms) {
   const { file, fm, body, raw } = atom;
@@ -61,15 +68,9 @@ for (const [id, atom] of atoms) {
   // Sandbox evidence lives in catalogue/verification/, internal to contributors.
   if (fm.verified !== undefined) fail(file, "verified is no longer a field; drop it. Sandbox evidence lives in catalogue/verification/");
 
-  // The five sections, present and in order.
-  const headings = [...body.matchAll(/^##\s+(.+?)\s*$/gm)].map((h) => h[1]);
-  const found = SECTIONS.map((s) => headings.indexOf(s));
-  SECTIONS.forEach((s, i) => { if (found[i] === -1) fail(file, `missing mandatory section: ## ${s}`); });
-  if (found.every((i) => i !== -1)) {
-    for (let i = 1; i < found.length; i++) {
-      if (found[i] < found[i - 1]) { fail(file, `sections are out of order at "## ${SECTIONS[i]}"`); break; }
-    }
-  }
+  // Atom contract v2: sections per type, the operation join, facts, side
+  // and status (scripts/lib/contract.mjs).
+  for (const p of contractProblems(fm, body, contractCtx)) fail(file, p);
 
   // An atom must not name a site route. Atoms are built before the site and
   // are not published one to one as pages, so a route here is a guess that
@@ -104,6 +105,11 @@ for (const [id, atom] of atoms) {
 
   for (const [kind, ids] of Object.entries(fm.related ?? {})) {
     for (const ref of ids ?? []) {
+      // ponytail: NHCX atoms are exempt until owner decision 1 (whether NHCX
+      // stays merged in from NHA's fork). Eight of them list themselves, and an
+      // edit here would be lost or conflict on the next merge. Drop the gateway
+      // guard once that is decided and those eight are fixed at their source.
+      if (ref === fm.id && fm.gateway !== "nhcx") fail(file, `related.${kind} lists the atom itself; remove "${ref}"`);
       if (!atoms.has(ref)) fail(file, `related.${kind} points at "${ref}", which no atom defines`);
     }
   }

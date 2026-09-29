@@ -1,0 +1,11 @@
+## Get a subscription request by its request id {/* #p3-details-by-request-id */}
+
+Returns one subscription request by its request id, with its `status` and the `subscriptionId` it belongs to. Show it to the person before they approve or deny it.
+
+<AgentOnly>
+**Before you start.** The person's `X-AUTH-TOKEN` and the `subscriptionRequestId`.
+
+**How you know it worked.** You receive `200` with `status` and `details`, which holds the purpose, the HIU and the facilities asked for.
+
+**When it goes wrong.** `400` with `ABDM-1066` means the token is invalid: log the person in again.
+</AgentOnly>

@@ -142,17 +142,23 @@ func (r *Reader) closest(table, col, id string) []string {
 
 func (r *Reader) GetAtom(id string) (catalogue.Atom, error) {
 	var a catalogue.Atom
+	var factsJSON string
 	err := r.db.QueryRow(`
         SELECT id, type, gateway, milestone, title, summary,
-               body, source_path, doc_url, doc_anchor
+               body, source_path, doc_url, doc_anchor,
+               operation, side, status, superseded_by, facts_json
         FROM atoms WHERE id = ?`, id).Scan(
 		&a.ID, &a.Type, &a.Gateway, &a.Milestone, &a.Title, &a.Summary,
-		&a.Body, &a.SourcePath, &a.DocURL, &a.DocAnchor)
+		&a.Body, &a.SourcePath, &a.DocURL, &a.DocAnchor,
+		&a.Operation, &a.Side, &a.Status, &a.SupersededBy, &factsJSON)
 	if err == sql.ErrNoRows {
 		return catalogue.Atom{}, &NotFoundError{ID: id, Closest: r.closest("atoms", "id", id)}
 	}
 	if err != nil {
 		return catalogue.Atom{}, err
+	}
+	if err := json.Unmarshal([]byte(factsJSON), &a.Facts); err != nil {
+		return catalogue.Atom{}, fmt.Errorf("atom %s facts: %w", id, err)
 	}
 	return a, nil
 }
@@ -224,7 +230,10 @@ func (r *Reader) RelatedAtoms(id string) ([]RelatedGroup, error) {
 	rows, err := r.db.Query(`
         SELECT to_id FROM related WHERE from_id = ?
         UNION
-        SELECT from_id FROM related WHERE to_id = ?`, id, id)
+        SELECT from_id FROM related WHERE to_id = ?
+        UNION
+        SELECT b.id FROM atoms a JOIN atoms b ON b.operation = a.operation
+        WHERE a.id = ? AND a.operation != ''`, id, id, id)
 	if err != nil {
 		return nil, err
 	}
@@ -374,6 +383,8 @@ type Stats struct {
 	ByMilestone map[string]int
 	ByType      map[string]int
 	Operations  int
+	Facts       int // facts across all atoms
+	Deprecated  int // atoms with status: deprecated
 }
 
 func (r *Reader) Stats() (Stats, error) {
@@ -396,7 +407,11 @@ func (r *Reader) Stats() (Stats, error) {
 	if err := rows.Err(); err != nil {
 		return s, err
 	}
-	err = r.db.QueryRow(`SELECT count(*) FROM operations`).Scan(&s.Operations)
+	if err := r.db.QueryRow(`SELECT count(*) FROM operations`).Scan(&s.Operations); err != nil {
+		return s, err
+	}
+	err = r.db.QueryRow(`SELECT coalesce(sum(json_array_length(facts_json)), 0),
+        count(*) FILTER (WHERE status = 'deprecated') FROM atoms`).Scan(&s.Facts, &s.Deprecated)
 	return s, err
 }
 

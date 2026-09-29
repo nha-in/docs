@@ -17,8 +17,8 @@
       "title": "Build and validate an OPConsultation bundle",
       "skill": "abdm-fhir",
       "needs": [],
-      "exit": "mcp__abdm-docs__validate_fhir returns findings: null for the bundle, with record_type OPConsultation.",
-      "prompt": "Build an NRCeS compliant OPConsultation FHIR document bundle using the abdm-fhir skill and save it as opconsult-bundle.json in the current directory. Validate it with the validate_fhir MCP tool with record_type OPConsultation. Maximum 8 validate attempts. The task is done only when the validator returns no findings."
+      "exit": "mcp__abdm-docs__validate with kind fhir returns findings: null for the bundle, with record_type OPConsultation.",
+      "prompt": "Build an NRCeS compliant OPConsultation FHIR document bundle using the abdm-fhir skill and save it as opconsult-bundle.json in the current directory. Validate it with the validate MCP tool, kind fhir, with record_type OPConsultation. Maximum 8 validate attempts. The task is done only when the validator returns no findings."
     },
     {
       "id": 3,
@@ -43,8 +43,8 @@
         "ABDM_HIU_ID",
         "ABDM_CALLBACK_URL"
       ],
-      "exit": "A consent artefact is received, and the fetched bundle decrypts and passes validate_fhir.",
-      "prompt": "Using the abdm-m3 skill, raise a consent request as HIU ABDM_HIU_ID for the sandbox test patient, wait for the artefact, and fetch the records. Callbacks arrive at ABDM_CALLBACK_URL. Consent approval in the patient app is a human step: report NEEDS_HUMAN at that point with the atom that marks it. The task is done only when a bundle is decrypted and validate_fhir returns no findings."
+      "exit": "A consent artefact is received, and the fetched bundle decrypts and passes validate with kind fhir.",
+      "prompt": "Using the abdm-m3 skill, raise a consent request as HIU ABDM_HIU_ID for the sandbox test patient, wait for the artefact, and fetch the records. Callbacks arrive at ABDM_CALLBACK_URL. Consent approval in the patient app is a human step: report NEEDS_HUMAN at that point with the atom that marks it. The task is done only when a bundle is decrypted and validate (kind fhir) returns no findings."
     },
     {
       "id": 5,

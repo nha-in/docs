@@ -1,0 +1,9 @@
+## Claim a chosen ABHA address {/* #m1-enrolment-claim-abha-address */}
+
+Attaches the [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address) the person chose to the ABHA number created earlier in the same enrolment. Send the enrolment `txnId`, the `abhaAddress`, and `preferred` set to `1` to make it the address shown by default. It is the last call of the create journey.
+
+<AgentOnly>
+**How you know it worked.** A 200 that echoes the `abhaAddress` and `preferred` you sent.
+
+**When it goes wrong.** A 400 with `Invalid Preferred Flag` or `Invalid Transaction Id` names the refused field. A 401 with `900901` means the access token is missing or expired.
+</AgentOnly>

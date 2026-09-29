@@ -129,3 +129,24 @@ func TestExtractErrorCodesCoversTheClaimsExchange(t *testing.T) {
 		}
 	}
 }
+
+func TestFrontmatterCarriesContractV2Fields(t *testing.T) {
+	src := "---\nid: hiecm.endpoint.verify\ntype: endpoint\ngateway: hiecm\nmilestone: M1\ntitle: Verify\nsummary: s\noperation: m1_post_profile_verify\nside: hip\nstatus: deprecated\nsuperseded_by: hiecm.endpoint.verify-v2\nfacts:\n  - {key: http_status, value: 202, source: 0}\n  - {key: link_token_validity, value: 6 months, source: 1}\n---\n\n## In plain words\n\nx\n"
+	a, err := ParseAtom("catalogue/hiecm/endpoints/verify.md", []byte(src))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if a.Operation != "m1_post_profile_verify" || a.Side != "hip" || a.Status != "deprecated" || a.SupersededBy != "hiecm.endpoint.verify-v2" {
+		t.Errorf("contract v2 fields = %q %q %q %q", a.Operation, a.Side, a.Status, a.SupersededBy)
+	}
+	if len(a.Facts) != 2 || a.Facts[0] != (Fact{Key: "http_status", Value: "202", Source: 0}) || a.Facts[1].Value != "6 months" {
+		t.Errorf("facts = %+v", a.Facts)
+	}
+	plain, err := ParseAtom("catalogue/shared/glossary/x.md", []byte("---\nid: shared.glossary.x\ntype: glossary\ngateway: shared\ntitle: X\n---\n\nbody\n"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if plain.Status != "current" {
+		t.Errorf("an atom with no status is current, got %q", plain.Status)
+	}
+}

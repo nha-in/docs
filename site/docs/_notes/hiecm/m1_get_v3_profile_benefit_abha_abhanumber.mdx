@@ -1,0 +1,11 @@
+## Get the benefit record for an ABHA number {/* #m1-benefit-get-by-abha */}
+
+Lists the benefit programmes linked to one [ABHA number](/docs/hiecm/v3/getting-started/glossary#abha-number). Put the ABHA number in the path and your approved programme name in the `BENEFIT_NAME` header. The response names each linked programme in `benefitName`.
+
+<AgentOnly>
+**Before you start.** The programme name approved for your integration, sent as `BENEFIT_NAME`, and the access token as `Authorization: Bearer <gateway token>`.
+
+**How you know it worked.** A 200 with the `abhaNumber` you asked about and a `programme` list.
+
+**When it goes wrong.** A 404 with `ABDM-1114` means no account holds that ABHA number. A 401 with `900901` means the access token is missing or expired.
+</AgentOnly>

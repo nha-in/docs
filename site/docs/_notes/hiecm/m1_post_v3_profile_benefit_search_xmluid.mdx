@@ -1,0 +1,9 @@
+## Search benefit records for a person {/* #m1-benefit-search */}
+
+Lists the benefit programmes linked to a person, found by their Aadhaar `xmlUid` or their [ABHA number](/docs/hiecm/v3/getting-started/glossary#abha-number). Set `loginHint` to `xmlUid` or `abha-number` and put the encrypted value in `loginId`, with `scope` as `["search"]`. The response is a list with one entry per programme, each with the programme name, the ABHA number and a status.
+
+<AgentOnly>
+**Before you start.** Encrypt `loginId` with the key from the public certificate call. Send your approved programme name as `BENEFIT_NAME`.
+
+**When it goes wrong.** A 400 with `Invalid LoginId` means the value was refused: check it was encrypted with the published key and `encryptionAlgorithm`. A 400 with `Invalid Benefit Name` means `BENEFIT_NAME` is not approved for you. A 404 with `ABDM-1114` means no account matched.
+</AgentOnly>

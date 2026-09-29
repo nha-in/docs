@@ -1,0 +1,9 @@
+## Search an ABHA address and get its sign in methods {/* #m1-phr-search-abha-address */}
+
+The first step of [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address) login. Send the `abhaAddress`, and the response confirms it exists and lists the sign in methods it allows in `authMethods`, with any blocked ones in `blockedAuthMethods`. Offer the person only the allowed methods.
+
+<AgentOnly>
+**How you know it worked.** A 200 with `status` `ACTIVE` and the method you intend to use in `authMethods`, for example `MOBILE_OTP` before a mobile OTP login.
+
+**When it goes wrong.** A 400 with `ABDM-1211` means no account holds that ABHA address. A 404 with `ABDM-1030` means the `REQUEST-ID` was refused: send a fresh one.
+</AgentOnly>

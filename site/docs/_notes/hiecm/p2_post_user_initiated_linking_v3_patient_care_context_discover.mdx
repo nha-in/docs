@@ -1,0 +1,13 @@
+## Ask a facility what records it holds {/* #p2-care-context-discover */}
+
+[Discovery](/docs/hiecm/v3/getting-started/glossary#discovery) asks one [Health Information Provider (HIP)](/docs/hiecm/v3/getting-started/glossary#hip) whether it holds records for this person. Name the facility in `hip.id` and identify the person in `unverifiedIdentifiers`. The facility answers on your on-discover callback, not on this response.
+
+<AgentOnly>
+**Before you start.** The person's `X-AUTH-TOKEN` from their PHR login, your `X-HIU-ID`, and the facility's HIP id from the provider search.
+
+**What happens.** You receive `202`. The care contexts the facility finds arrive at `/api/v3/hiu/patient/care-context/on-discover`, with a `transactionId` that the link init call needs.
+
+**How you know it worked.** The on-discover callback carries a `patient` array with at least one `careContexts` entry.
+
+**When it goes wrong.** `400` with `ABDM-1103` means a duplicate discovery request. Wait for the callback instead of sending the request again.
+</AgentOnly>

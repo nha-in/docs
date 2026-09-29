@@ -41,8 +41,10 @@ function pageType(file, fm) {
   if (fm?.page_type) return fm.page_type;
   const path = relative(docsDir, file);
   const name = basename(path);
-  if (/\/endpoints\//.test(path)) return 'endpoint';
-  if (/(^|\/)reference\//.test(path) || name === 'errors.md') return 'reference';
+  // A notes partial is read on the generated page that imports it.
+  if (/^_notes\/.*\/errors\//.test(path)) return 'reference';
+  if (/\/endpoints\//.test(path) || /^_notes\//.test(path)) return 'endpoint';
+  if (/(^|\/)reference\//.test(path) || /^errors\.mdx?$/.test(name)) return 'reference';
   if (/(^|\/)concepts\//.test(path)) return 'concept';
   if (/(^|\/)api\/[^/]+\/index\.mdx?$/.test(path)) return 'module-overview';
   return 'howto';
@@ -101,7 +103,10 @@ function paragraphs(text) {
 function walk(dir) {
   const out = [];
   for (const name of readdirSync(dir)) {
-    if (name.startsWith('_')) continue; // partials, never rendered as pages
+    // Partials, never rendered as pages. The _notes partials are the
+    // exception: hand-written prose on generated API pages, held to the same
+    // rules, and with no frontmatter they are spared the description check.
+    if (name.startsWith('_') && name !== '_notes') continue;
     const path = join(dir, name);
     if (statSync(path).isDirectory()) out.push(...walk(path));
     // READMEs are contributor notes for their folder and never render.
@@ -218,7 +223,8 @@ const show = (list, limit = 40) => {
 // Anything else inside that div, an anchor span or a second paragraph, shifts
 // every following term into the definition column and the table reads as
 // nonsense from there down. That shipped once without anyone noticing, so it is
-// checked here rather than left to the eye.
+// checked here rather than left to the eye. An <AgentOnly> note is exempt:
+// docitem.css spans it across the whole row, so it takes no cell.
 const glossaryDir = join(root, 'site', 'docs', '_glossary');
 for (const name of readdirSync(glossaryDir).filter((f) => f.endsWith('.mdx'))) {
   const opened = readFileSync(join(glossaryDir, name), 'utf8').split(
@@ -227,6 +233,7 @@ for (const name of readdirSync(glossaryDir).filter((f) => f.endsWith('.mdx'))) {
   if (!opened) continue;
   const blocks = opened
     .split('</div>')[0]
+    .replace(/<AgentOnly>[\s\S]*?<\/AgentOnly>/g, '')
     .split(/\n\s*\n/)
     .map((block) => block.trim())
     .filter(Boolean);

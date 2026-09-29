@@ -199,6 +199,11 @@ func run(catDir, outPath, nrcesPath, skillsDir string, emb embed.Embedder) error
 				})
 			}
 		}
+		// Operations are embedded beside the atoms, so an intent phrased in a
+		// reader's words finds the endpoint even when no atom describes it.
+		for _, o := range ops {
+			all = append(all, catalogue.ChunkOperation(o))
+		}
 		for start := 0; start < len(all); start += embedBatch {
 			end := min(start+embedBatch, len(all))
 			var texts []string

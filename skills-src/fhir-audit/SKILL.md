@@ -20,7 +20,7 @@ bundle would look like.
 
 ## 2. Tier 1 pass
 
-Run `validate_fhir` on each bundle, passing its `record_type`. Collect
+Run `validate` with `kind: fhir` on each bundle, passing its `record_type`. Collect
 every finding across every bundle into one gap report, grouped by
 finding (the shape of the defect, for example "`Composition.author`
 missing" or "`Composition.meta.profile` does not include ..."), not by
@@ -34,7 +34,7 @@ many separate problems.
 For each finding, use its Ref to read what NRCES actually demands and
 why ABDM checks it. Ref names the NRCES profile the rule came from
 (for example `OPConsultRecord` or `DocumentBundle`), not an atom id
-directly; map it to the record type's mapping atom via `get_atom`:
+directly; map it to the record type's mapping atom via `get`:
 `shared.fhir.document-bundles` for envelope-level findings (Ref
 `DocumentBundle`), or the type's mapping atom
 (`shared.fhir.map-opconsultation`, `shared.fhir.map-prescription`,

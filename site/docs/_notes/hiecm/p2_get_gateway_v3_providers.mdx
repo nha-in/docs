@@ -1,0 +1,11 @@
+## Search providers by name {/* #p2-all-providers */}
+
+Use this call to let a person find a facility by name before asking it for records. Narrow the search with `stateCode` and `districtCode`, where `-1` means all. When nothing matches, the answer is `204` with `ABDM-1001`, not an empty list.
+
+<AgentOnly>
+**Before you start.** A gateway session token and `X-CM-ID`, the consent manager suffix, for example `sbx`.
+
+**How you know it worked.** You receive `200` with an array of providers. Each has an `identifier` holding `id` and `name`. Only entries with `isHIP` set to true hold records you can discover. That `id` is the HIP id discovery takes in `hip`.
+
+**When it goes wrong.** `204` with `ABDM-1001` means no provider matched. Widen the name or set both codes to `-1`.
+</AgentOnly>

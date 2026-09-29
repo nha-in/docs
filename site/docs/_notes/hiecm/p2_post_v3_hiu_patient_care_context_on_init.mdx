@@ -1,0 +1,11 @@
+## Link init result callback {/* #p2-response-on-health-record-link */}
+
+ABDM posts the facility's answer to your link request here. It carries a `link.referenceNumber` and says how the person will confirm. `link.meta.communicationMedium` is `MOBILE` or `EMAIL`, and `communicationHint` shows where the code went.
+
+<AgentOnly>
+**What happens.** Send `link.referenceNumber` as `linkRefNumber` in the confirm call, with the code the person received.
+
+**How you know it worked.** `link` is present and `communicationExpiry` is in the future. Answer with `200`.
+
+**When it goes wrong.** An `error` object instead of `link` means linking cannot go ahead. Show the error `message` and do not ask the person for a code.
+</AgentOnly>

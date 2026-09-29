@@ -1,0 +1,11 @@
+## List the services registered on your bridge {/* #gateway-list-bridge-services */}
+
+Returns your [bridge](/docs/hiecm/v3/getting-started/glossary#bridge) and every service registered under it. The bridge record carries the callback `url` [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) sends to, and whether the bridge is `active` or `blocklisted`. Each service lists its `types`, such as `HIP` or `HIU`, and whether it is active. Call it to confirm your setup before you test a journey.
+
+<AgentOnly>
+**Before you start.** Hold an access token from the session call and send it as `Authorization: Bearer <gateway token>`, with `REQUEST-ID`, `TIMESTAMP` and `X-CM-ID`.
+
+**How you know it worked.** A 200 whose `bridge` object holds the `url` you registered, with `active` true, and a `services` list naming every service you expect.
+
+**When it goes wrong.** A 204 with `ABDM-1001` means nothing is registered against the bridge yet. A 401 with `900901` means the access token is missing or expired: create a new session and retry.
+</AgentOnly>

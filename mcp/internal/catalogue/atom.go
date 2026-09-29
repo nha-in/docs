@@ -39,6 +39,25 @@ type Atom struct {
 	DocAnchor  string
 	ErrorCodes []string
 	Related    map[string][]string
+
+	// Atom contract v2. Operation joins an endpoint or callback atom to its
+	// operationId. Side narrows who it is for (provider, payer, hip, hiu,
+	// both). Status is current, deprecated or draft; a deprecated atom is
+	// hidden from search unless asked for, and SupersededBy names what
+	// replaced it. Facts are values to quote exactly, each citing a source.
+	Operation    string
+	Side         string
+	Status       string
+	SupersededBy string
+	Facts        []Fact
+}
+
+// Fact is one value an answer should quote exactly, with the index into the
+// atom's sources that states it.
+type Fact struct {
+	Key    string
+	Value  string
+	Source int
 }
 
 type frontmatter struct {
@@ -50,6 +69,16 @@ type frontmatter struct {
 	Summary   string              `yaml:"summary"`
 	Audience  string              `yaml:"audience"`
 	Related   map[string][]string `yaml:"related"`
+
+	Operation    string `yaml:"operation"`
+	Side         string `yaml:"side"`
+	Status       string `yaml:"status"`
+	SupersededBy string `yaml:"superseded_by"`
+	Facts        []struct {
+		Key    string `yaml:"key"`
+		Value  any    `yaml:"value"`
+		Source int    `yaml:"source"`
+	} `yaml:"facts"`
 }
 
 // HIS is M4's registry series and AS is the PHR series NHA records once
@@ -103,17 +132,32 @@ func ParseAtom(sourcePath string, content []byte) (Atom, error) {
 	if related == nil {
 		related = map[string][]string{}
 	}
+	status := fm.Status
+	if status == "" {
+		status = "current"
+	}
+	var facts []Fact
+	for _, f := range fm.Facts {
+		// A value may be written as a number or a word (202, 6 months);
+		// it is quoted as written.
+		facts = append(facts, Fact{Key: f.Key, Value: fmt.Sprint(f.Value), Source: f.Source})
+	}
 	return Atom{
-		ID:         fm.ID,
-		Type:       fm.Type,
-		Gateway:    fm.Gateway,
-		Milestone:  fm.Milestone,
-		Title:      fm.Title,
-		Summary:    strings.TrimSpace(fm.Summary),
-		Audience:   fm.Audience,
-		Body:       strings.TrimSpace(string(body)),
-		SourcePath: sourcePath,
-		ErrorCodes: ExtractErrorCodes(string(content)),
-		Related:    related,
+		ID:           fm.ID,
+		Type:         fm.Type,
+		Gateway:      fm.Gateway,
+		Milestone:    fm.Milestone,
+		Title:        fm.Title,
+		Summary:      strings.TrimSpace(fm.Summary),
+		Audience:     fm.Audience,
+		Body:         strings.TrimSpace(string(body)),
+		SourcePath:   sourcePath,
+		ErrorCodes:   ExtractErrorCodes(string(content)),
+		Related:      related,
+		Operation:    fm.Operation,
+		Side:         fm.Side,
+		Status:       status,
+		SupersededBy: fm.SupersededBy,
+		Facts:        facts,
 	}, nil
 }

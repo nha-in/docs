@@ -1,5 +1,5 @@
 ---
-description: Scaffold a new ABDM Catalogue atom with valid frontmatter and the five mandatory section headings.
+description: Scaffold a new ABDM Catalogue atom with valid frontmatter and the section headings its type requires.
 argument-hint: <type> <gateway> <slug>
 ---
 
@@ -35,7 +35,7 @@ Create a new atom, correctly shaped, ready to write.
 ## After running
 
 1. Fill `sources` with a URL and hash. Use `/source-check` if you need the hash.
-2. Write the five sections. Follow `writing-guide`.
+2. Write the sections the type requires. Follow `writing-guide`.
 3. Populate `related` with ids that resolve.
 4. Run `/catalogue-lint --atoms`.
 5. Open the pull request. Reviewers use `atom-review`.

@@ -167,3 +167,10 @@ test('htmlToMarkdown keeps a diagram whose heading did not survive conversion', 
   const md = htmlToMarkdown(page('<p>No headings here.</p>'), src);
   assert.match(md, /```mermaid\ngraph TD\n```/);
 });
+
+test('agent-only notes reach the markdown although readers do not see them', () => {
+  const html = page('<h3>Link token</h3><p>Valid for six months.</p><aside class="agent-only" data-agent-only><p class="agent-only__label">Notes for AI agents</p><p>Validate the token before every link.</p></aside>');
+  const md = htmlToMarkdown(html, '');
+  assert.match(md, /Notes for AI agents/);
+  assert.match(md, /Validate the token before every link\./);
+});

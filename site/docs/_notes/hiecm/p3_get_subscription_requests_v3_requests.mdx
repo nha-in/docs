@@ -1,0 +1,11 @@
+## List the subscription requests of an ABHA address {/* #p3-get-all-subscription-requests-for-an-abha-address */}
+
+Lists the logged-in person's subscription requests, a page at a time. `limit`, `offset` and `status` are all required, and `status=ALL` returns every state.
+
+<AgentOnly>
+**Before you start.** The person's `X-AUTH-TOKEN`.
+
+**How you know it worked.** You receive `200` with `size`, `limit`, `offset` and the page in `requests`. Each request has a `requestId` for the approve and deny calls.
+
+**When it goes wrong.** `400` with `ABDM-1066` means the token is invalid: log the person in again.
+</AgentOnly>
