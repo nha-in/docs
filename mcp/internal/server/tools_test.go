@@ -231,3 +231,31 @@ func TestOpenPassageDegradesToSummaryOnGetAtomError(t *testing.T) {
 		t.Errorf("related = %v, want nil: the related walk must be skipped when GetAtom fails", related)
 	}
 }
+
+// A code in the question names the one atom that explains it, and that atom
+// goes first whatever the rest of the wording ranks: "401 with code 900901"
+// retrieved five M1 enrolment atoms and not the error atom. Only an error
+// atom is pinned; a flow that merely mentions the code keeps its rank.
+type codeStub map[string][]index.AtomRef
+
+func (s codeStub) AtomsByErrorCode(code string) ([]index.AtomRef, error) { return s[code], nil }
+
+func TestPinErrorAtomsPutsTheCodesErrorAtomFirst(t *testing.T) {
+	stub := codeStub{"900901": {
+		{ID: "hiecm.flow.m1-create-abha", Type: "flow"},
+		{ID: "hiecm.error.900901", Type: "error", Title: "900901, the credentials are not valid"},
+	}}
+	hits := []index.SearchHit{{ID: "hiecm.endpoint.m1-enrolment-by-aadhaar"}, {ID: "hiecm.error.900901"}, {ID: "shared.glossary.abha"}}
+	got := pinErrorAtoms(stub, "abha enrolment returns 401 with code 900901 Invalid Credentials", hits, 5)
+	var ids []string
+	for _, h := range got {
+		ids = append(ids, h.ID)
+	}
+	want := []string{"hiecm.error.900901", "hiecm.endpoint.m1-enrolment-by-aadhaar", "shared.glossary.abha"}
+	if strings.Join(ids, ",") != strings.Join(want, ",") {
+		t.Errorf("ids = %v, want %v (error atom first, no duplicate, the flow not pinned)", ids, want)
+	}
+	if got := pinErrorAtoms(stub, "how do I create an ABHA", hits, 5); len(got) != 3 || got[0].ID != hits[0].ID {
+		t.Errorf("a question with no code must keep search order, got %v", got)
+	}
+}
