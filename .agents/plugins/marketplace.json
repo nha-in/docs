@@ -25,6 +25,17 @@
         "installation": "AVAILABLE"
       },
       "category": "Documentation"
+    },
+    {
+      "name": "uhi-integrators-assistant",
+      "source": {
+        "source": "local",
+        "path": "./plugins/uhi-integrators-assistant"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Documentation"
     }
   ]
 }

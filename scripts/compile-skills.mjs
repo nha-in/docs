@@ -4,7 +4,8 @@
 import {mkdirSync, writeFileSync, readFileSync, existsSync, readdirSync, rmSync, statSync} from 'node:fs';
 import {join} from 'node:path';
 import {parse} from 'yaml';
-import {root} from './lib/atoms.mjs';
+import {root, loadAtoms} from './lib/atoms.mjs';
+import {UHI_SERVICES, buildLoop as uhiBuildLoop, debugLoop as uhiDebugLoop, uhiHostedBy} from './lib/uhi-skills.mjs';
 import {loadJourneys, stepDataName} from './lib/journeys.mjs';
 import {errorsFromSpec} from './lib/spec-errors.mjs';
 
@@ -100,4 +101,21 @@ for (const module of Object.keys(MODULES)) {
   const hasErrorsPage = codes.length > 0 || Object.keys(spec.webhooks ?? {}).length > 0;
   if ((journeys.get(module) ?? []).length) write(`hiecm-${module}-build`, buildSkill(module, hasErrorsPage));
   if (codes.length) write(`hiecm-${module}-debug`, debugSkill(module, codes));
+}
+
+// UHI: one build loop and one debug loop per service, from the UHI journeys,
+// the UHI step data and the UHI atoms. build-skills.mjs folds them into
+// plugins/uhi-integrators-assistant/skills/uhi-<service>/.
+const uhiCtx = {
+  journeys: loadJourneys({platform: 'uhi', version: 'v1'}),
+  stepData: (op, journeyId, i) => stepData({op}, journeyId, i),
+  hostedBy: uhiHostedBy(join(root, 'catalogue', 'uhi', 'openapi', 'v1')),
+  atoms: loadAtoms().atoms,
+};
+for (const service of UHI_SERVICES) {
+  for (const [name, body] of [[`${service.slug}-build`, uhiBuildLoop(service, uhiCtx)], [`${service.slug}-debug`, uhiDebugLoop(service, uhiCtx)]]) {
+    mkdirSync(join(outDir, name), {recursive: true});
+    writeFileSync(join(outDir, name, 'SKILL.md'), body);
+    console.log(`wrote skills-src/${name}/SKILL.md`);
+  }
 }
