@@ -1,0 +1,9 @@
+## Ask for address suggestions {/* #p1-enrollment-address-suggestion */}
+
+A person should not have to invent an [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address). Send the `txnId` of the verified registration with their name and date of birth, and the response lists candidates in `abhaAddressList`. They are suggestions, not reservations: the person may still type their own, and any choice goes through the existence check before you enrol it.
+
+<AgentOnly>
+**Before you start.** The `txnId` from the verified registration OTP. `firstName`, `lastName`, `dayOfBirth`, `monthOfBirth` and `yearOfBirth` are required. `email` is optional.
+
+**When it goes wrong.** A `400` carries `ABDM-9999` with a message that names the field: `Invalid First Name`, `Invalid Transaction Id`, `Invalid Day Of Birth`, `Invalid Month Of Birth` or `Invalid Year Of Birth`. One response can list several.
+</AgentOnly>

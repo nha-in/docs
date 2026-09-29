@@ -82,7 +82,7 @@
     "his"
   ],
   "sources": {
-    "catalogue/openapi/.raw/nha-2026-09-16/hiecm/patient-share.yaml": {
+    "nha-2026-09-16/hiecm/patient-share.yaml": {
       "fetched": "2026-09-16",
       "hash": "sha256:8de274b417bbb860e87718adc299bf626c093cd91435fdcd095fa8748b28523a"
     }

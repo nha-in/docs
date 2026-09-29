@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "sync-specs": "node scripts/sync-specs.mjs",
-    "lint:specs": "spectral lint \"catalogue/openapi/*/*/*.yaml\" --fail-severity=error",
+    "lint:specs": "spectral lint \"catalogue/*/openapi/*/*.yaml\" \"catalogue/openapi/*/*/*.yaml\" --fail-severity=error",
     "build:specs": "node scripts/ingest-nha.mjs && node scripts/ingest-uhi.mjs",
     "check:specs": "node scripts/ingest-nha.mjs --check && node scripts/ingest-uhi.mjs --check",
     "start": "npm start --workspace site",
@@ -22,6 +22,7 @@
     "compile:skills": "node scripts/compile-skills.mjs",
     "build:plugins": "node scripts/build-plugin-manifests.mjs",
     "check:plugins": "node scripts/build-plugin-manifests.mjs --check",
+    "check:plugin-version": "node scripts/check-plugin-version.mjs",
     "check:build-assets": "node scripts/check-build-assets.mjs",
     "validate:skills": "node scripts/validate-skills.mjs",
     "stamp:nhcx": "node scripts/stamp-nhcx-skills.mjs",
@@ -36,11 +37,14 @@
     "check:icons": "node scripts/build-sidebar-icons.mjs --check",
     "build:routes": "node scripts/build-atom-routes.mjs",
     "check:routes": "node scripts/build-atom-routes.mjs --check",
+    "build:sections": "node scripts/build-sections.mjs",
+    "check:sections": "node scripts/build-sections.mjs --check",
+    "report:migration": "node scripts/migration-report.mjs",
     "build:widget": "npm run build --workspace ai-widget",
     "test:widget": "npm test --workspace ai-widget",
     "test:postman": "node --test scripts/postman.test.mjs site/src/components/api/carry.test.mjs",
     "test:changelog": "node --test scripts/changelog.test.mjs",
-    "test:scripts": "node --test scripts/lib/journeys.test.mjs scripts/redact-nha-raw.test.mjs scripts/ingest-uhi.test.mjs scripts/api-samples.test.mjs site/src/components/docs/uhi-quickstart-values.test.mjs",
+    "test:scripts": "node --test scripts/*.test.mjs scripts/lib/*.test.mjs site/src/components/docs/uhi-quickstart-values.test.mjs",
     "changelog": "node scripts/build-whats-new.mjs",
     "check:changelog": "node scripts/build-whats-new.mjs --check",
     "eval:askai:run": "cd mcp && go run ./cmd/askai-eval run -cases ../evals/askai/cases -out ../evals/askai/runs/$(date +%Y-%m-%d)-$(cat ../catalogue/VERSION)",
@@ -48,8 +52,7 @@
     "eval:askai:judge": "cd mcp && go run ./cmd/askai-eval judge -cases ../evals/askai/cases",
     "eval:askai:report": "cd mcp && go run ./cmd/askai-eval report -cases ../evals/askai/cases",
     "eval:askai:calibrate": "cd mcp && go run ./cmd/askai-eval calibrate",
-    "eval:agent": "node scripts/eval-agent.mjs",
-    "verify:atoms": "node scripts/verify-atoms.mjs"
+    "eval:agent": "node scripts/eval-agent.mjs"
   },
   "devDependencies": {
     "@docusaurus/faster": "^3.10.2",

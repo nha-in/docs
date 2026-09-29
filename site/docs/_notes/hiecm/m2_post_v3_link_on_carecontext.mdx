@@ -1,0 +1,23 @@
+## Linking care context Call back API {/* #m2-linking-care-context-call-back */}
+
+After you [link care contexts](/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/01-m2-post-hip-v3-link-carecontext), ABDM answers on your bridge at `/api/v3/link/on_carecontext`. The path is relative to the callback URL you registered. This callback, not the 202 on your link call, says whether the records linked.
+
+<AgentOnly>
+**Before you start.** A callback URL registered for your bridge and reachable from the public internet.
+
+**What happens.** ABDM posts with the `REQUEST-ID`, `TIMESTAMP` and `X-HIP-ID` headers. The body carries `abhaAddress`, `status`, `response` and, on failure, `error`.
+
+**When it goes wrong.** `ABDM-1038` (ABHA address and Link token mismatch): generate a token for this address. `ABDM-1037` (Counter and Care context count mismatch): fix `count`. `ABDM-1024` (Dependent service unavailable): try again later.
+</AgentOnly>
+
+## The outcome of the care context linking call you made {/* #m2-on-carecontext-result */}
+
+Read `status` for the outcome: `Successfully Linked care context`, or `Failed to link care context` with an `error`. Match the callback to your link call by `response.requestId`, which echoes the `REQUEST-ID` you sent. Treat the care context as linked only when this callback says so.
+
+<AgentOnly>
+**Before you start.** Store the `REQUEST-ID` of the link call before you send it, so a fast callback still finds a match.
+
+**How you know it worked.** A callback with `status` of `Successfully Linked care context` and a `requestId` equal to your stored `REQUEST-ID`. Answer it with 200 OK.
+
+**When it goes wrong.** No callback arrives: check that the callback URL is public, registered and quick to answer. An `error` object is the answer, not a delivery fault: read the code and stop retrying the link call. Make the handler idempotent on `requestId`.
+</AgentOnly>

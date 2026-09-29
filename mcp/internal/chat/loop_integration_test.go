@@ -1,6 +1,6 @@
 // Package chat_test (external, not chat) holds the two loop tests that need
 // real []chat.ToolDef values built by server.NewTools against a genuine
-// catalogue snapshot: TestLoopToolCallThenAnswer (a real search_docs call)
+// catalogue snapshot: TestLoopToolCallThenAnswer (a real search call)
 // and TestLoopBudgetExhausted (a real catalogue_info call, six times over).
 //
 // They cannot live in loop_test.go (package chat, an internal test file):
@@ -60,14 +60,14 @@ func collectEvents() (func(string, any) error, *[]event) {
 }
 
 // toolCallThenAnswer builds the fakeModel and tools every test in this
-// group answers with: one search_docs call, then a text answer.
+// group answers with: one search call, then a text answer.
 func toolCallThenAnswer(t *testing.T) (*fakeModel, []chat.ToolDef) {
 	t.Helper()
 	r := servertest.Reader(t)
 	tools := server.ChatTools(server.NewTools(r, nil).Defs())
 	fm := &fakeModel{
 		replies: []chat.Reply{
-			{ToolCalls: []chat.ToolCall{{ID: "t1", Name: "search_docs",
+			{ToolCalls: []chat.ToolCall{{ID: "t1", Name: "search",
 				Input: json.RawMessage(`{"query":"timestamp"}`)}}, StopReason: "tool_use"},
 			{Text: "It is ISO 8601 UTC.", StopReason: "end_turn"},
 		},
@@ -102,17 +102,17 @@ func TestLoopToolCallThenAnswer(t *testing.T) {
 	if last[len(last)-1].ToolResult == nil {
 		t.Fatal("tool result was not appended to the conversation")
 	}
-	// The tool event names the search_docs call with its query as the detail.
+	// The tool event names the search call with its query as the detail.
 	toolEvt := (*evs)[0]
 	data, ok := toolEvt.data.(map[string]string)
-	if !ok || data["name"] != "search_docs" || data["detail"] != "timestamp" {
+	if !ok || data["name"] != "search" || data["detail"] != "timestamp" {
 		t.Errorf("tool event data = %+v", toolEvt.data)
 	}
 	// The tool_result event carries the raw input and output the eval
 	// harness records; it is the recorder's evidence, not the reader's cue.
 	resultEvt := (*evs)[1]
 	rdata, ok := resultEvt.data.(map[string]any)
-	if !ok || rdata["name"] != "search_docs" {
+	if !ok || rdata["name"] != "search" {
 		t.Errorf("tool_result event data = %+v", resultEvt.data)
 	}
 	if _, ok := rdata["input"].(json.RawMessage); !ok {
@@ -151,7 +151,7 @@ func TestLoopToolResultGuardsATruncatedToolInput(t *testing.T) {
 	tools := server.ChatTools(server.NewTools(r, nil).Defs())
 	fm := &fakeModel{
 		replies: []chat.Reply{
-			{ToolCalls: []chat.ToolCall{{ID: "t1", Name: "search_docs",
+			{ToolCalls: []chat.ToolCall{{ID: "t1", Name: "search",
 				Input: json.RawMessage(`{"query":"timestamp"`)}}, StopReason: "tool_use"}, // truncated: no closing brace
 			{Text: "It is ISO 8601 UTC.", StopReason: "end_turn"},
 		},

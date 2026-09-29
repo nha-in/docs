@@ -1,6 +1,7 @@
 import React from 'react';
 import MDXComponents from '@theme-original/MDXComponents';
 import {
+  AgentOnly,
   Card,
   CardGroup,
   Expandable,
@@ -39,6 +40,7 @@ export default {
   Steps,
   Step,
   Expandable,
+  AgentOnly,
   ParamField,
   LegacyAnchor,
   UseCase,

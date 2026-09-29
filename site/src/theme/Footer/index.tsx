@@ -1,6 +1,7 @@
 import React from 'react';
 import Footer from '@theme-original/Footer';
 import {isLanding, useRoutePath} from '@site/src/config/navigation';
+import AgentNotesToggle from '@site/src/components/docs/AgentNotesToggle';
 
 /**
  * The site map at the foot of every page, except the landing page.
@@ -15,5 +16,10 @@ export default function FooterWrapper(): React.ReactNode {
   if (isLanding(pathname)) {
     return null;
   }
-  return <Footer />;
+  return (
+    <>
+      <Footer />
+      <AgentNotesToggle />
+    </>
+  );
 }

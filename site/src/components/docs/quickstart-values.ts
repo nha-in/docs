@@ -44,7 +44,7 @@ export function readable(value: unknown): string {
  * the address as a list of them under `phrAddress`. Reading the top level
  * only, and strings only, found neither: a creation that had entirely
  * succeeded rendered as nothing but the raw response. See the byAadhaar 200
- * schema in catalogue/openapi/hiecm/v3/hiecm-m1.yaml.
+ * schema in catalogue/hiecm/openapi/v3/hiecm-m1.yaml.
  *
  * Every requested spelling is tried at the current level before descending, so
  * a name that exists at the top still wins over the same name nested deeper.

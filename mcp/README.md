@@ -58,13 +58,25 @@ answer contract, is specified in support-agent-playbook.md.
 
 ## Tools
 
-search_docs, get_atom, related_atoms, decode_error, list_atoms,
-catalogue_info, list_operations, get_operation, validate_request,
-list_fhir_profiles, get_fhir_profile, get_fhir_example, validate_fhir.
-Every response carries catalogue_version. validate_fhir never logs bundle contents — the
-tool-call logging middleware records only the tool name, duration and
-whether it errored — and, like validate_request, is not part of the
-chat tool set. A bundle over the 2 MiB input cap gets a different
+Six read-only tools:
+
+| Tool | Does |
+|---|---|
+| search | atoms (default), API operations by intent or path (`kind: operation`), or FHIR profiles (`kind: fhir_profile`); an empty query with a type or milestone lists atoms; `response_format` concise (default) or detailed |
+| get | one item by id, the id's shape picking the kind: atom id, operationId, `fhir:<profile>`, `fhir-example:<hiType>` |
+| related | the atom graph walk |
+| decode_error | error atoms and specification rows for a code or raw response |
+| validate | `kind: request` checks a request body against its operation; `kind: fhir` checks a FHIR document bundle |
+| catalogue_info | version, build time and coverage |
+
+The eleven old names (search_docs, get_atom, related_atoms, list_atoms,
+list_operations, get_operation, list_fhir_profiles, get_fhir_profile,
+get_fhir_example, validate_request, validate_fhir) are deprecated aliases
+for one release, each returning exactly what it did.
+
+Every response carries catalogue_version. FHIR validation never logs bundle
+contents: the tool-call logging middleware records only the tool name,
+duration and whether it errored. It is not part of the chat tool set. A bundle over the 2 MiB input cap gets a different
 response shape: just `error` and `catalogue_version`, with no
 `findings` or `limits` field.
 
@@ -72,6 +84,18 @@ An atom marked `audience: contributor` in its frontmatter never reaches the
 snapshot, so nothing that documents how this catalogue is built can be
 returned to somebody asking about ABDM. Absent means integrator, so an atom
 is integrator-facing unless it says otherwise.
+
+## Discovery
+
+The site publishes `/.well-known/mcp.json`: this server's `/mcp` endpoint,
+streamable HTTP, no authentication, and the six tool names. A test fails if
+the file names a tool the server does not register.
+
+Agents that read pages rather than call tools can fetch any page's markdown
+copy by adding `.md` to its URL (`/docs/hiecm/v3/getting-started/glossary.md`),
+built by `scripts/emit-page-markdown.mjs` and served as `text/markdown`. The
+host does not negotiate on an `Accept: text/markdown` header; use the `.md`
+URL.
 
 ## Skills
 
@@ -106,8 +130,9 @@ that file leniently and so does this one.
 
 `POST /api/chat` is a server-sent-events endpoint behind the site's "Ask
 AI" panel. It runs an agent loop against a Claude model on Amazon Bedrock,
-using the same ten read tools listed above (not list_atoms,
-validate_request or validate_fhir) — so the assistant's retrieval quality
+using the same read tools listed above: search, get, related,
+decode_error and catalogue_info, plus validate for requests when a page is
+attached. So the assistant's retrieval quality
 is exactly the MCP server's retrieval quality, never a separate,
 duplicated path.
 

@@ -5,7 +5,7 @@ sidebar_position: 7
 sidebar_custom_props:
   roles: [his, hip]
 description: Milestone 4 establishes the identity of healthcare professionals on the HPR and the details of healthcare facilities on the HFR.
-source: NHA content review of 18 September 2026 (Milestone 4 Document NHA Reviewed); NHA content review of 15 September 2026 for the milestone naming; catalogue/openapi/hiecm/v3/hiecm-m4.yaml for the calls and fields
+source: NHA content review of 18 September 2026 (Milestone 4 Document NHA Reviewed); NHA content review of 15 September 2026 for the milestone naming; catalogue/hiecm/openapi/v3/hiecm-m4.yaml for the calls and fields
 covers: [hiecm.flow.m4-create-hpid]
 sidebar_class_name: sidebar-icon sidebar-icon--clipboard-pen
 ---
@@ -154,9 +154,7 @@ Milestone 4 (M4) of [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) covers 
 | HFR Journey | Aadhaar Authentication → Role Selection → HP-ID Creation → HFR Registration → Facility Software Integration as HIP/HIU, where applicable |
 | Both Journey | Aadhaar Authentication → Role Selection → HP-ID Creation → HFR Registration → HPR Registration → Facility Software Integration as HIP/HIU, where applicable |
 
-## Journey 1: creating an HPID for a professional
-
-<LegacyAnchor id="journey-1-create-an-hpid-for-a-professional" />
+## Journey 1: creating an HPID for a professional <LegacyAnchor id="journey-1-create-an-hpid-for-a-professional" /> {/* #m4-create-hpid */}
 
 ### Aadhaar authentication
 
@@ -225,11 +223,17 @@ sequenceDiagram
 
 Create HPID returns a `token`. The register professional call carries an `hprToken` in its payload.
 
-<LegacyAnchor id="then-the-profile" />
+<AgentOnly>
+**Before you start.** A gateway session token for `Authorization`, a way to redirect the professional to a URL and bring them back, and the HPR certificate from `/v4/int/api/v1/auth/cert`. Mobile numbers and passwords here are encrypted with `RSA/ECB/PKCS1Padding` under that certificate, not with the M1 key and padding.
 
-## Journey 2: registering a professional on HPR
+**What happens.** Generate the Aadhaar link and redirect to its URL. `/aadhaar/isAuthenticated` answers a bare `true` or `false`, not an object. Verify, then check whether an HP-ID already exists for the Aadhaar and stop there if it does. Match the mobile with `/v2/registration/aadhaar/demographicAuthViaMobile`; when `verified` is false, verify it by OTP. Take a suggestion and create the HP-ID. Keep the token it returns for the next journeys.
 
-<LegacyAnchor id="journey-2-register-the-professional-on-the-hpr" />
+**How you know it worked.** The create call returns the HP-ID and a token, and checking the same Aadhaar again returns that HP-ID rather than none. An HP-ID is an identity, not a professional profile: Journey 2 creates the profile.
+
+**When it goes wrong.** The redirect URL is valid for five minutes, so a slow professional needs a fresh link rather than a retry. An existing HP-ID for the Aadhaar means login, not creation. A client that parses the status poll as an object fails on the bare boolean.
+</AgentOnly>
+
+## Journey 2: registering a professional on HPR <LegacyAnchor id="then-the-profile" /><LegacyAnchor id="journey-2-register-the-professional-on-the-hpr" /> {/* #m4-register-professional */}
 
 The HP-ID is an identity, not a professional profile. The professional profile is created through the registration process, which captures details such as qualifications, council registration, and current work information. Professional registration requires the HPR Token returned from Journey 1.
 
@@ -255,11 +259,17 @@ The following documents are mandatory for upload: the qualification degree certi
 
 The registration API requires codes rather than names. Therefore, the application must first fetch the relevant master data through the respective master APIs and use the corresponding codes during registration. Master data includes council, course, college, university, state, district and language.
 
-<LegacyAnchor id="journey-2-a-facility-onboards-to-the-hfr" />
+<AgentOnly>
+**Before you start.** The professional holds an HP-ID from Journey 1, you hold the `hprToken`, and you hold a gateway session token.
 
-## Journey 3: onboarding a facility to the HFR
+**What happens.** Fetch the master lists first and send codes, never names. Call `/apis/v1/doctors/register-professional-new` with the `hprToken` in the payload. Fetch the document list, then upload one document per call to `/apis/v1/uploads/upload-document`. Corrections later go to `/apis/v1/doctors/update-professional-new`.
 
-<LegacyAnchor id="journey-3-a-facility-onboards-to-the-hfr" />
+**How you know it worked.** Registration returns the `hprId` and a status, the uploads report each certificate's status, and `/apis/v1/doctors/fetch-professional-info` shows the qualification and registration you sent. A registration with a mandatory document missing is not finished, even though the register call was accepted.
+
+**When it goes wrong.** A code that is not on the current master list reads as a validation failure on a field you believed was right: fetch the list again rather than trusting a cached value. A professional who is already registered is a state to read, not an error to retry.
+</AgentOnly>
+
+## Journey 3: onboarding a facility to the HFR <LegacyAnchor id="journey-2-a-facility-onboards-to-the-hfr" /><LegacyAnchor id="journey-3-a-facility-onboards-to-the-hfr" /> {/* #m4-onboard-facility */}
 
 Onboarding consists of one search, three updates, and a final submission, with each update adding another layer of facility details. If you stop before submission, the facility remains in Draft status and is not visible on ABDM.
 
@@ -312,9 +322,17 @@ sequenceDiagram
     H-->>S: Validation result
 ```
 
-<LegacyAnchor id="journey-3-linking-bridges-to-a-facility" />
+<AgentOnly>
+**Before you start.** Someone at the facility holds an HP-ID, so you hold the HPR token that goes in `x-hprid-auth`. You hold a gateway session token and the LGD codes for the facility's address.
 
-## Journey 4: linking bridges to a facility
+**What happens.** Search with `/search/address/filter/deduplicate` and stop if the facility exists. Send basic information and keep the `trackingId` it returns: every later call carries it. Send additional information, then detailed information, then submit with `x-hprid-auth` and `x-hprid-auth-verifier`.
+
+**How you know it worked.** Submit accepts the same `trackingId` and reports the facility submitted for verification, and a search afterwards returns it. A facility written but never submitted stays in Draft and is invisible to ABDM, whatever the three writes returned.
+
+**When it goes wrong.** A duplicate facility: the search step is what prevents it. A field refused on detailed information, because which sections are mandatory depends on the facility type, the service type and the system of medicine rather than on the field itself.
+</AgentOnly>
+
+## Journey 4: linking bridges to a facility <LegacyAnchor id="journey-3-linking-bridges-to-a-facility" /> {/* #m4-link-bridge */}
 
 ### Facility-Bridge linkage
 
@@ -347,6 +365,16 @@ For example, the HIP name can be derived by combining the hospital name and Brid
 A facility with a Facility ID and a linked HIP bridge can perform [M2](/docs/hiecm/v3/api/m2) activities, including linking care contexts and sharing health records. A facility with a linked HIU bridge can perform [M3](/docs/hiecm/v3/api/m3) activities, including requesting patient consent and fetching health records. M4 covers the registration of the facility and the healthcare professionals working at the facility.
 
 Next: [M4 API reference](/docs/hiecm/v3/api/m4).
+
+<AgentOnly>
+**Before you start.** The facility is submitted and holds its Facility ID, 12 characters beginning with IN. A facility still in Draft has no ID to link. You hold the `bridgeId` of the software that will act for it.
+
+**What happens.** Call `/v1/bridges/MutipleHRPAddUpdateServices` with `facilityId`, `facilityName` and one entry per bridge carrying `bridgeId`, `hipName`, `type` and `active`. A facility that publishes and fetches needs one entry of type HIP and one of type HIU, not one entry that claims both.
+
+**How you know it worked.** The linkage result lists the bridge as active for the facility. The proof that it works is the flow it unblocks: a facility with an active HIP link completes [linking a care context](/docs/hiecm/v3/milestones/m2#m2-link-care-context), and one with an active HIU link can raise a consent request.
+
+**When it goes wrong.** A `hipName` longer than 15 characters or carrying a special character is refused as validation. A name already used by another bridge on the same facility is refused, which is common on a facility's second bridge.
+</AgentOnly>
 
 ## Next
 

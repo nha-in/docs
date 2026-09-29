@@ -1,0 +1,7 @@
+## Download the ABHA card as a file {/* #m1-profile-download-abha-card */}
+
+Returns the signed in person's [ABHA](/docs/hiecm/v3/getting-started/glossary#abha) card as a file to save or print. Send the person's `X-token`. To show the card inside your application, use the card image call.
+
+<AgentOnly>
+**When it goes wrong.** A 400 with `Invalid X-token` means the token is missing, wrong or expired. A 401 with `900901` means the access token is missing or expired.
+</AgentOnly>

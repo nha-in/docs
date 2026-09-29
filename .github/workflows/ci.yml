@@ -43,6 +43,13 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run lint:atoms
+      # The postman and API sample tests read site/src/data/api and
+      # site/src/data/postman.json, which are gitignored build outputs.
+      - run: node scripts/build-api-reference.mjs && node scripts/build-postman.mjs
+        env:
+          DOCUSAURUS_URL: ''
+      - run: npm run test:scripts
+      - run: npm run check:sections
       - run: npm run lint:questions
 
   lint-sources:
@@ -74,12 +81,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
       - run: npm ci
       - run: npm run check:plugins
+      - run: npm run check:plugin-version
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_REF: origin/${{ github.base_ref }}
 
   validate-skills:
     name: Validate compiled agent skills

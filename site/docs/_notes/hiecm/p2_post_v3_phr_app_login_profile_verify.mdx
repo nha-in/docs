@@ -1,0 +1,35 @@
+## Link ABHA number via AADHAAR-Verify OTP {/* #p1-link-abha-number-via-aadhaar-verify-otp */}
+
+Verifies the Aadhaar one time password ([OTP](/docs/hiecm/v3/getting-started/glossary#otp)) sent to link an [ABHA number](/docs/hiecm/v3/getting-started/glossary#abha-number) to the [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address) signed in. Send `scope` `abha-login` and `aadhaar-verify`, with the `txnId` and the encrypted `otpValue` in `authData`. A wrong code still returns `200`: read `authResult`, not the status code.
+
+<AgentOnly>
+**Before you start.** The `txnId` from the request OTP call, and the user token in `X-token`.
+
+**How you know it worked.** `authResult` is `success`. Then send the link request with the same `txnId` as `transactionId`.
+
+**When it goes wrong.** `authResult` is `failed` with `Entered OTP is incorrect. Kindly re-enter valid OTP.` when the code is wrong. `ABDM-9999` with `Invalid Transaction Id` means the `txnId` is wrong or spent.
+</AgentOnly>
+
+## Link ABHA number via Mobile-Verify OTP {/* #p1-link-abha-number-via-mobile-verify-otp */}
+
+Verifies the one time password ([OTP](/docs/hiecm/v3/getting-started/glossary#otp)) sent to the mobile number of an [ABHA number](/docs/hiecm/v3/getting-started/glossary#abha-number), to link it to the [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address) signed in. Send `scope` `abha-login` and `mobile-verify`, with the `txnId` and the encrypted `otpValue` in `authData`. A wrong code still returns `200`: read `authResult`.
+
+<AgentOnly>
+**Before you start.** The `txnId` from the request OTP call, and the user token in `X-token`.
+
+**How you know it worked.** `authResult` is `success`. Then send the link request with the same `txnId` as `transactionId`.
+
+**When it goes wrong.** `authResult` is `failed` when the code is wrong. `ABDM-9999` with `Invalid Transaction Id` or `Invalid OTP Value` names the field that failed.
+</AgentOnly>
+
+## Update Mobile Verify-OTP {/* #p1-update-mobile-verify-otp */}
+
+Verifies the one time password ([OTP](/docs/hiecm/v3/getting-started/glossary#otp)) sent to the new mobile number and updates the number on the [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address) signed in. Send `scope` `abha-address-profile` and `mobile-verify`, with the `txnId` and the encrypted `otpValue` in `authData`. A wrong code still returns `200`: read `authResult`.
+
+<AgentOnly>
+**Before you start.** The `txnId` from the update mobile request OTP call, and the user token in `X-token`.
+
+**How you know it worked.** `authResult` is `success`, and the profile call returns the new masked `mobile`.
+
+**When it goes wrong.** `authResult` is `failed` when the code is wrong. `ABDM-9999` with `Invalid Transaction Id` means the `txnId` is wrong or spent.
+</AgentOnly>

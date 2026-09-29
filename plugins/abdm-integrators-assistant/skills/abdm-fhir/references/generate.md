@@ -6,7 +6,7 @@ clean bill of health against both validation tiers.
 
 ## 1. Establish scope
 
-Call `list_fhir_profiles` to get the full list of ABDM record types
+Call `search` with `kind: fhir_profile` to get the full list of ABDM record types
 (the seven `hiType` values: OPConsultation, Prescription,
 DiagnosticReport, DischargeSummary, ImmunizationRecord,
 HealthDocumentRecord, WellnessRecord). Confirm with the integrator
@@ -22,14 +22,14 @@ directory), that is where this work belongs.
 
 For each in-scope record type:
 
-- Call `get_fhir_profile` for that type, and once for `DocumentBundle`
+- Call `get` with `fhir:<that type>`, and once with `fhir:DocumentBundle`
   (the shared envelope profile every record type rides on top of).
-- Call `get_fhir_example` for that type, to see a concrete, valid
+- Call `get` with `fhir-example:<that type>`, to see a concrete, valid
   bundle.
-- Read `shared.fhir.document-bundles` via `get_atom` for the envelope
+- Read `shared.fhir.document-bundles` via `get` for the envelope
   rules that apply to every record type (`Bundle.type`, `Bundle.meta`,
   `Bundle.identifier`, `Bundle.timestamp`).
-- Read that type's mapping atom via `get_atom`
+- Read that type's mapping atom via `get`
   (`shared.fhir.map-opconsultation`, `shared.fhir.map-prescription`,
   `shared.fhir.map-diagnosticreport`, `shared.fhir.map-dischargesummary`,
   `shared.fhir.map-immunizationrecord`,
@@ -53,7 +53,7 @@ For each in-scope record type, write a builder function that:
 - Takes the integrator's own domain data as input (their patient,
   encounter, order, or report model, whatever they call it).
 - Produces a document bundle matching the digest returned by
-  `get_fhir_profile`: the correct `meta.profile` URL on the
+  `get` with `fhir:<type>`: the correct `meta.profile` URL on the
   Composition, every required top-level element the digest lists, and
   the section shape the mapping atom describes for that type.
 - Resolves every reference internally: any resource a section entry or
@@ -76,15 +76,15 @@ dependency just for this.
 
 ## 4. Iterate against tier 1
 
-Run each builder's output bundle through `validate_fhir`, passing the
+Run each builder's output bundle through `validate` with `kind: fhir`, passing the
 bundle and its `record_type`. For every finding returned:
 
 - Read the finding's Fix text.
 - Apply exactly that fix to the builder (not a workaround in the test
   data).
-- Re-run `validate_fhir`.
+- Re-run `validate` with `kind: fhir`.
 
-Repeat until `validate_fhir` returns no findings for that record type,
+Repeat until `validate` returns no findings for that record type,
 then move to the next in-scope type.
 
 ## 5. Finish with tier 2
@@ -101,7 +101,7 @@ it is acceptable, rather than treating a warning-only run as clean.
 
 ## 6. Done means
 
-For every in-scope record type: tier 1 (`validate_fhir`) returns no
+For every in-scope record type: tier 1 (`validate`, `kind: fhir`) returns no
 findings, and tier 2 (the official HL7 validator) exits 0 with no
 errors, against IG 6.5.0. Record the exact commands to re-run both
 checks (a make target, an npm script, or a shell script committed to

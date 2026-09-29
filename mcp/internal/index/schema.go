@@ -12,7 +12,12 @@ CREATE TABLE atoms (
     body TEXT NOT NULL,
     source_path TEXT NOT NULL,
     doc_url TEXT NOT NULL,
-    doc_anchor TEXT NOT NULL
+    doc_anchor TEXT NOT NULL,
+    operation TEXT NOT NULL DEFAULT '',
+    side TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'current',
+    superseded_by TEXT NOT NULL DEFAULT '',
+    facts_json TEXT NOT NULL DEFAULT '[]'
 );
 CREATE VIRTUAL TABLE atoms_fts USING fts5(
     id UNINDEXED, title, summary, body, error_codes, questions
@@ -49,7 +54,13 @@ CREATE TABLE chunks (
     atom_id TEXT NOT NULL,
     heading TEXT NOT NULL,
     text TEXT NOT NULL,
-    embedding BLOB
+    embedding BLOB,
+    kind TEXT NOT NULL DEFAULT 'atom'
+);
+-- Operations are keyword-searched in a table of their own: bm25 weighs terms
+-- across the whole table, so sharing atoms_fts would move every atom query.
+CREATE VIRTUAL TABLE operations_fts USING fts5(
+    operation_id UNINDEXED, text, error_codes
 );
 -- The compiled integrator skills, one row per section. The snapshot carries
 -- them so the server keeps its one rule: everything it serves comes from the

@@ -37,7 +37,7 @@ related:
   - nhcx.endpoint.participant-update
   - nhcx.endpoint.update-validate
   glossary:
-  - shared.glossary.hmis
+  - hiecm.glossary.hmis
   - nhcx.glossary.tms
   - nhcx.glossary.pmjay
   - shared.glossary.dsc
@@ -48,7 +48,7 @@ related:
 
 ## In plain words
 
-Today a PMJAY hospital records a patient in its own [HMIS](../../shared/glossary/hmis.md), then types the same details again into the scheme's [TMS](../glossary/tms.md) provider portal. Two systems, two rounds of data entry.
+Today a PMJAY hospital records a patient in its own [HMIS](../../hiecm/glossary/hmis.md), then types the same details again into the scheme's [TMS](../glossary/tms.md) provider portal. Two systems, two rounds of data entry.
 
 With NHCX, the HMIS sends preauthorisations and claims itself, system to system, to the payer's TMS. The portal drops out of the hospital's workflow.
 

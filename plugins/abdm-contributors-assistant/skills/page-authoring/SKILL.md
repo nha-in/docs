@@ -185,6 +185,18 @@ Declaring nothing means every role sees the page, which is right for most pages.
 
 Pages carrying `generated: true` in frontmatter come from `scripts/build-api-reference.mjs`, which is the OpenAPI build. `scripts/build-skills.mjs` writes no documentation pages at all: its outputs are one `SKILL.md` per module under `site/static/skills` plus `site/src/data/skills.json`. **Never hand edit a generated page.** The guard is `writeGenerated` at `scripts/build-api-reference.mjs:26`: a file already at a generated name without the flag is left alone, collected, and reported at the end with a non-zero exit, so a hand written file there stops the build rather than getting silently replaced. A hand edit to an existing generated page is not caught by anything and is simply lost on the next build. Fix the specification or the generator.
 
+## Sections that hold an atom, and notes for AI agents
+
+A section listed in a content map, `catalogue/<gateway>/map/*.yaml`, is where an atom's words live; the atom file at `catalogue/<gateway>/<type folder>/<id slug>.md`, marked `generated: true`, is built from it.
+
+Endpoint, callback and error atoms cannot sit on their API page, which is generated. They live in hand-written notes partials under `site/docs/_notes/<gateway>/`: `<operationId>.mdx` renders on that operation's page, and `errors/<module>.mdx` renders after the module's error table. A partial carries no frontmatter and only sections with explicit ids, one per atom. `lint:content` holds it to the page rules as hard errors, with the endpoint budget for an operation's notes and none for an error partial. New map entries for a batch go in a file of their own under `catalogue/<gateway>/map/`.
+
+- Its heading carries an id that never changes: `{#id}` in `.md`, `{/* #id */}` in `.mdx`. Reword the heading freely; never rename the id.
+- Rules only an agent needs go in `<AgentOnly>` in the same section, one paragraph per labelled part (`**Before you start.**`, `**What happens.**`, `**How you know it worked.**`, `**When it goes wrong.**`). Readers and site search do not see them; the page's `.md` copy and llms-full.txt do. "Show notes for AI agents" in the footer, or `?agent-notes=1`, shows them.
+- A note never states an API literal the page and the specifications do not. NHA does not review notes, so `npm run check:sections` is their guard.
+- In a glossary partial, a note may follow a definition: it spans the whole grid row, and `lint:content` skips it.
+- After editing such a section, run `npm run build:sections && npm run check:sections`. NHA corrections follow `docs/runbook-nha-corrections.md`.
+
 ## Common mistakes
 
 | Mistake | Why it fails | Do instead |

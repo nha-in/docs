@@ -5,7 +5,7 @@ sidebar_position: 1
 sidebar_custom_props:
   roles: [ims, hip]
 description: A patient scans the QR code at your counter and shares their ABHA profile, so registration needs no typing and every record links to the right ABHA address.
-source: NHA content review of 15 September 2026 (Sandbox2.0 M1, Scan and Register separated from M1); catalogue/openapi/hiecm/v3/hiecm-scan-and-register.yaml for the patient share calls
+source: NHA content review of 15 September 2026 (Sandbox2.0 M1, Scan and Register separated from M1); catalogue/hiecm/openapi/v3/hiecm-scan-and-register.yaml for the patient share calls
 sidebar_class_name: sidebar-icon sidebar-icon--qr-code
 ---
 
@@ -40,4 +40,4 @@ The patient's app holds its screen open for 30 seconds. Send the acknowledgement
 
 `profile.patient` carries the ABHA number, the ABHA address, name, gender, date of birth, mobile number, address and a KYC photo. Match on the ABHA address. The counter context is yours to define: up to 20 alphanumeric characters, and never the facility id, the HIP id or the HIP name.
 
-The two calls: [receive a patient's shared profile](/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/01-scan-and-register-post-v3-hip-patient-share) and [send the share acknowledgement](/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/02-scan-and-register-post-patient-share-v3-on-share). The patient's side is [P2 Consents Management](/docs/hiecm/v3/milestones/p2#scan-and-register-at-a-facility).
+The two calls: [receive a patient's shared profile](/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/01-scan-and-register-post-v3-hip-patient-share) and [send the share acknowledgement](/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/02-scan-and-register-post-patient-share-v3-on-share). The patient's side is [P2 Consents Management](/docs/hiecm/v3/milestones/p2#p2-scan-and-share).

@@ -1,0 +1,11 @@
+## Approve a subscription request {/* #p3-approve-subscription-request */}
+
+Lets the person approve a subscription request from their [PHR](/docs/hiecm/v3/getting-started/glossary#phr) app. The body sets what the subscription covers: which facilities, [HI types](/docs/hiecm/v3/getting-started/glossary#hi-type), purposes, categories and dates. Set `isApplicableForAllHIPs` or list facilities in `includedSources`. `excludedSources` carves out exceptions.
+
+<AgentOnly>
+**Before you start.** The person's `X-AUTH-TOKEN` and the `subscriptionRequestId`, from the list of subscription requests.
+
+**How you know it worked.** You receive `202` with `subscriptionId`. Keep it: editing, enabling and disabling the subscription take it. The requesting HIU is notified with `GRANTED`.
+
+**When it goes wrong.** `400` returns an `error` with a code and message. Correct the body from the error `message`.
+</AgentOnly>

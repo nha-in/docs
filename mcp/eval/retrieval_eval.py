@@ -103,7 +103,20 @@ RANK_CASES = [
       "nhcx.concept.policy-linking"}),
     ("the exchange rejected my retry saying the correlation id was already used",
      {"nhcx.error.nhcx-1006", "nhcx.concept.message-identifiers"}),
+    # -- the first atom whose words live on its page ---------------------------
+    # The rebuilt link token endpoint and its callback both state the
+    # six-month lifetime, so either answers.
+    ("how long can I keep using the token that lets me link a patient's records",
+     {"hiecm.glossary.link-token", "hiecm.endpoint.m2-generate-link-token",
+      "hiecm.callback.m2-on-generate-token-result"}),
+    ("linking care contexts fails because my stored link token has expired",
+     {"hiecm.glossary.link-token"}),
 ]
+
+# Single-turn Ask AI cases that name their answering atoms, from seed_cases.py.
+_seeded = Path(__file__).parent / "cases_seeded.json"
+if _seeded.exists():
+    RANK_CASES += [(c["query"], set(c["expect"])) for c in json.loads(_seeded.read_text())]
 
 # ---------------------------------------------------------------------------
 # Content probes. For each query, the TOP hit's snippet+summary (lowercased)

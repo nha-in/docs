@@ -43,7 +43,7 @@ It emits no phase scope into the sidebar. Atoms carry no verification status and
 
 ## Per-module reference routes
 
-One Scalar reference per OpenAPI spec file, matching the module-per-file layout in `catalogue/openapi/hiecm/v3/`:
+One Scalar reference per OpenAPI spec file, matching the module-per-file layout in `catalogue/hiecm/openapi/v3/`:
 
 | Route | Spec file |
 |---|---|
@@ -64,7 +64,7 @@ Going fully self-hosted meant giving up what Scalar's hosted platform would have
 | Hosted feature we do not have | What replaces it |
 |---|---|
 | A free Docs MCP at a Scalar-hosted URL | Our own Go Docs MCP server, `docs-mcp`, in the `mcp/` module of the abdm-docs repo. Nine tools over a CI-built SQLite snapshot. See `support-agent`. |
-| A free Installation MCP (search mode, personal token, passthrough auth) | Superseded. Its search-mode value is covered by `docs-mcp`'s `get_operation` and `validate_request` tools. Execute mode stays a Phase 2 concern with per-caller credentials. |
+| A free Installation MCP (search mode, personal token, passthrough auth) | Superseded. Its search-mode value is covered by `docs-mcp`'s `get` and `validate` tools. Execute mode stays a Phase 2 concern with per-caller credentials. |
 | Ask AI answering questions on the site | No on-site assistant in V1. Answer synthesis stays in the consuming agent (Claude Code, the support agent) over `/mcp`. An assistant can be added in front of `/api/search` later; it does not exist yet. |
 | Hosted search over published content | A local build-time index (`@easyops-cn/docusaurus-search-local`), plus `docs-mcp`'s `/api/search` endpoint for anything that needs the same retrieval the MCP uses. |
 | A mock server generated from the OpenAPI files | Not built. Unbuilt until something needs it. The first-day developer test relies on real sandbox credentials, applied for early, not a mock. |
@@ -83,7 +83,7 @@ This keeps the "a different static site generator could render this in a week" t
 
 ## Publishing
 
-- CI on merge builds the Docusaurus site with specs synced from `catalogue/openapi`, lints, compiles skills, and indexes the catalogue into `catalogue.db`.
+- CI on merge builds the Docusaurus site with specs synced from each gateway's `catalogue/<gateway>/openapi/` (NHCX's from `catalogue/openapi/nhcx/`), lints, compiles skills, and indexes the catalogue into `catalogue.db`.
 - Deploy is the static site plus the `docs-mcp` image built with the new snapshot.
 - The docs and the compiled skills publish from the same build, so their `catalogue_version` always matches.
 

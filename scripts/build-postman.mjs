@@ -22,7 +22,7 @@ const outDir = join(root, 'site', 'static', 'postman');
 const manifestFile = join(root, 'site', 'src', 'data', 'postman.json');
 // Collection ids in NHA's public Postman workspace, written back by hand after
 // the first publish-postman.mjs run. Empty until then.
-const published = JSON.parse(readFileSync(join(root, 'catalogue', 'postman.json'), 'utf8'));
+const published = JSON.parse(readFileSync(join(root, 'catalogue', 'hiecm', 'postman.json'), 'utf8'));
 
 const SCHEMA = 'https://schema.getpostman.com/json/collection/v2.1.0/collection.json';
 

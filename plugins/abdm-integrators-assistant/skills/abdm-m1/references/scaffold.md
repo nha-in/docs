@@ -1545,7 +1545,7 @@ curl --request POST \
   ],
   "loginHint": "abha-number",
   "loginId": "{{encrypted abha-number}}",
-  "otpSystem": "abdm"
+  "otpSystem": "aadhaar"
 }'
 ```
 
@@ -1620,7 +1620,7 @@ curl --request POST \
   ],
   "loginHint": "abha-number",
   "loginId": "{{encrypted abha-number}}",
-  "otpSystem": "abdm"
+  "otpSystem": "aadhaar"
 }'
 ```
 
@@ -1885,57 +1885,6 @@ A 200 whose body matches:
 }
 ```
 
-### Profile, Update Photo (`m1-profile-update-photo`)
-
-**Act: the calls in this journey, in order**
-
-#### 1. Update profile photo (`m1_patch_v3_profile_account_profile_photo`)
-
-```bash
-curl --request PATCH \
-  --url https://abhasbx.abdm.gov.in/abha/api/v3/profile/account \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
-  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'X-token: Bearer {{X-token}}' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "profilePhoto": "{{profile photo string}}"
-}'
-```
-
-**Exit condition (Observe until this is true)**
-
-A 200 whose body matches:
-
-```json
-{
-  "ABHANumber": "<ABHA_NUMBER>",
-  "preferredAbhaAddress": "<ABHA_ADDRESS>",
-  "mobile": "******0903",
-  "firstName": "<NAME>",
-  "middleName": "<NAME>",
-  "lastName": "<NAME>",
-  "yearOfBirth": "<DOB>",
-  "monthOfBirth": "<DOB>",
-  "dayOfBirth": "<DOB>",
-  "gender": "F",
-  "status": "ACTIVE",
-  "stateCode": 27,
-  "districtCode": 290,
-  "stateName": "Maharashtra",
-  "districtName": "<ADDRESS>",
-  "subdistrictName": "<ADDRESS>",
-  "authMethods": [
-    "MOBILE_OTP"
-  ],
-  "kycVerified": false,
-  "verificationStatus": "VERIFIED",
-  "verificationType": "CHILD_ABHA",
-  "createdDate": "10-05-2024"
-}
-```
-
 ### Find ABHA, Mobile OTP (`m1-find-abha-mobile-otp`)
 
 **Act: the calls in this journey, in order**
@@ -2064,7 +2013,7 @@ curl --request POST \
   "scope": [
     "abha-login",
     "search-abha",
-    "aadhaar-face-verify"
+    "face-auth"
   ],
   "loginHint": "index",
   "loginId": "{{rsaIndexEncryptionOutput}}",

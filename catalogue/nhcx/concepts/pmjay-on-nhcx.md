@@ -53,7 +53,7 @@ related:
   - nhcx.glossary.hbp
   - nhcx.glossary.tms
   - nhcx.glossary.bis
-  - shared.glossary.hmis
+  - hiecm.glossary.hmis
   - shared.glossary.ayushman-card
   errors:
   - nhcx.error.payr-1256

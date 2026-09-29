@@ -1,0 +1,228 @@
+hiecm.endpoint.p2-profile-on-share:
+  type: endpoint
+  gateway: hiecm
+  milestone: P2
+  title: Answer a profile share with a token number
+  summary: The facility's answer to a profile share, carrying the token number the
+    person shows at the counter.
+  page: site/docs/_notes/hiecm/scan-and-register_post_patient_share_v3_on_share.mdx
+  heading: p2-profile-on-share
+  url: /docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/02-scan-and-register-post-patient-share-v3-on-share#p2-profile-on-share
+  operation: scan-and-register_post_patient_share_v3_on_share
+  related:
+    flows:
+    - hiecm.flow.p2-scan-and-share
+    concepts:
+    - hiecm.concept.gateway-session
+    callbacks:
+    - hiecm.callback.p2-profile-share-callback
+hiecm.callback.p2-profile-share-callback:
+  type: callback
+  gateway: hiecm
+  milestone: P2
+  title: Profile share callback
+  summary: ABDM posts a person's profile to the facility whose code they scanned.
+  page: site/docs/_notes/hiecm/scan-and-register_post_v3_hip_patient_share.mdx
+  heading: p2-profile-share-callback
+  url: /docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/01-scan-and-register-post-v3-hip-patient-share#p2-profile-share-callback
+  operation: scan-and-register_post_v3_hip_patient_share
+  related:
+    flows:
+    - hiecm.flow.p2-scan-and-share
+    concepts:
+    - hiecm.concept.gateway-session
+    - hiecm.concept.asynchronous-callbacks
+    endpoints:
+    - hiecm.endpoint.p2-profile-on-share
+hiecm.endpoint.p3-get-all-subscription-request:
+  type: endpoint
+  gateway: hiecm
+  milestone: P3
+  title: List consent and subscription requests together
+  summary: List the logged-in person's consent requests and subscription requests
+    in one call, each paged on its own.
+  page: site/docs/_notes/hiecm/p4_get_subscription_requests_v3_patients_requests.mdx
+  heading: p3-get-all-subscription-request
+  url: /docs/hiecm/v3/api/p4/endpoints/p4-locker/04-p4-get-subscription-requests-v3-patients-requests#p3-get-all-subscription-request
+  operation: p4_get_subscription_requests_v3_patients_requests
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.p3-get-patient-subscribed-lockers:
+  type: endpoint
+  gateway: hiecm
+  milestone: P3
+  title: List the health lockers an ABHA address subscribes to
+  summary: List the health lockers the logged-in person is subscribed to.
+  page: site/docs/_notes/hiecm/p4_get_subscription_requests_v3_patients_lockers.mdx
+  heading: p3-get-patient-subscribed-lockers
+  url: /docs/hiecm/v3/api/p4/endpoints/p4-locker/02-p4-get-subscription-requests-v3-patients-lockers#p3-get-patient-subscribed-lockers
+  operation: p4_get_subscription_requests_v3_patients_lockers
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    endpoints:
+    - hiecm.endpoint.p3-patient-locker-details-by-locker-id
+hiecm.endpoint.p3-patient-locker-details-by-locker-id:
+  type: endpoint
+  gateway: hiecm
+  milestone: P3
+  title: Get a health locker by its id
+  summary: Fetch one health locker's settings for the logged-in person.
+  page: site/docs/_notes/hiecm/p4_get_subscription_requests_v3_patients_lockers_lockerid.mdx
+  heading: p3-patient-locker-details-by-locker-id
+  url: /docs/hiecm/v3/api/p4/endpoints/p4-locker/03-p4-get-subscription-requests-v3-patients-lockers-lockerid#p3-patient-locker-details-by-locker-id
+  operation: p4_get_subscription_requests_v3_patients_lockers_lockerid
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    endpoints:
+    - hiecm.endpoint.p3-get-patient-subscribed-lockers
+hiecm.endpoint.p3-setup-locker:
+  type: endpoint
+  gateway: hiecm
+  milestone: P3
+  title: Set up a health locker
+  summary: Set up a health locker for the logged-in person.
+  page: site/docs/_notes/hiecm/p4_post_subscription_requests_v3_setup_locker.mdx
+  heading: p3-setup-locker
+  url: /docs/hiecm/v3/api/p4/endpoints/p4-locker/01-p4-post-subscription-requests-v3-setup-locker#p3-setup-locker
+  operation: p4_post_subscription_requests_v3_setup_locker
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    endpoints:
+    - hiecm.endpoint.p3-consent-disable-auto-approve
+    - hiecm.endpoint.p3-consent-enable-auto-approve
+hiecm.callback.p2-callback-to-hip-discovery:
+  type: callback
+  gateway: hiecm
+  milestone: P2
+  title: Discovery request to the HIP
+  summary: ABDM asks your facility which records it holds for a person who started
+    discovery from their PHR app.
+  page: site/docs/_notes/hiecm/m2_post_v3_hip_patient_care_context_discover.mdx
+  heading: p2-callback-to-hip-discovery
+  url: /docs/hiecm/v3/api/m2/endpoints/m2-callbacks/05-m2-post-v3-hip-patient-care-context-discover#p2-callback-to-hip-discovery
+  operation: m2_post_v3_hip_patient_care_context_discover
+  related:
+    flows:
+    - hiecm.flow.p2-discover-and-link
+    concepts:
+    - hiecm.concept.gateway-session
+    - hiecm.concept.asynchronous-callbacks
+    endpoints:
+    - hiecm.endpoint.p2-care-context-discover
+hiecm.callback.p2-callback-on-health-record-link-init:
+  type: callback
+  gateway: hiecm
+  milestone: P2
+  title: Link init request to the HIP
+  summary: ABDM tells your facility which care contexts the person chose to link.
+  page: site/docs/_notes/hiecm/m2_post_v3_hip_link_care_context_init.mdx
+  heading: p2-callback-on-health-record-link-init
+  url: /docs/hiecm/v3/api/m2/endpoints/m2-callbacks/06-m2-post-v3-hip-link-care-context-init#p2-callback-on-health-record-link-init
+  operation: m2_post_v3_hip_link_care_context_init
+  related:
+    flows:
+    - hiecm.flow.p2-discover-and-link
+    concepts:
+    - hiecm.concept.gateway-session
+    - hiecm.concept.asynchronous-callbacks
+    endpoints:
+    - hiecm.endpoint.p2-link-care-context-init
+hiecm.callback.p2-callback-for-health-record-confirmation:
+  type: callback
+  gateway: hiecm
+  milestone: P2
+  title: Link confirm request to the HIP
+  summary: ABDM passes your facility the code the person entered, to confirm the link.
+  page: site/docs/_notes/hiecm/m2_post_v3_hip_link_care_context_confirm.mdx
+  heading: p2-callback-for-health-record-confirmation
+  url: /docs/hiecm/v3/api/m2/endpoints/m2-callbacks/07-m2-post-v3-hip-link-care-context-confirm#p2-callback-for-health-record-confirmation
+  operation: m2_post_v3_hip_link_care_context_confirm
+  related:
+    flows:
+    - hiecm.flow.p2-discover-and-link
+    concepts:
+    - hiecm.concept.gateway-session
+    - hiecm.concept.asynchronous-callbacks
+    endpoints:
+    - hiecm.endpoint.p2-link-care-context-confirm
+hiecm.callback.p3-call-back-to-hiu:
+  type: callback
+  gateway: hiecm
+  milestone: P3
+  title: Health information request acknowledgement
+  summary: ABDM tells the HIU that its health information request is valid for the
+    consent it names.
+  page: site/docs/_notes/hiecm/m3_post_v3_hiu_health_information_on_request.mdx
+  heading: p3-call-back-to-hiu
+  url: /docs/hiecm/v3/api/m3/endpoints/m3-callbacks/05-m3-post-v3-hiu-health-information-on-request#p3-call-back-to-hiu
+  operation: m3_post_v3_hiu_health_information_on_request
+  related:
+    flows:
+    - hiecm.flow.p3-fetch-records
+    concepts:
+    - hiecm.concept.gateway-session
+    - hiecm.concept.asynchronous-callbacks
+    endpoints:
+    - hiecm.endpoint.p3-request-status
+hiecm.callback.p3-consent-request-on-status-callback:
+  type: callback
+  gateway: hiecm
+  milestone: P3
+  title: Consent request status callback
+  summary: ABDM posts the current status of a consent request to the HIU that asked.
+  page: site/docs/_notes/hiecm/m3_post_v3_hiu_consent_request_on_status.mdx
+  heading: p3-consent-request-on-status-callback
+  url: /docs/hiecm/v3/api/m3/endpoints/m3-callbacks/02-m3-post-v3-hiu-consent-request-on-status#p3-consent-request-on-status-callback
+  operation: m3_post_v3_hiu_consent_request_on_status
+  related:
+    concepts:
+    - hiecm.concept.gateway-session
+    - hiecm.concept.asynchronous-callbacks
+hiecm.endpoint.p3-consent-fetch:
+  type: endpoint
+  gateway: hiecm
+  milestone: P3
+  title: Fetch a consent artefact in full
+  summary: Ask for what a consent artefact covers; the artefact arrives on a callback.
+  page: site/docs/_notes/hiecm/m3_post_consent_v3_fetch.mdx
+  heading: p3-consent-fetch
+  url: /docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/04-m3-post-consent-v3-fetch#p3-consent-fetch
+  operation: m3_post_consent_v3_fetch
+  related:
+    flows:
+    - hiecm.flow.p3-fetch-records
+    concepts:
+    - hiecm.concept.gateway-session
+hiecm.endpoint.p3-request-status:
+  type: endpoint
+  gateway: hiecm
+  milestone: P3
+  title: Get the status of a health information request
+  summary: Check how far a health information request has got, by its transaction
+    id.
+  page: site/docs/_notes/hiecm/m3_get_data_flow_v3_health_information_request_status_tra_550104.mdx
+  heading: p3-request-status
+  url: /docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/07-m3-get-data-flow-v3-health-information-request-status-tra-550104#p3-request-status
+  operation: m3_get_data_flow_v3_health_information_request_status_tra_550104
+  related:
+    flows:
+    - hiecm.flow.p3-fetch-records
+    concepts:
+    - hiecm.concept.gateway-session
+    callbacks:
+    - hiecm.callback.p3-call-back-to-hiu
+hiecm.endpoint.m2-get-all-link-records:
+  type: endpoint
+  gateway: hiecm
+  milestone: M2
+  title: GET All Link records
+  summary: Lists every care context already linked to an ABHA address.
+  page: site/docs/_notes/hiecm/p2_get_hip_v3_link_patient_links.mdx
+  heading: m2-get-all-link-records
+  url: /docs/hiecm/v3/api/p2/endpoints/p2-consent-manager-hiu-hip/01-p2-get-hip-v3-link-patient-links#m2-get-all-link-records
+  operation: p2_get_hip_v3_link_patient_links
+  related: {}

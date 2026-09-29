@@ -8,6 +8,7 @@ import type {ScalarOptions} from '@scalar/docusaurus';
 import apiTree from './src/data/api-sidebar.json';
 import uhiRedirects from './redirects-uhi.json';
 import {sandboxLinks} from './src/data/sandboxLinks';
+import {listSpecs} from '../scripts/specs.mjs';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
@@ -40,22 +41,11 @@ const widgetVersion = existsSync(widgetFile)
   : '';
 
 // One interactive reference per specification file, discovered from the
-// catalogue tree: dropping a YAML under catalogue/openapi/<platform>/<version>
-// publishes its Scalar reference at /reference/<filename-stem>. Every instance
-// is self-hosted: the bundle is vendored, and Scalar's cloud services stay off.
-function listSpecFiles(dir: string): string[] {
-  return readdirSync(dir, {withFileTypes: true}).flatMap((entry) => {
-    if (entry.isDirectory()) {
-      // journeys/ holds step lists and errors/ holds NHA's per-module error
-      // code lists. Neither is an OpenAPI document, so neither gets a reference.
-      return entry.name.startsWith('.') || entry.name === 'journeys' || entry.name === 'errors'
-        ? []
-        : listSpecFiles(join(dir, entry.name));
-    }
-    return /\.(yaml|json)$/.test(entry.name) ? [entry.name] : [];
-  });
-}
-const references = listSpecFiles(join(__dirname, '../catalogue/openapi')).map((file) => {
+// catalogue tree through scripts/specs.mjs: dropping a YAML under a gateway's
+// openapi/<version>/ publishes its Scalar reference at /reference/<filename-stem>.
+// Every instance is self-hosted: the bundle is vendored, and Scalar's cloud
+// services stay off.
+const references = listSpecs().map(({name: file}) => {
   const id = file.replace(/\.(yaml|json)$/, '');
   return {id, label: id, spec: file};
 });
@@ -617,6 +607,7 @@ const config: Config = {
         docsRouteBasePath: '/docs',
         highlightSearchTermsOnTargetPage: true,
         searchResultLimits: 10,
+        ignoreCssSelectors: ['.agent-only'],
       },
     ],
     '@docusaurus/theme-mermaid',

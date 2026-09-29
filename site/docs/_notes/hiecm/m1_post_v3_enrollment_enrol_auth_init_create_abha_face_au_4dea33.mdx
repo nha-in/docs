@@ -1,0 +1,9 @@
+## Start face authentication and get a transaction id {/* #m1-enrolment-face-auth-init */}
+
+Starts face authentication and returns a `txnId`. For an enrolment, send `scope` as `["abha-enrol","face-auth"]`. Hand that id to the [ABHA](/docs/hiecm/v3/getting-started/glossary#abha) app by an app intent, or as a QR code the person scans. The person completes the face capture in the ABHA app, and you follow its progress with the capture status call. The same call starts the face authentication login journey.
+
+<AgentOnly>
+**How you know it worked.** A 200 with a `txnId`. Keep it: every later step of the face journey uses it.
+
+**When it goes wrong.** A 400 with `Invalid Scope` means the `scope` values are wrong for this call.
+</AgentOnly>

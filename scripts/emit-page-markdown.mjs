@@ -403,7 +403,7 @@ function main() {
   for (const src of walk(DOCS_SRC)) {
     if (!/\.(md|mdx)$/.test(src)) continue;
     if (/README\.md$|_category_\.json/.test(src)) continue;
-    if (/[\\/]_glossary[\\/]/.test(src)) continue; // partials, not routes
+    if (/[\\/]_(glossary|notes)[\\/]/.test(src)) continue; // partials, not routes
 
     const raw = readFileSync(src, 'utf8');
     const route = routeFor(src, raw);

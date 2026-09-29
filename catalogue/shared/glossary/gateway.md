@@ -20,12 +20,12 @@ sources:
     note: >
       NHA's PHR Framework page, which calls the gateway the hub that
       mediates and connects HIE-CMs, health repositories and HIUs.
-  - url: https://github.com/nha-in/docs/blob/main/catalogue/openapi/.raw/nha-2026-09-28-uhi/UHI%20Documentation%20Requirements.md
+  - url: https://github.com/nha-in/docs/blob/main/catalogue/uhi/openapi/.raw/nha-2026-09-28-uhi/UHI%20Documentation%20Requirements.md
     status: docs-only
     note: >
       UHI developer guide as of 22 September 2026, sections 1.1 and 1.2.
 related:
-  glossary: [shared.glossary.bridge, shared.glossary.uhi]
+  glossary: [hiecm.glossary.bridge, shared.glossary.uhi]
 ---
 
 # Gateway, the routing layer between participants

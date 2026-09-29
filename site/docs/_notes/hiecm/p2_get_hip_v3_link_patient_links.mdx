@@ -1,0 +1,21 @@
+## Get all linked records {/* #p3-get-all-links-records */}
+
+Lists every [care context](/docs/hiecm/v3/getting-started/glossary#care-context) linked to the logged-in person's [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address), grouped by facility. Send `limit=-1` to get all the links in one response.
+
+<AgentOnly>
+**Before you start.** The person's `X-AUTH-TOKEN` and `X-CM-ID`.
+
+**How you know it worked.** You receive `200` with `links` under `Patient`, one entry per facility and record.
+
+**When it goes wrong.** `404` with `ABDM-1001` means nothing is linked yet. `400` with `ABDM-1065` means the `X-AUTH-TOKEN` is invalid.
+</AgentOnly>
+
+## GET All Link records {/* #m2-get-all-link-records */}
+
+A [PHR](/docs/hiecm/v3/getting-started/glossary#phr) app calls this to list every care context linked to the patient's [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address), grouped by the [HIP](/docs/hiecm/v3/getting-started/glossary#hip) that linked it. It is a read, so the answer comes back on the call, not on a callback.
+
+<AgentOnly>
+**Before you start.** A gateway session token and the patient's `X-AUTH-TOKEN`. Send the `REQUEST-ID`, `TIMESTAMP` and `X-CM-ID` headers.
+
+**When it goes wrong.** `ABDM-1065` (Invalid X Auth token): the patient's token is missing or expired.
+</AgentOnly>

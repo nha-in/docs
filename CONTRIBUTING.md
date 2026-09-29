@@ -10,13 +10,13 @@ it on every pull request.
 | You are adding | You write | It goes in |
 | --- | --- | --- |
 | A documentation page | Markdown (`.md`, or `.mdx` for components) | `site/docs/<platform>/<version>/...` |
-| API reference | OpenAPI 3.1 YAML | `catalogue/openapi/<platform>/<version>/<spec>.yaml` |
+| API reference | OpenAPI 3.1 YAML | `catalogue/<gateway>/openapi/<version>/<spec>.yaml` (NHCX: `catalogue/openapi/nhcx/v1/`) |
 
 ## The contributor's assistant
 
 This repo ships a Claude Code plugin, `plugins/abdm-contributors-assistant`,
 holding the skills, commands and agents for working on the portal: authoring an
-atom, verifying one against the sandbox, linting, ingesting OpenAPI, compiling
+atom, linting, ingesting OpenAPI, compiling
 skills, and the plan and gantt checks. Changes here are meant to go through it,
 as [CLAUDE.md](CLAUDE.md) says. It is not the plugin ABDM integrators install.
 
@@ -69,7 +69,7 @@ and are never rendered either.
 
 ## API references (YAML)
 
-Drop an OpenAPI 3.1 file at `catalogue/openapi/<platform>/<version>/<name>.yaml`.
+Drop an OpenAPI 3.1 file at `catalogue/<gateway>/openapi/<version>/<name>.yaml` (NHCX: `catalogue/openapi/nhcx/v1/<name>.yaml` until NHCX is restructured).
 The build generates, per spec:
 
 - one documentation page per operation and webhook, grouped by tag, under

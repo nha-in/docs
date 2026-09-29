@@ -1,0 +1,9 @@
+## Verify the OTP for a profile change {/* #m1-profile-verify-otp */}
+
+Completes the change the [OTP](/docs/hiecm/v3/getting-started/glossary#otp) was raised for. Send the same `scope` you used to request it, the `txnId` and the encrypted OTP, with the person's `X-token`. For a mobile change, success updates the mobile number on the [ABHA](/docs/hiecm/v3/getting-started/glossary#abha).
+
+<AgentOnly>
+**How you know it worked.** A 200 with `authResult` `success`.
+
+**When it goes wrong.** A 400 names the refused part, such as `Invalid Transaction Id` or `Invalid OTP Value`. A 401 with `X-token expired` means refresh the token and retry. A 422 means Aadhaar refused the request.
+</AgentOnly>

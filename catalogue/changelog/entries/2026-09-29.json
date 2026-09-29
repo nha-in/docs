@@ -192,5 +192,166 @@
       "eua",
       "hspa"
     ]
+  },
+  {
+    "id": "d394f8023f7a",
+    "date": "2026-09-29",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "abdm-contributors-assistant",
+        "from": "0.3.0",
+        "to": "0.3.4"
+      }
+    ]
+  },
+  {
+    "id": "21c529102e1d",
+    "date": "2026-09-29",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "abdm-integrators-assistant",
+        "from": "0.9.0",
+        "to": "0.9.2"
+      }
+    ]
+  },
+  {
+    "id": "909c4cd8b134",
+    "date": "2026-09-29",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "nhcx",
+        "from": "1.0.0",
+        "to": "1.0.1"
+      }
+    ]
+  },
+  {
+    "id": "704b2402222e",
+    "date": "2026-09-29",
+    "kind": "artefact-added",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": "/docs/hiecm/v3/getting-started/build-with-ai",
+    "count": 1,
+    "items": [
+      {
+        "artefact": "skill",
+        "name": "hiecm-m1-test"
+      }
+    ]
+  },
+  {
+    "id": "55703b80165d",
+    "date": "2026-09-29",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "abdm-integrators-assistant",
+        "from": "0.9.2",
+        "to": "0.10.0"
+      }
+    ]
+  },
+  {
+    "id": "4bf8048a3c39",
+    "date": "2026-09-29",
+    "kind": "withdrawn",
+    "gateway": "hiecm",
+    "version": "v3",
+    "module": "m1",
+    "label": "M1 Identity",
+    "link": "/docs/hiecm/v3/api/m1/",
+    "count": 1,
+    "items": [
+      {
+        "method": "PATCH",
+        "path": "/abha/api/v3/profile/account#profile-photo",
+        "kind": "call"
+      }
+    ]
+  },
+  {
+    "id": "5803a43a65a1",
+    "date": "2026-09-29",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "abdm-integrators-assistant",
+        "from": "0.10.0",
+        "to": "0.10.1"
+      }
+    ]
+  },
+  {
+    "id": "219d42399700",
+    "date": "2026-09-29",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "abdm-contributors-assistant",
+        "from": "0.3.4",
+        "to": "0.4.2"
+      }
+    ]
+  },
+  {
+    "id": "ef0bf9d54feb",
+    "date": "2026-09-29",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "nhcx",
+        "from": "1.0.1",
+        "to": "1.0.2"
+      }
+    ]
   }
 ]

@@ -1,0 +1,9 @@
+## Sign in with a biometric, v3.1 {/* #m1-login-verify-v31 */}
+
+Version 3.1 of login verification, on the `/abha/api/v3.1` base path. A fingerprint or iris sign in takes one call, with no send request step. Send the encrypted Aadhaar number and the capture from a registered device. Face sign in uses the same path as its last step, after face authentication completes in the [ABHA](/docs/hiecm/v3/getting-started/glossary#abha) app. The response carries the `token` and the accounts it opens.
+
+<AgentOnly>
+**Before you start.** For fingerprint, send `scope` as `["abha-login", "aadhaar-bio-login-verify"]`, `authMethods` as `["bio_login"]`, and `aadhaar` and `fingerPrintAuthPid` inside `bio_login`.
+
+**When it goes wrong.** A 400 with `Invalid Fingerprint Auth PID` means the capture was refused: capture again. A 404 with `ABDM-1114` means no ABHA is registered with that Aadhaar number.
+</AgentOnly>

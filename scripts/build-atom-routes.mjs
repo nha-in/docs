@@ -25,6 +25,7 @@ import { readFileSync, readdirSync, statSync, existsSync, writeFileSync } from "
 import { join, relative, extname, basename, dirname } from "node:path";
 import { parse } from "yaml";
 import { loadAtoms, root } from "./lib/atoms.mjs";
+import { loadMap } from "./lib/map.mjs";
 
 const check = process.argv.includes("--check");
 const docsRoot = join(root, "site", "docs");
@@ -125,6 +126,12 @@ for (const p of pages) {
   for (const id of [].concat(covers)) claimed.set(String(id).trim(), p);
 }
 
+// ---------- Rule -1: the atom registry names the section ----------
+// An atom whose words live on a page is listed in its gateway's content map,
+// catalogue/<gateway>/map/, with the published URL of its section, so its
+// route is known exactly and wins. A duplicate id is check:sections' to report.
+const { map: registryMap } = loadMap(root);
+
 // ---------- Rule 1: same spec operation ----------
 const apiPageByOperation = new Map();
 for (const p of pages) {
@@ -213,7 +220,13 @@ for (const [id, atom] of atoms) {
   const title = String(fm.title ?? "");
   let route = null, anchor = null, rule = null, confidence = null;
 
-  const claim = claimed.get(id);
+  const reg = registryMap[id];
+  if (reg?.url) {
+    const [r, a] = String(reg.url).split("#");
+    route = r; anchor = a ?? null;
+    rule = "named by its content map"; confidence = "derived";
+  }
+  const claim = route ? null : claimed.get(id);
   if (claim) {
     const subject = title.split(",")[0].trim();
     const h = headingFor(claim.body, subject)

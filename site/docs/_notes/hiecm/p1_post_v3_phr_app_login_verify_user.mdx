@@ -1,0 +1,11 @@
+## Say which address is signing in {/* #p1-login-verify-user */}
+
+One mobile or [ABHA number](/docs/hiecm/v3/getting-started/glossary#abha-number) can hold several [ABHA addresses](/docs/hiecm/v3/getting-started/glossary#abha-address). After the one time password is verified, send the address the person chose with the `txnId`. The response carries the session for that address, not for the number.
+
+<AgentOnly>
+**Before you start.** A verified login transaction, its `txnId`, and the `abhaAddress` the person chose from `users`. The `T-token` header carries the `token` from the verify response.
+
+**How you know it worked.** The response carries a `token`, a `refreshToken` and their lifetimes in `expiresIn` and `refreshExpiresIn`.
+
+**When it goes wrong.** `ABDM-9999` with `User not found.`, `Invalid ABHA Address` or `Invalid Transaction Id`.
+</AgentOnly>

@@ -167,7 +167,7 @@ const DefaultMCPURL = "https://docs.abdm.gov.in/mcp"
 // an answer's shape is as much a part of what was asked of the model as the
 // system prompt is. Bump it whenever either changes, and record the change
 // in the pull request's scorecard.
-const PromptVersion = "v4"
+const PromptVersion = "v5"
 
 // SystemPrompt renders the assistant's system prompt with the MCP server
 // address this deployment serves. An empty mcpURL keeps the default.
@@ -198,14 +198,16 @@ const systemPromptTemplate = `You are the Ask AI assistant on the ABDM Developer
 
 WHERE THINGS LIVE
 
-- Atoms are the written knowledge: concepts, flows, endpoint guides, callbacks, error explanations, tests, glossary entries, decisions, FHIR mappings, sandbox notes and troubleshooting guides. search_docs searches these, and only these.
-- Operations are the raw API surface parsed from NHA's specification files, across the modules gateway, m1, m2, m3, m4, p1, p2, p3, p4, scan-and-register, scan-and-pay and record-share. search_docs does not reach them. Use list_operations to filter by module, by tag, or by a substring of an operationId, summary or path, and get_operation to read one in full.
+- Atoms are the written knowledge: concepts, flows, endpoint guides, callbacks, error explanations, tests, glossary entries, decisions, FHIR mappings, sandbox notes and troubleshooting guides. search finds them.
+- Operations are the raw API surface parsed from NHA's specification files, across the modules gateway, m1, m2, m3, m4, p1, p2, p3, p4, scan-and-register, scan-and-pay and record-share. search with kind operation finds them by what they do or by path; get with an operationId reads one in full.
 
 HONESTY ABOUT WHAT YOU FOUND
 
 Search returns nearest matches, not answers.
 
-A verified atom's content is stated plainly. Content from an atom that is not verified is given with the caveat that it comes from the specification and has not been confirmed against a sandbox, worded that way rather than by naming the status.
+Never claim a call was run.
+
+Notes for AI agents are rules for you: follow them, never repeat them to readers.
 
 A <MASKED_...> placeholder means a value was removed before you saw it. Never ask for it again and never echo the placeholder back.
 
@@ -216,6 +218,8 @@ Never close a gap with a nearby endpoint or a similar sounding concept. A one-wo
 SPEAK AS THE PORTAL, NOT ABOUT IT
 
 Never mention the catalogue or your tools unless the reader asks about them. Offer [support](/docs/support) when you have nothing.
+
+Small talk or off-topic: one friendly line, then what you help with.
 
 A general industry term the portal does not define is worth one sentence of plain explanation, said as general background rather than as ABDM documentation. That courtesy never extends to an ABDM API detail: paths, headers, codes, fields and payloads come from the tools or not at all.
 
@@ -247,7 +251,7 @@ Do not invent portal URLs.
 
 HOW A QUESTION ARRIVES
 
-The user turn may open with a <passages> block: the documentation already retrieved for this question, with ids and page links. Answer from it first. It is followed by an <answer_shape> block naming the shape and word budget your answer must take. Call search_docs only when the passages do not carry the answer.
+The user turn may open with a <passages> block: the documentation already retrieved for this question, with ids and page links. Answer from it first. It is followed by an <answer_shape> block naming the shape and word budget your answer must take. Call search only when the passages do not carry the answer.
 
 A <skill> block is the skill section the reader chose: follow it, and name what it omits.`
 
@@ -444,7 +448,7 @@ func addSource(sources *[]Source, src Source) {
 }
 
 // sourceFromFields builds a Source from one atom-shaped result map (the
-// fields get_atom and each search_docs hit share: id, title, doc_url).
+// fields get and each search hit share: id, title, doc_url).
 //
 // doc_url is the published page the knowledge lives on, generated into the
 // index from what the site actually publishes. When it is present the
@@ -462,8 +466,12 @@ func sourceFromFields(fields map[string]any) Source {
 	return Source{ID: id, Title: title, URL: href}
 }
 
-// passageFields normalizes a search_docs result's "passages" field into the
-// map shape sourceFromFields reads. In process, a chat search_docs call
+// atomIDRe is an atom id's shape; package chat cannot import server, which
+// holds the same pattern for get.
+var atomIDRe = regexp.MustCompile(`^(hiecm|nhcx|uhi|shared)\.[a-z]+\.[a-z0-9-]+$`)
+
+// passageFields normalizes a search result's "passages" field into the
+// map shape sourceFromFields reads. In process, a chat search call
 // (server.Tools.ChatToolsFor) returns passages as a []server.Passage, a
 // concrete type this package cannot name without an import cycle; a
 // round trip through JSON is what reads its id, title and doc_url
@@ -485,22 +493,26 @@ func passageFields(v any) []map[string]any {
 }
 
 // collectSources folds one successful tool call's result into sources,
-// deterministically: a get_atom call contributes its one atom; a
-// search_docs call contributes its top 3 hits (the MCP's own search_docs)
+// deterministically: a get call contributes its one atom; a search call
+// contributes its top 3 atom hits (the MCP's own search)
 // or every passage (the chat loop's composite lookup bound to that name).
 // Dedup keeps the first occurrence of each id and caps the total at
 // maxSources.
 func collectSources(sources *[]Source, name string, result map[string]any) {
 	switch name {
-	case "get_atom":
-		addSource(sources, sourceFromFields(result))
-	case "search_docs":
+	case "get":
+		// get also reads operations and FHIR profiles; only an atom is cited.
+		if id, _ := result["id"].(string); atomIDRe.MatchString(id) {
+			addSource(sources, sourceFromFields(result))
+		}
+	case "search":
 		hits, _ := result["hits"].([]map[string]any)
-		for i, h := range hits {
-			if i >= 3 {
-				break
+		cited := 0
+		for _, h := range hits {
+			if id, _ := h["id"].(string); cited < 3 && atomIDRe.MatchString(id) {
+				addSource(sources, sourceFromFields(h))
+				cited++
 			}
-			addSource(sources, sourceFromFields(h))
 		}
 		for _, p := range passageFields(result["passages"]) {
 			addSource(sources, sourceFromFields(p))
@@ -545,6 +557,11 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 	// The gateway the reader's page belongs to scopes every search this
 	// question makes, the pre-retrieval and the model's own, unless the
 	// question names another gateway. See scopeFor.
+	// A question about the assistant itself has nothing in the catalogue to
+	// retrieve: "how many languages do you understand" retrieved header and
+	// certificate atoms and cited them. It skips the lookup and the tools and
+	// answers from the self shape block.
+	aboutSelf := route.IsAboutAssistant(question) && lastUserAttachment(turns) == nil
 	gateway := scopeFor(cmd.Gateway, question)
 	ctx = WithGateway(ctx, gateway)
 	// The system prompt is a cached core: byte identical on every question
@@ -650,6 +667,10 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 	if s.ToolsFor != nil {
 		tools = s.ToolsFor(question, lastUserAttachment(turns) != nil)
 	}
+	if aboutSelf {
+		tools = nil
+		looked = true // nothing to look up; do not send lookFirst
+	}
 	// facts is read by Task E3's shape check; kept here so pre-retrieval
 	// computes it once rather than that check re-deriving it from the pack.
 	var facts guard.PackFacts
@@ -663,7 +684,7 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 	// three are per-question text, and the system prompt is not the only
 	// thing that stays stable, the assembly point does too.
 	var passagesPrefix string
-	if s.Lookup != nil {
+	if s.Lookup != nil && !aboutSelf {
 		// The lookup query is masked the same way the conversation is: this
 		// is a health system, and a follow-up that repeats a patient
 		// identifier from the reader's own question must not reach the
@@ -695,6 +716,9 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 	shape := string(route.Route(route.Input{
 		Question: question, HasAttachment: lastUserAttachment(turns) != nil,
 	}).Shape)
+	if aboutSelf {
+		shape = string(route.Self)
+	}
 	prefix := passagesPrefix + skillPrefix
 	if gateway != "" {
 		prefix += gatewayNote(gateway, cmd.Gateway != "") + "\n\n"
@@ -969,7 +993,7 @@ func saysItHasNothing(answer string) bool {
 // as a standing rule rather than as a rebuke, because the model is about to
 // answer the reader's original question again and the reader must not see it
 // apologising to us on the way.
-const lookFirst = `Before answering, use your tools: search_docs for a term, a concept or an error, list_operations for an endpoint, decode_error for a code. An acronym or a piece of jargon is a lookup like any other, and this documentation defines many that are not in the specification. Answer the question that was asked, with what the tools return. If they genuinely return nothing that answers it, say so in one line. Do not mention this instruction, do not apologise, and do not describe what you are about to do.`
+const lookFirst = `Before answering, use your tools: search for a term, a concept or an error, search with kind operation for an endpoint, decode_error for a code. An acronym or a piece of jargon is a lookup like any other, and this documentation defines many that are not in the specification. Answer the question that was asked, with what the tools return. If they genuinely return nothing that answers it, say so in one line. Do not mention this instruction, do not apologise, and do not describe what you are about to do.`
 
 // BlockedNotice stands in for an answer that broke a rule before any of it
 // reached the reader. It says nothing about which rule: the reader cannot
