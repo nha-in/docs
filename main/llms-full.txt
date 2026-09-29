@@ -76835,11 +76835,21 @@ Some failures stop a call before any error object is built. Read the status firs
 | `403`                              | Your public key is not registered, or your registration is not yet active                                                                          |
 | `200` with `ACK`, then no callback | Your `consumer_uri` is not publicly reachable over HTTPS, or your endpoint did not return `200`                                                    |
 
+Notes for AI agents
+
+**What happens.** A `401` or `403` stops the call before any error object is built. Branch on the status first, and parse `error` only when there is a body to parse.
+
+**When it goes wrong.** On `401`, fix the signature and send with a new header; the same header fails again. On `403`, finish or activate your registration before retrying. On `200` with `ACK` and no callback, call your `consumer_uri` from outside your network over HTTPS, and check that your endpoint returns `200` at once.
+
 ## Send and log
 
 **When you reject a call**, send all four fields. Fill `path` whenever the failure is a schema validation failure, so the sender can find the field.
 
-**When you receive an error**, log all four fields with the call's `transaction_id` and `message_id`. Those two values tie the error to the exchange. See [Messages and callbacks](/docs/main/docs/uhi/v1/concepts/messages#match-on-transaction_id-and-message_id).
+**When you receive an error**, log all four fields with the call's `transaction_id` and `message_id`. Those two values tie the error to the exchange. See [Messages and callbacks](/docs/main/docs/uhi/v1/concepts/messages#match-on-transaction-id-and-message-id).
+
+Notes for AI agents
+
+**What happens.** Act on the HTTP status and on whether `error` is empty. Never branch on a `code` value, because no code list is published.
 
 ## Confirm at onboarding
 
@@ -76892,6 +76902,16 @@ Every call, in both directions, starts with the same block. Build a fresh one fo
 
 Times inside `message`, such as a fulfillment's start and end, follow ISO 8601 without a time zone: `2022-07-15T00:00:00`.
 
+Notes for AI agents
+
+**Before you start.** A subscriber ID from sandbox registration, and a public HTTPS callback base URL that shares a domain name with it.
+
+**What happens.** Build a new `context` for every request, with a new `message_id` and a current `timestamp`. Create a new `transaction_id` only when an exchange starts at `search`, and reuse it on every call through `confirm`. Set `action` to the call you are making and `domain` to the value on the service page.
+
+**How you know it worked.** The `on_search` for your request echoes your `transaction_id` and `message_id`, and arrives on your `consumer_uri`.
+
+**When it goes wrong.** No callback arrives: check that `consumer_uri` is public over HTTPS and shares a domain name with `consumer_id`. A `transaction_id` reused across two exchanges mixes their callbacks, so neither can be matched.
+
 ## ACK now, answer later
 
 The HTTP response to any UHI call is a receipt, not a result. The receiver returns `200` with this body as soon as the request is accepted:
@@ -76907,6 +76927,14 @@ Your own callback endpoints must do the same. Return `200` and the `ACK` body at
 
 Both URLs must be public and reachable over HTTPS.
 
+Notes for AI agents
+
+**What happens.** On every endpoint you serve, return `200` with the `ACK` body before any processing. Then send the business answer as a new call. Never wait for a result in the HTTP response of a call you sent.
+
+**How you know it worked.** Your endpoint answers `200` with `ACK` at once, and the answer reaches the other side later as its own call, such as `on_search`.
+
+**When it goes wrong.** Code that reads results from the response to `search` finds only the receipt and shows nothing. An endpoint that does not return `200` at once can leave the sender with an `ACK` and no callback.
+
 ## Match on transaction\_id and message\_id
 
 | Field            | Scope                                         | Use it to                                                             |
@@ -76915,6 +76943,14 @@ Both URLs must be public and reachable over HTTPS.
 | `message_id`     | One request and its callback                  | Tie one callback to the request that caused it                        |
 
 An HSPA echoes both values in its `on_search`. A mismatch is the most common reason an EUA never sees results. Store both before you send, and look each callback up by `transaction_id` first.
+
+Notes for AI agents
+
+**What happens.** Store `transaction_id` and `message_id` against the patient's request before the call leaves. On each callback, find the exchange by `transaction_id`, then the request by `message_id`.
+
+**How you know it worked.** Every `on_search` your app receives resolves to a stored exchange, and its results render on that patient's screen.
+
+**When it goes wrong.** Results never render: compare the callback's `transaction_id` with the one you stored. A callback whose `transaction_id` matches no stored exchange is logged with its `message_id` and never attached to another exchange.
 
 ## Timeouts
 
@@ -76926,6 +76962,14 @@ A search has no end signal. The Gateway broadcasts it to every HSPA registered f
 - When the timeout passes with nothing received, stop waiting and offer a retry.
 
 Blood Bank's figure is 10 to 15 seconds. Aggregate its answers by `transaction_id` within that window.
+
+Notes for AI agents
+
+**What happens.** Read the timeout from configuration and start it when `search` is sent. Render each `on_search` for that `transaction_id` as it arrives. When the timeout passes, stop waiting on that exchange.
+
+**How you know it worked.** The first result shows before the timeout ends, and a search that gets no answer ends in a retry offer, not a loading screen.
+
+**When it goes wrong.** A screen that waits for a final answer never finishes, because no final answer is sent. A timeout fixed in code cannot take your service's figure once it is agreed at onboarding.
 
 ## Confirm at onboarding
 
@@ -76953,6 +76997,12 @@ The [network registry](/docs/main/docs/uhi/v1/getting-started/glossary#network-r
 | An EUA or an HSPA                                             | Acting on any direct call you receive                                                                     | The sender's public key, to check its `Authorization` header          |
 
 A call the [UHI Gateway](/docs/main/docs/uhi/v1/getting-started/glossary#uhi-gateway) forwards carries the Gateway's own `X-Gateway-Authorization` header instead. Check that one against the Gateway's key. See [Signing](/docs/main/docs/uhi/v1/concepts/signing#checking-a-signature-you-receive).
+
+Notes for AI agents
+
+**What happens.** Take `subscriber_id` and `pub_key_id` from the sender's `keyId`, and send the lookup. Trust the key only while `status` is `SUBSCRIBED` and the current time falls between `valid_from` and `valid_until`.
+
+**How you know it worked.** A `200` returns a record whose `subscriber_id` and `pub_key_id` match the sender's `keyId`.
 
 ## Send the lookup
 
@@ -76996,6 +77046,12 @@ A `200` returns the participant's subscriber record.
 | `403`    | Your public key is not registered, or your registration is not yet active                                       |
 | `404`    | No participant matches the body. The response carries an [error object](/docs/main/docs/uhi/v1/concepts/errors) |
 
+Notes for AI agents
+
+**What happens.** A failed lookup returns a status and no subscriber record. Read the status before the body.
+
+**When it goes wrong.** On `401`, build a fresh header over the exact bytes you send, and check your `keyId`. On `403`, confirm your registration is complete and uses the public key you sign with; a retry does not help. On `404`, check that `subscriber_id` and `pub_key_id` came from the right parts of the sender's `keyId`. Log the error object, and do not trust the call you were checking.
+
 ## Next steps
 
 - [Signing](/docs/main/docs/uhi/v1/concepts/signing): build your header and check the ones you receive.
@@ -77018,29 +77074,6 @@ A [UHI](/docs/main/docs/uhi/v1/getting-started/glossary#uhi) call takes one of t
 
 ## The whole exchange
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant EUA as EUA
-    participant GW as UHI Gateway
-    participant HSPA as HSPA
-    participant REG as Network registry
-    EUA->>GW: POST /api/v1/uhi/search (Authorization)
-    GW-->>EUA: HTTP 200 ACK (receipt only)
-    GW->>HSPA: POST /search (X-Gateway-Authorization)
-    HSPA-->>GW: HTTP 200 ACK
-    HSPA->>GW: POST /api/v1/uhi/on_search (catalog)
-    GW->>EUA: POST /on_search to consumer_uri
-    EUA-->>GW: HTTP 200 ACK
-    opt Services with booking, after on_search
-        EUA->>REG: POST /api/v1/networkregistry/lookup
-        REG-->>EUA: HSPA public key
-        EUA->>HSPA: init onwards, direct to provider_uri
-        HSPA->>EUA: on_init onwards, direct to consumer_uri
-        HSPA->>GW: Audit copies (on_confirm, on_status, on_update, on_cancel)
-    end
-```
-
 Steps 1 to 7 apply to every service. The optional block applies to Physical Consultation, with audit copies, and to Ambulance Booking, for `init` and `on_init` only.
 
 ## Through the Gateway
@@ -77055,6 +77088,12 @@ Discovery is the only stage the Gateway routes.
 
 Several HSPAs can answer one search. See [Messages and callbacks](/docs/main/docs/uhi/v1/concepts/messages#timeouts) for how long to wait.
 
+Notes for AI agents
+
+**What happens.** An EUA sends `search` to `POST /api/v1/uhi/search` and receives every `on_search` on its `consumer_uri`. An HSPA answers a forwarded `search` with an `ACK`, then sends its catalog to `POST /api/v1/uhi/on_search`, never to the EUA.
+
+**When it goes wrong.** An HSPA that checks `Authorization` on a forwarded search finds the Gateway's `X-Gateway-Authorization` instead. Check the header the route carries.
+
 ## Direct between EUA and HSPA
 
 From `init` onwards, the EUA and the HSPA talk directly.
@@ -77064,6 +77103,14 @@ From `init` onwards, the EUA and the HSPA talk directly.
 - **Each side** signs with its own `Authorization` header. The receiver fetches the sender's key with the [network registry lookup](/docs/main/docs/uhi/v1/concepts/registry-lookup).
 
 Physical Consultation's second search, for a chosen doctor's slots, also goes direct to the HSPA. Its `on_search` comes back with the HSPA's `Authorization` header, not the Gateway's.
+
+Notes for AI agents
+
+**Before you start.** The HSPA's `provider_uri` from the `context` of the `on_search` the patient chose, and the HSPA's key from the network registry lookup.
+
+**What happens.** Send `init` and every later call to `provider_uri`, signed with your own `Authorization`. The Gateway has no endpoint for these calls.
+
+**When it goes wrong.** A booking call sent to the Gateway base URL has no endpoint to reach. A direct callback checked against the Gateway's key fails: check it against the sender's key.
 
 ## Audit copies
 
@@ -77075,6 +77122,16 @@ The Gateway does not see a direct call. A Physical Consultation HSPA therefore s
 | `on_status`         | `POST /api/v1/uhi/on_status_audit`                                |
 | `on_update`         | `POST /api/v1/uhi/on_update_audit`, including the care context ID |
 | `on_cancel`         | `POST /api/v1/uhi/on_cancel_audit`                                |
+
+Notes for AI agents
+
+**Before you start.** Your system is a Physical Consultation HSPA. No other service sends audit copies.
+
+**What happens.** After each `on_confirm`, `on_status`, `on_update` or `on_cancel` to the EUA, send the same body to the matching audit endpoint. Sign it as you sign every outbound call.
+
+**How you know it worked.** Every one of the four callbacks your HSPA sends has a matching audit call with an identical body.
+
+**When it goes wrong.** A body edited between the callback and its copy is not an exact copy. An `on_update` copy without the care context ID is incomplete.
 
 ## Gateway endpoints
 
@@ -77105,6 +77162,29 @@ The sandbox also runs a reference EUA at `http://uhieuasandbox.abdm.gov.in/api/v
 - [Signing](/docs/main/docs/uhi/v1/concepts/signing): the headers on each route.
 - [Network and discovery reference](/docs/main/docs/uhi/v1/api/network): the Gateway calls, one page each.
 - [Physical Consultation reference](/docs/main/docs/uhi/v1/api/consultation): the direct calls and audit copies.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant EUA as EUA
+    participant GW as UHI Gateway
+    participant HSPA as HSPA
+    participant REG as Network registry
+    EUA->>GW: POST /api/v1/uhi/search (Authorization)
+    GW-->>EUA: HTTP 200 ACK (receipt only)
+    GW->>HSPA: POST /search (X-Gateway-Authorization)
+    HSPA-->>GW: HTTP 200 ACK
+    HSPA->>GW: POST /api/v1/uhi/on_search (catalog)
+    GW->>EUA: POST /on_search to consumer_uri
+    EUA-->>GW: HTTP 200 ACK
+    opt Services with booking, after on_search
+        EUA->>REG: POST /api/v1/networkregistry/lookup
+        REG-->>EUA: HSPA public key
+        EUA->>HSPA: init onwards, direct to provider_uri
+        HSPA->>EUA: on_init onwards, direct to consumer_uri
+        HSPA->>GW: Audit copies (on_confirm, on_status, on_update, on_cancel)
+    end
+```
 
 
 ---
@@ -77151,6 +77231,14 @@ The Gateway's header has the same shape, with `"keyId":"gateway-nha|uhi_gateway_
 
 Changing one byte of the body after signing breaks the digest, and the call is refused with a `401`. So is a header whose `expires` has passed, which is why every request needs a new one.
 
+Notes for AI agents
+
+**What happens.** Sign the exact byte string your HTTP client sends. Do not let a client library serialise the body again after you sign it. Build a new header on every send, retries included.
+
+**How you know it worked.** The receiver answers `200` with `ACK`, not `401`.
+
+**When it goes wrong.** A `401` has three usual causes. Compare the bytes sent with the bytes hashed. Check that `expires` had not passed when the call arrived. Check that `keyId` names your subscriber ID and the key ID you registered.
+
 ## Generate your keys and headers
 
 Use the [Header Generation Utility](https://github.com/NHA-ABDM/UHI/tree/main/header_generator_utility). It generates your Ed25519 key pair and signs each payload, so you do not implement Ed25519 and BLAKE-512 yourself.
@@ -77158,10 +77246,22 @@ Use the [Header Generation Utility](https://github.com/NHA-ABDM/UHI/tree/main/he
 - Share only the public key, at [sandbox registration](/docs/main/docs/uhi/v1/getting-started/sandbox#3-submit-the-sandbox-registration-form). Keep the private key on your server.
 - The signing code the Gateway runs is [Crypt.java](https://github.com/NHA-ABDM/UHI/blob/Group-consultation/src/gateway/Discovery/src/main/java/in/gov/abdm/uhi/discovery/security/Crypt.java). The [UHI header signing document](https://github.com/NHA-ABDM/UHI/blob/main/docs/Signing%20UHI%20APIs_Final%20\(1\).docx) describes the scheme in full.
 
+Notes for AI agents
+
+**What happens.** Generate the key pair once with the Header Generation Utility. Submit the public key at sandbox registration. Keep the private key in server-side secret storage, never in a mobile or browser build, a repository or a log.
+
 ## Checking a signature you receive
 
 - **A call forwarded by the Gateway**, such as the first search reaching an HSPA, carries `X-Gateway-Authorization`. Check it against the Gateway's public key.
 - **A direct call**, such as the second search or any call from `init` onwards, carries the sender's `Authorization`. Look up that sender with the [network registry lookup](/docs/main/docs/uhi/v1/api/network/endpoints/uhi-network-registry-lookup), then check the signature against the public key it returns.
+
+Notes for AI agents
+
+**What happens.** Pick the header by route. On a forwarded call, check `X-Gateway-Authorization`, or `Proxy-Authorization` if it is absent. On a direct call, split the sender's `keyId` into subscriber ID and key ID, look the sender up, and check `Authorization`. Check against the raw bytes you received, before you parse the body.
+
+**How you know it worked.** A call with a valid signature and an unexpired `expires` passes. The same body with one byte changed fails.
+
+**When it goes wrong.** Reject a call whose signature fails or whose `expires` has passed, and do not act on it. A lookup that returns `404` means no participant matches, so the call is not trusted.
 
 ## Confirm at onboarding
 
@@ -77198,7 +77298,7 @@ Every call carries a `transaction_id` in its `context`. The [HSPA](/docs/main/do
 | `transaction_id` | One exchange, from `search` through `confirm` | Group every callback for one patient's search and booking |
 | `message_id`     | One request and its callback                  | Tie one callback to the request that caused it            |
 
-[Messages and callbacks](/docs/main/docs/uhi/v1/concepts/messages#match-on-transaction_id-and-message_id) sets out the whole `context` block.
+[Messages and callbacks](/docs/main/docs/uhi/v1/concepts/messages#match-on-transaction-id-and-message-id) sets out the whole `context` block.
 
 ## Sign every request fresh
 
@@ -77240,7 +77340,7 @@ Blood Bank's window is 10 to 15 seconds. No figure is set for the other services
 
 ## What the screens must do
 
-The service pages carry each service's own rules. These are the ones stated as checked at sign-off or required of every app.
+The service pages carry each service's own rules. The rules below are checked at sign-off or required of every app.
 
 | Rule                                                                                                        | Service                                                                                                                               |
 | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
@@ -77271,6 +77371,16 @@ Each service's go-live checklist carries these items. Work through them before y
 | 8 | Sign-off requested with sandbox test evidence                                                                                                                                                          |
 
 [Physical Consultation](/docs/main/docs/uhi/v1/services/consultation#go-live-checklist) carries its full twenty item checklist.
+
+Notes for AI agents
+
+**Before you start.** Your service page, with its own test cases and go-live checklist, and your role for that service.
+
+**What happens.** Treat each row as a pass or fail item that needs evidence. Items 1 to 4 are set up before you build. Items 5 and 6 live in your code. Items 7 and 8 close the list.
+
+**How you know it worked.** Each row has evidence: the Milestone 2 completion, the submitted public key, the sandbox access, a callback received on your public HTTPS URL, a signed call that is not refused, and every test case passed.
+
+**When it goes wrong.** An EUA without Milestone 2 cannot be onboarded onto any service, so item 1 blocks the rest. A callback URL reachable only inside your network fails item 4. A handler that waits on the reply to `search` for results fails item 6. For Physical Consultation, pass its twenty item list as well.
 
 ## Next
 
@@ -77469,6 +77579,18 @@ Every UHI service your app adds later follows this exchange.
 
 Step 4 carries the symptom table. A `200` whose `error` is not empty carries the reason: [Errors on UHI](/docs/main/docs/uhi/v1/concepts/errors) sets out the object and what to log.
 
+Notes for AI agents
+
+**What happens.** The search is sent to the sandbox Gateway, which returns `200` with an `ACK` at once. The results arrive later as `on_search` on the callback at your `consumer_uri`, matched by `transaction_id`. A failure shows at one of those two points.
+
+**When it goes wrong.** Match the symptom, then fix its cause.
+
+- A `401` on the send step: the header was signed over a different body, the signature was reused or has expired, or the key ID is wrong. Sign again and send the body byte for byte as signed.
+- A `403` on the send step: the public key is not registered, or the registration is not yet active.
+- An `ACK` but no callback: your `consumer_uri` is not publicly reachable over HTTPS, or your endpoint did not reply `200`.
+- A callback arrives but is not matched: your code looked up the wrong `transaction_id`.
+- An empty `providers` list: no empanelled hospital lies inside the radius. Widen the radius and search again.
+
 ## Next
 
 [Build with AI](/docs/main/docs/uhi/v1/getting-started/build-with-ai).
@@ -77655,6 +77777,10 @@ Build against the sample payloads on your service's page and the [UHI API refere
 
 **You get:** a passing sandbox integration.
 
+Notes for AI agents
+
+**How you know it worked.** Every test case on your service's test case page passes in the sandbox, along with the checks every service shares. Request sign-off only after that.
+
 ## 2. Record a demo and request sign-off
 
 Record your app running the service's flow, and send it to your [NHA](/docs/main/docs/uhi/v1/getting-started/glossary#nha) point of contact with a request for sign-off.
@@ -77662,6 +77788,12 @@ Record your app running the service's flow, and send it to your [NHA](/docs/main
 The [recorded walkthroughs of UHI services in Aarogya Setu](https://drive.google.com/drive/folders/1JvlWPouPNlyfLT3RmsjuUzeAVkdhlKrD?usp=drive_link) show each service running end to end. Watch the one for your service before you build your [EUA](/docs/main/docs/uhi/v1/getting-started/glossary#eua) screens. Your sign-off demo follows the same flow.
 
 **You get:** written sign-off.
+
+Notes for AI agents
+
+**Before you start.** Every test case for your service passes in the sandbox, and you have watched the recorded walkthrough for your service.
+
+**How you know it worked.** You hold written sign-off from your NHA point of contact. Do not switch to production values without it.
 
 ## 3. Switch to production
 
@@ -77683,6 +77815,12 @@ In production you use your own endpoints, not the sandbox reference apps.
 
 **You get:** a live integration on the production network.
 
+Notes for AI agents
+
+**Before you start.** You hold written sign-off from step 2.
+
+**How you know it worked.** A search sent to `https://uhigateway.abdm.gov.in` returns `200` with an `ACK`, and the answer arrives on your production callback URL, matched by `transaction_id`.
+
 ## What you see when it works
 
 A search your app sends to `https://uhigateway.abdm.gov.in` returns `200` with an `ACK`, and the answer arrives on your production callback URL, matched by `transaction_id`.
@@ -77690,6 +77828,12 @@ A search your app sends to `https://uhigateway.abdm.gov.in` returns `200` with a
 ## When it goes wrong
 
 If a search that worked in the sandbox fails in production, check the Gateway host first, then `consumer_id` and `consumer_uri` or their HSPA equivalents. A `401` or `403` comes before any body: see [Errors on UHI](/docs/main/docs/uhi/v1/concepts/errors#http-statuses-before-the-body).
+
+Notes for AI agents
+
+**What happens.** A search that worked in the sandbox fails after the switch to production. Either a value still points at the sandbox, or the Gateway rejects the signature or the registration before it reads the body.
+
+**When it goes wrong.** Check in this order and stop at the first that fails. The host is `https://uhigateway.abdm.gov.in`, not `https://uhigatewaysandbox.abdm.gov.in`. An EUA sends production values in `consumer_id` and `consumer_uri`; an HSPA in `provider_id` and `provider_uri`. A `401` means the signature does not match the body sent, is reused or expired, or names the wrong key. A `403` means the public key is not registered or the registration is not yet active.
 
 ## Next steps
 
@@ -77879,9 +78023,11 @@ Submit the sandbox registration form with three things:
 | Callback URL | Your public HTTPS `consumer_uri`, or `provider_uri` for an HSPA |
 | Public key   | The public half of the key pair from step 2                     |
 
-[Open the sandbox registration form](https://sbxai.abdm.gov.in)
-
 **You get:** a subscriber ID, a public key ID and sandbox access. The utility signs with both IDs, so keep them.
+
+### Open the form
+
+[Open the sandbox registration form](https://sbxai.abdm.gov.in)
 
 ## 4. Note the base URLs
 
@@ -78312,22 +78458,6 @@ Each role exposes these endpoints.
 
 ## Journey 1: discovery
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant C as Caregiver
-    participant E as EUA
-    participant G as UHI Gateway
-    participant H as Ambulance HSPAs
-    C->>E: Case type, class, pickup location, optional services
-    E->>G: search (EMERGENCY, SOURCE)
-    G-->>E: HTTP 200 ACK
-    G->>H: Broadcasts search to all ambulance HSPAs
-    H->>G: on_search (ambulances, arrival window, indicative price)
-    G->>E: on_search to consumer_uri
-    E->>C: Available ambulance options
-```
-
 The caregiver gives the case type, the class, the pickup location and any extra services. The Gateway broadcasts the search to every ambulance HSPA. Only providers that serve the pickup area answer.
 
 | Case type   | Location fields                                                                |
@@ -78342,24 +78472,31 @@ An excerpt of `on_search`, with one ambulance and its price:
 
 Start with the first call: [search](/docs/main/docs/uhi/v1/api/ambulance/endpoints/uhi-ambulance-discovery/01-uhi-network-gateway-search).
 
-## Journey 2: order
+Notes for AI agents
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant C as Caregiver
-    participant E as EUA
-    participant H as Ambulance HSPA
-    C->>E: Selects an ambulance (fulfillment)
-    E->>H: init (order, patient details, fulfillment ID)
-    H->>E: on_init (order.id, quote, terms)
-    E->>C: Quote and terms for review
-    H->>C: Calls back to arrange dispatch
-```
+**Before you start.** The EUA has a public HTTPS `consumer_uri` and signs every call. Set `context.domain` to `nic2008:86909`, the item code to `AMBULANCE` and the fulfillment type to `EMERGENCY`.
+
+**What happens.** The EUA sends `search` to the UHI Gateway with the class, the current time as the pickup time, and the `SOURCE` GPS and address. The Gateway answers HTTP 200 ACK and broadcasts the search to every ambulance HSPA. Each HSPA that serves the pickup area returns `on_search`. It carries one fulfillment per ambulance, with its arrival window, and items priced per ambulance through `items[].fulfillment_id`.
+
+**How you know it worked.** An `on_search` reaches your `consumer_uri` with your `transaction_id` and at least one fulfillment. Store `context.provider_id` and `context.provider_uri` from it for `init`.
+
+**When it goes wrong.** No answer means no HSPA serves the pickup area, not a network fault. Skip any HSPA whose `catalog.descriptor.flag` is `true`: its service is paused. An `agent` block in any payload fails testing. Render any category code, including `PTA` and `MVA`. Agree the `on_search` wait at onboarding.
+
+## Journey 2: order
 
 The caregiver picks an ambulance. The EUA sends the patient's details directly to that HSPA, which returns a quote and terms. The provider then calls the caregiver to arrange dispatch.
 
 Start with the first call: [init](/docs/main/docs/uhi/v1/api/ambulance/endpoints/uhi-ambulance-order/01-uhi-ambulance-init).
+
+Notes for AI agents
+
+**Before you start.** Hold `context.provider_id`, `context.provider_uri`, the chosen item id and fulfillment id from `on_search`, and the patient's ABHA address. `init` goes directly to the HSPA, signed, after looking up its public key.
+
+**What happens.** The EUA sends `init` with `order.provider.id`, `order.item.id` and `order.item.fulfillment_id`, and a matching `order.fulfillment.id`. It adds billing, `order.customer.id` as the ABHA address, and the `SOURCE` location. The HSPA returns `on_init` with `order.id`, `order.quote.price.value` and its `order.quote.breakup[]`. It also returns the payment type and status, five terms as `INITIATED`, and `order.fulfillment.tags.terms_reference`.
+
+**How you know it worked.** `on_init` reaches your `consumer_uri` with an `order.id`, a quote and all five terms. Show the cancellation and payment terms before any confirm action. The HSPA then calls the caregiver to arrange dispatch.
+
+**When it goes wrong.** `on_init` is a quote, not a booking: there is no `confirm`, `status` or `cancel` in this service today. Send the item and fulfillment ids exactly as `on_search` gave them. Driver and vehicle details in any payload fail testing.
 
 ## Concepts explored
 
@@ -78472,6 +78609,35 @@ Each test case is stated in plain words and as its exact success condition on [A
 - How every call is signed: [Signing](/docs/main/docs/uhi/v1/concepts/signing).
 - When every test case passes: [record a demo and request sign-off](/docs/main/docs/uhi/v1/getting-started/going-live#2-record-a-demo-and-request-sign-off).
 
+```mermaid
+sequenceDiagram
+    autonumber
+    participant C as Caregiver
+    participant E as EUA
+    participant G as UHI Gateway
+    participant H as Ambulance HSPAs
+    C->>E: Case type, class, pickup location, optional services
+    E->>G: search (EMERGENCY, SOURCE)
+    G-->>E: HTTP 200 ACK
+    G->>H: Broadcasts search to all ambulance HSPAs
+    H->>G: on_search (ambulances, arrival window, indicative price)
+    G->>E: on_search to consumer_uri
+    E->>C: Available ambulance options
+```
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant C as Caregiver
+    participant E as EUA
+    participant H as Ambulance HSPA
+    C->>E: Selects an ambulance (fulfillment)
+    E->>H: init (order, patient details, fulfillment ID)
+    H->>E: on_init (order.id, quote, terms)
+    E->>C: Quote and terms for review
+    H->>C: Calls back to arrange dispatch
+```
+
 
 ---
 
@@ -78580,31 +78746,21 @@ The `context` block, `category`, `fulfillment` and `item` are the same. Replace 
 
 ## Journey
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor P as Patient family
-    participant E as EUA (your app)
-    participant G as UHI Gateway
-    participant H as Blood Bank HSPAs
-    P->>E: Blood group + component + location
-    E->>G: POST /api/v1/uhi/search (BloodStock)
-    G-->>E: HTTP 200 ACK
-    loop Once per registered Blood Bank HSPA
-        G->>H: POST /search
-        H->>H: Query blood bank inventory
-        H->>G: POST /api/v1/uhi/on_search (banks, availability, units)
-        G->>E: POST /on_search to consumer_uri
-        E-->>G: HTTP 200 ACK
-    end
-    E->>P: Blood banks with stock and contact
-```
-
 A patient's family searches for blood of a given group and component.
 
 Steps 4 to 8 happen once per registered Blood Bank HSPA. Aggregate results by `transaction_id` as they arrive, and close the window after 10 to 15 seconds.
 
 The first call in the reference is [search](/docs/main/docs/uhi/v1/api/network/endpoints/uhi-blood-bank/01-uhi-network-gateway-search).
+
+Notes for AI agents
+
+**Before you start.** The EUA has a public HTTPS `consumer_uri` and signs every call. Set `nic2008:86906` and `BloodStock`. Send the blood group in `item.descriptor`, the component in `category.descriptor`, and one location mode.
+
+**What happens.** The EUA sends `POST /api/v1/uhi/search`, and the Gateway answers HTTP 200 ACK. The Gateway forwards the search to every registered Blood Bank HSPA. Each HSPA answers with its own `on_search` on your `consumer_uri`. Answer each with HTTP 200 ACK and aggregate them by `transaction_id`.
+
+**How you know it worked.** At least one `on_search` arrives with your `transaction_id`. Each blood group item carries `quantity.count` and a `fulfillment_id` that points to its availability.
+
+**When it goes wrong.** A wrong `domain` means no HSPA responds. No end signal arrives, so close the window after 10 to 15 seconds. The unavailable status arrives as `NotAvailable` or `Not Available`, so match both. Counts are indicative: show the phone number and a call to confirm.
 
 ## What comes back
 
@@ -78739,6 +78895,26 @@ The test cases for this service are on [Blood Bank test cases](/docs/main/docs/u
 - Signing each call: [Signing](/docs/main/docs/uhi/v1/concepts/signing).
 - When every test case passes: [record a demo and request sign-off](/docs/main/docs/uhi/v1/getting-started/going-live#2-record-a-demo-and-request-sign-off).
 
+```mermaid
+sequenceDiagram
+    autonumber
+    actor P as Patient family
+    participant E as EUA (your app)
+    participant G as UHI Gateway
+    participant H as Blood Bank HSPAs
+    P->>E: Blood group + component + location
+    E->>G: POST /api/v1/uhi/search (BloodStock)
+    G-->>E: HTTP 200 ACK
+    loop Once per registered Blood Bank HSPA
+        G->>H: POST /search
+        H->>H: Query blood bank inventory
+        H->>G: POST /api/v1/uhi/on_search (banks, availability, units)
+        G->>E: POST /on_search to consumer_uri
+        E-->>G: HTTP 200 ACK
+    end
+    E->>P: Blood banks with stock and contact
+```
+
 
 ---
 
@@ -78828,23 +79004,6 @@ Each role exposes these endpoints.
 
 ## Journey 1: discovery
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant P as Patient
-    participant E as EUA
-    participant G as UHI Gateway
-    participant H as HSPA
-    P->>E: Search filters (doctor, speciality, location)
-    E->>G: search (first, broadcast)
-    G->>H: search
-    H->>G: on_search (doctor catalog, provider_uri)
-    G->>E: on_search
-    P->>E: Selects doctor
-    E->>H: search (second, direct)
-    H->>E: on_search (time slots)
-```
-
 The patient searches by doctor, speciality or location. The Gateway broadcasts the first search to every HSPA in the domain, and each matching HSPA answers with its own catalog. The EUA then asks the chosen HSPA directly for the doctor's slots.
 
 The first search filters are all optional, on top of the service identity and the time window.
@@ -78865,23 +79024,17 @@ A GPS search needs all three radius fields: `type: CONSTANT`, `value`, and `unit
 
 Start with the first call: [search](/docs/main/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-discovery/01-uhi-network-gateway-search).
 
-## Journey 2: order
+Notes for AI agents
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant P as Patient
-    participant E as EUA
-    participant G as UHI Gateway
-    participant H as HSPA
-    P->>E: Selects slot
-    E->>H: init (patient, slot)
-    H->>E: on_init (order.id, quote, terms)
-    P->>E: Agrees to terms
-    E->>H: confirm (terms AGREED)
-    H->>E: on_confirm (CONFIRMED, PIN)
-    H->>G: on_confirm_audit (exact copy of on_confirm)
-```
+**Before you start.** The EUA has a public HTTPS `consumer_uri`, signs every call, and uses a fresh `transaction_id` per search. Set `context.domain` to `nic2004:85111` and the fulfillment type to `Physical`, which is case sensitive.
+
+**What happens.** The first `search` goes to the UHI Gateway, which broadcasts it. Each matching HSPA returns its own `on_search` catalog of doctors, so group the replies by `transaction_id`. Store `context.provider_uri` and `provider_id` from the chosen catalog. Look up that HSPA's public key at `/api/v1/networkregistry/lookup`, then send the second `search` straight to it. Its `on_search` returns the doctor's slots.
+
+**How you know it worked.** The second `on_search` reaches your `consumer_uri` with the same `transaction_id` and at least one slot. Keep the slot's `fulfillments[].id`: it becomes the fulfillment id in `init`.
+
+**When it goes wrong.** A GPS filter missing any of its three radius fields is ignored without an error, so results come back unfiltered. No `on_search` timeout is set for this service: render results as they arrive and agree a timeout at onboarding. Handle an empty `on_search` as a normal outcome. Do not call `select`: go from the second `on_search` to `init`.
+
+## Journey 2: order
 
 The EUA sends the patient and the slot. The HSPA holds the slot, assigns the order id and returns the quote and five terms. Once the patient agrees, the HSPA confirms and issues the PIN.
 
@@ -78893,40 +79046,17 @@ An excerpt of a confirmed `on_confirm`:
 
 Start with the first call: [init](/docs/main/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-order/01-uhi-consultation-init).
 
+Notes for AI agents
+
+**Before you start.** Hold the chosen HSPA's `provider_uri` and `provider_id`, and the slot's `fulfillments[].id`, from the second `on_search`. Every call from here goes directly to the HSPA, signed, after looking up its public key.
+
+**What happens.** The EUA sends `init` with the patient and the slot UUID as the fulfillment id, also in `@abdm/gov.in/slot_id`. The HSPA holds the slot for 15 minutes and returns `on_init` with `order.id`, the quote and five terms as `INITIATED`. Show all five. Send `confirm` with the HSPA's `order.id` and the terms unchanged, except `termsState` set to `AGREED`. The HSPA returns `on_confirm` and sends an exact copy to `on_confirm_audit`.
+
+**How you know it worked.** `on_confirm` arrives with state `CONFIRMED` and `authorization.type: PIN`, a 4-digit token with status `GENERATED`. Show the PIN to the patient and keep it in memory only.
+
+**When it goes wrong.** A slot UUID that does not match `on_search` makes the HSPA reject the request or fail to hold the slot. One term left as `INITIATED` in `confirm` causes rejection. Use the `order.id` from `on_init` in `confirm` and every call after it. `FAILED` in `on_confirm` means the booking did not complete. Never write the PIN to a database or a log.
+
 ## Journey 3: fulfilment
-
-```mermaid
-sequenceDiagram
-    autonumber
-    participant P as Patient
-    participant E as EUA
-    participant G as UHI Gateway
-    participant H as HSPA
-    P->>H: Presents PIN at facility
-    H->>E: on_update (APPOINTMENT_STARTED)
-    H->>G: on_update_audit
-    H->>E: on_update (COMPLETED)
-    H->>G: on_update_audit
-    opt An expected on_update never arrives
-        E->>H: status
-        H->>E: on_status
-        H->>G: on_status_audit
-    end
-    opt The doctor does not appear
-        E->>H: on_update (DOCTOR_NO_SHOW)
-    end
-```
-
-```mermaid
-stateDiagram-v2
-    [*] --> CONFIRMED: on_confirm
-    [*] --> FAILED: on_confirm
-    CONFIRMED --> APPOINTMENT_STARTED: HSPA on_update
-    APPOINTMENT_STARTED --> COMPLETED: HSPA on_update
-    CONFIRMED --> CANCELLED: cancel / on_cancel
-    CONFIRMED --> NO_SHOW: HSPA on_update
-    CONFIRMED --> DOCTOR_NO_SHOW: EUA on_update
-```
 
 The patient shows the PIN at the facility. The HSPA pushes each state change to the EUA with `on_update`. The EUA calls `status` only when an expected update never arrives.
 
@@ -78934,28 +79064,31 @@ The appointment moves through these states. Only `DOCTOR_NO_SHOW` starts from th
 
 Start with the first call: [status](/docs/main/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-fulfilment/01-uhi-consultation-status).
 
-## Journey 4: post-fulfilment
+Notes for AI agents
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant E as EUA
-    participant G as UHI Gateway
-    participant H as HSPA
-    E->>H: cancel (reason code, cancelledby patient)
-    H->>E: on_cancel (CANCELLED)
-    H->>G: on_cancel_audit
-    opt The doctor cancels
-        H->>E: on_cancel (CANCELLED, cancelledby doctor)
-        H->>G: on_cancel_audit
-    end
-    E->>H: on_message
-    H->>E: on_message
-```
+**Before you start.** The order is `CONFIRMED` and you hold its `order.id`. The EUA exposes `/on_update` and `/on_status`. The HSPA exposes `/status` and `/on_update`.
+
+**What happens.** At check-in the PIN status moves from `GENERATED` to `VERIFIED`, or to `HSPAOVERRIDE` with an override reason code. The HSPA pushes `on_update` for `APPOINTMENT_STARTED`, then `COMPLETED`, or for `NO_SHOW`. It copies each one to `on_update_audit`. The EUA sends `status` only when an expected update never arrives, and the HSPA copies its `on_status` to `on_status_audit`.
+
+**How you know it worked.** An `on_update` with `COMPLETED` reaches the EUA, carrying `@abdm/gov.in/care_context_id`. Keep that id. With the doctor's `@abdm/gov.in/hip_id`, it lets the EUA fetch the records later.
+
+**When it goes wrong.** If no `on_update` arrives when expected, call `status`. The EUA sets one state only, `DOCTOR_NO_SHOW`, through `on_update`. Do not send or depend on `NOT_VERIFIED`. An HSPA sends every `on_update_audit`, because it is the copy that counts for DHIS.
+
+## Journey 4: post-fulfilment
 
 A cancellation takes the place of fulfilment. The patient cancels through the EUA, or the doctor cancels through the HSPA. Either side sends the other a message with `on_message`.
 
 Start with the first call: [cancel](/docs/main/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-post-fulfilment/01-uhi-consultation-cancel).
+
+Notes for AI agents
+
+**Before you start.** Hold the order's `order.id`. Pick the reason code from the lists under Cancellation and override reason codes, and send it exactly as listed.
+
+**What happens.** A patient cancellation is a `cancel` from the EUA with `@abdm/gov.in/cancelledby: patient` and the reason in `@abdm/gov.in/cancel_reason`. The HSPA answers `on_cancel` with `CANCELLED` and copies it to `on_cancel_audit`. A doctor cancellation is an `on_cancel` the HSPA sends unprompted, with `@abdm/gov.in/cancelledby: doctor`. Either side can send `on_message`.
+
+**How you know it worked.** An `on_cancel` with `CANCELLED` reaches the EUA, and the HSPA has sent its copy to `on_cancel_audit`.
+
+**When it goes wrong.** `@abdm/gov.in/cancelledby` is mandatory, because it decides which terms apply. `PATIENT_OTHER` and `DOCTOR_OTHER` need free text. `/on_message` is mandatory for an EUA and optional for an HSPA.
 
 ## Concepts explored
 
@@ -79002,6 +79135,10 @@ The order tags from `init` onwards:
 | Settlement   | Your own text. Online payment is not part of the flow today.                                                                                                                                                                                                     |
 | Refund       | Your own text. Refunds are not part of the flow today.                                                                                                                                                                                                           |
 
+Notes for AI agents
+
+**What happens.** These texts travel in the five terms of `on_init`, each with `termsState` set to `INITIATED`. The EUA shows every term before `confirm`, then returns all five unchanged with `termsState` set to `AGREED`.
+
 ## Cancellation and override reason codes
 
 Send the reason codes exactly as listed. The labels are yours to choose.
@@ -79040,6 +79177,10 @@ Facility staff use an override reason when a confirmed patient cannot check in w
 | O5 | `OVERRIDE_EUA_OUTAGE`             | The EUA platform is down                                   |
 | O6 | `OVERRIDE_MISMATCH`               | PIN mismatch after 3 attempts                              |
 | O6 | `OVERRIDE_OTHER`                  | Other. The HSPA must provide free text                     |
+
+Notes for AI agents
+
+**When it goes wrong.** `OVERRIDE_MISMATCH` and `OVERRIDE_OTHER` share the number O6. Key your handling on the reason code string, never on the number.
 
 ## Go-live checklist
 
@@ -79087,6 +79228,89 @@ Find the test cases this service is certified against on [Physical Consultation 
 - The calls, one page each: [Physical Consultation API reference](/docs/main/docs/uhi/v1/api/consultation).
 - How every call is signed: [Signing](/docs/main/docs/uhi/v1/concepts/signing).
 - When every test case passes: [record a demo and request sign-off](/docs/main/docs/uhi/v1/getting-started/going-live#2-record-a-demo-and-request-sign-off).
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant P as Patient
+    participant E as EUA
+    participant G as UHI Gateway
+    participant H as HSPA
+    P->>E: Search filters (doctor, speciality, location)
+    E->>G: search (first, broadcast)
+    G->>H: search
+    H->>G: on_search (doctor catalog, provider_uri)
+    G->>E: on_search
+    P->>E: Selects doctor
+    E->>H: search (second, direct)
+    H->>E: on_search (time slots)
+```
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant P as Patient
+    participant E as EUA
+    participant G as UHI Gateway
+    participant H as HSPA
+    P->>E: Selects slot
+    E->>H: init (patient, slot)
+    H->>E: on_init (order.id, quote, terms)
+    P->>E: Agrees to terms
+    E->>H: confirm (terms AGREED)
+    H->>E: on_confirm (CONFIRMED, PIN)
+    H->>G: on_confirm_audit (exact copy of on_confirm)
+```
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant P as Patient
+    participant E as EUA
+    participant G as UHI Gateway
+    participant H as HSPA
+    P->>H: Presents PIN at facility
+    H->>E: on_update (APPOINTMENT_STARTED)
+    H->>G: on_update_audit
+    H->>E: on_update (COMPLETED)
+    H->>G: on_update_audit
+    opt An expected on_update never arrives
+        E->>H: status
+        H->>E: on_status
+        H->>G: on_status_audit
+    end
+    opt The doctor does not appear
+        E->>H: on_update (DOCTOR_NO_SHOW)
+    end
+```
+
+```mermaid
+stateDiagram-v2
+    [*] --> CONFIRMED: on_confirm
+    [*] --> FAILED: on_confirm
+    CONFIRMED --> APPOINTMENT_STARTED: HSPA on_update
+    APPOINTMENT_STARTED --> COMPLETED: HSPA on_update
+    CONFIRMED --> CANCELLED: cancel / on_cancel
+    CONFIRMED --> NO_SHOW: HSPA on_update
+    CONFIRMED --> DOCTOR_NO_SHOW: EUA on_update
+```
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant E as EUA
+    participant G as UHI Gateway
+    participant H as HSPA
+    E->>H: cancel (reason code, cancelledby patient)
+    H->>E: on_cancel (CANCELLED)
+    H->>G: on_cancel_audit
+    opt The doctor cancels
+        H->>E: on_cancel (CANCELLED, cancelledby doctor)
+        H->>G: on_cancel_audit
+    end
+    E->>H: on_message
+    H->>E: on_message
+```
 
 
 ---
@@ -79233,55 +79457,37 @@ The `context` block is the same, with a new `transaction_id`. `76476` is a `medi
 
 ## Journey 1: find a Kendra
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor C as Citizen
-    participant E as EUA (your app)
-    participant G as UHI Gateway
-    participant P as PMBI HSPA
-    C->>E: Location filter or Kendra code
-    E->>G: POST /api/v1/uhi/search (JANAUSHADHI)
-    G-->>E: HTTP 200 ACK
-    G->>P: POST /search
-    P->>P: Query the Kendra database
-    P->>G: POST /api/v1/uhi/on_search (Kendra records)
-    G->>E: POST /on_search to consumer_uri
-    E-->>G: HTTP 200 ACK
-    E->>C: Kendra list
-```
-
 A citizen searches for Jan Aushadhi Kendras.
 
 The first call in the reference is [search](/docs/main/docs/uhi/v1/api/network/endpoints/uhi-jan-aushadhi-kendra-search/01-uhi-network-gateway-search).
 
-## Journey 2: find a medicine, then a Kendra that stocks it
+Notes for AI agents
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor C as Citizen
-    participant E as EUA (your app)
-    participant G as UHI Gateway
-    participant P as PMBI HSPA
-    C->>E: Medicine name
-    E->>G: search (JANAUSHADHI_MEDICINE)
-    G->>P: search
-    P->>G: on_search (medicines, medicineId, MRP)
-    G->>E: on_search
-    C->>E: Selects medicine + location filter
-    E->>G: search (JANAUSHADHI_KENDRA, medicineId)
-    G->>P: search
-    P->>G: on_search (Kendras with stock flag)
-    G->>E: on_search
-    E->>C: Kendras that stock the medicine
-```
+**Before you start.** The EUA has a public HTTPS `consumer_uri` and signs every call. Set `nic2008:47721`, and `JANAUSHADHI` as both the fulfillment type and the item code and name. Every location filter is optional.
+
+**What happens.** The EUA sends `POST /api/v1/uhi/search` with a location filter, or with a Kendra code in `category.descriptor.code` and `.name`. The Gateway answers HTTP 200 ACK and forwards it to `pmbi.hspa`. Its `on_search` reaches your `consumer_uri` through the Gateway.
+
+**How you know it worked.** An `on_search` arrives with your `transaction_id`. Each `providers[]` record is one Kendra, and its `id` is the Kendra code.
+
+**When it goes wrong.** A wrong `fulfillment.type` returns the wrong kind of catalog, or nothing. Empty city, email, `short_desc` or `long_desc` are not errors. Display an unrecognised ownership code as sent. Check the HSPA's signature with key ID `pmbi.hspapid.jak`.
+
+## Journey 2: find a medicine, then a Kendra that stocks it
 
 A citizen looks up a generic medicine by name, then searches for Kendras that stock it. Gateway ACKs are left out of this diagram.
 
 The two searches are separate transactions. Only `medicineId` carries across from step 5 to step 7.
 
 The first call of each search in the reference: [medicine search](/docs/main/docs/uhi/v1/api/network/endpoints/uhi-jan-aushadhi-medicine-search/01-uhi-network-gateway-search) and [Kendras for a selected medicine](/docs/main/docs/uhi/v1/api/network/endpoints/uhi-jan-aushadhi-medicine-stock/01-uhi-network-gateway-search).
+
+Notes for AI agents
+
+**Before you start.** The EUA has a public HTTPS `consumer_uri` and signs every call, with `context.domain` set to `nic2008:47721`. The citizen has typed a medicine name.
+
+**What happens.** The first search uses `JANAUSHADHI_MEDICINE`, with the name in `item.descriptor.name` and the name without spaces in `item.descriptor.code`. Its `on_search` lists medicines, and each `providers[].id` is a `medicineId`. After the citizen picks one, the second search uses a new `transaction_id` and `JANAUSHADHI_KENDRA`. It carries the `medicineId` in `item.descriptor.code` and `.name`, plus any location filter.
+
+**How you know it worked.** The second `on_search` lists Kendras. Each carries the medicine in `items[]`, where `descriptor.flag` is `true` for in stock and `false` for out of stock.
+
+**When it goes wrong.** Never send a medicine name in the second search. Name matching is not fixed, so show every medicine returned and let the citizen choose. Render stock from `descriptor.flag`, and show a count from `quantity.measure.value` only when one arrives. `location.radius` carries a distance only when the search sent GPS.
 
 ## What comes back
 
@@ -79449,6 +79655,44 @@ The test cases for this service are on [Jan Aushadhi test cases](/docs/main/docs
 - Signing each call: [Signing](/docs/main/docs/uhi/v1/concepts/signing).
 - When every test case passes: [record a demo and request sign-off](/docs/main/docs/uhi/v1/getting-started/going-live#2-record-a-demo-and-request-sign-off).
 
+```mermaid
+sequenceDiagram
+    autonumber
+    actor C as Citizen
+    participant E as EUA (your app)
+    participant G as UHI Gateway
+    participant P as PMBI HSPA
+    C->>E: Location filter or Kendra code
+    E->>G: POST /api/v1/uhi/search (JANAUSHADHI)
+    G-->>E: HTTP 200 ACK
+    G->>P: POST /search
+    P->>P: Query the Kendra database
+    P->>G: POST /api/v1/uhi/on_search (Kendra records)
+    G->>E: POST /on_search to consumer_uri
+    E-->>G: HTTP 200 ACK
+    E->>C: Kendra list
+```
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor C as Citizen
+    participant E as EUA (your app)
+    participant G as UHI Gateway
+    participant P as PMBI HSPA
+    C->>E: Medicine name
+    E->>G: search (JANAUSHADHI_MEDICINE)
+    G->>P: search
+    P->>G: on_search (medicines, medicineId, MRP)
+    G->>E: on_search
+    C->>E: Selects medicine + location filter
+    E->>G: search (JANAUSHADHI_KENDRA, medicineId)
+    G->>P: search
+    P->>G: on_search (Kendras with stock flag)
+    G->>E: on_search
+    E->>C: Kendras that stock the medicine
+```
+
 
 ---
 
@@ -79534,29 +79778,21 @@ Use a fresh `message_id` and `transaction_id` for each search. Leave out `locati
 
 ## Journey
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor P as Patient family
-    participant E as EUA (your app)
-    participant G as UHI Gateway
-    participant N as NOTTO HSPA
-    P->>E: Organ or tissue type + optional state
-    E->>G: POST /api/v1/uhi/search (NOTTO_HOSPITAL)
-    G-->>E: HTTP 200 ACK
-    G->>N: POST /search
-    N->>N: Query the NOTTO hospital registry
-    N->>G: POST /api/v1/uhi/on_search (hospital records)
-    G->>E: POST /on_search to consumer_uri
-    E-->>G: HTTP 200 ACK
-    E->>P: Hospital list with capabilities and contacts
-```
-
 A patient's family searches for NOTTO registered hospitals for an organ or tissue type.
 
 If step 7 does not arrive within your timeout, check that `consumer_uri` is publicly reachable and that `transaction_id` matches.
 
 The first call in the reference is [search](/docs/main/docs/uhi/v1/api/network/endpoints/uhi-notto/01-uhi-network-gateway-search).
+
+Notes for AI agents
+
+**Before you start.** The EUA has a public HTTPS `consumer_uri` and signs every call. Set `nic2004:86100`, `NOTTO_HOSPITAL` and `NOTTO`. Send an organ or tissue code from the master list. State is optional, and district needs state.
+
+**What happens.** The EUA sends `POST /api/v1/uhi/search`, and the Gateway answers HTTP 200 ACK. The Gateway forwards it to `notto.hspa`, which queries the NOTTO hospital registry. Its `on_search` reaches your `consumer_uri` through the Gateway. Answer it with HTTP 200 ACK.
+
+**How you know it worked.** An `on_search` arrives with your `transaction_id`. Each hospital carries the four capability tags and the transplant coordinator's `contact.phone`.
+
+**When it goes wrong.** If no `on_search` arrives within your timeout, check that `consumer_uri` is publicly reachable and that `transaction_id` matches. An unknown organ or tissue code returns an error. GPS and radius search is not available yet. Store `providers[].id` as a string. Read the Gateway signature from `X-Gateway-Authorization`, and accept `Proxy-Authorization` as well.
 
 ## What comes back
 
@@ -79654,6 +79890,24 @@ The test cases for this service are on [NOTTO test cases](/docs/main/docs/uhi/v1
 - Signing each call: [Signing](/docs/main/docs/uhi/v1/concepts/signing).
 - When every test case passes: [record a demo and request sign-off](/docs/main/docs/uhi/v1/getting-started/going-live#2-record-a-demo-and-request-sign-off).
 
+```mermaid
+sequenceDiagram
+    autonumber
+    actor P as Patient family
+    participant E as EUA (your app)
+    participant G as UHI Gateway
+    participant N as NOTTO HSPA
+    P->>E: Organ or tissue type + optional state
+    E->>G: POST /api/v1/uhi/search (NOTTO_HOSPITAL)
+    G-->>E: HTTP 200 ACK
+    G->>N: POST /search
+    N->>N: Query the NOTTO hospital registry
+    N->>G: POST /api/v1/uhi/on_search (hospital records)
+    G->>E: POST /on_search to consumer_uri
+    E-->>G: HTTP 200 ACK
+    E->>P: Hospital list with capabilities and contacts
+```
+
 
 ---
 
@@ -79740,29 +79994,21 @@ The `context` block is the same. The intent carries no state.
 
 ## Journey
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor B as Beneficiary
-    participant E as EUA (your app)
-    participant G as UHI Gateway
-    participant H as PM-JAY HEM HSPA
-    B->>E: State + optional filter, or GPS
-    E->>G: POST /api/v1/uhi/search
-    G-->>E: HTTP 200 ACK
-    G->>H: POST /search
-    H->>H: Query the HEM database
-    H->>G: POST /api/v1/uhi/on_search (hospital records)
-    G->>E: POST /on_search to consumer_uri
-    E-->>G: HTTP 200 ACK
-    E->>B: Hospital list
-```
-
 A beneficiary searches for PM-JAY empanelled hospitals.
 
 The optional filter is one of district, speciality, facility name or pincode. If step 7 does not arrive within your timeout, stop waiting and offer a retry. If the catalog is empty, suggest a wider search.
 
 The first call in the reference is [search](/docs/main/docs/uhi/v1/api/network/endpoints/uhi-pmjay-hem/01-uhi-network-gateway-search).
+
+Notes for AI agents
+
+**Before you start.** The EUA has a public HTTPS `consumer_uri`, a subscriber ID, and signs every call. Set `nic2004:85112`, `PMJAYHEM` and `PMJAY` exactly. Send a state, or GPS with all three radius fields.
+
+**What happens.** The EUA sends `POST /api/v1/uhi/search`, and the Gateway answers HTTP 200 ACK. The Gateway forwards the search to the single PM-JAY HEM HSPA, which queries the HEM database. Its `on_search` reaches your `consumer_uri` through the Gateway. Answer it with HTTP 200 ACK. Expect one `on_search` per search.
+
+**How you know it worked.** An `on_search` arrives with your `transaction_id`, and each record in `catalog.providers[]` is one empanelled hospital.
+
+**When it goes wrong.** A wrong case in `PMJAYHEM` or `PMJAY` means no HSPA responds. If no `on_search` arrives within your timeout, stop waiting and offer a retry. If the catalog is empty, suggest a wider search. GPS search can miss hospitals, so offer district or pincode next to it.
 
 ## What comes back
 
@@ -79902,6 +80148,24 @@ Run the PM-JAY HEM test cases in sandbox before you request sign-off. Each one i
 - The other services on the network: [Services](/docs/main/docs/uhi/v1/services).
 - Signing each call: [Signing](/docs/main/docs/uhi/v1/concepts/signing).
 - When every test case passes: [record a demo and request sign-off](/docs/main/docs/uhi/v1/getting-started/going-live#2-record-a-demo-and-request-sign-off).
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor B as Beneficiary
+    participant E as EUA (your app)
+    participant G as UHI Gateway
+    participant H as PM-JAY HEM HSPA
+    B->>E: State + optional filter, or GPS
+    E->>G: POST /api/v1/uhi/search
+    G-->>E: HTTP 200 ACK
+    G->>H: POST /search
+    H->>H: Query the HEM database
+    H->>G: POST /api/v1/uhi/on_search (hospital records)
+    G->>E: POST /on_search to consumer_uri
+    E-->>G: HTTP 200 ACK
+    E->>B: Hospital list
+```
 
 
 ---
@@ -80169,7 +80433,7 @@ They are no longer published; remove them from your agent. [Build with AI](/docs
 
 # 29 September 2026
 
-13 changes
+14 changes
 
 ### Ambulance Booking has an API reference
 
@@ -80223,6 +80487,10 @@ Reinstall to move from 0.3.4. [Build with AI](/docs/main/docs/hiecm/v3/getting-s
 
 Reinstall to move from 1.0.1. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
 
+### The abdm-contributors-assistant plugin is 0.4.3
+
+Reinstall to move from 0.4.2. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
+
 
 ---
 
@@ -80232,7 +80500,7 @@ Changes that affect what you can build against, newest first. Each entry links t
 
 ## 29 September 2026
 
-13 changes
+14 changes
 
 - [Ambulance Booking has an API reference](/docs/main/docs/whats-new/2026-09-29#ambulance-booking-has-an-api-reference)
 - [Physical Consultation has an API reference](/docs/main/docs/whats-new/2026-09-29#physical-consultation-has-an-api-reference)
@@ -80247,6 +80515,7 @@ Changes that affect what you can build against, newest first. Each entry links t
 - [The abdm-integrators-assistant plugin is 0.10.1](/docs/main/docs/whats-new/2026-09-29#the-abdm-integrators-assistant-plugin-is-0101)
 - [The abdm-contributors-assistant plugin is 0.4.2](/docs/main/docs/whats-new/2026-09-29#the-abdm-contributors-assistant-plugin-is-042)
 - [The nhcx plugin is 1.0.2](/docs/main/docs/whats-new/2026-09-29#the-nhcx-plugin-is-102)
+- [The abdm-contributors-assistant plugin is 0.4.3](/docs/main/docs/whats-new/2026-09-29#the-abdm-contributors-assistant-plugin-is-043)
 
 ## 25 September 2026
 

@@ -105,55 +105,37 @@ The `context` block is the same, with a new `transaction_id`. `76476` is a `medi
 
 ## Journey 1: find a Kendra
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor C as Citizen
-    participant E as EUA (your app)
-    participant G as UHI Gateway
-    participant P as PMBI HSPA
-    C->>E: Location filter or Kendra code
-    E->>G: POST /api/v1/uhi/search (JANAUSHADHI)
-    G-->>E: HTTP 200 ACK
-    G->>P: POST /search
-    P->>P: Query the Kendra database
-    P->>G: POST /api/v1/uhi/on_search (Kendra records)
-    G->>E: POST /on_search to consumer_uri
-    E-->>G: HTTP 200 ACK
-    E->>C: Kendra list
-```
-
 A citizen searches for Jan Aushadhi Kendras.
 
 The first call in the reference is [search](/docs/main/docs/uhi/v1/api/network/endpoints/uhi-jan-aushadhi-kendra-search/01-uhi-network-gateway-search).
 
-## Journey 2: find a medicine, then a Kendra that stocks it
+Notes for AI agents
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor C as Citizen
-    participant E as EUA (your app)
-    participant G as UHI Gateway
-    participant P as PMBI HSPA
-    C->>E: Medicine name
-    E->>G: search (JANAUSHADHI_MEDICINE)
-    G->>P: search
-    P->>G: on_search (medicines, medicineId, MRP)
-    G->>E: on_search
-    C->>E: Selects medicine + location filter
-    E->>G: search (JANAUSHADHI_KENDRA, medicineId)
-    G->>P: search
-    P->>G: on_search (Kendras with stock flag)
-    G->>E: on_search
-    E->>C: Kendras that stock the medicine
-```
+**Before you start.** The EUA has a public HTTPS `consumer_uri` and signs every call. Set `nic2008:47721`, and `JANAUSHADHI` as both the fulfillment type and the item code and name. Every location filter is optional.
+
+**What happens.** The EUA sends `POST /api/v1/uhi/search` with a location filter, or with a Kendra code in `category.descriptor.code` and `.name`. The Gateway answers HTTP 200 ACK and forwards it to `pmbi.hspa`. Its `on_search` reaches your `consumer_uri` through the Gateway.
+
+**How you know it worked.** An `on_search` arrives with your `transaction_id`. Each `providers[]` record is one Kendra, and its `id` is the Kendra code.
+
+**When it goes wrong.** A wrong `fulfillment.type` returns the wrong kind of catalog, or nothing. Empty city, email, `short_desc` or `long_desc` are not errors. Display an unrecognised ownership code as sent. Check the HSPA's signature with key ID `pmbi.hspapid.jak`.
+
+## Journey 2: find a medicine, then a Kendra that stocks it
 
 A citizen looks up a generic medicine by name, then searches for Kendras that stock it. Gateway ACKs are left out of this diagram.
 
 The two searches are separate transactions. Only `medicineId` carries across from step 5 to step 7.
 
 The first call of each search in the reference: [medicine search](/docs/main/docs/uhi/v1/api/network/endpoints/uhi-jan-aushadhi-medicine-search/01-uhi-network-gateway-search) and [Kendras for a selected medicine](/docs/main/docs/uhi/v1/api/network/endpoints/uhi-jan-aushadhi-medicine-stock/01-uhi-network-gateway-search).
+
+Notes for AI agents
+
+**Before you start.** The EUA has a public HTTPS `consumer_uri` and signs every call, with `context.domain` set to `nic2008:47721`. The citizen has typed a medicine name.
+
+**What happens.** The first search uses `JANAUSHADHI_MEDICINE`, with the name in `item.descriptor.name` and the name without spaces in `item.descriptor.code`. Its `on_search` lists medicines, and each `providers[].id` is a `medicineId`. After the citizen picks one, the second search uses a new `transaction_id` and `JANAUSHADHI_KENDRA`. It carries the `medicineId` in `item.descriptor.code` and `.name`, plus any location filter.
+
+**How you know it worked.** The second `on_search` lists Kendras. Each carries the medicine in `items[]`, where `descriptor.flag` is `true` for in stock and `false` for out of stock.
+
+**When it goes wrong.** Never send a medicine name in the second search. Name matching is not fixed, so show every medicine returned and let the citizen choose. Render stock from `descriptor.flag`, and show a count from `quantity.measure.value` only when one arrives. `location.radius` carries a distance only when the search sent GPS.
 
 ## What comes back
 
@@ -320,3 +302,41 @@ The test cases for this service are on [Jan Aushadhi test cases](/docs/main/docs
 - The other services on the network: [Services](/docs/main/docs/uhi/v1/services).
 - Signing each call: [Signing](/docs/main/docs/uhi/v1/concepts/signing).
 - When every test case passes: [record a demo and request sign-off](/docs/main/docs/uhi/v1/getting-started/going-live#2-record-a-demo-and-request-sign-off).
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor C as Citizen
+    participant E as EUA (your app)
+    participant G as UHI Gateway
+    participant P as PMBI HSPA
+    C->>E: Location filter or Kendra code
+    E->>G: POST /api/v1/uhi/search (JANAUSHADHI)
+    G-->>E: HTTP 200 ACK
+    G->>P: POST /search
+    P->>P: Query the Kendra database
+    P->>G: POST /api/v1/uhi/on_search (Kendra records)
+    G->>E: POST /on_search to consumer_uri
+    E-->>G: HTTP 200 ACK
+    E->>C: Kendra list
+```
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor C as Citizen
+    participant E as EUA (your app)
+    participant G as UHI Gateway
+    participant P as PMBI HSPA
+    C->>E: Medicine name
+    E->>G: search (JANAUSHADHI_MEDICINE)
+    G->>P: search
+    P->>G: on_search (medicines, medicineId, MRP)
+    G->>E: on_search
+    C->>E: Selects medicine + location filter
+    E->>G: search (JANAUSHADHI_KENDRA, medicineId)
+    G->>P: search
+    P->>G: on_search (Kendras with stock flag)
+    G->>E: on_search
+    E->>C: Kendras that stock the medicine
+```

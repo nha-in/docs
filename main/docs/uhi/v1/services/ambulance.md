@@ -69,22 +69,6 @@ Each role exposes these endpoints.
 
 ## Journey 1: discovery
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant C as Caregiver
-    participant E as EUA
-    participant G as UHI Gateway
-    participant H as Ambulance HSPAs
-    C->>E: Case type, class, pickup location, optional services
-    E->>G: search (EMERGENCY, SOURCE)
-    G-->>E: HTTP 200 ACK
-    G->>H: Broadcasts search to all ambulance HSPAs
-    H->>G: on_search (ambulances, arrival window, indicative price)
-    G->>E: on_search to consumer_uri
-    E->>C: Available ambulance options
-```
-
 The caregiver gives the case type, the class, the pickup location and any extra services. The Gateway broadcasts the search to every ambulance HSPA. Only providers that serve the pickup area answer.
 
 | Case type   | Location fields                                                                |
@@ -99,24 +83,31 @@ An excerpt of `on_search`, with one ambulance and its price:
 
 Start with the first call: [search](/docs/main/docs/uhi/v1/api/ambulance/endpoints/uhi-ambulance-discovery/01-uhi-network-gateway-search).
 
-## Journey 2: order
+Notes for AI agents
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant C as Caregiver
-    participant E as EUA
-    participant H as Ambulance HSPA
-    C->>E: Selects an ambulance (fulfillment)
-    E->>H: init (order, patient details, fulfillment ID)
-    H->>E: on_init (order.id, quote, terms)
-    E->>C: Quote and terms for review
-    H->>C: Calls back to arrange dispatch
-```
+**Before you start.** The EUA has a public HTTPS `consumer_uri` and signs every call. Set `context.domain` to `nic2008:86909`, the item code to `AMBULANCE` and the fulfillment type to `EMERGENCY`.
+
+**What happens.** The EUA sends `search` to the UHI Gateway with the class, the current time as the pickup time, and the `SOURCE` GPS and address. The Gateway answers HTTP 200 ACK and broadcasts the search to every ambulance HSPA. Each HSPA that serves the pickup area returns `on_search`. It carries one fulfillment per ambulance, with its arrival window, and items priced per ambulance through `items[].fulfillment_id`.
+
+**How you know it worked.** An `on_search` reaches your `consumer_uri` with your `transaction_id` and at least one fulfillment. Store `context.provider_id` and `context.provider_uri` from it for `init`.
+
+**When it goes wrong.** No answer means no HSPA serves the pickup area, not a network fault. Skip any HSPA whose `catalog.descriptor.flag` is `true`: its service is paused. An `agent` block in any payload fails testing. Render any category code, including `PTA` and `MVA`. Agree the `on_search` wait at onboarding.
+
+## Journey 2: order
 
 The caregiver picks an ambulance. The EUA sends the patient's details directly to that HSPA, which returns a quote and terms. The provider then calls the caregiver to arrange dispatch.
 
 Start with the first call: [init](/docs/main/docs/uhi/v1/api/ambulance/endpoints/uhi-ambulance-order/01-uhi-ambulance-init).
+
+Notes for AI agents
+
+**Before you start.** Hold `context.provider_id`, `context.provider_uri`, the chosen item id and fulfillment id from `on_search`, and the patient's ABHA address. `init` goes directly to the HSPA, signed, after looking up its public key.
+
+**What happens.** The EUA sends `init` with `order.provider.id`, `order.item.id` and `order.item.fulfillment_id`, and a matching `order.fulfillment.id`. It adds billing, `order.customer.id` as the ABHA address, and the `SOURCE` location. The HSPA returns `on_init` with `order.id`, `order.quote.price.value` and its `order.quote.breakup[]`. It also returns the payment type and status, five terms as `INITIATED`, and `order.fulfillment.tags.terms_reference`.
+
+**How you know it worked.** `on_init` reaches your `consumer_uri` with an `order.id`, a quote and all five terms. Show the cancellation and payment terms before any confirm action. The HSPA then calls the caregiver to arrange dispatch.
+
+**When it goes wrong.** `on_init` is a quote, not a booking: there is no `confirm`, `status` or `cancel` in this service today. Send the item and fulfillment ids exactly as `on_search` gave them. Driver and vehicle details in any payload fail testing.
 
 ## Concepts explored
 
@@ -228,3 +219,32 @@ Each test case is stated in plain words and as its exact success condition on [A
 - The calls, one page each: [Ambulance Booking API reference](/docs/main/docs/uhi/v1/api/ambulance).
 - How every call is signed: [Signing](/docs/main/docs/uhi/v1/concepts/signing).
 - When every test case passes: [record a demo and request sign-off](/docs/main/docs/uhi/v1/getting-started/going-live#2-record-a-demo-and-request-sign-off).
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant C as Caregiver
+    participant E as EUA
+    participant G as UHI Gateway
+    participant H as Ambulance HSPAs
+    C->>E: Case type, class, pickup location, optional services
+    E->>G: search (EMERGENCY, SOURCE)
+    G-->>E: HTTP 200 ACK
+    G->>H: Broadcasts search to all ambulance HSPAs
+    H->>G: on_search (ambulances, arrival window, indicative price)
+    G->>E: on_search to consumer_uri
+    E->>C: Available ambulance options
+```
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant C as Caregiver
+    participant E as EUA
+    participant H as Ambulance HSPA
+    C->>E: Selects an ambulance (fulfillment)
+    E->>H: init (order, patient details, fulfillment ID)
+    H->>E: on_init (order.id, quote, terms)
+    E->>C: Quote and terms for review
+    H->>C: Calls back to arrange dispatch
+```

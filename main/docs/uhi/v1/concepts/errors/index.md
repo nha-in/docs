@@ -32,11 +32,21 @@ Some failures stop a call before any error object is built. Read the status firs
 | `403`                              | Your public key is not registered, or your registration is not yet active                                                                          |
 | `200` with `ACK`, then no callback | Your `consumer_uri` is not publicly reachable over HTTPS, or your endpoint did not return `200`                                                    |
 
+Notes for AI agents
+
+**What happens.** A `401` or `403` stops the call before any error object is built. Branch on the status first, and parse `error` only when there is a body to parse.
+
+**When it goes wrong.** On `401`, fix the signature and send with a new header; the same header fails again. On `403`, finish or activate your registration before retrying. On `200` with `ACK` and no callback, call your `consumer_uri` from outside your network over HTTPS, and check that your endpoint returns `200` at once.
+
 ## Send and log
 
 **When you reject a call**, send all four fields. Fill `path` whenever the failure is a schema validation failure, so the sender can find the field.
 
-**When you receive an error**, log all four fields with the call's `transaction_id` and `message_id`. Those two values tie the error to the exchange. See [Messages and callbacks](/docs/main/docs/uhi/v1/concepts/messages#match-on-transaction_id-and-message_id).
+**When you receive an error**, log all four fields with the call's `transaction_id` and `message_id`. Those two values tie the error to the exchange. See [Messages and callbacks](/docs/main/docs/uhi/v1/concepts/messages#match-on-transaction-id-and-message-id).
+
+Notes for AI agents
+
+**What happens.** Act on the HTTP status and on whether `error` is empty. Never branch on a `code` value, because no code list is published.
 
 ## Confirm at onboarding
 

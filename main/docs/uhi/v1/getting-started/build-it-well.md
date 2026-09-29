@@ -19,7 +19,7 @@ Every call carries a `transaction_id` in its `context`. The [HSPA](/docs/main/do
 | `transaction_id` | One exchange, from `search` through `confirm` | Group every callback for one patient's search and booking |
 | `message_id`     | One request and its callback                  | Tie one callback to the request that caused it            |
 
-[Messages and callbacks](/docs/main/docs/uhi/v1/concepts/messages#match-on-transaction_id-and-message_id) sets out the whole `context` block.
+[Messages and callbacks](/docs/main/docs/uhi/v1/concepts/messages#match-on-transaction-id-and-message-id) sets out the whole `context` block.
 
 ## Sign every request fresh
 
@@ -61,7 +61,7 @@ Blood Bank's window is 10 to 15 seconds. No figure is set for the other services
 
 ## What the screens must do
 
-The service pages carry each service's own rules. These are the ones stated as checked at sign-off or required of every app.
+The service pages carry each service's own rules. The rules below are checked at sign-off or required of every app.
 
 | Rule                                                                                                        | Service                                                                                                                               |
 | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
@@ -92,6 +92,16 @@ Each service's go-live checklist carries these items. Work through them before y
 | 8 | Sign-off requested with sandbox test evidence                                                                                                                                                          |
 
 [Physical Consultation](/docs/main/docs/uhi/v1/services/consultation#go-live-checklist) carries its full twenty item checklist.
+
+Notes for AI agents
+
+**Before you start.** Your service page, with its own test cases and go-live checklist, and your role for that service.
+
+**What happens.** Treat each row as a pass or fail item that needs evidence. Items 1 to 4 are set up before you build. Items 5 and 6 live in your code. Items 7 and 8 close the list.
+
+**How you know it worked.** Each row has evidence: the Milestone 2 completion, the submitted public key, the sandbox access, a callback received on your public HTTPS URL, a signed call that is not refused, and every test case passed.
+
+**When it goes wrong.** An EUA without Milestone 2 cannot be onboarded onto any service, so item 1 blocks the rest. A callback URL reachable only inside your network fails item 4. A handler that waits on the reply to `search` for results fails item 6. For Physical Consultation, pass its twenty item list as well.
 
 ## Next
 

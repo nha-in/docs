@@ -53,9 +53,11 @@ Submit the sandbox registration form with three things:
 | Callback URL | Your public HTTPS `consumer_uri`, or `provider_uri` for an HSPA |
 | Public key   | The public half of the key pair from step 2                     |
 
-[Open the sandbox registration form](https://sbxai.abdm.gov.in)
-
 **You get:** a subscriber ID, a public key ID and sandbox access. The utility signs with both IDs, so keep them.
+
+### Open the form
+
+[Open the sandbox registration form](https://sbxai.abdm.gov.in)
 
 ## 4. Note the base URLs
 

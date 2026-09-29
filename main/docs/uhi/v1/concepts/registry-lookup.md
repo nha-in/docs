@@ -11,6 +11,12 @@ The [network registry](/docs/main/docs/uhi/v1/getting-started/glossary#network-r
 
 A call the [UHI Gateway](/docs/main/docs/uhi/v1/getting-started/glossary#uhi-gateway) forwards carries the Gateway's own `X-Gateway-Authorization` header instead. Check that one against the Gateway's key. See [Signing](/docs/main/docs/uhi/v1/concepts/signing#checking-a-signature-you-receive).
 
+Notes for AI agents
+
+**What happens.** Take `subscriber_id` and `pub_key_id` from the sender's `keyId`, and send the lookup. Trust the key only while `status` is `SUBSCRIBED` and the current time falls between `valid_from` and `valid_until`.
+
+**How you know it worked.** A `200` returns a record whose `subscriber_id` and `pub_key_id` match the sender's `keyId`.
+
 ## Send the lookup
 
 Sign the request with your own key, as you sign every UHI call. The body names the participant you want.
@@ -52,6 +58,12 @@ A `200` returns the participant's subscriber record.
 | `401`    | Your own header is wrong: signed over a different body, reused, expired, or with the wrong `keyId`              |
 | `403`    | Your public key is not registered, or your registration is not yet active                                       |
 | `404`    | No participant matches the body. The response carries an [error object](/docs/main/docs/uhi/v1/concepts/errors) |
+
+Notes for AI agents
+
+**What happens.** A failed lookup returns a status and no subscriber record. Read the status before the body.
+
+**When it goes wrong.** On `401`, build a fresh header over the exact bytes you send, and check your `keyId`. On `403`, confirm your registration is complete and uses the public key you sign with; a retry does not help. On `404`, check that `subscriber_id` and `pub_key_id` came from the right parts of the sender's `keyId`. Log the error object, and do not trust the call you were checking.
 
 ## Next steps
 

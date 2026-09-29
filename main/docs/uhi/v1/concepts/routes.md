@@ -11,29 +11,6 @@ A [UHI](/docs/main/docs/uhi/v1/getting-started/glossary#uhi) call takes one of t
 
 ## The whole exchange
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant EUA as EUA
-    participant GW as UHI Gateway
-    participant HSPA as HSPA
-    participant REG as Network registry
-    EUA->>GW: POST /api/v1/uhi/search (Authorization)
-    GW-->>EUA: HTTP 200 ACK (receipt only)
-    GW->>HSPA: POST /search (X-Gateway-Authorization)
-    HSPA-->>GW: HTTP 200 ACK
-    HSPA->>GW: POST /api/v1/uhi/on_search (catalog)
-    GW->>EUA: POST /on_search to consumer_uri
-    EUA-->>GW: HTTP 200 ACK
-    opt Services with booking, after on_search
-        EUA->>REG: POST /api/v1/networkregistry/lookup
-        REG-->>EUA: HSPA public key
-        EUA->>HSPA: init onwards, direct to provider_uri
-        HSPA->>EUA: on_init onwards, direct to consumer_uri
-        HSPA->>GW: Audit copies (on_confirm, on_status, on_update, on_cancel)
-    end
-```
-
 Steps 1 to 7 apply to every service. The optional block applies to Physical Consultation, with audit copies, and to Ambulance Booking, for `init` and `on_init` only.
 
 ## Through the Gateway
@@ -48,6 +25,12 @@ Discovery is the only stage the Gateway routes.
 
 Several HSPAs can answer one search. See [Messages and callbacks](/docs/main/docs/uhi/v1/concepts/messages#timeouts) for how long to wait.
 
+Notes for AI agents
+
+**What happens.** An EUA sends `search` to `POST /api/v1/uhi/search` and receives every `on_search` on its `consumer_uri`. An HSPA answers a forwarded `search` with an `ACK`, then sends its catalog to `POST /api/v1/uhi/on_search`, never to the EUA.
+
+**When it goes wrong.** An HSPA that checks `Authorization` on a forwarded search finds the Gateway's `X-Gateway-Authorization` instead. Check the header the route carries.
+
 ## Direct between EUA and HSPA
 
 From `init` onwards, the EUA and the HSPA talk directly.
@@ -57,6 +40,14 @@ From `init` onwards, the EUA and the HSPA talk directly.
 - **Each side** signs with its own `Authorization` header. The receiver fetches the sender's key with the [network registry lookup](/docs/main/docs/uhi/v1/concepts/registry-lookup).
 
 Physical Consultation's second search, for a chosen doctor's slots, also goes direct to the HSPA. Its `on_search` comes back with the HSPA's `Authorization` header, not the Gateway's.
+
+Notes for AI agents
+
+**Before you start.** The HSPA's `provider_uri` from the `context` of the `on_search` the patient chose, and the HSPA's key from the network registry lookup.
+
+**What happens.** Send `init` and every later call to `provider_uri`, signed with your own `Authorization`. The Gateway has no endpoint for these calls.
+
+**When it goes wrong.** A booking call sent to the Gateway base URL has no endpoint to reach. A direct callback checked against the Gateway's key fails: check it against the sender's key.
 
 ## Audit copies
 
@@ -68,6 +59,16 @@ The Gateway does not see a direct call. A Physical Consultation HSPA therefore s
 | `on_status`         | `POST /api/v1/uhi/on_status_audit`                                |
 | `on_update`         | `POST /api/v1/uhi/on_update_audit`, including the care context ID |
 | `on_cancel`         | `POST /api/v1/uhi/on_cancel_audit`                                |
+
+Notes for AI agents
+
+**Before you start.** Your system is a Physical Consultation HSPA. No other service sends audit copies.
+
+**What happens.** After each `on_confirm`, `on_status`, `on_update` or `on_cancel` to the EUA, send the same body to the matching audit endpoint. Sign it as you sign every outbound call.
+
+**How you know it worked.** Every one of the four callbacks your HSPA sends has a matching audit call with an identical body.
+
+**When it goes wrong.** A body edited between the callback and its copy is not an exact copy. An `on_update` copy without the care context ID is incomplete.
 
 ## Gateway endpoints
 
@@ -98,3 +99,26 @@ The sandbox also runs a reference EUA at `http://uhieuasandbox.abdm.gov.in/api/v
 - [Signing](/docs/main/docs/uhi/v1/concepts/signing): the headers on each route.
 - [Network and discovery reference](/docs/main/docs/uhi/v1/api/network): the Gateway calls, one page each.
 - [Physical Consultation reference](/docs/main/docs/uhi/v1/api/consultation): the direct calls and audit copies.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant EUA as EUA
+    participant GW as UHI Gateway
+    participant HSPA as HSPA
+    participant REG as Network registry
+    EUA->>GW: POST /api/v1/uhi/search (Authorization)
+    GW-->>EUA: HTTP 200 ACK (receipt only)
+    GW->>HSPA: POST /search (X-Gateway-Authorization)
+    HSPA-->>GW: HTTP 200 ACK
+    HSPA->>GW: POST /api/v1/uhi/on_search (catalog)
+    GW->>EUA: POST /on_search to consumer_uri
+    EUA-->>GW: HTTP 200 ACK
+    opt Services with booking, after on_search
+        EUA->>REG: POST /api/v1/networkregistry/lookup
+        REG-->>EUA: HSPA public key
+        EUA->>HSPA: init onwards, direct to provider_uri
+        HSPA->>EUA: on_init onwards, direct to consumer_uri
+        HSPA->>GW: Audit copies (on_confirm, on_status, on_update, on_cancel)
+    end
+```

@@ -84,23 +84,6 @@ Each role exposes these endpoints.
 
 ## Journey 1: discovery
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant P as Patient
-    participant E as EUA
-    participant G as UHI Gateway
-    participant H as HSPA
-    P->>E: Search filters (doctor, speciality, location)
-    E->>G: search (first, broadcast)
-    G->>H: search
-    H->>G: on_search (doctor catalog, provider_uri)
-    G->>E: on_search
-    P->>E: Selects doctor
-    E->>H: search (second, direct)
-    H->>E: on_search (time slots)
-```
-
 The patient searches by doctor, speciality or location. The Gateway broadcasts the first search to every HSPA in the domain, and each matching HSPA answers with its own catalog. The EUA then asks the chosen HSPA directly for the doctor's slots.
 
 The first search filters are all optional, on top of the service identity and the time window.
@@ -121,23 +104,17 @@ A GPS search needs all three radius fields: `type: CONSTANT`, `value`, and `unit
 
 Start with the first call: [search](/docs/main/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-discovery/01-uhi-network-gateway-search).
 
-## Journey 2: order
+Notes for AI agents
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant P as Patient
-    participant E as EUA
-    participant G as UHI Gateway
-    participant H as HSPA
-    P->>E: Selects slot
-    E->>H: init (patient, slot)
-    H->>E: on_init (order.id, quote, terms)
-    P->>E: Agrees to terms
-    E->>H: confirm (terms AGREED)
-    H->>E: on_confirm (CONFIRMED, PIN)
-    H->>G: on_confirm_audit (exact copy of on_confirm)
-```
+**Before you start.** The EUA has a public HTTPS `consumer_uri`, signs every call, and uses a fresh `transaction_id` per search. Set `context.domain` to `nic2004:85111` and the fulfillment type to `Physical`, which is case sensitive.
+
+**What happens.** The first `search` goes to the UHI Gateway, which broadcasts it. Each matching HSPA returns its own `on_search` catalog of doctors, so group the replies by `transaction_id`. Store `context.provider_uri` and `provider_id` from the chosen catalog. Look up that HSPA's public key at `/api/v1/networkregistry/lookup`, then send the second `search` straight to it. Its `on_search` returns the doctor's slots.
+
+**How you know it worked.** The second `on_search` reaches your `consumer_uri` with the same `transaction_id` and at least one slot. Keep the slot's `fulfillments[].id`: it becomes the fulfillment id in `init`.
+
+**When it goes wrong.** A GPS filter missing any of its three radius fields is ignored without an error, so results come back unfiltered. No `on_search` timeout is set for this service: render results as they arrive and agree a timeout at onboarding. Handle an empty `on_search` as a normal outcome. Do not call `select`: go from the second `on_search` to `init`.
+
+## Journey 2: order
 
 The EUA sends the patient and the slot. The HSPA holds the slot, assigns the order id and returns the quote and five terms. Once the patient agrees, the HSPA confirms and issues the PIN.
 
@@ -149,40 +126,17 @@ An excerpt of a confirmed `on_confirm`:
 
 Start with the first call: [init](/docs/main/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-order/01-uhi-consultation-init).
 
+Notes for AI agents
+
+**Before you start.** Hold the chosen HSPA's `provider_uri` and `provider_id`, and the slot's `fulfillments[].id`, from the second `on_search`. Every call from here goes directly to the HSPA, signed, after looking up its public key.
+
+**What happens.** The EUA sends `init` with the patient and the slot UUID as the fulfillment id, also in `@abdm/gov.in/slot_id`. The HSPA holds the slot for 15 minutes and returns `on_init` with `order.id`, the quote and five terms as `INITIATED`. Show all five. Send `confirm` with the HSPA's `order.id` and the terms unchanged, except `termsState` set to `AGREED`. The HSPA returns `on_confirm` and sends an exact copy to `on_confirm_audit`.
+
+**How you know it worked.** `on_confirm` arrives with state `CONFIRMED` and `authorization.type: PIN`, a 4-digit token with status `GENERATED`. Show the PIN to the patient and keep it in memory only.
+
+**When it goes wrong.** A slot UUID that does not match `on_search` makes the HSPA reject the request or fail to hold the slot. One term left as `INITIATED` in `confirm` causes rejection. Use the `order.id` from `on_init` in `confirm` and every call after it. `FAILED` in `on_confirm` means the booking did not complete. Never write the PIN to a database or a log.
+
 ## Journey 3: fulfilment
-
-```mermaid
-sequenceDiagram
-    autonumber
-    participant P as Patient
-    participant E as EUA
-    participant G as UHI Gateway
-    participant H as HSPA
-    P->>H: Presents PIN at facility
-    H->>E: on_update (APPOINTMENT_STARTED)
-    H->>G: on_update_audit
-    H->>E: on_update (COMPLETED)
-    H->>G: on_update_audit
-    opt An expected on_update never arrives
-        E->>H: status
-        H->>E: on_status
-        H->>G: on_status_audit
-    end
-    opt The doctor does not appear
-        E->>H: on_update (DOCTOR_NO_SHOW)
-    end
-```
-
-```mermaid
-stateDiagram-v2
-    [*] --> CONFIRMED: on_confirm
-    [*] --> FAILED: on_confirm
-    CONFIRMED --> APPOINTMENT_STARTED: HSPA on_update
-    APPOINTMENT_STARTED --> COMPLETED: HSPA on_update
-    CONFIRMED --> CANCELLED: cancel / on_cancel
-    CONFIRMED --> NO_SHOW: HSPA on_update
-    CONFIRMED --> DOCTOR_NO_SHOW: EUA on_update
-```
 
 The patient shows the PIN at the facility. The HSPA pushes each state change to the EUA with `on_update`. The EUA calls `status` only when an expected update never arrives.
 
@@ -190,28 +144,31 @@ The appointment moves through these states. Only `DOCTOR_NO_SHOW` starts from th
 
 Start with the first call: [status](/docs/main/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-fulfilment/01-uhi-consultation-status).
 
-## Journey 4: post-fulfilment
+Notes for AI agents
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant E as EUA
-    participant G as UHI Gateway
-    participant H as HSPA
-    E->>H: cancel (reason code, cancelledby patient)
-    H->>E: on_cancel (CANCELLED)
-    H->>G: on_cancel_audit
-    opt The doctor cancels
-        H->>E: on_cancel (CANCELLED, cancelledby doctor)
-        H->>G: on_cancel_audit
-    end
-    E->>H: on_message
-    H->>E: on_message
-```
+**Before you start.** The order is `CONFIRMED` and you hold its `order.id`. The EUA exposes `/on_update` and `/on_status`. The HSPA exposes `/status` and `/on_update`.
+
+**What happens.** At check-in the PIN status moves from `GENERATED` to `VERIFIED`, or to `HSPAOVERRIDE` with an override reason code. The HSPA pushes `on_update` for `APPOINTMENT_STARTED`, then `COMPLETED`, or for `NO_SHOW`. It copies each one to `on_update_audit`. The EUA sends `status` only when an expected update never arrives, and the HSPA copies its `on_status` to `on_status_audit`.
+
+**How you know it worked.** An `on_update` with `COMPLETED` reaches the EUA, carrying `@abdm/gov.in/care_context_id`. Keep that id. With the doctor's `@abdm/gov.in/hip_id`, it lets the EUA fetch the records later.
+
+**When it goes wrong.** If no `on_update` arrives when expected, call `status`. The EUA sets one state only, `DOCTOR_NO_SHOW`, through `on_update`. Do not send or depend on `NOT_VERIFIED`. An HSPA sends every `on_update_audit`, because it is the copy that counts for DHIS.
+
+## Journey 4: post-fulfilment
 
 A cancellation takes the place of fulfilment. The patient cancels through the EUA, or the doctor cancels through the HSPA. Either side sends the other a message with `on_message`.
 
 Start with the first call: [cancel](/docs/main/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-post-fulfilment/01-uhi-consultation-cancel).
+
+Notes for AI agents
+
+**Before you start.** Hold the order's `order.id`. Pick the reason code from the lists under Cancellation and override reason codes, and send it exactly as listed.
+
+**What happens.** A patient cancellation is a `cancel` from the EUA with `@abdm/gov.in/cancelledby: patient` and the reason in `@abdm/gov.in/cancel_reason`. The HSPA answers `on_cancel` with `CANCELLED` and copies it to `on_cancel_audit`. A doctor cancellation is an `on_cancel` the HSPA sends unprompted, with `@abdm/gov.in/cancelledby: doctor`. Either side can send `on_message`.
+
+**How you know it worked.** An `on_cancel` with `CANCELLED` reaches the EUA, and the HSPA has sent its copy to `on_cancel_audit`.
+
+**When it goes wrong.** `@abdm/gov.in/cancelledby` is mandatory, because it decides which terms apply. `PATIENT_OTHER` and `DOCTOR_OTHER` need free text. `/on_message` is mandatory for an EUA and optional for an HSPA.
 
 ## Concepts explored
 
@@ -258,6 +215,10 @@ The order tags from `init` onwards:
 | Settlement   | Your own text. Online payment is not part of the flow today.                                                                                                                                                                                                     |
 | Refund       | Your own text. Refunds are not part of the flow today.                                                                                                                                                                                                           |
 
+Notes for AI agents
+
+**What happens.** These texts travel in the five terms of `on_init`, each with `termsState` set to `INITIATED`. The EUA shows every term before `confirm`, then returns all five unchanged with `termsState` set to `AGREED`.
+
 ## Cancellation and override reason codes
 
 Send the reason codes exactly as listed. The labels are yours to choose.
@@ -296,6 +257,10 @@ Facility staff use an override reason when a confirmed patient cannot check in w
 | O5 | `OVERRIDE_EUA_OUTAGE`             | The EUA platform is down                                   |
 | O6 | `OVERRIDE_MISMATCH`               | PIN mismatch after 3 attempts                              |
 | O6 | `OVERRIDE_OTHER`                  | Other. The HSPA must provide free text                     |
+
+Notes for AI agents
+
+**When it goes wrong.** `OVERRIDE_MISMATCH` and `OVERRIDE_OTHER` share the number O6. Key your handling on the reason code string, never on the number.
 
 ## Go-live checklist
 
@@ -343,3 +308,86 @@ Find the test cases this service is certified against on [Physical Consultation 
 - The calls, one page each: [Physical Consultation API reference](/docs/main/docs/uhi/v1/api/consultation).
 - How every call is signed: [Signing](/docs/main/docs/uhi/v1/concepts/signing).
 - When every test case passes: [record a demo and request sign-off](/docs/main/docs/uhi/v1/getting-started/going-live#2-record-a-demo-and-request-sign-off).
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant P as Patient
+    participant E as EUA
+    participant G as UHI Gateway
+    participant H as HSPA
+    P->>E: Search filters (doctor, speciality, location)
+    E->>G: search (first, broadcast)
+    G->>H: search
+    H->>G: on_search (doctor catalog, provider_uri)
+    G->>E: on_search
+    P->>E: Selects doctor
+    E->>H: search (second, direct)
+    H->>E: on_search (time slots)
+```
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant P as Patient
+    participant E as EUA
+    participant G as UHI Gateway
+    participant H as HSPA
+    P->>E: Selects slot
+    E->>H: init (patient, slot)
+    H->>E: on_init (order.id, quote, terms)
+    P->>E: Agrees to terms
+    E->>H: confirm (terms AGREED)
+    H->>E: on_confirm (CONFIRMED, PIN)
+    H->>G: on_confirm_audit (exact copy of on_confirm)
+```
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant P as Patient
+    participant E as EUA
+    participant G as UHI Gateway
+    participant H as HSPA
+    P->>H: Presents PIN at facility
+    H->>E: on_update (APPOINTMENT_STARTED)
+    H->>G: on_update_audit
+    H->>E: on_update (COMPLETED)
+    H->>G: on_update_audit
+    opt An expected on_update never arrives
+        E->>H: status
+        H->>E: on_status
+        H->>G: on_status_audit
+    end
+    opt The doctor does not appear
+        E->>H: on_update (DOCTOR_NO_SHOW)
+    end
+```
+
+```mermaid
+stateDiagram-v2
+    [*] --> CONFIRMED: on_confirm
+    [*] --> FAILED: on_confirm
+    CONFIRMED --> APPOINTMENT_STARTED: HSPA on_update
+    APPOINTMENT_STARTED --> COMPLETED: HSPA on_update
+    CONFIRMED --> CANCELLED: cancel / on_cancel
+    CONFIRMED --> NO_SHOW: HSPA on_update
+    CONFIRMED --> DOCTOR_NO_SHOW: EUA on_update
+```
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant E as EUA
+    participant G as UHI Gateway
+    participant H as HSPA
+    E->>H: cancel (reason code, cancelledby patient)
+    H->>E: on_cancel (CANCELLED)
+    H->>G: on_cancel_audit
+    opt The doctor cancels
+        H->>E: on_cancel (CANCELLED, cancelledby doctor)
+        H->>G: on_cancel_audit
+    end
+    E->>H: on_message
+    H->>E: on_message
+```
