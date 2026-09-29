@@ -57,9 +57,10 @@ const titleOverrides = (() => {
   // At the catalogue root, outside every openapi folder: listSpecTree
   // treats a YAML under <platform>/<version> as a module, and lint:agent reads
   // every YAML anywhere under openapi/ as a specification. This is neither.
-  const file = join(root, 'catalogue', 'titles.yaml');
-  if (!existsSync(file)) return {};
-  return parse(readFileSync(file, 'utf8')) ?? {};
+  // HIE-CM's are in catalogue/hiecm/titles.yaml, NHCX's still in
+  // catalogue/titles.yaml; operationIds are unique, so they merge.
+  const files = [join(root, 'catalogue', 'titles.yaml'), ...['hiecm', 'nhcx', 'uhi'].map((g) => join(root, 'catalogue', g, 'titles.yaml'))];
+  return Object.assign({}, ...files.filter(existsSync).map((f) => parse(readFileSync(f, 'utf8')) ?? {}));
 })();
 
 const slug = (s) =>

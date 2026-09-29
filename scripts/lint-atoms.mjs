@@ -6,7 +6,7 @@ import { dirname, join, relative } from "node:path";
 import { loadAtoms, root } from "./lib/atoms.mjs";
 import { contractProblems } from "./lib/contract.mjs";
 import { loadOps } from "./lib/ops.mjs";
-import { FOLDER } from "./lib/paths.mjs";
+import { FOLDER, atomPath, layoutProblems } from "./lib/paths.mjs";
 
 const TYPES = ["concept", "flow", "endpoint", "callback", "error", "test",
                "decision", "glossary", "fhir", "sandbox", "troubleshooting"];
@@ -20,6 +20,8 @@ function fail(file, msg) {
 
 const { atoms, problems: parseProblems, duplicates } = loadAtoms();
 for (const d of duplicates) problems.push(`two files carry one id, ${d}`);
+// Nothing sits in the catalogue outside the tree catalogue/README.md draws.
+problems.push(...layoutProblems(root));
 for (const p of parseProblems) fail(p.file, p.msg);
 
 // Only HIE-CM has specifications in this repository; an operation on any
@@ -46,8 +48,10 @@ for (const [id, atom] of atoms) {
     const [g, t] = id.split(".");
     if (g !== fm.gateway) fail(file, `id says gateway "${g}" but frontmatter says "${fm.gateway}"`);
     if (t !== fm.type) fail(file, `id says type "${t}" but frontmatter says "${fm.type}"`);
-    if (FOLDER[fm.type] && !file.includes(`/${FOLDER[fm.type]}/`)) {
-      fail(file, `type ${fm.type} must live in a ${FOLDER[fm.type]}/ folder`);
+    // An atom lives at catalogue/<gateway>/<type folder>/<id slug>.md, and
+    // nowhere else, whether it is hand-written or written from its page.
+    if (FOLDER[fm.type] && relative(root, file) !== atomPath(id, fm.type, fm.gateway)) {
+      fail(file, `expected at ${atomPath(id, fm.type, fm.gateway)}`);
     }
   }
 
