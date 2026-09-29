@@ -3,6 +3,13 @@ import type {SkillUse} from './commands';
 /** One catalogue atom an answer drew on, surfaced as a citation chip. */
 export type Source = {id: string; title: string; status: string; url: string};
 
+/**
+ * An API literal the answer may quote, paired with the reference page that
+ * documents it. The server builds these from the passages it retrieved, so
+ * a path the model invented never gets one.
+ */
+export type Link = {literal: string; url: string};
+
 /** Fallback text when the live backend cannot be reached mid-stream. */
 export const UNREACHABLE =
   'The assistant is unreachable right now. Try again shortly.';
@@ -11,6 +18,8 @@ type StreamHandlers = {
   onText: (delta: string) => void;
   onTool: (detail: string) => void;
   onSources: (sources: Source[]) => void;
+  /** Literals with reference pages, sent once before "sources". */
+  onLinks?: (links: Link[]) => void;
   onError: (message: string) => void;
   /** Which skill section a command used, sent once before the answer. */
   onSkill?: (use: SkillUse) => void;
@@ -60,6 +69,9 @@ export async function readStream(
       }
       case 'sources':
         handlers.onSources(payload as Source[]);
+        break;
+      case 'links':
+        handlers.onLinks?.(payload as Link[]);
         break;
       case 'skill':
         handlers.onSkill?.(payload as SkillUse);

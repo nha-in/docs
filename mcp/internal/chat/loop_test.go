@@ -1432,3 +1432,33 @@ func TestRespondAnswersThanksWithoutGreetingBack(t *testing.T) {
 		t.Error("thanks was answered with the greeting")
 	}
 }
+
+// An endpoint passage opens with its method and path and names its page, so
+// the turn ends with a links event pairing the two. The widget renders the
+// path as a link from that, never from anything the model wrote.
+func TestRespondEmitsLinksForEndpointPassages(t *testing.T) {
+	m := &fakeModel{replies: []Reply{{Text: "Call `/api/hiecm/v3/token/generate-token` first.", StopReason: "end_turn"}}}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			return json.RawMessage(`{"passages":[
+				{"id":"hiecm.endpoint.m2-generate-link-token","title":"Generate link token","doc_url":"/docs/hiecm/v3/api/m2/generate-token","body":"POST /api/hiecm/v3/token/generate-token\n\nGenerates a link token."},
+				{"id":"hiecm.concept.care-context","title":"Care context","doc_url":"/docs/hiecm/v3/concepts/care-context","body":"A care context is a visit."},
+				{"id":"hiecm.endpoint.orphan","title":"No page","doc_url":"","body":"GET /api/nowhere\n\nUnrouted."}]}`),
+				[]Source{{ID: "hiecm.endpoint.m2-generate-link-token"}}, guard.PackFacts{}, nil
+		},
+	}
+	var links []Link
+	emit := func(event string, data any) error {
+		if event == "links" {
+			links = data.([]Link)
+		}
+		return nil
+	}
+	if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "link records"}}, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	want := Link{Literal: "/api/hiecm/v3/token/generate-token", URL: "/docs/hiecm/v3/api/m2/generate-token"}
+	if len(links) != 1 || links[0] != want {
+		t.Errorf("links = %v, want [%v]: one per endpoint passage with a route line and a page", links, want)
+	}
+}

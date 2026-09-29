@@ -75,6 +75,44 @@ type Source struct {
 	URL   string `json:"url"`
 }
 
+// Link pairs an API literal the model was shown this turn with the reference
+// page that documents it. The widget turns a matching inline code span into
+// a link. Built from the pack, never from the answer, so a path the model
+// invented can never acquire one.
+type Link struct {
+	Literal string `json:"literal"`
+	URL     string `json:"url"`
+}
+
+// routeLineRe matches the method and path openPassage puts on the first
+// line of an endpoint or callback passage.
+var routeLineRe = regexp.MustCompile(`^(?:GET|POST|PUT|PATCH|DELETE) (/\S+)\n`)
+
+// linksFromPack reads the pre-retrieved pack and returns one Link per
+// endpoint or callback passage that carries both a route line and a page.
+func linksFromPack(pack []byte) []Link {
+	var pp struct {
+		Passages []struct {
+			DocURL string `json:"doc_url"`
+			Body   string `json:"body"`
+		} `json:"passages"`
+	}
+	if err := json.Unmarshal(pack, &pp); err != nil {
+		return nil
+	}
+	var links []Link
+	seen := map[string]bool{}
+	for _, p := range pp.Passages {
+		m := routeLineRe.FindStringSubmatch(p.Body)
+		if m == nil || p.DocURL == "" || seen[m[1]] {
+			continue
+		}
+		seen[m[1]] = true
+		links = append(links, Link{Literal: m[1], URL: p.DocURL})
+	}
+	return links
+}
+
 // Service runs the agent loop: stream from the model, execute any tool
 // calls it asks for, feed the results back, repeat until it has an answer.
 type Service struct {
@@ -501,7 +539,7 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 		if err := emit("text", map[string]string{"delta": reply}); err != nil {
 			return err
 		}
-		return s.finish(nil, emit)
+		return s.finish(nil, nil, emit)
 	}
 	// The gateway the reader's page belongs to scopes every search this
 	// question makes, the pre-retrieval and the model's own, unless the
@@ -582,7 +620,7 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 			if err := emit("skill", use); err != nil {
 				return err
 			}
-			return s.finish(nil, emit)
+			return s.finish(nil, nil, emit)
 		}
 		use.Module, use.ResolvedBy = module, by
 		if body, ok := s.Skill(module, cmd.Name); ok {
@@ -633,6 +671,9 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 	// three are per-question text, and the system prompt is not the only
 	// thing that stays stable, the assembly point does too.
 	var passagesPrefix string
+	// links pairs each endpoint passage's path with its reference page, for
+	// the widget to render the path as a link. Nothing else feeds it.
+	var links []Link
 	if s.Lookup != nil && !aboutSelf {
 		// The lookup query is masked the same way the conversation is: this
 		// is a health system, and a follow-up that repeats a patient
@@ -647,6 +688,7 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 		} else if len(pack) > 0 {
 			facts = f
 			packHadContent = true
+			links = linksFromPack(pack)
 			for _, src := range packSources {
 				addSource(&sources, src)
 			}
@@ -825,9 +867,9 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 				// too: they belong to an answer the reader never saw. When
 				// part of the answer did reach the reader they keep their
 				// citations, because that part is what those sources back.
-				return s.finish(nil, emit)
+				return s.finish(nil, nil, emit)
 			}
-			return s.finish(sources, emit)
+			return s.finish(sources, links, emit)
 		}
 
 		// The round ended in a tool call, so whatever text it produced was
@@ -917,18 +959,23 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 				return textErr
 			}
 			if g.blocked && g.released.Len() == 0 {
-				return s.finish(nil, emit)
+				return s.finish(nil, nil, emit)
 			}
-			return s.finish(sources, emit)
+			return s.finish(sources, links, emit)
 		}
 	}
 	// Unreachable: the loop above always returns by round == MaxToolCalls.
-	return s.finish(sources, emit)
+	return s.finish(sources, links, emit)
 }
 
 // finish emits the sources event (only when there is at least one source)
 // followed by done, and returns nil -- the loop's only successful exit.
-func (s *Service) finish(sources []Source, emit func(event string, data any) error) error {
+func (s *Service) finish(sources []Source, links []Link, emit func(event string, data any) error) error {
+	if len(links) > 0 {
+		if err := emit("links", links); err != nil {
+			return err
+		}
+	}
 	if len(sources) > 0 {
 		if err := emit("sources", sources); err != nil {
 			return err

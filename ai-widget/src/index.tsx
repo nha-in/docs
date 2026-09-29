@@ -2,7 +2,7 @@ import {Fragment, render} from 'preact';
 import {useEffect, useRef, useState} from 'preact/hooks';
 import ChatMarkdown, {CopyButton, absolute, headings} from './markdown';
 import {ArrowUp, ChevronRight, FileText, Paperclip, Plus, Sparkles, X} from './icons';
-import {readStream, UNREACHABLE, type Source} from './sse';
+import {readStream, UNREACHABLE, type Source, Link} from './sse';
 import {
   AGENTS,
   TOOLS,
@@ -52,6 +52,8 @@ type Turn = {
   from: 'you' | 'assistant';
   text: string;
   sources?: Source[];
+  /** Endpoint paths the answer may quote, each with its reference page. */
+  links?: Link[];
   /** The file that went with this question, kept so a follow-up still has it. */
   file?: Attached;
   /**
@@ -195,10 +197,10 @@ function offerIndex(turns: Turn[]): number {
 }
 
 /** Attaches the citation chips to the last turn in the thread. */
-function attachSources(setTurns: Setter, sources: Source[]) {
+function attachSources(setTurns: Setter, sources: Source[], links?: Link[]) {
   setTurns((prior) => {
     const last = prior[prior.length - 1];
-    return [...prior.slice(0, -1), {...last, sources}];
+    return [...prior.slice(0, -1), {...last, sources, links: links ?? last.links}];
   });
 }
 
@@ -416,6 +418,7 @@ function Panel({
   const atOnce = useRef(false);
   const frame = useRef(0);
   const heldSources = useRef<Source[] | null>(null);
+  const heldLinks = useRef<Link[] | null>(null);
 
   const drain = () => {
     frame.current = requestAnimationFrame(drain);
@@ -426,9 +429,10 @@ function Panel({
       cancelAnimationFrame(frame.current);
       frame.current = 0;
       revealing.current = false;
-      if (heldSources.current) {
-        attachSources(setTurns, heldSources.current);
+      if (heldSources.current || heldLinks.current) {
+        attachSources(setTurns, heldSources.current ?? [], heldLinks.current ?? undefined);
         heldSources.current = null;
+        heldLinks.current = null;
       }
       setPhase('idle');
       return;
@@ -460,6 +464,9 @@ function Panel({
   const queueSources = (sources: Source[]) => {
     heldSources.current = sources;
   };
+  const queueLinks = (links: Link[]) => {
+    heldLinks.current = links;
+  };
 
   const stopDrain = () => {
     if (frame.current) cancelAnimationFrame(frame.current);
@@ -467,6 +474,7 @@ function Panel({
     revealing.current = false;
     pending.current = '';
     heldSources.current = null;
+    heldLinks.current = null;
     netDone.current = true;
   };
 
@@ -875,6 +883,8 @@ function Panel({
         // Citations belong to the answer, so they wait for it: attaching them
         // while the text is still revealing would sit them under half a reply.
         onSources: (sources) => queueSources(sources),
+        // Same timing as the citations: a link lands with the finished answer.
+        onLinks: (links) => queueLinks(links),
         onError: emit,
         // Before any text: which section the answer draws on. When the
         // server could not tell which module the question is about, it asks
@@ -1050,7 +1060,7 @@ function Panel({
               </p>
             )}
             {turn.from === 'assistant' ? (
-              <ChatMarkdown text={turn.text} docsOrigin={docsOrigin} />
+              <ChatMarkdown text={turn.text} docsOrigin={docsOrigin} links={turn.links} />
             ) : (
               turn.text
             )}

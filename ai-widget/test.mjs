@@ -8,7 +8,7 @@ import {build} from 'esbuild';
 const out = join(tmpdir(), `abdm-widget-test-${process.pid}.mjs`);
 await build({
   stdin: {
-    contents: `export {toBlocks, absolute, headings} from './src/markdown';
+    contents: `export {toBlocks, absolute, headings, linkFor} from './src/markdown';
                export {readStream} from './src/sse';
                export {revealStep, THINKING_HOLD, THINKING_BURST} from './src/pacing';
                export {say, answer, wantsTools, needsAgent, TOOLS, AGENTS} from './src/install';
@@ -36,7 +36,7 @@ await build({
   outfile: out,
 });
 const {
-  toBlocks, absolute, headings, readStream, revealStep, THINKING_HOLD, THINKING_BURST,
+  toBlocks, absolute, headings, linkFor, readStream, revealStep, THINKING_HOLD, THINKING_BURST,
   say, answer, wantsTools, needsAgent, TOOLS, AGENTS,
   titleOf, remember, whenSaid, forgetOne, resumable, ABOUT, isAboutQuestion, memoryOf, sentFrom,
   startersFrom, DEFAULT_STARTERS, forModel, parseLlms, searchPages, pageUrl, markdownUrl, isHtmlDocument,
@@ -299,3 +299,28 @@ assert.match(say({at: 'tools'}, ctx), /Skills/);
 assert.match(say({at: 'agents', tool: 'mcp'}, ctx), /Which agent are you working in\?/);
 
 console.log('ok');
+
+// A links event arrives once before sources and is handed over as sent;
+// linkFor turns an exact literal into an absolute page and nothing else.
+{
+  const enc = new TextEncoder();
+  const stream = new ReadableStream({
+    start(c) {
+      c.enqueue(enc.encode('event: links\ndata: [{"literal":"/api/hiecm/v3/token/generate-token","url":"/docs/hiecm/v3/api/m2/generate-token"}]\n\n'));
+      c.enqueue(enc.encode('event: done\ndata: {}\n\n'));
+      c.close();
+    },
+  });
+  let links = null;
+  await readStream(stream, {
+    onText: () => {},
+    onTool: () => {},
+    onSources: () => {},
+    onLinks: (l) => (links = l),
+    onError: () => assert.fail('no error expected'),
+  });
+  assert.deepEqual(links, [{literal: '/api/hiecm/v3/token/generate-token', url: '/docs/hiecm/v3/api/m2/generate-token'}]);
+  assert.equal(linkFor('/api/hiecm/v3/token/generate-token', links, 'https://docs.example'), 'https://docs.example/docs/hiecm/v3/api/m2/generate-token');
+  assert.equal(linkFor('/api/hiecm/v3/token/generate-token?x=1', links, 'https://docs.example'), null);
+  assert.equal(linkFor('X-LINK-TOKEN', undefined, 'https://docs.example'), null);
+}
