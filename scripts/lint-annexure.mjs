@@ -69,6 +69,10 @@ for (const [id, n] of rows) {
 }
 if (process.argv.includes('--write') && updated !== text) writeFileSync(annexurePath, updated);
 else if (updated !== text && process.env.CI) failures.push('annexure counts are stale; run npm run lint:annexure -- --write');
+// Outside CI a stale count only warns, but it says so: a run that printed
+// "all citations resolve" over stale counts is how #73 merged with a table
+// CI then rejected.
+else if (updated !== text) console.warn('annexure counts are stale; CI will fail until you run npm run lint:annexure -- --write');
 
 if (failures.length) {
   console.error(failures.join('\n'));
