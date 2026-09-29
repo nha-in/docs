@@ -1,0 +1,36 @@
+{
+  "id": "naive-hiecm-m2-link-record-token-generation-01",
+  "slice": "naive",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "Link record token generation"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "The link token is requested with POST /api/hiecm/v3/token/generate-token.",
+    "That call returns only 202 Accepted, and the linkToken arrives later on your bridge at /api/v3/hip/token/on-generate-token."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.endpoint.m2-generate-link-token",
+    "hiecm.flow.m2-link-care-context"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-hiecm-link-token-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "A real question from the live Ask AI panel that failed there, kept in the reader's exact words. The miss a wrong answer makes is expecting the token in the response body. Source lines: catalogue/hiecm/flows/m2-link-care-context.md, step 1 'Your system calls `POST /api/hiecm/v3/token/generate-token`'; 'Generate the link token; the 202 carries nothing, and the token arrives on `/api/v3/hip/token/on-generate-token`'. catalogue/hiecm/endpoints/m2-generate-link-token.md, 'The call returns 202 Accepted, and the token arrives on your bridge at on-generate-token'; 'A `linkToken` arrives on `/api/v3/hip/token/on-generate-token`'."
+}

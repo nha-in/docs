@@ -1,0 +1,43 @@
+{
+  "id": "followup-hiecm-m2-several-care-contexts-01",
+  "slice": "followup",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "how do I link care contexts once I have the link token"
+    },
+    {
+      "role": "assistant",
+      "text": "Call POST /api/hiecm/hip/v3/link/carecontext with the patient's care contexts, sending the link token in the X-LINK-TOKEN header."
+    },
+    {
+      "role": "user",
+      "text": "can i send more than one visit"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "One call can link one or many care contexts: put them in the careContexts array and set count to how many there are.",
+    "hiTypes on each patient entry is one value, such as OPConsultation, not an array."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.endpoint.m2-hip-link-care-context"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-hiecm-hip-initiated-linking-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "The last turn is under specified: 'visit' means care context on the link call from the assistant turn. Source lines: catalogue/hiecm/endpoints/m2-hip-link-care-context.md, 'One call covers one or many: put them in the `careContexts` array and set `count` to how many there are.'; '`hiTypes` on each patient entry is one value, such as `OPConsultation`, not an array.'; '`ABDM-1037`: `count` does not match the care contexts sent.'"
+}

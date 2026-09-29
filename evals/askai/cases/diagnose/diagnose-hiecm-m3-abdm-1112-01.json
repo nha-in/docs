@@ -1,0 +1,36 @@
+{
+  "id": "diagnose-hiecm-m3-abdm-1112-01",
+  "slice": "diagnose",
+  "class": "diagnose",
+  "turns": [
+    {
+      "role": "user",
+      "text": "health information request keeps failing with ABDM-1112 \"Invalid or already expired consent artefact id\". it worked last week with the same artefact. retrying doesnt help"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "ABDM-1112 means the consent artefact is unknown or has expired, and an expired artefact is often not a bug because a consent window is allowed to end.",
+    "If you still need the data, raise a new consent request instead of retrying against the old artefact."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.error.abdm-1112",
+    "hiecm.concept.consent-artefact"
+  ],
+  "expected_shape": "diagnose",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-hiecm-consent-management-data-flow-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "A fetch that worked last week and fails now reads as a bug; the atoms say it is the consent ending. The same code means a DigiLocker gender mismatch in another module, so that meaning must not appear. Source lines: catalogue/hiecm/errors/abdm-1112.md, 'The [consent artefact] you presented is unknown or has expired... An expired artefact is often not a bug: a consent window is allowed to end.' and 'If you still need the data, raise a new consent request. Do not retry against the old artefact.'; catalogue/hiecm/concepts/consent-artefact.md, 'A fetch that worked last week fails today because the patient revoked or the validity period ended; that is the system working.'; catalogue/hiecm/concepts/m3-plural-artefacts-and-codes.md, '`ABDM-1112` is an unusable consent in one place and a DigiLocker gender mismatch in a module error table.' Review: must_not_contain 'gender mismatch' removed: the catalogue records 1112 also as a DigiLocker gender mismatch."
+}

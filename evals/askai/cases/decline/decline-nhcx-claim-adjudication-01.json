@@ -27,6 +27,6 @@
   "expected_behaviour": "decline",
   "derived_from": null,
   "source_row": "annexure#abdm-faq-general",
-  "catalogue_version": "2026.08.24",
+  "catalogue_version": "2026.09.16",
   "notes": "claim adjudication rules are an insurer business process, not part of what this catalogue documents about the NHCX gateway; point at the NHCX orientation page rather than inventing a rule."
 }

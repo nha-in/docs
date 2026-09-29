@@ -12,6 +12,6 @@
   "expected_behaviour": "decline",
   "derived_from": null,
   "source_row": "annexure#abdm-faq-general",
-  "catalogue_version": "2026.08.24",
+  "catalogue_version": "2026.09.16",
   "notes": "No NHA phone number is in the catalogue; support is a forum and email address, not a phone line, so the fail is an invented phone number."
 }
