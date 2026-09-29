@@ -194,7 +194,7 @@ assert.equal(absolute('javascript:alert(1)', 'https://d.example'), null);
 // The stream: events split on blank lines, deltas concatenated, a payload
 // that arrives in two chunks mid-event still parses.
 const chunks = [
-  'event: tool\ndata: {"name":"search","detail":"Consulting the catalogue"}\n\n',
+  'event: tool\ndata: {"name":"search_docs","detail":"UHI create ABHA with Aadhaar OTP: request OTP"}\n\n',
   'event: text\ndata: {"delta":"Hel',
   'lo"}\n\nevent: text\ndata: {"delta":" there"}\n\n',
   'event: sources\ndata: [{"id":"a","title":"A","status":"verified","url":"/docs/a"}]\n\n',
@@ -217,7 +217,9 @@ await readStream(stream, {
   onError: () => assert.fail('no error expected'),
 });
 assert.equal(text, 'Hello there');
-assert.equal(tool, 'Consulting the catalogue');
+// The activity line names what the assistant is doing, never the query it
+// wrote: that read as the reader's own question repeated back.
+assert.equal(tool, 'Searching the docs');
 assert.deepEqual(sources, [
   {id: 'a', title: 'A', status: 'verified', url: '/docs/a'},
 ]);

@@ -1270,7 +1270,7 @@ function Panel({
             is fine: the oldest exchanges simply stop being sent. */}
         {memory.full && !busy && continued !== conversation.current && (
           <div class="ask-ai__window-offer" role="status">
-            <p>Context window full. Earlier turns are no longer sent.</p>
+            <p>{`${memory.window} of ${memory.window} conversation exchanges completed.`}</p>
             <div class="ask-ai__window-offer-actions">
               <button type="button" class="ask-ai__window-offer-new" onClick={reset}>
                 Start a new chat
