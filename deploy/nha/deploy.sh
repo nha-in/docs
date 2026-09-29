@@ -100,7 +100,13 @@ echo "==> docs-mcp: building the search index against Bedrock in $REGION"
 # the infrastructure names, so the rollout, and any rollback, goes through it.
 echo "==> docs-mcp: building and pushing $image"
 aws ecr get-login-password | docker login --username AWS --password-stdin "$registry"
-docker buildx build --platform linux/amd64 --provenance=false -t "$image" --push "$repo/mcp"
+# The layer cache lives beside the images in the same repository, under one tag, so a
+# deploy from any machine reuses the Go module and compile layers of the last one.
+cache="$registry/$ECR_REPOSITORY:buildcache"
+docker buildx build --platform linux/amd64 --provenance=false -t "$image" --push \
+  --cache-from "type=registry,ref=$cache" \
+  --cache-to "type=registry,ref=$cache,mode=max,image-manifest=true,oci-mediatypes=true" \
+  "$repo/mcp"
 
 running="$(aws ecs describe-services --cluster "$CLUSTER" --services "$SERVICE" \
   --query 'services[0].taskDefinition' --output text 2>/dev/null | xargs -I{} aws ecs describe-task-definition \

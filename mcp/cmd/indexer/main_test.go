@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"os"
 	"path/filepath"
@@ -73,6 +74,43 @@ func TestRunWithEmbedder(t *testing.T) {
 	}
 	if model != "fake-32" {
 		t.Errorf("embedding_model = %q", model)
+	}
+}
+
+// countingEmbedder counts the texts it is asked to embed.
+type countingEmbedder struct {
+	*embed.Fake
+	n int
+}
+
+func (c *countingEmbedder) Embed(ctx context.Context, texts []string) ([][]float32, error) {
+	c.n += len(texts)
+	return c.Fake.Embed(ctx, texts)
+}
+
+func TestRunReusesPreviousVectors(t *testing.T) {
+	out := filepath.Join(t.TempDir(), "catalogue.db")
+	first := &countingEmbedder{Fake: embed.NewFake(32)}
+	if err := run(fixtureDir(), out, "", "", first); err != nil {
+		t.Fatal(err)
+	}
+	if first.n == 0 {
+		t.Fatal("first build embedded nothing")
+	}
+	second := &countingEmbedder{Fake: embed.NewFake(32)}
+	if err := run(fixtureDir(), out, "", "", second); err != nil {
+		t.Fatal(err)
+	}
+	if second.n != 0 {
+		t.Errorf("unchanged rebuild embedded %d texts, want 0", second.n)
+	}
+	// Another model cannot reuse these vectors.
+	other := &countingEmbedder{Fake: embed.NewFake(16)}
+	if err := run(fixtureDir(), out, "", "", other); err != nil {
+		t.Fatal(err)
+	}
+	if other.n != first.n {
+		t.Errorf("rebuild with another model embedded %d texts, want %d", other.n, first.n)
 	}
 }
 

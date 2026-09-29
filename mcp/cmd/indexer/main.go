@@ -206,21 +206,41 @@ func run(catDir, outPath, nrcesPath, skillsDir string, emb embed.Embedder) error
 		for _, o := range ops {
 			all = append(all, catalogue.ChunkOperation(o))
 		}
-		for start := 0; start < len(all); start += embedBatch {
-			end := min(start+embedBatch, len(all))
-			var texts []string
-			for _, c := range all[start:end] {
-				texts = append(texts, c.Text)
+		// A chunk whose text the previous snapshot already embedded with the
+		// same model keeps that vector; only new or edited text is sent to
+		// the provider. A deploy that changes a few atoms embeds a few chunks.
+		prev, err := index.PreviousVectors(outPath, emb.Model())
+		if err != nil {
+			return fmt.Errorf("read previous vectors: %w", err)
+		}
+		vecs := make([][]float32, len(all))
+		var todo []int
+		for i, c := range all {
+			if v, ok := prev[c.Text]; ok {
+				vecs[i] = v
+			} else {
+				todo = append(todo, i)
 			}
-			vecs, err := emb.Embed(context.Background(), texts)
+		}
+		for start := 0; start < len(todo); start += embedBatch {
+			batch := todo[start:min(start+embedBatch, len(todo))]
+			var texts []string
+			for _, i := range batch {
+				texts = append(texts, all[i].Text)
+			}
+			got, err := emb.Embed(context.Background(), texts)
 			if err != nil {
 				return fmt.Errorf("embed batch at %d: %w", start, err)
 			}
-			for i, c := range all[start:end] {
-				chunks = append(chunks, index.EmbeddedChunk{Chunk: c, Vector: vecs[i]})
-				meta.EmbeddingDim = len(vecs[i])
+			for j, i := range batch {
+				vecs[i] = got[j]
 			}
 		}
+		for i, c := range all {
+			chunks = append(chunks, index.EmbeddedChunk{Chunk: c, Vector: vecs[i]})
+			meta.EmbeddingDim = len(vecs[i])
+		}
+		fmt.Printf("embedded %d of %d chunks, reused %d from %s\n", len(todo), len(all), len(all)-len(todo), outPath)
 		meta.EmbeddingModel = emb.Model()
 	}
 
