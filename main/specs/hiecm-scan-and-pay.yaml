@@ -21,7 +21,7 @@ info:
   x-abdm-roles:
     - his
 x-abdm-sources:
-  - file: catalogue/openapi/.raw/nha-2026-09-16/hiecm/scan-and-pay.yaml
+  - file: catalogue/hiecm/openapi/.raw/nha-2026-09-16/hiecm/scan-and-pay.yaml
     role: upstream
     hash: sha256:fe6c61d73f40d1ceb5d5d3835a031521f4ab227a52830fdbe52ab5a549b5cc7e
     fetched: "2026-09-16"

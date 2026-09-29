@@ -4,7 +4,7 @@ Changes that affect what you can build against, newest first. Each entry links t
 
 ## 29 September 2026
 
-11 changes
+13 changes
 
 - [Ambulance Booking has an API reference](/docs/main/docs/whats-new/2026-09-29#ambulance-booking-has-an-api-reference)
 - [Physical Consultation has an API reference](/docs/main/docs/whats-new/2026-09-29#physical-consultation-has-an-api-reference)
@@ -17,6 +17,8 @@ Changes that affect what you can build against, newest first. Each entry links t
 - [The nhcx plugin is 1.0.1](/docs/main/docs/whats-new/2026-09-29#the-nhcx-plugin-is-101)
 - [The abdm-integrators-assistant plugin is 0.10.0](/docs/main/docs/whats-new/2026-09-29#the-abdm-integrators-assistant-plugin-is-0100)
 - [The abdm-integrators-assistant plugin is 0.10.1](/docs/main/docs/whats-new/2026-09-29#the-abdm-integrators-assistant-plugin-is-0101)
+- [The abdm-contributors-assistant plugin is 0.4.2](/docs/main/docs/whats-new/2026-09-29#the-abdm-contributors-assistant-plugin-is-042)
+- [The nhcx plugin is 1.0.2](/docs/main/docs/whats-new/2026-09-29#the-nhcx-plugin-is-102)
 
 ## 25 September 2026
 

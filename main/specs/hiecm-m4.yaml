@@ -20,15 +20,15 @@ info:
   x-abdm-roles:
     - his
 x-abdm-sources:
-  - file: catalogue/openapi/.raw/nha-2026-09-24/M4/M4-HFR.json
+  - file: catalogue/hiecm/openapi/.raw/nha-2026-09-24/M4/M4-HFR.json
     role: upstream
     hash: sha256:39a581bb31e74f48340703056258e31850788848220787814ffa49750d23d9ba
     fetched: "2026-09-24"
-  - file: catalogue/openapi/.raw/nha-2026-09-24/M4/M4-HPID.json
+  - file: catalogue/hiecm/openapi/.raw/nha-2026-09-24/M4/M4-HPID.json
     role: upstream
     hash: sha256:b673f1dc7d25958998a8be194c87df9b779fd80389f9c8970bdb28b53df30b12
     fetched: "2026-09-24"
-  - file: catalogue/openapi/.raw/nha-2026-09-24/M4/M4-HPR.json
+  - file: catalogue/hiecm/openapi/.raw/nha-2026-09-24/M4/M4-HPR.json
     role: upstream
     hash: sha256:2cbcab72692ada1b6b07bce3c6c6d3e3bd047bcaca0c5716ac1d691121025081
     fetched: "2026-09-24"

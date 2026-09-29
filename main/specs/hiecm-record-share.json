@@ -30,19 +30,19 @@
   },
   "x-abdm-sources": [
     {
-      "file": "catalogue/openapi/.raw/nha-2026-09-21-record-share/Patient Scan and Record Share.docx",
+      "file": "catalogue/hiecm/openapi/.raw/nha-2026-09-21-record-share/Patient Scan and Record Share.docx",
       "role": "upstream",
       "hash": "sha256:2d3ba3761a8a4b0a9b1b21d945a54797956f0ece683c85bfaa2af2bfbbb8df52",
       "fetched": "2026-09-21"
     },
     {
-      "file": "catalogue/openapi/.raw/nha-2026-09-21-record-share/Record_Share_19_03_2026.postman_collection.json",
+      "file": "catalogue/hiecm/openapi/.raw/nha-2026-09-21-record-share/Record_Share_19_03_2026.postman_collection.json",
       "role": "upstream",
       "hash": "sha256:a3a8d786cc35e6859c0d640eaf8be37f72e7eb8b65c27ec24f35ce1a3fb3f70c",
       "fetched": "2026-09-21"
     },
     {
-      "file": "catalogue/openapi/corrections/2026-09-21-record-share-ingest.md",
+      "file": "catalogue/hiecm/openapi/corrections/2026-09-21-record-share-ingest.md",
       "role": "correction",
       "status": "not-yet-hashed"
     }

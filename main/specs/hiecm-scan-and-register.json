@@ -28,7 +28,7 @@
   },
   "x-abdm-sources": [
     {
-      "file": "catalogue/openapi/.raw/nha-2026-09-16/hiecm/patient-share.yaml",
+      "file": "catalogue/hiecm/openapi/.raw/nha-2026-09-16/hiecm/patient-share.yaml",
       "role": "upstream",
       "hash": "sha256:8de274b417bbb860e87718adc299bf626c093cd91435fdcd095fa8748b28523a",
       "fetched": "2026-09-16"

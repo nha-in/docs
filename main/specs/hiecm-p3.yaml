@@ -20,7 +20,7 @@ info:
   x-abdm-roles:
     - phr
 x-abdm-sources:
-  - file: catalogue/openapi/.raw/nha-2026-09-16/hiecm/subscription.yaml
+  - file: catalogue/hiecm/openapi/.raw/nha-2026-09-16/hiecm/subscription.yaml
     role: upstream
     hash: sha256:19e2be6557790fecf8f9b5e2374ee25bb5e432b6aa11a9f673d93a0228eb61b0
     fetched: "2026-09-16"

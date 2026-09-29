@@ -21,11 +21,11 @@ info:
     - his
   description: Encrypt Aadhaar numbers, mobile numbers, OTP values and passwords under the certificate from GET /abha/api/v3/profile/public/certificate. See /docs/hiecm/v3/concepts/encryption.
 x-abdm-sources:
-  - file: catalogue/openapi/.raw/nha-2026-09-22/abha/ABHA Swagger split.yaml
+  - file: catalogue/hiecm/openapi/.raw/nha-2026-09-22/abha/ABHA Swagger split.yaml
     role: upstream
     hash: sha256:f635eaf1411d96dcf427773d45d3e6d67a57748612ca4b3217b101118620609c
     fetched: "2026-09-22"
-  - file: catalogue/openapi/.raw/nha-2026-09-16/abha/M1 ABHA Collection.json
+  - file: catalogue/hiecm/openapi/.raw/nha-2026-09-16/abha/M1 ABHA Collection.json
     role: upstream
     hash: sha256:e121c850ed891b6d96c241be3616e15fddeb967a22f600cfc08561c99f81fc65
     fetched: "2026-09-15"
