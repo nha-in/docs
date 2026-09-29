@@ -1,0 +1,40 @@
+{
+  "name": "uhi-integrators-assistant",
+  "version": "0.1.0",
+  "description": "Agent skills for UHI integration from the ABDM Developer Portal, compiled from the Catalogue. One skill per service: uhi-consultation (Physical Consultation, as EUA or HSPA), uhi-ambulance (Ambulance Booking, as EUA or HSPA), uhi-pmjay-hem (PM-JAY hospital search, as EUA), uhi-blood-bank (Blood Bank Discovery, as EUA or HSPA), uhi-jan-aushadhi (Jan Aushadhi Kendras and medicines, as EUA) and uhi-notto (transplant hospitals, as EUA). Each carries its work as sections that load on demand: scaffold builds the service journey by journey against the sandbox, design holds what the screens around the calls must do, integrate holds the hosts, headers, signing and the context block, debug walks a failed call or a missing callback to a fix proved by the original step succeeding, and test runs the service's test cases and the go-live steps. Every step names the operation it came from. Three commands open the work from the terminal: /uhi-preflight checks what must be true before the first call, /uhi-prove-signing signs one PM-JAY HEM search and proves the header before a flow is built on it, and /uhi-decode-response turns an HTTP status, an ACK or NACK, an error object or a silence into its most likely cause and the next check. Two agents plan above the skills: uhi-integration-agent takes a goal such as making a clinic bookable, picks the role and the service skills and sequences them by what each requires and produces, and uhi-call-debugger takes one failing call or one missing callback to a fix and verifies it by the original step succeeding. An EUA completes Milestone 2 on HIE-CM first, which the abdm-integrators-assistant plugin carries. Every skill declares its domain, what it requires and produces, and that it never orchestrates.",
+  "author": {
+    "name": "ABDM Developer Portal",
+    "url": "https://github.com/nha-in/docs"
+  },
+  "homepage": "https://github.com/nha-in/docs",
+  "repository": "https://github.com/nha-in/docs",
+  "license": "MIT",
+  "keywords": [
+    "uhi",
+    "beckn",
+    "eua",
+    "hspa",
+    "pmjay",
+    "healthcare",
+    "india-health"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "ABDM Developer Portal",
+    "shortDescription": "Build a UHI integration, one service at a time.",
+    "longDescription": "India's open network for finding and booking health services, written as skills an agent reads before it writes code. One skill per service, from PM-JAY hospital search to physical consultation. Each builds its journeys as loops against the sandbox, signs every call, and walks a missing callback to a named fix.",
+    "defaultPrompt": [
+      "Add PM-JAY empanelled hospital search to this patient app.",
+      "Make this clinic system bookable for physical consultations on UHI.",
+      "My UHI search returns ACK but no results arrive. Find out why."
+    ],
+    "developerName": "ABDM Developer Portal working group",
+    "category": "Documentation",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/nha-in/docs"
+  }
+}

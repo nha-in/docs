@@ -371,5 +371,120 @@
         "to": "0.4.3"
       }
     ]
+  },
+  {
+    "id": "7d6f78ea997d",
+    "date": "2026-09-29",
+    "kind": "artefact-added",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": "/docs/hiecm/v3/getting-started/build-with-ai",
+    "count": 12,
+    "items": [
+      {
+        "artefact": "skill",
+        "name": "uhi-ambulance-build"
+      },
+      {
+        "artefact": "skill",
+        "name": "uhi-ambulance-debug"
+      },
+      {
+        "artefact": "skill",
+        "name": "uhi-blood-bank-build"
+      },
+      {
+        "artefact": "skill",
+        "name": "uhi-blood-bank-debug"
+      },
+      {
+        "artefact": "skill",
+        "name": "uhi-consultation-build"
+      },
+      {
+        "artefact": "skill",
+        "name": "uhi-consultation-debug"
+      },
+      {
+        "artefact": "skill",
+        "name": "uhi-jan-aushadhi-build"
+      },
+      {
+        "artefact": "skill",
+        "name": "uhi-jan-aushadhi-debug"
+      },
+      {
+        "artefact": "skill",
+        "name": "uhi-notto-build"
+      },
+      {
+        "artefact": "skill",
+        "name": "uhi-notto-debug"
+      },
+      {
+        "artefact": "skill",
+        "name": "uhi-pmjay-hem-build"
+      },
+      {
+        "artefact": "skill",
+        "name": "uhi-pmjay-hem-debug"
+      }
+    ]
+  },
+  {
+    "id": "8a2dfd77ff56",
+    "date": "2026-09-29",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "abdm-contributors-assistant",
+        "from": "0.3.5",
+        "to": "0.3.6"
+      }
+    ]
+  },
+  {
+    "id": "bb6c54f6654f",
+    "date": "2026-09-29",
+    "kind": "artefact-added",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "artefact": "plugin",
+        "name": "uhi-integrators-assistant",
+        "version": "0.1.0"
+      }
+    ]
+  },
+  {
+    "id": "c83dff46ff16",
+    "date": "2026-09-29",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "abdm-contributors-assistant",
+        "from": "0.4.3",
+        "to": "0.4.4"
+      }
+    ]
   }
 ]

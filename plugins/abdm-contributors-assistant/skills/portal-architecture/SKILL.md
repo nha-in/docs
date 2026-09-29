@@ -1,9 +1,9 @@
 ---
 name: portal-architecture
 description: 'The architecture of the ABDM Developer Portal: the four building blocks, how the Catalogue compiles into docs, skills and MCP surfaces, the seven binding principles, the atom model, and what is deliberately excluded from V1. Use whenever someone asks how the portal fits together, why a design decision was made, whether something belongs in V1, where a new capability should live, or proposes a change to the structure. Also use before designing any new component so it lands in the right layer instead of beside it.'
-plan_version: 2026.09.29-12
+plan_version: 2026.09.29-13
 plan_source: abdm-v1-phase1-architecture-and-plan.md
-plan_hash: sha256:dbbd718604d5e7d276881b9bb75b67c5d784ed75d8c84053b9bba35cfb27d484
+plan_hash: sha256:47cf8dcb036e7311e2381502b17818d74223ca9e13bb9dbccaad38a28695096c
 compiled_from_plan: true
 ---
 
@@ -111,7 +111,7 @@ One gateway written out beats three gateways half-written. Generated reference p
 
 Naming these prevents scope creep by accretion.
 
-- A skill for UHI. Its specifications, journeys, generated pages and atoms are already in the repository; only the skill is Phase 2. PHR application services was on this list and its specification was retired in the 16 September 2026 reset; the phase of atoms for P4 and the three use cases, Scan and Register, Record Share and Scan and Pay, is not decided. HIE-CM M4 and the PHR modules have come off this list: they carry compiled skills built from their journeys and specifications, and M4 and P1 to P3 carry atoms again since the 29 September 2026 rebuild
+PHR application services was on this list and its specification was retired in the 16 September 2026 reset; the phase of atoms for P4 and the three use cases, Scan and Register, Record Share and Scan and Pay, is not decided. HIE-CM M4 and the PHR modules have come off this list: they carry compiled skills built from their journeys and specifications, and M4 and P1 to P3 carry atoms again since the 29 September 2026 rebuild
 - NHCX atoms and NHCX skills, in V1 only. Nothing rejects them: the gateway lints clean and Phase 2 may add them. NHCX site pages are not on this list: they exist and they ship
 - The conformance harness, ledger, gate and simulators
 - Execute-mode MCP exposed publicly
