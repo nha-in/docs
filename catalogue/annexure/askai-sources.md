@@ -18,16 +18,18 @@ One row per NHA document. `id` is stable and is what an eval case or an atom cit
 | abdm-faq-hpr | https://abdm.gov.in/FAQ | abdm.gov.in FAQ, the Healthcare Professionals Registry category | 2026-09-03 | page | 0 | 0 |
 | abdm-faq-hfr | https://abdm.gov.in/FAQ | abdm.gov.in FAQ, the Health Facility Registry category | 2026-09-03 | page | 0 | 0 |
 | abdm-faq-general | https://abdm.gov.in/FAQ | abdm.gov.in FAQ, the General category | 2026-09-03 | page | 0 | 21 |
-| glossary | site/docs/_glossary/_hiecm.mdx | This portal's glossary, from which the shared glossary atoms were moved | 2026-09-17 | sha256:0f8b53081bee4c0e | 0 | 18 |
+| glossary | site/docs/_glossary/_hiecm.mdx | This portal's glossary, from which the shared glossary atoms were moved | 2026-09-17 | sha256:0f8b53081bee4c0e | 0 | 20 |
 | ask-ai-panel | ai-widget/README.md | This portal's Ask AI panel: what the assistant does, what a reader can give it, what it keeps and what it will not do | 2026-09-23 | sha256:969f1a400a866759 | 1 | 1 |
+| build-with-ai | site/docs/hiecm/v3/getting-started/build-with-ai.mdx | This portal's Build with AI page: the Docs MCP server, the plugin, the skills and the Ask AI panel, which the terse portal feature cases point at instead of an ABDM fact | 2026-09-29 | sha256:ebd90fbc86e76710 | 0 | 4 |
+| api-reference-m3 | site/docs/hiecm/v3/api/m3/index.mdx | This portal's M3 API reference overview, one of the module pages that offer a Postman collection and the shared sandbox environment | 2026-09-29 | sha256:ae7c7ecc1d1fbf0c | 0 | 1 |
 | final-m4-m4-hfr-json | catalogue/hiecm/openapi/.raw/nha-2026-09-16/M4/M4-HFR.json | NHA's final M4 HFR swagger, 16 September 2026 | 2026-09-16 | sha256:25291734dd378285 | 0 | 0 |
 | final-m4-m4-hpid-json | catalogue/hiecm/openapi/.raw/nha-2026-09-16/M4/M4-HPID.json | NHA's final M4 HPID swagger, 16 September 2026 | 2026-09-16 | sha256:7e2eb837caa110f8 | 0 | 0 |
 | final-m4-m4-hpr-json | catalogue/hiecm/openapi/.raw/nha-2026-09-16/M4/M4-HPR.json | NHA's final M4 HPR swagger, 16 September 2026 | 2026-09-16 | sha256:fe3e5b211cf9f1c0 | 0 | 0 |
-| final-abha-m1-abha-collection-json | catalogue/hiecm/openapi/.raw/nha-2026-09-16/abha/M1 ABHA Collection.json | NHA's M1 ABHA Postman collection, supplying the order of M1 calls | 2026-09-16 | sha256:ea48dc0600f8322c | 0 | 6 |
-| final-abha-m1-abha-swagger-1-yaml | catalogue/hiecm/openapi/.raw/nha-2026-09-16/abha/M1 ABHA Swagger 1.yaml | NHA's final M1 ABHA swagger, 16 September 2026 | 2026-09-16 | sha256:6ab5cfe77c29032f | 0 | 9 |
-| final-hiecm-consent-management-data-flow-yaml | catalogue/hiecm/openapi/.raw/nha-2026-09-16/hiecm/consent-management-data-flow.yaml | NHA's final consent management data flow swagger, 16 September 2026 | 2026-09-16 | sha256:4b0af51af2e2b5bf | 0 | 14 |
-| final-hiecm-gateway-yaml | catalogue/hiecm/openapi/.raw/nha-2026-09-16/hiecm/gateway.yaml | NHA's final gateway swagger, 16 September 2026 | 2026-09-16 | sha256:d3bc599054c2570a | 0 | 0 |
-| final-hiecm-hip-initiated-linking-yaml | catalogue/hiecm/openapi/.raw/nha-2026-09-16/hiecm/hip-initiated-linking.yaml | NHA's final HIP initiated linking swagger, 16 September 2026 | 2026-09-16 | sha256:8c4036b49028e243 | 0 | 6 |
+| final-abha-m1-abha-collection-json | catalogue/hiecm/openapi/.raw/nha-2026-09-16/abha/M1 ABHA Collection.json | NHA's M1 ABHA Postman collection, supplying the order of M1 calls | 2026-09-16 | sha256:ea48dc0600f8322c | 0 | 7 |
+| final-abha-m1-abha-swagger-1-yaml | catalogue/hiecm/openapi/.raw/nha-2026-09-16/abha/M1 ABHA Swagger 1.yaml | NHA's final M1 ABHA swagger, 16 September 2026 | 2026-09-16 | sha256:6ab5cfe77c29032f | 0 | 10 |
+| final-hiecm-consent-management-data-flow-yaml | catalogue/hiecm/openapi/.raw/nha-2026-09-16/hiecm/consent-management-data-flow.yaml | NHA's final consent management data flow swagger, 16 September 2026 | 2026-09-16 | sha256:4b0af51af2e2b5bf | 0 | 17 |
+| final-hiecm-gateway-yaml | catalogue/hiecm/openapi/.raw/nha-2026-09-16/hiecm/gateway.yaml | NHA's final gateway swagger, 16 September 2026 | 2026-09-16 | sha256:d3bc599054c2570a | 0 | 1 |
+| final-hiecm-hip-initiated-linking-yaml | catalogue/hiecm/openapi/.raw/nha-2026-09-16/hiecm/hip-initiated-linking.yaml | NHA's final HIP initiated linking swagger, 16 September 2026 | 2026-09-16 | sha256:8c4036b49028e243 | 0 | 8 |
 | final-hiecm-link-token-yaml | catalogue/hiecm/openapi/.raw/nha-2026-09-16/hiecm/link-token.yaml | NHA's final link token swagger, 16 September 2026 | 2026-09-16 | sha256:2e9cdca38bd2b223 | 0 | 5 |
 | final-hiecm-patient-share-yaml | catalogue/hiecm/openapi/.raw/nha-2026-09-16/hiecm/patient-share.yaml | NHA's final patient share swagger, 16 September 2026 | 2026-09-16 | sha256:8de274b417bbb860 | 0 | 0 |
 | final-hiecm-scan-and-pay-yaml | catalogue/hiecm/openapi/.raw/nha-2026-09-16/hiecm/scan-and-pay.yaml | NHA's final scan and pay swagger, 16 September 2026 | 2026-09-16 | sha256:fe6c61d73f40d1ce | 0 | 0 |

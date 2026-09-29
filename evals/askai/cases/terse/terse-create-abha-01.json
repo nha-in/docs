@@ -1,0 +1,36 @@
+{
+  "id": "terse-create-abha-01",
+  "slice": "terse",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "create ABHA"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "Creating an ABHA is M1 work: the individual provides their Aadhaar number, the ABHA service sends a one time password to the mobile number registered against that Aadhaar, and the ABHA number is issued.",
+    "The first call is POST /abha/api/v3/enrollment/request/otp with scope abha-enrol, loginHint aadhaar, loginId (encrypted Aadhaar) and otpSystem aadhaar, and you keep the txnId.",
+    "The enrolment call is the one with a lasting effect: it creates the account."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.flow.m1-create-abha-aadhaar-otp"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-abha-m1-abha-collection-json",
+  "catalogue_version": "2026.09.16",
+  "notes": "Group A, an imperative task phrase with no auth method named: it catches an answer that skips the module and the first call, or that names enrol/byAadhaar as the first call instead of the OTP request. Source lines: catalogue/hiecm/flows/m1-create-abha-aadhaar-otp.md, 'The individual provides their Aadhaar number. The ABHA service sends a one time password (OTP) to the mobile number registered against that Aadhaar'; 'POST /abha/api/v3/enrollment/request/otp scope [abha-enrol], loginHint aadhaar, loginId (encrypted Aadhaar), otpSystem aadhaar'; 'Request the OTP with scope `abha-enrol` and keep the `txnId`'; 'The enrolment call is the one with a lasting effect: it creates the account.'"
+}

@@ -48,7 +48,7 @@ The run exists; the judged half does not. Nothing in v6 is worth arguing about u
 2. Set `CHAT_MODEL`, `EVAL_JUDGE_MODEL` and `EVAL_AWS_ROLE_ARN` as repository variables so the nightly workflow runs.
 3. The owner grades the thirty calibration cases into `calibration/owner-grades.json`. The judge is not trusted below 85 percent agreement.
 4. Run `eval:askai:judge`, `calibrate` and `report` on the recorded run. Commit the judged scorecard as the new `runs/latest`. This is the v5 baseline: factuality and uncertainty per slice, beside the deterministic numbers already there.
-5. Add the missing cases before the v6 run, so the slices v6 targets have something to move: four injection cases (two in the message, two in an attachment), four attachment debugging cases, four off-portal but in-domain declines (enrolment at a centre, an NHA policy question, ABHA card printing, a UHI question phrased as HIE-CM), the twelve `nudge` cases and fifteen `terse` cases in section 5, and the six `meta` cases. Each cites an annexure row.
+5. Add the missing cases before the v6 run, so the slices v6 targets have something to move: four injection cases (two in the message, two in an attachment), four attachment debugging cases, four off-portal but in-domain declines (enrolment at a centre, an NHA policy question, ABHA card printing, a UHI question phrased as HIE-CM), the twelve `nudge` cases in section 5, and the six `meta` cases. The fifteen `terse` cases already exist in this unit. Each cites an annexure row.
 
 Exit: `scorecard.json` in `runs/latest` has `graded` equal to `answered`, and the CI gate's factuality comparison is live.
 
@@ -226,7 +226,7 @@ Three additions, none of them system prompt text:
 2. **Portal feature names route to the portal, not the catalogue.** A bare `scaffold`, `design`, `integrate`, `debug`, `skill`, `MCP`, `plugin` or `postman` gets a fixed reply naming the command or page and the command chips, the same pattern as greetings, in `route.go` and `gateway.go`.
 3. **A similarity floor on the vector leg** of search, so an off-catalogue phrase declines instead of retrieving neighbours. This is the root cause behind the `scaffold skill` answer, and no shape fixes it.
 
-Measured by a `terse` slice of fifteen cases drawn from the phrasings the chat log shows, five per row above, with `must_contain` naming the module and the sub-questions for the first two rows and the command or page for the third. The `naive` slice holds a few such prompts already; they move to `terse` so the number reads on its own.
+Measured by the `terse` slice, fifteen cases in `evals/askai/cases/terse/`, five per row above, to be re-drawn from the chat log's real phrasings once those are shared, with `must_contain` naming the module and the sub-questions for the first two rows and the command or page for the third. The `naive` slice holds a few such prompts already; they move to `terse` so the number reads on its own.
 
 ### Greetings and questions about the assistant itself
 
