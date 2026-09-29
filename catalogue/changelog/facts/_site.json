@@ -17,7 +17,7 @@
   ],
   "plugins": {
     "abdm-contributors-assistant": "0.3.4",
-    "abdm-integrators-assistant": "0.10.0",
+    "abdm-integrators-assistant": "0.10.1",
     "nhcx": "1.0.1"
   },
   "procedures": {},

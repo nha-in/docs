@@ -299,5 +299,23 @@
         "kind": "call"
       }
     ]
+  },
+  {
+    "id": "5803a43a65a1",
+    "date": "2026-09-29",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "abdm-integrators-assistant",
+        "from": "0.10.0",
+        "to": "0.10.1"
+      }
+    ]
   }
 ]
