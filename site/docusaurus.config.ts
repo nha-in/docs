@@ -283,6 +283,26 @@ function groupUseCases(items: any[]): any[] {
   return out;
 }
 
+/**
+ * UHI's network module holds four services, PM-JAY HEM, Blood Bank, Jan
+ * Aushadhi and NOTTO, beside Physical Consultation and Ambulance Booking,
+ * which are modules of their own. Nesting four of the six under "Network and
+ * discovery" put a click between a reader and their service, so the module
+ * unwraps: its overview stays as a link, each service sits at the top level,
+ * and the one call outside every journey, the registry lookup, is a link
+ * rather than a folder of one.
+ */
+function servicesAtTheTop(items: any[]): any[] {
+  return items.flatMap((item: any) => {
+    if (item.type !== 'category' || !(firstDocId(item) ?? '').includes('/api/network/')) return [item];
+    const overview = item.link?.type === 'doc' ? [{type: 'doc', id: item.link.id, label: item.label}] : [];
+    const children = (item.items ?? []).map((child: any) =>
+      child.type === 'category' && child.items?.length === 1 && child.items[0].type === 'doc' ? child.items[0] : child,
+    );
+    return [...overview, ...children];
+  });
+}
+
 async function sidebarItemsGenerator({defaultSidebarItemsGenerator, ...args}: any) {
   const items = await defaultSidebarItemsGenerator(args);
   const dirName: string = args.item.dirName;
@@ -316,7 +336,8 @@ async function sidebarItemsGenerator({defaultSidebarItemsGenerator, ...args}: an
   const withoutIndex = () =>
     items.filter((item: any) => !(item.type === 'doc' && item.id === `${dirName}/index`));
   if (dirName.endsWith('/api')) {
-    return groupUseCases(spliceEndpoints(withoutIndex()));
+    const modules = groupUseCases(spliceEndpoints(withoutIndex()));
+    return dirName.startsWith('uhi/') ? servicesAtTheTop(modules) : modules;
   }
   if (dirName.endsWith('/troubleshooting') || dirName.endsWith('/go-live')) {
     return withoutIndex();
