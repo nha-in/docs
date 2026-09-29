@@ -303,6 +303,18 @@ Every call can return an error object with `type` and `code`, and optionally `pa
 
 Find the test cases this service is certified against on [Physical Consultation test cases](/docs/main/docs/uhi/v1/resources/consultation).
 
+## Try it in Postman
+
+Every call in this service's journeys, in order. Sign each body with the [Header Generation Utility](https://github.com/NHA-ABDM/UHI/tree/main/header_generator_utility) and paste the header into `authorization` before you send.
+
+23 requests in the order you build them, and a sandbox environment to fill in. Sign each body with the Header Generation Utility and paste the header before you send.
+
+[Collection](/docs/main/postman/uhi-consultation.postman_collection.json)[Environment](/docs/main/postman/uhi-sandbox.postman_environment.json)
+
+`https://nha-in.github.io/docs/main/postman/uhi-consultation.postman_collection.json`
+
+Postman, Insomnia, Hoppscotch and Bruno take this through Import, as a link or as the downloaded file.
+
 ## Next
 
 - The calls, one page each: [Physical Consultation API reference](/docs/main/docs/uhi/v1/api/consultation).

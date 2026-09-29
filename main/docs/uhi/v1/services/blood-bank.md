@@ -246,6 +246,18 @@ Both `search` and `on_search` can be answered with a NACK instead of an ACK. The
 
 The test cases for this service are on [Blood Bank test cases](/docs/main/docs/uhi/v1/resources/blood-bank).
 
+## Try it in Postman
+
+Every call in this service's journeys, in order. Sign each body with the [Header Generation Utility](https://github.com/NHA-ABDM/UHI/tree/main/header_generator_utility) and paste the header into `authorization` before you send.
+
+5 requests in the order you build them, and a sandbox environment to fill in. Sign each body with the Header Generation Utility and paste the header before you send.
+
+[Collection](/docs/main/postman/uhi-blood-bank.postman_collection.json)[Environment](/docs/main/postman/uhi-sandbox.postman_environment.json)
+
+`https://nha-in.github.io/docs/main/postman/uhi-blood-bank.postman_collection.json`
+
+Postman, Insomnia, Hoppscotch and Bruno take this through Import, as a link or as the downloaded file.
+
 ## Next
 
 - The other services on the network: [Services](/docs/main/docs/uhi/v1/services).

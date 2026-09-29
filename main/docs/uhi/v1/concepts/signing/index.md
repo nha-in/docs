@@ -53,7 +53,7 @@ Notes for AI agents
 Use the [Header Generation Utility](https://github.com/NHA-ABDM/UHI/tree/main/header_generator_utility). It generates your Ed25519 key pair and signs each payload, so you do not implement Ed25519 and BLAKE-512 yourself.
 
 - Share only the public key, at [sandbox registration](/docs/main/docs/uhi/v1/getting-started/sandbox#3-submit-the-sandbox-registration-form). Keep the private key on your server.
-- The signing code the Gateway runs is [Crypt.java](https://github.com/NHA-ABDM/UHI/blob/Group-consultation/src/gateway/Discovery/src/main/java/in/gov/abdm/uhi/discovery/security/Crypt.java). The [UHI header signing document](https://github.com/NHA-ABDM/UHI/blob/main/docs/Signing%20UHI%20APIs_Final%20\(1\).docx) describes the scheme in full.
+- The signing code the Gateway runs is [Crypt.java](https://github.com/NHA-ABDM/UHI/blob/sandbox/src/gateway/Discovery/src/main/java/in/gov/abdm/uhi/discovery/security/Crypt.java). The [UHI header signing document](https://github.com/NHA-ABDM/UHI/blob/main/docs/Signing%20UHI%20APIs_Final%20\(1\).docx) describes the scheme in full.
 
 Notes for AI agents
 
