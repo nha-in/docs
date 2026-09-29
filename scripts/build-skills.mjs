@@ -27,7 +27,7 @@ import {loadAtoms} from './lib/atoms.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dataDir = join(root, 'site', 'src', 'data', 'api');
-const specDir = join(root, 'catalogue', 'openapi', 'hiecm', 'v3');
+const specDir = join(root, 'catalogue', 'hiecm', 'openapi', 'v3');
 const outDir = join(root, 'site', 'static', 'skills');
 
 // Provenance for the snapshot header. A downloaded skill is frozen while the
@@ -730,7 +730,11 @@ function withSurvey(scaffold) {
 const FOLD = Object.fromEntries(
   MODULES.map((module) => [
     module.slug,
-    {scaffold: `hiecm-${module.id}-build`, debug: `hiecm-${module.id}-debug`},
+    {
+      scaffold: `hiecm-${module.id}-build`,
+      debug: `hiecm-${module.id}-debug`,
+      test: `hiecm-${module.id}-test`,
+    },
   ]),
 );
 
@@ -850,6 +854,17 @@ for (const module of MODULES) {
         : `- **Debug.** ${
             debugLoop ? 'The loop from a failed call to a named fix. ' : ''
           }The specification's examples return no error code for this module. [references/debug.md](references/debug.md)`,
+    );
+  }
+
+  // Test after debug: the functional test cases are what an integrator walks
+  // once the build runs, and each case names the evidence a reviewer can
+  // check against the gateway rather than a screenshot.
+  const test = fold.test ? guided(fold.test) : '';
+  if (test) {
+    files['references/test.md'] = test;
+    covers.push(
+      `- **Test.** The functional test cases, one loop each, with the evidence the sandbox can vouch for and the manifest that replaces a screenshot report. [references/test.md](references/test.md)`,
     );
   }
 
@@ -1190,7 +1205,7 @@ const uhiCtx = {
     if (!existsSync(file)) throw new Error(`run build-api-reference first: ${file} missing`);
     return JSON.parse(readFileSync(file, 'utf8'));
   },
-  hostedBy: uhiHostedBy(join(root, 'catalogue', 'openapi', 'uhi', 'v1')),
+  hostedBy: uhiHostedBy(join(root, 'catalogue', 'uhi', 'openapi', 'v1')),
   atoms: loadAtoms().atoms,
   // No practices: shared.concept.integration-practices is written for
   // HIE-CM (certificates, REQUEST-ID, its TIMESTAMP), and a UHI integrator

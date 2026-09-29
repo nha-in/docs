@@ -5,18 +5,12 @@ import { statSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { loadAtoms, root } from "./lib/atoms.mjs";
 import { contractProblems } from "./lib/contract.mjs";
-import { loadOps } from "./rekey-verification.mjs";
+import { loadOps } from "./lib/ops.mjs";
+import { FOLDER, atomPath, layoutProblems } from "./lib/paths.mjs";
 
 const TYPES = ["concept", "flow", "endpoint", "callback", "error", "test",
                "decision", "glossary", "fhir", "sandbox", "troubleshooting"];
 const GATEWAYS = ["hiecm", "uhi", "nhcx", "shared"];
-// Folder name per type, so an atom cannot claim a type it is not filed under.
-const FOLDER = {
-  concept: "concepts", flow: "flows", endpoint: "endpoints",
-  callback: "callbacks", error: "errors", test: "tests",
-  decision: "decisions", glossary: "glossary", fhir: "fhir", sandbox: "sandbox",
-  troubleshooting: "troubleshooting",
-};
 
 const problems = [];
 
@@ -24,7 +18,10 @@ function fail(file, msg) {
   problems.push(`${relative(root, file)}: ${msg}`);
 }
 
-const { atoms, problems: parseProblems } = loadAtoms();
+const { atoms, problems: parseProblems, duplicates } = loadAtoms();
+for (const d of duplicates) problems.push(`two files carry one id, ${d}`);
+// Nothing sits in the catalogue outside the tree catalogue/README.md draws.
+problems.push(...layoutProblems(root));
 for (const p of parseProblems) fail(p.file, p.msg);
 
 // HIE-CM and UHI have specifications in this repository; an operation on
@@ -54,8 +51,10 @@ for (const [id, atom] of atoms) {
     const [g, t] = id.split(".");
     if (g !== fm.gateway) fail(file, `id says gateway "${g}" but frontmatter says "${fm.gateway}"`);
     if (t !== fm.type) fail(file, `id says type "${t}" but frontmatter says "${fm.type}"`);
-    if (FOLDER[fm.type] && !file.includes(`/${FOLDER[fm.type]}/`)) {
-      fail(file, `type ${fm.type} must live in a ${FOLDER[fm.type]}/ folder`);
+    // An atom lives at catalogue/<gateway>/<type folder>/<id slug>.md, and
+    // nowhere else, whether it is hand-written or written from its page.
+    if (FOLDER[fm.type] && relative(root, file) !== atomPath(id, fm.type, fm.gateway)) {
+      fail(file, `expected at ${atomPath(id, fm.type, fm.gateway)}`);
     }
   }
 
@@ -68,8 +67,7 @@ for (const [id, atom] of atoms) {
   });
 
   // No verification field: the Catalogue is published as ABDM's statement of how ABDM works.
-  // Sandbox evidence lives in catalogue/verification/, internal to contributors.
-  if (fm.verified !== undefined) fail(file, "verified is no longer a field; drop it. Sandbox evidence lives in catalogue/verification/");
+  if (fm.verified !== undefined) fail(file, "verified is not a field; delete it");
 
   // Atom contract v2: sections per type, the operation join, facts, side
   // and status (scripts/lib/contract.mjs).

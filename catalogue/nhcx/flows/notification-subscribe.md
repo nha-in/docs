@@ -47,7 +47,7 @@ related:
   glossary:
   - shared.glossary.phr
   - shared.glossary.abha-address
-  - shared.glossary.eua
+  - uhi.glossary.eua
 ---
 
 # Subscribe a patient app to notifications
@@ -60,8 +60,8 @@ Only one app receives a patient's notifications at a time. The most recent subsc
 
 ## Before you start
 
-- Your app has completed [ABDM](../../shared/glossary/abdm.md) [Milestone 1](../../shared/glossary/m1.md) integration.
-- You are registered as a BSP: sandbox testing on `hcxsbx.abdm.gov.in`, sandbox certification, then production registry onboarding. An [end user application](../../shared/glossary/eua.md) such as a PHR app registers with role `10009`. See [Onboard as a participant in the NHCX sandbox](sandbox-onboarding.md).
+- Your app has completed [ABDM](../../shared/glossary/abdm.md) [Milestone 1](../../hiecm/glossary/m1.md) integration.
+- You are registered as a BSP: sandbox testing on `hcxsbx.abdm.gov.in`, sandbox certification, then production registry onboarding. An [end user application](../../uhi/glossary/eua.md) such as a PHR app registers with role `10009`. See [Onboard as a participant in the NHCX sandbox](sandbox-onboarding.md).
 - You host an HTTPS endpoint with TLS 1.2 or higher, where notifications will arrive.
 - You have the NHCX gateway's participant code and certificate, which you seal the subscription for. See [Where to get help with NHCX](../sandbox/support-contacts.md).
 - The patient has given explicit consent to receive claim updates in your app. See [beneficiary consent](../concepts/beneficiary-consent.md).

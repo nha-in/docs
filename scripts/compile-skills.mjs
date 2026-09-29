@@ -11,7 +11,7 @@ import {errorsFromSpec} from './lib/spec-errors.mjs';
 
 const outDir = join(root, 'skills-src');
 const dataDir = join(root, 'site', 'src', 'data', 'api');
-const specDir = join(root, 'catalogue', 'openapi', 'hiecm', 'v3');
+const specDir = join(root, 'catalogue', 'hiecm', 'openapi', 'v3');
 const journeys = loadJourneys();
 
 const MODULES = {
@@ -109,7 +109,7 @@ for (const module of Object.keys(MODULES)) {
 const uhiCtx = {
   journeys: loadJourneys({platform: 'uhi', version: 'v1'}),
   stepData: (op, journeyId, i) => stepData({op}, journeyId, i),
-  hostedBy: uhiHostedBy(join(root, 'catalogue', 'openapi', 'uhi', 'v1')),
+  hostedBy: uhiHostedBy(join(root, 'catalogue', 'uhi', 'openapi', 'v1')),
   atoms: loadAtoms().atoms,
 };
 for (const service of UHI_SERVICES) {

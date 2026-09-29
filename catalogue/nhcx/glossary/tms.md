@@ -28,14 +28,14 @@ related:
   - nhcx.flow.pmjay-hospital-migration
   glossary:
   - nhcx.glossary.pmjay
-  - shared.glossary.hmis
+  - hiecm.glossary.hmis
 ---
 
 # TMS, Transaction Management System
 
 ## In plain words
 
-TMS stands for Transaction Management System, the [PMJAY](../glossary/pmjay.md) system in which preauthorisations and claims are decided. Hospitals without an integrated [HMIS](../../shared/glossary/hmis.md) enter cases by hand in the TMS 2.0 Provider portal. After a hospital is mapped to its [NHCX](../../shared/glossary/nhcx.md) participant code, new cases go from its HMIS through NHCX. TMS keeps only the cases already open there.
+TMS stands for Transaction Management System, the [PMJAY](../glossary/pmjay.md) system in which preauthorisations and claims are decided. Hospitals without an integrated [HMIS](../../hiecm/glossary/hmis.md) enter cases by hand in the TMS 2.0 Provider portal. After a hospital is mapped to its [NHCX](../../shared/glossary/nhcx.md) participant code, new cases go from its HMIS through NHCX. TMS keeps only the cases already open there.
 
 ## Before you start
 

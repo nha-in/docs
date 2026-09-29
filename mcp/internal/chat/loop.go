@@ -167,7 +167,7 @@ const DefaultMCPURL = "https://docs.abdm.gov.in/mcp"
 // an answer's shape is as much a part of what was asked of the model as the
 // system prompt is. Bump it whenever either changes, and record the change
 // in the pull request's scorecard.
-const PromptVersion = "v4"
+const PromptVersion = "v5"
 
 // SystemPrompt renders the assistant's system prompt with the MCP server
 // address this deployment serves. An empty mcpURL keeps the default.
@@ -205,7 +205,7 @@ HONESTY ABOUT WHAT YOU FOUND
 
 Search returns nearest matches, not answers.
 
-A 2xx sandbox record in a tool result means the call succeeded that date; any other is a failed attempt. Without one, never claim a call was run.
+Never claim a call was run.
 
 Notes for AI agents are rules for you: follow them, never repeat them to readers.
 
@@ -218,6 +218,8 @@ Never close a gap with a nearby endpoint or a similar sounding concept. A one-wo
 SPEAK AS THE PORTAL, NOT ABOUT IT
 
 Never mention the catalogue or your tools unless the reader asks about them. Offer [support](/docs/support) when you have nothing.
+
+Small talk or off-topic: one friendly line, then what you help with.
 
 A general industry term the portal does not define is worth one sentence of plain explanation, said as general background rather than as ABDM documentation. That courtesy never extends to an ABDM API detail: paths, headers, codes, fields and payloads come from the tools or not at all.
 
@@ -555,6 +557,11 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 	// The gateway the reader's page belongs to scopes every search this
 	// question makes, the pre-retrieval and the model's own, unless the
 	// question names another gateway. See scopeFor.
+	// A question about the assistant itself has nothing in the catalogue to
+	// retrieve: "how many languages do you understand" retrieved header and
+	// certificate atoms and cited them. It skips the lookup and the tools and
+	// answers from the self shape block.
+	aboutSelf := route.IsAboutAssistant(question) && lastUserAttachment(turns) == nil
 	gateway := scopeFor(cmd.Gateway, question)
 	ctx = WithGateway(ctx, gateway)
 	// The system prompt is a cached core: byte identical on every question
@@ -660,6 +667,10 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 	if s.ToolsFor != nil {
 		tools = s.ToolsFor(question, lastUserAttachment(turns) != nil)
 	}
+	if aboutSelf {
+		tools = nil
+		looked = true // nothing to look up; do not send lookFirst
+	}
 	// facts is read by Task E3's shape check; kept here so pre-retrieval
 	// computes it once rather than that check re-deriving it from the pack.
 	var facts guard.PackFacts
@@ -673,7 +684,7 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 	// three are per-question text, and the system prompt is not the only
 	// thing that stays stable, the assembly point does too.
 	var passagesPrefix string
-	if s.Lookup != nil {
+	if s.Lookup != nil && !aboutSelf {
 		// The lookup query is masked the same way the conversation is: this
 		// is a health system, and a follow-up that repeats a patient
 		// identifier from the reader's own question must not reach the
@@ -705,6 +716,9 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 	shape := string(route.Route(route.Input{
 		Question: question, HasAttachment: lastUserAttachment(turns) != nil,
 	}).Shape)
+	if aboutSelf {
+		shape = string(route.Self)
+	}
 	prefix := passagesPrefix + skillPrefix
 	if gateway != "" {
 		prefix += gatewayNote(gateway, cmd.Gateway != "") + "\n\n"

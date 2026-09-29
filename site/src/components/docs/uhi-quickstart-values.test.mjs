@@ -1,5 +1,5 @@
 // The UHI quickstart's builder, against the sample search in section 1.3 of
-// the UHI developer guide (catalogue/openapi/.raw/nha-2026-09-28-uhi).
+// the UHI developer guide (catalogue/uhi/openapi/.raw/nha-2026-09-28-uhi).
 //
 // Run: node --test site/src/components/docs/uhi-quickstart-values.test.mjs
 import {test} from 'node:test';

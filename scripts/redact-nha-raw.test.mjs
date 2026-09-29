@@ -10,11 +10,11 @@ import {execFileSync} from 'node:child_process';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SET = '__redact-test__';
-const dir = join(root, 'catalogue', 'openapi', '.raw', SET);
+const dir = join(root, 'catalogue', 'hiecm', 'openapi', '.raw', SET);
 const sha = (b) => createHash('sha256').update(b).digest('hex');
 
 test('in a UHI set a name is a person only under a person-shaped parent', () => {
-  const uhi = join(root, 'catalogue', 'openapi', '.raw', '__redact-test-uhi');
+  const uhi = join(root, 'catalogue', 'uhi', 'openapi', '.raw', '__redact-test-uhi');
   rmSync(uhi, {recursive: true, force: true});
   mkdirSync(uhi, {recursive: true});
   try {
@@ -52,7 +52,7 @@ test('in a UHI set a name is a person only under a person-shaped parent', () => 
 });
 
 test('names passed in REDACT_NAMES are removed wherever they stand, and never written to the repo', () => {
-  const set = join(root, 'catalogue', 'openapi', '.raw', '__redact-test-names');
+  const set = join(root, 'catalogue', 'hiecm', 'openapi', '.raw', '__redact-test-names');
   rmSync(set, {recursive: true, force: true});
   mkdirSync(set, {recursive: true});
   try {

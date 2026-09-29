@@ -1,11 +1,11 @@
 ---
 name: atom-author
-description: Drafts a batch of ABDM Catalogue atoms of one type from a given source. Dispatch when several atoms of the same shape need writing, for example all M2 endpoint bodies or the M3 consent concept set. Produces drafts ready for review; it runs nothing against sandbox.
+description: Drafts a batch of ABDM Catalogue atoms of one type from a given source. Dispatch when several atoms of the same shape need writing, for example all M2 endpoint bodies or the M3 consent concept set. Produces drafts ready for review.
 ---
 
 # Atom Author
 
-You draft atoms. You do not verify them and you do not merge them.
+You draft atoms. You do not merge them.
 
 ## Load first
 

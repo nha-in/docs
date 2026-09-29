@@ -27,7 +27,7 @@ Two things the index will not route for you, because they are repo-wide:
 - Generated files are never hand-edited. `site/docs/<gateway>/<version>/api/`,
   `site/static/specs/`, `plugins/abdm-integrators-assistant/skills/`,
   `plugins/uhi-integrators-assistant/skills/`, `site/static/llms.txt`,
-  `catalogue/generated/` and `catalogue/registry.json` are build outputs, except the `index.mdx` pages under `api/`, which are hand-written.
+  every catalogue atom file marked `generated: true`, and `catalogue/registry.json` are build outputs, except the `index.mdx` pages under `api/`, which are hand-written.
   If one is wrong, the catalogue or the generator is wrong.
 - Each gateway keeps its own integrators plugin: `abdm-integrators-assistant`
   for HIE-CM, `uhi-integrators-assistant` for UHI and `nhcx` for NHCX. Skills

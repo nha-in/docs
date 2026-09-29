@@ -16,7 +16,7 @@ summary: >
   them into one list is what makes a simple journey look like a menu of five
   unrelated options.
 sources:
-  - file: catalogue/openapi/hiecm/v3/hiecm-m1.yaml
+  - file: catalogue/hiecm/openapi/v3/hiecm-m1.yaml
     status: read-from-spec-2026-09-20
     note: >
       The identifier travels as loginHint and the proof as authMethods, whose

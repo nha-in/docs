@@ -50,3 +50,16 @@ func TestIsGreeting(t *testing.T) {
 		}
 	}
 }
+
+func TestIsAboutAssistant(t *testing.T) {
+	for _, q := range []string{"how many languages do you understand", "who are you?", "what can you do", "are you a bot", "do you speak Hindi", "tell me about yourself", "what model are you"} {
+		if !IsAboutAssistant(q) {
+			t.Errorf("%q should be about the assistant", q)
+		}
+	}
+	for _, q := range []string{"how many ABHA creation ways exist", "can you tell me how to link a care context", "what are the languages supported in FHIR display", "documents/ID required to create ABHA", "do you know the consent flow"} {
+		if IsAboutAssistant(q) {
+			t.Errorf("%q should not be about the assistant", q)
+		}
+	}
+}

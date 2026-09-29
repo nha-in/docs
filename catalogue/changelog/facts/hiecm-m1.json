@@ -764,37 +764,6 @@
         "https://abhasbx.abdm.gov.in"
       ]
     },
-    "PATCH /abha/api/v3/profile/account#profile-photo": {
-      "encrypted": [],
-      "id": "m1_patch_v3_profile_account_profile_photo",
-      "kind": "call",
-      "method": "PATCH",
-      "params": [
-        "header:REQUEST-ID!",
-        "header:TIMESTAMP!",
-        "header:X-token!"
-      ],
-      "path": "/abha/api/v3/profile/account#profile-photo",
-      "properties": [
-        "profilePhoto"
-      ],
-      "required": [],
-      "responses": [
-        "200",
-        "400",
-        "401",
-        "404",
-        "422",
-        "500"
-      ],
-      "security": [
-        "bearerAuth"
-      ],
-      "server": "https://abhasbx.abdm.gov.in",
-      "servers": [
-        "https://abhasbx.abdm.gov.in"
-      ]
-    },
     "POST /abha/api/v3.1/profile/login/verify#face-auth-qr": {
       "encrypted": [],
       "id": "m1_post_v3_1_profile_login_verify_face_auth_qr",
@@ -4009,11 +3978,11 @@
     "his"
   ],
   "sources": {
-    "catalogue/openapi/.raw/nha-2026-09-16/abha/M1 ABHA Collection.json": {
+    "nha-2026-09-16/abha/M1 ABHA Collection.json": {
       "fetched": "2026-09-15",
       "hash": "sha256:e121c850ed891b6d96c241be3616e15fddeb967a22f600cfc08561c99f81fc65"
     },
-    "catalogue/openapi/.raw/nha-2026-09-22/abha/ABHA Swagger split.yaml": {
+    "nha-2026-09-22/abha/ABHA Swagger split.yaml": {
       "fetched": "2026-09-22",
       "hash": "sha256:f635eaf1411d96dcf427773d45d3e6d67a57748612ca4b3217b101118620609c"
     }

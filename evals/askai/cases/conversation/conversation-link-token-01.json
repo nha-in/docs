@@ -33,7 +33,7 @@
     "atom"
   ],
   "expected_sources": [
-    "shared.glossary.link-token"
+    "hiecm.glossary.link-token"
   ],
   "expected_shape": "define",
   "expected_behaviour": "answer",

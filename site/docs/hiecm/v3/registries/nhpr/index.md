@@ -2,7 +2,7 @@
 title: NHPR, the provider registries
 sidebar_label: NHPR
 description: The National Health Professional Registry, why professionals and facilities are registered separately, and which one you need first.
-source: catalogue/openapi/hiecm/v3/hiecm-m4.yaml
+source: catalogue/hiecm/openapi/v3/hiecm-m4.yaml
 ---
 
 # NHPR, the provider registries

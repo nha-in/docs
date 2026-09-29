@@ -1,7 +1,7 @@
 import {readFileSync, readdirSync, existsSync} from 'node:fs';
 import {join} from 'node:path';
 import {parse} from 'yaml';
-import {listSpecTree} from '../specs.mjs';
+import {listSpecTree, specDir} from '../specs.mjs';
 
 const METHODS = ['get', 'post', 'put', 'patch', 'delete'];
 
@@ -27,11 +27,12 @@ export function operationIndex({platform: wantPlatform = 'hiecm', version: wantV
   return index;
 }
 
-/** moduleId -> journeys, from catalogue/openapi/<platform>/<version>/journeys/<module>.yaml. */
+/** moduleId -> journeys, from the gateway's <version>/journeys/<module>.yaml (see specs.mjs). */
 export function loadJourneys({platform = 'hiecm', version = 'v3', dir} = {}) {
-  dir ??= join(new URL(`../../catalogue/openapi/${platform}/${version}/journeys/`, import.meta.url).pathname);
+  const base = specDir(platform);
+  dir ??= base && join(base, version, 'journeys');
   const out = new Map();
-  if (!existsSync(dir)) return out;
+  if (!dir || !existsSync(dir)) return out;
   for (const name of readdirSync(dir).sort()) {
     if (!name.endsWith('.yaml')) continue;
     out.set(name.replace(/\.yaml$/, ''), parse(readFileSync(join(dir, name), 'utf8')) ?? []);

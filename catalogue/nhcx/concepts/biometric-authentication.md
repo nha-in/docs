@@ -56,7 +56,7 @@ related:
   - nhcx.glossary.rd-service
   - nhcx.glossary.pid-block
   - shared.glossary.abha-number
-  - shared.glossary.auth-modes
+  - hiecm.glossary.auth-modes
   - shared.glossary.kyc
   concepts:
   - nhcx.concept.pmjay-on-nhcx

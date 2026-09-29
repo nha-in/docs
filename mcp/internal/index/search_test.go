@@ -388,7 +388,7 @@ func TestSideFilter(t *testing.T) {
 // that repeats the term must not outrank the entry that defines it.
 func TestDefinitionQuestionsPreferTheGlossary(t *testing.T) {
 	atoms := append(fixtureAtoms(),
-		catalogue.Atom{ID: "shared.glossary.hiu", Type: "glossary", Gateway: "shared", Milestone: "n/a", Title: "HIU, health information user", Summary: "The system that requests records.", Body: "## In plain words\n\nAn HIU requests a person's records with consent.", Related: map[string][]string{}},
+		catalogue.Atom{ID: "hiecm.glossary.hiu", Type: "glossary", Gateway: "hiecm", Milestone: "n/a", Title: "HIU, health information user", Summary: "The system that requests records.", Body: "## In plain words\n\nAn HIU requests a person's records with consent.", Related: map[string][]string{}},
 		catalogue.Atom{ID: "hiecm.error.abdm-1040", Type: "error", Gateway: "hiecm", Milestone: "M3", Title: "ABDM-1040 HIU not found", Summary: "The HIU id is not registered as an HIU.", Body: "## In plain words\n\nHIU HIU HIU. The HIU in the request is not an HIU the gateway knows. Register the HIU.", Related: map[string][]string{}},
 	)
 	dbPath := filepath.Join(t.TempDir(), "catalogue.db")
@@ -405,7 +405,7 @@ func TestDefinitionQuestionsPreferTheGlossary(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		if len(hits) == 0 || hits[0].ID != "shared.glossary.hiu" {
+		if len(hits) == 0 || hits[0].ID != "hiecm.glossary.hiu" {
 			t.Errorf("%q: top hit %v, want the glossary entry first", q, ids(hits))
 		}
 	}

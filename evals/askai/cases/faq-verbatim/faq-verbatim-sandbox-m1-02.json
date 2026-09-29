@@ -24,7 +24,7 @@
     "atom"
   ],
   "expected_sources": [
-    "shared.glossary.hmis",
+    "hiecm.glossary.hmis",
     "shared.glossary.phr"
   ],
   "expected_shape": "define",

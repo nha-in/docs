@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"os"
 	"path/filepath"
@@ -76,6 +77,43 @@ func TestRunWithEmbedder(t *testing.T) {
 	}
 }
 
+// countingEmbedder counts the texts it is asked to embed.
+type countingEmbedder struct {
+	*embed.Fake
+	n int
+}
+
+func (c *countingEmbedder) Embed(ctx context.Context, texts []string) ([][]float32, error) {
+	c.n += len(texts)
+	return c.Fake.Embed(ctx, texts)
+}
+
+func TestRunReusesPreviousVectors(t *testing.T) {
+	out := filepath.Join(t.TempDir(), "catalogue.db")
+	first := &countingEmbedder{Fake: embed.NewFake(32)}
+	if err := run(fixtureDir(), out, "", "", first); err != nil {
+		t.Fatal(err)
+	}
+	if first.n == 0 {
+		t.Fatal("first build embedded nothing")
+	}
+	second := &countingEmbedder{Fake: embed.NewFake(32)}
+	if err := run(fixtureDir(), out, "", "", second); err != nil {
+		t.Fatal(err)
+	}
+	if second.n != 0 {
+		t.Errorf("unchanged rebuild embedded %d texts, want 0", second.n)
+	}
+	// Another model cannot reuse these vectors.
+	other := &countingEmbedder{Fake: embed.NewFake(16)}
+	if err := run(fixtureDir(), out, "", "", other); err != nil {
+		t.Fatal(err)
+	}
+	if other.n != first.n {
+		t.Errorf("rebuild with another model embedded %d texts, want %d", other.n, first.n)
+	}
+}
+
 func TestRunSkipsOpenapiMarkdown(t *testing.T) {
 	dir := t.TempDir()
 
@@ -85,6 +123,16 @@ func TestRunSkipsOpenapiMarkdown(t *testing.T) {
 	}
 	if err := os.WriteFile(filepath.Join(openapiDir, "CONVENTIONS.md"),
 		[]byte("This is plain prose with no frontmatter.\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	// A gateway's own correction log sits under <gateway>/openapi/ and is
+	// skipped the same way.
+	corrections := filepath.Join(dir, "hiecm", "openapi", "corrections")
+	if err := os.MkdirAll(corrections, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(corrections, "2026-09-16-final-set.md"),
+		[]byte("# Corrections\n\nPlain prose.\n"), 0o644); err != nil {
 		t.Fatal(err)
 	}
 
@@ -219,11 +267,17 @@ func TestRunSkipsNestedReadme(t *testing.T) {
 
 func TestIsSpecPath(t *testing.T) {
 	for path, want := range map[string]bool{
-		"openapi/hiecm/v3/hiecm-m1.yaml":    true,
-		"openapi/hiecm/v3/journeys/m1.yaml": false,
-		"openapi/.raw/x/y.yaml":             false,
-		"openapi/corrections/hiecm-m1.yaml": false,
-		"openapi/hiecm-v3.yaml":             false,
+		"hiecm/openapi/v3/hiecm-m1.yaml":          true,
+		"openapi/nhcx/v1/nhcx-claim.yaml":         true,
+		"hiecm/openapi/v3/journeys/m1.yaml":       false,
+		"hiecm/openapi/v3/errors/m1.yaml":         false,
+		"openapi/nhcx/v1/journeys/x.yaml":         false,
+		"hiecm/map/m1.yaml":                       false,
+		"hiecm/openapi/.raw/x/y.yaml":             false,
+		"openapi/.raw/x/y.yaml":                   false,
+		"openapi/nrces/PINNED":                    false,
+		"hiecm/openapi/corrections/hiecm-m1.yaml": false,
+		"openapi/hiecm-v3.yaml":                   false,
 	} {
 		if got := isSpecPath(filepath.FromSlash(path)); got != want {
 			t.Errorf("isSpecPath(%q) = %v, want %v", path, got, want)

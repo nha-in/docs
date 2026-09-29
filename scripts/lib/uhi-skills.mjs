@@ -154,7 +154,7 @@ const LANDS = {
 
 function journeyOf(ctx, j) {
   const found = (ctx.journeys.get(j.module) ?? []).find((x) => x.id === j.id);
-  if (!found) throw new Error(`journey ${j.module}/${j.id} is not in catalogue/openapi/uhi/v1/journeys/`);
+  if (!found) throw new Error(`journey ${j.module}/${j.id} is not in catalogue/uhi/openapi/v1/journeys/`);
   return found;
 }
 

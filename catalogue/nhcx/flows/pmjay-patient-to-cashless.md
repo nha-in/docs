@@ -84,7 +84,7 @@ related:
   - nhcx.glossary.tpa
   - shared.glossary.abha-number
   - shared.glossary.hfr
-  - shared.glossary.hmis
+  - hiecm.glossary.hmis
   - shared.glossary.nhcx
   troubleshooting:
   - nhcx.troubleshooting.everything-returns-401
@@ -96,7 +96,7 @@ related:
 
 A [PMJAY](../glossary/pmjay.md) patient does not become cashless because they hold a card. Your hospital must first find the payer, confirm the linked policy, and learn the plan's rules. Only then can you check eligibility and ask for preauthorisation.
 
-Two things must both be true. In your [HMIS](../../shared/glossary/hmis.md), the admission is converted from cash to insurance, with the scheme, payer, identifier and policy number attached. For the [NHCX](../../shared/glossary/nhcx.md) exchange, you have resolved the payer's code, the policy and the member ID.
+Two things must both be true. In your [HMIS](../../hiecm/glossary/hmis.md), the admission is converted from cash to insurance, with the scheme, payer, identifier and policy number attached. For the [NHCX](../../shared/glossary/nhcx.md) exchange, you have resolved the payer's code, the policy and the member ID.
 
 The order is fixed: find the payer, find the policy, resolve the codes, fetch the plan, check eligibility, authenticate, submit the preauthorisation. [PMJAY on NHCX](../concepts/pmjay-on-nhcx.md) explains how PMJAY differs from the standard exchange.
 

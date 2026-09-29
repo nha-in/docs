@@ -15,8 +15,8 @@ func searchTrace(ids ...string) ToolTrace {
 }
 
 func TestRetrievalScoresTheFirstSearch(t *testing.T) {
-	c := answerCase() // expects shared.glossary.hmis
-	tr := Transcript{Calls: []ModelCall{{ToolResults: []ToolTrace{searchTrace("shared.glossary.hip", "shared.glossary.hmis")}}}}
+	c := answerCase() // expects hiecm.glossary.hmis
+	tr := Transcript{Calls: []ModelCall{{ToolResults: []ToolTrace{searchTrace("hiecm.glossary.hip", "hiecm.glossary.hmis")}}}}
 	r := Retrieval(c, tr)
 	if !r.Scored || r.Recall3 != 1 || r.RR != 0.5 {
 		t.Fatalf("got %+v", r)
@@ -24,7 +24,7 @@ func TestRetrievalScoresTheFirstSearch(t *testing.T) {
 }
 
 func TestRetrievalMissIsZero(t *testing.T) {
-	tr := Transcript{Calls: []ModelCall{{ToolResults: []ToolTrace{searchTrace("a", "b", "c", "shared.glossary.hmis")}}}}
+	tr := Transcript{Calls: []ModelCall{{ToolResults: []ToolTrace{searchTrace("a", "b", "c", "hiecm.glossary.hmis")}}}}
 	r := Retrieval(answerCase(), tr)
 	if r.Recall3 != 0 || r.RR != 0.25 {
 		t.Fatalf("got %+v", r)

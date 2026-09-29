@@ -3,7 +3,7 @@ title: Personal Health Record (PHR) Application
 sidebar_label: PHR application
 sidebar_position: 7
 description: 'The citizen facing application: its role in ABDM, the capabilities each phase adds, and why it is where consent is managed.'
-source: PHR_Sandbox_Changes_V2.docx, NHA content review of 21 September 2026, catalogue/openapi/hiecm/v3/hiecm-p1.yaml, catalogue/openapi/hiecm/v3/hiecm-p2.yaml, catalogue/openapi/hiecm/v3/hiecm-p3.yaml, catalogue/openapi/hiecm/v3/hiecm-p4.yaml
+source: PHR_Sandbox_Changes_V2.docx, NHA content review of 21 September 2026, catalogue/hiecm/openapi/v3/hiecm-p1.yaml, catalogue/hiecm/openapi/v3/hiecm-p2.yaml, catalogue/hiecm/openapi/v3/hiecm-p3.yaml, catalogue/hiecm/openapi/v3/hiecm-p4.yaml
 sidebar_class_name: sidebar-icon sidebar-icon--smartphone
 ---
 

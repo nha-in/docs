@@ -29,7 +29,7 @@
     "an hmis is a hip"
   ],
   "expected_sources": [
-    "shared.glossary.hip"
+    "hiecm.glossary.hip"
   ],
   "expected_shape": "define",
   "expected_behaviour": "answer",
