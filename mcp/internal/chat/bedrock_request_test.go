@@ -67,3 +67,31 @@ func TestUncacheableModelGetsTextOnly(t *testing.T) {
 		t.Fatalf("want a text block, got %T", blocks[0])
 	}
 }
+
+// OpenAI's GPT-5 and GPT-6 reasoning models reject a temperature outright, so
+// none is sent; every other model, gpt-oss included, keeps the configured one.
+func TestTemperatureOmittedForOpenAIReasoningModels(t *testing.T) {
+	omitted := []string{
+		"global.openai.gpt-6-luna",
+		"in.openai.gpt-5.6-luna",
+		"us.openai.gpt-6-sol",
+		"openai.gpt-5.5",
+	}
+	for _, id := range omitted {
+		if got := temperatureFor(id, 0.1); got != nil {
+			t.Errorf("temperatureFor(%q) = %v, want nil", id, *got)
+		}
+	}
+	kept := []string{
+		"openai.gpt-oss-120b-1:0",
+		"global.anthropic.claude-haiku-4-5-20251001-v1:0",
+		"apac.amazon.nova-pro-v1:0",
+		"qwen.qwen3-235b-a22b-2507-v1:0",
+	}
+	for _, id := range kept {
+		got := temperatureFor(id, 0.1)
+		if got == nil || *got != 0.1 {
+			t.Errorf("temperatureFor(%q) = %v, want 0.1", id, got)
+		}
+	}
+}
