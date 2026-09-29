@@ -41,6 +41,7 @@ What it cannot do yet matters as much. Read **Before anything else** below befor
 - **Design.** What the journey around the calls has to do, and what a screen is forbidden to claim. [references/design.md](references/design.md)
 - **Integrate.** 125 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
 - **Debug.** The loop from a failed call to a named fix, and 17 error codes from the specification's examples. [references/debug.md](references/debug.md)
+- **Test.** The functional test cases, one loop each, with the evidence the sandbox can vouch for and the manifest that replaces a screenshot report. [references/test.md](references/test.md)
 
 This file is the map. Each line above is a file beside it, opened one at a time rather than read through.
 

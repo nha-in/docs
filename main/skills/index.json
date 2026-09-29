@@ -20,7 +20,8 @@
         "references/scaffold.md",
         "references/design.md",
         "references/integrate.md",
-        "references/debug.md"
+        "references/debug.md",
+        "references/test.md"
       ]
     },
     {
