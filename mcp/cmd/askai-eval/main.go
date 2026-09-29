@@ -172,7 +172,12 @@ func checkCmd(args []string) error {
 	fs := flag.NewFlagSet("check", flag.ExitOnError)
 	casesDir := fs.String("cases", "../evals/askai/cases", "cases directory")
 	run := fs.String("run", "", "run directory; empty reads ../evals/askai/runs/latest")
+	// A run of a subset (-only, a slice, a smoke test) has no transcript for
+	// the rest, and scoring them as "transcript: missing" buries the cases it
+	// did answer, and bakes them into a first baseline.
+	answered := fs.Bool("answered", false, "score only cases that have a transcript in the run")
 	fs.Parse(args)
+	onlyAnswered = *answered
 	dir, err := resolveRun(*run)
 	if err != nil {
 		if *run == "" {
@@ -351,6 +356,9 @@ func readJSON(path string, v any) error {
 // directory and writes checks.json and retrieval.json beside the transcripts.
 // Exit status is failure when any case has a failure, which is what makes
 // this a gate rather than a report.
+// onlyAnswered is check's -answered flag, read by checkInto.
+var onlyAnswered bool
+
 func checkInto(casesDir, runDir string) error {
 	cases, err := eval.LoadCases(casesDir)
 	if err != nil {
@@ -359,6 +367,15 @@ func checkInto(casesDir, runDir string) error {
 	ts, err := eval.ReadTranscripts(filepath.Join(runDir, "transcripts"))
 	if err != nil {
 		return err
+	}
+	if onlyAnswered {
+		var kept []eval.Case
+		for _, c := range cases {
+			if _, ok := ts[c.ID]; ok {
+				kept = append(kept, c)
+			}
+		}
+		cases = kept
 	}
 	results := eval.CheckAll(cases, ts)
 	var retrieval []eval.RetrievalResult

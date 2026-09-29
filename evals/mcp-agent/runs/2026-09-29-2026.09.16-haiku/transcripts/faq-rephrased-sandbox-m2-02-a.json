@@ -1,0 +1,448 @@
+{
+  "case_id": "faq-rephrased-sandbox-m2-02-a",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "who can be a hip?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01HPRqdHQHdxAo9fCgNuGDLt",
+            "Name": "search",
+            "Input": {
+              "query": "who can be a HIP Health Information Provider",
+              "kind": "atom",
+              "limit": 5
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "who can be a HIP Health Information Provider",
+            "kind": "atom",
+            "limit": 5
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "",
+                "id": "shared.decision.role-model-two-axes",
+                "summary": "HIP, HIU, HRP and the health locker read as one list of four roles. This catalogue separates the entity that holds the role from what that entity is doing, b...",
+                "title": "Roles belong to the entity, and split into two axes, position and direction",
+                "type": "decision"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/care-context#care-context",
+                "id": "hiecm.concept.care-context",
+                "summary": "A care context is the unit a provider links to a patient's ABHA address, carrying a reference number and a display name and nothing clinical.",
+                "title": "Care contexts, how records are grouped so they can be found",
+                "type": "concept"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_013KYUgZGaJxGDWTeeh9T6Tf",
+            "Name": "search",
+            "Input": {
+              "query": "HIP definition types hospitals clinics providers",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "HIP definition types hospitals clinics providers",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01552T1AjYbGquitznSaDLB4",
+            "Name": "search",
+            "Input": {
+              "query": "HIP Health Information Provider glossary",
+              "kind": "atom",
+              "type": "glossary",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "HIP Health Information Provider glossary",
+            "kind": "atom",
+            "type": "glossary",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "",
+                "id": "hiecm.glossary.m2",
+                "summary": "The milestone covering care context linking, discovery and sending records.",
+                "title": "M2 Health Information Provider: Create and link records",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#link-token",
+                "id": "hiecm.glossary.link-token",
+                "summary": "The token that authorises your system to link a care context to a patient's ABHA address.",
+                "title": "Link token, the token that authorises linking",
+                "type": "glossary"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_016cyDmmgPezyc29S8mpbD88",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.glossary.m2"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.glossary.m2"
+          },
+          "output": {
+            "body": "# M2 Health Information Provider: Create and link records\n\n## In plain words\n\nMilestone 2, sharing records as a [HIP](hip.md): turning your records\ninto [FHIR](fhir.md) bundles, grouping them into\n[care contexts](/docs/hiecm/v3/concepts/care-context), linking those to a patient's\n[ABHA address](abha-address.md), answering [discovery](discovery.md), and\nencrypting and pushing data when consent allows. See\n[M2](/docs/hiecm/v3/api/m2).\n\n## Before you start\n\nNothing. A glossary entry assumes no prior reading.\n\n## What happens\n\nNothing happens here. This entry defines a term, it does not describe a call.\n\n## How you know it worked\n\nYou have understood this when you can say whether your system holds records that other systems should be able to find.\n\n## When it goes wrong\n\nAssuming M2 alone makes records visible. Nothing you hold is\ndiscoverable until a care context is linked.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "",
+            "gateway": "hiecm",
+            "id": "hiecm.glossary.m2",
+            "milestone": "n/a",
+            "summary": "The milestone covering care context linking, discovery and sending records.",
+            "title": "M2 Health Information Provider: Create and link records",
+            "type": "glossary"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01QMMiZVeFncsj2DkGjuU2AC",
+            "Name": "search",
+            "Input": {
+              "query": "HIP role entity provider onboarding eligibility",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "HIP role entity provider onboarding eligibility",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01G5P3BmFnYiLc3TTND2oeed",
+            "Name": "search",
+            "Input": {
+              "query": "HIP",
+              "kind": "atom",
+              "type": "concept",
+              "limit": 15
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "HIP",
+            "kind": "atom",
+            "type": "concept",
+            "limit": 15
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/how-it-fits#roles",
+                "id": "hiecm.concept.roles",
+                "summary": "Your role, IMS or PHR, is fixed by the entity your software acts for, while HIP and HIU change with the direction each record moves.",
+                "title": "Roles, which entity your software acts for and which way the record moves",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m3-plural-artefacts-and-codes",
+                "summary": "A consent request produces one artefact per HIP, and the same error code means different things in different modules, so carry ABDM's own message.",
+                "title": "Read plural as plural, and never translate a code into a meaning",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.concept.fidelius-ecdh-interop",
+                "summary": "What an implementation must match to exchange records with a peer built on Fidelius: Curve25519 in short Weierstrass form inside an X.509 key, a nonce split ...",
+                "title": "Fidelius ECDH interop, the curve encoding and the key derivation",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/care-context#care-context",
+                "id": "hiecm.concept.care-context",
+                "summary": "A care context is the unit a provider links to a patient's ABHA address, carrying a reference number and a display name and nothing clinical.",
+                "title": "Care contexts, how records are grouped so they can be found",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/gateway#asynchronous-callbacks",
+                "id": "hiecm.concept.asynchronous-callbacks",
+                "summary": "Most HIE-CM calls answer 202 at once and deliver the real answer later as a callback to your registered URL, matched by request id.",
+                "title": "Asynchronous calls and callbacks, why a 200 means very little",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m2-inbound-is-a-surface",
+                "summary": "ABDM asks your bridge questions and waits, most of them carry no documented payload, and a handler that only logs leaves records undiscoverable.",
+                "title": "Inbound is a surface, and silence there is a failure state",
+                "type": "concept"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_014JfXGJjAYwFeUjnoMoDdnZ",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.concept.roles"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.concept.roles"
+          },
+          "output": {
+            "body": "# Roles, which entity your software acts for and which way the record moves\n\n## In plain words\n\nThere are two integrator roles on HIE-CM, and your product is one of them for its\nwhole life. What decides it is which entity your software acts for.\n\n| Role | It acts for | What you build |\n| --- | --- | --- |\n| [IMS](/docs/hiecm/v3/getting-started/glossary#ims) | A care provider. An HMIS in a hospital, an EMR in a clinic, a LIMS in a laboratory, a PMS in a pharmacy | [M1](/docs/hiecm/v3/milestones/m1) to [M4](/docs/hiecm/v3/milestones/m4) |\n| [PHR](/docs/hiecm/v3/getting-started/glossary#phr) | A care seeker, who holds their own records and gives consent | [P1](/docs/hiecm/v3/milestones/p1) to [P3](/docs/hiecm/v3/milestones/p3) |\n\n[HIP](/docs/hiecm/v3/getting-started/glossary#hip) and\n[HIU](/docs/hiecm/v3/getting-started/glossary#hiu) are not a third and a fourth\nrole, and they are not something you register as. They are the two ends of one\nrecord moving: whoever publishes it is the HIP for that exchange, and whoever\nasks to read one they did not create is the HIU.\n\nBoth roles are both, and it changes call by call:\n\n- A hospital is the HIP when it shares a discharge summary, and the HIU when it pulls an earlier prescription, through the same IMS.\n- A citizen is the HIP when they push a record from their PHR application, and the HIU when they fetch one.\n\nNeither is a thing you can build once and be. See\n[HIP and HIU](/docs/hiecm/v3/concepts/hip-hiu).\n\nSo the milestones you build follow the direction your records move, not the kind\nof product you sell. A PHR app that lets a citizen push a record publishes as\nthe HIP, and builds the M2 linking and transfer calls as well. See\n[where the citizen is the HIP](/docs/hiecm/v3/milestones/p2#where-the-citizen-is-the-hip).\nRecords never pass through the consent manager: it routes the request and holds\nthe consent, and the record goes from the system that holds it to the system\nthat asked.\n\n## Before you start\n\nKnow which entity the software acts for, a care provider or a care seeker. That fixes the role for the life of the product.\n\n## What happens\n\nDecide the role once, IMS or PHR, from the entity. Then list every direction a record moves through the product: publishing a record is HIP behaviour, fetching one it did not create is HIU behaviour. Build the milestones for each direction the product uses.\n\n## How you know it worked\n\nFor a hospital system that also pulls a patient's history, you can name the role, IMS, both directions, and the milestones: M1, M2 and M3. For a PHR app that uploads a scanned prescription, you can say the citizen is the HIP for that record.\n\n## When it goes wrong\n\nHIP, HIU, health repository and health locker are chosen as though they were one list of company types: two are directions, one is custody, one is a product. A PHR app is built for P1 alone and then cannot publish the first record a citizen pushes. A fetch is designed against the consent manager, which holds no records.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/concepts/how-it-fits#roles",
+            "gateway": "hiecm",
+            "id": "hiecm.concept.roles",
+            "milestone": "M2",
+            "summary": "Your role, IMS or PHR, is fixed by the entity your software acts for, while HIP and HIU change with the direction each record moves.",
+            "title": "Roles, which entity your software acts for and which way the record moves",
+            "type": "concept"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "According to the ABDM documentation on [Roles](https://docs.abdm.gov.in/docs/hiecm/v3/concepts/how-it-fits#roles):\n\n**HIP (Health Information Provider) is not a fixed entity type—it's a directional role.** Whoever publishes or shares a record is the HIP for that exchange.\n\nThere are two fixed integrator roles based on the entity your software acts for:\n\n1. **IMS** — software for a care provider:\n   - Hospital HMIS\n   - Clinic EMR\n   - Laboratory LIMS\n   - Pharmacy PMS\n\n2. **PHR** — software for a care seeker (citizen) who holds their own records\n\nBoth can act as HIPs depending on the direction records move:\n- A hospital is the **HIP** when sharing a discharge summary, and the **HIU** (Health Information User) when pulling an earlier prescription\n- A citizen via PHR app is the **HIP** when pushing a record, and the **HIU** when fetching one\n\nSo to answer directly: **any entity that publishes health records** (a care provider system, a citizen's PHR app, or a health repository) can be a HIP in that exchange—it's not a registration type, but a role that changes with each record transfer.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "According to the ABDM documentation on [Roles](https://docs.abdm.gov.in/docs/hiecm/v3/concepts/how-it-fits#roles):\n\n**HIP (Health Information Provider) is not a fixed entity type—it's a directional role.** Whoever publishes or shares a record is the HIP for that exchange.\n\nThere are two fixed integrator roles based on the entity your software acts for:\n\n1. **IMS** — software for a care provider:\n   - Hospital HMIS\n   - Clinic EMR\n   - Laboratory LIMS\n   - Pharmacy PMS\n\n2. **PHR** — software for a care seeker (citizen) who holds their own records\n\nBoth can act as HIPs depending on the direction records move:\n- A hospital is the **HIP** when sharing a discharge summary, and the **HIU** (Health Information User) when pulling an earlier prescription\n- A citizen via PHR app is the **HIP** when pushing a record, and the **HIU** when fetching one\n\nSo to answer directly: **any entity that publishes health records** (a care provider system, a citizen's PHR app, or a health repository) can be a HIP in that exchange—it's not a registration type, but a role that changes with each record transfer.",
+  "sources": [
+    {
+      "id": "hiecm.glossary.m2",
+      "title": "M2 Health Information Provider: Create and link records",
+      "url": ""
+    },
+    {
+      "id": "hiecm.concept.roles",
+      "title": "Roles, which entity your software acts for and which way the record moves",
+      "url": "/docs/hiecm/v3/concepts/how-it-fits#roles"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"\",\"id\":\"shared.decision.role-model-two-axes\",\"summary\":\"HIP, HIU, HRP and the health locker read as one list of four roles. This catalogue separates the entity that holds the role from what that entity is doing, b...\",\"title\":\"Roles belong to the entity, and split into two axes, position and direction\",\"type\":\"decision\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/care-context#care-context\",\"id\":\"hiecm.concept.care-context\",\"summary\":\"A care context is the unit a provider links to a patient's ABHA address, carrying a reference number and a display name and nothing clinical.\",\"title\":\"Care contexts, how records are grouped so they can be found\",\"type\":\"concept\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"\",\"id\":\"hiecm.glossary.m2\",\"summary\":\"The milestone covering care context linking, discovery and sending records.\",\"title\":\"M2 Health Information Provider: Create and link records\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#link-token\",\"id\":\"hiecm.glossary.link-token\",\"summary\":\"The token that authorises your system to link a care context to a patient's ABHA address.\",\"title\":\"Link token, the token that authorises linking\",\"type\":\"glossary\"}]}\n{\"body\":\"# M2 Health Information Provider: Create and link records\\n\\n## In plain words\\n\\nMilestone 2, sharing records as a [HIP](hip.md): turning your records\\ninto [FHIR](fhir.md) bundles, grouping them into\\n[care contexts](/docs/hiecm/v3/concepts/care-context), linking those to a patient's\\n[ABHA address](abha-address.md), answering [discovery](discovery.md), and\\nencrypting and pushing data when consent allows. See\\n[M2](/docs/hiecm/v3/api/m2).\\n\\n## Before you start\\n\\nNothing. A glossary entry assumes no prior reading.\\n\\n## What happens\\n\\nNothing happens here. This entry defines a term, it does not describe a call.\\n\\n## How you know it worked\\n\\nYou have understood this when you can say whether your system holds records that other systems should be able to find.\\n\\n## When it goes wrong\\n\\nAssuming M2 alone makes records visible. Nothing you hold is\\ndiscoverable until a care context is linked.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"\",\"gateway\":\"hiecm\",\"id\":\"hiecm.glossary.m2\",\"milestone\":\"n/a\",\"summary\":\"The milestone covering care context linking, discovery and sending records.\",\"title\":\"M2 Health Information Provider: Create and link records\",\"type\":\"glossary\"}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/concepts/how-it-fits#roles\",\"id\":\"hiecm.concept.roles\",\"summary\":\"Your role, IMS or PHR, is fixed by the entity your software acts for, while HIP and HIU change with the direction each record moves.\",\"title\":\"Roles, which entity your software acts for and which way the record moves\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m3-plural-artefacts-and-codes\",\"summary\":\"A consent request produces one artefact per HIP, and the same error code means different things in different modules, so carry ABDM's own message.\",\"title\":\"Read plural as plural, and never translate a code into a meaning\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"shared.concept.fidelius-ecdh-interop\",\"summary\":\"What an implementation must match to exchange records with a peer built on Fidelius: Curve25519 in short Weierstrass form inside an X.509 key, a nonce split ...\",\"title\":\"Fidelius ECDH interop, the curve encoding and the key derivation\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/care-context#care-context\",\"id\":\"hiecm.concept.care-context\",\"summary\":\"A care context is the unit a provider links to a patient's ABHA address, carrying a reference number and a display name and nothing clinical.\",\"title\":\"Care contexts, how records are grouped so they can be found\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/gateway#asynchronous-callbacks\",\"id\":\"hiecm.concept.asynchronous-callbacks\",\"summary\":\"Most HIE-CM calls answer 202 at once and deliver the real answer later as a callback to your registered URL, matched by request id.\",\"title\":\"Asynchronous calls and callbacks, why a 200 means very little\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m2-inbound-is-a-surface\",\"summary\":\"ABDM asks your bridge questions and waits, most of them carry no documented payload, and a handler that only logs leaves records undiscoverable.\",\"title\":\"Inbound is a surface, and silence there is a failure state\",\"type\":\"concept\"}]}\n{\"body\":\"# Roles, which entity your software acts for and which way the record moves\\n\\n## In plain words\\n\\nThere are two integrator roles on HIE-CM, and your product is one of them for its\\nwhole life. What decides it is which entity your software acts for.\\n\\n| Role | It acts for | What you build |\\n| --- | --- | --- |\\n| [IMS](/docs/hiecm/v3/getting-started/glossary#ims) | A care provider. An HMIS in a hospital, an EMR in a clinic, a LIMS in a laboratory, a PMS in a pharmacy | [M1](/docs/hiecm/v3/milestones/m1) to [M4](/docs/hiecm/v3/milestones/m4) |\\n| [PHR](/docs/hiecm/v3/getting-started/glossary#phr) | A care seeker, who holds their own records and gives consent | [P1](/docs/hiecm/v3/milestones/p1) to [P3](/docs/hiecm/v3/milestones/p3) |\\n\\n[HIP](/docs/hiecm/v3/getting-started/glossary#hip) and\\n[HIU](/docs/hiecm/v3/getting-started/glossary#hiu) are not a third and a fourth\\nrole, and they are not something you register as. They are the two ends of one\\nrecord moving: whoever publishes it is the HIP for that exchange, and whoever\\nasks to read one they did not create is the HIU.\\n\\nBoth roles are both, and it changes call by call:\\n\\n- A hospital is the HIP when it shares a discharge summary, and the HIU when it pulls an earlier prescription, through the same IMS.\\n- A citizen is the HIP when they push a record from their PHR application, and the HIU when they fetch one.\\n\\nNeither is a thing you can build once and be. See\\n[HIP and HIU](/docs/hiecm/v3/concepts/hip-hiu).\\n\\nSo the milestones you build follow the direction your records move, not the kind\\nof product you sell. A PHR app that lets a citizen push a record publishes as\\nthe HIP, and builds the M2 linking and transfer calls as well. See\\n[where the citizen is the HIP](/docs/hiecm/v3/milestones/p2#where-the-citizen-is-the-hip).\\nRecords never pass through the consent manager: it routes the request and holds\\nthe consent, and the record goes from the system that holds it to the system\\nthat asked.\\n\\n## Before you start\\n\\nKnow which entity the software acts for, a care provider or a care seeker. That fixes the role for the life of the product.\\n\\n## What happens\\n\\nDecide the role once, IMS or PHR, from the entity. Then list every direction a record moves through the product: publishing a record is HIP behaviour, fetching one it did not create is HIU behaviour. Build the milestones for each direction the product uses.\\n\\n## How you know it worked\\n\\nFor a hospital system that also pulls a patient's history, you can name the role, IMS, both directions, and the milestones: M1, M2 and M3. For a PHR app that uploads a scanned prescription, you can say the citizen is the HIP for that record.\\n\\n## When it goes wrong\\n\\nHIP, HIU, health repository and health locker are chosen as though they were one list of company types: two are directions, one is custody, one is a product. A PHR app is built for P1 alone and then cannot publish the first record a citizen pushes. A fetch is designed against the consent manager, which holds no records.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/concepts/how-it-fits#roles\",\"gateway\":\"hiecm\",\"id\":\"hiecm.concept.roles\",\"milestone\":\"M2\",\"summary\":\"Your role, IMS or PHR, is fixed by the entity your software acts for, while HIP and HIU change with the direction each record moves.\",\"title\":\"Roles, which entity your software acts for and which way the record moves\",\"type\":\"concept\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:02:04.092Z",
+  "usage": {
+    "input_tokens": 80,
+    "output_tokens": 1414,
+    "cache_read_input_tokens": 90591,
+    "cache_creation_input_tokens": 8961,
+    "num_turns": 8,
+    "duration_ms": 20239,
+    "cost_usd_equivalent": 0.034131100000000004
+  }
+}

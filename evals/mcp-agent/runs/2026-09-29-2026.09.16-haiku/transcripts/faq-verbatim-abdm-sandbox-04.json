@@ -1,0 +1,123 @@
+{
+  "case_id": "faq-verbatim-abdm-sandbox-04",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "What should I do if I have some technical query for my integration?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01XogcyoUS5UjUqcRdi34LSC",
+            "Name": "catalogue_info",
+            "Input": {}
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "catalogue_info",
+          "input": {},
+          "output": {
+            "atoms": {
+              "by_gateway": {
+                "hiecm": 269,
+                "nhcx": 536,
+                "shared": 46,
+                "uhi": 111
+              },
+              "by_milestone": {
+                "M1": 74,
+                "M2": 57,
+                "M3": 20,
+                "M4": 11,
+                "P1": 29,
+                "P2": 18,
+                "P3": 36,
+                "n/a": 717
+              },
+              "by_type": {
+                "callback": 66,
+                "concept": 105,
+                "decision": 13,
+                "endpoint": 186,
+                "error": 335,
+                "fhir": 30,
+                "flow": 57,
+                "glossary": 86,
+                "sandbox": 18,
+                "test": 51,
+                "troubleshooting": 15
+              }
+            },
+            "built_at": "2026-09-29T11:55:12Z",
+            "catalogue_version": "2026.09.16",
+            "deprecated": 0,
+            "embeddings": false,
+            "facts": 0,
+            "operations": 387
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "For technical queries about your ABDM integration, here are your options:\n\n**1. Ask me directly** — I have access to the official ABDM developer portal documentation and can help with:\n- **Error codes & fixes**: If you get an error response, share the code and I'll decode it with the fix\n- **API operations**: Request details, headers, and schema for any endpoint\n- **FHIR bundle validation**: Check if your data structure matches NRCES profiles\n- **Troubleshooting**: I have 15 troubleshooting guides covering common issues\n- **Flows & concepts**: How integrations work across HIE-CM, NHCX, and UHI\n- **Test examples**: Reference data for each record type\n\n**2. Search the portal directly** — Go to the [ABDM developer portal](https://developer.abdm.gov.in/) for:\n- Official API documentation\n- Sandbox environment & testing tools\n- Community forums or support channels\n- Release notes and updates\n\n**3. What I can search for**:\n- Just describe what you're trying to do (e.g., \"how do I generate a token?\", \"what does error ABDM-1035 mean?\", \"validate my OPConsultation bundle\")\n- I'll find the relevant documentation pages and explain what you need\n\nWhat's your technical question?",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "For technical queries about your ABDM integration, here are your options:\n\n**1. Ask me directly** — I have access to the official ABDM developer portal documentation and can help with:\n- **Error codes & fixes**: If you get an error response, share the code and I'll decode it with the fix\n- **API operations**: Request details, headers, and schema for any endpoint\n- **FHIR bundle validation**: Check if your data structure matches NRCES profiles\n- **Troubleshooting**: I have 15 troubleshooting guides covering common issues\n- **Flows & concepts**: How integrations work across HIE-CM, NHCX, and UHI\n- **Test examples**: Reference data for each record type\n\n**2. Search the portal directly** — Go to the [ABDM developer portal](https://developer.abdm.gov.in/) for:\n- Official API documentation\n- Sandbox environment & testing tools\n- Community forums or support channels\n- Release notes and updates\n\n**3. What I can search for**:\n- Just describe what you're trying to do (e.g., \"how do I generate a token?\", \"what does error ABDM-1035 mean?\", \"validate my OPConsultation bundle\")\n- I'll find the relevant documentation pages and explain what you need\n\nWhat's your technical question?",
+  "sources": [],
+  "corpus": "{\"atoms\":{\"by_gateway\":{\"hiecm\":269,\"nhcx\":536,\"shared\":46,\"uhi\":111},\"by_milestone\":{\"M1\":74,\"M2\":57,\"M3\":20,\"M4\":11,\"P1\":29,\"P2\":18,\"P3\":36,\"n/a\":717},\"by_type\":{\"callback\":66,\"concept\":105,\"decision\":13,\"endpoint\":186,\"error\":335,\"fhir\":30,\"flow\":57,\"glossary\":86,\"sandbox\":18,\"test\":51,\"troubleshooting\":15}},\"built_at\":\"2026-09-29T11:55:12Z\",\"catalogue_version\":\"2026.09.16\",\"deprecated\":0,\"embeddings\":false,\"facts\":0,\"operations\":387}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:03:11.710Z",
+  "usage": {
+    "input_tokens": 20,
+    "output_tokens": 760,
+    "cache_read_input_tokens": 16783,
+    "cache_creation_input_tokens": 5593,
+    "num_turns": 2,
+    "duration_ms": 10270,
+    "cost_usd_equivalent": 0.0166843
+  }
+}

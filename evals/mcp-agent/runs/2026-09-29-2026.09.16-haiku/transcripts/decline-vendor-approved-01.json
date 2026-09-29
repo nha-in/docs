@@ -1,0 +1,237 @@
+{
+  "case_id": "decline-vendor-approved-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "Is CarePlus HMS on NHA's approved software list for ABDM integration?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_016G3knizHSMHwhAiFhZLxBL",
+            "Name": "search",
+            "Input": {
+              "query": "CarePlus HMS approved software list NHA",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "CarePlus HMS approved software list NHA",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#ims",
+                "id": "hiecm.glossary.ims",
+                "summary": "The umbrella term for the software a health facility runs, whichever of HMIS, EMR, LIMS or PMS it happens to be.",
+                "title": "IMS, information management system",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hmis",
+                "id": "hiecm.glossary.hmis",
+                "summary": "The day to day software of a hospital, under any of its three names. A hospital uses it both to publish its own records and to fetch a patient's history from...",
+                "title": "HMIS, HIS or HIMS, the software a hospital runs",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#emr",
+                "id": "hiecm.glossary.emr",
+                "summary": "The system a hospital or clinic records consultations, prescriptions and results in. A facility uses it both to publish its own records and to fetch a patien...",
+                "title": "EMR, the clinical system a provider runs, also written EHR",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#lims",
+                "id": "hiecm.glossary.lims",
+                "summary": "The system a diagnostic laboratory uses to manage samples, tests and results.",
+                "title": "LIMS, laboratory information management system, also written LMIS",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/how-it-fits#roles",
+                "id": "hiecm.concept.roles",
+                "summary": "Your role, IMS or PHR, is fixed by the entity your software acts for, while HIP and HIU change with the direction each record moves.",
+                "title": "Roles, which entity your software acts for and which way the record moves",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hrp",
+                "id": "hiecm.glossary.hrp",
+                "summary": "Whoever holds the records. It describes custody, which is why it is neither a position nor a direction.",
+                "title": "HRP, health repository provider",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#fhir",
+                "id": "shared.glossary.nrces",
+                "summary": "The body that publishes the Indian FHIR profiles every ABDM health record must validate against.",
+                "title": "NRCeS, National Resource Centre for EHR Standards",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/codes-and-value-sets#supporting-info-categories",
+                "id": "shared.glossary.dsc",
+                "summary": "The company that builds ABDM compliant software for patients or health facilities. It is the entity that certifies, as distinct from the software that integr...",
+                "title": "DSC, Digital Solution Company",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/claim-request",
+                "id": "nhcx.fhir.claim-request",
+                "summary": "The bundle a hospital sends after discharge to claim payment, with the final amounts, the discharge details and the documents the policy requires.",
+                "title": "Claim request bundle",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m4#m4-link-bridge",
+                "id": "hiecm.flow.m4-link-bridge",
+                "summary": "Connect an onboarded facility to the software that will act for it, say whether the facility publishes records through it, fetches them, or both, and name it...",
+                "title": "Link a facility to its bridge",
+                "type": "flow"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01Kb1qaiseRnNbEQUyuDz2q3",
+            "Name": "search",
+            "Input": {
+              "query": "approved software certification list",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "approved software certification list",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01VeC5fsUtTEeSFT8TkmwwYd",
+            "Name": "search",
+            "Input": {
+              "query": "CarePlus",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "CarePlus",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "The ABDM documentation I have access to doesn't contain information about NHA's approved software list or CarePlus HMS specifically. \n\nFor current information on approved HMS/HIS systems for ABDM integration, you'll need to check:\n- **NHA's official ABDM portal** (https://nha.gov.in or the official ABDM sandbox/production gateway portals)\n- **Digital Solution Company (DSC) registries** maintained by NHA, which lists certified software vendors and their products\n- **Direct contact with NHA's onboarding team** for official certification status\n\nIf you're integrating CarePlus HMS with ABDM, the certification status may not be a blocker—many systems integrate by building their own ABDM connectors or using certified integration partners, even if the HMS itself isn't on a pre-approved list.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "The ABDM documentation I have access to doesn't contain information about NHA's approved software list or CarePlus HMS specifically. \n\nFor current information on approved HMS/HIS systems for ABDM integration, you'll need to check:\n- **NHA's official ABDM portal** (https://nha.gov.in or the official ABDM sandbox/production gateway portals)\n- **Digital Solution Company (DSC) registries** maintained by NHA, which lists certified software vendors and their products\n- **Direct contact with NHA's onboarding team** for official certification status\n\nIf you're integrating CarePlus HMS with ABDM, the certification status may not be a blocker—many systems integrate by building their own ABDM connectors or using certified integration partners, even if the HMS itself isn't on a pre-approved list.",
+  "sources": [],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#ims\",\"id\":\"hiecm.glossary.ims\",\"summary\":\"The umbrella term for the software a health facility runs, whichever of HMIS, EMR, LIMS or PMS it happens to be.\",\"title\":\"IMS, information management system\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hmis\",\"id\":\"hiecm.glossary.hmis\",\"summary\":\"The day to day software of a hospital, under any of its three names. A hospital uses it both to publish its own records and to fetch a patient's history from...\",\"title\":\"HMIS, HIS or HIMS, the software a hospital runs\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#emr\",\"id\":\"hiecm.glossary.emr\",\"summary\":\"The system a hospital or clinic records consultations, prescriptions and results in. A facility uses it both to publish its own records and to fetch a patien...\",\"title\":\"EMR, the clinical system a provider runs, also written EHR\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#lims\",\"id\":\"hiecm.glossary.lims\",\"summary\":\"The system a diagnostic laboratory uses to manage samples, tests and results.\",\"title\":\"LIMS, laboratory information management system, also written LMIS\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/how-it-fits#roles\",\"id\":\"hiecm.concept.roles\",\"summary\":\"Your role, IMS or PHR, is fixed by the entity your software acts for, while HIP and HIU change with the direction each record moves.\",\"title\":\"Roles, which entity your software acts for and which way the record moves\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hrp\",\"id\":\"hiecm.glossary.hrp\",\"summary\":\"Whoever holds the records. It describes custody, which is why it is neither a position nor a direction.\",\"title\":\"HRP, health repository provider\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#fhir\",\"id\":\"shared.glossary.nrces\",\"summary\":\"The body that publishes the Indian FHIR profiles every ABDM health record must validate against.\",\"title\":\"NRCeS, National Resource Centre for EHR Standards\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/codes-and-value-sets#supporting-info-categories\",\"id\":\"shared.glossary.dsc\",\"summary\":\"The company that builds ABDM compliant software for patients or health facilities. It is the entity that certifies, as distinct from the software that integr...\",\"title\":\"DSC, Digital Solution Company\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/claim-request\",\"id\":\"nhcx.fhir.claim-request\",\"summary\":\"The bundle a hospital sends after discharge to claim payment, with the final amounts, the discharge details and the documents the policy requires.\",\"title\":\"Claim request bundle\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m4#m4-link-bridge\",\"id\":\"hiecm.flow.m4-link-bridge\",\"summary\":\"Connect an onboarded facility to the software that will act for it, say whether the facility publishes records through it, fetches them, or both, and name it...\",\"title\":\"Link a facility to its bridge\",\"type\":\"flow\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:58:16.459Z",
+  "usage": {
+    "input_tokens": 30,
+    "output_tokens": 632,
+    "cache_read_input_tokens": 29037,
+    "cache_creation_input_tokens": 6696,
+    "num_turns": 4,
+    "duration_ms": 10619,
+    "cost_usd_equivalent": 0.019485699999999998
+  }
+}

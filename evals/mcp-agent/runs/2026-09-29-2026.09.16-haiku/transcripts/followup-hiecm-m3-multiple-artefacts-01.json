@@ -1,0 +1,1375 @@
+{
+  "case_id": "followup-hiecm-m3-multiple-artefacts-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "The conversation so far:\nDeveloper: patient approved my consent request, what next\nYou: The notify callback on your HIU bridge carries consentArtefacts with the artefact ids. Fetch the artefact with /api/hiecm/consent/v3/fetch and then request the health information.\n\nThe developer's new message:\nthere were two ids in it, do i need both"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01SoWZjvg28fB8he5kgx1Lrg",
+            "Name": "search",
+            "Input": {
+              "query": "consent artefact notify callback multiple ids",
+              "kind": "atom"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "consent artefact notify callback multiple ids",
+            "kind": "atom"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_017AeoBW82UXsVv6Njy6pWuK",
+            "Name": "search",
+            "Input": {
+              "query": "consent notify callback artefact structure",
+              "kind": "atom"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "consent notify callback artefact structure",
+            "kind": "atom"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01PFJ8eXi9iFaNMWC5CwUrbr",
+            "Name": "search",
+            "Input": {
+              "query": "consent notify",
+              "kind": "operation"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "consent notify",
+            "kind": "operation"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-post-v3-consent-request-hip-notify",
+                "id": "m2_post_v3_consent_request_hip_notify",
+                "summary": "This is a callback api to notify hip when consent is APPROVED or REVOKED.",
+                "title": "POST /api/v3/consent/request/hip/notify",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-post-consent-v3-request-hip-on-notify",
+                "id": "m2_post_consent_v3_request_hip_on_notify",
+                "summary": "This is ABDM HIE-CM API called by HIP to acknowledge the notification sent when a consent request is approved/revoked/expired by the patient.",
+                "title": "POST /api/hiecm/consent/v3/request/hip/on-notify",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-post-consent-v3-request-hiu-on-notify",
+                "id": "m3_post_consent_v3_request_hiu_on_notify",
+                "summary": "This is ABDM HIE-CM API called by HIU to acknowledge the notification sent when a consent request is approved/denied/revoked/expired by the patient.",
+                "title": "POST /api/hiecm/consent/v3/request/hiu/on-notify",
+                "type": "operation"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01VBkv5qLW3dw3LoiWHV5m6x",
+            "Name": "get",
+            "Input": {
+              "id": "m3_post_consent_v3_request_hiu_on_notify"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "m3_post_consent_v3_request_hiu_on_notify"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "doc_path": "/docs/hiecm/v3/api/m3/endpoints/m3-post-consent-v3-request-hiu-on-notify",
+            "operation_id": "m3_post_consent_v3_request_hiu_on_notify",
+            "spec": {
+              "description": "This API is called by HIU as acknowledgement to consent notifications, specifically for cases when consent is APPROVED, DENIED, or REVOKED or EXPIRED. Notified by CM earlier via Gateway API - <b> /api/v3/hiu/consent/request/notify </b>",
+              "operationId": "m3_post_consent_v3_request_hiu_on_notify",
+              "parameters": [
+                {
+                  "description": "Unique UUID for track the end to end request transaction",
+                  "example": "18235d89-cb13-479d-ad71-7a57d5f669a8",
+                  "in": "header",
+                  "name": "REQUEST-ID",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "description": "Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds",
+                  "example": "2022-10-06T15:10:00.587Z",
+                  "in": "header",
+                  "name": "TIMESTAMP",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "description": "Suffix of the consent manager to which the request was intended",
+                  "example": "sbx",
+                  "in": "header",
+                  "name": "X-CM-ID",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "description": "In the request body, either ‘acknowledgement’ or ‘error’ must be included.<br> <ol type='a'><br/> <li>Incase of success scenario,acknowledgement is mandatory and error is optional </li> <li>Incase of failure scenario,error is mandatory and acknowledgment is optional</li> <li>response is mandatory object in both the cases</li> </ol>",
+                      "properties": {
+                        "acknowledgement": {
+                          "items": {
+                            "properties": {
+                              "consentId": {
+                                "description": "The consent artefact id. Should be valid UUID. Allows alpha numeric character and special characters like \"^[0-9a-fA-F]{8}\\\\b-[0-9a-fA-F]{4}\\\\b-[0-9a-fA-F]{4}\\\\b-[0-9a-fA-F]{4}\\\\b-[0-9a-fA-F]{12}$\"",
+                                "example": "e3c74829-3f82-4f94-959e-e10f57bcd57b",
+                                "format": "uuid",
+                                "type": "string"
+                              },
+                              "status": {
+                                "description": "The status of the notification. Allows alpha numeric character and special characters like \"^[a-zA-Z0-9_\\\\-@,. \\\":/]{0,255}$\"",
+                                "example": "OK",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "status",
+                              "consentId"
+                            ],
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "error": {
+                          "description": "The error code and message, if any occurred.",
+                          "nullable": true,
+                          "properties": {
+                            "code": {
+                              "description": "ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing \": \" separator (`ABDM-1001: `); match on the code itself and tolerate the separator.",
+                              "example": "ABDM-1001",
+                              "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                              "type": "string"
+                            },
+                            "message": {
+                              "description": "The appropriate error message",
+                              "example": "unable to connect database",
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "code",
+                            "message"
+                          ],
+                          "type": "object"
+                        },
+                        "response": {
+                          "description": "The request id is from the /hiu/consent/request/notify callback",
+                          "properties": {
+                            "requestId": {
+                              "description": "The requestId that was passed. it must be in Alpha numeric and - in middle and Allows alpha numeric character and special characters like \"^[0-9a-fA-F]{8}\\\\b-[0-9a-fA-F]{4}\\\\b-[0-9a-fA-F]{4}\\\\b-[0-9a-fA-F]{4}\\\\b-[0-9a-fA-F]{12}\"",
+                              "example": "6f0b4665-a915-4c92-aa36-65afb4a2cd71",
+                              "format": "uuid",
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "requestId"
+                          ],
+                          "type": "object"
+                        }
+                      },
+                      "required": [
+                        "acknowledgement",
+                        "response"
+                      ],
+                      "type": "object"
+                    }
+                  }
+                },
+                "required": true
+              },
+              "responses": {
+                "202": {
+                  "description": "Accepted"
+                },
+                "400": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "example": [
+                          {
+                            "error": {
+                              "code": "ABDM-9999",
+                              "message": "RequestId cannot be NULL or Blank"
+                            }
+                          },
+                          {
+                            "error": {
+                              "code": "ABDM-9999",
+                              "message": "Invalid status, Please provide a valid status"
+                            }
+                          },
+                          {
+                            "error": {
+                              "code": "ABDM-9999",
+                              "message": "Invalid ConsentId, Please provide a valid ConsentId"
+                            }
+                          }
+                        ],
+                        "items": {
+                          "properties": {
+                            "error": {
+                              "description": "The error code and message, if any occurred.",
+                              "properties": {
+                                "code": {
+                                  "description": "The error code. May be returned either bare or with a trailing \": \" separator; match on the code itself and tolerate the separator.",
+                                  "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                                  "type": "string"
+                                },
+                                "message": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "code",
+                                "message"
+                              ],
+                              "type": "object"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      }
+                    }
+                  },
+                  "description": "Bad Request"
+                },
+                "401": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "code": {
+                            "description": "900901 - Unauthorized. May be returned either bare or with a trailing \": \" separator; match on the code itself and tolerate the separator.",
+                            "example": "900901",
+                            "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                            "type": "string"
+                          },
+                          "description": {
+                            "example": "Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'",
+                            "type": "string"
+                          },
+                          "message": {
+                            "example": "Unauthorized",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Unauthorized"
+                },
+                "403": {
+                  "content": {
+                    "text/plain": {
+                      "schema": {
+                        "example": "Access Denied",
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "description": "Forbidden"
+                },
+                "404": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "error": {
+                            "description": "The error code and message, if any occurred.",
+                            "properties": {
+                              "code": {
+                                "description": "ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing \": \" separator (`ABDM-1001: `); match on the code itself and tolerate the separator.",
+                                "example": "ABDM-1001",
+                                "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                                "type": "string"
+                              },
+                              "message": {
+                                "example": "No data found",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "code",
+                              "message"
+                            ],
+                            "type": "object"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Not Found"
+                },
+                "500": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "code": {
+                            "description": "900900 - Unclassified Authentication Failure. May be returned either bare or with a trailing \": \" separator; match on the code itself and tolerate the separator.",
+                            "example": "900900",
+                            "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                            "type": "string"
+                          },
+                          "description": {
+                            "example": "Access failure for API: /hiecm/api/v3, version: v3 status: (900900) - Unclassified Authentication Failure",
+                            "type": "string"
+                          },
+                          "message": {
+                            "example": "Unclassified Authentication Failure",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Internal Server Error"
+                },
+                "503": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "code": {
+                            "description": "ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing \": \" separator (`ABDM-1024: `); match on the code itself and tolerate the separator.",
+                            "example": "ABDM-1024",
+                            "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                            "type": "string"
+                          },
+                          "message": {
+                            "example": "Dependent service unavailable",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "message"
+                        ],
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Service Unavailable"
+                }
+              },
+              "security": [
+                {
+                  "bearerAuth": []
+                }
+              ],
+              "summary": "This is ABDM HIE-CM API called by HIU to acknowledge the notification sent when a consent request is approved/denied/revoked/expired by the patient.",
+              "tags": [
+                "consent-management-data-flow-hiu"
+              ],
+              "x-abdm-nha-operation-id": "abdm-consent-management 3 (3)"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01MSF4qdDd7XdukQ7JFGsyom",
+            "Name": "search",
+            "Input": {
+              "query": "/api/v3/hiu/consent/request/notify",
+              "kind": "operation"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "/api/v3/hiu/consent/request/notify",
+            "kind": "operation"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_012Gd2ND1ieG729X2uvejfWE",
+            "Name": "search",
+            "Input": {
+              "query": "gateway consent notify hiu",
+              "kind": "operation"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "gateway consent notify hiu",
+            "kind": "operation"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01CGT8r14Mmrceq381htracs",
+            "Name": "search",
+            "Input": {
+              "query": "consent artefact fetch",
+              "kind": "operation"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "consent artefact fetch",
+            "kind": "operation"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-get-consent-v3-artefact-artefact-id",
+                "id": "p2_get_consent_v3_artefact_artefact_id",
+                "summary": "This is ABDM HIE-CM API called to fetch the consent artefact details associated with the artefact-id.",
+                "title": "GET /api/hiecm/consent/v3/artefact/{consentId}",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-get-consent-v3-artefact-request-request-id",
+                "id": "p2_get_consent_v3_artefact_request_request_id",
+                "summary": "This is ABDM HIE-CM API called to fetch all the consent artefact details associated with a consent request request-id.",
+                "title": "GET /api/hiecm/consent/v3/artefact/request/{consentRequestId}",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-get-consent-v3-artefact",
+                "id": "p2_get_consent_v3_artefact",
+                "summary": "This is ABDM HIE-CM API called to fetch all the consent artefact details of a patient.",
+                "title": "GET /api/hiecm/consent/v3/artefact",
+                "type": "operation"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01BWjnUthaq2dCZjHwBBL6cV",
+            "Name": "get",
+            "Input": {
+              "id": "p2_get_consent_v3_artefact_request_request_id"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "p2_get_consent_v3_artefact_request_request_id"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "doc_path": "/docs/hiecm/v3/api/p2/endpoints/p2-get-consent-v3-artefact-request-request-id",
+            "operation_id": "p2_get_consent_v3_artefact_request_request_id",
+            "spec": {
+              "description": "This API endpoint is used to fetch all consent artefact details associated with a specific consent request ID. By invoking this API, users can retrieve comprehensive information about all consent artefacts linked to the given request ID, including their status, scope, and any associated conditions. This functionality is essential for ensuring that users have access to accurate and up-to-date consent artefact information, supporting secure and compliant health information exchange. The API facilitates efficient management and verification of consent artefacts, enhancing the overall integrity of the consent management process.",
+              "operationId": "p2_get_consent_v3_artefact_request_request_id",
+              "parameters": [
+                {
+                  "description": "Unique UUID for track the end to end request transaction",
+                  "example": "18235d89-cb13-479d-ad71-7a57d5f669a8",
+                  "in": "header",
+                  "name": "REQUEST-ID",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "description": "Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds",
+                  "example": "2022-10-06T15:10:00.587Z",
+                  "in": "header",
+                  "name": "TIMESTAMP",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "description": "Suffix of the consent manager to which the request was intended",
+                  "example": "sbx",
+                  "in": "header",
+                  "name": "X-CM-ID",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "description": "The user token the PHR service issued when the patient logged in.",
+                  "in": "header",
+                  "name": "X-AUTH-TOKEN",
+                  "required": true,
+                  "schema": {
+                    "example": "<TOKEN>",
+                    "format": "bearer",
+                    "maximum": 100,
+                    "minimum": 1,
+                    "type": "string"
+                  }
+                },
+                {
+                  "description": "Consent request id",
+                  "in": "path",
+                  "name": "consentRequestId",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "responses": {
+                "200": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "items": {
+                          "properties": {
+                            "consentDetail": {
+                              "nullable": true,
+                              "properties": {
+                                "careContexts": {
+                                  "description": "List of care contexts linked at the HIP end for the identified patient.",
+                                  "items": {
+                                    "nullable": true,
+                                    "properties": {
+                                      "careContextReference": {
+                                        "description": "An identifier of patient's care context created in HIP. A care context is a group of patient's health data (Not the actual health data)",
+                                        "example": "Episode1",
+                                        "type": "string"
+                                      },
+                                      "patientReference": {
+                                        "description": "A patient identifier with which patient is registered in the facility/hospital",
+                                        "example": "batman@tmh",
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "patientReference",
+                                      "careContextReference"
+                                    ],
+                                    "type": "object"
+                                  },
+                                  "type": "array"
+                                },
+                                "consentId": {
+                                  "description": "Allows alpha numeric character and special characters like \"^[0-9a-fA-F]{8}\\\\b-[0-9a-fA-F]{4}\\\\b-[0-9a-fA-F]{4}\\\\b-[0-9a-fA-F]{4}\\\\b-[0-9a-fA-F]{12}$\";",
+                                  "example": "e5ec415f-c098-40f6-a0db-faa162fc5295",
+                                  "nullable": true,
+                                  "type": "string"
+                                },
+                                "consentManager": {
+                                  "properties": {
+                                    "id": {
+                                      "example": "abdm",
+                                      "type": "string"
+                                    }
+                                  },
+                                  "type": "object"
+                                },
+                                "createdAt": {
+                                  "example": "2021-09-28T12:30:08.573Z",
+                                  "format": "date-time",
+                                  "type": "string"
+                                },
+                                "hiTypes": {
+                                  "description": "Types of health information document.",
+                                  "items": {
+                                    "enum": [
+                                      "DiagnosticReport",
+                                      "DischargeSummary",
+                                      "HealthDocumentRecord",
+                                      "ImmunizationRecord",
+                                      "OPConsultation",
+                                      "Prescription",
+                                      "WellnessRecord",
+                                      "Invoice"
+                                    ],
+                                    "example": "Prescription",
+                                    "type": "string"
+                                  },
+                                  "type": "array"
+                                },
+                                "hip": {
+                                  "description": "Identifier and name of the health information provider.",
+                                  "nullable": true,
+                                  "properties": {
+                                    "id": {
+                                      "description": "The service ID of the health information provider. Allows alpha numeric character and special characters like [A-Z a-z 0-9]+[A-Z a-z 0-9 //_//-]*[A-Z a-z 0-9]$",
+                                      "example": "cowin_hip_01",
+                                      "type": "string"
+                                    },
+                                    "name": {
+                                      "description": "The name of the health information provider. Allows alpha numeric and special characters like _\\-@,():/",
+                                      "example": "Cowin",
+                                      "nullable": true,
+                                      "type": "string"
+                                    },
+                                    "type": {
+                                      "description": "The type of the health information provider. Allows alpha numeric and special characters like _\\-@,. \":/",
+                                      "example": "HIP",
+                                      "nullable": true,
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "name"
+                                  ],
+                                  "type": "object"
+                                },
+                                "hiu": {
+                                  "properties": {
+                                    "id": {
+                                      "description": "The service ID of the health information user.  Allows alpha numeric character and special characters like [A-Z a-z 0-9]+[A-Z a-z 0-9 //_//-]*[A-Z a-z 0-9]$",
+                                      "example": "cowin_hiu_01",
+                                      "type": "string"
+                                    },
+                                    "name": {
+                                      "description": "The name of the health information user. Allows alpha numeric and special characters like _\\-@,():/",
+                                      "example": "Cowin",
+                                      "nullable": true,
+                                      "type": "string"
+                                    },
+                                    "type": {
+                                      "description": "The type of the health information user. Allows alpha numeric and special characters like _\\-@,. \":/",
+                                      "example": "HIU",
+                                      "nullable": true,
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "name"
+                                  ],
+                                  "type": "object"
+                                },
+                                "lastUpdated": {
+                                  "example": "2021-09-28T12:30:08.573Z",
+                                  "format": "date-time",
+                                  "type": "string"
+                                },
+                                "patient": {
+                                  "properties": {
+                                    "id": {
+                                      "description": "The abha address of the patient",
+                                      "example": "<ABHA_ADDRESS>",
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "id"
+                                  ],
+                                  "type": "object"
+                                },
+                                "permission": {
+                                  "properties": {
+                                    "accessMode": {
+                                      "enum": [
+                                        "VIEW",
+                                        "STORE",
+                                        "STREAM",
+                                        "QUERY"
+                                      ],
+                                      "example": "VIEW",
+                                      "type": "string"
+                                    },
+                                    "dataEraseAt": {
+                                      "description": "The date at which the consent expire. Should be UTC date time in ISO format",
+                                      "example": "2021-09-28T12:30:08.573Z",
+                                      "format": "date-time",
+                                      "type": "string"
+                                    },
+                                    "dateRange": {
+                                      "properties": {
+                                        "from": {
+                                          "description": "Should be UTC date time in ISO format",
+                                          "example": "2021-09-28T12:30:08.573Z",
+                                          "format": "date-time",
+                                          "type": "string"
+                                        },
+                                        "to": {
+                                          "description": "Should be UTC date time in ISO format",
+                                          "example": "2021-09-28T12:30:08.573Z",
+                                          "format": "date-time",
+                                          "type": "string"
+                                        }
+                                      },
+                                      "required": [
+                                        "from",
+                                        "to"
+                                      ],
+                                      "type": "object"
+                                    },
+                                    "frequency": {
+                                      "properties": {
+                                        "repeats": {
+                                          "description": "Should be be a integer",
+                                          "example": 0,
+                                          "format": "int32",
+                                          "nullable": true,
+                                          "type": "number"
+                                        },
+                                        "unit": {
+                                          "enum": [
+                                            "HOUR",
+                                            "DAY",
+                                            "WEEK",
+                                            "MONTH",
+                                            "YEAR"
+                                          ],
+                                          "type": "string"
+                                        },
+                                        "value": {
+                                          "description": "The frequency unit value. Should be be a integer",
+                                          "example": 1,
+                                          "format": "int32",
+                                          "type": "number"
+                                        }
+                                      },
+                                      "required": [
+                                        "unit",
+                                        "value",
+                                        "repeats"
+                                      ],
+                                      "type": "object"
+                                    }
+                                  },
+                                  "required": [
+                                    "accessMode",
+                                    "dateRange",
+                                    "dataEraseAt",
+                                    "frequency"
+                                  ],
+                                  "type": "object"
+                                },
+                                "purpose": {
+                                  "properties": {
+                                    "code": {
+                                      "enum": [
+                                        "CAREMGT",
+                                        "BTG",
+                                        "PUBHLTH",
+                                        "HPAYMT",
+                                        "DSRCH",
+                                        "PATRQT"
+                                      ],
+                                      "type": "string"
+                                    },
+                                    "refUri": {
+                                      "description": "The reference URL. Should be a valid URL",
+                                      "example": "www.abc.com",
+                                      "type": "string"
+                                    },
+                                    "text": {
+                                      "enum": [
+                                        "Care Management",
+                                        "Break the Glass",
+                                        "Public Health",
+                                        "Healthcare Payment",
+                                        "Disease Specific Healthcare Research",
+                                        "Self Requested"
+                                      ],
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "text",
+                                    "code",
+                                    "refUri"
+                                  ],
+                                  "type": "object"
+                                },
+                                "requester": {
+                                  "nullable": true,
+                                  "properties": {
+                                    "identifier": {
+                                      "properties": {
+                                        "system": {
+                                          "description": "Allows alpha numeric character and special characters like _\\-@,. \":/",
+                                          "example": "https://www.sample.com",
+                                          "type": "string"
+                                        },
+                                        "type": {
+                                          "description": "The identification value. Allows alpha numeric character and special characters like _\\-@,. \":/",
+                                          "example": "MH1001",
+                                          "type": "string"
+                                        },
+                                        "value": {
+                                          "description": "The type of the identification. Allows alpha numeric character and special characters like _\\-@,. \":/",
+                                          "example": "REG1",
+                                          "type": "string"
+                                        }
+                                      },
+                                      "required": [
+                                        "value",
+                                        "type",
+                                        "system"
+                                      ],
+                                      "type": "object"
+                                    },
+                                    "name": {
+                                      "description": "The name of the requester",
+                                      "example": "<ABHA_ADDRESS>",
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "name",
+                                    "identifier"
+                                  ],
+                                  "type": "object"
+                                },
+                                "schemaVersion": {
+                                  "example": "v3",
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "purpose",
+                                "patient",
+                                "hiu",
+                                "requester",
+                                "hiTypes",
+                                "permission"
+                              ],
+                              "type": "object"
+                            },
+                            "signature": {
+                              "example": "Signature of CM as defined in W3C standards; Base64 encoded",
+                              "type": "string"
+                            },
+                            "status": {
+                              "enum": [
+                                "GRANTED",
+                                "DENIED",
+                                "EXPIRED",
+                                "REVOKED"
+                              ],
+                              "example": "GRANTED",
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "status",
+                            "consentDetail",
+                            "signature"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      }
+                    }
+                  },
+                  "description": "Ok"
+                },
+                "400": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "error": {
+                            "description": "The error code and message, if any occurred.",
+                            "properties": {
+                              "code": {
+                                "description": "ABDM-1006 - Bad Request, invalid request Body. May be returned either bare or with a trailing \": \" separator; match on the code itself and tolerate the separator.",
+                                "example": "ABDM-1006",
+                                "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                                "type": "string"
+                              },
+                              "message": {
+                                "description": "Short description of the failure.",
+                                "example": "Bad Request, invalid request Body",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "code",
+                              "message"
+                            ],
+                            "type": "object"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Bad Request. The request could not be processed because it was malformed or failed validation - a missing mandatory field, a value in the wrong format, or a header that did not match the body."
+                },
+                "401": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "code": {
+                            "description": "900901 - Unauthorized. May be returned either bare or with a trailing \": \" separator; match on the code itself and tolerate the separator.",
+                            "example": "900901",
+                            "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                            "type": "string"
+                          },
+                          "description": {
+                            "example": "Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'",
+                            "type": "string"
+                          },
+                          "message": {
+                            "example": "Unauthorized",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Unauthorized"
+                },
+                "403": {
+                  "content": {
+                    "text/plain": {
+                      "schema": {
+                        "example": "Access Denied",
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "description": "Forbidden"
+                },
+                "404": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "error": {
+                            "description": "The error code and message, if any occurred.",
+                            "properties": {
+                              "code": {
+                                "description": "ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing \": \" separator (`ABDM-1001: `); match on the code itself and tolerate the separator.",
+                                "example": "ABDM-1001",
+                                "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                                "type": "string"
+                              },
+                              "message": {
+                                "example": "No data found",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "code",
+                              "message"
+                            ],
+                            "type": "object"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Not Found"
+                },
+                "500": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "code": {
+                            "description": "900900 - Unclassified Authentication Failure. May be returned either bare or with a trailing \": \" separator; match on the code itself and tolerate the separator.",
+                            "example": "900900",
+                            "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                            "type": "string"
+                          },
+                          "description": {
+                            "example": "Access failure for API: /hiecm/api/v3, version: v3 status: (900900) - Unclassified Authentication Failure",
+                            "type": "string"
+                          },
+                          "message": {
+                            "example": "Unclassified Authentication Failure",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Internal Server Error"
+                },
+                "503": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "code": {
+                            "description": "ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing \": \" separator (`ABDM-1024: `); match on the code itself and tolerate the separator.",
+                            "example": "ABDM-1024",
+                            "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                            "type": "string"
+                          },
+                          "message": {
+                            "example": "Dependent service unavailable",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "message"
+                        ],
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Service Unavailable"
+                }
+              },
+              "security": [
+                {
+                  "bearerAuth": []
+                }
+              ],
+              "summary": "This is ABDM HIE-CM API called to fetch all the consent artefact details associated with a consent request request-id.",
+              "tags": [
+                "consent-management-data-flow-phr"
+              ],
+              "x-abdm-nha-operation-id": "abdm-consent-management 7"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01PRjTsjcWg7qHt9xtkErH5U",
+            "Name": "search",
+            "Input": {
+              "query": "multiple consent artefacts single request",
+              "kind": "atom"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "multiple consent artefacts single request",
+            "kind": "atom"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01KW3NcxT3DhKqEocuWAQhAL",
+            "Name": "search",
+            "Input": {
+              "query": "consent request approved artefact created",
+              "kind": "atom"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "consent request approved artefact created",
+            "kind": "atom"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "You need **both** artefact IDs. A single consent request can create multiple consent artefacts — typically one per HIP (health information provider) you requested data from. When you fetch each artefact by its ID using `/api/hiecm/consent/v3/artefact/{artefactId}`, you get the scope, permissions, and which HIP it covers. Then use both artefacts to request health information from their respective HIPs.\n\nCheck what each artefact's `hip.id` is — that tells you which provider each one is for.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "You need **both** artefact IDs. A single consent request can create multiple consent artefacts — typically one per HIP (health information provider) you requested data from. When you fetch each artefact by its ID using `/api/hiecm/consent/v3/artefact/{artefactId}`, you get the scope, permissions, and which HIP it covers. Then use both artefacts to request health information from their respective HIPs.\n\nCheck what each artefact's `hip.id` is — that tells you which provider each one is for.",
+  "sources": [],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-post-v3-consent-request-hip-notify\",\"id\":\"m2_post_v3_consent_request_hip_notify\",\"summary\":\"This is a callback api to notify hip when consent is APPROVED or REVOKED.\",\"title\":\"POST /api/v3/consent/request/hip/notify\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-post-consent-v3-request-hip-on-notify\",\"id\":\"m2_post_consent_v3_request_hip_on_notify\",\"summary\":\"This is ABDM HIE-CM API called by HIP to acknowledge the notification sent when a consent request is approved/revoked/expired by the patient.\",\"title\":\"POST /api/hiecm/consent/v3/request/hip/on-notify\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-post-consent-v3-request-hiu-on-notify\",\"id\":\"m3_post_consent_v3_request_hiu_on_notify\",\"summary\":\"This is ABDM HIE-CM API called by HIU to acknowledge the notification sent when a consent request is approved/denied/revoked/expired by the patient.\",\"title\":\"POST /api/hiecm/consent/v3/request/hiu/on-notify\",\"type\":\"operation\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"doc_path\":\"/docs/hiecm/v3/api/m3/endpoints/m3-post-consent-v3-request-hiu-on-notify\",\"operation_id\":\"m3_post_consent_v3_request_hiu_on_notify\",\"spec\":{\"description\":\"This API is called by HIU as acknowledgement to consent notifications, specifically for cases when consent is APPROVED, DENIED, or REVOKED or EXPIRED. Notified by CM earlier via Gateway API - <b> /api/v3/hiu/consent/request/notify </b>\",\"operationId\":\"m3_post_consent_v3_request_hiu_on_notify\",\"parameters\":[{\"description\":\"Unique UUID for track the end to end request transaction\",\"example\":\"18235d89-cb13-479d-ad71-7a57d5f669a8\",\"in\":\"header\",\"name\":\"REQUEST-ID\",\"required\":true,\"schema\":{\"type\":\"string\"}},{\"description\":\"Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds\",\"example\":\"2022-10-06T15:10:00.587Z\",\"in\":\"header\",\"name\":\"TIMESTAMP\",\"required\":true,\"schema\":{\"type\":\"string\"}},{\"description\":\"Suffix of the consent manager to which the request was intended\",\"example\":\"sbx\",\"in\":\"header\",\"name\":\"X-CM-ID\",\"required\":true,\"schema\":{\"type\":\"string\"}}],\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"description\":\"In the request body, either ‘acknowledgement’ or ‘error’ must be included.<br> <ol type='a'><br/> <li>Incase of success scenario,acknowledgement is mandatory and error is optional </li> <li>Incase of failure scenario,error is mandatory and acknowledgment is optional</li> <li>response is mandatory object in both the cases</li> </ol>\",\"properties\":{\"acknowledgement\":{\"items\":{\"properties\":{\"consentId\":{\"description\":\"The consent artefact id. Should be valid UUID. Allows alpha numeric character and special characters like \\\"^[0-9a-fA-F]{8}\\\\\\\\b-[0-9a-fA-F]{4}\\\\\\\\b-[0-9a-fA-F]{4}\\\\\\\\b-[0-9a-fA-F]{4}\\\\\\\\b-[0-9a-fA-F]{12}$\\\"\",\"example\":\"e3c74829-3f82-4f94-959e-e10f57bcd57b\",\"format\":\"uuid\",\"type\":\"string\"},\"status\":{\"description\":\"The status of the notification. Allows alpha numeric character and special characters like \\\"^[a-zA-Z0-9_\\\\\\\\-@,. \\\\\\\":/]{0,255}$\\\"\",\"example\":\"OK\",\"type\":\"string\"}},\"required\":[\"status\",\"consentId\"],\"type\":\"object\"},\"type\":\"array\"},\"error\":{\"description\":\"The error code and message, if any occurred.\",\"nullable\":true,\"properties\":{\"code\":{\"description\":\"ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing \\\": \\\" separator (`ABDM-1001: `); match on the code itself and tolerate the separator.\",\"example\":\"ABDM-1001\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"message\":{\"description\":\"The appropriate error message\",\"example\":\"unable to connect database\",\"type\":\"string\"}},\"required\":[\"code\",\"message\"],\"type\":\"object\"},\"response\":{\"description\":\"The request id is from the /hiu/consent/request/notify callback\",\"properties\":{\"requestId\":{\"description\":\"The requestId that was passed. it must be in Alpha numeric and - in middle and Allows alpha numeric character and special characters like \\\"^[0-9a-fA-F]{8}\\\\\\\\b-[0-9a-fA-F]{4}\\\\\\\\b-[0-9a-fA-F]{4}\\\\\\\\b-[0-9a-fA-F]{4}\\\\\\\\b-[0-9a-fA-F]{12}\\\"\",\"example\":\"6f0b4665-a915-4c92-aa36-65afb4a2cd71\",\"format\":\"uuid\",\"type\":\"string\"}},\"required\":[\"requestId\"],\"type\":\"object\"}},\"required\":[\"acknowledgement\",\"response\"],\"type\":\"object\"}}},\"required\":true},\"responses\":{\"202\":{\"description\":\"Accepted\"},\"400\":{\"content\":{\"application/json\":{\"schema\":{\"example\":[{\"error\":{\"code\":\"ABDM-9999\",\"message\":\"RequestId cannot be NULL or Blank\"}},{\"error\":{\"code\":\"ABDM-9999\",\"message\":\"Invalid status, Please provide a valid status\"}},{\"error\":{\"code\":\"ABDM-9999\",\"message\":\"Invalid ConsentId, Please provide a valid ConsentId\"}}],\"items\":{\"properties\":{\"error\":{\"description\":\"The error code and message, if any occurred.\",\"properties\":{\"code\":{\"description\":\"The error code. May be returned either bare or with a trailing \\\": \\\" separator; match on the code itself and tolerate the separator.\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"message\":{\"type\":\"string\"}},\"required\":[\"code\",\"message\"],\"type\":\"object\"}},\"type\":\"object\"},\"type\":\"array\"}}},\"description\":\"Bad Request\"},\"401\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"code\":{\"description\":\"900901 - Unauthorized. May be returned either bare or with a trailing \\\": \\\" separator; match on the code itself and tolerate the separator.\",\"example\":\"900901\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"description\":{\"example\":\"Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'\",\"type\":\"string\"},\"message\":{\"example\":\"Unauthorized\",\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Unauthorized\"},\"403\":{\"content\":{\"text/plain\":{\"schema\":{\"example\":\"Access Denied\",\"type\":\"string\"}}},\"description\":\"Forbidden\"},\"404\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"error\":{\"description\":\"The error code and message, if any occurred.\",\"properties\":{\"code\":{\"description\":\"ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing \\\": \\\" separator (`ABDM-1001: `); match on the code itself and tolerate the separator.\",\"example\":\"ABDM-1001\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"message\":{\"example\":\"No data found\",\"type\":\"string\"}},\"required\":[\"code\",\"message\"],\"type\":\"object\"}},\"type\":\"object\"}}},\"description\":\"Not Found\"},\"500\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"code\":{\"description\":\"900900 - Unclassified Authentication Failure. May be returned either bare or with a trailing \\\": \\\" separator; match on the code itself and tolerate the separator.\",\"example\":\"900900\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"description\":{\"example\":\"Access failure for API: /hiecm/api/v3, version: v3 status: (900900) - Unclassified Authentication Failure\",\"type\":\"string\"},\"message\":{\"example\":\"Unclassified Authentication Failure\",\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Internal Server Error\"},\"503\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"code\":{\"description\":\"ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing \\\": \\\" separator (`ABDM-1024: `); match on the code itself and tolerate the separator.\",\"example\":\"ABDM-1024\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"message\":{\"example\":\"Dependent service unavailable\",\"type\":\"string\"}},\"required\":[\"code\",\"message\"],\"type\":\"object\"}}},\"description\":\"Service Unavailable\"}},\"security\":[{\"bearerAuth\":[]}],\"summary\":\"This is ABDM HIE-CM API called by HIU to acknowledge the notification sent when a consent request is approved/denied/revoked/expired by the patient.\",\"tags\":[\"consent-management-data-flow-hiu\"],\"x-abdm-nha-operation-id\":\"abdm-consent-management 3 (3)\"}}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-get-consent-v3-artefact-artefact-id\",\"id\":\"p2_get_consent_v3_artefact_artefact_id\",\"summary\":\"This is ABDM HIE-CM API called to fetch the consent artefact details associated with the artefact-id.\",\"title\":\"GET /api/hiecm/consent/v3/artefact/{consentId}\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-get-consent-v3-artefact-request-request-id\",\"id\":\"p2_get_consent_v3_artefact_request_request_id\",\"summary\":\"This is ABDM HIE-CM API called to fetch all the consent artefact details associated with a consent request request-id.\",\"title\":\"GET /api/hiecm/consent/v3/artefact/request/{consentRequestId}\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-get-consent-v3-artefact\",\"id\":\"p2_get_consent_v3_artefact\",\"summary\":\"This is ABDM HIE-CM API called to fetch all the consent artefact details of a patient.\",\"title\":\"GET /api/hiecm/consent/v3/artefact\",\"type\":\"operation\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"doc_path\":\"/docs/hiecm/v3/api/p2/endpoints/p2-get-consent-v3-artefact-request-request-id\",\"operation_id\":\"p2_get_consent_v3_artefact_request_request_id\",\"spec\":{\"description\":\"This API endpoint is used to fetch all consent artefact details associated with a specific consent request ID. By invoking this API, users can retrieve comprehensive information about all consent artefacts linked to the given request ID, including their status, scope, and any associated conditions. This functionality is essential for ensuring that users have access to accurate and up-to-date consent artefact information, supporting secure and compliant health information exchange. The API facilitates efficient management and verification of consent artefacts, enhancing the overall integrity of the consent management process.\",\"operationId\":\"p2_get_consent_v3_artefact_request_request_id\",\"parameters\":[{\"description\":\"Unique UUID for track the end to end request transaction\",\"example\":\"18235d89-cb13-479d-ad71-7a57d5f669a8\",\"in\":\"header\",\"name\":\"REQUEST-ID\",\"required\":true,\"schema\":{\"type\":\"string\"}},{\"description\":\"Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds\",\"example\":\"2022-10-06T15:10:00.587Z\",\"in\":\"header\",\"name\":\"TIMESTAMP\",\"required\":true,\"schema\":{\"type\":\"string\"}},{\"description\":\"Suffix of the consent manager to which the request was intended\",\"example\":\"sbx\",\"in\":\"header\",\"name\":\"X-CM-ID\",\"required\":true,\"schema\":{\"type\":\"string\"}},{\"description\":\"The user token the PHR service issued when the patient logged in.\",\"in\":\"header\",\"name\":\"X-AUTH-TOKEN\",\"required\":true,\"schema\":{\"example\":\"<TOKEN>\",\"format\":\"bearer\",\"maximum\":100,\"minimum\":1,\"type\":\"string\"}},{\"description\":\"Consent request id\",\"in\":\"path\",\"name\":\"consentRequestId\",\"required\":true,\"schema\":{\"type\":\"string\"}}],\"responses\":{\"200\":{\"content\":{\"application/json\":{\"schema\":{\"items\":{\"properties\":{\"consentDetail\":{\"nullable\":true,\"properties\":{\"careContexts\":{\"description\":\"List of care contexts linked at the HIP end for the identified patient.\",\"items\":{\"nullable\":true,\"properties\":{\"careContextReference\":{\"description\":\"An identifier of patient's care context created in HIP. A care context is a group of patient's health data (Not the actual health data)\",\"example\":\"Episode1\",\"type\":\"string\"},\"patientReference\":{\"description\":\"A patient identifier with which patient is registered in the facility/hospital\",\"example\":\"batman@tmh\",\"type\":\"string\"}},\"required\":[\"patientReference\",\"careContextReference\"],\"type\":\"object\"},\"type\":\"array\"},\"consentId\":{\"description\":\"Allows alpha numeric character and special characters like \\\"^[0-9a-fA-F]{8}\\\\\\\\b-[0-9a-fA-F]{4}\\\\\\\\b-[0-9a-fA-F]{4}\\\\\\\\b-[0-9a-fA-F]{4}\\\\\\\\b-[0-9a-fA-F]{12}$\\\";\",\"example\":\"e5ec415f-c098-40f6-a0db-faa162fc5295\",\"nullable\":true,\"type\":\"string\"},\"consentManager\":{\"properties\":{\"id\":{\"example\":\"abdm\",\"type\":\"string\"}},\"type\":\"object\"},\"createdAt\":{\"example\":\"2021-09-28T12:30:08.573Z\",\"format\":\"date-time\",\"type\":\"string\"},\"hiTypes\":{\"description\":\"Types of health information document.\",\"items\":{\"enum\":[\"DiagnosticReport\",\"DischargeSummary\",\"HealthDocumentRecord\",\"ImmunizationRecord\",\"OPConsultation\",\"Prescription\",\"WellnessRecord\",\"Invoice\"],\"example\":\"Prescription\",\"type\":\"string\"},\"type\":\"array\"},\"hip\":{\"description\":\"Identifier and name of the health information provider.\",\"nullable\":true,\"properties\":{\"id\":{\"description\":\"The service ID of the health information provider. Allows alpha numeric character and special characters like [A-Z a-z 0-9]+[A-Z a-z 0-9 //_//-]*[A-Z a-z 0-9]$\",\"example\":\"cowin_hip_01\",\"type\":\"string\"},\"name\":{\"description\":\"The name of the health information provider. Allows alpha numeric and special characters like _\\\\-@,():/\",\"example\":\"Cowin\",\"nullable\":true,\"type\":\"string\"},\"type\":{\"description\":\"The type of the health information provider. Allows alpha numeric and special characters like _\\\\-@,. \\\":/\",\"example\":\"HIP\",\"nullable\":true,\"type\":\"string\"}},\"required\":[\"id\",\"name\"],\"type\":\"object\"},\"hiu\":{\"properties\":{\"id\":{\"description\":\"The service ID of the health information user.  Allows alpha numeric character and special characters like [A-Z a-z 0-9]+[A-Z a-z 0-9 //_//-]*[A-Z a-z 0-9]$\",\"example\":\"cowin_hiu_01\",\"type\":\"string\"},\"name\":{\"description\":\"The name of the health information user. Allows alpha numeric and special characters like _\\\\-@,():/\",\"example\":\"Cowin\",\"nullable\":true,\"type\":\"string\"},\"type\":{\"description\":\"The type of the health information user. Allows alpha numeric and special characters like _\\\\-@,. \\\":/\",\"example\":\"HIU\",\"nullable\":true,\"type\":\"string\"}},\"required\":[\"id\",\"name\"],\"type\":\"object\"},\"lastUpdated\":{\"example\":\"2021-09-28T12:30:08.573Z\",\"format\":\"date-time\",\"type\":\"string\"},\"patient\":{\"properties\":{\"id\":{\"description\":\"The abha address of the patient\",\"example\":\"<ABHA_ADDRESS>\",\"type\":\"string\"}},\"required\":[\"id\"],\"type\":\"object\"},\"permission\":{\"properties\":{\"accessMode\":{\"enum\":[\"VIEW\",\"STORE\",\"STREAM\",\"QUERY\"],\"example\":\"VIEW\",\"type\":\"string\"},\"dataEraseAt\":{\"description\":\"The date at which the consent expire. Should be UTC date time in ISO format\",\"example\":\"2021-09-28T12:30:08.573Z\",\"format\":\"date-time\",\"type\":\"string\"},\"dateRange\":{\"properties\":{\"from\":{\"description\":\"Should be UTC date time in ISO format\",\"example\":\"2021-09-28T12:30:08.573Z\",\"format\":\"date-time\",\"type\":\"string\"},\"to\":{\"description\":\"Should be UTC date time in ISO format\",\"example\":\"2021-09-28T12:30:08.573Z\",\"format\":\"date-time\",\"type\":\"string\"}},\"required\":[\"from\",\"to\"],\"type\":\"object\"},\"frequency\":{\"properties\":{\"repeats\":{\"description\":\"Should be be a integer\",\"example\":0,\"format\":\"int32\",\"nullable\":true,\"type\":\"number\"},\"unit\":{\"enum\":[\"HOUR\",\"DAY\",\"WEEK\",\"MONTH\",\"YEAR\"],\"type\":\"string\"},\"value\":{\"description\":\"The frequency unit value. Should be be a integer\",\"example\":1,\"format\":\"int32\",\"type\":\"number\"}},\"required\":[\"unit\",\"value\",\"repeats\"],\"type\":\"object\"}},\"required\":[\"accessMode\",\"dateRange\",\"dataEraseAt\",\"frequency\"],\"type\":\"object\"},\"purpose\":{\"properties\":{\"code\":{\"enum\":[\"CAREMGT\",\"BTG\",\"PUBHLTH\",\"HPAYMT\",\"DSRCH\",\"PATRQT\"],\"type\":\"string\"},\"refUri\":{\"description\":\"The reference URL. Should be a valid URL\",\"example\":\"www.abc.com\",\"type\":\"string\"},\"text\":{\"enum\":[\"Care Management\",\"Break the Glass\",\"Public Health\",\"Healthcare Payment\",\"Disease Specific Healthcare Research\",\"Self Requested\"],\"type\":\"string\"}},\"required\":[\"text\",\"code\",\"refUri\"],\"type\":\"object\"},\"requester\":{\"nullable\":true,\"properties\":{\"identifier\":{\"properties\":{\"system\":{\"description\":\"Allows alpha numeric character and special characters like _\\\\-@,. \\\":/\",\"example\":\"https://www.sample.com\",\"type\":\"string\"},\"type\":{\"description\":\"The identification value. Allows alpha numeric character and special characters like _\\\\-@,. \\\":/\",\"example\":\"MH1001\",\"type\":\"string\"},\"value\":{\"description\":\"The type of the identification. Allows alpha numeric character and special characters like _\\\\-@,. \\\":/\",\"example\":\"REG1\",\"type\":\"string\"}},\"required\":[\"value\",\"type\",\"system\"],\"type\":\"object\"},\"name\":{\"description\":\"The name of the requester\",\"example\":\"<ABHA_ADDRESS>\",\"type\":\"string\"}},\"required\":[\"name\",\"identifier\"],\"type\":\"object\"},\"schemaVersion\":{\"example\":\"v3\",\"type\":\"string\"}},\"required\":[\"purpose\",\"patient\",\"hiu\",\"requester\",\"hiTypes\",\"permission\"],\"type\":\"object\"},\"signature\":{\"example\":\"Signature of CM as defined in W3C standards; Base64 encoded\",\"type\":\"string\"},\"status\":{\"enum\":[\"GRANTED\",\"DENIED\",\"EXPIRED\",\"REVOKED\"],\"example\":\"GRANTED\",\"type\":\"string\"}},\"required\":[\"status\",\"consentDetail\",\"signature\"],\"type\":\"object\"},\"type\":\"array\"}}},\"description\":\"Ok\"},\"400\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"error\":{\"description\":\"The error code and message, if any occurred.\",\"properties\":{\"code\":{\"description\":\"ABDM-1006 - Bad Request, invalid request Body. May be returned either bare or with a trailing \\\": \\\" separator; match on the code itself and tolerate the separator.\",\"example\":\"ABDM-1006\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"message\":{\"description\":\"Short description of the failure.\",\"example\":\"Bad Request, invalid request Body\",\"type\":\"string\"}},\"required\":[\"code\",\"message\"],\"type\":\"object\"}},\"type\":\"object\"}}},\"description\":\"Bad Request. The request could not be processed because it was malformed or failed validation - a missing mandatory field, a value in the wrong format, or a header that did not match the body.\"},\"401\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"code\":{\"description\":\"900901 - Unauthorized. May be returned either bare or with a trailing \\\": \\\" separator; match on the code itself and tolerate the separator.\",\"example\":\"900901\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"description\":{\"example\":\"Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'\",\"type\":\"string\"},\"message\":{\"example\":\"Unauthorized\",\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Unauthorized\"},\"403\":{\"content\":{\"text/plain\":{\"schema\":{\"example\":\"Access Denied\",\"type\":\"string\"}}},\"description\":\"Forbidden\"},\"404\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"error\":{\"description\":\"The error code and message, if any occurred.\",\"properties\":{\"code\":{\"description\":\"ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing \\\": \\\" separator (`ABDM-1001: `); match on the code itself and tolerate the separator.\",\"example\":\"ABDM-1001\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"message\":{\"example\":\"No data found\",\"type\":\"string\"}},\"required\":[\"code\",\"message\"],\"type\":\"object\"}},\"type\":\"object\"}}},\"description\":\"Not Found\"},\"500\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"code\":{\"description\":\"900900 - Unclassified Authentication Failure. May be returned either bare or with a trailing \\\": \\\" separator; match on the code itself and tolerate the separator.\",\"example\":\"900900\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"description\":{\"example\":\"Access failure for API: /hiecm/api/v3, version: v3 status: (900900) - Unclassified Authentication Failure\",\"type\":\"string\"},\"message\":{\"example\":\"Unclassified Authentication Failure\",\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Internal Server Error\"},\"503\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"code\":{\"description\":\"ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing \\\": \\\" separator (`ABDM-1024: `); match on the code itself and tolerate the separator.\",\"example\":\"ABDM-1024\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"message\":{\"example\":\"Dependent service unavailable\",\"type\":\"string\"}},\"required\":[\"code\",\"message\"],\"type\":\"object\"}}},\"description\":\"Service Unavailable\"}},\"security\":[{\"bearerAuth\":[]}],\"summary\":\"This is ABDM HIE-CM API called to fetch all the consent artefact details associated with a consent request request-id.\",\"tags\":[\"consent-management-data-flow-phr\"],\"x-abdm-nha-operation-id\":\"abdm-consent-management 7\"}}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:07:05.163Z",
+  "usage": {
+    "input_tokens": 110,
+    "output_tokens": 1464,
+    "cache_read_input_tokens": 158807,
+    "cache_creation_input_tokens": 16527,
+    "num_turns": 11,
+    "duration_ms": 24976,
+    "cost_usd_equivalent": 0.056364700000000004
+  }
+}

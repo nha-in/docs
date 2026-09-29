@@ -1,0 +1,2380 @@
+{
+  "case_id": "naive-hiecm-m1-update-mobile-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "how to change the mobile number linked to someones abha"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01BDJPRZguxnvNZ5BeCmtfEf",
+            "Name": "search",
+            "Input": {
+              "query": "change update mobile number ABHA",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "change update mobile number ABHA",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#abha",
+                "id": "shared.glossary.abha",
+                "summary": "The patient's identity in ABDM, in two forms that look alike and are not: a 14 digit ABHA number and a readable ABHA address.",
+                "title": "ABHA",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.abha-identifiers",
+                "summary": "NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...",
+                "title": "Carrying an ABHA number and an ABHA address on a FHIR Patient",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-child-abha/03-m1-patch-v3-profile-account-child-child-abha#m1-profile-update-account",
+                "id": "hiecm.endpoint.m1-profile-update-account",
+                "summary": "Changes the name, date of birth and gender on a child ABHA, or the photo on any signed in account.",
+                "title": "Update fields on an ABHA profile",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m1-the-whole-surface",
+                "summary": "M1 supports several placements beyond registering a patient, and a design that accounts for them from the start avoids meeting each one later as a change req...",
+                "title": "The surface is more than a registration form",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m1-confirm-the-filled-form",
+                "summary": "The profile is what ABDM holds, which is not always what the clinician needs to see, so the filled form is confirmed by a person before it becomes the facili...",
+                "title": "Present the filled form for confirmation rather than saving it unseen",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/01-m1-post-v3-profile-benefit-linkanddelink-x-token#m1-benefit-link-or-delink",
+                "id": "hiecm.endpoint.m1-benefit-link-or-delink",
+                "summary": "Links or unlinks the programme named in the BENEFIT_NAME header for an ABHA.",
+                "title": "Link or unlink a benefit record from an ABHA",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/errors#abdm-1094",
+                "id": "hiecm.error.abdm-1094",
+                "summary": "Your client or the person's token is not allowed to do what the call tried, and the message says which of three cases applies.",
+                "title": "ABDM-1094, access to this feature is refused",
+                "type": "error"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.profile-and-example-together",
+                "summary": "A NRCeS profile gives the cardinalities and a NRCeS example gives the shape, and a generator written from either one alone is wrong in a different way.",
+                "title": "Read the profile and the example together, because each omits what the other carries",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/07-m3-get-data-flow-v3-health-information-request-status-tra-550104#p3-request-status",
+                "id": "hiecm.endpoint.p3-request-status",
+                "summary": "Check how far a health information request has got, by its transaction id.",
+                "title": "Get the status of a health information request",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/03-p4-get-subscription-requests-v3-patients-lockers-lockerid#p3-patient-locker-details-by-locker-id",
+                "id": "hiecm.endpoint.p3-patient-locker-details-by-locker-id",
+                "summary": "Fetch one health locker's settings for the logged-in person.",
+                "title": "Get a health locker by its id",
+                "type": "endpoint"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01NKRsBFH8i5YB8veXeH6fRR",
+            "Name": "search",
+            "Input": {
+              "query": "mobile phone update profile ABHA linked",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "mobile phone update profile ABHA linked",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#abha",
+                "id": "shared.glossary.abha",
+                "summary": "The patient's identity in ABDM, in two forms that look alike and are not: a 14 digit ABHA number and a readable ABHA address.",
+                "title": "ABHA",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.abha-identifiers",
+                "summary": "NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...",
+                "title": "Carrying an ABHA number and an ABHA address on a FHIR Patient",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/get-your-sandbox-credentials",
+                "id": "nhcx.flow.sandbox-onboarding",
+                "summary": "Register your system in the claims exchange test environment so it holds a participant code, a registered certificate and a callback address.",
+                "title": "Onboard as a participant in the NHCX sandbox",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/01-m1-post-v3-profile-benefit-linkanddelink-x-token#m1-benefit-link-or-delink",
+                "id": "hiecm.endpoint.m1-benefit-link-or-delink",
+                "summary": "Links or unlinks the programme named in the BENEFIT_NAME header for an ABHA.",
+                "title": "Link or unlink a benefit record from an ABHA",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/errors#abdm-1094",
+                "id": "hiecm.error.abdm-1094",
+                "summary": "Your client or the person's token is not allowed to do what the call tried, and the message says which of three cases applies.",
+                "title": "ABDM-1094, access to this feature is refused",
+                "type": "error"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.profile-and-example-together",
+                "summary": "A NRCeS profile gives the cardinalities and a NRCeS example gives the shape, and a generator written from either one alone is wrong in a different way.",
+                "title": "Read the profile and the example together, because each omits what the other carries",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/07-m3-get-data-flow-v3-health-information-request-status-tra-550104#p3-request-status",
+                "id": "hiecm.endpoint.p3-request-status",
+                "summary": "Check how far a health information request has got, by its transaction id.",
+                "title": "Get the status of a health information request",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/03-p4-get-subscription-requests-v3-patients-lockers-lockerid#p3-patient-locker-details-by-locker-id",
+                "id": "hiecm.endpoint.p3-patient-locker-details-by-locker-id",
+                "summary": "Fetch one health locker's settings for the logged-in person.",
+                "title": "Get a health locker by its id",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/01-p4-post-subscription-requests-v3-setup-locker#p3-setup-locker",
+                "id": "hiecm.endpoint.p3-setup-locker",
+                "summary": "Set up a health locker for the logged-in person.",
+                "title": "Set up a health locker",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request#m2-hip-health-information-on-request",
+                "id": "hiecm.endpoint.m2-hip-health-information-on-request",
+                "summary": "The HIP acknowledges a health information request, then encrypts the records and pushes them to the requester.",
+                "title": "Acknowledge a health information data request",
+                "type": "endpoint"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_0159A98AAq9kL1uNMkTNPXNn",
+            "Name": "search",
+            "Input": {
+              "query": "verify OTP mobile number ABHA authentication",
+              "kind": "operation",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "verify OTP mobile number ABHA authentication",
+            "kind": "operation",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-post-data-flow-v3-health-information-request",
+                "id": "m3_post_data_flow_v3_health_information_request",
+                "summary": "Health information data request from HIU.",
+                "title": "POST /api/hiecm/data-flow/v3/health-information/request",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-post-data-flow-v3-health-information-hip-on-request",
+                "id": "m2_post_data_flow_v3_health_information_hip_on_request",
+                "summary": "Health information data request acknowledgement from HIP.",
+                "title": "POST /api/hiecm/data-flow/v3/health-information/hip/on-request",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-get-gateway-v3-health-lockers",
+                "id": "p4_get_gateway_v3_health_lockers",
+                "summary": "This API is invoked to fetch the record with health locker enabled provider details.",
+                "title": "GET /api/hiecm/gateway/v3/health-lockers",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-get-data-flow-v3-health-information-request-status-tra-550104",
+                "id": "m3_get_data_flow_v3_health_information_request_status_tra_550104",
+                "summary": "API to get the current status of the Health Information Request.",
+                "title": "GET /api/hiecm/data-flow/v3/health-information/request/status/{transaction-id}",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-post-v1-forgot-hprid-aadhaar",
+                "id": "m4_post_v1_forgot_hprid_aadhaar",
+                "summary": "Retrieval Health Id By Aadhaar",
+                "title": "POST /v1/forgot/hprId/aadhaar",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-post-v1-forgot-hprid-mobile",
+                "id": "m4_post_v1_forgot_hprid_mobile",
+                "summary": "Retrieval Health Id By Mobile",
+                "title": "POST /v1/forgot/hprId/mobile",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-post-data-flow-v3-health-information-notify",
+                "id": "m2_post_data_flow_v3_health_information_notify",
+                "summary": "Notifications corresponding to events during data flow",
+                "title": "POST /api/hiecm/data-flow/v3/health-information/notify",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-post-data-flow-v3-health-information-notify",
+                "id": "m3_post_data_flow_v3_health_information_notify",
+                "summary": "Notifications corresponding to events during data flow",
+                "title": "POST /api/hiecm/data-flow/v3/health-information/notify",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-post-v3-token-generate-token",
+                "id": "m2_post_v3_token_generate_token",
+                "summary": "API used to generate link token to link the health records",
+                "title": "POST /api/hiecm/v3/token/generate-token",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-get-subscription-requests-v3-patients-lockers",
+                "id": "p4_get_subscription_requests_v3_patients_lockers",
+                "summary": "The API provides the list of health locker that the ABHA address is subscribed to.",
+                "title": "GET /api/hiecm/subscription-requests/v3/patients/lockers",
+                "type": "operation"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "Let me search for M1 profile-related operations which handle ABHA account management.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01JisxK7ZZdJ8dsDqqh7PHbt",
+            "Name": "search",
+            "Input": {
+              "query": "M1 update profile ABHA account",
+              "kind": "operation",
+              "module": "m1"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "M1 update profile ABHA account",
+            "kind": "operation",
+            "module": "m1"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "operations": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "Let me check what M1 operations are available for account management.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01WngGd4yUCY6YpL7iebRWGh",
+            "Name": "search",
+            "Input": {
+              "query": "",
+              "kind": "operation",
+              "module": "m1",
+              "limit": 25
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "",
+            "kind": "operation",
+            "module": "m1",
+            "limit": 25
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "operations": [
+              {
+                "operation_id": "m1_get_v3_enrollment_enrol_suggestion_create_abha_aadhaar_otp",
+                "method": "GET",
+                "path": "/abha/api/v3/enrollment/enrol/suggestion",
+                "summary": "After ABHA creation - get ABHA address suggestions",
+                "tag": "Create ABHA - Aadhaar OTP",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_get_v3_enrollment_enrol_suggestion_create_abha_face_au_848b26",
+                "method": "GET",
+                "path": "/abha/api/v3/enrollment/enrol/suggestion",
+                "summary": "After ABHA creation - get ABHA address suggestions",
+                "tag": "Create ABHA - Face Authentication",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_get_v3_enrollment_enrol_suggestion_create_abha_fingerprint",
+                "method": "GET",
+                "path": "/abha/api/v3/enrollment/enrol/suggestion",
+                "summary": "After ABHA creation - get ABHA address suggestions",
+                "tag": "Create ABHA - Fingerprint",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_get_v3_enrollment_enrol_suggestion_create_abha_iris",
+                "method": "GET",
+                "path": "/abha/api/v3/enrollment/enrol/suggestion",
+                "summary": "After ABHA creation - get ABHA address suggestions",
+                "tag": "Create ABHA - IRIS",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_get_v3_enrollment_profile_children_benefit_child_abha",
+                "method": "GET",
+                "path": "/abha/api/v3/enrollment/profile/children",
+                "summary": "Get Child ABHA list of the parent",
+                "tag": "Benefit - Child ABHA",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_get_v3_enrollment_profile_children_child_abha",
+                "method": "GET",
+                "path": "/abha/api/v3/enrollment/profile/children",
+                "summary": "Get Child ABHA list of the parent",
+                "tag": "Child ABHA",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_get_v3_phr_web_login_profile_abha_phr_card_abha_addres_817c0d",
+                "method": "GET",
+                "path": "/abha/api/v3/phr/web/login/profile/abha/phr-card",
+                "summary": "Get PHR card",
+                "tag": "ABHA Address Login - Aadhaar OTP",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_get_v3_phr_web_login_profile_abha_phr_card_abha_addres_b64ebf",
+                "method": "GET",
+                "path": "/abha/api/v3/phr/web/login/profile/abha/phr-card",
+                "summary": "Get PHR card",
+                "tag": "ABHA Address Login - IRIS",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_get_v3_phr_web_login_profile_abha_phr_card_abha_addres_e1bae9",
+                "method": "GET",
+                "path": "/abha/api/v3/phr/web/login/profile/abha/phr-card",
+                "summary": "Get PHR card",
+                "tag": "ABHA Address Login - Mobile OTP",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_get_v3_phr_web_login_profile_abha_phr_card_abha_addres_e751bf",
+                "method": "GET",
+                "path": "/abha/api/v3/phr/web/login/profile/abha/phr-card",
+                "summary": "Get PHR card",
+                "tag": "ABHA Address Login - Fingerprint",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_get_v3_phr_web_login_profile_abha_profile_abha_address_809900",
+                "method": "GET",
+                "path": "/abha/api/v3/phr/web/login/profile/abha-profile",
+                "summary": "Get ABHA-address profile",
+                "tag": "ABHA Address Login - IRIS",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_get_v3_phr_web_login_profile_abha_profile_abha_address_8ec4ee",
+                "method": "GET",
+                "path": "/abha/api/v3/phr/web/login/profile/abha-profile",
+                "summary": "Get ABHA-address profile",
+                "tag": "ABHA Address Login - Fingerprint",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_get_v3_phr_web_login_profile_abha_profile_abha_address_b038c4",
+                "method": "GET",
+                "path": "/abha/api/v3/phr/web/login/profile/abha-profile",
+                "summary": "Get ABHA-address profile",
+                "tag": "ABHA Address Login - Mobile OTP",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_get_v3_phr_web_login_profile_abha_profile_abha_address_c04e83",
+                "method": "GET",
+                "path": "/abha/api/v3/phr/web/login/profile/abha-profile",
+                "summary": "Get ABHA-address profile",
+                "tag": "ABHA Address Login - Aadhaar OTP",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_get_v3_phr_web_login_profile_abha_qr_code_abha_address_26c955",
+                "method": "GET",
+                "path": "/abha/api/v3/phr/web/login/profile/abha/qr-code",
+                "summary": "Get ABHA-address QR code",
+                "tag": "ABHA Address Login - Aadhaar OTP",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_get_v3_phr_web_login_profile_abha_qr_code_abha_address_4b4e10",
+                "method": "GET",
+                "path": "/abha/api/v3/phr/web/login/profile/abha/qr-code",
+                "summary": "Get ABHA-address QR code",
+                "tag": "ABHA Address Login - IRIS",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_get_v3_phr_web_login_profile_abha_qr_code_abha_address_91c62b",
+                "method": "GET",
+                "path": "/abha/api/v3/phr/web/login/profile/abha/qr-code",
+                "summary": "Get ABHA-address QR code",
+                "tag": "ABHA Address Login - Fingerprint",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_get_v3_phr_web_login_profile_abha_qr_code_abha_address_a48785",
+                "method": "GET",
+                "path": "/abha/api/v3/phr/web/login/profile/abha/qr-code",
+                "summary": "Get ABHA-address QR code",
+                "tag": "ABHA Address Login - Mobile OTP",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_get_v3_profile_account",
+                "method": "GET",
+                "path": "/abha/api/v3/profile/account",
+                "summary": "Get ABHA profile",
+                "tag": "ABHA Card & Profile",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_get_v3_profile_account_abha_card",
+                "method": "GET",
+                "path": "/abha/api/v3/profile/account/abha-card",
+                "summary": "Retrieve ABHA card image",
+                "tag": "ABHA Card & Profile",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_get_v3_profile_account_download_abha_card",
+                "method": "GET",
+                "path": "/abha/api/v3/profile/account/download-abha-card",
+                "summary": "Download ABHA card",
+                "tag": "ABHA Card & Profile",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_get_v3_profile_account_qrcode",
+                "method": "GET",
+                "path": "/abha/api/v3/profile/account/qrCode",
+                "summary": "Get ABHA QR code",
+                "tag": "ABHA Card & Profile",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_get_v3_profile_account_request_token",
+                "method": "GET",
+                "path": "/abha/api/v3/profile/account/request/token",
+                "summary": "Refresh user token",
+                "tag": "Access Tokens & Encryption",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_get_v3_profile_benefit_abha_abhanumber",
+                "method": "GET",
+                "path": "/abha/api/v3/profile/benefit/abha/{abhanumber}",
+                "summary": "Get benefits linked to an ABHA number",
+                "tag": "Benefit - Search",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_get_v3_profile_public_certificate",
+                "method": "GET",
+                "path": "/abha/api/v3/profile/public/certificate",
+                "summary": "Get public certificate (RSA encryption key)",
+                "tag": "Access Tokens & Encryption",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_patch_v3_profile_account_child_benefit_child_abha",
+                "method": "PATCH",
+                "path": "/abha/api/v3/profile/account",
+                "summary": "Update Child ABHA profile",
+                "tag": "Benefit - Child ABHA",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_patch_v3_profile_account_child_child_abha",
+                "method": "PATCH",
+                "path": "/abha/api/v3/profile/account",
+                "summary": "Update Child ABHA profile",
+                "tag": "Child ABHA",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_1_profile_login_verify_face_auth_qr",
+                "method": "POST",
+                "path": "/abha/api/v3.1/profile/login/verify",
+                "summary": "Login via Face Auth (QR) - verify",
+                "tag": "Login - Face Auth QR (v3.1)",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_1_profile_login_verify_fingerprint",
+                "method": "POST",
+                "path": "/abha/api/v3.1/profile/login/verify",
+                "summary": "Login via Biometric (Fingerprint) - v3.1 single step",
+                "tag": "Login - Biometric v3.1",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_1_profile_login_verify_iris",
+                "method": "POST",
+                "path": "/abha/api/v3.1/profile/login/verify",
+                "summary": "Login via Biometric (Iris) - v3.1 single step",
+                "tag": "Login - Biometric v3.1",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_enrollment_auth_byabdm_email_verify_create_abh_6d732c",
+                "method": "POST",
+                "path": "/abha/api/v3/enrollment/auth/byAbdm",
+                "summary": "After ABHA creation - verify email OTP (optional)",
+                "tag": "Create ABHA - Aadhaar OTP",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_enrollment_auth_byabdm_email_verify_create_abh_b696ba",
+                "method": "POST",
+                "path": "/abha/api/v3/enrollment/auth/byAbdm",
+                "summary": "After ABHA creation - verify email OTP (optional)",
+                "tag": "Create ABHA - Fingerprint",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_enrollment_auth_byabdm_email_verify_create_abh_d8de3e",
+                "method": "POST",
+                "path": "/abha/api/v3/enrollment/auth/byAbdm",
+                "summary": "After ABHA creation - verify email OTP (optional)",
+                "tag": "Create ABHA - Face Authentication",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_enrollment_auth_byabdm_email_verify_create_abha_iris",
+                "method": "POST",
+                "path": "/abha/api/v3/enrollment/auth/byAbdm",
+                "summary": "After ABHA creation - verify email OTP (optional)",
+                "tag": "Create ABHA - IRIS",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_enrollment_auth_byabdm_mobile_verify_create_ab_091285",
+                "method": "POST",
+                "path": "/abha/api/v3/enrollment/auth/byAbdm",
+                "summary": "After ABHA creation - verify mobile OTP (optional)",
+                "tag": "Create ABHA - Aadhaar OTP",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_enrollment_auth_byabdm_mobile_verify_create_ab_3b237a",
+                "method": "POST",
+                "path": "/abha/api/v3/enrollment/auth/byAbdm",
+                "summary": "After ABHA creation - verify mobile OTP (optional)",
+                "tag": "Create ABHA - Fingerprint",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_enrollment_auth_byabdm_mobile_verify_create_ab_b555fb",
+                "method": "POST",
+                "path": "/abha/api/v3/enrollment/auth/byAbdm",
+                "summary": "After ABHA creation - verify mobile OTP (optional)",
+                "tag": "Create ABHA - Face Authentication",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_enrollment_auth_byabdm_mobile_verify_create_abha_iris",
+                "method": "POST",
+                "path": "/abha/api/v3/enrollment/auth/byAbdm",
+                "summary": "After ABHA creation - verify mobile OTP (optional)",
+                "tag": "Create ABHA - IRIS",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_enrollment_enrol_abha_address_create_abha_aadhaar_otp",
+                "method": "POST",
+                "path": "/abha/api/v3/enrollment/enrol/abha-address",
+                "summary": "After ABHA creation - create ABHA address",
+                "tag": "Create ABHA - Aadhaar OTP",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_enrollment_enrol_abha_address_create_abha_face_4b1f33",
+                "method": "POST",
+                "path": "/abha/api/v3/enrollment/enrol/abha-address",
+                "summary": "After ABHA creation - create ABHA address",
+                "tag": "Create ABHA - Face Authentication",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_enrollment_enrol_abha_address_create_abha_fingerprint",
+                "method": "POST",
+                "path": "/abha/api/v3/enrollment/enrol/abha-address",
+                "summary": "After ABHA creation - create ABHA address",
+                "tag": "Create ABHA - Fingerprint",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_enrollment_enrol_abha_address_create_abha_iris",
+                "method": "POST",
+                "path": "/abha/api/v3/enrollment/enrol/abha-address",
+                "summary": "After ABHA creation - create ABHA address",
+                "tag": "Create ABHA - IRIS",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_enrollment_enrol_auth_init_create_abha_face_au_4dea33",
+                "method": "POST",
+                "path": "/abha/api/v3/enrollment/enrol/auth/init",
+                "summary": "Face auth - generate transaction ID (init)",
+                "tag": "Create ABHA - Face Authentication",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_enrollment_enrol_auth_init_login_face_auth_qr_v3_1",
+                "method": "POST",
+                "path": "/abha/api/v3/enrollment/enrol/auth/init",
+                "summary": "Face auth - generate transaction ID (init)",
+                "tag": "Login - Face Auth QR (v3.1)",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_enrollment_enrol_byaadhaar_child_benefit_child_abha",
+                "method": "POST",
+                "path": "/abha/api/v3/enrollment/enrol/byAadhaar",
+                "summary": "Create Child ABHA",
+                "tag": "Benefit - Child ABHA",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_enrollment_enrol_byaadhaar_child_child_abha",
+                "method": "POST",
+                "path": "/abha/api/v3/enrollment/enrol/byAadhaar",
+                "summary": "Create Child ABHA",
+                "tag": "Child ABHA",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_enrollment_enrol_byaadhaar_demo_auth_benefit_c_d20a11",
+                "method": "POST",
+                "path": "/abha/api/v3/enrollment/enrol/byAadhaar",
+                "summary": "Create ABHA - Demographic authentication (Demo Auth)",
+                "tag": "Benefit - Child ABHA",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_enrollment_enrol_byaadhaar_demo_auth_benefit_c_d5c7c3",
+                "method": "POST",
+                "path": "/abha/api/v3/enrollment/enrol/byAadhaar",
+                "summary": "Create ABHA - Demographic authentication (Demo Auth)",
+                "tag": "Benefit - Create ABHA via Demo Auth",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_enrollment_enrol_byaadhaar_demo_auth_create_ab_81107d",
+                "method": "POST",
+                "path": "/abha/api/v3/enrollment/enrol/byAadhaar",
+                "summary": "Create ABHA - Demographic authentication (Demo Auth)",
+                "tag": "Create ABHA - Demo Auth",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_enrollment_enrol_byaadhaar_face",
+                "method": "POST",
+                "path": "/abha/api/v3/enrollment/enrol/byAadhaar",
+                "summary": "Create ABHA - Aadhaar face authentication",
+                "tag": "Create ABHA - Face Authentication",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_enrollment_enrol_byaadhaar_fingerprint",
+                "method": "POST",
+                "path": "/abha/api/v3/enrollment/enrol/byAadhaar",
+                "summary": "Create ABHA - Aadhaar fingerprint (bio)",
+                "tag": "Create ABHA - Fingerprint",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_enrollment_enrol_byaadhaar_iris",
+                "method": "POST",
+                "path": "/abha/api/v3/enrollment/enrol/byAadhaar",
+                "summary": "Create ABHA - Aadhaar IRIS",
+                "tag": "Create ABHA - IRIS",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_enrollment_enrol_byaadhaar_otp",
+                "method": "POST",
+                "path": "/abha/api/v3/enrollment/enrol/byAadhaar",
+                "summary": "Create ABHA - verify Aadhaar OTP",
+                "tag": "Create ABHA - Aadhaar OTP",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_enrollment_enrol_capturepid_create_abha_face_a_417d5e",
+                "method": "POST",
+                "path": "/abha/api/v3/enrollment/enrol/capturePID",
+                "summary": "Face auth - capture PID / track status",
+                "tag": "Create ABHA - Face Authentication",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_enrollment_enrol_capturepid_find_abha_face",
+                "method": "POST",
+                "path": "/abha/api/v3/enrollment/enrol/capturePID",
+                "summary": "Face auth - capture PID / track status",
+                "tag": "Find ABHA - Face",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_enrollment_enrol_capturepid_login_face_auth_qr_v3_1",
+                "method": "POST",
+                "path": "/abha/api/v3/enrollment/enrol/capturePID",
+                "summary": "Face auth - capture PID / track status",
+                "tag": "Login - Face Auth QR (v3.1)",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_enrollment_request_otp_aadhaar_otp",
+                "method": "POST",
+                "path": "/abha/api/v3/enrollment/request/otp",
+                "summary": "Send Aadhaar OTP for ABHA enrolment",
+                "tag": "Create ABHA - Aadhaar OTP",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_enrollment_request_otp_email_verify_create_abh_4833d9",
+                "method": "POST",
+                "path": "/abha/api/v3/enrollment/request/otp",
+                "summary": "After ABHA creation - send OTP to verify email (optional)",
+                "tag": "Create ABHA - Fingerprint",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_enrollment_request_otp_email_verify_create_abh_880d7e",
+                "method": "POST",
+                "path": "/abha/api/v3/enrollment/request/otp",
+                "summary": "After ABHA creation - send OTP to verify email (optional)",
+                "tag": "Create ABHA - Face Authentication",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_enrollment_request_otp_email_verify_create_abh_ddbed1",
+                "method": "POST",
+                "path": "/abha/api/v3/enrollment/request/otp",
+                "summary": "After ABHA creation - send OTP to verify email (optional)",
+                "tag": "Create ABHA - Aadhaar OTP",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_enrollment_request_otp_email_verify_create_abha_iris",
+                "method": "POST",
+                "path": "/abha/api/v3/enrollment/request/otp",
+                "summary": "After ABHA creation - send OTP to verify email (optional)",
+                "tag": "Create ABHA - IRIS",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_enrollment_request_otp_mobile_verify_create_ab_1b66bb",
+                "method": "POST",
+                "path": "/abha/api/v3/enrollment/request/otp",
+                "summary": "After ABHA creation - send OTP to verify mobile (optional)",
+                "tag": "Create ABHA - Aadhaar OTP",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_enrollment_request_otp_mobile_verify_create_ab_6474ce",
+                "method": "POST",
+                "path": "/abha/api/v3/enrollment/request/otp",
+                "summary": "After ABHA creation - send OTP to verify mobile (optional)",
+                "tag": "Create ABHA - Face Authentication",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_enrollment_request_otp_mobile_verify_create_ab_64b04e",
+                "method": "POST",
+                "path": "/abha/api/v3/enrollment/request/otp",
+                "summary": "After ABHA creation - send OTP to verify mobile (optional)",
+                "tag": "Create ABHA - Fingerprint",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_enrollment_request_otp_mobile_verify_create_abha_iris",
+                "method": "POST",
+                "path": "/abha/api/v3/enrollment/request/otp",
+                "summary": "After ABHA creation - send OTP to verify mobile (optional)",
+                "tag": "Create ABHA - IRIS",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_phr_web_login_abha_request_otp_aadhaar_otp",
+                "method": "POST",
+                "path": "/abha/api/v3/phr/web/login/abha/request/otp",
+                "summary": "ABHA address login via Aadhaar OTP - send OTP",
+                "tag": "ABHA Address Login - Aadhaar OTP",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_phr_web_login_abha_request_otp_fingerprint",
+                "method": "POST",
+                "path": "/abha/api/v3/phr/web/login/abha/request/otp",
+                "summary": "ABHA address login via Fingerprint - send authentication request",
+                "tag": "ABHA Address Login - Fingerprint",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_phr_web_login_abha_request_otp_iris",
+                "method": "POST",
+                "path": "/abha/api/v3/phr/web/login/abha/request/otp",
+                "summary": "ABHA address login via IRIS - send authentication request",
+                "tag": "ABHA Address Login - IRIS",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_phr_web_login_abha_request_otp_mobile_otp",
+                "method": "POST",
+                "path": "/abha/api/v3/phr/web/login/abha/request/otp",
+                "summary": "ABHA address login via Mobile OTP - send OTP",
+                "tag": "ABHA Address Login - Mobile OTP",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_phr_web_login_abha_search_abha_address_login_a_de8184",
+                "method": "POST",
+                "path": "/abha/api/v3/phr/web/login/abha/search",
+                "summary": "Search ABHA address (auth methods)",
+                "tag": "ABHA Address Login - Aadhaar OTP",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_phr_web_login_abha_search_abha_address_login_m_27a20f",
+                "method": "POST",
+                "path": "/abha/api/v3/phr/web/login/abha/search",
+                "summary": "Search ABHA address (auth methods)",
+                "tag": "ABHA Address Login - Mobile OTP",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_phr_web_login_abha_verify_aadhaar_otp",
+                "method": "POST",
+                "path": "/abha/api/v3/phr/web/login/abha/verify",
+                "summary": "ABHA address login via Aadhaar OTP - verify",
+                "tag": "ABHA Address Login - Aadhaar OTP",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_phr_web_login_abha_verify_fingerprint",
+                "method": "POST",
+                "path": "/abha/api/v3/phr/web/login/abha/verify",
+                "summary": "ABHA address login via Fingerprint - verify",
+                "tag": "ABHA Address Login - Fingerprint",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_phr_web_login_abha_verify_iris",
+                "method": "POST",
+                "path": "/abha/api/v3/phr/web/login/abha/verify",
+                "summary": "ABHA address login via IRIS - verify",
+                "tag": "ABHA Address Login - IRIS",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_phr_web_login_abha_verify_mobile_otp",
+                "method": "POST",
+                "path": "/abha/api/v3/phr/web/login/abha/verify",
+                "summary": "ABHA address login via Mobile OTP - verify",
+                "tag": "ABHA Address Login - Mobile OTP",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_account_abha_search_find_abha_aadhaar_otp",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/account/abha/search",
+                "summary": "Search ABHA by mobile",
+                "tag": "Find ABHA - Aadhaar OTP",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_account_abha_search_find_abha_face",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/account/abha/search",
+                "summary": "Search ABHA by mobile",
+                "tag": "Find ABHA - Face",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_account_abha_search_find_abha_fingerprint",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/account/abha/search",
+                "summary": "Search ABHA by mobile",
+                "tag": "Find ABHA - Fingerprint",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_account_abha_search_find_abha_iris",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/account/abha/search",
+                "summary": "Search ABHA by mobile",
+                "tag": "Find ABHA - IRIS",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_account_abha_search_find_abha_mobile_otp",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/account/abha/search",
+                "summary": "Search ABHA by mobile",
+                "tag": "Find ABHA - Mobile OTP",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_account_request_otp_child_kyc_benefit__ec9035",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/account/request/otp",
+                "summary": "Child ABHA KYC - send Aadhaar OTP",
+                "tag": "Benefit - Child ABHA",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_account_request_otp_child_kyc_child_abha",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/account/request/otp",
+                "summary": "Child ABHA KYC - send Aadhaar OTP",
+                "tag": "Child ABHA",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_account_request_otp_re_kyc",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/account/request/otp",
+                "summary": "Re-KYC - send Aadhaar OTP",
+                "tag": "Profile - Re-KYC",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_account_request_otp_update_mobile",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/account/request/otp",
+                "summary": "Update mobile - send OTP",
+                "tag": "Profile - Update Mobile",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_account_verify_child_kyc_benefit_child_abha",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/account/verify",
+                "summary": "Child ABHA KYC - verify Aadhaar OTP",
+                "tag": "Benefit - Child ABHA",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_account_verify_child_kyc_child_abha",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/account/verify",
+                "summary": "Child ABHA KYC - verify Aadhaar OTP",
+                "tag": "Child ABHA",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_account_verify_re_kyc",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/account/verify",
+                "summary": "Re-KYC - verify Aadhaar OTP",
+                "tag": "Profile - Re-KYC",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_account_verify_update_mobile",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/account/verify",
+                "summary": "Update mobile - verify OTP",
+                "tag": "Profile - Update Mobile",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_benefit_linkanddelink_abha_number",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/benefit/linkAndDelink",
+                "summary": "Link / De-link benefit using ABHA number",
+                "tag": "Benefit - Link / De-link",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_benefit_linkanddelink_x_token",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/benefit/linkAndDelink",
+                "summary": "Link / De-link benefit using X-token",
+                "tag": "Benefit - Link / De-link",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_benefit_linkanddelink_xmluid",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/benefit/linkAndDelink",
+                "summary": "Link / De-link benefit using xmlUid",
+                "tag": "Benefit - Link / De-link",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_benefit_search_abha_number",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/benefit/search",
+                "summary": "Benefit search by ABHA number",
+                "tag": "Benefit - Search",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_benefit_search_xmluid",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/benefit/search",
+                "summary": "Benefit search by xmlUid",
+                "tag": "Benefit - Search",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_login_request_otp_aadhaar",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/login/request/otp",
+                "summary": "Login via Aadhaar number - send Aadhaar OTP",
+                "tag": "Login - Aadhaar Number",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_login_request_otp_abha_number_aadhaar_otp",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/login/request/otp",
+                "summary": "Login via ABHA number - send Aadhaar OTP",
+                "tag": "Login - ABHA Number (Aadhaar OTP)",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_login_request_otp_abha_number_abha_otp",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/login/request/otp",
+                "summary": "Login via ABHA number - send ABHA (mobile) OTP",
+                "tag": "Login - ABHA Number (Mobile OTP)",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_login_request_otp_biometric_fingerprint",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/login/request/otp",
+                "summary": "Login via Biometric (Fingerprint) - send authentication request",
+                "tag": "Login - Biometric v3 (Fingerprint)",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_login_request_otp_biometric_iris",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/login/request/otp",
+                "summary": "Login via Biometric (Iris) - send authentication request",
+                "tag": "Login - Biometric v3 (Iris)",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_login_request_otp_find_abha_aadhaar",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/login/request/otp",
+                "summary": "Find ABHA via Aadhaar OTP - send OTP",
+                "tag": "Find ABHA - Aadhaar OTP",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_login_request_otp_find_abha_face",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/login/request/otp",
+                "summary": "Find ABHA via Face - send authentication request",
+                "tag": "Find ABHA - Face",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_login_request_otp_find_abha_fingerprint",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/login/request/otp",
+                "summary": "Find ABHA via Fingerprint - send authentication request",
+                "tag": "Find ABHA - Fingerprint",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_login_request_otp_find_abha_iris",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/login/request/otp",
+                "summary": "Find ABHA via IRIS - send authentication request",
+                "tag": "Find ABHA - IRIS",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_login_request_otp_find_abha_mobile",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/login/request/otp",
+                "summary": "Find ABHA via Mobile - send OTP",
+                "tag": "Find ABHA - Mobile OTP",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_login_request_otp_forgot_abha_aadhaar",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/login/request/otp",
+                "summary": "Forgot ABHA via Aadhaar - send OTP",
+                "tag": "Forgot ABHA - Aadhaar OTP",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_login_request_otp_forgot_abha_mobile",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/login/request/otp",
+                "summary": "Forgot ABHA via Mobile - send OTP",
+                "tag": "Forgot ABHA - Mobile OTP",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_login_request_otp_mobile",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/login/request/otp",
+                "summary": "Login via Mobile number - send OTP",
+                "tag": "Login - Mobile Number",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_login_verify_aadhaar_otp",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/login/verify",
+                "summary": "Login via Aadhaar number - verify Aadhaar OTP",
+                "tag": "Login - Aadhaar Number",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_login_verify_abha_number_aadhaar_otp",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/login/verify",
+                "summary": "Login via ABHA number - verify Aadhaar OTP",
+                "tag": "Login - ABHA Number (Aadhaar OTP)",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_login_verify_abha_number_abha_otp",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/login/verify",
+                "summary": "Login via ABHA number - verify ABHA (mobile) OTP",
+                "tag": "Login - ABHA Number (Mobile OTP)",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_login_verify_biometric_fingerprint",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/login/verify",
+                "summary": "Login via Biometric (Fingerprint) - verify",
+                "tag": "Login - Biometric v3 (Fingerprint)",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_login_verify_biometric_iris",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/login/verify",
+                "summary": "Login via Biometric (Iris) - verify",
+                "tag": "Login - Biometric v3 (Iris)",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_login_verify_find_abha_aadhaar",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/login/verify",
+                "summary": "Find ABHA via Aadhaar OTP - verify OTP",
+                "tag": "Find ABHA - Aadhaar OTP",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_login_verify_find_abha_face",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/login/verify",
+                "summary": "Find ABHA via Face - verify",
+                "tag": "Find ABHA - Face",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_login_verify_find_abha_fingerprint",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/login/verify",
+                "summary": "Find ABHA via Fingerprint - verify",
+                "tag": "Find ABHA - Fingerprint",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_login_verify_find_abha_iris",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/login/verify",
+                "summary": "Find ABHA via IRIS - verify",
+                "tag": "Find ABHA - IRIS",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_login_verify_find_abha_mobile",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/login/verify",
+                "summary": "Find ABHA via Mobile - verify OTP",
+                "tag": "Find ABHA - Mobile OTP",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_login_verify_forgot_abha_aadhaar",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/login/verify",
+                "summary": "Forgot ABHA via Aadhaar - verify OTP",
+                "tag": "Forgot ABHA - Aadhaar OTP",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_login_verify_forgot_abha_mobile",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/login/verify",
+                "summary": "Forgot ABHA via Mobile - verify OTP",
+                "tag": "Forgot ABHA - Mobile OTP",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_login_verify_mobile_otp",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/login/verify",
+                "summary": "Login via Mobile number - verify OTP",
+                "tag": "Login - Mobile Number",
+                "module": "m1"
+              },
+              {
+                "operation_id": "m1_post_v3_profile_login_verify_user",
+                "method": "POST",
+                "path": "/abha/api/v3/profile/login/verify/user",
+                "summary": "Login via Mobile number - verify user (select ABHA)",
+                "tag": "Login - Mobile Number",
+                "module": "m1"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01NguFw4w5c7166FZb9x5Fib",
+            "Name": "get",
+            "Input": {
+              "id": "m1_post_v3_profile_account_request_otp_update_mobile"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "m1_post_v3_profile_account_request_otp_update_mobile"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "doc_path": "/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-profile-account-request-otp-update-mobile",
+            "operation_id": "m1_post_v3_profile_account_request_otp_update_mobile",
+            "spec": {
+              "description": "Starts a mobile number change for a logged-in ABHA user (`X-token`). ABDM sends an OTP to the **new** mobile number.\n\n**Endpoint:** `POST /abha/api/v3/profile/account/request/otp`\n\n**Flow:** **Profile - Update Mobile** - step 1 of 2\n- Previous: none (first call of this flow)\n- Next: *Update mobile - verify OTP*\n\n**Headers** (plus `Authorization: Bearer <gateway token>`):\n\n| Header | Required | Description |\n|---|---|---|\n| X-token | yes | User token (`Bearer <token>`) received after ABHA creation / login. |\n| REQUEST-ID | yes | Unique UUID for every request. |\n| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |\n\n**Request body for this use case:**\n\n| Field | Value / Type | Required | Description |\n|---|---|---|---|\n| `scope` | `[\"abha-profile\", \"mobile-verify\"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |\n| `loginHint` | `\"mobile\"` | yes | Type of identifier sent in `loginId`. |\n| `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |\n| `otpSystem` | `\"abdm\"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |",
+              "operationId": "m1_post_v3_profile_account_request_otp_update_mobile",
+              "parameters": [
+                {
+                  "description": "User token (`Bearer <token>`) received after ABHA creation / login.",
+                  "example": "Bearer {{X-token}}",
+                  "in": "header",
+                  "name": "X-token",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "description": "Unique UUID for every request.",
+                  "example": "18235d89-cb13-479d-ad71-7a57d5f669a8",
+                  "in": "header",
+                  "name": "REQUEST-ID",
+                  "required": true,
+                  "schema": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                {
+                  "description": "Current UTC timestamp in ISO-8601 format.",
+                  "example": "2022-10-06T15:10:00.587Z",
+                  "in": "header",
+                  "name": "TIMESTAMP",
+                  "required": true,
+                  "schema": {
+                    "format": "date-time",
+                    "type": "string"
+                  }
+                }
+              ],
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "examples": {
+                      "Update mobile - send OTP": {
+                        "summary": "Update mobile - send OTP",
+                        "value": {
+                          "loginHint": "mobile",
+                          "loginId": "{{encrypted mobile number}}",
+                          "otpSystem": "abdm",
+                          "scope": [
+                            "abha-profile",
+                            "mobile-verify"
+                          ]
+                        }
+                      }
+                    },
+                    "schema": {
+                      "properties": {
+                        "loginHint": {
+                          "description": "Type of identifier sent in `loginId`.",
+                          "enum": [
+                            "mobile"
+                          ],
+                          "type": "string"
+                        },
+                        "loginId": {
+                          "description": "Identifier value, RSA-encrypted with the ABHA public certificate.",
+                          "type": "string"
+                        },
+                        "otpSystem": {
+                          "description": "System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM).",
+                          "enum": [
+                            "abdm"
+                          ],
+                          "type": "string"
+                        },
+                        "scope": {
+                          "description": "Scope that selects this use case. Send exactly the values listed for this API.",
+                          "example": [
+                            "abha-profile",
+                            "mobile-verify"
+                          ],
+                          "items": {
+                            "enum": [
+                              "abha-profile",
+                              "mobile-verify"
+                            ],
+                            "type": "string"
+                          },
+                          "maxItems": 2,
+                          "minItems": 2,
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "scope",
+                        "loginHint",
+                        "loginId",
+                        "otpSystem"
+                      ],
+                      "type": "object"
+                    }
+                  }
+                },
+                "required": true
+              },
+              "responses": {
+                "200": {
+                  "content": {
+                    "application/json": {
+                      "examples": {
+                        "Update Mobile-Positive flow": {
+                          "value": {
+                            "message": "OTP sent to mobile number ending with ******0903",
+                            "txnId": "1c5fa806-67e1-4ad5-a848-0c4d805cd824"
+                          }
+                        }
+                      },
+                      "schema": {
+                        "properties": {
+                          "message": {
+                            "example": "OTP is sent to Aadhaar registered mobile number ending with *******0903",
+                            "type": "string"
+                          },
+                          "txnId": {
+                            "example": "c2095ea0-52ed-44ee-b8fc-02375b874e7a",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Success: Update Mobile-Positive flow"
+                },
+                "400": {
+                  "content": {
+                    "application/json": {
+                      "examples": {
+                        "Update Mobile- Invalid Login Hint": {
+                          "value": {
+                            "loginHint": "Invalid Login Hint",
+                            "timestamp": "2024-05-10T15:45:28.000Z"
+                          }
+                        },
+                        "Update Mobile- Invalid LoginId": {
+                          "value": {
+                            "loginId": "Invalid LoginId",
+                            "timestamp": "2024-05-10T15:44:28.000Z"
+                          }
+                        },
+                        "Update Mobile- Invalid Scope": {
+                          "value": {
+                            "scope": "Invalid Scope",
+                            "timestamp": "2024-05-10T15:46:48.000Z"
+                          }
+                        },
+                        "Update Mobile-Already verified mobile number": {
+                          "value": {
+                            "message": "This mobile number is already verified. Please enter a different mobile number.",
+                            "timestamp": "2024-05-10T15:45:57.000Z"
+                          }
+                        }
+                      },
+                      "schema": {
+                        "anyOf": [
+                          {
+                            "example": {
+                              "Invalid Scope": "Invalid Scope",
+                              "timestamp": "2024-05-10T14:33:06.000Z"
+                            },
+                            "properties": {
+                              "Invalid Scope": {
+                                "example": "Invalid Scope",
+                                "type": "string"
+                              },
+                              "timestamp": {
+                                "example": "2024-05-10T14:33:06.000Z",
+                                "format": "date-time",
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          {
+                            "example": {
+                              "Invalid LoginId": "Invalid LoginId",
+                              "timestamp": "2024-05-10T14:33:06.000Z"
+                            },
+                            "properties": {
+                              "Invalid LoginId": {
+                                "example": "Invalid LoginId",
+                                "type": "string"
+                              },
+                              "timestamp": {
+                                "example": "2024-05-10T14:33:06.000Z",
+                                "format": "date-time",
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          {
+                            "example": {
+                              "Invalid Login Hint": "Invalid Login Hint",
+                              "timestamp": "2024-05-10T14:33:06.000Z"
+                            },
+                            "properties": {
+                              "Invalid Login Hint": {
+                                "example": "Invalid Login Hint",
+                                "type": "string"
+                              },
+                              "timestamp": {
+                                "example": "2024-05-10T14:33:06.000Z",
+                                "format": "date-time",
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          {
+                            "example": {
+                              "Invalid X-token": "Invalid X-token"
+                            },
+                            "properties": {
+                              "Invalid X-token": {
+                                "example": "Invalid X-token",
+                                "type": "string"
+                              },
+                              "timestamp": {
+                                "example": "2024-05-10T14:33:06.000Z",
+                                "format": "date-time",
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          {
+                            "example": {
+                              "Invalid X-token": "Invalid X-token",
+                              "timestamp": "2024-05-10T14:33:06.000Z"
+                            },
+                            "properties": {
+                              "Invalid X-token": {
+                                "example": "Invalid X-token",
+                                "type": "string"
+                              },
+                              "timestamp": {
+                                "example": "2024-05-10T14:33:06.000Z",
+                                "format": "date-time",
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "description": "Bad Request (request validation failed): Update Mobile- Invalid Scope; Update Mobile- Invalid LoginId; Update Mobile- Invalid Login Hint; Update Mobile-Already verified mobile number"
+                },
+                "401": {
+                  "content": {
+                    "application/json": {
+                      "examples": {
+                        "Invalid access token": {
+                          "summary": "Invalid access token",
+                          "value": {
+                            "code": "900901",
+                            "description": "Invalid JWT token. Make sure you have provided the correct security credentials",
+                            "message": "Invalid Credentials"
+                          }
+                        }
+                      },
+                      "schema": {
+                        "properties": {
+                          "code": {
+                            "example": "900901",
+                            "type": "string"
+                          },
+                          "description": {
+                            "example": "Invalid JWT token. Make sure you have provided the correct security credentials",
+                            "type": "string"
+                          },
+                          "message": {
+                            "example": "Invalid Credentials",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Unauthorized (invalid / expired gateway token, X-token or benefit access): Invalid access token"
+                },
+                "500": {
+                  "description": "Internal Server Error."
+                }
+              },
+              "security": [
+                {
+                  "bearerAuth": []
+                }
+              ],
+              "summary": "Update mobile - send OTP",
+              "tags": [
+                "Profile - Update Mobile"
+              ],
+              "x-abdm-nha-operation-id": "profileRequestOtpMobile",
+              "x-abdm-title": "Update mobile - send OTP",
+              "x-actual-path": "/abha/api/v3/profile/account/request/otp",
+              "x-journey": {
+                "journey": "Profile - Update Mobile",
+                "kind": "flow",
+                "of": 2,
+                "step": 1
+              },
+              "x-stoplight": {
+                "id": "ylrpfy8miqlmm"
+              },
+              "x-use-case": "update-mobile"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_013FS2MZwct7tQafGDRreexb",
+            "Name": "get",
+            "Input": {
+              "id": "m1_post_v3_profile_account_verify_update_mobile"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "m1_post_v3_profile_account_verify_update_mobile"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "doc_path": "/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-profile-account-verify-update-mobile",
+            "operation_id": "m1_post_v3_profile_account_verify_update_mobile",
+            "spec": {
+              "description": "Verifies the OTP sent by *Update mobile - send OTP* and updates the mobile number on the ABHA profile.\n\n**Endpoint:** `POST /abha/api/v3/profile/account/verify`\n\n**Flow:** **Profile - Update Mobile** - step 2 of 2\n- Previous: *Update mobile - send OTP*\n- Next: none (last call of this flow)\n\n**Headers** (plus `Authorization: Bearer <gateway token>`):\n\n| Header | Required | Description |\n|---|---|---|\n| X-token | yes | User token (`Bearer <token>`) received after ABHA creation / login. |\n| REQUEST-ID | yes | Unique UUID for every request. |\n| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |\n\n**Request body for this use case:**\n\n| Field | Value / Type | Required | Description |\n|---|---|---|---|\n| `scope` | `[\"abha-profile\", \"mobile-verify\"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |\n| `authData` | object | yes | Authentication payload for this use case. |\n| `authData.authMethods` | `[\"otp\"]` | yes | Authentication method used in this step. |\n| `authData.otp` | object | yes | OTP authentication block. |\n| `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |\n| `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |",
+              "operationId": "m1_post_v3_profile_account_verify_update_mobile",
+              "parameters": [
+                {
+                  "description": "User token (`Bearer <token>`) received after ABHA creation / login.",
+                  "example": "Bearer {{X-token}}",
+                  "in": "header",
+                  "name": "X-token",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "description": "Unique UUID for every request.",
+                  "example": "18235d89-cb13-479d-ad71-7a57d5f669a8",
+                  "in": "header",
+                  "name": "REQUEST-ID",
+                  "required": true,
+                  "schema": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                {
+                  "description": "Current UTC timestamp in ISO-8601 format.",
+                  "example": "2022-10-06T15:10:00.587Z",
+                  "in": "header",
+                  "name": "TIMESTAMP",
+                  "required": true,
+                  "schema": {
+                    "format": "date-time",
+                    "type": "string"
+                  }
+                }
+              ],
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "examples": {
+                      "Update mobile - verify OTP": {
+                        "summary": "Update mobile - verify OTP",
+                        "value": {
+                          "authData": {
+                            "authMethods": [
+                              "otp"
+                            ],
+                            "otp": {
+                              "otpValue": "{{encrypted otp}}",
+                              "txnId": "{{txnId}}"
+                            }
+                          },
+                          "scope": [
+                            "abha-profile",
+                            "mobile-verify"
+                          ]
+                        }
+                      }
+                    },
+                    "schema": {
+                      "properties": {
+                        "authData": {
+                          "description": "Authentication payload for this use case.",
+                          "properties": {
+                            "authMethods": {
+                              "description": "Authentication method used in this step.",
+                              "items": {
+                                "enum": [
+                                  "otp"
+                                ],
+                                "type": "string"
+                              },
+                              "maxItems": 1,
+                              "minItems": 1,
+                              "type": "array"
+                            },
+                            "otp": {
+                              "description": "OTP authentication block.",
+                              "properties": {
+                                "otpValue": {
+                                  "description": "OTP received by the user, RSA-encrypted.",
+                                  "type": "string"
+                                },
+                                "txnId": {
+                                  "description": "Transaction ID returned by the previous step of this flow.",
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "txnId",
+                                "otpValue"
+                              ],
+                              "type": "object"
+                            }
+                          },
+                          "required": [
+                            "authMethods",
+                            "otp"
+                          ],
+                          "type": "object"
+                        },
+                        "scope": {
+                          "description": "Scope that selects this use case. Send exactly the values listed for this API.",
+                          "example": [
+                            "abha-profile",
+                            "mobile-verify"
+                          ],
+                          "items": {
+                            "enum": [
+                              "abha-profile",
+                              "mobile-verify"
+                            ],
+                            "type": "string"
+                          },
+                          "maxItems": 2,
+                          "minItems": 2,
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "scope",
+                        "authData"
+                      ],
+                      "type": "object"
+                    }
+                  }
+                },
+                "required": true
+              },
+              "responses": {
+                "200": {
+                  "content": {
+                    "application/json": {
+                      "examples": {
+                        "Update Mobile- Positive Flow": {
+                          "value": {
+                            "accounts": [
+                              {
+                                "ABHANumber": "<ABHA_NUMBER>"
+                              }
+                            ],
+                            "authResult": "success",
+                            "message": "Mobile Number linked successfully",
+                            "txnId": "01bb3a4c-4588-4734-aff4-23d3978e50be"
+                          }
+                        }
+                      },
+                      "schema": {
+                        "properties": {
+                          "accounts": {
+                            "items": {
+                              "properties": {
+                                "ABHANumber": {
+                                  "example": "<ABHA_NUMBER>",
+                                  "type": "string"
+                                }
+                              },
+                              "type": "object"
+                            },
+                            "type": "array"
+                          },
+                          "authResult": {
+                            "example": "success",
+                            "type": "string"
+                          },
+                          "message": {
+                            "example": "Email linked successfully,Password updated successfully,Re-kyc done successfully,Mobile Number linked successfully",
+                            "type": "string"
+                          },
+                          "txnId": {
+                            "example": "8730eae6-8c1e-45fb-a087-89d79a30b37e",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Success: Update Mobile- Positive Flow"
+                },
+                "400": {
+                  "content": {
+                    "application/json": {
+                      "examples": {
+                        "Update Mobile- Invalid Auth Methods": {
+                          "value": {
+                            "authMethods": "Invalid Auth Methods",
+                            "timestamp": "2024-05-10T11:40:16.000Z"
+                          }
+                        },
+                        "Update Mobile- Invalid OTP Value": {
+                          "value": {
+                            "otpValue": "Invalid OTP Value",
+                            "timestamp": "2024-05-10T15:35:20.000Z"
+                          }
+                        },
+                        "Update Mobile- Invalid Scope": {
+                          "value": {
+                            "scope": "Invalid Scope",
+                            "timestamp": "2024-05-10T11:13:04.000Z"
+                          }
+                        },
+                        "Update Mobile- Invalid Transaction Id": {
+                          "value": {
+                            "timestamp": "2024-05-10T12:45:25.000Z",
+                            "txnId": "Invalid Transaction Id"
+                          }
+                        },
+                        "Update Mobile- Invalid X-token": {
+                          "value": {
+                            "message": "Invalid X-token",
+                            "timestamp": "2024-05-10T14:53:18.000Z"
+                          }
+                        }
+                      },
+                      "schema": {
+                        "anyOf": [
+                          {
+                            "example": {
+                              "Invalid Scope": "Invalid Scope",
+                              "timestamp": "2024-05-10T14:33:06.000Z"
+                            },
+                            "properties": {
+                              "Invalid Scope": {
+                                "example": "Invalid Scope",
+                                "type": "string"
+                              },
+                              "timestamp": {
+                                "example": "2024-05-10T14:33:06.000Z",
+                                "format": "date-time",
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          {
+                            "example": {
+                              "Invalid LoginId": "Invalid LoginId",
+                              "timestamp": "2024-05-10T14:33:06.000Z"
+                            },
+                            "properties": {
+                              "Invalid LoginId": {
+                                "example": "Invalid LoginId",
+                                "type": "string"
+                              },
+                              "timestamp": {
+                                "example": "2024-05-10T14:33:06.000Z",
+                                "format": "date-time",
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          {
+                            "example": {
+                              "Invalid Login Hint": "Invalid Login Hint",
+                              "timestamp": "2024-05-10T14:33:06.000Z"
+                            },
+                            "properties": {
+                              "Invalid Login Hint": {
+                                "example": "Invalid Login Hint",
+                                "type": "string"
+                              },
+                              "timestamp": {
+                                "example": "2024-05-10T14:33:06.000Z",
+                                "format": "date-time",
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          {
+                            "example": {
+                              "Invalid X-token": "Invalid X-token"
+                            },
+                            "properties": {
+                              "Invalid X-token": {
+                                "example": "Invalid X-token",
+                                "type": "string"
+                              },
+                              "timestamp": {
+                                "example": "2024-05-10T14:33:06.000Z",
+                                "format": "date-time",
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          {
+                            "example": {
+                              "Invalid X-token": "Invalid X-token",
+                              "timestamp": "2024-05-10T14:33:06.000Z"
+                            },
+                            "properties": {
+                              "timestamp": {
+                                "example": "2024-05-10T14:33:06.000Z",
+                                "format": "date-time",
+                                "type": "string"
+                              },
+                              "txnId": {
+                                "example": "Invalid Transaction Id",
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          {
+                            "example": {
+                              "timestamp": "2024-05-10T14:33:06.000Z",
+                              "txnId": "Invalid Transaction Id"
+                            },
+                            "properties": {
+                              "timestamp": {
+                                "example": "2024-05-10T14:33:06.000Z",
+                                "format": "date-time",
+                                "type": "string"
+                              },
+                              "txnId": {
+                                "example": "Invalid Transaction Id",
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          {
+                            "example": {
+                              "authMethods": "Invalid Auth Methods",
+                              "timestamp": "2024-05-10T14:33:06.000Z"
+                            },
+                            "properties": {
+                              "authMethods": {
+                                "example": "Invalid Auth Methods",
+                                "type": "string"
+                              },
+                              "timestamp": {
+                                "example": "2024-05-10T14:33:06.000Z",
+                                "format": "date-time",
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          {
+                            "example": {
+                              "otpValue": "Invalid OTP Value",
+                              "timestamp": "2024-05-10T14:33:06.000Z"
+                            },
+                            "properties": {
+                              "otpValue": {
+                                "example": "Invalid OTP Value",
+                                "type": "string"
+                              },
+                              "timestamp": {
+                                "example": "2024-05-10T14:33:06.000Z",
+                                "format": "date-time",
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          {
+                            "example": {
+                              "password": "New & Confirm Password is not same",
+                              "timestamp": "2024-05-10T14:33:06.000Z"
+                            },
+                            "properties": {
+                              "password": {
+                                "example": "New & Confirm Password is not same",
+                                "type": "string"
+                              },
+                              "timestamp": {
+                                "example": "2024-05-10T14:33:06.000Z",
+                                "format": "date-time",
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          {
+                            "example": {
+                              "New Password": "Invalid New Password",
+                              "timestamp": "2024-05-10T14:33:06.000Z"
+                            },
+                            "properties": {
+                              "New Password": {
+                                "example": "Invalid New Password",
+                                "type": "string"
+                              },
+                              "timestamp": {
+                                "example": "2024-05-10T14:33:06.000Z",
+                                "format": "date-time",
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          {
+                            "example": {
+                              "password": "Invalid Password",
+                              "timestamp": "2024-05-10T14:33:06.000Z"
+                            },
+                            "properties": {
+                              "password": {
+                                "example": "Invalid Password",
+                                "type": "string"
+                              },
+                              "timestamp": {
+                                "example": "2024-05-10T14:33:06.000Z",
+                                "format": "date-time",
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "description": "Bad Request (request validation failed): Update Mobile- Invalid Transaction Id; Update Mobile- Invalid Scope; Update Mobile- Invalid Auth Methods; Update Mobile- Invalid X-token; Update Mobile- Invalid OTP Value"
+                },
+                "401": {
+                  "content": {
+                    "application/json": {
+                      "examples": {
+                        "Update Mobile- Invalid access token": {
+                          "value": {
+                            "code": "900901",
+                            "description": "Invalid Credentials. Make sure you have provided the correct security credentials",
+                            "message": "Invalid Credentials"
+                          }
+                        },
+                        "Update Mobile- X-token expired": {
+                          "value": {
+                            "message": "X-token expired",
+                            "timestamp": "2024-05-10T14:51:16.000Z"
+                          }
+                        }
+                      },
+                      "schema": {
+                        "anyOf": [
+                          {
+                            "properties": {
+                              "code": {
+                                "example": "900901",
+                                "type": "string"
+                              },
+                              "description": {
+                                "example": "Invalid Credentials. Make sure you have provided the correct security credentials",
+                                "type": "string"
+                              },
+                              "message": {
+                                "example": "Invalid Credentials",
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          {
+                            "properties": {
+                              "message": {
+                                "example": "X-token expired",
+                                "type": "string"
+                              },
+                              "timestamp": {
+                                "example": "2023-01-18T18:01:36.000Z",
+                                "format": "date-time",
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "description": "Unauthorized (invalid / expired gateway token, X-token or benefit access): Update Mobile- Invalid access token; Update Mobile- X-token expired"
+                },
+                "422": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "message": {
+                            "example": "UIDAI Error code : 400 : Invalid Aadhaar OTP value.",
+                            "type": "string"
+                          },
+                          "timestamp": {
+                            "example": "2023-01-11T00:14:02.000Z",
+                            "format": "date-time",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Unprocessable Entity (business rule or UIDAI failure)."
+                },
+                "500": {
+                  "description": "Internal Server Error."
+                }
+              },
+              "security": [
+                {
+                  "bearerAuth": []
+                }
+              ],
+              "summary": "Update mobile - verify OTP",
+              "tags": [
+                "Profile - Update Mobile"
+              ],
+              "x-abdm-nha-operation-id": "profileVerifyMobileOtp",
+              "x-abdm-title": "Update mobile - verify OTP",
+              "x-actual-path": "/abha/api/v3/profile/account/verify",
+              "x-journey": {
+                "journey": "Profile - Update Mobile",
+                "kind": "flow",
+                "of": 2,
+                "step": 2
+              },
+              "x-stoplight": {
+                "id": "lb98xilhhv4fb"
+              },
+              "x-use-case": "update-mobile"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "To change the mobile number linked to an ABHA account, use the **Profile - Update Mobile** flow with these two API calls:\n\n## Step 1: Request OTP\n**Endpoint:** `POST /abha/api/v3/profile/account/request/otp`\n\nSend an OTP to the new mobile number. Requires:\n- `X-token` header (user's logged-in token)\n- `REQUEST-ID` and `TIMESTAMP` headers\n- Request body with:\n  - `scope`: `[\"abha-profile\", \"mobile-verify\"]`\n  - `loginHint`: `\"mobile\"`\n  - `loginId`: new mobile number (RSA-encrypted with ABHA public certificate)\n  - `otpSystem`: `\"abdm\"`\n\nReturns a `txnId` (transaction ID) to use in step 2.\n\n## Step 2: Verify OTP\n**Endpoint:** `POST /abha/api/v3/profile/account/verify`\n\nVerify the OTP sent to the new number to complete the update. Requires:\n- Same headers as step 1 (X-token, REQUEST-ID, TIMESTAMP)\n- Request body with:\n  - `scope`: `[\"abha-profile\", \"mobile-verify\"]`\n  - `authData.authMethods`: `[\"otp\"]`\n  - `authData.otp.txnId`: transaction ID from step 1\n  - `authData.otp.otpValue`: OTP received (RSA-encrypted)\n\nOn success, returns `\"Mobile Number linked successfully\"` with the ABHA number.\n\n**Reference:** [ABDM M1 Profile - Update Mobile documentation](https://www.abdm.gov.in/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-profile-account-request-otp-update-mobile)",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "To change the mobile number linked to an ABHA account, use the **Profile - Update Mobile** flow with these two API calls:\n\n## Step 1: Request OTP\n**Endpoint:** `POST /abha/api/v3/profile/account/request/otp`\n\nSend an OTP to the new mobile number. Requires:\n- `X-token` header (user's logged-in token)\n- `REQUEST-ID` and `TIMESTAMP` headers\n- Request body with:\n  - `scope`: `[\"abha-profile\", \"mobile-verify\"]`\n  - `loginHint`: `\"mobile\"`\n  - `loginId`: new mobile number (RSA-encrypted with ABHA public certificate)\n  - `otpSystem`: `\"abdm\"`\n\nReturns a `txnId` (transaction ID) to use in step 2.\n\n## Step 2: Verify OTP\n**Endpoint:** `POST /abha/api/v3/profile/account/verify`\n\nVerify the OTP sent to the new number to complete the update. Requires:\n- Same headers as step 1 (X-token, REQUEST-ID, TIMESTAMP)\n- Request body with:\n  - `scope`: `[\"abha-profile\", \"mobile-verify\"]`\n  - `authData.authMethods`: `[\"otp\"]`\n  - `authData.otp.txnId`: transaction ID from step 1\n  - `authData.otp.otpValue`: OTP received (RSA-encrypted)\n\nOn success, returns `\"Mobile Number linked successfully\"` with the ABHA number.\n\n**Reference:** [ABDM M1 Profile - Update Mobile documentation](https://www.abdm.gov.in/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-profile-account-request-otp-update-mobile)",
+  "sources": [],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#abha\",\"id\":\"shared.glossary.abha\",\"summary\":\"The patient's identity in ABDM, in two forms that look alike and are not: a 14 digit ABHA number and a readable ABHA address.\",\"title\":\"ABHA\",\"type\":\"glossary\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.abha-identifiers\",\"summary\":\"NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...\",\"title\":\"Carrying an ABHA number and an ABHA address on a FHIR Patient\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-child-abha/03-m1-patch-v3-profile-account-child-child-abha#m1-profile-update-account\",\"id\":\"hiecm.endpoint.m1-profile-update-account\",\"summary\":\"Changes the name, date of birth and gender on a child ABHA, or the photo on any signed in account.\",\"title\":\"Update fields on an ABHA profile\",\"type\":\"endpoint\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m1-the-whole-surface\",\"summary\":\"M1 supports several placements beyond registering a patient, and a design that accounts for them from the start avoids meeting each one later as a change req...\",\"title\":\"The surface is more than a registration form\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m1-confirm-the-filled-form\",\"summary\":\"The profile is what ABDM holds, which is not always what the clinician needs to see, so the filled form is confirmed by a person before it becomes the facili...\",\"title\":\"Present the filled form for confirmation rather than saving it unseen\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/01-m1-post-v3-profile-benefit-linkanddelink-x-token#m1-benefit-link-or-delink\",\"id\":\"hiecm.endpoint.m1-benefit-link-or-delink\",\"summary\":\"Links or unlinks the programme named in the BENEFIT_NAME header for an ABHA.\",\"title\":\"Link or unlink a benefit record from an ABHA\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/errors#abdm-1094\",\"id\":\"hiecm.error.abdm-1094\",\"summary\":\"Your client or the person's token is not allowed to do what the call tried, and the message says which of three cases applies.\",\"title\":\"ABDM-1094, access to this feature is refused\",\"type\":\"error\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.profile-and-example-together\",\"summary\":\"A NRCeS profile gives the cardinalities and a NRCeS example gives the shape, and a generator written from either one alone is wrong in a different way.\",\"title\":\"Read the profile and the example together, because each omits what the other carries\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/07-m3-get-data-flow-v3-health-information-request-status-tra-550104#p3-request-status\",\"id\":\"hiecm.endpoint.p3-request-status\",\"summary\":\"Check how far a health information request has got, by its transaction id.\",\"title\":\"Get the status of a health information request\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-locker/03-p4-get-subscription-requests-v3-patients-lockers-lockerid#p3-patient-locker-details-by-locker-id\",\"id\":\"hiecm.endpoint.p3-patient-locker-details-by-locker-id\",\"summary\":\"Fetch one health locker's settings for the logged-in person.\",\"title\":\"Get a health locker by its id\",\"type\":\"endpoint\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#abha\",\"id\":\"shared.glossary.abha\",\"summary\":\"The patient's identity in ABDM, in two forms that look alike and are not: a 14 digit ABHA number and a readable ABHA address.\",\"title\":\"ABHA\",\"type\":\"glossary\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.abha-identifiers\",\"summary\":\"NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...\",\"title\":\"Carrying an ABHA number and an ABHA address on a FHIR Patient\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/get-your-sandbox-credentials\",\"id\":\"nhcx.flow.sandbox-onboarding\",\"summary\":\"Register your system in the claims exchange test environment so it holds a participant code, a registered certificate and a callback address.\",\"title\":\"Onboard as a participant in the NHCX sandbox\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/01-m1-post-v3-profile-benefit-linkanddelink-x-token#m1-benefit-link-or-delink\",\"id\":\"hiecm.endpoint.m1-benefit-link-or-delink\",\"summary\":\"Links or unlinks the programme named in the BENEFIT_NAME header for an ABHA.\",\"title\":\"Link or unlink a benefit record from an ABHA\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/errors#abdm-1094\",\"id\":\"hiecm.error.abdm-1094\",\"summary\":\"Your client or the person's token is not allowed to do what the call tried, and the message says which of three cases applies.\",\"title\":\"ABDM-1094, access to this feature is refused\",\"type\":\"error\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.profile-and-example-together\",\"summary\":\"A NRCeS profile gives the cardinalities and a NRCeS example gives the shape, and a generator written from either one alone is wrong in a different way.\",\"title\":\"Read the profile and the example together, because each omits what the other carries\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/07-m3-get-data-flow-v3-health-information-request-status-tra-550104#p3-request-status\",\"id\":\"hiecm.endpoint.p3-request-status\",\"summary\":\"Check how far a health information request has got, by its transaction id.\",\"title\":\"Get the status of a health information request\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-locker/03-p4-get-subscription-requests-v3-patients-lockers-lockerid#p3-patient-locker-details-by-locker-id\",\"id\":\"hiecm.endpoint.p3-patient-locker-details-by-locker-id\",\"summary\":\"Fetch one health locker's settings for the logged-in person.\",\"title\":\"Get a health locker by its id\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-locker/01-p4-post-subscription-requests-v3-setup-locker#p3-setup-locker\",\"id\":\"hiecm.endpoint.p3-setup-locker\",\"summary\":\"Set up a health locker for the logged-in person.\",\"title\":\"Set up a health locker\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request#m2-hip-health-information-on-request\",\"id\":\"hiecm.endpoint.m2-hip-health-information-on-request\",\"summary\":\"The HIP acknowledges a health information request, then encrypts the records and pushes them to the requester.\",\"title\":\"Acknowledge a health information data request\",\"type\":\"endpoint\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-post-data-flow-v3-health-information-request\",\"id\":\"m3_post_data_flow_v3_health_information_request\",\"summary\":\"Health information data request from HIU.\",\"title\":\"POST /api/hiecm/data-flow/v3/health-information/request\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-post-data-flow-v3-health-information-hip-on-request\",\"id\":\"m2_post_data_flow_v3_health_information_hip_on_request\",\"summary\":\"Health information data request acknowledgement from HIP.\",\"title\":\"POST /api/hiecm/data-flow/v3/health-information/hip/on-request\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-get-gateway-v3-health-lockers\",\"id\":\"p4_get_gateway_v3_health_lockers\",\"summary\":\"This API is invoked to fetch the record with health locker enabled provider details.\",\"title\":\"GET /api/hiecm/gateway/v3/health-lockers\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-get-data-flow-v3-health-information-request-status-tra-550104\",\"id\":\"m3_get_data_flow_v3_health_information_request_status_tra_550104\",\"summary\":\"API to get the current status of the Health Information Request.\",\"title\":\"GET /api/hiecm/data-flow/v3/health-information/request/status/{transaction-id}\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-post-v1-forgot-hprid-aadhaar\",\"id\":\"m4_post_v1_forgot_hprid_aadhaar\",\"summary\":\"Retrieval Health Id By Aadhaar\",\"title\":\"POST /v1/forgot/hprId/aadhaar\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-post-v1-forgot-hprid-mobile\",\"id\":\"m4_post_v1_forgot_hprid_mobile\",\"summary\":\"Retrieval Health Id By Mobile\",\"title\":\"POST /v1/forgot/hprId/mobile\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-post-data-flow-v3-health-information-notify\",\"id\":\"m2_post_data_flow_v3_health_information_notify\",\"summary\":\"Notifications corresponding to events during data flow\",\"title\":\"POST /api/hiecm/data-flow/v3/health-information/notify\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-post-data-flow-v3-health-information-notify\",\"id\":\"m3_post_data_flow_v3_health_information_notify\",\"summary\":\"Notifications corresponding to events during data flow\",\"title\":\"POST /api/hiecm/data-flow/v3/health-information/notify\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-post-v3-token-generate-token\",\"id\":\"m2_post_v3_token_generate_token\",\"summary\":\"API used to generate link token to link the health records\",\"title\":\"POST /api/hiecm/v3/token/generate-token\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-get-subscription-requests-v3-patients-lockers\",\"id\":\"p4_get_subscription_requests_v3_patients_lockers\",\"summary\":\"The API provides the list of health locker that the ABHA address is subscribed to.\",\"title\":\"GET /api/hiecm/subscription-requests/v3/patients/lockers\",\"type\":\"operation\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"operations\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"operations\":[{\"operation_id\":\"m1_get_v3_enrollment_enrol_suggestion_create_abha_aadhaar_otp\",\"method\":\"GET\",\"path\":\"/abha/api/v3/enrollment/enrol/suggestion\",\"summary\":\"After ABHA creation - get ABHA address suggestions\",\"tag\":\"Create ABHA - Aadhaar OTP\",\"module\":\"m1\"},{\"operation_id\":\"m1_get_v3_enrollment_enrol_suggestion_create_abha_face_au_848b26\",\"method\":\"GET\",\"path\":\"/abha/api/v3/enrollment/enrol/suggestion\",\"summary\":\"After ABHA creation - get ABHA address suggestions\",\"tag\":\"Create ABHA - Face Authentication\",\"module\":\"m1\"},{\"operation_id\":\"m1_get_v3_enrollment_enrol_suggestion_create_abha_fingerprint\",\"method\":\"GET\",\"path\":\"/abha/api/v3/enrollment/enrol/suggestion\",\"summary\":\"After ABHA creation - get ABHA address suggestions\",\"tag\":\"Create ABHA - Fingerprint\",\"module\":\"m1\"},{\"operation_id\":\"m1_get_v3_enrollment_enrol_suggestion_create_abha_iris\",\"method\":\"GET\",\"path\":\"/abha/api/v3/enrollment/enrol/suggestion\",\"summary\":\"After ABHA creation - get ABHA address suggestions\",\"tag\":\"Create ABHA - IRIS\",\"module\":\"m1\"},{\"operation_id\":\"m1_get_v3_enrollment_profile_children_benefit_child_abha\",\"method\":\"GET\",\"path\":\"/abha/api/v3/enrollment/profile/children\",\"summary\":\"Get Child ABHA list of the parent\",\"tag\":\"Benefit - Child ABHA\",\"module\":\"m1\"},{\"operation_id\":\"m1_get_v3_enrollment_profile_children_child_abha\",\"method\":\"GET\",\"path\":\"/abha/api/v3/enrollment/profile/children\",\"summary\":\"Get Child ABHA list of the parent\",\"tag\":\"Child ABHA\",\"module\":\"m1\"},{\"operation_id\":\"m1_get_v3_phr_web_login_profile_abha_phr_card_abha_addres_817c0d\",\"method\":\"GET\",\"path\":\"/abha/api/v3/phr/web/login/profile/abha/phr-card\",\"summary\":\"Get PHR card\",\"tag\":\"ABHA Address Login - Aadhaar OTP\",\"module\":\"m1\"},{\"operation_id\":\"m1_get_v3_phr_web_login_profile_abha_phr_card_abha_addres_b64ebf\",\"method\":\"GET\",\"path\":\"/abha/api/v3/phr/web/login/profile/abha/phr-card\",\"summary\":\"Get PHR card\",\"tag\":\"ABHA Address Login - IRIS\",\"module\":\"m1\"},{\"operation_id\":\"m1_get_v3_phr_web_login_profile_abha_phr_card_abha_addres_e1bae9\",\"method\":\"GET\",\"path\":\"/abha/api/v3/phr/web/login/profile/abha/phr-card\",\"summary\":\"Get PHR card\",\"tag\":\"ABHA Address Login - Mobile OTP\",\"module\":\"m1\"},{\"operation_id\":\"m1_get_v3_phr_web_login_profile_abha_phr_card_abha_addres_e751bf\",\"method\":\"GET\",\"path\":\"/abha/api/v3/phr/web/login/profile/abha/phr-card\",\"summary\":\"Get PHR card\",\"tag\":\"ABHA Address Login - Fingerprint\",\"module\":\"m1\"},{\"operation_id\":\"m1_get_v3_phr_web_login_profile_abha_profile_abha_address_809900\",\"method\":\"GET\",\"path\":\"/abha/api/v3/phr/web/login/profile/abha-profile\",\"summary\":\"Get ABHA-address profile\",\"tag\":\"ABHA Address Login - IRIS\",\"module\":\"m1\"},{\"operation_id\":\"m1_get_v3_phr_web_login_profile_abha_profile_abha_address_8ec4ee\",\"method\":\"GET\",\"path\":\"/abha/api/v3/phr/web/login/profile/abha-profile\",\"summary\":\"Get ABHA-address profile\",\"tag\":\"ABHA Address Login - Fingerprint\",\"module\":\"m1\"},{\"operation_id\":\"m1_get_v3_phr_web_login_profile_abha_profile_abha_address_b038c4\",\"method\":\"GET\",\"path\":\"/abha/api/v3/phr/web/login/profile/abha-profile\",\"summary\":\"Get ABHA-address profile\",\"tag\":\"ABHA Address Login - Mobile OTP\",\"module\":\"m1\"},{\"operation_id\":\"m1_get_v3_phr_web_login_profile_abha_profile_abha_address_c04e83\",\"method\":\"GET\",\"path\":\"/abha/api/v3/phr/web/login/profile/abha-profile\",\"summary\":\"Get ABHA-address profile\",\"tag\":\"ABHA Address Login - Aadhaar OTP\",\"module\":\"m1\"},{\"operation_id\":\"m1_get_v3_phr_web_login_profile_abha_qr_code_abha_address_26c955\",\"method\":\"GET\",\"path\":\"/abha/api/v3/phr/web/login/profile/abha/qr-code\",\"summary\":\"Get ABHA-address QR code\",\"tag\":\"ABHA Address Login - Aadhaar OTP\",\"module\":\"m1\"},{\"operation_id\":\"m1_get_v3_phr_web_login_profile_abha_qr_code_abha_address_4b4e10\",\"method\":\"GET\",\"path\":\"/abha/api/v3/phr/web/login/profile/abha/qr-code\",\"summary\":\"Get ABHA-address QR code\",\"tag\":\"ABHA Address Login - IRIS\",\"module\":\"m1\"},{\"operation_id\":\"m1_get_v3_phr_web_login_profile_abha_qr_code_abha_address_91c62b\",\"method\":\"GET\",\"path\":\"/abha/api/v3/phr/web/login/profile/abha/qr-code\",\"summary\":\"Get ABHA-address QR code\",\"tag\":\"ABHA Address Login - Fingerprint\",\"module\":\"m1\"},{\"operation_id\":\"m1_get_v3_phr_web_login_profile_abha_qr_code_abha_address_a48785\",\"method\":\"GET\",\"path\":\"/abha/api/v3/phr/web/login/profile/abha/qr-code\",\"summary\":\"Get ABHA-address QR code\",\"tag\":\"ABHA Address Login - Mobile OTP\",\"module\":\"m1\"},{\"operation_id\":\"m1_get_v3_profile_account\",\"method\":\"GET\",\"path\":\"/abha/api/v3/profile/account\",\"summary\":\"Get ABHA profile\",\"tag\":\"ABHA Card & Profile\",\"module\":\"m1\"},{\"operation_id\":\"m1_get_v3_profile_account_abha_card\",\"method\":\"GET\",\"path\":\"/abha/api/v3/profile/account/abha-card\",\"summary\":\"Retrieve ABHA card image\",\"tag\":\"ABHA Card & Profile\",\"module\":\"m1\"},{\"operation_id\":\"m1_get_v3_profile_account_download_abha_card\",\"method\":\"GET\",\"path\":\"/abha/api/v3/profile/account/download-abha-card\",\"summary\":\"Download ABHA card\",\"tag\":\"ABHA Card & Profile\",\"module\":\"m1\"},{\"operation_id\":\"m1_get_v3_profile_account_qrcode\",\"method\":\"GET\",\"path\":\"/abha/api/v3/profile/account/qrCode\",\"summary\":\"Get ABHA QR code\",\"tag\":\"ABHA Card & Profile\",\"module\":\"m1\"},{\"operation_id\":\"m1_get_v3_profile_account_request_token\",\"method\":\"GET\",\"path\":\"/abha/api/v3/profile/account/request/token\",\"summary\":\"Refresh user token\",\"tag\":\"Access Tokens & Encryption\",\"module\":\"m1\"},{\"operation_id\":\"m1_get_v3_profile_benefit_abha_abhanumber\",\"method\":\"GET\",\"path\":\"/abha/api/v3/profile/benefit/abha/{abhanumber}\",\"summary\":\"Get benefits linked to an ABHA number\",\"tag\":\"Benefit - Search\",\"module\":\"m1\"},{\"operation_id\":\"m1_get_v3_profile_public_certificate\",\"method\":\"GET\",\"path\":\"/abha/api/v3/profile/public/certificate\",\"summary\":\"Get public certificate (RSA encryption key)\",\"tag\":\"Access Tokens & Encryption\",\"module\":\"m1\"},{\"operation_id\":\"m1_patch_v3_profile_account_child_benefit_child_abha\",\"method\":\"PATCH\",\"path\":\"/abha/api/v3/profile/account\",\"summary\":\"Update Child ABHA profile\",\"tag\":\"Benefit - Child ABHA\",\"module\":\"m1\"},{\"operation_id\":\"m1_patch_v3_profile_account_child_child_abha\",\"method\":\"PATCH\",\"path\":\"/abha/api/v3/profile/account\",\"summary\":\"Update Child ABHA profile\",\"tag\":\"Child ABHA\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_1_profile_login_verify_face_auth_qr\",\"method\":\"POST\",\"path\":\"/abha/api/v3.1/profile/login/verify\",\"summary\":\"Login via Face Auth (QR) - verify\",\"tag\":\"Login - Face Auth QR (v3.1)\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_1_profile_login_verify_fingerprint\",\"method\":\"POST\",\"path\":\"/abha/api/v3.1/profile/login/verify\",\"summary\":\"Login via Biometric (Fingerprint) - v3.1 single step\",\"tag\":\"Login - Biometric v3.1\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_1_profile_login_verify_iris\",\"method\":\"POST\",\"path\":\"/abha/api/v3.1/profile/login/verify\",\"summary\":\"Login via Biometric (Iris) - v3.1 single step\",\"tag\":\"Login - Biometric v3.1\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_enrollment_auth_byabdm_email_verify_create_abh_6d732c\",\"method\":\"POST\",\"path\":\"/abha/api/v3/enrollment/auth/byAbdm\",\"summary\":\"After ABHA creation - verify email OTP (optional)\",\"tag\":\"Create ABHA - Aadhaar OTP\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_enrollment_auth_byabdm_email_verify_create_abh_b696ba\",\"method\":\"POST\",\"path\":\"/abha/api/v3/enrollment/auth/byAbdm\",\"summary\":\"After ABHA creation - verify email OTP (optional)\",\"tag\":\"Create ABHA - Fingerprint\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_enrollment_auth_byabdm_email_verify_create_abh_d8de3e\",\"method\":\"POST\",\"path\":\"/abha/api/v3/enrollment/auth/byAbdm\",\"summary\":\"After ABHA creation - verify email OTP (optional)\",\"tag\":\"Create ABHA - Face Authentication\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_enrollment_auth_byabdm_email_verify_create_abha_iris\",\"method\":\"POST\",\"path\":\"/abha/api/v3/enrollment/auth/byAbdm\",\"summary\":\"After ABHA creation - verify email OTP (optional)\",\"tag\":\"Create ABHA - IRIS\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_enrollment_auth_byabdm_mobile_verify_create_ab_091285\",\"method\":\"POST\",\"path\":\"/abha/api/v3/enrollment/auth/byAbdm\",\"summary\":\"After ABHA creation - verify mobile OTP (optional)\",\"tag\":\"Create ABHA - Aadhaar OTP\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_enrollment_auth_byabdm_mobile_verify_create_ab_3b237a\",\"method\":\"POST\",\"path\":\"/abha/api/v3/enrollment/auth/byAbdm\",\"summary\":\"After ABHA creation - verify mobile OTP (optional)\",\"tag\":\"Create ABHA - Fingerprint\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_enrollment_auth_byabdm_mobile_verify_create_ab_b555fb\",\"method\":\"POST\",\"path\":\"/abha/api/v3/enrollment/auth/byAbdm\",\"summary\":\"After ABHA creation - verify mobile OTP (optional)\",\"tag\":\"Create ABHA - Face Authentication\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_enrollment_auth_byabdm_mobile_verify_create_abha_iris\",\"method\":\"POST\",\"path\":\"/abha/api/v3/enrollment/auth/byAbdm\",\"summary\":\"After ABHA creation - verify mobile OTP (optional)\",\"tag\":\"Create ABHA - IRIS\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_enrollment_enrol_abha_address_create_abha_aadhaar_otp\",\"method\":\"POST\",\"path\":\"/abha/api/v3/enrollment/enrol/abha-address\",\"summary\":\"After ABHA creation - create ABHA address\",\"tag\":\"Create ABHA - Aadhaar OTP\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_enrollment_enrol_abha_address_create_abha_face_4b1f33\",\"method\":\"POST\",\"path\":\"/abha/api/v3/enrollment/enrol/abha-address\",\"summary\":\"After ABHA creation - create ABHA address\",\"tag\":\"Create ABHA - Face Authentication\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_enrollment_enrol_abha_address_create_abha_fingerprint\",\"method\":\"POST\",\"path\":\"/abha/api/v3/enrollment/enrol/abha-address\",\"summary\":\"After ABHA creation - create ABHA address\",\"tag\":\"Create ABHA - Fingerprint\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_enrollment_enrol_abha_address_create_abha_iris\",\"method\":\"POST\",\"path\":\"/abha/api/v3/enrollment/enrol/abha-address\",\"summary\":\"After ABHA creation - create ABHA address\",\"tag\":\"Create ABHA - IRIS\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_enrollment_enrol_auth_init_create_abha_face_au_4dea33\",\"method\":\"POST\",\"path\":\"/abha/api/v3/enrollment/enrol/auth/init\",\"summary\":\"Face auth - generate transaction ID (init)\",\"tag\":\"Create ABHA - Face Authentication\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_enrollment_enrol_auth_init_login_face_auth_qr_v3_1\",\"method\":\"POST\",\"path\":\"/abha/api/v3/enrollment/enrol/auth/init\",\"summary\":\"Face auth - generate transaction ID (init)\",\"tag\":\"Login - Face Auth QR (v3.1)\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_enrollment_enrol_byaadhaar_child_benefit_child_abha\",\"method\":\"POST\",\"path\":\"/abha/api/v3/enrollment/enrol/byAadhaar\",\"summary\":\"Create Child ABHA\",\"tag\":\"Benefit - Child ABHA\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_enrollment_enrol_byaadhaar_child_child_abha\",\"method\":\"POST\",\"path\":\"/abha/api/v3/enrollment/enrol/byAadhaar\",\"summary\":\"Create Child ABHA\",\"tag\":\"Child ABHA\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_enrollment_enrol_byaadhaar_demo_auth_benefit_c_d20a11\",\"method\":\"POST\",\"path\":\"/abha/api/v3/enrollment/enrol/byAadhaar\",\"summary\":\"Create ABHA - Demographic authentication (Demo Auth)\",\"tag\":\"Benefit - Child ABHA\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_enrollment_enrol_byaadhaar_demo_auth_benefit_c_d5c7c3\",\"method\":\"POST\",\"path\":\"/abha/api/v3/enrollment/enrol/byAadhaar\",\"summary\":\"Create ABHA - Demographic authentication (Demo Auth)\",\"tag\":\"Benefit - Create ABHA via Demo Auth\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_enrollment_enrol_byaadhaar_demo_auth_create_ab_81107d\",\"method\":\"POST\",\"path\":\"/abha/api/v3/enrollment/enrol/byAadhaar\",\"summary\":\"Create ABHA - Demographic authentication (Demo Auth)\",\"tag\":\"Create ABHA - Demo Auth\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_enrollment_enrol_byaadhaar_face\",\"method\":\"POST\",\"path\":\"/abha/api/v3/enrollment/enrol/byAadhaar\",\"summary\":\"Create ABHA - Aadhaar face authentication\",\"tag\":\"Create ABHA - Face Authentication\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_enrollment_enrol_byaadhaar_fingerprint\",\"method\":\"POST\",\"path\":\"/abha/api/v3/enrollment/enrol/byAadhaar\",\"summary\":\"Create ABHA - Aadhaar fingerprint (bio)\",\"tag\":\"Create ABHA - Fingerprint\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_enrollment_enrol_byaadhaar_iris\",\"method\":\"POST\",\"path\":\"/abha/api/v3/enrollment/enrol/byAadhaar\",\"summary\":\"Create ABHA - Aadhaar IRIS\",\"tag\":\"Create ABHA - IRIS\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_enrollment_enrol_byaadhaar_otp\",\"method\":\"POST\",\"path\":\"/abha/api/v3/enrollment/enrol/byAadhaar\",\"summary\":\"Create ABHA - verify Aadhaar OTP\",\"tag\":\"Create ABHA - Aadhaar OTP\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_enrollment_enrol_capturepid_create_abha_face_a_417d5e\",\"method\":\"POST\",\"path\":\"/abha/api/v3/enrollment/enrol/capturePID\",\"summary\":\"Face auth - capture PID / track status\",\"tag\":\"Create ABHA - Face Authentication\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_enrollment_enrol_capturepid_find_abha_face\",\"method\":\"POST\",\"path\":\"/abha/api/v3/enrollment/enrol/capturePID\",\"summary\":\"Face auth - capture PID / track status\",\"tag\":\"Find ABHA - Face\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_enrollment_enrol_capturepid_login_face_auth_qr_v3_1\",\"method\":\"POST\",\"path\":\"/abha/api/v3/enrollment/enrol/capturePID\",\"summary\":\"Face auth - capture PID / track status\",\"tag\":\"Login - Face Auth QR (v3.1)\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_enrollment_request_otp_aadhaar_otp\",\"method\":\"POST\",\"path\":\"/abha/api/v3/enrollment/request/otp\",\"summary\":\"Send Aadhaar OTP for ABHA enrolment\",\"tag\":\"Create ABHA - Aadhaar OTP\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_enrollment_request_otp_email_verify_create_abh_4833d9\",\"method\":\"POST\",\"path\":\"/abha/api/v3/enrollment/request/otp\",\"summary\":\"After ABHA creation - send OTP to verify email (optional)\",\"tag\":\"Create ABHA - Fingerprint\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_enrollment_request_otp_email_verify_create_abh_880d7e\",\"method\":\"POST\",\"path\":\"/abha/api/v3/enrollment/request/otp\",\"summary\":\"After ABHA creation - send OTP to verify email (optional)\",\"tag\":\"Create ABHA - Face Authentication\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_enrollment_request_otp_email_verify_create_abh_ddbed1\",\"method\":\"POST\",\"path\":\"/abha/api/v3/enrollment/request/otp\",\"summary\":\"After ABHA creation - send OTP to verify email (optional)\",\"tag\":\"Create ABHA - Aadhaar OTP\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_enrollment_request_otp_email_verify_create_abha_iris\",\"method\":\"POST\",\"path\":\"/abha/api/v3/enrollment/request/otp\",\"summary\":\"After ABHA creation - send OTP to verify email (optional)\",\"tag\":\"Create ABHA - IRIS\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_enrollment_request_otp_mobile_verify_create_ab_1b66bb\",\"method\":\"POST\",\"path\":\"/abha/api/v3/enrollment/request/otp\",\"summary\":\"After ABHA creation - send OTP to verify mobile (optional)\",\"tag\":\"Create ABHA - Aadhaar OTP\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_enrollment_request_otp_mobile_verify_create_ab_6474ce\",\"method\":\"POST\",\"path\":\"/abha/api/v3/enrollment/request/otp\",\"summary\":\"After ABHA creation - send OTP to verify mobile (optional)\",\"tag\":\"Create ABHA - Face Authentication\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_enrollment_request_otp_mobile_verify_create_ab_64b04e\",\"method\":\"POST\",\"path\":\"/abha/api/v3/enrollment/request/otp\",\"summary\":\"After ABHA creation - send OTP to verify mobile (optional)\",\"tag\":\"Create ABHA - Fingerprint\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_enrollment_request_otp_mobile_verify_create_abha_iris\",\"method\":\"POST\",\"path\":\"/abha/api/v3/enrollment/request/otp\",\"summary\":\"After ABHA creation - send OTP to verify mobile (optional)\",\"tag\":\"Create ABHA - IRIS\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_phr_web_login_abha_request_otp_aadhaar_otp\",\"method\":\"POST\",\"path\":\"/abha/api/v3/phr/web/login/abha/request/otp\",\"summary\":\"ABHA address login via Aadhaar OTP - send OTP\",\"tag\":\"ABHA Address Login - Aadhaar OTP\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_phr_web_login_abha_request_otp_fingerprint\",\"method\":\"POST\",\"path\":\"/abha/api/v3/phr/web/login/abha/request/otp\",\"summary\":\"ABHA address login via Fingerprint - send authentication request\",\"tag\":\"ABHA Address Login - Fingerprint\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_phr_web_login_abha_request_otp_iris\",\"method\":\"POST\",\"path\":\"/abha/api/v3/phr/web/login/abha/request/otp\",\"summary\":\"ABHA address login via IRIS - send authentication request\",\"tag\":\"ABHA Address Login - IRIS\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_phr_web_login_abha_request_otp_mobile_otp\",\"method\":\"POST\",\"path\":\"/abha/api/v3/phr/web/login/abha/request/otp\",\"summary\":\"ABHA address login via Mobile OTP - send OTP\",\"tag\":\"ABHA Address Login - Mobile OTP\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_phr_web_login_abha_search_abha_address_login_a_de8184\",\"method\":\"POST\",\"path\":\"/abha/api/v3/phr/web/login/abha/search\",\"summary\":\"Search ABHA address (auth methods)\",\"tag\":\"ABHA Address Login - Aadhaar OTP\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_phr_web_login_abha_search_abha_address_login_m_27a20f\",\"method\":\"POST\",\"path\":\"/abha/api/v3/phr/web/login/abha/search\",\"summary\":\"Search ABHA address (auth methods)\",\"tag\":\"ABHA Address Login - Mobile OTP\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_phr_web_login_abha_verify_aadhaar_otp\",\"method\":\"POST\",\"path\":\"/abha/api/v3/phr/web/login/abha/verify\",\"summary\":\"ABHA address login via Aadhaar OTP - verify\",\"tag\":\"ABHA Address Login - Aadhaar OTP\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_phr_web_login_abha_verify_fingerprint\",\"method\":\"POST\",\"path\":\"/abha/api/v3/phr/web/login/abha/verify\",\"summary\":\"ABHA address login via Fingerprint - verify\",\"tag\":\"ABHA Address Login - Fingerprint\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_phr_web_login_abha_verify_iris\",\"method\":\"POST\",\"path\":\"/abha/api/v3/phr/web/login/abha/verify\",\"summary\":\"ABHA address login via IRIS - verify\",\"tag\":\"ABHA Address Login - IRIS\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_phr_web_login_abha_verify_mobile_otp\",\"method\":\"POST\",\"path\":\"/abha/api/v3/phr/web/login/abha/verify\",\"summary\":\"ABHA address login via Mobile OTP - verify\",\"tag\":\"ABHA Address Login - Mobile OTP\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_account_abha_search_find_abha_aadhaar_otp\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/account/abha/search\",\"summary\":\"Search ABHA by mobile\",\"tag\":\"Find ABHA - Aadhaar OTP\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_account_abha_search_find_abha_face\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/account/abha/search\",\"summary\":\"Search ABHA by mobile\",\"tag\":\"Find ABHA - Face\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_account_abha_search_find_abha_fingerprint\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/account/abha/search\",\"summary\":\"Search ABHA by mobile\",\"tag\":\"Find ABHA - Fingerprint\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_account_abha_search_find_abha_iris\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/account/abha/search\",\"summary\":\"Search ABHA by mobile\",\"tag\":\"Find ABHA - IRIS\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_account_abha_search_find_abha_mobile_otp\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/account/abha/search\",\"summary\":\"Search ABHA by mobile\",\"tag\":\"Find ABHA - Mobile OTP\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_account_request_otp_child_kyc_benefit__ec9035\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/account/request/otp\",\"summary\":\"Child ABHA KYC - send Aadhaar OTP\",\"tag\":\"Benefit - Child ABHA\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_account_request_otp_child_kyc_child_abha\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/account/request/otp\",\"summary\":\"Child ABHA KYC - send Aadhaar OTP\",\"tag\":\"Child ABHA\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_account_request_otp_re_kyc\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/account/request/otp\",\"summary\":\"Re-KYC - send Aadhaar OTP\",\"tag\":\"Profile - Re-KYC\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_account_request_otp_update_mobile\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/account/request/otp\",\"summary\":\"Update mobile - send OTP\",\"tag\":\"Profile - Update Mobile\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_account_verify_child_kyc_benefit_child_abha\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/account/verify\",\"summary\":\"Child ABHA KYC - verify Aadhaar OTP\",\"tag\":\"Benefit - Child ABHA\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_account_verify_child_kyc_child_abha\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/account/verify\",\"summary\":\"Child ABHA KYC - verify Aadhaar OTP\",\"tag\":\"Child ABHA\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_account_verify_re_kyc\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/account/verify\",\"summary\":\"Re-KYC - verify Aadhaar OTP\",\"tag\":\"Profile - Re-KYC\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_account_verify_update_mobile\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/account/verify\",\"summary\":\"Update mobile - verify OTP\",\"tag\":\"Profile - Update Mobile\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_benefit_linkanddelink_abha_number\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/benefit/linkAndDelink\",\"summary\":\"Link / De-link benefit using ABHA number\",\"tag\":\"Benefit - Link / De-link\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_benefit_linkanddelink_x_token\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/benefit/linkAndDelink\",\"summary\":\"Link / De-link benefit using X-token\",\"tag\":\"Benefit - Link / De-link\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_benefit_linkanddelink_xmluid\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/benefit/linkAndDelink\",\"summary\":\"Link / De-link benefit using xmlUid\",\"tag\":\"Benefit - Link / De-link\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_benefit_search_abha_number\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/benefit/search\",\"summary\":\"Benefit search by ABHA number\",\"tag\":\"Benefit - Search\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_benefit_search_xmluid\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/benefit/search\",\"summary\":\"Benefit search by xmlUid\",\"tag\":\"Benefit - Search\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_login_request_otp_aadhaar\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/login/request/otp\",\"summary\":\"Login via Aadhaar number - send Aadhaar OTP\",\"tag\":\"Login - Aadhaar Number\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_login_request_otp_abha_number_aadhaar_otp\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/login/request/otp\",\"summary\":\"Login via ABHA number - send Aadhaar OTP\",\"tag\":\"Login - ABHA Number (Aadhaar OTP)\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_login_request_otp_abha_number_abha_otp\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/login/request/otp\",\"summary\":\"Login via ABHA number - send ABHA (mobile) OTP\",\"tag\":\"Login - ABHA Number (Mobile OTP)\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_login_request_otp_biometric_fingerprint\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/login/request/otp\",\"summary\":\"Login via Biometric (Fingerprint) - send authentication request\",\"tag\":\"Login - Biometric v3 (Fingerprint)\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_login_request_otp_biometric_iris\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/login/request/otp\",\"summary\":\"Login via Biometric (Iris) - send authentication request\",\"tag\":\"Login - Biometric v3 (Iris)\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_login_request_otp_find_abha_aadhaar\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/login/request/otp\",\"summary\":\"Find ABHA via Aadhaar OTP - send OTP\",\"tag\":\"Find ABHA - Aadhaar OTP\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_login_request_otp_find_abha_face\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/login/request/otp\",\"summary\":\"Find ABHA via Face - send authentication request\",\"tag\":\"Find ABHA - Face\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_login_request_otp_find_abha_fingerprint\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/login/request/otp\",\"summary\":\"Find ABHA via Fingerprint - send authentication request\",\"tag\":\"Find ABHA - Fingerprint\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_login_request_otp_find_abha_iris\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/login/request/otp\",\"summary\":\"Find ABHA via IRIS - send authentication request\",\"tag\":\"Find ABHA - IRIS\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_login_request_otp_find_abha_mobile\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/login/request/otp\",\"summary\":\"Find ABHA via Mobile - send OTP\",\"tag\":\"Find ABHA - Mobile OTP\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_login_request_otp_forgot_abha_aadhaar\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/login/request/otp\",\"summary\":\"Forgot ABHA via Aadhaar - send OTP\",\"tag\":\"Forgot ABHA - Aadhaar OTP\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_login_request_otp_forgot_abha_mobile\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/login/request/otp\",\"summary\":\"Forgot ABHA via Mobile - send OTP\",\"tag\":\"Forgot ABHA - Mobile OTP\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_login_request_otp_mobile\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/login/request/otp\",\"summary\":\"Login via Mobile number - send OTP\",\"tag\":\"Login - Mobile Number\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_login_verify_aadhaar_otp\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/login/verify\",\"summary\":\"Login via Aadhaar number - verify Aadhaar OTP\",\"tag\":\"Login - Aadhaar Number\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_login_verify_abha_number_aadhaar_otp\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/login/verify\",\"summary\":\"Login via ABHA number - verify Aadhaar OTP\",\"tag\":\"Login - ABHA Number (Aadhaar OTP)\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_login_verify_abha_number_abha_otp\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/login/verify\",\"summary\":\"Login via ABHA number - verify ABHA (mobile) OTP\",\"tag\":\"Login - ABHA Number (Mobile OTP)\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_login_verify_biometric_fingerprint\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/login/verify\",\"summary\":\"Login via Biometric (Fingerprint) - verify\",\"tag\":\"Login - Biometric v3 (Fingerprint)\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_login_verify_biometric_iris\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/login/verify\",\"summary\":\"Login via Biometric (Iris) - verify\",\"tag\":\"Login - Biometric v3 (Iris)\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_login_verify_find_abha_aadhaar\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/login/verify\",\"summary\":\"Find ABHA via Aadhaar OTP - verify OTP\",\"tag\":\"Find ABHA - Aadhaar OTP\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_login_verify_find_abha_face\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/login/verify\",\"summary\":\"Find ABHA via Face - verify\",\"tag\":\"Find ABHA - Face\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_login_verify_find_abha_fingerprint\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/login/verify\",\"summary\":\"Find ABHA via Fingerprint - verify\",\"tag\":\"Find ABHA - Fingerprint\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_login_verify_find_abha_iris\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/login/verify\",\"summary\":\"Find ABHA via IRIS - verify\",\"tag\":\"Find ABHA - IRIS\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_login_verify_find_abha_mobile\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/login/verify\",\"summary\":\"Find ABHA via Mobile - verify OTP\",\"tag\":\"Find ABHA - Mobile OTP\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_login_verify_forgot_abha_aadhaar\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/login/verify\",\"summary\":\"Forgot ABHA via Aadhaar - verify OTP\",\"tag\":\"Forgot ABHA - Aadhaar OTP\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_login_verify_forgot_abha_mobile\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/login/verify\",\"summary\":\"Forgot ABHA via Mobile - verify OTP\",\"tag\":\"Forgot ABHA - Mobile OTP\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_login_verify_mobile_otp\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/login/verify\",\"summary\":\"Login via Mobile number - verify OTP\",\"tag\":\"Login - Mobile Number\",\"module\":\"m1\"},{\"operation_id\":\"m1_post_v3_profile_login_verify_user\",\"method\":\"POST\",\"path\":\"/abha/api/v3/profile/login/verify/user\",\"summary\":\"Login via Mobile number - verify user (select ABHA)\",\"tag\":\"Login - Mobile Number\",\"module\":\"m1\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"doc_path\":\"/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-profile-account-request-otp-update-mobile\",\"operation_id\":\"m1_post_v3_profile_account_request_otp_update_mobile\",\"spec\":{\"description\":\"Starts a mobile number change for a logged-in ABHA user (`X-token`). ABDM sends an OTP to the **new** mobile number.\\n\\n**Endpoint:** `POST /abha/api/v3/profile/account/request/otp`\\n\\n**Flow:** **Profile - Update Mobile** - step 1 of 2\\n- Previous: none (first call of this flow)\\n- Next: *Update mobile - verify OTP*\\n\\n**Headers** (plus `Authorization: Bearer <gateway token>`):\\n\\n| Header | Required | Description |\\n|---|---|---|\\n| X-token | yes | User token (`Bearer <token>`) received after ABHA creation / login. |\\n| REQUEST-ID | yes | Unique UUID for every request. |\\n| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |\\n\\n**Request body for this use case:**\\n\\n| Field | Value / Type | Required | Description |\\n|---|---|---|---|\\n| `scope` | `[\\\"abha-profile\\\", \\\"mobile-verify\\\"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |\\n| `loginHint` | `\\\"mobile\\\"` | yes | Type of identifier sent in `loginId`. |\\n| `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |\\n| `otpSystem` | `\\\"abdm\\\"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |\",\"operationId\":\"m1_post_v3_profile_account_request_otp_update_mobile\",\"parameters\":[{\"description\":\"User token (`Bearer <token>`) received after ABHA creation / login.\",\"example\":\"Bearer {{X-token}}\",\"in\":\"header\",\"name\":\"X-token\",\"required\":true,\"schema\":{\"type\":\"string\"}},{\"description\":\"Unique UUID for every request.\",\"example\":\"18235d89-cb13-479d-ad71-7a57d5f669a8\",\"in\":\"header\",\"name\":\"REQUEST-ID\",\"required\":true,\"schema\":{\"format\":\"uuid\",\"type\":\"string\"}},{\"description\":\"Current UTC timestamp in ISO-8601 format.\",\"example\":\"2022-10-06T15:10:00.587Z\",\"in\":\"header\",\"name\":\"TIMESTAMP\",\"required\":true,\"schema\":{\"format\":\"date-time\",\"type\":\"string\"}}],\"requestBody\":{\"content\":{\"application/json\":{\"examples\":{\"Update mobile - send OTP\":{\"summary\":\"Update mobile - send OTP\",\"value\":{\"loginHint\":\"mobile\",\"loginId\":\"{{encrypted mobile number}}\",\"otpSystem\":\"abdm\",\"scope\":[\"abha-profile\",\"mobile-verify\"]}}},\"schema\":{\"properties\":{\"loginHint\":{\"description\":\"Type of identifier sent in `loginId`.\",\"enum\":[\"mobile\"],\"type\":\"string\"},\"loginId\":{\"description\":\"Identifier value, RSA-encrypted with the ABHA public certificate.\",\"type\":\"string\"},\"otpSystem\":{\"description\":\"System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM).\",\"enum\":[\"abdm\"],\"type\":\"string\"},\"scope\":{\"description\":\"Scope that selects this use case. Send exactly the values listed for this API.\",\"example\":[\"abha-profile\",\"mobile-verify\"],\"items\":{\"enum\":[\"abha-profile\",\"mobile-verify\"],\"type\":\"string\"},\"maxItems\":2,\"minItems\":2,\"type\":\"array\"}},\"required\":[\"scope\",\"loginHint\",\"loginId\",\"otpSystem\"],\"type\":\"object\"}}},\"required\":true},\"responses\":{\"200\":{\"content\":{\"application/json\":{\"examples\":{\"Update Mobile-Positive flow\":{\"value\":{\"message\":\"OTP sent to mobile number ending with ******0903\",\"txnId\":\"1c5fa806-67e1-4ad5-a848-0c4d805cd824\"}}},\"schema\":{\"properties\":{\"message\":{\"example\":\"OTP is sent to Aadhaar registered mobile number ending with *******0903\",\"type\":\"string\"},\"txnId\":{\"example\":\"c2095ea0-52ed-44ee-b8fc-02375b874e7a\",\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Success: Update Mobile-Positive flow\"},\"400\":{\"content\":{\"application/json\":{\"examples\":{\"Update Mobile- Invalid Login Hint\":{\"value\":{\"loginHint\":\"Invalid Login Hint\",\"timestamp\":\"2024-05-10T15:45:28.000Z\"}},\"Update Mobile- Invalid LoginId\":{\"value\":{\"loginId\":\"Invalid LoginId\",\"timestamp\":\"2024-05-10T15:44:28.000Z\"}},\"Update Mobile- Invalid Scope\":{\"value\":{\"scope\":\"Invalid Scope\",\"timestamp\":\"2024-05-10T15:46:48.000Z\"}},\"Update Mobile-Already verified mobile number\":{\"value\":{\"message\":\"This mobile number is already verified. Please enter a different mobile number.\",\"timestamp\":\"2024-05-10T15:45:57.000Z\"}}},\"schema\":{\"anyOf\":[{\"example\":{\"Invalid Scope\":\"Invalid Scope\",\"timestamp\":\"2024-05-10T14:33:06.000Z\"},\"properties\":{\"Invalid Scope\":{\"example\":\"Invalid Scope\",\"type\":\"string\"},\"timestamp\":{\"example\":\"2024-05-10T14:33:06.000Z\",\"format\":\"date-time\",\"type\":\"string\"}},\"type\":\"object\"},{\"example\":{\"Invalid LoginId\":\"Invalid LoginId\",\"timestamp\":\"2024-05-10T14:33:06.000Z\"},\"properties\":{\"Invalid LoginId\":{\"example\":\"Invalid LoginId\",\"type\":\"string\"},\"timestamp\":{\"example\":\"2024-05-10T14:33:06.000Z\",\"format\":\"date-time\",\"type\":\"string\"}},\"type\":\"object\"},{\"example\":{\"Invalid Login Hint\":\"Invalid Login Hint\",\"timestamp\":\"2024-05-10T14:33:06.000Z\"},\"properties\":{\"Invalid Login Hint\":{\"example\":\"Invalid Login Hint\",\"type\":\"string\"},\"timestamp\":{\"example\":\"2024-05-10T14:33:06.000Z\",\"format\":\"date-time\",\"type\":\"string\"}},\"type\":\"object\"},{\"example\":{\"Invalid X-token\":\"Invalid X-token\"},\"properties\":{\"Invalid X-token\":{\"example\":\"Invalid X-token\",\"type\":\"string\"},\"timestamp\":{\"example\":\"2024-05-10T14:33:06.000Z\",\"format\":\"date-time\",\"type\":\"string\"}},\"type\":\"object\"},{\"example\":{\"Invalid X-token\":\"Invalid X-token\",\"timestamp\":\"2024-05-10T14:33:06.000Z\"},\"properties\":{\"Invalid X-token\":{\"example\":\"Invalid X-token\",\"type\":\"string\"},\"timestamp\":{\"example\":\"2024-05-10T14:33:06.000Z\",\"format\":\"date-time\",\"type\":\"string\"}},\"type\":\"object\"}]}}},\"description\":\"Bad Request (request validation failed): Update Mobile- Invalid Scope; Update Mobile- Invalid LoginId; Update Mobile- Invalid Login Hint; Update Mobile-Already verified mobile number\"},\"401\":{\"content\":{\"application/json\":{\"examples\":{\"Invalid access token\":{\"summary\":\"Invalid access token\",\"value\":{\"code\":\"900901\",\"description\":\"Invalid JWT token. Make sure you have provided the correct security credentials\",\"message\":\"Invalid Credentials\"}}},\"schema\":{\"properties\":{\"code\":{\"example\":\"900901\",\"type\":\"string\"},\"description\":{\"example\":\"Invalid JWT token. Make sure you have provided the correct security credentials\",\"type\":\"string\"},\"message\":{\"example\":\"Invalid Credentials\",\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Unauthorized (invalid / expired gateway token, X-token or benefit access): Invalid access token\"},\"500\":{\"description\":\"Internal Server Error.\"}},\"security\":[{\"bearerAuth\":[]}],\"summary\":\"Update mobile - send OTP\",\"tags\":[\"Profile - Update Mobile\"],\"x-abdm-nha-operation-id\":\"profileRequestOtpMobile\",\"x-abdm-title\":\"Update mobile - send OTP\",\"x-actual-path\":\"/abha/api/v3/profile/account/request/otp\",\"x-journey\":{\"journey\":\"Profile - Update Mobile\",\"kind\":\"flow\",\"of\":2,\"step\":1},\"x-stoplight\":{\"id\":\"ylrpfy8miqlmm\"},\"x-use-case\":\"update-mobile\"}}\n{\"catalogue_version\":\"2026.09.16\",\"doc_path\":\"/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-profile-account-verify-update-mobile\",\"operation_id\":\"m1_post_v3_profile_account_verify_update_mobile\",\"spec\":{\"description\":\"Verifies the OTP sent by *Update mobile - send OTP* and updates the mobile number on the ABHA profile.\\n\\n**Endpoint:** `POST /abha/api/v3/profile/account/verify`\\n\\n**Flow:** **Profile - Update Mobile** - step 2 of 2\\n- Previous: *Update mobile - send OTP*\\n- Next: none (last call of this flow)\\n\\n**Headers** (plus `Authorization: Bearer <gateway token>`):\\n\\n| Header | Required | Description |\\n|---|---|---|\\n| X-token | yes | User token (`Bearer <token>`) received after ABHA creation / login. |\\n| REQUEST-ID | yes | Unique UUID for every request. |\\n| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |\\n\\n**Request body for this use case:**\\n\\n| Field | Value / Type | Required | Description |\\n|---|---|---|---|\\n| `scope` | `[\\\"abha-profile\\\", \\\"mobile-verify\\\"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |\\n| `authData` | object | yes | Authentication payload for this use case. |\\n| `authData.authMethods` | `[\\\"otp\\\"]` | yes | Authentication method used in this step. |\\n| `authData.otp` | object | yes | OTP authentication block. |\\n| `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |\\n| `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |\",\"operationId\":\"m1_post_v3_profile_account_verify_update_mobile\",\"parameters\":[{\"description\":\"User token (`Bearer <token>`) received after ABHA creation / login.\",\"example\":\"Bearer {{X-token}}\",\"in\":\"header\",\"name\":\"X-token\",\"required\":true,\"schema\":{\"type\":\"string\"}},{\"description\":\"Unique UUID for every request.\",\"example\":\"18235d89-cb13-479d-ad71-7a57d5f669a8\",\"in\":\"header\",\"name\":\"REQUEST-ID\",\"required\":true,\"schema\":{\"format\":\"uuid\",\"type\":\"string\"}},{\"description\":\"Current UTC timestamp in ISO-8601 format.\",\"example\":\"2022-10-06T15:10:00.587Z\",\"in\":\"header\",\"name\":\"TIMESTAMP\",\"required\":true,\"schema\":{\"format\":\"date-time\",\"type\":\"string\"}}],\"requestBody\":{\"content\":{\"application/json\":{\"examples\":{\"Update mobile - verify OTP\":{\"summary\":\"Update mobile - verify OTP\",\"value\":{\"authData\":{\"authMethods\":[\"otp\"],\"otp\":{\"otpValue\":\"{{encrypted otp}}\",\"txnId\":\"{{txnId}}\"}},\"scope\":[\"abha-profile\",\"mobile-verify\"]}}},\"schema\":{\"properties\":{\"authData\":{\"description\":\"Authentication payload for this use case.\",\"properties\":{\"authMethods\":{\"description\":\"Authentication method used in this step.\",\"items\":{\"enum\":[\"otp\"],\"type\":\"string\"},\"maxItems\":1,\"minItems\":1,\"type\":\"array\"},\"otp\":{\"description\":\"OTP authentication block.\",\"properties\":{\"otpValue\":{\"description\":\"OTP received by the user, RSA-encrypted.\",\"type\":\"string\"},\"txnId\":{\"description\":\"Transaction ID returned by the previous step of this flow.\",\"type\":\"string\"}},\"required\":[\"txnId\",\"otpValue\"],\"type\":\"object\"}},\"required\":[\"authMethods\",\"otp\"],\"type\":\"object\"},\"scope\":{\"description\":\"Scope that selects this use case. Send exactly the values listed for this API.\",\"example\":[\"abha-profile\",\"mobile-verify\"],\"items\":{\"enum\":[\"abha-profile\",\"mobile-verify\"],\"type\":\"string\"},\"maxItems\":2,\"minItems\":2,\"type\":\"array\"}},\"required\":[\"scope\",\"authData\"],\"type\":\"object\"}}},\"required\":true},\"responses\":{\"200\":{\"content\":{\"application/json\":{\"examples\":{\"Update Mobile- Positive Flow\":{\"value\":{\"accounts\":[{\"ABHANumber\":\"<ABHA_NUMBER>\"}],\"authResult\":\"success\",\"message\":\"Mobile Number linked successfully\",\"txnId\":\"01bb3a4c-4588-4734-aff4-23d3978e50be\"}}},\"schema\":{\"properties\":{\"accounts\":{\"items\":{\"properties\":{\"ABHANumber\":{\"example\":\"<ABHA_NUMBER>\",\"type\":\"string\"}},\"type\":\"object\"},\"type\":\"array\"},\"authResult\":{\"example\":\"success\",\"type\":\"string\"},\"message\":{\"example\":\"Email linked successfully,Password updated successfully,Re-kyc done successfully,Mobile Number linked successfully\",\"type\":\"string\"},\"txnId\":{\"example\":\"8730eae6-8c1e-45fb-a087-89d79a30b37e\",\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Success: Update Mobile- Positive Flow\"},\"400\":{\"content\":{\"application/json\":{\"examples\":{\"Update Mobile- Invalid Auth Methods\":{\"value\":{\"authMethods\":\"Invalid Auth Methods\",\"timestamp\":\"2024-05-10T11:40:16.000Z\"}},\"Update Mobile- Invalid OTP Value\":{\"value\":{\"otpValue\":\"Invalid OTP Value\",\"timestamp\":\"2024-05-10T15:35:20.000Z\"}},\"Update Mobile- Invalid Scope\":{\"value\":{\"scope\":\"Invalid Scope\",\"timestamp\":\"2024-05-10T11:13:04.000Z\"}},\"Update Mobile- Invalid Transaction Id\":{\"value\":{\"timestamp\":\"2024-05-10T12:45:25.000Z\",\"txnId\":\"Invalid Transaction Id\"}},\"Update Mobile- Invalid X-token\":{\"value\":{\"message\":\"Invalid X-token\",\"timestamp\":\"2024-05-10T14:53:18.000Z\"}}},\"schema\":{\"anyOf\":[{\"example\":{\"Invalid Scope\":\"Invalid Scope\",\"timestamp\":\"2024-05-10T14:33:06.000Z\"},\"properties\":{\"Invalid Scope\":{\"example\":\"Invalid Scope\",\"type\":\"string\"},\"timestamp\":{\"example\":\"2024-05-10T14:33:06.000Z\",\"format\":\"date-time\",\"type\":\"string\"}},\"type\":\"object\"},{\"example\":{\"Invalid LoginId\":\"Invalid LoginId\",\"timestamp\":\"2024-05-10T14:33:06.000Z\"},\"properties\":{\"Invalid LoginId\":{\"example\":\"Invalid LoginId\",\"type\":\"string\"},\"timestamp\":{\"example\":\"2024-05-10T14:33:06.000Z\",\"format\":\"date-time\",\"type\":\"string\"}},\"type\":\"object\"},{\"example\":{\"Invalid Login Hint\":\"Invalid Login Hint\",\"timestamp\":\"2024-05-10T14:33:06.000Z\"},\"properties\":{\"Invalid Login Hint\":{\"example\":\"Invalid Login Hint\",\"type\":\"string\"},\"timestamp\":{\"example\":\"2024-05-10T14:33:06.000Z\",\"format\":\"date-time\",\"type\":\"string\"}},\"type\":\"object\"},{\"example\":{\"Invalid X-token\":\"Invalid X-token\"},\"properties\":{\"Invalid X-token\":{\"example\":\"Invalid X-token\",\"type\":\"string\"},\"timestamp\":{\"example\":\"2024-05-10T14:33:06.000Z\",\"format\":\"date-time\",\"type\":\"string\"}},\"type\":\"object\"},{\"example\":{\"Invalid X-token\":\"Invalid X-token\",\"timestamp\":\"2024-05-10T14:33:06.000Z\"},\"properties\":{\"timestamp\":{\"example\":\"2024-05-10T14:33:06.000Z\",\"format\":\"date-time\",\"type\":\"string\"},\"txnId\":{\"example\":\"Invalid Transaction Id\",\"type\":\"string\"}},\"type\":\"object\"},{\"example\":{\"timestamp\":\"2024-05-10T14:33:06.000Z\",\"txnId\":\"Invalid Transaction Id\"},\"properties\":{\"timestamp\":{\"example\":\"2024-05-10T14:33:06.000Z\",\"format\":\"date-time\",\"type\":\"string\"},\"txnId\":{\"example\":\"Invalid Transaction Id\",\"type\":\"string\"}},\"type\":\"object\"},{\"example\":{\"authMethods\":\"Invalid Auth Methods\",\"timestamp\":\"2024-05-10T14:33:06.000Z\"},\"properties\":{\"authMethods\":{\"example\":\"Invalid Auth Methods\",\"type\":\"string\"},\"timestamp\":{\"example\":\"2024-05-10T14:33:06.000Z\",\"format\":\"date-time\",\"type\":\"string\"}},\"type\":\"object\"},{\"example\":{\"otpValue\":\"Invalid OTP Value\",\"timestamp\":\"2024-05-10T14:33:06.000Z\"},\"properties\":{\"otpValue\":{\"example\":\"Invalid OTP Value\",\"type\":\"string\"},\"timestamp\":{\"example\":\"2024-05-10T14:33:06.000Z\",\"format\":\"date-time\",\"type\":\"string\"}},\"type\":\"object\"},{\"example\":{\"password\":\"New & Confirm Password is not same\",\"timestamp\":\"2024-05-10T14:33:06.000Z\"},\"properties\":{\"password\":{\"example\":\"New & Confirm Password is not same\",\"type\":\"string\"},\"timestamp\":{\"example\":\"2024-05-10T14:33:06.000Z\",\"format\":\"date-time\",\"type\":\"string\"}},\"type\":\"object\"},{\"example\":{\"New Password\":\"Invalid New Password\",\"timestamp\":\"2024-05-10T14:33:06.000Z\"},\"properties\":{\"New Password\":{\"example\":\"Invalid New Password\",\"type\":\"string\"},\"timestamp\":{\"example\":\"2024-05-10T14:33:06.000Z\",\"format\":\"date-time\",\"type\":\"string\"}},\"type\":\"object\"},{\"example\":{\"password\":\"Invalid Password\",\"timestamp\":\"2024-05-10T14:33:06.000Z\"},\"properties\":{\"password\":{\"example\":\"Invalid Password\",\"type\":\"string\"},\"timestamp\":{\"example\":\"2024-05-10T14:33:06.000Z\",\"format\":\"date-time\",\"type\":\"string\"}},\"type\":\"object\"}]}}},\"description\":\"Bad Request (request validation failed): Update Mobile- Invalid Transaction Id; Update Mobile- Invalid Scope; Update Mobile- Invalid Auth Methods; Update Mobile- Invalid X-token; Update Mobile- Invalid OTP Value\"},\"401\":{\"content\":{\"application/json\":{\"examples\":{\"Update Mobile- Invalid access token\":{\"value\":{\"code\":\"900901\",\"description\":\"Invalid Credentials. Make sure you have provided the correct security credentials\",\"message\":\"Invalid Credentials\"}},\"Update Mobile- X-token expired\":{\"value\":{\"message\":\"X-token expired\",\"timestamp\":\"2024-05-10T14:51:16.000Z\"}}},\"schema\":{\"anyOf\":[{\"properties\":{\"code\":{\"example\":\"900901\",\"type\":\"string\"},\"description\":{\"example\":\"Invalid Credentials. Make sure you have provided the correct security credentials\",\"type\":\"string\"},\"message\":{\"example\":\"Invalid Credentials\",\"type\":\"string\"}},\"type\":\"object\"},{\"properties\":{\"message\":{\"example\":\"X-token expired\",\"type\":\"string\"},\"timestamp\":{\"example\":\"2023-01-18T18:01:36.000Z\",\"format\":\"date-time\",\"type\":\"string\"}},\"type\":\"object\"}]}}},\"description\":\"Unauthorized (invalid / expired gateway token, X-token or benefit access): Update Mobile- Invalid access token; Update Mobile- X-token expired\"},\"422\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"message\":{\"example\":\"UIDAI Error code : 400 : Invalid Aadhaar OTP value.\",\"type\":\"string\"},\"timestamp\":{\"example\":\"2023-01-11T00:14:02.000Z\",\"format\":\"date-time\",\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Unprocessable Entity (business rule or UIDAI failure).\"},\"500\":{\"description\":\"Internal Server Error.\"}},\"security\":[{\"bearerAuth\":[]}],\"summary\":\"Update mobile - verify OTP\",\"tags\":[\"Profile - Update Mobile\"],\"x-abdm-nha-operation-id\":\"profileVerifyMobileOtp\",\"x-abdm-title\":\"Update mobile - verify OTP\",\"x-actual-path\":\"/abha/api/v3/profile/account/verify\",\"x-journey\":{\"journey\":\"Profile - Update Mobile\",\"kind\":\"flow\",\"of\":2,\"step\":2},\"x-stoplight\":{\"id\":\"lb98xilhhv4fb\"},\"x-use-case\":\"update-mobile\"}}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:07:29.987Z",
+  "usage": {
+    "input_tokens": 70,
+    "output_tokens": 1607,
+    "cache_read_input_tokens": 103412,
+    "cache_creation_input_tokens": 32023,
+    "num_turns": 8,
+    "duration_ms": 23312,
+    "cost_usd_equivalent": 0.0824922
+  }
+}

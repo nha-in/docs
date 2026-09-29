@@ -53,6 +53,7 @@
     "eval:askai:report": "cd mcp && go run ./cmd/askai-eval report -cases ../evals/askai/cases",
     "eval:askai:calibrate": "cd mcp && go run ./cmd/askai-eval calibrate",
     "eval:agent": "node scripts/eval-agent.mjs",
+    "eval:mcp-agent": "node scripts/eval-mcp-agent.mjs",
     "eval:contract": "cd mcp && go run ./cmd/indexer -catalogue ../catalogue -out ${TMPDIR:-/tmp}/abdm-contract.db && go run ./cmd/contract -db ${TMPDIR:-/tmp}/abdm-contract.db"
   },
   "devDependencies": {

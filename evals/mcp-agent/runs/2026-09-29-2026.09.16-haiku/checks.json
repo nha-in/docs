@@ -1,0 +1,1313 @@
+[
+  {
+    "case_id": "abstain-abdm-pricing-01",
+    "failures": null,
+    "tool_calls": 2,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "abstain-hpr-bulk-data-01",
+    "failures": null,
+    "tool_calls": 8,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "abstain-m3-postman-collection-01",
+    "failures": null,
+    "tool_calls": 6,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "abstain-nha-phone-support-01",
+    "failures": null,
+    "tool_calls": 2,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "abstain-pune-hospitals-01",
+    "failures": null,
+    "tool_calls": 0,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "abstain-python-sdk-01",
+    "failures": null,
+    "tool_calls": 7,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "abstain-sandbox-sla-01",
+    "failures": null,
+    "tool_calls": 4,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "abstain-uhi-booking-integration-01",
+    "failures": null,
+    "tool_calls": 9,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "abstain-write-my-m2-code-01",
+    "failures": null,
+    "tool_calls": 0,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "confusable-hiecm-m1-abha-number-vs-address-01",
+    "failures": [
+      "expected_source: hiecm.concept.abha-number-and-address absent"
+    ],
+    "tool_calls": 4,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "confusable-hiecm-m1-t-token-vs-x-token-01",
+    "failures": [
+      "expected_source: hiecm.endpoint.m1-login-verify absent",
+      "expected_source: hiecm.endpoint.m1-login-select-account absent"
+    ],
+    "tool_calls": 4,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "confusable-hiecm-m2-hip-vs-hiu-consent-ack-01",
+    "failures": [
+      "citations: none",
+      "expected_source: hiecm.endpoint.m2-consent-hip-on-notify absent"
+    ],
+    "tool_calls": 4,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "confusable-hiecm-m2-otp-vs-link-token-01",
+    "failures": null,
+    "tool_calls": 3,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "confusable-hiecm-m3-request-id-vs-artefact-id-01",
+    "failures": [
+      "expected_source: hiecm.callback.m3-on-consent-request-init absent",
+      "expected_source: hiecm.callback.m3-on-consent-request-notify-hiu absent"
+    ],
+    "tool_calls": 6,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "confusable-hiecm-m3-request-window-vs-validity-01",
+    "failures": [
+      "expected_source: hiecm.concept.consent-artefact absent"
+    ],
+    "tool_calls": 9,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "confusable-hip-vs-hiu-01",
+    "failures": null,
+    "tool_calls": 7,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "confusable-link-vs-access-token-01",
+    "failures": null,
+    "tool_calls": 5,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "confusable-sandbox-vs-prod-host-01",
+    "failures": [
+      "expected_source: shared.sandbox.going-live absent"
+    ],
+    "tool_calls": 10,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "confusable-session-vs-user-token-01",
+    "failures": null,
+    "tool_calls": 3,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "confusable-txnid-vs-requestid-01",
+    "failures": null,
+    "tool_calls": 5,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "conversation-abha-document-route-01",
+    "failures": null,
+    "tool_calls": 15,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "conversation-gateway-session-01",
+    "failures": [
+      "citations: none"
+    ],
+    "tool_calls": 2,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "conversation-hip-vs-hiu-01",
+    "failures": null,
+    "tool_calls": 3,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "conversation-link-token-01",
+    "failures": [
+      "expected_source: hiecm.glossary.link-token absent"
+    ],
+    "tool_calls": 3,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "conversation-m1-vs-m2-01",
+    "failures": [
+      "citations: none",
+      "expected_source: hiecm.glossary.m2 absent"
+    ],
+    "tool_calls": 6,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "conversation-production-timeline-01",
+    "failures": null,
+    "tool_calls": 3,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "conversation-public-certificate-01",
+    "failures": null,
+    "tool_calls": 3,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "conversation-wasa-recert-01",
+    "failures": null,
+    "tool_calls": 2,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "decline-aarogya-setu-feature-01",
+    "failures": null,
+    "tool_calls": 6,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "decline-foreign-health-network-01",
+    "failures": null,
+    "tool_calls": 0,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "decline-future-release-date-01",
+    "failures": null,
+    "tool_calls": 6,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "decline-hfr-approval-duration-01",
+    "failures": null,
+    "tool_calls": 6,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "decline-injection-attachment-01",
+    "failures": [
+      "citations: none"
+    ],
+    "tool_calls": 0,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "decline-injection-trailing-instruction-01",
+    "failures": null,
+    "tool_calls": 14,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "decline-metformin-dose-01",
+    "failures": null,
+    "tool_calls": 0,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "decline-nha-fee-01",
+    "failures": null,
+    "tool_calls": 4,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "decline-nhcx-claim-adjudication-01",
+    "failures": null,
+    "tool_calls": 4,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "decline-nonsense-emoji-01",
+    "failures": null,
+    "tool_calls": 0,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "decline-nonsense-question-marks-01",
+    "failures": null,
+    "tool_calls": 0,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "decline-nonsense-string-01",
+    "failures": null,
+    "tool_calls": 0,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "decline-production-cert-timeline-01",
+    "failures": [
+      "forbidden: business days"
+    ],
+    "tool_calls": 15,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "decline-uhi-booking-payload-01",
+    "failures": null,
+    "tool_calls": 6,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "decline-vendor-approved-01",
+    "failures": null,
+    "tool_calls": 3,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "define-abha-id-01",
+    "failures": null,
+    "tool_calls": 2,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "define-ask-ai-capabilities-01",
+    "failures": [
+      "citations: none",
+      "expected_source: shared.concept.ask-ai-assistant absent"
+    ],
+    "tool_calls": 0,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "define-discovery-01",
+    "failures": null,
+    "tool_calls": 2,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "define-dsc-01",
+    "failures": null,
+    "tool_calls": 2,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "define-elliptic-curve-01",
+    "failures": [
+      "expected_source: hiecm.glossary.ecdh absent"
+    ],
+    "tool_calls": 3,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "define-gateway-01",
+    "failures": null,
+    "tool_calls": 8,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "define-health-professional-id-01",
+    "failures": null,
+    "tool_calls": 3,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "define-health-records-provider-01",
+    "failures": null,
+    "tool_calls": 2,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "define-hiecm-m1-abha-address-rules-01",
+    "failures": [
+      "expected_source: hiecm.concept.abha-address-policy absent"
+    ],
+    "tool_calls": 3,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "define-hiecm-m3-consent-artefact-contents-01",
+    "failures": [
+      "expected_source: hiecm.endpoint.m3-consent-fetch absent"
+    ],
+    "tool_calls": 5,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "define-himis-01",
+    "failures": null,
+    "tool_calls": 2,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "define-hip-01",
+    "failures": null,
+    "tool_calls": 3,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "define-hiu-01",
+    "failures": null,
+    "tool_calls": 2,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "define-link-token-01",
+    "failures": [
+      "expected_source: hiecm.glossary.link-token absent"
+    ],
+    "tool_calls": 3,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "define-lis-01",
+    "failures": null,
+    "tool_calls": 2,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "diagnose-hiecm-m1-900900-01",
+    "failures": null,
+    "tool_calls": 1,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "diagnose-hiecm-m1-900901-01",
+    "failures": null,
+    "tool_calls": 1,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "diagnose-hiecm-m1-abdm-1016-01",
+    "failures": null,
+    "tool_calls": 1,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "diagnose-hiecm-m1-abdm-1094-01",
+    "failures": [
+      "expected_source: hiecm.flow.m1-login-by-mobile absent"
+    ],
+    "tool_calls": 1,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "diagnose-hiecm-m2-abdm-1056-01",
+    "failures": null,
+    "tool_calls": 1,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "diagnose-hiecm-m2-abdm-2406-01",
+    "failures": null,
+    "tool_calls": 1,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "diagnose-hiecm-m2-duplicate-link-token-01",
+    "failures": [
+      "expected_source: hiecm.concept.m2-retry-is-a-duplicate absent"
+    ],
+    "tool_calls": 2,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "diagnose-hiecm-m2-on-generate-token-never-arrives-01",
+    "failures": [
+      "expected_source: hiecm.troubleshooting.callback-never-arrives absent"
+    ],
+    "tool_calls": 8,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "diagnose-hiecm-m3-abdm-1040-01",
+    "failures": null,
+    "tool_calls": 1,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "diagnose-hiecm-m3-abdm-1112-01",
+    "failures": null,
+    "tool_calls": 5,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "diagnose-hiecm-m3-notify-keeps-arriving-01",
+    "failures": [
+      "expected_source: hiecm.endpoint.m3-consent-hiu-on-notify absent",
+      "expected_source: hiecm.flow.m3-request-consent absent"
+    ],
+    "tool_calls": 8,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "faq-rephrased-abdm-sandbox-02-a",
+    "failures": null,
+    "tool_calls": 2,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-rephrased-abdm-sandbox-02-b",
+    "failures": null,
+    "tool_calls": 6,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-rephrased-abdm-sandbox-02-c",
+    "failures": [
+      "expected_source: shared.sandbox.first-fifteen-minutes absent"
+    ],
+    "tool_calls": 8,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "faq-rephrased-abdm-sandbox-06-a",
+    "failures": null,
+    "tool_calls": 3,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-rephrased-abdm-sandbox-06-b",
+    "failures": null,
+    "tool_calls": 3,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-rephrased-abdm-sandbox-06-c",
+    "failures": null,
+    "tool_calls": 3,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-rephrased-abdm-sandbox-10-a",
+    "failures": null,
+    "tool_calls": 4,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-rephrased-abdm-sandbox-10-b",
+    "failures": null,
+    "tool_calls": 4,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-rephrased-abdm-sandbox-10-c",
+    "failures": [
+      "citations: none",
+      "expected_source: shared.sandbox.going-live absent"
+    ],
+    "tool_calls": 0,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-general-01-a",
+    "failures": null,
+    "tool_calls": 3,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-general-01-b",
+    "failures": null,
+    "tool_calls": 15,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-general-01-c",
+    "failures": [
+      "expected_source: shared.sandbox.first-fifteen-minutes absent"
+    ],
+    "tool_calls": 4,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-general-02-a",
+    "failures": null,
+    "tool_calls": 2,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-general-02-b",
+    "failures": null,
+    "tool_calls": 2,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-general-02-c",
+    "failures": [
+      "citations: none",
+      "expected_source: shared.glossary.phr absent"
+    ],
+    "tool_calls": 1,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-general-03-a",
+    "failures": null,
+    "tool_calls": 2,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-general-03-b",
+    "failures": null,
+    "tool_calls": 2,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-general-03-c",
+    "failures": null,
+    "tool_calls": 3,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m1-03-a",
+    "failures": null,
+    "tool_calls": 9,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m1-03-b",
+    "failures": [
+      "citations: none",
+      "expected_source: hiecm.glossary.m1 absent",
+      "expected_source: hiecm.glossary.m2 absent",
+      "expected_source: hiecm.glossary.m3 absent"
+    ],
+    "tool_calls": 1,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m1-03-c",
+    "failures": [
+      "expected_source: hiecm.glossary.m1 absent",
+      "expected_source: hiecm.glossary.m2 absent",
+      "expected_source: hiecm.glossary.m3 absent"
+    ],
+    "tool_calls": 6,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m1-04-a",
+    "failures": null,
+    "tool_calls": 5,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m1-04-b",
+    "failures": null,
+    "tool_calls": 6,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m1-04-c",
+    "failures": null,
+    "tool_calls": 8,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m1-05-a",
+    "failures": null,
+    "tool_calls": 8,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m1-05-b",
+    "failures": null,
+    "tool_calls": 4,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m1-05-c",
+    "failures": null,
+    "tool_calls": 2,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m2-01-a",
+    "failures": [
+      "expected_source: hiecm.glossary.hip absent"
+    ],
+    "tool_calls": 2,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m2-01-b",
+    "failures": [
+      "expected_source: hiecm.glossary.hip absent"
+    ],
+    "tool_calls": 2,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m2-01-c",
+    "failures": [
+      "citations: none",
+      "expected_source: hiecm.glossary.hip absent"
+    ],
+    "tool_calls": 0,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m2-02-a",
+    "failures": [
+      "expected_source: hiecm.glossary.hip absent"
+    ],
+    "tool_calls": 7,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m2-02-b",
+    "failures": null,
+    "tool_calls": 7,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m2-02-c",
+    "failures": [
+      "citations: none",
+      "expected_source: hiecm.glossary.hip absent"
+    ],
+    "tool_calls": 6,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m2-07-a",
+    "failures": [
+      "expected_source: hiecm.glossary.auth-modes absent"
+    ],
+    "tool_calls": 8,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m2-07-b",
+    "failures": [
+      "expected_source: hiecm.glossary.auth-modes absent"
+    ],
+    "tool_calls": 11,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m2-07-c",
+    "failures": [
+      "expected_source: hiecm.glossary.auth-modes absent"
+    ],
+    "tool_calls": 12,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m3-02-a",
+    "failures": null,
+    "tool_calls": 2,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m3-02-b",
+    "failures": null,
+    "tool_calls": 3,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m3-02-c",
+    "failures": [
+      "citations: none",
+      "expected_source: hiecm.glossary.hiu absent"
+    ],
+    "tool_calls": 0,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m3-03-a",
+    "failures": [
+      "citations: none",
+      "expected_source: hiecm.glossary.hi-type absent",
+      "expected_source: shared.fhir.document-bundle absent"
+    ],
+    "tool_calls": 0,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m3-03-b",
+    "failures": [
+      "expected_source: hiecm.glossary.hi-type absent",
+      "expected_source: shared.fhir.document-bundle absent"
+    ],
+    "tool_calls": 7,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m3-03-c",
+    "failures": [
+      "citations: none",
+      "expected_source: hiecm.glossary.hi-type absent",
+      "expected_source: shared.fhir.document-bundle absent"
+    ],
+    "tool_calls": 2,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m3-07-a",
+    "failures": null,
+    "tool_calls": 3,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m3-07-b",
+    "failures": null,
+    "tool_calls": 2,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-rephrased-sandbox-m3-07-c",
+    "failures": [
+      "citations: none"
+    ],
+    "tool_calls": 4,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-verbatim-abdm-sandbox-01",
+    "failures": null,
+    "tool_calls": 4,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-verbatim-abdm-sandbox-02",
+    "failures": null,
+    "tool_calls": 5,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-verbatim-abdm-sandbox-03",
+    "failures": [
+      "expected_source: shared.sandbox.wasa absent"
+    ],
+    "tool_calls": 4,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-verbatim-abdm-sandbox-04",
+    "failures": [
+      "grounding: ABDM-1035",
+      "citations: none",
+      "expected_source: shared.sandbox.going-live absent"
+    ],
+    "tool_calls": 1,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "faq-verbatim-abdm-sandbox-05",
+    "failures": [
+      "expected_source: shared.glossary.sandbox absent",
+      "expected_source: shared.sandbox.going-live absent"
+    ],
+    "tool_calls": 4,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "faq-verbatim-abdm-sandbox-06",
+    "failures": null,
+    "tool_calls": 6,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-verbatim-abdm-sandbox-07",
+    "failures": null,
+    "tool_calls": 4,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-verbatim-abdm-sandbox-08",
+    "failures": null,
+    "tool_calls": 4,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-verbatim-abdm-sandbox-09",
+    "failures": null,
+    "tool_calls": 3,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-verbatim-abdm-sandbox-10",
+    "failures": null,
+    "tool_calls": 4,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-verbatim-abdm-sandbox-11",
+    "failures": null,
+    "tool_calls": 4,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-verbatim-abdm-sandbox-12",
+    "failures": null,
+    "tool_calls": 9,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-verbatim-abdm-sandbox-13",
+    "failures": null,
+    "tool_calls": 6,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-verbatim-abdm-sandbox-14",
+    "failures": [
+      "citations: none"
+    ],
+    "tool_calls": 0,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-verbatim-abdm-sandbox-15",
+    "failures": null,
+    "tool_calls": 4,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-verbatim-abdm-sandbox-16",
+    "failures": [
+      "citations: none"
+    ],
+    "tool_calls": 3,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-general-01",
+    "failures": [
+      "expected_source: shared.sandbox.first-fifteen-minutes absent"
+    ],
+    "tool_calls": 7,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-general-02",
+    "failures": [
+      "citations: none",
+      "expected_source: shared.glossary.phr absent"
+    ],
+    "tool_calls": 3,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-general-03",
+    "failures": null,
+    "tool_calls": 2,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-general-04",
+    "failures": null,
+    "tool_calls": 3,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-general-05",
+    "failures": null,
+    "tool_calls": 2,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-general-06",
+    "failures": null,
+    "tool_calls": 2,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m1-01",
+    "failures": [
+      "expected_source: shared.sandbox.going-live absent"
+    ],
+    "tool_calls": 2,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m1-02",
+    "failures": [
+      "expected_source: hiecm.glossary.hmis absent",
+      "expected_source: shared.glossary.phr absent"
+    ],
+    "tool_calls": 10,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m1-03",
+    "failures": [
+      "citations: none",
+      "expected_source: hiecm.glossary.m1 absent",
+      "expected_source: hiecm.glossary.m2 absent",
+      "expected_source: hiecm.glossary.m3 absent"
+    ],
+    "tool_calls": 12,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m1-04",
+    "failures": null,
+    "tool_calls": 12,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m1-05",
+    "failures": null,
+    "tool_calls": 6,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m1-06",
+    "failures": [
+      "citations: none"
+    ],
+    "tool_calls": 7,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m1-07",
+    "failures": null,
+    "tool_calls": 14,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m1-08",
+    "failures": null,
+    "tool_calls": 2,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m2-01",
+    "failures": [
+      "expected_source: hiecm.glossary.hip absent"
+    ],
+    "tool_calls": 2,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m2-02",
+    "failures": null,
+    "tool_calls": 7,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m2-03",
+    "failures": null,
+    "tool_calls": 2,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m2-04",
+    "failures": [
+      "expected_source: shared.sandbox.going-live absent"
+    ],
+    "tool_calls": 13,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m2-05",
+    "failures": [
+      "citations: none"
+    ],
+    "tool_calls": 4,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m2-06",
+    "failures": null,
+    "tool_calls": 13,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m2-07",
+    "failures": null,
+    "tool_calls": 7,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m2-08",
+    "failures": [
+      "grounding: /v1/reference/fhir/document-bundle",
+      "expected_source: hiecm.glossary.hi-type absent"
+    ],
+    "tool_calls": 3,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m3-01",
+    "failures": [
+      "expected_source: hiecm.glossary.hiu absent"
+    ],
+    "tool_calls": 2,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m3-02",
+    "failures": null,
+    "tool_calls": 3,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m3-03",
+    "failures": [
+      "expected_source: hiecm.glossary.hi-type absent",
+      "expected_source: shared.fhir.document-bundle absent"
+    ],
+    "tool_calls": 8,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m3-04",
+    "failures": null,
+    "tool_calls": 4,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m3-05",
+    "failures": [
+      "expected_source: hiecm.glossary.key-material absent"
+    ],
+    "tool_calls": 5,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m3-06",
+    "failures": null,
+    "tool_calls": 6,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "faq-verbatim-sandbox-m3-07",
+    "failures": null,
+    "tool_calls": 4,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "followup-hiecm-m1-choose-address-01",
+    "failures": [
+      "expected_source: hiecm.endpoint.m1-enrolment-address-suggestions absent",
+      "expected_source: hiecm.endpoint.m1-enrolment-claim-abha-address absent"
+    ],
+    "tool_calls": 4,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "followup-hiecm-m1-token-refresh-01",
+    "failures": [
+      "citations: none",
+      "expected_source: hiecm.endpoint.m1-token-refresh absent"
+    ],
+    "tool_calls": 4,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "followup-hiecm-m2-match-link-token-callback-01",
+    "failures": [
+      "grounding: /api/hiecm/v3/token/generate-token",
+      "expected_source: hiecm.callback.m2-on-generate-token-result absent"
+    ],
+    "tool_calls": 5,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "followup-hiecm-m2-several-care-contexts-01",
+    "failures": [
+      "citations: none",
+      "expected_source: hiecm.endpoint.m2-hip-link-care-context absent"
+    ],
+    "tool_calls": 2,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "followup-hiecm-m3-multiple-artefacts-01",
+    "failures": [
+      "grounding: /api/hiecm/consent/v3/artefact/{artefactId}",
+      "citations: none",
+      "expected_source: hiecm.concept.m3-plural-artefacts-and-codes absent",
+      "expected_source: hiecm.callback.m3-on-consent-request-notify-hiu absent",
+      "expected_source: hiecm.endpoint.m3-consent-fetch absent"
+    ],
+    "tool_calls": 10,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "followup-session-token-lifetime-01",
+    "failures": [
+      "citations: none"
+    ],
+    "tool_calls": 4,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "naive-hiecm-m1-create-abha-aadhaar-01",
+    "failures": [
+      "expected_source: hiecm.endpoint.m1-enrolment-request-otp absent",
+      "expected_source: hiecm.endpoint.m1-enrolment-by-aadhaar absent"
+    ],
+    "tool_calls": 3,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "naive-hiecm-m1-encrypt-aadhaar-01",
+    "failures": [
+      "expected_source: hiecm.endpoint.m1-get-public-certificate absent"
+    ],
+    "tool_calls": 2,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "naive-hiecm-m1-face-auth-01",
+    "failures": [
+      "expected_source: hiecm.endpoint.m1-enrolment-capture-pid absent"
+    ],
+    "tool_calls": 2,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "naive-hiecm-m1-find-abha-01",
+    "failures": [
+      "expected_source: hiecm.flow.m1-find-abha absent",
+      "expected_source: hiecm.endpoint.m1-find-abha-search absent"
+    ],
+    "tool_calls": 12,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "naive-hiecm-m1-login-mobile-01",
+    "failures": [
+      "expected_source: hiecm.flow.m1-login-by-mobile absent",
+      "expected_source: hiecm.endpoint.m1-login-verify absent",
+      "expected_source: hiecm.endpoint.m1-login-select-account absent"
+    ],
+    "tool_calls": 13,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "naive-hiecm-m1-update-mobile-01",
+    "failures": [
+      "citations: none",
+      "expected_source: hiecm.flow.m1-update-mobile absent"
+    ],
+    "tool_calls": 7,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "naive-hiecm-m2-202-is-linked-01",
+    "failures": [
+      "citations: none",
+      "expected_source: hiecm.endpoint.m2-hip-link-care-context absent",
+      "expected_source: hiecm.callback.m2-on-carecontext-result absent"
+    ],
+    "tool_calls": 3,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "naive-hiecm-m2-after-data-push-01",
+    "failures": null,
+    "tool_calls": 4,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "naive-hiecm-m2-discovery-request-01",
+    "failures": [
+      "grounding: /api/v3/hip/patient/care-context/on-discover",
+      "expected_source: hiecm.callback.m2-on-discovery-request absent"
+    ],
+    "tool_calls": 6,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "naive-hiecm-m2-link-record-01",
+    "failures": [
+      "citations: none",
+      "expected_source: hiecm.flow.m2-link-care-context absent"
+    ],
+    "tool_calls": 1,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "naive-hiecm-m2-link-record-token-generation-01",
+    "failures": [
+      "citations: none",
+      "expected_source: hiecm.endpoint.m2-generate-link-token absent",
+      "expected_source: hiecm.flow.m2-link-care-context absent"
+    ],
+    "tool_calls": 6,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "naive-hiecm-m2-send-records-to-hiu-01",
+    "failures": null,
+    "tool_calls": 9,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "naive-hiecm-m2-token-generation-01",
+    "failures": null,
+    "tool_calls": 10,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "naive-hiecm-m2-update-linked-care-context-01",
+    "failures": [
+      "expected_source: hiecm.endpoint.m2-link-care-context-notify absent"
+    ],
+    "tool_calls": 14,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "naive-hiecm-m3-consent-request-id-01",
+    "failures": [
+      "expected_source: hiecm.endpoint.m3-consent-request-init absent",
+      "expected_source: hiecm.callback.m3-on-consent-request-init absent"
+    ],
+    "tool_calls": 5,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "naive-hiecm-m3-key-material-01",
+    "failures": null,
+    "tool_calls": 3,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "naive-hiecm-m3-notify-after-decrypt-01",
+    "failures": [
+      "expected_source: hiecm.endpoint.m3-hiu-data-flow-notify absent",
+      "expected_source: hiecm.flow.m3-fetch-records absent"
+    ],
+    "tool_calls": 8,
+    "retrieval_hit": false
+  },
+  {
+    "case_id": "naive-hiecm-m3-where-records-arrive-01",
+    "failures": null,
+    "tool_calls": 3,
+    "retrieval_hit": true
+  },
+  {
+    "case_id": "naive-nhcx-claim-endpoint-01",
+    "failures": [
+      "citations: none",
+      "expected_source: nhcx.endpoint.claim-submit absent"
+    ],
+    "tool_calls": 4,
+    "retrieval_hit": false
+  }
+]

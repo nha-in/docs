@@ -1,0 +1,154 @@
+{
+  "case_id": "define-dsc-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "What is a DSC?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01RgfgJJiYBJzudZ2A5BBa2d",
+            "Name": "search",
+            "Input": {
+              "query": "DSC digital signature certificate",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "DSC digital signature certificate",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/codes-and-value-sets#supporting-info-categories",
+                "id": "shared.glossary.dsc",
+                "summary": "The company that builds ABDM compliant software for patients or health facilities. It is the entity that certifies, as distinct from the software that integr...",
+                "title": "DSC, Digital Solution Company",
+                "type": "glossary"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01BJiobu2stCJ5PuUr3W5oYr",
+            "Name": "get",
+            "Input": {
+              "id": "shared.glossary.dsc"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "shared.glossary.dsc"
+          },
+          "output": {
+            "body": "# DSC, Digital Solution Company\n\n## In plain words\n\nA DSC is the company that makes the software: an organisation that\nprovides software to patients or health facilities, and the primary user\nof the sandbox.\n\nIf you are reading this because you build an HMIS, an EMR, a lab system\nor a patient app and you want to connect it to ABDM, you are a DSC. The\nsandbox account, the certification and the production credentials belong\nto you. The facilities that use your software have their own separate\nregistration.\n\n## Before you start\n\nNothing.\n\n## What happens\n\nThe distinction that matters is company against deployment. A DSC\ncertifies a product once. Each facility running it then registers\nseparately in the Health Facility Registry and is linked to your\nsoftware.\n\nSo one DSC leads to many facilities, and the identifiers do not\ninterchange. Your client id identifies your software. The facility id\nidentifies whose records you are acting on, and it travels in the\n`X-HIP-ID` header per call.\n\nCertification is per milestone, and the milestones follow what the entity\nyou act for does with records rather than what kind of product you sell.\nA facility that publishes records needs M2, and one that reads them needs\nM3, through the one product.\n\n## How you know it worked\n\nYou can say which identifier answers which question: the client id says\nwhich software is calling, and the facility id says on whose behalf.\n\n## When it goes wrong\n\nAssuming certification covers the facilities too. It does not. A\ncertified product still cannot act for a facility that is not registered\nand linked, and that is a common cause of an authorisation failure that\nlooks like a credentials problem.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/nhcx/v1/reference/fhir/codes-and-value-sets#supporting-info-categories",
+            "gateway": "shared",
+            "id": "shared.glossary.dsc",
+            "milestone": "n/a",
+            "summary": "The company that builds ABDM compliant software for patients or health facilities. It is the entity that certifies, as distinct from the software that integrates.",
+            "title": "DSC, Digital Solution Company",
+            "type": "glossary"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "**DSC** stands for **Digital Solution Company**. In ABDM, it's the company that builds and provides ABDM-compliant software to patients or health facilities.\n\nKey points:\n\n- **If you build an HMIS, EMR, lab system, or patient app** and want to connect it to ABDM, you're a DSC.\n- Your organization owns the sandbox account, certification, and production credentials.\n- One DSC can support **many facilities** — each facility registers separately in the Health Facility Registry and links to your software.\n- The distinction that matters: a DSC certifies a product once; facilities using that product register separately.\n- Your **client ID** identifies your software, while the **facility ID** identifies which facility's records you're acting on (sent in the `X-HIP-ID` header per call).\n- Certification is per milestone (M2 for publishing records, M3 for reading them), based on what the entity does with records, not the product type.\n\nA common mistake: assuming certification covers the facilities too. It doesn't — your certified product still can't act for a facility that isn't registered and linked to you.\n\n([From the ABDM developer portal glossary](https://abdm.gov.in/docs/nhcx/v1/reference/fhir/codes-and-value-sets#supporting-info-categories))",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "**DSC** stands for **Digital Solution Company**. In ABDM, it's the company that builds and provides ABDM-compliant software to patients or health facilities.\n\nKey points:\n\n- **If you build an HMIS, EMR, lab system, or patient app** and want to connect it to ABDM, you're a DSC.\n- Your organization owns the sandbox account, certification, and production credentials.\n- One DSC can support **many facilities** — each facility registers separately in the Health Facility Registry and links to your software.\n- The distinction that matters: a DSC certifies a product once; facilities using that product register separately.\n- Your **client ID** identifies your software, while the **facility ID** identifies which facility's records you're acting on (sent in the `X-HIP-ID` header per call).\n- Certification is per milestone (M2 for publishing records, M3 for reading them), based on what the entity does with records, not the product type.\n\nA common mistake: assuming certification covers the facilities too. It doesn't — your certified product still can't act for a facility that isn't registered and linked to you.\n\n([From the ABDM developer portal glossary](https://abdm.gov.in/docs/nhcx/v1/reference/fhir/codes-and-value-sets#supporting-info-categories))",
+  "sources": [
+    {
+      "id": "shared.glossary.dsc",
+      "title": "DSC, Digital Solution Company",
+      "url": "/docs/nhcx/v1/reference/fhir/codes-and-value-sets#supporting-info-categories"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/codes-and-value-sets#supporting-info-categories\",\"id\":\"shared.glossary.dsc\",\"summary\":\"The company that builds ABDM compliant software for patients or health facilities. It is the entity that certifies, as distinct from the software that integr...\",\"title\":\"DSC, Digital Solution Company\",\"type\":\"glossary\"}]}\n{\"body\":\"# DSC, Digital Solution Company\\n\\n## In plain words\\n\\nA DSC is the company that makes the software: an organisation that\\nprovides software to patients or health facilities, and the primary user\\nof the sandbox.\\n\\nIf you are reading this because you build an HMIS, an EMR, a lab system\\nor a patient app and you want to connect it to ABDM, you are a DSC. The\\nsandbox account, the certification and the production credentials belong\\nto you. The facilities that use your software have their own separate\\nregistration.\\n\\n## Before you start\\n\\nNothing.\\n\\n## What happens\\n\\nThe distinction that matters is company against deployment. A DSC\\ncertifies a product once. Each facility running it then registers\\nseparately in the Health Facility Registry and is linked to your\\nsoftware.\\n\\nSo one DSC leads to many facilities, and the identifiers do not\\ninterchange. Your client id identifies your software. The facility id\\nidentifies whose records you are acting on, and it travels in the\\n`X-HIP-ID` header per call.\\n\\nCertification is per milestone, and the milestones follow what the entity\\nyou act for does with records rather than what kind of product you sell.\\nA facility that publishes records needs M2, and one that reads them needs\\nM3, through the one product.\\n\\n## How you know it worked\\n\\nYou can say which identifier answers which question: the client id says\\nwhich software is calling, and the facility id says on whose behalf.\\n\\n## When it goes wrong\\n\\nAssuming certification covers the facilities too. It does not. A\\ncertified product still cannot act for a facility that is not registered\\nand linked, and that is a common cause of an authorisation failure that\\nlooks like a credentials problem.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/nhcx/v1/reference/fhir/codes-and-value-sets#supporting-info-categories\",\"gateway\":\"shared\",\"id\":\"shared.glossary.dsc\",\"milestone\":\"n/a\",\"summary\":\"The company that builds ABDM compliant software for patients or health facilities. It is the entity that certifies, as distinct from the software that integrates.\",\"title\":\"DSC, Digital Solution Company\",\"type\":\"glossary\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:58:28.346Z",
+  "usage": {
+    "input_tokens": 30,
+    "output_tokens": 641,
+    "cache_read_input_tokens": 28003,
+    "cache_creation_input_tokens": 6069,
+    "num_turns": 3,
+    "duration_ms": 9828,
+    "cost_usd_equivalent": 0.0181733
+  }
+}

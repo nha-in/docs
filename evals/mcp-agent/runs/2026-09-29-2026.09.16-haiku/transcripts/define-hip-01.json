@@ -1,0 +1,267 @@
+{
+  "case_id": "define-hip-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "What is HIP?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01MR99qGWLJ6TBcDNAULCJAE",
+            "Name": "search",
+            "Input": {
+              "query": "HIP Health Information Provider definition",
+              "kind": "atom",
+              "limit": 5
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "HIP Health Information Provider definition",
+            "kind": "atom",
+            "limit": 5
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01SGEiTGRyUZRaTMkFQvsdQ2",
+            "Name": "search",
+            "Input": {
+              "query": "HIP",
+              "kind": "atom",
+              "type": "glossary"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "HIP",
+            "kind": "atom",
+            "type": "glossary"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hip",
+                "id": "hiecm.glossary.hip",
+                "summary": "The role held by a system that holds a patient's records and shares them when a consent allows it.",
+                "title": "HIP, health information provider",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hfr",
+                "id": "shared.glossary.hfr",
+                "summary": "The registry of health facilities, which is where a facility is searched for, onboarded and linked to software.",
+                "title": "HFR, Health Facility Registry",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hrp",
+                "id": "hiecm.glossary.hrp",
+                "summary": "Whoever holds the records. It describes custody, which is why it is neither a position nor a direction.",
+                "title": "HRP, health repository provider",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/fetching-a-recipient-certificate#what-comes-back",
+                "id": "hiecm.glossary.key-material",
+                "summary": "The ECDH key pairs that encrypt health records in transit. A fresh pair per transfer, the HIU keeps its own, and the HIP returns its public half alongside th...",
+                "title": "Key material, who generates it and who keeps it",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#pms",
+                "id": "hiecm.glossary.pms",
+                "summary": "The system a pharmacy runs to dispense and to hold stock. A pharmacy uses it both to read the prescription it is dispensing against and to record what it dis...",
+                "title": "PMS, pharmacy management system",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#lims",
+                "id": "hiecm.glossary.lims",
+                "summary": "The system a diagnostic laboratory uses to manage samples, tests and results.",
+                "title": "LIMS, laboratory information management system, also written LMIS",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#bridge",
+                "id": "hiecm.glossary.bridge",
+                "summary": "The set of callback URLs NHA posts to when it answers one of your calls.",
+                "title": "Bridge, your callback endpoints",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.glossary.m2",
+                "summary": "The milestone covering care context linking, discovery and sending records.",
+                "title": "M2 Health Information Provider: Create and link records",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#ecdh",
+                "id": "hiecm.glossary.ecdh",
+                "summary": "Elliptic Curve Diffie-Hellman, used so only the requester holding a valid consent can read what is sent.",
+                "title": "ECDH, the key exchange that protects records in transit",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#discovery",
+                "id": "hiecm.glossary.discovery",
+                "summary": "The step where a patient's app asks a facility whether it holds records for that patient.",
+                "title": "Discovery, finding whether a facility holds records",
+                "type": "glossary"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01TjCsZFEZmBkXkDwntiGW1x",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.glossary.hip"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.glossary.hip"
+          },
+          "output": {
+            "body": "# HIP, health information provider\n\n## In plain words\n\nA health information provider is the side of an exchange that holds health\nrecords and hands them over. It is identified by a service id, carried in the\n`X-HIP-ID` header, which the specification describes as:\n\n> Identifier of the health information provider to which the request was\n> intended\n\nA hospital, a lab or a clinic system acts in this role when it shares what it\nrecorded.\n\n## Before you start\n\nYou need your bridge registered and its service id in hand, because the\nheader value is that id rather than a name.\n\n## What happens\n\nABDM calls `m2_post_v3_consent_request_hip_notify` at your callback URL to\ntell you a consent covering your records was granted, revoked or expired.\nYour system acknowledges it by calling\n`m2_post_consent_v3_request_hip_on_notify`.\n\n## How you know it worked\n\nYou have understood this when you can say which side of a data exchange holds\nthe records and which side asks for them.\n\n## When it goes wrong\n\nBuilding only the request side and leaving the callback endpoints unbuilt,\nwhich leaves ABDM with nowhere to deliver the notifications this role\nreceives.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/getting-started/glossary#hip",
+            "gateway": "hiecm",
+            "id": "hiecm.glossary.hip",
+            "milestone": "n/a",
+            "summary": "The role held by a system that holds a patient's records and shares them when a consent allows it.",
+            "title": "HIP, health information provider",
+            "type": "glossary"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "**HIP** stands for **Health Information Provider** — the side of an ABDM data exchange that holds and shares patient health records.\n\nFrom the [official glossary](/docs/hiecm/v3/getting-started/glossary#hip):\n\n- A HIP is identified by a **service ID** (carried in the `X-HIP-ID` header)\n- Examples include hospitals, labs, and clinic systems that record and share patient data\n- When a patient grants consent, ABDM notifies the HIP via your callback URL (`m2_post_v3_consent_request_hip_notify`), and you acknowledge it by responding to ABDM\n\nThe key distinction: **HIP holds the records**; the other side (HIU, Health Information User) requests them. A common mistake is building only the request side and forgetting to implement the callback endpoints where ABDM delivers consent notifications to your HIP.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "**HIP** stands for **Health Information Provider** — the side of an ABDM data exchange that holds and shares patient health records.\n\nFrom the [official glossary](/docs/hiecm/v3/getting-started/glossary#hip):\n\n- A HIP is identified by a **service ID** (carried in the `X-HIP-ID` header)\n- Examples include hospitals, labs, and clinic systems that record and share patient data\n- When a patient grants consent, ABDM notifies the HIP via your callback URL (`m2_post_v3_consent_request_hip_notify`), and you acknowledge it by responding to ABDM\n\nThe key distinction: **HIP holds the records**; the other side (HIU, Health Information User) requests them. A common mistake is building only the request side and forgetting to implement the callback endpoints where ABDM delivers consent notifications to your HIP.",
+  "sources": [
+    {
+      "id": "hiecm.glossary.hip",
+      "title": "HIP, health information provider",
+      "url": "/docs/hiecm/v3/getting-started/glossary#hip"
+    },
+    {
+      "id": "hiecm.glossary.discovery",
+      "title": "Discovery, finding whether a facility holds records",
+      "url": "/docs/hiecm/v3/getting-started/glossary#discovery"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hip\",\"id\":\"hiecm.glossary.hip\",\"summary\":\"The role held by a system that holds a patient's records and shares them when a consent allows it.\",\"title\":\"HIP, health information provider\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hfr\",\"id\":\"shared.glossary.hfr\",\"summary\":\"The registry of health facilities, which is where a facility is searched for, onboarded and linked to software.\",\"title\":\"HFR, Health Facility Registry\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hrp\",\"id\":\"hiecm.glossary.hrp\",\"summary\":\"Whoever holds the records. It describes custody, which is why it is neither a position nor a direction.\",\"title\":\"HRP, health repository provider\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/fetching-a-recipient-certificate#what-comes-back\",\"id\":\"hiecm.glossary.key-material\",\"summary\":\"The ECDH key pairs that encrypt health records in transit. A fresh pair per transfer, the HIU keeps its own, and the HIP returns its public half alongside th...\",\"title\":\"Key material, who generates it and who keeps it\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#pms\",\"id\":\"hiecm.glossary.pms\",\"summary\":\"The system a pharmacy runs to dispense and to hold stock. A pharmacy uses it both to read the prescription it is dispensing against and to record what it dis...\",\"title\":\"PMS, pharmacy management system\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#lims\",\"id\":\"hiecm.glossary.lims\",\"summary\":\"The system a diagnostic laboratory uses to manage samples, tests and results.\",\"title\":\"LIMS, laboratory information management system, also written LMIS\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#bridge\",\"id\":\"hiecm.glossary.bridge\",\"summary\":\"The set of callback URLs NHA posts to when it answers one of your calls.\",\"title\":\"Bridge, your callback endpoints\",\"type\":\"glossary\"},{\"doc_url\":\"\",\"id\":\"hiecm.glossary.m2\",\"summary\":\"The milestone covering care context linking, discovery and sending records.\",\"title\":\"M2 Health Information Provider: Create and link records\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#ecdh\",\"id\":\"hiecm.glossary.ecdh\",\"summary\":\"Elliptic Curve Diffie-Hellman, used so only the requester holding a valid consent can read what is sent.\",\"title\":\"ECDH, the key exchange that protects records in transit\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#discovery\",\"id\":\"hiecm.glossary.discovery\",\"summary\":\"The step where a patient's app asks a facility whether it holds records for that patient.\",\"title\":\"Discovery, finding whether a facility holds records\",\"type\":\"glossary\"}]}\n{\"body\":\"# HIP, health information provider\\n\\n## In plain words\\n\\nA health information provider is the side of an exchange that holds health\\nrecords and hands them over. It is identified by a service id, carried in the\\n`X-HIP-ID` header, which the specification describes as:\\n\\n> Identifier of the health information provider to which the request was\\n> intended\\n\\nA hospital, a lab or a clinic system acts in this role when it shares what it\\nrecorded.\\n\\n## Before you start\\n\\nYou need your bridge registered and its service id in hand, because the\\nheader value is that id rather than a name.\\n\\n## What happens\\n\\nABDM calls `m2_post_v3_consent_request_hip_notify` at your callback URL to\\ntell you a consent covering your records was granted, revoked or expired.\\nYour system acknowledges it by calling\\n`m2_post_consent_v3_request_hip_on_notify`.\\n\\n## How you know it worked\\n\\nYou have understood this when you can say which side of a data exchange holds\\nthe records and which side asks for them.\\n\\n## When it goes wrong\\n\\nBuilding only the request side and leaving the callback endpoints unbuilt,\\nwhich leaves ABDM with nowhere to deliver the notifications this role\\nreceives.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hip\",\"gateway\":\"hiecm\",\"id\":\"hiecm.glossary.hip\",\"milestone\":\"n/a\",\"summary\":\"The role held by a system that holds a patient's records and shares them when a consent allows it.\",\"title\":\"HIP, health information provider\",\"type\":\"glossary\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:58:57.732Z",
+  "usage": {
+    "input_tokens": 40,
+    "output_tokens": 628,
+    "cache_read_input_tokens": 40195,
+    "cache_creation_input_tokens": 7043,
+    "num_turns": 4,
+    "duration_ms": 10712,
+    "cost_usd_equivalent": 0.0212855
+  }
+}

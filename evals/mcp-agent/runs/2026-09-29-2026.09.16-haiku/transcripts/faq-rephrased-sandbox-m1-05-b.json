@@ -1,0 +1,258 @@
+{
+  "case_id": "faq-rephrased-sandbox-m1-05-b",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "what should be format of the Authorization header?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01DKmYwTgvrzyqhs8LZ5ExEo",
+            "Name": "search",
+            "Input": {
+              "query": "Authorization header format",
+              "kind": "atom"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "Authorization header format",
+            "kind": "atom"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/uhi/v1/concepts/signing#the-headers",
+                "id": "uhi.concept.signing-headers",
+                "summary": "The EUA and HSPA sign every outbound call in Authorization; the UHI Gateway adds X-Gateway-Authorization to everything it forwards.",
+                "title": "The signature headers on a UHI call",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/registry/endpoints/registry-fetch-participants-list",
+                "id": "nhcx.endpoint.fetch-participants-list",
+                "summary": "List the payers, providers or third party administrators registered in a date window, to pick who to address.",
+                "title": "POST /fetch/participants/list",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/first-fifteen-minutes",
+                "id": "shared.sandbox.first-fifteen-minutes",
+                "summary": "Everything you can do before NHA approves your sandbox registration: read one real gateway session exchange and assemble your own first call, ready to paste ...",
+                "title": "Your first fifteen minutes with ABDM",
+                "type": "sandbox"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01WigiM9YwQ3gHoQnRWTfNG1",
+            "Name": "get",
+            "Input": {
+              "id": "uhi.concept.signing-headers"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "uhi.concept.signing-headers"
+          },
+          "output": {
+            "body": "# The signature headers on a UHI call\n\n## In plain words\n\n| Header | Sent by | Contents |\n| --- | --- | --- |\n| `Authorization` | The [EUA](/docs/uhi/v1/getting-started/glossary#eua) and the [HSPA](/docs/uhi/v1/getting-started/glossary#hspa), on every outbound call | An Ed25519 signature over `(created) (expires) digest`, with `keyId` set to `<subscriber-id>\\|<pub-key-id>\\|ed25519` |\n| `X-Gateway-Authorization` | The UHI Gateway, on everything it forwards | The same format, with a `keyId` starting `gateway-nha` |\n\nAn EUA's `Authorization` header looks like this:\n\n```text\nAuthorization: {\"headers\":\"(created) (expires) digest\",\"expires\":\"1682340844\",\"signature\":\"PEYK1W+xsuBuyaNbO0BaECKndTEQ9wjQXjkS1CgvuZUZ/mmUCUcqBNCzi2590GeLD4s2bqvv8dCopS9yomMZDA==\",\"created\":\"1682340834\",\"keyId\":\"eua-nha|nha.eua.k1|ed25519\",\"algorithm\":\"ed25519\"}\n```\n\nThe Gateway's header has the same shape, with `\"keyId\":\"gateway-nha|uhi_gateway_pubkeyid|ed25519\"`.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/uhi/v1/concepts/signing#the-headers",
+            "gateway": "uhi",
+            "id": "uhi.concept.signing-headers",
+            "milestone": "n/a",
+            "summary": "The EUA and HSPA sign every outbound call in Authorization; the UHI Gateway adds X-Gateway-Authorization to everything it forwards.",
+            "title": "The signature headers on a UHI call",
+            "type": "concept"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_019nfLUoxwdFGNhMHwTdbLAH",
+            "Name": "search",
+            "Input": {
+              "query": "Bearer token JWT authentication",
+              "kind": "atom"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "Bearer token JWT authentication",
+            "kind": "atom"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/gateway#gateway-session",
+                "id": "hiecm.concept.gateway-session",
+                "summary": "Every gateway call carries a short lived bearer token from one session endpoint, which identifies your application, not a person.",
+                "title": "The gateway session, the first call in every integration",
+                "type": "concept"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01SKGNgSxJ3nEyrLkKJz829d",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.concept.gateway-session"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.concept.gateway-session"
+          },
+          "output": {
+            "body": "# The gateway session, the first call in every integration\n\n## In plain words\n\nOne endpoint issues the token every other call carries. It is the call [M1](/docs/hiecm/v3/getting-started/glossary#m1) uses. [M4](/docs/hiecm/v3/getting-started/glossary#m4) calls carry their own bearer token instead.\n\n**POST** `/api/hiecm/gateway/v3/sessions`\n\nHeaders:\n\n| Header | Example value | What it is |\n|---|---|---|\n| `REQUEST-ID` | `18235d89-cb13-479d-ad71-7a57d5f669a8` | A fresh UUID for this call |\n| `TIMESTAMP` | `2022-10-06T15:10:00.587Z` | The time you made the call, ISO 8601 |\n| `X-CM-ID` | `sbx` | The consent manager. Use `sbx` for sandbox |\n| `Content-Type` | `application/json` | |\n\nNo `Authorization` header on this call. It is the one call with no token yet.\n\nBody:\n\n```json\n{\n  \"clientId\": \"<CLIENT_ID_FROM_SANDBOX_SIGNUP>\",\n  \"clientSecret\": \"<CLIENT_SECRET_FROM_SANDBOX_SIGNUP>\",\n  \"grantType\": \"client_credentials\"\n}\n```\n\nSend the client id you were issued.\n\nResponse shape:\n\n```json\n{\n  \"accessToken\": \"<JWT>\",\n  \"expiresIn\": 1200,\n  \"refreshExpiresIn\": 1800,\n  \"refreshToken\": \"<JWT>\",\n  \"tokenType\": \"bearer\"\n}\n```\n\nThe response carries the token in `accessToken`.\n\nSend the token back as `Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>` on every other call. Headers per call, and the second token M1 login issues, are on [authentication](/docs/hiecm/v3/reference/authentication). Interactive: [gateway API reference](/reference/hiecm-gateway).\n\nThe session token says which application is calling, not which person. [M1](/docs/hiecm/v3/milestones/m1) profile calls also carry a user token in `X-token`, which login returns.\n\n## Before you start\n\nA client id and client secret from sandbox registration, held on your server. Never ship the secret in a mobile or browser build.\n\n## What happens\n\nCall the session endpoint with `clientId`, `clientSecret` and `grantType` set to `client_credentials`. Send the `accessToken` it returns as `Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>` on every other gateway call. Renew before `expiresIn` runs out rather than on a fixed timer.\n\n## How you know it worked\n\nThe response carries `accessToken` and `expiresIn`, and the next gateway call with that token is not refused as unauthorised.\n\n## When it goes wrong\n\nEvery call returns 401: see [everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401). A profile call is refused while the session token is fresh: the `X-token` is missing, or it holds the short lived token from login verify, which the verify user call exchanges for the user token. `ABDM-1094` reads X-token expired, and the token sent is often the wrong kind rather than an old one.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/concepts/gateway#gateway-session",
+            "gateway": "hiecm",
+            "id": "hiecm.concept.gateway-session",
+            "milestone": "M1",
+            "summary": "Every gateway call carries a short lived bearer token from one session endpoint, which identifies your application, not a person.",
+            "title": "The gateway session, the first call in every integration",
+            "type": "concept"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "The Authorization header format depends on which ABDM gateway you're using:\n\n## HIE-CM Gateway\n\nUse a **Bearer token** format:\n\n```\nAuthorization: Bearer <ACCESS_TOKEN>\n```\n\nThe access token is obtained from the session endpoint (`POST /api/hiecm/gateway/v3/sessions`) using your `clientId` and `clientSecret`. The token is a JWT that identifies your application.\n\n**Source:** [The gateway session concept](/docs/hiecm/v3/concepts/gateway#gateway-session)\n\n## UHI Gateway\n\nUse an **Ed25519 signature** format in JSON:\n\n```\nAuthorization: {\"headers\":\"(created) (expires) digest\",\"expires\":\"1682340844\",\"signature\":\"PEYK1W+xsuBuyaNbO0BaECKndTEQ9wjQXjkS1CgvuZUZ/mmUCUcqBNCzi2590GeLD4s2bqvv8dCopS9yomMZDA==\",\"created\":\"1682340834\",\"keyId\":\"eua-nha|nha.eua.k1|ed25519\",\"algorithm\":\"ed25519\"}\n```\n\nThe signature is computed over `(created) (expires) digest` using your Ed25519 private key, with `keyId` in the format `<subscriber-id>|<pub-key-id>|ed25519`.\n\n**Source:** [The signature headers on a UHI call](/docs/uhi/v1/concepts/signing#the-headers)\n\nWhich gateway are you integrating with? I can provide more specific details.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "The Authorization header format depends on which ABDM gateway you're using:\n\n## HIE-CM Gateway\n\nUse a **Bearer token** format:\n\n```\nAuthorization: Bearer <ACCESS_TOKEN>\n```\n\nThe access token is obtained from the session endpoint (`POST /api/hiecm/gateway/v3/sessions`) using your `clientId` and `clientSecret`. The token is a JWT that identifies your application.\n\n**Source:** [The gateway session concept](/docs/hiecm/v3/concepts/gateway#gateway-session)\n\n## UHI Gateway\n\nUse an **Ed25519 signature** format in JSON:\n\n```\nAuthorization: {\"headers\":\"(created) (expires) digest\",\"expires\":\"1682340844\",\"signature\":\"PEYK1W+xsuBuyaNbO0BaECKndTEQ9wjQXjkS1CgvuZUZ/mmUCUcqBNCzi2590GeLD4s2bqvv8dCopS9yomMZDA==\",\"created\":\"1682340834\",\"keyId\":\"eua-nha|nha.eua.k1|ed25519\",\"algorithm\":\"ed25519\"}\n```\n\nThe signature is computed over `(created) (expires) digest` using your Ed25519 private key, with `keyId` in the format `<subscriber-id>|<pub-key-id>|ed25519`.\n\n**Source:** [The signature headers on a UHI call](/docs/uhi/v1/concepts/signing#the-headers)\n\nWhich gateway are you integrating with? I can provide more specific details.",
+  "sources": [
+    {
+      "id": "uhi.concept.signing-headers",
+      "title": "The signature headers on a UHI call",
+      "url": "/docs/uhi/v1/concepts/signing#the-headers"
+    },
+    {
+      "id": "hiecm.concept.gateway-session",
+      "title": "The gateway session, the first call in every integration",
+      "url": "/docs/hiecm/v3/concepts/gateway#gateway-session"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/uhi/v1/concepts/signing#the-headers\",\"id\":\"uhi.concept.signing-headers\",\"summary\":\"The EUA and HSPA sign every outbound call in Authorization; the UHI Gateway adds X-Gateway-Authorization to everything it forwards.\",\"title\":\"The signature headers on a UHI call\",\"type\":\"concept\"},{\"doc_url\":\"/docs/nhcx/v1/api/registry/endpoints/registry-fetch-participants-list\",\"id\":\"nhcx.endpoint.fetch-participants-list\",\"summary\":\"List the payers, providers or third party administrators registered in a date window, to pick who to address.\",\"title\":\"POST /fetch/participants/list\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/first-fifteen-minutes\",\"id\":\"shared.sandbox.first-fifteen-minutes\",\"summary\":\"Everything you can do before NHA approves your sandbox registration: read one real gateway session exchange and assemble your own first call, ready to paste ...\",\"title\":\"Your first fifteen minutes with ABDM\",\"type\":\"sandbox\"}]}\n{\"body\":\"# The signature headers on a UHI call\\n\\n## In plain words\\n\\n| Header | Sent by | Contents |\\n| --- | --- | --- |\\n| `Authorization` | The [EUA](/docs/uhi/v1/getting-started/glossary#eua) and the [HSPA](/docs/uhi/v1/getting-started/glossary#hspa), on every outbound call | An Ed25519 signature over `(created) (expires) digest`, with `keyId` set to `<subscriber-id>\\\\|<pub-key-id>\\\\|ed25519` |\\n| `X-Gateway-Authorization` | The UHI Gateway, on everything it forwards | The same format, with a `keyId` starting `gateway-nha` |\\n\\nAn EUA's `Authorization` header looks like this:\\n\\n```text\\nAuthorization: {\\\"headers\\\":\\\"(created) (expires) digest\\\",\\\"expires\\\":\\\"1682340844\\\",\\\"signature\\\":\\\"PEYK1W+xsuBuyaNbO0BaECKndTEQ9wjQXjkS1CgvuZUZ/mmUCUcqBNCzi2590GeLD4s2bqvv8dCopS9yomMZDA==\\\",\\\"created\\\":\\\"1682340834\\\",\\\"keyId\\\":\\\"eua-nha|nha.eua.k1|ed25519\\\",\\\"algorithm\\\":\\\"ed25519\\\"}\\n```\\n\\nThe Gateway's header has the same shape, with `\\\"keyId\\\":\\\"gateway-nha|uhi_gateway_pubkeyid|ed25519\\\"`.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/uhi/v1/concepts/signing#the-headers\",\"gateway\":\"uhi\",\"id\":\"uhi.concept.signing-headers\",\"milestone\":\"n/a\",\"summary\":\"The EUA and HSPA sign every outbound call in Authorization; the UHI Gateway adds X-Gateway-Authorization to everything it forwards.\",\"title\":\"The signature headers on a UHI call\",\"type\":\"concept\"}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/concepts/gateway#gateway-session\",\"id\":\"hiecm.concept.gateway-session\",\"summary\":\"Every gateway call carries a short lived bearer token from one session endpoint, which identifies your application, not a person.\",\"title\":\"The gateway session, the first call in every integration\",\"type\":\"concept\"}]}\n{\"body\":\"# The gateway session, the first call in every integration\\n\\n## In plain words\\n\\nOne endpoint issues the token every other call carries. It is the call [M1](/docs/hiecm/v3/getting-started/glossary#m1) uses. [M4](/docs/hiecm/v3/getting-started/glossary#m4) calls carry their own bearer token instead.\\n\\n**POST** `/api/hiecm/gateway/v3/sessions`\\n\\nHeaders:\\n\\n| Header | Example value | What it is |\\n|---|---|---|\\n| `REQUEST-ID` | `18235d89-cb13-479d-ad71-7a57d5f669a8` | A fresh UUID for this call |\\n| `TIMESTAMP` | `2022-10-06T15:10:00.587Z` | The time you made the call, ISO 8601 |\\n| `X-CM-ID` | `sbx` | The consent manager. Use `sbx` for sandbox |\\n| `Content-Type` | `application/json` | |\\n\\nNo `Authorization` header on this call. It is the one call with no token yet.\\n\\nBody:\\n\\n```json\\n{\\n  \\\"clientId\\\": \\\"<CLIENT_ID_FROM_SANDBOX_SIGNUP>\\\",\\n  \\\"clientSecret\\\": \\\"<CLIENT_SECRET_FROM_SANDBOX_SIGNUP>\\\",\\n  \\\"grantType\\\": \\\"client_credentials\\\"\\n}\\n```\\n\\nSend the client id you were issued.\\n\\nResponse shape:\\n\\n```json\\n{\\n  \\\"accessToken\\\": \\\"<JWT>\\\",\\n  \\\"expiresIn\\\": 1200,\\n  \\\"refreshExpiresIn\\\": 1800,\\n  \\\"refreshToken\\\": \\\"<JWT>\\\",\\n  \\\"tokenType\\\": \\\"bearer\\\"\\n}\\n```\\n\\nThe response carries the token in `accessToken`.\\n\\nSend the token back as `Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>` on every other call. Headers per call, and the second token M1 login issues, are on [authentication](/docs/hiecm/v3/reference/authentication). Interactive: [gateway API reference](/reference/hiecm-gateway).\\n\\nThe session token says which application is calling, not which person. [M1](/docs/hiecm/v3/milestones/m1) profile calls also carry a user token in `X-token`, which login returns.\\n\\n## Before you start\\n\\nA client id and client secret from sandbox registration, held on your server. Never ship the secret in a mobile or browser build.\\n\\n## What happens\\n\\nCall the session endpoint with `clientId`, `clientSecret` and `grantType` set to `client_credentials`. Send the `accessToken` it returns as `Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>` on every other gateway call. Renew before `expiresIn` runs out rather than on a fixed timer.\\n\\n## How you know it worked\\n\\nThe response carries `accessToken` and `expiresIn`, and the next gateway call with that token is not refused as unauthorised.\\n\\n## When it goes wrong\\n\\nEvery call returns 401: see [everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401). A profile call is refused while the session token is fresh: the `X-token` is missing, or it holds the short lived token from login verify, which the verify user call exchanges for the user token. `ABDM-1094` reads X-token expired, and the token sent is often the wrong kind rather than an old one.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/concepts/gateway#gateway-session\",\"gateway\":\"hiecm\",\"id\":\"hiecm.concept.gateway-session\",\"milestone\":\"M1\",\"summary\":\"Every gateway call carries a short lived bearer token from one session endpoint, which identifies your application, not a person.\",\"title\":\"The gateway session, the first call in every integration\",\"type\":\"concept\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:01:39.398Z",
+  "usage": {
+    "input_tokens": 40,
+    "output_tokens": 1017,
+    "cache_read_input_tokens": 40640,
+    "cache_creation_input_tokens": 7856,
+    "num_turns": 5,
+    "duration_ms": 16926,
+    "cost_usd_equivalent": 0.024901
+  }
+}

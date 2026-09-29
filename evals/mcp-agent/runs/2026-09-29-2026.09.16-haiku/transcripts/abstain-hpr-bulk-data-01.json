@@ -1,0 +1,1157 @@
+{
+  "case_id": "abstain-hpr-bulk-data-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "how do I get HPR data in bulk"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01HvH9t1sBSh2NQsKeLm9i7y",
+            "Name": "search",
+            "Input": {
+              "query": "HPR data bulk",
+              "kind": "operation"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "HPR data bulk",
+            "kind": "operation"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01H631qcoSMGio1jVAF4qYWf",
+            "Name": "search",
+            "Input": {
+              "query": "Health Professional Registry bulk",
+              "kind": "atom"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "Health Professional Registry bulk",
+            "kind": "atom"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hpr",
+                "id": "shared.glossary.hpr",
+                "summary": "The registry of individual healthcare professionals across every system of medicine, which issues a Healthcare Professional ID.",
+                "title": "HPR, Healthcare Professionals Registry",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.glossary.m4",
+                "summary": "The milestone covering professional and facility registration.",
+                "title": "M4 Registry Integration: Register facilities and professionals",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hfr",
+                "id": "shared.glossary.hfr",
+                "summary": "The registry of health facilities, which is where a facility is searched for, onboarded and linked to software.",
+                "title": "HFR, Health Facility Registry",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/error-codes#payr",
+                "id": "nhcx.error.payr-1080",
+                "summary": "The payer rejected your preauthorisation or claim because a practitioner in the bundle carries a professional registry id it does not accept.",
+                "title": "PAYR-1080: a practitioner's HPR id is not valid",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-enrollment/05-m4-post-v1-doctors-fetch-professional-info#m4-hpr-fetch-professional-info",
+                "id": "hiecm.endpoint.m4-hpr-fetch-professional-info",
+                "summary": "Returns what the registry holds for a healthcare professional, found by HPR ID or other details.",
+                "title": "Read a professional's profile",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/error-codes#payr",
+                "id": "nhcx.error.payr-1083",
+                "summary": "The payer rejected your preauthorisation or claim because a practitioner in the bundle carries no professional registry id.",
+                "title": "PAYR-1083: a practitioner has no HPR id",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m4#m4-register-professional",
+                "id": "hiecm.flow.m4-register-professional",
+                "summary": "Turn a bare identity number into a registered professional by adding qualifications, council registration and current work, then uploading the certificates t...",
+                "title": "Register a professional's profile on the HPR",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hpid",
+                "id": "shared.glossary.hpid",
+                "summary": "A 14 digit number issued to a healthcare professional or a facility manager, created on the HPR.",
+                "title": "HPID, healthcare professional identifier",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-enrollment/04-m4-post-v1-uploads-upload-document#m4-hpr-upload-document",
+                "id": "hiecm.endpoint.m4-hpr-upload-document",
+                "summary": "Attaches a professional's certificates to their registration against the ids the document list returned.",
+                "title": "Upload one of the professional's documents",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m4#m4-create-hpid",
+                "id": "hiecm.flow.m4-create-hpid",
+                "summary": "Take a healthcare professional through Aadhaar authentication and mobile verification until the registry issues an HP-ID.",
+                "title": "Get a healthcare professional an HPID",
+                "type": "flow"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01FFUKKTPW6m3Exp5FczdfmA",
+            "Name": "search",
+            "Input": {
+              "query": "bulk export download registry data",
+              "kind": "atom"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "bulk export download registry data",
+            "kind": "atom"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01Tq8zzWkD1yRqqEddMPc5Bg",
+            "Name": "search",
+            "Input": {
+              "query": "HPR fetch professional",
+              "kind": "operation"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "HPR fetch professional",
+            "kind": "operation"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01GNtih2WFFKPHw4bkZUde19",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.endpoint.m4-hpr-fetch-professional-info"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.endpoint.m4-hpr-fetch-professional-info"
+          },
+          "output": {
+            "body": "# Read a professional's profile\n\n## In plain words\n\nReads back what the [HPR](/docs/hiecm/v3/getting-started/glossary#hpr) holds for a healthcare professional. Call it before you register someone, so a professional who already has a profile is not registered again. Search by the HPR ID in `practitioner.id`, or by `name`, `contactNumber`, `state`, `registrationNumber` and `stateCouncilName`.\n\n## How you know it worked\n\nThe response carries a `message` and the matching `practitioners`.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-enrollment/05-m4-post-v1-doctors-fetch-professional-info#m4-hpr-fetch-professional-info",
+            "gateway": "hiecm",
+            "id": "hiecm.endpoint.m4-hpr-fetch-professional-info",
+            "milestone": "M4",
+            "operation": "m4_post_v1_doctors_fetch_professional_info",
+            "summary": "Returns what the registry holds for a healthcare professional, found by HPR ID or other details.",
+            "title": "Read a professional's profile",
+            "type": "endpoint"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01ELhPeVrGP7rWY9frHFme19",
+            "Name": "search",
+            "Input": {
+              "query": "M4 list professionals",
+              "kind": "operation"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "M4 list professionals",
+            "kind": "operation"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01X2u6ZLDfw3M5cm5Yc4pNqS",
+            "Name": "search",
+            "Input": {
+              "query": "M4 registry",
+              "type": "flow"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "M4 registry",
+            "type": "flow"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m4#m4-create-hpid",
+                "id": "hiecm.flow.m4-create-hpid",
+                "summary": "Take a healthcare professional through Aadhaar authentication and mobile verification until the registry issues an HP-ID.",
+                "title": "Get a healthcare professional an HPID",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m4#m4-link-bridge",
+                "id": "hiecm.flow.m4-link-bridge",
+                "summary": "Connect an onboarded facility to the software that will act for it, say whether the facility publishes records through it, fetches them, or both, and name it...",
+                "title": "Link a facility to its bridge",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m2#m2-link-care-context",
+                "id": "hiecm.flow.m2-link-care-context",
+                "summary": "Tell ABDM that this patient had a visit at your facility so their records can be found and fetched later.",
+                "title": "Link a care context to a patient's ABHA",
+                "type": "flow"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01ThXsR31sQTUhb6xeYcZM2X",
+            "Name": "search",
+            "Input": {
+              "query": "",
+              "kind": "operation",
+              "module": "m4",
+              "limit": 25
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "",
+            "kind": "operation",
+            "module": "m4",
+            "limit": 25
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "operations": [
+              {
+                "operation_id": "m4_get_getpsudetailsbyministry",
+                "method": "GET",
+                "path": "/getPsuDetailsByMinistry",
+                "summary": "Get Psu Data",
+                "tag": "Utilities",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_get_hpid_get_categories",
+                "method": "GET",
+                "path": "/hpid/get/categories",
+                "summary": "Fetch Hp Id Categories",
+                "tag": "Util",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_get_hpid_get_subcategories",
+                "method": "GET",
+                "path": "/hpid/get/subCategories",
+                "summary": "Fetch Hp Id Sub Categories From Category",
+                "tag": "Util",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_get_v1_5_facility_get_master_data",
+                "method": "GET",
+                "path": "/v1.5/facility/get-master-data",
+                "summary": "Get Master Data",
+                "tag": "Utilities",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_get_v1_5_facility_get_master_types",
+                "method": "GET",
+                "path": "/v1.5/facility/get-master-types",
+                "summary": "Get All Master Type",
+                "tag": "Utilities",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_get_v1_5_facility_lgd_districts",
+                "method": "GET",
+                "path": "/v1.5/facility/lgd/districts",
+                "summary": "Get All District By State Id",
+                "tag": "Utilities",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_get_v1_5_facility_lgd_states",
+                "method": "GET",
+                "path": "/v1.5/facility/lgd/states",
+                "summary": "Get All States By LGD",
+                "tag": "Utilities",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_get_v1_5_facility_lgd_subdistricts",
+                "method": "GET",
+                "path": "/v1.5/facility/lgd/subdistricts",
+                "summary": "Get All Sub District By District Code",
+                "tag": "Utilities",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_get_v1_account_getidcard",
+                "method": "GET",
+                "path": "/v1/account/getIdCard",
+                "summary": "Get Account Png Card",
+                "tag": "Profile",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_get_v1_account_information",
+                "method": "GET",
+                "path": "/v1/account/information",
+                "summary": "Get User Profile By Jwt",
+                "tag": "Profile",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_get_v1_account_user_details_hprid",
+                "method": "GET",
+                "path": "/v1/account/user-details/{hprId}",
+                "summary": "Get User Details",
+                "tag": "Profile",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_get_v1_auth_cert",
+                "method": "GET",
+                "path": "/api/v1/auth/cert",
+                "summary": "Get Public Certificate",
+                "tag": "Authentication",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_get_v1_masters_affiliated_board",
+                "method": "GET",
+                "path": "/apis/v1/masters/affiliated-board",
+                "summary": "Get All Affiliated Board",
+                "tag": "Utility",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_get_v1_masters_affiliated_board_id",
+                "method": "GET",
+                "path": "/apis/v1/masters/affiliated-board/{id}",
+                "summary": "Get Affiliated Board By Id",
+                "tag": "Utility",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_get_v1_masters_affiliated_board_states_id",
+                "method": "GET",
+                "path": "/apis/v1/masters/affiliated-board/states/{id}",
+                "summary": "Get Affiliated Board By State Id",
+                "tag": "Utility",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_get_v1_masters_colleges_id",
+                "method": "GET",
+                "path": "/apis/v1/masters/colleges/{id}",
+                "summary": "Get College By State",
+                "tag": "Utility",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_get_v1_masters_colleges_stateid_medicineid",
+                "method": "GET",
+                "path": "/apis/v1/masters/colleges/{stateId}/{medicineId}",
+                "summary": "Get College By State And Medicine Id",
+                "tag": "Utility",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_get_v1_masters_countries",
+                "method": "GET",
+                "path": "/apis/v1/masters/countries",
+                "summary": "Get All Countries",
+                "tag": "Utility",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_get_v1_masters_countries_id",
+                "method": "GET",
+                "path": "/apis/v1/masters/countries/{id}",
+                "summary": "Get Countries By Id",
+                "tag": "Utility",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_get_v1_masters_district",
+                "method": "GET",
+                "path": "/apis/v1/masters/district",
+                "summary": "Get All Districts",
+                "tag": "Utility",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_get_v1_masters_district_id",
+                "method": "GET",
+                "path": "/apis/v1/masters/district/{id}",
+                "summary": "Get Districts By State",
+                "tag": "Utility",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_get_v1_masters_languages",
+                "method": "GET",
+                "path": "/apis/v1/masters/languages",
+                "summary": "List Government Health Programmes",
+                "tag": "Utility",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_get_v1_masters_languages_id",
+                "method": "GET",
+                "path": "/apis/v1/masters/languages/{id}",
+                "summary": "Get Pi Languages By Id",
+                "tag": "Utility",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_get_v1_masters_medical_councils",
+                "method": "GET",
+                "path": "/apis/v1/masters/medical-councils",
+                "summary": "Get All Medical Council",
+                "tag": "Utility",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_get_v1_masters_medical_councils_name",
+                "method": "GET",
+                "path": "/apis/v1/masters/medical-councils/name",
+                "summary": "Get Medical Council By System Of Medicine Name",
+                "tag": "Utility",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_get_v1_masters_nurse_councils",
+                "method": "GET",
+                "path": "/apis/v1/masters/nurse-councils",
+                "summary": "Get All Nurse Councils",
+                "tag": "Utility",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_get_v1_masters_states",
+                "method": "GET",
+                "path": "/apis/v1/masters/states",
+                "summary": "Get All States",
+                "tag": "Utility",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_get_v1_masters_states_id",
+                "method": "GET",
+                "path": "/apis/v1/masters/states/{id}",
+                "summary": "Get Status",
+                "tag": "Utility",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_get_v1_masters_sub_districts",
+                "method": "GET",
+                "path": "/apis/v1/masters/sub-districts",
+                "summary": "Get All Sub Districts",
+                "tag": "Utility",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_get_v1_masters_sub_districts_id",
+                "method": "GET",
+                "path": "/apis/v1/masters/sub-districts/{id}",
+                "summary": "Get All Sub Districts 1",
+                "tag": "Utility",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_get_v1_masters_system_of_medicines",
+                "method": "GET",
+                "path": "/apis/v1/masters/system-of-medicines",
+                "summary": "Get All Medical System",
+                "tag": "Utility",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_get_v1_masters_universites",
+                "method": "GET",
+                "path": "/apis/v1/masters/universites",
+                "summary": "List All University",
+                "tag": "Utility",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_get_v1_masters_universites_id",
+                "method": "GET",
+                "path": "/apis/v1/masters/universites/{id}",
+                "summary": "Get University By College",
+                "tag": "Utility",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_get_v1_search_existsbyhprid_hprid",
+                "method": "GET",
+                "path": "/v1/search/existsByHprId/{hprId}",
+                "summary": "Exists By Hpr Id",
+                "tag": "Searched",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_get_v1_search_searchbyhprid_hprid",
+                "method": "GET",
+                "path": "/v1/search/searchByHprId/{hprId}",
+                "summary": "Search User By Hpr Id",
+                "tag": "Searched",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_get_v1_search_searchbymobile_mobile",
+                "method": "GET",
+                "path": "/v1/search/searchByMobile/{mobile}",
+                "summary": "Search User By Mobile No",
+                "tag": "Searched",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_get_v4_auth_logout",
+                "method": "GET",
+                "path": "/v4/auth/logout",
+                "summary": "Logout",
+                "tag": "Profile",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_aadhaar_generatelink",
+                "method": "POST",
+                "path": "/aadhaar/generateLink",
+                "summary": "Generate Aadhaar Link",
+                "tag": "Registration API's Collection Via Aadhaar",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_aadhaar_isauthenticated",
+                "method": "POST",
+                "path": "/aadhaar/isAuthenticated",
+                "summary": "Is Aadhaar Authenticated",
+                "tag": "Registration API's Collection Via Aadhaar",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_facilitymanagement_v1_5_facility_bygeolocation_se_16e590",
+                "method": "POST",
+                "path": "/FacilityManagement/v1.5/facility/bygeoLocation/searchWithinRadiusWithFilter",
+                "summary": "Get Facility Within Radius With Filter",
+                "tag": "Search",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_facilitymanagement_v1_5_facility_search",
+                "method": "POST",
+                "path": "/FacilityManagement/v1.5/facility/search",
+                "summary": "Search Facility 1",
+                "tag": "Search",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_password_change_bypassword",
+                "method": "POST",
+                "path": "/password/change/byPassword",
+                "summary": "Change Password",
+                "tag": "Profile",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_password_recover_byaadhaar",
+                "method": "POST",
+                "path": "/password/recover/byAadhaar",
+                "summary": "Recover Password Via Aadhaar",
+                "tag": "Profile",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_password_recover_bymobile_sendmobileotp",
+                "method": "POST",
+                "path": "/password/recover/byMobile/sendMobileOTP",
+                "summary": "Generate Mobile OTP 1",
+                "tag": "Profile",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_password_recover_bymobile_verifymobileotp",
+                "method": "POST",
+                "path": "/password/recover/byMobile/verifyMobileOTP",
+                "summary": "Verify Mobile OTP 1",
+                "tag": "Profile",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_password_recover_confirmbyaadhaar",
+                "method": "POST",
+                "path": "/password/recover/confirmByAadhaar",
+                "summary": "Recover Password Confirm By Aadhaar",
+                "tag": "Profile",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_password_reset_password",
+                "method": "POST",
+                "path": "/password/reset/password",
+                "summary": "Reset Password And Session",
+                "tag": "Profile",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_password_resetpassword",
+                "method": "POST",
+                "path": "/password/resetPassword",
+                "summary": "Reset Password",
+                "tag": "Profile",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_search_address_filter_deduplicate",
+                "method": "POST",
+                "path": "/search/address/filter/deduplicate",
+                "summary": "Get Filtered Address Post",
+                "tag": "Onboarding APIs",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v1_0_facility_search_facilities",
+                "method": "POST",
+                "path": "/v1.0/facility/search-facilities",
+                "summary": "Search Facility",
+                "tag": "Multiple HRP API",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v1_5_facility_additional_information",
+                "method": "POST",
+                "path": "/v1.5/facility/additional-information",
+                "summary": "V15Facility Additional Information",
+                "tag": "Onboarding APIs",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v1_5_facility_basic_information",
+                "method": "POST",
+                "path": "/v1.5/facility/basic-information",
+                "summary": "V15Basic Facility Information",
+                "tag": "Onboarding APIs",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v1_5_facility_detailed_information",
+                "method": "POST",
+                "path": "/v1.5/facility/detailed-information",
+                "summary": "V15Facility Detailed Information",
+                "tag": "Onboarding APIs",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v1_5_facility_fetch_facility_sub_type",
+                "method": "POST",
+                "path": "/v1.5/facility/fetch-facility-Sub-type",
+                "summary": "Get All Facility Sub Type By Facility Type",
+                "tag": "Utilities",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v1_5_facility_fetch_facility_type",
+                "method": "POST",
+                "path": "/v1.5/facility/fetch-facility-type",
+                "summary": "Get All Facility Type By Ownership And Sys Of Med",
+                "tag": "Utilities",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v1_5_facility_get_owner_subtype",
+                "method": "POST",
+                "path": "/v1.5/facility/get-owner-subtype",
+                "summary": "Get All Sub Types By Owner Ship Type And Sub Type",
+                "tag": "Utilities",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v1_5_facility_get_specialities",
+                "method": "POST",
+                "path": "/v1.5/facility/get-specialities",
+                "summary": "Get All Specialities By System Of Medicine Code",
+                "tag": "Utilities",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v1_5_facility_sendotptocontact",
+                "method": "POST",
+                "path": "/v1.5/facility/sendOtpToContact",
+                "summary": "Send Otp To Contact",
+                "tag": "HFR-HRP Linkage APIs",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v1_5_facility_submit_facility",
+                "method": "POST",
+                "path": "/v1.5/facility/submit-facility",
+                "summary": "V15Submit Facility Details",
+                "tag": "Onboarding APIs",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v1_5_facility_validateotp",
+                "method": "POST",
+                "path": "/v1.5/facility/validateOtp",
+                "summary": "Validate Otp",
+                "tag": "HFR-HRP Linkage APIs",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v1_auth_authpassword",
+                "method": "POST",
+                "path": "/api/v1/auth/authPassword",
+                "summary": "Login Via Password",
+                "tag": "Authentication",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v1_auth_confirmwithaadhaarotp",
+                "method": "POST",
+                "path": "/api/v1/auth/confirmWithAadhaarOtp",
+                "summary": "Verify Aadhaar OTP",
+                "tag": "Authentication",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v1_auth_init",
+                "method": "POST",
+                "path": "/api/v1/auth/init",
+                "summary": "Send Via Aadhaar OTP",
+                "tag": "Authentication",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v1_bridges_mutiplehrpaddupdateservices",
+                "method": "POST",
+                "path": "/v1/bridges/MutipleHRPAddUpdateServices",
+                "summary": "Facility Add And Update",
+                "tag": "Multiple HRP API",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v1_doctors_fetch_documents_list",
+                "method": "POST",
+                "path": "/apis/v1/doctors/fetch-documents-list",
+                "summary": "Fetch Documents",
+                "tag": "Enrollment",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v1_doctors_fetch_professional_info",
+                "method": "POST",
+                "path": "/apis/v1/doctors/fetch-professional-info",
+                "summary": "Get Professional Info",
+                "tag": "Enrollment",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v1_doctors_generate_mobile_otp",
+                "method": "POST",
+                "path": "/apis/v1/doctors/generate-mobile-otp",
+                "summary": "Generate Mobile OTP 2",
+                "tag": "Verification",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v1_doctors_generate_verification_email",
+                "method": "POST",
+                "path": "/apis/v1/doctors/generate-verification-email",
+                "summary": "Send Verification Email",
+                "tag": "Verification",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v1_doctors_regenerate_mobile_otp",
+                "method": "POST",
+                "path": "/apis/v1/doctors/regenerate-mobile-otp",
+                "summary": "Regenerate Mobile OTP",
+                "tag": "Verification",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v1_doctors_register_professional_new",
+                "method": "POST",
+                "path": "/apis/v1/doctors/register-professional-new",
+                "summary": "Register Professtional",
+                "tag": "Enrollment",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v1_doctors_resent_verify_email",
+                "method": "POST",
+                "path": "/apis/v1/doctors/resent-verify-email",
+                "summary": "Resent Verification Email",
+                "tag": "Verification",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v1_doctors_update_professional_new",
+                "method": "POST",
+                "path": "/apis/v1/doctors/update-professional-new",
+                "summary": "Update Professtional",
+                "tag": "Enrollment",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v1_doctors_verify_email_otp",
+                "method": "POST",
+                "path": "/apis/v1/doctors/verify-email-otp",
+                "summary": "Verify Email OTP",
+                "tag": "Verification",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v1_doctors_verify_mobile_otp",
+                "method": "POST",
+                "path": "/apis/v1/doctors/verify-mobile-otp",
+                "summary": "Verify Mobile Otp",
+                "tag": "Verification",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v1_forgot_hprid_aadhaar",
+                "method": "POST",
+                "path": "/v1/forgot/hprId/aadhaar",
+                "summary": "Retrieval Health Id By Aadhaar",
+                "tag": "Forgot Healthcare Professional ID/number",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v1_forgot_hprid_mobile",
+                "method": "POST",
+                "path": "/v1/forgot/hprId/mobile",
+                "summary": "Retrieval Health Id By Mobile",
+                "tag": "Forgot Healthcare Professional ID/number",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v1_forgot_hprid_mobile_generateotp",
+                "method": "POST",
+                "path": "/v1/forgot/hprId/mobile/generateOtp",
+                "summary": "Generate Mobile OTP",
+                "tag": "Forgot Healthcare Professional ID/number",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v1_masters_courses",
+                "method": "POST",
+                "path": "/apis/v1/masters/courses",
+                "summary": "List Courses",
+                "tag": "Utility",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v1_registration_aadhaar_checkhpidaccountexist",
+                "method": "POST",
+                "path": "/v1/registration/aadhaar/checkHpIdAccountExist",
+                "summary": "Account Exist",
+                "tag": "Registration API's Collection Via Aadhaar",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v1_registration_aadhaar_generatemobileotp",
+                "method": "POST",
+                "path": "/v1/registration/aadhaar/generateMobileOTP",
+                "summary": "Generate Mobile Otp",
+                "tag": "Registration API's Collection Via Aadhaar",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v1_registration_aadhaar_hpid_suggestion",
+                "method": "POST",
+                "path": "/v1/registration/aadhaar/hpid/suggestion",
+                "summary": "Get Suggesstion",
+                "tag": "Registration API's Collection Via Aadhaar",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v1_registration_aadhaar_verifymobileotp",
+                "method": "POST",
+                "path": "/v1/registration/aadhaar/verifyMobileOTP",
+                "summary": "Verify Mobile OTP",
+                "tag": "Registration API's Collection Via Aadhaar",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v1_uploads_upload_document",
+                "method": "POST",
+                "path": "/apis/v1/uploads/upload-document",
+                "summary": "Upload Documents",
+                "tag": "Enrollment",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v2_auth_loginviamobilesendotp",
+                "method": "POST",
+                "path": "/api/v2/auth/loginViaMobileSendOTP",
+                "summary": "Send Verify OTP",
+                "tag": "Authentication",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v2_registration_aadhaar_createhpridwithpreverified",
+                "method": "POST",
+                "path": "/v2/registration/aadhaar/createHprIdWithPreVerified",
+                "summary": "Create Hpr Id V2",
+                "tag": "Registration API's Collection Via Aadhaar",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v2_registration_aadhaar_demographicauthviamobile",
+                "method": "POST",
+                "path": "/v2/registration/aadhaar/demographicAuthViaMobile",
+                "summary": "Demographic Auth Via Mobile",
+                "tag": "Registration API's Collection Via Aadhaar",
+                "module": "m4"
+              },
+              {
+                "operation_id": "m4_post_v2_registration_aadhaar_verifyotp",
+                "method": "POST",
+                "path": "/v2/registration/aadhaar/verifyOTP",
+                "summary": "Verify Otp",
+                "tag": "Registration API's Collection Via Aadhaar",
+                "module": "m4"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "Based on the ABDM documentation portal, I don't see a dedicated bulk HPR data export API operation. The available M4 endpoints are primarily for:\n\n- **Individual professional lookups**: Search by HPID, mobile, or registration details\n- **Individual registration**: Register or update a single professional's profile\n- **Master data**: Get utility data like states, districts, councils, etc.\n\nThe portal pages I checked were:\n- M4 operations list at `/docs/hiecm/v3/api/m4/endpoints/`\n- \"Read a professional's profile\" endpoint (single record retrieval)\n\n**If you need bulk HPR data**, you may need to:\n\n1. **Check with HPR directly** — The ABDM registry might offer bulk data exports through a separate portal or administrative interface not documented in the developer API guide\n2. **Use individual API calls** — Iterate through search operations if you have a list of criteria\n3. **Contact your HPR representative** — For large-scale data needs, registries typically have formal data access programs\n\nWould you clarify your use case — are you trying to sync HPR data into your system, validate professionals, or something else? That might help me find the right integration pattern.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "Based on the ABDM documentation portal, I don't see a dedicated bulk HPR data export API operation. The available M4 endpoints are primarily for:\n\n- **Individual professional lookups**: Search by HPID, mobile, or registration details\n- **Individual registration**: Register or update a single professional's profile\n- **Master data**: Get utility data like states, districts, councils, etc.\n\nThe portal pages I checked were:\n- M4 operations list at `/docs/hiecm/v3/api/m4/endpoints/`\n- \"Read a professional's profile\" endpoint (single record retrieval)\n\n**If you need bulk HPR data**, you may need to:\n\n1. **Check with HPR directly** — The ABDM registry might offer bulk data exports through a separate portal or administrative interface not documented in the developer API guide\n2. **Use individual API calls** — Iterate through search operations if you have a list of criteria\n3. **Contact your HPR representative** — For large-scale data needs, registries typically have formal data access programs\n\nWould you clarify your use case — are you trying to sync HPR data into your system, validate professionals, or something else? That might help me find the right integration pattern.",
+  "sources": [
+    {
+      "id": "hiecm.endpoint.m4-hpr-fetch-professional-info",
+      "title": "Read a professional's profile",
+      "url": "/docs/hiecm/v3/api/m4/endpoints/m4-enrollment/05-m4-post-v1-doctors-fetch-professional-info#m4-hpr-fetch-professional-info"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hpr\",\"id\":\"shared.glossary.hpr\",\"summary\":\"The registry of individual healthcare professionals across every system of medicine, which issues a Healthcare Professional ID.\",\"title\":\"HPR, Healthcare Professionals Registry\",\"type\":\"glossary\"},{\"doc_url\":\"\",\"id\":\"hiecm.glossary.m4\",\"summary\":\"The milestone covering professional and facility registration.\",\"title\":\"M4 Registry Integration: Register facilities and professionals\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hfr\",\"id\":\"shared.glossary.hfr\",\"summary\":\"The registry of health facilities, which is where a facility is searched for, onboarded and linked to software.\",\"title\":\"HFR, Health Facility Registry\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/reference/error-codes#payr\",\"id\":\"nhcx.error.payr-1080\",\"summary\":\"The payer rejected your preauthorisation or claim because a practitioner in the bundle carries a professional registry id it does not accept.\",\"title\":\"PAYR-1080: a practitioner's HPR id is not valid\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-enrollment/05-m4-post-v1-doctors-fetch-professional-info#m4-hpr-fetch-professional-info\",\"id\":\"hiecm.endpoint.m4-hpr-fetch-professional-info\",\"summary\":\"Returns what the registry holds for a healthcare professional, found by HPR ID or other details.\",\"title\":\"Read a professional's profile\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/nhcx/v1/reference/error-codes#payr\",\"id\":\"nhcx.error.payr-1083\",\"summary\":\"The payer rejected your preauthorisation or claim because a practitioner in the bundle carries no professional registry id.\",\"title\":\"PAYR-1083: a practitioner has no HPR id\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m4#m4-register-professional\",\"id\":\"hiecm.flow.m4-register-professional\",\"summary\":\"Turn a bare identity number into a registered professional by adding qualifications, council registration and current work, then uploading the certificates t...\",\"title\":\"Register a professional's profile on the HPR\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hpid\",\"id\":\"shared.glossary.hpid\",\"summary\":\"A 14 digit number issued to a healthcare professional or a facility manager, created on the HPR.\",\"title\":\"HPID, healthcare professional identifier\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-enrollment/04-m4-post-v1-uploads-upload-document#m4-hpr-upload-document\",\"id\":\"hiecm.endpoint.m4-hpr-upload-document\",\"summary\":\"Attaches a professional's certificates to their registration against the ids the document list returned.\",\"title\":\"Upload one of the professional's documents\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m4#m4-create-hpid\",\"id\":\"hiecm.flow.m4-create-hpid\",\"summary\":\"Take a healthcare professional through Aadhaar authentication and mobile verification until the registry issues an HP-ID.\",\"title\":\"Get a healthcare professional an HPID\",\"type\":\"flow\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"body\":\"# Read a professional's profile\\n\\n## In plain words\\n\\nReads back what the [HPR](/docs/hiecm/v3/getting-started/glossary#hpr) holds for a healthcare professional. Call it before you register someone, so a professional who already has a profile is not registered again. Search by the HPR ID in `practitioner.id`, or by `name`, `contactNumber`, `state`, `registrationNumber` and `stateCouncilName`.\\n\\n## How you know it worked\\n\\nThe response carries a `message` and the matching `practitioners`.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-enrollment/05-m4-post-v1-doctors-fetch-professional-info#m4-hpr-fetch-professional-info\",\"gateway\":\"hiecm\",\"id\":\"hiecm.endpoint.m4-hpr-fetch-professional-info\",\"milestone\":\"M4\",\"operation\":\"m4_post_v1_doctors_fetch_professional_info\",\"summary\":\"Returns what the registry holds for a healthcare professional, found by HPR ID or other details.\",\"title\":\"Read a professional's profile\",\"type\":\"endpoint\"}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/milestones/m4#m4-create-hpid\",\"id\":\"hiecm.flow.m4-create-hpid\",\"summary\":\"Take a healthcare professional through Aadhaar authentication and mobile verification until the registry issues an HP-ID.\",\"title\":\"Get a healthcare professional an HPID\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m4#m4-link-bridge\",\"id\":\"hiecm.flow.m4-link-bridge\",\"summary\":\"Connect an onboarded facility to the software that will act for it, say whether the facility publishes records through it, fetches them, or both, and name it...\",\"title\":\"Link a facility to its bridge\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m2#m2-link-care-context\",\"id\":\"hiecm.flow.m2-link-care-context\",\"summary\":\"Tell ABDM that this patient had a visit at your facility so their records can be found and fetched later.\",\"title\":\"Link a care context to a patient's ABHA\",\"type\":\"flow\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"operations\":[{\"operation_id\":\"m4_get_getpsudetailsbyministry\",\"method\":\"GET\",\"path\":\"/getPsuDetailsByMinistry\",\"summary\":\"Get Psu Data\",\"tag\":\"Utilities\",\"module\":\"m4\"},{\"operation_id\":\"m4_get_hpid_get_categories\",\"method\":\"GET\",\"path\":\"/hpid/get/categories\",\"summary\":\"Fetch Hp Id Categories\",\"tag\":\"Util\",\"module\":\"m4\"},{\"operation_id\":\"m4_get_hpid_get_subcategories\",\"method\":\"GET\",\"path\":\"/hpid/get/subCategories\",\"summary\":\"Fetch Hp Id Sub Categories From Category\",\"tag\":\"Util\",\"module\":\"m4\"},{\"operation_id\":\"m4_get_v1_5_facility_get_master_data\",\"method\":\"GET\",\"path\":\"/v1.5/facility/get-master-data\",\"summary\":\"Get Master Data\",\"tag\":\"Utilities\",\"module\":\"m4\"},{\"operation_id\":\"m4_get_v1_5_facility_get_master_types\",\"method\":\"GET\",\"path\":\"/v1.5/facility/get-master-types\",\"summary\":\"Get All Master Type\",\"tag\":\"Utilities\",\"module\":\"m4\"},{\"operation_id\":\"m4_get_v1_5_facility_lgd_districts\",\"method\":\"GET\",\"path\":\"/v1.5/facility/lgd/districts\",\"summary\":\"Get All District By State Id\",\"tag\":\"Utilities\",\"module\":\"m4\"},{\"operation_id\":\"m4_get_v1_5_facility_lgd_states\",\"method\":\"GET\",\"path\":\"/v1.5/facility/lgd/states\",\"summary\":\"Get All States By LGD\",\"tag\":\"Utilities\",\"module\":\"m4\"},{\"operation_id\":\"m4_get_v1_5_facility_lgd_subdistricts\",\"method\":\"GET\",\"path\":\"/v1.5/facility/lgd/subdistricts\",\"summary\":\"Get All Sub District By District Code\",\"tag\":\"Utilities\",\"module\":\"m4\"},{\"operation_id\":\"m4_get_v1_account_getidcard\",\"method\":\"GET\",\"path\":\"/v1/account/getIdCard\",\"summary\":\"Get Account Png Card\",\"tag\":\"Profile\",\"module\":\"m4\"},{\"operation_id\":\"m4_get_v1_account_information\",\"method\":\"GET\",\"path\":\"/v1/account/information\",\"summary\":\"Get User Profile By Jwt\",\"tag\":\"Profile\",\"module\":\"m4\"},{\"operation_id\":\"m4_get_v1_account_user_details_hprid\",\"method\":\"GET\",\"path\":\"/v1/account/user-details/{hprId}\",\"summary\":\"Get User Details\",\"tag\":\"Profile\",\"module\":\"m4\"},{\"operation_id\":\"m4_get_v1_auth_cert\",\"method\":\"GET\",\"path\":\"/api/v1/auth/cert\",\"summary\":\"Get Public Certificate\",\"tag\":\"Authentication\",\"module\":\"m4\"},{\"operation_id\":\"m4_get_v1_masters_affiliated_board\",\"method\":\"GET\",\"path\":\"/apis/v1/masters/affiliated-board\",\"summary\":\"Get All Affiliated Board\",\"tag\":\"Utility\",\"module\":\"m4\"},{\"operation_id\":\"m4_get_v1_masters_affiliated_board_id\",\"method\":\"GET\",\"path\":\"/apis/v1/masters/affiliated-board/{id}\",\"summary\":\"Get Affiliated Board By Id\",\"tag\":\"Utility\",\"module\":\"m4\"},{\"operation_id\":\"m4_get_v1_masters_affiliated_board_states_id\",\"method\":\"GET\",\"path\":\"/apis/v1/masters/affiliated-board/states/{id}\",\"summary\":\"Get Affiliated Board By State Id\",\"tag\":\"Utility\",\"module\":\"m4\"},{\"operation_id\":\"m4_get_v1_masters_colleges_id\",\"method\":\"GET\",\"path\":\"/apis/v1/masters/colleges/{id}\",\"summary\":\"Get College By State\",\"tag\":\"Utility\",\"module\":\"m4\"},{\"operation_id\":\"m4_get_v1_masters_colleges_stateid_medicineid\",\"method\":\"GET\",\"path\":\"/apis/v1/masters/colleges/{stateId}/{medicineId}\",\"summary\":\"Get College By State And Medicine Id\",\"tag\":\"Utility\",\"module\":\"m4\"},{\"operation_id\":\"m4_get_v1_masters_countries\",\"method\":\"GET\",\"path\":\"/apis/v1/masters/countries\",\"summary\":\"Get All Countries\",\"tag\":\"Utility\",\"module\":\"m4\"},{\"operation_id\":\"m4_get_v1_masters_countries_id\",\"method\":\"GET\",\"path\":\"/apis/v1/masters/countries/{id}\",\"summary\":\"Get Countries By Id\",\"tag\":\"Utility\",\"module\":\"m4\"},{\"operation_id\":\"m4_get_v1_masters_district\",\"method\":\"GET\",\"path\":\"/apis/v1/masters/district\",\"summary\":\"Get All Districts\",\"tag\":\"Utility\",\"module\":\"m4\"},{\"operation_id\":\"m4_get_v1_masters_district_id\",\"method\":\"GET\",\"path\":\"/apis/v1/masters/district/{id}\",\"summary\":\"Get Districts By State\",\"tag\":\"Utility\",\"module\":\"m4\"},{\"operation_id\":\"m4_get_v1_masters_languages\",\"method\":\"GET\",\"path\":\"/apis/v1/masters/languages\",\"summary\":\"List Government Health Programmes\",\"tag\":\"Utility\",\"module\":\"m4\"},{\"operation_id\":\"m4_get_v1_masters_languages_id\",\"method\":\"GET\",\"path\":\"/apis/v1/masters/languages/{id}\",\"summary\":\"Get Pi Languages By Id\",\"tag\":\"Utility\",\"module\":\"m4\"},{\"operation_id\":\"m4_get_v1_masters_medical_councils\",\"method\":\"GET\",\"path\":\"/apis/v1/masters/medical-councils\",\"summary\":\"Get All Medical Council\",\"tag\":\"Utility\",\"module\":\"m4\"},{\"operation_id\":\"m4_get_v1_masters_medical_councils_name\",\"method\":\"GET\",\"path\":\"/apis/v1/masters/medical-councils/name\",\"summary\":\"Get Medical Council By System Of Medicine Name\",\"tag\":\"Utility\",\"module\":\"m4\"},{\"operation_id\":\"m4_get_v1_masters_nurse_councils\",\"method\":\"GET\",\"path\":\"/apis/v1/masters/nurse-councils\",\"summary\":\"Get All Nurse Councils\",\"tag\":\"Utility\",\"module\":\"m4\"},{\"operation_id\":\"m4_get_v1_masters_states\",\"method\":\"GET\",\"path\":\"/apis/v1/masters/states\",\"summary\":\"Get All States\",\"tag\":\"Utility\",\"module\":\"m4\"},{\"operation_id\":\"m4_get_v1_masters_states_id\",\"method\":\"GET\",\"path\":\"/apis/v1/masters/states/{id}\",\"summary\":\"Get Status\",\"tag\":\"Utility\",\"module\":\"m4\"},{\"operation_id\":\"m4_get_v1_masters_sub_districts\",\"method\":\"GET\",\"path\":\"/apis/v1/masters/sub-districts\",\"summary\":\"Get All Sub Districts\",\"tag\":\"Utility\",\"module\":\"m4\"},{\"operation_id\":\"m4_get_v1_masters_sub_districts_id\",\"method\":\"GET\",\"path\":\"/apis/v1/masters/sub-districts/{id}\",\"summary\":\"Get All Sub Districts 1\",\"tag\":\"Utility\",\"module\":\"m4\"},{\"operation_id\":\"m4_get_v1_masters_system_of_medicines\",\"method\":\"GET\",\"path\":\"/apis/v1/masters/system-of-medicines\",\"summary\":\"Get All Medical System\",\"tag\":\"Utility\",\"module\":\"m4\"},{\"operation_id\":\"m4_get_v1_masters_universites\",\"method\":\"GET\",\"path\":\"/apis/v1/masters/universites\",\"summary\":\"List All University\",\"tag\":\"Utility\",\"module\":\"m4\"},{\"operation_id\":\"m4_get_v1_masters_universites_id\",\"method\":\"GET\",\"path\":\"/apis/v1/masters/universites/{id}\",\"summary\":\"Get University By College\",\"tag\":\"Utility\",\"module\":\"m4\"},{\"operation_id\":\"m4_get_v1_search_existsbyhprid_hprid\",\"method\":\"GET\",\"path\":\"/v1/search/existsByHprId/{hprId}\",\"summary\":\"Exists By Hpr Id\",\"tag\":\"Searched\",\"module\":\"m4\"},{\"operation_id\":\"m4_get_v1_search_searchbyhprid_hprid\",\"method\":\"GET\",\"path\":\"/v1/search/searchByHprId/{hprId}\",\"summary\":\"Search User By Hpr Id\",\"tag\":\"Searched\",\"module\":\"m4\"},{\"operation_id\":\"m4_get_v1_search_searchbymobile_mobile\",\"method\":\"GET\",\"path\":\"/v1/search/searchByMobile/{mobile}\",\"summary\":\"Search User By Mobile No\",\"tag\":\"Searched\",\"module\":\"m4\"},{\"operation_id\":\"m4_get_v4_auth_logout\",\"method\":\"GET\",\"path\":\"/v4/auth/logout\",\"summary\":\"Logout\",\"tag\":\"Profile\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_aadhaar_generatelink\",\"method\":\"POST\",\"path\":\"/aadhaar/generateLink\",\"summary\":\"Generate Aadhaar Link\",\"tag\":\"Registration API's Collection Via Aadhaar\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_aadhaar_isauthenticated\",\"method\":\"POST\",\"path\":\"/aadhaar/isAuthenticated\",\"summary\":\"Is Aadhaar Authenticated\",\"tag\":\"Registration API's Collection Via Aadhaar\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_facilitymanagement_v1_5_facility_bygeolocation_se_16e590\",\"method\":\"POST\",\"path\":\"/FacilityManagement/v1.5/facility/bygeoLocation/searchWithinRadiusWithFilter\",\"summary\":\"Get Facility Within Radius With Filter\",\"tag\":\"Search\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_facilitymanagement_v1_5_facility_search\",\"method\":\"POST\",\"path\":\"/FacilityManagement/v1.5/facility/search\",\"summary\":\"Search Facility 1\",\"tag\":\"Search\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_password_change_bypassword\",\"method\":\"POST\",\"path\":\"/password/change/byPassword\",\"summary\":\"Change Password\",\"tag\":\"Profile\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_password_recover_byaadhaar\",\"method\":\"POST\",\"path\":\"/password/recover/byAadhaar\",\"summary\":\"Recover Password Via Aadhaar\",\"tag\":\"Profile\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_password_recover_bymobile_sendmobileotp\",\"method\":\"POST\",\"path\":\"/password/recover/byMobile/sendMobileOTP\",\"summary\":\"Generate Mobile OTP 1\",\"tag\":\"Profile\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_password_recover_bymobile_verifymobileotp\",\"method\":\"POST\",\"path\":\"/password/recover/byMobile/verifyMobileOTP\",\"summary\":\"Verify Mobile OTP 1\",\"tag\":\"Profile\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_password_recover_confirmbyaadhaar\",\"method\":\"POST\",\"path\":\"/password/recover/confirmByAadhaar\",\"summary\":\"Recover Password Confirm By Aadhaar\",\"tag\":\"Profile\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_password_reset_password\",\"method\":\"POST\",\"path\":\"/password/reset/password\",\"summary\":\"Reset Password And Session\",\"tag\":\"Profile\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_password_resetpassword\",\"method\":\"POST\",\"path\":\"/password/resetPassword\",\"summary\":\"Reset Password\",\"tag\":\"Profile\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_search_address_filter_deduplicate\",\"method\":\"POST\",\"path\":\"/search/address/filter/deduplicate\",\"summary\":\"Get Filtered Address Post\",\"tag\":\"Onboarding APIs\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v1_0_facility_search_facilities\",\"method\":\"POST\",\"path\":\"/v1.0/facility/search-facilities\",\"summary\":\"Search Facility\",\"tag\":\"Multiple HRP API\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v1_5_facility_additional_information\",\"method\":\"POST\",\"path\":\"/v1.5/facility/additional-information\",\"summary\":\"V15Facility Additional Information\",\"tag\":\"Onboarding APIs\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v1_5_facility_basic_information\",\"method\":\"POST\",\"path\":\"/v1.5/facility/basic-information\",\"summary\":\"V15Basic Facility Information\",\"tag\":\"Onboarding APIs\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v1_5_facility_detailed_information\",\"method\":\"POST\",\"path\":\"/v1.5/facility/detailed-information\",\"summary\":\"V15Facility Detailed Information\",\"tag\":\"Onboarding APIs\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v1_5_facility_fetch_facility_sub_type\",\"method\":\"POST\",\"path\":\"/v1.5/facility/fetch-facility-Sub-type\",\"summary\":\"Get All Facility Sub Type By Facility Type\",\"tag\":\"Utilities\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v1_5_facility_fetch_facility_type\",\"method\":\"POST\",\"path\":\"/v1.5/facility/fetch-facility-type\",\"summary\":\"Get All Facility Type By Ownership And Sys Of Med\",\"tag\":\"Utilities\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v1_5_facility_get_owner_subtype\",\"method\":\"POST\",\"path\":\"/v1.5/facility/get-owner-subtype\",\"summary\":\"Get All Sub Types By Owner Ship Type And Sub Type\",\"tag\":\"Utilities\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v1_5_facility_get_specialities\",\"method\":\"POST\",\"path\":\"/v1.5/facility/get-specialities\",\"summary\":\"Get All Specialities By System Of Medicine Code\",\"tag\":\"Utilities\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v1_5_facility_sendotptocontact\",\"method\":\"POST\",\"path\":\"/v1.5/facility/sendOtpToContact\",\"summary\":\"Send Otp To Contact\",\"tag\":\"HFR-HRP Linkage APIs\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v1_5_facility_submit_facility\",\"method\":\"POST\",\"path\":\"/v1.5/facility/submit-facility\",\"summary\":\"V15Submit Facility Details\",\"tag\":\"Onboarding APIs\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v1_5_facility_validateotp\",\"method\":\"POST\",\"path\":\"/v1.5/facility/validateOtp\",\"summary\":\"Validate Otp\",\"tag\":\"HFR-HRP Linkage APIs\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v1_auth_authpassword\",\"method\":\"POST\",\"path\":\"/api/v1/auth/authPassword\",\"summary\":\"Login Via Password\",\"tag\":\"Authentication\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v1_auth_confirmwithaadhaarotp\",\"method\":\"POST\",\"path\":\"/api/v1/auth/confirmWithAadhaarOtp\",\"summary\":\"Verify Aadhaar OTP\",\"tag\":\"Authentication\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v1_auth_init\",\"method\":\"POST\",\"path\":\"/api/v1/auth/init\",\"summary\":\"Send Via Aadhaar OTP\",\"tag\":\"Authentication\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v1_bridges_mutiplehrpaddupdateservices\",\"method\":\"POST\",\"path\":\"/v1/bridges/MutipleHRPAddUpdateServices\",\"summary\":\"Facility Add And Update\",\"tag\":\"Multiple HRP API\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v1_doctors_fetch_documents_list\",\"method\":\"POST\",\"path\":\"/apis/v1/doctors/fetch-documents-list\",\"summary\":\"Fetch Documents\",\"tag\":\"Enrollment\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v1_doctors_fetch_professional_info\",\"method\":\"POST\",\"path\":\"/apis/v1/doctors/fetch-professional-info\",\"summary\":\"Get Professional Info\",\"tag\":\"Enrollment\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v1_doctors_generate_mobile_otp\",\"method\":\"POST\",\"path\":\"/apis/v1/doctors/generate-mobile-otp\",\"summary\":\"Generate Mobile OTP 2\",\"tag\":\"Verification\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v1_doctors_generate_verification_email\",\"method\":\"POST\",\"path\":\"/apis/v1/doctors/generate-verification-email\",\"summary\":\"Send Verification Email\",\"tag\":\"Verification\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v1_doctors_regenerate_mobile_otp\",\"method\":\"POST\",\"path\":\"/apis/v1/doctors/regenerate-mobile-otp\",\"summary\":\"Regenerate Mobile OTP\",\"tag\":\"Verification\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v1_doctors_register_professional_new\",\"method\":\"POST\",\"path\":\"/apis/v1/doctors/register-professional-new\",\"summary\":\"Register Professtional\",\"tag\":\"Enrollment\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v1_doctors_resent_verify_email\",\"method\":\"POST\",\"path\":\"/apis/v1/doctors/resent-verify-email\",\"summary\":\"Resent Verification Email\",\"tag\":\"Verification\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v1_doctors_update_professional_new\",\"method\":\"POST\",\"path\":\"/apis/v1/doctors/update-professional-new\",\"summary\":\"Update Professtional\",\"tag\":\"Enrollment\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v1_doctors_verify_email_otp\",\"method\":\"POST\",\"path\":\"/apis/v1/doctors/verify-email-otp\",\"summary\":\"Verify Email OTP\",\"tag\":\"Verification\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v1_doctors_verify_mobile_otp\",\"method\":\"POST\",\"path\":\"/apis/v1/doctors/verify-mobile-otp\",\"summary\":\"Verify Mobile Otp\",\"tag\":\"Verification\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v1_forgot_hprid_aadhaar\",\"method\":\"POST\",\"path\":\"/v1/forgot/hprId/aadhaar\",\"summary\":\"Retrieval Health Id By Aadhaar\",\"tag\":\"Forgot Healthcare Professional ID/number\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v1_forgot_hprid_mobile\",\"method\":\"POST\",\"path\":\"/v1/forgot/hprId/mobile\",\"summary\":\"Retrieval Health Id By Mobile\",\"tag\":\"Forgot Healthcare Professional ID/number\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v1_forgot_hprid_mobile_generateotp\",\"method\":\"POST\",\"path\":\"/v1/forgot/hprId/mobile/generateOtp\",\"summary\":\"Generate Mobile OTP\",\"tag\":\"Forgot Healthcare Professional ID/number\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v1_masters_courses\",\"method\":\"POST\",\"path\":\"/apis/v1/masters/courses\",\"summary\":\"List Courses\",\"tag\":\"Utility\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v1_registration_aadhaar_checkhpidaccountexist\",\"method\":\"POST\",\"path\":\"/v1/registration/aadhaar/checkHpIdAccountExist\",\"summary\":\"Account Exist\",\"tag\":\"Registration API's Collection Via Aadhaar\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v1_registration_aadhaar_generatemobileotp\",\"method\":\"POST\",\"path\":\"/v1/registration/aadhaar/generateMobileOTP\",\"summary\":\"Generate Mobile Otp\",\"tag\":\"Registration API's Collection Via Aadhaar\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v1_registration_aadhaar_hpid_suggestion\",\"method\":\"POST\",\"path\":\"/v1/registration/aadhaar/hpid/suggestion\",\"summary\":\"Get Suggesstion\",\"tag\":\"Registration API's Collection Via Aadhaar\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v1_registration_aadhaar_verifymobileotp\",\"method\":\"POST\",\"path\":\"/v1/registration/aadhaar/verifyMobileOTP\",\"summary\":\"Verify Mobile OTP\",\"tag\":\"Registration API's Collection Via Aadhaar\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v1_uploads_upload_document\",\"method\":\"POST\",\"path\":\"/apis/v1/uploads/upload-document\",\"summary\":\"Upload Documents\",\"tag\":\"Enrollment\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v2_auth_loginviamobilesendotp\",\"method\":\"POST\",\"path\":\"/api/v2/auth/loginViaMobileSendOTP\",\"summary\":\"Send Verify OTP\",\"tag\":\"Authentication\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v2_registration_aadhaar_createhpridwithpreverified\",\"method\":\"POST\",\"path\":\"/v2/registration/aadhaar/createHprIdWithPreVerified\",\"summary\":\"Create Hpr Id V2\",\"tag\":\"Registration API's Collection Via Aadhaar\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v2_registration_aadhaar_demographicauthviamobile\",\"method\":\"POST\",\"path\":\"/v2/registration/aadhaar/demographicAuthViaMobile\",\"summary\":\"Demographic Auth Via Mobile\",\"tag\":\"Registration API's Collection Via Aadhaar\",\"module\":\"m4\"},{\"operation_id\":\"m4_post_v2_registration_aadhaar_verifyotp\",\"method\":\"POST\",\"path\":\"/v2/registration/aadhaar/verifyOTP\",\"summary\":\"Verify Otp\",\"tag\":\"Registration API's Collection Via Aadhaar\",\"module\":\"m4\"}]}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:55:37.635Z",
+  "usage": {
+    "input_tokens": 60,
+    "output_tokens": 1361,
+    "cache_read_input_tokens": 68992,
+    "cache_creation_input_tokens": 15968,
+    "num_turns": 9,
+    "duration_ms": 20494,
+    "cost_usd_equivalent": 0.0457002
+  }
+}

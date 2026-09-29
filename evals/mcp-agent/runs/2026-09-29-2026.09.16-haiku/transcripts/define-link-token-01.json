@@ -1,0 +1,215 @@
+{
+  "case_id": "define-link-token-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "What is a linktoken in ABDM?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01SL7P624XybDDVCqT12wNKM",
+            "Name": "search",
+            "Input": {
+              "query": "linktoken"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "linktoken"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-link-token-generation-call-back",
+                "id": "hiecm.callback.m2-link-token-generation-call-back",
+                "summary": "ABDM answers a link token request on the HIP's bridge, with the token or an error.",
+                "title": "Link token generation – Call Back API",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-on-generate-token-result",
+                "id": "hiecm.callback.m2-on-generate-token-result",
+                "summary": "The link token arrives here; store it against the patient, because it is valid for six months.",
+                "title": "The link token you asked for, or why it was refused",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-link-token-hip/01-m2-post-v3-token-generate-token#m2-generate-link-token",
+                "id": "hiecm.endpoint.m2-generate-link-token",
+                "summary": "Ask for a link token for one patient; it arrives on your bridge and is valid for six months.",
+                "title": "Generate Link Token",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m2#m2-link-care-context",
+                "id": "hiecm.flow.m2-link-care-context",
+                "summary": "Tell ABDM that this patient had a visit at your facility so their records can be found and fetched later.",
+                "title": "Link a care context to a patient's ABHA",
+                "type": "flow"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01NaoA2FV2P3BtemKZ3EGmUL",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.endpoint.m2-generate-link-token"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.endpoint.m2-generate-link-token"
+          },
+          "output": {
+            "body": "# Generate Link Token\n\n## In plain words\n\nAsk for a [link token](/docs/hiecm/v3/getting-started/glossary#link-token) for one patient before you link their care contexts. The call returns 202 Accepted, and the token arrives on your bridge at [on-generate-token](/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token). A link token is valid for six months, so store it and reuse it until it expires.\n\nSend `abhaAddress`, `name`, `gender` and `yearOfBirth` as you hold them for the patient. Add `abhaNumber` when the patient has one linked to the address.\n\n## Before you start\n\nA gateway session token and your HIP id. Send the `REQUEST-ID`, `TIMESTAMP`, `X-CM-ID` and `X-HIP-ID` headers.\n\n## What happens\n\n`gender` takes `M`, `F`, `O`, `D`, `T` or `U`. `yearOfBirth` is four digits. If you send both `abhaNumber` and `abhaAddress` here, send both again on the link call.\n\n## How you know it worked\n\nA `linkToken` arrives on `/api/v3/hip/token/on-generate-token`, carrying your `REQUEST-ID` as `requestId`.\n\n## When it goes wrong\n\n`ABDM-1035` (Invalid HIP ID): check `X-HIP-ID`. `ABDM-2402` (Invalid Timestamp): check `TIMESTAMP` against your clock. `ABDM-2404` (Invalid Request Id): send a fresh UUID in `REQUEST-ID`. `ABDM-2500` (Authorization header is missing): send the session token. `ABDM-9999` (Unknown exception) gives no cause.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-link-token-hip/01-m2-post-v3-token-generate-token#m2-generate-link-token",
+            "gateway": "hiecm",
+            "id": "hiecm.endpoint.m2-generate-link-token",
+            "milestone": "M2",
+            "operation": "m2_post_v3_token_generate_token",
+            "summary": "Ask for a link token for one patient; it arrives on your bridge and is valid for six months.",
+            "title": "Generate Link Token",
+            "type": "endpoint"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_019S3VjMG9psh2MjKS1PucVZ",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.flow.m2-link-care-context"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.flow.m2-link-care-context"
+          },
+          "output": {
+            "body": "# Link a care context to a patient's ABHA\n\n## In plain words\n\nThe HIP generates a linking token using the patient's ABHA address and\ndemographic details for authentication. After successful verification, a\nlinking token valid for 6 months is created, and the patient's care context is\nlinked to the ABHA Address.\n\n```mermaid\nsequenceDiagram\n    autonumber\n    participant S as Your system (HIP)\n    participant G as ABDM Gateway\n    participant P as ABHA / PHR app\n    Note over S,G: Step 1: generate link token\n    S->>G: POST /api/hiecm/v3/token/generate-token<br/>abhaNumber, abhaAddress, name, gender, yearOfBirth\n    G-->>S: 202 Accepted\n    Note over S,G: Step 2: ABDM responds asynchronously with token details\n    G-)S: POST /api/v3/hip/token/on-generate-token<br/>abhaAddress, linkToken\n    S-->>G: 202 Accepted\n    Note over S,G: Step 3: push care contexts\n    S->>G: POST /api/hiecm/hip/v3/link/carecontext<br/>Authorization: Bearer accessToken, X-Link-Token: linkToken<br/>abhaNumber, abhaAddress, patient [referenceNumber, display,<br/>careContexts [referenceNumber, display], hiType, count]\n    G-->>S: 202 Accepted, care contexts queued\n    Note over S,G: Step 4: ABDM responds asynchronously with the status of linking\n    G-)S: POST /api/v3/link/on_carecontext<br/>status\n    S-->>G: 202 Accepted\n    G-)P: Push notification, record linked\n    P->>P: Patient sees a new record linked\n```\n\nThe steps, as drawn:\n\n1. Your system calls `POST /api/hiecm/v3/token/generate-token` with the\n   patient's ABHA number or ABHA address, name, gender and year of birth.\n2. The gateway answers 202 Accepted.\n3. The gateway calls `POST /api/v3/hip/token/on-generate-token` on your bridge\n   with the ABHA address and the link token.\n4. Your system answers 202 Accepted and stores the link token against the\n   patient.\n5. Your system calls `POST /api/hiecm/hip/v3/link/carecontext` with the gateway\n   access token, the link token in `X-Link-Token`, and the patient's care\n   contexts: for each, a reference number and a display name, the HI type and\n   the count of records.\n6. The gateway answers 202 Accepted and queues the care contexts.\n7. The gateway calls `POST /api/v3/link/on_carecontext` on your bridge with the\n   status of the linking.\n8. Your system answers 202 Accepted.\n9. The gateway pushes a notification to the patient's ABHA or PHR app that a\n   record is linked.\n10. The patient sees the new record linked in the app.\n\nWhen a linked care context changes, tell ABDM with\n`POST /api/hiecm/hip/v3/link/context/notify`. The outcome arrives on your\nbridge at `/api/v3/links/context/on-notify`.\n\n## Before you start\n\nThe facility holds a facility ID and a bridge linked with type HIP: see [Journey 4 on M4](/docs/hiecm/v3/milestones/m4#m4-link-bridge). You hold a gateway session token, and the patient has an ABHA address.\n\n## What happens\n\nGenerate the link token; the 202 carries nothing, and the token arrives on `/api/v3/hip/token/on-generate-token`. Store it against the patient and reuse it: it is valid for six months. Link with `X-Link-Token` set to it, and wait for `/api/v3/link/on_carecontext`.\n\n## How you know it worked\n\nA POST reaches `/api/v3/link/on_carecontext` whose `response.requestId` matches the `REQUEST-ID` of your link call and whose status reads Successfully Linked care context. The care context then appears when the patient runs discovery against your facility. The 202 on the link call is receipt, not success.\n\n## When it goes wrong\n\n`ABDM-1056`: the care context is already linked. `ABDM-1038`: the ABHA address does not match the link token. `ABDM-1026`: the link token is invalid, so generate a fresh one. `ABDM-2406`: calls made out of the logical sequence. No callback at all: see [the callback never arrives](/docs/hiecm/v3/troubleshooting/callback-never-arrives).",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/milestones/m2#m2-link-care-context",
+            "gateway": "hiecm",
+            "id": "hiecm.flow.m2-link-care-context",
+            "milestone": "M2",
+            "summary": "Tell ABDM that this patient had a visit at your facility so their records can be found and fetched later.",
+            "title": "Link a care context to a patient's ABHA",
+            "type": "flow"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "A **link token** in ABDM is a temporary credential that authenticates a patient's identity when linking their care contexts (medical records) to their ABHA address.\n\n## Key Details\n\n- **Purpose**: It serves as proof that a patient's demographic details (name, gender, year of birth) match their ABHA address, allowing their records to be securely linked to their ABHA.\n\n- **Validity**: Valid for **6 months**, so you can reuse it for multiple linking operations for the same patient until it expires.\n\n- **How it's obtained**: A HIP (Health Information Provider) requests it via `POST /api/hiecm/v3/token/generate-token` with the patient's ABHA address or number and demographic details. ABDM responds asynchronously with the token on the HIP's callback endpoint `/api/v3/hip/token/on-generate-token`.\n\n- **How it's used**: The link token is sent in the `X-Link-Token` header when calling `POST /api/hiecm/hip/v3/link/carecontext` to actually link the patient's care contexts to their ABHA.\n\nIn the ABDM flow, generating the link token is **Step 1** before you can link any care contexts. Without it, patients' records can't be discovered and fetched later.\n\n**Portal pages**: \n- [Generate Link Token endpoint](https://abdm.gov.in/docs/hiecm/v3/api/m2/endpoints/m2-abdm-link-token-hip/01-m2-post-v3-token-generate-token#m2-generate-link-token)\n- [Link Care Context flow](https://abdm.gov.in/docs/hiecm/v3/milestones/m2#m2-link-care-context)",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "A **link token** in ABDM is a temporary credential that authenticates a patient's identity when linking their care contexts (medical records) to their ABHA address.\n\n## Key Details\n\n- **Purpose**: It serves as proof that a patient's demographic details (name, gender, year of birth) match their ABHA address, allowing their records to be securely linked to their ABHA.\n\n- **Validity**: Valid for **6 months**, so you can reuse it for multiple linking operations for the same patient until it expires.\n\n- **How it's obtained**: A HIP (Health Information Provider) requests it via `POST /api/hiecm/v3/token/generate-token` with the patient's ABHA address or number and demographic details. ABDM responds asynchronously with the token on the HIP's callback endpoint `/api/v3/hip/token/on-generate-token`.\n\n- **How it's used**: The link token is sent in the `X-Link-Token` header when calling `POST /api/hiecm/hip/v3/link/carecontext` to actually link the patient's care contexts to their ABHA.\n\nIn the ABDM flow, generating the link token is **Step 1** before you can link any care contexts. Without it, patients' records can't be discovered and fetched later.\n\n**Portal pages**: \n- [Generate Link Token endpoint](https://abdm.gov.in/docs/hiecm/v3/api/m2/endpoints/m2-abdm-link-token-hip/01-m2-post-v3-token-generate-token#m2-generate-link-token)\n- [Link Care Context flow](https://abdm.gov.in/docs/hiecm/v3/milestones/m2#m2-link-care-context)",
+  "sources": [
+    {
+      "id": "hiecm.endpoint.m2-generate-link-token",
+      "title": "Generate Link Token",
+      "url": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-link-token-hip/01-m2-post-v3-token-generate-token#m2-generate-link-token"
+    },
+    {
+      "id": "hiecm.flow.m2-link-care-context",
+      "title": "Link a care context to a patient's ABHA",
+      "url": "/docs/hiecm/v3/milestones/m2#m2-link-care-context"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-link-token-generation-call-back\",\"id\":\"hiecm.callback.m2-link-token-generation-call-back\",\"summary\":\"ABDM answers a link token request on the HIP's bridge, with the token or an error.\",\"title\":\"Link token generation – Call Back API\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-on-generate-token-result\",\"id\":\"hiecm.callback.m2-on-generate-token-result\",\"summary\":\"The link token arrives here; store it against the patient, because it is valid for six months.\",\"title\":\"The link token you asked for, or why it was refused\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-abdm-link-token-hip/01-m2-post-v3-token-generate-token#m2-generate-link-token\",\"id\":\"hiecm.endpoint.m2-generate-link-token\",\"summary\":\"Ask for a link token for one patient; it arrives on your bridge and is valid for six months.\",\"title\":\"Generate Link Token\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m2#m2-link-care-context\",\"id\":\"hiecm.flow.m2-link-care-context\",\"summary\":\"Tell ABDM that this patient had a visit at your facility so their records can be found and fetched later.\",\"title\":\"Link a care context to a patient's ABHA\",\"type\":\"flow\"}]}\n{\"body\":\"# Generate Link Token\\n\\n## In plain words\\n\\nAsk for a [link token](/docs/hiecm/v3/getting-started/glossary#link-token) for one patient before you link their care contexts. The call returns 202 Accepted, and the token arrives on your bridge at [on-generate-token](/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token). A link token is valid for six months, so store it and reuse it until it expires.\\n\\nSend `abhaAddress`, `name`, `gender` and `yearOfBirth` as you hold them for the patient. Add `abhaNumber` when the patient has one linked to the address.\\n\\n## Before you start\\n\\nA gateway session token and your HIP id. Send the `REQUEST-ID`, `TIMESTAMP`, `X-CM-ID` and `X-HIP-ID` headers.\\n\\n## What happens\\n\\n`gender` takes `M`, `F`, `O`, `D`, `T` or `U`. `yearOfBirth` is four digits. If you send both `abhaNumber` and `abhaAddress` here, send both again on the link call.\\n\\n## How you know it worked\\n\\nA `linkToken` arrives on `/api/v3/hip/token/on-generate-token`, carrying your `REQUEST-ID` as `requestId`.\\n\\n## When it goes wrong\\n\\n`ABDM-1035` (Invalid HIP ID): check `X-HIP-ID`. `ABDM-2402` (Invalid Timestamp): check `TIMESTAMP` against your clock. `ABDM-2404` (Invalid Request Id): send a fresh UUID in `REQUEST-ID`. `ABDM-2500` (Authorization header is missing): send the session token. `ABDM-9999` (Unknown exception) gives no cause.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-abdm-link-token-hip/01-m2-post-v3-token-generate-token#m2-generate-link-token\",\"gateway\":\"hiecm\",\"id\":\"hiecm.endpoint.m2-generate-link-token\",\"milestone\":\"M2\",\"operation\":\"m2_post_v3_token_generate_token\",\"summary\":\"Ask for a link token for one patient; it arrives on your bridge and is valid for six months.\",\"title\":\"Generate Link Token\",\"type\":\"endpoint\"}\n{\"body\":\"# Link a care context to a patient's ABHA\\n\\n## In plain words\\n\\nThe HIP generates a linking token using the patient's ABHA address and\\ndemographic details for authentication. After successful verification, a\\nlinking token valid for 6 months is created, and the patient's care context is\\nlinked to the ABHA Address.\\n\\n```mermaid\\nsequenceDiagram\\n    autonumber\\n    participant S as Your system (HIP)\\n    participant G as ABDM Gateway\\n    participant P as ABHA / PHR app\\n    Note over S,G: Step 1: generate link token\\n    S->>G: POST /api/hiecm/v3/token/generate-token<br/>abhaNumber, abhaAddress, name, gender, yearOfBirth\\n    G-->>S: 202 Accepted\\n    Note over S,G: Step 2: ABDM responds asynchronously with token details\\n    G-)S: POST /api/v3/hip/token/on-generate-token<br/>abhaAddress, linkToken\\n    S-->>G: 202 Accepted\\n    Note over S,G: Step 3: push care contexts\\n    S->>G: POST /api/hiecm/hip/v3/link/carecontext<br/>Authorization: Bearer accessToken, X-Link-Token: linkToken<br/>abhaNumber, abhaAddress, patient [referenceNumber, display,<br/>careContexts [referenceNumber, display], hiType, count]\\n    G-->>S: 202 Accepted, care contexts queued\\n    Note over S,G: Step 4: ABDM responds asynchronously with the status of linking\\n    G-)S: POST /api/v3/link/on_carecontext<br/>status\\n    S-->>G: 202 Accepted\\n    G-)P: Push notification, record linked\\n    P->>P: Patient sees a new record linked\\n```\\n\\nThe steps, as drawn:\\n\\n1. Your system calls `POST /api/hiecm/v3/token/generate-token` with the\\n   patient's ABHA number or ABHA address, name, gender and year of birth.\\n2. The gateway answers 202 Accepted.\\n3. The gateway calls `POST /api/v3/hip/token/on-generate-token` on your bridge\\n   with the ABHA address and the link token.\\n4. Your system answers 202 Accepted and stores the link token against the\\n   patient.\\n5. Your system calls `POST /api/hiecm/hip/v3/link/carecontext` with the gateway\\n   access token, the link token in `X-Link-Token`, and the patient's care\\n   contexts: for each, a reference number and a display name, the HI type and\\n   the count of records.\\n6. The gateway answers 202 Accepted and queues the care contexts.\\n7. The gateway calls `POST /api/v3/link/on_carecontext` on your bridge with the\\n   status of the linking.\\n8. Your system answers 202 Accepted.\\n9. The gateway pushes a notification to the patient's ABHA or PHR app that a\\n   record is linked.\\n10. The patient sees the new record linked in the app.\\n\\nWhen a linked care context changes, tell ABDM with\\n`POST /api/hiecm/hip/v3/link/context/notify`. The outcome arrives on your\\nbridge at `/api/v3/links/context/on-notify`.\\n\\n## Before you start\\n\\nThe facility holds a facility ID and a bridge linked with type HIP: see [Journey 4 on M4](/docs/hiecm/v3/milestones/m4#m4-link-bridge). You hold a gateway session token, and the patient has an ABHA address.\\n\\n## What happens\\n\\nGenerate the link token; the 202 carries nothing, and the token arrives on `/api/v3/hip/token/on-generate-token`. Store it against the patient and reuse it: it is valid for six months. Link with `X-Link-Token` set to it, and wait for `/api/v3/link/on_carecontext`.\\n\\n## How you know it worked\\n\\nA POST reaches `/api/v3/link/on_carecontext` whose `response.requestId` matches the `REQUEST-ID` of your link call and whose status reads Successfully Linked care context. The care context then appears when the patient runs discovery against your facility. The 202 on the link call is receipt, not success.\\n\\n## When it goes wrong\\n\\n`ABDM-1056`: the care context is already linked. `ABDM-1038`: the ABHA address does not match the link token. `ABDM-1026`: the link token is invalid, so generate a fresh one. `ABDM-2406`: calls made out of the logical sequence. No callback at all: see [the callback never arrives](/docs/hiecm/v3/troubleshooting/callback-never-arrives).\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/milestones/m2#m2-link-care-context\",\"gateway\":\"hiecm\",\"id\":\"hiecm.flow.m2-link-care-context\",\"milestone\":\"M2\",\"summary\":\"Tell ABDM that this patient had a visit at your facility so their records can be found and fetched later.\",\"title\":\"Link a care context to a patient's ABHA\",\"type\":\"flow\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:59:06.708Z",
+  "usage": {
+    "input_tokens": 30,
+    "output_tokens": 968,
+    "cache_read_input_tokens": 28406,
+    "cache_creation_input_tokens": 8197,
+    "num_turns": 4,
+    "duration_ms": 14027,
+    "cost_usd_equivalent": 0.024104600000000004
+  }
+}

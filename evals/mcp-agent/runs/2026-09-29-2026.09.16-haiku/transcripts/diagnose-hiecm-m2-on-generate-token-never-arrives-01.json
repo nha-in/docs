@@ -1,0 +1,656 @@
+{
+  "case_id": "diagnose-hiecm-m2-on-generate-token-never-arrives-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "generate-token gives 202 but nothing ever comes on my on-generate-token endpoint"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "Let me search for information about generate-token and the callback flow.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_012omc4vP5NqbeLMMrw86Eux",
+            "Name": "search",
+            "Input": {
+              "query": "generate-token 202 callback on-generate-token"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "generate-token 202 callback on-generate-token"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m2#m2-link-care-context",
+                "id": "hiecm.flow.m2-link-care-context",
+                "summary": "Tell ABDM that this patient had a visit at your facility so their records can be found and fetched later.",
+                "title": "Link a care context to a patient's ABHA",
+                "type": "flow"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01477W4zBwsKFhhJ5iphQsA6",
+            "Name": "search",
+            "Input": {
+              "query": "generate-token operation endpoint",
+              "kind": "operation"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "generate-token operation endpoint",
+            "kind": "operation"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01HZThQpEQTMDTmCWiRHMona",
+            "Name": "search",
+            "Input": {
+              "query": "generate-token",
+              "kind": "operation"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "generate-token",
+            "kind": "operation"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-post-v3-token-generate-token",
+                "id": "m2_post_v3_token_generate_token",
+                "summary": "API used to generate link token to link the health records",
+                "title": "POST /api/hiecm/v3/token/generate-token",
+                "type": "operation"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01VyVKKqUoesPos6zrYTw4K2",
+            "Name": "search",
+            "Input": {
+              "query": "callback not receiving invoke"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "callback not receiving invoke"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01VugyEQFuzSZ6mzPpMVLQTg",
+            "Name": "get",
+            "Input": {
+              "id": "m2_post_v3_token_generate_token"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "m2_post_v3_token_generate_token"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "doc_path": "/docs/hiecm/v3/api/m2/endpoints/m2-post-v3-token-generate-token",
+            "operation_id": "m2_post_v3_token_generate_token",
+            "spec": {
+              "description": "This API endpoint is used to generate a link token which will be valid for 6 months.. This token can be utilized for Health Information Provider (HIP) Initiated Linking, enabling HIPs to securely link patient health records to their ABHA (Ayushman Bharat Health Account) address. The generated token ensures that the linking process is authenticated and authorized, maintaining the integrity and security of health information exchange. This functionality is crucial for facilitating seamless and efficient linking of health records within the healthcare ecosystem.<ol type='a'><li><b>Authorization:</b> We are passing the access-token in the authorization [Example: Bearer  eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJBbFJiNVd]</li></ol>",
+              "operationId": "m2_post_v3_token_generate_token",
+              "parameters": [
+                {
+                  "description": "Unique UUID for track the end to end request transaction",
+                  "example": "18235d89-cb13-479d-ad71-7a57d5f669a8",
+                  "in": "header",
+                  "name": "REQUEST-ID",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "description": "Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds",
+                  "example": "2022-10-06T15:10:00.587Z",
+                  "in": "header",
+                  "name": "TIMESTAMP",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "description": "Suffix of the consent manager to which the request was intended",
+                  "example": "sbx",
+                  "in": "header",
+                  "name": "X-CM-ID",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "description": "Identifier of the health information provider to which the request was intended",
+                  "example": "IN2810014366",
+                  "in": "header",
+                  "name": "X-HIP-ID",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "description": "In the request body, either 'abhaNumber' or 'abhaAddress' must be included, with atleast one being mandatory based on the patient profile.",
+                      "properties": {
+                        "abhaAddress": {
+                          "description": "abhaAddress of the user/patient. Allows alpha numeric character and special characters like ^[a-zA-Z0-9][a-zA-Z0-9_.]+[a-zA-Z0-9]@(abdm|sbx)$",
+                          "example": "<ABHA_ADDRESS>",
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "abhaNumber": {
+                          "description": "it can be null if abhaNumber is not linked with abhaAddress. Allows numeric character like ^\\d{14}$",
+                          "example": 12345678901234,
+                          "nullable": true,
+                          "type": "number"
+                        },
+                        "gender": {
+                          "description": "Allows M, F, O, D, T, U as a input",
+                          "example": "M",
+                          "type": "string"
+                        },
+                        "name": {
+                          "description": "Only alphabets and special characters like ',.- are allowed like ^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$",
+                          "example": "first_name + middle_name + last_name",
+                          "type": "string"
+                        },
+                        "yearOfBirth": {
+                          "description": "Year of birth must be 4 digit, ranging between 1900 and 2200",
+                          "example": 9999,
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "abhaAddress",
+                        "name",
+                        "gender",
+                        "yearOfBirth"
+                      ],
+                      "type": "object"
+                    }
+                  }
+                },
+                "required": true
+              },
+              "responses": {
+                "202": {
+                  "description": "Accepted"
+                },
+                "400": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "error": {
+                            "description": "The error code and message, if any occurred.",
+                            "properties": {
+                              "code": {
+                                "description": "ABDM-1035 - Invalid HIP ID. May be returned either bare (`ABDM-1035`) or with a trailing \": \" separator (`ABDM-1035: `); match on the code itself and tolerate the separator.",
+                                "example": "ABDM-1035",
+                                "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                                "type": "string"
+                              },
+                              "message": {
+                                "example": "Invalid HIP ID",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "code",
+                              "message"
+                            ],
+                            "type": "object"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Bad Request"
+                },
+                "401": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "code": {
+                            "description": "900902 - Unauthorized. May be returned either bare or with a trailing \": \" separator; match on the code itself and tolerate the separator.",
+                            "example": "900902",
+                            "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                            "type": "string"
+                          },
+                          "description": {
+                            "example": "Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'",
+                            "type": "string"
+                          },
+                          "message": {
+                            "example": "Unauthorized",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Unauthorized"
+                },
+                "403": {
+                  "content": {
+                    "text/plain": {
+                      "schema": {
+                        "example": "Access Denied",
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "description": "Forbidden"
+                },
+                "404": {
+                  "description": "server cannot find the requested resource"
+                },
+                "500": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "code": {
+                            "description": "900900 - Unclassified Authentication Failure. May be returned either bare or with a trailing \": \" separator; match on the code itself and tolerate the separator.",
+                            "example": "900900",
+                            "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                            "type": "string"
+                          },
+                          "description": {
+                            "example": "Access failure for API: /hiecm/api/v3, version: v3 status: (900900) - Unclassified Authentication Failure",
+                            "type": "string"
+                          },
+                          "message": {
+                            "example": "Unclassified Authentication Failure",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Internal Server Error"
+                },
+                "503": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "code": {
+                            "description": "ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing \": \" separator (`ABDM-1024: `); match on the code itself and tolerate the separator.",
+                            "example": "ABDM-1024",
+                            "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                            "type": "string"
+                          },
+                          "message": {
+                            "example": "Dependent service unavailable",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "message"
+                        ],
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Service Unavailable"
+                }
+              },
+              "security": [
+                {
+                  "bearerAuth": []
+                }
+              ],
+              "summary": "API used to generate link token to link the health records",
+              "tags": [
+                "abdm-link-token-hip"
+              ],
+              "x-abdm-nha-operation-id": "abdm-link-token 1"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01G4dGxUfF5HWPVJfLrGS7ac",
+            "Name": "search",
+            "Input": {
+              "query": "on-generate-token callback"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "on-generate-token callback"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m2#m2-link-care-context",
+                "id": "hiecm.flow.m2-link-care-context",
+                "summary": "Tell ABDM that this patient had a visit at your facility so their records can be found and fetched later.",
+                "title": "Link a care context to a patient's ABHA",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-link-token-generation-call-back",
+                "id": "hiecm.callback.m2-link-token-generation-call-back",
+                "summary": "ABDM answers a link token request on the HIP's bridge, with the token or an error.",
+                "title": "Link token generation – Call Back API",
+                "type": "callback"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_012W1w17KyMJfv2q8FNYfhwe",
+            "Name": "search",
+            "Input": {
+              "query": "link token HIP initiated linking callback"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "link token HIP initiated linking callback"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/02-m2-post-v3-link-on-carecontext#m2-linking-care-context-call-back",
+                "id": "hiecm.callback.m2-linking-care-context-call-back",
+                "summary": "ABDM answers a care context link request on the HIP's bridge with the outcome.",
+                "title": "Linking care context Call back API",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-on-generate-token-result",
+                "id": "hiecm.callback.m2-on-generate-token-result",
+                "summary": "The link token arrives here; store it against the patient, because it is valid for six months.",
+                "title": "The link token you asked for, or why it was refused",
+                "type": "callback"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "Perfect! Let me get the callback specification:",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01PSqrN6UCdfzxUAYTQmS2HL",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.callback.m2-link-token-generation-call-back"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.callback.m2-link-token-generation-call-back"
+          },
+          "output": {
+            "body": "# Link token generation – Call Back API\n\n## In plain words\n\nAfter you [ask for a link token](/docs/hiecm/v3/api/m2/endpoints/m2-abdm-link-token-hip/01-m2-post-v3-token-generate-token), ABDM answers on your bridge at `/api/v3/hip/token/on-generate-token`. The path is relative to the callback URL you registered. On success the body carries the `linkToken` for the patient's [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address). On failure it carries an `error`.\n\n## Before you start\n\nA callback URL registered for your bridge and reachable from the public internet.\n\n## What happens\n\nABDM posts with the `REQUEST-ID`, `TIMESTAMP` and `X-HIP-ID` headers. The body carries `abhaAddress`, `response` and either `linkToken` or `error`.\n\n## When it goes wrong\n\n`ABDM-1027`: blocked, try again after 24 hours. `ABDM-1051` (Invalid ABHA Number or ABHA Address): check the details you sent. `ABDM-1024` (Dependent service unavailable): try again later.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-link-token-generation-call-back",
+            "gateway": "hiecm",
+            "id": "hiecm.callback.m2-link-token-generation-call-back",
+            "milestone": "M2",
+            "operation": "m2_post_v3_hip_token_on_generate_token",
+            "summary": "ABDM answers a link token request on the HIP's bridge, with the token or an error.",
+            "title": "Link token generation – Call Back API",
+            "type": "callback"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "The issue is likely with your **callback URL registration**. The key requirement from the docs:\n\n> A callback URL registered for your bridge and reachable from the public internet.\n\nWhen you get a 202 response, it means ABDM accepted your request. The **202 is async** — ABDM will invoke your callback at `POST /api/v3/hip/token/on-generate-token` on the callback URL you registered for your bridge, but only if:\n\n1. **You've registered a callback URL** for your HIP in the ABDM console\n2. **That URL is publicly reachable** (not localhost or private IP)\n3. **ABDM can reach it** (no firewall/network issues blocking inbound traffic)\n\n**Common causes:**\n- Callback URL not registered or misconfigured in your bridge settings\n- Running on `localhost` or a private IP that ABDM can't reach\n- Firewall blocking inbound traffic from ABDM's IP ranges\n- The registered URL doesn't match where your `/api/v3/hip/token/on-generate-token` endpoint actually is\n\n**Check:**\n1. Verify your callback URL is registered in your ABDM bridge configuration\n2. Make sure it's a public, routable URL (not localhost)\n3. Test that ABDM's servers can reach it (you can check access logs or add logging)\n\nSee [Link token generation – Call Back API](/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-link-token-generation-call-back) in the ABDM portal for callback details.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "The issue is likely with your **callback URL registration**. The key requirement from the docs:\n\n> A callback URL registered for your bridge and reachable from the public internet.\n\nWhen you get a 202 response, it means ABDM accepted your request. The **202 is async** — ABDM will invoke your callback at `POST /api/v3/hip/token/on-generate-token` on the callback URL you registered for your bridge, but only if:\n\n1. **You've registered a callback URL** for your HIP in the ABDM console\n2. **That URL is publicly reachable** (not localhost or private IP)\n3. **ABDM can reach it** (no firewall/network issues blocking inbound traffic)\n\n**Common causes:**\n- Callback URL not registered or misconfigured in your bridge settings\n- Running on `localhost` or a private IP that ABDM can't reach\n- Firewall blocking inbound traffic from ABDM's IP ranges\n- The registered URL doesn't match where your `/api/v3/hip/token/on-generate-token` endpoint actually is\n\n**Check:**\n1. Verify your callback URL is registered in your ABDM bridge configuration\n2. Make sure it's a public, routable URL (not localhost)\n3. Test that ABDM's servers can reach it (you can check access logs or add logging)\n\nSee [Link token generation – Call Back API](/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-link-token-generation-call-back) in the ABDM portal for callback details.",
+  "sources": [
+    {
+      "id": "hiecm.callback.m2-link-token-generation-call-back",
+      "title": "Link token generation – Call Back API",
+      "url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-link-token-generation-call-back"
+    },
+    {
+      "id": "hiecm.callback.m2-on-generate-token-result",
+      "title": "The link token you asked for, or why it was refused",
+      "url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-on-generate-token-result"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/milestones/m2#m2-link-care-context\",\"id\":\"hiecm.flow.m2-link-care-context\",\"summary\":\"Tell ABDM that this patient had a visit at your facility so their records can be found and fetched later.\",\"title\":\"Link a care context to a patient's ABHA\",\"type\":\"flow\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-post-v3-token-generate-token\",\"id\":\"m2_post_v3_token_generate_token\",\"summary\":\"API used to generate link token to link the health records\",\"title\":\"POST /api/hiecm/v3/token/generate-token\",\"type\":\"operation\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"doc_path\":\"/docs/hiecm/v3/api/m2/endpoints/m2-post-v3-token-generate-token\",\"operation_id\":\"m2_post_v3_token_generate_token\",\"spec\":{\"description\":\"This API endpoint is used to generate a link token which will be valid for 6 months.. This token can be utilized for Health Information Provider (HIP) Initiated Linking, enabling HIPs to securely link patient health records to their ABHA (Ayushman Bharat Health Account) address. The generated token ensures that the linking process is authenticated and authorized, maintaining the integrity and security of health information exchange. This functionality is crucial for facilitating seamless and efficient linking of health records within the healthcare ecosystem.<ol type='a'><li><b>Authorization:</b> We are passing the access-token in the authorization [Example: Bearer  eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJBbFJiNVd]</li></ol>\",\"operationId\":\"m2_post_v3_token_generate_token\",\"parameters\":[{\"description\":\"Unique UUID for track the end to end request transaction\",\"example\":\"18235d89-cb13-479d-ad71-7a57d5f669a8\",\"in\":\"header\",\"name\":\"REQUEST-ID\",\"required\":true,\"schema\":{\"type\":\"string\"}},{\"description\":\"Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds\",\"example\":\"2022-10-06T15:10:00.587Z\",\"in\":\"header\",\"name\":\"TIMESTAMP\",\"required\":true,\"schema\":{\"type\":\"string\"}},{\"description\":\"Suffix of the consent manager to which the request was intended\",\"example\":\"sbx\",\"in\":\"header\",\"name\":\"X-CM-ID\",\"required\":true,\"schema\":{\"type\":\"string\"}},{\"description\":\"Identifier of the health information provider to which the request was intended\",\"example\":\"IN2810014366\",\"in\":\"header\",\"name\":\"X-HIP-ID\",\"required\":true,\"schema\":{\"type\":\"string\"}}],\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"description\":\"In the request body, either 'abhaNumber' or 'abhaAddress' must be included, with atleast one being mandatory based on the patient profile.\",\"properties\":{\"abhaAddress\":{\"description\":\"abhaAddress of the user/patient. Allows alpha numeric character and special characters like ^[a-zA-Z0-9][a-zA-Z0-9_.]+[a-zA-Z0-9]@(abdm|sbx)$\",\"example\":\"<ABHA_ADDRESS>\",\"nullable\":true,\"type\":\"string\"},\"abhaNumber\":{\"description\":\"it can be null if abhaNumber is not linked with abhaAddress. Allows numeric character like ^\\\\d{14}$\",\"example\":12345678901234,\"nullable\":true,\"type\":\"number\"},\"gender\":{\"description\":\"Allows M, F, O, D, T, U as a input\",\"example\":\"M\",\"type\":\"string\"},\"name\":{\"description\":\"Only alphabets and special characters like ',.- are allowed like ^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$\",\"example\":\"first_name + middle_name + last_name\",\"type\":\"string\"},\"yearOfBirth\":{\"description\":\"Year of birth must be 4 digit, ranging between 1900 and 2200\",\"example\":9999,\"type\":\"number\"}},\"required\":[\"abhaAddress\",\"name\",\"gender\",\"yearOfBirth\"],\"type\":\"object\"}}},\"required\":true},\"responses\":{\"202\":{\"description\":\"Accepted\"},\"400\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"error\":{\"description\":\"The error code and message, if any occurred.\",\"properties\":{\"code\":{\"description\":\"ABDM-1035 - Invalid HIP ID. May be returned either bare (`ABDM-1035`) or with a trailing \\\": \\\" separator (`ABDM-1035: `); match on the code itself and tolerate the separator.\",\"example\":\"ABDM-1035\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"message\":{\"example\":\"Invalid HIP ID\",\"type\":\"string\"}},\"required\":[\"code\",\"message\"],\"type\":\"object\"}},\"type\":\"object\"}}},\"description\":\"Bad Request\"},\"401\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"code\":{\"description\":\"900902 - Unauthorized. May be returned either bare or with a trailing \\\": \\\" separator; match on the code itself and tolerate the separator.\",\"example\":\"900902\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"description\":{\"example\":\"Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'\",\"type\":\"string\"},\"message\":{\"example\":\"Unauthorized\",\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Unauthorized\"},\"403\":{\"content\":{\"text/plain\":{\"schema\":{\"example\":\"Access Denied\",\"type\":\"string\"}}},\"description\":\"Forbidden\"},\"404\":{\"description\":\"server cannot find the requested resource\"},\"500\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"code\":{\"description\":\"900900 - Unclassified Authentication Failure. May be returned either bare or with a trailing \\\": \\\" separator; match on the code itself and tolerate the separator.\",\"example\":\"900900\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"description\":{\"example\":\"Access failure for API: /hiecm/api/v3, version: v3 status: (900900) - Unclassified Authentication Failure\",\"type\":\"string\"},\"message\":{\"example\":\"Unclassified Authentication Failure\",\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Internal Server Error\"},\"503\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"code\":{\"description\":\"ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing \\\": \\\" separator (`ABDM-1024: `); match on the code itself and tolerate the separator.\",\"example\":\"ABDM-1024\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"message\":{\"example\":\"Dependent service unavailable\",\"type\":\"string\"}},\"required\":[\"code\",\"message\"],\"type\":\"object\"}}},\"description\":\"Service Unavailable\"}},\"security\":[{\"bearerAuth\":[]}],\"summary\":\"API used to generate link token to link the health records\",\"tags\":[\"abdm-link-token-hip\"],\"x-abdm-nha-operation-id\":\"abdm-link-token 1\"}}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/milestones/m2#m2-link-care-context\",\"id\":\"hiecm.flow.m2-link-care-context\",\"summary\":\"Tell ABDM that this patient had a visit at your facility so their records can be found and fetched later.\",\"title\":\"Link a care context to a patient's ABHA\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-link-token-generation-call-back\",\"id\":\"hiecm.callback.m2-link-token-generation-call-back\",\"summary\":\"ABDM answers a link token request on the HIP's bridge, with the token or an error.\",\"title\":\"Link token generation – Call Back API\",\"type\":\"callback\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/02-m2-post-v3-link-on-carecontext#m2-linking-care-context-call-back\",\"id\":\"hiecm.callback.m2-linking-care-context-call-back\",\"summary\":\"ABDM answers a care context link request on the HIP's bridge with the outcome.\",\"title\":\"Linking care context Call back API\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-on-generate-token-result\",\"id\":\"hiecm.callback.m2-on-generate-token-result\",\"summary\":\"The link token arrives here; store it against the patient, because it is valid for six months.\",\"title\":\"The link token you asked for, or why it was refused\",\"type\":\"callback\"}]}\n{\"body\":\"# Link token generation – Call Back API\\n\\n## In plain words\\n\\nAfter you [ask for a link token](/docs/hiecm/v3/api/m2/endpoints/m2-abdm-link-token-hip/01-m2-post-v3-token-generate-token), ABDM answers on your bridge at `/api/v3/hip/token/on-generate-token`. The path is relative to the callback URL you registered. On success the body carries the `linkToken` for the patient's [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address). On failure it carries an `error`.\\n\\n## Before you start\\n\\nA callback URL registered for your bridge and reachable from the public internet.\\n\\n## What happens\\n\\nABDM posts with the `REQUEST-ID`, `TIMESTAMP` and `X-HIP-ID` headers. The body carries `abhaAddress`, `response` and either `linkToken` or `error`.\\n\\n## When it goes wrong\\n\\n`ABDM-1027`: blocked, try again after 24 hours. `ABDM-1051` (Invalid ABHA Number or ABHA Address): check the details you sent. `ABDM-1024` (Dependent service unavailable): try again later.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-link-token-generation-call-back\",\"gateway\":\"hiecm\",\"id\":\"hiecm.callback.m2-link-token-generation-call-back\",\"milestone\":\"M2\",\"operation\":\"m2_post_v3_hip_token_on_generate_token\",\"summary\":\"ABDM answers a link token request on the HIP's bridge, with the token or an error.\",\"title\":\"Link token generation – Call Back API\",\"type\":\"callback\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:59:38.175Z",
+  "usage": {
+    "input_tokens": 60,
+    "output_tokens": 1414,
+    "cache_read_input_tokens": 70128,
+    "cache_creation_input_tokens": 10265,
+    "num_turns": 9,
+    "duration_ms": 18937,
+    "cost_usd_equivalent": 0.0346728
+  }
+}

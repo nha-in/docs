@@ -1,0 +1,178 @@
+{
+  "case_id": "faq-verbatim-abdm-sandbox-16",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "What should I do if my technical query cannot be solved through dev forum?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01GPJvAUPk2CgVb3c7i8bScZ",
+            "Name": "search",
+            "Input": {
+              "query": "dev forum support escalation technical help contact",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "dev forum support escalation technical help contact",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_012vEUk6NaRQUPXskggWVevM",
+            "Name": "search",
+            "Input": {
+              "query": "support contact troubleshooting help",
+              "kind": "atom",
+              "type": "troubleshooting"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "support contact troubleshooting help",
+            "kind": "atom",
+            "type": "troubleshooting"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01MNApBVNRZGULhwzth1Wi9u",
+            "Name": "search",
+            "Input": {
+              "query": "developer portal resources",
+              "kind": "atom"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "developer portal resources",
+            "kind": "atom"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "The ABDM documentation I have access to doesn't contain guidance on escalating technical queries beyond the dev forum or alternative support channels.\n\nFor information on how to escalate or get help outside the dev forum, you should:\n\n1. **Check the ABDM developer portal directly** — look for a \"Support\" or \"Contact Us\" section, typically at the bottom of portal pages or in a help menu\n2. **Visit the main ABDM website** — they may have listed contact information for technical support teams\n3. **Look for community channels** — Slack groups, Discord, or other official communities associated with ABDM integrations\n\nSince you're integrating with HIE-CM, UHI, or NHCX gateways, each gateway may also have its own dedicated support contacts. If you have access to your sandbox credentials or onboarding documentation, those often list a support email or POC.\n\nDo you have a specific technical question I can help you with using the ABDM documentation?",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "The ABDM documentation I have access to doesn't contain guidance on escalating technical queries beyond the dev forum or alternative support channels.\n\nFor information on how to escalate or get help outside the dev forum, you should:\n\n1. **Check the ABDM developer portal directly** — look for a \"Support\" or \"Contact Us\" section, typically at the bottom of portal pages or in a help menu\n2. **Visit the main ABDM website** — they may have listed contact information for technical support teams\n3. **Look for community channels** — Slack groups, Discord, or other official communities associated with ABDM integrations\n\nSince you're integrating with HIE-CM, UHI, or NHCX gateways, each gateway may also have its own dedicated support contacts. If you have access to your sandbox credentials or onboarding documentation, those often list a support email or POC.\n\nDo you have a specific technical question I can help you with using the ABDM documentation?",
+  "sources": [],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:04:09.178Z",
+  "usage": {
+    "input_tokens": 40,
+    "output_tokens": 777,
+    "cache_read_input_tokens": 39212,
+    "cache_creation_input_tokens": 5625,
+    "num_turns": 4,
+    "duration_ms": 12052,
+    "cost_usd_equivalent": 0.0190962
+  }
+}

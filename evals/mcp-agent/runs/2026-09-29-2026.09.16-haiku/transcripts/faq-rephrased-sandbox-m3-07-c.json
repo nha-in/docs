@@ -1,0 +1,403 @@
+{
+  "case_id": "faq-rephrased-sandbox-m3-07-c",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "record request"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "I'll search the ABDM documentation for information about record requests.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_013hT4LubTCvEeCcjLV2DbEe",
+            "Name": "search",
+            "Input": {
+              "query": "record request",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "record request",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#phr",
+                "id": "shared.glossary.phr",
+                "summary": "The application a patient uses to see consent requests and to approve, deny or revoke them.",
+                "title": "PHR, personal health record application",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/06-p3-post-subscription-requests-v3-hiu-care-context-on-notify#p3-subscription-hiu-on-notify",
+                "id": "hiecm.endpoint.p3-subscription-hiu-on-notify",
+                "summary": "Tell ABDM you received a new record notification under a subscription.",
+                "title": "Acknowledge a new record notification",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#gateway",
+                "id": "shared.glossary.gateway",
+                "summary": "The component that routes calls between participants so they never call each other directly. It is not the consent manager, and no health record passes throu...",
+                "title": "Gateway, the routing layer between participants",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/going-live#2-record-a-demo-and-request-sign-off",
+                "id": "uhi.sandbox.demo-sign-off",
+                "summary": "Record your app running the service's flow and send it to your NHA point of contact. Sign-off arrives in writing.",
+                "title": "Record a demo and request UHI sign-off",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/p3#phr-subscriptions",
+                "id": "hiecm.concept.phr-subscriptions",
+                "summary": "A subscription tells a personal health record app when a record is linked to a person's address, and the person must agree to it first.",
+                "title": "Subscriptions, and why a personal health record application needs one",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.document-bundles",
+                "summary": "Every ABDM health record travels as one FHIR document Bundle: a Composition first, eight possible NRCES profiles, and a two tier validation story. This atom ...",
+                "title": "FHIR document bundles, the eight ABDM record types",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/how-it-fits#roles",
+                "id": "hiecm.concept.roles",
+                "summary": "Your role, IMS or PHR, is fixed by the entity your software acts for, while HIP and HIU change with the direction each record moves.",
+                "title": "Roles, which entity your software acts for and which way the record moves",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/08-m2-post-v3-consent-request-hip-notify#m3-on-consent-request-notify-hip",
+                "id": "hiecm.callback.m3-on-consent-request-notify-hip",
+                "summary": "ABDM tells the HIP that a consent covering its records was granted, revoked or expired.",
+                "title": "The patient's decision, sent to the record holder",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/consent#consent-in-a-phr-app",
+                "id": "hiecm.concept.consent-in-a-phr-app",
+                "summary": "A personal health record app must let a person see a consent request, change it, allow or refuse it, see what is allowed, and take it back.",
+                "title": "The five things a personal health record application must let a person do with consent",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/error-codes#payr",
+                "id": "nhcx.error.payr-1059",
+                "summary": "The payer rejected your preauthorisation or claim because an attached clinical record or observation points at the wrong kind of record for its visit.",
+                "title": "PAYR-1059, a clinical record points at something other than an encounter",
+                "type": "error"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "I found some general results, but let me search more specifically for the record retrieval operation you might be looking for.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01VqjMkPxuX7uvWRYsH2KFvr",
+            "Name": "search",
+            "Input": {
+              "query": "on-demand health record retrieval",
+              "kind": "operation",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "on-demand health record retrieval",
+            "kind": "operation",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01BEoCZksMcbyRcTxmAvagbB",
+            "Name": "search",
+            "Input": {
+              "query": "health record request",
+              "kind": "operation"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "health record request",
+            "kind": "operation"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-get-gateway-v3-health-lockers",
+                "id": "p4_get_gateway_v3_health_lockers",
+                "summary": "This API is invoked to fetch the record with health locker enabled provider details.",
+                "title": "GET /api/hiecm/gateway/v3/health-lockers",
+                "type": "operation"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01CTUC3UvJHJYhd83D5QqB7u",
+            "Name": "list_operations",
+            "Input": {
+              "q": "record"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "list_operations",
+          "input": {
+            "q": "record"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "operations": [
+              {
+                "operation_id": "m2_post_user_initiated_linking_v3_patient_care_context_on_8c9340",
+                "method": "POST",
+                "path": "/api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover",
+                "summary": "HMIS/LIMS/HIP has to ensure that only unlinked records of the patient has to be shared through this API.",
+                "tag": "abdm-user-initiated-linking-hip",
+                "module": "m2"
+              },
+              {
+                "operation_id": "m2_post_v3_token_generate_token",
+                "method": "POST",
+                "path": "/api/hiecm/v3/token/generate-token",
+                "summary": "API used to generate link token to link the health records",
+                "tag": "abdm-link-token-hip",
+                "module": "m2"
+              },
+              {
+                "operation_id": "other_v1_delete",
+                "method": "POST",
+                "path": "/v1/delete",
+                "summary": "Support: delete records by correlation ID",
+                "tag": "Other",
+                "module": "other"
+              },
+              {
+                "operation_id": "p2_get_gateway_v3_providers_provider_id",
+                "method": "GET",
+                "path": "/api/hiecm/gateway/v3/providers/{hip-id}",
+                "summary": "This API is invoked to fetch the record for provider details for requested provider id.",
+                "tag": "abdm-gateway",
+                "module": "p2"
+              },
+              {
+                "operation_id": "p2_post_user_initiated_linking_v3_link_care_context_confirm",
+                "method": "POST",
+                "path": "/api/hiecm/user-initiated-linking/v3/link/care-context/confirm",
+                "summary": "This API will be invoked by the patient/user to confirm his/her health records.",
+                "tag": "abdm-user-initiated-linking-phr",
+                "module": "p2"
+              },
+              {
+                "operation_id": "p2_post_user_initiated_linking_v3_link_care_context_init",
+                "method": "POST",
+                "path": "/api/hiecm/user-initiated-linking/v3/link/care-context/init",
+                "summary": "This API will be invoked by the patient/user to link his/her health records.",
+                "tag": "abdm-user-initiated-linking-phr",
+                "module": "p2"
+              },
+              {
+                "operation_id": "p2_post_user_initiated_linking_v3_patient_care_context_discover",
+                "method": "POST",
+                "path": "/api/hiecm/user-initiated-linking/v3/patient/care-context/discover",
+                "summary": "This API will be invoked by the patient/user from PHR application to discover his/her health records.",
+                "tag": "abdm-user-initiated-linking-phr",
+                "module": "p2"
+              },
+              {
+                "operation_id": "p4_get_gateway_v3_health_lockers",
+                "method": "GET",
+                "path": "/api/hiecm/gateway/v3/health-lockers",
+                "summary": "This API is invoked to fetch the record with health locker enabled provider details.",
+                "tag": "abdm-gateway",
+                "module": "p4"
+              },
+              {
+                "operation_id": "record-share_get_patient_record_v3_audit_history",
+                "method": "GET",
+                "path": "/api/hiecm/patient-record/v3/audit-history",
+                "summary": "List the record sharing history of the signed in user.",
+                "tag": "abdm-record-share-phr",
+                "module": "record-share"
+              },
+              {
+                "operation_id": "record-share_post_patient_record_v3_notify",
+                "method": "POST",
+                "path": "/api/hiecm/patient-record/v3/notify",
+                "summary": "Notify the HIE-CM of the transfer status, once, after the data transfer completes.",
+                "tag": "abdm-record-share-phr",
+                "module": "record-share"
+              },
+              {
+                "operation_id": "record-share_post_patient_record_v3_on_share",
+                "method": "POST",
+                "path": "/api/hiecm/patient-record/v3/on-share",
+                "summary": "Reply to a share request with the data push URL and the encryption key.",
+                "tag": "abdm-record-share-hiu",
+                "module": "record-share"
+              },
+              {
+                "operation_id": "record-share_post_patient_record_v3_share",
+                "method": "POST",
+                "path": "/api/hiecm/patient-record/v3/share",
+                "summary": "Share a patient's records with the HIU whose QR code was scanned.",
+                "tag": "abdm-record-share-phr",
+                "module": "record-share"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "I found several ABDM record operations, but I need clarification on what you're looking for:\n\n**Are you asking about:**\n1. **HIU requesting records** from a HIP (on-demand retrieval via P4 phase)?\n2. **HIP responding** to a record request?\n3. **PHR app** initiating record share/request?\n4. General **documentation** on how record requests work?\n\nOr did you want me to search for something specific like an error, API endpoint, or flow documentation? Share more context and I can point you to the right portal pages.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "I found several ABDM record operations, but I need clarification on what you're looking for:\n\n**Are you asking about:**\n1. **HIU requesting records** from a HIP (on-demand retrieval via P4 phase)?\n2. **HIP responding** to a record request?\n3. **PHR app** initiating record share/request?\n4. General **documentation** on how record requests work?\n\nOr did you want me to search for something specific like an error, API endpoint, or flow documentation? Share more context and I can point you to the right portal pages.",
+  "sources": [],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#phr\",\"id\":\"shared.glossary.phr\",\"summary\":\"The application a patient uses to see consent requests and to approve, deny or revoke them.\",\"title\":\"PHR, personal health record application\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/06-p3-post-subscription-requests-v3-hiu-care-context-on-notify#p3-subscription-hiu-on-notify\",\"id\":\"hiecm.endpoint.p3-subscription-hiu-on-notify\",\"summary\":\"Tell ABDM you received a new record notification under a subscription.\",\"title\":\"Acknowledge a new record notification\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#gateway\",\"id\":\"shared.glossary.gateway\",\"summary\":\"The component that routes calls between participants so they never call each other directly. It is not the consent manager, and no health record passes throu...\",\"title\":\"Gateway, the routing layer between participants\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/going-live#2-record-a-demo-and-request-sign-off\",\"id\":\"uhi.sandbox.demo-sign-off\",\"summary\":\"Record your app running the service's flow and send it to your NHA point of contact. Sign-off arrives in writing.\",\"title\":\"Record a demo and request UHI sign-off\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/p3#phr-subscriptions\",\"id\":\"hiecm.concept.phr-subscriptions\",\"summary\":\"A subscription tells a personal health record app when a record is linked to a person's address, and the person must agree to it first.\",\"title\":\"Subscriptions, and why a personal health record application needs one\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.document-bundles\",\"summary\":\"Every ABDM health record travels as one FHIR document Bundle: a Composition first, eight possible NRCES profiles, and a two tier validation story. This atom ...\",\"title\":\"FHIR document bundles, the eight ABDM record types\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/how-it-fits#roles\",\"id\":\"hiecm.concept.roles\",\"summary\":\"Your role, IMS or PHR, is fixed by the entity your software acts for, while HIP and HIU change with the direction each record moves.\",\"title\":\"Roles, which entity your software acts for and which way the record moves\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/08-m2-post-v3-consent-request-hip-notify#m3-on-consent-request-notify-hip\",\"id\":\"hiecm.callback.m3-on-consent-request-notify-hip\",\"summary\":\"ABDM tells the HIP that a consent covering its records was granted, revoked or expired.\",\"title\":\"The patient's decision, sent to the record holder\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/consent#consent-in-a-phr-app\",\"id\":\"hiecm.concept.consent-in-a-phr-app\",\"summary\":\"A personal health record app must let a person see a consent request, change it, allow or refuse it, see what is allowed, and take it back.\",\"title\":\"The five things a personal health record application must let a person do with consent\",\"type\":\"concept\"},{\"doc_url\":\"/docs/nhcx/v1/reference/error-codes#payr\",\"id\":\"nhcx.error.payr-1059\",\"summary\":\"The payer rejected your preauthorisation or claim because an attached clinical record or observation points at the wrong kind of record for its visit.\",\"title\":\"PAYR-1059, a clinical record points at something other than an encounter\",\"type\":\"error\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-get-gateway-v3-health-lockers\",\"id\":\"p4_get_gateway_v3_health_lockers\",\"summary\":\"This API is invoked to fetch the record with health locker enabled provider details.\",\"title\":\"GET /api/hiecm/gateway/v3/health-lockers\",\"type\":\"operation\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"operations\":[{\"operation_id\":\"m2_post_user_initiated_linking_v3_patient_care_context_on_8c9340\",\"method\":\"POST\",\"path\":\"/api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover\",\"summary\":\"HMIS/LIMS/HIP has to ensure that only unlinked records of the patient has to be shared through this API.\",\"tag\":\"abdm-user-initiated-linking-hip\",\"module\":\"m2\"},{\"operation_id\":\"m2_post_v3_token_generate_token\",\"method\":\"POST\",\"path\":\"/api/hiecm/v3/token/generate-token\",\"summary\":\"API used to generate link token to link the health records\",\"tag\":\"abdm-link-token-hip\",\"module\":\"m2\"},{\"operation_id\":\"other_v1_delete\",\"method\":\"POST\",\"path\":\"/v1/delete\",\"summary\":\"Support: delete records by correlation ID\",\"tag\":\"Other\",\"module\":\"other\"},{\"operation_id\":\"p2_get_gateway_v3_providers_provider_id\",\"method\":\"GET\",\"path\":\"/api/hiecm/gateway/v3/providers/{hip-id}\",\"summary\":\"This API is invoked to fetch the record for provider details for requested provider id.\",\"tag\":\"abdm-gateway\",\"module\":\"p2\"},{\"operation_id\":\"p2_post_user_initiated_linking_v3_link_care_context_confirm\",\"method\":\"POST\",\"path\":\"/api/hiecm/user-initiated-linking/v3/link/care-context/confirm\",\"summary\":\"This API will be invoked by the patient/user to confirm his/her health records.\",\"tag\":\"abdm-user-initiated-linking-phr\",\"module\":\"p2\"},{\"operation_id\":\"p2_post_user_initiated_linking_v3_link_care_context_init\",\"method\":\"POST\",\"path\":\"/api/hiecm/user-initiated-linking/v3/link/care-context/init\",\"summary\":\"This API will be invoked by the patient/user to link his/her health records.\",\"tag\":\"abdm-user-initiated-linking-phr\",\"module\":\"p2\"},{\"operation_id\":\"p2_post_user_initiated_linking_v3_patient_care_context_discover\",\"method\":\"POST\",\"path\":\"/api/hiecm/user-initiated-linking/v3/patient/care-context/discover\",\"summary\":\"This API will be invoked by the patient/user from PHR application to discover his/her health records.\",\"tag\":\"abdm-user-initiated-linking-phr\",\"module\":\"p2\"},{\"operation_id\":\"p4_get_gateway_v3_health_lockers\",\"method\":\"GET\",\"path\":\"/api/hiecm/gateway/v3/health-lockers\",\"summary\":\"This API is invoked to fetch the record with health locker enabled provider details.\",\"tag\":\"abdm-gateway\",\"module\":\"p4\"},{\"operation_id\":\"record-share_get_patient_record_v3_audit_history\",\"method\":\"GET\",\"path\":\"/api/hiecm/patient-record/v3/audit-history\",\"summary\":\"List the record sharing history of the signed in user.\",\"tag\":\"abdm-record-share-phr\",\"module\":\"record-share\"},{\"operation_id\":\"record-share_post_patient_record_v3_notify\",\"method\":\"POST\",\"path\":\"/api/hiecm/patient-record/v3/notify\",\"summary\":\"Notify the HIE-CM of the transfer status, once, after the data transfer completes.\",\"tag\":\"abdm-record-share-phr\",\"module\":\"record-share\"},{\"operation_id\":\"record-share_post_patient_record_v3_on_share\",\"method\":\"POST\",\"path\":\"/api/hiecm/patient-record/v3/on-share\",\"summary\":\"Reply to a share request with the data push URL and the encryption key.\",\"tag\":\"abdm-record-share-hiu\",\"module\":\"record-share\"},{\"operation_id\":\"record-share_post_patient_record_v3_share\",\"method\":\"POST\",\"path\":\"/api/hiecm/patient-record/v3/share\",\"summary\":\"Share a patient's records with the HIU whose QR code was scanned.\",\"tag\":\"abdm-record-share-phr\",\"module\":\"record-share\"}]}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:02:59.872Z",
+  "usage": {
+    "input_tokens": 40,
+    "output_tokens": 987,
+    "cache_read_input_tokens": 41834,
+    "cache_creation_input_tokens": 8587,
+    "num_turns": 5,
+    "duration_ms": 14687,
+    "cost_usd_equivalent": 0.0263324
+  }
+}

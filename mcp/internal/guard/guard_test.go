@@ -289,3 +289,16 @@ func TestPortalLinksAreNotAPILiterals(t *testing.T) {
 		t.Errorf("Literals = %q, want only the API path", got)
 	}
 }
+
+// A path that ends a sentence took the full stop with it, since the pattern
+// allows dots inside a path, and "/api/v3/x/info." is not in any corpus: a
+// correctly quoted path was flagged as invented and the answer blocked.
+func TestAPathEndingASentenceIsGroundedWithoutItsFullStop(t *testing.T) {
+	answer := "Call /api/hiecm/v3/token/generate-token. Then wait."
+	if got := Literals(answer); len(got) != 1 || got[0] != "/api/hiecm/v3/token/generate-token" {
+		t.Errorf("Literals = %q, want the path without the full stop", got)
+	}
+	if vs := CheckGrounding(answer, "POST /api/hiecm/v3/token/generate-token", 1, true); len(vs) != 0 {
+		t.Errorf("CheckGrounding = %+v, want the path grounded", vs)
+	}
+}

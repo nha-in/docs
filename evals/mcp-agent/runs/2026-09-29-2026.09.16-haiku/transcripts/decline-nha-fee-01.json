@@ -1,0 +1,372 @@
+{
+  "case_id": "decline-nha-fee-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "How much does NHA charge for issuing a production ABDM API key?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01MxipxX5dHw3oYj8p2Y6AFQ",
+            "Name": "search",
+            "Input": {
+              "query": "NHA production ABDM API key cost charge fee pricing",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "NHA production ABDM API key cost charge fee pricing",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#abdm",
+                "id": "shared.glossary.abdm",
+                "summary": "India's national programme for connecting health records, identities and facilities across providers.",
+                "title": "ABDM, Ayushman Bharat Digital Mission",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/claim-request",
+                "id": "nhcx.fhir.claim-request",
+                "summary": "The bundle a hospital sends after discharge to claim payment, with the final amounts, the discharge details and the documents the policy requires.",
+                "title": "Claim request bundle",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.terminologies",
+                "summary": "The code systems every claims bundle draws on, where each one is used, and how strictly each binding applies.",
+                "title": "Code systems and value sets used in NHCX bundles",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.pmjay-insurance-plan",
+                "summary": "How the government scheme's policy is laid out as data: specialties, packages, rates, claim rules, required documents and treatment-guideline questionnaires.",
+                "title": "The PMJAY InsurancePlan profile, packages and questionnaires",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/payment-notice-and-acknowledgement",
+                "id": "nhcx.fhir.payment-notice",
+                "summary": "The bundle a payer sends to tell a hospital a claim has been paid, with the amount and bank reference, and the short task the hospital sends back to acknowle...",
+                "title": "PaymentNotice bundle and its acknowledgement",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.preauth-cancel",
+                "summary": "The task a hospital sends to cancel a preauthorisation it no longer needs, and the payer's confirmation that the case is cancelled.",
+                "title": "Preauthorisation cancel request and response bundles",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.task",
+                "summary": "The task a hospital sends to dispute a rejected or underpaid claim, which routes the case to the claim review committee, and the task that carries the payer'...",
+                "title": "Task bundle for reprocess and CRC",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/coverage-eligibility-request",
+                "id": "nhcx.fhir.coverage-eligibility-request",
+                "summary": "The bundle a hospital sends to ask a payer whether a patient's policy is in force, what it covers, and whether a treatment needs prior approval.",
+                "title": "CoverageEligibilityRequest bundle",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.query-update",
+                "summary": "How to recognise a payer's query on a preauthorisation or claim, and how to resend the same claim with the documents and answers the payer asked for.",
+                "title": "Query update bundles for preauthorisation and claim",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/preauthorisation-request",
+                "id": "nhcx.fhir.preauth-request",
+                "summary": "The bundle a hospital sends to ask a payer to approve a planned treatment before it happens, with the package, the diagnosis and the required documents.",
+                "title": "Preauthorisation request bundle, a Claim with use preauthorization",
+                "type": "fhir"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01GQNYunYK32LEem4GB3y6c4",
+            "Name": "search",
+            "Input": {
+              "query": "API key registration onboarding setup cost fee",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "API key registration onboarding setup cost fee",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01KAXdUqV3cKhG2A3egkfpFD",
+            "Name": "search",
+            "Input": {
+              "query": "production API key sandbox getting started",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "production API key sandbox getting started",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/sandbox#4-note-the-base-urls",
+                "id": "uhi.sandbox.base-urls",
+                "summary": "The UHI Gateway base URL for the sandbox and for production, and the reference EUA and HSPA apps in the sandbox.",
+                "title": "UHI Gateway base URLs for sandbox and production",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/base-urls",
+                "id": "nhcx.sandbox.environments-and-base-urls",
+                "summary": "The two environments, the web portals, and the two base addresses every call is built on, for testing and for live claims.",
+                "title": "NHCX environments, hosts and base URLs",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/get-your-sandbox-credentials",
+                "id": "nhcx.sandbox.prerequisites",
+                "summary": "The checklist to complete before your system can register on the claims exchange sandbox: a facility registration, sandbox credentials, basic health ID featu...",
+                "title": "What you need before you register on the NHCX sandbox",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/going-live",
+                "id": "shared.sandbox.going-live",
+                "summary": "How an integration leaves the sandbox for production: functional testing and the security audit, the Health Tech Committee demonstration, then production cre...",
+                "title": "Going live, the sandbox exit process",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/first-fifteen-minutes",
+                "id": "shared.sandbox.first-fifteen-minutes",
+                "summary": "Everything you can do before NHA approves your sandbox registration: read one real gateway session exchange and assemble your own first call, ready to paste ...",
+                "title": "Your first fifteen minutes with ABDM",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/concepts/signing#generate-your-keys-and-headers",
+                "id": "uhi.concept.key-generation",
+                "summary": "The Header Generation Utility creates your Ed25519 key pair and signs each payload; share only the public key and keep the private key on your server.",
+                "title": "Generating UHI signing keys and headers",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/session/endpoints/session-api-hiecm-gateway-v3-sessions",
+                "id": "nhcx.endpoint.session-token",
+                "summary": "Trade your client id and client secret for the access token, valid for 1200 seconds (20 minutes), that every claims exchange call carries.",
+                "title": "POST /api/hiecm/gateway/v3/sessions",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.decision.session-endpoint",
+                "summary": "Get the token that every exchange call carries from one place in your code, and set the address it calls per environment.",
+                "title": "Which session token endpoint to call",
+                "type": "decision"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/going-live#when-it-goes-wrong",
+                "id": "uhi.troubleshooting.go-live",
+                "summary": "A search that worked in the sandbox fails in production. Check the Gateway host, then your production IDs and callback URL.",
+                "title": "When a UHI search fails after the switch to production",
+                "type": "troubleshooting"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#sandbox",
+                "id": "shared.glossary.sandbox",
+                "summary": "NHA's test environment, with its own base URLs and credentials, separate from production.",
+                "title": "Sandbox, the test environment",
+                "type": "glossary"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01MrepTfkxVwTifxFHLzipu1",
+            "Name": "get",
+            "Input": {
+              "id": "shared.sandbox.going-live"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "shared.sandbox.going-live"
+          },
+          "output": {
+            "body": "# Going live, the sandbox exit process\n\n## In plain words\n\nWorking in the sandbox is not the same as being live. Sandbox integration has six stages.\nStages 1 to 3 get you access and build the milestones. Stages 4 to 6 take you to production,\nand you run them once, at the end.\n\nThere is no per milestone submission. Stages 4 to 6 cover your whole integration.\n\n## Before you start\n\nEvery milestone your integration needs works end to end. The\n[milestones page](/docs/hiecm/v3/milestones) says which ones apply to each entity you build\nfor, a facility, an insurer or a citizen. See [roles](hiecm.concept.roles) for which role that\nentity takes on a given call. Start stage 4 once all of them are complete, not milestone by\nmilestone.\n\n## What happens\n\n1. **Stage 4: functional testing and the security audit.** Before testing, you demonstrate\n   the [ABDM](shared.glossary.abdm) functionality you built to the integration team.\n   Empanelled agencies then run both exercises. Functional testing produces a report and a\n   certificate. The security audit produces the [Safe to Host certificate](wasa.md), and the\n   [WASA](wasa.md) atom covers it in detail. You then upload the exit form on the sandbox with\n   four things: the functional testing report and certificate, the security audit report, a\n   signed undertaking, and any other supporting document the integration team requests.\n2. **Stage 5: the Health Tech Committee demonstration.** You present the integrated solution\n   to the Health Tech Committee (HTC) and obtain approval for production access. The committee\n   records its decision in four review stages, each with its own reviewer and date, so the\n   outcome arrives as a sequence rather than a single answer.\n3. **Stage 6: go live.** You move the approved integration to production. Production\n   credentials are issued once the committee approves.\n\nConfirm the format of the functional testing report and the undertaking with the integration\nteam before you assemble them.\n\n## How you know it worked\n\nYou hold production credentials: a production client id and client secret. They are not the\nsame values as your sandbox credentials.\n\nYou also switch base URLs. For the gateway session call, sandbox is `https://dev.abdm.gov.in`\nwith `X-CM-ID: sbx`, and production is `https://apis.abdm.gov.in`. For the\n[ABHA](shared.glossary.abha) service, sandbox is `https://abhasbx.abdm.gov.in/abha/api/v3/`. A\nproduction client id against a sandbox host, or the reverse, fails.\n\nA call that worked in the sandbox returns the same result against the production host.\n\n## When it goes wrong\n\nQuestions about the exit process itself, including where to submit the exit form or what\ncounts as a valid supporting document, go to the\n[support ticketing platform](https://sandboxsupport.abdm.gov.in/) or\n`integration.support@nha.gov.in`. See [Support](/docs/support) for the report format.\n\nIf a call that worked in the sandbox fails in production, check the base URL and the `X-CM-ID`\nheader first: see [Everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401),\nwhich covers this exact class of failure.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/getting-started/going-live",
+            "gateway": "shared",
+            "id": "shared.sandbox.going-live",
+            "milestone": "n/a",
+            "summary": "How an integration leaves the sandbox for production: functional testing and the security audit, the Health Tech Committee demonstration, then production credentials.",
+            "title": "Going live, the sandbox exit process",
+            "type": "sandbox"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "The ABDM documentation I reviewed doesn't mention any charges from NHA for issuing production API keys. \n\nThe \"Going live\" page on the developer portal describes the sandbox exit process, which involves:\n1. Functional testing and security audit (conducted by empanelled agencies)\n2. Health Tech Committee (HTC) demonstration and approval\n3. Production credentials issuance\n\nThe documentation covers what you need to submit (functional testing report, security audit report, signed undertaking, and supporting documents) but makes no reference to any fee or cost from NHA for the production credentials themselves.\n\nIf there are charges involved, they're not documented in the official ABDM developer portal. I'd recommend contacting NHA directly via their support channels mentioned in the documentation:\n- **Support ticketing platform**: https://sandboxsupport.abdm.gov.in/\n- **Email**: integration.support@nha.gov.in\n\nThey can confirm whether there are any costs associated with production API key issuance.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "The ABDM documentation I reviewed doesn't mention any charges from NHA for issuing production API keys. \n\nThe \"Going live\" page on the developer portal describes the sandbox exit process, which involves:\n1. Functional testing and security audit (conducted by empanelled agencies)\n2. Health Tech Committee (HTC) demonstration and approval\n3. Production credentials issuance\n\nThe documentation covers what you need to submit (functional testing report, security audit report, signed undertaking, and supporting documents) but makes no reference to any fee or cost from NHA for the production credentials themselves.\n\nIf there are charges involved, they're not documented in the official ABDM developer portal. I'd recommend contacting NHA directly via their support channels mentioned in the documentation:\n- **Support ticketing platform**: https://sandboxsupport.abdm.gov.in/\n- **Email**: integration.support@nha.gov.in\n\nThey can confirm whether there are any costs associated with production API key issuance.",
+  "sources": [
+    {
+      "id": "shared.sandbox.going-live",
+      "title": "Going live, the sandbox exit process",
+      "url": "/docs/hiecm/v3/getting-started/going-live"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#abdm\",\"id\":\"shared.glossary.abdm\",\"summary\":\"India's national programme for connecting health records, identities and facilities across providers.\",\"title\":\"ABDM, Ayushman Bharat Digital Mission\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/claim-request\",\"id\":\"nhcx.fhir.claim-request\",\"summary\":\"The bundle a hospital sends after discharge to claim payment, with the final amounts, the discharge details and the documents the policy requires.\",\"title\":\"Claim request bundle\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.terminologies\",\"summary\":\"The code systems every claims bundle draws on, where each one is used, and how strictly each binding applies.\",\"title\":\"Code systems and value sets used in NHCX bundles\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.pmjay-insurance-plan\",\"summary\":\"How the government scheme's policy is laid out as data: specialties, packages, rates, claim rules, required documents and treatment-guideline questionnaires.\",\"title\":\"The PMJAY InsurancePlan profile, packages and questionnaires\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/payment-notice-and-acknowledgement\",\"id\":\"nhcx.fhir.payment-notice\",\"summary\":\"The bundle a payer sends to tell a hospital a claim has been paid, with the amount and bank reference, and the short task the hospital sends back to acknowle...\",\"title\":\"PaymentNotice bundle and its acknowledgement\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.preauth-cancel\",\"summary\":\"The task a hospital sends to cancel a preauthorisation it no longer needs, and the payer's confirmation that the case is cancelled.\",\"title\":\"Preauthorisation cancel request and response bundles\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.task\",\"summary\":\"The task a hospital sends to dispute a rejected or underpaid claim, which routes the case to the claim review committee, and the task that carries the payer'...\",\"title\":\"Task bundle for reprocess and CRC\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/coverage-eligibility-request\",\"id\":\"nhcx.fhir.coverage-eligibility-request\",\"summary\":\"The bundle a hospital sends to ask a payer whether a patient's policy is in force, what it covers, and whether a treatment needs prior approval.\",\"title\":\"CoverageEligibilityRequest bundle\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.query-update\",\"summary\":\"How to recognise a payer's query on a preauthorisation or claim, and how to resend the same claim with the documents and answers the payer asked for.\",\"title\":\"Query update bundles for preauthorisation and claim\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/preauthorisation-request\",\"id\":\"nhcx.fhir.preauth-request\",\"summary\":\"The bundle a hospital sends to ask a payer to approve a planned treatment before it happens, with the package, the diagnosis and the required documents.\",\"title\":\"Preauthorisation request bundle, a Claim with use preauthorization\",\"type\":\"fhir\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/uhi/v1/getting-started/sandbox#4-note-the-base-urls\",\"id\":\"uhi.sandbox.base-urls\",\"summary\":\"The UHI Gateway base URL for the sandbox and for production, and the reference EUA and HSPA apps in the sandbox.\",\"title\":\"UHI Gateway base URLs for sandbox and production\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/base-urls\",\"id\":\"nhcx.sandbox.environments-and-base-urls\",\"summary\":\"The two environments, the web portals, and the two base addresses every call is built on, for testing and for live claims.\",\"title\":\"NHCX environments, hosts and base URLs\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/get-your-sandbox-credentials\",\"id\":\"nhcx.sandbox.prerequisites\",\"summary\":\"The checklist to complete before your system can register on the claims exchange sandbox: a facility registration, sandbox credentials, basic health ID featu...\",\"title\":\"What you need before you register on the NHCX sandbox\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/going-live\",\"id\":\"shared.sandbox.going-live\",\"summary\":\"How an integration leaves the sandbox for production: functional testing and the security audit, the Health Tech Committee demonstration, then production cre...\",\"title\":\"Going live, the sandbox exit process\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/first-fifteen-minutes\",\"id\":\"shared.sandbox.first-fifteen-minutes\",\"summary\":\"Everything you can do before NHA approves your sandbox registration: read one real gateway session exchange and assemble your own first call, ready to paste ...\",\"title\":\"Your first fifteen minutes with ABDM\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/uhi/v1/concepts/signing#generate-your-keys-and-headers\",\"id\":\"uhi.concept.key-generation\",\"summary\":\"The Header Generation Utility creates your Ed25519 key pair and signs each payload; share only the public key and keep the private key on your server.\",\"title\":\"Generating UHI signing keys and headers\",\"type\":\"concept\"},{\"doc_url\":\"/docs/nhcx/v1/api/session/endpoints/session-api-hiecm-gateway-v3-sessions\",\"id\":\"nhcx.endpoint.session-token\",\"summary\":\"Trade your client id and client secret for the access token, valid for 1200 seconds (20 minutes), that every claims exchange call carries.\",\"title\":\"POST /api/hiecm/gateway/v3/sessions\",\"type\":\"endpoint\"},{\"doc_url\":\"\",\"id\":\"nhcx.decision.session-endpoint\",\"summary\":\"Get the token that every exchange call carries from one place in your code, and set the address it calls per environment.\",\"title\":\"Which session token endpoint to call\",\"type\":\"decision\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/going-live#when-it-goes-wrong\",\"id\":\"uhi.troubleshooting.go-live\",\"summary\":\"A search that worked in the sandbox fails in production. Check the Gateway host, then your production IDs and callback URL.\",\"title\":\"When a UHI search fails after the switch to production\",\"type\":\"troubleshooting\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#sandbox\",\"id\":\"shared.glossary.sandbox\",\"summary\":\"NHA's test environment, with its own base URLs and credentials, separate from production.\",\"title\":\"Sandbox, the test environment\",\"type\":\"glossary\"}]}\n{\"body\":\"# Going live, the sandbox exit process\\n\\n## In plain words\\n\\nWorking in the sandbox is not the same as being live. Sandbox integration has six stages.\\nStages 1 to 3 get you access and build the milestones. Stages 4 to 6 take you to production,\\nand you run them once, at the end.\\n\\nThere is no per milestone submission. Stages 4 to 6 cover your whole integration.\\n\\n## Before you start\\n\\nEvery milestone your integration needs works end to end. The\\n[milestones page](/docs/hiecm/v3/milestones) says which ones apply to each entity you build\\nfor, a facility, an insurer or a citizen. See [roles](hiecm.concept.roles) for which role that\\nentity takes on a given call. Start stage 4 once all of them are complete, not milestone by\\nmilestone.\\n\\n## What happens\\n\\n1. **Stage 4: functional testing and the security audit.** Before testing, you demonstrate\\n   the [ABDM](shared.glossary.abdm) functionality you built to the integration team.\\n   Empanelled agencies then run both exercises. Functional testing produces a report and a\\n   certificate. The security audit produces the [Safe to Host certificate](wasa.md), and the\\n   [WASA](wasa.md) atom covers it in detail. You then upload the exit form on the sandbox with\\n   four things: the functional testing report and certificate, the security audit report, a\\n   signed undertaking, and any other supporting document the integration team requests.\\n2. **Stage 5: the Health Tech Committee demonstration.** You present the integrated solution\\n   to the Health Tech Committee (HTC) and obtain approval for production access. The committee\\n   records its decision in four review stages, each with its own reviewer and date, so the\\n   outcome arrives as a sequence rather than a single answer.\\n3. **Stage 6: go live.** You move the approved integration to production. Production\\n   credentials are issued once the committee approves.\\n\\nConfirm the format of the functional testing report and the undertaking with the integration\\nteam before you assemble them.\\n\\n## How you know it worked\\n\\nYou hold production credentials: a production client id and client secret. They are not the\\nsame values as your sandbox credentials.\\n\\nYou also switch base URLs. For the gateway session call, sandbox is `https://dev.abdm.gov.in`\\nwith `X-CM-ID: sbx`, and production is `https://apis.abdm.gov.in`. For the\\n[ABHA](shared.glossary.abha) service, sandbox is `https://abhasbx.abdm.gov.in/abha/api/v3/`. A\\nproduction client id against a sandbox host, or the reverse, fails.\\n\\nA call that worked in the sandbox returns the same result against the production host.\\n\\n## When it goes wrong\\n\\nQuestions about the exit process itself, including where to submit the exit form or what\\ncounts as a valid supporting document, go to the\\n[support ticketing platform](https://sandboxsupport.abdm.gov.in/) or\\n`integration.support@nha.gov.in`. See [Support](/docs/support) for the report format.\\n\\nIf a call that worked in the sandbox fails in production, check the base URL and the `X-CM-ID`\\nheader first: see [Everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401),\\nwhich covers this exact class of failure.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/getting-started/going-live\",\"gateway\":\"shared\",\"id\":\"shared.sandbox.going-live\",\"milestone\":\"n/a\",\"summary\":\"How an integration leaves the sandbox for production: functional testing and the security audit, the Health Tech Committee demonstration, then production credentials.\",\"title\":\"Going live, the sandbox exit process\",\"type\":\"sandbox\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:57:49.893Z",
+  "usage": {
+    "input_tokens": 50,
+    "output_tokens": 946,
+    "cache_read_input_tokens": 55088,
+    "cache_creation_input_tokens": 8973,
+    "num_turns": 5,
+    "duration_ms": 14769,
+    "cost_usd_equivalent": 0.028234799999999997
+  }
+}
