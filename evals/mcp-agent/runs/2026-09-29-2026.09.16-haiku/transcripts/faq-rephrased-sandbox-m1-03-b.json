@@ -1,0 +1,133 @@
+{
+  "case_id": "faq-rephrased-sandbox-m1-03-b",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "what are the different milestones present in ABDM Sandbox?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "I'll check the ABDM documentation to find information about the milestones in the sandbox.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01KnfvCRL57fEG3BPqyDBnvQ",
+            "Name": "catalogue_info",
+            "Input": {}
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "catalogue_info",
+          "input": {},
+          "output": {
+            "atoms": {
+              "by_gateway": {
+                "hiecm": 269,
+                "nhcx": 536,
+                "shared": 46,
+                "uhi": 111
+              },
+              "by_milestone": {
+                "M1": 74,
+                "M2": 57,
+                "M3": 20,
+                "M4": 11,
+                "P1": 29,
+                "P2": 18,
+                "P3": 36,
+                "n/a": 717
+              },
+              "by_type": {
+                "callback": 66,
+                "concept": 105,
+                "decision": 13,
+                "endpoint": 186,
+                "error": 335,
+                "fhir": 30,
+                "flow": 57,
+                "glossary": 86,
+                "sandbox": 18,
+                "test": 51,
+                "troubleshooting": 15
+              }
+            },
+            "built_at": "2026-09-29T11:55:12Z",
+            "catalogue_version": "2026.09.16",
+            "deprecated": 0,
+            "embeddings": false,
+            "facts": 0,
+            "operations": 387
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "Based on the ABDM catalogue information, there are **7 different milestones** in the ABDM Sandbox:\n\n1. **M1** - 74 atoms\n2. **M2** - 57 atoms\n3. **M3** - 20 atoms\n4. **M4** - 11 atoms\n5. **P1** - 29 atoms\n6. **P2** - 18 atoms\n7. **P3** - 36 atoms\n\nThe **M** milestones (M1–M4) appear to represent the primary development phases, with M1 and M2 being the most extensively documented. The **P** milestones (P1–P3) likely represent progressive or phase-based milestones with additional features and functionality.\n\nThese milestones organize the documentation atoms (concepts, flows, endpoints, errors, tests, etc.) across the ABDM gateways—HIE-CM, NHCX, and UHI.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "Based on the ABDM catalogue information, there are **7 different milestones** in the ABDM Sandbox:\n\n1. **M1** - 74 atoms\n2. **M2** - 57 atoms\n3. **M3** - 20 atoms\n4. **M4** - 11 atoms\n5. **P1** - 29 atoms\n6. **P2** - 18 atoms\n7. **P3** - 36 atoms\n\nThe **M** milestones (M1–M4) appear to represent the primary development phases, with M1 and M2 being the most extensively documented. The **P** milestones (P1–P3) likely represent progressive or phase-based milestones with additional features and functionality.\n\nThese milestones organize the documentation atoms (concepts, flows, endpoints, errors, tests, etc.) across the ABDM gateways—HIE-CM, NHCX, and UHI.",
+  "sources": [],
+  "corpus": "{\"atoms\":{\"by_gateway\":{\"hiecm\":269,\"nhcx\":536,\"shared\":46,\"uhi\":111},\"by_milestone\":{\"M1\":74,\"M2\":57,\"M3\":20,\"M4\":11,\"P1\":29,\"P2\":18,\"P3\":36,\"n/a\":717},\"by_type\":{\"callback\":66,\"concept\":105,\"decision\":13,\"endpoint\":186,\"error\":335,\"fhir\":30,\"flow\":57,\"glossary\":86,\"sandbox\":18,\"test\":51,\"troubleshooting\":15}},\"built_at\":\"2026-09-29T11:55:12Z\",\"catalogue_version\":\"2026.09.16\",\"deprecated\":0,\"embeddings\":false,\"facts\":0,\"operations\":387}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:00:59.108Z",
+  "usage": {
+    "input_tokens": 20,
+    "output_tokens": 600,
+    "cache_read_input_tokens": 16784,
+    "cache_creation_input_tokens": 5479,
+    "num_turns": 2,
+    "duration_ms": 8223,
+    "cost_usd_equivalent": 0.0156564
+  }
+}

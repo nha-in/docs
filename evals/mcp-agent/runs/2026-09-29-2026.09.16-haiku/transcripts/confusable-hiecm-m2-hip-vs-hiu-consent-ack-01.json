@@ -1,0 +1,841 @@
+{
+  "case_id": "confusable-hiecm-m2-hip-vs-hiu-consent-ack-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "as a HIP, when i acknowledge the consent notify, is acknowledgement an array like the HIU one?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01LdCuKoZXNubFCzfcB1Sevw",
+            "Name": "search",
+            "Input": {
+              "query": "HIP consent notify acknowledge",
+              "kind": "operation"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "HIP consent notify acknowledge",
+            "kind": "operation"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-post-consent-v3-request-hip-on-notify",
+                "id": "m2_post_consent_v3_request_hip_on_notify",
+                "summary": "This is ABDM HIE-CM API called by HIP to acknowledge the notification sent when a consent request is approved/revoked/expired by the patient.",
+                "title": "POST /api/hiecm/consent/v3/request/hip/on-notify",
+                "type": "operation"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01Jb1orhExNGqiKQST2fAwRB",
+            "Name": "get",
+            "Input": {
+              "id": "m2_post_consent_v3_request_hip_on_notify"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "m2_post_consent_v3_request_hip_on_notify"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "doc_path": "/docs/hiecm/v3/api/m2/endpoints/m2-post-consent-v3-request-hip-on-notify",
+            "operation_id": "m2_post_consent_v3_request_hip_on_notify",
+            "spec": {
+              "description": "This API is called by HIP as acknowledgement to notification of consents, in cases of consent approval, revocation and expiration. Notified by CM earlier via Gateway API - <b> /api/v3/consent/request/hip/notify </b>",
+              "operationId": "m2_post_consent_v3_request_hip_on_notify",
+              "parameters": [
+                {
+                  "description": "Unique UUID for track the end to end request transaction",
+                  "example": "18235d89-cb13-479d-ad71-7a57d5f669a8",
+                  "in": "header",
+                  "name": "REQUEST-ID",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "description": "Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds",
+                  "example": "2022-10-06T15:10:00.587Z",
+                  "in": "header",
+                  "name": "TIMESTAMP",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "description": "Suffix of the consent manager to which the request was intended",
+                  "example": "sbx",
+                  "in": "header",
+                  "name": "X-CM-ID",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "example": {
+                      "acknowledgement": {
+                        "consentId": "e3c74829-3f82-4f94-959e-e10f57bcd57b",
+                        "status": "OK"
+                      },
+                      "response": {
+                        "requestId": "6f0b4665-a915-4c92-aa36-65afb4a2cd71"
+                      }
+                    },
+                    "schema": {
+                      "description": "In the request body, either ‘acknowledgement’ or ‘error’ must be included.<br> <ol type='a'><br/> <li>Incase of success scenario,acknowledgement is mandatory and error is optional</li> <li>Incase of failure scenario,error is mandatory and acknowledgement is optional<li>response is mandatory object in both the cases</li> </ol>",
+                      "properties": {
+                        "acknowledgement": {
+                          "properties": {
+                            "consentId": {
+                              "description": "The consent artefact id. Should be valid UUID. Allows alpha numeric character and special characters like \"^[0-9a-fA-F]{8}\\\\b-[0-9a-fA-F]{4}\\\\b-[0-9a-fA-F]{4}\\\\b-[0-9a-fA-F]{4}\\\\b-[0-9a-fA-F]{12}$\";",
+                              "example": "e3c74829-3f82-4f94-959e-e10f57bcd57b",
+                              "format": "uuid",
+                              "type": "string"
+                            },
+                            "status": {
+                              "description": "The status of the notification.  Allows alpha numeric character and special characters like \"^[a-zA-Z0-9_\\\\-@,. \\\":/]{0,255}$\"",
+                              "example": "OK",
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "status",
+                            "consentId"
+                          ],
+                          "type": "object"
+                        },
+                        "error": {
+                          "description": "The error code and message, if any occurred.",
+                          "nullable": true,
+                          "properties": {
+                            "code": {
+                              "description": "ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing \": \" separator (`ABDM-1001: `); match on the code itself and tolerate the separator.",
+                              "example": "ABDM-1001",
+                              "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                              "type": "string"
+                            },
+                            "message": {
+                              "description": "The appropriate error message",
+                              "example": "unable to connect database",
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "code",
+                            "message"
+                          ],
+                          "type": "object"
+                        },
+                        "response": {
+                          "description": "The request id is from the /consent/request/hip/notify callback",
+                          "properties": {
+                            "requestId": {
+                              "description": "The requestId that was passed. it must be in Alpha numeric and - in middle and Allows alpha numeric character and special characters like \"^[0-9a-fA-F]{8}\\\\b-[0-9a-fA-F]{4}\\\\b-[0-9a-fA-F]{4}\\\\b-[0-9a-fA-F]{4}\\\\b-[0-9a-fA-F]{12}\"",
+                              "example": "6f0b4665-a915-4c92-aa36-65afb4a2cd71",
+                              "format": "uuid",
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "requestId"
+                          ],
+                          "type": "object"
+                        }
+                      },
+                      "required": [
+                        "acknowledgement",
+                        "response"
+                      ],
+                      "type": "object"
+                    }
+                  }
+                },
+                "required": true
+              },
+              "responses": {
+                "202": {
+                  "description": "Accepted"
+                },
+                "400": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "example": [
+                          {
+                            "error": {
+                              "code": "ABDM-9999",
+                              "message": "RequestId cannot be NULL or Blank"
+                            }
+                          },
+                          {
+                            "error": {
+                              "code": "ABDM-9999",
+                              "message": "Invalid status, Please provide a valid status"
+                            }
+                          },
+                          {
+                            "error": {
+                              "code": "ABDM-9999",
+                              "message": "Invalid ConsentId, Please provide a valid ConsentId"
+                            }
+                          }
+                        ],
+                        "items": {
+                          "properties": {
+                            "error": {
+                              "description": "The error code and message, if any occurred.",
+                              "properties": {
+                                "code": {
+                                  "description": "The error code. May be returned either bare or with a trailing \": \" separator; match on the code itself and tolerate the separator.",
+                                  "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                                  "type": "string"
+                                },
+                                "message": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "code",
+                                "message"
+                              ],
+                              "type": "object"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      }
+                    }
+                  },
+                  "description": "Bad Request"
+                },
+                "401": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "code": {
+                            "description": "900901 - Unauthorized. May be returned either bare or with a trailing \": \" separator; match on the code itself and tolerate the separator.",
+                            "example": "900901",
+                            "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                            "type": "string"
+                          },
+                          "description": {
+                            "example": "Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'",
+                            "type": "string"
+                          },
+                          "message": {
+                            "example": "Unauthorized",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Unauthorized"
+                },
+                "403": {
+                  "content": {
+                    "text/plain": {
+                      "schema": {
+                        "example": "Access Denied",
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "description": "Forbidden"
+                },
+                "404": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "error": {
+                            "description": "The error code and message, if any occurred.",
+                            "properties": {
+                              "code": {
+                                "description": "ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing \": \" separator (`ABDM-1001: `); match on the code itself and tolerate the separator.",
+                                "example": "ABDM-1001",
+                                "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                                "type": "string"
+                              },
+                              "message": {
+                                "example": "No data found",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "code",
+                              "message"
+                            ],
+                            "type": "object"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Not Found"
+                },
+                "500": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "code": {
+                            "description": "900900 - Unclassified Authentication Failure. May be returned either bare or with a trailing \": \" separator; match on the code itself and tolerate the separator.",
+                            "example": "900900",
+                            "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                            "type": "string"
+                          },
+                          "description": {
+                            "example": "Access failure for API: /hiecm/api/v3, version: v3 status: (900900) - Unclassified Authentication Failure",
+                            "type": "string"
+                          },
+                          "message": {
+                            "example": "Unclassified Authentication Failure",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Internal Server Error"
+                },
+                "503": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "code": {
+                            "description": "ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing \": \" separator (`ABDM-1024: `); match on the code itself and tolerate the separator.",
+                            "example": "ABDM-1024",
+                            "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                            "type": "string"
+                          },
+                          "message": {
+                            "example": "Dependent service unavailable",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "message"
+                        ],
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Service Unavailable"
+                }
+              },
+              "security": [
+                {
+                  "bearerAuth": []
+                }
+              ],
+              "summary": "This is ABDM HIE-CM API called by HIP to acknowledge the notification sent when a consent request is approved/revoked/expired by the patient.",
+              "tags": [
+                "consent-management-data-flow-hip"
+              ],
+              "x-abdm-nha-operation-id": "abdm-consent-management 2"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01ApAEjaWTC5arNivgGwzn3p",
+            "Name": "search",
+            "Input": {
+              "query": "HIU consent notify acknowledge",
+              "kind": "operation"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "HIU consent notify acknowledge",
+            "kind": "operation"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-post-consent-v3-request-hiu-on-notify",
+                "id": "m3_post_consent_v3_request_hiu_on_notify",
+                "summary": "This is ABDM HIE-CM API called by HIU to acknowledge the notification sent when a consent request is approved/denied/revoked/expired by the patient.",
+                "title": "POST /api/hiecm/consent/v3/request/hiu/on-notify",
+                "type": "operation"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01WACHgYuULQ2Hyapg9KnUVC",
+            "Name": "get",
+            "Input": {
+              "id": "m3_post_consent_v3_request_hiu_on_notify"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "m3_post_consent_v3_request_hiu_on_notify"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "doc_path": "/docs/hiecm/v3/api/m3/endpoints/m3-post-consent-v3-request-hiu-on-notify",
+            "operation_id": "m3_post_consent_v3_request_hiu_on_notify",
+            "spec": {
+              "description": "This API is called by HIU as acknowledgement to consent notifications, specifically for cases when consent is APPROVED, DENIED, or REVOKED or EXPIRED. Notified by CM earlier via Gateway API - <b> /api/v3/hiu/consent/request/notify </b>",
+              "operationId": "m3_post_consent_v3_request_hiu_on_notify",
+              "parameters": [
+                {
+                  "description": "Unique UUID for track the end to end request transaction",
+                  "example": "18235d89-cb13-479d-ad71-7a57d5f669a8",
+                  "in": "header",
+                  "name": "REQUEST-ID",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "description": "Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds",
+                  "example": "2022-10-06T15:10:00.587Z",
+                  "in": "header",
+                  "name": "TIMESTAMP",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "description": "Suffix of the consent manager to which the request was intended",
+                  "example": "sbx",
+                  "in": "header",
+                  "name": "X-CM-ID",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "description": "In the request body, either ‘acknowledgement’ or ‘error’ must be included.<br> <ol type='a'><br/> <li>Incase of success scenario,acknowledgement is mandatory and error is optional </li> <li>Incase of failure scenario,error is mandatory and acknowledgment is optional</li> <li>response is mandatory object in both the cases</li> </ol>",
+                      "properties": {
+                        "acknowledgement": {
+                          "items": {
+                            "properties": {
+                              "consentId": {
+                                "description": "The consent artefact id. Should be valid UUID. Allows alpha numeric character and special characters like \"^[0-9a-fA-F]{8}\\\\b-[0-9a-fA-F]{4}\\\\b-[0-9a-fA-F]{4}\\\\b-[0-9a-fA-F]{4}\\\\b-[0-9a-fA-F]{12}$\"",
+                                "example": "e3c74829-3f82-4f94-959e-e10f57bcd57b",
+                                "format": "uuid",
+                                "type": "string"
+                              },
+                              "status": {
+                                "description": "The status of the notification. Allows alpha numeric character and special characters like \"^[a-zA-Z0-9_\\\\-@,. \\\":/]{0,255}$\"",
+                                "example": "OK",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "status",
+                              "consentId"
+                            ],
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "error": {
+                          "description": "The error code and message, if any occurred.",
+                          "nullable": true,
+                          "properties": {
+                            "code": {
+                              "description": "ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing \": \" separator (`ABDM-1001: `); match on the code itself and tolerate the separator.",
+                              "example": "ABDM-1001",
+                              "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                              "type": "string"
+                            },
+                            "message": {
+                              "description": "The appropriate error message",
+                              "example": "unable to connect database",
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "code",
+                            "message"
+                          ],
+                          "type": "object"
+                        },
+                        "response": {
+                          "description": "The request id is from the /hiu/consent/request/notify callback",
+                          "properties": {
+                            "requestId": {
+                              "description": "The requestId that was passed. it must be in Alpha numeric and - in middle and Allows alpha numeric character and special characters like \"^[0-9a-fA-F]{8}\\\\b-[0-9a-fA-F]{4}\\\\b-[0-9a-fA-F]{4}\\\\b-[0-9a-fA-F]{4}\\\\b-[0-9a-fA-F]{12}\"",
+                              "example": "6f0b4665-a915-4c92-aa36-65afb4a2cd71",
+                              "format": "uuid",
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "requestId"
+                          ],
+                          "type": "object"
+                        }
+                      },
+                      "required": [
+                        "acknowledgement",
+                        "response"
+                      ],
+                      "type": "object"
+                    }
+                  }
+                },
+                "required": true
+              },
+              "responses": {
+                "202": {
+                  "description": "Accepted"
+                },
+                "400": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "example": [
+                          {
+                            "error": {
+                              "code": "ABDM-9999",
+                              "message": "RequestId cannot be NULL or Blank"
+                            }
+                          },
+                          {
+                            "error": {
+                              "code": "ABDM-9999",
+                              "message": "Invalid status, Please provide a valid status"
+                            }
+                          },
+                          {
+                            "error": {
+                              "code": "ABDM-9999",
+                              "message": "Invalid ConsentId, Please provide a valid ConsentId"
+                            }
+                          }
+                        ],
+                        "items": {
+                          "properties": {
+                            "error": {
+                              "description": "The error code and message, if any occurred.",
+                              "properties": {
+                                "code": {
+                                  "description": "The error code. May be returned either bare or with a trailing \": \" separator; match on the code itself and tolerate the separator.",
+                                  "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                                  "type": "string"
+                                },
+                                "message": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "code",
+                                "message"
+                              ],
+                              "type": "object"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      }
+                    }
+                  },
+                  "description": "Bad Request"
+                },
+                "401": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "code": {
+                            "description": "900901 - Unauthorized. May be returned either bare or with a trailing \": \" separator; match on the code itself and tolerate the separator.",
+                            "example": "900901",
+                            "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                            "type": "string"
+                          },
+                          "description": {
+                            "example": "Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'",
+                            "type": "string"
+                          },
+                          "message": {
+                            "example": "Unauthorized",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Unauthorized"
+                },
+                "403": {
+                  "content": {
+                    "text/plain": {
+                      "schema": {
+                        "example": "Access Denied",
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "description": "Forbidden"
+                },
+                "404": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "error": {
+                            "description": "The error code and message, if any occurred.",
+                            "properties": {
+                              "code": {
+                                "description": "ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing \": \" separator (`ABDM-1001: `); match on the code itself and tolerate the separator.",
+                                "example": "ABDM-1001",
+                                "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                                "type": "string"
+                              },
+                              "message": {
+                                "example": "No data found",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "code",
+                              "message"
+                            ],
+                            "type": "object"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Not Found"
+                },
+                "500": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "code": {
+                            "description": "900900 - Unclassified Authentication Failure. May be returned either bare or with a trailing \": \" separator; match on the code itself and tolerate the separator.",
+                            "example": "900900",
+                            "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                            "type": "string"
+                          },
+                          "description": {
+                            "example": "Access failure for API: /hiecm/api/v3, version: v3 status: (900900) - Unclassified Authentication Failure",
+                            "type": "string"
+                          },
+                          "message": {
+                            "example": "Unclassified Authentication Failure",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Internal Server Error"
+                },
+                "503": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "code": {
+                            "description": "ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing \": \" separator (`ABDM-1024: `); match on the code itself and tolerate the separator.",
+                            "example": "ABDM-1024",
+                            "pattern": "^(ABDM-\\d{4}|\\d{3,6})(: )?$",
+                            "type": "string"
+                          },
+                          "message": {
+                            "example": "Dependent service unavailable",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "message"
+                        ],
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Service Unavailable"
+                }
+              },
+              "security": [
+                {
+                  "bearerAuth": []
+                }
+              ],
+              "summary": "This is ABDM HIE-CM API called by HIU to acknowledge the notification sent when a consent request is approved/denied/revoked/expired by the patient.",
+              "tags": [
+                "consent-management-data-flow-hiu"
+              ],
+              "x-abdm-nha-operation-id": "abdm-consent-management 3 (3)"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "No, the HIP acknowledgement is **not** an array—it's a single object. Here's the difference:\n\n**HIP** (`POST /api/hiecm/consent/v3/request/hip/on-notify`):\n```json\n{\n  \"acknowledgement\": {\n    \"consentId\": \"e3c74829-3f82-4f94-959e-e10f57bcd57b\",\n    \"status\": \"OK\"\n  },\n  \"response\": { \"requestId\": \"...\" }\n}\n```\n\n**HIU** (`POST /api/hiecm/consent/v3/request/hiu/on-notify`):\n```json\n{\n  \"acknowledgement\": [\n    {\n      \"consentId\": \"e3c74829-3f82-4f94-959e-e10f57bcd57b\",\n      \"status\": \"OK\"\n    }\n  ],\n  \"response\": { \"requestId\": \"...\" }\n}\n```\n\nThe HIU's `acknowledgement` is an array (can acknowledge multiple consents), while the HIP's is a single object (one acknowledgement per request). See the [HIP endpoint](https://abdm.nha.gov.in/docs/hiecm/v3/api/m2/endpoints/m2-post-consent-v3-request-hip-on-notify) and [HIU endpoint](https://abdm.nha.gov.in/docs/hiecm/v3/api/m3/endpoints/m3-post-consent-v3-request-hiu-on-notify) for details.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "No, the HIP acknowledgement is **not** an array—it's a single object. Here's the difference:\n\n**HIP** (`POST /api/hiecm/consent/v3/request/hip/on-notify`):\n```json\n{\n  \"acknowledgement\": {\n    \"consentId\": \"e3c74829-3f82-4f94-959e-e10f57bcd57b\",\n    \"status\": \"OK\"\n  },\n  \"response\": { \"requestId\": \"...\" }\n}\n```\n\n**HIU** (`POST /api/hiecm/consent/v3/request/hiu/on-notify`):\n```json\n{\n  \"acknowledgement\": [\n    {\n      \"consentId\": \"e3c74829-3f82-4f94-959e-e10f57bcd57b\",\n      \"status\": \"OK\"\n    }\n  ],\n  \"response\": { \"requestId\": \"...\" }\n}\n```\n\nThe HIU's `acknowledgement` is an array (can acknowledge multiple consents), while the HIP's is a single object (one acknowledgement per request). See the [HIP endpoint](https://abdm.nha.gov.in/docs/hiecm/v3/api/m2/endpoints/m2-post-consent-v3-request-hip-on-notify) and [HIU endpoint](https://abdm.nha.gov.in/docs/hiecm/v3/api/m3/endpoints/m3-post-consent-v3-request-hiu-on-notify) for details.",
+  "sources": [],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-post-consent-v3-request-hip-on-notify\",\"id\":\"m2_post_consent_v3_request_hip_on_notify\",\"summary\":\"This is ABDM HIE-CM API called by HIP to acknowledge the notification sent when a consent request is approved/revoked/expired by the patient.\",\"title\":\"POST /api/hiecm/consent/v3/request/hip/on-notify\",\"type\":\"operation\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"doc_path\":\"/docs/hiecm/v3/api/m2/endpoints/m2-post-consent-v3-request-hip-on-notify\",\"operation_id\":\"m2_post_consent_v3_request_hip_on_notify\",\"spec\":{\"description\":\"This API is called by HIP as acknowledgement to notification of consents, in cases of consent approval, revocation and expiration. Notified by CM earlier via Gateway API - <b> /api/v3/consent/request/hip/notify </b>\",\"operationId\":\"m2_post_consent_v3_request_hip_on_notify\",\"parameters\":[{\"description\":\"Unique UUID for track the end to end request transaction\",\"example\":\"18235d89-cb13-479d-ad71-7a57d5f669a8\",\"in\":\"header\",\"name\":\"REQUEST-ID\",\"required\":true,\"schema\":{\"type\":\"string\"}},{\"description\":\"Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds\",\"example\":\"2022-10-06T15:10:00.587Z\",\"in\":\"header\",\"name\":\"TIMESTAMP\",\"required\":true,\"schema\":{\"type\":\"string\"}},{\"description\":\"Suffix of the consent manager to which the request was intended\",\"example\":\"sbx\",\"in\":\"header\",\"name\":\"X-CM-ID\",\"required\":true,\"schema\":{\"type\":\"string\"}}],\"requestBody\":{\"content\":{\"application/json\":{\"example\":{\"acknowledgement\":{\"consentId\":\"e3c74829-3f82-4f94-959e-e10f57bcd57b\",\"status\":\"OK\"},\"response\":{\"requestId\":\"6f0b4665-a915-4c92-aa36-65afb4a2cd71\"}},\"schema\":{\"description\":\"In the request body, either ‘acknowledgement’ or ‘error’ must be included.<br> <ol type='a'><br/> <li>Incase of success scenario,acknowledgement is mandatory and error is optional</li> <li>Incase of failure scenario,error is mandatory and acknowledgement is optional<li>response is mandatory object in both the cases</li> </ol>\",\"properties\":{\"acknowledgement\":{\"properties\":{\"consentId\":{\"description\":\"The consent artefact id. Should be valid UUID. Allows alpha numeric character and special characters like \\\"^[0-9a-fA-F]{8}\\\\\\\\b-[0-9a-fA-F]{4}\\\\\\\\b-[0-9a-fA-F]{4}\\\\\\\\b-[0-9a-fA-F]{4}\\\\\\\\b-[0-9a-fA-F]{12}$\\\";\",\"example\":\"e3c74829-3f82-4f94-959e-e10f57bcd57b\",\"format\":\"uuid\",\"type\":\"string\"},\"status\":{\"description\":\"The status of the notification.  Allows alpha numeric character and special characters like \\\"^[a-zA-Z0-9_\\\\\\\\-@,. \\\\\\\":/]{0,255}$\\\"\",\"example\":\"OK\",\"type\":\"string\"}},\"required\":[\"status\",\"consentId\"],\"type\":\"object\"},\"error\":{\"description\":\"The error code and message, if any occurred.\",\"nullable\":true,\"properties\":{\"code\":{\"description\":\"ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing \\\": \\\" separator (`ABDM-1001: `); match on the code itself and tolerate the separator.\",\"example\":\"ABDM-1001\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"message\":{\"description\":\"The appropriate error message\",\"example\":\"unable to connect database\",\"type\":\"string\"}},\"required\":[\"code\",\"message\"],\"type\":\"object\"},\"response\":{\"description\":\"The request id is from the /consent/request/hip/notify callback\",\"properties\":{\"requestId\":{\"description\":\"The requestId that was passed. it must be in Alpha numeric and - in middle and Allows alpha numeric character and special characters like \\\"^[0-9a-fA-F]{8}\\\\\\\\b-[0-9a-fA-F]{4}\\\\\\\\b-[0-9a-fA-F]{4}\\\\\\\\b-[0-9a-fA-F]{4}\\\\\\\\b-[0-9a-fA-F]{12}\\\"\",\"example\":\"6f0b4665-a915-4c92-aa36-65afb4a2cd71\",\"format\":\"uuid\",\"type\":\"string\"}},\"required\":[\"requestId\"],\"type\":\"object\"}},\"required\":[\"acknowledgement\",\"response\"],\"type\":\"object\"}}},\"required\":true},\"responses\":{\"202\":{\"description\":\"Accepted\"},\"400\":{\"content\":{\"application/json\":{\"schema\":{\"example\":[{\"error\":{\"code\":\"ABDM-9999\",\"message\":\"RequestId cannot be NULL or Blank\"}},{\"error\":{\"code\":\"ABDM-9999\",\"message\":\"Invalid status, Please provide a valid status\"}},{\"error\":{\"code\":\"ABDM-9999\",\"message\":\"Invalid ConsentId, Please provide a valid ConsentId\"}}],\"items\":{\"properties\":{\"error\":{\"description\":\"The error code and message, if any occurred.\",\"properties\":{\"code\":{\"description\":\"The error code. May be returned either bare or with a trailing \\\": \\\" separator; match on the code itself and tolerate the separator.\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"message\":{\"type\":\"string\"}},\"required\":[\"code\",\"message\"],\"type\":\"object\"}},\"type\":\"object\"},\"type\":\"array\"}}},\"description\":\"Bad Request\"},\"401\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"code\":{\"description\":\"900901 - Unauthorized. May be returned either bare or with a trailing \\\": \\\" separator; match on the code itself and tolerate the separator.\",\"example\":\"900901\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"description\":{\"example\":\"Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'\",\"type\":\"string\"},\"message\":{\"example\":\"Unauthorized\",\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Unauthorized\"},\"403\":{\"content\":{\"text/plain\":{\"schema\":{\"example\":\"Access Denied\",\"type\":\"string\"}}},\"description\":\"Forbidden\"},\"404\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"error\":{\"description\":\"The error code and message, if any occurred.\",\"properties\":{\"code\":{\"description\":\"ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing \\\": \\\" separator (`ABDM-1001: `); match on the code itself and tolerate the separator.\",\"example\":\"ABDM-1001\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"message\":{\"example\":\"No data found\",\"type\":\"string\"}},\"required\":[\"code\",\"message\"],\"type\":\"object\"}},\"type\":\"object\"}}},\"description\":\"Not Found\"},\"500\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"code\":{\"description\":\"900900 - Unclassified Authentication Failure. May be returned either bare or with a trailing \\\": \\\" separator; match on the code itself and tolerate the separator.\",\"example\":\"900900\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"description\":{\"example\":\"Access failure for API: /hiecm/api/v3, version: v3 status: (900900) - Unclassified Authentication Failure\",\"type\":\"string\"},\"message\":{\"example\":\"Unclassified Authentication Failure\",\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Internal Server Error\"},\"503\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"code\":{\"description\":\"ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing \\\": \\\" separator (`ABDM-1024: `); match on the code itself and tolerate the separator.\",\"example\":\"ABDM-1024\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"message\":{\"example\":\"Dependent service unavailable\",\"type\":\"string\"}},\"required\":[\"code\",\"message\"],\"type\":\"object\"}}},\"description\":\"Service Unavailable\"}},\"security\":[{\"bearerAuth\":[]}],\"summary\":\"This is ABDM HIE-CM API called by HIP to acknowledge the notification sent when a consent request is approved/revoked/expired by the patient.\",\"tags\":[\"consent-management-data-flow-hip\"],\"x-abdm-nha-operation-id\":\"abdm-consent-management 2\"}}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-post-consent-v3-request-hiu-on-notify\",\"id\":\"m3_post_consent_v3_request_hiu_on_notify\",\"summary\":\"This is ABDM HIE-CM API called by HIU to acknowledge the notification sent when a consent request is approved/denied/revoked/expired by the patient.\",\"title\":\"POST /api/hiecm/consent/v3/request/hiu/on-notify\",\"type\":\"operation\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"doc_path\":\"/docs/hiecm/v3/api/m3/endpoints/m3-post-consent-v3-request-hiu-on-notify\",\"operation_id\":\"m3_post_consent_v3_request_hiu_on_notify\",\"spec\":{\"description\":\"This API is called by HIU as acknowledgement to consent notifications, specifically for cases when consent is APPROVED, DENIED, or REVOKED or EXPIRED. Notified by CM earlier via Gateway API - <b> /api/v3/hiu/consent/request/notify </b>\",\"operationId\":\"m3_post_consent_v3_request_hiu_on_notify\",\"parameters\":[{\"description\":\"Unique UUID for track the end to end request transaction\",\"example\":\"18235d89-cb13-479d-ad71-7a57d5f669a8\",\"in\":\"header\",\"name\":\"REQUEST-ID\",\"required\":true,\"schema\":{\"type\":\"string\"}},{\"description\":\"Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds\",\"example\":\"2022-10-06T15:10:00.587Z\",\"in\":\"header\",\"name\":\"TIMESTAMP\",\"required\":true,\"schema\":{\"type\":\"string\"}},{\"description\":\"Suffix of the consent manager to which the request was intended\",\"example\":\"sbx\",\"in\":\"header\",\"name\":\"X-CM-ID\",\"required\":true,\"schema\":{\"type\":\"string\"}}],\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"description\":\"In the request body, either ‘acknowledgement’ or ‘error’ must be included.<br> <ol type='a'><br/> <li>Incase of success scenario,acknowledgement is mandatory and error is optional </li> <li>Incase of failure scenario,error is mandatory and acknowledgment is optional</li> <li>response is mandatory object in both the cases</li> </ol>\",\"properties\":{\"acknowledgement\":{\"items\":{\"properties\":{\"consentId\":{\"description\":\"The consent artefact id. Should be valid UUID. Allows alpha numeric character and special characters like \\\"^[0-9a-fA-F]{8}\\\\\\\\b-[0-9a-fA-F]{4}\\\\\\\\b-[0-9a-fA-F]{4}\\\\\\\\b-[0-9a-fA-F]{4}\\\\\\\\b-[0-9a-fA-F]{12}$\\\"\",\"example\":\"e3c74829-3f82-4f94-959e-e10f57bcd57b\",\"format\":\"uuid\",\"type\":\"string\"},\"status\":{\"description\":\"The status of the notification. Allows alpha numeric character and special characters like \\\"^[a-zA-Z0-9_\\\\\\\\-@,. \\\\\\\":/]{0,255}$\\\"\",\"example\":\"OK\",\"type\":\"string\"}},\"required\":[\"status\",\"consentId\"],\"type\":\"object\"},\"type\":\"array\"},\"error\":{\"description\":\"The error code and message, if any occurred.\",\"nullable\":true,\"properties\":{\"code\":{\"description\":\"ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing \\\": \\\" separator (`ABDM-1001: `); match on the code itself and tolerate the separator.\",\"example\":\"ABDM-1001\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"message\":{\"description\":\"The appropriate error message\",\"example\":\"unable to connect database\",\"type\":\"string\"}},\"required\":[\"code\",\"message\"],\"type\":\"object\"},\"response\":{\"description\":\"The request id is from the /hiu/consent/request/notify callback\",\"properties\":{\"requestId\":{\"description\":\"The requestId that was passed. it must be in Alpha numeric and - in middle and Allows alpha numeric character and special characters like \\\"^[0-9a-fA-F]{8}\\\\\\\\b-[0-9a-fA-F]{4}\\\\\\\\b-[0-9a-fA-F]{4}\\\\\\\\b-[0-9a-fA-F]{4}\\\\\\\\b-[0-9a-fA-F]{12}\\\"\",\"example\":\"6f0b4665-a915-4c92-aa36-65afb4a2cd71\",\"format\":\"uuid\",\"type\":\"string\"}},\"required\":[\"requestId\"],\"type\":\"object\"}},\"required\":[\"acknowledgement\",\"response\"],\"type\":\"object\"}}},\"required\":true},\"responses\":{\"202\":{\"description\":\"Accepted\"},\"400\":{\"content\":{\"application/json\":{\"schema\":{\"example\":[{\"error\":{\"code\":\"ABDM-9999\",\"message\":\"RequestId cannot be NULL or Blank\"}},{\"error\":{\"code\":\"ABDM-9999\",\"message\":\"Invalid status, Please provide a valid status\"}},{\"error\":{\"code\":\"ABDM-9999\",\"message\":\"Invalid ConsentId, Please provide a valid ConsentId\"}}],\"items\":{\"properties\":{\"error\":{\"description\":\"The error code and message, if any occurred.\",\"properties\":{\"code\":{\"description\":\"The error code. May be returned either bare or with a trailing \\\": \\\" separator; match on the code itself and tolerate the separator.\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"message\":{\"type\":\"string\"}},\"required\":[\"code\",\"message\"],\"type\":\"object\"}},\"type\":\"object\"},\"type\":\"array\"}}},\"description\":\"Bad Request\"},\"401\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"code\":{\"description\":\"900901 - Unauthorized. May be returned either bare or with a trailing \\\": \\\" separator; match on the code itself and tolerate the separator.\",\"example\":\"900901\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"description\":{\"example\":\"Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'\",\"type\":\"string\"},\"message\":{\"example\":\"Unauthorized\",\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Unauthorized\"},\"403\":{\"content\":{\"text/plain\":{\"schema\":{\"example\":\"Access Denied\",\"type\":\"string\"}}},\"description\":\"Forbidden\"},\"404\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"error\":{\"description\":\"The error code and message, if any occurred.\",\"properties\":{\"code\":{\"description\":\"ABDM-1001 - No data found. May be returned either bare (`ABDM-1001`) or with a trailing \\\": \\\" separator (`ABDM-1001: `); match on the code itself and tolerate the separator.\",\"example\":\"ABDM-1001\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"message\":{\"example\":\"No data found\",\"type\":\"string\"}},\"required\":[\"code\",\"message\"],\"type\":\"object\"}},\"type\":\"object\"}}},\"description\":\"Not Found\"},\"500\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"code\":{\"description\":\"900900 - Unclassified Authentication Failure. May be returned either bare or with a trailing \\\": \\\" separator; match on the code itself and tolerate the separator.\",\"example\":\"900900\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"description\":{\"example\":\"Access failure for API: /hiecm/api/v3, version: v3 status: (900900) - Unclassified Authentication Failure\",\"type\":\"string\"},\"message\":{\"example\":\"Unclassified Authentication Failure\",\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Internal Server Error\"},\"503\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"code\":{\"description\":\"ABDM-1024 - Dependent service unavailable. May be returned either bare (`ABDM-1024`) or with a trailing \\\": \\\" separator (`ABDM-1024: `); match on the code itself and tolerate the separator.\",\"example\":\"ABDM-1024\",\"pattern\":\"^(ABDM-\\\\d{4}|\\\\d{3,6})(: )?$\",\"type\":\"string\"},\"message\":{\"example\":\"Dependent service unavailable\",\"type\":\"string\"}},\"required\":[\"code\",\"message\"],\"type\":\"object\"}}},\"description\":\"Service Unavailable\"}},\"security\":[{\"bearerAuth\":[]}],\"summary\":\"This is ABDM HIE-CM API called by HIU to acknowledge the notification sent when a consent request is approved/denied/revoked/expired by the patient.\",\"tags\":[\"consent-management-data-flow-hiu\"],\"x-abdm-nha-operation-id\":\"abdm-consent-management 3 (3)\"}}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:56:04.587Z",
+  "usage": {
+    "input_tokens": 50,
+    "output_tokens": 1207,
+    "cache_read_input_tokens": 58061,
+    "cache_creation_input_tokens": 12717,
+    "num_turns": 5,
+    "duration_ms": 16065,
+    "cost_usd_equivalent": 0.0373251
+  }
+}

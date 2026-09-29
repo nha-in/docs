@@ -1,0 +1,342 @@
+{
+  "case_id": "faq-verbatim-abdm-sandbox-07",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "Who can participate in the ABDM Sandbox?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01UVFfh8SakAGb1GEtdgcsp5",
+            "Name": "search",
+            "Input": {
+              "query": "ABDM Sandbox participation eligibility who can",
+              "type": "sandbox",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "ABDM Sandbox participation eligibility who can",
+            "type": "sandbox",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01DYymVWrLKQ8Aj4V3im9YMc",
+            "Name": "search",
+            "Input": {
+              "query": "sandbox participants access",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "sandbox participants access",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/nhcx/v1/api/registry/endpoints/registry-fetch-participants-list",
+                "id": "nhcx.endpoint.fetch-participants-list",
+                "summary": "List the payers, providers or third party administrators registered in a date window, to pick who to address.",
+                "title": "POST /fetch/participants/list",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.test.payer-uc-04",
+                "summary": "Prove that your insurance system can fetch the registered participants of one role from the claims exchange.",
+                "title": "Payer sandbox exit use case 4: Get participant list",
+                "type": "test"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.test.provider-uc-01",
+                "summary": "Prove that your hospital system can fetch the registered participants of one role, such as every payer, from the claims exchange.",
+                "title": "Provider sandbox exit use case 1: Get participant list",
+                "type": "test"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/session/endpoints/session-api-hiecm-gateway-v3-sessions",
+                "id": "nhcx.endpoint.session-token",
+                "summary": "Trade your client id and client secret for the access token, valid for 1200 seconds (20 minutes), that every claims exchange call carries.",
+                "title": "POST /api/hiecm/gateway/v3/sessions",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/registry/endpoints/registry-participant-search",
+                "id": "nhcx.endpoint.participant-search",
+                "summary": "Read one participant's full registry record by its participant code.",
+                "title": "POST /participant/search",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/base-urls",
+                "id": "nhcx.sandbox.environments-and-base-urls",
+                "summary": "The two environments, the web portals, and the two base addresses every call is built on, for testing and for live claims.",
+                "title": "NHCX environments, hosts and base URLs",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/registry/endpoints/registry-participant-details",
+                "id": "nhcx.endpoint.participant-details",
+                "summary": "Read one participant's full registry record by its participant code, through the second lookup path.",
+                "title": "POST /participant/details",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.decision.session-endpoint",
+                "summary": "Get the token that every exchange call carries from one place in your code, and set the address it calls per environment.",
+                "title": "Which session token endpoint to call",
+                "type": "decision"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/onboarding/endpoints/onboarding-participant-create",
+                "id": "nhcx.endpoint.participant-create",
+                "summary": "Register your organisation in the sandbox participant registry and receive the participant code that addresses all your messages.",
+                "title": "POST /participant/create",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/registry/endpoints/registry-fetch-certs",
+                "id": "nhcx.endpoint.fetch-certs",
+                "summary": "Fetch a recipient's public encryption certificate so you can seal a message only they can open.",
+                "title": "POST /fetch/certs",
+                "type": "endpoint"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_014xrkGWAScicXadnp1tQ4ro",
+            "Name": "search",
+            "Input": {
+              "query": "ABDM sandbox access onboarding registration",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "ABDM sandbox access onboarding registration",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/get-your-sandbox-credentials",
+                "id": "nhcx.sandbox.prerequisites",
+                "summary": "The checklist to complete before your system can register on the claims exchange sandbox: a facility registration, sandbox credentials, basic health ID featu...",
+                "title": "What you need before you register on the NHCX sandbox",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.test.payer-uc-04",
+                "summary": "Prove that your insurance system can fetch the registered participants of one role from the claims exchange.",
+                "title": "Payer sandbox exit use case 4: Get participant list",
+                "type": "test"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/get-your-sandbox-credentials",
+                "id": "nhcx.flow.sandbox-onboarding",
+                "summary": "Register your system in the claims exchange test environment so it holds a participant code, a registered certificate and a callback address.",
+                "title": "Onboard as a participant in the NHCX sandbox",
+                "type": "flow"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.test.provider-uc-01",
+                "summary": "Prove that your hospital system can fetch the registered participants of one role, such as every payer, from the claims exchange.",
+                "title": "Provider sandbox exit use case 1: Get participant list",
+                "type": "test"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/notifications-and-patient-apps#subscribing",
+                "id": "nhcx.flow.notification-subscribe",
+                "summary": "Have a patient's health record app receive plain-language updates on their pre-authorisations, claims and payments, by subscribing each time the patient logs...",
+                "title": "Subscribe a patient app to notifications",
+                "type": "flow"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01C4RCr2jNyrzVCZNZ5arhBC",
+            "Name": "get",
+            "Input": {
+              "id": "nhcx.sandbox.prerequisites"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "nhcx.sandbox.prerequisites"
+          },
+          "output": {
+            "body": "# What you need before you register on the NHCX sandbox\n\n## In plain words\n\nBefore your system can join the NHCX sandbox, your organisation and your software must exist in the right registries. Your software must also support basic [ABHA](../../shared/glossary/abha.md) features.\n\nSome steps need approval, and the reviews have no fixed turnaround time. Start them first.\n\n## Before you start\n\nNothing. This page is the starting point.\n\n## What happens\n\n### 1. Register the organisation\n\n- A [provider](../glossary/provider.md) registers each facility in the Health Facility Registry ([HFR](../../shared/glossary/hfr.md)) at https://facility.abdm.gov.in/. The HFR ID becomes your registry id. Questions go to `facility@nha.gov.in`.\n- A [payer](../glossary/payer.md) or [TPA](../glossary/tpa.md) uses the id issued by [IRDAI](../glossary/irdai.md) or the relevant authority.\n- The mobile number on the HFR record must be current. Participant creation checks it and sends a passcode to it.\n\n### 2. Apply for ABDM sandbox credentials\n\n1. Apply at https://sandbox.abdm.gov.in/sandbox/v3/.\n2. Select \"Providers and Payer\" and Milestone 1 as your intent.\n3. Wait for review. On approval you receive a client ID and a client secret.\n\nThe review is semi-manual. It filters out repeat requests from the same organisation, organisations missing from any registry, technology providers without a valid website, and spam.\n\n### 3. Build Milestone 1\n\nYour software must support [Milestone 1](../../hiecm/glossary/m1.md). It creates an ABHA number through Aadhaar or a driving licence. It verifies an ABHA number or ABHA address at patient registration.\n\n### 4. Register on the NHCX sandbox\n\nRegister at https://sandbox.abdm.gov.in/sandbox/v3/sandbox-registration with your ABDM sandbox client ID and secret. After you submit the form, NHCX sandbox roles are assigned to your client.\n\n### 5. Decide your role\n\n| Role | Code | Registry | Registry code |\n|---|---|---|---|\n| Provider | `10001` | HFR | `10001` |\n| Payer | `10002` | Payer | `10004` |\n| TPA | `10003` | Payer | `10004` |\n\nA wrong role and registry pair leads to access errors, rejected requests or misrouted messages.\n\n### 6. Prepare the technical pieces\n\n- An RSA key pair and an X.509 certificate. See [generate an encryption certificate](../flows/generate-and-register-certificate.md).\n- A public HTTPS callback address. See [callback URL rules](callback-url-requirements.md).\n\nThen create your participant code. See [onboard as a participant in the sandbox](../flows/sandbox-onboarding.md).\n\n## How you know it worked\n\nYou are ready to register when all of these hold:\n\n- Your facility has an HFR ID, or your payer holds its registry id.\n- You hold an ABDM sandbox client ID and secret, and a session token call with them returns an access token.\n- The NHCX sandbox registration form is submitted and roles are assigned to your client.\n- You have a certificate and a reachable callback URL.\n\n## When it goes wrong\n\n- **You are waiting for sandbox approval.** The review has no fixed turnaround time, and nothing on your side speeds it up. Do not submit a second application: repeat requests are filtered out. Ask about a stalled request through the channels in [where to get help](support-contacts.md).\n- **Participant creation fails the mobile number check.** The number must match the one on the HFR record for providers, or the payer record for payers. Update the registry record first.\n- **\"No user role found/associated for sender code.\"** Your client has no NHCX role yet. Confirm the sandbox registration form went through, then contact support.\n- **Requests are rejected or misrouted after registration.** Check the role and registry codes you registered with.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/nhcx/v1/getting-started/get-your-sandbox-credentials",
+            "gateway": "nhcx",
+            "id": "nhcx.sandbox.prerequisites",
+            "milestone": "n/a",
+            "summary": "The checklist to complete before your system can register on the claims exchange sandbox: a facility registration, sandbox credentials, basic health ID features, a role, a certificate and a callback address.",
+            "title": "What you need before you register on the NHCX sandbox",
+            "type": "sandbox"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "Based on the ABDM Developer Portal documentation, **three types of organizations can participate in the ABDM Sandbox**:\n\n1. **Providers** — Healthcare facilities that register in the Health Facility Registry (HFR) at https://facility.abdm.gov.in/\n2. **Payers** — Insurance companies that hold an ID issued by IRDAI (Insurance Regulatory and Development Authority of India)\n3. **TPAs** — Third Party Administrators that also hold an IRDAI-issued ID or relevant authority ID\n\n## Process to participate:\n\n1. **Register your organization** — Providers register facilities in HFR; payers/TPAs use their regulatory ID\n2. **Apply for ABDM sandbox credentials** at https://sandbox.abdm.gov.in/sandbox/v3/ (requires semi-manual review)\n3. **Build Milestone 1** — Your software must support ABHA creation and verification features\n4. **Register on NHCX sandbox** at https://sandbox.abdm.gov.in/sandbox/v3/sandbox-registration with your credentials\n5. **Prepare technical requirements** — RSA key pair, X.509 certificate, and public HTTPS callback URL\n\nThe key requirement is that your organization must exist in the appropriate registry before you can apply for sandbox access. The approval process has no fixed turnaround time.\n\n**Source:** [What you need before you register on the NHCX sandbox](https://sandbox.abdm.gov.in/docs/nhcx/v1/getting-started/get-your-sandbox-credentials)",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "Based on the ABDM Developer Portal documentation, **three types of organizations can participate in the ABDM Sandbox**:\n\n1. **Providers** — Healthcare facilities that register in the Health Facility Registry (HFR) at https://facility.abdm.gov.in/\n2. **Payers** — Insurance companies that hold an ID issued by IRDAI (Insurance Regulatory and Development Authority of India)\n3. **TPAs** — Third Party Administrators that also hold an IRDAI-issued ID or relevant authority ID\n\n## Process to participate:\n\n1. **Register your organization** — Providers register facilities in HFR; payers/TPAs use their regulatory ID\n2. **Apply for ABDM sandbox credentials** at https://sandbox.abdm.gov.in/sandbox/v3/ (requires semi-manual review)\n3. **Build Milestone 1** — Your software must support ABHA creation and verification features\n4. **Register on NHCX sandbox** at https://sandbox.abdm.gov.in/sandbox/v3/sandbox-registration with your credentials\n5. **Prepare technical requirements** — RSA key pair, X.509 certificate, and public HTTPS callback URL\n\nThe key requirement is that your organization must exist in the appropriate registry before you can apply for sandbox access. The approval process has no fixed turnaround time.\n\n**Source:** [What you need before you register on the NHCX sandbox](https://sandbox.abdm.gov.in/docs/nhcx/v1/getting-started/get-your-sandbox-credentials)",
+  "sources": [
+    {
+      "id": "nhcx.sandbox.prerequisites",
+      "title": "What you need before you register on the NHCX sandbox",
+      "url": "/docs/nhcx/v1/getting-started/get-your-sandbox-credentials"
+    },
+    {
+      "id": "nhcx.flow.sandbox-onboarding",
+      "title": "Onboard as a participant in the NHCX sandbox",
+      "url": "/docs/nhcx/v1/getting-started/get-your-sandbox-credentials"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/nhcx/v1/api/registry/endpoints/registry-fetch-participants-list\",\"id\":\"nhcx.endpoint.fetch-participants-list\",\"summary\":\"List the payers, providers or third party administrators registered in a date window, to pick who to address.\",\"title\":\"POST /fetch/participants/list\",\"type\":\"endpoint\"},{\"doc_url\":\"\",\"id\":\"nhcx.test.payer-uc-04\",\"summary\":\"Prove that your insurance system can fetch the registered participants of one role from the claims exchange.\",\"title\":\"Payer sandbox exit use case 4: Get participant list\",\"type\":\"test\"},{\"doc_url\":\"\",\"id\":\"nhcx.test.provider-uc-01\",\"summary\":\"Prove that your hospital system can fetch the registered participants of one role, such as every payer, from the claims exchange.\",\"title\":\"Provider sandbox exit use case 1: Get participant list\",\"type\":\"test\"},{\"doc_url\":\"/docs/nhcx/v1/api/session/endpoints/session-api-hiecm-gateway-v3-sessions\",\"id\":\"nhcx.endpoint.session-token\",\"summary\":\"Trade your client id and client secret for the access token, valid for 1200 seconds (20 minutes), that every claims exchange call carries.\",\"title\":\"POST /api/hiecm/gateway/v3/sessions\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/nhcx/v1/api/registry/endpoints/registry-participant-search\",\"id\":\"nhcx.endpoint.participant-search\",\"summary\":\"Read one participant's full registry record by its participant code.\",\"title\":\"POST /participant/search\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/base-urls\",\"id\":\"nhcx.sandbox.environments-and-base-urls\",\"summary\":\"The two environments, the web portals, and the two base addresses every call is built on, for testing and for live claims.\",\"title\":\"NHCX environments, hosts and base URLs\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/nhcx/v1/api/registry/endpoints/registry-participant-details\",\"id\":\"nhcx.endpoint.participant-details\",\"summary\":\"Read one participant's full registry record by its participant code, through the second lookup path.\",\"title\":\"POST /participant/details\",\"type\":\"endpoint\"},{\"doc_url\":\"\",\"id\":\"nhcx.decision.session-endpoint\",\"summary\":\"Get the token that every exchange call carries from one place in your code, and set the address it calls per environment.\",\"title\":\"Which session token endpoint to call\",\"type\":\"decision\"},{\"doc_url\":\"/docs/nhcx/v1/api/onboarding/endpoints/onboarding-participant-create\",\"id\":\"nhcx.endpoint.participant-create\",\"summary\":\"Register your organisation in the sandbox participant registry and receive the participant code that addresses all your messages.\",\"title\":\"POST /participant/create\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/nhcx/v1/api/registry/endpoints/registry-fetch-certs\",\"id\":\"nhcx.endpoint.fetch-certs\",\"summary\":\"Fetch a recipient's public encryption certificate so you can seal a message only they can open.\",\"title\":\"POST /fetch/certs\",\"type\":\"endpoint\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/nhcx/v1/getting-started/get-your-sandbox-credentials\",\"id\":\"nhcx.sandbox.prerequisites\",\"summary\":\"The checklist to complete before your system can register on the claims exchange sandbox: a facility registration, sandbox credentials, basic health ID featu...\",\"title\":\"What you need before you register on the NHCX sandbox\",\"type\":\"sandbox\"},{\"doc_url\":\"\",\"id\":\"nhcx.test.payer-uc-04\",\"summary\":\"Prove that your insurance system can fetch the registered participants of one role from the claims exchange.\",\"title\":\"Payer sandbox exit use case 4: Get participant list\",\"type\":\"test\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/get-your-sandbox-credentials\",\"id\":\"nhcx.flow.sandbox-onboarding\",\"summary\":\"Register your system in the claims exchange test environment so it holds a participant code, a registered certificate and a callback address.\",\"title\":\"Onboard as a participant in the NHCX sandbox\",\"type\":\"flow\"},{\"doc_url\":\"\",\"id\":\"nhcx.test.provider-uc-01\",\"summary\":\"Prove that your hospital system can fetch the registered participants of one role, such as every payer, from the claims exchange.\",\"title\":\"Provider sandbox exit use case 1: Get participant list\",\"type\":\"test\"},{\"doc_url\":\"/docs/nhcx/v1/reference/notifications-and-patient-apps#subscribing\",\"id\":\"nhcx.flow.notification-subscribe\",\"summary\":\"Have a patient's health record app receive plain-language updates on their pre-authorisations, claims and payments, by subscribing each time the patient logs...\",\"title\":\"Subscribe a patient app to notifications\",\"type\":\"flow\"}]}\n{\"body\":\"# What you need before you register on the NHCX sandbox\\n\\n## In plain words\\n\\nBefore your system can join the NHCX sandbox, your organisation and your software must exist in the right registries. Your software must also support basic [ABHA](../../shared/glossary/abha.md) features.\\n\\nSome steps need approval, and the reviews have no fixed turnaround time. Start them first.\\n\\n## Before you start\\n\\nNothing. This page is the starting point.\\n\\n## What happens\\n\\n### 1. Register the organisation\\n\\n- A [provider](../glossary/provider.md) registers each facility in the Health Facility Registry ([HFR](../../shared/glossary/hfr.md)) at https://facility.abdm.gov.in/. The HFR ID becomes your registry id. Questions go to `facility@nha.gov.in`.\\n- A [payer](../glossary/payer.md) or [TPA](../glossary/tpa.md) uses the id issued by [IRDAI](../glossary/irdai.md) or the relevant authority.\\n- The mobile number on the HFR record must be current. Participant creation checks it and sends a passcode to it.\\n\\n### 2. Apply for ABDM sandbox credentials\\n\\n1. Apply at https://sandbox.abdm.gov.in/sandbox/v3/.\\n2. Select \\\"Providers and Payer\\\" and Milestone 1 as your intent.\\n3. Wait for review. On approval you receive a client ID and a client secret.\\n\\nThe review is semi-manual. It filters out repeat requests from the same organisation, organisations missing from any registry, technology providers without a valid website, and spam.\\n\\n### 3. Build Milestone 1\\n\\nYour software must support [Milestone 1](../../hiecm/glossary/m1.md). It creates an ABHA number through Aadhaar or a driving licence. It verifies an ABHA number or ABHA address at patient registration.\\n\\n### 4. Register on the NHCX sandbox\\n\\nRegister at https://sandbox.abdm.gov.in/sandbox/v3/sandbox-registration with your ABDM sandbox client ID and secret. After you submit the form, NHCX sandbox roles are assigned to your client.\\n\\n### 5. Decide your role\\n\\n| Role | Code | Registry | Registry code |\\n|---|---|---|---|\\n| Provider | `10001` | HFR | `10001` |\\n| Payer | `10002` | Payer | `10004` |\\n| TPA | `10003` | Payer | `10004` |\\n\\nA wrong role and registry pair leads to access errors, rejected requests or misrouted messages.\\n\\n### 6. Prepare the technical pieces\\n\\n- An RSA key pair and an X.509 certificate. See [generate an encryption certificate](../flows/generate-and-register-certificate.md).\\n- A public HTTPS callback address. See [callback URL rules](callback-url-requirements.md).\\n\\nThen create your participant code. See [onboard as a participant in the sandbox](../flows/sandbox-onboarding.md).\\n\\n## How you know it worked\\n\\nYou are ready to register when all of these hold:\\n\\n- Your facility has an HFR ID, or your payer holds its registry id.\\n- You hold an ABDM sandbox client ID and secret, and a session token call with them returns an access token.\\n- The NHCX sandbox registration form is submitted and roles are assigned to your client.\\n- You have a certificate and a reachable callback URL.\\n\\n## When it goes wrong\\n\\n- **You are waiting for sandbox approval.** The review has no fixed turnaround time, and nothing on your side speeds it up. Do not submit a second application: repeat requests are filtered out. Ask about a stalled request through the channels in [where to get help](support-contacts.md).\\n- **Participant creation fails the mobile number check.** The number must match the one on the HFR record for providers, or the payer record for payers. Update the registry record first.\\n- **\\\"No user role found/associated for sender code.\\\"** Your client has no NHCX role yet. Confirm the sandbox registration form went through, then contact support.\\n- **Requests are rejected or misrouted after registration.** Check the role and registry codes you registered with.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/nhcx/v1/getting-started/get-your-sandbox-credentials\",\"gateway\":\"nhcx\",\"id\":\"nhcx.sandbox.prerequisites\",\"milestone\":\"n/a\",\"summary\":\"The checklist to complete before your system can register on the claims exchange sandbox: a facility registration, sandbox credentials, basic health ID features, a role, a certificate and a callback address.\",\"title\":\"What you need before you register on the NHCX sandbox\",\"type\":\"sandbox\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:03:29.037Z",
+  "usage": {
+    "input_tokens": 50,
+    "output_tokens": 1075,
+    "cache_read_input_tokens": 53340,
+    "cache_creation_input_tokens": 8623,
+    "num_turns": 5,
+    "duration_ms": 15850,
+    "cost_usd_equivalent": 0.028005
+  }
+}

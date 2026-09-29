@@ -1,0 +1,1350 @@
+{
+  "case_id": "faq-verbatim-sandbox-m2-06",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "What if patient does not share any ABHA Address with the health facility?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_011yS6SmqYiYHyTHimJJWaXo",
+            "Name": "search",
+            "Input": {
+              "query": "patient does not share ABHA Address health facility",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "patient does not share ABHA Address health facility",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-manager-hiu-hip/01-p2-get-hip-v3-link-patient-links#m2-get-all-link-records",
+                "id": "hiecm.endpoint.m2-get-all-link-records",
+                "summary": "Lists every care context already linked to an ABHA address.",
+                "title": "GET All Link records",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#discovery",
+                "id": "hiecm.glossary.discovery",
+                "summary": "The step where a patient's app asks a facility whether it holds records for that patient.",
+                "title": "Discovery, finding whether a facility holds records",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/notifications-and-patient-apps#subscribing",
+                "id": "nhcx.flow.notification-subscribe",
+                "summary": "Have a patient's health record app receive plain-language updates on their pre-authorisations, claims and payments, by subscribing each time the patient logs...",
+                "title": "Subscribe a patient app to notifications",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/03-m1-post-v3-phr-web-login-abha-verify-mobile-otp#m1-phr-verify",
+                "id": "hiecm.endpoint.m1-phr-verify",
+                "summary": "Completes an ABHA address login and returns the X-token for the profile, card and QR calls.",
+                "title": "Verify OTP or biometric for ABHA address login",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m3#m3-request-consent",
+                "id": "hiecm.flow.m3-request-consent",
+                "summary": "Ask a patient, by ABHA address, for permission to read records held elsewhere, and collect the consent artefact ids once they grant it.",
+                "title": "Request consent for a patient's health records",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#abha-address",
+                "id": "shared.glossary.abha-address",
+                "summary": "The readable name, such as name@sbx, that ABDM uses to route a person's health records.",
+                "title": "ABHA address",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/other/endpoints/other-v1-notification-subscribe",
+                "id": "nhcx.endpoint.notification-subscribe",
+                "summary": "Let a patient's health record app receive plain-language updates about that patient's insurance claims.",
+                "title": "POST /v1/notification/subscribe",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/troubleshooting/consent-stuck-requested#consent-stuck-requested",
+                "id": "hiecm.troubleshooting.consent-stuck-requested",
+                "summary": "A consent request has stayed in Requested and never moved to Granted or Denied.",
+                "title": "The consent request is stuck in Requested",
+                "type": "troubleshooting"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.notifications",
+                "summary": "A patient's health record app subscribes on login to claim events for that person, and the exchange then pushes short readable updates to the app, with only ...",
+                "title": "Notifications to patient apps",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m2#m2-link-care-context",
+                "id": "hiecm.flow.m2-link-care-context",
+                "summary": "Tell ABDM that this patient had a visit at your facility so their records can be found and fetched later.",
+                "title": "Link a care context to a patient's ABHA",
+                "type": "flow"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01XPS949q9YViMbvFMSTGd6z",
+            "Name": "search",
+            "Input": {
+              "query": "no ABHA Address health facility identification",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "no ABHA Address health facility identification",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-manager-hiu-hip/01-p2-get-hip-v3-link-patient-links#m2-get-all-link-records",
+                "id": "hiecm.endpoint.m2-get-all-link-records",
+                "summary": "Lists every care context already linked to an ABHA address.",
+                "title": "GET All Link records",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#discovery",
+                "id": "hiecm.glossary.discovery",
+                "summary": "The step where a patient's app asks a facility whether it holds records for that patient.",
+                "title": "Discovery, finding whether a facility holds records",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/notifications-and-patient-apps#subscribing",
+                "id": "nhcx.flow.notification-subscribe",
+                "summary": "Have a patient's health record app receive plain-language updates on their pre-authorisations, claims and payments, by subscribing each time the patient logs...",
+                "title": "Subscribe a patient app to notifications",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/03-m1-post-v3-phr-web-login-abha-verify-mobile-otp#m1-phr-verify",
+                "id": "hiecm.endpoint.m1-phr-verify",
+                "summary": "Completes an ABHA address login and returns the X-token for the profile, card and QR calls.",
+                "title": "Verify OTP or biometric for ABHA address login",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m3#m3-request-consent",
+                "id": "hiecm.flow.m3-request-consent",
+                "summary": "Ask a patient, by ABHA address, for permission to read records held elsewhere, and collect the consent artefact ids once they grant it.",
+                "title": "Request consent for a patient's health records",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#abha-address",
+                "id": "shared.glossary.abha-address",
+                "summary": "The readable name, such as name@sbx, that ABDM uses to route a person's health records.",
+                "title": "ABHA address",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/other/endpoints/other-v1-notification-subscribe",
+                "id": "nhcx.endpoint.notification-subscribe",
+                "summary": "Let a patient's health record app receive plain-language updates about that patient's insurance claims.",
+                "title": "POST /v1/notification/subscribe",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/troubleshooting/consent-stuck-requested#consent-stuck-requested",
+                "id": "hiecm.troubleshooting.consent-stuck-requested",
+                "summary": "A consent request has stayed in Requested and never moved to Granted or Denied.",
+                "title": "The consent request is stuck in Requested",
+                "type": "troubleshooting"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.notifications",
+                "summary": "A patient's health record app subscribes on login to claim events for that person, and the exchange then pushes short readable updates to the app, with only ...",
+                "title": "Notifications to patient apps",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m2#m2-link-care-context",
+                "id": "hiecm.flow.m2-link-care-context",
+                "summary": "Tell ABDM that this patient had a visit at your facility so their records can be found and fetched later.",
+                "title": "Link a care context to a patient's ABHA",
+                "type": "flow"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01SCWhhg8Tn7mz8AqXxNPXPt",
+            "Name": "search",
+            "Input": {
+              "query": "patient without ABHA address cannot share",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "patient without ABHA address cannot share",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/p2#p2-scan-and-share",
+                "id": "hiecm.flow.p2-scan-and-share",
+                "summary": "Let a person scan the code on a hospital counter and hand over their health address and profile, so registration happens without a form and later records fin...",
+                "title": "Share a profile at a facility by scanning its code",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-manager-hiu-hip/01-p2-get-hip-v3-link-patient-links#m2-get-all-link-records",
+                "id": "hiecm.endpoint.m2-get-all-link-records",
+                "summary": "Lists every care context already linked to an ABHA address.",
+                "title": "GET All Link records",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#discovery",
+                "id": "hiecm.glossary.discovery",
+                "summary": "The step where a patient's app asks a facility whether it holds records for that patient.",
+                "title": "Discovery, finding whether a facility holds records",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/notifications-and-patient-apps#subscribing",
+                "id": "nhcx.flow.notification-subscribe",
+                "summary": "Have a patient's health record app receive plain-language updates on their pre-authorisations, claims and payments, by subscribing each time the patient logs...",
+                "title": "Subscribe a patient app to notifications",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/03-m1-post-v3-phr-web-login-abha-verify-mobile-otp#m1-phr-verify",
+                "id": "hiecm.endpoint.m1-phr-verify",
+                "summary": "Completes an ABHA address login and returns the X-token for the profile, card and QR calls.",
+                "title": "Verify OTP or biometric for ABHA address login",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m3#m3-request-consent",
+                "id": "hiecm.flow.m3-request-consent",
+                "summary": "Ask a patient, by ABHA address, for permission to read records held elsewhere, and collect the consent artefact ids once they grant it.",
+                "title": "Request consent for a patient's health records",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#abha-address",
+                "id": "shared.glossary.abha-address",
+                "summary": "The readable name, such as name@sbx, that ABDM uses to route a person's health records.",
+                "title": "ABHA address",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/other/endpoints/other-v1-notification-subscribe",
+                "id": "nhcx.endpoint.notification-subscribe",
+                "summary": "Let a patient's health record app receive plain-language updates about that patient's insurance claims.",
+                "title": "POST /v1/notification/subscribe",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/troubleshooting/consent-stuck-requested#consent-stuck-requested",
+                "id": "hiecm.troubleshooting.consent-stuck-requested",
+                "summary": "A consent request has stayed in Requested and never moved to Granted or Denied.",
+                "title": "The consent request is stuck in Requested",
+                "type": "troubleshooting"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.notifications",
+                "summary": "A patient's health record app subscribes on login to claim events for that person, and the exchange then pushes short readable updates to the app, with only ...",
+                "title": "Notifications to patient apps",
+                "type": "concept"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01JniW4XeiabcbuCZt9AYPvo",
+            "Name": "search",
+            "Input": {
+              "query": "health facility patient identification ABHA prerequisite",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "health facility patient identification ABHA prerequisite",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#abha",
+                "id": "shared.glossary.abha",
+                "summary": "The patient's identity in ABDM, in two forms that look alike and are not: a 14 digit ABHA number and a readable ABHA address.",
+                "title": "ABHA",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.abha-identifiers",
+                "summary": "NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...",
+                "title": "Carrying an ABHA number and an ABHA address on a FHIR Patient",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/01-m1-post-v3-profile-benefit-linkanddelink-x-token#m1-benefit-link-or-delink",
+                "id": "hiecm.endpoint.m1-benefit-link-or-delink",
+                "summary": "Links or unlinks the programme named in the BENEFIT_NAME header for an ABHA.",
+                "title": "Link or unlink a benefit record from an ABHA",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/errors#abdm-1094",
+                "id": "hiecm.error.abdm-1094",
+                "summary": "Your client or the person's token is not allowed to do what the call tried, and the message says which of three cases applies.",
+                "title": "ABDM-1094, access to this feature is refused",
+                "type": "error"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.profile-and-example-together",
+                "summary": "A NRCeS profile gives the cardinalities and a NRCeS example gives the shape, and a generator written from either one alone is wrong in a different way.",
+                "title": "Read the profile and the example together, because each omits what the other carries",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/07-m3-get-data-flow-v3-health-information-request-status-tra-550104#p3-request-status",
+                "id": "hiecm.endpoint.p3-request-status",
+                "summary": "Check how far a health information request has got, by its transaction id.",
+                "title": "Get the status of a health information request",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/03-p4-get-subscription-requests-v3-patients-lockers-lockerid#p3-patient-locker-details-by-locker-id",
+                "id": "hiecm.endpoint.p3-patient-locker-details-by-locker-id",
+                "summary": "Fetch one health locker's settings for the logged-in person.",
+                "title": "Get a health locker by its id",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/01-p4-post-subscription-requests-v3-setup-locker#p3-setup-locker",
+                "id": "hiecm.endpoint.p3-setup-locker",
+                "summary": "Set up a health locker for the logged-in person.",
+                "title": "Set up a health locker",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request#m2-hip-health-information-on-request",
+                "id": "hiecm.endpoint.m2-hip-health-information-on-request",
+                "summary": "The HIP acknowledges a health information request, then encrypts the records and pushes them to the requester.",
+                "title": "Acknowledge a health information data request",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/05-m3-post-v3-hiu-health-information-on-request#m3-on-health-information-request",
+                "id": "hiecm.callback.m3-on-health-information-request",
+                "summary": "ABDM acknowledges an HIU's data request with its transaction id and status; the records come separately.",
+                "title": "Acknowledgement of a health information request",
+                "type": "callback"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01EmqKaPgLWqs3RTMMo2gWvC",
+            "Name": "search",
+            "Input": {
+              "query": "ABHA required mandatory for health facility patients",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "ABHA required mandatory for health facility patients",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#abha",
+                "id": "shared.glossary.abha",
+                "summary": "The patient's identity in ABDM, in two forms that look alike and are not: a 14 digit ABHA number and a readable ABHA address.",
+                "title": "ABHA",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.abha-identifiers",
+                "summary": "NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...",
+                "title": "Carrying an ABHA number and an ABHA address on a FHIR Patient",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/01-m1-post-v3-profile-benefit-linkanddelink-x-token#m1-benefit-link-or-delink",
+                "id": "hiecm.endpoint.m1-benefit-link-or-delink",
+                "summary": "Links or unlinks the programme named in the BENEFIT_NAME header for an ABHA.",
+                "title": "Link or unlink a benefit record from an ABHA",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/errors#abdm-1094",
+                "id": "hiecm.error.abdm-1094",
+                "summary": "Your client or the person's token is not allowed to do what the call tried, and the message says which of three cases applies.",
+                "title": "ABDM-1094, access to this feature is refused",
+                "type": "error"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.profile-and-example-together",
+                "summary": "A NRCeS profile gives the cardinalities and a NRCeS example gives the shape, and a generator written from either one alone is wrong in a different way.",
+                "title": "Read the profile and the example together, because each omits what the other carries",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/07-m3-get-data-flow-v3-health-information-request-status-tra-550104#p3-request-status",
+                "id": "hiecm.endpoint.p3-request-status",
+                "summary": "Check how far a health information request has got, by its transaction id.",
+                "title": "Get the status of a health information request",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/03-p4-get-subscription-requests-v3-patients-lockers-lockerid#p3-patient-locker-details-by-locker-id",
+                "id": "hiecm.endpoint.p3-patient-locker-details-by-locker-id",
+                "summary": "Fetch one health locker's settings for the logged-in person.",
+                "title": "Get a health locker by its id",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/01-p4-post-subscription-requests-v3-setup-locker#p3-setup-locker",
+                "id": "hiecm.endpoint.p3-setup-locker",
+                "summary": "Set up a health locker for the logged-in person.",
+                "title": "Set up a health locker",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request#m2-hip-health-information-on-request",
+                "id": "hiecm.endpoint.m2-hip-health-information-on-request",
+                "summary": "The HIP acknowledges a health information request, then encrypts the records and pushes them to the requester.",
+                "title": "Acknowledge a health information data request",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/05-m3-post-v3-hiu-health-information-on-request#m3-on-health-information-request",
+                "id": "hiecm.callback.m3-on-health-information-request",
+                "summary": "ABDM acknowledges an HIU's data request with its transaction id and status; the records come separately.",
+                "title": "Acknowledgement of a health information request",
+                "type": "callback"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01PYdBVSmZp4Dc2ZHcatHpHX",
+            "Name": "search",
+            "Input": {
+              "query": "patient registration health facility without sharing ABHA",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "patient registration health facility without sharing ABHA",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#abha",
+                "id": "shared.glossary.abha",
+                "summary": "The patient's identity in ABDM, in two forms that look alike and are not: a 14 digit ABHA number and a readable ABHA address.",
+                "title": "ABHA",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/p2#p2-scan-and-share",
+                "id": "hiecm.flow.p2-scan-and-share",
+                "summary": "Let a person scan the code on a hospital counter and hand over their health address and profile, so registration happens without a form and later records fin...",
+                "title": "Share a profile at a facility by scanning its code",
+                "type": "flow"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.abha-identifiers",
+                "summary": "NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...",
+                "title": "Carrying an ABHA number and an ABHA address on a FHIR Patient",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/01-m1-post-v3-profile-benefit-linkanddelink-x-token#m1-benefit-link-or-delink",
+                "id": "hiecm.endpoint.m1-benefit-link-or-delink",
+                "summary": "Links or unlinks the programme named in the BENEFIT_NAME header for an ABHA.",
+                "title": "Link or unlink a benefit record from an ABHA",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/errors#abdm-1094",
+                "id": "hiecm.error.abdm-1094",
+                "summary": "Your client or the person's token is not allowed to do what the call tried, and the message says which of three cases applies.",
+                "title": "ABDM-1094, access to this feature is refused",
+                "type": "error"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.profile-and-example-together",
+                "summary": "A NRCeS profile gives the cardinalities and a NRCeS example gives the shape, and a generator written from either one alone is wrong in a different way.",
+                "title": "Read the profile and the example together, because each omits what the other carries",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/07-m3-get-data-flow-v3-health-information-request-status-tra-550104#p3-request-status",
+                "id": "hiecm.endpoint.p3-request-status",
+                "summary": "Check how far a health information request has got, by its transaction id.",
+                "title": "Get the status of a health information request",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/03-p4-get-subscription-requests-v3-patients-lockers-lockerid#p3-patient-locker-details-by-locker-id",
+                "id": "hiecm.endpoint.p3-patient-locker-details-by-locker-id",
+                "summary": "Fetch one health locker's settings for the logged-in person.",
+                "title": "Get a health locker by its id",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/01-p4-post-subscription-requests-v3-setup-locker#p3-setup-locker",
+                "id": "hiecm.endpoint.p3-setup-locker",
+                "summary": "Set up a health locker for the logged-in person.",
+                "title": "Set up a health locker",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request#m2-hip-health-information-on-request",
+                "id": "hiecm.endpoint.m2-hip-health-information-on-request",
+                "summary": "The HIP acknowledges a health information request, then encrypts the records and pushes them to the requester.",
+                "title": "Acknowledge a health information data request",
+                "type": "endpoint"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01X8rCequTBFtrKSb3vG9ohH",
+            "Name": "search",
+            "Input": {
+              "query": "HIP health facility patient data storage records without ABDM linkage",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "HIP health facility patient data storage records without ABDM linkage",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#abdm",
+                "id": "shared.glossary.abdm",
+                "summary": "India's national programme for connecting health records, identities and facilities across providers.",
+                "title": "ABDM, Ayushman Bharat Digital Mission",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/claim-request",
+                "id": "nhcx.fhir.claim-request",
+                "summary": "The bundle a hospital sends after discharge to claim payment, with the final amounts, the discharge details and the documents the policy requires.",
+                "title": "Claim request bundle",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.terminologies",
+                "summary": "The code systems every claims bundle draws on, where each one is used, and how strictly each binding applies.",
+                "title": "Code systems and value sets used in NHCX bundles",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.pmjay-insurance-plan",
+                "summary": "How the government scheme's policy is laid out as data: specialties, packages, rates, claim rules, required documents and treatment-guideline questionnaires.",
+                "title": "The PMJAY InsurancePlan profile, packages and questionnaires",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/payment-notice-and-acknowledgement",
+                "id": "nhcx.fhir.payment-notice",
+                "summary": "The bundle a payer sends to tell a hospital a claim has been paid, with the amount and bank reference, and the short task the hospital sends back to acknowle...",
+                "title": "PaymentNotice bundle and its acknowledgement",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.preauth-cancel",
+                "summary": "The task a hospital sends to cancel a preauthorisation it no longer needs, and the payer's confirmation that the case is cancelled.",
+                "title": "Preauthorisation cancel request and response bundles",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.task",
+                "summary": "The task a hospital sends to dispute a rejected or underpaid claim, which routes the case to the claim review committee, and the task that carries the payer'...",
+                "title": "Task bundle for reprocess and CRC",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/coverage-eligibility-request",
+                "id": "nhcx.fhir.coverage-eligibility-request",
+                "summary": "The bundle a hospital sends to ask a payer whether a patient's policy is in force, what it covers, and whether a treatment needs prior approval.",
+                "title": "CoverageEligibilityRequest bundle",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.query-update",
+                "summary": "How to recognise a payer's query on a preauthorisation or claim, and how to resend the same claim with the documents and answers the payer asked for.",
+                "title": "Query update bundles for preauthorisation and claim",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/preauthorisation-request",
+                "id": "nhcx.fhir.preauth-request",
+                "summary": "The bundle a hospital sends to ask a payer to approve a planned treatment before it happens, with the package, the diagnosis and the required documents.",
+                "title": "Preauthorisation request bundle, a Claim with use preauthorization",
+                "type": "fhir"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_016gjjVGrige8LADqeuSSAXR",
+            "Name": "search",
+            "Input": {
+              "query": "M2 link care context ABHA required steps",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "M2 link care context ABHA required steps",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#abha",
+                "id": "shared.glossary.abha",
+                "summary": "The patient's identity in ABDM, in two forms that look alike and are not: a 14 digit ABHA number and a readable ABHA address.",
+                "title": "ABHA",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.abha-identifiers",
+                "summary": "NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...",
+                "title": "Carrying an ABHA number and an ABHA address on a FHIR Patient",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/01-m2-post-hip-v3-link-carecontext#m2-hip-link-care-context",
+                "id": "hiecm.endpoint.m2-hip-link-care-context",
+                "summary": "The HIP links one or more care contexts to a patient's ABHA address, using the patient's link token.",
+                "title": "Link care contexts to an ABHA address",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m2#m2-link-care-context",
+                "id": "hiecm.flow.m2-link-care-context",
+                "summary": "Tell ABDM that this patient had a visit at your facility so their records can be found and fetched later.",
+                "title": "Link a care context to a patient's ABHA",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/02-m2-post-v3-link-on-carecontext#m2-linking-care-context-call-back",
+                "id": "hiecm.callback.m2-linking-care-context-call-back",
+                "summary": "ABDM answers a care context link request on the HIP's bridge with the outcome.",
+                "title": "Linking care context Call back API",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-on-generate-token-result",
+                "id": "hiecm.callback.m2-on-generate-token-result",
+                "summary": "The link token arrives here; store it against the patient, because it is valid for six months.",
+                "title": "The link token you asked for, or why it was refused",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/care-context#care-context",
+                "id": "hiecm.concept.care-context",
+                "summary": "A care context is the unit a provider links to a patient's ABHA address, carrying a reference number and a display name and nothing clinical.",
+                "title": "Care contexts, how records are grouped so they can be found",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/p2#p2-discover-and-link",
+                "id": "hiecm.flow.p2-discover-and-link",
+                "summary": "Let a person search for a facility they visited, discover the records it holds for them, and attach those records to their health address after an OTP confir...",
+                "title": "Find records held elsewhere and link them",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/03-m2-post-user-initiated-linking-v3-link-care-context-on-confirm#m2-on-link-confirm",
+                "id": "hiecm.endpoint.m2-on-link-confirm",
+                "summary": "The HIP checks the patient's code and answers a link confirm request with the care contexts it linked.",
+                "title": "Link On-Confirm, HIP confirms linked care contexts",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/01-m2-post-user-initiated-linking-v3-patient-care-context-on-8c9340#m2-on-discover-care-contexts",
+                "id": "hiecm.endpoint.m2-on-discover-care-contexts",
+                "summary": "The HIP answers a discovery request with the patient's unlinked care contexts and how it matched the patient.",
+                "title": "On Discovery, HIP responds with found care contexts",
+                "type": "endpoint"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_017rcB2JQz24XpR23ULDDeQG",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.flow.m2-link-care-context"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.flow.m2-link-care-context"
+          },
+          "output": {
+            "body": "# Link a care context to a patient's ABHA\n\n## In plain words\n\nThe HIP generates a linking token using the patient's ABHA address and\ndemographic details for authentication. After successful verification, a\nlinking token valid for 6 months is created, and the patient's care context is\nlinked to the ABHA Address.\n\n```mermaid\nsequenceDiagram\n    autonumber\n    participant S as Your system (HIP)\n    participant G as ABDM Gateway\n    participant P as ABHA / PHR app\n    Note over S,G: Step 1: generate link token\n    S->>G: POST /api/hiecm/v3/token/generate-token<br/>abhaNumber, abhaAddress, name, gender, yearOfBirth\n    G-->>S: 202 Accepted\n    Note over S,G: Step 2: ABDM responds asynchronously with token details\n    G-)S: POST /api/v3/hip/token/on-generate-token<br/>abhaAddress, linkToken\n    S-->>G: 202 Accepted\n    Note over S,G: Step 3: push care contexts\n    S->>G: POST /api/hiecm/hip/v3/link/carecontext<br/>Authorization: Bearer accessToken, X-Link-Token: linkToken<br/>abhaNumber, abhaAddress, patient [referenceNumber, display,<br/>careContexts [referenceNumber, display], hiType, count]\n    G-->>S: 202 Accepted, care contexts queued\n    Note over S,G: Step 4: ABDM responds asynchronously with the status of linking\n    G-)S: POST /api/v3/link/on_carecontext<br/>status\n    S-->>G: 202 Accepted\n    G-)P: Push notification, record linked\n    P->>P: Patient sees a new record linked\n```\n\nThe steps, as drawn:\n\n1. Your system calls `POST /api/hiecm/v3/token/generate-token` with the\n   patient's ABHA number or ABHA address, name, gender and year of birth.\n2. The gateway answers 202 Accepted.\n3. The gateway calls `POST /api/v3/hip/token/on-generate-token` on your bridge\n   with the ABHA address and the link token.\n4. Your system answers 202 Accepted and stores the link token against the\n   patient.\n5. Your system calls `POST /api/hiecm/hip/v3/link/carecontext` with the gateway\n   access token, the link token in `X-Link-Token`, and the patient's care\n   contexts: for each, a reference number and a display name, the HI type and\n   the count of records.\n6. The gateway answers 202 Accepted and queues the care contexts.\n7. The gateway calls `POST /api/v3/link/on_carecontext` on your bridge with the\n   status of the linking.\n8. Your system answers 202 Accepted.\n9. The gateway pushes a notification to the patient's ABHA or PHR app that a\n   record is linked.\n10. The patient sees the new record linked in the app.\n\nWhen a linked care context changes, tell ABDM with\n`POST /api/hiecm/hip/v3/link/context/notify`. The outcome arrives on your\nbridge at `/api/v3/links/context/on-notify`.\n\n## Before you start\n\nThe facility holds a facility ID and a bridge linked with type HIP: see [Journey 4 on M4](/docs/hiecm/v3/milestones/m4#m4-link-bridge). You hold a gateway session token, and the patient has an ABHA address.\n\n## What happens\n\nGenerate the link token; the 202 carries nothing, and the token arrives on `/api/v3/hip/token/on-generate-token`. Store it against the patient and reuse it: it is valid for six months. Link with `X-Link-Token` set to it, and wait for `/api/v3/link/on_carecontext`.\n\n## How you know it worked\n\nA POST reaches `/api/v3/link/on_carecontext` whose `response.requestId` matches the `REQUEST-ID` of your link call and whose status reads Successfully Linked care context. The care context then appears when the patient runs discovery against your facility. The 202 on the link call is receipt, not success.\n\n## When it goes wrong\n\n`ABDM-1056`: the care context is already linked. `ABDM-1038`: the ABHA address does not match the link token. `ABDM-1026`: the link token is invalid, so generate a fresh one. `ABDM-2406`: calls made out of the logical sequence. No callback at all: see [the callback never arrives](/docs/hiecm/v3/troubleshooting/callback-never-arrives).",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/milestones/m2#m2-link-care-context",
+            "gateway": "hiecm",
+            "id": "hiecm.flow.m2-link-care-context",
+            "milestone": "M2",
+            "summary": "Tell ABDM that this patient had a visit at your facility so their records can be found and fetched later.",
+            "title": "Link a care context to a patient's ABHA",
+            "type": "flow"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01DP1mThsCJ6N1yUnWzrsN1s",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.concept.care-context"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.concept.care-context"
+          },
+          "output": {
+            "body": "# Care contexts, how records are grouped so they can be found\n\n## In plain words\n\nEach care context contains only two pieces of information:\n\n- **Reference ID.** A unique internal identifier assigned by the\n  [HRP](/docs/hiecm/v3/getting-started/glossary#hrp) (HMIS/LMIS). Used to link\n  and retrieve the associated health records.\n- **Display Name.** A user-friendly description to help identify the group of\n  records. Must not include any sensitive or confidential information such as\n  test results or diagnoses. Example: \"OPD records (X-Ray, Prescription) from\n  3rd March 2023\".\n\n### Recommended approach for structuring care contexts\n\nTo ensure clarity and usability, it is recommended to organise patient data as\nfollows:\n\n- Create one care context per outpatient visit (OPD)\n- Create one care context per inpatient admission (IPD)\n\nThis approach provides a clear and event-based grouping of health records.\n\n### JSON structure of care contexts\n\n```json\n{\n  \"patient\": {\n    \"referenceNumber\": \"TMH-PUID-001\",\n    \"display\": \"TMH records for Kiran Kumar\",\n    \"careContexts\": [\n      {\n        \"referenceNumber\": \"2375639\",\n        \"display\": \"OPD records for 03 Oct 2022\"\n      }\n    ]\n  }\n}\n```\n\n## Before you start\n\nYour system acts as the HIP for the records it groups, and the facility holds a facility ID. Linking is how a care context reaches the patient: see [linking](/docs/hiecm/v3/concepts/linking).\n\n## What happens\n\nGive each care context a `referenceNumber` your own system resolves to the records behind it, and a `display` a person recognises months later. Group by encounter: one per outpatient visit, one per inpatient admission, not one per test or document.\n\n## How you know it worked\n\nThree tests in one visit are one care context. A display name reads like \"OPD records for 03 Oct 2022\" and carries no diagnosis or result.\n\n## When it goes wrong\n\nA diagnosis or result in `display` leaks clinical information into a system built never to hold it, visible to anyone who can list the patient's care contexts. One care context per record produces a list no person can navigate.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/concepts/care-context#care-context",
+            "gateway": "hiecm",
+            "id": "hiecm.concept.care-context",
+            "milestone": "M2",
+            "summary": "A care context is the unit a provider links to a patient's ABHA address, carrying a reference number and a display name and nothing clinical.",
+            "title": "Care contexts, how records are grouped so they can be found",
+            "type": "concept"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01MZccNuaQ9fkjZXTSmedQv3",
+            "Name": "search",
+            "Input": {
+              "query": "patient does not have ABHA address local records facility operations",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "patient does not have ABHA address local records facility operations",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-manager-hiu-hip/01-p2-get-hip-v3-link-patient-links#m2-get-all-link-records",
+                "id": "hiecm.endpoint.m2-get-all-link-records",
+                "summary": "Lists every care context already linked to an ABHA address.",
+                "title": "GET All Link records",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#discovery",
+                "id": "hiecm.glossary.discovery",
+                "summary": "The step where a patient's app asks a facility whether it holds records for that patient.",
+                "title": "Discovery, finding whether a facility holds records",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/notifications-and-patient-apps#subscribing",
+                "id": "nhcx.flow.notification-subscribe",
+                "summary": "Have a patient's health record app receive plain-language updates on their pre-authorisations, claims and payments, by subscribing each time the patient logs...",
+                "title": "Subscribe a patient app to notifications",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/03-m1-post-v3-phr-web-login-abha-verify-mobile-otp#m1-phr-verify",
+                "id": "hiecm.endpoint.m1-phr-verify",
+                "summary": "Completes an ABHA address login and returns the X-token for the profile, card and QR calls.",
+                "title": "Verify OTP or biometric for ABHA address login",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m3#m3-request-consent",
+                "id": "hiecm.flow.m3-request-consent",
+                "summary": "Ask a patient, by ABHA address, for permission to read records held elsewhere, and collect the consent artefact ids once they grant it.",
+                "title": "Request consent for a patient's health records",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#abha-address",
+                "id": "shared.glossary.abha-address",
+                "summary": "The readable name, such as name@sbx, that ABDM uses to route a person's health records.",
+                "title": "ABHA address",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/other/endpoints/other-v1-notification-subscribe",
+                "id": "nhcx.endpoint.notification-subscribe",
+                "summary": "Let a patient's health record app receive plain-language updates about that patient's insurance claims.",
+                "title": "POST /v1/notification/subscribe",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/troubleshooting/consent-stuck-requested#consent-stuck-requested",
+                "id": "hiecm.troubleshooting.consent-stuck-requested",
+                "summary": "A consent request has stayed in Requested and never moved to Granted or Denied.",
+                "title": "The consent request is stuck in Requested",
+                "type": "troubleshooting"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.notifications",
+                "summary": "A patient's health record app subscribes on login to claim events for that person, and the exchange then pushes short readable updates to the app, with only ...",
+                "title": "Notifications to patient apps",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m2#m2-link-care-context",
+                "id": "hiecm.flow.m2-link-care-context",
+                "summary": "Tell ABDM that this patient had a visit at your facility so their records can be found and fetched later.",
+                "title": "Link a care context to a patient's ABHA",
+                "type": "flow"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01GayNVBRhSPi4bPpEmYdceY",
+            "Name": "search",
+            "Input": {
+              "query": "scope ABDM applies only with ABHA",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "scope ABDM applies only with ABHA",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#abdm",
+                "id": "shared.glossary.abdm",
+                "summary": "India's national programme for connecting health records, identities and facilities across providers.",
+                "title": "ABDM, Ayushman Bharat Digital Mission",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.abha-identifiers",
+                "summary": "NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...",
+                "title": "Carrying an ABHA number and an ABHA address on a FHIR Patient",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#abha",
+                "id": "shared.glossary.abha",
+                "summary": "The patient's identity in ABDM, in two forms that look alike and are not: a 14 digit ABHA number and a readable ABHA address.",
+                "title": "ABHA",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m1-two-routes-to-the-profile",
+                "summary": "A profile arrives either because the patient scanned a QR and consented in their own application, or because the desk ran an identifier journey, and which on...",
+                "title": "Two routes to the profile, and the form is the destination of both",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.profile-and-example-together",
+                "summary": "A NRCeS profile gives the cardinalities and a NRCeS example gives the shape, and a generator written from either one alone is wrong in a different way.",
+                "title": "Read the profile and the example together, because each omits what the other carries",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.pmjay-insurance-plan",
+                "summary": "How the government scheme's policy is laid out as data: specialties, packages, rates, claim rules, required documents and treatment-guideline questionnaires.",
+                "title": "The PMJAY InsurancePlan profile, packages and questionnaires",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/01-m1-post-v3-profile-benefit-linkanddelink-x-token#m1-benefit-link-or-delink",
+                "id": "hiecm.endpoint.m1-benefit-link-or-delink",
+                "summary": "Links or unlinks the programme named in the BENEFIT_NAME header for an ABHA.",
+                "title": "Link or unlink a benefit record from an ABHA",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/errors#abdm-1094",
+                "id": "hiecm.error.abdm-1094",
+                "summary": "Your client or the person's token is not allowed to do what the call tried, and the message says which of three cases applies.",
+                "title": "ABDM-1094, access to this feature is refused",
+                "type": "error"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.terminologies",
+                "summary": "The code systems every claims bundle draws on, where each one is used, and how strictly each binding applies.",
+                "title": "Code systems and value sets used in NHCX bundles",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/preauthorisation-request",
+                "id": "nhcx.fhir.preauth-request",
+                "summary": "The bundle a hospital sends to ask a payer to approve a planned treatment before it happens, with the package, the diagnosis and the required documents.",
+                "title": "Preauthorisation request bundle, a Claim with use preauthorization",
+                "type": "fhir"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01PnM772dcFaiUDSG24w9ftK",
+            "Name": "search",
+            "Input": {
+              "query": "getting started concepts overview ABDM HIP operations",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "getting started concepts overview ABDM HIP operations",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#abdm",
+                "id": "shared.glossary.abdm",
+                "summary": "India's national programme for connecting health records, identities and facilities across providers.",
+                "title": "ABDM, Ayushman Bharat Digital Mission",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/claim-request",
+                "id": "nhcx.fhir.claim-request",
+                "summary": "The bundle a hospital sends after discharge to claim payment, with the final amounts, the discharge details and the documents the policy requires.",
+                "title": "Claim request bundle",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.terminologies",
+                "summary": "The code systems every claims bundle draws on, where each one is used, and how strictly each binding applies.",
+                "title": "Code systems and value sets used in NHCX bundles",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.pmjay-insurance-plan",
+                "summary": "How the government scheme's policy is laid out as data: specialties, packages, rates, claim rules, required documents and treatment-guideline questionnaires.",
+                "title": "The PMJAY InsurancePlan profile, packages and questionnaires",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/payment-notice-and-acknowledgement",
+                "id": "nhcx.fhir.payment-notice",
+                "summary": "The bundle a payer sends to tell a hospital a claim has been paid, with the amount and bank reference, and the short task the hospital sends back to acknowle...",
+                "title": "PaymentNotice bundle and its acknowledgement",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.preauth-cancel",
+                "summary": "The task a hospital sends to cancel a preauthorisation it no longer needs, and the payer's confirmation that the case is cancelled.",
+                "title": "Preauthorisation cancel request and response bundles",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.task",
+                "summary": "The task a hospital sends to dispute a rejected or underpaid claim, which routes the case to the claim review committee, and the task that carries the payer'...",
+                "title": "Task bundle for reprocess and CRC",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/coverage-eligibility-request",
+                "id": "nhcx.fhir.coverage-eligibility-request",
+                "summary": "The bundle a hospital sends to ask a payer whether a patient's policy is in force, what it covers, and whether a treatment needs prior approval.",
+                "title": "CoverageEligibilityRequest bundle",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.query-update",
+                "summary": "How to recognise a payer's query on a preauthorisation or claim, and how to resend the same claim with the documents and answers the payer asked for.",
+                "title": "Query update bundles for preauthorisation and claim",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/preauthorisation-request",
+                "id": "nhcx.fhir.preauth-request",
+                "summary": "The bundle a hospital sends to ask a payer to approve a planned treatment before it happens, with the package, the diagnosis and the required documents.",
+                "title": "Preauthorisation request bundle, a Claim with use preauthorization",
+                "type": "fhir"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "Based on the ABDM documentation, **if a patient does not share any ABHA Address with a health facility, they cannot participate in ABDM's record linking and sharing ecosystem**.\n\nHere's why:\n\n## ABHA Address is a Prerequisite\n\nAccording to the **[M2: Link a care context to a patient's ABHA](/docs/hiecm/v3/milestones/m2#m2-link-care-context)** flow (from the developer portal), the explicit prerequisite is: *\"the patient has an ABHA address.\"*\n\nAll ABDM operations—including linking care contexts, requesting consent, and fetching health records—require the patient's ABHA address as the routing identifier. The ABHA address is the core identity mechanism that ABDM uses to:\n\n- Route health records across providers\n- Link care contexts from different facilities\n- Request and manage patient consent\n- Enable patient discovery of records held elsewhere\n\n## What This Means Practically\n\nIf a patient refuses to share or doesn't have an ABHA Address:\n\n1. **No ABDM linking is possible** — You cannot call the link care context API\n2. **Records stay local** — Patient records remain only in your facility's system\n3. **No interoperability** — The patient cannot use ABDM to retrieve or share records from other facilities\n4. **Outside ABDM scope** — The patient operates outside the ABDM network for that facility\n\n## The Patient's Options\n\nThe patient would need to:\n- Create an ABHA address (if they don't have one)\n- Explicitly consent to share their ABHA address with the facility (for linking to proceed)\n\nThe ABDM ecosystem cannot function without this foundational identifier. Your facility's internal record management can continue normally, but ABDM integration specifically requires patient participation through their ABHA address.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "Based on the ABDM documentation, **if a patient does not share any ABHA Address with a health facility, they cannot participate in ABDM's record linking and sharing ecosystem**.\n\nHere's why:\n\n## ABHA Address is a Prerequisite\n\nAccording to the **[M2: Link a care context to a patient's ABHA](/docs/hiecm/v3/milestones/m2#m2-link-care-context)** flow (from the developer portal), the explicit prerequisite is: *\"the patient has an ABHA address.\"*\n\nAll ABDM operations—including linking care contexts, requesting consent, and fetching health records—require the patient's ABHA address as the routing identifier. The ABHA address is the core identity mechanism that ABDM uses to:\n\n- Route health records across providers\n- Link care contexts from different facilities\n- Request and manage patient consent\n- Enable patient discovery of records held elsewhere\n\n## What This Means Practically\n\nIf a patient refuses to share or doesn't have an ABHA Address:\n\n1. **No ABDM linking is possible** — You cannot call the link care context API\n2. **Records stay local** — Patient records remain only in your facility's system\n3. **No interoperability** — The patient cannot use ABDM to retrieve or share records from other facilities\n4. **Outside ABDM scope** — The patient operates outside the ABDM network for that facility\n\n## The Patient's Options\n\nThe patient would need to:\n- Create an ABHA address (if they don't have one)\n- Explicitly consent to share their ABHA address with the facility (for linking to proceed)\n\nThe ABDM ecosystem cannot function without this foundational identifier. Your facility's internal record management can continue normally, but ABDM integration specifically requires patient participation through their ABHA address.",
+  "sources": [
+    {
+      "id": "hiecm.flow.m2-link-care-context",
+      "title": "Link a care context to a patient's ABHA",
+      "url": "/docs/hiecm/v3/milestones/m2#m2-link-care-context"
+    },
+    {
+      "id": "hiecm.concept.care-context",
+      "title": "Care contexts, how records are grouped so they can be found",
+      "url": "/docs/hiecm/v3/concepts/care-context#care-context"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-consent-manager-hiu-hip/01-p2-get-hip-v3-link-patient-links#m2-get-all-link-records\",\"id\":\"hiecm.endpoint.m2-get-all-link-records\",\"summary\":\"Lists every care context already linked to an ABHA address.\",\"title\":\"GET All Link records\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#discovery\",\"id\":\"hiecm.glossary.discovery\",\"summary\":\"The step where a patient's app asks a facility whether it holds records for that patient.\",\"title\":\"Discovery, finding whether a facility holds records\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/reference/notifications-and-patient-apps#subscribing\",\"id\":\"nhcx.flow.notification-subscribe\",\"summary\":\"Have a patient's health record app receive plain-language updates on their pre-authorisations, claims and payments, by subscribing each time the patient logs...\",\"title\":\"Subscribe a patient app to notifications\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/03-m1-post-v3-phr-web-login-abha-verify-mobile-otp#m1-phr-verify\",\"id\":\"hiecm.endpoint.m1-phr-verify\",\"summary\":\"Completes an ABHA address login and returns the X-token for the profile, card and QR calls.\",\"title\":\"Verify OTP or biometric for ABHA address login\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m3#m3-request-consent\",\"id\":\"hiecm.flow.m3-request-consent\",\"summary\":\"Ask a patient, by ABHA address, for permission to read records held elsewhere, and collect the consent artefact ids once they grant it.\",\"title\":\"Request consent for a patient's health records\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#abha-address\",\"id\":\"shared.glossary.abha-address\",\"summary\":\"The readable name, such as name@sbx, that ABDM uses to route a person's health records.\",\"title\":\"ABHA address\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/api/other/endpoints/other-v1-notification-subscribe\",\"id\":\"nhcx.endpoint.notification-subscribe\",\"summary\":\"Let a patient's health record app receive plain-language updates about that patient's insurance claims.\",\"title\":\"POST /v1/notification/subscribe\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/troubleshooting/consent-stuck-requested#consent-stuck-requested\",\"id\":\"hiecm.troubleshooting.consent-stuck-requested\",\"summary\":\"A consent request has stayed in Requested and never moved to Granted or Denied.\",\"title\":\"The consent request is stuck in Requested\",\"type\":\"troubleshooting\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.notifications\",\"summary\":\"A patient's health record app subscribes on login to claim events for that person, and the exchange then pushes short readable updates to the app, with only ...\",\"title\":\"Notifications to patient apps\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m2#m2-link-care-context\",\"id\":\"hiecm.flow.m2-link-care-context\",\"summary\":\"Tell ABDM that this patient had a visit at your facility so their records can be found and fetched later.\",\"title\":\"Link a care context to a patient's ABHA\",\"type\":\"flow\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-consent-manager-hiu-hip/01-p2-get-hip-v3-link-patient-links#m2-get-all-link-records\",\"id\":\"hiecm.endpoint.m2-get-all-link-records\",\"summary\":\"Lists every care context already linked to an ABHA address.\",\"title\":\"GET All Link records\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#discovery\",\"id\":\"hiecm.glossary.discovery\",\"summary\":\"The step where a patient's app asks a facility whether it holds records for that patient.\",\"title\":\"Discovery, finding whether a facility holds records\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/reference/notifications-and-patient-apps#subscribing\",\"id\":\"nhcx.flow.notification-subscribe\",\"summary\":\"Have a patient's health record app receive plain-language updates on their pre-authorisations, claims and payments, by subscribing each time the patient logs...\",\"title\":\"Subscribe a patient app to notifications\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/03-m1-post-v3-phr-web-login-abha-verify-mobile-otp#m1-phr-verify\",\"id\":\"hiecm.endpoint.m1-phr-verify\",\"summary\":\"Completes an ABHA address login and returns the X-token for the profile, card and QR calls.\",\"title\":\"Verify OTP or biometric for ABHA address login\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m3#m3-request-consent\",\"id\":\"hiecm.flow.m3-request-consent\",\"summary\":\"Ask a patient, by ABHA address, for permission to read records held elsewhere, and collect the consent artefact ids once they grant it.\",\"title\":\"Request consent for a patient's health records\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#abha-address\",\"id\":\"shared.glossary.abha-address\",\"summary\":\"The readable name, such as name@sbx, that ABDM uses to route a person's health records.\",\"title\":\"ABHA address\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/api/other/endpoints/other-v1-notification-subscribe\",\"id\":\"nhcx.endpoint.notification-subscribe\",\"summary\":\"Let a patient's health record app receive plain-language updates about that patient's insurance claims.\",\"title\":\"POST /v1/notification/subscribe\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/troubleshooting/consent-stuck-requested#consent-stuck-requested\",\"id\":\"hiecm.troubleshooting.consent-stuck-requested\",\"summary\":\"A consent request has stayed in Requested and never moved to Granted or Denied.\",\"title\":\"The consent request is stuck in Requested\",\"type\":\"troubleshooting\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.notifications\",\"summary\":\"A patient's health record app subscribes on login to claim events for that person, and the exchange then pushes short readable updates to the app, with only ...\",\"title\":\"Notifications to patient apps\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m2#m2-link-care-context\",\"id\":\"hiecm.flow.m2-link-care-context\",\"summary\":\"Tell ABDM that this patient had a visit at your facility so their records can be found and fetched later.\",\"title\":\"Link a care context to a patient's ABHA\",\"type\":\"flow\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/milestones/p2#p2-scan-and-share\",\"id\":\"hiecm.flow.p2-scan-and-share\",\"summary\":\"Let a person scan the code on a hospital counter and hand over their health address and profile, so registration happens without a form and later records fin...\",\"title\":\"Share a profile at a facility by scanning its code\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-consent-manager-hiu-hip/01-p2-get-hip-v3-link-patient-links#m2-get-all-link-records\",\"id\":\"hiecm.endpoint.m2-get-all-link-records\",\"summary\":\"Lists every care context already linked to an ABHA address.\",\"title\":\"GET All Link records\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#discovery\",\"id\":\"hiecm.glossary.discovery\",\"summary\":\"The step where a patient's app asks a facility whether it holds records for that patient.\",\"title\":\"Discovery, finding whether a facility holds records\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/reference/notifications-and-patient-apps#subscribing\",\"id\":\"nhcx.flow.notification-subscribe\",\"summary\":\"Have a patient's health record app receive plain-language updates on their pre-authorisations, claims and payments, by subscribing each time the patient logs...\",\"title\":\"Subscribe a patient app to notifications\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/03-m1-post-v3-phr-web-login-abha-verify-mobile-otp#m1-phr-verify\",\"id\":\"hiecm.endpoint.m1-phr-verify\",\"summary\":\"Completes an ABHA address login and returns the X-token for the profile, card and QR calls.\",\"title\":\"Verify OTP or biometric for ABHA address login\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m3#m3-request-consent\",\"id\":\"hiecm.flow.m3-request-consent\",\"summary\":\"Ask a patient, by ABHA address, for permission to read records held elsewhere, and collect the consent artefact ids once they grant it.\",\"title\":\"Request consent for a patient's health records\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#abha-address\",\"id\":\"shared.glossary.abha-address\",\"summary\":\"The readable name, such as name@sbx, that ABDM uses to route a person's health records.\",\"title\":\"ABHA address\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/api/other/endpoints/other-v1-notification-subscribe\",\"id\":\"nhcx.endpoint.notification-subscribe\",\"summary\":\"Let a patient's health record app receive plain-language updates about that patient's insurance claims.\",\"title\":\"POST /v1/notification/subscribe\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/troubleshooting/consent-stuck-requested#consent-stuck-requested\",\"id\":\"hiecm.troubleshooting.consent-stuck-requested\",\"summary\":\"A consent request has stayed in Requested and never moved to Granted or Denied.\",\"title\":\"The consent request is stuck in Requested\",\"type\":\"troubleshooting\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.notifications\",\"summary\":\"A patient's health record app subscribes on login to claim events for that person, and the exchange then pushes short readable updates to the app, with only ...\",\"title\":\"Notifications to patient apps\",\"type\":\"concept\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#abha\",\"id\":\"shared.glossary.abha\",\"summary\":\"The patient's identity in ABDM, in two forms that look alike and are not: a 14 digit ABHA number and a readable ABHA address.\",\"title\":\"ABHA\",\"type\":\"glossary\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.abha-identifiers\",\"summary\":\"NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...\",\"title\":\"Carrying an ABHA number and an ABHA address on a FHIR Patient\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/01-m1-post-v3-profile-benefit-linkanddelink-x-token#m1-benefit-link-or-delink\",\"id\":\"hiecm.endpoint.m1-benefit-link-or-delink\",\"summary\":\"Links or unlinks the programme named in the BENEFIT_NAME header for an ABHA.\",\"title\":\"Link or unlink a benefit record from an ABHA\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/errors#abdm-1094\",\"id\":\"hiecm.error.abdm-1094\",\"summary\":\"Your client or the person's token is not allowed to do what the call tried, and the message says which of three cases applies.\",\"title\":\"ABDM-1094, access to this feature is refused\",\"type\":\"error\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.profile-and-example-together\",\"summary\":\"A NRCeS profile gives the cardinalities and a NRCeS example gives the shape, and a generator written from either one alone is wrong in a different way.\",\"title\":\"Read the profile and the example together, because each omits what the other carries\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/07-m3-get-data-flow-v3-health-information-request-status-tra-550104#p3-request-status\",\"id\":\"hiecm.endpoint.p3-request-status\",\"summary\":\"Check how far a health information request has got, by its transaction id.\",\"title\":\"Get the status of a health information request\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-locker/03-p4-get-subscription-requests-v3-patients-lockers-lockerid#p3-patient-locker-details-by-locker-id\",\"id\":\"hiecm.endpoint.p3-patient-locker-details-by-locker-id\",\"summary\":\"Fetch one health locker's settings for the logged-in person.\",\"title\":\"Get a health locker by its id\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-locker/01-p4-post-subscription-requests-v3-setup-locker#p3-setup-locker\",\"id\":\"hiecm.endpoint.p3-setup-locker\",\"summary\":\"Set up a health locker for the logged-in person.\",\"title\":\"Set up a health locker\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request#m2-hip-health-information-on-request\",\"id\":\"hiecm.endpoint.m2-hip-health-information-on-request\",\"summary\":\"The HIP acknowledges a health information request, then encrypts the records and pushes them to the requester.\",\"title\":\"Acknowledge a health information data request\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/05-m3-post-v3-hiu-health-information-on-request#m3-on-health-information-request\",\"id\":\"hiecm.callback.m3-on-health-information-request\",\"summary\":\"ABDM acknowledges an HIU's data request with its transaction id and status; the records come separately.\",\"title\":\"Acknowledgement of a health information request\",\"type\":\"callback\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#abha\",\"id\":\"shared.glossary.abha\",\"summary\":\"The patient's identity in ABDM, in two forms that look alike and are not: a 14 digit ABHA number and a readable ABHA address.\",\"title\":\"ABHA\",\"type\":\"glossary\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.abha-identifiers\",\"summary\":\"NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...\",\"title\":\"Carrying an ABHA number and an ABHA address on a FHIR Patient\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/01-m1-post-v3-profile-benefit-linkanddelink-x-token#m1-benefit-link-or-delink\",\"id\":\"hiecm.endpoint.m1-benefit-link-or-delink\",\"summary\":\"Links or unlinks the programme named in the BENEFIT_NAME header for an ABHA.\",\"title\":\"Link or unlink a benefit record from an ABHA\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/errors#abdm-1094\",\"id\":\"hiecm.error.abdm-1094\",\"summary\":\"Your client or the person's token is not allowed to do what the call tried, and the message says which of three cases applies.\",\"title\":\"ABDM-1094, access to this feature is refused\",\"type\":\"error\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.profile-and-example-together\",\"summary\":\"A NRCeS profile gives the cardinalities and a NRCeS example gives the shape, and a generator written from either one alone is wrong in a different way.\",\"title\":\"Read the profile and the example together, because each omits what the other carries\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/07-m3-get-data-flow-v3-health-information-request-status-tra-550104#p3-request-status\",\"id\":\"hiecm.endpoint.p3-request-status\",\"summary\":\"Check how far a health information request has got, by its transaction id.\",\"title\":\"Get the status of a health information request\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-locker/03-p4-get-subscription-requests-v3-patients-lockers-lockerid#p3-patient-locker-details-by-locker-id\",\"id\":\"hiecm.endpoint.p3-patient-locker-details-by-locker-id\",\"summary\":\"Fetch one health locker's settings for the logged-in person.\",\"title\":\"Get a health locker by its id\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-locker/01-p4-post-subscription-requests-v3-setup-locker#p3-setup-locker\",\"id\":\"hiecm.endpoint.p3-setup-locker\",\"summary\":\"Set up a health locker for the logged-in person.\",\"title\":\"Set up a health locker\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request#m2-hip-health-information-on-request\",\"id\":\"hiecm.endpoint.m2-hip-health-information-on-request\",\"summary\":\"The HIP acknowledges a health information request, then encrypts the records and pushes them to the requester.\",\"title\":\"Acknowledge a health information data request\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/05-m3-post-v3-hiu-health-information-on-request#m3-on-health-information-request\",\"id\":\"hiecm.callback.m3-on-health-information-request\",\"summary\":\"ABDM acknowledges an HIU's data request with its transaction id and status; the records come separately.\",\"title\":\"Acknowledgement of a health information request\",\"type\":\"callback\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#abha\",\"id\":\"shared.glossary.abha\",\"summary\":\"The patient's identity in ABDM, in two forms that look alike and are not: a 14 digit ABHA number and a readable ABHA address.\",\"title\":\"ABHA\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/p2#p2-scan-and-share\",\"id\":\"hiecm.flow.p2-scan-and-share\",\"summary\":\"Let a person scan the code on a hospital counter and hand over their health address and profile, so registration happens without a form and later records fin...\",\"title\":\"Share a profile at a facility by scanning its code\",\"type\":\"flow\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.abha-identifiers\",\"summary\":\"NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...\",\"title\":\"Carrying an ABHA number and an ABHA address on a FHIR Patient\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/01-m1-post-v3-profile-benefit-linkanddelink-x-token#m1-benefit-link-or-delink\",\"id\":\"hiecm.endpoint.m1-benefit-link-or-delink\",\"summary\":\"Links or unlinks the programme named in the BENEFIT_NAME header for an ABHA.\",\"title\":\"Link or unlink a benefit record from an ABHA\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/errors#abdm-1094\",\"id\":\"hiecm.error.abdm-1094\",\"summary\":\"Your client or the person's token is not allowed to do what the call tried, and the message says which of three cases applies.\",\"title\":\"ABDM-1094, access to this feature is refused\",\"type\":\"error\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.profile-and-example-together\",\"summary\":\"A NRCeS profile gives the cardinalities and a NRCeS example gives the shape, and a generator written from either one alone is wrong in a different way.\",\"title\":\"Read the profile and the example together, because each omits what the other carries\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/07-m3-get-data-flow-v3-health-information-request-status-tra-550104#p3-request-status\",\"id\":\"hiecm.endpoint.p3-request-status\",\"summary\":\"Check how far a health information request has got, by its transaction id.\",\"title\":\"Get the status of a health information request\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-locker/03-p4-get-subscription-requests-v3-patients-lockers-lockerid#p3-patient-locker-details-by-locker-id\",\"id\":\"hiecm.endpoint.p3-patient-locker-details-by-locker-id\",\"summary\":\"Fetch one health locker's settings for the logged-in person.\",\"title\":\"Get a health locker by its id\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-locker/01-p4-post-subscription-requests-v3-setup-locker#p3-setup-locker\",\"id\":\"hiecm.endpoint.p3-setup-locker\",\"summary\":\"Set up a health locker for the logged-in person.\",\"title\":\"Set up a health locker\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request#m2-hip-health-information-on-request\",\"id\":\"hiecm.endpoint.m2-hip-health-information-on-request\",\"summary\":\"The HIP acknowledges a health information request, then encrypts the records and pushes them to the requester.\",\"title\":\"Acknowledge a health information data request\",\"type\":\"endpoint\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#abdm\",\"id\":\"shared.glossary.abdm\",\"summary\":\"India's national programme for connecting health records, identities and facilities across providers.\",\"title\":\"ABDM, Ayushman Bharat Digital Mission\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/claim-request\",\"id\":\"nhcx.fhir.claim-request\",\"summary\":\"The bundle a hospital sends after discharge to claim payment, with the final amounts, the discharge details and the documents the policy requires.\",\"title\":\"Claim request bundle\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.terminologies\",\"summary\":\"The code systems every claims bundle draws on, where each one is used, and how strictly each binding applies.\",\"title\":\"Code systems and value sets used in NHCX bundles\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.pmjay-insurance-plan\",\"summary\":\"How the government scheme's policy is laid out as data: specialties, packages, rates, claim rules, required documents and treatment-guideline questionnaires.\",\"title\":\"The PMJAY InsurancePlan profile, packages and questionnaires\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/payment-notice-and-acknowledgement\",\"id\":\"nhcx.fhir.payment-notice\",\"summary\":\"The bundle a payer sends to tell a hospital a claim has been paid, with the amount and bank reference, and the short task the hospital sends back to acknowle...\",\"title\":\"PaymentNotice bundle and its acknowledgement\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.preauth-cancel\",\"summary\":\"The task a hospital sends to cancel a preauthorisation it no longer needs, and the payer's confirmation that the case is cancelled.\",\"title\":\"Preauthorisation cancel request and response bundles\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.task\",\"summary\":\"The task a hospital sends to dispute a rejected or underpaid claim, which routes the case to the claim review committee, and the task that carries the payer'...\",\"title\":\"Task bundle for reprocess and CRC\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/coverage-eligibility-request\",\"id\":\"nhcx.fhir.coverage-eligibility-request\",\"summary\":\"The bundle a hospital sends to ask a payer whether a patient's policy is in force, what it covers, and whether a treatment needs prior approval.\",\"title\":\"CoverageEligibilityRequest bundle\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.query-update\",\"summary\":\"How to recognise a payer's query on a preauthorisation or claim, and how to resend the same claim with the documents and answers the payer asked for.\",\"title\":\"Query update bundles for preauthorisation and claim\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/preauthorisation-request\",\"id\":\"nhcx.fhir.preauth-request\",\"summary\":\"The bundle a hospital sends to ask a payer to approve a planned treatment before it happens, with the package, the diagnosis and the required documents.\",\"title\":\"Preauthorisation request bundle, a Claim with use preauthorization\",\"type\":\"fhir\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#abha\",\"id\":\"shared.glossary.abha\",\"summary\":\"The patient's identity in ABDM, in two forms that look alike and are not: a 14 digit ABHA number and a readable ABHA address.\",\"title\":\"ABHA\",\"type\":\"glossary\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.abha-identifiers\",\"summary\":\"NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...\",\"title\":\"Carrying an ABHA number and an ABHA address on a FHIR Patient\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/01-m2-post-hip-v3-link-carecontext#m2-hip-link-care-context\",\"id\":\"hiecm.endpoint.m2-hip-link-care-context\",\"summary\":\"The HIP links one or more care contexts to a patient's ABHA address, using the patient's link token.\",\"title\":\"Link care contexts to an ABHA address\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m2#m2-link-care-context\",\"id\":\"hiecm.flow.m2-link-care-context\",\"summary\":\"Tell ABDM that this patient had a visit at your facility so their records can be found and fetched later.\",\"title\":\"Link a care context to a patient's ABHA\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/02-m2-post-v3-link-on-carecontext#m2-linking-care-context-call-back\",\"id\":\"hiecm.callback.m2-linking-care-context-call-back\",\"summary\":\"ABDM answers a care context link request on the HIP's bridge with the outcome.\",\"title\":\"Linking care context Call back API\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-on-generate-token-result\",\"id\":\"hiecm.callback.m2-on-generate-token-result\",\"summary\":\"The link token arrives here; store it against the patient, because it is valid for six months.\",\"title\":\"The link token you asked for, or why it was refused\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/care-context#care-context\",\"id\":\"hiecm.concept.care-context\",\"summary\":\"A care context is the unit a provider links to a patient's ABHA address, carrying a reference number and a display name and nothing clinical.\",\"title\":\"Care contexts, how records are grouped so they can be found\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/p2#p2-discover-and-link\",\"id\":\"hiecm.flow.p2-discover-and-link\",\"summary\":\"Let a person search for a facility they visited, discover the records it holds for them, and attach those records to their health address after an OTP confir...\",\"title\":\"Find records held elsewhere and link them\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/03-m2-post-user-initiated-linking-v3-link-care-context-on-confirm#m2-on-link-confirm\",\"id\":\"hiecm.endpoint.m2-on-link-confirm\",\"summary\":\"The HIP checks the patient's code and answers a link confirm request with the care contexts it linked.\",\"title\":\"Link On-Confirm, HIP confirms linked care contexts\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/01-m2-post-user-initiated-linking-v3-patient-care-context-on-8c9340#m2-on-discover-care-contexts\",\"id\":\"hiecm.endpoint.m2-on-discover-care-contexts\",\"summary\":\"The HIP answers a discovery request with the patient's unlinked care contexts and how it matched the patient.\",\"title\":\"On Discovery, HIP responds with found care contexts\",\"type\":\"endpoint\"}]}\n{\"body\":\"# Link a care context to a patient's ABHA\\n\\n## In plain words\\n\\nThe HIP generates a linking token using the patient's ABHA address and\\ndemographic details for authentication. After successful verification, a\\nlinking token valid for 6 months is created, and the patient's care context is\\nlinked to the ABHA Address.\\n\\n```mermaid\\nsequenceDiagram\\n    autonumber\\n    participant S as Your system (HIP)\\n    participant G as ABDM Gateway\\n    participant P as ABHA / PHR app\\n    Note over S,G: Step 1: generate link token\\n    S->>G: POST /api/hiecm/v3/token/generate-token<br/>abhaNumber, abhaAddress, name, gender, yearOfBirth\\n    G-->>S: 202 Accepted\\n    Note over S,G: Step 2: ABDM responds asynchronously with token details\\n    G-)S: POST /api/v3/hip/token/on-generate-token<br/>abhaAddress, linkToken\\n    S-->>G: 202 Accepted\\n    Note over S,G: Step 3: push care contexts\\n    S->>G: POST /api/hiecm/hip/v3/link/carecontext<br/>Authorization: Bearer accessToken, X-Link-Token: linkToken<br/>abhaNumber, abhaAddress, patient [referenceNumber, display,<br/>careContexts [referenceNumber, display], hiType, count]\\n    G-->>S: 202 Accepted, care contexts queued\\n    Note over S,G: Step 4: ABDM responds asynchronously with the status of linking\\n    G-)S: POST /api/v3/link/on_carecontext<br/>status\\n    S-->>G: 202 Accepted\\n    G-)P: Push notification, record linked\\n    P->>P: Patient sees a new record linked\\n```\\n\\nThe steps, as drawn:\\n\\n1. Your system calls `POST /api/hiecm/v3/token/generate-token` with the\\n   patient's ABHA number or ABHA address, name, gender and year of birth.\\n2. The gateway answers 202 Accepted.\\n3. The gateway calls `POST /api/v3/hip/token/on-generate-token` on your bridge\\n   with the ABHA address and the link token.\\n4. Your system answers 202 Accepted and stores the link token against the\\n   patient.\\n5. Your system calls `POST /api/hiecm/hip/v3/link/carecontext` with the gateway\\n   access token, the link token in `X-Link-Token`, and the patient's care\\n   contexts: for each, a reference number and a display name, the HI type and\\n   the count of records.\\n6. The gateway answers 202 Accepted and queues the care contexts.\\n7. The gateway calls `POST /api/v3/link/on_carecontext` on your bridge with the\\n   status of the linking.\\n8. Your system answers 202 Accepted.\\n9. The gateway pushes a notification to the patient's ABHA or PHR app that a\\n   record is linked.\\n10. The patient sees the new record linked in the app.\\n\\nWhen a linked care context changes, tell ABDM with\\n`POST /api/hiecm/hip/v3/link/context/notify`. The outcome arrives on your\\nbridge at `/api/v3/links/context/on-notify`.\\n\\n## Before you start\\n\\nThe facility holds a facility ID and a bridge linked with type HIP: see [Journey 4 on M4](/docs/hiecm/v3/milestones/m4#m4-link-bridge). You hold a gateway session token, and the patient has an ABHA address.\\n\\n## What happens\\n\\nGenerate the link token; the 202 carries nothing, and the token arrives on `/api/v3/hip/token/on-generate-token`. Store it against the patient and reuse it: it is valid for six months. Link with `X-Link-Token` set to it, and wait for `/api/v3/link/on_carecontext`.\\n\\n## How you know it worked\\n\\nA POST reaches `/api/v3/link/on_carecontext` whose `response.requestId` matches the `REQUEST-ID` of your link call and whose status reads Successfully Linked care context. The care context then appears when the patient runs discovery against your facility. The 202 on the link call is receipt, not success.\\n\\n## When it goes wrong\\n\\n`ABDM-1056`: the care context is already linked. `ABDM-1038`: the ABHA address does not match the link token. `ABDM-1026`: the link token is invalid, so generate a fresh one. `ABDM-2406`: calls made out of the logical sequence. No callback at all: see [the callback never arrives](/docs/hiecm/v3/troubleshooting/callback-never-arrives).\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/milestones/m2#m2-link-care-context\",\"gateway\":\"hiecm\",\"id\":\"hiecm.flow.m2-link-care-context\",\"milestone\":\"M2\",\"summary\":\"Tell ABDM that this patient had a visit at your facility so their records can be found and fetched later.\",\"title\":\"Link a care context to a patient's ABHA\",\"type\":\"flow\"}\n{\"body\":\"# Care contexts, how records are grouped so they can be found\\n\\n## In plain words\\n\\nEach care context contains only two pieces of information:\\n\\n- **Reference ID.** A unique internal identifier assigned by the\\n  [HRP](/docs/hiecm/v3/getting-started/glossary#hrp) (HMIS/LMIS). Used to link\\n  and retrieve the associated health records.\\n- **Display Name.** A user-friendly description to help identify the group of\\n  records. Must not include any sensitive or confidential information such as\\n  test results or diagnoses. Example: \\\"OPD records (X-Ray, Prescription) from\\n  3rd March 2023\\\".\\n\\n### Recommended approach for structuring care contexts\\n\\nTo ensure clarity and usability, it is recommended to organise patient data as\\nfollows:\\n\\n- Create one care context per outpatient visit (OPD)\\n- Create one care context per inpatient admission (IPD)\\n\\nThis approach provides a clear and event-based grouping of health records.\\n\\n### JSON structure of care contexts\\n\\n```json\\n{\\n  \\\"patient\\\": {\\n    \\\"referenceNumber\\\": \\\"TMH-PUID-001\\\",\\n    \\\"display\\\": \\\"TMH records for Kiran Kumar\\\",\\n    \\\"careContexts\\\": [\\n      {\\n        \\\"referenceNumber\\\": \\\"2375639\\\",\\n        \\\"display\\\": \\\"OPD records for 03 Oct 2022\\\"\\n      }\\n    ]\\n  }\\n}\\n```\\n\\n## Before you start\\n\\nYour system acts as the HIP for the records it groups, and the facility holds a facility ID. Linking is how a care context reaches the patient: see [linking](/docs/hiecm/v3/concepts/linking).\\n\\n## What happens\\n\\nGive each care context a `referenceNumber` your own system resolves to the records behind it, and a `display` a person recognises months later. Group by encounter: one per outpatient visit, one per inpatient admission, not one per test or document.\\n\\n## How you know it worked\\n\\nThree tests in one visit are one care context. A display name reads like \\\"OPD records for 03 Oct 2022\\\" and carries no diagnosis or result.\\n\\n## When it goes wrong\\n\\nA diagnosis or result in `display` leaks clinical information into a system built never to hold it, visible to anyone who can list the patient's care contexts. One care context per record produces a list no person can navigate.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/concepts/care-context#care-context\",\"gateway\":\"hiecm\",\"id\":\"hiecm.concept.care-context\",\"milestone\":\"M2\",\"summary\":\"A care context is the unit a provider links to a patient's ABHA address, carrying a reference number and a display name and nothing clinical.\",\"title\":\"Care contexts, how records are grouped so they can be found\",\"type\":\"concept\"}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-consent-manager-hiu-hip/01-p2-get-hip-v3-link-patient-links#m2-get-all-link-records\",\"id\":\"hiecm.endpoint.m2-get-all-link-records\",\"summary\":\"Lists every care context already linked to an ABHA address.\",\"title\":\"GET All Link records\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#discovery\",\"id\":\"hiecm.glossary.discovery\",\"summary\":\"The step where a patient's app asks a facility whether it holds records for that patient.\",\"title\":\"Discovery, finding whether a facility holds records\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/reference/notifications-and-patient-apps#subscribing\",\"id\":\"nhcx.flow.notification-subscribe\",\"summary\":\"Have a patient's health record app receive plain-language updates on their pre-authorisations, claims and payments, by subscribing each time the patient logs...\",\"title\":\"Subscribe a patient app to notifications\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/03-m1-post-v3-phr-web-login-abha-verify-mobile-otp#m1-phr-verify\",\"id\":\"hiecm.endpoint.m1-phr-verify\",\"summary\":\"Completes an ABHA address login and returns the X-token for the profile, card and QR calls.\",\"title\":\"Verify OTP or biometric for ABHA address login\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m3#m3-request-consent\",\"id\":\"hiecm.flow.m3-request-consent\",\"summary\":\"Ask a patient, by ABHA address, for permission to read records held elsewhere, and collect the consent artefact ids once they grant it.\",\"title\":\"Request consent for a patient's health records\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#abha-address\",\"id\":\"shared.glossary.abha-address\",\"summary\":\"The readable name, such as name@sbx, that ABDM uses to route a person's health records.\",\"title\":\"ABHA address\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/api/other/endpoints/other-v1-notification-subscribe\",\"id\":\"nhcx.endpoint.notification-subscribe\",\"summary\":\"Let a patient's health record app receive plain-language updates about that patient's insurance claims.\",\"title\":\"POST /v1/notification/subscribe\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/troubleshooting/consent-stuck-requested#consent-stuck-requested\",\"id\":\"hiecm.troubleshooting.consent-stuck-requested\",\"summary\":\"A consent request has stayed in Requested and never moved to Granted or Denied.\",\"title\":\"The consent request is stuck in Requested\",\"type\":\"troubleshooting\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.notifications\",\"summary\":\"A patient's health record app subscribes on login to claim events for that person, and the exchange then pushes short readable updates to the app, with only ...\",\"title\":\"Notifications to patient apps\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m2#m2-link-care-context\",\"id\":\"hiecm.flow.m2-link-care-context\",\"summary\":\"Tell ABDM that this patient had a visit at your facility so their records can be found and fetched later.\",\"title\":\"Link a care context to a patient's ABHA\",\"type\":\"flow\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#abdm\",\"id\":\"shared.glossary.abdm\",\"summary\":\"India's national programme for connecting health records, identities and facilities across providers.\",\"title\":\"ABDM, Ayushman Bharat Digital Mission\",\"type\":\"glossary\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.abha-identifiers\",\"summary\":\"NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...\",\"title\":\"Carrying an ABHA number and an ABHA address on a FHIR Patient\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#abha\",\"id\":\"shared.glossary.abha\",\"summary\":\"The patient's identity in ABDM, in two forms that look alike and are not: a 14 digit ABHA number and a readable ABHA address.\",\"title\":\"ABHA\",\"type\":\"glossary\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m1-two-routes-to-the-profile\",\"summary\":\"A profile arrives either because the patient scanned a QR and consented in their own application, or because the desk ran an identifier journey, and which on...\",\"title\":\"Two routes to the profile, and the form is the destination of both\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.profile-and-example-together\",\"summary\":\"A NRCeS profile gives the cardinalities and a NRCeS example gives the shape, and a generator written from either one alone is wrong in a different way.\",\"title\":\"Read the profile and the example together, because each omits what the other carries\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.pmjay-insurance-plan\",\"summary\":\"How the government scheme's policy is laid out as data: specialties, packages, rates, claim rules, required documents and treatment-guideline questionnaires.\",\"title\":\"The PMJAY InsurancePlan profile, packages and questionnaires\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/01-m1-post-v3-profile-benefit-linkanddelink-x-token#m1-benefit-link-or-delink\",\"id\":\"hiecm.endpoint.m1-benefit-link-or-delink\",\"summary\":\"Links or unlinks the programme named in the BENEFIT_NAME header for an ABHA.\",\"title\":\"Link or unlink a benefit record from an ABHA\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/errors#abdm-1094\",\"id\":\"hiecm.error.abdm-1094\",\"summary\":\"Your client or the person's token is not allowed to do what the call tried, and the message says which of three cases applies.\",\"title\":\"ABDM-1094, access to this feature is refused\",\"type\":\"error\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.terminologies\",\"summary\":\"The code systems every claims bundle draws on, where each one is used, and how strictly each binding applies.\",\"title\":\"Code systems and value sets used in NHCX bundles\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/preauthorisation-request\",\"id\":\"nhcx.fhir.preauth-request\",\"summary\":\"The bundle a hospital sends to ask a payer to approve a planned treatment before it happens, with the package, the diagnosis and the required documents.\",\"title\":\"Preauthorisation request bundle, a Claim with use preauthorization\",\"type\":\"fhir\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#abdm\",\"id\":\"shared.glossary.abdm\",\"summary\":\"India's national programme for connecting health records, identities and facilities across providers.\",\"title\":\"ABDM, Ayushman Bharat Digital Mission\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/claim-request\",\"id\":\"nhcx.fhir.claim-request\",\"summary\":\"The bundle a hospital sends after discharge to claim payment, with the final amounts, the discharge details and the documents the policy requires.\",\"title\":\"Claim request bundle\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.terminologies\",\"summary\":\"The code systems every claims bundle draws on, where each one is used, and how strictly each binding applies.\",\"title\":\"Code systems and value sets used in NHCX bundles\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.pmjay-insurance-plan\",\"summary\":\"How the government scheme's policy is laid out as data: specialties, packages, rates, claim rules, required documents and treatment-guideline questionnaires.\",\"title\":\"The PMJAY InsurancePlan profile, packages and questionnaires\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/payment-notice-and-acknowledgement\",\"id\":\"nhcx.fhir.payment-notice\",\"summary\":\"The bundle a payer sends to tell a hospital a claim has been paid, with the amount and bank reference, and the short task the hospital sends back to acknowle...\",\"title\":\"PaymentNotice bundle and its acknowledgement\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.preauth-cancel\",\"summary\":\"The task a hospital sends to cancel a preauthorisation it no longer needs, and the payer's confirmation that the case is cancelled.\",\"title\":\"Preauthorisation cancel request and response bundles\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.task\",\"summary\":\"The task a hospital sends to dispute a rejected or underpaid claim, which routes the case to the claim review committee, and the task that carries the payer'...\",\"title\":\"Task bundle for reprocess and CRC\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/coverage-eligibility-request\",\"id\":\"nhcx.fhir.coverage-eligibility-request\",\"summary\":\"The bundle a hospital sends to ask a payer whether a patient's policy is in force, what it covers, and whether a treatment needs prior approval.\",\"title\":\"CoverageEligibilityRequest bundle\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.query-update\",\"summary\":\"How to recognise a payer's query on a preauthorisation or claim, and how to resend the same claim with the documents and answers the payer asked for.\",\"title\":\"Query update bundles for preauthorisation and claim\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/preauthorisation-request\",\"id\":\"nhcx.fhir.preauth-request\",\"summary\":\"The bundle a hospital sends to ask a payer to approve a planned treatment before it happens, with the package, the diagnosis and the required documents.\",\"title\":\"Preauthorisation request bundle, a Claim with use preauthorization\",\"type\":\"fhir\"}]}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:06:07.714Z",
+  "usage": {
+    "input_tokens": 80,
+    "output_tokens": 2412,
+    "cache_read_input_tokens": 141004,
+    "cache_creation_input_tokens": 23107,
+    "num_turns": 14,
+    "duration_ms": 33512,
+    "cost_usd_equivalent": 0.0724544
+  }
+}

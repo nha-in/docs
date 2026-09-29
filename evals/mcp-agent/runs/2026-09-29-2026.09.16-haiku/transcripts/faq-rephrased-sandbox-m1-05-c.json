@@ -1,0 +1,239 @@
+{
+  "case_id": "faq-rephrased-sandbox-m1-05-c",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "header format"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "I need more context about which header format you're asking about. Are you looking for:\n\n1. **ABDM gateway API request headers** (for authentications, timestamps, signatures)?\n2. **FHIR bundle headers** (for health records)?\n3. **HTTP headers** for a specific ABDM operation?\n4. Something else?\n\nLet me search the docs for header information while you clarify:",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01SYUTMm4Vjy5oE7WfZjkyoF",
+            "Name": "search",
+            "Input": {
+              "query": "header format request headers",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "header format request headers",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.protocol-headers",
+                "summary": "The x-hcx headers inside the sealed envelope tell the exchange who is sending, who must receive, which conversation the message belongs to and what state it ...",
+                "title": "The x-hcx protocol headers",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/error-codes#payr",
+                "id": "nhcx.error.payr-1081",
+                "summary": "The payer rejected your preauthorisation or claim because the service date on one of the billed items is not valid.",
+                "title": "PAYR-1081: an item's service date is not valid",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/troubleshooting/everything-returns-401#everything-returns-401",
+                "id": "hiecm.troubleshooting.everything-returns-401",
+                "summary": "Every call is rejected the same way, which points at the session or the headers rather than any one operation.",
+                "title": "Everything returns 401",
+                "type": "troubleshooting"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/status/endpoints/status-v1-status",
+                "id": "nhcx.endpoint.status",
+                "summary": "Ask the claims exchange where one of your own sent messages stands, without sending it again.",
+                "title": "POST /v1/status",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/other/endpoints/other-v1-on-status",
+                "id": "nhcx.endpoint.on-status",
+                "summary": "Tell a participant who asked about one of its messages that the message has reached you.",
+                "title": "POST /v1/on_status",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/status/endpoints/status-v1-search-on-submit",
+                "id": "nhcx.endpoint.search-on-submit",
+                "summary": "Send the claim documents an authorised body asked for back to it through the claims exchange.",
+                "title": "POST /v1/search/on_submit",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/payment-notice/endpoints/payment-notice-v1-paymentnotice-on-request",
+                "id": "nhcx.endpoint.paymentnotice-on-request",
+                "summary": "Confirm to an insurer, through the claims exchange, that your hospital has received and recorded a payment notice.",
+                "title": "POST /v1/paymentnotice/on_request",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/eligibility/endpoints/eligibility-v1-coverageeligibility-on-check",
+                "id": "nhcx.endpoint.coverageeligibility-on-check",
+                "summary": "Send an insurer's answer to an eligibility question back to the hospital through the claims exchange.",
+                "title": "POST /v1/coverageeligibility/on_check",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/task/endpoints/task-v1-task-on-submit",
+                "id": "nhcx.endpoint.task-on-submit",
+                "summary": "Send an insurer's outcome on a reprocess or cancellation request back to the hospital through the claims exchange.",
+                "title": "POST /v1/task/on_submit",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/communication/endpoints/communication-v1-communication-on-request",
+                "id": "nhcx.endpoint.communication-on-request",
+                "summary": "Answer an insurer's message about a case, for example with the documents it asked for, through the claims exchange.",
+                "title": "POST /v1/communication/on_request",
+                "type": "endpoint"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "I found a documentation page about ABDM protocol headers. Let me get that for you:",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_011Yk5U6PXKYuUwtNYYFWsgY",
+            "Name": "get",
+            "Input": {
+              "id": "nhcx.concept.protocol-headers"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "nhcx.concept.protocol-headers"
+          },
+          "output": {
+            "body": "# The x-hcx protocol headers\n\n## In plain words\n\nThe protocol headers are the address and tracking label on every sealed message. They live inside the [protected header](../glossary/protected-header.md), and every name starts with `x-hcx-`.\n\nNHCX reads them to route and audit the message. It never reads the bundle underneath.\n\n## Before you start\n\nRead [the JWE envelope](./jwe-envelope.md) first. You need your own and the recipient's [participant codes](./participant-code.md).\n\n## What happens\n\n### The headers to send on every request\n\nSend all of these. Together they satisfy every published header list.\n\n| Header | Holds |\n|---|---|\n| `x-hcx-sender_code` | Your participant code |\n| `x-hcx-recipient_code` | The participant that must act on the message |\n| `x-hcx-api_call_id` | A new UUID for this one call. See [message identifiers](./message-identifiers.md) |\n| `x-hcx-request_id` | A UUID for the originating request |\n| `x-hcx-correlation_id` | The UUID of the conversation |\n| `x-hcx-workflow_id` | The stage of the case. See [workflow codes](./workflow-codes.md) |\n| `x-hcx-timestamp` | When you sent it, from a synchronised clock |\n| `x-hcx-status` | The message state. See below |\n| `x-hcx-ben-abha-id` | The beneficiary's [ABHA number](../../shared/glossary/abha-number.md). Optional |\n\nEach UUID is a random 36 character universally unique identifier.\n\n### Status values\n\n| Who sends | `x-hcx-status` |\n|---|---|\n| The party starting a request | `request.initiated` |\n| The party answering, final answer | `response.complete` |\n| The party answering, partial answer or acknowledgement | `response.partial` |\n| The party answering, rejection or error | `response.error` |\n\n[The status lifecycle](./status-lifecycle.md) covers the states NHCX adds itself.\n\n### Optional headers\n\n| Header | Holds |\n|---|---|\n| `x-hcx-debug_flag` | `Error`, `Info` or `Debug`: asks for debug detail. Servers may ignore it |\n| `x-hcx-error_details` | An object with `code`, `message` and `trace` |\n| `x-hcx-debug_details` | The same shape, for debugging |\n\n### Extra fields on an error response\n\nA `ProtocolResponse` repeats the protocol headers in the clear and adds `x-hcx-redirect_to`, `x-hcx-domain-header` (with `use_case_name` and `amt_processed`) and `x-hcx-entity-type`. The entity type is one of `coverageeligibility`, `preauth`, `claim`, `task`, `payment` and `insuranceplan`.\n\n## How you know it worked\n\nYou have understood this when you can answer both of these.\n\n1. You answer a payer's communication request. What goes in `x-hcx-status`, and which header tells NHCX which conversation your answer belongs to?\n2. Which three headers must hold fresh random UUIDs when you start a new preauthorisation?\n\n## When it goes wrong\n\n**Missing or malformed header.** NHCX refuses the envelope with [NHCX-1005](../errors/nhcx-1005.md).\n\n**Wrong status value.** NHCX refuses a status it does not recognise with [NHCX-1011](../errors/nhcx-1011.md). Use the four values above exactly, in lower case.\n\n**ABHA number in the wrong format.** NHCX refuses it with [NHCX-1018](../errors/nhcx-1018.md). The error message names the expected format, `XX-XXXX-XXXX-XXXX`.\n\n**Reused correlation ID.** A new request with a correlation ID NHCX has already seen is refused with [NHCX-1006](../errors/nhcx-1006.md).\n\n**Stale timestamp.** A payer refuses a request whose timestamp is 24 hours or more away from its own clock. See [retries and expiry](./retries-and-expiry.md).",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "",
+            "gateway": "nhcx",
+            "id": "nhcx.concept.protocol-headers",
+            "milestone": "n/a",
+            "summary": "The x-hcx headers inside the sealed envelope tell the exchange who is sending, who must receive, which conversation the message belongs to and what state it is in.",
+            "title": "The x-hcx protocol headers",
+            "type": "concept"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "I found documentation on **NHCX protocol headers** (for the claims exchange). Here's the header format:\n\n## Required headers for every NHCX request:\n\n| Header | Contains |\n|--------|----------|\n| `x-hcx-sender_code` | Your participant code |\n| `x-hcx-recipient_code` | Recipient's participant code |\n| `x-hcx-api_call_id` | New UUID for this call |\n| `x-hcx-request_id` | UUID for originating request |\n| `x-hcx-correlation_id` | UUID of the conversation |\n| `x-hcx-workflow_id` | Stage of the case (see workflow codes) |\n| `x-hcx-timestamp` | When sent (from synchronized clock) |\n| `x-hcx-status` | Message state |\n| `x-hcx-ben-abha-id` | Beneficiary's ABHA number (optional) |\n\n## Status values:\n- `request.initiated` — starting a request\n- `response.complete` — final answer\n- `response.partial` — partial answer/acknowledgement\n- `response.error` — rejection or error\n\n## Optional headers:\n- `x-hcx-debug_flag` — `Error`, `Info`, or `Debug`\n- `x-hcx-error_details` / `x-hcx-debug_details` — objects with `code`, `message`, `trace`\n\nAre you integrating with **NHCX**, **HIE-CM**, or **UHI**? Each gateway has different header requirements—I can search for those specific formats if needed.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "I found documentation on **NHCX protocol headers** (for the claims exchange). Here's the header format:\n\n## Required headers for every NHCX request:\n\n| Header | Contains |\n|--------|----------|\n| `x-hcx-sender_code` | Your participant code |\n| `x-hcx-recipient_code` | Recipient's participant code |\n| `x-hcx-api_call_id` | New UUID for this call |\n| `x-hcx-request_id` | UUID for originating request |\n| `x-hcx-correlation_id` | UUID of the conversation |\n| `x-hcx-workflow_id` | Stage of the case (see workflow codes) |\n| `x-hcx-timestamp` | When sent (from synchronized clock) |\n| `x-hcx-status` | Message state |\n| `x-hcx-ben-abha-id` | Beneficiary's ABHA number (optional) |\n\n## Status values:\n- `request.initiated` — starting a request\n- `response.complete` — final answer\n- `response.partial` — partial answer/acknowledgement\n- `response.error` — rejection or error\n\n## Optional headers:\n- `x-hcx-debug_flag` — `Error`, `Info`, or `Debug`\n- `x-hcx-error_details` / `x-hcx-debug_details` — objects with `code`, `message`, `trace`\n\nAre you integrating with **NHCX**, **HIE-CM**, or **UHI**? Each gateway has different header requirements—I can search for those specific formats if needed.",
+  "sources": [
+    {
+      "id": "nhcx.concept.protocol-headers",
+      "title": "The x-hcx protocol headers",
+      "url": ""
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"\",\"id\":\"nhcx.concept.protocol-headers\",\"summary\":\"The x-hcx headers inside the sealed envelope tell the exchange who is sending, who must receive, which conversation the message belongs to and what state it ...\",\"title\":\"The x-hcx protocol headers\",\"type\":\"concept\"},{\"doc_url\":\"/docs/nhcx/v1/reference/error-codes#payr\",\"id\":\"nhcx.error.payr-1081\",\"summary\":\"The payer rejected your preauthorisation or claim because the service date on one of the billed items is not valid.\",\"title\":\"PAYR-1081: an item's service date is not valid\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/troubleshooting/everything-returns-401#everything-returns-401\",\"id\":\"hiecm.troubleshooting.everything-returns-401\",\"summary\":\"Every call is rejected the same way, which points at the session or the headers rather than any one operation.\",\"title\":\"Everything returns 401\",\"type\":\"troubleshooting\"},{\"doc_url\":\"/docs/nhcx/v1/api/status/endpoints/status-v1-status\",\"id\":\"nhcx.endpoint.status\",\"summary\":\"Ask the claims exchange where one of your own sent messages stands, without sending it again.\",\"title\":\"POST /v1/status\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/nhcx/v1/api/other/endpoints/other-v1-on-status\",\"id\":\"nhcx.endpoint.on-status\",\"summary\":\"Tell a participant who asked about one of its messages that the message has reached you.\",\"title\":\"POST /v1/on_status\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/nhcx/v1/api/status/endpoints/status-v1-search-on-submit\",\"id\":\"nhcx.endpoint.search-on-submit\",\"summary\":\"Send the claim documents an authorised body asked for back to it through the claims exchange.\",\"title\":\"POST /v1/search/on_submit\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/nhcx/v1/api/payment-notice/endpoints/payment-notice-v1-paymentnotice-on-request\",\"id\":\"nhcx.endpoint.paymentnotice-on-request\",\"summary\":\"Confirm to an insurer, through the claims exchange, that your hospital has received and recorded a payment notice.\",\"title\":\"POST /v1/paymentnotice/on_request\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/nhcx/v1/api/eligibility/endpoints/eligibility-v1-coverageeligibility-on-check\",\"id\":\"nhcx.endpoint.coverageeligibility-on-check\",\"summary\":\"Send an insurer's answer to an eligibility question back to the hospital through the claims exchange.\",\"title\":\"POST /v1/coverageeligibility/on_check\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/nhcx/v1/api/task/endpoints/task-v1-task-on-submit\",\"id\":\"nhcx.endpoint.task-on-submit\",\"summary\":\"Send an insurer's outcome on a reprocess or cancellation request back to the hospital through the claims exchange.\",\"title\":\"POST /v1/task/on_submit\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/nhcx/v1/api/communication/endpoints/communication-v1-communication-on-request\",\"id\":\"nhcx.endpoint.communication-on-request\",\"summary\":\"Answer an insurer's message about a case, for example with the documents it asked for, through the claims exchange.\",\"title\":\"POST /v1/communication/on_request\",\"type\":\"endpoint\"}]}\n{\"body\":\"# The x-hcx protocol headers\\n\\n## In plain words\\n\\nThe protocol headers are the address and tracking label on every sealed message. They live inside the [protected header](../glossary/protected-header.md), and every name starts with `x-hcx-`.\\n\\nNHCX reads them to route and audit the message. It never reads the bundle underneath.\\n\\n## Before you start\\n\\nRead [the JWE envelope](./jwe-envelope.md) first. You need your own and the recipient's [participant codes](./participant-code.md).\\n\\n## What happens\\n\\n### The headers to send on every request\\n\\nSend all of these. Together they satisfy every published header list.\\n\\n| Header | Holds |\\n|---|---|\\n| `x-hcx-sender_code` | Your participant code |\\n| `x-hcx-recipient_code` | The participant that must act on the message |\\n| `x-hcx-api_call_id` | A new UUID for this one call. See [message identifiers](./message-identifiers.md) |\\n| `x-hcx-request_id` | A UUID for the originating request |\\n| `x-hcx-correlation_id` | The UUID of the conversation |\\n| `x-hcx-workflow_id` | The stage of the case. See [workflow codes](./workflow-codes.md) |\\n| `x-hcx-timestamp` | When you sent it, from a synchronised clock |\\n| `x-hcx-status` | The message state. See below |\\n| `x-hcx-ben-abha-id` | The beneficiary's [ABHA number](../../shared/glossary/abha-number.md). Optional |\\n\\nEach UUID is a random 36 character universally unique identifier.\\n\\n### Status values\\n\\n| Who sends | `x-hcx-status` |\\n|---|---|\\n| The party starting a request | `request.initiated` |\\n| The party answering, final answer | `response.complete` |\\n| The party answering, partial answer or acknowledgement | `response.partial` |\\n| The party answering, rejection or error | `response.error` |\\n\\n[The status lifecycle](./status-lifecycle.md) covers the states NHCX adds itself.\\n\\n### Optional headers\\n\\n| Header | Holds |\\n|---|---|\\n| `x-hcx-debug_flag` | `Error`, `Info` or `Debug`: asks for debug detail. Servers may ignore it |\\n| `x-hcx-error_details` | An object with `code`, `message` and `trace` |\\n| `x-hcx-debug_details` | The same shape, for debugging |\\n\\n### Extra fields on an error response\\n\\nA `ProtocolResponse` repeats the protocol headers in the clear and adds `x-hcx-redirect_to`, `x-hcx-domain-header` (with `use_case_name` and `amt_processed`) and `x-hcx-entity-type`. The entity type is one of `coverageeligibility`, `preauth`, `claim`, `task`, `payment` and `insuranceplan`.\\n\\n## How you know it worked\\n\\nYou have understood this when you can answer both of these.\\n\\n1. You answer a payer's communication request. What goes in `x-hcx-status`, and which header tells NHCX which conversation your answer belongs to?\\n2. Which three headers must hold fresh random UUIDs when you start a new preauthorisation?\\n\\n## When it goes wrong\\n\\n**Missing or malformed header.** NHCX refuses the envelope with [NHCX-1005](../errors/nhcx-1005.md).\\n\\n**Wrong status value.** NHCX refuses a status it does not recognise with [NHCX-1011](../errors/nhcx-1011.md). Use the four values above exactly, in lower case.\\n\\n**ABHA number in the wrong format.** NHCX refuses it with [NHCX-1018](../errors/nhcx-1018.md). The error message names the expected format, `XX-XXXX-XXXX-XXXX`.\\n\\n**Reused correlation ID.** A new request with a correlation ID NHCX has already seen is refused with [NHCX-1006](../errors/nhcx-1006.md).\\n\\n**Stale timestamp.** A payer refuses a request whose timestamp is 24 hours or more away from its own clock. See [retries and expiry](./retries-and-expiry.md).\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"\",\"gateway\":\"nhcx\",\"id\":\"nhcx.concept.protocol-headers\",\"milestone\":\"n/a\",\"summary\":\"The x-hcx headers inside the sealed envelope tell the exchange who is sending, who must receive, which conversation the message belongs to and what state it is in.\",\"title\":\"The x-hcx protocol headers\",\"type\":\"concept\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:01:40.969Z",
+  "usage": {
+    "input_tokens": 30,
+    "output_tokens": 1044,
+    "cache_read_input_tokens": 29117,
+    "cache_creation_input_tokens": 7990,
+    "num_turns": 3,
+    "duration_ms": 14408,
+    "cost_usd_equivalent": 0.024141700000000002
+  }
+}

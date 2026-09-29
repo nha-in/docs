@@ -1,0 +1,676 @@
+{
+  "case_id": "confusable-hip-vs-hiu-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "am I a HIP or a HIU?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01AjyGC2kYYcYa9u5sZUB39r",
+            "Name": "search",
+            "Input": {
+              "query": "HIP HIU difference what is",
+              "type": "concept"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "HIP HIU difference what is",
+            "type": "concept"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_014zKRaN41feXTbvymG354Fr",
+            "Name": "search",
+            "Input": {
+              "query": "HIP provider HIU user ABDM roles",
+              "kind": "atom",
+              "limit": 25
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "HIP provider HIU user ABDM roles",
+            "kind": "atom",
+            "limit": 25
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#abdm",
+                "id": "shared.glossary.abdm",
+                "summary": "India's national programme for connecting health records, identities and facilities across providers.",
+                "title": "ABDM, Ayushman Bharat Digital Mission",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/claim-request",
+                "id": "nhcx.fhir.claim-request",
+                "summary": "The bundle a hospital sends after discharge to claim payment, with the final amounts, the discharge details and the documents the policy requires.",
+                "title": "Claim request bundle",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.terminologies",
+                "summary": "The code systems every claims bundle draws on, where each one is used, and how strictly each binding applies.",
+                "title": "Code systems and value sets used in NHCX bundles",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.pmjay-insurance-plan",
+                "summary": "How the government scheme's policy is laid out as data: specialties, packages, rates, claim rules, required documents and treatment-guideline questionnaires.",
+                "title": "The PMJAY InsurancePlan profile, packages and questionnaires",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/payment-notice-and-acknowledgement",
+                "id": "nhcx.fhir.payment-notice",
+                "summary": "The bundle a payer sends to tell a hospital a claim has been paid, with the amount and bank reference, and the short task the hospital sends back to acknowle...",
+                "title": "PaymentNotice bundle and its acknowledgement",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.preauth-cancel",
+                "summary": "The task a hospital sends to cancel a preauthorisation it no longer needs, and the payer's confirmation that the case is cancelled.",
+                "title": "Preauthorisation cancel request and response bundles",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.task",
+                "summary": "The task a hospital sends to dispute a rejected or underpaid claim, which routes the case to the claim review committee, and the task that carries the payer'...",
+                "title": "Task bundle for reprocess and CRC",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/coverage-eligibility-request",
+                "id": "nhcx.fhir.coverage-eligibility-request",
+                "summary": "The bundle a hospital sends to ask a payer whether a patient's policy is in force, what it covers, and whether a treatment needs prior approval.",
+                "title": "CoverageEligibilityRequest bundle",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.query-update",
+                "summary": "How to recognise a payer's query on a preauthorisation or claim, and how to resend the same claim with the documents and answers the payer asked for.",
+                "title": "Query update bundles for preauthorisation and claim",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/preauthorisation-request",
+                "id": "nhcx.fhir.preauth-request",
+                "summary": "The bundle a hospital sends to ask a payer to approve a planned treatment before it happens, with the package, the diagnosis and the required documents.",
+                "title": "Preauthorisation request bundle, a Claim with use preauthorization",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.abha-identifiers",
+                "summary": "NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...",
+                "title": "Carrying an ABHA number and an ABHA address on a FHIR Patient",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.collection-bundle",
+                "summary": "Every claims message you send is one bundle of type collection, holding the main business resource and every resource it points to.",
+                "title": "The NHCX collection bundle and its required elements",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/error-codes#payr",
+                "id": "nhcx.error.payr-1096",
+                "summary": "The payer rejected your claim because the patient's discharge type is death and the claim carries no valid date of death.",
+                "title": "PAYR-1096: a death discharge carries no valid death date",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/error-codes#payr",
+                "id": "nhcx.error.payr-1095",
+                "summary": "The payer rejected your claim because it carries no valid information about how the patient was discharged.",
+                "title": "PAYR-1095: the claim carries no valid discharge information",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/error-codes#payr",
+                "id": "nhcx.error.payr-1519",
+                "summary": "The scheme payer rejected your task request because at least one of the task's inputs does not say what kind of input it is.",
+                "title": "PAYR-1519: a Task input parameter has no type",
+                "type": "error"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.insurance-plan-bundle",
+                "summary": "The small task a hospital sends to fetch a payer's digital policy, and the large bundle of packages, rates and document rules that comes back.",
+                "title": "InsurancePlan request and response bundles",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/error-codes#payr",
+                "id": "nhcx.error.payr-1518",
+                "summary": "The scheme payer rejected your task request because the task carries none of the inputs it needs.",
+                "title": "PAYR-1518: your Task resource carries no input parameters",
+                "type": "error"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.validation",
+                "summary": "How to check a claims bundle against the national profiles on your own machine, what the check covers, and the bundle review that precedes sandbox sign-off.",
+                "title": "Validating an NHCX bundle before you send it",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.hl7-validator-recipe",
+                "summary": "The agent-executable recipe for tier 2: download the pinned HL7 validator_cli.jar, run it against the same NRCES IG version the catalogue pins, and read what...",
+                "title": "Running the official HL7 validator, the tier 2 full conformance check",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/error-codes#payr",
+                "id": "nhcx.error.payr-1504",
+                "summary": "The scheme payer rejected your answer to its query because the overall case remarks were not sent as text.",
+                "title": "PAYR-1504: the case remarks in your query response are not text",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/error-codes#payr",
+                "id": "nhcx.error.payr-1514",
+                "summary": "The scheme payer rejected your claim because the discharge information entry was not text naming the discharge stage.",
+                "title": "PAYR-1514: the discharge information entry does not name a discharge stage",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/error-codes#payr",
+                "id": "nhcx.error.payr-1501",
+                "summary": "The scheme payer rejected your preauthorisation or claim because the surgery date entry holds a value that is not a date, a period or text.",
+                "title": "PAYR-1501: the surgery date entry carries the wrong kind of value",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/error-codes#payr",
+                "id": "nhcx.error.payr-1509",
+                "summary": "The scheme payer rejected your newborn case because the proof of birth document is missing or unusable.",
+                "title": "PAYR-1509: the newborn's proof of birth attachment is not valid",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/error-codes#payr",
+                "id": "nhcx.error.payr-1503",
+                "summary": "The scheme payer rejected your claim because the death date entry holds a value that is not a date, a period or text.",
+                "title": "PAYR-1503: the death date entry carries the wrong kind of value",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/error-codes#payr",
+                "id": "nhcx.error.payr-1502",
+                "summary": "The scheme payer rejected your preauthorisation or claim because the admission date entry holds a value that is not a date, a period or text.",
+                "title": "PAYR-1502: the admission date entry carries the wrong kind of value",
+                "type": "error"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_018BfprX4u2Hc65UjgnQ3Leh",
+            "Name": "search",
+            "Input": {
+              "query": "Health Information Provider User",
+              "type": "glossary",
+              "limit": 25
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "Health Information Provider User",
+            "type": "glossary",
+            "limit": 25
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#ims",
+                "id": "hiecm.glossary.ims",
+                "summary": "The umbrella term for the software a health facility runs, whichever of HMIS, EMR, LIMS or PMS it happens to be.",
+                "title": "IMS, information management system",
+                "type": "glossary"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01HhRxWNCSbGiGZSyHZSSvhB",
+            "Name": "search",
+            "Input": {
+              "query": "HIP",
+              "type": "glossary"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "HIP",
+            "type": "glossary"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hip",
+                "id": "hiecm.glossary.hip",
+                "summary": "The role held by a system that holds a patient's records and shares them when a consent allows it.",
+                "title": "HIP, health information provider",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hfr",
+                "id": "shared.glossary.hfr",
+                "summary": "The registry of health facilities, which is where a facility is searched for, onboarded and linked to software.",
+                "title": "HFR, Health Facility Registry",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hrp",
+                "id": "hiecm.glossary.hrp",
+                "summary": "Whoever holds the records. It describes custody, which is why it is neither a position nor a direction.",
+                "title": "HRP, health repository provider",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/fetching-a-recipient-certificate#what-comes-back",
+                "id": "hiecm.glossary.key-material",
+                "summary": "The ECDH key pairs that encrypt health records in transit. A fresh pair per transfer, the HIU keeps its own, and the HIP returns its public half alongside th...",
+                "title": "Key material, who generates it and who keeps it",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#pms",
+                "id": "hiecm.glossary.pms",
+                "summary": "The system a pharmacy runs to dispense and to hold stock. A pharmacy uses it both to read the prescription it is dispensing against and to record what it dis...",
+                "title": "PMS, pharmacy management system",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#lims",
+                "id": "hiecm.glossary.lims",
+                "summary": "The system a diagnostic laboratory uses to manage samples, tests and results.",
+                "title": "LIMS, laboratory information management system, also written LMIS",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#bridge",
+                "id": "hiecm.glossary.bridge",
+                "summary": "The set of callback URLs NHA posts to when it answers one of your calls.",
+                "title": "Bridge, your callback endpoints",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.glossary.m2",
+                "summary": "The milestone covering care context linking, discovery and sending records.",
+                "title": "M2 Health Information Provider: Create and link records",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#ecdh",
+                "id": "hiecm.glossary.ecdh",
+                "summary": "Elliptic Curve Diffie-Hellman, used so only the requester holding a valid consent can read what is sent.",
+                "title": "ECDH, the key exchange that protects records in transit",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#discovery",
+                "id": "hiecm.glossary.discovery",
+                "summary": "The step where a patient's app asks a facility whether it holds records for that patient.",
+                "title": "Discovery, finding whether a facility holds records",
+                "type": "glossary"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_014gjzKc8rvc5iGezetCRqog",
+            "Name": "search",
+            "Input": {
+              "query": "HIU",
+              "type": "glossary"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "HIU",
+            "type": "glossary"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hiu",
+                "id": "hiecm.glossary.hiu",
+                "summary": "The role held by a system that asks a patient for consent and then fetches records held elsewhere.",
+                "title": "HIU, health information user",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/fetching-a-recipient-certificate#what-comes-back",
+                "id": "hiecm.glossary.key-material",
+                "summary": "The ECDH key pairs that encrypt health records in transit. A fresh pair per transfer, the HIU keeps its own, and the HIP returns its public half alongside th...",
+                "title": "Key material, who generates it and who keeps it",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#pms",
+                "id": "hiecm.glossary.pms",
+                "summary": "The system a pharmacy runs to dispense and to hold stock. A pharmacy uses it both to read the prescription it is dispensing against and to record what it dis...",
+                "title": "PMS, pharmacy management system",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#lims",
+                "id": "hiecm.glossary.lims",
+                "summary": "The system a diagnostic laboratory uses to manage samples, tests and results.",
+                "title": "LIMS, laboratory information management system, also written LMIS",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#bridge",
+                "id": "hiecm.glossary.bridge",
+                "summary": "The set of callback URLs NHA posts to when it answers one of your calls.",
+                "title": "Bridge, your callback endpoints",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.glossary.m3",
+                "summary": "The milestone covering consent requests and fetching someone else's records.",
+                "title": "M3 Health Information User: Fetch data with consent",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hrp",
+                "id": "hiecm.glossary.hrp",
+                "summary": "Whoever holds the records. It describes custody, which is why it is neither a position nor a direction.",
+                "title": "HRP, health repository provider",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#purpose-of-use",
+                "id": "hiecm.glossary.purpose-of-use",
+                "summary": "The stated reason a consent request gives for wanting records.",
+                "title": "Purpose of use, why records are being requested",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#ecdh",
+                "id": "hiecm.glossary.ecdh",
+                "summary": "Elliptic Curve Diffie-Hellman, used so only the requester holding a valid consent can read what is sent.",
+                "title": "ECDH, the key exchange that protects records in transit",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hmis",
+                "id": "hiecm.glossary.hmis",
+                "summary": "The day to day software of a hospital, under any of its three names. A hospital uses it both to publish its own records and to fetch a patient's history from...",
+                "title": "HMIS, HIS or HIMS, the software a hospital runs",
+                "type": "glossary"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_016nncYcT8iUZkw4aG3JnkWM",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.glossary.hip"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.glossary.hip"
+          },
+          "output": {
+            "body": "# HIP, health information provider\n\n## In plain words\n\nA health information provider is the side of an exchange that holds health\nrecords and hands them over. It is identified by a service id, carried in the\n`X-HIP-ID` header, which the specification describes as:\n\n> Identifier of the health information provider to which the request was\n> intended\n\nA hospital, a lab or a clinic system acts in this role when it shares what it\nrecorded.\n\n## Before you start\n\nYou need your bridge registered and its service id in hand, because the\nheader value is that id rather than a name.\n\n## What happens\n\nABDM calls `m2_post_v3_consent_request_hip_notify` at your callback URL to\ntell you a consent covering your records was granted, revoked or expired.\nYour system acknowledges it by calling\n`m2_post_consent_v3_request_hip_on_notify`.\n\n## How you know it worked\n\nYou have understood this when you can say which side of a data exchange holds\nthe records and which side asks for them.\n\n## When it goes wrong\n\nBuilding only the request side and leaving the callback endpoints unbuilt,\nwhich leaves ABDM with nowhere to deliver the notifications this role\nreceives.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/getting-started/glossary#hip",
+            "gateway": "hiecm",
+            "id": "hiecm.glossary.hip",
+            "milestone": "n/a",
+            "summary": "The role held by a system that holds a patient's records and shares them when a consent allows it.",
+            "title": "HIP, health information provider",
+            "type": "glossary"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01W6pUwxinjdsxm5oyvVpEqN",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.glossary.hiu"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.glossary.hiu"
+          },
+          "output": {
+            "body": "# HIU, health information user\n\n## In plain words\n\nA health information user is the side of an exchange that wants records it\ndoes not hold. It is identified by a service id, carried in the `X-HIU-ID`\nheader, which the specification describes as:\n\n> Identifier of the health information user to which the request was intended\n\nThe same organisation often holds both roles, one for the records it keeps\nand one for the records it wants to read.\n\n## Before you start\n\nYou need a consent request the patient has approved, because this role reads\nnothing without one.\n\n## What happens\n\n`m3_post_consent_v3_request_init` raises the consent request that this role\nbegins every exchange with.\n\n## How you know it worked\n\nYou have understood this when you can say which role a consent request is\nraised by and which role it is served against.\n\n## When it goes wrong\n\nRequesting health information on a consent artefact that has expired or been\nrevoked, which the specification states must not be done.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/getting-started/glossary#hiu",
+            "gateway": "hiecm",
+            "id": "hiecm.glossary.hiu",
+            "milestone": "n/a",
+            "summary": "The role held by a system that asks a patient for consent and then fetches records held elsewhere.",
+            "title": "HIU, health information user",
+            "type": "glossary"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "Based on the ABDM documentation, here's the distinction:\n\n**HIP (Health Information Provider):** A system that **holds patient records** and shares them when a consent is granted. Examples include hospitals, labs, or clinics. HIPs receive consent notifications and acknowledge them via callbacks.\n\n**HIU (Health Information User):** A system that **requests records it doesn't hold**. It initiates consent requests and fetches records from other systems when the patient approves. The same organization can hold both roles for different records.\n\nI can't tell from your email alone which role you are. You're likely **both** — it's common for a health organization to act as a HIP for records it creates and a HIU when it needs records from elsewhere. \n\nWhat does your system do? Does it:\n- Hold and share patient records? → You're a **HIP**\n- Request records from other systems? → You're a **HIU**\n\nSee the HIP and HIU glossary pages at `/docs/hiecm/v3/getting-started/glossary`.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "Based on the ABDM documentation, here's the distinction:\n\n**HIP (Health Information Provider):** A system that **holds patient records** and shares them when a consent is granted. Examples include hospitals, labs, or clinics. HIPs receive consent notifications and acknowledge them via callbacks.\n\n**HIU (Health Information User):** A system that **requests records it doesn't hold**. It initiates consent requests and fetches records from other systems when the patient approves. The same organization can hold both roles for different records.\n\nI can't tell from your email alone which role you are. You're likely **both** — it's common for a health organization to act as a HIP for records it creates and a HIU when it needs records from elsewhere. \n\nWhat does your system do? Does it:\n- Hold and share patient records? → You're a **HIP**\n- Request records from other systems? → You're a **HIU**\n\nSee the HIP and HIU glossary pages at `/docs/hiecm/v3/getting-started/glossary`.",
+  "sources": [
+    {
+      "id": "hiecm.glossary.hip",
+      "title": "HIP, health information provider",
+      "url": "/docs/hiecm/v3/getting-started/glossary#hip"
+    },
+    {
+      "id": "hiecm.glossary.hiu",
+      "title": "HIU, health information user",
+      "url": "/docs/hiecm/v3/getting-started/glossary#hiu"
+    },
+    {
+      "id": "hiecm.glossary.hmis",
+      "title": "HMIS, HIS or HIMS, the software a hospital runs",
+      "url": "/docs/hiecm/v3/getting-started/glossary#hmis"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#abdm\",\"id\":\"shared.glossary.abdm\",\"summary\":\"India's national programme for connecting health records, identities and facilities across providers.\",\"title\":\"ABDM, Ayushman Bharat Digital Mission\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/claim-request\",\"id\":\"nhcx.fhir.claim-request\",\"summary\":\"The bundle a hospital sends after discharge to claim payment, with the final amounts, the discharge details and the documents the policy requires.\",\"title\":\"Claim request bundle\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.terminologies\",\"summary\":\"The code systems every claims bundle draws on, where each one is used, and how strictly each binding applies.\",\"title\":\"Code systems and value sets used in NHCX bundles\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.pmjay-insurance-plan\",\"summary\":\"How the government scheme's policy is laid out as data: specialties, packages, rates, claim rules, required documents and treatment-guideline questionnaires.\",\"title\":\"The PMJAY InsurancePlan profile, packages and questionnaires\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/payment-notice-and-acknowledgement\",\"id\":\"nhcx.fhir.payment-notice\",\"summary\":\"The bundle a payer sends to tell a hospital a claim has been paid, with the amount and bank reference, and the short task the hospital sends back to acknowle...\",\"title\":\"PaymentNotice bundle and its acknowledgement\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.preauth-cancel\",\"summary\":\"The task a hospital sends to cancel a preauthorisation it no longer needs, and the payer's confirmation that the case is cancelled.\",\"title\":\"Preauthorisation cancel request and response bundles\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.task\",\"summary\":\"The task a hospital sends to dispute a rejected or underpaid claim, which routes the case to the claim review committee, and the task that carries the payer'...\",\"title\":\"Task bundle for reprocess and CRC\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/coverage-eligibility-request\",\"id\":\"nhcx.fhir.coverage-eligibility-request\",\"summary\":\"The bundle a hospital sends to ask a payer whether a patient's policy is in force, what it covers, and whether a treatment needs prior approval.\",\"title\":\"CoverageEligibilityRequest bundle\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.query-update\",\"summary\":\"How to recognise a payer's query on a preauthorisation or claim, and how to resend the same claim with the documents and answers the payer asked for.\",\"title\":\"Query update bundles for preauthorisation and claim\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/preauthorisation-request\",\"id\":\"nhcx.fhir.preauth-request\",\"summary\":\"The bundle a hospital sends to ask a payer to approve a planned treatment before it happens, with the package, the diagnosis and the required documents.\",\"title\":\"Preauthorisation request bundle, a Claim with use preauthorization\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.abha-identifiers\",\"summary\":\"NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...\",\"title\":\"Carrying an ABHA number and an ABHA address on a FHIR Patient\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.collection-bundle\",\"summary\":\"Every claims message you send is one bundle of type collection, holding the main business resource and every resource it points to.\",\"title\":\"The NHCX collection bundle and its required elements\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/nhcx/v1/reference/error-codes#payr\",\"id\":\"nhcx.error.payr-1096\",\"summary\":\"The payer rejected your claim because the patient's discharge type is death and the claim carries no valid date of death.\",\"title\":\"PAYR-1096: a death discharge carries no valid death date\",\"type\":\"error\"},{\"doc_url\":\"/docs/nhcx/v1/reference/error-codes#payr\",\"id\":\"nhcx.error.payr-1095\",\"summary\":\"The payer rejected your claim because it carries no valid information about how the patient was discharged.\",\"title\":\"PAYR-1095: the claim carries no valid discharge information\",\"type\":\"error\"},{\"doc_url\":\"/docs/nhcx/v1/reference/error-codes#payr\",\"id\":\"nhcx.error.payr-1519\",\"summary\":\"The scheme payer rejected your task request because at least one of the task's inputs does not say what kind of input it is.\",\"title\":\"PAYR-1519: a Task input parameter has no type\",\"type\":\"error\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.insurance-plan-bundle\",\"summary\":\"The small task a hospital sends to fetch a payer's digital policy, and the large bundle of packages, rates and document rules that comes back.\",\"title\":\"InsurancePlan request and response bundles\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/nhcx/v1/reference/error-codes#payr\",\"id\":\"nhcx.error.payr-1518\",\"summary\":\"The scheme payer rejected your task request because the task carries none of the inputs it needs.\",\"title\":\"PAYR-1518: your Task resource carries no input parameters\",\"type\":\"error\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.validation\",\"summary\":\"How to check a claims bundle against the national profiles on your own machine, what the check covers, and the bundle review that precedes sandbox sign-off.\",\"title\":\"Validating an NHCX bundle before you send it\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.hl7-validator-recipe\",\"summary\":\"The agent-executable recipe for tier 2: download the pinned HL7 validator_cli.jar, run it against the same NRCES IG version the catalogue pins, and read what...\",\"title\":\"Running the official HL7 validator, the tier 2 full conformance check\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/nhcx/v1/reference/error-codes#payr\",\"id\":\"nhcx.error.payr-1504\",\"summary\":\"The scheme payer rejected your answer to its query because the overall case remarks were not sent as text.\",\"title\":\"PAYR-1504: the case remarks in your query response are not text\",\"type\":\"error\"},{\"doc_url\":\"/docs/nhcx/v1/reference/error-codes#payr\",\"id\":\"nhcx.error.payr-1514\",\"summary\":\"The scheme payer rejected your claim because the discharge information entry was not text naming the discharge stage.\",\"title\":\"PAYR-1514: the discharge information entry does not name a discharge stage\",\"type\":\"error\"},{\"doc_url\":\"/docs/nhcx/v1/reference/error-codes#payr\",\"id\":\"nhcx.error.payr-1501\",\"summary\":\"The scheme payer rejected your preauthorisation or claim because the surgery date entry holds a value that is not a date, a period or text.\",\"title\":\"PAYR-1501: the surgery date entry carries the wrong kind of value\",\"type\":\"error\"},{\"doc_url\":\"/docs/nhcx/v1/reference/error-codes#payr\",\"id\":\"nhcx.error.payr-1509\",\"summary\":\"The scheme payer rejected your newborn case because the proof of birth document is missing or unusable.\",\"title\":\"PAYR-1509: the newborn's proof of birth attachment is not valid\",\"type\":\"error\"},{\"doc_url\":\"/docs/nhcx/v1/reference/error-codes#payr\",\"id\":\"nhcx.error.payr-1503\",\"summary\":\"The scheme payer rejected your claim because the death date entry holds a value that is not a date, a period or text.\",\"title\":\"PAYR-1503: the death date entry carries the wrong kind of value\",\"type\":\"error\"},{\"doc_url\":\"/docs/nhcx/v1/reference/error-codes#payr\",\"id\":\"nhcx.error.payr-1502\",\"summary\":\"The scheme payer rejected your preauthorisation or claim because the admission date entry holds a value that is not a date, a period or text.\",\"title\":\"PAYR-1502: the admission date entry carries the wrong kind of value\",\"type\":\"error\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#ims\",\"id\":\"hiecm.glossary.ims\",\"summary\":\"The umbrella term for the software a health facility runs, whichever of HMIS, EMR, LIMS or PMS it happens to be.\",\"title\":\"IMS, information management system\",\"type\":\"glossary\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hip\",\"id\":\"hiecm.glossary.hip\",\"summary\":\"The role held by a system that holds a patient's records and shares them when a consent allows it.\",\"title\":\"HIP, health information provider\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hfr\",\"id\":\"shared.glossary.hfr\",\"summary\":\"The registry of health facilities, which is where a facility is searched for, onboarded and linked to software.\",\"title\":\"HFR, Health Facility Registry\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hrp\",\"id\":\"hiecm.glossary.hrp\",\"summary\":\"Whoever holds the records. It describes custody, which is why it is neither a position nor a direction.\",\"title\":\"HRP, health repository provider\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/fetching-a-recipient-certificate#what-comes-back\",\"id\":\"hiecm.glossary.key-material\",\"summary\":\"The ECDH key pairs that encrypt health records in transit. A fresh pair per transfer, the HIU keeps its own, and the HIP returns its public half alongside th...\",\"title\":\"Key material, who generates it and who keeps it\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#pms\",\"id\":\"hiecm.glossary.pms\",\"summary\":\"The system a pharmacy runs to dispense and to hold stock. A pharmacy uses it both to read the prescription it is dispensing against and to record what it dis...\",\"title\":\"PMS, pharmacy management system\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#lims\",\"id\":\"hiecm.glossary.lims\",\"summary\":\"The system a diagnostic laboratory uses to manage samples, tests and results.\",\"title\":\"LIMS, laboratory information management system, also written LMIS\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#bridge\",\"id\":\"hiecm.glossary.bridge\",\"summary\":\"The set of callback URLs NHA posts to when it answers one of your calls.\",\"title\":\"Bridge, your callback endpoints\",\"type\":\"glossary\"},{\"doc_url\":\"\",\"id\":\"hiecm.glossary.m2\",\"summary\":\"The milestone covering care context linking, discovery and sending records.\",\"title\":\"M2 Health Information Provider: Create and link records\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#ecdh\",\"id\":\"hiecm.glossary.ecdh\",\"summary\":\"Elliptic Curve Diffie-Hellman, used so only the requester holding a valid consent can read what is sent.\",\"title\":\"ECDH, the key exchange that protects records in transit\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#discovery\",\"id\":\"hiecm.glossary.discovery\",\"summary\":\"The step where a patient's app asks a facility whether it holds records for that patient.\",\"title\":\"Discovery, finding whether a facility holds records\",\"type\":\"glossary\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hiu\",\"id\":\"hiecm.glossary.hiu\",\"summary\":\"The role held by a system that asks a patient for consent and then fetches records held elsewhere.\",\"title\":\"HIU, health information user\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/fetching-a-recipient-certificate#what-comes-back\",\"id\":\"hiecm.glossary.key-material\",\"summary\":\"The ECDH key pairs that encrypt health records in transit. A fresh pair per transfer, the HIU keeps its own, and the HIP returns its public half alongside th...\",\"title\":\"Key material, who generates it and who keeps it\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#pms\",\"id\":\"hiecm.glossary.pms\",\"summary\":\"The system a pharmacy runs to dispense and to hold stock. A pharmacy uses it both to read the prescription it is dispensing against and to record what it dis...\",\"title\":\"PMS, pharmacy management system\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#lims\",\"id\":\"hiecm.glossary.lims\",\"summary\":\"The system a diagnostic laboratory uses to manage samples, tests and results.\",\"title\":\"LIMS, laboratory information management system, also written LMIS\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#bridge\",\"id\":\"hiecm.glossary.bridge\",\"summary\":\"The set of callback URLs NHA posts to when it answers one of your calls.\",\"title\":\"Bridge, your callback endpoints\",\"type\":\"glossary\"},{\"doc_url\":\"\",\"id\":\"hiecm.glossary.m3\",\"summary\":\"The milestone covering consent requests and fetching someone else's records.\",\"title\":\"M3 Health Information User: Fetch data with consent\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hrp\",\"id\":\"hiecm.glossary.hrp\",\"summary\":\"Whoever holds the records. It describes custody, which is why it is neither a position nor a direction.\",\"title\":\"HRP, health repository provider\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#purpose-of-use\",\"id\":\"hiecm.glossary.purpose-of-use\",\"summary\":\"The stated reason a consent request gives for wanting records.\",\"title\":\"Purpose of use, why records are being requested\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#ecdh\",\"id\":\"hiecm.glossary.ecdh\",\"summary\":\"Elliptic Curve Diffie-Hellman, used so only the requester holding a valid consent can read what is sent.\",\"title\":\"ECDH, the key exchange that protects records in transit\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hmis\",\"id\":\"hiecm.glossary.hmis\",\"summary\":\"The day to day software of a hospital, under any of its three names. A hospital uses it both to publish its own records and to fetch a patient's history from...\",\"title\":\"HMIS, HIS or HIMS, the software a hospital runs\",\"type\":\"glossary\"}]}\n{\"body\":\"# HIP, health information provider\\n\\n## In plain words\\n\\nA health information provider is the side of an exchange that holds health\\nrecords and hands them over. It is identified by a service id, carried in the\\n`X-HIP-ID` header, which the specification describes as:\\n\\n> Identifier of the health information provider to which the request was\\n> intended\\n\\nA hospital, a lab or a clinic system acts in this role when it shares what it\\nrecorded.\\n\\n## Before you start\\n\\nYou need your bridge registered and its service id in hand, because the\\nheader value is that id rather than a name.\\n\\n## What happens\\n\\nABDM calls `m2_post_v3_consent_request_hip_notify` at your callback URL to\\ntell you a consent covering your records was granted, revoked or expired.\\nYour system acknowledges it by calling\\n`m2_post_consent_v3_request_hip_on_notify`.\\n\\n## How you know it worked\\n\\nYou have understood this when you can say which side of a data exchange holds\\nthe records and which side asks for them.\\n\\n## When it goes wrong\\n\\nBuilding only the request side and leaving the callback endpoints unbuilt,\\nwhich leaves ABDM with nowhere to deliver the notifications this role\\nreceives.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hip\",\"gateway\":\"hiecm\",\"id\":\"hiecm.glossary.hip\",\"milestone\":\"n/a\",\"summary\":\"The role held by a system that holds a patient's records and shares them when a consent allows it.\",\"title\":\"HIP, health information provider\",\"type\":\"glossary\"}\n{\"body\":\"# HIU, health information user\\n\\n## In plain words\\n\\nA health information user is the side of an exchange that wants records it\\ndoes not hold. It is identified by a service id, carried in the `X-HIU-ID`\\nheader, which the specification describes as:\\n\\n> Identifier of the health information user to which the request was intended\\n\\nThe same organisation often holds both roles, one for the records it keeps\\nand one for the records it wants to read.\\n\\n## Before you start\\n\\nYou need a consent request the patient has approved, because this role reads\\nnothing without one.\\n\\n## What happens\\n\\n`m3_post_consent_v3_request_init` raises the consent request that this role\\nbegins every exchange with.\\n\\n## How you know it worked\\n\\nYou have understood this when you can say which role a consent request is\\nraised by and which role it is served against.\\n\\n## When it goes wrong\\n\\nRequesting health information on a consent artefact that has expired or been\\nrevoked, which the specification states must not be done.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hiu\",\"gateway\":\"hiecm\",\"id\":\"hiecm.glossary.hiu\",\"milestone\":\"n/a\",\"summary\":\"The role held by a system that asks a patient for consent and then fetches records held elsewhere.\",\"title\":\"HIU, health information user\",\"type\":\"glossary\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:56:22.884Z",
+  "usage": {
+    "input_tokens": 60,
+    "output_tokens": 1126,
+    "cache_read_input_tokens": 73039,
+    "cache_creation_input_tokens": 11984,
+    "num_turns": 8,
+    "duration_ms": 16779,
+    "cost_usd_equivalent": 0.0369619
+  }
+}

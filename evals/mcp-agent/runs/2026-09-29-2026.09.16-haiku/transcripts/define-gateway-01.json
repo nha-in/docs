@@ -1,0 +1,624 @@
+{
+  "case_id": "define-gateway-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "What is the gateway in ABDM?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01GhC1Hs2msemduepxncjSgf",
+            "Name": "search",
+            "Input": {
+              "query": "gateway ABDM definition architecture",
+              "kind": "atom",
+              "limit": 5
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "gateway ABDM definition architecture",
+            "kind": "atom",
+            "limit": 5
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#abdm",
+                "id": "shared.glossary.abdm",
+                "summary": "India's national programme for connecting health records, identities and facilities across providers.",
+                "title": "ABDM, Ayushman Bharat Digital Mission",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/claim-request",
+                "id": "nhcx.fhir.claim-request",
+                "summary": "The bundle a hospital sends after discharge to claim payment, with the final amounts, the discharge details and the documents the policy requires.",
+                "title": "Claim request bundle",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.terminologies",
+                "summary": "The code systems every claims bundle draws on, where each one is used, and how strictly each binding applies.",
+                "title": "Code systems and value sets used in NHCX bundles",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.pmjay-insurance-plan",
+                "summary": "How the government scheme's policy is laid out as data: specialties, packages, rates, claim rules, required documents and treatment-guideline questionnaires.",
+                "title": "The PMJAY InsurancePlan profile, packages and questionnaires",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/payment-notice-and-acknowledgement",
+                "id": "nhcx.fhir.payment-notice",
+                "summary": "The bundle a payer sends to tell a hospital a claim has been paid, with the amount and bank reference, and the short task the hospital sends back to acknowle...",
+                "title": "PaymentNotice bundle and its acknowledgement",
+                "type": "fhir"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_016ty16gcyFhtnf4r2o1Evbd",
+            "Name": "search",
+            "Input": {
+              "query": "gateway HIE-CM HIP HIU",
+              "kind": "atom",
+              "type": "concept",
+              "limit": 5
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "gateway HIE-CM HIP HIU",
+            "kind": "atom",
+            "type": "concept",
+            "limit": 5
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/gateway#asynchronous-callbacks",
+                "id": "hiecm.concept.asynchronous-callbacks",
+                "summary": "Most HIE-CM calls answer 202 at once and deliver the real answer later as a callback to your registered URL, matched by request id.",
+                "title": "Asynchronous calls and callbacks, why a 200 means very little",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/gateway#gateway-session",
+                "id": "hiecm.concept.gateway-session",
+                "summary": "Every gateway call carries a short lived bearer token from one session endpoint, which identifies your application, not a person.",
+                "title": "The gateway session, the first call in every integration",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/how-it-fits#roles",
+                "id": "hiecm.concept.roles",
+                "summary": "Your role, IMS or PHR, is fixed by the entity your software acts for, while HIP and HIU change with the direction each record moves.",
+                "title": "Roles, which entity your software acts for and which way the record moves",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/consent#consent-in-a-phr-app",
+                "id": "hiecm.concept.consent-in-a-phr-app",
+                "summary": "A personal health record app must let a person see a consent request, change it, allow or refuse it, see what is allowed, and take it back.",
+                "title": "The five things a personal health record application must let a person do with consent",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.beneficiary-consent",
+                "summary": "The patient's data stays sealed from the exchange, research sees only aggregates, individual data needs the patient's consent, and the patient must agree bef...",
+                "title": "Beneficiary consent and data rights",
+                "type": "concept"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01WpEip5BgbjoNAuyNvkDBtK",
+            "Name": "search",
+            "Input": {
+              "query": "what is gateway central registry integration",
+              "kind": "atom",
+              "limit": 5
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "what is gateway central registry integration",
+            "kind": "atom",
+            "limit": 5
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hrp",
+                "id": "hiecm.glossary.hrp",
+                "summary": "Whoever holds the records. It describes custody, which is why it is neither a position nor a direction.",
+                "title": "HRP, health repository provider",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/sandbox#4-note-the-base-urls",
+                "id": "uhi.sandbox.base-urls",
+                "summary": "The UHI Gateway base URL for the sandbox and for production, and the reference EUA and HSPA apps in the sandbox.",
+                "title": "UHI Gateway base URLs for sandbox and production",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-2500",
+                "id": "hiecm.error.abdm-2500",
+                "summary": "The call carried no access token, or a callback answered a request the gateway is not waiting on.",
+                "title": "ABDM-2500, no Authorization header, or no matching request",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/06-m3-post-data-flow-v3-health-information-notify#m3-hiu-data-flow-notify",
+                "id": "hiecm.endpoint.m3-hiu-data-flow-notify",
+                "summary": "After the records arrive, the HIU reports receipt with a session status and a status per care context.",
+                "title": "Notify the gateway that data was received",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/03-m2-post-data-flow-v3-health-information-notify#m2-hip-data-flow-notify",
+                "id": "hiecm.endpoint.m2-hip-data-flow-notify",
+                "summary": "After pushing the records, the HIP reports the transfer with a session status and a status per care context.",
+                "title": "Notify the gateway that a data transfer finished",
+                "type": "endpoint"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_013JBr8o7to4WqV5us2bYb6x",
+            "Name": "search",
+            "Input": {
+              "query": "gateway",
+              "type": "concept",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "gateway",
+            "type": "concept",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/gateway#gateway-session",
+                "id": "hiecm.concept.gateway-session",
+                "summary": "Every gateway call carries a short lived bearer token from one session endpoint, which identifies your application, not a person.",
+                "title": "The gateway session, the first call in every integration",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/services/blood-bank#service-identity",
+                "id": "uhi.concept.blood-bank-service-identity",
+                "summary": "The fixed values every Blood Bank search carries, context.domain nic2008:86906 and fulfillment type BloodStock, and the sandbox reference HSPA.",
+                "title": "Blood Bank service identity",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/concepts/signing#generate-your-keys-and-headers",
+                "id": "uhi.concept.key-generation",
+                "summary": "The Header Generation Utility creates your Ed25519 key pair and signs each payload; share only the public key and keep the private key on your server.",
+                "title": "Generating UHI signing keys and headers",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/callback-authenticity#callback-authenticity",
+                "id": "hiecm.concept.callback-authenticity",
+                "summary": "Anything can post to your callback URL, so require the bearer token and a request id you sent before your handler acts.",
+                "title": "Proving a callback really came from ABDM",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/consent#consent-artefact",
+                "id": "hiecm.concept.consent-artefact",
+                "summary": "Reading somebody else's records needs a consent artefact naming who, what and for how long, and the patient can end it at any time.",
+                "title": "Consent, what it authorises and how it ends",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/encryption#input-encryption",
+                "id": "hiecm.concept.input-encryption",
+                "summary": "Aadhaar numbers, mobile numbers, OTPs and passwords are encrypted with the published certificate before they go in a request body.",
+                "title": "Encrypting sensitive inputs, Aadhaar, mobile, OTP and passwords",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m2-exchange-not-call",
+                "summary": "Every linking call answers twice, so group the outbound call, the wait and the callback into one row keyed by request id.",
+                "title": "The unit of work is an exchange, not a call",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.what-nhcx-is",
+                "summary": "The claims exchange is a switch that carries sealed claim messages between hospitals and insurers; it routes and checks envelopes but never reads or decides ...",
+                "title": "What the National Health Claims Exchange is and what it does not do",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/abha-journey#m1-journey-design",
+                "id": "hiecm.concept.m1-journey-design",
+                "summary": "One suggested ABHA journey for a registration desk, and the platform facts that hold for any journey you design instead.",
+                "title": "A suggested ABHA journey, and what holds if you design your own",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/uhi/v1#what-the-uhi-gateway-does",
+                "id": "uhi.concept.gateway-role",
+                "summary": "The UHI Gateway passes a patient's search to every provider offering the service and relays each answer back; booking goes direct.",
+                "title": "What the UHI Gateway does",
+                "type": "concept"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01PBp5F3fjBSRu7ydDRkEcht",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.concept.gateway-session"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.concept.gateway-session"
+          },
+          "output": {
+            "body": "# The gateway session, the first call in every integration\n\n## In plain words\n\nOne endpoint issues the token every other call carries. It is the call [M1](/docs/hiecm/v3/getting-started/glossary#m1) uses. [M4](/docs/hiecm/v3/getting-started/glossary#m4) calls carry their own bearer token instead.\n\n**POST** `/api/hiecm/gateway/v3/sessions`\n\nHeaders:\n\n| Header | Example value | What it is |\n|---|---|---|\n| `REQUEST-ID` | `18235d89-cb13-479d-ad71-7a57d5f669a8` | A fresh UUID for this call |\n| `TIMESTAMP` | `2022-10-06T15:10:00.587Z` | The time you made the call, ISO 8601 |\n| `X-CM-ID` | `sbx` | The consent manager. Use `sbx` for sandbox |\n| `Content-Type` | `application/json` | |\n\nNo `Authorization` header on this call. It is the one call with no token yet.\n\nBody:\n\n```json\n{\n  \"clientId\": \"<CLIENT_ID_FROM_SANDBOX_SIGNUP>\",\n  \"clientSecret\": \"<CLIENT_SECRET_FROM_SANDBOX_SIGNUP>\",\n  \"grantType\": \"client_credentials\"\n}\n```\n\nSend the client id you were issued.\n\nResponse shape:\n\n```json\n{\n  \"accessToken\": \"<JWT>\",\n  \"expiresIn\": 1200,\n  \"refreshExpiresIn\": 1800,\n  \"refreshToken\": \"<JWT>\",\n  \"tokenType\": \"bearer\"\n}\n```\n\nThe response carries the token in `accessToken`.\n\nSend the token back as `Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>` on every other call. Headers per call, and the second token M1 login issues, are on [authentication](/docs/hiecm/v3/reference/authentication). Interactive: [gateway API reference](/reference/hiecm-gateway).\n\nThe session token says which application is calling, not which person. [M1](/docs/hiecm/v3/milestones/m1) profile calls also carry a user token in `X-token`, which login returns.\n\n## Before you start\n\nA client id and client secret from sandbox registration, held on your server. Never ship the secret in a mobile or browser build.\n\n## What happens\n\nCall the session endpoint with `clientId`, `clientSecret` and `grantType` set to `client_credentials`. Send the `accessToken` it returns as `Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>` on every other gateway call. Renew before `expiresIn` runs out rather than on a fixed timer.\n\n## How you know it worked\n\nThe response carries `accessToken` and `expiresIn`, and the next gateway call with that token is not refused as unauthorised.\n\n## When it goes wrong\n\nEvery call returns 401: see [everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401). A profile call is refused while the session token is fresh: the `X-token` is missing, or it holds the short lived token from login verify, which the verify user call exchanges for the user token. `ABDM-1094` reads X-token expired, and the token sent is often the wrong kind rather than an old one.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/concepts/gateway#gateway-session",
+            "gateway": "hiecm",
+            "id": "hiecm.concept.gateway-session",
+            "milestone": "M1",
+            "summary": "Every gateway call carries a short lived bearer token from one session endpoint, which identifies your application, not a person.",
+            "title": "The gateway session, the first call in every integration",
+            "type": "concept"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01CyvjyztQnAb6JiJHw6yczJ",
+            "Name": "get",
+            "Input": {
+              "id": "uhi.concept.gateway-role"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "uhi.concept.gateway-role"
+          },
+          "output": {
+            "body": "# What the UHI Gateway does\n\n## In plain words\n\nThe Gateway works like a switchboard for searches. When a patient searches, the\napp sends one request to the Gateway. The Gateway checks who sent it, passes it\nto every provider that offers that service, and passes each answer back. The\npatient sees results from many providers at once.\n\nThe Gateway only helps the patient find. Once the patient picks a provider, the\napp and that provider talk to each other directly to book, track and cancel.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/uhi/v1#what-the-uhi-gateway-does",
+            "gateway": "uhi",
+            "id": "uhi.concept.gateway-role",
+            "milestone": "n/a",
+            "summary": "The UHI Gateway passes a patient's search to every provider offering the service and relays each answer back; booking goes direct.",
+            "title": "What the UHI Gateway does",
+            "type": "concept"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_013WexgH56dRNfNCzxMBVwvT",
+            "Name": "search",
+            "Input": {
+              "query": "gateway central registry middleware broker",
+              "type": "glossary",
+              "limit": 5
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "gateway central registry middleware broker",
+            "type": "glossary",
+            "limit": 5
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#gateway",
+                "id": "shared.glossary.gateway",
+                "summary": "The component that routes calls between participants so they never call each other directly. It is not the consent manager, and no health record passes throu...",
+                "title": "Gateway, the routing layer between participants",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hie-cm",
+                "id": "shared.glossary.hie-cm",
+                "summary": "The ABDM building block that holds ABHA addresses, the links to each address's records, and the consent that authorises sharing them. It is not the gateway.",
+                "title": "HIE-CM, Health Information Exchange and Consent Manager",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#nhcx",
+                "id": "shared.glossary.nhcx",
+                "summary": "The gateway for insurance claims, separate from HIE-CM and UHI.",
+                "title": "NHCX, the National Health Claims Exchange",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/build-it-well#validate-before-you-send",
+                "id": "shared.glossary.request-id",
+                "summary": "A UUID you generate for one request, carried in the REQUEST-ID header so the call and everything that follows from it can be traced.",
+                "title": "REQUEST-ID, the request correlation header",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/jwe-message-format#timestamp",
+                "id": "shared.glossary.timestamp-header",
+                "summary": "The moment you sent the request, written as an ISO 8601 date and time and carried in the TIMESTAMP header.",
+                "title": "TIMESTAMP, the request time header",
+                "type": "glossary"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01PvjZR2t62kC4Nuiot7TGxC",
+            "Name": "get",
+            "Input": {
+              "id": "shared.glossary.gateway"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "shared.glossary.gateway"
+          },
+          "output": {
+            "body": "# Gateway, the routing layer between participants\n\n## In plain words\n\nNHA's routing layer: you do not call another participant directly, you\ncall the gateway, it forwards your request, and the reply arrives at\nyour [bridge](bridge.md) as a separate inbound call. You get a session\ntoken first, by posting your client id and client secret to\n`/api/hiecm/gateway/v3/sessions`. The sandbox host for that path is\n`https://dev.abdm.gov.in`. Take the\nhost from your onboarding documentation and keep it in configuration.\n\nNHA's own description is the hub that mediates and connects consent\nmanagers, health repositories and requesters, and whose job is discovery\nand routing.\n\n## Before you start\n\nNothing. A glossary entry assumes no prior reading.\n\n## What happens\n\nThe gateway is not the [consent manager](hie-cm.md). The two are\nseparate components and the distinction decides where a call goes:\n\n| | Gateway | HIE-CM |\n|---|---|---|\n| What it is | The hub of the network | One participant on it |\n| How many | One | One today, several by design |\n| Identified by | The host you call | A domain, the part after the `@` |\n| Holds consents | No | Yes |\n| Holds records | No | No |\n\nHealth records do not pass through the gateway. When a provider hands\ndata to a requester it pushes it straight to the requester's own URL,\nand the gateway is told only that the transfer happened.\n\nOn [UHI](uhi.md) the gateway is the UHI Gateway, and it routes discovery\nonly. It authenticates each `search`, broadcasts it to every\n[HSPA](hspa.md) registered for the `context.domain`, and relays each\n`on_search` to the [EUA](eua.md)'s `consumer_uri`. From `init` onwards\nthe EUA and the HSPA call each other directly, and the UHI Gateway never\nsees those calls. A Physical Consultation HSPA sends it an exact audit\ncopy of `on_confirm`, `on_status`, `on_update` and `on_cancel` instead.\nIts sandbox host is `https://uhigatewaysandbox.abdm.gov.in`. See\n[Routes](/docs/uhi/v1/concepts/routes).\n\n## How you know it worked\n\nYou have understood this when you can say why two participants never hold each other's addresses, and which of the gateway or the consent manager a given header addresses.\n\n## When it goes wrong\n\nExpecting a synchronous answer. The gateway acknowledges your call and\nthe real answer arrives later at your bridge.\n\nSending a UHI booking call to the UHI Gateway. Only `search` and\n`on_search` go through it. Send `init` and every later call to the other\nparty's `provider_uri` or `consumer_uri`.\n\nReading \"the gateway\" in NHA material as a synonym for the consent\nmanager. Some of NHA's own pages blur them. When a document says gateway\nand means routing, it is the hub. When it says gateway and means\nconsent, it means the HIE-CM.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/getting-started/glossary#gateway",
+            "gateway": "shared",
+            "id": "shared.glossary.gateway",
+            "milestone": "n/a",
+            "summary": "The component that routes calls between participants so they never call each other directly. It is not the consent manager, and no health record passes through it.",
+            "title": "Gateway, the routing layer between participants",
+            "type": "glossary"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "A **gateway** in ABDM is **NHA's routing layer that mediates connections between participants** — you never call another participant directly. Instead, you call the gateway, it forwards your request, and the reply comes back to your bridge as a separate inbound call.\n\nKey points:\n\n**What it does:**\n- Routes API calls between participants (HIPs, HIUs, apps, consent managers)\n- NOT the consent manager — these are separate components\n- Health records do NOT pass through the gateway; they're pushed directly between participants\n- Handles discovery, routing, and asynchronous callbacks\n\n**How it works:**\n1. Get a session token by posting your `clientId` and `clientSecret` to `/api/hiecm/gateway/v3/sessions`\n2. Use that token on all subsequent calls to the gateway\n3. The gateway forwards your request and returns a 202 (acknowledged)\n4. The real answer arrives later as a callback to your registered bridge URL\n\n**Types of gateways in ABDM:**\n- **HIE-CM Gateway** — routes consent and health information exchange calls (identified by the host URL you call)\n- **UHI Gateway** — routes only discovery/search calls; booking and follow-on calls go direct between provider and app\n- **NHCX Gateway** — routes insurance claims (separate from HIE-CM and UHI)\n\nThe distinction between gateway and HIE-CM matters for routing: the **gateway** is the hub identified by the host URL, while **HIE-CM** is one participant identified by a domain (the part after the `@`).\n\nSee the [gateway glossary entry](https://abdm.gov.in/docs/hiecm/v3/getting-started/glossary#gateway) and [gateway session concept](https://abdm.gov.in/docs/hiecm/v3/concepts/gateway#gateway-session) in the ABDM developer portal.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "A **gateway** in ABDM is **NHA's routing layer that mediates connections between participants** — you never call another participant directly. Instead, you call the gateway, it forwards your request, and the reply comes back to your bridge as a separate inbound call.\n\nKey points:\n\n**What it does:**\n- Routes API calls between participants (HIPs, HIUs, apps, consent managers)\n- NOT the consent manager — these are separate components\n- Health records do NOT pass through the gateway; they're pushed directly between participants\n- Handles discovery, routing, and asynchronous callbacks\n\n**How it works:**\n1. Get a session token by posting your `clientId` and `clientSecret` to `/api/hiecm/gateway/v3/sessions`\n2. Use that token on all subsequent calls to the gateway\n3. The gateway forwards your request and returns a 202 (acknowledged)\n4. The real answer arrives later as a callback to your registered bridge URL\n\n**Types of gateways in ABDM:**\n- **HIE-CM Gateway** — routes consent and health information exchange calls (identified by the host URL you call)\n- **UHI Gateway** — routes only discovery/search calls; booking and follow-on calls go direct between provider and app\n- **NHCX Gateway** — routes insurance claims (separate from HIE-CM and UHI)\n\nThe distinction between gateway and HIE-CM matters for routing: the **gateway** is the hub identified by the host URL, while **HIE-CM** is one participant identified by a domain (the part after the `@`).\n\nSee the [gateway glossary entry](https://abdm.gov.in/docs/hiecm/v3/getting-started/glossary#gateway) and [gateway session concept](https://abdm.gov.in/docs/hiecm/v3/concepts/gateway#gateway-session) in the ABDM developer portal.",
+  "sources": [
+    {
+      "id": "hiecm.concept.gateway-session",
+      "title": "The gateway session, the first call in every integration",
+      "url": "/docs/hiecm/v3/concepts/gateway#gateway-session"
+    },
+    {
+      "id": "uhi.concept.gateway-role",
+      "title": "What the UHI Gateway does",
+      "url": "/docs/uhi/v1#what-the-uhi-gateway-does"
+    },
+    {
+      "id": "shared.glossary.gateway",
+      "title": "Gateway, the routing layer between participants",
+      "url": "/docs/hiecm/v3/getting-started/glossary#gateway"
+    },
+    {
+      "id": "shared.glossary.nhcx",
+      "title": "NHCX, the National Health Claims Exchange",
+      "url": "/docs/hiecm/v3/getting-started/glossary#nhcx"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#abdm\",\"id\":\"shared.glossary.abdm\",\"summary\":\"India's national programme for connecting health records, identities and facilities across providers.\",\"title\":\"ABDM, Ayushman Bharat Digital Mission\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/claim-request\",\"id\":\"nhcx.fhir.claim-request\",\"summary\":\"The bundle a hospital sends after discharge to claim payment, with the final amounts, the discharge details and the documents the policy requires.\",\"title\":\"Claim request bundle\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.terminologies\",\"summary\":\"The code systems every claims bundle draws on, where each one is used, and how strictly each binding applies.\",\"title\":\"Code systems and value sets used in NHCX bundles\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.pmjay-insurance-plan\",\"summary\":\"How the government scheme's policy is laid out as data: specialties, packages, rates, claim rules, required documents and treatment-guideline questionnaires.\",\"title\":\"The PMJAY InsurancePlan profile, packages and questionnaires\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/payment-notice-and-acknowledgement\",\"id\":\"nhcx.fhir.payment-notice\",\"summary\":\"The bundle a payer sends to tell a hospital a claim has been paid, with the amount and bank reference, and the short task the hospital sends back to acknowle...\",\"title\":\"PaymentNotice bundle and its acknowledgement\",\"type\":\"fhir\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/concepts/gateway#asynchronous-callbacks\",\"id\":\"hiecm.concept.asynchronous-callbacks\",\"summary\":\"Most HIE-CM calls answer 202 at once and deliver the real answer later as a callback to your registered URL, matched by request id.\",\"title\":\"Asynchronous calls and callbacks, why a 200 means very little\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/gateway#gateway-session\",\"id\":\"hiecm.concept.gateway-session\",\"summary\":\"Every gateway call carries a short lived bearer token from one session endpoint, which identifies your application, not a person.\",\"title\":\"The gateway session, the first call in every integration\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/how-it-fits#roles\",\"id\":\"hiecm.concept.roles\",\"summary\":\"Your role, IMS or PHR, is fixed by the entity your software acts for, while HIP and HIU change with the direction each record moves.\",\"title\":\"Roles, which entity your software acts for and which way the record moves\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/consent#consent-in-a-phr-app\",\"id\":\"hiecm.concept.consent-in-a-phr-app\",\"summary\":\"A personal health record app must let a person see a consent request, change it, allow or refuse it, see what is allowed, and take it back.\",\"title\":\"The five things a personal health record application must let a person do with consent\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.beneficiary-consent\",\"summary\":\"The patient's data stays sealed from the exchange, research sees only aggregates, individual data needs the patient's consent, and the patient must agree bef...\",\"title\":\"Beneficiary consent and data rights\",\"type\":\"concept\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hrp\",\"id\":\"hiecm.glossary.hrp\",\"summary\":\"Whoever holds the records. It describes custody, which is why it is neither a position nor a direction.\",\"title\":\"HRP, health repository provider\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/sandbox#4-note-the-base-urls\",\"id\":\"uhi.sandbox.base-urls\",\"summary\":\"The UHI Gateway base URL for the sandbox and for production, and the reference EUA and HSPA apps in the sandbox.\",\"title\":\"UHI Gateway base URLs for sandbox and production\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-2500\",\"id\":\"hiecm.error.abdm-2500\",\"summary\":\"The call carried no access token, or a callback answered a request the gateway is not waiting on.\",\"title\":\"ABDM-2500, no Authorization header, or no matching request\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/06-m3-post-data-flow-v3-health-information-notify#m3-hiu-data-flow-notify\",\"id\":\"hiecm.endpoint.m3-hiu-data-flow-notify\",\"summary\":\"After the records arrive, the HIU reports receipt with a session status and a status per care context.\",\"title\":\"Notify the gateway that data was received\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/03-m2-post-data-flow-v3-health-information-notify#m2-hip-data-flow-notify\",\"id\":\"hiecm.endpoint.m2-hip-data-flow-notify\",\"summary\":\"After pushing the records, the HIP reports the transfer with a session status and a status per care context.\",\"title\":\"Notify the gateway that a data transfer finished\",\"type\":\"endpoint\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/concepts/gateway#gateway-session\",\"id\":\"hiecm.concept.gateway-session\",\"summary\":\"Every gateway call carries a short lived bearer token from one session endpoint, which identifies your application, not a person.\",\"title\":\"The gateway session, the first call in every integration\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/services/blood-bank#service-identity\",\"id\":\"uhi.concept.blood-bank-service-identity\",\"summary\":\"The fixed values every Blood Bank search carries, context.domain nic2008:86906 and fulfillment type BloodStock, and the sandbox reference HSPA.\",\"title\":\"Blood Bank service identity\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1/concepts/signing#generate-your-keys-and-headers\",\"id\":\"uhi.concept.key-generation\",\"summary\":\"The Header Generation Utility creates your Ed25519 key pair and signs each payload; share only the public key and keep the private key on your server.\",\"title\":\"Generating UHI signing keys and headers\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/callback-authenticity#callback-authenticity\",\"id\":\"hiecm.concept.callback-authenticity\",\"summary\":\"Anything can post to your callback URL, so require the bearer token and a request id you sent before your handler acts.\",\"title\":\"Proving a callback really came from ABDM\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/consent#consent-artefact\",\"id\":\"hiecm.concept.consent-artefact\",\"summary\":\"Reading somebody else's records needs a consent artefact naming who, what and for how long, and the patient can end it at any time.\",\"title\":\"Consent, what it authorises and how it ends\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/encryption#input-encryption\",\"id\":\"hiecm.concept.input-encryption\",\"summary\":\"Aadhaar numbers, mobile numbers, OTPs and passwords are encrypted with the published certificate before they go in a request body.\",\"title\":\"Encrypting sensitive inputs, Aadhaar, mobile, OTP and passwords\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m2-exchange-not-call\",\"summary\":\"Every linking call answers twice, so group the outbound call, the wait and the callback into one row keyed by request id.\",\"title\":\"The unit of work is an exchange, not a call\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.what-nhcx-is\",\"summary\":\"The claims exchange is a switch that carries sealed claim messages between hospitals and insurers; it routes and checks envelopes but never reads or decides ...\",\"title\":\"What the National Health Claims Exchange is and what it does not do\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/abha-journey#m1-journey-design\",\"id\":\"hiecm.concept.m1-journey-design\",\"summary\":\"One suggested ABHA journey for a registration desk, and the platform facts that hold for any journey you design instead.\",\"title\":\"A suggested ABHA journey, and what holds if you design your own\",\"type\":\"concept\"},{\"doc_url\":\"/docs/uhi/v1#what-the-uhi-gateway-does\",\"id\":\"uhi.concept.gateway-role\",\"summary\":\"The UHI Gateway passes a patient's search to every provider offering the service and relays each answer back; booking goes direct.\",\"title\":\"What the UHI Gateway does\",\"type\":\"concept\"}]}\n{\"body\":\"# The gateway session, the first call in every integration\\n\\n## In plain words\\n\\nOne endpoint issues the token every other call carries. It is the call [M1](/docs/hiecm/v3/getting-started/glossary#m1) uses. [M4](/docs/hiecm/v3/getting-started/glossary#m4) calls carry their own bearer token instead.\\n\\n**POST** `/api/hiecm/gateway/v3/sessions`\\n\\nHeaders:\\n\\n| Header | Example value | What it is |\\n|---|---|---|\\n| `REQUEST-ID` | `18235d89-cb13-479d-ad71-7a57d5f669a8` | A fresh UUID for this call |\\n| `TIMESTAMP` | `2022-10-06T15:10:00.587Z` | The time you made the call, ISO 8601 |\\n| `X-CM-ID` | `sbx` | The consent manager. Use `sbx` for sandbox |\\n| `Content-Type` | `application/json` | |\\n\\nNo `Authorization` header on this call. It is the one call with no token yet.\\n\\nBody:\\n\\n```json\\n{\\n  \\\"clientId\\\": \\\"<CLIENT_ID_FROM_SANDBOX_SIGNUP>\\\",\\n  \\\"clientSecret\\\": \\\"<CLIENT_SECRET_FROM_SANDBOX_SIGNUP>\\\",\\n  \\\"grantType\\\": \\\"client_credentials\\\"\\n}\\n```\\n\\nSend the client id you were issued.\\n\\nResponse shape:\\n\\n```json\\n{\\n  \\\"accessToken\\\": \\\"<JWT>\\\",\\n  \\\"expiresIn\\\": 1200,\\n  \\\"refreshExpiresIn\\\": 1800,\\n  \\\"refreshToken\\\": \\\"<JWT>\\\",\\n  \\\"tokenType\\\": \\\"bearer\\\"\\n}\\n```\\n\\nThe response carries the token in `accessToken`.\\n\\nSend the token back as `Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>` on every other call. Headers per call, and the second token M1 login issues, are on [authentication](/docs/hiecm/v3/reference/authentication). Interactive: [gateway API reference](/reference/hiecm-gateway).\\n\\nThe session token says which application is calling, not which person. [M1](/docs/hiecm/v3/milestones/m1) profile calls also carry a user token in `X-token`, which login returns.\\n\\n## Before you start\\n\\nA client id and client secret from sandbox registration, held on your server. Never ship the secret in a mobile or browser build.\\n\\n## What happens\\n\\nCall the session endpoint with `clientId`, `clientSecret` and `grantType` set to `client_credentials`. Send the `accessToken` it returns as `Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>` on every other gateway call. Renew before `expiresIn` runs out rather than on a fixed timer.\\n\\n## How you know it worked\\n\\nThe response carries `accessToken` and `expiresIn`, and the next gateway call with that token is not refused as unauthorised.\\n\\n## When it goes wrong\\n\\nEvery call returns 401: see [everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401). A profile call is refused while the session token is fresh: the `X-token` is missing, or it holds the short lived token from login verify, which the verify user call exchanges for the user token. `ABDM-1094` reads X-token expired, and the token sent is often the wrong kind rather than an old one.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/concepts/gateway#gateway-session\",\"gateway\":\"hiecm\",\"id\":\"hiecm.concept.gateway-session\",\"milestone\":\"M1\",\"summary\":\"Every gateway call carries a short lived bearer token from one session endpoint, which identifies your application, not a person.\",\"title\":\"The gateway session, the first call in every integration\",\"type\":\"concept\"}\n{\"body\":\"# What the UHI Gateway does\\n\\n## In plain words\\n\\nThe Gateway works like a switchboard for searches. When a patient searches, the\\napp sends one request to the Gateway. The Gateway checks who sent it, passes it\\nto every provider that offers that service, and passes each answer back. The\\npatient sees results from many providers at once.\\n\\nThe Gateway only helps the patient find. Once the patient picks a provider, the\\napp and that provider talk to each other directly to book, track and cancel.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/uhi/v1#what-the-uhi-gateway-does\",\"gateway\":\"uhi\",\"id\":\"uhi.concept.gateway-role\",\"milestone\":\"n/a\",\"summary\":\"The UHI Gateway passes a patient's search to every provider offering the service and relays each answer back; booking goes direct.\",\"title\":\"What the UHI Gateway does\",\"type\":\"concept\"}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#gateway\",\"id\":\"shared.glossary.gateway\",\"summary\":\"The component that routes calls between participants so they never call each other directly. It is not the consent manager, and no health record passes throu...\",\"title\":\"Gateway, the routing layer between participants\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hie-cm\",\"id\":\"shared.glossary.hie-cm\",\"summary\":\"The ABDM building block that holds ABHA addresses, the links to each address's records, and the consent that authorises sharing them. It is not the gateway.\",\"title\":\"HIE-CM, Health Information Exchange and Consent Manager\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#nhcx\",\"id\":\"shared.glossary.nhcx\",\"summary\":\"The gateway for insurance claims, separate from HIE-CM and UHI.\",\"title\":\"NHCX, the National Health Claims Exchange\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/build-it-well#validate-before-you-send\",\"id\":\"shared.glossary.request-id\",\"summary\":\"A UUID you generate for one request, carried in the REQUEST-ID header so the call and everything that follows from it can be traced.\",\"title\":\"REQUEST-ID, the request correlation header\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/jwe-message-format#timestamp\",\"id\":\"shared.glossary.timestamp-header\",\"summary\":\"The moment you sent the request, written as an ISO 8601 date and time and carried in the TIMESTAMP header.\",\"title\":\"TIMESTAMP, the request time header\",\"type\":\"glossary\"}]}\n{\"body\":\"# Gateway, the routing layer between participants\\n\\n## In plain words\\n\\nNHA's routing layer: you do not call another participant directly, you\\ncall the gateway, it forwards your request, and the reply arrives at\\nyour [bridge](bridge.md) as a separate inbound call. You get a session\\ntoken first, by posting your client id and client secret to\\n`/api/hiecm/gateway/v3/sessions`. The sandbox host for that path is\\n`https://dev.abdm.gov.in`. Take the\\nhost from your onboarding documentation and keep it in configuration.\\n\\nNHA's own description is the hub that mediates and connects consent\\nmanagers, health repositories and requesters, and whose job is discovery\\nand routing.\\n\\n## Before you start\\n\\nNothing. A glossary entry assumes no prior reading.\\n\\n## What happens\\n\\nThe gateway is not the [consent manager](hie-cm.md). The two are\\nseparate components and the distinction decides where a call goes:\\n\\n| | Gateway | HIE-CM |\\n|---|---|---|\\n| What it is | The hub of the network | One participant on it |\\n| How many | One | One today, several by design |\\n| Identified by | The host you call | A domain, the part after the `@` |\\n| Holds consents | No | Yes |\\n| Holds records | No | No |\\n\\nHealth records do not pass through the gateway. When a provider hands\\ndata to a requester it pushes it straight to the requester's own URL,\\nand the gateway is told only that the transfer happened.\\n\\nOn [UHI](uhi.md) the gateway is the UHI Gateway, and it routes discovery\\nonly. It authenticates each `search`, broadcasts it to every\\n[HSPA](hspa.md) registered for the `context.domain`, and relays each\\n`on_search` to the [EUA](eua.md)'s `consumer_uri`. From `init` onwards\\nthe EUA and the HSPA call each other directly, and the UHI Gateway never\\nsees those calls. A Physical Consultation HSPA sends it an exact audit\\ncopy of `on_confirm`, `on_status`, `on_update` and `on_cancel` instead.\\nIts sandbox host is `https://uhigatewaysandbox.abdm.gov.in`. See\\n[Routes](/docs/uhi/v1/concepts/routes).\\n\\n## How you know it worked\\n\\nYou have understood this when you can say why two participants never hold each other's addresses, and which of the gateway or the consent manager a given header addresses.\\n\\n## When it goes wrong\\n\\nExpecting a synchronous answer. The gateway acknowledges your call and\\nthe real answer arrives later at your bridge.\\n\\nSending a UHI booking call to the UHI Gateway. Only `search` and\\n`on_search` go through it. Send `init` and every later call to the other\\nparty's `provider_uri` or `consumer_uri`.\\n\\nReading \\\"the gateway\\\" in NHA material as a synonym for the consent\\nmanager. Some of NHA's own pages blur them. When a document says gateway\\nand means routing, it is the hub. When it says gateway and means\\nconsent, it means the HIE-CM.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#gateway\",\"gateway\":\"shared\",\"id\":\"shared.glossary.gateway\",\"milestone\":\"n/a\",\"summary\":\"The component that routes calls between participants so they never call each other directly. It is not the consent manager, and no health record passes through it.\",\"title\":\"Gateway, the routing layer between participants\",\"type\":\"glossary\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:58:45.505Z",
+  "usage": {
+    "input_tokens": 70,
+    "output_tokens": 1550,
+    "cache_read_input_tokens": 85550,
+    "cache_creation_input_tokens": 12198,
+    "num_turns": 9,
+    "duration_ms": 22620,
+    "cost_usd_equivalent": 0.040771
+  }
+}

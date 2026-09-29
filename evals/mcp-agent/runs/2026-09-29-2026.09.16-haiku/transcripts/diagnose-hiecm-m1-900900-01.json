@@ -1,0 +1,132 @@
+{
+  "case_id": "diagnose-hiecm-m1-900900-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "getting HTTP 500 900900 Unclassified Authentication Failure on the abha profile account api"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "Let me decode that error code for you.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01SoPTjHeUGYXEmfQZcsCSSM",
+            "Name": "decode_error",
+            "Input": {
+              "input": "900900"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "decode_error",
+          "input": {
+            "input": "900900"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "codes": [
+              "900900"
+            ],
+            "matches": {
+              "900900": {
+                "atoms": [
+                  {
+                    "body": "# 900900, authentication failed without a reason\n\n## In plain words\n\nThe [ABHA](/docs/hiecm/v3/getting-started/glossary#abha) service returns `900900` with HTTP 500 and the message \"Unclassified Authentication Failure\". The `description` field names the API that refused the call. Authentication failed, and the response does not say which credential was at fault.\n\n## What happens\n\nThe M1 examples return it where the access token is not valid. Many M1 calls take two tokens, the access token in `Authorization` and the person's token in `X-token`, so either can be the cause.\n\n## When it goes wrong\n\nCheck both tokens. `Authorization` must carry a current access token from the session call. `X-token`, where the call takes one, must be the token issued when this person logged in. If both are current, confirm your client is allowed to call this API.",
+                    "id": "hiecm.error.900900",
+                    "summary": "The ABHA service refused the call as an unclassified authentication failure, so check both the access token and the person's token.",
+                    "title": "900900, authentication failed without a reason"
+                  }
+                ],
+                "source": "specification response example",
+                "specification": [
+                  {
+                    "code": "900900",
+                    "message": "Unclassified Authentication Failure",
+                    "http": "500",
+                    "operation_id": "m1_post_v3_enrollment_auth_byabdm_mobile_verify_create_ab_091285",
+                    "module": "m1"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "The error code `900900` is an **unclassified authentication failure** from the ABHA service. The response doesn't tell you which credential failed.\n\nFor ABHA profile account API calls, you have two tokens to check:\n\n1. **`Authorization` header** — must be a current access token from your session call (M1)\n2. **`X-token` header** — must be the token issued when this person logged in\n\n**Troubleshoot:**\n- Verify both tokens are current and not expired\n- Confirm your client has permission to call this ABHA API endpoint\n- If you're unsure which token is invalid, try refreshing both\n\nDo you need help with which M1 endpoint to call to refresh tokens, or do you want to paste the request you're making so I can check the headers?",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "The error code `900900` is an **unclassified authentication failure** from the ABHA service. The response doesn't tell you which credential failed.\n\nFor ABHA profile account API calls, you have two tokens to check:\n\n1. **`Authorization` header** — must be a current access token from your session call (M1)\n2. **`X-token` header** — must be the token issued when this person logged in\n\n**Troubleshoot:**\n- Verify both tokens are current and not expired\n- Confirm your client has permission to call this ABHA API endpoint\n- If you're unsure which token is invalid, try refreshing both\n\nDo you need help with which M1 endpoint to call to refresh tokens, or do you want to paste the request you're making so I can check the headers?",
+  "sources": [
+    {
+      "id": "hiecm.error.900900",
+      "title": "900900, authentication failed without a reason",
+      "url": ""
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"codes\":[\"900900\"],\"matches\":{\"900900\":{\"atoms\":[{\"body\":\"# 900900, authentication failed without a reason\\n\\n## In plain words\\n\\nThe [ABHA](/docs/hiecm/v3/getting-started/glossary#abha) service returns `900900` with HTTP 500 and the message \\\"Unclassified Authentication Failure\\\". The `description` field names the API that refused the call. Authentication failed, and the response does not say which credential was at fault.\\n\\n## What happens\\n\\nThe M1 examples return it where the access token is not valid. Many M1 calls take two tokens, the access token in `Authorization` and the person's token in `X-token`, so either can be the cause.\\n\\n## When it goes wrong\\n\\nCheck both tokens. `Authorization` must carry a current access token from the session call. `X-token`, where the call takes one, must be the token issued when this person logged in. If both are current, confirm your client is allowed to call this API.\",\"id\":\"hiecm.error.900900\",\"summary\":\"The ABHA service refused the call as an unclassified authentication failure, so check both the access token and the person's token.\",\"title\":\"900900, authentication failed without a reason\"}],\"source\":\"specification response example\",\"specification\":[{\"code\":\"900900\",\"message\":\"Unclassified Authentication Failure\",\"http\":\"500\",\"operation_id\":\"m1_post_v3_enrollment_auth_byabdm_mobile_verify_create_ab_091285\",\"module\":\"m1\"}]}}}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:59:08.234Z",
+  "usage": {
+    "input_tokens": 20,
+    "output_tokens": 523,
+    "cache_read_input_tokens": 16786,
+    "cache_creation_input_tokens": 5644,
+    "num_turns": 2,
+    "duration_ms": 6212,
+    "cost_usd_equivalent": 0.0156016
+  }
+}

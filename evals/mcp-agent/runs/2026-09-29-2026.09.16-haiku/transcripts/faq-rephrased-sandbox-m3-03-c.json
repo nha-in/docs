@@ -1,0 +1,264 @@
+{
+  "case_id": "faq-rephrased-sandbox-m3-03-c",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "fhir samples"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01GNbhCfJPHRFWLGLm1bFh9K",
+            "Name": "search",
+            "Input": {
+              "query": "fhir examples samples",
+              "kind": "fhir_profile",
+              "limit": 25
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "fhir examples samples",
+            "kind": "fhir_profile",
+            "limit": 25
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "profiles": [
+              {
+                "record_type": "DiagnosticReport",
+                "profile_name": "DiagnosticReportRecord",
+                "url": "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DiagnosticReportRecord",
+                "title": ""
+              },
+              {
+                "record_type": "DischargeSummary",
+                "profile_name": "DischargeSummaryRecord",
+                "url": "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DischargeSummaryRecord",
+                "title": ""
+              },
+              {
+                "record_type": "",
+                "profile_name": "DocumentBundle",
+                "url": "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DocumentBundle",
+                "title": ""
+              },
+              {
+                "record_type": "HealthDocumentRecord",
+                "profile_name": "HealthDocumentRecord",
+                "url": "https://nrces.in/ndhm/fhir/r4/StructureDefinition/HealthDocumentRecord",
+                "title": ""
+              },
+              {
+                "record_type": "ImmunizationRecord",
+                "profile_name": "ImmunizationRecord",
+                "url": "https://nrces.in/ndhm/fhir/r4/StructureDefinition/ImmunizationRecord",
+                "title": ""
+              },
+              {
+                "record_type": "Invoice",
+                "profile_name": "InvoiceRecord",
+                "url": "https://nrces.in/ndhm/fhir/r4/StructureDefinition/InvoiceRecord",
+                "title": ""
+              },
+              {
+                "record_type": "OPConsultation",
+                "profile_name": "OPConsultRecord",
+                "url": "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord",
+                "title": ""
+              },
+              {
+                "record_type": "Prescription",
+                "profile_name": "PrescriptionRecord",
+                "url": "https://nrces.in/ndhm/fhir/r4/StructureDefinition/PrescriptionRecord",
+                "title": ""
+              },
+              {
+                "record_type": "WellnessRecord",
+                "profile_name": "WellnessRecord",
+                "url": "https://nrces.in/ndhm/fhir/r4/StructureDefinition/WellnessRecord",
+                "title": ""
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_011gjGjAtKirK3witnpEtbJH",
+            "Name": "search",
+            "Input": {
+              "query": "fhir example",
+              "kind": "atom",
+              "type": "fhir",
+              "limit": 25
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "fhir example",
+            "kind": "atom",
+            "type": "fhir",
+            "limit": 25
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.terminologies",
+                "summary": "The code systems every claims bundle draws on, where each one is used, and how strictly each binding applies.",
+                "title": "Code systems and value sets used in NHCX bundles",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.abha-identifiers",
+                "summary": "NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...",
+                "title": "Carrying an ABHA number and an ABHA address on a FHIR Patient",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.map-opconsultation",
+                "summary": "How an outpatient visit becomes an OPConsultRecord bundle: which Composition sections NRCES defines, what resource type fills each one, and the findings inte...",
+                "title": "Mapping OPConsultation, the outpatient consultation note",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.map-diagnosticreport",
+                "summary": "How a lab or radiology report becomes a DiagnosticReportRecord bundle. NRCES does not slice this record type's sections; this atom maps the Composition's req...",
+                "title": "Mapping DiagnosticReport, the lab and radiology report record",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.map-prescription",
+                "summary": "How a prescription becomes a PrescriptionRecord bundle. NRCES does not slice this record type's sections; this atom maps the Composition's required elements ...",
+                "title": "Mapping Prescription, the medication advice record",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/claim-response",
+                "id": "nhcx.fhir.claim-response",
+                "summary": "The payer's decision on a claim: approved, partly approved, queried or rejected, with the approved amount and any deductions.",
+                "title": "Claim response bundle",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.collection-bundle",
+                "summary": "Every claims message you send is one bundle of type collection, holding the main business resource and every resource it points to.",
+                "title": "The NHCX collection bundle and its required elements",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.hl7-validator-recipe",
+                "summary": "The agent-executable recipe for tier 2: download the pinned HL7 validator_cli.jar, run it against the same NRCES IG version the catalogue pins, and read what...",
+                "title": "Running the official HL7 validator, the tier 2 full conformance check",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.pmjay-insurance-plan",
+                "summary": "How the government scheme's policy is laid out as data: specialties, packages, rates, claim rules, required documents and treatment-guideline questionnaires.",
+                "title": "The PMJAY InsurancePlan profile, packages and questionnaires",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.bundle-weight-and-narrative",
+                "summary": "Almost every byte of a document bundle is the patient's attachment, which decides how you store and log it, and every resource carries a human readable narra...",
+                "title": "Bundles are mostly somebody's health record, and they carry a narrative",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/coverage-eligibility-response",
+                "id": "nhcx.fhir.coverage-eligibility-response",
+                "summary": "The payer's answer to an eligibility check: whether the policy is in force, how much cover is left, and whether the treatment needs prior approval.",
+                "title": "CoverageEligibilityResponse bundle",
+                "type": "fhir"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "The ABDM portal has FHIR examples for these record types:\n\n- **OPConsultation** — outpatient consultation note\n- **DiagnosticReport** — lab/radiology report\n- **Prescription** — medication advice\n- **DischargeSummary** — discharge notes\n- **ImmunizationRecord** — vaccination records\n- **WellnessRecord** — preventive/wellness data\n- **HealthDocumentRecord** — generic health document\n- **Invoice** — billing records\n\nWhich record type would you like a sample bundle for? I can pull a known-good example from the NRCES implementation guide.\n\nOr if you're looking for mapping guidance (how to structure data into FHIR), I can show you docs like:\n- **Mapping OPConsultation** — Composition sections and resource types for outpatient visits\n- **Mapping DiagnosticReport** — lab/radiology report structure\n- **Mapping Prescription** — medication advice structure\n- **ABHA identifiers in FHIR Patient** — how to carry ABHA numbers/addresses\n- **Code systems and value sets** — terminologies used in bundles\n\nWhat are you working on?",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "The ABDM portal has FHIR examples for these record types:\n\n- **OPConsultation** — outpatient consultation note\n- **DiagnosticReport** — lab/radiology report\n- **Prescription** — medication advice\n- **DischargeSummary** — discharge notes\n- **ImmunizationRecord** — vaccination records\n- **WellnessRecord** — preventive/wellness data\n- **HealthDocumentRecord** — generic health document\n- **Invoice** — billing records\n\nWhich record type would you like a sample bundle for? I can pull a known-good example from the NRCES implementation guide.\n\nOr if you're looking for mapping guidance (how to structure data into FHIR), I can show you docs like:\n- **Mapping OPConsultation** — Composition sections and resource types for outpatient visits\n- **Mapping DiagnosticReport** — lab/radiology report structure\n- **Mapping Prescription** — medication advice structure\n- **ABHA identifiers in FHIR Patient** — how to carry ABHA numbers/addresses\n- **Code systems and value sets** — terminologies used in bundles\n\nWhat are you working on?",
+  "sources": [],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"profiles\":[{\"record_type\":\"DiagnosticReport\",\"profile_name\":\"DiagnosticReportRecord\",\"url\":\"https://nrces.in/ndhm/fhir/r4/StructureDefinition/DiagnosticReportRecord\",\"title\":\"\"},{\"record_type\":\"DischargeSummary\",\"profile_name\":\"DischargeSummaryRecord\",\"url\":\"https://nrces.in/ndhm/fhir/r4/StructureDefinition/DischargeSummaryRecord\",\"title\":\"\"},{\"record_type\":\"\",\"profile_name\":\"DocumentBundle\",\"url\":\"https://nrces.in/ndhm/fhir/r4/StructureDefinition/DocumentBundle\",\"title\":\"\"},{\"record_type\":\"HealthDocumentRecord\",\"profile_name\":\"HealthDocumentRecord\",\"url\":\"https://nrces.in/ndhm/fhir/r4/StructureDefinition/HealthDocumentRecord\",\"title\":\"\"},{\"record_type\":\"ImmunizationRecord\",\"profile_name\":\"ImmunizationRecord\",\"url\":\"https://nrces.in/ndhm/fhir/r4/StructureDefinition/ImmunizationRecord\",\"title\":\"\"},{\"record_type\":\"Invoice\",\"profile_name\":\"InvoiceRecord\",\"url\":\"https://nrces.in/ndhm/fhir/r4/StructureDefinition/InvoiceRecord\",\"title\":\"\"},{\"record_type\":\"OPConsultation\",\"profile_name\":\"OPConsultRecord\",\"url\":\"https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord\",\"title\":\"\"},{\"record_type\":\"Prescription\",\"profile_name\":\"PrescriptionRecord\",\"url\":\"https://nrces.in/ndhm/fhir/r4/StructureDefinition/PrescriptionRecord\",\"title\":\"\"},{\"record_type\":\"WellnessRecord\",\"profile_name\":\"WellnessRecord\",\"url\":\"https://nrces.in/ndhm/fhir/r4/StructureDefinition/WellnessRecord\",\"title\":\"\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"\",\"id\":\"nhcx.fhir.terminologies\",\"summary\":\"The code systems every claims bundle draws on, where each one is used, and how strictly each binding applies.\",\"title\":\"Code systems and value sets used in NHCX bundles\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.abha-identifiers\",\"summary\":\"NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...\",\"title\":\"Carrying an ABHA number and an ABHA address on a FHIR Patient\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.map-opconsultation\",\"summary\":\"How an outpatient visit becomes an OPConsultRecord bundle: which Composition sections NRCES defines, what resource type fills each one, and the findings inte...\",\"title\":\"Mapping OPConsultation, the outpatient consultation note\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.map-diagnosticreport\",\"summary\":\"How a lab or radiology report becomes a DiagnosticReportRecord bundle. NRCES does not slice this record type's sections; this atom maps the Composition's req...\",\"title\":\"Mapping DiagnosticReport, the lab and radiology report record\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.map-prescription\",\"summary\":\"How a prescription becomes a PrescriptionRecord bundle. NRCES does not slice this record type's sections; this atom maps the Composition's required elements ...\",\"title\":\"Mapping Prescription, the medication advice record\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/claim-response\",\"id\":\"nhcx.fhir.claim-response\",\"summary\":\"The payer's decision on a claim: approved, partly approved, queried or rejected, with the approved amount and any deductions.\",\"title\":\"Claim response bundle\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.collection-bundle\",\"summary\":\"Every claims message you send is one bundle of type collection, holding the main business resource and every resource it points to.\",\"title\":\"The NHCX collection bundle and its required elements\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.hl7-validator-recipe\",\"summary\":\"The agent-executable recipe for tier 2: download the pinned HL7 validator_cli.jar, run it against the same NRCES IG version the catalogue pins, and read what...\",\"title\":\"Running the official HL7 validator, the tier 2 full conformance check\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.pmjay-insurance-plan\",\"summary\":\"How the government scheme's policy is laid out as data: specialties, packages, rates, claim rules, required documents and treatment-guideline questionnaires.\",\"title\":\"The PMJAY InsurancePlan profile, packages and questionnaires\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.bundle-weight-and-narrative\",\"summary\":\"Almost every byte of a document bundle is the patient's attachment, which decides how you store and log it, and every resource carries a human readable narra...\",\"title\":\"Bundles are mostly somebody's health record, and they carry a narrative\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/coverage-eligibility-response\",\"id\":\"nhcx.fhir.coverage-eligibility-response\",\"summary\":\"The payer's answer to an eligibility check: whether the policy is in force, how much cover is left, and whether the treatment needs prior approval.\",\"title\":\"CoverageEligibilityResponse bundle\",\"type\":\"fhir\"}]}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:02:43.419Z",
+  "usage": {
+    "input_tokens": 20,
+    "output_tokens": 726,
+    "cache_read_input_tokens": 16768,
+    "cache_creation_input_tokens": 7258,
+    "num_turns": 3,
+    "duration_ms": 9369,
+    "cost_usd_equivalent": 0.0198428
+  }
+}

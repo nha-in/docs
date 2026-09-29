@@ -1,0 +1,53 @@
+{
+  "case_id": "decline-nonsense-question-marks-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "??"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "I'm here to help with ABDM gateway integration questions. What can I assist you with?",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "I'm here to help with ABDM gateway integration questions. What can I assist you with?",
+  "sources": [],
+  "corpus": "",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:57:44.975Z",
+  "usage": {
+    "input_tokens": 10,
+    "output_tokens": 101,
+    "cache_read_input_tokens": 5899,
+    "cache_creation_input_tokens": 4964,
+    "num_turns": 1,
+    "duration_ms": 1953,
+    "cost_usd_equivalent": 0.0110329
+  }
+}
