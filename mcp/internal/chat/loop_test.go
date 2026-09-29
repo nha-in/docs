@@ -1514,3 +1514,61 @@ func TestAboutSelfWithAttachmentTakesSelfShape(t *testing.T) {
 		t.Errorf("about question with attachment did not take the self shape: %q", lastUser)
 	}
 }
+
+// A bare portal feature name gets the portal's page from a fixed reply, with
+// no lookup and no model, the way a greeting does.
+func TestRespondAnswersAPortalFeatureNameWithoutLookingItUp(t *testing.T) {
+	m := &fakeModel{next: func([]Message) Reply {
+		t.Fatal("the model was called for a feature name")
+		return Reply{}
+	}}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			t.Fatalf("a feature name was looked up: %q", q)
+			return nil, nil, guard.PackFacts{}, nil
+		},
+	}
+	for _, tc := range []struct{ q, want string }{
+		{"scaffold skill", "/docs/hiecm/v3/getting-started/build-with-ai"},
+		{"MCP server", "/docs/hiecm/v3/getting-started/build-with-ai"},
+		{"postman collection", "/docs/hiecm/v3/api/"},
+	} {
+		emit, evs := collectEvents()
+		if err := svc.RespondCommand(context.Background(), []Turn{{Role: "user", Text: tc.q}}, nil, Command{}, emit); err != nil {
+			t.Fatal(err)
+		}
+		var text string
+		for _, e := range *evs {
+			if e.name == "text" {
+				text += e.data.(map[string]string)["delta"]
+			}
+		}
+		if !strings.Contains(text, tc.want) {
+			t.Errorf("%q: reply %q does not name %s", tc.q, text, tc.want)
+		}
+	}
+}
+
+// A two or three word noun phrase whose top passage is a flow takes the
+// topic shape; the same phrase over a glossary passage stays a definition.
+func TestShortPhraseOverAFlowTakesTheTopicShape(t *testing.T) {
+	for _, tc := range []struct{ top, wantShape string }{{"flow", "topic"}, {"glossary", "define"}} {
+		var lastUser string
+		m := &fakeModel{
+			replies:  []Reply{{Text: "Consent is requested by an HIU.", StopReason: "end_turn"}},
+			onStream: func(system string, tools []ToolDef, msgs []Message) { lastUser = msgs[len(msgs)-1].Text },
+		}
+		svc := &Service{Model: m, MaxTokens: 100,
+			Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+				return json.RawMessage(`{"passages":[{"id":"hiecm.flow.m3-request-consent","type":"` + tc.top + `","title":"Request consent","body":"An HIU requests consent."}]}`),
+					[]Source{{ID: "hiecm.flow.m3-request-consent"}}, guard.PackFacts{}, nil
+			},
+		}
+		if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "consent flow"}}, nil, func(string, any) error { return nil }); err != nil {
+			t.Fatal(err)
+		}
+		if !strings.Contains(lastUser, `<answer_shape name="`+tc.wantShape+`"`) {
+			t.Errorf("top passage %s: shape should be %s, user turn was %q", tc.top, tc.wantShape, lastUser)
+		}
+	}
+}

@@ -76,3 +76,20 @@ func TestIsAboutAssistant(t *testing.T) {
 		}
 	}
 }
+
+func TestPortalFeature(t *testing.T) {
+	for q, want := range map[string]string{
+		"scaffold skill": "command", "Integrate command": "command", "debug": "command",
+		"agent skills": "skills", "skills": "skills", "MCP server": "mcp", "mcp": "mcp",
+		"the plugin": "plugin", "postman collection": "postman", "Postman": "postman",
+	} {
+		if got := PortalFeature(q); got != want {
+			t.Errorf("PortalFeature(%q) = %q, want %q", q, got, want)
+		}
+	}
+	for _, q := range []string{"how do I debug ABDM-1016", "consent design", "scaffold a HIP", "skills for M2", "postman collection for UHI", "link records"} {
+		if got := PortalFeature(q); got != "" {
+			t.Errorf("PortalFeature(%q) = %q, want none", q, got)
+		}
+	}
+}

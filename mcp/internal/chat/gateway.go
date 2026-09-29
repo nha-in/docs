@@ -158,3 +158,17 @@ func variantTerm(question string) (theirs, ours string) {
 func isWordChar(b byte) bool {
 	return b == '_' || (b >= '0' && b <= '9') || (b >= 'a' && b <= 'z') || (b >= 'A' && b <= 'Z')
 }
+
+// featureReply is the fixed reply to a bare portal feature name. Two
+// sentences and a portal page, the decline shape's own limits, so the eval
+// scores it the same way it scores a model decline.
+func featureReply(feature string) string {
+	switch feature {
+	case "command":
+		return "Scaffold, Design, Integrate and Debug are the chips under the box: pick one and the module it is about, and the answer draws on that module's skill section. The same sections ship as files for your coding agent, on [agent skills and the MCP server](/docs/hiecm/v3/getting-started/build-with-ai)."
+	case "postman":
+		return "Each module's API reference offers a Postman collection and the shared sandbox environment from its overview page under /docs/hiecm/v3/api/. Pick the module, for example M1 for ABHA or M3 for consent, and the download sits at the top of its page."
+	default: // skills, mcp, plugin
+		return "Agent skills and the MCP server put this documentation inside your coding agent: the skills as files it loads once, the server as tools it queries as it works. Install steps for Claude Code, Cursor and VS Code are on [agent skills and the MCP server](/docs/hiecm/v3/getting-started/build-with-ai)."
+	}
+}

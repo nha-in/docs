@@ -188,6 +188,13 @@ func (r *Reader) vectorSearch(ctx context.Context, query string, f Filter,
 			h.Snippet = text
 		}
 		s := embed.Cosine(qv[0], blobToVec(blob))
+		// Below the floor a chunk is a neighbour, not a match: an
+		// off-catalogue phrase such as "scaffold skill" otherwise returns
+		// the sandbox atoms nearest to nothing in particular, and the define
+		// shape turns them into a confident wrong definition.
+		if r.VectorFloor > 0 && s < r.VectorFloor {
+			continue
+		}
 		if prev, ok := best[atomID]; !ok || s > prev.score {
 			best[atomID] = scored{hit: h, score: s}
 		}

@@ -131,6 +131,26 @@ func suggestionsFromPack(pack []byte) []Suggestion {
 	return out
 }
 
+// topPassageType returns the atom type of the first passage in the pack.
+func topPassageType(pack []byte) string {
+	var pp struct {
+		Passages []struct {
+			Type string `json:"type"`
+		} `json:"passages"`
+	}
+	if err := json.Unmarshal(pack, &pp); err != nil || len(pp.Passages) == 0 {
+		return ""
+	}
+	return pp.Passages[0].Type
+}
+
+// isTopicPhrase is a one to three word phrase with no question mark: a
+// topic typed into the box rather than a question asked of it.
+func isTopicPhrase(q string) bool {
+	q = strings.TrimSpace(q)
+	return len(strings.Fields(q)) <= 3 && !strings.Contains(q, "?")
+}
+
 // routeLineRe matches the method and path openPassage puts on the first
 // line of an endpoint or callback passage.
 var routeLineRe = regexp.MustCompile(`^(?:GET|POST|PUT|PATCH|DELETE) (/\S+)\n`)
@@ -570,6 +590,20 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 	if err := s.ValidatePage(page); err != nil {
 		return err
 	}
+	// A bare portal feature name typed into the box ("scaffold skill", "MCP
+	// server", "postman collection") wants the portal's page, not an ABDM
+	// answer. Checked before a command is inferred from the words: a reader
+	// who typed "scaffold skill" is asking what that is, which the fixed
+	// reply says, while a reader who picked the Scaffold chip has cmd.Name
+	// set already and takes the command path. Without this the phrase
+	// retrieved whatever sat nearest in vector space and the define shape
+	// wrote a confident definition of nothing.
+	if feature := route.PortalFeature(lastUserText(turns)); feature != "" && cmd.Name == "" && lastUserAttachment(turns) == nil {
+		if err := emit("text", map[string]string{"delta": featureReply(feature)}); err != nil {
+			return err
+		}
+		return s.finish(nil, nil, nil, emit)
+	}
 	cmd = InferCommand(cmd, turns)
 	msgs := toMessages(turns)
 	question := lastUserText(turns)
@@ -725,6 +759,9 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 	// the widget to render the path as a link. Nothing else feeds it.
 	var links []Link
 	var suggestions []Suggestion
+	// topType is the type of the top retrieved passage, read for the topic
+	// shape below. Empty when nothing was retrieved.
+	var topType string
 	if s.Lookup != nil && !aboutSelf {
 		// The lookup query is masked the same way the conversation is: this
 		// is a health system, and a follow-up that repeats a patient
@@ -750,6 +787,7 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 			packHadContent = true
 			links = linksFromPack(pack)
 			suggestions = suggestionsFromPack(pack)
+			topType = topPassageType(pack)
 			for _, src := range packSources {
 				addSource(&sources, src)
 			}
@@ -770,6 +808,13 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 	}).Shape)
 	if aboutSelf {
 		shape = string(route.Self)
+	}
+	// A short noun phrase the router could only call a definition, whose
+	// best passage is a flow, is a topic: "consent flow", "link records".
+	// The define shape compresses a flow into four sentences; the topic
+	// shape orients and offers the questions the phrase usually means.
+	if shape == string(route.Define) && isTopicPhrase(question) && topType == "flow" {
+		shape = string(route.Topic)
 	}
 	prefix := passagesPrefix + skillPrefix
 	if gateway != "" {

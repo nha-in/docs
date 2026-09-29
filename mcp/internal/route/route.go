@@ -19,6 +19,10 @@ const (
 	Compare  Shape = "compare"
 	Meta     Shape = "meta"
 	Self     Shape = "self"
+	// Topic is chosen after retrieval, not by Route: a two or three word
+	// noun phrase whose top passage is a flow is a topic, and a topic wants
+	// orientation and a choice rather than a definition.
+	Topic Shape = "topic"
 )
 
 type Input struct {
@@ -43,6 +47,11 @@ var (
 	thanksRe = regexp.MustCompile(`(?i)^(thanks?|thank you|thank you (?:so|very) much|ty|ok(?:ay)?|cool|great|got it|perfect|nice)(?: there| all| team| a lot)?[\s.!?]*$`)
 	selfRe   = regexp.MustCompile(`(?i)\b(?:who|what) are you\b|\bwhat can you (?:do|help)|\b(?:how many |which |what )languages?\b.*\byou\b|\bdo you (?:understand|speak|remember)\b|\bcan you (?:speak|understand)\b|\bare you (?:an? )?(?:bot|ai|human|robot|real|person|chatgpt|gpt|claude|llm)\b|\bwho (?:made|built|created|trained|runs) you\b|\bwhat (?:model|llm) (?:are|is) (?:you|this)\b|\byour (?:name|capabilit\w*|limit\w*)\b|\babout yourself\b|\bhow (?:do|does) (?:you|this assistant) work\b`)
 	whRe     = regexp.MustCompile(`(?i)^(what is|what's|whats|what are|what makes|define|meaning of|explain)\b`)
+	// featureRe matches a bare portal feature name: the command chips, the
+	// agent skills, the MCP server, the plugin, the Postman collections. A
+	// reader typing one wants the portal's page, not an ABDM definition,
+	// and without this the define fallback builds one from neighbours.
+	featureRe = regexp.MustCompile(`(?i)^(?:the )?(?:(scaffold|design|integrate|debug)(?: (?:command|skill|mode|chip))?|(?:agent |claude )?(skills?)|(mcp)(?: server)?|(plugins?)|(postman)(?: collections?)?)[\s.!?]*$`)
 )
 
 // imperativeVerbs are bare how-to imperatives ("link record", "reset
@@ -113,3 +122,26 @@ func IsGreeting(q string) bool { return greetRe.MatchString(strings.TrimSpace(q)
 // It used to count as a greeting, so a reader closing with "thanks" was
 // asked what they were building as if they had just arrived.
 func IsThanks(q string) bool { return thanksRe.MatchString(strings.TrimSpace(q)) }
+
+// PortalFeature reports which portal feature a bare phrase names, or an
+// empty string: "command" for scaffold, design, integrate and debug,
+// "skills", "mcp", "plugin" or "postman". A phrase with any other word in it
+// is a question about ABDM and takes the ordinary path.
+func PortalFeature(q string) string {
+	m := featureRe.FindStringSubmatch(strings.TrimSpace(q))
+	if m == nil {
+		return ""
+	}
+	switch {
+	case m[1] != "":
+		return "command"
+	case m[2] != "":
+		return "skills"
+	case m[3] != "":
+		return "mcp"
+	case m[4] != "":
+		return "plugin"
+	default:
+		return "postman"
+	}
+}

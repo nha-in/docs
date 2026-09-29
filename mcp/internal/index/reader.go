@@ -14,6 +14,12 @@ import (
 )
 
 type Reader struct {
+	// VectorFloor drops a vector hit whose cosine similarity is below it.
+	// Zero, the default, keeps every hit. Set from VECTOR_FLOOR once the
+	// retrieval eval has shown where matches end and neighbours begin; a
+	// value picked without that measurement costs recall, which is already
+	// the weakest number on the scorecard.
+	VectorFloor   float32
 	db            *sql.DB
 	version       string
 	builtAt       string

@@ -51,6 +51,12 @@ Example:
 I am the portal's Ask AI assistant. I answer questions about building on ABDM, such as creating an ABHA, linking records, consent or an error code, from this documentation, and I can reply in Hindi or another Indian language if you write in it. What are you working on?
 </answer_shape>`,
 
+	"topic": `<answer_shape name="topic" budget="80 words">
+The reader typed a topic, not a question. One sentence saying what it is and which module owns it, then the two or three questions a reader usually means by it, one line each, so they can pick rather than rephrase. No steps yet.
+Example:
+Linking records is attaching a facility's care contexts to a patient's ABHA address, and it lives in M2 for a HIP and in P1 for a PHR app. Readers who type this usually want one of: how a HIP links its own records; how a PHR app discovers and links on the patient's behalf; or why a link call returned ABDM-1010. Which is yours?
+</answer_shape>`,
+
 	"decline": `<answer_shape name="decline" budget="60 words">
 Say in one sentence that this is not covered here, then in one more name the closest page or the support route and one question this portal can answer that is nearest to theirs. Never guess a value, a host or a path.
 Example:
