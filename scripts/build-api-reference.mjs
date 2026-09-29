@@ -1106,9 +1106,9 @@ for (const {platform, version, files} of tree) {
         // Which gateway the page belongs to, for what the page says around
         // the samples.
         gateway: platform,
-        // A UHI call is signed with the sender's private key, which a browser
-        // console cannot hold, so its page offers no Try it.
-        ...(platform === 'uhi' ? {tryIt: false} : {}),
+        // A UHI call is signed with the sender's Ed25519 key. Try it signs it
+        // in the browser (site/src/components/api/uhi-sign.ts) with a key held
+        // in the panel's memory only, or sends a header the reader pastes.
         // The file the page came from and what it declares, for the pills
         // over the title and the download beside them. The file is served
         // flat under /specs/ by sync-specs.mjs, beside a JSON copy.
