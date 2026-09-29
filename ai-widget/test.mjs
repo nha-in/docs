@@ -324,3 +324,24 @@ console.log('ok');
   assert.equal(linkFor('/api/hiecm/v3/token/generate-token?x=1', links, 'https://docs.example'), null);
   assert.equal(linkFor('X-LINK-TOKEN', undefined, 'https://docs.example'), null);
 }
+
+// Suggestions arrive on their own event and are handed over as sent.
+{
+  const enc = new TextEncoder();
+  const stream = new ReadableStream({
+    start(c) {
+      c.enqueue(enc.encode('event: suggestions\ndata: [{"id":"b","title":"Link a care context","prompt":"Link a care context"}]\n\n'));
+      c.enqueue(enc.encode('event: done\ndata: {}\n\n'));
+      c.close();
+    },
+  });
+  let got = null;
+  await readStream(stream, {
+    onText: () => {},
+    onTool: () => {},
+    onSources: () => {},
+    onSuggestions: (s) => (got = s),
+    onError: () => assert.fail('no error expected'),
+  });
+  assert.deepEqual(got, [{id: 'b', title: 'Link a care context', prompt: 'Link a care context'}]);
+}

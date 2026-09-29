@@ -1597,3 +1597,8 @@
 .ask-ai__code-link:hover code {
   border-bottom-style: solid;
 }
+
+/* Next-question pills sit under the answer, before the sources line. */
+.ask-ai__followups {
+  margin-top: 10px;
+}

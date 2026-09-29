@@ -2,7 +2,7 @@ import {Fragment, render} from 'preact';
 import {useEffect, useRef, useState} from 'preact/hooks';
 import ChatMarkdown, {CopyButton, absolute, headings} from './markdown';
 import {ArrowUp, ChevronRight, FileText, Paperclip, Plus, Sparkles, X} from './icons';
-import {readStream, UNREACHABLE, type Source, Link} from './sse';
+import {readStream, UNREACHABLE, type Source, type Link, type Suggestion} from './sse';
 import {
   AGENTS,
   TOOLS,
@@ -54,6 +54,8 @@ type Turn = {
   sources?: Source[];
   /** Endpoint paths the answer may quote, each with its reference page. */
   links?: Link[];
+  /** Next questions offered as pills under this answer. */
+  suggestions?: Suggestion[];
   /** The file that went with this question, kept so a follow-up still has it. */
   file?: Attached;
   /**
@@ -197,10 +199,13 @@ function offerIndex(turns: Turn[]): number {
 }
 
 /** Attaches the citation chips to the last turn in the thread. */
-function attachSources(setTurns: Setter, sources: Source[], links?: Link[]) {
+function attachSources(setTurns: Setter, sources: Source[], links?: Link[], suggestions?: Suggestion[]) {
   setTurns((prior) => {
     const last = prior[prior.length - 1];
-    return [...prior.slice(0, -1), {...last, sources, links: links ?? last.links}];
+    return [
+      ...prior.slice(0, -1),
+      {...last, sources, links: links ?? last.links, suggestions: suggestions ?? last.suggestions},
+    ];
   });
 }
 
@@ -419,6 +424,7 @@ function Panel({
   const frame = useRef(0);
   const heldSources = useRef<Source[] | null>(null);
   const heldLinks = useRef<Link[] | null>(null);
+  const heldSuggestions = useRef<Suggestion[] | null>(null);
 
   const drain = () => {
     frame.current = requestAnimationFrame(drain);
@@ -429,10 +435,16 @@ function Panel({
       cancelAnimationFrame(frame.current);
       frame.current = 0;
       revealing.current = false;
-      if (heldSources.current || heldLinks.current) {
-        attachSources(setTurns, heldSources.current ?? [], heldLinks.current ?? undefined);
+      if (heldSources.current || heldLinks.current || heldSuggestions.current) {
+        attachSources(
+          setTurns,
+          heldSources.current ?? [],
+          heldLinks.current ?? undefined,
+          heldSuggestions.current ?? undefined,
+        );
         heldSources.current = null;
         heldLinks.current = null;
+        heldSuggestions.current = null;
       }
       setPhase('idle');
       return;
@@ -467,6 +479,9 @@ function Panel({
   const queueLinks = (links: Link[]) => {
     heldLinks.current = links;
   };
+  const queueSuggestions = (suggestions: Suggestion[]) => {
+    heldSuggestions.current = suggestions;
+  };
 
   const stopDrain = () => {
     if (frame.current) cancelAnimationFrame(frame.current);
@@ -475,6 +490,7 @@ function Panel({
     pending.current = '';
     heldSources.current = null;
     heldLinks.current = null;
+    heldSuggestions.current = null;
     netDone.current = true;
   };
 
@@ -885,6 +901,7 @@ function Panel({
         onSources: (sources) => queueSources(sources),
         // Same timing as the citations: a link lands with the finished answer.
         onLinks: (links) => queueLinks(links),
+        onSuggestions: (suggestions) => queueSuggestions(suggestions),
         onError: emit,
         // Before any text: which section the answer draws on. When the
         // server could not tell which module the question is about, it asks
@@ -1089,6 +1106,27 @@ function Panel({
                 answer rather than above it, because the sources land when
                 the answer ends, and a line appearing above would push the
                 text the reader is on down the panel. */}
+            {/* Next questions, under the latest answer only: a pill row on
+                every earlier turn would be a wall of buttons. They are the
+                titles of the pages one hop out from what the answer used,
+                chosen by the server, never written by the model. */}
+            {turn.from === 'assistant' &&
+              index === turns.length - 1 &&
+              !busy &&
+              turn.suggestions &&
+              turn.suggestions.length > 0 && (
+                <div class="ask-ai__pills ask-ai__followups" aria-label="Ask next">
+                  {turn.suggestions.map((s) => (
+                    <button
+                      key={s.id}
+                      type="button"
+                      class="ask-ai__pill"
+                      onClick={() => void ask(s.prompt)}>
+                      {s.title}
+                    </button>
+                  ))}
+                </div>
+              )}
             {turn.sources && turn.sources.length > 0 && (
               <details class="ask-ai__sources">
                 <summary class="ask-ai__sources-toggle">

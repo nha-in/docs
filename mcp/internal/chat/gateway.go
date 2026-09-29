@@ -3,6 +3,7 @@ package chat
 import (
 	"context"
 	"regexp"
+	"strings"
 )
 
 // The gateway a question is asked from.
@@ -117,4 +118,43 @@ func greetingFor(gateway string) string {
 	default:
 		return "Hi. What are you building? Ask how to make a call, what a field means, or what an error code is telling you."
 	}
+}
+
+// variantTerms maps a spelling readers use to the term this portal uses.
+// Keys are lower case and matched on word boundaries. Kept short on purpose:
+// a row earns its place when the eval shows readers typing it.
+var variantTerms = []struct{ theirs, ours string }{
+	{"hmis", "HIMS"},
+	{"lims", "LIS"},
+	{"health id", "ABHA"},
+	{"phr address", "ABHA address"},
+	{"abha id", "ABHA number"},
+}
+
+// variantTerm returns the reader's spelling and the portal's term when the
+// question uses a known variant, and empty strings otherwise. The reader's
+// spelling is returned as they wrote it so the note quotes them exactly.
+func variantTerm(question string) (theirs, ours string) {
+	lower := strings.ToLower(question)
+	for _, v := range variantTerms {
+		i := strings.Index(lower, v.theirs)
+		for i >= 0 {
+			before := i == 0 || !isWordChar(lower[i-1])
+			end := i + len(v.theirs)
+			after := end == len(lower) || !isWordChar(lower[end])
+			if before && after {
+				return question[i:end], v.ours
+			}
+			next := strings.Index(lower[i+1:], v.theirs)
+			if next < 0 {
+				break
+			}
+			i += 1 + next
+		}
+	}
+	return "", ""
+}
+
+func isWordChar(b byte) bool {
+	return b == '_' || (b >= '0' && b <= '9') || (b >= 'a' && b <= 'z') || (b >= 'A' && b <= 'Z')
 }

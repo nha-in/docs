@@ -10,6 +10,9 @@ export type Source = {id: string; title: string; status: string; url: string};
  */
 export type Link = {literal: string; url: string};
 
+/** A next question offered as a pill under an answer; prompt is what is sent. */
+export type Suggestion = {id: string; title: string; prompt: string};
+
 /** Fallback text when the live backend cannot be reached mid-stream. */
 export const UNREACHABLE =
   'The assistant is unreachable right now. Try again shortly.';
@@ -20,6 +23,8 @@ type StreamHandlers = {
   onSources: (sources: Source[]) => void;
   /** Literals with reference pages, sent once before "sources". */
   onLinks?: (links: Link[]) => void;
+  /** Next questions to offer under the answer, sent once before "sources". */
+  onSuggestions?: (suggestions: Suggestion[]) => void;
   onError: (message: string) => void;
   /** Which skill section a command used, sent once before the answer. */
   onSkill?: (use: SkillUse) => void;
@@ -72,6 +77,9 @@ export async function readStream(
         break;
       case 'links':
         handlers.onLinks?.(payload as Link[]);
+        break;
+      case 'suggestions':
+        handlers.onSuggestions?.(payload as Suggestion[]);
         break;
       case 'skill':
         handlers.onSkill?.(payload as SkillUse);

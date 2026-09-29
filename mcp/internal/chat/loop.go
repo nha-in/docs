@@ -84,6 +84,53 @@ type Link struct {
 	URL     string `json:"url"`
 }
 
+// Suggestion is a next question the widget offers as a pill under an
+// answer. Built from the related atoms one hop out from what was retrieved,
+// so it is deterministic and costs no prompt tokens; a model asked to
+// suggest follow-ups does so under every answer, including the ones that
+// need none.
+type Suggestion struct {
+	ID     string `json:"id"`
+	Title  string `json:"title"`
+	Prompt string `json:"prompt"`
+}
+
+const maxSuggestions = 3
+
+// suggestionsFromPack returns up to three related atoms that were not
+// themselves passages, as pills. The prompt is the atom's title: a short
+// topic the router already handles.
+func suggestionsFromPack(pack []byte) []Suggestion {
+	var pp struct {
+		Passages []struct {
+			ID string `json:"id"`
+		} `json:"passages"`
+		Related []struct {
+			ID    string `json:"id"`
+			Title string `json:"title"`
+		} `json:"related"`
+	}
+	if err := json.Unmarshal(pack, &pp); err != nil {
+		return nil
+	}
+	shown := map[string]bool{}
+	for _, p := range pp.Passages {
+		shown[p.ID] = true
+	}
+	var out []Suggestion
+	for _, r := range pp.Related {
+		if r.ID == "" || r.Title == "" || shown[r.ID] {
+			continue
+		}
+		shown[r.ID] = true
+		out = append(out, Suggestion{ID: r.ID, Title: r.Title, Prompt: r.Title})
+		if len(out) == maxSuggestions {
+			break
+		}
+	}
+	return out
+}
+
 // routeLineRe matches the method and path openPassage puts on the first
 // line of an endpoint or callback passage.
 var routeLineRe = regexp.MustCompile(`^(?:GET|POST|PUT|PATCH|DELETE) (/\S+)\n`)
@@ -539,7 +586,7 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 		if err := emit("text", map[string]string{"delta": reply}); err != nil {
 			return err
 		}
-		return s.finish(nil, nil, emit)
+		return s.finish(nil, nil, nil, emit)
 	}
 	// The gateway the reader's page belongs to scopes every search this
 	// question makes, the pre-retrieval and the model's own, unless the
@@ -548,7 +595,10 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 	// retrieve: "how many languages do you understand" retrieved header and
 	// certificate atoms and cited them. It skips the lookup and the tools and
 	// answers from the self shape block.
-	aboutSelf := route.IsAboutAssistant(question) && lastUserAttachment(turns) == nil
+	// An attachment does not change that: "what can you do with this" is
+	// still a question about the assistant, and the self facts already say
+	// it reads what is attached.
+	aboutSelf := route.IsAboutAssistant(question)
 	gateway := scopeFor(cmd.Gateway, question)
 	ctx = WithGateway(ctx, gateway)
 	// The system prompt is a cached core: byte identical on every question
@@ -620,7 +670,7 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 			if err := emit("skill", use); err != nil {
 				return err
 			}
-			return s.finish(nil, nil, emit)
+			return s.finish(nil, nil, nil, emit)
 		}
 		use.Module, use.ResolvedBy = module, by
 		if body, ok := s.Skill(module, cmd.Name); ok {
@@ -674,12 +724,22 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 	// links pairs each endpoint passage's path with its reference page, for
 	// the widget to render the path as a link. Nothing else feeds it.
 	var links []Link
+	var suggestions []Suggestion
 	if s.Lookup != nil && !aboutSelf {
 		// The lookup query is masked the same way the conversation is: this
 		// is a health system, and a follow-up that repeats a patient
 		// identifier from the reader's own question must not reach the
 		// embedder or the index unmasked.
 		lq, _ := guard.MaskPII(lookupQuery(turns))
+		// A reader's spelling of a term the portal spells another way: the
+		// lookup carries both, and the pack opens by saying which is the
+		// portal's, so the answer can say "this portal calls that HIMS" from
+		// a fact in front of it rather than from memory.
+		variantNote := ""
+		if theirs, ours := variantTerm(question); ours != "" {
+			lq += " " + ours
+			variantNote = "The reader wrote " + theirs + "; this portal's term is " + ours + ".\n"
+		}
 		lookupCtx, cancel := context.WithTimeout(ctx, toolCallTimeout)
 		pack, packSources, f, err := s.Lookup(lookupCtx, lq)
 		cancel()
@@ -689,11 +749,12 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 			facts = f
 			packHadContent = true
 			links = linksFromPack(pack)
+			suggestions = suggestionsFromPack(pack)
 			for _, src := range packSources {
 				addSource(&sources, src)
 			}
 			g.corpus.Write(pack)
-			passagesPrefix = "<passages>\n" + string(pack) + "\n</passages>\n\n"
+			passagesPrefix = "<passages>\n" + variantNote + string(pack) + "\n</passages>\n\n"
 			looked = true // pre-retrieval is a lookup; do not send lookFirst
 		}
 	}
@@ -867,9 +928,9 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 				// too: they belong to an answer the reader never saw. When
 				// part of the answer did reach the reader they keep their
 				// citations, because that part is what those sources back.
-				return s.finish(nil, nil, emit)
+				return s.finish(nil, nil, nil, emit)
 			}
-			return s.finish(sources, links, emit)
+			return s.finish(sources, links, suggestions, emit)
 		}
 
 		// The round ended in a tool call, so whatever text it produced was
@@ -959,18 +1020,23 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 				return textErr
 			}
 			if g.blocked && g.released.Len() == 0 {
-				return s.finish(nil, nil, emit)
+				return s.finish(nil, nil, nil, emit)
 			}
-			return s.finish(sources, links, emit)
+			return s.finish(sources, links, suggestions, emit)
 		}
 	}
 	// Unreachable: the loop above always returns by round == MaxToolCalls.
-	return s.finish(sources, links, emit)
+	return s.finish(sources, links, suggestions, emit)
 }
 
 // finish emits the sources event (only when there is at least one source)
 // followed by done, and returns nil -- the loop's only successful exit.
-func (s *Service) finish(sources []Source, links []Link, emit func(event string, data any) error) error {
+func (s *Service) finish(sources []Source, links []Link, suggestions []Suggestion, emit func(event string, data any) error) error {
+	if len(suggestions) > 0 {
+		if err := emit("suggestions", suggestions); err != nil {
+			return err
+		}
+	}
 	if len(links) > 0 {
 		if err := emit("links", links); err != nil {
 			return err

@@ -1462,3 +1462,55 @@ func TestRespondEmitsLinksForEndpointPassages(t *testing.T) {
 		t.Errorf("links = %v, want [%v]: one per endpoint passage with a route line and a page", links, want)
 	}
 }
+
+// The related atoms one hop out from the pack become up to three pills, none
+// of them a passage the reader was already shown.
+func TestSuggestionsFromPack(t *testing.T) {
+	pack := []byte(`{"passages":[{"id":"a"}],"related":[
+		{"id":"a","type":"flow","title":"Already shown"},
+		{"id":"b","type":"flow","title":"Link a care context"},
+		{"id":"","type":"flow","title":"No id"},
+		{"id":"c","type":"error","title":"ABDM-1016"},
+		{"id":"b","type":"flow","title":"Duplicate"},
+		{"id":"d","type":"concept","title":"Care context"},
+		{"id":"e","type":"concept","title":"One too many"}]}`)
+	got := suggestionsFromPack(pack)
+	want := []Suggestion{
+		{ID: "b", Title: "Link a care context", Prompt: "Link a care context"},
+		{ID: "c", Title: "ABDM-1016", Prompt: "ABDM-1016"},
+		{ID: "d", Title: "Care context", Prompt: "Care context"},
+	}
+	if len(got) != len(want) {
+		t.Fatalf("got %v, want %v", got, want)
+	}
+	for i := range want {
+		if got[i] != want[i] {
+			t.Errorf("suggestion %d = %v, want %v", i, got[i], want[i])
+		}
+	}
+}
+
+// A question about the assistant with a file attached still takes the self
+// shape: "what can you do with this" is about the assistant, and the self
+// facts say it reads what is attached.
+func TestAboutSelfWithAttachmentTakesSelfShape(t *testing.T) {
+	var lastUser string
+	m := &fakeModel{
+		replies:  []Reply{{Text: "I read the request you attached and explain it.", StopReason: "end_turn"}},
+		onStream: func(system string, tools []ToolDef, msgs []Message) { lastUser = msgs[len(msgs)-1].Text },
+	}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			t.Fatal("an about question was looked up")
+			return nil, nil, guard.PackFacts{}, nil
+		},
+	}
+	emit := func(event string, data any) error { return nil }
+	turns := []Turn{{Role: "user", Text: "what can you do with this?", Attachment: &Attachment{Name: "req.txt", Text: "POST /x"}}}
+	if err := svc.Respond(context.Background(), turns, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(lastUser, `<answer_shape name="self"`) {
+		t.Errorf("about question with attachment did not take the self shape: %q", lastUser)
+	}
+}
