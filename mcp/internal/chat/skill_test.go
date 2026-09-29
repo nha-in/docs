@@ -223,3 +223,52 @@ func TestRespondWithoutACommandIsUnchanged(t *testing.T) {
 		}
 	}
 }
+
+// "Scaffolding skill" typed into the composer is the scaffold pill in words.
+// It retrieved sandbox onboarding atoms and answered about the sandbox.
+func TestCommandFromQuestion(t *testing.T) {
+	for q, want := range map[string]string{
+		"Scaffolding skill":                "scaffold",
+		"scaffold skill for m2":            "scaffold",
+		"use the debug skill on ABDM-1017": "debug",
+		"integration skills":               "integrate",
+		"the skill for designing M1":       "design",
+		"what is a skill":                  "",
+		"how do I design my consent flow":  "",
+		"debug this error":                 "",
+	} {
+		if got := CommandFromQuestion(q); got != want {
+			t.Errorf("CommandFromQuestion(%q) = %q, want %q", q, got, want)
+		}
+	}
+}
+
+// Picking a module from the choices re-sends the question with the module
+// and no command, since no pill was chosen; the typed command must survive
+// that, or the module arrives alone and is refused.
+func TestInferCommandKeepsAPickedModuleValid(t *testing.T) {
+	turns := []Turn{{Role: "user", Text: "Scaffolding skill"}}
+	cmd := InferCommand(Command{Module: "abdm-m2"}, turns)
+	if cmd.Name != "scaffold" || ValidateCommand(cmd) != nil {
+		t.Fatalf("cmd = %+v, err = %v", cmd, ValidateCommand(cmd))
+	}
+	if got := InferCommand(Command{Name: "debug"}, turns); got.Name != "debug" {
+		t.Errorf("a pill the reader chose was overridden: %+v", got)
+	}
+}
+
+func TestRespondRoutesATypedSkillToTheCommand(t *testing.T) {
+	fm := &fakeModel{}
+	emit, evs := collectEvents()
+	turns := []Turn{{Role: "user", Text: "Scaffolding skill"}}
+	if err := skillService(fm).Respond(context.Background(), turns, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	use := skillEvent(t, *evs)
+	if use.Section != "scaffold" || use.Status != "unresolved" || len(use.Candidates) != 1 || use.Candidates[0] != "abdm-m2" {
+		t.Fatalf("skill event = %+v, want the scaffold section and a module to pick", use)
+	}
+	if fm.calls != 0 {
+		t.Fatalf("the model answered %d times instead of asking which module", fm.calls)
+	}
+}
