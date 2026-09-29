@@ -1,0 +1,39 @@
+{
+  "id": "meta-privacy-store-paste-01",
+  "slice": "meta",
+  "class": "meta",
+  "turns": [
+    {
+      "role": "user",
+      "text": "If I paste a request that has a patient's ABHA number in it, do you store it anywhere?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "Nothing you type or attach is stored; there is no upload route and no storage",
+    "Identifiers such as Aadhaar and ABHA numbers, mobiles, emails and tokens are masked before the model or any log sees them",
+    "History lives in your browser only, and nothing about a conversation leaves the browser except the question being asked"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom",
+    "we store",
+    "retained for training",
+    "kept on our servers"
+  ],
+  "expected_sources": [
+    "shared.concept.ask-ai-assistant"
+  ],
+  "expected_shape": "meta",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#ask-ai-panel",
+  "catalogue_version": "2026.09.16",
+  "notes": "Meta group, the privacy question: it catches an answer that claims storage, claims nothing at all is processed, or omits that identifiers are masked before the model sees them."
+}

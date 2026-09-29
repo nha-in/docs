@@ -101,6 +101,13 @@ func main() {
 		os.Exit(1)
 	}
 	defer r.Close()
+	// VECTOR_FLOOR: minimum cosine for a vector hit; 0 keeps every hit.
+	// See index.Reader.VectorFloor for why it stays off until measured.
+	r.VectorFloor = float32(envFloatOr("VECTOR_FLOOR", 0))
+	if r.VectorFloor < 0 || r.VectorFloor >= 1 {
+		slog.Error("VECTOR_FLOOR must be between 0 and 1", "got", r.VectorFloor)
+		os.Exit(1)
+	}
 
 	// Deployment policy, deliberately at the edge rather than in the library:
 	// every deployment must decide its provider. An absent decision is a

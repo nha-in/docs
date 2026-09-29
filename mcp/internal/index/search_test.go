@@ -419,3 +419,24 @@ func TestDefinitionQuestionsPreferTheGlossary(t *testing.T) {
 		t.Error("a full sentence about an error is not definition shaped")
 	}
 }
+
+// A floor above every cosine leaves the vector leg empty; zero keeps it.
+func TestVectorFloorDropsNeighbours(t *testing.T) {
+	r := openFixture(t, true)
+	f := embed.NewFake(64)
+	hits, err := r.vectorSearch(context.Background(), "link a care context", Filter{}, 10, f)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(hits) == 0 {
+		t.Fatal("fixture vector search returned nothing with no floor")
+	}
+	r.VectorFloor = 1.5 // above any cosine
+	hits, err = r.vectorSearch(context.Background(), "link a care context", Filter{}, 10, f)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(hits) != 0 {
+		t.Errorf("floor above every score should drop every hit, got %d", len(hits))
+	}
+}

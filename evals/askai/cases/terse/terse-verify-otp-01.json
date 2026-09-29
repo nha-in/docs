@@ -1,0 +1,37 @@
+{
+  "id": "terse-verify-otp-01",
+  "slice": "terse",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "verify OTP"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "For an M1 mobile login the OTP is verified with POST /abha/api/v3/profile/login/verify, sending scope abha-login and mobile-verify and the otp with its txnId and the encrypted otpValue.",
+    "On a mobile number login it returns a short lived token and, in accounts, every ABHA held against that mobile number, and that token is not the X-token.",
+    "Send it as the T-token header to the select account call, which returns the X-token for the account the person picks, even when accounts holds one entry."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.endpoint.m1-login-verify",
+    "hiecm.flow.m1-login-by-mobile"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-abha-m1-abha-swagger-1-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "Group A, an imperative task phrase that names no journey: the case reads it as the M1 login verify and catches an answer that stops at the verify call and hands out its token as the X-token. Source lines: catalogue/hiecm/flows/m1-login-by-mobile.md, 'POST /abha/api/v3/profile/login/verify scope [abha-login, mobile-verify], authData.authMethods [otp], otp {txnId, otpValue (encrypted)}' and 'even when `accounts` holds one entry'; catalogue/hiecm/endpoints/m1-login-verify.md, 'On a mobile number login it returns a short lived `token` and, in `accounts`, every ABHA held against that mobile number. That token is not the `X-token`. Send it as the `T-token` header to the select account call, which returns the `X-token` for the account the person picks.'"
+}

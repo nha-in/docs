@@ -14,6 +14,12 @@ import (
 )
 
 type Reader struct {
+	// VectorFloor drops a vector hit whose cosine similarity is below it.
+	// Zero, the default, keeps every hit. Set from VECTOR_FLOOR once the
+	// retrieval eval has shown where matches end and neighbours begin; a
+	// value picked without that measurement costs recall, which is already
+	// the weakest number on the scorecard.
+	VectorFloor   float32
 	db            *sql.DB
 	version       string
 	builtAt       string
@@ -302,6 +308,15 @@ type OperationSummary struct {
 	Summary     string `json:"summary"`
 	Tag         string `json:"tag"`
 	Module      string `json:"module"`
+}
+
+// OperationRoute returns the method and path of one operation, or ok false
+// when the id is unknown. An endpoint atom names its operation but its body
+// does not repeat the path, so the passage built from it carries the route
+// from here; without it the reader's real path cannot be grounded.
+func (r *Reader) OperationRoute(id string) (method, path string, ok bool) {
+	err := r.db.QueryRow(`SELECT method, path FROM operations WHERE operation_id = ?`, id).Scan(&method, &path)
+	return method, path, err == nil
 }
 
 // ListOperations filters by exact tag, exact module, and a free

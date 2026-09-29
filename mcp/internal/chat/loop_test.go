@@ -1400,3 +1400,175 @@ func TestSourcesComeFromTheNewToolNames(t *testing.T) {
 		t.Fatalf("get must cite atoms and only atoms: %+v", got)
 	}
 }
+
+// "thanks" used to match the greeting and got "Hi. What are you building?"
+// back, so a reader closing a conversation was greeted as if they had just
+// arrived. It now gets its own fixed line, still with no lookup and no model.
+func TestRespondAnswersThanksWithoutGreetingBack(t *testing.T) {
+	m := &fakeModel{next: func([]Message) Reply {
+		t.Fatal("the model was called for thanks")
+		return Reply{}
+	}}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			t.Fatal("thanks was looked up")
+			return nil, nil, guard.PackFacts{}, nil
+		},
+	}
+	emit, evs := collectEvents()
+	if err := svc.RespondCommand(context.Background(), []Turn{{Role: "user", Text: "thanks!"}}, nil, Command{Gateway: "hiecm"}, emit); err != nil {
+		t.Fatal(err)
+	}
+	var text string
+	for _, e := range *evs {
+		if e.name == "text" {
+			text += e.data.(map[string]string)["delta"]
+		}
+	}
+	if text != thanksReply {
+		t.Errorf("thanks got %q, want %q", text, thanksReply)
+	}
+	if strings.Contains(text, "What are you building") {
+		t.Error("thanks was answered with the greeting")
+	}
+}
+
+// An endpoint passage opens with its method and path and names its page, so
+// the turn ends with a links event pairing the two. The widget renders the
+// path as a link from that, never from anything the model wrote.
+func TestRespondEmitsLinksForEndpointPassages(t *testing.T) {
+	m := &fakeModel{replies: []Reply{{Text: "Call `/api/hiecm/v3/token/generate-token` first.", StopReason: "end_turn"}}}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			return json.RawMessage(`{"passages":[
+				{"id":"hiecm.endpoint.m2-generate-link-token","title":"Generate link token","doc_url":"/docs/hiecm/v3/api/m2/generate-token","body":"POST /api/hiecm/v3/token/generate-token\n\nGenerates a link token."},
+				{"id":"hiecm.concept.care-context","title":"Care context","doc_url":"/docs/hiecm/v3/concepts/care-context","body":"A care context is a visit."},
+				{"id":"hiecm.endpoint.orphan","title":"No page","doc_url":"","body":"GET /api/nowhere\n\nUnrouted."}]}`),
+				[]Source{{ID: "hiecm.endpoint.m2-generate-link-token"}}, guard.PackFacts{}, nil
+		},
+	}
+	var links []Link
+	emit := func(event string, data any) error {
+		if event == "links" {
+			links = data.([]Link)
+		}
+		return nil
+	}
+	if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "link records"}}, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	want := Link{Literal: "/api/hiecm/v3/token/generate-token", URL: "/docs/hiecm/v3/api/m2/generate-token"}
+	if len(links) != 1 || links[0] != want {
+		t.Errorf("links = %v, want [%v]: one per endpoint passage with a route line and a page", links, want)
+	}
+}
+
+// The related atoms one hop out from the pack become up to three pills, none
+// of them a passage the reader was already shown.
+func TestSuggestionsFromPack(t *testing.T) {
+	pack := []byte(`{"passages":[{"id":"a"}],"related":[
+		{"id":"a","type":"flow","title":"Already shown"},
+		{"id":"b","type":"flow","title":"Link a care context"},
+		{"id":"","type":"flow","title":"No id"},
+		{"id":"c","type":"error","title":"ABDM-1016"},
+		{"id":"b","type":"flow","title":"Duplicate"},
+		{"id":"d","type":"concept","title":"Care context"},
+		{"id":"e","type":"concept","title":"One too many"}]}`)
+	got := suggestionsFromPack(pack)
+	want := []Suggestion{
+		{ID: "b", Title: "Link a care context", Prompt: "Link a care context"},
+		{ID: "c", Title: "ABDM-1016", Prompt: "ABDM-1016"},
+		{ID: "d", Title: "Care context", Prompt: "Care context"},
+	}
+	if len(got) != len(want) {
+		t.Fatalf("got %v, want %v", got, want)
+	}
+	for i := range want {
+		if got[i] != want[i] {
+			t.Errorf("suggestion %d = %v, want %v", i, got[i], want[i])
+		}
+	}
+}
+
+// A question about the assistant with a file attached still takes the self
+// shape: "what can you do with this" is about the assistant, and the self
+// facts say it reads what is attached.
+func TestAboutSelfWithAttachmentTakesSelfShape(t *testing.T) {
+	var lastUser string
+	m := &fakeModel{
+		replies:  []Reply{{Text: "I read the request you attached and explain it.", StopReason: "end_turn"}},
+		onStream: func(system string, tools []ToolDef, msgs []Message) { lastUser = msgs[len(msgs)-1].Text },
+	}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			t.Fatal("an about question was looked up")
+			return nil, nil, guard.PackFacts{}, nil
+		},
+	}
+	emit := func(event string, data any) error { return nil }
+	turns := []Turn{{Role: "user", Text: "what can you do with this?", Attachment: &Attachment{Name: "req.txt", Text: "POST /x"}}}
+	if err := svc.Respond(context.Background(), turns, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(lastUser, `<answer_shape name="self"`) {
+		t.Errorf("about question with attachment did not take the self shape: %q", lastUser)
+	}
+}
+
+// A bare portal feature name gets the portal's page from a fixed reply, with
+// no lookup and no model, the way a greeting does.
+func TestRespondAnswersAPortalFeatureNameWithoutLookingItUp(t *testing.T) {
+	m := &fakeModel{next: func([]Message) Reply {
+		t.Fatal("the model was called for a feature name")
+		return Reply{}
+	}}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			t.Fatalf("a feature name was looked up: %q", q)
+			return nil, nil, guard.PackFacts{}, nil
+		},
+	}
+	for _, tc := range []struct{ q, want string }{
+		{"scaffold skill", "/docs/hiecm/v3/getting-started/build-with-ai"},
+		{"MCP server", "/docs/hiecm/v3/getting-started/build-with-ai"},
+		{"postman collection", "/docs/hiecm/v3/api/"},
+	} {
+		emit, evs := collectEvents()
+		if err := svc.RespondCommand(context.Background(), []Turn{{Role: "user", Text: tc.q}}, nil, Command{}, emit); err != nil {
+			t.Fatal(err)
+		}
+		var text string
+		for _, e := range *evs {
+			if e.name == "text" {
+				text += e.data.(map[string]string)["delta"]
+			}
+		}
+		if !strings.Contains(text, tc.want) {
+			t.Errorf("%q: reply %q does not name %s", tc.q, text, tc.want)
+		}
+	}
+}
+
+// A two or three word noun phrase whose top passage is a flow takes the
+// topic shape; the same phrase over a glossary passage stays a definition.
+func TestShortPhraseOverAFlowTakesTheTopicShape(t *testing.T) {
+	for _, tc := range []struct{ top, wantShape string }{{"flow", "topic"}, {"glossary", "define"}} {
+		var lastUser string
+		m := &fakeModel{
+			replies:  []Reply{{Text: "Consent is requested by an HIU.", StopReason: "end_turn"}},
+			onStream: func(system string, tools []ToolDef, msgs []Message) { lastUser = msgs[len(msgs)-1].Text },
+		}
+		svc := &Service{Model: m, MaxTokens: 100,
+			Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+				return json.RawMessage(`{"passages":[{"id":"hiecm.flow.m3-request-consent","type":"` + tc.top + `","title":"Request consent","body":"An HIU requests consent."}]}`),
+					[]Source{{ID: "hiecm.flow.m3-request-consent"}}, guard.PackFacts{}, nil
+			},
+		}
+		if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "consent flow"}}, nil, func(string, any) error { return nil }); err != nil {
+			t.Fatal(err)
+		}
+		if !strings.Contains(lastUser, `<answer_shape name="`+tc.wantShape+`"`) {
+			t.Errorf("top passage %s: shape should be %s, user turn was %q", tc.top, tc.wantShape, lastUser)
+		}
+	}
+}

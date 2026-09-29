@@ -142,6 +142,12 @@ func Check(c Case, t Transcript) CheckResult {
 		}
 		// The define shape is the panel's; an agent answering through the MCP
 		// writes for whoever asked it, and is not scored on it.
+		// One question at most, after the substance. Two or more is the
+		// model asking instead of answering, the failure a nudge rule can
+		// reintroduce. Counted outside code, where a ? is part of a URL.
+		if n := strings.Count(stripped, "?"); n > 1 && t.Surface != SurfaceMCPAgent {
+			add("shape: %d questions in an answer", n)
+		}
 		if c.ExpectedShape == "define" && t.Surface != SurfaceMCPAgent {
 			if listRe.MatchString(answer) {
 				add("shape: define has a list")

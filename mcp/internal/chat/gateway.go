@@ -3,6 +3,7 @@ package chat
 import (
 	"context"
 	"regexp"
+	"strings"
 )
 
 // The gateway a question is asked from.
@@ -101,6 +102,11 @@ func gatewayNote(gateway string, fromPage bool) string {
 		" unless they ask about another gateway, and do not bring in another gateway's calls or fields.</reader_context>"
 }
 
+// thanksReply is the fixed reply to thanks or an acknowledgement. It is not
+// the greeting: a reader closing a conversation is not asked what they are
+// building.
+const thanksReply = "You're welcome. Ask again whenever the next call gives you trouble."
+
 // greetingFor is the fixed reply to a greeting, pointed at what the reader's
 // gateway covers.
 func greetingFor(gateway string) string {
@@ -111,5 +117,58 @@ func greetingFor(gateway string) string {
 		return "Hi. What are you building? Ask about a claim or a pre-authorisation, building a JWE, or an error code you are seeing."
 	default:
 		return "Hi. What are you building? Ask how to make a call, what a field means, or what an error code is telling you."
+	}
+}
+
+// variantTerms maps a spelling readers use to the term this portal uses.
+// Keys are lower case and matched on word boundaries. Kept short on purpose:
+// a row earns its place when the eval shows readers typing it.
+var variantTerms = []struct{ theirs, ours string }{
+	{"hmis", "HIMS"},
+	{"lims", "LIS"},
+	{"health id", "ABHA"},
+	{"phr address", "ABHA address"},
+	{"abha id", "ABHA number"},
+}
+
+// variantTerm returns the reader's spelling and the portal's term when the
+// question uses a known variant, and empty strings otherwise. The reader's
+// spelling is returned as they wrote it so the note quotes them exactly.
+func variantTerm(question string) (theirs, ours string) {
+	lower := strings.ToLower(question)
+	for _, v := range variantTerms {
+		i := strings.Index(lower, v.theirs)
+		for i >= 0 {
+			before := i == 0 || !isWordChar(lower[i-1])
+			end := i + len(v.theirs)
+			after := end == len(lower) || !isWordChar(lower[end])
+			if before && after {
+				return question[i:end], v.ours
+			}
+			next := strings.Index(lower[i+1:], v.theirs)
+			if next < 0 {
+				break
+			}
+			i += 1 + next
+		}
+	}
+	return "", ""
+}
+
+func isWordChar(b byte) bool {
+	return b == '_' || (b >= '0' && b <= '9') || (b >= 'a' && b <= 'z') || (b >= 'A' && b <= 'Z')
+}
+
+// featureReply is the fixed reply to a bare portal feature name. Two
+// sentences and a portal page, the decline shape's own limits, so the eval
+// scores it the same way it scores a model decline.
+func featureReply(feature string) string {
+	switch feature {
+	case "command":
+		return "Scaffold, Design, Integrate and Debug are the chips under the box: pick one and the module it is about, and the answer draws on that module's skill section. The same sections ship as files for your coding agent, on [agent skills and the MCP server](/docs/hiecm/v3/getting-started/build-with-ai)."
+	case "postman":
+		return "Each module's API reference offers a Postman collection and the shared sandbox environment from its overview page under /docs/hiecm/v3/api/. Pick the module, for example M1 for ABHA or M3 for consent, and the download sits at the top of its page."
+	default: // skills, mcp, plugin
+		return "Agent skills and the MCP server put this documentation inside your coding agent: the skills as files it loads once, the server as tools it queries as it works. Install steps for Claude Code, Cursor and VS Code are on [agent skills and the MCP server](/docs/hiecm/v3/getting-started/build-with-ai)."
 	}
 }

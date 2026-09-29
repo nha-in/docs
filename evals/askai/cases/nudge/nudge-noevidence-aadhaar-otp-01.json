@@ -1,0 +1,35 @@
+{
+  "id": "nudge-noevidence-aadhaar-otp-01",
+  "slice": "nudge",
+  "class": "diagnose",
+  "turns": [
+    {
+      "role": "user",
+      "text": "The Aadhaar OTP for creating an ABHA never reaches the person at the counter."
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "The OTP goes only to the mobile registered against the Aadhaar, which may not be the phone in the room",
+    "txnId"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.flow.m1-create-abha-aadhaar-otp"
+  ],
+  "expected_shape": "diagnose",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-abha-m1-abha-swagger-1-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "Nudge group, debugging with no evidence: the answer comes from the Aadhaar OTP flow and must end with exactly one question, whether the request/otp call returned a txnId; it catches an answer that blames the network or asks the reader for their code before answering."
+}

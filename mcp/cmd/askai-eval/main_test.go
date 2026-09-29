@@ -203,3 +203,17 @@ func TestRecordLatestAndResolveRun(t *testing.T) {
 		t.Fatalf("resolveRun(\"\") = %q, want %q", got, want)
 	}
 }
+
+// A case with no transcript in the run is unmeasured, not failing: it was
+// added after the run was recorded. A case that has a transcript and also
+// fails a check is a failure however the list is ordered.
+func TestIsUnmeasured(t *testing.T) {
+	if !isUnmeasured(eval.CheckResult{CaseID: "x", Failures: []string{"transcript: missing"}}) {
+		t.Error("a lone missing transcript should be unmeasured")
+	}
+	for _, f := range [][]string{nil, {"shape: heading in a chat answer"}, {"transcript: missing", "decline: no route"}} {
+		if isUnmeasured(eval.CheckResult{CaseID: "x", Failures: f}) {
+			t.Errorf("%v should not be unmeasured", f)
+		}
+	}
+}

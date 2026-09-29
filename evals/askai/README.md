@@ -41,6 +41,9 @@ were already known, per case, not just which cases were failing, so a case
 already in the baseline cannot acquire a new kind of failure for free.
 Shrinking the baseline is a deliberate act in a pull request, when a case is
 actually fixed, not something the tooling does on its own.
+A case the recorded run never answered, because it was added after the run,
+is reported as unmeasured: it neither fails the gate nor enters the baseline,
+and the next recorded run is what brings it under the gate.
 
 The judge is not trusted until it agrees with the owner's hand grading on at
 least 85 percent of the 30 cases in `calibration/owner-grades.json`;

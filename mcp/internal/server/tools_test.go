@@ -217,6 +217,46 @@ func (failingOpener) RelatedAtoms(id string) ([]index.RelatedGroup, error) {
 	return nil, nil
 }
 
+func (failingOpener) OperationRoute(id string) (string, string, bool) { return "", "", false }
+
+// routedOpener returns an endpoint atom that names an operation, and knows
+// that operation's route, so the passage can be checked for the path line.
+type routedOpener struct{ known bool }
+
+func (routedOpener) GetAtom(id string) (catalogue.Atom, error) {
+	return catalogue.Atom{ID: id, Type: "endpoint", Operation: "m2_post_v3_link_token_generate",
+		Body: "Generates a link token for the patient."}, nil
+}
+
+func (routedOpener) RelatedAtoms(id string) ([]index.RelatedGroup, error) { return nil, nil }
+
+func (o routedOpener) OperationRoute(id string) (string, string, bool) {
+	if !o.known || id != "m2_post_v3_link_token_generate" {
+		return "", "", false
+	}
+	return "POST", "/api/hiecm/v3/token/generate-token", true
+}
+
+// The endpoint atom's body never carries its path; the guard grounds
+// literals against the pack, so the passage has to carry the route or every
+// answer quoting the real path is withheld.
+func TestOpenPassageCarriesTheOperationRoute(t *testing.T) {
+	hit := index.SearchHit{ID: "hiecm.endpoint.m2-generate-link-token", Type: "endpoint"}
+	p, _ := openPassage(routedOpener{known: true}, hit)
+	if !strings.HasPrefix(p.Body, "POST /api/hiecm/v3/token/generate-token\n\n") {
+		t.Errorf("Body should open with the method and path, got %q", p.Body)
+	}
+	if !strings.HasSuffix(p.Body, "Generates a link token for the patient.") {
+		t.Errorf("Body should still end with the atom body, got %q", p.Body)
+	}
+	// An operation the index does not know leaves the body as it was, rather
+	// than writing an empty route line.
+	p, _ = openPassage(routedOpener{known: false}, hit)
+	if p.Body != "Generates a link token for the patient." {
+		t.Errorf("unknown operation should leave the body untouched, got %q", p.Body)
+	}
+}
+
 func TestOpenPassageDegradesToSummaryOnGetAtomError(t *testing.T) {
 	hit := index.SearchHit{ID: "hiecm.flow.m2-link-care-context", Type: "flow",
 		Title: "Link a care context", Summary: "the search hit's own summary"}

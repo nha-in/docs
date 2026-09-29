@@ -1584,3 +1584,21 @@
   outline-offset: 2px;
 }
 
+
+/* An endpoint path the server paired with its reference page. It stays code
+   to the eye; the underline on hover is what says it goes somewhere. */
+.ask-ai__code-link {
+  color: inherit;
+  text-decoration: none;
+}
+.ask-ai__code-link code {
+  border-bottom: 1px dotted currentColor;
+}
+.ask-ai__code-link:hover code {
+  border-bottom-style: solid;
+}
+
+/* Next-question pills sit under the answer, before the sources line. */
+.ask-ai__followups {
+  margin-top: 10px;
+}

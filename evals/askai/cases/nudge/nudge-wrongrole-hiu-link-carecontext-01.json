@@ -1,0 +1,37 @@
+{
+  "id": "nudge-wrongrole-hiu-link-carecontext-01",
+  "slice": "nudge",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "As an HIU, how do I call /api/hiecm/hip/v3/link/carecontext to attach the records I fetched to the patient?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "HIP",
+    "Linking a care context is the HIP's call: the side that holds the record links it against the patient's ABHA address",
+    "An HIU is the side that wants records it does not hold, and it begins every exchange with a consent request"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.flow.m2-link-care-context",
+    "hiecm.glossary.hiu"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-hiecm-hip-initiated-linking-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "Nudge group, wrong role: the reader asks for a HIP call as an HIU, and the case catches an answer that walks an HIU through linking instead of naming the HIP as the documented role and offering the HIU question."
+}

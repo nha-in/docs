@@ -1,0 +1,40 @@
+{
+  "id": "diagnose-hiecm-m1-expired-t-token-01",
+  "slice": "diagnose",
+  "class": "diagnose",
+  "turns": [
+    {
+      "role": "user",
+      "text": "I verified the mobile OTP yesterday while testing, and today selecting the account fails. Nothing else changed."
+    }
+  ],
+  "attachment": {
+    "name": "select-account.txt",
+    "text": "curl -X POST https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/verify/user \\\n  -H \"REQUEST-ID: 3d7e5f2a-8c1b-4a9d-b6e0-4f2c8a1d9e44\" \\\n  -H \"TIMESTAMP: 2026-09-29T11:02:09.771Z\" \\\n  -H \"T-token: Bearer <MASKED_TOKEN>\" \\\n  -H \"Authorization: Bearer <MASKED_TOKEN>\" \\\n  -d '{\"ABHANumber\":\"<MASKED_ABHA_NUMBER>\",\"txnId\":\"c8b2e4f1-9a3d-4c7e-8f1b-2d5a6e9c0b55\"}'\n\nHTTP/1.1 400 Bad Request\n\n{\"message\":\"Invalid T-token\"}",
+    "kind": "text"
+  },
+  "page": null,
+  "must_contain": [
+    "Invalid T-token means the verify token is wrong or expired: verify the OTP again and use the fresh token",
+    "The T-token header carries the short lived token from the login verify call, sent as Bearer <token>; it is not the X-token",
+    "The response of this call carries the person's X-token in token, with a refresh token"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.endpoint.m1-login-select-account"
+  ],
+  "expected_shape": "diagnose",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-abha-m1-abha-swagger-1-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "Diagnose group, attached curl with a stale short lived token: it catches an answer that blames the ABHA number or the gateway session instead of naming the expired T-token and the re-verify fix."
+}
