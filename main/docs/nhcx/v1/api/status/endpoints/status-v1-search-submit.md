@@ -16,7 +16,7 @@ Use it when an authorised body such as NHA or IRDAI needs the claim documents fo
 
 - You are an entity allowed to search, registered on NHCX, with a valid access token.
 - The payload is an encrypted FHIR `Task` that points to the case being queried.
-- `x-hcx-correlation_ID` carries the correlation ID of the request being queried.
+- `x-hcx-correlation_id` carries the correlation ID of the request being queried.
 
 ### Postconditions
 

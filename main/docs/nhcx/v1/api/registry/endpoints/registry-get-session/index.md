@@ -14,7 +14,7 @@ Call it when your system starts and again before the cached token expires. There
 
 ### Preconditions
 
-- You have the `client_ID` and `client_secret` issued at onboarding.
+- You have the `client_id` and `client_secret` issued at onboarding.
 - The credentials match the environment: sandbox and production credentials are separate.
 - The body is form-encoded with `grant_type=client_credentials`.
 - You do not need an access token for this call.

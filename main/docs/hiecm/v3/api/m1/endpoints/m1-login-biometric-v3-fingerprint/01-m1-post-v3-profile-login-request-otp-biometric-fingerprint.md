@@ -21,10 +21,10 @@ Starts fingerprint login for an ABHA number. Use the returned `txnId` in *Login 
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "Aadhaar-bio-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
-| `loginHint` | `"ABHA-number"` | yes | Type of identifier sent in `loginId`. |
+| `scope` | `["abha-login", "aadhaar-bio-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `loginHint` | `"abha-number"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"ABDM"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"aadhaar"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 
 > **Note:** The Postman collection does biometric login with a single call to `/abha/api/v3.1/profile/login/verify` (see tag *Login - Biometric v3.1*). Confirm which contract is current.
 
@@ -42,7 +42,7 @@ curl --request POST \
   ],
   "loginHint": "abha-number",
   "loginId": "{{encrypted abha-number}}",
-  "otpSystem": "abdm"
+  "otpSystem": "aadhaar"
 }'
 ```
 
@@ -60,7 +60,7 @@ curl --request POST \
 - `scope` (string[], required): Scope that selects this use case. Send exactly the values listed for this API.
 - `loginHint` (string, required): Type of identifier sent in `loginId`. One of: abha-number.
 - `loginId` (string, required): Identifier value, RSA-encrypted with the ABHA public certificate.
-- `otpSystem` (string, required): System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). One of: abdm.
+- `otpSystem` (string, required): System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). One of: aadhaar.
 
 ## Responses
 

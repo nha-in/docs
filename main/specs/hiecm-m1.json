@@ -122,10 +122,6 @@
       "description": "QR code, ABHA card and profile of a logged-in ABHA (`X-token`).\n\n**APIs:**\n- Get ABHA QR code\n- Retrieve ABHA card image\n- Get ABHA profile\n- Download ABHA card"
     },
     {
-      "name": "Profile - Update Photo",
-      "description": "Update the profile photo. (Not in the Postman collection.)\n\n**Call order:**\n1. Update profile photo"
-    },
-    {
       "name": "Find ABHA - Mobile OTP",
       "description": "Search ABHA accounts by mobile, pick one, and verify with mobile OTP.\n\n**Call order:**\n1. Search ABHA by mobile\n2. Find ABHA via Mobile - send OTP\n3. Find ABHA via Mobile - verify OTP"
     },
@@ -18137,7 +18133,7 @@
         ],
         "summary": "Login via Biometric (Fingerprint) - send authentication request",
         "operationId": "m1_post_v3_profile_login_request_otp_biometric_fingerprint",
-        "description": "Starts fingerprint login for an ABHA number. Use the returned `txnId` in *Login via Biometric (Fingerprint) - verify*.\n\n**Endpoint:** `POST /abha/api/v3/profile/login/request/otp`\n\n**Flow:** **Login - Biometric v3 (Fingerprint)** - step 1 of 2\n- Previous: none (first call of this flow)\n- Next: *Login via Biometric (Fingerprint) - verify*\n\n**Headers** (plus `Authorization: Bearer <gateway token>`):\n\n| Header | Required | Description |\n|---|---|---|\n| REQUEST-ID | yes | Unique UUID for every request. |\n| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |\n\n**Request body for this use case:**\n\n| Field | Value / Type | Required | Description |\n|---|---|---|---|\n| `scope` | `[\"abha-login\", \"aadhaar-bio-verify\"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |\n| `loginHint` | `\"abha-number\"` | yes | Type of identifier sent in `loginId`. |\n| `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |\n| `otpSystem` | `\"abdm\"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |\n\n> **Note:** The Postman collection does biometric login with a single call to `/abha/api/v3.1/profile/login/verify` (see tag *Login - Biometric v3.1*). Confirm which contract is current.",
+        "description": "Starts fingerprint login for an ABHA number. Use the returned `txnId` in *Login via Biometric (Fingerprint) - verify*.\n\n**Endpoint:** `POST /abha/api/v3/profile/login/request/otp`\n\n**Flow:** **Login - Biometric v3 (Fingerprint)** - step 1 of 2\n- Previous: none (first call of this flow)\n- Next: *Login via Biometric (Fingerprint) - verify*\n\n**Headers** (plus `Authorization: Bearer <gateway token>`):\n\n| Header | Required | Description |\n|---|---|---|\n| REQUEST-ID | yes | Unique UUID for every request. |\n| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |\n\n**Request body for this use case:**\n\n| Field | Value / Type | Required | Description |\n|---|---|---|---|\n| `scope` | `[\"abha-login\", \"aadhaar-bio-verify\"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |\n| `loginHint` | `\"abha-number\"` | yes | Type of identifier sent in `loginId`. |\n| `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |\n| `otpSystem` | `\"aadhaar\"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |\n\n> **Note:** The Postman collection does biometric login with a single call to `/abha/api/v3.1/profile/login/verify` (see tag *Login - Biometric v3.1*). Confirm which contract is current.",
         "security": [
           {
             "bearerAuth": []
@@ -18206,7 +18202,7 @@
                     "type": "string",
                     "description": "System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM).",
                     "enum": [
-                      "abdm"
+                      "aadhaar"
                     ]
                   }
                 },
@@ -18226,7 +18222,7 @@
                     ],
                     "loginHint": "abha-number",
                     "loginId": "{{encrypted abha-number}}",
-                    "otpSystem": "abdm"
+                    "otpSystem": "aadhaar"
                   },
                   "summary": "Login via Biometric (Fingerprint) - send authentication request"
                 }
@@ -18979,7 +18975,7 @@
         ],
         "summary": "Login via Biometric (Iris) - send authentication request",
         "operationId": "m1_post_v3_profile_login_request_otp_biometric_iris",
-        "description": "Starts IRIS login for an ABHA number. Use the returned `txnId` in *Login via Biometric (Iris) - verify*.\n\n**Endpoint:** `POST /abha/api/v3/profile/login/request/otp`\n\n**Flow:** **Login - Biometric v3 (Iris)** - step 1 of 2\n- Previous: none (first call of this flow)\n- Next: *Login via Biometric (Iris) - verify*\n\n**Headers** (plus `Authorization: Bearer <gateway token>`):\n\n| Header | Required | Description |\n|---|---|---|\n| REQUEST-ID | yes | Unique UUID for every request. |\n| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |\n\n**Request body for this use case:**\n\n| Field | Value / Type | Required | Description |\n|---|---|---|---|\n| `scope` | `[\"abha-login\", \"aadhaar-iris-verify\"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |\n| `loginHint` | `\"abha-number\"` | yes | Type of identifier sent in `loginId`. |\n| `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |\n| `otpSystem` | `\"abdm\"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |\n\n> **Note:** The Postman collection does biometric login with a single call to `/abha/api/v3.1/profile/login/verify` (see tag *Login - Biometric v3.1*). Confirm which contract is current.",
+        "description": "Starts IRIS login for an ABHA number. Use the returned `txnId` in *Login via Biometric (Iris) - verify*.\n\n**Endpoint:** `POST /abha/api/v3/profile/login/request/otp`\n\n**Flow:** **Login - Biometric v3 (Iris)** - step 1 of 2\n- Previous: none (first call of this flow)\n- Next: *Login via Biometric (Iris) - verify*\n\n**Headers** (plus `Authorization: Bearer <gateway token>`):\n\n| Header | Required | Description |\n|---|---|---|\n| REQUEST-ID | yes | Unique UUID for every request. |\n| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |\n\n**Request body for this use case:**\n\n| Field | Value / Type | Required | Description |\n|---|---|---|---|\n| `scope` | `[\"abha-login\", \"aadhaar-iris-verify\"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |\n| `loginHint` | `\"abha-number\"` | yes | Type of identifier sent in `loginId`. |\n| `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |\n| `otpSystem` | `\"aadhaar\"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |\n\n> **Note:** The Postman collection does biometric login with a single call to `/abha/api/v3.1/profile/login/verify` (see tag *Login - Biometric v3.1*). Confirm which contract is current.",
         "security": [
           {
             "bearerAuth": []
@@ -19048,7 +19044,7 @@
                     "type": "string",
                     "description": "System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM).",
                     "enum": [
-                      "abdm"
+                      "aadhaar"
                     ]
                   }
                 },
@@ -19068,7 +19064,7 @@
                     ],
                     "loginHint": "abha-number",
                     "loginId": "{{encrypted abha-number}}",
-                    "otpSystem": "abdm"
+                    "otpSystem": "aadhaar"
                   },
                   "summary": "Login via Biometric (Iris) - send authentication request"
                 }
@@ -22325,305 +22321,6 @@
         "x-abdm-title": "Download ABHA card"
       }
     },
-    "/abha/api/v3/profile/account#profile-photo": {
-      "patch": {
-        "tags": [
-          "Profile - Update Photo"
-        ],
-        "summary": "Update profile photo",
-        "operationId": "m1_patch_v3_profile_account_profile_photo",
-        "description": "Updates the profile photo of the logged-in ABHA user (`X-token`). Send the photo as a Base64 string.\n\n**Endpoint:** `PATCH /abha/api/v3/profile/account`\n\n**Flow:** **Profile - Update Photo** - step 1 of 1\n- Previous: none (first call of this flow)\n- Next: none (last call of this flow)\n\n**Headers** (plus `Authorization: Bearer <gateway token>`):\n\n| Header | Required | Description |\n|---|---|---|\n| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |\n| REQUEST-ID | yes | Unique UUID for every request. |\n| X-token | yes | User token (`Bearer <token>`) received after verification / login. |\n\n**Request body for this use case:**\n\n| Field | Value / Type | Required | Description |\n|---|---|---|---|\n| `profilePhoto` | string | no | Base64 encoded profile photo. |\n\n> **Note:** The source spec has no response example for this use case. Its only examples are for Child ABHA.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "profilePhoto": {
-                    "type": "string",
-                    "description": "Base64 encoded profile photo."
-                  }
-                }
-              },
-              "examples": {
-                "Update profile photo": {
-                  "value": {
-                    "profilePhoto": "{{profile photo string}}"
-                  },
-                  "summary": "Update profile photo"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "TIMESTAMP",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "example": "2022-10-06T15:10:00.587Z",
-            "description": "Current UTC timestamp in ISO-8601 format."
-          },
-          {
-            "name": "REQUEST-ID",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            },
-            "example": "18235d89-cb13-479d-ad71-7a57d5f669a8",
-            "description": "Unique UUID for every request."
-          },
-          {
-            "name": "X-token",
-            "in": "header",
-            "schema": {
-              "type": "string"
-            },
-            "description": "User token (`Bearer <token>`) received after verification / login.",
-            "example": "Bearer {{X-token}}",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "ABHANumber": {
-                      "type": "string",
-                      "example": "<ABHA_NUMBER>"
-                    },
-                    "preferredAbhaAddress": {
-                      "type": "string",
-                      "example": "<ABHA_ADDRESS>"
-                    },
-                    "mobile": {
-                      "type": "string",
-                      "example": "******0903"
-                    },
-                    "firstName": {
-                      "type": "string",
-                      "example": "<NAME>"
-                    },
-                    "middleName": {
-                      "type": "string",
-                      "example": "<NAME>"
-                    },
-                    "lastName": {
-                      "type": "string",
-                      "example": "<NAME>"
-                    },
-                    "yearOfBirth": {
-                      "type": "integer",
-                      "example": "<DOB>"
-                    },
-                    "monthOfBirth": {
-                      "type": "integer",
-                      "example": "<DOB>"
-                    },
-                    "dayOfBirth": {
-                      "type": "integer",
-                      "example": "<DOB>"
-                    },
-                    "gender": {
-                      "type": "string",
-                      "example": "F"
-                    },
-                    "status": {
-                      "type": "string",
-                      "example": "ACTIVE"
-                    },
-                    "stateCode": {
-                      "type": "integer",
-                      "example": 27
-                    },
-                    "districtCode": {
-                      "type": "integer",
-                      "example": 290
-                    },
-                    "stateName": {
-                      "type": "string",
-                      "example": "Maharashtra"
-                    },
-                    "districtName": {
-                      "type": "string",
-                      "example": "<ADDRESS>"
-                    },
-                    "subdistrictName": {
-                      "type": "string",
-                      "example": "<ADDRESS>"
-                    },
-                    "authMethods": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      },
-                      "example": [
-                        "MOBILE_OTP"
-                      ]
-                    },
-                    "tags": {
-                      "type": "object",
-                      "additionalProperties": {
-                        "type": "string"
-                      }
-                    },
-                    "kycVerified": {
-                      "type": "boolean",
-                      "example": false
-                    },
-                    "verificationStatus": {
-                      "type": "string",
-                      "example": "VERIFIED"
-                    },
-                    "verificationType": {
-                      "type": "string",
-                      "example": "CHILD_ABHA"
-                    },
-                    "createdDate": {
-                      "type": "string",
-                      "example": "10-05-2024"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request (request validation failed).",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "object",
-                      "properties": {
-                        "message": {
-                          "type": "string",
-                          "example": "Please provide a valid field to update"
-                        },
-                        "timestamp": {
-                          "type": "string",
-                          "format": "date-time",
-                          "example": "2023-01-11T00:14:02.000Z"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized (invalid / expired gateway token, X-token or benefit access).",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "object",
-                      "properties": {
-                        "code": {
-                          "type": "string",
-                          "example": "ABDM-1021"
-                        },
-                        "message": {
-                          "type": "string",
-                          "example": "Lack of required priviledges"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "object",
-                      "properties": {
-                        "code": {
-                          "type": "string",
-                          "example": "ABDM-1114"
-                        },
-                        "message": {
-                          "type": "string",
-                          "example": "User not found"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity (business rule or UIDAI failure).",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "object",
-                      "properties": {
-                        "code": {
-                          "type": "string",
-                          "example": "ABDM-1160"
-                        },
-                        "message": {
-                          "type": "string",
-                          "example": "Non KYC CHILD ABHA is allowed to update their profile only once"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error."
-          }
-        },
-        "x-stoplight": {
-          "id": "twxkgdie7jr8m"
-        },
-        "x-actual-path": "/abha/api/v3/profile/account",
-        "x-use-case": "profile-photo",
-        "x-journey": {
-          "journey": "Profile - Update Photo",
-          "step": 1,
-          "of": 1,
-          "kind": "flow"
-        },
-        "x-abdm-nha-operation-id": "profileUpdatePhoto",
-        "x-abdm-title": "Update profile photo"
-      }
-    },
     "/abha/api/v3/profile/account/abha/search#find-abha-mobile-otp": {
       "post": {
         "tags": [
@@ -24024,7 +23721,7 @@
         ],
         "summary": "Find ABHA via Face - send authentication request",
         "operationId": "m1_post_v3_profile_login_request_otp_find_abha_face",
-        "description": "Starts face authentication for the ABHA account picked from *Search ABHA by mobile*. Send `loginHint: index`, the RSA-encrypted `index` of the chosen account, and the `txnId` returned by the search. Then poll *Face auth - capture PID / track status* until `COMPLETE`.\n\n**Endpoint:** `POST /abha/api/v3/profile/login/request/otp`\n\n**Flow:** **Find ABHA - Face** - step 2 of 4\n- Previous: *Search ABHA by mobile*\n- Next: *Face auth - capture PID / track status*\n\n**Headers** (plus `Authorization: Bearer <gateway token>`):\n\n| Header | Required | Description |\n|---|---|---|\n| REQUEST-ID | yes | Unique UUID for every request. |\n| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |\n\n**Request body for this use case:**\n\n| Field | Value / Type | Required | Description |\n|---|---|---|---|\n| `scope` | `[\"abha-login\", \"search-abha\", \"aadhaar-face-verify\"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |\n| `loginHint` | `\"index\"` | yes | Type of identifier sent in `loginId`. |\n| `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |\n| `otpSystem` | `\"aadhaar\"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |\n| `txnId` | string | yes | Transaction ID returned by the previous step of this flow. |\n\n> **Note:** The Postman collection sends scope `[\"abha-login\",\"search-abha\",\"face-auth\"]` for this step. This spec uses `aadhaar-face-verify`; confirm with NHA.",
+        "description": "Starts face authentication for the ABHA account picked from *Search ABHA by mobile*. Send `loginHint: index`, the RSA-encrypted `index` of the chosen account, and the `txnId` returned by the search. Then poll *Face auth - capture PID / track status* until `COMPLETE`.\n\n**Endpoint:** `POST /abha/api/v3/profile/login/request/otp`\n\n**Flow:** **Find ABHA - Face** - step 2 of 4\n- Previous: *Search ABHA by mobile*\n- Next: *Face auth - capture PID / track status*\n\n**Headers** (plus `Authorization: Bearer <gateway token>`):\n\n| Header | Required | Description |\n|---|---|---|\n| REQUEST-ID | yes | Unique UUID for every request. |\n| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |\n\n**Request body for this use case:**\n\n| Field | Value / Type | Required | Description |\n|---|---|---|---|\n| `scope` | `[\"abha-login\", \"search-abha\", \"face-auth\"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |\n| `loginHint` | `\"index\"` | yes | Type of identifier sent in `loginId`. |\n| `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |\n| `otpSystem` | `\"aadhaar\"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |\n| `txnId` | string | yes | Transaction ID returned by the previous step of this flow. |\n\n> **Note:** The Postman collection sends scope `[\"abha-login\",\"search-abha\",\"face-auth\"]` for this step. This spec uses `face-auth`; confirm with NHA.",
         "security": [
           {
             "bearerAuth": []
@@ -24068,7 +23765,7 @@
                       "enum": [
                         "abha-login",
                         "search-abha",
-                        "aadhaar-face-verify"
+                        "face-auth"
                       ]
                     },
                     "description": "Scope that selects this use case. Send exactly the values listed for this API.",
@@ -24077,7 +23774,7 @@
                     "example": [
                       "abha-login",
                       "search-abha",
-                      "aadhaar-face-verify"
+                      "face-auth"
                     ]
                   },
                   "loginHint": {
@@ -24117,7 +23814,7 @@
                     "scope": [
                       "abha-login",
                       "search-abha",
-                      "aadhaar-face-verify"
+                      "face-auth"
                     ],
                     "loginHint": "index",
                     "loginId": "{{rsaIndexEncryptionOutput}}",

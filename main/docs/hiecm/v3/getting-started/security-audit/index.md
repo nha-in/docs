@@ -5,7 +5,7 @@ Every application passes a security audit before it reaches production. The audi
 ## In short
 
 - The audit is separate from anything functional. Passing every milestone still leaves this to do.
-- Your auditor comes from the CERT-In empanelled list. An audit by anyone else does not count.
+- Your auditor is an STQC approved agency or a CERT-In empanelled agency. An audit by anyone else does not count.
 - The audit runs on your staging URL, and the certificate then licenses the same application in production.
 - Each platform you ship is audited on its own. A website, an Android app and an iOS app need three.
 - A certificate that is in date covers a new module without re-auditing what it already covers.
@@ -16,7 +16,7 @@ Build the modules you intend to certify before you apply. An audit covering seve
 
 ## 1. Appoint an auditor
 
-Choose an auditor from the [CERT-In empanelled list](https://www.cert-in.org.in/PDF/Empanel_org_2021.pdf).
+Choose an STQC approved agency, or an agency on the [CERT-In empanelled list](https://www.cert-in.org.in/PDF/Empanel_org_2021.pdf).
 
 ## 2. Point the auditor at staging
 
@@ -25,6 +25,10 @@ The audit is conducted on your staging URL. The certificate it produces then lic
 ## 3. Cover every platform you ship
 
 One audit covers one platform. An audit of a shared [ABHA](/docs/main/docs/hiecm/v3/getting-started/glossary#abha) base URL does not cover the mobile applications that call it.
+
+## 4. Submit the certificate to NHA
+
+Submit the valid Safe to Host certificate to NHA. It is also one of the documents you upload with the [exit form](/docs/main/docs/hiecm/v3/getting-started/going-live#step-4-submit-the-sandbox-exit-form).
 
 ## What gets audited
 

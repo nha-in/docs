@@ -19,7 +19,7 @@ v3.1 fingerprint login in a single call. Send the encrypted Aadhaar number and t
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "Aadhaar-bio-login-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-login", "aadhaar-bio-login-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
 | `authData.authMethods` | `["bio_login"]` | yes | Authentication method used in this step. |
 | `authData.bio_login` | object | yes | Fingerprint login block (v3.1). |

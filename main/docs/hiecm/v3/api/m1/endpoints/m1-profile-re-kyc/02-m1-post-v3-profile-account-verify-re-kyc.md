@@ -22,9 +22,9 @@ Verifies the Aadhaar OTP sent by *Re-KYC - send Aadhaar OTP* and refreshes the A
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-profile", "re-KYC"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-profile", "re-kyc"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
-| `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
+| `authData.authMethods` | `["otp"]` | yes | Authentication method used in this step. |
 | `authData.otp` | object | yes | OTP authentication block. |
 | `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 | `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |

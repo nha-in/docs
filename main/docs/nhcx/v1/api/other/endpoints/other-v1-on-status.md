@@ -29,13 +29,13 @@ Read `x-hcx-status` in the header. `request.dispatched` means the message reache
 
 ### Best practices
 
-- Keep every `API_call_ID` you send. Without it you cannot ask the question at all.
+- Keep every `api_call_id` you send. Without it you cannot ask the question at all.
 - Act on `request.stopped` at once, and treat `request.dispatched` as a reason to wait for the payer.
 - Ask from a support screen when a case has gone quiet for longer than the payer's expected turnaround, not on a timer.
 
 ### Related scenario
 
-A pre-authorisation has had no answer for longer than the payer's usual turnaround. The support screen sends `/v1/status` with that request's `API_call_ID` as the correlation ID. The answer arrives here with an empty payload and `x-hcx-status` `request.stopped`, so the desk knows the request is dead rather than slow, and resubmits it with a fresh correlation ID.
+A pre-authorisation has had no answer for longer than the payer's usual turnaround. The support screen sends `/v1/status` with that request's `api_call_id` as the correlation ID. The answer arrives here with an empty payload and `x-hcx-status` `request.stopped`, so the desk knows the request is dead rather than slow, and resubmits it with a fresh correlation ID.
 
 ### Specification
 

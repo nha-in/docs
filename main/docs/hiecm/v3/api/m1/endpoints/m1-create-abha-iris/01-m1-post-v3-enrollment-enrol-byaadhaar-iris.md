@@ -29,7 +29,7 @@ Creates an ABHA number by authenticating the Aadhaar holder's IRIS. The PID bloc
 | `authData.iris.pid` | string | yes | Base64 PID block captured from a registered IRIS RD device. |
 | `authData.iris.mobile` | string | no | Mobile number to be linked with the ABHA (plain, 10 digits). |
 | `consent` | object | yes | Consent captured from the user for ABHA enrolment. |
-| `consent.code` | string | yes | Consent code. Use `ABHA-enrollment`. |
+| `consent.code` | string | yes | Consent code. Use `abha-enrollment`. |
 | `consent.version` | string | yes | Consent version. Use `1.4`. |
 
 ```bash

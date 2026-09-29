@@ -23,7 +23,7 @@ You need an organisation to register, and a URL we can post callbacks to. Step 3
 
 Submit a request to access the ABDM Sandbox APIs. Eligible entities may apply for access to the ABDM Sandbox to integrate and test their software with ABDM APIs. Provide the required organisation, product and contact details and select the applicable integration category while submitting the request.
 
-[Apply for Sandbox Integration](https://sandbox.abdm.gov.in/sandbox/v3/sandbox-registration)
+[Apply for Sandbox Integration](https://sbxai.abdm.gov.in)
 
 ## 2. Get access: your client id and client secret
 
@@ -31,7 +31,7 @@ Sandbox access is granted after approval by the [Health Tech Committee](/docs/ma
 
 Store the secret the way you store any other production credential. Never commit it, and never send it to a browser.
 
-[Open the sandbox](https://sandbox.abdm.gov.in/)
+[Open the sandbox](https://sbxai.abdm.gov.in/)
 
 ## 3. Register your callback URL
 
@@ -41,7 +41,7 @@ Register one base URL. We post to paths under it, and each callback that answers
 
 One URL covers your whole integration, however many facilities it serves. It belongs to your bridge, never to a facility, and the callback names the facility it is for in its own header. See [one bridge, many facilities](/docs/main/docs/hiecm/v3/concepts/how-it-fits#one-bridge-many-facilities).
 
-[Open the sandbox](https://sandbox.abdm.gov.in/)
+[Open the sandbox](https://sbxai.abdm.gov.in/)
 
 Two things about that URL decide whether your integration works:
 

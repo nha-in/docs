@@ -10,11 +10,11 @@ Asynchronous exchanges lose messages, stall in queues and outlive the shift of t
 
 ### When to use
 
-Use it when the callback for a request you sent has not arrived. Set `x-hcx-correlation_ID` to the `x-hcx-API_call_ID` of that request. You can only check requests you sent yourself.
+Use it when the callback for a request you sent has not arrived. Set `x-hcx-correlation_id` to the `x-hcx-api_call_id` of that request. You can only check requests you sent yourself.
 
 ### Preconditions
 
-- You sent the original request and kept its `API_call_ID`.
+- You sent the original request and kept its `api_call_id`.
 - You have a valid access token.
 - The encrypted payload is an empty string, and the header status is `request.initiated`.
 
@@ -24,7 +24,7 @@ NHCX answers at once with `request.queued` or `request.dispatched`. Queued means
 
 ### Common mistakes
 
-- Making a new correlation ID instead of using the original request's `API_call_ID`.
+- Making a new correlation ID instead of using the original request's `api_call_id`.
 - Polling in a tight loop.
 - Resubmitting the original request after `request.queued`, which creates a duplicate.
 

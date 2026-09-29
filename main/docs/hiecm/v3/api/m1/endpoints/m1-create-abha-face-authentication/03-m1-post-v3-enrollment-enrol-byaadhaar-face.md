@@ -29,7 +29,7 @@ Creates an ABHA number with Aadhaar face authentication. First call *Face auth -
 | `authData.face.aadhaar` | string | yes | Aadhaar number, RSA-encrypted. |
 | `authData.face.mobile` | string | no | Mobile number to be linked with the ABHA (plain, 10 digits). |
 | `consent` | object | yes | Consent captured from the user for ABHA enrolment. |
-| `consent.code` | string | yes | Consent code. Use `ABHA-enrollment`. |
+| `consent.code` | string | yes | Consent code. Use `abha-enrollment`. |
 | `consent.version` | string | yes | Consent version. Use `1.4`. |
 
 ```bash

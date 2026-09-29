@@ -19,7 +19,7 @@ v3.1 IRIS login in a single call. Send the encrypted Aadhaar number and the IRIS
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "Aadhaar-iris-login-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-login", "aadhaar-iris-login-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
 | `authData.authMethods` | `["iris_login"]` | yes | Authentication method used in this step. |
 | `authData.iris_login` | object | yes | IRIS login block (v3.1). |

@@ -21,9 +21,9 @@ Verifies the mobile OTP. Returns the ABHA accounts linked to the mobile number, 
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-login", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
-| `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
+| `authData.authMethods` | `["otp"]` | yes | Authentication method used in this step. |
 | `authData.otp` | object | yes | OTP authentication block. |
 | `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 | `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
