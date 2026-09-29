@@ -1,27 +1,26 @@
 # HPR on UHI
 
-The [HPR](/docs/main/docs/uhi/v1/getting-started/glossary#hpr) is the national register of health professionals. On UHI it names the person a patient is booking: the doctor in a consultation.
+The [HPR](/docs/main/docs/uhi/v1/getting-started/glossary#hpr) is the national register of health professionals. On [UHI](/docs/main/docs/uhi/v1/getting-started/glossary#uhi) it names the doctor a patient books in [Physical Consultation](/docs/main/docs/uhi/v1/services/consultation).
 
 ## Where it appears
 
-| Field                                                 | Stage                                                                                           | Required |
-| ----------------------------------------------------- | ----------------------------------------------------------------------------------------------- | -------- |
-| `catalog.providers[].fulfillments[].agent.id`         | The catalogue an [HSPA](/docs/main/docs/uhi/v1/getting-started/glossary#hspa) returns on search | Yes      |
-| `catalog.providers[].fulfillments[].agent.tags`       | The same catalogue entry                                                                        | No       |
-| `order.fulfillment.agent.id`                          | The order, from select onward                                                                   | Yes      |
-| `chat.sender.person.id` and `chat.receiver.person.id` | Chat, when the doctor is one end of it                                                          | Yes      |
+| Field                                                   | Stage                                                                                              | Required |
+| ------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | -------- |
+| `message.intent.fulfillment.agent.id`                   | A search by the doctor's HPR address                                                               | No       |
+| `message.catalog.providers[].fulfillments[].agent.id`   | The catalog an [HSPA](/docs/main/docs/uhi/v1/getting-started/glossary#hspa) returns in `on_search` | Yes      |
+| `message.catalog.providers[].fulfillments[].agent.tags` | The same catalog entry                                                                             | No       |
+| `order.fulfillment.agent.id`                            | The order                                                                                          | Yes      |
+| `message.intent.chat.receiver.person.id`                | A message from the patient to the doctor                                                           | Yes      |
 
 ## Two forms of the same identifier
 
-The practitioner appears two ways in the same sample. `agent.id` carries the readable address, `<HPR_ADDRESS>`. The tag block beside it carries the numeric ID, `@abdm/gov.in/hpr_id`, as `<HPR_ID>`.
+- **`agent.id`** carries the HPR address, in the form `<HPR_ADDRESS>@hpr.ndhm`.
+- **The `@abdm/gov.in/hpr_id` tag** carries the HPR ID, `<HPR_ID>`, among the doctor's other tags.
 
-Send the address in `agent.id`. The tag is optional, and it sits with the other practitioner tags The same block also carries: `@abdm/gov.in/experience`, `/languages`, `/education`, `/hpr_id`, `/hfr_id` and `/hip_id`.
+The same tag block can carry `@abdm/gov.in/experience`, `languages`, `education`, `hfr_id` and `hip_id`.
 
-## Where the ID comes from
+## Next steps
 
-Not from UHI. A professional is registered in the HPR through [M4](/docs/main/docs/hiecm/v3/api/m4) on HIE-CM, and UHI quotes what M4 wrote. If your HSPA lists a doctor who has no HPR ID, the catalogue entry has no valid `agent.id` to carry, and there is no UHI call that will mint one.
-
-## Next
-
-- [HFR on UHI](/docs/main/docs/uhi/v1/registries/hfr), the facility the practitioner works in
-- [M4 Registry Integration](/docs/main/docs/hiecm/v3/api/m4), where both are written
+- [HFR on UHI](/docs/main/docs/uhi/v1/registries/hfr), the facility tag beside the doctor
+- [ABHA on UHI](/docs/main/docs/uhi/v1/registries/abha), the patient in the same booking
+- [Physical Consultation](/docs/main/docs/uhi/v1/services/consultation), the service where a patient books the doctor

@@ -589,14 +589,16 @@ Add `.md` to any link below to get that page as markdown. Individual API operati
 
 ## docs/uhi
 
-- [Introduction](https://nha-in.github.io/docs/main/docs/uhi/v1): What UHI is, the two roles you can build, and how far each service goes today.
+- [Get started](https://nha-in.github.io/docs/main/docs/uhi/v1): Connect your app to the UHI network, from the parties and services to sandbox registration, your first signed search and going live.
 - [API references](https://nha-in.github.io/docs/main/docs/uhi/v1/api): Every operation published for this gateway, module by module.
+- [Ambulance Booking](https://nha-in.github.io/docs/main/docs/uhi/v1/api/ambulance): Ambulance Booking's Phase 1 calls, init and on_init direct between EUA and HSPA, after discovery through the UHI Gateway.
 - [Search through the Gateway](https://nha-in.github.io/docs/main/docs/uhi/v1/api/ambulance/endpoints/uhi-ambulance-discovery/01-uhi-network-gateway-search): Search for services by intent
 - [Search an HSPA](https://nha-in.github.io/docs/main/docs/uhi/v1/api/ambulance/endpoints/uhi-ambulance-discovery/02-uhi-network-search): Search for services by intent * First search coming from UHI gateway will include header(X-Gateway-Authorisation) Second search will be a peer to peer...
 - [Send a catalog through the Gateway](https://nha-in.github.io/docs/main/docs/uhi/v1/api/ambulance/endpoints/uhi-ambulance-discovery/03-uhi-network-gateway-on-search): Accepter for all the on_search response from the HSPAs
 - [Send a catalog to the EUA](https://nha-in.github.io/docs/main/docs/uhi/v1/api/ambulance/endpoints/uhi-ambulance-discovery/04-uhi-network-on-search): Sends catalogue.
 - [Send the patient's details for a quote](https://nha-in.github.io/docs/main/docs/uhi/v1/api/ambulance/endpoints/uhi-ambulance-order/01-uhi-ambulance-init): Initialise an order by providing billing and/or shipping details
 - [Send the quote and terms](https://nha-in.github.io/docs/main/docs/uhi/v1/api/ambulance/endpoints/uhi-ambulance-order/02-uhi-ambulance-on-init): Send order object with payment details updated
+- [Physical Consultation](https://nha-in.github.io/docs/main/docs/uhi/v1/api/consultation): Physical Consultation's calls from init to on_message, direct between EUA and HSPA, and the four audit copies the HSPA sends the UHI Gateway.
 - [Search through the Gateway](https://nha-in.github.io/docs/main/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-discovery/01-uhi-network-gateway-search): Search for services by intent
 - [Search an HSPA](https://nha-in.github.io/docs/main/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-discovery/02-uhi-network-search): Search for services by intent * First search coming from UHI gateway will include header(X-Gateway-Authorisation) Second search will be a peer to peer...
 - [Send a catalog through the Gateway](https://nha-in.github.io/docs/main/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-discovery/03-uhi-network-gateway-on-search): Accepter for all the on_search response from the HSPAs
@@ -619,6 +621,7 @@ Add `.md` to any link below to get that page as markdown. Individual API operati
 - [Copy on_cancel to the Gateway audit](https://nha-in.github.io/docs/main/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-post-fulfilment/03-uhi-consultation-on-cancel-audit): Accepter for all the on_cancel_audit response from the HSPAs
 - [Send a message to the HSPA](https://nha-in.github.io/docs/main/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-post-fulfilment/04-uhi-consultation-on-message-to-hspa): Inter-operable communication API between consumer and provider *(Both HSPA and EUA will be consuming the same on_message API)*
 - [Send a message to the EUA](https://nha-in.github.io/docs/main/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-post-fulfilment/05-uhi-consultation-on-message-to-eua): Inter-operable communication API between consumer and provider *(Both HSPA and EUA will be consuming the same on_message API)*
+- [Network and discovery](https://nha-in.github.io/docs/main/docs/uhi/v1/api/network): The UHI Gateway search and on_search, the discovery pair every EUA and HSPA serves, and the network registry lookup, by service.
 - [Search through the Gateway](https://nha-in.github.io/docs/main/docs/uhi/v1/api/network/endpoints/uhi-blood-bank/01-uhi-network-gateway-search): Search for services by intent
 - [Search an HSPA](https://nha-in.github.io/docs/main/docs/uhi/v1/api/network/endpoints/uhi-blood-bank/02-uhi-network-search): Search for services by intent * First search coming from UHI gateway will include header(X-Gateway-Authorisation) Second search will be a peer to peer...
 - [Send a catalog through the Gateway](https://nha-in.github.io/docs/main/docs/uhi/v1/api/network/endpoints/uhi-blood-bank/03-uhi-network-gateway-on-search): Accepter for all the on_search response from the HSPAs
@@ -643,24 +646,37 @@ Add `.md` to any link below to get that page as markdown. Individual API operati
 - [Search an HSPA](https://nha-in.github.io/docs/main/docs/uhi/v1/api/network/endpoints/uhi-pmjay-hem/02-uhi-network-search): Search for services by intent * First search coming from UHI gateway will include header(X-Gateway-Authorisation) Second search will be a peer to peer...
 - [Send a catalog through the Gateway](https://nha-in.github.io/docs/main/docs/uhi/v1/api/network/endpoints/uhi-pmjay-hem/03-uhi-network-gateway-on-search): Accepter for all the on_search response from the HSPAs
 - [Send a catalog to the EUA](https://nha-in.github.io/docs/main/docs/uhi/v1/api/network/endpoints/uhi-pmjay-hem/04-uhi-network-on-search): Sends catalogue.
-- [UHI gateway](https://nha-in.github.io/docs/main/docs/uhi/v1/concepts/network-and-protocol): The open network for discovering and booking health services, its two roles, and its signing scheme.
-- [Ambulance booking](https://nha-in.github.io/docs/main/docs/uhi/v1/concepts/services/ambulance-booking): Find an ambulance nearby and get a quote from the provider, using the two call pairs live in this service today.
-- [AMRIT Pharmacy discovery](https://nha-in.github.io/docs/main/docs/uhi/v1/concepts/services/amrit-pharmacy): Find AMRIT Pharmacy stores over UHI by store code, state and district, pincode or GPS radius.
-- [Blood bank discovery](https://nha-in.github.io/docs/main/docs/uhi/v1/concepts/services/blood-bank): Search live blood stock by group and component across registered blood banks, using one call pair.
-- [Jan Aushadhi Kendra discovery](https://nha-in.github.io/docs/main/docs/uhi/v1/concepts/services/jan-aushadhi-kendra): Find Jan Aushadhi Kendras over UHI by Kendra code, state and district, pincode or GPS radius.
-- [Jan Aushadhi medicine search](https://nha-in.github.io/docs/main/docs/uhi/v1/concepts/services/jan-aushadhi-medicine-search): Search the Jan Aushadhi medicine catalogue, then find the Kendras that stock a chosen medicine.
-- [Physical consultation](https://nha-in.github.io/docs/main/docs/uhi/v1/concepts/services/physical-consultation): Doctor discovery, appointment booking, PIN check-in and the full appointment lifecycle on UHI.
-- [PM-JAY HEM hospital discovery](https://nha-in.github.io/docs/main/docs/uhi/v1/concepts/services/pmjay-hem): Find PM-JAY empanelled hospitals over UHI by state, district, speciality, facility name, pincode or GPS.
+- [Errors on UHI](https://nha-in.github.io/docs/main/docs/uhi/v1/concepts/errors): The error object every UHI response can carry, the HTTP statuses you see before one, and what to send and log when a call fails.
+- [Messages and callbacks](https://nha-in.github.io/docs/main/docs/uhi/v1/concepts/messages): The context block every UHI call carries, how transaction_id and message_id match a callback to its request, and how long to wait for answers.
+- [Network registry lookup](https://nha-in.github.io/docs/main/docs/uhi/v1/concepts/registry-lookup): Fetch another UHI participant's public key and details from the network registry, so you can check its signature before you trust a call.
+- [Routes through the UHI network](https://nha-in.github.io/docs/main/docs/uhi/v1/concepts/routes): Which UHI calls go through the UHI Gateway, which go direct between EUA and HSPA, the audit copies, and every Gateway endpoint.
 - [Signing UHI requests](https://nha-in.github.io/docs/main/docs/uhi/v1/concepts/signing): Every UHI request is signed with the sender's Ed25519 key over a BLAKE-512 digest of its body. How to build the header and check one you receive.
+- [Build it well](https://nha-in.github.io/docs/main/docs/uhi/v1/getting-started/build-it-well): Match every callback, sign every request fresh, aggregate answers, time out without an end signal, and build the screens sign-off checks.
+- [Build with AI](https://nha-in.github.io/docs/main/docs/uhi/v1/getting-started/build-with-ai): Set a coding agent up to build your UHI integration, with live retrieval over the Docs MCP server, this site as markdown, and Ask AI.
+- [Quickstart](https://nha-in.github.io/docs/main/docs/uhi/v1/getting-started/first-fifteen-minutes): Find PM-JAY hospitals near a point in four steps. Enter your IDs, sign the search with your own key, send it, and see the hospitals on your callback.
 - [Glossary](https://nha-in.github.io/docs/main/docs/uhi/v1/getting-started/glossary): The ABDM terms UHI shares, and the two roles that belong to UHI alone.
-- [Onboarding to UHI](https://nha-in.github.io/docs/main/docs/uhi/v1/getting-started/onboarding): How an application joins the UHI network, from the M2 gate to sandbox sign-off and production go-live.
+- [Go live](https://nha-in.github.io/docs/main/docs/uhi/v1/getting-started/going-live): Steps 4 to 6 of UHI onboarding. Run your service's test cases, record a demo for sign-off, then switch your IDs and callback URL to production.
+- [Get your sandbox credentials](https://nha-in.github.io/docs/main/docs/uhi/v1/getting-started/sandbox): The six steps from sandbox to production, then how to express intent, generate your key pair, register for a subscriber ID and note the base URLs.
 - [Authentication](https://nha-in.github.io/docs/main/docs/uhi/v1/reference/authentication): The credentials every ABDM call carries, and the headers that go with them.
 - [Error codes](https://nha-in.github.io/docs/main/docs/uhi/v1/reference/error-codes): Every error code the specifications carry, with its message and what to do.
-- [Registries](https://nha-in.github.io/docs/main/docs/uhi/v1/registries): The registry UHI runs itself, the three ABDM identifiers that ride inside UHI messages, and which of them onboarding actually asks for.
-- [ABHA on UHI](https://nha-in.github.io/docs/main/docs/uhi/v1/registries/abha): Where a patient's ABHA address appears in UHI messages, in which services it is mandatory, and what UHI does not do with it.
-- [HFR on UHI](https://nha-in.github.io/docs/main/docs/uhi/v1/registries/hfr): The one UHI service that carries an HFR ID, the tag it travels in, and what is issued at onboarding.
-- [HPR on UHI](https://nha-in.github.io/docs/main/docs/uhi/v1/registries/hpr): Where a practitioner's HPR ID appears in a UHI catalogue and a UHI order, and the two forms it takes.
-- [Developer resources](https://nha-in.github.io/docs/main/docs/uhi/v1/resources): What is published for UHI developers beyond the guides and the API reference today.
+- [Registries](https://nha-in.github.io/docs/main/docs/uhi/v1/registries): The network registry UHI runs itself, and the three ABDM identifiers that travel inside UHI messages, with the field each one fills.
+- [ABHA on UHI](https://nha-in.github.io/docs/main/docs/uhi/v1/registries/abha): Where a patient's ABHA address appears in UHI messages, and the services in which it is mandatory.
+- [HFR on UHI](https://nha-in.github.io/docs/main/docs/uhi/v1/registries/hfr): The one place a UHI message carries an HFR ID, as an optional tag beside the doctor in a Physical Consultation catalog.
+- [HPR on UHI](https://nha-in.github.io/docs/main/docs/uhi/v1/registries/hpr): Where a doctor's HPR address and HPR ID appear in a UHI search, catalog, order and chat message.
+- [Developer resources](https://nha-in.github.io/docs/main/docs/uhi/v1/resources): The test cases for each UHI service, the recorded service walkthroughs, and the tools you sign and build with.
+- [Ambulance Booking test cases](https://nha-in.github.io/docs/main/docs/uhi/v1/resources/ambulance): The 31 certification test cases for UHI Ambulance Booking, each in plain words and as its exact success condition.
+- [Blood Bank test cases](https://nha-in.github.io/docs/main/docs/uhi/v1/resources/blood-bank): The test cases for Blood Bank Discovery on UHI.
+- [Physical Consultation test cases](https://nha-in.github.io/docs/main/docs/uhi/v1/resources/consultation): The certification test cases for the UHI Physical Consultation service.
+- [Jan Aushadhi test cases](https://nha-in.github.io/docs/main/docs/uhi/v1/resources/jan-aushadhi): The test cases for Jan Aushadhi on UHI.
+- [NOTTO test cases](https://nha-in.github.io/docs/main/docs/uhi/v1/resources/notto): The test cases for NOTTO Hospital Discovery on UHI.
+- [PM-JAY HEM test cases](https://nha-in.github.io/docs/main/docs/uhi/v1/resources/pmjay-hem): The PM-JAY HEM discovery test cases, each stated in plain words and as its exact success condition, to run in sandbox before sign-off.
+- [Services](https://nha-in.github.io/docs/main/docs/uhi/v1/services): The six services live on UHI, the role you build for each, who runs the HSPA, what each covers today and its context.domain.
+- [Ambulance Booking: Find an ambulance and get a quote](https://nha-in.github.io/docs/main/docs/uhi/v1/services/ambulance): A caregiver finds nearby private ambulances with an arrival window and a price, then sends the patient's details to the chosen provider.
+- [Blood Bank: Find blood in stock nearby](https://nha-in.github.io/docs/main/docs/uhi/v1/services/blood-bank): Search blood stock by group and component across every registered blood bank on UHI, by GPS radius or by state and district, with unit counts.
+- [Physical Consultation: Find, book and visit a doctor](https://nha-in.github.io/docs/main/docs/uhi/v1/services/consultation): A patient finds a doctor, books a slot, receives a 4-digit PIN and checks in at the clinic, through one UHI integration.
+- [Jan Aushadhi: Find Kendras and generic medicines](https://nha-in.github.io/docs/main/docs/uhi/v1/services/jan-aushadhi): Find Jan Aushadhi Kendras over UHI, look up a generic medicine by name, then find the Kendras that stock it. Three flows, one domain.
+- [NOTTO: Find transplant and retrieval hospitals](https://nha-in.github.io/docs/main/docs/uhi/v1/services/notto): Find NOTTO registered hospitals over UHI for an organ or tissue, nationally or in one state, with capabilities and the transplant coordinator.
+- [PM-JAY HEM: Find empanelled hospitals](https://nha-in.github.io/docs/main/docs/uhi/v1/services/pmjay-hem): Find PM-JAY empanelled hospitals over UHI by state, district, speciality, facility name, pincode or GPS, from one search and on_search pair.
 
 ## docs/whats-new
 

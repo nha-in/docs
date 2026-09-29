@@ -1,25 +1,14 @@
 # HFR on UHI
 
-The [HFR](/docs/main/docs/uhi/v1/getting-started/glossary#hfr) is the national register of health facilities: hospitals, clinics, labs, imaging centres and pharmacies. On UHI it names the place behind a listing.
+The [HFR](/docs/main/docs/uhi/v1/getting-started/glossary#hfr) is the national register of health facilities. On [UHI](/docs/main/docs/uhi/v1/getting-started/glossary#uhi) it names the facility where a doctor practises.
 
 ## Where it appears
 
-| Field                                                            | Service                                                                                                                            | Required                      |
-| ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
-| `catalog.providers[].fulfillments[].tags["@abdm/gov.in/hfr_id"]` | [AMRIT pharmacy](/docs/main/docs/uhi/v1/concepts/services/amrit-pharmacy), one tag per store                                       | Listed in the field reference |
-| `catalog.providers[].fulfillments[].agent.tags`                  | [Physical consultation](/docs/main/docs/uhi/v1/concepts/services/physical-consultation), as `/hfr_id` beside the practitioner tags | No                            |
+| Field                                                                          | Service                                                                                                                                      | Required |
+| ------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| `message.catalog.providers[].fulfillments[].agent.tags["@abdm/gov.in/hfr_id"]` | [Physical Consultation](/docs/main/docs/uhi/v1/services/consultation), beside the doctor's [HPR](/docs/main/docs/uhi/v1/registries/hpr) tags | No       |
 
-AMRIT pharmacy is the only UHI service in this portal whose catalogue carries the facility identifier as a field of its own. It is one of three things that service adds over the others.
+## Next steps
 
-## What the document does not fill in
-
-The value appears as the placeholder `<HFR_ID>`, with no filled example published. The AMRIT page records the same gap for the store hours and the contact block. Treat the field's format as whatever the HFR itself issues, and confirm it against a real store entry before you rely on it.
-
-## Where the ID comes from
-
-Not from UHI. A facility is enrolled in the HFR through [M4](/docs/main/docs/hiecm/v3/api/m4) on HIE-CM, and the create call there needs a professional token from an [HPR](/docs/main/docs/uhi/v1/registries/hpr) ID with facility manager rights. UHI quotes the result.
-
-## Next
-
-- [Registries](/docs/main/docs/uhi/v1/registries), for the four UHI touches and the one it owns
-- [AMRIT pharmacy](/docs/main/docs/uhi/v1/concepts/services/amrit-pharmacy), the catalogue this tag sits in
+- [HPR on UHI](/docs/main/docs/uhi/v1/registries/hpr), the doctor this tag sits beside
+- [Physical Consultation](/docs/main/docs/uhi/v1/services/consultation), the service whose catalog carries this tag
