@@ -16,7 +16,7 @@ The payer calls it after each step of reviewing a claim, on the claim's correlat
 
 - A claim with this correlation ID exists and is still open.
 - A valid access token and the provider's certificate.
-- The header echoes the claim's `x-hcx-correlation_ID`, with a new `x-hcx-API_call_ID`.
+- The header echoes the claim's `x-hcx-correlation_id`, with a new `x-hcx-api_call_id`.
 
 ### Postconditions
 

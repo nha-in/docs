@@ -418,7 +418,7 @@ Milestone 1 APIs enable the creation, authentication, verification, and manageme
 - ABHA profile management
 - ABHA-related services and operations
 
-122 endpoints across 10 use cases: Create ABHA, Child ABHA, Login, Profile, ABHA Card & Profile, Find ABHA, Forgot ABHA, Benefit, Access Tokens & Encryption, ABHA Address Login. Each endpoint has its own page in the sidebar.
+121 endpoints across 10 use cases: Create ABHA, Child ABHA, Login, Profile, ABHA Card & Profile, Find ABHA, Forgot ABHA, Benefit, Access Tokens & Encryption, ABHA Address Login. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/docs/pr-65/reference/hiecm-m1)
 
@@ -639,7 +639,7 @@ Example 200 response. The values are placeholders:
 
 `POST /abha/api/v3/phr/web/login/abha/request/otp`
 
-Starts login with an ABHA address. UIDAI sends an OTP to the Aadhaar-linked mobile. `loginId` is the RSA-encrypted ABHA address. Use *Search ABHA address (auth methods)* first to check that `Aadhaar_OTP` is allowed.
+Starts login with an ABHA address. UIDAI sends an OTP to the Aadhaar-linked mobile. `loginId` is the RSA-encrypted ABHA address. Use *Search ABHA address (auth methods)* first to check that `AADHAAR_OTP` is allowed.
 
 **Endpoint:** `POST /abha/api/v3/phr/web/login/abha/request/otp`
 
@@ -658,10 +658,10 @@ Starts login with an ABHA address. UIDAI sends an OTP to the Aadhaar-linked mobi
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-address-login", "Aadhaar-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
-| `loginHint` | `"ABHA-address"` | yes | Type of identifier sent in `loginId`. |
+| `scope` | `["abha-address-login", "aadhaar-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `loginHint` | `"abha-address"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"Aadhaar"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"aadhaar"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 
 ```bash
 curl --request POST \
@@ -747,9 +747,9 @@ Verifies the Aadhaar OTP for ABHA-address login. Returns the linked ABHA address
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-address-login", "Aadhaar-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-address-login", "aadhaar-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
-| `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
+| `authData.authMethods` | `["otp"]` | yes | Authentication method used in this step. |
 | `authData.otp` | object | yes | OTP authentication block. |
 | `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 | `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
@@ -1081,12 +1081,12 @@ Starts fingerprint login with an ABHA address. `loginId` is the RSA-encrypted AB
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "Aadhaar-bio-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
-| `loginHint` | `"ABHA-address"` | yes | Type of identifier sent in `loginId`. |
+| `scope` | `["abha-login", "aadhaar-bio-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `loginHint` | `"abha-address"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"Aadhaar"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"aadhaar"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 
-> **Note:** Biometric ABHA-address login uses scope `ABHA-login`, not `ABHA-address-login` (the same in Swagger and Postman).
+> **Note:** Biometric ABHA-address login uses scope `abha-login`, not `abha-address-login` (the same in Swagger and Postman).
 
 ```bash
 curl --request POST \
@@ -1172,14 +1172,14 @@ Completes fingerprint login with an ABHA address. Send the `txnId` and the finge
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "Aadhaar-bio-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-login", "aadhaar-bio-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
 | `authData.authMethods` | `["bio"]` | yes | Authentication method used in this step. |
 | `authData.bio` | object | yes | Fingerprint authentication block. |
 | `authData.bio.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 | `authData.bio.fingerPrintAuthPid` | string | yes | Base64 PID block captured from a registered fingerprint RD device. |
 
-> **Note:** Biometric ABHA-address login uses scope `ABHA-login`, not `ABHA-address-login` (the same in Swagger and Postman).
+> **Note:** Biometric ABHA-address login uses scope `abha-login`, not `abha-address-login` (the same in Swagger and Postman).
 
 ```bash
 curl --request POST \
@@ -1510,12 +1510,12 @@ Starts IRIS login with an ABHA address. `loginId` is the RSA-encrypted ABHA addr
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "Aadhaar-iris-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
-| `loginHint` | `"ABHA-address"` | yes | Type of identifier sent in `loginId`. |
+| `scope` | `["abha-login", "aadhaar-iris-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `loginHint` | `"abha-address"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"Aadhaar"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"aadhaar"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 
-> **Note:** Biometric ABHA-address login uses scope `ABHA-login`, not `ABHA-address-login` (the same in Swagger and Postman).
+> **Note:** Biometric ABHA-address login uses scope `abha-login`, not `abha-address-login` (the same in Swagger and Postman).
 
 ```bash
 curl --request POST \
@@ -1601,14 +1601,14 @@ Completes IRIS login with an ABHA address. Send the `txnId` and the IRIS PID. Re
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "Aadhaar-iris-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-login", "aadhaar-iris-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
 | `authData.authMethods` | `["iris"]` | yes | Authentication method used in this step. |
 | `authData.iris` | object | yes | IRIS authentication block. |
 | `authData.iris.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 | `authData.iris.irisAuthPid` | string | yes | Base64 PID block captured from a registered IRIS RD device. |
 
-> **Note:** Biometric ABHA-address login uses scope `ABHA-login`, not `ABHA-address-login` (the same in Swagger and Postman).
+> **Note:** Biometric ABHA-address login uses scope `abha-login`, not `abha-address-login` (the same in Swagger and Postman).
 
 ```bash
 curl --request POST \
@@ -2021,10 +2021,10 @@ Starts login with an ABHA address. ABDM sends an OTP to the mobile linked with t
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-address-login", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
-| `loginHint` | `"ABHA-address"` | yes | Type of identifier sent in `loginId`. |
+| `scope` | `["abha-address-login", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `loginHint` | `"abha-address"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"ABDM"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"abdm"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 
 ```bash
 curl --request POST \
@@ -2110,9 +2110,9 @@ Verifies the mobile OTP for ABHA-address login. Returns the linked ABHA address(
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-address-login", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-address-login", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
-| `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
+| `authData.authMethods` | `["otp"]` | yes | Authentication method used in this step. |
 | `authData.otp` | object | yes | OTP authentication block. |
 | `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 | `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
@@ -2667,7 +2667,7 @@ Example 200 response. The values are placeholders:
 
 `GET /abha/api/v3/profile/account/download-abha-card`
 
-**Endpoint:** `GET /abha/api/v3/profile/account/download-ABHA-card`
+**Endpoint:** `GET /abha/api/v3/profile/account/download-abha-card`
 
 **Flow:** **ABHA Card & Profile** - independent API; call the one that fits your identifier / modality.
 
@@ -2952,7 +2952,7 @@ Creates an ABHA number from Aadhaar demographic details (name, DOB, gender, stat
 | `authData.demo_auth.pinCode` | string | no | PIN code of the address. |
 | `authData.demo_auth.address` | string | no | Address as per Aadhaar. |
 | `consent` | object | yes | Consent captured from the user for ABHA enrolment. |
-| `consent.code` | string | yes | Consent code. Use `ABHA-enrollment`. |
+| `consent.code` | string | yes | Consent code. Use `abha-enrollment`. |
 | `consent.version` | string | yes | Consent version. Use `1.4`. |
 
 ```bash
@@ -3130,7 +3130,7 @@ Creates a Child ABHA linked to the parent's ABHA. Send the **parent's** `X-token
 | `authData.child.profilePhoto` | string | no | Base64 encoded profile photo. |
 | `authData.child.parentConsent` | string | no | Parent consent flag for creating a child ABHA. |
 | `consent` | object | yes | Consent captured from the user for ABHA enrolment. |
-| `consent.code` | string | yes | Consent code. Use `ABHA-enrollment`. |
+| `consent.code` | string | yes | Consent code. Use `abha-enrollment`. |
 | `consent.version` | string | yes | Consent version. Use `1.4`. |
 
 ```bash
@@ -3525,10 +3525,10 @@ Starts KYC of a non-KYC Child ABHA. UIDAI sends an OTP to the mobile linked with
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-profile", "re-KYC"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
-| `loginHint` | `"Aadhaar"` | yes | Type of identifier sent in `loginId`. |
+| `scope` | `["abha-profile", "re-kyc"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `loginHint` | `"aadhaar"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"Aadhaar"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"aadhaar"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 
 ```bash
 curl --request POST \
@@ -3619,9 +3619,9 @@ Verifies the Aadhaar OTP sent by *Child ABHA KYC - send Aadhaar OTP* and marks t
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-profile", "re-KYC"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-profile", "re-kyc"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
-| `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
+| `authData.authMethods` | `["otp"]` | yes | Authentication method used in this step. |
 | `authData.otp` | object | yes | OTP authentication block. |
 | `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 | `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
@@ -3753,7 +3753,7 @@ Creates an ABHA number from Aadhaar demographic details (name, DOB, gender, stat
 | `authData.demo_auth.pinCode` | string | no | PIN code of the address. |
 | `authData.demo_auth.address` | string | no | Address as per Aadhaar. |
 | `consent` | object | yes | Consent captured from the user for ABHA enrolment. |
-| `consent.code` | string | yes | Consent code. Use `ABHA-enrollment`. |
+| `consent.code` | string | yes | Consent code. Use `abha-enrollment`. |
 | `consent.version` | string | yes | Consent version. Use `1.4`. |
 
 ```bash
@@ -4004,7 +4004,7 @@ Links (`scope: ["link"]`) or de-links (`scope: ["de-link"]`) the benefit named i
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
 | `scope` | `["link"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
-| `loginHint` | `"ABHA-number"` | yes | Type of identifier sent in `loginId`. |
+| `loginHint` | `"abha-number"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
 
 ```bash
@@ -4278,7 +4278,7 @@ Lists the benefit programmes linked to an ABHA number. `loginId` is the RSA-encr
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
 | `scope` | `["search"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
-| `loginHint` | `"ABHA-number"` | yes | Type of identifier sent in `loginId`. |
+| `loginHint` | `"abha-number"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
 
 ```bash
@@ -4460,7 +4460,7 @@ Creates a Child ABHA linked to the parent's ABHA. Send the **parent's** `X-token
 | `authData.child.profilePhoto` | string | no | Base64 encoded profile photo. |
 | `authData.child.parentConsent` | string | no | Parent consent flag for creating a child ABHA. |
 | `consent` | object | yes | Consent captured from the user for ABHA enrolment. |
-| `consent.code` | string | yes | Consent code. Use `ABHA-enrollment`. |
+| `consent.code` | string | yes | Consent code. Use `abha-enrollment`. |
 | `consent.version` | string | yes | Consent version. Use `1.4`. |
 
 ```bash
@@ -4855,10 +4855,10 @@ Starts KYC of a non-KYC Child ABHA. UIDAI sends an OTP to the mobile linked with
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-profile", "re-KYC"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
-| `loginHint` | `"Aadhaar"` | yes | Type of identifier sent in `loginId`. |
+| `scope` | `["abha-profile", "re-kyc"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `loginHint` | `"aadhaar"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"Aadhaar"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"aadhaar"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 
 ```bash
 curl --request POST \
@@ -4949,9 +4949,9 @@ Verifies the Aadhaar OTP sent by *Child ABHA KYC - send Aadhaar OTP* and marks t
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-profile", "re-KYC"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-profile", "re-kyc"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
-| `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
+| `authData.authMethods` | `["otp"]` | yes | Authentication method used in this step. |
 | `authData.otp` | object | yes | OTP authentication block. |
 | `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 | `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
@@ -5069,10 +5069,10 @@ Starts ABHA creation with Aadhaar OTP. UIDAI sends an OTP to the mobile number l
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
 | `txnId` | string | no | Transaction ID returned by the previous step of this flow. |
-| `scope` | `["ABHA-enrol"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
-| `loginHint` | `"Aadhaar"` | yes | Type of identifier sent in `loginId`. |
+| `scope` | `["abha-enrol"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `loginHint` | `"aadhaar"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"Aadhaar"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"aadhaar"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 
 > **Note:** `txnId` is optional here. Leave it empty on the first call, or send a previous `txnId` to resend the OTP.
 
@@ -5168,13 +5168,13 @@ Verifies the Aadhaar OTP and creates the ABHA number, or returns the existing AB
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
 | `authData` | object | yes | Authentication payload for this use case. |
-| `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
+| `authData.authMethods` | `["otp"]` | yes | Authentication method used in this step. |
 | `authData.otp` | object | yes | OTP authentication block. |
 | `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 | `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
 | `authData.otp.mobile` | string | no | Mobile number to be linked with the ABHA (plain, 10 digits). |
 | `consent` | object | yes | Consent captured from the user for ABHA enrolment. |
-| `consent.code` | string | yes | Consent code. Use `ABHA-enrollment`. |
+| `consent.code` | string | yes | Consent code. Use `abha-enrollment`. |
 | `consent.version` | string | yes | Consent version. Use `1.4`. |
 
 ```bash
@@ -5330,10 +5330,10 @@ Optional, called after the ABHA is created. Needed only when the `mobile` sent i
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
 | `txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
-| `scope` | `["ABHA-enrol", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-enrol", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `loginHint` | `"mobile"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"ABDM"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"abdm"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 
 ```bash
 curl --request POST \
@@ -5426,9 +5426,9 @@ Verifies the OTP sent by *After ABHA creation - send OTP to verify mobile (optio
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-enrol", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-enrol", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
-| `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
+| `authData.authMethods` | `["otp"]` | yes | Authentication method used in this step. |
 | `authData.otp` | object | yes | OTP authentication block. |
 | `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 | `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
@@ -5539,10 +5539,10 @@ Optional. Sends an ABDM OTP to an email address so it can be linked to the newly
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
 | `txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
-| `scope` | `["ABHA-enrol", "email-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-enrol", "email-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `loginHint` | `"email"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"ABDM"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"abdm"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 
 ```bash
 curl --request POST \
@@ -5635,9 +5635,9 @@ Verifies the OTP sent by *After ABHA creation - send OTP to verify email (option
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-enrol", "email-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-enrol", "email-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
-| `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
+| `authData.authMethods` | `["otp"]` | yes | Authentication method used in this step. |
 | `authData.otp` | object | yes | OTP authentication block. |
 | `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 | `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
@@ -5902,7 +5902,7 @@ Creates an ABHA number from Aadhaar demographic details (name, DOB, gender, stat
 | `authData.demo_auth.pinCode` | string | no | PIN code of the address. |
 | `authData.demo_auth.address` | string | no | Address as per Aadhaar. |
 | `consent` | object | yes | Consent captured from the user for ABHA enrolment. |
-| `consent.code` | string | yes | Consent code. Use `ABHA-enrollment`. |
+| `consent.code` | string | yes | Consent code. Use `abha-enrollment`. |
 | `consent.version` | string | yes | Consent version. Use `1.4`. |
 
 ```bash
@@ -6237,7 +6237,7 @@ Creates an ABHA number with Aadhaar face authentication. First call *Face auth -
 | `authData.face.aadhaar` | string | yes | Aadhaar number, RSA-encrypted. |
 | `authData.face.mobile` | string | no | Mobile number to be linked with the ABHA (plain, 10 digits). |
 | `consent` | object | yes | Consent captured from the user for ABHA enrolment. |
-| `consent.code` | string | yes | Consent code. Use `ABHA-enrollment`. |
+| `consent.code` | string | yes | Consent code. Use `abha-enrollment`. |
 | `consent.version` | string | yes | Consent version. Use `1.4`. |
 
 ```bash
@@ -6392,10 +6392,10 @@ Optional, called after the ABHA is created. Needed only when the `mobile` sent i
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
 | `txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
-| `scope` | `["ABHA-enrol", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-enrol", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `loginHint` | `"mobile"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"ABDM"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"abdm"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 
 ```bash
 curl --request POST \
@@ -6488,9 +6488,9 @@ Verifies the OTP sent by *After ABHA creation - send OTP to verify mobile (optio
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-enrol", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-enrol", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
-| `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
+| `authData.authMethods` | `["otp"]` | yes | Authentication method used in this step. |
 | `authData.otp` | object | yes | OTP authentication block. |
 | `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 | `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
@@ -6601,10 +6601,10 @@ Optional. Sends an ABDM OTP to an email address so it can be linked to the newly
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
 | `txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
-| `scope` | `["ABHA-enrol", "email-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-enrol", "email-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `loginHint` | `"email"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"ABDM"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"abdm"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 
 ```bash
 curl --request POST \
@@ -6697,9 +6697,9 @@ Verifies the OTP sent by *After ABHA creation - send OTP to verify email (option
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-enrol", "email-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-enrol", "email-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
-| `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
+| `authData.authMethods` | `["otp"]` | yes | Authentication method used in this step. |
 | `authData.otp` | object | yes | OTP authentication block. |
 | `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 | `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
@@ -6957,10 +6957,10 @@ Creates an ABHA number by authenticating the Aadhaar holder's fingerprint. The P
 | `authData.bio.fingerPrintAuthPid` | string | yes | Base64 PID block captured from a registered fingerprint RD device. |
 | `authData.bio.mobile` | string | no | Mobile number to be linked with the ABHA (plain, 10 digits). |
 | `consent` | object | yes | Consent captured from the user for ABHA enrolment. |
-| `consent.code` | string | yes | Consent code. Use `ABHA-enrollment`. |
+| `consent.code` | string | yes | Consent code. Use `abha-enrollment`. |
 | `consent.version` | string | yes | Consent version. Use `1.4`. |
 
-> **Note:** The Postman collection (Create ABHA - Fingerprint 3.1) sends `authMethods: ["OTP"]`. This spec uses `["bio"]`; confirm with NHA.
+> **Note:** The Postman collection (Create ABHA - Fingerprint 3.1) sends `authMethods: ["otp"]`. This spec uses `["bio"]`; confirm with NHA.
 
 ```bash
 curl --request POST \
@@ -7114,10 +7114,10 @@ Optional, called after the ABHA is created. Needed only when the `mobile` sent i
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
 | `txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
-| `scope` | `["ABHA-enrol", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-enrol", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `loginHint` | `"mobile"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"ABDM"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"abdm"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 
 ```bash
 curl --request POST \
@@ -7210,9 +7210,9 @@ Verifies the OTP sent by *After ABHA creation - send OTP to verify mobile (optio
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-enrol", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-enrol", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
-| `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
+| `authData.authMethods` | `["otp"]` | yes | Authentication method used in this step. |
 | `authData.otp` | object | yes | OTP authentication block. |
 | `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 | `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
@@ -7323,10 +7323,10 @@ Optional. Sends an ABDM OTP to an email address so it can be linked to the newly
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
 | `txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
-| `scope` | `["ABHA-enrol", "email-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-enrol", "email-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `loginHint` | `"email"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"ABDM"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"abdm"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 
 ```bash
 curl --request POST \
@@ -7419,9 +7419,9 @@ Verifies the OTP sent by *After ABHA creation - send OTP to verify email (option
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-enrol", "email-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-enrol", "email-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
-| `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
+| `authData.authMethods` | `["otp"]` | yes | Authentication method used in this step. |
 | `authData.otp` | object | yes | OTP authentication block. |
 | `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 | `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
@@ -7679,7 +7679,7 @@ Creates an ABHA number by authenticating the Aadhaar holder's IRIS. The PID bloc
 | `authData.iris.pid` | string | yes | Base64 PID block captured from a registered IRIS RD device. |
 | `authData.iris.mobile` | string | no | Mobile number to be linked with the ABHA (plain, 10 digits). |
 | `consent` | object | yes | Consent captured from the user for ABHA enrolment. |
-| `consent.code` | string | yes | Consent code. Use `ABHA-enrollment`. |
+| `consent.code` | string | yes | Consent code. Use `abha-enrollment`. |
 | `consent.version` | string | yes | Consent version. Use `1.4`. |
 
 ```bash
@@ -7834,10 +7834,10 @@ Optional, called after the ABHA is created. Needed only when the `mobile` sent i
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
 | `txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
-| `scope` | `["ABHA-enrol", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-enrol", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `loginHint` | `"mobile"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"ABDM"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"abdm"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 
 ```bash
 curl --request POST \
@@ -7930,9 +7930,9 @@ Verifies the OTP sent by *After ABHA creation - send OTP to verify mobile (optio
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-enrol", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-enrol", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
-| `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
+| `authData.authMethods` | `["otp"]` | yes | Authentication method used in this step. |
 | `authData.otp` | object | yes | OTP authentication block. |
 | `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 | `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
@@ -8043,10 +8043,10 @@ Optional. Sends an ABDM OTP to an email address so it can be linked to the newly
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
 | `txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
-| `scope` | `["ABHA-enrol", "email-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-enrol", "email-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `loginHint` | `"email"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"ABDM"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"abdm"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 
 ```bash
 curl --request POST \
@@ -8139,9 +8139,9 @@ Verifies the OTP sent by *After ABHA creation - send OTP to verify email (option
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-enrol", "email-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-enrol", "email-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
-| `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
+| `authData.authMethods` | `["otp"]` | yes | Authentication method used in this step. |
 | `authData.otp` | object | yes | OTP authentication block. |
 | `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 | `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
@@ -8483,10 +8483,10 @@ Sends an Aadhaar OTP for the ABHA account picked from *Search ABHA by mobile*. S
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "search-ABHA", "Aadhaar-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-login", "search-abha", "aadhaar-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `loginHint` | `"index"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"Aadhaar"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"aadhaar"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 | `txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 
 ```bash
@@ -8585,9 +8585,9 @@ Verifies the Aadhaar OTP for the chosen account. Returns the ABHA details and th
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "Aadhaar-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-login", "aadhaar-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
-| `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
+| `authData.authMethods` | `["otp"]` | yes | Authentication method used in this step. |
 | `authData.otp` | object | yes | OTP authentication block. |
 | `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 | `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
@@ -8805,13 +8805,13 @@ Starts face authentication for the ABHA account picked from *Search ABHA by mobi
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "search-ABHA", "Aadhaar-face-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-login", "search-abha", "face-auth"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `loginHint` | `"index"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"Aadhaar"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"aadhaar"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 | `txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 
-> **Note:** The Postman collection sends scope `["ABHA-login","search-ABHA","face-auth"]` for this step. This spec uses `Aadhaar-face-verify`; confirm with NHA.
+> **Note:** The Postman collection sends scope `["abha-login","search-abha","face-auth"]` for this step. This spec uses `face-auth`; confirm with NHA.
 
 ```bash
 curl --request POST \
@@ -8824,7 +8824,7 @@ curl --request POST \
   "scope": [
     "abha-login",
     "search-abha",
-    "aadhaar-face-verify"
+    "face-auth"
   ],
   "loginHint": "index",
   "loginId": "{{rsaIndexEncryptionOutput}}",
@@ -8991,7 +8991,7 @@ Completes face authentication for the chosen account. Once *Face auth - capture 
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "Aadhaar-face-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-login", "aadhaar-face-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
 | `authData.authMethods` | `["face_auth"]` | yes | Authentication method used in this step. |
 | `authData.face` | object | yes | Face authentication block. |
@@ -9214,10 +9214,10 @@ Starts fingerprint authentication for the ABHA account picked from *Search ABHA 
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "search-ABHA", "Aadhaar-bio-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-login", "search-abha", "aadhaar-bio-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `loginHint` | `"index"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"Aadhaar"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"aadhaar"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 | `txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 
 ```bash
@@ -9316,7 +9316,7 @@ Completes fingerprint authentication for the chosen account. Send the `txnId` fr
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "Aadhaar-bio-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-login", "aadhaar-bio-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
 | `authData.authMethods` | `["bio"]` | yes | Authentication method used in this step. |
 | `authData.bio` | object | yes | Fingerprint authentication block. |
@@ -9536,10 +9536,10 @@ Starts IRIS authentication for the ABHA account picked from *Search ABHA by mobi
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "search-ABHA", "Aadhaar-iris-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-login", "search-abha", "aadhaar-iris-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `loginHint` | `"index"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"Aadhaar"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"aadhaar"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 | `txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 
 ```bash
@@ -9638,7 +9638,7 @@ Completes IRIS authentication for the chosen account. Send the `txnId` from *Fin
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "Aadhaar-iris-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-login", "aadhaar-iris-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
 | `authData.authMethods` | `["iris"]` | yes | Authentication method used in this step. |
 | `authData.iris` | object | yes | IRIS authentication block. |
@@ -9858,10 +9858,10 @@ Sends a mobile OTP for the ABHA account picked from *Search ABHA by mobile*. Sen
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "search-ABHA", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-login", "search-abha", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `loginHint` | `"index"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"ABDM"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"abdm"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 | `txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 
 ```bash
@@ -9960,9 +9960,9 @@ Verifies the mobile OTP for the chosen account. Returns the ABHA details and the
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-login", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
-| `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
+| `authData.authMethods` | `["otp"]` | yes | Authentication method used in this step. |
 | `authData.otp` | object | yes | OTP authentication block. |
 | `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 | `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
@@ -10088,10 +10088,10 @@ Starts recovery of a forgotten ABHA number. UIDAI sends an OTP to the Aadhaar-li
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "Aadhaar-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
-| `loginHint` | `"Aadhaar"` | yes | Type of identifier sent in `loginId`. |
+| `scope` | `["abha-login", "aadhaar-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `loginHint` | `"aadhaar"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"Aadhaar"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"aadhaar"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 
 ```bash
 curl --request POST \
@@ -10186,9 +10186,9 @@ Verifies the Aadhaar OTP. Returns the ABHA linked to the Aadhaar number, with th
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "Aadhaar-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-login", "aadhaar-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
-| `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
+| `authData.authMethods` | `["otp"]` | yes | Authentication method used in this step. |
 | `authData.otp` | object | yes | OTP authentication block. |
 | `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 | `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
@@ -10313,10 +10313,10 @@ Starts recovery of a forgotten ABHA number. ABDM sends an OTP to the mobile numb
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-login", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `loginHint` | `"mobile"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"ABDM"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"abdm"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 
 ```bash
 curl --request POST \
@@ -10411,9 +10411,9 @@ Verifies the mobile OTP. Returns the ABHA accounts linked to the mobile number, 
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-login", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
-| `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
+| `authData.authMethods` | `["otp"]` | yes | Authentication method used in this step. |
 | `authData.otp` | object | yes | OTP authentication block. |
 | `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 | `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
@@ -10553,10 +10553,10 @@ Starts login with an Aadhaar number. UIDAI sends an OTP to the Aadhaar-linked mo
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "Aadhaar-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
-| `loginHint` | `"Aadhaar"` | yes | Type of identifier sent in `loginId`. |
+| `scope` | `["abha-login", "aadhaar-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `loginHint` | `"aadhaar"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"Aadhaar"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"aadhaar"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 
 ```bash
 curl --request POST \
@@ -10651,9 +10651,9 @@ Verifies the Aadhaar OTP for Aadhaar-number login. Returns the user X-token (`to
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "Aadhaar-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-login", "aadhaar-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
-| `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
+| `authData.authMethods` | `["otp"]` | yes | Authentication method used in this step. |
 | `authData.otp` | object | yes | OTP authentication block. |
 | `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 | `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
@@ -10779,10 +10779,10 @@ Starts login with an ABHA number. UIDAI sends an OTP to the mobile linked with t
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "Aadhaar-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
-| `loginHint` | `"ABHA-number"` | yes | Type of identifier sent in `loginId`. |
+| `scope` | `["abha-login", "aadhaar-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `loginHint` | `"abha-number"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"Aadhaar"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"aadhaar"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 
 ```bash
 curl --request POST \
@@ -10877,9 +10877,9 @@ Verifies the Aadhaar OTP for ABHA-number login. Returns the user X-token (`token
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "Aadhaar-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-login", "aadhaar-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
-| `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
+| `authData.authMethods` | `["otp"]` | yes | Authentication method used in this step. |
 | `authData.otp` | object | yes | OTP authentication block. |
 | `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 | `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
@@ -11005,10 +11005,10 @@ Starts login with an ABHA number. ABDM sends an OTP to the mobile registered wit
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
-| `loginHint` | `"ABHA-number"` | yes | Type of identifier sent in `loginId`. |
+| `scope` | `["abha-login", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `loginHint` | `"abha-number"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"ABDM"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"abdm"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 
 ```bash
 curl --request POST \
@@ -11103,9 +11103,9 @@ Verifies the ABHA (mobile) OTP for ABHA-number login. Returns the user X-token (
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-login", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
-| `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
+| `authData.authMethods` | `["otp"]` | yes | Authentication method used in this step. |
 | `authData.otp` | object | yes | OTP authentication block. |
 | `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 | `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
@@ -11229,7 +11229,7 @@ v3.1 fingerprint login in a single call. Send the encrypted Aadhaar number and t
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "Aadhaar-bio-login-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-login", "aadhaar-bio-login-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
 | `authData.authMethods` | `["bio_login"]` | yes | Authentication method used in this step. |
 | `authData.bio_login` | object | yes | Fingerprint login block (v3.1). |
@@ -11357,7 +11357,7 @@ v3.1 IRIS login in a single call. Send the encrypted Aadhaar number and the IRIS
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "Aadhaar-iris-login-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-login", "aadhaar-iris-login-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
 | `authData.authMethods` | `["iris_login"]` | yes | Authentication method used in this step. |
 | `authData.iris_login` | object | yes | IRIS login block (v3.1). |
@@ -11487,10 +11487,10 @@ Starts fingerprint login for an ABHA number. Use the returned `txnId` in *Login 
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "Aadhaar-bio-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
-| `loginHint` | `"ABHA-number"` | yes | Type of identifier sent in `loginId`. |
+| `scope` | `["abha-login", "aadhaar-bio-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `loginHint` | `"abha-number"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"ABDM"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"aadhaar"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 
 > **Note:** The Postman collection does biometric login with a single call to `/abha/api/v3.1/profile/login/verify` (see tag *Login - Biometric v3.1*). Confirm which contract is current.
 
@@ -11508,7 +11508,7 @@ curl --request POST \
   ],
   "loginHint": "abha-number",
   "loginId": "{{encrypted abha-number}}",
-  "otpSystem": "abdm"
+  "otpSystem": "aadhaar"
 }'
 ```
 
@@ -11526,7 +11526,7 @@ curl --request POST \
 - `scope` (string[], required): Scope that selects this use case. Send exactly the values listed for this API.
 - `loginHint` (string, required): Type of identifier sent in `loginId`. One of: abha-number.
 - `loginId` (string, required): Identifier value, RSA-encrypted with the ABHA public certificate.
-- `otpSystem` (string, required): System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). One of: abdm.
+- `otpSystem` (string, required): System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). One of: aadhaar.
 
 ## Responses
 
@@ -11587,7 +11587,7 @@ Completes fingerprint login. Send the `txnId` from *Login via Biometric (Fingerp
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "Aadhaar-bio-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-login", "aadhaar-bio-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
 | `authData.authMethods` | `["bio"]` | yes | Authentication method used in this step. |
 | `authData.bio` | object | yes | Fingerprint authentication block. |
@@ -11715,10 +11715,10 @@ Starts IRIS login for an ABHA number. Use the returned `txnId` in *Login via Bio
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "Aadhaar-iris-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
-| `loginHint` | `"ABHA-number"` | yes | Type of identifier sent in `loginId`. |
+| `scope` | `["abha-login", "aadhaar-iris-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `loginHint` | `"abha-number"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"ABDM"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"aadhaar"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 
 > **Note:** The Postman collection does biometric login with a single call to `/abha/api/v3.1/profile/login/verify` (see tag *Login - Biometric v3.1*). Confirm which contract is current.
 
@@ -11736,7 +11736,7 @@ curl --request POST \
   ],
   "loginHint": "abha-number",
   "loginId": "{{encrypted abha-number}}",
-  "otpSystem": "abdm"
+  "otpSystem": "aadhaar"
 }'
 ```
 
@@ -11754,7 +11754,7 @@ curl --request POST \
 - `scope` (string[], required): Scope that selects this use case. Send exactly the values listed for this API.
 - `loginHint` (string, required): Type of identifier sent in `loginId`. One of: abha-number.
 - `loginId` (string, required): Identifier value, RSA-encrypted with the ABHA public certificate.
-- `otpSystem` (string, required): System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). One of: abdm.
+- `otpSystem` (string, required): System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). One of: aadhaar.
 
 ## Responses
 
@@ -11815,7 +11815,7 @@ Completes IRIS login. Send the `txnId` from *Login via Biometric (Iris) - send a
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "Aadhaar-iris-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-login", "aadhaar-iris-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
 | `authData.authMethods` | `["iris"]` | yes | Authentication method used in this step. |
 | `authData.iris` | object | yes | IRIS authentication block. |
@@ -12108,7 +12108,7 @@ Completes login through the face-auth QR / ABHA-app flow. First call *Face auth 
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "Aadhaar-face-login-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-login", "aadhaar-face-login-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
 | `authData.authMethods` | `["face_auth"]` | yes | Authentication method used in this step. |
 | `authData.face_login` | object | yes | Face login block (v3.1). |
@@ -12238,10 +12238,10 @@ Starts login with a mobile number. ABDM sends an OTP to the mobile number.
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-login", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `loginHint` | `"mobile"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"ABDM"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"abdm"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 
 ```bash
 curl --request POST \
@@ -12336,9 +12336,9 @@ Verifies the mobile OTP. Returns a short-lived token (`token`, used as the `T-to
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-login", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
-| `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
+| `authData.authMethods` | `["otp"]` | yes | Authentication method used in this step. |
 | `authData.otp` | object | yes | OTP authentication block. |
 | `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 | `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
@@ -12555,10 +12555,10 @@ Starts Re-KYC of a logged-in ABHA (`X-token`). UIDAI sends an OTP to the Aadhaar
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-profile", "re-KYC"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
-| `loginHint` | `"ABHA-number"` | yes | Type of identifier sent in `loginId`. |
+| `scope` | `["abha-profile", "re-kyc"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `loginHint` | `"abha-number"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"Aadhaar"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"aadhaar"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 
 ```bash
 curl --request POST \
@@ -12649,9 +12649,9 @@ Verifies the Aadhaar OTP sent by *Re-KYC - send Aadhaar OTP* and refreshes the A
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-profile", "re-KYC"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-profile", "re-kyc"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
-| `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
+| `authData.authMethods` | `["otp"]` | yes | Authentication method used in this step. |
 | `authData.otp` | object | yes | OTP authentication block. |
 | `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 | `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
@@ -12766,10 +12766,10 @@ Starts a mobile number change for a logged-in ABHA user (`X-token`). ABDM sends 
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-profile", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-profile", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `loginHint` | `"mobile"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"ABDM"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"abdm"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 
 ```bash
 curl --request POST \
@@ -12860,9 +12860,9 @@ Verifies the OTP sent by *Update mobile - send OTP* and updates the mobile numbe
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-profile", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-profile", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
-| `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
+| `authData.authMethods` | `["otp"]` | yes | Authentication method used in this step. |
 | `authData.otp` | object | yes | OTP authentication block. |
 | `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 | `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
@@ -12947,142 +12947,6 @@ Example 200 response. The values are placeholders:
       "ABHANumber": "<ABHA_NUMBER>"
     }
   ]
-}
-```
-
-
----
-
-# Update profile photo
-
-`PATCH /abha/api/v3/profile/account`
-
-Updates the profile photo of the logged-in ABHA user (`X-token`). Send the photo as a Base64 string.
-
-**Endpoint:** `PATCH /abha/api/v3/profile/account`
-
-**Flow:** **Profile - Update Photo** - step 1 of 1
-- Previous: none (first call of this flow)
-- Next: none (last call of this flow)
-
-**Headers** (plus `Authorization: Bearer <gateway token>`):
-
-| Header | Required | Description |
-|---|---|---|
-| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |
-| REQUEST-ID | yes | Unique UUID for every request. |
-| X-token | yes | User token (`Bearer <token>`) received after verification / login. |
-
-**Request body for this use case:**
-
-| Field | Value / Type | Required | Description |
-|---|---|---|---|
-| `profilePhoto` | string | no | Base64 encoded profile photo. |
-
-> **Note:** The source spec has no response example for this use case. Its only examples are for Child ABHA.
-
-```bash
-curl --request PATCH \
-  --url https://abhasbx.abdm.gov.in/abha/api/v3/profile/account \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
-  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'X-token: Bearer {{X-token}}' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "profilePhoto": "{{profile photo string}}"
-}'
-```
-
-## Authorization
-
-- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
-
-## Headers
-
-- `TIMESTAMP` (string, required): Current UTC timestamp in ISO-8601 format.
-- `REQUEST-ID` (string, required): Unique UUID for every request.
-- `X-token` (string, required): User token (`Bearer <token>`) received after verification / login.
-
-## Body
-
-- `profilePhoto` (string): Base64 encoded profile photo.
-
-## Responses
-
-- `200`: Success.
-  - `ABHANumber` (string)
-  - `preferredAbhaAddress` (string)
-  - `mobile` (string)
-  - `firstName` (string)
-  - `middleName` (string)
-  - `lastName` (string)
-  - `yearOfBirth` (integer)
-  - `monthOfBirth` (integer)
-  - `dayOfBirth` (integer)
-  - `gender` (string)
-  - `status` (string)
-  - `stateCode` (integer)
-  - `districtCode` (integer)
-  - `stateName` (string)
-  - `districtName` (string)
-  - `subdistrictName` (string)
-  - `authMethods` (string[])
-  - `tags` (object)
-  - `kycVerified` (boolean)
-  - `verificationStatus` (string)
-  - `verificationType` (string)
-  - `createdDate` (string)
-- `400`: Bad Request (request validation failed).
-  See Error codes for this module: /docs/hiecm/v3/api/m1/errors
-  - `error` (object)
-  - `error.message` (string)
-  - `error.timestamp` (string)
-- `401`: Unauthorized (invalid / expired gateway token, X-token or benefit access).
-  See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
-  - `error` (object)
-  - `error.code` (string)
-  - `error.message` (string)
-- `404`: Not Found.
-  See Error codes for this module: /docs/hiecm/v3/api/m1/errors
-  - `error` (object)
-  - `error.code` (string)
-  - `error.message` (string)
-- `422`: Unprocessable Entity (business rule or UIDAI failure).
-  See Error codes for this module: /docs/hiecm/v3/api/m1/errors
-  - `error` (object)
-  - `error.code` (string)
-  - `error.message` (string)
-- `500`: Internal Server Error.
-  See Error codes for this module: /docs/hiecm/v3/api/m1/errors
-
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
-
-```json
-{
-  "ABHANumber": "<ABHA_NUMBER>",
-  "preferredAbhaAddress": "<ABHA_ADDRESS>",
-  "mobile": "******0903",
-  "firstName": "<NAME>",
-  "middleName": "<NAME>",
-  "lastName": "<NAME>",
-  "yearOfBirth": "<DOB>",
-  "monthOfBirth": "<DOB>",
-  "dayOfBirth": "<DOB>",
-  "gender": "F",
-  "status": "ACTIVE",
-  "stateCode": 27,
-  "districtCode": 290,
-  "stateName": "Maharashtra",
-  "districtName": "<ADDRESS>",
-  "subdistrictName": "<ADDRESS>",
-  "authMethods": [
-    "MOBILE_OTP"
-  ],
-  "kycVerified": false,
-  "verificationStatus": "VERIFIED",
-  "verificationType": "CHILD_ABHA",
-  "createdDate": "10-05-2024"
 }
 ```
 
@@ -13178,7 +13042,7 @@ Create an ABHA, authenticate a holder, and read or update the profile, QR code a
 
 ## Postman collection
 
-122 requests in the order you build them, and a sandbox environment to fill in. Each step keeps the txnId and X-token it gets back for the steps after it.
+121 requests in the order you build them, and a sandbox environment to fill in. Each step keeps the txnId and X-token it gets back for the steps after it.
 
 [Collection](/docs/pr-65/postman/hiecm-m1.postman_collection.json)[Environment](/docs/pr-65/postman/hiecm-sandbox.postman_environment.json)[Run in Postman](https://app.getpostman.com/run-collection/58494529-812374a9-3b91-42a0-8cbc-f86a31e0e688?action=collection%2Ffork\&collection-url=entityId%3D58494529-812374a9-3b91-42a0-8cbc-f86a31e0e688%26entityType%3Dcollection%26workspaceId%3D87d6429f-b4ee-4ec4-ac5d-5e6e5700b974)
 
@@ -22993,10 +22857,10 @@ Starts ABHA creation with Aadhaar OTP. UIDAI sends an OTP to the mobile number l
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
 | `txnId` | string | no | Transaction ID returned by the previous step of this flow. |
-| `scope` | `["ABHA-enrol"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
-| `loginHint` | `"Aadhaar"` | yes | Type of identifier sent in `loginId`. |
+| `scope` | `["abha-enrol"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `loginHint` | `"aadhaar"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"Aadhaar"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"aadhaar"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 
 > **Note:** `txnId` is optional here. Leave it empty on the first call, or send a previous `txnId` to resend the OTP.
 
@@ -23092,13 +22956,13 @@ Verifies the Aadhaar OTP and creates the ABHA number, or returns the existing AB
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
 | `authData` | object | yes | Authentication payload for this use case. |
-| `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
+| `authData.authMethods` | `["otp"]` | yes | Authentication method used in this step. |
 | `authData.otp` | object | yes | OTP authentication block. |
 | `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 | `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
 | `authData.otp.mobile` | string | no | Mobile number to be linked with the ABHA (plain, 10 digits). |
 | `consent` | object | yes | Consent captured from the user for ABHA enrolment. |
-| `consent.code` | string | yes | Consent code. Use `ABHA-enrollment`. |
+| `consent.code` | string | yes | Consent code. Use `abha-enrollment`. |
 | `consent.version` | string | yes | Consent version. Use `1.4`. |
 
 ```bash
@@ -23254,10 +23118,10 @@ Optional, called after the ABHA is created. Needed only when the `mobile` sent i
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
 | `txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
-| `scope` | `["ABHA-enrol", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-enrol", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `loginHint` | `"mobile"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"ABDM"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"abdm"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 
 ```bash
 curl --request POST \
@@ -23350,9 +23214,9 @@ Verifies the OTP sent by *After ABHA creation - send OTP to verify mobile (optio
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-enrol", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-enrol", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
-| `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
+| `authData.authMethods` | `["otp"]` | yes | Authentication method used in this step. |
 | `authData.otp` | object | yes | OTP authentication block. |
 | `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 | `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
@@ -37497,7 +37361,7 @@ The whole of M1: the calls, the loop that builds them, every error code and the 
 
 - ScaffoldThe loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.
 - DesignWhat the journey around the calls has to do, and what a screen is forbidden to claim.
-- Integrate125 operations, with their hosts and headers.
+- Integrate124 operations, with their hosts and headers.
 - Debug17 error codes, each with what to do about it.
 - TestThe test pyramid, from offline pins up to a live payer on the sandbox.
 
@@ -37832,9 +37696,9 @@ Working in the sandbox is not the same as being live. Stages 4 to 6 of [sandbox 
 
 - Sandbox integration has 6 stages. Stages 1 to 3 get you access and build the milestones; this page covers stages 4 to 6.
 - There is no per milestone submission. Stages 4 to 6 cover your whole integration, once.
-- The [security audit](/docs/pr-65/docs/hiecm/v3/getting-started/security-audit) is separate from functional testing.
+- Functional testing, an NHA review and demo, and the [security audit](/docs/pr-65/docs/hiecm/v3/getting-started/security-audit) come before the exit form.
 - The Health Tech Committee demonstration obtains approval for production access.
-- Production credentials are issued at the end. They are not your sandbox values.
+- Production credentials are issued at the end, to your registered email address only. They are not your sandbox values.
 
 ## Prerequisites
 
@@ -37842,34 +37706,69 @@ Every milestone your integration needs works end to end. [Your integration path]
 
 Start stage 4 once all of them are complete, not milestone by milestone.
 
-## Stage 4: Complete functional testing and security audit
+## Stage 4: Test, review and audit
 
-Test the integrated solution and complete the required security audit.
+### Step 1: Complete functional testing
 
-Empanelled agencies run both. They are separate exercises with separate outputs: functional testing produces a report and a certificate, and the security audit produces the [Safe to Host certificate](/docs/pr-65/docs/hiecm/v3/getting-started/glossary#safe-to-host-certificate). [Security audit](/docs/pr-65/docs/hiecm/v3/getting-started/security-audit) covers who may audit you, which URL they audit, and how many audits your platforms need.
+Functional testing validates the ABDM functions you integrated. An empanelled functional testing agency runs it.
 
-Before testing, you demonstrate the [ABDM](/docs/pr-65/docs/hiecm/v3/getting-started/glossary#abdm) functionality you built to the integration team.
+1. Contact an agency on the empanelled functional testing list.
+2. Complete functional and non-functional testing of the integrated application.
+3. Obtain the functional testing report.
+4. Share the report with the ABDM integration team.
 
-### Submit the exit form
+For support or a grievance about testing, contact the ABDM integration team.
 
-Upload the exit form on the sandbox with four things:
+### Step 2: Pass the NHA internal review and demo
 
-| What you upload                               | Comes from                      |
-| --------------------------------------------- | ------------------------------- |
-| The functional testing report and certificate | Your empanelled testing agency  |
-| The security audit report                     | Your CERT-In empanelled auditor |
-| A signed undertaking                          | You                             |
-| Any other supporting document requested       | The integration team            |
+The review confirms every mandatory scenario is implemented and tested.
 
-Confirm the format of the report and the undertaking with the integration team before you assemble them.
+1. Submit your functional testing reports to NHA.
+2. The ABDM integration team reviews them.
+3. Once they are approved, NHA schedules an internal demonstration.
+4. At the demonstration, you show the milestones and workflows you implemented.
+
+### Step 3: Complete the security audit
+
+The Web Application Security Assessment, or WASA, is conducted by an STQC approved agency or a CERT-In empanelled agency. It produces the [Safe to Host certificate](/docs/pr-65/docs/hiecm/v3/getting-started/glossary#safe-to-host-certificate), which you submit to NHA. [Security audit](/docs/pr-65/docs/hiecm/v3/getting-started/security-audit) covers which URL is audited and how many audits your platforms need.
+
+### Step 4: Submit the sandbox exit form
+
+Before the Health Tech Committee reviews you, the exit form carries these documents:
+
+| What you upload                           | Comes from                                       |
+| ----------------------------------------- | ------------------------------------------------ |
+| The functional testing report             | Your empanelled testing agency                   |
+| The Safe to Host certificate              | Your STQC approved or CERT-In empanelled auditor |
+| Your GSTIN certificate                    | You                                              |
+| A signed undertaking                      | You                                              |
+| Any supporting document a milestone needs | You, as the integration team asks                |
+
+1. Log in with the credentials you created at sandbox registration.
+2. Select the milestones you are seeking approval for.
+3. Upload every document and certificate in the table.
+4. Submit the exit form.
+5. Wait for the NHA review.
+6. Take part in the Health Tech Committee demonstration.
+
+Also send the signed hard copy of the undertaking to NHA by Speed Post or courier.
 
 ## Stage 5: Complete the Health Tech Committee demonstration
 
-Present the integrated solution to the [Health Tech Committee](/docs/pr-65/docs/hiecm/v3/getting-started/glossary#health-tech-committee) and obtain approval for production access. The committee records its decision in four review stages, each carrying its own reviewer and date, so the outcome arrives as a sequence rather than a single answer.
+Present your final implementation to the [Health Tech Committee](/docs/pr-65/docs/hiecm/v3/getting-started/glossary#health-tech-committee). The committee evaluates four things:
+
+- Compliance with ABDM guidelines
+- Successful implementation of each milestone
+- Functional readiness
+- Security compliance
+
+The committee records its decision in four review stages, each carrying its own reviewer and date, so the outcome arrives as a sequence rather than a single answer. Approval makes you eligible for production access.
 
 ## Stage 6: Go live
 
-Move the approved integration to the production environment and begin using ABDM services. Production credentials are issued once the committee approves.
+Once the committee approves, NHA issues a production client id and client secret. They are sent only to your registered email address. Keep the production secret confidential and never share it.
+
+Move the approved integration to the production environment and begin using ABDM services.
 
 | What you call                                                               | Sandbox                                    | Production                 |
 | --------------------------------------------------------------------------- | ------------------------------------------ | -------------------------- |
@@ -38054,7 +37953,7 @@ You need an organisation to register, and a URL we can post callbacks to. Step 3
 
 Submit a request to access the ABDM Sandbox APIs. Eligible entities may apply for access to the ABDM Sandbox to integrate and test their software with ABDM APIs. Provide the required organisation, product and contact details and select the applicable integration category while submitting the request.
 
-[Apply for Sandbox Integration](https://sandbox.abdm.gov.in/sandbox/v3/sandbox-registration)
+[Apply for Sandbox Integration](https://sbxai.abdm.gov.in)
 
 ## 2. Get access: your client id and client secret
 
@@ -38062,7 +37961,7 @@ Sandbox access is granted after approval by the [Health Tech Committee](/docs/pr
 
 Store the secret the way you store any other production credential. Never commit it, and never send it to a browser.
 
-[Open the sandbox](https://sandbox.abdm.gov.in/)
+[Open the sandbox](https://sbxai.abdm.gov.in/)
 
 ## 3. Register your callback URL
 
@@ -38072,7 +37971,7 @@ Register one base URL. We post to paths under it, and each callback that answers
 
 One URL covers your whole integration, however many facilities it serves. It belongs to your bridge, never to a facility, and the callback names the facility it is for in its own header. See [one bridge, many facilities](/docs/pr-65/docs/hiecm/v3/concepts/how-it-fits#one-bridge-many-facilities).
 
-[Open the sandbox](https://sandbox.abdm.gov.in/)
+[Open the sandbox](https://sbxai.abdm.gov.in/)
 
 Two things about that URL decide whether your integration works:
 
@@ -38106,7 +38005,7 @@ Every application passes a security audit before it reaches production. The audi
 ## In short
 
 - The audit is separate from anything functional. Passing every milestone still leaves this to do.
-- Your auditor comes from the CERT-In empanelled list. An audit by anyone else does not count.
+- Your auditor is an STQC approved agency or a CERT-In empanelled agency. An audit by anyone else does not count.
 - The audit runs on your staging URL, and the certificate then licenses the same application in production.
 - Each platform you ship is audited on its own. A website, an Android app and an iOS app need three.
 - A certificate that is in date covers a new module without re-auditing what it already covers.
@@ -38117,7 +38016,7 @@ Build the modules you intend to certify before you apply. An audit covering seve
 
 ## 1. Appoint an auditor
 
-Choose an auditor from the [CERT-In empanelled list](https://www.cert-in.org.in/PDF/Empanel_org_2021.pdf).
+Choose an STQC approved agency, or an agency on the [CERT-In empanelled list](https://www.cert-in.org.in/PDF/Empanel_org_2021.pdf).
 
 ## 2. Point the auditor at staging
 
@@ -38126,6 +38025,10 @@ The audit is conducted on your staging URL. The certificate it produces then lic
 ## 3. Cover every platform you ship
 
 One audit covers one platform. An audit of a shared [ABHA](/docs/pr-65/docs/hiecm/v3/getting-started/glossary#abha) base URL does not cover the mobile applications that call it.
+
+## 4. Submit the certificate to NHA
+
+Submit the valid Safe to Host certificate to NHA. It is also one of the documents you upload with the [exit form](/docs/pr-65/docs/hiecm/v3/getting-started/going-live#step-4-submit-the-sandbox-exit-form).
 
 ## What gets audited
 
@@ -38306,7 +38209,7 @@ Every M1 call, one per use case, with its error codes in one file: 125 operation
 
 - ScaffoldThe loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.
 - DesignWhat the journey around the calls has to do, and what a screen is forbidden to claim.
-- Integrate125 operations, with their hosts and headers.
+- Integrate124 operations, with their hosts and headers.
 - Debug17 error codes, each with what to do about it.
 - TestThe test pyramid, from offline pins up to a live payer on the sandbox.
 
@@ -41413,7 +41316,7 @@ Returns a `txnId`. Send it with the capture to `Biometric auth verify`.
 
 ### Related scenario
 
-A PMJAY beneficiary arrives for admission. The desk posts this request with `scope` `["ABHA-login", "Aadhaar-bio-verify"]`, `authMode` `FINGERPRINT`, the ABHA number with hyphens, `process` `Preauth` and the scheme payer's code, and gets a `txnId` back. The fingerprint is captured on the device and sent with that `txnId` to `Biometric auth verify`.
+A PMJAY beneficiary arrives for admission. The desk posts this request with `scope` `["abha-login", "aadhaar-bio-verify"]`, `authMode` `FINGERPRINT`, the ABHA number with hyphens, `process` `Preauth` and the scheme payer's code, and gets a `txnId` back. The fingerprint is captured on the device and sent with that `txnId` to `Biometric auth verify`.
 
 ### Specification
 
@@ -41961,7 +41864,7 @@ The payer calls it after each step of reviewing a claim, on the claim's correlat
 
 - A claim with this correlation ID exists and is still open.
 - A valid access token and the provider's certificate.
-- The header echoes the claim's `x-hcx-correlation_ID`, with a new `x-hcx-API_call_ID`.
+- The header echoes the claim's `x-hcx-correlation_id`, with a new `x-hcx-api_call_id`.
 
 ### Postconditions
 
@@ -42195,7 +42098,7 @@ Example 202 response. The values are placeholders:
 
 `POST /v1/claim/on_submit`
 
-Hosted by the provider. The exchange posts this message to the `endpoint_URL` you registered, at `/v1/claim/on_submit`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+Hosted by the provider. The exchange posts this message to the `endpoint_url` you registered, at `/v1/claim/on_submit`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
 
 Payer returns interim (response.partial) and final (response.complete) ClaimResponseBundles for a claim to the provider via NHCX.
 
@@ -42278,7 +42181,7 @@ Example 202 response. The values are placeholders:
 
 `POST /v1/claim/submit`
 
-Hosted by the payer. The exchange posts this message to the `endpoint_URL` you registered, at `/v1/claim/submit`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+Hosted by the payer. The exchange posts this message to the `endpoint_url` you registered, at `/v1/claim/submit`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
 
 Provider submits the final itemised Claim bundle (Claim.use claim), or a claim query response or resubmission; NHCX routes it to the payer.
 
@@ -42616,7 +42519,7 @@ The provider calls it to acknowledge a `/v1/communication/request`. It comes aft
 
 - You decrypted the incoming request and answered it `202` within 30 seconds.
 - A valid access token and the payer's certificate.
-- The acknowledgement mirrors the request and reuses its `x-hcx-correlation_ID`.
+- The acknowledgement mirrors the request and reuses its `x-hcx-correlation_id`.
 
 ### Postconditions
 
@@ -42844,7 +42747,7 @@ Example 202 response. The values are placeholders:
 
 `POST /v1/communication/on_request`
 
-Hosted by the payer. The exchange posts this message to the `endpoint_URL` you registered, at `/v1/communication/on_request`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+Hosted by the payer. The exchange posts this message to the `endpoint_url` you registered, at `/v1/communication/on_request`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
 
 Provider returns the acknowledgement Task bundle for a payer communication, echoing the reason code and correlation ID so the payer can close the loop.
 
@@ -42926,7 +42829,7 @@ Example 202 response. The values are placeholders:
 
 `POST /v1/communication/request`
 
-Hosted by the provider. The exchange posts this message to the `endpoint_URL` you registered, at `/v1/communication/request`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+Hosted by the provider. The exchange posts this message to the `endpoint_url` you registered, at `/v1/communication/request`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
 
 Payer pushes a Task plus Communication bundle to a provider mid-claim: TAT alerts, wallet or policy changes, grievances or extra-information requests.
 
@@ -43082,14 +42985,14 @@ Coverage eligibility is the pre-check a hospital desk runs before committing a p
  - `benefits` says whether a package is covered for this beneficiary.
  - `auth-requirements` says whether a chosen procedure is covered at this hospital, and returns the STG questionnaires and `MAND` document codes the pre-authorisation must carry.
 - Send `x-hcx-status` `request.initiated`.
-- No workflow code is specific to eligibility. The sample exchange uses `x-hcx-workflow_ID` `11` (PATIENT_ADMITTED).
+- No workflow code is specific to eligibility. The sample exchange uses `x-hcx-workflow_id` `11` (PATIENT_ADMITTED).
 - Under PMJAY, run an `auth-requirements` check even for an unspecified procedure.
 
 ### Preconditions
 
 - You have a valid access token and the payer's certificate.
 - `x-hcx-recipient_code` is the processing ID from the policy lookup, not the payer ID.
-- `x-hcx-correlation_ID` is a new UUID for this check.
+- `x-hcx-correlation_id` is a new UUID for this check.
 - The bundle names the patient, the coverage, the hospital and the insurer, encrypted for the payer.
 
 ### Postconditions
@@ -43205,7 +43108,7 @@ This is the answer leg of the eligibility check. The payer (or a TPA acting for 
 
 ### When to use
 
-- The payer calls it after it has processed a `/v1/coverageeligibility/check`, with the same `x-hcx-correlation_ID`.
+- The payer calls it after it has processed a `/v1/coverageeligibility/check`, with the same `x-hcx-correlation_id`.
 - Set `x-hcx-status` to one of these:
  - `response.complete` for a final answer. Accept `response.completed` as the same value; some samples spell it that way.
  - `response.partial` for a partial answer.
@@ -43327,7 +43230,7 @@ Example 202 response. The values are placeholders:
 
 `POST /v1/coverageeligibility/check`
 
-Hosted by the payer. The exchange posts this message to the `endpoint_URL` you registered, at `/v1/coverageeligibility/check`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+Hosted by the payer. The exchange posts this message to the `endpoint_url` you registered, at `/v1/coverageeligibility/check`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
 
 Provider asks the payer, via NHCX, whether a beneficiary's policy is in force, what it covers and which documents a preauth will need.
 
@@ -43407,7 +43310,7 @@ Example 202 response. The values are placeholders:
 
 `POST /v1/coverageeligibility/on_check`
 
-Hosted by the provider. The exchange posts this message to the `endpoint_URL` you registered, at `/v1/coverageeligibility/on_check`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+Hosted by the provider. The exchange posts this message to the `endpoint_url` you registered, at `/v1/coverageeligibility/on_check`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
 
 Payer returns the CoverageEligibilityResponse (policy in force, benefits, auth requirements) or an error to the provider through NHCX.
 
@@ -43927,7 +43830,7 @@ Example 202 response. The values are placeholders:
 
 `POST /v1/insuranceplan/on_request`
 
-Hosted by the provider. The exchange posts this message to the `endpoint_URL` you registered, at `/v1/insuranceplan/on_request`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+Hosted by the provider. The exchange posts this message to the `endpoint_url` you registered, at `/v1/insuranceplan/on_request`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
 
 Payer returns the InsurancePlan collection Bundle (InsurancePlan, Organisation, optional Questionnaire) under the request correlation ID.
 
@@ -44009,7 +43912,7 @@ Example 202 response. The values are placeholders:
 
 `POST /v1/insuranceplan/request`
 
-Hosted by the payer. The exchange posts this message to the `endpoint_URL` you registered, at `/v1/insuranceplan/request`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+Hosted by the payer. The exchange posts this message to the `endpoint_url` you registered, at `/v1/insuranceplan/request`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
 
 Provider sends a Task with code poll naming both a policy number and its HFR ID to fetch the payer's machine-readable InsurancePlan for that pairing.
 
@@ -44998,7 +44901,7 @@ A beneficiary app hosts this path to receive notifications for the ABHA IDs it s
 ### Preconditions
 
 - An active subscription exists for the ABHA ID, made through `/v1/notification/subscribe`.
-- Your callback runs over HTTPS with TLS 1.2 or higher, at the registered `on_notification_URL`.
+- Your callback runs over HTTPS with TLS 1.2 or higher, at the registered `on_notification_url`.
 - You check the token NHCX sends and its sender code.
 
 ### Postconditions
@@ -45008,7 +44911,7 @@ Each notification carries a `message` you can show the user as it is. Nothing ch
 ### Common mistakes
 
 - Building the user message from `domain_values`, which may be missing, instead of showing `message`.
-- Reading the status from `x-hcx-workflow_ID`. It lives in `x-hcx-status`.
+- Reading the status from `x-hcx-workflow_id`. It lives in `x-hcx-status`.
 - Assuming the subscription is still yours after it shows `replaced`.
 - Accepting calls without checking the token or the sender code.
 
@@ -45128,11 +45031,11 @@ Call it every time a beneficiary logs in to your app. The last app to subscribe 
 - You have a valid access token, sent in the `Authorization` header.
 - Your callback URL is registered over HTTPS, with TLS 1.2 or higher.
 - The user has agreed to receive notifications.
-- The body is encrypted and carries a new `x-hcx-correlation_ID`.
+- The body is encrypted and carries a new `x-hcx-correlation_id`.
 
 ### Postconditions
 
-NHCX saves the subscription and answers `200` with a `subscription_ID` and its status. From then on, claim events for that ABHA ID are pushed to your callback.
+NHCX saves the subscription and answers `200` with a `subscription_id` and its status. From then on, claim events for that ABHA ID are pushed to your callback.
 
 ### Common mistakes
 
@@ -45258,13 +45161,13 @@ Read `x-hcx-status` in the header. `request.dispatched` means the message reache
 
 ### Best practices
 
-- Keep every `API_call_ID` you send. Without it you cannot ask the question at all.
+- Keep every `api_call_id` you send. Without it you cannot ask the question at all.
 - Act on `request.stopped` at once, and treat `request.dispatched` as a reason to wait for the payer.
 - Ask from a support screen when a case has gone quiet for longer than the payer's expected turnaround, not on a timer.
 
 ### Related scenario
 
-A pre-authorisation has had no answer for longer than the payer's usual turnaround. The support screen sends `/v1/status` with that request's `API_call_ID` as the correlation ID. The answer arrives here with an empty payload and `x-hcx-status` `request.stopped`, so the desk knows the request is dead rather than slow, and resubmits it with a fresh correlation ID.
+A pre-authorisation has had no answer for longer than the payer's usual turnaround. The support screen sends `/v1/status` with that request's `api_call_id` as the correlation ID. The answer arrives here with an empty payload and `x-hcx-status` `request.stopped`, so the desk knows the request is dead rather than slow, and resubmits it with a fresh correlation ID.
 
 ### Specification
 
@@ -45334,7 +45237,7 @@ Example 200 response. The values are placeholders:
 
 `POST /v1/error`
 
-Hosted by every participant. The exchange posts this message to the `endpoint_URL` you registered, at `/v1/error`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+Hosted by every participant. The exchange posts this message to the `endpoint_url` you registered, at `/v1/error`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
 
 Where the exchange tells a sender that a request could not be delivered after five attempts. Received by every participant under its registered address. There is no outbound form.
 
@@ -45436,7 +45339,7 @@ Example 202 response. The values are placeholders:
 
 `POST /v1/on_status`
 
-Hosted by every participant that sends `/v1/status`. The exchange posts this message to the `endpoint_URL` you registered, at `/v1/on_status`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+Hosted by every participant that sends `/v1/status`. The exchange posts this message to the `endpoint_url` you registered, at `/v1/on_status`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
 
 The answer to a status request, delivered to the sender that asked. The `x-hcx-status` in the protected header says where the message you asked about got to. The payload is an empty string.
 
@@ -45840,7 +45743,7 @@ Example 202 response. The values are placeholders:
 
 `POST /v1/paymentnotice/on_request`
 
-Hosted by the payer. The exchange posts this message to the `endpoint_URL` you registered, at `/v1/paymentnotice/on_request`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+Hosted by the payer. The exchange posts this message to the `endpoint_url` you registered, at `/v1/paymentnotice/on_request`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
 
 Provider acknowledges a payment notice with a Task bundle (status completed, output paymentack), closing the payment lifecycle via NHCX.
 
@@ -45923,7 +45826,7 @@ Example 202 response. The values are placeholders:
 
 `POST /v1/paymentnotice/request`
 
-Hosted by the provider. The exchange posts this message to the `endpoint_URL` you registered, at `/v1/paymentnotice/request`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+Hosted by the provider. The exchange posts this message to the `endpoint_url` you registered, at `/v1/paymentnotice/request`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
 
 Payer pushes a Task bundle with PaymentNotice and PaymentReconciliation (amount, TDS, UTR) to the provider via NHCX after approving a claim.
 
@@ -46308,7 +46211,7 @@ Example 202 response. The values are placeholders:
 
 `POST /v1/preauth/on_submit`
 
-Hosted by the provider. The exchange posts this message to the `endpoint_URL` you registered, at `/v1/preauth/on_submit`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+Hosted by the provider. The exchange posts this message to the `endpoint_url` you registered, at `/v1/preauth/on_submit`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
 
 Payer returns the ClaimResponseBundle for a pre-authorisation (approved, partially approved, queried or rejected) to the provider via NHCX.
 
@@ -46391,7 +46294,7 @@ Example 202 response. The values are placeholders:
 
 `POST /v1/preauth/submit`
 
-Hosted by the payer. The exchange posts this message to the `endpoint_URL` you registered, at `/v1/preauth/submit`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+Hosted by the payer. The exchange posts this message to the `endpoint_url` you registered, at `/v1/preauth/submit`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
 
 Provider submits, resubmits, enhances or answers a query on a pre-authorisation Claim bundle (Claim.use preauthorization); NHCX routes it to the payer.
 
@@ -46997,7 +46900,7 @@ Call it when your system starts and again before the cached token expires. There
 
 ### Preconditions
 
-- You have the `client_ID` and `client_secret` issued at onboarding.
+- You have the `client_id` and `client_secret` issued at onboarding.
 - The credentials match the environment: sandbox and production credentials are separate.
 - The body is form-encoded with `grant_type=client_credentials`.
 - You do not need an access token for this call.
@@ -48964,7 +48867,7 @@ The payer calls it to answer a `/v1/search/submit` request. For a claim document
 
 - You received and decrypted the search `Task`, and answered it with `202`.
 - You have a valid access token and the requester's certificate.
-- The header repeats the search's `x-hcx-correlation_ID`.
+- The header repeats the search's `x-hcx-correlation_id`.
 
 ### Postconditions
 
@@ -49084,7 +48987,7 @@ Use it when an authorised body such as NHA or IRDAI needs the claim documents fo
 
 - You are an entity allowed to search, registered on NHCX, with a valid access token.
 - The payload is an encrypted FHIR `Task` that points to the case being queried.
-- `x-hcx-correlation_ID` carries the correlation ID of the request being queried.
+- `x-hcx-correlation_id` carries the correlation ID of the request being queried.
 
 ### Postconditions
 
@@ -49196,11 +49099,11 @@ Asynchronous exchanges lose messages, stall in queues and outlive the shift of t
 
 ### When to use
 
-Use it when the callback for a request you sent has not arrived. Set `x-hcx-correlation_ID` to the `x-hcx-API_call_ID` of that request. You can only check requests you sent yourself.
+Use it when the callback for a request you sent has not arrived. Set `x-hcx-correlation_id` to the `x-hcx-api_call_id` of that request. You can only check requests you sent yourself.
 
 ### Preconditions
 
-- You sent the original request and kept its `API_call_ID`.
+- You sent the original request and kept its `api_call_id`.
 - You have a valid access token.
 - The encrypted payload is an empty string, and the header status is `request.initiated`.
 
@@ -49210,7 +49113,7 @@ NHCX answers at once with `request.queued` or `request.dispatched`. Queued means
 
 ### Common mistakes
 
-- Making a new correlation ID instead of using the original request's `API_call_ID`.
+- Making a new correlation ID instead of using the original request's `api_call_id`.
 - Polling in a tight loop.
 - Resubmitting the original request after `request.queued`, which creates a duplicate.
 
@@ -49306,7 +49209,7 @@ Example 202 response. The values are placeholders:
 
 `POST /v1/search/on_submit`
 
-Hosted by the participant that sent the search, such as NHA or a regulator. The exchange posts this message to the `endpoint_URL` you registered, at `/v1/search/on_submit`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+Hosted by the participant that sent the search, such as NHA or a regulator. The exchange posts this message to the `endpoint_url` you registered, at `/v1/search/on_submit`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
 
 Callback returning a search result for task type code=poll; for a claim-document search the payload is the ClaimResponse for the reference number.
 
@@ -49387,7 +49290,7 @@ Example 202 response. The values are placeholders:
 
 `POST /v1/search/submit`
 
-Hosted by the payer. The exchange posts this message to the `endpoint_URL` you registered, at `/v1/search/submit`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+Hosted by the payer. The exchange posts this message to the `endpoint_url` you registered, at `/v1/search/submit`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
 
 Authorised entity such as NHA or IRDAI sends a Task to retrieve claim information for a case; the payer returns the documents on the search callback.
 
@@ -49466,7 +49369,7 @@ Example 202 response. The values are placeholders:
 
 `POST /v1/status`
 
-Hosted by the payer. The exchange posts this message to the `endpoint_URL` you registered, at `/v1/status`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+Hosted by the payer. The exchange posts this message to the `endpoint_url` you registered, at `/v1/status`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
 
 Sender asks NHCX where its own in-flight request stands; the gateway answers request.queued or request.dispatched, and only dispatched yields a callback.
 
@@ -49618,7 +49521,7 @@ The payer calls it to answer a reprocess or cancellation Task. The answer is a c
 
 - The payer answered the incoming Task with `202` within 30 seconds.
 - A valid access token and the provider's certificate.
-- The header reuses the Task's `x-hcx-correlation_ID`.
+- The header reuses the Task's `x-hcx-correlation_id`.
 - The `ClaimResponse` inside is built like any other decision.
 
 ### Postconditions
@@ -49852,7 +49755,7 @@ Example 202 response. The values are placeholders:
 
 `POST /v1/task/on_submit`
 
-Hosted by the provider. The exchange posts this message to the `endpoint_URL` you registered, at `/v1/task/on_submit`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+Hosted by the provider. The exchange posts this message to the `endpoint_url` you registered, at `/v1/task/on_submit`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
 
 Payer returns a Task bundle with Task.status completed whose Task.output references a ClaimResponse carrying the reprocess or cancellation outcome.
 
@@ -49934,7 +49837,7 @@ Example 202 response. The values are placeholders:
 
 `POST /v1/task/submit`
 
-Hosted by the payer. The exchange posts this message to the `endpoint_URL` you registered, at `/v1/task/submit`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+Hosted by the payer. The exchange posts this message to the `endpoint_url` you registered, at `/v1/task/submit`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
 
 Provider sends an FHIR Task asking the payer to reprocess a rejected or short-paid claim or to cancel a preauth; Task.code and reasonCode set the intent.
 
@@ -79236,7 +79139,7 @@ They are no longer published; remove them from your agent. [Build with AI](/docs
 
 # 29 September 2026
 
-11 changes
+13 changes
 
 ### Ambulance Booking has an API reference
 
@@ -79249,6 +79152,10 @@ Two calls, for EUAs and HSPAs, each on its own page with a request you can send.
 ### Network and discovery has an API reference
 
 Five calls, for EUAs and HSPAs, each on its own page with a request you can send. [Open the Network and discovery reference](/docs/pr-65/docs/uhi/v1/api/#network-and-discovery).
+
+### One M1 Identity call withdrawn
+
+`PATCH /abha/api/v3/profile/account#profile-photo`. If you call it, stop: the reference no longer carries it. [Open the M1 Identity reference](/docs/pr-65/docs/hiecm/v3/api/m1/).
 
 ### The hiecm-m1-test skill is published
 
@@ -79274,6 +79181,10 @@ Reinstall to move from 1.0.0. [Build with AI](/docs/pr-65/docs/hiecm/v3/getting-
 
 Reinstall to move from 0.9.2. [Build with AI](/docs/pr-65/docs/hiecm/v3/getting-started/build-with-ai).
 
+### The abdm-integrators-assistant plugin is 0.10.1
+
+Reinstall to move from 0.10.0. [Build with AI](/docs/pr-65/docs/hiecm/v3/getting-started/build-with-ai).
+
 ### The abdm-contributors-assistant plugin is 0.4.2
 
 Reinstall to move from 0.3.4. [Build with AI](/docs/pr-65/docs/hiecm/v3/getting-started/build-with-ai).
@@ -79291,17 +79202,19 @@ Changes that affect what you can build against, newest first. Each entry links t
 
 ## 29 September 2026
 
-11 changes
+13 changes
 
 - [Ambulance Booking has an API reference](/docs/pr-65/docs/whats-new/2026-09-29#ambulance-booking-has-an-api-reference)
 - [Physical Consultation has an API reference](/docs/pr-65/docs/whats-new/2026-09-29#physical-consultation-has-an-api-reference)
 - [Network and discovery has an API reference](/docs/pr-65/docs/whats-new/2026-09-29#network-and-discovery-has-an-api-reference)
+- [One M1 Identity call withdrawn](/docs/pr-65/docs/whats-new/2026-09-29#one-m1-identity-call-withdrawn)
 - [The hiecm-m1-test skill is published](/docs/pr-65/docs/whats-new/2026-09-29#the-hiecm-m1-test-skill-is-published)
 - [The abdm-integrators-assistant plugin is 0.9.0](/docs/pr-65/docs/whats-new/2026-09-29#the-abdm-integrators-assistant-plugin-is-090)
 - [The abdm-contributors-assistant plugin is 0.3.4](/docs/pr-65/docs/whats-new/2026-09-29#the-abdm-contributors-assistant-plugin-is-034)
 - [The abdm-integrators-assistant plugin is 0.9.2](/docs/pr-65/docs/whats-new/2026-09-29#the-abdm-integrators-assistant-plugin-is-092)
 - [The nhcx plugin is 1.0.1](/docs/pr-65/docs/whats-new/2026-09-29#the-nhcx-plugin-is-101)
 - [The abdm-integrators-assistant plugin is 0.10.0](/docs/pr-65/docs/whats-new/2026-09-29#the-abdm-integrators-assistant-plugin-is-0100)
+- [The abdm-integrators-assistant plugin is 0.10.1](/docs/pr-65/docs/whats-new/2026-09-29#the-abdm-integrators-assistant-plugin-is-0101)
 - [The abdm-contributors-assistant plugin is 0.4.2](/docs/pr-65/docs/whats-new/2026-09-29#the-abdm-contributors-assistant-plugin-is-042)
 - [The nhcx plugin is 1.0.2](/docs/pr-65/docs/whats-new/2026-09-29#the-nhcx-plugin-is-102)
 

@@ -15,7 +15,7 @@ A beneficiary app hosts this path to receive notifications for the ABHA IDs it s
 ### Preconditions
 
 - An active subscription exists for the ABHA ID, made through `/v1/notification/subscribe`.
-- Your callback runs over HTTPS with TLS 1.2 or higher, at the registered `on_notification_URL`.
+- Your callback runs over HTTPS with TLS 1.2 or higher, at the registered `on_notification_url`.
 - You check the token NHCX sends and its sender code.
 
 ### Postconditions
@@ -25,7 +25,7 @@ Each notification carries a `message` you can show the user as it is. Nothing ch
 ### Common mistakes
 
 - Building the user message from `domain_values`, which may be missing, instead of showing `message`.
-- Reading the status from `x-hcx-workflow_ID`. It lives in `x-hcx-status`.
+- Reading the status from `x-hcx-workflow_id`. It lives in `x-hcx-status`.
 - Assuming the subscription is still yours after it shows `replaced`.
 - Accepting calls without checking the token or the sender code.
 

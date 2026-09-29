@@ -2,7 +2,7 @@
 
 `POST /v1/insuranceplan/request`
 
-Hosted by the payer. The exchange posts this message to the `endpoint_URL` you registered, at `/v1/insuranceplan/request`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+Hosted by the payer. The exchange posts this message to the `endpoint_url` you registered, at `/v1/insuranceplan/request`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
 
 Provider sends a Task with code poll naming both a policy number and its HFR ID to fetch the payer's machine-readable InsurancePlan for that pairing.
 

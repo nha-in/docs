@@ -29,10 +29,10 @@ Creates an ABHA number by authenticating the Aadhaar holder's fingerprint. The P
 | `authData.bio.fingerPrintAuthPid` | string | yes | Base64 PID block captured from a registered fingerprint RD device. |
 | `authData.bio.mobile` | string | no | Mobile number to be linked with the ABHA (plain, 10 digits). |
 | `consent` | object | yes | Consent captured from the user for ABHA enrolment. |
-| `consent.code` | string | yes | Consent code. Use `ABHA-enrollment`. |
+| `consent.code` | string | yes | Consent code. Use `abha-enrollment`. |
 | `consent.version` | string | yes | Consent version. Use `1.4`. |
 
-> **Note:** The Postman collection (Create ABHA - Fingerprint 3.1) sends `authMethods: ["OTP"]`. This spec uses `["bio"]`; confirm with NHA.
+> **Note:** The Postman collection (Create ABHA - Fingerprint 3.1) sends `authMethods: ["otp"]`. This spec uses `["bio"]`; confirm with NHA.
 
 ```bash
 curl --request POST \

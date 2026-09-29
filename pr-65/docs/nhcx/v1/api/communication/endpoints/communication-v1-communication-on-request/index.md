@@ -16,7 +16,7 @@ The provider calls it to acknowledge a `/v1/communication/request`. It comes aft
 
 - You decrypted the incoming request and answered it `202` within 30 seconds.
 - A valid access token and the payer's certificate.
-- The acknowledgement mirrors the request and reuses its `x-hcx-correlation_ID`.
+- The acknowledgement mirrors the request and reuses its `x-hcx-correlation_id`.
 
 ### Postconditions
 

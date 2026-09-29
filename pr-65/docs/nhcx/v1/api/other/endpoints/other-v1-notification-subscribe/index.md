@@ -17,11 +17,11 @@ Call it every time a beneficiary logs in to your app. The last app to subscribe 
 - You have a valid access token, sent in the `Authorization` header.
 - Your callback URL is registered over HTTPS, with TLS 1.2 or higher.
 - The user has agreed to receive notifications.
-- The body is encrypted and carries a new `x-hcx-correlation_ID`.
+- The body is encrypted and carries a new `x-hcx-correlation_id`.
 
 ### Postconditions
 
-NHCX saves the subscription and answers `200` with a `subscription_ID` and its status. From then on, claim events for that ABHA ID are pushed to your callback.
+NHCX saves the subscription and answers `200` with a `subscription_id` and its status. From then on, claim events for that ABHA ID are pushed to your callback.
 
 ### Common mistakes
 

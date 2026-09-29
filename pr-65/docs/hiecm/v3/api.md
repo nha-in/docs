@@ -47,7 +47,7 @@ Milestone 1 APIs enable the creation, authentication, verification, and manageme
 - ABHA profile management
 - ABHA-related services and operations
 
-122 endpoints across 10 use cases: Create ABHA, Child ABHA, Login, Profile, ABHA Card & Profile, Find ABHA, Forgot ABHA, Benefit, Access Tokens & Encryption, ABHA Address Login. Each endpoint has its own page in the sidebar.
+121 endpoints across 10 use cases: Create ABHA, Child ABHA, Login, Profile, ABHA Card & Profile, Find ABHA, Forgot ABHA, Benefit, Access Tokens & Encryption, ABHA Address Login. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/docs/pr-65/reference/hiecm-m1)
 

@@ -10,7 +10,7 @@ This is the answer leg of the eligibility check. The payer (or a TPA acting for 
 
 ### When to use
 
-- The payer calls it after it has processed a `/v1/coverageeligibility/check`, with the same `x-hcx-correlation_ID`.
+- The payer calls it after it has processed a `/v1/coverageeligibility/check`, with the same `x-hcx-correlation_id`.
 - Set `x-hcx-status` to one of these:
  - `response.complete` for a final answer. Accept `response.completed` as the same value; some samples spell it that way.
  - `response.partial` for a partial answer.

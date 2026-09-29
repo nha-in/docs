@@ -16,7 +16,7 @@ The payer calls it to answer a reprocess or cancellation Task. The answer is a c
 
 - The payer answered the incoming Task with `202` within 30 seconds.
 - A valid access token and the provider's certificate.
-- The header reuses the Task's `x-hcx-correlation_ID`.
+- The header reuses the Task's `x-hcx-correlation_id`.
 - The `ClaimResponse` inside is built like any other decision.
 
 ### Postconditions

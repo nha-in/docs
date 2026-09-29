@@ -1,6 +1,6 @@
 # 29 September 2026
 
-11 changes
+13 changes
 
 ### Ambulance Booking has an API reference
 
@@ -13,6 +13,10 @@ Two calls, for EUAs and HSPAs, each on its own page with a request you can send.
 ### Network and discovery has an API reference
 
 Five calls, for EUAs and HSPAs, each on its own page with a request you can send. [Open the Network and discovery reference](/docs/pr-65/docs/uhi/v1/api/#network-and-discovery).
+
+### One M1 Identity call withdrawn
+
+`PATCH /abha/api/v3/profile/account#profile-photo`. If you call it, stop: the reference no longer carries it. [Open the M1 Identity reference](/docs/pr-65/docs/hiecm/v3/api/m1/).
 
 ### The hiecm-m1-test skill is published
 
@@ -37,6 +41,10 @@ Reinstall to move from 1.0.0. [Build with AI](/docs/pr-65/docs/hiecm/v3/getting-
 ### The abdm-integrators-assistant plugin is 0.10.0
 
 Reinstall to move from 0.9.2. [Build with AI](/docs/pr-65/docs/hiecm/v3/getting-started/build-with-ai).
+
+### The abdm-integrators-assistant plugin is 0.10.1
+
+Reinstall to move from 0.10.0. [Build with AI](/docs/pr-65/docs/hiecm/v3/getting-started/build-with-ai).
 
 ### The abdm-contributors-assistant plugin is 0.4.2
 

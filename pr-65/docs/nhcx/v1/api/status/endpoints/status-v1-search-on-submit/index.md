@@ -16,7 +16,7 @@ The payer calls it to answer a `/v1/search/submit` request. For a claim document
 
 - You received and decrypted the search `Task`, and answered it with `202`.
 - You have a valid access token and the requester's certificate.
-- The header repeats the search's `x-hcx-correlation_ID`.
+- The header repeats the search's `x-hcx-correlation_id`.
 
 ### Postconditions
 

@@ -38,7 +38,7 @@ Returns a `txnId`. Send it with the capture to `Biometric auth verify`.
 
 ### Related scenario
 
-A PMJAY beneficiary arrives for admission. The desk posts this request with `scope` `["ABHA-login", "Aadhaar-bio-verify"]`, `authMode` `FINGERPRINT`, the ABHA number with hyphens, `process` `Preauth` and the scheme payer's code, and gets a `txnId` back. The fingerprint is captured on the device and sent with that `txnId` to `Biometric auth verify`.
+A PMJAY beneficiary arrives for admission. The desk posts this request with `scope` `["abha-login", "aadhaar-bio-verify"]`, `authMode` `FINGERPRINT`, the ABHA number with hyphens, `process` `Preauth` and the scheme payer's code, and gets a `txnId` back. The fingerprint is captured on the device and sent with that `txnId` to `Biometric auth verify`.
 
 ### Specification
 

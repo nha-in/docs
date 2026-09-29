@@ -17,14 +17,14 @@ Coverage eligibility is the pre-check a hospital desk runs before committing a p
  - `benefits` says whether a package is covered for this beneficiary.
  - `auth-requirements` says whether a chosen procedure is covered at this hospital, and returns the STG questionnaires and `MAND` document codes the pre-authorisation must carry.
 - Send `x-hcx-status` `request.initiated`.
-- No workflow code is specific to eligibility. The sample exchange uses `x-hcx-workflow_ID` `11` (PATIENT_ADMITTED).
+- No workflow code is specific to eligibility. The sample exchange uses `x-hcx-workflow_id` `11` (PATIENT_ADMITTED).
 - Under PMJAY, run an `auth-requirements` check even for an unspecified procedure.
 
 ### Preconditions
 
 - You have a valid access token and the payer's certificate.
 - `x-hcx-recipient_code` is the processing ID from the policy lookup, not the payer ID.
-- `x-hcx-correlation_ID` is a new UUID for this check.
+- `x-hcx-correlation_id` is a new UUID for this check.
 - The bundle names the patient, the coverage, the hospital and the insurer, encrypted for the payer.
 
 ### Postconditions
