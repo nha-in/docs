@@ -562,6 +562,54 @@ func TestRespondBlocksAnInventedLiteral(t *testing.T) {
 	}
 }
 
+// An answer the guard would block is not the end of the turn: the model is
+// told which literal the documentation does not carry and gets one more go.
+// "Link record token generation" reached a reader as the blocked notice while
+// search had returned the three atoms that answer it.
+func TestRespondRetriesAnInventedLiteralOnce(t *testing.T) {
+	result := map[string]any{"hits": []map[string]any{{
+		"id": "hiecm.error.abdm-1035", "title": "Facility not onboarded",
+		"doc_url": "/docs/hiecm/v3/reference/error-codes",
+		"snippet": "ABDM-1035 means the X-HIP-ID is not registered.",
+	}}}
+	var retryPrompt string
+	fm := &fakeModel{next: func(msgs []Message) Reply {
+		switch len(msgs) {
+		case 1:
+			return Reply{ToolCalls: []ToolCall{{ID: "1", Name: "search_docs",
+				Input: json.RawMessage(`{"query":"x"}`)}}, StopReason: "tool_use"}
+		case 3:
+			return Reply{Text: "Add X-Retry-After-Ms to the call and it clears.\n", StopReason: "end_turn"}
+		default:
+			retryPrompt = msgs[len(msgs)-1].Text
+			return Reply{Text: "ABDM-1035 means your X-HIP-ID is not registered yet.\n", StopReason: "end_turn"}
+		}
+	}}
+	svc := &Service{Model: fm, MaxTokens: 100,
+		Tools: []ToolDef{{Name: "search_docs",
+			Call: func(context.Context, json.RawMessage) (map[string]any, error) { return result, nil }}}}
+	var seen strings.Builder
+	emit := func(name string, data any) error {
+		if name == "text" {
+			seen.WriteString(data.(map[string]string)["delta"])
+		}
+		return nil
+	}
+	if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "why ABDM-1035?"}}, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	got := seen.String()
+	if strings.Contains(got, "X-Retry-After-Ms") || strings.Contains(got, BlockedNotice) {
+		t.Errorf("the first draft or the notice reached the reader: %q", got)
+	}
+	if !strings.Contains(got, "X-HIP-ID is not registered") {
+		t.Errorf("the corrected answer went missing: %q", got)
+	}
+	if !strings.Contains(retryPrompt, "X-Retry-After-Ms") {
+		t.Errorf("the retry did not name the literal: %q", retryPrompt)
+	}
+}
+
 // The model narrating its own plumbing ("let me look that up") before a tool
 // call must never reach the reader. The prompt already forbids it, which is
 // exactly why this is here: the tool call that identifies the words as
