@@ -1259,6 +1259,25 @@ func TestLookupQueryLeavesALongTurnAlone(t *testing.T) {
 	}
 }
 
+// A follow-up that points back ("that callback", "it", "both") names nothing
+// the search can find on its own, whatever its length: "how do i know which
+// patient's request that callback is for" is nine words and retrieved a
+// discovery callback instead of the link-token callback it meant. Follow-ups
+// scored 0.20 recall at 3 on the first recorded run.
+func TestLookupQueryCarriesThePreviousTurnForAFollowUpThatRefersBack(t *testing.T) {
+	for _, tc := range []struct{ prev, last string }{
+		{"how do I link a care context to a patient's ABHA", "how do i know which patient's request that callback is for"},
+		{"patient approved my consent request, what next", "there were two ids in it, do i need both"},
+		{"how do i create an ABHA with aadhaar otp", "ok got the number back. now how does the person pick their address"},
+		{"how do I get the X-token after a mobile OTP login", "and when it expires? do they have to login again"},
+	} {
+		turns := []Turn{{Role: "user", Text: tc.prev}, {Role: "assistant", Text: "..."}, {Role: "user", Text: tc.last}}
+		if got := lookupQuery(turns); !strings.Contains(got, tc.prev) || !strings.Contains(got, tc.last) {
+			t.Errorf("lookupQuery for %q = %q, want both turns", tc.last, got)
+		}
+	}
+}
+
 // TestRespondPreRetrievesOnAShortFollowUp covers finding 5 end to end: the
 // pre-retrieval query for "and the address?" must carry the previous turn,
 // or a follow-up like it can never find the flow it is asking to continue.
