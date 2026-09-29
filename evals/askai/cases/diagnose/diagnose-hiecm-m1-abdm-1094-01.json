@@ -1,0 +1,37 @@
+{
+  "id": "diagnose-hiecm-m1-abdm-1094-01",
+  "slice": "diagnose",
+  "class": "diagnose",
+  "turns": [
+    {
+      "role": "user",
+      "text": "user just logged in by mobile OTP, but profile call says ABDM-1094 X-token expired. token is brand new, why?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "A profile call refused with ABDM-1094 X-token expired on a new token usually means the token from login verify was sent instead of the one from /abha/api/v3/profile/login/verify/user.",
+    "Send the verify token as the T-token header to /abha/api/v3/profile/login/verify/user and use the token it returns as the X-token.",
+    "ABDM-1094 arrives with code at the top level beside a timestamp, not inside an error object, so read the code inside error when present and fall back to the top level code."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.flow.m1-login-by-mobile",
+    "hiecm.error.abdm-1094"
+  ],
+  "expected_shape": "diagnose",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-abha-m1-abha-swagger-1-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "The message says expired but the token is fresh; the real cause is sending the wrong one of two login tokens. Source lines: catalogue/hiecm/flows/m1-login-by-mobile.md, 'A profile call refused with `ABDM-1094`, X-token expired, on a new token usually means the token from login verify was sent instead of the one from verify user'; 'Always call `/abha/api/v3/profile/login/verify/user` with the chosen `ABHANumber`, the same `txnId` and that token in the `T-token` header ... It returns the `X-token` profile calls need.' catalogue/hiecm/errors/abdm-1094.md, 'This code arrives with `code` at the top level beside a `timestamp`, while other M1 errors wrap it in an `error` object. Read the `code` inside `error` when it is present, and fall back to the top level `code`.'"
+}

@@ -273,6 +273,25 @@ var (
 	portalPathRe = regexp.MustCompile(`^/docs/`)
 )
 
+// apiPaths returns the API path matches in s, leaving out any that sit
+// inside a link to the portal's own pages: /docs/hiecm/v3/... carries /v3/,
+// which groundedPathRe matches from there on, and a page link is navigation,
+// not a literal an integrator copies into a request.
+func apiPaths(s string) []string {
+	var out []string
+	for _, loc := range groundedPathRe.FindAllStringIndex(s, -1) {
+		token := s[:loc[0]]
+		if i := strings.LastIndexAny(token, " \t\n([<\"'`"); i >= 0 {
+			token = token[i+1:]
+		}
+		if strings.Contains(token, "/docs/") || portalPathRe.MatchString(s[loc[0]:loc[1]]) {
+			continue
+		}
+		out = append(out, s[loc[0]:loc[1]])
+	}
+	return out
+}
+
 // CheckGrounding compares the literals in an answer against the text the
 // tools returned, plus the reader's own question.
 //
@@ -305,7 +324,12 @@ func CheckGrounding(answer, corpus string, cited int, final bool) []Violation {
 	}
 	collect(groundedCodeRe, nil)
 	collect(groundedHeaderRe, nil)
-	collect(groundedPathRe, func(p string) bool { return portalPathRe.MatchString(p) })
+	for _, m := range apiPaths(answer) {
+		if !seen[m] {
+			seen[m] = true
+			literals = append(literals, m)
+		}
+	}
 
 	for _, lit := range literals {
 		if !strings.Contains(haystack, strings.ToLower(lit)) {
@@ -335,14 +359,13 @@ func CheckGrounding(answer, corpus string, cited int, final bool) []Violation {
 func Literals(s string) []string {
 	var out []string
 	seen := map[string]bool{}
-	for _, re := range []*regexp.Regexp{groundedCodeRe, groundedHeaderRe, groundedPathRe} {
-		for _, m := range re.FindAllString(s, -1) {
-			if portalPathRe.MatchString(m) || seen[m] {
-				continue
-			}
-			seen[m] = true
-			out = append(out, m)
+	found := append(groundedCodeRe.FindAllString(s, -1), groundedHeaderRe.FindAllString(s, -1)...)
+	for _, m := range append(found, apiPaths(s)...) {
+		if seen[m] {
+			continue
 		}
+		seen[m] = true
+		out = append(out, m)
 	}
 	return out
 }

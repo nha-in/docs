@@ -1,0 +1,43 @@
+{
+  "id": "followup-hiecm-m2-match-link-token-callback-01",
+  "slice": "followup",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "how do I link a care context to a patient's ABHA"
+    },
+    {
+      "role": "assistant",
+      "text": "First generate a link token for the patient with POST /api/hiecm/v3/token/generate-token. The token arrives on your bridge at /api/v3/hip/token/on-generate-token, and you then link with it."
+    },
+    {
+      "role": "user",
+      "text": "how do i know which patient's request that callback is for"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "Match the callback to your request by response.requestId, which echoes the REQUEST-ID you sent on the generate token call.",
+    "Store that REQUEST-ID before you send the call, so a fast callback still finds a match."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.callback.m2-on-generate-token-result"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-hiecm-link-token-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "The last turn is under specified: 'that callback' is on-generate-token from the assistant turn. Source lines: catalogue/hiecm/callbacks/m2-on-generate-token-result.md, 'Match the callback to your request by `response.requestId`, which echoes the `REQUEST-ID` you sent.'; 'Store the `REQUEST-ID` of the generate token call before you send it, so a fast callback still finds a match.'"
+}

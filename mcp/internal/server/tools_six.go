@@ -23,7 +23,7 @@ type searchSixIn struct {
 }
 
 type getSixIn struct {
-	ID string `json:"id" jsonschema:"an atom id (hiecm.error.abdm-1035), an operationId (m1_post_profile_verify), fhir:<profile> (fhir:OPConsultRecord) or fhir-example:<hiType> (fhir-example:OPConsultation)"`
+	ID string `json:"id" jsonschema:"an atom id (hiecm.error.abdm-1035), an operationId (m2_post_v3_token_generate_token), fhir:<profile> (fhir:OPConsultRecord) or fhir-example:<hiType> (fhir-example:OPConsultation)"`
 }
 
 type validateSixIn struct {
@@ -123,7 +123,7 @@ func (t *Tools) Validate(ctx context.Context, in validateSixIn) (map[string]any,
 
 const (
 	searchDescription       = "Find catalogue atoms, API operations or FHIR profiles. Use kind: atom (default) for concepts, errors, flows and glossary terms; kind: operation for an endpoint by what it does or its path; kind: fhir_profile to list profiles. Leave query empty with type or milestone to list atoms. Returns ids to pass to get; response_format concise (default) keeps each hit to id, type, title, url and a short summary."
-	getDescription          = "Read one item in full by id. The id's shape picks the kind: an atom id (hiecm.error.abdm-1035), an operationId (m1_post_profile_verify), fhir:<profile> or fhir-example:<hiType>. Use search first when you do not have an id."
+	getDescription          = "Read one item in full by id. The id's shape picks the kind: an atom id (hiecm.error.abdm-1035), an operationId (m2_post_v3_token_generate_token), fhir:<profile> or fhir-example:<hiType>. Use search first when you do not have an id."
 	validateDescription     = "Check a candidate before you send it. kind: request checks a request body against its operation's schema; kind: fhir checks a FHIR document bundle against the pinned NRCES profiles and ABDM rules. Findings name locations and fixes."
 	validateFhirDescription = "Structural pre-flight check of a FHIR document bundle against the pinned NRCES profiles and ABDM transport rules. " +
 		"Returns findings with locations and concrete fixes, never a bare pass or fail. " +

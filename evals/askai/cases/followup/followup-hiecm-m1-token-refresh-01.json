@@ -1,0 +1,45 @@
+{
+  "id": "followup-hiecm-m1-token-refresh-01",
+  "slice": "followup",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "how do I get the X-token after a mobile OTP login"
+    },
+    {
+      "role": "assistant",
+      "text": "Call /abha/api/v3/profile/login/verify/user with the chosen ABHANumber, the txnId and the verify token in the T-token header. The response carries token, which is the X-token, with expiresIn and refreshToken."
+    },
+    {
+      "role": "user",
+      "text": "and when it expires? do they have to login again"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "A new X-token can be issued without a new sign in by sending the refreshToken from login or enrolment in the R-token header.",
+    "The response carries a new token and refreshToken, and their lifetimes should be read from expiresIn and refreshExpiresIn rather than assumed.",
+    "A 400 with Invalid R-token means the refresh token is wrong or expired, and then the person has to sign in again."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom",
+    "clientSecret"
+  ],
+  "expected_sources": [
+    "hiecm.endpoint.m1-token-refresh"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-abha-m1-abha-swagger-1-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "Under-specified follow-up ('it') that must resolve to the X-token from turn 2, not the gateway session token. Source lines: catalogue/hiecm/endpoints/m1-token-refresh.md, 'Issues a new `X-token` without making the person sign in again. Send the refresh token from login or enrolment in the `R-token` header. The response carries a new `token` and `refreshToken`, with their lifetimes in `expiresIn` and `refreshExpiresIn`. Read the lifetimes from the response rather than assuming them'; 'A 400 with `Invalid R-token` means the refresh token is wrong or expired: sign the person in again.' The atom does not state the refresh path, so no path is required."
+}

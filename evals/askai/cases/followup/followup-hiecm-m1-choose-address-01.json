@@ -1,0 +1,46 @@
+{
+  "id": "followup-hiecm-m1-choose-address-01",
+  "slice": "followup",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "how do i create an ABHA with aadhaar otp"
+    },
+    {
+      "role": "assistant",
+      "text": "Request an OTP with scope abha-enrol and loginHint aadhaar, then call enrol/byAadhaar with the txnId and the encrypted OTP. The response carries ABHAProfile with the ABHANumber."
+    },
+    {
+      "role": "user",
+      "text": "ok got the number back. now how does the person pick their address"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "Fetch suggestions with GET /abha/api/v3/enrollment/enrol/suggestion, sending the enrolment txnId in the TRANSACTION_ID header, and the suggestions come back in abhaAddressList.",
+    "Claim the chosen address with POST /abha/api/v3/enrollment/enrol/abha-address, sending the txnId, the abhaAddress and preferred set to 1.",
+    "An account left with only its default address is a half finished job the person will not recognise later."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.endpoint.m1-enrolment-address-suggestions",
+    "hiecm.endpoint.m1-enrolment-claim-abha-address",
+    "hiecm.flow.m1-create-abha-aadhaar-otp"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-abha-m1-abha-collection-json",
+  "catalogue_version": "2026.09.16",
+  "notes": "Follow-up that depends on the enrolment context from turn 1; the TRANSACTION_ID header is the detail people miss. Source lines: catalogue/hiecm/flows/m1-create-abha-aadhaar-otp.md, 'GET /abha/api/v3/enrollment/enrol/suggestion<br/>header TRANSACTION_ID txnId'; 'POST /abha/api/v3/enrollment/enrol/abha-address<br/>txnId, abhaAddress, preferred 1'; 'An account left with only its default address is a half finished job the person will not recognise later.' catalogue/hiecm/endpoints/m1-enrolment-address-suggestions.md, 'Send the enrolment `txnId` in the `TRANSACTION_ID` header. The suggestions come back in `abhaAddressList`.' catalogue/hiecm/endpoints/m1-enrolment-claim-abha-address.md, 'Send the enrolment `txnId`, the `abhaAddress`, and `preferred` set to `1`'."
+}

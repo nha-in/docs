@@ -38,6 +38,6 @@
   "expected_behaviour": "answer",
   "derived_from": null,
   "source_row": "annexure#sandbox-faq-m1",
-  "catalogue_version": "2026.08.24",
+  "catalogue_version": "2026.09.16",
   "notes": "follow-up asks for the concrete call behind a concept answer; the second answer is the gateway-sessions endpoint atom."
 }

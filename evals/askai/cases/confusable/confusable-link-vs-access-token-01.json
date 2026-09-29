@@ -15,6 +15,6 @@
   "expected_behaviour": "answer",
   "derived_from": null,
   "source_row": "annexure#glossary",
-  "catalogue_version": "2026.08.24",
+  "catalogue_version": "2026.09.16",
   "notes": "Source lines: catalogue/shared/glossary/link-token.md, 'your system obtains it when the patient registers and stores it against that patient. NHA's M2 document gives it a validity of six months'; catalogue/hiecm/concepts/gateway-session.md, 'The session token says which application is calling.'"
 }

@@ -270,3 +270,22 @@ func TestMaskAttachmentLeavesASchemaAlone(t *testing.T) {
 		t.Errorf("a schema was masked as if it named someone:\n%s", got)
 	}
 }
+
+// A link to one of the portal's own pages carries /v3/ inside it, which the
+// API path pattern matched from there on. The tail is not an API literal:
+// the answer was blocked for linking a real page the search had not
+// returned, and the eval flagged 79 links as literals outside a code span.
+func TestPortalLinksAreNotAPILiterals(t *testing.T) {
+	answer := "See [the glossary](/docs/hiecm/v3/getting-started/glossary#hip) and https://docs.abdm.gov.in/docs/hiecm/v3/api/m2/endpoints/x."
+	if got := Literals(answer); len(got) != 0 {
+		t.Errorf("Literals = %q, want none", got)
+	}
+	if vs := CheckGrounding(answer, "", 1, true); len(vs) != 0 {
+		t.Errorf("CheckGrounding = %+v, want nothing to ground", vs)
+	}
+	// A real API path still counts, including one written after a link.
+	got := Literals("see [docs](/docs/hiecm/v3/x) then call `/api/hiecm/v3/token/generate-token`")
+	if len(got) != 1 || got[0] != "/api/hiecm/v3/token/generate-token" {
+		t.Errorf("Literals = %q, want only the API path", got)
+	}
+}

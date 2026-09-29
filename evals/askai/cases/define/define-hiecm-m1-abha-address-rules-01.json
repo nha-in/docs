@@ -1,0 +1,36 @@
+{
+  "id": "define-hiecm-m1-abha-address-rules-01",
+  "slice": "define",
+  "class": "define",
+  "turns": [
+    {
+      "role": "user",
+      "text": "what is a valid abha address? can it just be the patient's mobile number?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "An ABHA address may use letters, digits and dots, and it cannot begin or end with a dot.",
+    "A mobile number cannot be used directly as an ABHA address.",
+    "Every ABHA number is issued a default address built from its 14 digits, and the person can create a readable one beside it."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.concept.abha-address-policy"
+  ],
+  "expected_shape": "define",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-abha-m1-abha-swagger-1-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "Definition of what an ABHA address may be, with the mobile number misconception. Source lines: catalogue/hiecm/concepts/abha-address-policy.md, 'Permitted Characters: Alphabetic characters (A-Z), Numeric characters (0-9), Dot (.)'; 'Cannot begin with a numeric character. Cannot begin or end with a dot (.)'; 'Mobile numbers cannot be used directly as ABHA Addresses'; 'Every ABHA number is issued a default address built from its 14 digits. A person cannot create that address themselves, and can create a readable one beside it.' Underscore is deliberately not asserted: this concept lists no underscore, while hiecm.error.abdm-1170 (M2) gives a pattern that allows one. Review: 'cannot begin with a digit' dropped; hiecm.error.abdm-1170 gives a pattern that allows a leading digit, a catalogue conflict to resolve."
+}
