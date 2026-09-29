@@ -287,7 +287,9 @@ func apiPaths(s string) []string {
 		if strings.Contains(token, "/docs/") || portalPathRe.MatchString(s[loc[0]:loc[1]]) {
 			continue
 		}
-		out = append(out, s[loc[0]:loc[1]])
+		// A path that ends a sentence must not take the full stop with it:
+		// "/api/v3/x/info." is not a literal anyone sent or any corpus holds.
+		out = append(out, strings.TrimRight(s[loc[0]:loc[1]], "."))
 	}
 	return out
 }
