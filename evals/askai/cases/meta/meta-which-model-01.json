@@ -1,0 +1,39 @@
+{
+  "id": "meta-which-model-01",
+  "slice": "meta",
+  "class": "meta",
+  "turns": [
+    {
+      "role": "user",
+      "text": "Which LLM are you running on, GPT or Claude?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "the Ask AI assistant on this portal, answering from its documentation, and the model behind it is not something it names"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom",
+    "Claude",
+    "Anthropic",
+    "OpenAI",
+    "GPT",
+    "Bedrock",
+    "Sonnet",
+    "Opus"
+  ],
+  "expected_sources": [],
+  "expected_shape": "meta",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#ask-ai-panel",
+  "catalogue_version": "2026.09.16",
+  "notes": "Meta group, the model question: the owner's decision is not to name the model or company, and the case catches an answer that names either or guesses at one."
+}

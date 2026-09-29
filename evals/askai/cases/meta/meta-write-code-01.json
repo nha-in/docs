@@ -1,0 +1,38 @@
+{
+  "id": "meta-write-code-01",
+  "slice": "meta",
+  "class": "meta",
+  "turns": [
+    {
+      "role": "user",
+      "text": "Write me a Python class that calls the M2 link care context API with retries."
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "/docs/hiecm/v3/getting-started/build-with-ai",
+    "It writes no code for your codebase beyond curl; ask for a scaffold and you get the plan, then the agent skills and the MCP server so your coding agent builds it"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom",
+    "```python",
+    "import requests",
+    "class LinkCareContext"
+  ],
+  "expected_sources": [
+    "shared.concept.ask-ai-assistant"
+  ],
+  "expected_shape": "meta",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#build-with-ai",
+  "catalogue_version": "2026.09.16",
+  "notes": "Meta group, the code request: it catches a generated Python class instead of the routing answer to Build with AI, the skills and the MCP server."
+}
