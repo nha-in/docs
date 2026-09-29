@@ -1,0 +1,43 @@
+# Network and discovery
+
+Every [UHI](/docs/pr-83/docs/uhi/v1/getting-started/glossary#uhi) service starts here. This module holds the discovery calls that go through the [UHI Gateway](/docs/pr-83/docs/uhi/v1/getting-started/glossary#uhi-gateway), and the lookup that returns another participant's public key.
+
+## What it holds
+
+| Call                                  | Served by   | What it does                                                                                                                                                                          |
+| ------------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `POST /api/v1/uhi/search`             | UHI Gateway | Takes the [EUA](/docs/pr-83/docs/uhi/v1/getting-started/glossary#eua)'s search and broadcasts it to every [HSPA](/docs/pr-83/docs/uhi/v1/getting-started/glossary#hspa) in the domain |
+| `POST /search`                        | HSPA        | Receives the search the Gateway forwards                                                                                                                                              |
+| `POST /api/v1/uhi/on_search`          | UHI Gateway | Takes an HSPA's catalog for the EUA                                                                                                                                                   |
+| `POST /on_search`                     | EUA         | Receives the catalog on the EUA's `consumer_uri`                                                                                                                                      |
+| `POST /api/v1/networkregistry/lookup` | UHI Gateway | Returns another participant's public key and details. [Look up a participant](/docs/pr-83/docs/uhi/v1/api/network/endpoints/uhi-network-registry-lookup)                              |
+
+Sign every call first. See [Signing](/docs/pr-83/docs/uhi/v1/concepts/signing).
+
+## Journeys
+
+Each journey walks the four discovery calls with one service's own examples.
+
+| Service                       | Journey                                                                                                                                        |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| PM-JAY HEM Hospital Discovery | [PM-JAY HEM hospital discovery](/docs/pr-83/docs/uhi/v1/api/network/endpoints/uhi-pmjay-hem/01-uhi-network-gateway-search)                     |
+| Blood Bank Discovery          | [Blood stock discovery](/docs/pr-83/docs/uhi/v1/api/network/endpoints/uhi-blood-bank/01-uhi-network-gateway-search)                            |
+| Jan Aushadhi                  | [Kendra search](/docs/pr-83/docs/uhi/v1/api/network/endpoints/uhi-jan-aushadhi-kendra-search/01-uhi-network-gateway-search)                    |
+| Jan Aushadhi                  | [Medicine search](/docs/pr-83/docs/uhi/v1/api/network/endpoints/uhi-jan-aushadhi-medicine-search/01-uhi-network-gateway-search)                |
+| Jan Aushadhi                  | [Kendras for a selected medicine](/docs/pr-83/docs/uhi/v1/api/network/endpoints/uhi-jan-aushadhi-medicine-stock/01-uhi-network-gateway-search) |
+| NOTTO Hospital Discovery      | [NOTTO hospital discovery](/docs/pr-83/docs/uhi/v1/api/network/endpoints/uhi-notto/01-uhi-network-gateway-search)                              |
+
+## Base URLs
+
+| Environment | Base URL                                |
+| ----------- | --------------------------------------- |
+| Sandbox     | `https://uhigatewaysandbox.abdm.gov.in` |
+| Production  | `https://uhigateway.abdm.gov.in`        |
+
+## Pairs with
+
+- [Physical Consultation](/docs/pr-83/docs/uhi/v1/api/consultation) and [Ambulance Booking](/docs/pr-83/docs/uhi/v1/api/ambulance) run their discovery on these calls, then go direct between EUA and HSPA.
+- [Routes](/docs/pr-83/docs/uhi/v1/concepts/routes) shows which calls go through the Gateway.
+- [Messages and callbacks](/docs/pr-83/docs/uhi/v1/concepts/messages) explains the `context` block and the `ACK`.
+
+New to this? Start with the [Quickstart](/docs/pr-83/docs/uhi/v1/getting-started/first-fifteen-minutes).
