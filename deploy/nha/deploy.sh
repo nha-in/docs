@@ -102,8 +102,12 @@ echo "==> docs-mcp: building and pushing $image"
 aws ecr get-login-password | docker login --username AWS --password-stdin "$registry"
 # The layer cache lives beside the images in the same repository, under one tag, so a
 # deploy from any machine reuses the Go module and compile layers of the last one.
+# The default docker driver cannot export a cache, so the build runs on a
+# docker-container builder of its own, created on first use.
 cache="$registry/$ECR_REPOSITORY:buildcache"
-docker buildx build --platform linux/amd64 --provenance=false -t "$image" --push \
+builder=abdm-docs
+docker buildx inspect "$builder" >/dev/null 2>&1 || docker buildx create --name "$builder" --driver docker-container >/dev/null
+docker buildx build --builder "$builder" --platform linux/amd64 --provenance=false -t "$image" --push \
   --cache-from "type=registry,ref=$cache" \
   --cache-to "type=registry,ref=$cache,mode=max,image-manifest=true,oci-mediatypes=true" \
   "$repo/mcp"
