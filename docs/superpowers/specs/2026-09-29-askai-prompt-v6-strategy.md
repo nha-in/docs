@@ -38,6 +38,20 @@ Each principle names its source. Where the source is a page, the sentence quoted
 
 ## 3. The strategy
 
+### Status, 29 September evening
+
+Everything in this document that is code, rather than prompt wording, landed on `feat/askai-prompt-foundation` in twelve commits. What landed: the prompt as `prompt/v5.md` with its drift test; endpoint passages carry method and path; the thanks reply; playbook sections 3 and 7; an endpoint path in an answer links to its reference page; next-question pills, the variant-term note, the askable decline and the self shape's privacy line; the one-question check; cases added after a run count as unmeasured rather than failing; portal feature names get a fixed reply; the topic shape; the vector floor as a knob; and 45 new golden cases across `terse`, `injection`, `nudge`, `meta`, `diagnose` and `decline` (229 in all). `PromptVersion` is still v5: nothing the system prompt says has changed.
+
+What remains, and who holds it:
+
+| Item | Needs | Holder |
+|---|---|---|
+| Judged baseline for v5: repository variables, thirty hand grades, `judge`, `calibrate`, `report`, a re-recorded run covering the 45 unmeasured cases | Bedrock access | owner |
+| `VECTOR_FLOOR` value | the retrieval eval's score distribution from a run against a built index | owner, after the run |
+| The `terse` and `nudge` cases re-drawn from real phrasings | the masked chat log's two and three word prompts | owner |
+| v6 wording, section 4, one hypothesis per pull request | the judged baseline above | after the baseline |
+
+
 Five phases. Each has an exit condition that can be read off the repository.
 
 ### Phase 0: make the instrument produce a factuality number
