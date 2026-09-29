@@ -1,6 +1,6 @@
 # 29 September 2026
 
-14 changes
+18 changes
 
 ### Ambulance Booking has an API reference
 
@@ -21,6 +21,14 @@ Five calls, for EUAs and HSPAs, each on its own page with a signed sample reques
 ### The hiecm-m1-test skill is published
 
 Install it with your agent, alongside the others. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
+
+### Twelve skills published: uhi-ambulance-build, uhi-ambulance-debug, uhi-blood-bank-build, uhi-blood-bank-debug, uhi-consultation-build, uhi-consultation-debug, uhi-jan-aushadhi-build, uhi-jan-aushadhi-debug, uhi-notto-build, uhi-notto-debug, uhi-pmjay-hem-build, uhi-pmjay-hem-debug
+
+Install them with your agent, alongside the others. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
+
+### The uhi-integrators-assistant plugin 0.1.0 installs
+
+One install gives your agent every skill in it. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
 
 ### The abdm-integrators-assistant plugin is 0.9.0
 
@@ -57,3 +65,11 @@ Reinstall to move from 1.0.1. [Build with AI](/docs/main/docs/hiecm/v3/getting-s
 ### The abdm-contributors-assistant plugin is 0.4.3
 
 Reinstall to move from 0.4.2. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
+
+### The abdm-contributors-assistant plugin is 0.3.6
+
+Reinstall to move from 0.3.5. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
+
+### The abdm-contributors-assistant plugin is 0.4.4
+
+Reinstall to move from 0.4.3. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).

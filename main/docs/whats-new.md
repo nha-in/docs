@@ -4,13 +4,15 @@ Changes that affect what you can build against, newest first. Each entry links t
 
 ## 29 September 2026
 
-14 changes
+18 changes
 
 - [Ambulance Booking has an API reference](/docs/main/docs/whats-new/2026-09-29#ambulance-booking-has-an-api-reference)
 - [Physical Consultation has an API reference](/docs/main/docs/whats-new/2026-09-29#physical-consultation-has-an-api-reference)
 - [Network and discovery has an API reference](/docs/main/docs/whats-new/2026-09-29#network-and-discovery-has-an-api-reference)
 - [One M1 Identity call withdrawn](/docs/main/docs/whats-new/2026-09-29#one-m1-identity-call-withdrawn)
 - [The hiecm-m1-test skill is published](/docs/main/docs/whats-new/2026-09-29#the-hiecm-m1-test-skill-is-published)
+- [Twelve skills published: uhi-ambulance-build, uhi-ambulance-debug, uhi-blood-bank-build, uhi-blood-bank-debug, uhi-consultation-build, uhi-consultation-debug, uhi-jan-aushadhi-build, uhi-jan-aushadhi-debug, uhi-notto-build, uhi-notto-debug, uhi-pmjay-hem-build, uhi-pmjay-hem-debug](/docs/main/docs/whats-new/2026-09-29#twelve-skills-published-uhi-ambulance-build-uhi-ambulance-debug-uhi-blood-bank-build-uhi-blood-bank-debug-uhi-consultation-build-uhi-consultation-debug-uhi-jan-aushadhi-build-uhi-jan-aushadhi-debug-uhi-notto-build-uhi-notto-debug-uhi-pmjay-hem-build-uhi-pmjay-hem-debug)
+- [The uhi-integrators-assistant plugin 0.1.0 installs](/docs/main/docs/whats-new/2026-09-29#the-uhi-integrators-assistant-plugin-010-installs)
 - [The abdm-integrators-assistant plugin is 0.9.0](/docs/main/docs/whats-new/2026-09-29#the-abdm-integrators-assistant-plugin-is-090)
 - [The abdm-contributors-assistant plugin is 0.3.4](/docs/main/docs/whats-new/2026-09-29#the-abdm-contributors-assistant-plugin-is-034)
 - [The abdm-integrators-assistant plugin is 0.9.2](/docs/main/docs/whats-new/2026-09-29#the-abdm-integrators-assistant-plugin-is-092)
@@ -20,6 +22,8 @@ Changes that affect what you can build against, newest first. Each entry links t
 - [The abdm-contributors-assistant plugin is 0.4.2](/docs/main/docs/whats-new/2026-09-29#the-abdm-contributors-assistant-plugin-is-042)
 - [The nhcx plugin is 1.0.2](/docs/main/docs/whats-new/2026-09-29#the-nhcx-plugin-is-102)
 - [The abdm-contributors-assistant plugin is 0.4.3](/docs/main/docs/whats-new/2026-09-29#the-abdm-contributors-assistant-plugin-is-043)
+- [The abdm-contributors-assistant plugin is 0.3.6](/docs/main/docs/whats-new/2026-09-29#the-abdm-contributors-assistant-plugin-is-036)
+- [The abdm-contributors-assistant plugin is 0.4.4](/docs/main/docs/whats-new/2026-09-29#the-abdm-contributors-assistant-plugin-is-044)
 
 ## 25 September 2026
 
