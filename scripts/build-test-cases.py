@@ -3,9 +3,11 @@
 
 NHA publishes each milestone's functional test cases as a spreadsheet. The
 sheets are stored untouched under catalogue/hiecm/openapi/.raw/, and this
-turns each one into a Markdown page with one anchored section per case, so a
-case id is searchable, linkable from a milestone or API page, and present in
-the page's Markdown copy for agents. The pages carry `generated: true`: fix
+turns each one into a page with one table per group of cases, the way the
+sheet lays them out. A case id is an anchor on its row, so it is searchable,
+linkable from a milestone or API page, and present in the page's Markdown copy
+for agents. Steps sit behind a Steps toggle in the row, so the table stays
+scannable. The pages carry `generated: true`: fix
 the sheet or this script, never the page.
 
 Each call a case names links to its endpoint page when the path is exactly
@@ -19,6 +21,7 @@ Needs openpyxl.
 import json
 import re
 import sys
+from collections import Counter
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -27,7 +30,7 @@ import openpyxl
 ROOT = Path(__file__).resolve().parent.parent
 RAW = ROOT / "catalogue" / "hiecm" / "openapi" / ".raw"
 ROUTES = ROOT / "site" / "src" / "data" / "api-routes.json"
-OUT = ROOT / "site" / "docs" / "hiecm" / "v3" / "resources"
+OUT = ROOT / "site" / "docs" / "hiecm" / "v3" / "resources" / "test-cases"
 
 PAGES = {
     "m1": {
@@ -39,7 +42,7 @@ PAGES = {
         "covers": "ABHA creation by Aadhaar OTP, Aadhaar biometric, demographic authentication and driving licence or PAN, then verification, profile update, one ABHA per patient record, and sharing a profile by QR code",
         "api": "/docs/hiecm/v3/api/m1",
         "skill": "/docs/hiecm/v3/milestones/m1#build-m1-with-an-ai-coding-assistant",
-        "next": "[M2 test cases](/docs/hiecm/v3/resources/m2)",
+        "next": "[M2 test cases](/docs/hiecm/v3/resources/test-cases/m2)",
     },
 }
 
@@ -105,12 +108,34 @@ def load_routes():
     return by_path
 
 
-def call(url, routes):
+def call(url, routes, base=""):
+    """An API as code, linked when its path is exactly one operation.
+
+    `base` is a prefix every case on the page shares; it is stated once above
+    the tables and left off each path, so the APIs column stays narrow.
+    """
     path = urlparse(url).path.rstrip("/") or url
+    shown = path[len(base):] if base and path.startswith(base + "/") else path
     matches = routes.get(path, [])
     if len(matches) == 1:
-        return f"[`{matches[0]['method']} {path}`]({matches[0]['route']})"
-    return f"`{path}`"
+        return f"[`{matches[0]['method']} {shown}`]({matches[0]['route']})"
+    return f"`{shown}`"
+
+
+def shared_base(groups):
+    """The first three path segments most of the page's APIs share.
+
+    Paths outside it, such as a PHR share call on an M1 page, stay in full.
+    """
+    heads = [
+        "/" + "/".join(parts[:3])
+        for g in groups for c in g["cases"] for u in c["apis"]
+        if len(parts := urlparse(u).path.strip("/").split("/")) > 3
+    ]
+    if not heads:
+        return ""
+    head, count = Counter(heads).most_common(1)[0]
+    return head if count * 5 >= len(heads) * 4 else ""
 
 
 def extract(path):
@@ -162,41 +187,70 @@ def extract(path):
     return session, [g for g in groups if g["cases"]]
 
 
-def field(label, text):
-    """One labelled bullet; a cell with several lines becomes a nested list."""
-    if not text:
-        return []
-    lines = [line.strip(" /") for line in text.split("\n")]
-    lines = [line for line in lines if line]
-    if len(lines) == 1:
-        return [f"- **{label}:** {md(lines[0])}"]
-    return [f"- **{label}:**"] + [f"  - {md(line)}" for line in lines]
+def lines(text):
+    return [md(line.strip(" /")) for line in text.split("\n") if line.strip(" /")]
+
+
+def cell(text):
+    """A table cell: one line per line of the sheet, pipes escaped."""
+    return "<br/>".join(lines(text)).replace("|", "\\|")
+
+
+def marking(text, anchors):
+    """Shorten the sheet's either-of marking and link the two cases it names."""
+    either = re.match(r"Either of the test cases (\S+) or (\S+) is mandatory for Gov\w* Optional for Private", text)
+    if not either:
+        return cell(text or "Not marked")
+    a, b = (f"[{i}](#{anchors.get(i, i.lower())})" for i in either.groups())
+    return f"Government: {a} or {b} is mandatory.<br/>Private: optional."
+
+
+def row(case, routes, anchors, base):
+    what = f"**{md(case['title'])}**"
+    if case["test"]:
+        what += "<br/>" + cell(case["test"])
+    if case["steps"]:
+        what += f"<details><summary>Steps</summary>{cell(case['steps'])}</details>"
+    passes = cell(case["expected"]) or "Not stated."
+    if case["tester"]:
+        passes += f"<br/>*For the tester:* {cell(case['tester'])}"
+    calls = "<br/>".join(call(u, routes, base) for u in case["apis"]) or "None. Checked on your screens or records."
+    # Link, not a literal <a>: only Link registers the id with the build's
+    # broken anchor check, so a link to a case that is gone fails the build.
+    ident = f'<Link id="{case["anchor"]}" to="#{case["anchor"]}">{case["id"]}</Link>'
+    return f"| {ident}<br/>{marking(case['marking'], anchors)} | {what} | {passes} | {calls} |"
 
 
 def render(spec, session, groups, routes):
     total = sum(len(g["cases"]) for g in groups)
+    anchors = {c["id"]: c["anchor"] for g in groups for c in g["cases"]}
+    base = shared_base(groups)
     out = [
         "---",
         f"title: {spec['title']}",
         f"sidebar_label: {spec['label']}",
         f"sidebar_position: {spec['position']}",
-        f"description: The {spec['label']} functional test cases, each with its id, marking, steps, expected result and the calls it exercises.",
+        f"description: The {total} {spec['label']} functional test cases, each with its id, marking, steps, expected result and the APIs it calls.",
         "page_type: reference",
         "toc_max_heading_level: 2",
         "generated: true",
         "---",
         "",
-        "<!-- Generated by scripts/build-test-cases.py from NHA's sheet. Edit the sheet or the script, never this page. -->",
+        "import Link from '@docusaurus/Link';",
+        "",
+        "{/* Generated by scripts/build-test-cases.py from NHA's sheet. Edit the sheet or the script, never this page. */}",
         "",
         f"# {spec['title']}",
         "",
         f"The {total} cases {spec['milestone']} is tested against. They cover {spec['covers']}.",
-        "Each case keeps the id the functional testing report uses.",
+        "Each row keeps the case id the functional testing report uses, and links every API the case calls.",
+        "[How to read a case](/docs/hiecm/v3/resources/test-cases#how-to-read-a-case) explains the columns and markings.",
         "",
-        f"Every call a case names has its full request in the [{spec['label']} API reference]({spec['api']}).",
     ]
     if session:
-        out.append(f"Every call needs a gateway session first: {call(session, routes)}.")
+        out += [f"Every call needs a gateway session first: {call(session, routes)}.", ""]
+    if base:
+        out += [f"API paths in the tables below start with `{base}` unless shown in full. The prefix is left off each row to keep the table readable.", ""]
     out += [
         f"An AI coding assistant can walk these cases against your own system with the [{spec['label']} skill]({spec['skill']}).",
         "",
@@ -205,19 +259,10 @@ def render(spec, session, groups, routes):
         out += [f"## {md(group['label'])}", ""]
         if group["applies"]:
             out += [f"Applies to: {md(group['applies'])}.", ""]
-        for case in group["cases"]:
-            out += [f"### {case['id']}: {md(case['title'])} {{#{case['anchor']}}}", ""]
-            out += field("Marking", case["marking"] or "Not marked")
-            out += field("Note", case["note"])
-            out += field("Test", case["test"])
-            out += field("Steps", case["steps"])
-            out += field("Expected result", case["expected"])
-            out += field("For the tester", case["tester"])
-            if case["apis"]:
-                out.append("- **Calls:** " + ", ".join(call(u, routes) for u in case["apis"]))
-            else:
-                out.append("- **Calls:** none. This case is checked on your screens or in your records.")
-            out.append("")
+        # The wrapper's class top-aligns the rows; see .test-cases in mdx.css.
+        out += ['<div className="test-cases">', "", "| Case and marking | What is tested | Pass when | APIs |", "| --- | --- | --- | --- |"]
+        out += [row(case, routes, anchors, base) for case in group["cases"]]
+        out += ["", "</div>", ""]
     out += [
         "## Next steps",
         "",
@@ -236,7 +281,7 @@ def main():
     for name, spec in PAGES.items():
         session, groups = extract(spec["sheet"])
         text = render(spec, session, groups, routes)
-        target = OUT / f"{name}.md"
+        target = OUT / f"{name}.mdx"
         cases = sum(len(g["cases"]) for g in groups)
         if check:
             current = target.read_text() if target.exists() else ""
