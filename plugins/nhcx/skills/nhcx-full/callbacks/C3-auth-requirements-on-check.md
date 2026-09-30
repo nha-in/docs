@@ -72,3 +72,4 @@ A reply with no `authorizationSupporting` is valid: the ruling is `ready` with n
 - Callbacks: [C1. Callback Door](C1-callback-door.md), [C2. Coverage Eligibility Verdict](C2-coverage-eligibility-on-check.md)
 - FHIR: [F3. CoverageEligibilityResponse](../fhir/F3-coverage-eligibility-response.md)
 - Database: [D13. claim_auth](../database/D13-claim-auth.md)
+- Tests: [T4. IRDAI Insurance Plan and Authorisation Requirements](../tests/T4-irdai-plan-and-auth-requirements.md), [T13. PMJAY Eligibility, Package Master and Ruling](../tests/T13-pmjay-eligibility-and-package-master.md)

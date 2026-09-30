@@ -24,9 +24,9 @@ Unmarked statements are the protocol or this application's own design, and are f
 
 ## The adapters
 
-| Property | `pmjay` (PMJAY / Ayushman Bharat) | `xyz` (Sandbox Payer) | `generic` |
+| Property | `pmjay` (PMJAY / Ayushman Bharat) | `kyrocare` (Sandbox Payer) | `generic` |
 |---|---|---|---|
-| Payer code system | `https://payer.pmjay.nha.gov.in` | `https://xyz.example/fhir` | `https://nhcx.abdm.gov.in` |
+| Payer code system | `https://payer.pmjay.nha.gov.in` | `https://kyro.care/fhir` | `https://nhcx.abdm.gov.in` |
 | Programme code on every claim line | `AB-PMJAY` ("Ayushman Bharat Pradhan Mantri Jan Arogya Yojana (AB-PMJAY)") | none | none |
 | Rules on authorisation requirements (A2 `auth-requirements`, C3) | yes | yes | no: eligibility only |
 | Document stages wanted at pre-authorisation | `pre` | `pre` | `pre` |
@@ -37,13 +37,13 @@ Unmarked statements are the protocol or this application's own design, and are f
 | Reprocess reason codes | `claimrejected`, `partialpayment`, `rejectiondisputed` | same | same |
 | Adjudication desk (sandbox testing, A14, A15) | the NHCX Payer Service | the sandbox payer portal's own API | none |
 
-The `xyz` adapter is the reference implementation's own sandbox payer portal; it speaks the PMJAY dialect for plans and rulings. Replace it with the payers the target actually deals with.
+The `kyrocare` adapter is the reference implementation's own sandbox payer portal; it speaks the PMJAY dialect for plans and rulings. Replace it with the payers the target actually deals with.
 
 ## Workflow ids
 
 The `x-hcx-workflow_id` each send travels under, per adapter, and the `x-hcx-status` NHA's workflow sheet pairs it with. An environment override may replace any workflow id. The status is set by the send: a query answer goes on a request path yet travels as `response.complete`, so the gateway's path default must not decide it (the reference implementation let it, sending `request.initiated` everywhere [REF](PAYERS.md#markers)).
 
-| Send (kind) | `pmjay` | `xyz` | `generic` | API | `x-hcx-status` |
+| Send (kind) | `pmjay` | `kyrocare` | `generic` | API | `x-hcx-status` |
 |---|---|---|---|---|---|
 | Pre-authorisation (`preauth`) | 12 | 12 | 12 | A4 | `request.initiated` |
 | Pre-auth resubmitted after a rejection (`preauth_resubmit`) | 121 | 121 | 121 | A4 (defined; the reference send logic never chooses it) | `request.initiated` |
@@ -70,4 +70,19 @@ Seen in the reference implementation's sandbox runs [SANDBOX](PAYERS.md#markers)
 | Code | Is |
 |---|---|
 | `1518@hcx` | the PMJAY (NHA) payer on the NHCX sandbox, adapter `pmjay` |
-| `1000004805@hcx` | the reference implementation's IRDAI sandbox payer portal, adapter `xyz` |
+| `1000004805@hcx` | the reference implementation's IRDAI sandbox payer portal, adapter `kyrocare` |
+
+## Test participants
+
+The end-to-end tests ([TESTS.md](TESTS.md)) run against two payers. The values below are the defaults the test configuration ([T1. Test Configuration](../tests/T1-test-configuration.md)) starts from, except where the table says otherwise.
+
+| Test payer | Participant code | Adapter | Adjudication desk (A14, A15) | Member id | Variable |
+|---|---|---|---|---|---|
+| IRDAI test payer | `1000004957@hcx` (Sandbox Payer NHA) | `kyrocare` | IRDAI payer desk (`irdai-payer`), fixed at `https://nhcxai.abdm.gov.in/uat/` (API at `/api/payer`), signed in to by token login | `MRAJ2004001` | `NHCX_TEST_IRDAI_PAYER`, `NHCX_TEST_IRDAI_MEMBER_ID` |
+| PMJAY test payer | `1518@hcx` (PMJAY, NHA) | `pmjay` | NHCX Payer Service (`nhcx-payer-service`) | asked from the integrator, no default | `NHCX_TEST_PMJAY_PAYER`, `NHCX_TEST_PMJAY_MEMBER_ID` |
+
+**The IRDAI payer desk is fixed.** It is not a setting and has no variable: its screens are at `https://nhcxai.abdm.gov.in/uat/`, its API at `https://nhcxai.abdm.gov.in/api/payer`. It is signed in to only by token login, with the facility's own ABDM session token (A14): there is no username, password or desk account to configure or ask for.
+
+**PMJAY needs one value only the integrator has**: a PMJAY beneficiary's member id that the sandbox knows. It is asked from the integrator ([T1. Test Configuration](../tests/T1-test-configuration.md)), never guessed or taken from an example, and a PMJAY test without it is `blocked` with that reason. The beneficiary's ABHA number is not asked for: the registry returns it with the policy ([A1. Policy Search](../apis/A1-policy-search.md)). The facility's HFR id is not asked for either: it is the one on the facility's own record ([D1. organization](../database/D1-organization.md)), which every bundle already carries.
+
+**PMJAY's package master is slow and is not waited for.** The PMJAY sandbox answers an insurance plan request ([A3. Insurance Plan Request](../apis/A3-insurance-plan-request.md)) in 15 to 60 minutes, often about 30, and refuses a second request for the same policy meanwhile (PAYR-1406) [SANDBOX](PAYERS.md#markers). The tests request it once and move on: they run on a seeded package master instead ([T13. PMJAY Eligibility, Package Master and Ruling](../tests/T13-pmjay-eligibility-and-package-master.md)).

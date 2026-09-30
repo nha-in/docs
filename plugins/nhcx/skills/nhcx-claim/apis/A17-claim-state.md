@@ -37,7 +37,7 @@ GET /claims/42/state
 
 `200` with a JSON object. An unknown claim returns `404` `{"error": "No such claim"}`.
 
-Row objects are the stored rows with every column, or `null` when the row does not exist. Data: [D9. claim](../database/D9-claim.md), D10. claim_plan (in nhcx-preauth), [D11. claim_plan_benefit](../database/D11-claim-plan-benefit.md), D4. encounter (in nhcx-preauth), [D16. claim_line](../database/D16-claim-line.md), D13. claim_auth (in nhcx-coverage), [D15. claim_auth_requirement](../database/D15-claim-auth-requirement.md), [D12. claim_plan_form](../database/D12-claim-plan-form.md), [D28. claim_document](../database/D28-claim-document.md), [D18. claim_preauth](../database/D18-claim-preauth.md), D19. claim_predetermination (in nhcx-preauth), [D23. claim_query](../database/D23-claim-query.md), [D20. claim_submission](../database/D20-claim-submission.md), [D21. claim_payment](../database/D21-claim-payment.md), [D29. claim_enquiry](../database/D29-claim-enquiry.md).
+Row objects are the stored rows with every column, or `null` when the row does not exist. Data: [D9. claim](../database/D9-claim.md), D10. claim_plan (in nhcx-coverage), [D11. claim_plan_benefit](../database/D11-claim-plan-benefit.md), D4. encounter (in nhcx-preauth), [D16. claim_line](../database/D16-claim-line.md), D13. claim_auth (in nhcx-coverage), [D15. claim_auth_requirement](../database/D15-claim-auth-requirement.md), [D12. claim_plan_form](../database/D12-claim-plan-form.md), [D28. claim_document](../database/D28-claim-document.md), [D18. claim_preauth](../database/D18-claim-preauth.md), D19. claim_predetermination (in nhcx-preauth), [D23. claim_query](../database/D23-claim-query.md), [D20. claim_submission](../database/D20-claim-submission.md), [D21. claim_payment](../database/D21-claim-payment.md), [D29. claim_enquiry](../database/D29-claim-enquiry.md).
 
 | Key | Type | Content |
 |---|---|---|
@@ -55,7 +55,7 @@ Row objects are the stored rows with every column, or `null` when the row does n
 | `preauth` | object or null | The pre-authorisation row. |
 | `preauth_items` | array | The payer's per-item verdict on the pre-authorisation (see below). |
 | `next_send` | object | `preauth` and `claim`: the kind of the next send, or `{"refused": "<reason>"}` when nothing may be sent. Pre-authorisation kinds: `preauth`, `preauth_query_response`, `enhancement`, `enhancement_resubmit`. Claim kinds: `claim`, `claim_query_response`, `claim_resubmit`. |
-| `adapter` | string | The payer adapter's key (for example `pmjay`, `xyz`, `generic`). |
+| `adapter` | string | The payer adapter's key (for example `pmjay`, `kyrocare`, `generic`). |
 | `desk` | string or null | Where the payer's decision is taken: `nhcx-payer-service`, `irdai-payer`, or `null` for none (see A14). |
 | `predeterminations` | array | Quote rows, newest first. |
 | `enhancement_lines` | array | Lines quoted since the pre-authorisation was decided. Empty when nothing was added or nothing is decided yet. |

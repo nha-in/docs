@@ -75,3 +75,4 @@ State changes:
 - APIs: [A3. Insurance Plan Request](../apis/A3-insurance-plan-request.md), [A10. Transaction Related](../apis/A10-txn-related.md), [A12. Transaction FHIR](../apis/A12-txn-fhir.md), [A17. Claim State](../apis/A17-claim-state.md)
 - Callbacks: [C1. Callback Door](C1-callback-door.md), [C3. Authorisation Requirements Ruling](C3-auth-requirements-on-check.md)
 - Database: [D10. claim_plan](../database/D10-claim-plan.md)
+- Tests: [T1. Test Configuration](../tests/T1-test-configuration.md), [T4. IRDAI Insurance Plan and Authorisation Requirements](../tests/T4-irdai-plan-and-auth-requirements.md), [T13. PMJAY Eligibility, Package Master and Ruling](../tests/T13-pmjay-eligibility-and-package-master.md)

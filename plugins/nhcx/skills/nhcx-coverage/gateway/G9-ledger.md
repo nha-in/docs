@@ -219,5 +219,6 @@ sweep(now):                                          // hourly and at start, G1
 - APIs: [A1. Policy Search](../apis/A1-policy-search.md), [A2. Coverage Eligibility Check](../apis/A2-coverage-eligibility-check.md), [A10. Transaction Related](../apis/A10-txn-related.md), [A11. Transaction Dispatch](../apis/A11-txn-dispatch.md), [A12. Transaction FHIR](../apis/A12-txn-fhir.md), [A13. Transaction List](../apis/A13-txn-list.md), [A17. Claim State](../apis/A17-claim-state.md)
 - Callbacks: [C1. Callback Door](../callbacks/C1-callback-door.md)
 - FHIR: [F1. Bundle](../fhir/F1-bundle.md)
-- Database: [D9. claim](../database/D9-claim.md), [D13. claim_auth](../database/D13-claim-auth.md)
+- Database: [D9. claim](../database/D9-claim.md), [D10. claim_plan](../database/D10-claim-plan.md), [D13. claim_auth](../database/D13-claim-auth.md)
 - Gateway: [G1. Embedding](G1-embedding.md), [G2. Configuration and Participants](G2-configuration.md), [G5. Protocol Headers](G5-protocol-headers.md), [G7. Send](G7-send.md), [G8. Receive](G8-receive.md)
+- Tests: [T2. Test Runners](../tests/T2-test-runners.md)

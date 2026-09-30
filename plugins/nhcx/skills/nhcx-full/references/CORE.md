@@ -19,6 +19,7 @@ Follow these strictly, in every step and every file. When a spec seems to say ot
 9. **No secrets in the repository.** Client secret, private key and payer desk credentials come from configuration or the environment.
 10. **Treat markers as defined.** [REF](PAYERS.md#markers) may be chosen differently (record it); [PAYER](PAYERS.md#markers) values come from the payer adapter; [SANDBOX](PAYERS.md#markers) behaviour is not relied on in production.
 11. **Work the steps in order and log them.** L1 to L8, one plan file each, every sub-step and file change in `nhcx-plan/progress.json` ([LOG.md](../steps/LOG.md)). Re-read this page at the start of each step.
+12. **End every prompt by rebuilding the report.** The last action of every prompt, whatever it did, is to run the report builder (`nhcx-plan/report.py` or the target language's equivalent), which rewrites `nhcx-plan/report.html` from the plan files: every plan file on its own tab, errors first, with a refresh button; `make-report.sh` and `make-report.bat` rebuild it every 10 seconds for anyone watching ([LOG.md](../steps/LOG.md#logh-reporthtml)).
 
 ## Confusions
 

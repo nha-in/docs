@@ -38,7 +38,7 @@ Every call to ABDM (registry, NHCX gateway) carries a session token minted from 
 
 **401 handling.** `post_with_token` is the one authenticated POST used for the registry (G4, G10) and the NHCX gateway (G7). It sends the token twice, as `bearer_auth: Bearer <token>` (header name written in lower case, exactly as NHCX documents it) and as `Authorization: Bearer <token>` [REF](../references/PAYERS.md#markers). When the answer is 401 on the first attempt it refreshes the token once and repeats the request. Any other status, including a second 401, is handed back to the caller as is.
 
-**Timeouts.** Every call uses one HTTP client with a timeout of `outboundTimeoutSeconds` (30). The session answer is read up to 1 MiB, other answers up to 4 MiB.
+**Timeouts.** Every call uses one HTTP client with a timeout of `outboundTimeoutSeconds` (30). Answers are read in full, with no size limit of their own: a large answer (a registry record, an insurance plan with thousands of packages) is never cut short or refused for its size.
 
 **Token for the application.** `gateway.token(participant)` is how the application gets an ABDM bearer token for the calls it makes itself (A16). With no participant it is the default profile's token. A participant code (either spelling) selects that hosted profile's token; an unknown code is refused with `UNKNOWN_PARTICIPANT` rather than falling back, since the wrong participant's token would fail confusingly later. `gateway.refresh_token(participant)` does the same after forcing a new fetch. The application should not keep the token beyond `expires_at`.
 
@@ -135,7 +135,7 @@ fetch_locked(client):
     if request cannot be built: fail TOKEN_REQUEST
     header Accept: application/json
     response = send (timeout outboundTimeoutSeconds) or fail TOKEN_UNREACHABLE (retryable)
-    raw = read up to 1 MiB
+    raw = read the whole answer
     if status not 2xx: fail TOKEN_HTTP_<status> (retryable when >= 500 or 429; status, clipped raw)
     out = parse JSON object or fail TOKEN_BAD_JSON (retryable)
     token = first non-blank trimmed string of out.accessToken, out.access_token
@@ -168,7 +168,7 @@ post_with_token(client, url, body, label):
                           Authorization: "Bearer " + token
         if request cannot be built: fail <label>_REQUEST
         response = send or fail <label>_UNREACHABLE (retryable)
-        raw = read up to 4 MiB or fail <label>_READ_ERROR (retryable)
+        raw = read the whole answer or fail <label>_READ_ERROR (retryable)
         if response.status == 401 and attempt == 0:
             log warning "upstream answered 401, refreshing session token"
             client.refresh_token() or fail with that error

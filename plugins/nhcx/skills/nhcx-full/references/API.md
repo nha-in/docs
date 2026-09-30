@@ -31,7 +31,7 @@ Polling is the fallback when a callback is missed. Opening a claim runs these fo
 | # | API | Call | What it does | Replies | Screens |
 |---|---|---|---|---|---|
 | [A14](../apis/A14-adjudicator-user-role.md) | Adjudicator User Role | payer service `get/user-role`, or the IRDAI desk | Reads which payer role holds a case now, and so which actions are legal. | none | none |
-| [A15](../apis/A15-adjudicator-process-case.md) | Adjudicator Process Case | payer service `process/case`, or the IRDAI desk | Takes one decision on a pre-auth or claim, or walks a case through every role (at most 8 rounds) until it is decided. | none | none |
+| [A15](../apis/A15-adjudicator-process-case.md) | Adjudicator Process Case | payer service `process/case`, or the IRDAI desk | Takes one decision on a pre-auth or claim, or walks a case through every role (at most 8 rounds) until it is decided. | [C10](../callbacks/C10-paymentnotice-request.md) | none |
 | [A16](../apis/A16-gateway-token.md) | Gateway Token | `gateway.token(participant)` (G3) | Supplies the ABDM session token the payer service calls need, unless a payer service token is configured. | none | none |
 
 ## Application

@@ -19,7 +19,7 @@ The status Task goes on `task/submit`, not on the NHCX status route, because the
 
 **Workflow ids (`x-hcx-workflow_id`).** From the payer adapter (see [PAYERS.md](../references/PAYERS.md)) [PAYER](../references/PAYERS.md#markers).
 
-| Kind | `pmjay` | `xyz` (Sandbox Payer) | `generic` |
+| Kind | `pmjay` | `kyrocare` (Sandbox Payer) | `generic` |
 |---|---|---|---|
 | cancel | PC01 | PC01 | PC01 |
 | status | the leg's correlation id, else `13` [REF](../references/PAYERS.md#markers) | same | same |

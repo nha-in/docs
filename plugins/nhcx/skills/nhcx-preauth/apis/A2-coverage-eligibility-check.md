@@ -202,3 +202,4 @@ function ensure_auth_requirements(case_id):
 - FHIR: [F1. Bundle](../fhir/F1-bundle.md), [F15. Patient](../fhir/F15-patient.md), [F18. Coverage](../fhir/F18-coverage.md)
 - Database: [D9. claim](../database/D9-claim.md), [D13. claim_auth](../database/D13-claim-auth.md)
 - Gateway: [G1. Embedding](../gateway/G1-embedding.md), [G7. Send](../gateway/G7-send.md)
+- Tests: [T4. IRDAI Insurance Plan and Authorisation Requirements](../tests/T4-irdai-plan-and-auth-requirements.md), [T13. PMJAY Eligibility, Package Master and Ruling](../tests/T13-pmjay-eligibility-and-package-master.md)

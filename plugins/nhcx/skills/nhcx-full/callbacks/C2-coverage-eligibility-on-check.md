@@ -66,3 +66,4 @@ State changes, D9 claim:
 - Callbacks: [C1. Callback Door](C1-callback-door.md), [C3. Authorisation Requirements Ruling](C3-auth-requirements-on-check.md)
 - FHIR: [F3. CoverageEligibilityResponse](../fhir/F3-coverage-eligibility-response.md), [F15. Patient](../fhir/F15-patient.md)
 - Database: [D9. claim](../database/D9-claim.md)
+- Tests: [T3. IRDAI Policy Search and Eligibility](../tests/T3-irdai-policy-and-eligibility.md), [T13. PMJAY Eligibility, Package Master and Ruling](../tests/T13-pmjay-eligibility-and-package-master.md)

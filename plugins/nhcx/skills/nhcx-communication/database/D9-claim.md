@@ -4,7 +4,7 @@
 One row is one claim episode (case) around one selected policy, from eligibility to payment; primary key `id`; parent tables [D3. patient](D3-patient.md) and D4. encounter (in nhcx-preauth), both optional until the admission is linked.
 
 #### D9D. DESCRIPTION
-The case row. It holds the policy the operator selected, the coverage eligibility exchange and the payer's verdict flattened from it, the link to the admitted patient, the pre-authorisation draft header, and the case's stage. The legs of the case live in child tables: package master D10 (in nhcx-preauth), auth-requirements ruling D13 (in nhcx-coverage), lines D16 (in nhcx-preauth), pre-auth D18 (in nhcx-preauth), claim D20 (in nhcx-preauth), payments D21 (in nhcx-claim), queries [D23](D23-claim-query.md) and the others that point here.
+The case row. It holds the policy the operator selected, the coverage eligibility exchange and the payer's verdict flattened from it, the link to the admitted patient, the pre-authorisation draft header, and the case's stage. The legs of the case live in child tables: package master D10 (in nhcx-coverage), auth-requirements ruling D13 (in nhcx-coverage), lines D16 (in nhcx-preauth), pre-auth D18 (in nhcx-preauth), claim D20 (in nhcx-preauth), payments D21 (in nhcx-claim), queries [D23](D23-claim-query.md) and the others that point here.
 
 Create:
 - Written when the operator picks a policy from the search result (S2). The policy must carry a member ID ("That policy has no member ID; a claim cannot be raised without one."). The row starts with `status = 'draft'` and `created_at` = now. It copies the search inputs (`search_id_type`, `search_id_value`), the policy fields, `patient_photo` and the raw policy as `policy_json`. `payer_name` falls back to the payer adapter's name for `payer_id`, then to the configured default payer name.
@@ -95,7 +95,7 @@ Other writes:
 - Primary key `id` (integer).
 - `patient_id` references [D3. patient](D3-patient.md) `id`.
 - `encounter_id` references D4. encounter (in nhcx-preauth) `id`.
-- Referenced (`claim_id`, `ON DELETE CASCADE`) by D10 (in nhcx-preauth), D13 (in nhcx-coverage), D16 (in nhcx-preauth), D17 (in nhcx-preauth), D18 (in nhcx-preauth), D19 (in nhcx-preauth), D20 (in nhcx-preauth), D21 (in nhcx-claim), [D23](D23-claim-query.md), D24 (in nhcx-preauth), D25 (in nhcx-preauth), D26 (in nhcx-preauth), D27 (in nhcx-preauth), [D28](D28-claim-document.md), D29 (in nhcx-preauth). D10 (in nhcx-preauth), D13 (in nhcx-coverage), D18 (in nhcx-preauth) and D20 (in nhcx-preauth) allow one row per claim.
+- Referenced (`claim_id`, `ON DELETE CASCADE`) by D10 (in nhcx-coverage), D13 (in nhcx-coverage), D16 (in nhcx-preauth), D17 (in nhcx-preauth), D18 (in nhcx-preauth), D19 (in nhcx-preauth), D20 (in nhcx-preauth), D21 (in nhcx-claim), [D23](D23-claim-query.md), D24 (in nhcx-preauth), D25 (in nhcx-preauth), D26 (in nhcx-preauth), D27 (in nhcx-preauth), [D28](D28-claim-document.md), D29 (in nhcx-preauth). D10 (in nhcx-coverage), D13 (in nhcx-coverage), D18 (in nhcx-preauth) and D20 (in nhcx-preauth) allow one row per claim.
 - Unique: `claim_no`.
 - Index: `ix_claim_status (status, id DESC)`.
 

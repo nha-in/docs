@@ -7,7 +7,7 @@ Outbound, application to the payer side. Takes one action on a case for the role
 | Transport | Call | Chosen when |
 |---|---|---|
 | Payer service | `POST https://apisbeta.nha.gov.in/pmjay/hcx/nhcxpayerservice/wrapper/process/case` (the URL can be overridden per deployment), with a bearer token (configured, else the [G3. Session Token](../gateway/G3-session-token.md) through A16). This is a different host from the A14 role lookup, as the guide publishes it. | The leg's desk is `nhcx-payer-service`. |
-| IRDAI payer desk | `POST {desk}/api/cases/{id}/adjudicate` after sign-in and case lookup (A14) | The leg's desk is `irdai-payer`. |
+| IRDAI payer desk | `POST https://nhcxai.abdm.gov.in/api/payer/cases/{id}/adjudicate` after the token sign-in and case lookup of A14 (fixed desk, no password) [SANDBOX](../references/PAYERS.md#markers) | The leg's desk is `irdai-payer`. |
 
 A leg whose payer has no desk is refused with the same sentence as A14.
 
@@ -103,6 +103,16 @@ On the IRDAI desk the cycle is one call: the decision word itself (`approve`, `r
 {"action": "query", "remarks": "Discharge summary missing"}
 ```
 
+**IRDAI payer desk, the payer's other acts (sandbox testing only).** The end-to-end tests (T10. IRDAI Claim Approved, Part-approved and Rejected (in nhcx-claim), T11. IRDAI Payment Notice and Acknowledgement (in nhcx-payment), T12. IRDAI Reprocess and Balance Release (in nhcx-reprocess)) also need the payer to decide a claim line by line and to pay. Both are the desk's own calls, on the same origin and token as above, made by the test's payer driver ([T2. Test Runners](../tests/T2-test-runners.md)) and never by the application [SANDBOX](../references/PAYERS.md#markers):
+
+| Act | Call | Body |
+|---|---|---|
+| Decide one line | `PATCH https://nhcxai.abdm.gov.in/api/payer/cases/{id}/line-items/{lineId}` | `{"status", "approved_amount", "remarks", "query_remarks"}`; `status` is `approved`, `partially_approved`, `rejected` or `queried`; `approved_amount` is what the payer allows for the line; `query_remarks` only with `queried`. Decide the lines first, then take `approve` on the case: the case's approved amount is the sum of what the lines allow. |
+| Raise a payment | `POST https://nhcxai.abdm.gov.in/api/payer/payments` | `{"case_id", "payment_amount", "mode", "beneficiary": {"name", "account_no", "ifsc"}, "utr_no"}`; `mode` for example `NEFT`; `tds_percent` optional (the desk's default applies when left out). With `utr_no` the payment is raised and completed in one step and the payment notice goes out at once; without it the payment waits as `initiated`. Answers 201 with the payment's `id`. |
+| Complete a payment | `POST https://nhcxai.abdm.gov.in/api/payer/payments/{id}/complete` | `{"utr_no"}`: records the bank's reference and sends the payment notice (C10. Payment Notice (in nhcx-payment) at the provider). |
+
+The case `{id}` and the line `{lineId}` are read off the case the A14 lookup returned (`id`, and each row of its `line_items`).
+
 #### A15S. RESPONSE
 
 The application reduces every transport to one reply:
@@ -179,7 +189,7 @@ IRDAI_PROCESS(leg, action, remarks, cycle_id):
   if action in (reject, query) and trim(remarks) blank:
       fail "Say why, the IRDAI payer refuses a rejection or a query that says nothing."
   found = the desk's case for leg.case_number (A14P IRDAI_ROLE lookup, same failures)
-  status, data, raw = POST {desk}/api/cases/{found.id}/adjudicate {"action": action, "remarks": trim(remarks)}
+  status, data, raw = POST DESK/cases/{found.id}/adjudicate {"action": action, "remarks": trim(remarks)}
                       with Authorization: Bearer <desk token>
   reply = {success: status < 300, status, action, role: "Adjudicator", usecase: found.stage,
            correlationId: leg.correlation_id, response: data, raw, transport: "irdai-payer", cycle_id}
@@ -235,3 +245,4 @@ Screen after PROCESS:
 #### A15U. USED BY
 - APIs: [A14. Adjudicator User Role](A14-adjudicator-user-role.md), [A16. Gateway Token](A16-gateway-token.md)
 - Database: [D1. organization](../database/D1-organization.md), [D24. claim_adjudication](../database/D24-claim-adjudication.md)
+- Tests: [T2. Test Runners](../tests/T2-test-runners.md), [T5. IRDAI Pre-authorisation Approved](../tests/T5-irdai-preauth-approved.md), [T6. IRDAI Pre-authorisation Rejected and Sent Again](../tests/T6-irdai-preauth-rejected.md), [T7. IRDAI Query Answered](../tests/T7-irdai-query-answered.md), [T8. IRDAI Enhancement](../tests/T8-irdai-enhancement.md), [T9. IRDAI Status Enquiry and Cancel](../tests/T9-irdai-cancel-and-status.md), [T14. PMJAY Pre-authorisation Through the Payer Service](../tests/T14-pmjay-preauth-adjudicated.md), [T15. PMJAY Query Answered by Resubmission](../tests/T15-pmjay-query-by-resubmission.md), [T16. PMJAY Rejection and Enhancement](../tests/T16-pmjay-rejection-and-enhancement.md)
