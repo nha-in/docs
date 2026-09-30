@@ -222,7 +222,7 @@ type PanelProps = {
   starters: Starter[];
   /** False where the host asked not to keep conversations in its origin. */
   keepHistory: boolean;
-  /** The gateway of the page the panel is on, hiecm or nhcx, or empty. */
+  /** The gateway of the page the panel is on, hiecm, nhcx or uhi, or empty. */
   gateway: string;
   supportUrl: string;
   page: PageAttachment | null;
@@ -1482,7 +1482,7 @@ function Widget({
  *                and not to this element, so a host whose origin should not
  *                hold what readers type turns the list off here. Off also
  *                means a reload starts a fresh conversation
- *   gateway      the gateway the page belongs to, "hiecm" or "nhcx", so the
+ *   gateway      the gateway the page belongs to, "hiecm", "nhcx" or "uhi", so the
  *                answers stay in its documentation unless the reader names
  *                another; absent on a page that belongs to no gateway
  *
