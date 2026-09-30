@@ -48,3 +48,4 @@ Lifecycle:
 - Callbacks: [C4. Insurance Plan Reply](../callbacks/C4-insuranceplan-on-request.md)
 - FHIR: [F5. InsurancePlan](../fhir/F5-insuranceplan.md), [F6. Questionnaire](../fhir/F6-questionnaire.md), [F7. QuestionnaireResponse](../fhir/F7-questionnaireresponse.md)
 - Database: [D10. claim_plan](D10-claim-plan.md), [D11. claim_plan_benefit](D11-claim-plan-benefit.md), [D15. claim_auth_requirement](D15-claim-auth-requirement.md), [D17. claim_form_answer](D17-claim-form-answer.md)
+- Tests: [T13. PMJAY Eligibility, Package Master and Ruling](../tests/T13-pmjay-eligibility-and-package-master.md)

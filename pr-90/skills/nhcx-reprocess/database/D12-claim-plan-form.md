@@ -1,7 +1,7 @@
 # D12. claim_plan_form
 
 #### D12T. TABLE
-One row is one payer questionnaire (dynamic form) shipped with a claim's package master; primary key `id`; parent table D10. claim_plan (in nhcx-preauth).
+One row is one payer questionnaire (dynamic form) shipped with a claim's package master; primary key `id`; parent table D10. claim_plan (in nhcx-coverage).
 
 #### D12D. DESCRIPTION
 The payer's InsurancePlan bundle carries Questionnaire resources: policy forms and standard-treatment-guideline (STG) checklists that a document requirement points at through its `documentationUrl`. The payer sends the same form once for every benefit that needs it, so forms are collected by `url` and stored once per plan. Answers are stored per claim in [D17. claim_form_answer](D17-claim-form-answer.md), keyed by the same url (`form_url`).
@@ -9,7 +9,7 @@ The payer's InsurancePlan bundle carries Questionnaire resources: policy forms a
 Which forms a leg must carry:
 - With a `ready` auth-requirements ruling (D13 (in nhcx-coverage)): the forms named by its `form` requirements ([D15](D15-claim-auth-requirement.md) `form_url`) for that stage (`at_preauth = 1` for the pre-authorisation, `0` for the claim).
 - Without a ruling, pre-authorisation only: the forms named in `supporting_info[].form` of the quoted packages ([D11](D11-claim-plan-benefit.md)).
-- On both legs, always: the policy-wide forms named in the plan's `policy_documents[].form` (D10 (in nhcx-preauth)). A form answered earlier is offered again with the earlier answers filled in.
+- On both legs, always: the policy-wide forms named in the plan's `policy_documents[].form` (D10 (in nhcx-coverage)). A form answered earlier is offered again with the earlier answers filled in.
 - Nothing is required unless the plan is `ready`.
 
 Each question in `items` is a flattened Questionnaire item:
@@ -29,7 +29,7 @@ Lifecycle:
 | column | type | null/default | meaning (and allowed values) |
 |---|---|---|---|
 | id | INTEGER | primary key | row id |
-| plan_id | INTEGER | NOT NULL | the package master (D10 (in nhcx-preauth)) |
+| plan_id | INTEGER | NOT NULL | the package master (D10 (in nhcx-coverage)) |
 | url | TEXT | NOT NULL | Questionnaire.url; how requirements and answers name the form |
 | form_id | TEXT | null | Questionnaire.id |
 | title | TEXT | null | Questionnaire.title, else name, else url |
@@ -38,9 +38,9 @@ Lifecycle:
 
 #### D12K. KEYS AND INDEXES
 - Primary key `id` (integer).
-- `plan_id` references D10. claim_plan (in nhcx-preauth) `id`, `ON DELETE CASCADE`.
+- `plan_id` references D10. claim_plan (in nhcx-coverage) `id`, `ON DELETE CASCADE`.
 - Unique index: `ux_claim_plan_form (plan_id, url)`.
-- `url` is matched without a foreign key by [D15. claim_auth_requirement](D15-claim-auth-requirement.md) `form_url`, [D11](D11-claim-plan-benefit.md) `supporting_info[].form`, D10 (in nhcx-preauth) `policy_documents[].form` and [D17. claim_form_answer](D17-claim-form-answer.md) `form_url`.
+- `url` is matched without a foreign key by [D15. claim_auth_requirement](D15-claim-auth-requirement.md) `form_url`, [D11](D11-claim-plan-benefit.md) `supporting_info[].form`, D10 (in nhcx-coverage) `policy_documents[].form` and [D17. claim_form_answer](D17-claim-form-answer.md) `form_url`.
 
 #### D12U. USED BY
 - Screens: [S11. Claim Submission](../screens/S11-claim-submission.md)

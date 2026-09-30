@@ -56,7 +56,7 @@ git clone --depth 1 --filter=blob:none --sparse https://github.com/nha-in/docs .
 - `nha-in/docs/plugins/nhcx/skills/nhcx-payment`
 - `nha-in/docs/plugins/nhcx/skills/nhcx-reprocess`
 
-`https://nha-in.github.io/docs/pr-90/skills/nhcx-index.json` lists every NHCX skill, its archive and the exact files it is made of. A skill is 66 to 131 files across its folders, so take the archive rather than fetching files one at a time.
+`https://nha-in.github.io/docs/pr-90/skills/nhcx-index.json` lists every NHCX skill, its archive and the exact files it is made of. A skill is 72 to 151 files across its folders, so take the archive rather than fetching files one at a time.
 
 ## 3. Connect the Docs MCP server
 

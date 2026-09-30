@@ -87,7 +87,8 @@ State changes:
 
 #### C10U. USED BY
 - Screens: [S12. Payments](../screens/S12-payments.md)
-- APIs: [A8. Payment Notice Acknowledgement](../apis/A8-paymentnotice-on-request.md)
+- APIs: [A8. Payment Notice Acknowledgement](../apis/A8-paymentnotice-on-request.md), [A15. Adjudicator Process Case](../apis/A15-adjudicator-process-case.md)
 - Callbacks: [C1. Callback Door](C1-callback-door.md)
 - FHIR: [F1. Bundle](../fhir/F1-bundle.md), [F13. PaymentNotice](../fhir/F13-paymentnotice.md)
 - Database: [D21. claim_payment](../database/D21-claim-payment.md), [D22. claim_payment_detail](../database/D22-claim-payment-detail.md)
+- Tests: [T11. IRDAI Payment Notice and Acknowledgement](../tests/T11-irdai-payment.md), [T18. PMJAY Payment Notice, Status Refusal and Cancel](../tests/T18-pmjay-payment-status-cancel.md)

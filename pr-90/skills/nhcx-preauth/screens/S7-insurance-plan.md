@@ -23,7 +23,7 @@ Reuse before asking: on the first fetch (not on "Fetch again"), if another case 
 
 API: [A3. Insurance Plan Request](../apis/A3-insurance-plan-request.md)
 
-Without a policy code on the case the request is refused: "A plan request needs both the case's policy code and the facility's HFR ID." Flash: "Insurance plan requested from the payer." A refetch clears the case's packages before the new answer lands, so a stale package cannot survive it.
+With neither a policy code nor an HFR ID the request is refused: "A plan request needs a policy code or the facility's HFR ID." Flash: "Insurance plan requested from the payer." A refetch clears the case's packages before the new answer lands, so a stale package cannot survive it.
 
 **Waiting for the answer.** There is no timer: every load of the claim screen polls once while the plan is `fetching`. A failure of the poll itself shows as a muted line "Could not poll the gateway: <error>" on the waiting card.
 
@@ -82,7 +82,7 @@ A primary "Search" button (search icon). "Clear" (x icon) appears when any filte
 | Type | Chip: `Procedure` info, anything else (`Implant`) warning, `-` if none |
 | (action) | "View" small secondary button, opens S7.1 in a modal |
 
-At most 200 rows are shown. Beyond that a muted note reads "Showing the first 200 of <n> - search or filter to narrow it." Empty state: "Nothing matches that search."
+Every package is listed: there is no row limit, whatever the size of the plan. A large plan is paged, 100 rows a page with "Previous" and "Next" and "Page <p> of <q>" under the table [REF](../references/PAYERS.md#markers), and search and filters narrow it across all its packages, not just the page shown. Empty state: "Nothing matches that search."
 
 Cell helpers available for a denser table (defined but not in the default column set): a rate cell showing the package rate with "+<k> tier(s), up to ₹<max>" underneath; a conditions cell with up to three chips (key conditions first, in the order GovtReserved, Standalone, IsDayCare, ApprovalNotRequired, ImplantApplicable, StratificationAllowed, ProcedureType [PAYER](../references/PAYERS.md#markers); a true flag shows just its name, others `<name>: <value>`) and "+<k> more"; and a documents cell "<n> required" with the first document's name underneath.
 
@@ -104,7 +104,7 @@ The arrangement below is the reference implementation's [REF](../references/PAYE
 |  Code     | Package              | Speciality | Type       |     |
 |  SB039A   | Appendicectomy       | General    | [Procedure]| View|
 |  ...                                                             |
-|  Showing the first 200 of 975 - search or filter to narrow it.   |
+|  [Previous]  Page 1 of 10  [Next]                                |
 |------------------------------------------------------------------|
 ```
 
@@ -143,7 +143,7 @@ Below it, an accordion (several sections open at once). For a Procedure:
 
 For an Implant, instead of those two:
 
-1. "Allowed with (<n>)": the packages that list this implant. Columns Code, Package, Speciality, "View". At most 200 rows. Empty: "No package in this plan lists this implant."
+1. "Allowed with (<n>)": the packages that list this implant. Columns Code, Package, Speciality, "View". Every such package is listed, with no row limit, paged as the package list is. Empty: "No package in this plan lists this implant."
 
 Then for both:
 
@@ -200,7 +200,7 @@ Columns:
 | Questions | Number of questions, nested ones included |
 | (action) | "View", opens S7.3 in the modal |
 
-Sorted by title. At most 200 rows, then "Showing the first 200 of <n> - search to narrow it." Empty: "Nothing matches that search."
+Sorted by title. Every form is listed, with no row limit, paged the same way as the packages. Empty: "Nothing matches that search."
 
 Data: [D12. claim_plan_form](../database/D12-claim-plan-form.md)
 

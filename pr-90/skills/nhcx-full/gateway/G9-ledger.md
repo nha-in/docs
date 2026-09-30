@@ -221,3 +221,4 @@ sweep(now):                                          // hourly and at start, G1
 - FHIR: [F1. Bundle](../fhir/F1-bundle.md)
 - Database: [D9. claim](../database/D9-claim.md), [D10. claim_plan](../database/D10-claim-plan.md), [D13. claim_auth](../database/D13-claim-auth.md), [D18. claim_preauth](../database/D18-claim-preauth.md), [D19. claim_predetermination](../database/D19-claim-predetermination.md), [D20. claim_submission](../database/D20-claim-submission.md), [D29. claim_enquiry](../database/D29-claim-enquiry.md)
 - Gateway: [G1. Embedding](G1-embedding.md), [G2. Configuration and Participants](G2-configuration.md), [G5. Protocol Headers](G5-protocol-headers.md), [G7. Send](G7-send.md), [G8. Receive](G8-receive.md)
+- Tests: [T2. Test Runners](../tests/T2-test-runners.md)

@@ -14,6 +14,8 @@ A pre-authorisation is answered several times on one correlation id: an acknowle
 
 **Failed sends.** A leg whose send was reported failed (C1 `failed_send`) is reopened as `submitting` when the payer answers it, then the reply applied.
 
+**A denied enhancement.** A rejection that answers an enhancement leg denies the enhancement only: the approved pre-authorisation keeps its status and its approved amount, the payer's reason is recorded against the enhancement, and nothing is added to the approved total. Only a rejection of the pre-authorisation itself ends the leg `rejected`.
+
 #### C5Q. REQUEST
 `fhir` is an F1 Bundle carrying the payer's F9 ClaimResponse (`use: preauthorization`, or `predetermination` for a quote), usually beside F15 Patient, F17 Organizations and F18 Coverage; some payers send the ClaimResponse alone.
 
@@ -42,6 +44,14 @@ C5(envelope, corr):
     if already_applied(row, api_call_id, parsed): return "ignored"
     revive(D18, row, "submitting")
     status = verdict_status(parsed)
+    if status == "rejected" and row.submission_kind in {enhancement, enhancement_resubmit}:
+        # PMJAY denies the enhancement only (workflow 231): the approved
+        # pre-authorisation and its amounts stand. The denial is kept as the
+        # payer's reason, and the enhancement's amount is not added.
+        leg_write(D18, row, {status: "approved", error_message: parsed.reason or disposition,
+                             api_call_id: api_call_id or null, settled_at: now,
+                             response_json: body, enhancement_status: "rejected"})
+        return "settled"
     values = parsed, dropping preauth_ref when the reply carries none (the stored one stays)
     leg_write(D18, row, values + {status,
         api_call_id: api_call_id or null,
@@ -122,3 +132,4 @@ D19 claim_predetermination: `answered` whatever the outcome, with `outcome`, `ad
 - APIs: [A4. Pre-auth Submit](../apis/A4-preauth-submit.md), [A7. Communication Reply](../apis/A7-communication-on-request.md), [A10. Transaction Related](../apis/A10-txn-related.md), [A12. Transaction FHIR](../apis/A12-txn-fhir.md), [A17. Claim State](../apis/A17-claim-state.md)
 - Callbacks: [C1. Callback Door](C1-callback-door.md), [C6. Claim Reply](C6-claim-on-submit.md), [C7. Cancel Reply](C7-cancel-on-submit.md), [C8. Enquiry Reply](C8-enquiry-on-submit.md), [C9. Payer Communication](C9-communication-request.md)
 - Database: [D18. claim_preauth](../database/D18-claim-preauth.md), [D19. claim_predetermination](../database/D19-claim-predetermination.md)
+- Tests: [T5. IRDAI Pre-authorisation Approved](../tests/T5-irdai-preauth-approved.md), [T6. IRDAI Pre-authorisation Rejected and Sent Again](../tests/T6-irdai-preauth-rejected.md), [T7. IRDAI Query Answered](../tests/T7-irdai-query-answered.md), [T8. IRDAI Enhancement](../tests/T8-irdai-enhancement.md), [T9. IRDAI Status Enquiry and Cancel](../tests/T9-irdai-cancel-and-status.md), [T14. PMJAY Pre-authorisation Through the Payer Service](../tests/T14-pmjay-preauth-adjudicated.md), [T15. PMJAY Query Answered by Resubmission](../tests/T15-pmjay-query-by-resubmission.md), [T16. PMJAY Rejection and Enhancement](../tests/T16-pmjay-rejection-and-enhancement.md)

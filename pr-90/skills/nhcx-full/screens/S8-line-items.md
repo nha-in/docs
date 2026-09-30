@@ -120,7 +120,7 @@ Built from the procedures already on the pre-authorisation, from what their plan
 
 A filter row above the card, a GET form: "Search" (text, at least 18rem, matches code or name as a substring), "Speciality" (blank "All specialities", options `<name> (<count>)`), "Type" (blank "Any type", `Procedure` or `Implant`), and a primary "Search" button. Unlike S7 there is no Clear button.
 
-Card title "<n> in the payer's package master". Columns: Code, Package, Speciality, Type (chip, Procedure info, otherwise warning), Rate, and "Add". A benefit whose kind a pre-authorisation cannot quote (a policy-wide allowance such as an ambulance or room sub-limit) gets no Add button. At most 200 rows, then "Showing the first 200 of <n> - search to narrow it." Empty: "Nothing matches that search."
+Card title "<n> in the payer's package master". Columns: Code, Package, Speciality, Type (chip, Procedure info, otherwise warning), Rate, and "Add". A benefit whose kind a pre-authorisation cannot quote (a policy-wide allowance such as an ambulance or room sub-limit) gets no Add button. Every package is listed, with no row limit: paged 100 rows a page with "Previous" and "Next" and "Page <p> of <q>" [REF](../references/PAYERS.md#markers), and the search and filters narrow the whole package master. Empty: "Nothing matches that search."
 
 **Adding a line** posts the kind, the code, and for a tier the parent procedure code. The price is read from the plan at add time, never from the form: a Procedure or Implant takes the benefit's rate, a tier takes the rate its parent procedure lists for it (different procedures price the same ward differently [PAYER](../references/PAYERS.md#markers)). The new line starts at quantity 1. Rules, each shown verbatim as a red flash:
 - Kind not one of the three: "That is not something a preauth can quote."
@@ -162,7 +162,7 @@ Data: [D11. claim_plan_benefit](../database/D11-claim-plan-benefit.md)
 | [____________]    [All specialities v]  [Any type v]  [Search]   |
 | [Card] 975 in the payer's package master                         |
 |  Code | Package | Speciality | Type | Rate | [+ Add]             |
-|  Showing the first 200 of 975 - search to narrow it.             |
+|  [Previous]  Page 1 of 10  [Next]                                |
 |------------------------------------------------------------------|
 ```
 

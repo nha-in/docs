@@ -51779,7 +51779,7 @@ The whole provider-side integration, every exchange end to end, with the NHCX ga
 
 - ScaffoldThe eight steps that build the use case into your system, from discovery and mapping through code to tests on the sandbox, each logged as it goes.
 - Integrate26 operations, with their hosts and headers.
-- Test10 test matrix rows, from offline pins up to a live payer on the sandbox.
+- TestThe test pyramid, from offline pins up to a live payer on the sandbox.
 
 `mkdir -p .claude/skills && curl -fsSL https://nha-in.github.io/docs/pr-90/skills/nhcx-full.tar.gz | tar -xzf - -C .claude/skills`
 

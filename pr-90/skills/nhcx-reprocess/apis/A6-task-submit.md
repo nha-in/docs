@@ -19,7 +19,7 @@ The status Task goes on `task/submit`, not on the NHCX status route, because the
 
 **Workflow ids (`x-hcx-workflow_id`).** From the payer adapter (see [PAYERS.md](../references/PAYERS.md)) [PAYER](../references/PAYERS.md#markers).
 
-| Kind | `pmjay` | `xyz` (Sandbox Payer) | `generic` |
+| Kind | `pmjay` | `kyrocare` (Sandbox Payer) | `generic` |
 |---|---|---|---|
 | cancel | PC01 | PC01 | PC01 |
 | status | the leg's correlation id, else `13` [REF](../references/PAYERS.md#markers) | same | same |
@@ -240,3 +240,4 @@ function ask_release(case_id, amount, note):
 - APIs: [A10. Transaction Related](A10-txn-related.md), [A11. Transaction Dispatch](A11-txn-dispatch.md), [A13. Transaction List](A13-txn-list.md)
 - Callbacks: [C1. Callback Door](../callbacks/C1-callback-door.md), [C8. Enquiry Reply](../callbacks/C8-enquiry-on-submit.md)
 - FHIR: [F10. Task (claim actions)](../fhir/F10-task-claim-actions.md)
+- Tests: [T12. IRDAI Reprocess and Balance Release](../tests/T12-irdai-reprocess-and-release.md)
