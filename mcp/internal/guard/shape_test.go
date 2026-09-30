@@ -71,7 +71,7 @@ func TestCheckShapeNoConnectorNeverASibling(t *testing.T) {
 }
 
 func TestCheckShapeDisambiguatesIdentifiers(t *testing.T) {
-	pack := PackFacts{MentionsABHANumber: true, MentionsABHAAddress: true}
+	pack := PackFacts{MentionsABHANumber: true, MentionsABHAAddress: true, QuestionNamesABHA: true}
 	vague := "You need Aadhaar to create it. Then choose a username."
 	if f := CheckShape("how-do-i", vague, pack); len(f) == 0 {
 		t.Error("first sentence names neither identifier; must fail")
@@ -83,7 +83,7 @@ func TestCheckShapeDisambiguatesIdentifiers(t *testing.T) {
 }
 
 func TestCheckShapeFirstSentenceStripsListMarker(t *testing.T) {
-	pack := PackFacts{MentionsABHANumber: true, MentionsABHAAddress: true}
+	pack := PackFacts{MentionsABHANumber: true, MentionsABHAAddress: true, QuestionNamesABHA: true}
 	answer := "1. Use an ABHA number to log in."
 	if f := CheckShape("how-do-i", answer, pack); len(f) != 0 {
 		t.Errorf("a leading list marker must not stop the identifier from being read, got %v", f)
@@ -91,7 +91,7 @@ func TestCheckShapeFirstSentenceStripsListMarker(t *testing.T) {
 }
 
 func TestCheckShapeFirstSentenceFallsBackToFirstLine(t *testing.T) {
-	pack := PackFacts{MentionsABHANumber: true, MentionsABHAAddress: true}
+	pack := PackFacts{MentionsABHANumber: true, MentionsABHAAddress: true, QuestionNamesABHA: true}
 	answer := "An ABHA address needs no ABHA number\nmore text"
 	if f := CheckShape("how-do-i", answer, pack); len(f) != 0 {
 		t.Errorf("a first line with no terminal punctuation must still be read, got %v", f)
@@ -99,10 +99,24 @@ func TestCheckShapeFirstSentenceFallsBackToFirstLine(t *testing.T) {
 }
 
 func TestCheckShapeSkipsDefineAndDecline(t *testing.T) {
-	pack := PackFacts{FlowTitles: []string{"A", "B"}, MentionsABHANumber: true, MentionsABHAAddress: true}
+	pack := PackFacts{FlowTitles: []string{"A", "B"}, MentionsABHANumber: true, MentionsABHAAddress: true, QuestionNamesABHA: true}
 	for _, s := range []string{"define", "decline", "meta"} {
 		if f := CheckShape(s, "Short.", pack); len(f) != 0 {
 			t.Errorf("%s should not be route or identifier checked, got %v", s, f)
 		}
+	}
+}
+
+// The identifier rule is for questions about ABHA. A pack that mentions both
+// identifiers while the reader asked about an error code or an integration
+// must not force them into the first sentence.
+func TestCheckShapeIdentifierRuleNeedsAnABHAQuestion(t *testing.T) {
+	pack := PackFacts{MentionsABHANumber: true, MentionsABHAAddress: true}
+	if f := CheckShape("diagnose", "900901 means the credentials were rejected. Get a fresh token.", pack); len(f) != 0 {
+		t.Errorf("rule fired on a question that did not name ABHA: %v", f)
+	}
+	pack.QuestionNamesABHA = true
+	if f := CheckShape("diagnose", "The credentials were rejected. Get a fresh token.", pack); len(f) == 0 {
+		t.Error("rule must still fire on an ABHA question")
 	}
 }

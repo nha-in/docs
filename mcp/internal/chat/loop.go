@@ -146,6 +146,10 @@ func topPassageType(pack []byte) string {
 
 // isTopicPhrase is a one to three word phrase with no question mark: a
 // topic typed into the box rather than a question asked of it.
+// abhaQuestionRe is a question that names ABHA, for the identifier rule in
+// guard.CheckShape.
+var abhaQuestionRe = regexp.MustCompile(`(?i)\babha\b|\bhealth ?id\b`)
+
 func isTopicPhrase(q string) bool {
 	q = strings.TrimSpace(q)
 	return len(strings.Fields(q)) <= 3 && !strings.Contains(q, "?")
@@ -819,6 +823,7 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 			slog.Warn("pre-retrieval failed, continuing without it", "error", err)
 		} else if len(pack) > 0 {
 			facts = f
+			facts.QuestionNamesABHA = abhaQuestionRe.MatchString(question)
 			packHadContent = true
 			links = linksFromPack(pack)
 			suggestions = suggestionsFromPack(pack)

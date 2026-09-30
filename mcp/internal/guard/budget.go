@@ -12,6 +12,7 @@ var fencedBlockRe = regexp.MustCompile("(?s)```.*?```")
 // shapes a good answer, this catches one that has stopped being an answer.
 var WordBudget = map[string]int{
 	"define": 150, "how-do-i": 260, "diagnose": 260, "compare": 260, "meta": 150, "decline": 80, "topic": 110,
+	"overview": 240, "walkthrough": 480,
 }
 
 // Words counts prose words with fenced blocks removed: a worked example is
