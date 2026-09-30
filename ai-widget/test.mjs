@@ -322,6 +322,7 @@ console.log('ok');
   assert.deepEqual(links, [{literal: '/api/hiecm/v3/token/generate-token', url: '/docs/hiecm/v3/api/m2/generate-token'}]);
   assert.equal(linkFor('/api/hiecm/v3/token/generate-token', links, 'https://docs.example'), 'https://docs.example/docs/hiecm/v3/api/m2/generate-token');
   assert.equal(linkFor('/api/hiecm/v3/token/generate-token?x=1', links, 'https://docs.example'), null);
+  assert.equal(linkFor('POST /api/hiecm/v3/token/generate-token', links, 'https://docs.example'), 'https://docs.example/docs/hiecm/v3/api/m2/generate-token');
   assert.equal(linkFor('X-LINK-TOKEN', undefined, 'https://docs.example'), null);
 }
 
