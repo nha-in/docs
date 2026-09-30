@@ -34,5 +34,23 @@
         "kind": "call"
       }
     ]
+  },
+  {
+    "id": "e6e823071577",
+    "date": "2026-09-30",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "nhcx",
+        "from": "1.0.2",
+        "to": "1.0.3"
+      }
+    ]
   }
 ]
