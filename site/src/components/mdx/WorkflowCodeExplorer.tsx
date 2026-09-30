@@ -192,11 +192,6 @@ export default function WorkflowCodeExplorer(): React.JSX.Element {
 
       {tab === 'sheet' && (
         <div className="wf-explorer__panel">
-          <p className="wf-explorer__note">
-            Spellings are as published, such as <code>Initimation</code>,{' '}
-            <code>Reimburstment</code> and <code>protocal</code>, so that
-            searching for what you saw in a payload finds the row.
-          </p>
           <ul className="wf-explorer__list">
             {shown.sheet.map((r, i) => (
               <li key={`${r.code}-${r.header}-${i}`} className="wf-explorer__row">
