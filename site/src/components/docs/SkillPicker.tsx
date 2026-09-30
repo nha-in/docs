@@ -69,43 +69,43 @@ const CHOICES: Choice[] = [
   },
 ];
 
-// One skill for the whole provider-side integration, and one per NHCX use
-// case. Each is a folder that installs and runs alone.
+// One skill for the whole integration, and one per NHCX use case. Each
+// carries both sides of its exchanges, and is a folder that installs and runs alone.
 const NHCX_CHOICES: Choice[] = [
   {
     slug: 'nhcx-full',
     label: 'Everything',
-    note: 'The whole provider-side integration, every exchange end to end, with the NHCX gateway embedded in the application.',
+    note: 'The whole integration, every exchange end to end on either side, with the NHCX gateway embedded in the application.',
   },
   {
     slug: 'nhcx-coverage',
     label: 'Coverage',
-    note: "Finds the patient's policy and checks that it is in force before admission or pre-authorisation.",
+    note: "Policy search and the coverage eligibility check, asked and answered, before admission or pre-authorisation.",
   },
   {
     slug: 'nhcx-preauth',
     label: 'Preauth',
-    note: "Fetches the payer's plan, builds the line items, and sends the pre-authorisation, its enhancements, query answers and cancellation.",
+    note: 'The insurance plan, the line items, and the pre-authorisation with its enhancements, queries, answers and cancellation, on either side.',
   },
   {
     slug: 'nhcx-claim',
     label: 'Claim',
-    note: "Records the discharge, files the claim with its documents, answers its queries, and reads the payer's verdict.",
+    note: 'The discharge, the claim with its documents, its queries and answers, and the verdict, on either side.',
   },
   {
     slug: 'nhcx-communication',
     label: 'Communication',
-    note: "Receives the payer's queries, notifications and notes, replies with text and documents, and acknowledges notifications.",
+    note: 'Queries, notifications and notes on a case, replies with text and documents, and acknowledgements, on either side.',
   },
   {
     slug: 'nhcx-payment',
     label: 'Payment',
-    note: "Records the payer's payment notice against its claim, and acknowledges it.",
+    note: 'The payment notice and its breakdown, sent, matched to the claim and acknowledged.',
   },
   {
     slug: 'nhcx-reprocess',
     label: 'Reprocess',
-    note: 'Asks the payer to look again at a decided claim, and for the unpaid balance of a partly paid one.',
+    note: 'A second look at a decided claim, and the unpaid balance of a partly paid one, asked for and answered.',
   },
 ];
 

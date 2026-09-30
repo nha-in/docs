@@ -82,7 +82,7 @@ All seven skills in one install, updated in place, and the nhcx-docs MCP server 
 
 ## Install a skill
 
-There is one skill for the whole provider-side integration, `nhcx-full`, and one per NHCX use case. Each builds into an existing hospital information system through eight logged steps, from discovery and mapping to tests on the sandbox. It finds what your system already has and builds only what is missing. It takes its NHCX facts from the nhcx-docs MCP server when it is connected, and from a release of the NHCX package otherwise.
+There is one skill for the whole integration, `nhcx-full`, and one per NHCX use case. Each carries both sides of its exchanges: the hospital system that asks, and the payer system that answers. It builds into an existing system through eight logged steps, from discovery and mapping to tests on the sandbox, finds what your system already has, and builds only what is missing. It takes its NHCX facts from the nhcx-docs MCP server when it is connected, and from a release of the NHCX package otherwise.
 
 Each skill is self-contained, so install only the ones your integration needs. `npx skills` finds every coding agent in the project and sets the skill up for each. With git alone, the command fetches just the skill's folder into the directory your agent reads skills from.
 
@@ -100,13 +100,13 @@ export const SkillDownload = ({slug}) => {
 
 | Skill | What it builds | Download |
 | --- | --- | --- |
-| `nhcx-full` | The whole provider-side integration, every exchange end to end, with the NHCX gateway embedded in the application | <SkillDownload slug="nhcx-full" /> |
+| `nhcx-full` | The whole integration, every exchange end to end on either side, with the NHCX gateway embedded in the application | <SkillDownload slug="nhcx-full" /> |
 | `nhcx-coverage` | Beneficiary policy search and coverage eligibility: validation, benefits and discovery | <SkillDownload slug="nhcx-coverage" /> |
-| `nhcx-preauth` | The payer's insurance plan, line items, authorisation requirements, the pre-authorisation, enhancement, query answers, cancellation and status | <SkillDownload slug="nhcx-preauth" /> |
-| `nhcx-claim` | Discharge details, claim documents and forms, the claim and its query answers, the payer's verdict and status enquiries | <SkillDownload slug="nhcx-claim" /> |
-| `nhcx-communication` | Payer queries, notifications and notes on a case, replies with text and documents, and acknowledgements | <SkillDownload slug="nhcx-communication" /> |
-| `nhcx-payment` | The payer's payment notice and its breakdown, matched to the claim and acknowledged | <SkillDownload slug="nhcx-payment" /> |
-| `nhcx-reprocess` | Asking the payer to look again at a decided claim, and asking for the unpaid balance of a partly paid claim | <SkillDownload slug="nhcx-reprocess" /> |
+| `nhcx-preauth` | The insurance plan, line items, authorisation requirements, the pre-authorisation, enhancement, queries and their answers, cancellation and status | <SkillDownload slug="nhcx-preauth" /> |
+| `nhcx-claim` | Discharge details, claim documents and forms, the claim, its queries and answers, the verdict and status enquiries | <SkillDownload slug="nhcx-claim" /> |
+| `nhcx-communication` | Queries, notifications and notes on a case, replies with text and documents, and acknowledgements | <SkillDownload slug="nhcx-communication" /> |
+| `nhcx-payment` | The payment notice and its breakdown, sent, matched to the claim and acknowledged | <SkillDownload slug="nhcx-payment" /> |
+| `nhcx-reprocess` | A second look at a decided claim, and the unpaid balance of a partly paid one, asked for and answered | <SkillDownload slug="nhcx-reprocess" /> |
 
 <SkillPicker set="nhcx" />
 
