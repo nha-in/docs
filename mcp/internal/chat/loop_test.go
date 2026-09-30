@@ -211,7 +211,7 @@ func TestRespondScopesTheLookupToTheReadersGateway(t *testing.T) {
 	if scoped != "hiecm" {
 		t.Errorf("lookup scope = %q, want hiecm", scoped)
 	}
-	if !strings.Contains(sawTurn, "reading the HIE-CM documentation") {
+	if !strings.Contains(sawTurn, "reading the HIE-CM section of the ABDM documentation") {
 		t.Errorf("the model was not told which documentation the reader is in: %q", sawTurn)
 	}
 }
@@ -240,6 +240,16 @@ func TestScopeFor(t *testing.T) {
 		{"", "where does HIE-CM send the consent", "hiecm"},
 		{"", "is the NHCX session token the same as the HIE-CM one", ""},
 		{"someothergateway", "anything", ""},
+		// A milestone is ABDM's, and its documentation lives in the HIE-CM
+		// section whatever page the reader is on: "what is M1" on the NHCX
+		// claims page was searched in NHCX alone and answered as "the HIE-CM
+		// milestone ... not an NHCX claims workflow".
+		{"nhcx", "what is M1 how can i integrate M1", "hiecm"},
+		{"uhi", "which milestones do I need", "hiecm"},
+		{"nhcx", "is milestone 4 required for hospitals", "hiecm"},
+		{"nhcx", "how do I get sandbox credentials", "nhcx"},
+		{"nhcx", "how do I submit a claim", "nhcx"},
+		{"nhcx", "what is M1 in HIE-CM and in NHCX", ""},
 	} {
 		if got := scopeFor(tc.page, tc.question); got != tc.want {
 			t.Errorf("scopeFor(%q, %q) = %q, want %q", tc.page, tc.question, got, tc.want)
@@ -250,11 +260,48 @@ func TestScopeFor(t *testing.T) {
 // An inferred scope must not tell the model the reader is on a page they
 // are not on.
 func TestGatewayNoteSaysWhereTheScopeCameFrom(t *testing.T) {
-	if n := gatewayNote("hiecm", true); !strings.Contains(n, "reading the HIE-CM documentation") {
+	if n := gatewayNote("hiecm", true, false); !strings.Contains(n, "reading the HIE-CM section of the ABDM documentation") {
 		t.Errorf("page scope note = %q", n)
 	}
-	if n := gatewayNote("hiecm", false); strings.Contains(n, "reading the") || !strings.Contains(n, "HIE-CM") {
+	if n := gatewayNote("hiecm", false, false); strings.Contains(n, "reading the") || !strings.Contains(n, "HIE-CM") {
 		t.Errorf("inferred scope note = %q", n)
+	}
+}
+
+// The note carries behaviour, not ABDM's facts: those are in the glossary
+// atoms the search returns. It must not tell the model to answer "for
+// HIE-CM", which is what made the panel call M1 "the HIE-CM milestone" (NHA
+// review, 30 September 2026).
+func TestGatewayNoteCarriesBehaviourNotFacts(t *testing.T) {
+	for _, gw := range []string{"hiecm", "nhcx", "uhi"} {
+		for _, wide := range []bool{false, true} {
+			n := gatewayNote(gw, true, wide)
+			for _, fact := range []string{"Answer for", "M1", "M4", "milestone"} {
+				if strings.Contains(n, fact) {
+					t.Errorf("%s note (abdmWide %v) carries %q: %s", gw, wide, fact, n)
+				}
+			}
+		}
+	}
+	if n := gatewayNote("hiecm", true, true); !strings.Contains(n, "answer at the ABDM level") {
+		t.Errorf("an ABDM-wide question must be answered at the ABDM level: %s", n)
+	}
+}
+
+func TestABDMLevelQuestions(t *testing.T) {
+	for q, want := range map[string]bool{
+		"how can I integrate with ABDM":               true,
+		"what is M1":                                  true,
+		"who is eligible for ABDM integration":        true,
+		"which milestones do I need":                  true,
+		"what authentication is needed for ABDM APIs": true,
+		"why do I get ABDM-1016 on the link call":     false,
+		"how do I link a care context":                false,
+		"what does the NHCX claim submit call return": false,
+	} {
+		if got := abdmLevel(q); got != want {
+			t.Errorf("abdmLevel(%q) = %v, want %v", q, got, want)
+		}
 	}
 }
 
@@ -838,7 +885,7 @@ func TestRespondRetriesWithoutPuttingWordsInTheReadersMouth(t *testing.T) {
 	// mention of the first attempt.
 	// Asked with no page, the question's scope is inferred, and its note
 	// rides with the retry in the same place a page's would.
-	want := lookFirst + "\n\n" + gatewayNote("hiecm", false) + "\n\n" + ShapeBlock("define") + "\n\n" + "jhhjjk"
+	want := lookFirst + "\n\n" + gatewayNote("hiecm", false, false) + "\n\n" + ShapeBlock("define") + "\n\n" + "jhhjjk"
 	if got := fm.gotMsgs[1]; len(got) != 1 || got[0].Text != want {
 		t.Errorf("the retry changed the conversation: %+v", got)
 	}
