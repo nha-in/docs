@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["23570"],{28201(e,s,t){t.r(s),t.d(s,{__iconNode:()=>_,default:()=>a});var d=t(34438);let _=[["path",{d:"m7 7 10 10-5 5V2l5 5L7 17",key:"1q5490"}]],a=(0,d.A)("bluetooth",_)}}]);
