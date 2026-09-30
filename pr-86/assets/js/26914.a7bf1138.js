@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["26914"],{86137(e,a,d){d.r(a),d.d(a,{__iconNode:()=>h,default:()=>s});var t=d(34438);let h=[["path",{d:"M12 12v4",key:"tww15h"}],["path",{d:"M12 20h.01",key:"zekei9"}],["path",{d:"M8.128 16.949A7 7 0 1 1 15.71 8h1.79a1 1 0 0 1 0 9h-1.642",key:"1namsd"}]],s=(0,t.A)("cloud-alert",h)}}]);
