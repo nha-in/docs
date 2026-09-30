@@ -20,6 +20,7 @@ Search the whole target once for NHCX signatures before matching spec by spec: `
 
 ### L1.2 Identify the technology
 Read the build files, entry points and folder layout. Record:
+- which side of the exchange the target is, `provider` or `payer`, by the test in SKILL.md (WHICH SIDE). A `payer` target ends this skill's discovery here: log it, tell the user, and continue with the payer folder's SKILL.md and its own L1
 - languages and versions; web framework; UI technology (server-rendered, SPA, mobile)
 - database engine, ORM or query layer, migration tool and where migrations live
 - how routes are declared; how background jobs or schedulers run
@@ -57,6 +58,7 @@ One entry per spec id. A spec with no match is still listed, as `missing`.
 {
   "target": {"repo": "<name>", "commit": "<sha>", "discovered_at": "<ISO time>"},
   "technology": {
+    "side": "provider",
     "languages": [{"name": "", "version": ""}],
     "framework": "", "ui": "", "database": "", "orm": "",
     "migrations": {"tool": "", "dir": ""},

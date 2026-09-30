@@ -20,6 +20,6 @@ Postman, Insomnia, Hoppscotch and Bruno take this through Import, as a link or a
 
 Login by fingerprint or iris uses the v3.1 path, `/abha/api/v3.1/profile/login/verify`, with a `bio` or `iris` block.
 
-[See the user journeyWhat the person experiences, screen by screen, before you write any code.](/docs/pr-90/docs/hiecm/v3/milestones/m1)[When it goes wrongThe recorded error shapes and codes, and what to do about each.](/docs/pr-90/docs/hiecm/v3/api/m1/errors)
+[See the user journeyWhat the person experiences, screen by screen, before you write any code.](/docs/pr-90/docs/hiecm/v3/milestones/m1)[When it goes wrongThe recorded error shapes and codes, and what to do about each.](/docs/pr-90/docs/hiecm/v3/api/m1/errors)[Test itThe cases M1 is tested against, each with its steps, expected result and calls.](/docs/pr-90/docs/hiecm/v3/resources/test-cases/m1)
 
 New to this? Start with [M1 Identity](/docs/pr-90/docs/hiecm/v3/milestones/m1).

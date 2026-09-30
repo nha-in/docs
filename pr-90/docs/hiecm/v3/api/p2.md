@@ -20,3 +20,5 @@ Postman, Insomnia, Hoppscotch and Bruno take this through Import, as a link or a
 | Linking, sharing and consent calls | Sandbox     | `https://dev.abdm.gov.in`                         |
 
 New to this? Start with [P2 Consents Management](/docs/pr-90/docs/hiecm/v3/milestones/p2).
+
+The cases a PHR application is tested against: [PHR application test cases](/docs/pr-90/docs/hiecm/v3/resources/test-cases/phr).

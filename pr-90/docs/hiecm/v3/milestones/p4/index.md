@@ -31,6 +31,16 @@ A PHR application that stores a person's records rather than only displaying the
 
 A notification carries no health records. The records arrive only through the health information request that follows a granted consent, as described in [P3 Subscription](/docs/pr-90/docs/hiecm/v3/milestones/p3).
 
+Notes for AI agents
+
+**Before you start.** The app is a PHR application with [P1](/docs/pr-90/docs/hiecm/v3/milestones/p1) login and the [P3](/docs/pr-90/docs/hiecm/v3/milestones/p3) subscription and consent calls, and the person is signed in. The calls about a patient carry `X-AUTH-TOKEN`, the person's login token, not the gateway session token.
+
+**What happens.** Set up the locker with `X-LOCKER-ID` and keep the `consentAutoApprovalId` it returns. Subscribe to the ABHA address as a health locker; the subscription is approved automatically. On a `LINK` notification, raise a consent request and, once the person grants it, the health information request. On a `DATA` notification, reuse a consent that covers the health information type and date range. Store what arrives.
+
+**How you know it worked.** Setup locker answers 200 with a `consentAutoApprovalId`. The lockers call lists the locker for the ABHA address with `isActive` true, and its settings show subscriptions with status `GRANTED`.
+
+**When it goes wrong.** A notification arrived but no records did: the notification only says something changed, so raise the consent request or the health information request. A patient call is refused: it carries the gateway session token where `X-AUTH-TOKEN` needs the person's login token. Processing documents the person uploads needs certification as a Health Locker, which requires [M2](/docs/pr-90/docs/hiecm/v3/milestones/m2).
+
 ## The locker calls
 
 | Call                        | Method and path                                                        | What it returns                                                                                    |
@@ -53,6 +63,10 @@ Every call carries `REQUEST-ID`, `TIMESTAMP`, `X-CM-ID` and the gateway session 
 
 - **A notification arrived but no records did.** Raise the consent request, or the health information request under an existing consent. The notification only says that something changed.
 - **A patient call is refused.** Check that `X-AUTH-TOKEN` holds the person's login token, not the gateway session token.
+
+## Certification
+
+The cases a PHR application is tested against, each with its id, steps, expected result and the calls it exercises: [PHR application test cases](/docs/pr-90/docs/hiecm/v3/resources/test-cases/phr). Certification runs once, for the whole integration: [Go live](/docs/pr-90/docs/hiecm/v3/getting-started/going-live).
 
 ## Next
 

@@ -20,3 +20,5 @@ Postman, Insomnia, Hoppscotch and Bruno take this through Import, as a link or a
 | Production  | `https://apis.abdm.gov.in` |
 
 New to this? Start with [M2 Health Information Provider](/docs/pr-90/docs/hiecm/v3/milestones/m2).
+
+The cases M2 is tested against: [M2 test cases](/docs/pr-90/docs/hiecm/v3/resources/test-cases/m2).
