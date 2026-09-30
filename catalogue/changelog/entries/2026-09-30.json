@@ -1,0 +1,20 @@
+[
+  {
+    "id": "135cf7d29a1f",
+    "date": "2026-09-30",
+    "kind": "withdrawn",
+    "gateway": "nhcx",
+    "version": "v1",
+    "module": "registry",
+    "label": "Participant registry",
+    "link": "/docs/nhcx/v1/api/registry/",
+    "count": 1,
+    "items": [
+      {
+        "method": "POST",
+        "path": "/get/session",
+        "kind": "call"
+      }
+    ]
+  }
+]

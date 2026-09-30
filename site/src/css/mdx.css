@@ -1158,3 +1158,21 @@ li.docs-step:last-child {
     opacity: 1;
   }
 }
+
+/* PMJAY on NHCX: the animated scheme emblem beside the claim adjudication paragraph. */
+.pmjay-adjudication {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: var(--ifm-paragraph-margin-bottom);
+}
+.pmjay-adjudication__text > p:last-child { margin-bottom: 0; }
+.pmjay-adjudication__emblem {
+  flex: 0 0 auto;
+  width: 160px;
+  height: 160px;
+}
+@media (max-width: 600px) {
+  .pmjay-adjudication { flex-direction: column-reverse; align-items: center; }
+  .pmjay-adjudication__emblem { width: 120px; height: 120px; }
+}

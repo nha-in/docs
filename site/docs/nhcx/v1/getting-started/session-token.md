@@ -72,7 +72,7 @@ One token serves every call: the participant service, the use-case endpoints, an
 
 ## The other call named session
 
-The participant service publishes its own [`POST /get/session`](/docs/nhcx/v1/api/registry/endpoints/registry-get-session). It is a different call from the gateway sessions call above, and a request built for one fails on the other.
+The participant service publishes its own `POST /get/session`. It is not in the [Participant registry](/docs/nhcx/v1/api/registry/) reference. It is a different call from the gateway sessions call above, and a request built for one fails on the other.
 
 | | Gateway sessions call | Participant service `/get/session` |
 | :---- | :---- | :---- |
