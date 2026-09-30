@@ -158,7 +158,7 @@ func Run(ctx context.Context, cfg RunConfig, cases []Case) (int, error) {
 			return nil
 		}
 		turns, page := toTurns(c)
-		if err := svc.RespondCommand(ctx, turns, page, chat.Command{Name: c.Command, Module: c.Module}, emit); err != nil {
+		if err := svc.RespondCommand(ctx, turns, page, chat.Command{Name: c.Command, Module: c.Module, Gateway: c.Gateway}, emit); err != nil {
 			tr.Flags = append(tr.Flags, "error: "+err.Error())
 			if first == nil {
 				first = fmt.Errorf("%s: %w", c.ID, err)

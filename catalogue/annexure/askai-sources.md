@@ -13,12 +13,12 @@ One row per NHA document. `id` is stable and is what an eval case or an atom cit
 | sandbox-faq-m1 | https://sandbox.abdm.gov.in/sandbox/v3/faq | NHA sandbox FAQ, the Milestone 1 tab | 2026-09-03 | page | 0 | 23 |
 | sandbox-faq-m2 | https://sandbox.abdm.gov.in/sandbox/v3/faq | NHA sandbox FAQ, the Milestone 2 tab | 2026-09-03 | page | 0 | 17 |
 | sandbox-faq-m3 | https://sandbox.abdm.gov.in/sandbox/v3/faq | NHA sandbox FAQ, the Milestone 3 tab | 2026-09-03 | page | 0 | 16 |
-| abdm-faq-sandbox | https://abdm.gov.in/FAQ | abdm.gov.in FAQ, the Sandbox category | 2026-09-03 | page | 0 | 25 |
+| abdm-faq-sandbox | https://abdm.gov.in/FAQ | abdm.gov.in FAQ, the Sandbox category | 2026-09-03 | page | 0 | 26 |
 | abdm-faq-abha-number | https://abdm.gov.in/FAQ | abdm.gov.in FAQ, the ABHA Number category | 2026-09-03 | page | 0 | 2 |
 | abdm-faq-hpr | https://abdm.gov.in/FAQ | abdm.gov.in FAQ, the Healthcare Professionals Registry category | 2026-09-03 | page | 0 | 0 |
 | abdm-faq-hfr | https://abdm.gov.in/FAQ | abdm.gov.in FAQ, the Health Facility Registry category | 2026-09-03 | page | 0 | 0 |
 | abdm-faq-general | https://abdm.gov.in/FAQ | abdm.gov.in FAQ, the General category | 2026-09-03 | page | 0 | 24 |
-| glossary | site/docs/_glossary/_hiecm.mdx | This portal's glossary, from which the shared glossary atoms were moved | 2026-09-17 | sha256:0f8b53081bee4c0e | 0 | 26 |
+| glossary | site/docs/_glossary/_hiecm.mdx | This portal's glossary, from which the shared glossary atoms were moved | 2026-09-17 | sha256:0f8b53081bee4c0e | 0 | 29 |
 | ask-ai-panel | ai-widget/README.md | This portal's Ask AI panel: what the assistant does, what a reader can give it, what it keeps and what it will not do | 2026-09-23 | sha256:969f1a400a866759 | 1 | 5 |
 | build-with-ai | site/docs/hiecm/v3/getting-started/build-with-ai.mdx | This portal's Build with AI page: the Docs MCP server, the plugin, the skills and the Ask AI panel, which the terse portal feature cases point at instead of an ABDM fact | 2026-09-29 | sha256:ebd90fbc86e76710 | 0 | 5 |
 | api-reference-m3 | site/docs/hiecm/v3/api/m3/index.mdx | This portal's M3 API reference overview, one of the module pages that offer a Postman collection and the shared sandbox environment | 2026-09-29 | sha256:ae7c7ecc1d1fbf0c | 0 | 2 |

@@ -1,0 +1,38 @@
+{
+  "id": "naive-abdm-integrate-01",
+  "slice": "naive",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "how can i integrate with ABDM"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "gateway": "hiecm",
+  "must_contain": [
+    "Integration starts with an application to integrate the digital health solution in the ABDM sandbox",
+    "ABDM integration is divided into milestones, and an integrator implements the ones that apply to its software"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom",
+    "abdm through hie-cm",
+    "integrate with abdm through hie-cm"
+  ],
+  "expected_sources": [
+    "shared.sandbox.first-fifteen-minutes"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#abdm-faq-sandbox",
+  "catalogue_version": "2026.09.16",
+  "notes": "NHA review of 30 September 2026: 'How can I integrate with ABDM?' was answered as integrating 'through HIE-CM'. ABDM is the umbrella; HIE-CM, UHI and NHCX are its gateways. Source lines: shared.sandbox.first-fifteen-minutes ('you apply to integrate your digital health solution in the sandbox with an online application', as in faq-rephrased-abdm-sandbox-02-c); site/docs/hiecm/v3/milestones/index.mdx 'ABDM integration is divided into milestones ... Integrators should implement the milestones applicable to their software'."
+}
