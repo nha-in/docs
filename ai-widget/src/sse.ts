@@ -17,6 +17,26 @@ export type Suggestion = {id: string; title: string; prompt: string};
 export const UNREACHABLE =
   'The assistant is unreachable right now. Try again shortly.';
 
+/**
+ * What to show when the server refused the question before answering. A
+ * rate limit is not an unreachable assistant: the server's 429 carries which
+ * limit and how long to wait, and the reader is told that. Anything the
+ * panel cannot name stays UNREACHABLE.
+ */
+export function failureMessage(status: number, body: unknown): string {
+  if (status !== 429) return UNREACHABLE;
+  const b = (body ?? {}) as {limit?: string; retry_after_seconds?: number};
+  if (b.limit === 'day') {
+    return "This connection has used today's questions. The limit resets at midnight UTC.";
+  }
+  if (b.limit === 'minute') {
+    const s = Math.ceil(b.retry_after_seconds ?? 0);
+    const wait = s > 5 ? `about ${s} seconds` : 'a moment';
+    return `Too many questions in the last minute. Wait ${wait} and ask again.`;
+  }
+  return 'Too many questions in a short time. Wait a minute and ask again.';
+}
+
 type StreamHandlers = {
   onText: (delta: string) => void;
   onTool: (detail: string) => void;
