@@ -67,6 +67,8 @@ Arrives on `/v1/on_status`, again with an empty payload.
 the correlation has been retired, so the original request is dead and a retry
 needs a fresh correlation ID.
 
+A payer that hosts `/v1/status` answers from its own record. Its answer has to be consistent with the last `ClaimResponse.outcome` or `PaymentNotice` status the hospital already holds, which means persisting correlation ids against every case. Status after queued, after approve, and after payment notice are each distinct. A case that reports queued forever has never had its terminal outcome written, and a status enquiry is never treated as a submit.
+
 ### When to call it
 
 Not on a timer. The exchange delivers answers to your callback, and polling for

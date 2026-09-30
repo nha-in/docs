@@ -30,6 +30,8 @@ receive /v1/paymentnotice/on_request   the provider's acknowledgement, workflow 
 
 Three notices per claim as the money moves: 30 initiated, 31 processed by the bank, 33 settled with the UTR. Each is a separate message with its own correlation ID. Send 33 only when the bank has confirmed; under PMJAY it is the gate that lets the provider raise a shortfall claim.
 
+Send a notice only after a UTR or settlement reference exists. The money moves on your own NEFT, RTGS or IMPS rail; NHCX carries the notice, not the payment. Never represent to the hospital that payment happened on NHCX.
+
 ### What goes in the bundle
 
 A collection bundle: a `Task` with code `deliver` and an input referencing the notice, a `PaymentNotice`, a `PaymentReconciliation`, and the two `Organization`s.
@@ -52,6 +54,8 @@ The provider will check that net plus deductions equals the approved amount. Mak
 
 Arrives as a `Task` with `status = completed`, code `status`, and an output whose value is `paymentack`, with the claim number as a second output. It confirms receipt, not agreement. Record it against the claim and consider the payment lifecycle closed once the acknowledgement of 33 is in.
 
+Its outputs carry the hospital's case id and its description carries remarks. Handle a missing `caseId` or missing remarks cleanly; neither is guaranteed.
+
 A return payment, where money has to come back, has its own codes: RP1 intimation, RP2 acknowledged, RP3 failed.
 
 ## Communication requests
@@ -70,6 +74,34 @@ receive /v1/communication/on_request   the provider's acknowledgement
 Reasons, on `Task.reasonCode`: `tatquery`, `grievance`, `walletupdate`, `policychange`, `additionalinfo`, `claimArbitration`. The last is sent automatically when an appeal Task is received, so the provider knows it is in the Committee's queue.
 
 On the general network, `additionalinfo` is how a payer asks for documents outside a formal query. Under PMJAY, document queries go through the queried `ClaimResponse` instead, and this channel is for the other five.
+
+### Which workflow to send
+
+Choose the outbound workflow from the event that raised it. If the original event action contains preauth, send 24. If it contains claim, send 27. Otherwise the bundle is built as a wallet upgrade, and you set 34 explicitly when that is what is meant. Do not use a new workflow id when the hospital answers a resubmit, and do not treat a wallet upgrade or a TAT notice as a Task reprocess.
+
+| Scenario | Workflow | What you send | What the hospital receives |
+| :---- | :---- | :---- | :---- |
+| Preauthorisation document query | 24 | `casenumber`, `remarks`, `referencecorrelationid`, `referenceaction` | Task and CommunicationRequest on the case |
+| Claim document query | 27 | The same four fields | Task and CommunicationRequest on the case |
+| Wallet upgrade | 34 | `programid`, `hhid`, `careplan`, `amount`, `remarks`, `attachment`, and the coverage wallets | Task, Communication, Patient, and Coverage wallets on benefit type `30` |
+| Arbitration intimation | 36 | `registrationid` and `caseid` only | Task, code `poll` with an `include`, and a Communication keyed by case id |
+
+36 is also the code a hospital's reprocess Task arrives on, so route inbound messages by the Task, never by the workflow code alone.
+
+### Taking the hospital's answer
+
+- Accept an 18 acknowledgement, `response.partial`, only against a query you raised on 24 or 27.
+- Accept a 19 reply only while the case is still Pending. A completed case does not reopen from a reply.
+- A reference payload in the reply must resolve to a `Procedure` in the same bundle. `Procedure.identifier` of type `SNO` is the item sequence when the hospital answers line by line, and `Procedure.note` carries the item remarks.
+- On a wallet upgrade, read the hospital's 35 acknowledgement Task and persist it against the member, not against a new case number.
+
+### A wallet upgrade
+
+A wallet-upgrade intimation is usually not required on the private insurance and TPA track. Send one mid-case only when the available cover changes during an admission, for example when a top-up or a restoration benefit increases it. Reuse the 34 shape above.
+
+### A protocol response-error notice
+
+If a hospital-facing response cannot be built, send a Communication whose payload is the error code and description, instead of dropping the case silently. It is a fallback notice, not an adjudicator query. It does not replace a coded reject on the original `on_submit`; coded rejects still belong there.
 
 ### What goes in the bundle
 
@@ -100,6 +132,18 @@ Sending all three matters more than it looks, because the provider's case state 
 | 33 | The bank has confirmed settlement, and you send the UTR | Marks the case settled, reconciles the UTR against the bank statement, and acknowledges |
 
 Send 33 only when the bank has actually confirmed. Under PMJAY the acknowledgement of 33 is the gate that opens the provider's shortfall window, so sending it early opens that window against a payment that has not landed.
+
+The hospital screen maps your payment status to its own words:
+
+| Your status | What the hospital shows |
+| :---- | :---- |
+| Initiated | paid |
+| Paid | cleared |
+| Recovered | adjusted |
+| Re-Initiated | Re-Initiated |
+| Anything else, or an error | Rejected |
+
+The checkpoint is done when, after a test settlement, the hospital screen shows Paid or Initiated as designed.
 
 ## Notifying the beneficiary
 

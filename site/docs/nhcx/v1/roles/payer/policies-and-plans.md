@@ -51,7 +51,7 @@ The flags are the scheme's rules made machine-readable, and the provider's scree
 /v1/insuranceplan/request      answer on /v1/insuranceplan/on_request
 ```
 
-The request is a `Task` with code `poll` and inputs `policyNumber` and `providerId`. The answer is scoped to that provider: only the specialties and packages its empanelment allows. That scoping is a validation as much as a filter. The payer's own error codes reject a policy not allowed for the hospital, a renewal code that does not match, a policy with no specialty configured, and an HFR ID it has no enrolment for.
+The request is a `Task` with code `poll` and inputs `policyNumber` and `providerId`. The answer is scoped to that provider: only the specialties and packages its empanelment allows. That scoping is a validation as much as a filter. The payer's own error codes reject a policy not allowed for the hospital, a renewal code that does not match, a policy with no specialty configured, and an HFR ID it has no enrolment for. The sender's HFR id must match the registry unless the sender is a PHR application. A request without `policyNumber` is refused with `PAYR-1035`.
 
 Answer with a collection bundle: one `InsurancePlan`, the `Organization`s, and one `Questionnaire` per requirement. The reference sample carries 2,215 questionnaires and is 21 MB; that is what a real PMJAY plan looks like. Build the bundle from the plan master, never by hand.
 
@@ -69,3 +69,5 @@ Element tables for both are in the FHIR Reference.
 
 - Refresh is the provider's job, but a `policychange` communication from the payer is what tells providers to do it early. Send one whenever a rate or package changes.
 - Concurrency: a second plan request while the first is still being answered is refused by the reference payer with a wait-and-retry error. Design the request handler to be idempotent per correlation ID.
+- An empty plan stops the hospital: if the plan is empty, the hospital cannot start cashless. An empty specialities list in your plan master becomes an empty coverage list, and the hospital receives a plan with no packages. Treat that as a configuration fault on your side, not a gateway one.
+- The plan is done when `policyNumber` on the Task resolves to exactly one product, whose `careplancode` matches the `productid` returned on Get policy. And when a test hospital system can pick a package, see its rate and its document list, and render the STG form without a second download. [Insurance plan response, package-based](/docs/nhcx/v1/reference/fhir/insurance-plan-response-package-based) has the field mapping from a plan master to the bundle.

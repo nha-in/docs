@@ -83,6 +83,21 @@ Business refusals, "not a covered member", "policy expired", "coverage insuffici
 
 The coverage eligibility specification gives it one sentence: a payer might respond with a forward instruction asking NHCX to submit the same request to another payer. No fields or flow are published for it, so there is nothing to build against. Until they are, a request for a coverage you do not hold is a business refusal inside the sealed response, as described above. Governance and Audit lists the question to ask at onboarding.
 
+## Several purposes in one request
+
+`purpose` allows more than one value. When a request carries several, process them in the defined order of precedence: discovery, then validation, then benefits, then authorization requirements. Never re-prioritise that order. One response addresses the applicable requirements of every purpose asked. If a request carries discovery and validation, process discovery first and then validation. Validation inherently covers discovery, so the one response satisfies both without a separate transaction. The same principle applies to any other combination.
+
+The hospital's outbound JSON maps its own purposes onto the exchange's: `AUTHREQUIREMENTS` becomes `auth-requirements`, `BENEFITS` becomes `benefits`, and anything else becomes `validation`. Discovery is sent only when the hospital builds that purpose explicitly, so expect it rarely and only from systems that chose to.
+
+## What the hospital screen keeps
+
+Acknowledge within 30 seconds; decide later. Then build for what the hospital mapper keeps, which is less than the resource carries.
+
+- The hospital wallet is `allowedMoney` plus `usedMoney` on benefit type `30` only. Wallet figures on any other benefit type never reach the screen.
+- `purpose`, `outcome`, `inforce`, `status`, `disposition`, `period` and `authorizationRequired` are dropped by the hospital mapper. Do not rely on them to drive the hospital screen. Drive document collection from the insurance plan instead.
+- Patient identifiers: `PI` is the case reference. Generate one if the request has none; do not reject. `ADN` is the Aadhaar number. The provider organisation carries `NPI`, yours `NIIP`.
+- On discovery, identify the member from the Patient identifiers only, and return the products discoverable for that member. A request with no `Coverage` is valid here. Do not invent a product the registry has not linked.
+
 ## What to log
 
 Every eligibility answer is a promise the provider will rely on when it registers the patient. Keep the request, the answer, the wallet figures at that moment and the plan version they came from, so that when a claim arrives against them, the adjudicator sees what was said.

@@ -19,6 +19,9 @@ The terms this documentation uses, in the sense it uses them. Where NHA's docume
 - **NHA.** National Health Authority. Publishes the NHCX specifications, runs the exchange, and administers PMJAY.
 - **NRCeS.** National Resource Centre for EHR Standards, at C-DAC Pune. Publishes the FHIR profiles and value sets NHCX bundles must follow.
 - **IRDAI.** Insurance Regulatory and Development Authority of India. Consulted on the specifications; the registry insurers and TPAs are identified by.
+- **AHPI.** Association of Healthcare Providers India. The association of private hospitals, on the provider side of the network.
+- **HMO.** Health Maintenance Organisation. A payer that also organises the care it pays for; on the network it behaves as any other payer.
+- **NDHM.** National Digital Health Mission, the earlier name of ABDM. It survives in code-system names such as `ndhm-identifier-type-code`.
 - **PMJAY.** Pradhan Mantri Jan Arogya Yojana, the Ayushman Bharat health assurance scheme. On NHCX it is a payer with scheme-specific rules.
 - **SHA.** State Health Agency. Administers PMJAY in a state; under the trust model, the payer for that state.
 - **TPA.** Third-party administrator. Processes claims on an insurer's behalf; on the network it behaves as a payer and is the processor for the policies it handles.

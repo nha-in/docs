@@ -59,6 +59,8 @@ bearer_auth: Bearer eyJhbGciOiJSUzI1NiIs...
 
 Leaving out the `Bearer` prefix is the portal's own example of how to get a `401`.
 
+Only your backend obtains this token, never a browser application. The client secret and the token stay on the server that makes the NHCX calls.
+
 ## Keeping it fresh
 
 The token lasts 1200 seconds (20 minutes) from the moment it arrives. Build it like this:
