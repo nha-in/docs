@@ -607,4 +607,4 @@ From `uhi.flow.notto-discovery`.
 ## Where the detail is
 
 - The service: /docs/uhi/v1/services/notto
-- Every operation, with its body fields and responses: /docs/uhi/v1/api/network
+- Every operation, with its body fields and responses: /docs/uhi/v1/api/network/notto

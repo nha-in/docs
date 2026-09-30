@@ -1217,4 +1217,4 @@ From `uhi.flow.jan-aushadhi-find-medicine`.
 ## Where the detail is
 
 - The service: /docs/uhi/v1/services/jan-aushadhi
-- Every operation, with its body fields and responses: /docs/uhi/v1/api/network
+- Every operation, with its body fields and responses: /docs/uhi/v1/api/network/jan-aushadhi
