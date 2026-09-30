@@ -95,3 +95,44 @@ func TestTemperatureOmittedForOpenAIReasoningModels(t *testing.T) {
 		}
 	}
 }
+
+// Reasoning effort reaches an OpenAI GPT-5 or GPT-6 model as
+// additionalModelRequestFields.reasoning.effort, the shape Bedrock's Converse
+// accepts for them; the flat reasoning_effort key is rejected as an unknown
+// parameter. Any other family gets no field, and an empty effort sends none.
+func TestReasoningFieldsGoOnlyToOpenAIReasoningModels(t *testing.T) {
+	for _, id := range []string{"global.openai.gpt-5.6-terra", "in.openai.gpt-5.6-terra", "global.openai.gpt-6-luna"} {
+		doc := reasoningFieldsFor(id, "medium")
+		if doc == nil {
+			t.Fatalf("%s: no reasoning field sent", id)
+		}
+		b, err := doc.MarshalSmithyDocument()
+		if err != nil {
+			t.Fatal(err)
+		}
+		if string(b) != `{"reasoning":{"effort":"medium"}}` {
+			t.Errorf("%s: sent %s", id, b)
+		}
+	}
+	for _, id := range []string{"global.anthropic.claude-sonnet-5-5", "openai.gpt-oss-120b-1:0", "amazon.nova-pro-v1:0"} {
+		if reasoningFieldsFor(id, "medium") != nil {
+			t.Errorf("%s: a reasoning field was sent to a model that does not take it", id)
+		}
+	}
+	if reasoningFieldsFor("global.openai.gpt-5.6-terra", "") != nil {
+		t.Error("an empty effort must send no field, so the provider default applies")
+	}
+}
+
+func TestValidReasoningEffort(t *testing.T) {
+	for _, e := range []string{"", "none", "low", "medium", "high", "xhigh", "max"} {
+		if !ValidReasoningEffort(e) {
+			t.Errorf("%q rejected", e)
+		}
+	}
+	for _, e := range []string{"Medium", "minimal", "extreme"} {
+		if ValidReasoningEffort(e) {
+			t.Errorf("%q accepted", e)
+		}
+	}
+}

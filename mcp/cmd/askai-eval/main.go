@@ -80,6 +80,8 @@ func runCmd(args []string) error {
 	// saying so anywhere the scorecard can be compared against.
 	provider := fs.String("embed-provider", envOr("EMBED_PROVIDER", ""), "bedrock, ollama or none; required, no default")
 	temp := fs.Float64("temperature", 0.1, "sampling temperature")
+	// The same default the server runs with, so a run measures production.
+	effort := fs.String("reasoning-effort", envOr("CHAT_REASONING_EFFORT", "medium"), "reasoning effort for OpenAI GPT-5 and GPT-6 models; empty sends none")
 	only := fs.String("only", "", "comma separated case ids to run, empty runs all")
 	fs.Parse(args)
 	if *out == "" || *modelID == "" {
@@ -121,7 +123,10 @@ func runCmd(args []string) error {
 	if err != nil {
 		return err
 	}
-	model, err := chat.NewBedrockModel(context.Background(), *region, *modelID, float32(*temp))
+	if !chat.ValidReasoningEffort(*effort) {
+		return fmt.Errorf("run: -reasoning-effort must be none, low, medium, high, xhigh, max or empty, got %q", *effort)
+	}
+	model, err := chat.NewBedrockModel(context.Background(), *region, *modelID, float32(*temp), chat.WithReasoningEffort(*effort))
 	if err != nil {
 		return err
 	}
