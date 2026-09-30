@@ -2,7 +2,7 @@ import {Fragment, render} from 'preact';
 import {useEffect, useRef, useState} from 'preact/hooks';
 import ChatMarkdown, {CopyButton, absolute, headings} from './markdown';
 import {ArrowUp, ChevronRight, FileText, Paperclip, Plus, Sparkles, X} from './icons';
-import {readStream, UNREACHABLE, type Source, type Link, type Suggestion} from './sse';
+import {readStream, UNREACHABLE, type Source, type Link, type Suggestion, failureMessage} from './sse';
 import {
   AGENTS,
   TOOLS,
@@ -892,7 +892,14 @@ function Panel({
           ...(gateway ? {gateway} : {}),
         }),
       });
-      if (!res.ok || !res.body) throw new Error(`status ${res.status}`);
+      if (!res.ok) {
+        // A refusal the server explained (a rate limit) is shown as what it
+        // is; every other failure is the assistant being unreachable.
+        const body = await res.json().catch(() => null);
+        emit(failureMessage(res.status, body));
+        return;
+      }
+      if (!res.body) throw new Error(`status ${res.status}`);
       await readStream(res.body, {
         onText: emit,
         onTool: (detail) => setActivity(detail),
