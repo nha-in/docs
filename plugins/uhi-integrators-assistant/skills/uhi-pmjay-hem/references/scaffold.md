@@ -592,4 +592,4 @@ From `uhi.flow.pmjay-hem-discovery`.
 ## Where the detail is
 
 - The service: /docs/uhi/v1/services/pmjay-hem
-- Every operation, with its body fields and responses: /docs/uhi/v1/api/network
+- Every operation, with its body fields and responses: /docs/uhi/v1/api/network/pmjay-hem

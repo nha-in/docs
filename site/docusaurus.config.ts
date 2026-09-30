@@ -284,23 +284,47 @@ function groupUseCases(items: any[]): any[] {
 }
 
 /**
- * UHI's network module holds four services, PM-JAY HEM, Blood Bank, Jan
- * Aushadhi and NOTTO, beside Physical Consultation and Ambulance Booking,
- * which are modules of their own. Nesting four of the six under "Network and
- * discovery" put a click between a reader and their service, so the module
- * unwraps: its overview stays as a link, each service sits at the top level,
- * and the one call outside every journey, the registry lookup, is a link
- * rather than a folder of one.
+ * UHI's API reference, one category per service, in the order the Docs tab
+ * lists them. Clicking a service opens its overview page (api/<service>/),
+ * which carries the Postman collection, as an HIE-CM module's does.
+ *
+ * Physical Consultation and Ambulance Booking are modules of their own. The
+ * other four are journeys inside the network module's specification, so
+ * their groups are lifted out of it and given their overview page; the
+ * module itself has no page. The registry lookup, the one network call in no
+ * journey, closes the list as a link.
  */
-function servicesAtTheTop(items: any[]): any[] {
-  return items.flatMap((item: any) => {
-    if (item.type !== 'category' || !(firstDocId(item) ?? '').includes('/api/network/')) return [item];
-    const overview = item.link?.type === 'doc' ? [{type: 'doc', id: item.link.id, label: item.label}] : [];
-    const children = (item.items ?? []).map((child: any) =>
-      child.type === 'category' && child.items?.length === 1 && child.items[0].type === 'doc' ? child.items[0] : child,
-    );
-    return [...overview, ...children];
-  });
+const UHI_SERVICES: {id: string; label: string; icon: string; journeys?: RegExp}[] = [
+  {id: 'consultation', label: 'Physical Consultation', icon: 'stethoscope'},
+  {id: 'pmjay-hem', label: 'PM-JAY HEM', icon: 'hospital', journeys: /\/endpoints\/uhi-pmjay-hem\//},
+  {id: 'blood-bank', label: 'Blood Bank', icon: 'droplet', journeys: /\/endpoints\/uhi-blood-bank\//},
+  {id: 'ambulance', label: 'Ambulance Booking', icon: 'ambulance'},
+  {id: 'jan-aushadhi', label: 'Jan Aushadhi', icon: 'pill', journeys: /\/endpoints\/uhi-jan-aushadhi-/},
+  {id: 'notto', label: 'NOTTO', icon: 'hospital', journeys: /\/endpoints\/uhi-notto\//},
+];
+
+function servicesAtTheTop(items: any[], dirName: string): any[] {
+  const id = (item: any) => firstDocId(item) ?? item.link?.id ?? '';
+  const network = items.find((item: any) => item.type === 'category' && id(item).includes('/api/network/'));
+  const groups: any[] = network?.items ?? [];
+  // Consultation and Ambulance have a module folder of their own; the other
+  // four keep their overview in the network module's folder, which the
+  // reference generator keeps (it removes any api/ folder that is not a module).
+  const overview = (service: string, own: boolean) => (own ? `${dirName}/${service}/index` : `${dirName}/network/${service}`);
+  const services = UHI_SERVICES.map((service) => {
+    const className = `sidebar-icon sidebar-icon--${service.icon}`;
+    const link = {type: 'doc', id: overview(service.id, !service.journeys)};
+    if (!service.journeys) {
+      const module = items.find((item: any) => item.type === 'category' && id(item).includes(`/api/${service.id}/`));
+      return module && {...module, label: service.label, className, link};
+    }
+    const group = groups.find((g: any) => service.journeys!.test(id(g)));
+    return group && {type: 'category', label: service.label, className, collapsed: true, link, items: group.items ?? []};
+  }).filter(Boolean);
+  const lookup = groups.flatMap((g: any) => (g.type === 'category' ? g.items ?? [] : [g])).find(
+    (item: any) => item.type === 'doc' && item.id.endsWith('/uhi-network-registry-lookup'),
+  );
+  return [...services, ...(lookup ? [lookup] : [])];
 }
 
 async function sidebarItemsGenerator({defaultSidebarItemsGenerator, ...args}: any) {
@@ -337,7 +361,7 @@ async function sidebarItemsGenerator({defaultSidebarItemsGenerator, ...args}: an
     items.filter((item: any) => !(item.type === 'doc' && item.id === `${dirName}/index`));
   if (dirName.endsWith('/api')) {
     const modules = groupUseCases(spliceEndpoints(withoutIndex()));
-    return dirName.startsWith('uhi/') ? servicesAtTheTop(modules) : modules;
+    return dirName.startsWith('uhi/') ? servicesAtTheTop(modules, dirName) : modules;
   }
   if (dirName.endsWith('/troubleshooting') || dirName.endsWith('/go-live')) {
     return withoutIndex();

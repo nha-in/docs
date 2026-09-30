@@ -1,14 +1,20 @@
 ---
 title: Physical Consultation
-sidebar_label: Overview
+sidebar_label: Physical Consultation
 sidebar_position: 0
 description: Physical Consultation's calls from init to on_message, direct between EUA and HSPA, and the four audit copies the HSPA sends the UHI Gateway.
 source: UHI Gateway spec v2.0.2; UHI developer guide as of 22 September 2026, section 1.2 and Open points
 ---
 
+import PostmanCollection from '@site/src/components/docs/PostmanCollection';
+
 # Physical Consultation
 
 Book, fulfil and cancel a physical consultation. After discovery, the [EUA](/docs/uhi/v1/getting-started/glossary#eua) and the [HSPA](/docs/uhi/v1/getting-started/glossary#hspa) call each other directly. The HSPA sends the [UHI Gateway](/docs/uhi/v1/getting-started/glossary#uhi-gateway) an [audit copy](/docs/uhi/v1/getting-started/glossary#audit-copy) of each callback that changes an order.
+
+## Postman collection
+
+<PostmanCollection service="consultation" />
 
 ## What it holds
 
@@ -34,7 +40,7 @@ Sign every call first. See [Signing](/docs/uhi/v1/concepts/signing).
 
 ## Pairs with
 
-- [Network and discovery](/docs/uhi/v1/api/network) holds the search calls the discovery journey walks, and the registry lookup you need before `init`.
+- [Look up a network participant](/docs/uhi/v1/api/network/endpoints/uhi-network-registry-lookup) returns the HSPA's public key, which you need before `init`.
 - [Routes](/docs/uhi/v1/concepts/routes) shows which calls go direct and where the audit copies go.
 
 New to this? Start with [Physical Consultation](/docs/uhi/v1/services/consultation).
