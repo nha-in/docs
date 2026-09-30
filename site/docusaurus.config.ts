@@ -577,7 +577,7 @@ const config: Config = {
           {from: '/docs/hiecm/v3/api/subscription/endpoints/subscription-subscription-hiu/03-subscription-post-v3-hiu-subscription-requests-hiu-notify', to: '/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/03-p3-post-v3-hiu-subscription-requests-hiu-notify'},
           {from: '/reference/hiecm-subscription', to: '/reference/hiecm-p3'},
           // The HIE-CM test case pages sat under resources/testing/ until 17 September 2026.
-          {from: '/docs/hiecm/v3/resources/testing', to: '/docs/hiecm/v3/resources'},
+          {from: '/docs/hiecm/v3/resources/testing', to: '/docs/hiecm/v3/resources/'},
           {from: '/docs/hiecm/v3/resources/testing/m1', to: '/docs/hiecm/v3/resources/m1'},
           {from: '/docs/hiecm/v3/resources/testing/m2', to: '/docs/hiecm/v3/resources/m2'},
           {from: '/docs/hiecm/v3/resources/testing/m3', to: '/docs/hiecm/v3/resources/m3'},
