@@ -1,0 +1,38 @@
+{
+  "id": "naive-phr-milestones-01",
+  "slice": "naive",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "What are the milestones in PHR creation"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "gateway": "hiecm",
+  "must_contain": [
+    "Building a PHR application is four ABDM milestones in order: P1, P2, P3 and P4",
+    "P1 is registration and login, P2 finds and links records, P3 covers subscriptions, consent and fetching records, and P4 is a health locker that keeps records for the long term"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom",
+    "three milestones",
+    "three phr milestones"
+  ],
+  "expected_sources": [
+    "shared.glossary.phr"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#glossary",
+  "catalogue_version": "2026.09.16",
+  "notes": "NHA PHR review, 30 September 2026, case 3: the panel said 'three milestones' and left P4 out, because the milestones page's own description said 'the three PHR milestones' and the PHR entry named none. Source lines: catalogue/shared/glossary/phr.md, 'Building one is four ABDM milestones, in order: P1 ... P2 ... P3 ... P4'."
+}

@@ -41,7 +41,7 @@ them. A health locker builds on [P3 Subscription](./p3): it uses the same
 subscription and consent calls, and adds the locker setup and settings calls on
 this page.
 
-## How a health locker receives records
+## How a health locker receives records {/* #p4-receive-records */}
 
 1. **Set up the locker for the patient.** Call setup locker with the locker's
    identifier in `X-LOCKER-ID`. The response carries a `consentAutoApprovalId`.
@@ -60,6 +60,16 @@ this page.
 A notification carries no health records. The records arrive only through the
 health information request that follows a granted consent, as described in
 [P3 Subscription](./p3).
+
+<AgentOnly>
+**Before you start.** The app is a PHR application with [P1](./p1) login and the [P3](./p3) subscription and consent calls, and the person is signed in. The calls about a patient carry `X-AUTH-TOKEN`, the person's login token, not the gateway session token.
+
+**What happens.** Set up the locker with `X-LOCKER-ID` and keep the `consentAutoApprovalId` it returns. Subscribe to the ABHA address as a health locker; the subscription is approved automatically. On a `LINK` notification, raise a consent request and, once the person grants it, the health information request. On a `DATA` notification, reuse a consent that covers the health information type and date range. Store what arrives.
+
+**How you know it worked.** Setup locker answers 200 with a `consentAutoApprovalId`. The lockers call lists the locker for the ABHA address with `isActive` true, and its settings show subscriptions with status `GRANTED`.
+
+**When it goes wrong.** A notification arrived but no records did: the notification only says something changed, so raise the consent request or the health information request. A patient call is refused: it carries the gateway session token where `X-AUTH-TOKEN` needs the person's login token. Processing documents the person uploads needs certification as a Health Locker, which requires [M2](./m2).
+</AgentOnly>
 
 ## The locker calls
 
