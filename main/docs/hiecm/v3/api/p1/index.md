@@ -21,3 +21,5 @@ Postman, Insomnia, Hoppscotch and Bruno take this through Import, as a link or a
 | Session token                         | Sandbox     | `https://dev.abdm.gov.in`                         |
 
 New to this? Start with [P1 Registration and login](/docs/main/docs/hiecm/v3/milestones/p1).
+
+The cases a PHR application is tested against: [PHR application test cases](/docs/main/docs/hiecm/v3/resources/test-cases/phr).

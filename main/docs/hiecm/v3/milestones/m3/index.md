@@ -155,10 +155,13 @@ Notes for AI agents
 
 **When it goes wrong.** The chain stops between fetch, request and push: find the missing step on [accepted, then nothing](/docs/main/docs/hiecm/v3/troubleshooting/accepted-then-nothing), and check the `dataPushUrl` you sent rather than your registered callback URL. `ABDM-1062`, consent not granted: the patient revoked or the grant lapsed mid flow. `ABDM-1112`: the artefact id is invalid or already expired. A transfer that never arrives can be checked with the status call against its `transactionId`.
 
+## Certification
+
+The cases M3 is tested against, each with its id, steps, expected result and the calls it exercises: [M3 test cases](/docs/main/docs/hiecm/v3/resources/test-cases/m3). Certification runs once, for the whole integration: [Go live](/docs/main/docs/hiecm/v3/getting-started/going-live).
+
 ## Next
 
 - The calls, callbacks and error codes: [M3 API reference](/docs/main/docs/hiecm/v3/api/m3).
-- The cases M3 is tested against: the certification pack NHA issues. Certification runs once, for the whole integration: [Go live](/docs/main/docs/hiecm/v3/getting-started/going-live).
 - Receive records a patient pushes from their app: [Patient record share](/docs/main/docs/hiecm/v3/use-cases/patient-record-share).
 - The next milestone: [M4 Registry Integration](/docs/main/docs/hiecm/v3/milestones/m4).
 

@@ -185,11 +185,14 @@ Notes for AI agents
 
 **When it goes wrong.** The OTP goes to the new number, not the old one, so a person who cannot receive it there cannot change it. A scope on the verify call that differs from the request is refused: send the same array on both.
 
+## Certification
+
+The cases M1 is tested against, each with its id, steps, expected result and the calls it exercises: [M1 test cases](/docs/main/docs/hiecm/v3/resources/test-cases/m1). Certification runs once, for the whole integration: [Go live](/docs/main/docs/hiecm/v3/getting-started/going-live).
+
 ## Next
 
 - Register a patient who scanned your counter QR code: [Scan and Register](/docs/main/docs/hiecm/v3/use-cases/scan-and-register).
 - The calls, base URLs and error shapes: [M1 API reference](/docs/main/docs/hiecm/v3/api/m1).
-- Certification runs once, for the whole integration: [Go live](/docs/main/docs/hiecm/v3/getting-started/going-live).
 - The next milestone: [M2 Health Information Provider](/docs/main/docs/hiecm/v3/milestones/m2).
 
 ```mermaid

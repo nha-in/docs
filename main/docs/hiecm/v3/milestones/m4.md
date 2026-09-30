@@ -77,7 +77,7 @@ How to use it
 
 M4 does not have a separate certification process. A single exit process covers the complete integration and is conducted once all the required milestones for your role are working end to end.
 
-The [Going live](/docs/main/docs/hiecm/v3/getting-started/going-live) process outlines the four steps involved and the requirements for each step. The cases used for certification are covered under the M4 testing use cases, in [Developer resources](/docs/main/docs/hiecm/v3/resources).
+The [Going live](/docs/main/docs/hiecm/v3/getting-started/going-live) process outlines the four steps involved and the requirements for each step. The cases used for certification are covered under the [M4 testing use cases](/docs/main/docs/hiecm/v3/resources/test-cases/m4), in Developer resources.
 
 ## The journey, step by step
 

@@ -83,6 +83,10 @@ Notes for AI agents
 
 **When it goes wrong.** `ABDM-1112`: the artefact is invalid or already expired. Revocation is the person exercising a right, so handle it as a state, not as an error. Records fetched but not stored disappear when the consent window closes. Test every HI type the app may receive, structured and unstructured, not only one.
 
+## Certification
+
+The cases a PHR application is tested against, each with its id, steps, expected result and the calls it exercises: [PHR application test cases](/docs/main/docs/hiecm/v3/resources/test-cases/phr). Certification runs once, for the whole integration: [Go live](/docs/main/docs/hiecm/v3/getting-started/going-live).
+
 ## Next
 
 - The calls and base URLs: [P3 API reference](/docs/main/reference/hiecm-p3).

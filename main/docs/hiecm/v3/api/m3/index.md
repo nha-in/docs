@@ -13,3 +13,5 @@ Request patient consent, track its status, and fetch the health records a grante
 Postman, Insomnia, Hoppscotch and Bruno take this through Import, as a link or as the downloaded file.
 
 New to this? Start with [M3 Health Information User](/docs/main/docs/hiecm/v3/milestones/m3).
+
+The cases M3 is tested against: [M3 test cases](/docs/main/docs/hiecm/v3/resources/test-cases/m3).

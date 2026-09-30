@@ -64,6 +64,10 @@ Every call carries `REQUEST-ID`, `TIMESTAMP`, `X-CM-ID` and the gateway session 
 - **A notification arrived but no records did.** Raise the consent request, or the health information request under an existing consent. The notification only says that something changed.
 - **A patient call is refused.** Check that `X-AUTH-TOKEN` holds the person's login token, not the gateway session token.
 
+## Certification
+
+The cases a PHR application is tested against, each with its id, steps, expected result and the calls it exercises: [PHR application test cases](/docs/main/docs/hiecm/v3/resources/test-cases/phr). Certification runs once, for the whole integration: [Go live](/docs/main/docs/hiecm/v3/getting-started/going-live).
+
 ## Next
 
 - The calls and base URLs: [P4 API reference](/docs/main/reference/hiecm-p4).

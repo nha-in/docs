@@ -2,9 +2,9 @@
 
 This section contains the test scenarios applicable for ABDM integration and certification. Test cases are organized module-wise and include the corresponding test case identifiers used during the certification process. Additional developer resources and implementation guidance may be added to this section as they become available.
 
-## Testing use cases
+## Test cases
 
-The certification pack NHA issues names the cases each milestone is tested against.
+The checks your integration has to pass before it goes live, one page per module, each case with its id and the APIs it calls. [Test cases](/docs/main/docs/hiecm/v3/resources/test-cases) explains how to read them and lists every module.
 
 ## ABDM integration resources
 
@@ -28,4 +28,5 @@ Explore planned reference workflows for ABDM integration and follow the progress
 
 ## Next
 
-- The calls each case exercises: [API references](/docs/main/docs/hiecm/v3/api).
+- The checks your integration has to pass: [Test cases](/docs/main/docs/hiecm/v3/resources/test-cases).
+- Where functional testing fits in the route to production: [Go live](/docs/main/docs/hiecm/v3/getting-started/going-live).

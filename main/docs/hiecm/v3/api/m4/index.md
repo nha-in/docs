@@ -19,3 +19,5 @@ Postman, Insomnia, Hoppscotch and Bruno take this through Import, as a link or a
 | HPR and HFR calls | Sandbox     | `https://apihspsbx.abdm.gov.in/v4/int/` |
 
 New to this? Start with [M4 Registry Integration](/docs/main/docs/hiecm/v3/milestones/m4).
+
+The cases M4 is tested against: [M4 test cases](/docs/main/docs/hiecm/v3/resources/test-cases/m4).

@@ -19,3 +19,5 @@ Postman, Insomnia, Hoppscotch and Bruno take this through Import, as a link or a
 | Subscription calls | Sandbox     | `https://dev.abdm.gov.in` |
 
 New to this? Start with [P3 Subscription](/docs/main/docs/hiecm/v3/milestones/p3).
+
+The cases a PHR application is tested against: [PHR application test cases](/docs/main/docs/hiecm/v3/resources/test-cases/phr).
