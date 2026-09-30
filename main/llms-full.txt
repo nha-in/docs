@@ -66258,6 +66258,16 @@ Shape of the 200 response, generated from the schema. The values are placeholder
 
 Send a patient's details to the chosen ambulance provider and get a quote and terms back. Phase 1 covers discovery and the quote. The [EUA](/docs/main/docs/uhi/v1/getting-started/glossary#eua) sends `init` directly to the [HSPA](/docs/main/docs/uhi/v1/getting-started/glossary#hspa), and the HSPA answers with `on_init`.
 
+## Postman collection
+
+7 requests in the order you build them, and a sandbox environment to fill in. Sign each body with the Header Generation Utility and paste the header before you send.
+
+[Collection](/docs/main/postman/uhi-ambulance.postman_collection.json)[Environment](/docs/main/postman/uhi-sandbox.postman_environment.json)
+
+`https://nha-in.github.io/docs/main/postman/uhi-ambulance.postman_collection.json`
+
+Postman, Insomnia, Hoppscotch and Bruno take this through Import, as a link or as the downloaded file.
+
 ## What it holds
 
 | Call            | Served by | What it does                            |
@@ -66278,7 +66288,7 @@ Sign every call first. See [Signing](/docs/main/docs/uhi/v1/concepts/signing).
 
 ## Pairs with
 
-- [Network and discovery](/docs/main/docs/uhi/v1/api/network) holds the search calls the discovery journey walks, and the registry lookup you need before `init`.
+- [Look up a network participant](/docs/main/docs/uhi/v1/api/network/endpoints/uhi-network-registry-lookup) returns the HSPA's public key, which you need before `init`.
 - [Routes](/docs/main/docs/uhi/v1/concepts/routes) shows which calls go through the Gateway and which go direct.
 
 New to this? Start with [Ambulance Booking](/docs/main/docs/uhi/v1/services/ambulance).
@@ -72195,6 +72205,16 @@ Shape of the 200 response, generated from the schema. The values are placeholder
 
 Book, fulfil and cancel a physical consultation. After discovery, the [EUA](/docs/main/docs/uhi/v1/getting-started/glossary#eua) and the [HSPA](/docs/main/docs/uhi/v1/getting-started/glossary#hspa) call each other directly. The HSPA sends the [UHI Gateway](/docs/main/docs/uhi/v1/getting-started/glossary#uhi-gateway) an [audit copy](/docs/main/docs/uhi/v1/getting-started/glossary#audit-copy) of each callback that changes an order.
 
+## Postman collection
+
+23 requests in the order you build them, and a sandbox environment to fill in. Sign each body with the Header Generation Utility and paste the header before you send.
+
+[Collection](/docs/main/postman/uhi-consultation.postman_collection.json)[Environment](/docs/main/postman/uhi-sandbox.postman_environment.json)
+
+`https://nha-in.github.io/docs/main/postman/uhi-consultation.postman_collection.json`
+
+Postman, Insomnia, Hoppscotch and Bruno take this through Import, as a link or as the downloaded file.
+
 ## What it holds
 
 | Stage           | Calls                                                                                           |
@@ -72219,7 +72239,7 @@ Sign every call first. See [Signing](/docs/main/docs/uhi/v1/concepts/signing).
 
 ## Pairs with
 
-- [Network and discovery](/docs/main/docs/uhi/v1/api/network) holds the search calls the discovery journey walks, and the registry lookup you need before `init`.
+- [Look up a network participant](/docs/main/docs/uhi/v1/api/network/endpoints/uhi-network-registry-lookup) returns the HSPA's public key, which you need before `init`.
 - [Routes](/docs/main/docs/uhi/v1/concepts/routes) shows which calls go direct and where the audit copies go.
 
 New to this? Start with [Physical Consultation](/docs/main/docs/uhi/v1/services/consultation).
@@ -72250,6 +72270,49 @@ This page lists every module, including any that the role you have chosen does n
 6 endpoints across 2 use cases: Discovery, Order. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/docs/main/reference/uhi-ambulance)
+
+
+---
+
+# Blood Bank
+
+Find blood in stock by group and component. The [EUA](/docs/main/docs/uhi/v1/getting-started/glossary#eua) sends one search through the [UHI Gateway](/docs/main/docs/uhi/v1/getting-started/glossary#uhi-gateway), and every registered blood bank [HSPA](/docs/main/docs/uhi/v1/getting-started/glossary#hspa) answers with its own `on_search`. Discovery only: the patient contacts the blood bank.
+
+## Postman collection
+
+5 requests in the order you build them, and a sandbox environment to fill in. Sign each body with the Header Generation Utility and paste the header before you send.
+
+[Collection](/docs/main/postman/uhi-blood-bank.postman_collection.json)[Environment](/docs/main/postman/uhi-sandbox.postman_environment.json)
+
+`https://nha-in.github.io/docs/main/postman/uhi-blood-bank.postman_collection.json`
+
+Postman, Insomnia, Hoppscotch and Bruno take this through Import, as a link or as the downloaded file.
+
+## What it holds
+
+| Call                         | Served by   | What it does                                      |
+| ---------------------------- | ----------- | ------------------------------------------------- |
+| `POST /api/v1/uhi/search`    | UHI Gateway | Takes the EUA's search and passes it to the HSPA  |
+| `POST /search`               | HSPA        | Receives the search the Gateway forwards          |
+| `POST /api/v1/uhi/on_search` | UHI Gateway | Takes the HSPA's catalog and passes it to the EUA |
+| `POST /on_search`            | EUA         | Receives the catalog at its `consumer_uri`        |
+
+Every Blood Bank call uses `context.domain` `nic2008:86906` and `fulfillment.type` `BloodStock`.
+
+## Journey
+
+| Journey                                                                                                            | What it covers                                                                                |
+| ------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------- |
+| [Blood stock discovery](/docs/main/docs/uhi/v1/api/network/endpoints/uhi-blood-bank/01-uhi-network-gateway-search) | The Gateway search for a blood group and component, and the `on_search` each blood bank sends |
+
+Sign every call first. See [Signing](/docs/main/docs/uhi/v1/concepts/signing).
+
+## Pairs with
+
+- [Look up a network participant](/docs/main/docs/uhi/v1/api/network/endpoints/uhi-network-registry-lookup) returns the public key you check the HSPA's signature with.
+- [Routes](/docs/main/docs/uhi/v1/concepts/routes) shows which calls go through the Gateway.
+
+New to this? Start with [Blood Bank](/docs/main/docs/uhi/v1/services/blood-bank).
 
 
 ---
@@ -76754,49 +76817,133 @@ Shape of the 200 response, generated from the schema. The values are placeholder
 
 ---
 
-# Network and discovery
+# Jan Aushadhi
 
-Every [UHI](/docs/main/docs/uhi/v1/getting-started/glossary#uhi) service starts here. This module holds the discovery calls that go through the [UHI Gateway](/docs/main/docs/uhi/v1/getting-started/glossary#uhi-gateway), and the lookup that returns another participant's public key.
+Find Jan Aushadhi Kendras and generic medicines. The [EUA](/docs/main/docs/uhi/v1/getting-started/glossary#eua) searches through the [UHI Gateway](/docs/main/docs/uhi/v1/getting-started/glossary#uhi-gateway), and the PMBI [HSPA](/docs/main/docs/uhi/v1/getting-started/glossary#hspa) answers with `on_search`. Three flows share one domain: find a Kendra, find a medicine, then find the Kendras that stock it.
+
+## Postman collection
+
+13 requests in the order you build them, and a sandbox environment to fill in. Sign each body with the Header Generation Utility and paste the header before you send.
+
+[Collection](/docs/main/postman/uhi-jan-aushadhi.postman_collection.json)[Environment](/docs/main/postman/uhi-sandbox.postman_environment.json)
+
+`https://nha-in.github.io/docs/main/postman/uhi-jan-aushadhi.postman_collection.json`
+
+Postman, Insomnia, Hoppscotch and Bruno take this through Import, as a link or as the downloaded file.
 
 ## What it holds
 
-| Call                                  | Served by   | What it does                                                                                                                                                                        |
-| ------------------------------------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `POST /api/v1/uhi/search`             | UHI Gateway | Takes the [EUA](/docs/main/docs/uhi/v1/getting-started/glossary#eua)'s search and broadcasts it to every [HSPA](/docs/main/docs/uhi/v1/getting-started/glossary#hspa) in the domain |
-| `POST /search`                        | HSPA        | Receives the search the Gateway forwards                                                                                                                                            |
-| `POST /api/v1/uhi/on_search`          | UHI Gateway | Takes an HSPA's catalog for the EUA                                                                                                                                                 |
-| `POST /on_search`                     | EUA         | Receives the catalog on the EUA's `consumer_uri`                                                                                                                                    |
-| `POST /api/v1/networkregistry/lookup` | UHI Gateway | Returns another participant's public key and details. [Look up a participant](/docs/main/docs/uhi/v1/api/network/endpoints/uhi-network-registry-lookup)                             |
+| Call                         | Served by   | What it does                                      |
+| ---------------------------- | ----------- | ------------------------------------------------- |
+| `POST /api/v1/uhi/search`    | UHI Gateway | Takes the EUA's search and passes it to the HSPA  |
+| `POST /search`               | HSPA        | Receives the search the Gateway forwards          |
+| `POST /api/v1/uhi/on_search` | UHI Gateway | Takes the HSPA's catalog and passes it to the EUA |
+| `POST /on_search`            | EUA         | Receives the catalog at its `consumer_uri`        |
 
-Sign every call first. See [Signing](/docs/main/docs/uhi/v1/concepts/signing).
+Every Jan Aushadhi call uses `context.domain` `nic2008:47721`. The flow is set by `fulfillment.type`: `JANAUSHADHI`, `JANAUSHADHI_MEDICINE` or `JANAUSHADHI_KENDRA`.
 
 ## Journeys
 
-Each journey walks the four discovery calls with one service's own examples.
+| Journey                                                                                                                                       | What it covers                                                         |
+| --------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| [Kendra search](/docs/main/docs/uhi/v1/api/network/endpoints/uhi-jan-aushadhi-kendra-search/01-uhi-network-gateway-search)                    | Find Kendras near a location or in a district                          |
+| [Medicine search](/docs/main/docs/uhi/v1/api/network/endpoints/uhi-jan-aushadhi-medicine-search/01-uhi-network-gateway-search)                | Find a generic medicine by name                                        |
+| [Kendras for a selected medicine](/docs/main/docs/uhi/v1/api/network/endpoints/uhi-jan-aushadhi-medicine-stock/01-uhi-network-gateway-search) | Find the Kendras that stock the medicine chosen in the medicine search |
 
-| Service                       | Journey                                                                                                                                       |
-| ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| PM-JAY HEM Hospital Discovery | [PM-JAY HEM hospital discovery](/docs/main/docs/uhi/v1/api/network/endpoints/uhi-pmjay-hem/01-uhi-network-gateway-search)                     |
-| Blood Bank Discovery          | [Blood stock discovery](/docs/main/docs/uhi/v1/api/network/endpoints/uhi-blood-bank/01-uhi-network-gateway-search)                            |
-| Jan Aushadhi                  | [Kendra search](/docs/main/docs/uhi/v1/api/network/endpoints/uhi-jan-aushadhi-kendra-search/01-uhi-network-gateway-search)                    |
-| Jan Aushadhi                  | [Medicine search](/docs/main/docs/uhi/v1/api/network/endpoints/uhi-jan-aushadhi-medicine-search/01-uhi-network-gateway-search)                |
-| Jan Aushadhi                  | [Kendras for a selected medicine](/docs/main/docs/uhi/v1/api/network/endpoints/uhi-jan-aushadhi-medicine-stock/01-uhi-network-gateway-search) |
-| NOTTO Hospital Discovery      | [NOTTO hospital discovery](/docs/main/docs/uhi/v1/api/network/endpoints/uhi-notto/01-uhi-network-gateway-search)                              |
-
-## Base URLs
-
-| Environment | Base URL                                |
-| ----------- | --------------------------------------- |
-| Sandbox     | `https://uhigatewaysandbox.abdm.gov.in` |
-| Production  | `https://uhigateway.abdm.gov.in`        |
+Sign every call first. See [Signing](/docs/main/docs/uhi/v1/concepts/signing).
 
 ## Pairs with
 
-- [Physical Consultation](/docs/main/docs/uhi/v1/api/consultation) and [Ambulance Booking](/docs/main/docs/uhi/v1/api/ambulance) run their discovery on these calls, then go direct between EUA and HSPA.
+- [Look up a network participant](/docs/main/docs/uhi/v1/api/network/endpoints/uhi-network-registry-lookup) returns the public key you check the HSPA's signature with.
 - [Routes](/docs/main/docs/uhi/v1/concepts/routes) shows which calls go through the Gateway.
-- [Messages and callbacks](/docs/main/docs/uhi/v1/concepts/messages) explains the `context` block and the `ACK`.
 
-New to this? Start with the [Quickstart](/docs/main/docs/uhi/v1/getting-started/first-fifteen-minutes).
+New to this? Start with [Jan Aushadhi](/docs/main/docs/uhi/v1/services/jan-aushadhi).
+
+
+---
+
+# NOTTO
+
+Find hospitals registered with NOTTO for an organ or tissue. The [EUA](/docs/main/docs/uhi/v1/getting-started/glossary#eua) sends one search through the [UHI Gateway](/docs/main/docs/uhi/v1/getting-started/glossary#uhi-gateway), and the NOTTO [HSPA](/docs/main/docs/uhi/v1/getting-started/glossary#hspa) answers with the hospitals in `on_search`. Discovery only: the patient contacts the hospital.
+
+## Postman collection
+
+5 requests in the order you build them, and a sandbox environment to fill in. Sign each body with the Header Generation Utility and paste the header before you send.
+
+[Collection](/docs/main/postman/uhi-notto.postman_collection.json)[Environment](/docs/main/postman/uhi-sandbox.postman_environment.json)
+
+`https://nha-in.github.io/docs/main/postman/uhi-notto.postman_collection.json`
+
+Postman, Insomnia, Hoppscotch and Bruno take this through Import, as a link or as the downloaded file.
+
+## What it holds
+
+| Call                         | Served by   | What it does                                      |
+| ---------------------------- | ----------- | ------------------------------------------------- |
+| `POST /api/v1/uhi/search`    | UHI Gateway | Takes the EUA's search and passes it to the HSPA  |
+| `POST /search`               | HSPA        | Receives the search the Gateway forwards          |
+| `POST /api/v1/uhi/on_search` | UHI Gateway | Takes the HSPA's catalog and passes it to the EUA |
+| `POST /on_search`            | EUA         | Receives the catalog at its `consumer_uri`        |
+
+Every NOTTO call uses `context.domain` `nic2004:86100`, `fulfillment.type` `NOTTO_HOSPITAL` and item code `NOTTO`.
+
+## Journey
+
+| Journey                                                                                                          | What it covers                                                                 |
+| ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| [NOTTO hospital discovery](/docs/main/docs/uhi/v1/api/network/endpoints/uhi-notto/01-uhi-network-gateway-search) | The Gateway search for an organ or tissue, and the `on_search` that answers it |
+
+Sign every call first. See [Signing](/docs/main/docs/uhi/v1/concepts/signing).
+
+## Pairs with
+
+- [Look up a network participant](/docs/main/docs/uhi/v1/api/network/endpoints/uhi-network-registry-lookup) returns the public key you check the HSPA's signature with.
+- [Routes](/docs/main/docs/uhi/v1/concepts/routes) shows which calls go through the Gateway.
+
+New to this? Start with [NOTTO](/docs/main/docs/uhi/v1/services/notto).
+
+
+---
+
+# PM-JAY HEM
+
+Find hospitals empanelled under PM-JAY. The [EUA](/docs/main/docs/uhi/v1/getting-started/glossary#eua) sends one search through the [UHI Gateway](/docs/main/docs/uhi/v1/getting-started/glossary#uhi-gateway), and the PM-JAY HEM [HSPA](/docs/main/docs/uhi/v1/getting-started/glossary#hspa) answers with the hospitals in one `on_search`. Discovery only: the patient calls or visits the hospital.
+
+## Postman collection
+
+5 requests in the order you build them, and a sandbox environment to fill in. Sign each body with the Header Generation Utility and paste the header before you send.
+
+[Collection](/docs/main/postman/uhi-pmjay-hem.postman_collection.json)[Environment](/docs/main/postman/uhi-sandbox.postman_environment.json)
+
+`https://nha-in.github.io/docs/main/postman/uhi-pmjay-hem.postman_collection.json`
+
+Postman, Insomnia, Hoppscotch and Bruno take this through Import, as a link or as the downloaded file.
+
+## What it holds
+
+| Call                         | Served by   | What it does                                      |
+| ---------------------------- | ----------- | ------------------------------------------------- |
+| `POST /api/v1/uhi/search`    | UHI Gateway | Takes the EUA's search and passes it to the HSPA  |
+| `POST /search`               | HSPA        | Receives the search the Gateway forwards          |
+| `POST /api/v1/uhi/on_search` | UHI Gateway | Takes the HSPA's catalog and passes it to the EUA |
+| `POST /on_search`            | EUA         | Receives the catalog at its `consumer_uri`        |
+
+Every PM-JAY HEM call uses `context.domain` `nic2004:85112`, `fulfillment.type` `PMJAYHEM` and item code `PMJAY`.
+
+## Journey
+
+| Journey                                                                                                                   | What it covers                                                                       |
+| ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| [PM-JAY HEM hospital discovery](/docs/main/docs/uhi/v1/api/network/endpoints/uhi-pmjay-hem/01-uhi-network-gateway-search) | The Gateway search for empanelled hospitals, and the one `on_search` that answers it |
+
+Sign every call first. See [Signing](/docs/main/docs/uhi/v1/concepts/signing).
+
+## Pairs with
+
+- [Look up a network participant](/docs/main/docs/uhi/v1/api/network/endpoints/uhi-network-registry-lookup) returns the public key you check the HSPA's signature with.
+- [Routes](/docs/main/docs/uhi/v1/concepts/routes) shows which calls go through the Gateway.
+
+New to this? Start with [PM-JAY HEM](/docs/main/docs/uhi/v1/services/pmjay-hem).
 
 
 ---
@@ -77160,7 +77307,7 @@ The sandbox also runs a reference EUA at `http://uhieuasandbox.abdm.gov.in/api/v
 
 - [Messages and callbacks](/docs/main/docs/uhi/v1/concepts/messages): the `context` block and the `ACK`.
 - [Signing](/docs/main/docs/uhi/v1/concepts/signing): the headers on each route.
-- [Network and discovery reference](/docs/main/docs/uhi/v1/api/network): the Gateway calls, one page each.
+- [UHI API reference](/docs/main/docs/uhi/v1/api): every call, by service, one page each.
 - [Physical Consultation reference](/docs/main/docs/uhi/v1/api/consultation): the direct calls and audit copies.
 
 ```mermaid
@@ -80611,7 +80758,7 @@ Two calls, for EUAs and HSPAs, each on its own page with a signed sample request
 
 ### Network and discovery has an API reference
 
-Five calls, for EUAs and HSPAs, each on its own page with a signed sample request. [Open the Network and discovery reference](/docs/main/docs/uhi/v1/api/network).
+Five calls, for EUAs and HSPAs, each on its own page with a signed sample request. [Open the Network and discovery reference](/docs/main/docs/uhi/v1/api/).
 
 ### One M1 Identity call withdrawn
 
@@ -80676,9 +80823,26 @@ Reinstall to move from 0.4.3. [Build with AI](/docs/main/docs/hiecm/v3/getting-s
 
 ---
 
+# 30 September 2026
+
+1 change
+
+### The uhi-integrators-assistant plugin is 0.1.1
+
+Reinstall to move from 0.1.0. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
+
+
+---
+
 # What's new
 
 Changes that affect what you can build against, newest first. Each entry links to what you can now read, run or consume.
+
+## 30 September 2026
+
+1 change
+
+- [The uhi-integrators-assistant plugin is 0.1.1](/docs/main/docs/whats-new/2026-09-30#the-uhi-integrators-assistant-plugin-is-011)
 
 ## 29 September 2026
 

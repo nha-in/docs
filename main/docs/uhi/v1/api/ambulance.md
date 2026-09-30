@@ -2,6 +2,16 @@
 
 Send a patient's details to the chosen ambulance provider and get a quote and terms back. Phase 1 covers discovery and the quote. The [EUA](/docs/main/docs/uhi/v1/getting-started/glossary#eua) sends `init` directly to the [HSPA](/docs/main/docs/uhi/v1/getting-started/glossary#hspa), and the HSPA answers with `on_init`.
 
+## Postman collection
+
+7 requests in the order you build them, and a sandbox environment to fill in. Sign each body with the Header Generation Utility and paste the header before you send.
+
+[Collection](/docs/main/postman/uhi-ambulance.postman_collection.json)[Environment](/docs/main/postman/uhi-sandbox.postman_environment.json)
+
+`https://nha-in.github.io/docs/main/postman/uhi-ambulance.postman_collection.json`
+
+Postman, Insomnia, Hoppscotch and Bruno take this through Import, as a link or as the downloaded file.
+
 ## What it holds
 
 | Call            | Served by | What it does                            |
@@ -22,7 +32,7 @@ Sign every call first. See [Signing](/docs/main/docs/uhi/v1/concepts/signing).
 
 ## Pairs with
 
-- [Network and discovery](/docs/main/docs/uhi/v1/api/network) holds the search calls the discovery journey walks, and the registry lookup you need before `init`.
+- [Look up a network participant](/docs/main/docs/uhi/v1/api/network/endpoints/uhi-network-registry-lookup) returns the HSPA's public key, which you need before `init`.
 - [Routes](/docs/main/docs/uhi/v1/concepts/routes) shows which calls go through the Gateway and which go direct.
 
 New to this? Start with [Ambulance Booking](/docs/main/docs/uhi/v1/services/ambulance).

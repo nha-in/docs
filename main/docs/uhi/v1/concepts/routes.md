@@ -97,7 +97,7 @@ The sandbox also runs a reference EUA at `http://uhieuasandbox.abdm.gov.in/api/v
 
 - [Messages and callbacks](/docs/main/docs/uhi/v1/concepts/messages): the `context` block and the `ACK`.
 - [Signing](/docs/main/docs/uhi/v1/concepts/signing): the headers on each route.
-- [Network and discovery reference](/docs/main/docs/uhi/v1/api/network): the Gateway calls, one page each.
+- [UHI API reference](/docs/main/docs/uhi/v1/api): every call, by service, one page each.
 - [Physical Consultation reference](/docs/main/docs/uhi/v1/api/consultation): the direct calls and audit copies.
 
 ```mermaid

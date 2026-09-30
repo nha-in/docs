@@ -610,4 +610,4 @@ From `uhi.flow.blood-bank-discovery`.
 ## Where the detail is
 
 - The service: /docs/uhi/v1/services/blood-bank
-- Every operation, with its body fields and responses: /docs/uhi/v1/api/network
+- Every operation, with its body fields and responses: /docs/uhi/v1/api/network/blood-bank

@@ -2,6 +2,16 @@
 
 Book, fulfil and cancel a physical consultation. After discovery, the [EUA](/docs/main/docs/uhi/v1/getting-started/glossary#eua) and the [HSPA](/docs/main/docs/uhi/v1/getting-started/glossary#hspa) call each other directly. The HSPA sends the [UHI Gateway](/docs/main/docs/uhi/v1/getting-started/glossary#uhi-gateway) an [audit copy](/docs/main/docs/uhi/v1/getting-started/glossary#audit-copy) of each callback that changes an order.
 
+## Postman collection
+
+23 requests in the order you build them, and a sandbox environment to fill in. Sign each body with the Header Generation Utility and paste the header before you send.
+
+[Collection](/docs/main/postman/uhi-consultation.postman_collection.json)[Environment](/docs/main/postman/uhi-sandbox.postman_environment.json)
+
+`https://nha-in.github.io/docs/main/postman/uhi-consultation.postman_collection.json`
+
+Postman, Insomnia, Hoppscotch and Bruno take this through Import, as a link or as the downloaded file.
+
 ## What it holds
 
 | Stage           | Calls                                                                                           |
@@ -26,7 +36,7 @@ Sign every call first. See [Signing](/docs/main/docs/uhi/v1/concepts/signing).
 
 ## Pairs with
 
-- [Network and discovery](/docs/main/docs/uhi/v1/api/network) holds the search calls the discovery journey walks, and the registry lookup you need before `init`.
+- [Look up a network participant](/docs/main/docs/uhi/v1/api/network/endpoints/uhi-network-registry-lookup) returns the HSPA's public key, which you need before `init`.
 - [Routes](/docs/main/docs/uhi/v1/concepts/routes) shows which calls go direct and where the audit copies go.
 
 New to this? Start with [Physical Consultation](/docs/main/docs/uhi/v1/services/consultation).

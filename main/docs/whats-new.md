@@ -2,6 +2,12 @@
 
 Changes that affect what you can build against, newest first. Each entry links to what you can now read, run or consume.
 
+## 30 September 2026
+
+1 change
+
+- [The uhi-integrators-assistant plugin is 0.1.1](/docs/main/docs/whats-new/2026-09-30#the-uhi-integrators-assistant-plugin-is-011)
+
 ## 29 September 2026
 
 18 changes

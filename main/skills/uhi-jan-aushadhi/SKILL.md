@@ -51,6 +51,6 @@ This file is the map. Each line above is a file beside it, opened one at a time 
 ## Where the detail is
 
 - The service: /docs/uhi/v1/services/jan-aushadhi
-- Every operation: /docs/uhi/v1/api/network
+- Every operation: /docs/uhi/v1/api/network/jan-aushadhi
 - Messages, signing, routes and errors: /docs/uhi/v1/concepts/messages
 - Terms: /docs/uhi/v1/getting-started/glossary

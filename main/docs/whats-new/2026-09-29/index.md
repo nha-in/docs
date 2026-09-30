@@ -12,7 +12,7 @@ Two calls, for EUAs and HSPAs, each on its own page with a signed sample request
 
 ### Network and discovery has an API reference
 
-Five calls, for EUAs and HSPAs, each on its own page with a signed sample request. [Open the Network and discovery reference](/docs/main/docs/uhi/v1/api/network).
+Five calls, for EUAs and HSPAs, each on its own page with a signed sample request. [Open the Network and discovery reference](/docs/main/docs/uhi/v1/api/).
 
 ### One M1 Identity call withdrawn
 
