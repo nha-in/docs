@@ -17,5 +17,6 @@
   {"from": "/docs/uhi/v1/services/ambulance-booking", "to": "/docs/uhi/v1/services/ambulance"},
   {"from": "/docs/uhi/v1/services/jan-aushadhi-kendra", "to": "/docs/uhi/v1/services/jan-aushadhi"},
   {"from": "/docs/uhi/v1/services/jan-aushadhi-medicine-search", "to": "/docs/uhi/v1/services/jan-aushadhi"},
-  {"from": "/docs/uhi/v1/services/amrit-pharmacy", "to": "/docs/uhi/v1/services"}
+  {"from": "/docs/uhi/v1/services/amrit-pharmacy", "to": "/docs/uhi/v1/services"},
+  {"from": "/docs/uhi/v1/api/network", "to": "/docs/uhi/v1/api"}
 ]

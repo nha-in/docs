@@ -1,14 +1,20 @@
 ---
 title: Ambulance Booking
-sidebar_label: Overview
+sidebar_label: Ambulance Booking
 sidebar_position: 0
 description: Ambulance Booking's Phase 1 calls, init and on_init direct between EUA and HSPA, after discovery through the UHI Gateway.
 source: UHI Gateway spec v2.0.2; UHI developer guide as of 22 September 2026, sections 1.1 and 1.2
 ---
 
+import PostmanCollection from '@site/src/components/docs/PostmanCollection';
+
 # Ambulance Booking
 
 Send a patient's details to the chosen ambulance provider and get a quote and terms back. Phase 1 covers discovery and the quote. The [EUA](/docs/uhi/v1/getting-started/glossary#eua) sends `init` directly to the [HSPA](/docs/uhi/v1/getting-started/glossary#hspa), and the HSPA answers with `on_init`.
+
+## Postman collection
+
+<PostmanCollection service="ambulance" />
 
 ## What it holds
 
@@ -30,7 +36,7 @@ Sign every call first. See [Signing](/docs/uhi/v1/concepts/signing).
 
 ## Pairs with
 
-- [Network and discovery](/docs/uhi/v1/api/network) holds the search calls the discovery journey walks, and the registry lookup you need before `init`.
+- [Look up a network participant](/docs/uhi/v1/api/network/endpoints/uhi-network-registry-lookup) returns the HSPA's public key, which you need before `init`.
 - [Routes](/docs/uhi/v1/concepts/routes) shows which calls go through the Gateway and which go direct.
 
 New to this? Start with [Ambulance Booking](/docs/uhi/v1/services/ambulance).

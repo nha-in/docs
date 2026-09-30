@@ -66,15 +66,34 @@ function buildWithAiItems(pv: string): SidebarsConfig[string] | null {
   let fenced = false;
   for (const line of readFileSync(file, 'utf8').split('\n')) {
     if (/^\s*(```|~~~)/.test(line)) fenced = !fenced;
-    const heading = !fenced && line.match(/^## (.+?)\s*(?:\{\/\*\s*#([a-z0-9-]+)\s*\*\/\}|\{#([a-z0-9-]+)\})?\s*$/);
+    const heading = !fenced && line.match(/^(##|###) (.+?)\s*(?:\{\/\*\s*#([a-z0-9-]+)\s*\*\/\}|\{#([a-z0-9-]+)\})?\s*$/);
     if (!heading) continue;
-    const label = heading[1].replace(/\s*\{\/\*.*?\*\/\}\s*$/, '');
+    const label = heading[2].replace(/\s*\{\/\*.*?\*\/\}\s*$/, '');
     // The anchor Docusaurus gives a heading: an explicit id, else the
     // heading lowercased with punctuation dropped and spaces as hyphens.
-    const id = heading[2] ?? heading[3] ?? label.toLowerCase().replace(/[^a-z0-9 -]/g, '').trim().replace(/ /g, '-');
-    sections.push({type: 'link', label, href: `${href}#${id}`});
+    const id = heading[3] ?? heading[4] ?? label.toLowerCase().replace(/[^a-z0-9 -]/g, '').trim().replace(/ /g, '-');
+    // A ### sits under its section: a sidebar category can only link to a
+    // page, never to a heading on one, so it is an indented link of its own.
+    sections.push({
+      type: 'link',
+      label,
+      href: `${href}#${id}`,
+      ...(heading[1] === '###' ? {className: 'sidebar-subsection'} : {}),
+    });
   }
-  return [{type: 'doc', id: `${pv}/${BUILD_WITH_AI}`, label: 'Build with AI'}, ...sections];
+  // The page is the parent and its sections its children, open from the
+  // start, so the sidebar reads as the page's outline.
+  return [
+    {
+      type: 'category',
+      label: 'Build with AI',
+      link: {type: 'doc', id: `${pv}/${BUILD_WITH_AI}`},
+      collapsed: false,
+      collapsible: false,
+      className: 'sidebar-icon sidebar-icon--sparkles',
+      items: sections,
+    },
+  ];
 }
 
 const sidebars: SidebarsConfig = {

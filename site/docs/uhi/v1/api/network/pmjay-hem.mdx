@@ -1,0 +1,46 @@
+---
+title: PM-JAY HEM
+sidebar_label: PM-JAY HEM
+description: "PM-JAY HEM hospital discovery: the Gateway search and the on_search that answers it, and the Postman collection that sends them."
+source: "UHI Gateway spec v2.0.2; UHI developer guide as of 22 September 2026, sections 1.2 and 2.2"
+---
+
+import PostmanCollection from '@site/src/components/docs/PostmanCollection';
+
+{/* The service's overview in the API reference. It sits in the network
+    module's folder, which the reference generator keeps, because four
+    services share that module's specification. */}
+
+# PM-JAY HEM
+
+Find hospitals empanelled under PM-JAY. The [EUA](/docs/uhi/v1/getting-started/glossary#eua) sends one search through the [UHI Gateway](/docs/uhi/v1/getting-started/glossary#uhi-gateway), and the PM-JAY HEM [HSPA](/docs/uhi/v1/getting-started/glossary#hspa) answers with the hospitals in one `on_search`. Discovery only: the patient calls or visits the hospital.
+
+## Postman collection
+
+<PostmanCollection service="pmjay-hem" />
+
+## What it holds
+
+| Call | Served by | What it does |
+| --- | --- | --- |
+| `POST /api/v1/uhi/search` | UHI Gateway | Takes the EUA's search and passes it to the HSPA |
+| `POST /search` | HSPA | Receives the search the Gateway forwards |
+| `POST /api/v1/uhi/on_search` | UHI Gateway | Takes the HSPA's catalog and passes it to the EUA |
+| `POST /on_search` | EUA | Receives the catalog at its `consumer_uri` |
+
+Every PM-JAY HEM call uses `context.domain` `nic2004:85112`, `fulfillment.type` `PMJAYHEM` and item code `PMJAY`.
+
+## Journey
+
+| Journey | What it covers |
+| --- | --- |
+| [PM-JAY HEM hospital discovery](/docs/uhi/v1/api/network/endpoints/uhi-pmjay-hem/01-uhi-network-gateway-search) | The Gateway search for empanelled hospitals, and the one `on_search` that answers it |
+
+Sign every call first. See [Signing](/docs/uhi/v1/concepts/signing).
+
+## Pairs with
+
+- [Look up a network participant](/docs/uhi/v1/api/network/endpoints/uhi-network-registry-lookup) returns the public key you check the HSPA's signature with.
+- [Routes](/docs/uhi/v1/concepts/routes) shows which calls go through the Gateway.
+
+New to this? Start with [PM-JAY HEM](/docs/uhi/v1/services/pmjay-hem).
