@@ -4,15 +4,15 @@ Complete the steps yourself by running the commands directly. Ask the user only 
 
 ## 1. Establish scope
 
-There is one skill for the whole provider-side integration, `nhcx-full`, and one per NHCX use case. Ask the user which this project builds, and install only those:
+There is one skill for the whole integration, `nhcx-full`, and one per NHCX use case. Each carries both the hospital side and the payer side of its exchanges. Ask the user which this project builds, and install only those:
 
-- `nhcx-full`: NHCX, end to end. Build the whole provider-side NHCX integration into this hospital system.
-- `nhcx-coverage`: NHCX coverage. Add NHCX policy search and coverage eligibility to this hospital system.
-- `nhcx-preauth`: NHCX pre-authorisation. Add NHCX pre-authorisation, with the payer's plan and its authorisation requirements, to this system.
-- `nhcx-claim`: NHCX claim. File the NHCX claim at discharge from this system.
-- `nhcx-communication`: NHCX communication. Handle the payer's NHCX queries and notifications in this system.
-- `nhcx-payment`: NHCX payment. Record and acknowledge NHCX payment notices.
-- `nhcx-reprocess`: NHCX reprocess. Ask the payer to reprocess a rejected NHCX claim.
+- `nhcx-full`: NHCX, end to end. Build the whole NHCX integration into this system, on whichever side it sits.
+- `nhcx-coverage`: NHCX coverage. Add NHCX policy search and coverage eligibility to this system.
+- `nhcx-preauth`: NHCX pre-authorisation. Add NHCX pre-authorisation, with the insurance plan and its authorisation requirements, to this system.
+- `nhcx-claim`: NHCX claim. Add the NHCX claim at discharge, and its adjudication, to this system.
+- `nhcx-communication`: NHCX communication. Add NHCX queries, notifications and their acknowledgements to this system.
+- `nhcx-payment`: NHCX payment. Add NHCX payment notices, sent and acknowledged, to this system.
+- `nhcx-reprocess`: NHCX reprocess. Add the NHCX reprocess and shortfall Tasks, asked and answered, to this system.
 
 Each skill finds what the project already has and builds only what is missing, and each installs and runs alone. `nhcx-full` builds the whole integration; a system that needs one use case at a time usually starts with `nhcx-coverage`.
 
