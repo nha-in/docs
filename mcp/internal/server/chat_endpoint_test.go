@@ -13,6 +13,7 @@ package server_test
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"log/slog"
 	"net/http"
@@ -183,6 +184,25 @@ func TestChatEndpointRateLimit(t *testing.T) {
 	h.ServeHTTP(second, req())
 	if second.Code != 429 {
 		t.Fatalf("second request = %d, want 429", second.Code)
+	}
+	// The refusal names the limit and the wait, in the body for the panel
+	// and in Retry-After for any other client.
+	var body struct {
+		Error             string `json:"error"`
+		Limit             string `json:"limit"`
+		RetryAfterSeconds int    `json:"retry_after_seconds"`
+	}
+	if err := json.Unmarshal(second.Body.Bytes(), &body); err != nil {
+		t.Fatal(err)
+	}
+	if body.Limit != "minute" || body.RetryAfterSeconds < 1 || body.RetryAfterSeconds > 60 {
+		t.Fatalf("429 body = %+v, want limit minute and a wait within the minute", body)
+	}
+	if !strings.Contains(body.Error, "minute") {
+		t.Fatalf("429 error = %q, want it to say the minute limit", body.Error)
+	}
+	if ra := second.Header().Get("Retry-After"); ra == "" {
+		t.Fatal("429 has no Retry-After header")
 	}
 }
 

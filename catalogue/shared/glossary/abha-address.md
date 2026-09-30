@@ -20,10 +20,12 @@ related:
 
 ## In plain words
 
-An ABHA address looks like an email address, for example `ajeet123@abdm`
-on production or `something@sbx` on the sandbox. It is the handle a
-person shares at a facility, and the identifier that care contexts are
-linked against.
+An ABHA address is the name a person goes by on ABDM, written like an
+email address: `ajeet123@abdm` on production or `something@sbx` on the
+sandbox. A person logs in to their PHR app with it and shares it at a
+facility so the facility can find them. Every record linked to the person
+is linked against it, and a request to see those records is addressed to
+it.
 
 NHA calls this the PHR address in much of its own documentation, and
 says outright that the two terms mean the same thing. Older material

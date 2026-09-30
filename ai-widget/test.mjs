@@ -9,7 +9,7 @@ const out = join(tmpdir(), `abdm-widget-test-${process.pid}.mjs`);
 await build({
   stdin: {
     contents: `export {toBlocks, absolute, headings, linkFor} from './src/markdown';
-               export {readStream} from './src/sse';
+               export {readStream, failureMessage, UNREACHABLE} from './src/sse';
                export {revealStep, THINKING_HOLD, THINKING_BURST} from './src/pacing';
                export {say, answer, wantsTools, needsAgent, TOOLS, AGENTS} from './src/install';
                export {titleOf, remember, whenSaid, forgetOne, resumable} from './src/history';
@@ -36,7 +36,7 @@ await build({
   outfile: out,
 });
 const {
-  toBlocks, absolute, headings, linkFor, readStream, revealStep, THINKING_HOLD, THINKING_BURST,
+  toBlocks, absolute, headings, linkFor, readStream, failureMessage, UNREACHABLE, revealStep, THINKING_HOLD, THINKING_BURST,
   say, answer, wantsTools, needsAgent, TOOLS, AGENTS,
   titleOf, remember, whenSaid, forgetOne, resumable, ABOUT, isAboutQuestion, memoryOf, sentFrom,
   startersFrom, DEFAULT_STARTERS, forModel, parseLlms, searchPages, pageUrl, markdownUrl, isHtmlDocument,
@@ -346,3 +346,23 @@ console.log('ok');
   });
   assert.deepEqual(got, [{id: 'b', title: 'Link a care context', prompt: 'Link a care context'}]);
 }
+
+// A refused request is not an unreachable assistant. The server's 429 says
+// which limit and how long; the panel says that, and keeps "unreachable" for
+// a failure it cannot name. NHA's testers, asking back to back, saw
+// "unreachable" for every rate limit.
+assert.equal(
+  failureMessage(429, {error: 'x', limit: 'minute', retry_after_seconds: 40}),
+  'Too many questions in the last minute. Wait about 40 seconds and ask again.',
+);
+assert.equal(
+  failureMessage(429, {error: 'x', limit: 'minute', retry_after_seconds: 1}),
+  'Too many questions in the last minute. Wait a moment and ask again.',
+);
+assert.equal(
+  failureMessage(429, {error: 'x', limit: 'day', retry_after_seconds: 3600}),
+  "This connection has used today's questions. The limit resets at midnight UTC.",
+);
+assert.equal(failureMessage(429, null), 'Too many questions in a short time. Wait a minute and ask again.');
+assert.equal(failureMessage(500, {error: 'boom'}), UNREACHABLE);
+assert.equal(failureMessage(502, null), UNREACHABLE);

@@ -6,8 +6,9 @@ milestone: n/a
 version: abdm-v3
 title: PHR, personal health record application
 summary: >
-  The application a patient uses to see consent requests and to approve,
-  deny or revoke them.
+  The patient's own app on ABDM, where a person creates and logs in with an
+  ABHA address, links their records, controls consent and reads what is
+  shared; built through the four PHR milestones P1 to P4.
 sources:
   - file: catalogue/hiecm/openapi/.raw/nha-2026-09-16/hiecm/consent-management-data-flow.yaml
     fetched: 2026-09-16
@@ -19,16 +20,25 @@ related: {}
 
 ## In plain words
 
-A personal health record application is the patient's own side of ABDM. The
-specification describes what a patient does from it:
+A personal health record application, a PHR app, is the patient's own app
+on ABDM. From it a person creates an [ABHA address](abha-address.md) and logs
+in with it, finds the records that facilities hold about them and links those
+records to the address, decides who may see them, and reads the records they
+have allowed to be shared.
 
-> This API endpoint is used to deny a consent request from the Personal
-> Health Record (PHR) or mobile application. By invoking this API, users can
-> reject a consent request, preventing the Health Information User (HIU) from
-> accessing their health data.
+To build a PHR application you implement four ABDM milestones, in order:
+[P1](/docs/hiecm/v3/milestones/p1), registration and login;
+[P2](/docs/hiecm/v3/milestones/p2), finding and linking records and sharing a
+profile at a facility; [P3](/docs/hiecm/v3/milestones/p3), subscriptions,
+consent and fetching records; and [P4](/docs/hiecm/v3/milestones/p4), a
+health locker that keeps the records for the long term. P1 to P3 each mirror
+a milestone on the provider side, M1 to M3, from the patient's side. P4
+applies to an app that stores a person's records rather than only displaying
+them.
 
-Approval, denial and revocation all reach ABDM from this application, so it
-is where a patient's control over their records is exercised.
+Approval, denial and revocation of consent all reach ABDM from this
+application, so it is where a patient's control over their records is
+exercised.
 
 ## Before you start
 

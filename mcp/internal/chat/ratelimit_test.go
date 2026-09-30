@@ -85,3 +85,32 @@ func TestLimiterKeepsBucketsStillWithinTheDay(t *testing.T) {
 		t.Fatal("third request of the day must fail (dayCount survived the sweep)")
 	}
 }
+
+// A refusal says which limit it was and how long to wait, so the panel can
+// tell a reader "wait 40 seconds" apart from "unreachable". NHA's testers
+// fired questions back to back and saw "The assistant is unreachable".
+func TestLimiterDenySaysWhichLimitAndWhen(t *testing.T) {
+	at := time.Date(2026, 9, 30, 10, 0, 0, 0, time.UTC)
+	l := NewLimiter(2, 3)
+	for i := 0; i < 2; i++ {
+		if d := l.Deny("1.1.1.1", at); d.Limit != "" {
+			t.Fatalf("request %d denied: %+v", i+1, d)
+		}
+	}
+	d := l.Deny("1.1.1.1", at.Add(20*time.Second))
+	if d.Limit != "minute" || d.RetryAfter != 40*time.Second {
+		t.Fatalf("third request in the minute = %+v, want the minute limit and 40s", d)
+	}
+	// The minute passes; the third request of the day goes through, the
+	// fourth is the day's limit, with the wait running to midnight UTC.
+	if d := l.Deny("1.1.1.1", at.Add(2*time.Minute)); d.Limit != "" {
+		t.Fatalf("after the minute: %+v", d)
+	}
+	d = l.Deny("1.1.1.1", at.Add(3*time.Minute))
+	if d.Limit != "day" || d.RetryAfter != 13*time.Hour+57*time.Minute {
+		t.Fatalf("fourth request of the day = %+v, want the day limit and 13h57m", d)
+	}
+	if !l.Allow("2.2.2.2", at) {
+		t.Fatal("Allow must still work for another ip")
+	}
+}
