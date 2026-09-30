@@ -247,6 +247,11 @@ type PassagePack struct {
 	// Related are one hop out from the top hits: id and title only, so
 	// the model knows a sibling exists without paying to read it.
 	Related []map[string]string `json:"related"`
+	// Next feeds the widget's next-question pills: the atoms the top
+	// passages' authors named as related, outbound links only, in the
+	// conversation's gateway or shared. Related above is what the model
+	// sees; this is what the reader is offered.
+	Next []map[string]string `json:"next,omitempty"`
 }
 
 const (
@@ -261,6 +266,7 @@ type atomOpener interface {
 	GetAtom(id string) (catalogue.Atom, error)
 	RelatedAtoms(id string) ([]index.RelatedGroup, error)
 	OperationRoute(id string) (method, path string, ok bool)
+	RelatedOutbound(id string) ([]index.AtomRef, error)
 }
 
 // openPassage builds the full-body passage and its one-hop related atoms
@@ -316,6 +322,16 @@ func (t *Tools) Lookup(ctx context.Context, in lookupIn) (PassagePack, error) {
 	hits = pinErrorAtoms(t.r, in.Query, hits, lookupHits)
 	var pack PassagePack
 	seenRelated := map[string]bool{}
+	// The gateway pills may come from: the conversation's scope, else the
+	// top hit's own gateway. Shared atoms are always allowed.
+	scope := chat.GatewayFrom(ctx)
+	if scope == "" && len(hits) > 0 {
+		scope = gatewayOf(hits[0].ID)
+	}
+	shown := map[string]bool{}
+	for _, h := range hits {
+		shown[h.ID] = true
+	}
 	for i, h := range hits {
 		p := Passage{ID: h.ID, Type: h.Type, Milestone: h.Milestone, Title: h.Title,
 			DocURL: index.DocLink(h.DocURL, h.DocAnchor),
@@ -330,10 +346,40 @@ func (t *Tools) Lookup(ctx context.Context, in lookupIn) (PassagePack, error) {
 				seenRelated[ref["id"]] = true
 				pack.Related = append(pack.Related, ref)
 			}
+			pack.Next = append(pack.Next, nextQuestions(t.r, h.ID, shown, scope)...)
 		}
 		pack.Passages = append(pack.Passages, p)
 	}
 	return pack, nil
+}
+
+// nextQuestions returns the atoms one passage's author named as related,
+// as pill material: not a passage already shown, in the scope's gateway or
+// shared. shown is updated so a later passage does not offer the same atom
+// twice.
+func nextQuestions(r atomOpener, passageID string, shown map[string]bool, scope string) []map[string]string {
+	outbound, err := r.RelatedOutbound(passageID)
+	if err != nil {
+		return nil
+	}
+	var next []map[string]string
+	for _, a := range outbound {
+		if shown[a.ID] || (gatewayOf(a.ID) != scope && gatewayOf(a.ID) != "shared") {
+			continue
+		}
+		shown[a.ID] = true
+		next = append(next, map[string]string{"id": a.ID, "type": a.Type, "title": a.Title})
+	}
+	return next
+}
+
+// gatewayOf reads the gateway from an atom id, the segment before the first
+// dot: hiecm, nhcx, uhi or shared.
+func gatewayOf(atomID string) string {
+	if i := strings.IndexByte(atomID, '.'); i > 0 {
+		return atomID[:i]
+	}
+	return ""
 }
 
 // codeLookup is the one Reader method pinErrorAtoms needs.

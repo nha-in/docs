@@ -1466,7 +1466,7 @@ func TestRespondEmitsLinksForEndpointPassages(t *testing.T) {
 // The related atoms one hop out from the pack become up to three pills, none
 // of them a passage the reader was already shown.
 func TestSuggestionsFromPack(t *testing.T) {
-	pack := []byte(`{"passages":[{"id":"a"}],"related":[
+	pack := []byte(`{"passages":[{"id":"a"}],"related":[{"id":"z","type":"callback","title":"A backlink the pills must ignore"}],"next":[
 		{"id":"a","type":"flow","title":"Already shown"},
 		{"id":"b","type":"flow","title":"Link a care context"},
 		{"id":"","type":"flow","title":"No id"},

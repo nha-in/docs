@@ -97,9 +97,11 @@ type Suggestion struct {
 
 const maxSuggestions = 3
 
-// suggestionsFromPack returns up to three related atoms that were not
-// themselves passages, as pills. The prompt is the atom's title: a short
-// topic the router already handles.
+// suggestionsFromPack returns up to three of the pack's next atoms, the
+// ones the top passages' authors named as related in the reader's gateway,
+// as pills. The prompt is the atom's title: a short topic the router
+// already handles. The pack's related list is not used: it includes the
+// backlinks, which for a hub atom is most of the catalogue.
 func suggestionsFromPack(pack []byte) []Suggestion {
 	var pp struct {
 		Passages []struct {
@@ -108,7 +110,7 @@ func suggestionsFromPack(pack []byte) []Suggestion {
 		Related []struct {
 			ID    string `json:"id"`
 			Title string `json:"title"`
-		} `json:"related"`
+		} `json:"next"`
 	}
 	if err := json.Unmarshal(pack, &pp); err != nil {
 		return nil

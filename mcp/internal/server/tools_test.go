@@ -219,6 +219,47 @@ func (failingOpener) RelatedAtoms(id string) ([]index.RelatedGroup, error) {
 
 func (failingOpener) OperationRoute(id string) (string, string, bool) { return "", "", false }
 
+func (failingOpener) RelatedOutbound(id string) ([]index.AtomRef, error) { return nil, nil }
+
+func (routedOpener) RelatedOutbound(id string) ([]index.AtomRef, error) { return nil, nil }
+
+// outboundOpener stubs the outbound walk for one passage.
+type outboundOpener struct{ refs []index.AtomRef }
+
+func (outboundOpener) GetAtom(id string) (catalogue.Atom, error) { return catalogue.Atom{ID: id}, nil }
+func (outboundOpener) RelatedAtoms(id string) ([]index.RelatedGroup, error) {
+	return nil, nil
+}
+func (outboundOpener) OperationRoute(id string) (string, string, bool) { return "", "", false }
+func (o outboundOpener) RelatedOutbound(id string) ([]index.AtomRef, error) {
+	return o.refs, nil
+}
+
+// Next questions are what the passage's author named as related, in the
+// conversation's gateway or shared, never a passage already shown and never
+// the same atom twice. The backlinks RelatedAtoms walks play no part: for
+// the ABHA glossary entry they were every NHCX callback in the catalogue.
+func TestNextQuestionsAreOutboundScopedAndUnseen(t *testing.T) {
+	o := outboundOpener{refs: []index.AtomRef{
+		{ID: "shared.glossary.ayushman-card", Type: "glossary", Title: "Ayushman card"},
+		{ID: "nhcx.callback.claim-on-submit", Type: "callback", Title: "Receiving POST /v1/claim/on_submit"},
+		{ID: "hiecm.flow.m1-create-abha-aadhaar-otp", Type: "flow", Title: "Create an ABHA"},
+		{ID: "hiecm.glossary.abha-number", Type: "glossary", Title: "ABHA number"},
+		{ID: "hiecm.flow.m1-create-abha-aadhaar-otp", Type: "flow", Title: "Create an ABHA"},
+	}}
+	shown := map[string]bool{"hiecm.glossary.abha-number": true}
+	got := nextQuestions(o, "shared.glossary.abha", shown, "hiecm")
+	want := []string{"shared.glossary.ayushman-card", "hiecm.flow.m1-create-abha-aadhaar-otp"}
+	if len(got) != len(want) {
+		t.Fatalf("next = %v, want ids %v", got, want)
+	}
+	for i, w := range want {
+		if got[i]["id"] != w {
+			t.Errorf("next[%d] = %s, want %s", i, got[i]["id"], w)
+		}
+	}
+}
+
 // routedOpener returns an endpoint atom that names an operation, and knows
 // that operation's route, so the passage can be checked for the path line.
 type routedOpener struct{ known bool }
