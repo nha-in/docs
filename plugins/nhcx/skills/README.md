@@ -25,7 +25,7 @@ site. The site build copies each folder to `/skills/<name>/` and packs it as
 `/skills/<name>.tar.gz`, which the site's install commands unpack.
 
 They come from github.com/nha-in/nhcx-skills, taken from its working tree on
-30 September 2026, over commit 305efb9. Update them there and copy them across
+1 October 2026, over commit 305efb9. Update them there and copy them across
 again rather than editing them here.
 
 One block in each `SKILL.md` is the exception, and it is generated rather than
