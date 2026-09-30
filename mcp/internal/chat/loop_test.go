@@ -1572,3 +1572,48 @@ func TestShortPhraseOverAFlowTakesTheTopicShape(t *testing.T) {
 		}
 	}
 }
+
+// A path the model quoted from a flow atom, with a method in front of it,
+// links once the answer is finished; a path nobody documents does not.
+func TestAnswerLinksResolveQuotedPaths(t *testing.T) {
+	answer := "Call `POST /api/hiecm/v3/token/generate-token`, then `/api/hiecm/hip/v3/link/carecontext`. Not `/api/nowhere`."
+	m := &fakeModel{texts: []string{answer}, replies: []Reply{{Text: answer, StopReason: "end_turn"}}}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			return json.RawMessage(`{"passages":[{"id":"hiecm.flow.m2-link-care-context","type":"flow","title":"Link","doc_url":"/docs/hiecm/v3/flows/m2","body":"POST /api/hiecm/v3/token/generate-token then POST /api/hiecm/hip/v3/link/carecontext and /api/nowhere"}]}`),
+				[]Source{{ID: "hiecm.flow.m2-link-care-context"}}, guard.PackFacts{}, nil
+		},
+		LinkFor: func(path string) (string, bool) {
+			pages := map[string]string{
+				"/api/hiecm/v3/token/generate-token": "/docs/hiecm/v3/api/m2/endpoints/generate-token",
+				"/api/hiecm/hip/v3/link/carecontext": "/docs/hiecm/v3/api/m2/endpoints/link-carecontext",
+			}
+			u, ok := pages[path]
+			return u, ok
+		},
+	}
+	var links []Link
+	var text string
+	emit := func(event string, data any) error {
+		if event == "links" {
+			links = data.([]Link)
+		}
+		if event == "text" {
+			text += data.(map[string]string)["delta"]
+		}
+		return nil
+	}
+	if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "link records"}}, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	if text == "" {
+		t.Fatal("no text was released")
+	}
+	got := map[string]string{}
+	for _, l := range links {
+		got[l.Literal] = l.URL
+	}
+	if len(got) != 2 || got["/api/hiecm/v3/token/generate-token"] == "" || got["/api/hiecm/hip/v3/link/carecontext"] == "" {
+		t.Errorf("links = %v; want the two documented paths and not /api/nowhere", links)
+	}
+}

@@ -310,3 +310,16 @@ func TestDocLink(t *testing.T) {
 		}
 	}
 }
+
+// A path the index knows resolves to its module's endpoint page; one it
+// does not know resolves to nothing, so no answer ever links into the void.
+func TestLinkForPath(t *testing.T) {
+	r := openFixture(t, false)
+	url, ok := r.LinkForPath("/links/link/add-contexts")
+	if !ok || url != "/docs/hiecm/v3/api/m2/endpoints/linkaddcontexts" {
+		t.Errorf("LinkForPath = %q, %v; want the m2 endpoint page", url, ok)
+	}
+	if url, ok := r.LinkForPath("/api/nowhere"); ok {
+		t.Errorf("unknown path resolved to %q", url)
+	}
+}

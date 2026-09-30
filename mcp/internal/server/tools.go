@@ -763,3 +763,8 @@ func ChatHooks(tools *Tools) (
 	}
 	return lookup, toolsFor
 }
+
+// LinkFor resolves an API path the answer quoted to its reference page.
+// The chat loop calls it on the finished answer, so a path the model wrote
+// from a flow atom's body, which carries no doc_url of its own, still links.
+func (t *Tools) LinkFor(path string) (string, bool) { return t.r.LinkForPath(path) }

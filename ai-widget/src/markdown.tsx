@@ -38,7 +38,11 @@ export function absolute(href: string, docsOrigin: string): string | null {
  * is not the documented route.
  */
 export function linkFor(literal: string, links: Link[] | undefined, docsOrigin: string): string | null {
-  const hit = links?.find((l) => l.literal === literal);
+  // The model often writes the method inside the span: `POST /api/x`. The
+  // link is keyed by the path alone, so the method is set aside for the
+  // match and stays in the text.
+  const path = literal.replace(/^(?:GET|POST|PUT|PATCH|DELETE)\s+/, '');
+  const hit = links?.find((l) => l.literal === path);
   return hit ? absolute(hit.url, docsOrigin) : null;
 }
 

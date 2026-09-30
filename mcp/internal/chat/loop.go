@@ -151,6 +151,38 @@ func isTopicPhrase(q string) bool {
 	return len(strings.Fields(q)) <= 3 && !strings.Contains(q, "?")
 }
 
+// answerPathRe finds an API path inside an inline code span of the answer,
+// with or without a method in front of it: ` + "`POST /api/x`" + ` and ` + "`/api/x`" + `.
+var answerPathRe = regexp.MustCompile("`(?:(?:GET|POST|PUT|PATCH|DELETE) +)?(/[A-Za-z0-9/_{}.\\-]+)`")
+
+// answerLinks adds, to the links the pack produced, one per path the
+// finished answer quotes in a code span that LinkFor resolves. The pack
+// only knows endpoint passages; a path the model took from a flow atom's
+// body, the common case for "how do I" answers, is only known once the
+// answer exists. A path LinkFor does not know gets no link, so the model
+// cannot mint one.
+func (s *Service) answerLinks(answer string, have []Link) []Link {
+	if s.LinkFor == nil {
+		return have
+	}
+	seen := map[string]bool{}
+	for _, l := range have {
+		seen[l.Literal] = true
+	}
+	out := have
+	for _, m := range answerPathRe.FindAllStringSubmatch(answer, -1) {
+		p := strings.TrimRight(m[1], ".,;:")
+		if seen[p] {
+			continue
+		}
+		seen[p] = true
+		if url, ok := s.LinkFor(p); ok {
+			out = append(out, Link{Literal: p, URL: url})
+		}
+	}
+	return out
+}
+
 // routeLineRe matches the method and path openPassage puts on the first
 // line of an endpoint or callback passage.
 var routeLineRe = regexp.MustCompile(`^(?:GET|POST|PUT|PATCH|DELETE) (/\S+)\n`)
@@ -200,6 +232,9 @@ type Service struct {
 	// first model call. nil means no pre-retrieval (tests, or a caller
 	// that wants the old behaviour).
 	Lookup func(ctx context.Context, question string) (json.RawMessage, []Source, guard.PackFacts, error)
+	// LinkFor resolves an API path to its reference page, for the links
+	// event. Nil means only the pack's own endpoint passages produce links.
+	LinkFor func(path string) (url string, ok bool)
 	// ToolsFor returns the tools to expose for this question. nil means
 	// s.Tools unchanged.
 	ToolsFor func(question string, hasAttachment bool) []ToolDef
@@ -975,7 +1010,7 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 				// citations, because that part is what those sources back.
 				return s.finish(nil, nil, nil, emit)
 			}
-			return s.finish(sources, links, suggestions, emit)
+			return s.finish(sources, s.answerLinks(g.released.String(), links), suggestions, emit)
 		}
 
 		// The round ended in a tool call, so whatever text it produced was
@@ -1067,11 +1102,11 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 			if g.blocked && g.released.Len() == 0 {
 				return s.finish(nil, nil, nil, emit)
 			}
-			return s.finish(sources, links, suggestions, emit)
+			return s.finish(sources, s.answerLinks(g.released.String(), links), suggestions, emit)
 		}
 	}
 	// Unreachable: the loop above always returns by round == MaxToolCalls.
-	return s.finish(sources, links, suggestions, emit)
+	return s.finish(sources, s.answerLinks(g.released.String(), links), suggestions, emit)
 }
 
 // finish emits the sources event (only when there is at least one source)

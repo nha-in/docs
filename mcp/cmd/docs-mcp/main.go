@@ -197,6 +197,7 @@ func main() {
 			MaxTokens:    *chatMaxTokens,
 			MCPURL:       *mcpURL,
 			Lookup:       lookup,
+			LinkFor:      chatTools.LinkFor,
 			ToolsFor:     toolsFor,
 			Skill:        skill,
 			SkillModules: skillModules,

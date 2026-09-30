@@ -503,3 +503,37 @@ func (r *Reader) GetFHIRExample(recordType string) ([]byte, error) {
 	}
 	return []byte(bundle), nil
 }
+
+// hiecmModules are the modules whose generated endpoint pages live under
+// /docs/hiecm/v3/api/<module>/endpoints/, the route OperationDocPath builds.
+// UHI and NHCX operations are linked only through an endpoint atom's page,
+// because their reference pages follow another layout.
+var hiecmModules = map[string]bool{
+	"gateway": true, "m1": true, "m2": true, "m3": true, "m4": true,
+	"p1": true, "p2": true, "p3": true, "p4": true,
+	"scan-and-register": true, "scan-and-pay": true, "record-share": true,
+}
+
+// LinkForPath returns the reference page for an API path, or ok false when
+// the path is not an operation this index knows. An endpoint atom's own
+// page wins, since the site build assigned it; otherwise the generated
+// endpoint page of the operation's module. Callbacks are operations too,
+// so a webhook path resolves the same way.
+func (r *Reader) LinkForPath(path string) (url string, ok bool) {
+	var docURL, anchor string
+	err := r.db.QueryRow(`
+        SELECT a.doc_url, a.doc_anchor FROM operations o
+        JOIN atoms a ON a.operation = o.operation_id
+        WHERE o.path = ? AND a.doc_url != ''
+        ORDER BY a.id LIMIT 1`, path).Scan(&docURL, &anchor)
+	if err == nil {
+		return DocLink(docURL, anchor), true
+	}
+	var id, module string
+	if err := r.db.QueryRow(`SELECT operation_id, module FROM operations WHERE path = ? ORDER BY operation_id LIMIT 1`,
+		path).Scan(&id, &module); err != nil || !hiecmModules[module] {
+		return "", false
+	}
+	url = OperationDocPath(module, id)
+	return url, url != ""
+}
