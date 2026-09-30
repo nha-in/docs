@@ -29,10 +29,10 @@
   "expected_sources": [
     "shared.sandbox.first-fifteen-minutes"
   ],
-  "expected_shape": "how-do-i",
+  "expected_shape": "overview",
   "expected_behaviour": "answer",
   "derived_from": null,
   "source_row": "annexure#abdm-faq-sandbox",
   "catalogue_version": "2026.09.16",
-  "notes": "NHA review of 30 September 2026: 'How can I integrate with ABDM?' was answered as integrating 'through HIE-CM'. ABDM is the umbrella; HIE-CM, UHI and NHCX are its gateways. Source lines: shared.sandbox.first-fifteen-minutes ('you apply to integrate your digital health solution in the sandbox with an online application', as in faq-rephrased-abdm-sandbox-02-c); site/docs/hiecm/v3/milestones/index.mdx 'ABDM integration is divided into milestones ... Integrators should implement the milestones applicable to their software'."
+  "notes": "NHA review of 30 September 2026: 'How can I integrate with ABDM?' was answered as integrating 'through HIE-CM'. ABDM is the umbrella; HIE-CM, UHI and NHCX are its gateways. Source lines: shared.sandbox.first-fifteen-minutes ('you apply to integrate your digital health solution in the sandbox with an online application', as in faq-rephrased-abdm-sandbox-02-c); site/docs/hiecm/v3/milestones/index.mdx 'ABDM integration is divided into milestones ... Integrators should implement the milestones applicable to their software'. Routed to the overview shape."
 }
