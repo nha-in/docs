@@ -147,6 +147,12 @@ cache point, so Bedrock charges that prefix at the read rate on every turn
 after the first; other model families reject cache points, so for them the
 prompt goes without one at the full input rate. OpenAI GPT-5 and GPT-6 models refuse
 a temperature, so for them it is not sent and `CHAT_TEMPERATURE` has no effect.
+For those same models `CHAT_REASONING_EFFORT` (default `medium`; `none`, `low`,
+`medium`, `high`, `xhigh` or `max`) is sent as
+`additionalModelRequestFields.reasoning.effort`. Higher effort costs latency
+and output tokens against the 90 second deadline per question. Set it empty
+(`CHAT_REASONING_EFFORT=`) to send nothing and take the provider's default;
+other model families never receive it.
 
 Guardrails are environment-tunable: `CHAT_MAX_TOKENS` (default 1500),
 `CHAT_RATE_PER_MIN` (default 5) and `CHAT_RATE_PER_DAY` (default 100) cap

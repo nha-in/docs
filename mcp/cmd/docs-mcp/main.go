@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/nha-in/docs/mcp/internal/chat"
@@ -19,6 +20,15 @@ import (
 // envOr lets the environment set every default while the flags stay as local
 // dev overrides: the same image runs in every environment purely by env, and
 // `docs-mcp -addr :9090` still works at a keyboard.
+// envOrDefault is envOr, except a variable that is set but empty stays
+// empty: CHAT_REASONING_EFFORT= means send no effort, not the default.
+func envOrDefault(name, fallback string) string {
+	if v, ok := os.LookupEnv(name); ok {
+		return v
+	}
+	return fallback
+}
+
 func envOr(name, fallback string) string {
 	if v := os.Getenv(name); v != "" {
 		return v
@@ -71,6 +81,11 @@ func main() {
 	region := flag.String("aws-region", envOr("AWS_REGION", ""), "AWS region, for -embed-provider bedrock")
 	chatModel := flag.String("chat-model", envOr("CHAT_MODEL", ""), "Bedrock model id for /api/chat; empty disables chat")
 	chatMaxTokens := flag.Int("chat-max-tokens", envIntOr("CHAT_MAX_TOKENS", 1500), "max output tokens per chat answer")
+	// Medium is AWS's documented default for GPT-6; setting it explicitly
+	// keeps the deployment's behaviour from moving if a provider default does.
+	// Set CHAT_REASONING_EFFORT= (empty) to send nothing at all.
+	chatReasoning := flag.String("chat-reasoning-effort", envOrDefault("CHAT_REASONING_EFFORT", "medium"),
+		"reasoning effort for OpenAI GPT-5 and GPT-6 chat models: none, low, medium, high, xhigh or max; empty sends none")
 	chatTemperature := flag.Float64("chat-temperature", envFloatOr("CHAT_TEMPERATURE", 0.1),
 		"sampling temperature for chat answers, 0.1 to 0.2; low keeps quoted literals and tool choices stable, and 0 is not deterministic on any provider")
 	chatPerMin := flag.Int("chat-rate-per-min", envIntOr("CHAT_RATE_PER_MIN", 5), "chat requests per ip per minute")
@@ -182,8 +197,13 @@ func main() {
 			slog.Error("CHAT_TEMPERATURE must be between 0 and 1", "got", *chatTemperature)
 			os.Exit(1)
 		}
+		effort := strings.ToLower(strings.TrimSpace(*chatReasoning))
+		if !chat.ValidReasoningEffort(effort) {
+			slog.Error("CHAT_REASONING_EFFORT must be none, low, medium, high, xhigh, max or empty", "got", *chatReasoning)
+			os.Exit(1)
+		}
 		model, err := chat.NewBedrockModel(
-			context.Background(), *region, *chatModel, float32(*chatTemperature))
+			context.Background(), *region, *chatModel, float32(*chatTemperature), chat.WithReasoningEffort(effort))
 		if err != nil {
 			slog.Error("configure chat model", "err", err)
 			os.Exit(1)
