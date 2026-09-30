@@ -576,6 +576,12 @@ const config: Config = {
           {from: '/docs/hiecm/v3/api/subscription/endpoints/subscription-subscription-hiu/05-subscription-post-v3-hiu-subscription-notify', to: '/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/05-p3-post-v3-hiu-subscription-notify'},
           {from: '/docs/hiecm/v3/api/subscription/endpoints/subscription-subscription-hiu/03-subscription-post-v3-hiu-subscription-requests-hiu-notify', to: '/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/03-p3-post-v3-hiu-subscription-requests-hiu-notify'},
           {from: '/reference/hiecm-subscription', to: '/reference/hiecm-p3'},
+          // The HIE-CM test case pages sat under resources/testing/ until 17 September 2026.
+          {from: '/docs/hiecm/v3/resources/testing', to: '/docs/hiecm/v3/resources/test-cases/'},
+          {from: '/docs/hiecm/v3/resources/testing/m1', to: '/docs/hiecm/v3/resources/test-cases/m1'},
+          {from: '/docs/hiecm/v3/resources/testing/m2', to: '/docs/hiecm/v3/resources/test-cases/m2'},
+          {from: '/docs/hiecm/v3/resources/testing/m3', to: '/docs/hiecm/v3/resources/test-cases/m3'},
+          {from: '/docs/hiecm/v3/resources/testing/m4', to: '/docs/hiecm/v3/resources/test-cases/m4'},
           // Gateway calls NHA's sandbox observations of 23 September 2026 moved out of the gateway, or left out.
           {from: '/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/03-gateway-get-gateway-v3-certs', to: '/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions'},
           {from: '/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/07-gateway-get-gateway-v3-govt-programs', to: '/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/09-p2-get-gateway-v3-govt-programs'},
