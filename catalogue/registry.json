@@ -2129,6 +2129,15 @@
     "url": "/docs/hiecm/v3/milestones/p3#p3-subscribe-and-auto-approve"
   },
   {
+    "id": "hiecm.flow.p4-receive-records",
+    "type": "flow",
+    "gateway": "hiecm",
+    "source": "page",
+    "page": "site/docs/hiecm/v3/milestones/p4.mdx",
+    "heading": "p4-receive-records",
+    "url": "/docs/hiecm/v3/milestones/p4#p4-receive-records"
+  },
+  {
     "id": "hiecm.glossary.auth-modes",
     "type": "glossary",
     "gateway": "hiecm",
@@ -2262,6 +2271,34 @@
     "gateway": "hiecm",
     "source": "file",
     "file": "catalogue/hiecm/glossary/m4.md"
+  },
+  {
+    "id": "hiecm.glossary.p1",
+    "type": "glossary",
+    "gateway": "hiecm",
+    "source": "file",
+    "file": "catalogue/hiecm/glossary/p1.md"
+  },
+  {
+    "id": "hiecm.glossary.p2",
+    "type": "glossary",
+    "gateway": "hiecm",
+    "source": "file",
+    "file": "catalogue/hiecm/glossary/p2.md"
+  },
+  {
+    "id": "hiecm.glossary.p3",
+    "type": "glossary",
+    "gateway": "hiecm",
+    "source": "file",
+    "file": "catalogue/hiecm/glossary/p3.md"
+  },
+  {
+    "id": "hiecm.glossary.p4",
+    "type": "glossary",
+    "gateway": "hiecm",
+    "source": "file",
+    "file": "catalogue/hiecm/glossary/p4.md"
   },
   {
     "id": "hiecm.glossary.pms",
