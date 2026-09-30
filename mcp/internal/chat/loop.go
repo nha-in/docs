@@ -853,7 +853,10 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 	}
 	prefix := passagesPrefix + skillPrefix
 	if gateway != "" {
-		prefix += gatewayNote(gateway, cmd.Gateway != "") + "\n\n"
+		// The note names the page only when the scope is the page's: a
+		// milestone question asked on an NHCX page is scoped to the HIE-CM
+		// section without the reader being on it.
+		prefix += gatewayNote(gateway, cmd.Gateway != "" && gateway == cmd.Gateway, abdmLevel(question)) + "\n\n"
 	}
 	if page.attached() {
 		// The page is not run through MaskPII the way the reader's own text

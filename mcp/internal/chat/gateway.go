@@ -43,6 +43,27 @@ var gatewayLabels = map[string]string{"hiecm": "HIE-CM", "nhcx": "NHCX", "uhi": 
 // naming it.
 var claimsVocabulary = regexp.MustCompile(`(?i)\b(claims?|insurers?|payers?|pre-?auth\w*|tpas?|polic(?:y|ies)|coverage|participant codes?|correlation ids?|jwe)\b`)
 
+// milestoneRe is a question naming a milestone: M1 to M4, P1 to P4, or
+// "milestone" itself. Every milestone is ABDM's; M1 to M4 are implemented
+// through the HIE-CM gateway and documented in the portal's HIE-CM section,
+// so a milestone question is searched there from any page.
+var milestoneRe = regexp.MustCompile(`(?i)\b(?:[mp][1-4]|milestones?)\b`)
+
+// abdmNameRe is ABDM named as such. An ABDM error code (ABDM-1016) is not a
+// question about ABDM as a whole, so codes are removed before it is matched.
+var (
+	abdmNameRe = regexp.MustCompile(`(?i)\babdm\b`)
+	abdmCodeRe = regexp.MustCompile(`(?i)\babdm-\d+`)
+)
+
+// abdmLevel reports a question about ABDM as a whole rather than one
+// gateway's calls: it names ABDM itself or a milestone. Such a question is
+// answered at the ABDM level, naming the milestones and gateways that apply.
+func abdmLevel(question string) bool {
+	q := abdmCodeRe.ReplaceAllString(question, "")
+	return abdmNameRe.MatchString(q) || milestoneRe.MatchString(q)
+}
+
 // scopeFor decides the scope for one question. The page's gateway applies
 // unless the question names a different gateway, in which case the reader
 // has said what they want and nothing is filtered out. A page that belongs
@@ -59,6 +80,12 @@ func scopeFor(page, question string) string {
 		if id != page && re.MatchString(question) {
 			return ""
 		}
+	}
+	// A milestone question asked from the NHCX or UHI pages is still about
+	// the milestone, whose documentation is in the HIE-CM section. A question
+	// that also names the page's own gateway ("M1 in NHCX") keeps the page.
+	if page != "hiecm" && milestoneRe.MatchString(question) && !gatewayNames[page].MatchString(question) {
+		return "hiecm"
 	}
 	return page
 }
@@ -92,14 +119,26 @@ func inferScope(question string) string {
 // system prompt, which stays byte identical so its cache point holds.
 // fromPage is false when the scope was inferred from the question, and the
 // note then says so rather than naming a page the reader is not on.
-func gatewayNote(gateway string, fromPage bool) string {
+//
+// It carries behaviour, not facts. What ABDM is, and that M1 to M4 are ABDM
+// milestones implemented through the HIE-CM gateway, lives in the glossary
+// atoms the search returns (shared.glossary.abdm, hiecm.glossary.m1 to m4).
+// The note used to say "Answer for HIE-CM" on every HIE-CM page, and the
+// panel called M1 "the HIE-CM milestone" and answered "how can I integrate
+// with ABDM" as integrating "through HIE-CM" (NHA review, 30 September
+// 2026). abdmWide is a question about ABDM as a whole (see abdmLevel),
+// answered at that level rather than as the section's gateway's.
+func gatewayNote(gateway string, fromPage, abdmWide bool) string {
 	label := gatewayLabels[gateway]
-	where := "The reader is reading the " + label + " documentation."
+	where := "The reader is reading the " + label + " section of the ABDM documentation."
 	if !fromPage {
 		where = "The question reads as a " + label + " question."
 	}
-	return "<reader_context>" + where + " Answer for " + label +
-		" unless they ask about another gateway, and do not bring in another gateway's calls or fields.</reader_context>"
+	answer := "Do not bring in another gateway's calls or fields unless they ask about another gateway."
+	if abdmWide {
+		answer = "The question is about ABDM as a whole: answer at the ABDM level, from what the passages say about ABDM, not as a " + label + " question."
+	}
+	return "<reader_context>" + where + " " + answer + "</reader_context>"
 }
 
 // thanksReply is the fixed reply to thanks or an acknowledgement. It is not
