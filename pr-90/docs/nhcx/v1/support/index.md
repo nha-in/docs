@@ -32,3 +32,7 @@ A report without these cannot be traced:
 - The error code and message exactly as returned.
 
 Never send a token, a client secret or a private key.
+
+## NHA's office
+
+National Health Authority, 3rd, 4th, 7th and 9th Floor, Tower 1, Jeevan Bharti Building, Connaught Place, New Delhi 110001.

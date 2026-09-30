@@ -50323,6 +50323,17 @@ On securities exchanges like NSE & BSE, anyone can buy or sell independently by 
 
 ### Benefits of using NHCX
 
+Claims processing in India today is fragmented, manual and costly. That causes delays, inefficiencies and a cumbersome experience for citizens, and the constraints grow as utilisation rises. NHCX changes that for each participant:
+
+- Providers gain simplified workflows and a lower administrative burden.
+- Insurers gain more efficient adjudication, stronger fraud controls and better-quality data.
+- Policymakers gain the data for data-driven decisions, enabling targeted interventions and more coordinated care delivery.
+- Citizens gain faster, more predictable and more transparent claims.
+
+Standardised, machine-readable claims data unlocks more than efficiency. It enables advanced analytics, coordination across several payers, and the design of more responsive, need-based insurance products. NHCX is a networked public good: its value compounds with participation, and what any one participant gains depends on the depth and breadth of adoption across the ecosystem. Early adopters realise the efficiency gains first, and help shape the standards, workflows and innovation pathways of health insurance in India. For a private insurer or TPA the path is to adopt, integrate, and transact end-to-end claims through NHCX.
+
+The bullets below say what that means for the data itself.
+
 - It is imperative that in the present day context almost every healthcare provider or hospital is generating digitised health records. But there is no point if the hospital has to convert that data into a “pdf” or a “jpg” file and transmit the same to the insurance company in a human readable format. NHCX is the only solution to this widespread problem
 - Let us consider a diagnostic report of a patient like “Lipid Profile” that has some 10 parameter values, all very important to understand the criticality of the case. It would be very helpful for the insurance company to have those 10 different values for the individual parameters of Lipid Profile in adjudication of the case. Using NHCX such values for each of these parameters under Lipid Profile can be passed on from Provider to Payer
 - Since any standard hospital HMIS already captures data pertaining to a patient like medical history, allergies, medication, line of treatment, etc. it would be apt to convey those same details to the insurance company instead of taking a printout and scanning them again for email attachments or uploads, thereby ensuring chastity of data
@@ -51647,10 +51658,8 @@ Search by code, name or status, and switch between the codes a provider sends, t
 
 Search by code, name or status
 
-Spellings are as published, such as `Initimation`, `Reimburstment` and `protocal`, so that searching for what you saw in a payload finds the row.
-
 - `12`Preauth Request Initiatedrequest.initiated
-- `121`Preauth Reprocess(Resubmission) Initimationrequest.initiated
+- `121`Preauth Reprocess(Resubmission) Intimationrequest.initiated
 - `13`Enhancement Request Initiatedrequest.initiated
 - `131`Enhancement Query Ack Successresponse.partial
 - `131`Enhancement Query Ack Failedresponse.error
@@ -51686,7 +51695,7 @@ Spellings are as published, such as `Initimation`, `Reimburstment` and `protocal
 - `261`Discharge Request Approvedresponse.partial
 - `262`Discharge Request Rejectedresponse.complete
 - `263`Discharge Request Queriedrequest.initiated
-- `45`Final Bill Initimationrequest.initiated
+- `45`Final Bill Intimationrequest.initiated
 - `45`Final Bill Ack Successresponse.partial
 - `45`Final Bill Ack Failedresponse.error
 - `15`Claim Request Initiatedrequest.initiated
@@ -51707,16 +51716,16 @@ Spellings are as published, such as `Initimation`, `Reimburstment` and `protocal
 - `30`Payment Notice Initmationrequest.initiated
 - `30`Payment Notice Ack Successresponse.partial
 - `30`Payment Notice Ack Failedresponse.error
-- `R122`Reimburstment Claim Reprocess Requestedrequest.initiated
-- `R15`Reimburstment Claim Submittedrequest.initiated
-- `R151`Reimburstment Claim Query Response Submittedresponse.complete
-- `R252`Reimburstment Claim Reprocess Request Approvedresponse.complete
-- `R253`Reimburstment Claim Reprocess Request Rejectedresponse.complete
-- `R254`Reimburstment Claim Reprocess Request Queriedrequest.initiated
-- `R26`Reimburstment Claim Approvedresponse.complete
-- `R27`Reimburstment Claim Queriedrequest.initiated
-- `R28`Reimburstment Claim Evaluation In Processresponse.partial
-- `R291`Reimburstment Claim Rejectedresponse.complete
+- `R122`Reimbursement Claim Reprocess Requestedrequest.initiated
+- `R15`Reimbursement Claim Submittedrequest.initiated
+- `R151`Reimbursement Claim Query Response Submittedresponse.complete
+- `R252`Reimbursement Claim Reprocess Request Approvedresponse.complete
+- `R253`Reimbursement Claim Reprocess Request Rejectedresponse.complete
+- `R254`Reimbursement Claim Reprocess Request Queriedrequest.initiated
+- `R26`Reimbursement Claim Approvedresponse.complete
+- `R27`Reimbursement Claim Queriedrequest.initiated
+- `R28`Reimbursement Claim Evaluation In Processresponse.partial
+- `R291`Reimbursement Claim Rejectedresponse.complete
 - `34`Wallet Upgrade Intimationrequest.initiated
 - `36`Claim Arbitration Intimationrequest.initiated
 - `38`Fraud Alertrequest.initiated
@@ -52633,6 +52642,9 @@ The terms this documentation uses, in the sense it uses them. Where NHA's docume
 - **NHA.** National Health Authority. Publishes the NHCX specifications, runs the exchange, and administers PMJAY.
 - **NRCeS.** National Resource Centre for EHR Standards, at C-DAC Pune. Publishes the FHIR profiles and value sets NHCX bundles must follow.
 - **IRDAI.** Insurance Regulatory and Development Authority of India. Consulted on the specifications; the registry insurers and TPAs are identified by.
+- **AHPI.** Association of Healthcare Providers India. The association of private hospitals, on the provider side of the network.
+- **HMO.** Health Maintenance Organisation. A payer that also organises the care it pays for; on the network it behaves as any other payer.
+- **NDHM.** National Digital Health Mission, the earlier name of ABDM. It survives in code-system names such as `ndhm-identifier-type-code`.
 - **PMJAY.** Pradhan Mantri Jan Arogya Yojana, the Ayushman Bharat health assurance scheme. On NHCX it is a payer with scheme-specific rules.
 - **SHA.** State Health Agency. Administers PMJAY in a state; under the trust model, the payer for that state.
 - **TPA.** Third-party administrator. Processes claims on an insurer's behalf; on the network it behaves as a payer and is the processor for the policies it handles.
@@ -53411,6 +53423,8 @@ bearer_auth: Bearer eyJhbGciOiJSUzI1NiIs...
 
 Leaving out the `Bearer` prefix is the portal's own example of how to get a `401`.
 
+Only your backend obtains this token, never a browser application. The client secret and the token stay on the server that makes the NHCX calls.
+
 ## Keeping it fresh
 
 The token lasts 1200 seconds (20 minutes) from the moment it arrives. Build it like this:
@@ -53570,6 +53584,8 @@ Arrives on `/v1/on_status`, again with an empty payload.
 | `x-hcx-correlation_id` | The correlation of your status request                                                                                                  |
 
 `request.stopped` is the one to act on. It means redelivery was exhausted and the correlation has been retired, so the original request is dead and a retry needs a fresh correlation ID.
+
+A payer that hosts `/v1/status` answers from its own record. Its answer has to be consistent with the last `ClaimResponse.outcome` or `PaymentNotice` status the hospital already holds, which means persisting correlation ids against every case. Status after queued, after approve, and after payment notice are each distinct. A case that reports queued forever has never had its terminal outcome written, and a status enquiry is never treated as a submit.
 
 ### When to call it
 
@@ -53746,7 +53762,7 @@ The contents of `certificate.b64` go into the `encryption_cert` field in the nex
 
 ## Keeping it
 
-- Store `private.key` where your callback service can read it and nothing else can.
+- Store `private.key` where your callback service can read it and nothing else can. In production that is a hardware security module (HSM) or a key management service (KMS), not a file beside the application.
 - Note the expiry. A year from now the certificate lapses and every sender's encryption for you fails.
 - NHA recommends replacing the key once a year. Replacing it is a certificate update on the participant record, covered next; there is no passcode step for a certificate-only change.
 - If the private key may have leaked, generate a new pair, update the record, and tell NHA.
@@ -55553,7 +55569,7 @@ The `Patient`, `Organization`, `Coverage` entries are shaped as in the chapters 
 
 ### Cancel
 
-`Task.code` `cancel`, a reason from `ndhm-reason-code` (`treatmentplanchanged`, `patientrequest`, `financialconstraints`, `alternativetreatment`, `duplicateclaim`, `administrativeerror`, `other`), and the inputs `claimNumber` and `intimationNumber`.
+`Task.code` `cancel`, a reason from `ndhm-reason-code` (`treatmentplanchanged`, `patientrequest`, `financialconstraints`, `alternativetreatment`, `duplicateclaim`, `administrativeerror`, `other`), and the inputs `claimNumber` and `intimationNumber`. `reasonCode` carries both `code` and `display`; a payer refuses it otherwise (`PAYR-1018`). An optional `document` input, valid base64 with a content type, may accompany it. A cancelled preauthorisation releases the blocked sum insured at once.
 
 ### Reprocess
 
@@ -55561,7 +55577,7 @@ The `Patient`, `Organization`, `Coverage` entries are shaped as in the chapters 
 
 ### Release
 
-`Task.code` `release`, reason `partialpayment`, with the claim number and the amount sought as a `valueMoney` input.
+`Task.code` `release`, reason `partialpayment`, with the claim number and the amount sought as a `valueMoney` input. A payer that does not implement release, or does not reopen a partially paid claim, answers with a coded refusal rather than leaving the Task hanging.
 
 ### Nullify
 
@@ -55574,6 +55590,8 @@ The Reprocess sheet of the requests-and-responses workbook gives `Task.code` on 
 ### The answer
 
 A `Task` whose `output` of type `include` references a `ClaimResponse` in the same bundle. Read the result from that `ClaimResponse`'s adjudication reason, not from `outcome` and not from `Task.code`. A cancellation is `completed` with reason `cancelled`; a reprocess is `accepted` with the `ClaimResponse` `queued`, and the new verdict follows on the claim's own thread.
+
+The payer still sets `ClaimResponse.outcome` on every answer: the hospital-side reference walks the `ClaimResponse`, not the `Task`, shows nothing for an answer without an outcome, and takes `complete` as the preauthorisation-cancelled path. A `disposition` starting "Erroneous claim is rejected" is shown as Erroneous Rejected.
 
 ### Switch on system and code together
 
@@ -56459,7 +56477,15 @@ One supporting-info entry per cycle, with `timingPeriod`, listed in the item's `
 
 ### Newborn
 
-The parent stays the primary `Patient`; the child is a second `Patient` linked with `link.type` `refer`, with gender and birth date, and a proof of birth under category `DOB`, code `BCF` or `DCB`.
+The parent stays the primary `Patient`; the child is a second `Patient` linked with `link.type` `refer`, with gender and birth date, and a proof of birth under category `DOB`, code `BCF` or `DCB`. An invalid newborn resource fails the submit.
+
+### The referral
+
+A referral number, when present, is a `ServiceRequest.identifier` of type `OIN`.
+
+### Practitioners
+
+Only a `Practitioner` referenced from `Claim.careTeam` reaches adjudication. Any other is dropped.
 
 ## PMJAY
 
@@ -57881,6 +57907,14 @@ A notification carries its reason under the communication-category system, such 
 
 A `Task` coded `deliver`, `completed`, whose `include` input references a `Communication` with `basedOn` naming the request. Same correlation id. Take each organisation's role from `Organization.type`, not from the identifier type.
 
+### The reply
+
+A reply is taken only while the case is pending; a completed case does not reopen from one. A reference payload must resolve to a `Procedure` in the same bundle. `Procedure.identifier` of type `SNO` is the item sequence when the hospital answers line by line, and `Procedure.note` is the item remarks.
+
+### A protocol response-error notice
+
+When a hospital-facing response cannot be built, a Communication whose payload is the error code and description may be sent in place of a silent drop. It is a fallback notice, not an adjudicator query, and it does not replace a coded reject on the original `on_submit`.
+
 ## PMJAY
 
 The generic bundle above is what every payer takes, IRDAI-regulated insurers and TPAs included. PMJAY takes it with the changes and requirements below.
@@ -58380,7 +58414,15 @@ A response can carry more than one `Patient` or `Organization`. Index by `fullUr
 
 ### Money
 
-`allowedMoney` is the balance remaining and `usedMoney` the amount used, not the sum insured. There is one benefit per wallet; read them all.
+`allowedMoney` is the balance remaining and `usedMoney` the amount used, not the sum insured. There is one benefit per wallet; read them all. The hospital-side reference keeps the wallet from benefit type `30` only, as `allowedMoney` plus `usedMoney`; a wallet on any other benefit type never reaches the hospital screen.
+
+### Several purposes
+
+`purpose` may carry more than one value. The payer processes them in the defined order, discovery, validation, benefits, then authorization requirements, and answers all of them in one response. Validation covers discovery, so the two together need no separate transaction.
+
+### What the hospital mapper drops
+
+`purpose`, `outcome`, `inforce`, `status`, `disposition`, `period` and `authorizationRequired` are not carried to the hospital screen. The screen is driven from the items, the wallet and the insurance plan.
 
 ### Build for the fuller form
 
@@ -59495,6 +59537,69 @@ NRCeS profile: [InsurancePlan](https://nrces.in/ndhm/fhir/r4/StructureDefinition
 | Family History        | 7     | `choice`                           | `text`      |
 | Admission Details     | 4     | `dateTime`, `choice`               | `text`      |
 
+## Building the bundle from the plan master
+
+A payer builds the plan from its own master, through a data transfer object (DTO), rather than generating FHIR by hand. This is how each DTO field lands in the bundle. If the plan is empty, the hospital cannot start cashless, and an empty specialities list means an empty coverage list: the hospital receives a plan with no packages.
+
+### The plan
+
+| DTO field                      | Required | Where it lands                                                                       |
+| ------------------------------ | -------- | ------------------------------------------------------------------------------------ |
+| `providerid`                   | Yes      | The suffix of `InsurancePlan.id`, and the Bundle id                                  |
+| `careplanid`                   | Yes      | `InsurancePlan.id` is `careplanid-providerid`                                        |
+| `careplancode`                 | Yes      | Matches the `productid` already returned on Get policy                               |
+| `specialitycode`, `speciality` | Yes      | `coverage.type.coding.code` and `.display`, for example `BM` and Burns Management    |
+| `incentives[]`                 | Optional | `plan.specificCost` benefit cost type `splinc`, the hospital or speciality incentive |
+| `standaloneyn`                 | Optional | Written on `plan.specificCost`; omitted if blank                                     |
+| `parentprocedures`             | Optional | On `plan.specificCost`, for a combination package                                    |
+
+Do not collapse every package into a single coverage row. Hospital package pickers group by speciality, and mixing codes breaks their search and their speciality-wise empanelment checks.
+
+### Packages, rates and add-ons
+
+| DTO field                          | Where it lands                                                                                                                |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `procedurecost`                    | The `Procedure` cost line, and the `limit[]` rate                                                                             |
+| `stratifications[]`, `stratamount` | One extra `limit[]` per stratification code, and a `Stratification` cost line. A blank or null amount becomes `0`, not `null` |
+| `implants[]`, `implantamount`      | An `Implant` cost line per code                                                                                               |
+| `cost[splinc]`                     | The speciality incentive                                                                                                      |
+
+The flags in the DTO have to agree with the lists beside them, or a hospital allows a picker with an empty list or blocks a package the payer meant to allow:
+
+- If `ImplantApplicable` is `Y`, `implants[]` must be present with codes and amounts.
+- If `StratificationAllowed` is `Y`, `stratifications[]` must be present.
+- If `CyclicProcedure` is `Y`, `MaximumCyclesAllowed` must be a number.
+
+For a large catalogue keep JSON numbers as strings where the DTO expects strings: `procedurecost`, `stratamount`, `implantamount`.
+
+### STG questionnaires
+
+A package's clinical checklist is a supporting-information requirement with code `STG`, Standard Treatment Guidelines, whose `documentationUrl` points at a `Questionnaire` in the same bundle. The hospital matcher is case-insensitive on the `STG` code. The pointer follows the pattern `https://payer.gov.in/policy/stgquestionnaire/{questionnaire.identifier}`; a policy questionnaire lives under `/policy/questionnaire/` instead, and the two identifiers are never swapped, because the URLs live in different path prefixes. If the pointer is omitted, the hospital logs "No STG details received" for that package, and clinicians never see the checklist.
+
+| DTO field                                    | Where it lands                                                                                                         |
+| -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `name`, `title`                              | `Questionnaire.name`, `Questionnaire.title`                                                                            |
+| `questionnaireitem.linkid`                   | `item.linkId`                                                                                                          |
+| `questionnaireitem.required` `Yes`           | `item.required` `true`                                                                                                 |
+| `questionnaireitem.type` `date`              | `item.type` `dateTime`                                                                                                 |
+| `questionnaireitem.type` `file`              | `item.type` `attachment`                                                                                               |
+| `questionnaireitem.type` `radio` or `select` | `item.type` `choice`, with `answerOption[]`                                                                            |
+| any other `questionnaireitem.type`           | `item.type` `string`                                                                                                   |
+| `answeroptions[].value`                      | `answerOption.valueString`                                                                                             |
+| `answeroptions[].initialselected` `Yes`      | `answerOption.initialSelected` `true`                                                                                  |
+| `parentfieldid`, `parentfieldanswer`         | `item.enableWhen`: `question` the parent, `operator` `equal`, `answerString` the parent answer; `enableBehavior` `all` |
+
+- Skip an STG questionnaire that has no `questionnaireitem` list. An empty `Questionnaire` in the bundle is worse than omitting it.
+- Questionnaire identifiers are unique across policy forms and STG forms in the same bundle.
+- A package without an STG is a package the hospital can bill without answering the clinical checklist. If the medical policy requires a guideline, it is on this plan.
+- Version the questionnaire identifier when the STG text changes, so cached hospital copies refresh.
+- A claim that fails `PAYR-1030` or `PAYR-1084` for a questionnaire the plan demands is working as designed. Do not drop the questionnaire from the plan to make claims pass.
+
+### Done when
+
+1. `policyNumber` on the Task resolves to exactly one product, and `careplancode` matches Get policy.
+2. A test hospital system can pick a package, see its rate and its document list, and render the STG form without a second download.
+
 ## Rules
 
 ### Two parallel structures
@@ -59664,7 +59769,11 @@ Net plus the deductions equals the adjudicated benefit, not the submitted amount
 
 ### The acknowledgement
 
-A `Task` coded `status` in `financialtaskcode`, `completed`, with an output `paymentack` and the claim number as a second output. It confirms receipt, not agreement.
+A `Task` coded `status` in `financialtaskcode`, `completed`, with an output `paymentack` and the claim number as a second output. It confirms receipt, not agreement. The hospital's case id and remarks ride in the outputs and the description, and either can be missing.
+
+### What the hospital shows
+
+The hospital maps the payer's status to its own words: Initiated as paid, Paid as cleared, Recovered as adjusted, Re-Initiated as itself, and any error as Rejected. A notice is sent only once a UTR or settlement reference exists.
 
 ### Three notices
 
@@ -61217,6 +61326,8 @@ The `Patient`, `Organization` entries are shaped as in the chapters that introdu
 
 No bundle and no `Task`. Send an empty payload with the correlation id set to the call id of the request you are asking about, and read the answer from the callback's protected header.
 
+Where the enquiry reaches the payer, its answer is consistent with the last `ClaimResponse.outcome` or `PaymentNotice` status the hospital already holds. The payer persists correlation ids so that queued and complete are truthful. A status that stays queued forever means a terminal outcome was never written.
+
 ### Search
 
 `Task.code` `search` in `ndhm-task-codes`, with inputs from the task input-type value set, such as `ClaimNumber`, `PolicyNumber`, `FromDate` and `ToDate`. The answer is a `Task`, `completed`, whose outputs reference the matching `ClaimResponse` resources in the same bundle, possibly across several callbacks on one correlation id.
@@ -62222,6 +62333,10 @@ The reason an ABHA number works as a policy identifier at all is that someone li
 
 Linking is a Payer-side action, performed when the policy is created. The insurer links the beneficiary's ABHA number, mobile and member ID to the policy's products, naming itself as the payer and its TPA, or itself, as the processor. Only the party named as payer or processor can de-link it later; the exchange checks the caller's credentials against the link. If an insurer changes TPA, every affected policy is de-linked and re-linked with the new processor.
 
+The exchange enforces the link with its own codes. Only a participant with the payer or TPA role may link; any other role is refused with `NHCX-1048`. The token used must belong to the `payerid` or the `processingid` on the link. A duplicate member and payer combination returns `NHCX-1043`. An ABHA of the wrong length returns `NHCX-1041` or `NHCX-1042`. Wire linking into policy issuance and endorsement, so a member is linked the day cover starts.
+
+De-linking removes the association by `memberid` plus `payerid`, not by ABHA alone. Only the token that created the link may de-link; another token is refused with `NHCX-1049`. More than one row for the same pair returns `NHCX-1047`. NHCX does not store the business reason for a de-link, so keep your own audit of who de-linked which member and why.
+
 The effect is felt at the point of care. A beneficiary who walks in with only an ABHA number can be resolved to a policy without a card or a member ID, which is the whole point of linking it in the first place.
 
 
@@ -62247,6 +62362,8 @@ Workflow 15 is the claim; 151 is an answer to your query. Under PMJAY there is n
 
 Acknowledge receipt with 25 and `response.partial`. A claim may receive several interim answers before the final one; each is `response.partial` on the same correlation ID, and only the final carries `response.complete`.
 
+Do not send a Claim Submitted `on_submit` of your own to echo receipt. The 25 acknowledgement is the receipt. The next message carries a decision or an interim state, 28 in process or 29 forwarded. A fake decision with a blank `outcome` is worse than a later true one.
+
 ## Validate before queueing
 
 - An approved preauthorisation exists for the case number; no claim already raised against it.
@@ -62254,6 +62371,8 @@ Acknowledge receipt with 25 and `response.partial`. A claim may receive several 
 - Registration, admission, surgery and discharge dates present and well-formed; a discharge stage present, from the allowed set.
 - Amount within the preauthorisation's approved amount and the wallet.
 - Under PMJAY, the discharge biometric token. For a LAMA or DAMA before surgery, only `LM100`, with a quantity equal to the stay. For a death, a death date. For a newborn, the parent's card and the child's documents.
+- Newborn resources on the claim are valid. An invalid newborn resource fails the submit.
+- A referral number, if present, is a `ServiceRequest` identifier of type `OIN`.
 
 ## What goes in the answer
 
@@ -62293,9 +62412,21 @@ Acknowledge with 37, then answer on `/v1/task/on_submit` with a `Task` whose `st
 
 Under PMJAY the payer enforces four rules. One appeal per claim. A shortfall claim only after payment 33 has been sent and acknowledged. The amount never above the difference. The Committee's decision final, with no shortfall claim allowed after it. A cancellation Task, code `cancel`, is answered with PC02 and refused once payment has begun.
 
+### Answering a Task
+
+A hospital's Task is a cancel, a reprocess of a rejected claim, a shortfall, or a release. Implement both cancel flavours, and reprocess for a rejected claim and for an erroneous one. Ignore `release` and `nullify`, but answer them with a coded refusal rather than leaving the Task hanging. If you do not support reopening a partially paid claim, return a coded refusal for that too.
+
+- `intimationNumber` is the preauthorisation's case number and `claimNumber` is the claim's. Do not swap them.
+- A cancel typically carries `treatmentplanchanged` or another `ndhm-reason-code`. `reasonCode` with both `code` and `display` is mandatory on cancel and on reprocess (`PAYR-1018`). A cancel may carry an optional `document` input, valid base64 with a content type.
+- Always set `ClaimResponse.outcome` on the Task answer. A Task answer without an outcome does not display on the hospital screen at all.
+- The hospital's mapper walks the `ClaimResponse`, not the `Task`. `outcome` `complete` takes the preauthorisation-cancelled path, anything else the claim path. A `disposition` starting "Erroneous claim is rejected" shows as Erroneous Rejected.
+- A cancelled preauthorisation releases any blocked sum insured immediately, so the next hospital can run eligibility for the member.
+
 ## Search
 
 Regulators, and the scheme sponsor, can search claims across payers with a `Task` of code `search` on `/v1/search/submit`. Answer on `/v1/search/on_submit` with the matching `ClaimResponse`s. A provider may only search its own cases; a regulator may search any.
+
+Search inputs typically include `memberId`, `claimNumber`, `familyId`, `policyNumber` and `payerId`. An unknown member returns an empty result or a coded miss, not a 500. Search the whole store: a search implemented against a partial store leaves historic cases invisible, and the sandbox demonstration catches that.
 
 
 ---
@@ -62323,6 +62454,19 @@ Four actions: approve, approve at a reduced amount with a note, query, reject wi
 ```
 
 The workflow code says which kind of request it is: 12 new, 121 resubmission, 13 enhancement, 19 an answer to your query. Acknowledge receipt at once with code 20 and `response.partial`, so the provider knows it is in the queue.
+
+Route on the address, not on `Claim.use`. The URL is the domain: what arrives on `/v1/preauth/submit` is a preauthorisation whatever `Claim.use` says, and what arrives on `/v1/claim/submit` is a claim. Do not branch preauthorisation, claim or predetermination on that field.
+
+## Acknowledge after the flatten, decide later
+
+Two hops. The 30-second acknowledgement follows the flatten, the step that opens the envelope, validates the bundle and writes the case. It does not wait for the medical decision, which travels later as a `ClaimResponse` on `on_submit`.
+
+- If the flatten succeeds but a decision is not yet possible, withhold `on_submit`. A fake Submitted with a blank `outcome` is worse than a later true decision.
+- Set `x-hcx-status` on every `on_submit`. Omitted, it defaults to `response.complete`, and that is not what the hospital screen shows. The hospital reads `ClaimResponse.outcome`; drive its screen from that.
+- Persist `x-user-token` from the inbound request with the case. Echo `x-hcx-ben-abha-id` on `on_submit` when it is available.
+- `Claim.priority` `stat` is an emergency case, `E`. Anything else is planned, `P`.
+- Practitioner resources not referenced from `Claim.careTeam` are dropped. They never reach adjudication.
+- A Communication reply does not go through the claim flatten. And a preauthorisation submit carrying 19 is the answer to your query on the case thread, not a Communication acknowledgement.
 
 ## Validate before queueing
 
@@ -62459,6 +62603,21 @@ Business refusals, "not a covered member", "policy expired", "coverage insuffici
 
 The coverage eligibility specification gives it one sentence: a payer might respond with a forward instruction asking NHCX to submit the same request to another payer. No fields or flow are published for it, so there is nothing to build against. Until they are, a request for a coverage you do not hold is a business refusal inside the sealed response, as described above. Governance and Audit lists the question to ask at onboarding.
 
+## Several purposes in one request
+
+`purpose` allows more than one value. When a request carries several, process them in the defined order of precedence: discovery, then validation, then benefits, then authorization requirements. Never re-prioritise that order. One response addresses the applicable requirements of every purpose asked. If a request carries discovery and validation, process discovery first and then validation. Validation inherently covers discovery, so the one response satisfies both without a separate transaction. The same principle applies to any other combination.
+
+The hospital's outbound JSON maps its own purposes onto the exchange's: `AUTHREQUIREMENTS` becomes `auth-requirements`, `BENEFITS` becomes `benefits`, and anything else becomes `validation`. Discovery is sent only when the hospital builds that purpose explicitly, so expect it rarely and only from systems that chose to.
+
+## What the hospital screen keeps
+
+Acknowledge within 30 seconds; decide later. Then build for what the hospital mapper keeps, which is less than the resource carries.
+
+- The hospital wallet is `allowedMoney` plus `usedMoney` on benefit type `30` only. Wallet figures on any other benefit type never reach the screen.
+- `purpose`, `outcome`, `inforce`, `status`, `disposition`, `period` and `authorizationRequired` are dropped by the hospital mapper. Do not rely on them to drive the hospital screen. Drive document collection from the insurance plan instead.
+- Patient identifiers: `PI` is the case reference. Generate one if the request has none; do not reject. `ADN` is the Aadhaar number. The provider organisation carries `NPI`, yours `NIIP`.
+- On discovery, identify the member from the Patient identifiers only, and return the products discoverable for that member. A request with no `Coverage` is valid here. Do not invent a product the registry has not linked.
+
 ## What to log
 
 Every eligibility answer is a promise the provider will rely on when it registers the patient. Keep the request, the answer, the wallet figures at that moment and the plan version they came from, so that when a claim arrives against them, the adjudicator sees what was said.
@@ -62584,6 +62743,8 @@ NHA's payer exit process names fifteen use cases.
 15. Get status, `/v1/status`, answered on `/v1/on_status`.
 
 Plus `/v1/error` and, where the payer is a scheme, the biometric token validation.
+
+[Private insurers and TPAs](/docs/pr-90/docs/nhcx/v1/roles/payer/private-insurers-and-tpas) sets out what differs on that track. [Sandbox exit evidence](/docs/pr-90/docs/nhcx/v1/roles/payer/sandbox-exit-evidence) says what to record for each use case, when each is done, and the evidence pack the demonstration is scored on.
 
 ## The four validations on every response
 
@@ -62765,6 +62926,8 @@ POST /v1/paymentnotice/request      workflows 30, 31, 33receive /v1/paymentnotic
 
 Three notices per claim as the money moves: 30 initiated, 31 processed by the bank, 33 settled with the UTR. Each is a separate message with its own correlation ID. Send 33 only when the bank has confirmed; under PMJAY it is the gate that lets the provider raise a shortfall claim.
 
+Send a notice only after a UTR or settlement reference exists. The money moves on your own NEFT, RTGS or IMPS rail; NHCX carries the notice, not the payment. Never represent to the hospital that payment happened on NHCX.
+
 ### What goes in the bundle
 
 A collection bundle: a `Task` with code `deliver` and an input referencing the notice, a `PaymentNotice`, a `PaymentReconciliation`, and the two `Organization`s.
@@ -62787,6 +62950,8 @@ The provider will check that net plus deductions equals the approved amount. Mak
 
 Arrives as a `Task` with `status = completed`, code `status`, and an output whose value is `paymentack`, with the claim number as a second output. It confirms receipt, not agreement. Record it against the claim and consider the payment lifecycle closed once the acknowledgement of 33 is in.
 
+Its outputs carry the hospital's case id and its description carries remarks. Handle a missing `caseId` or missing remarks cleanly; neither is guaranteed.
+
 A return payment, where money has to come back, has its own codes: RP1 intimation, RP2 acknowledged, RP3 failed.
 
 ## Communication requests
@@ -62804,6 +62969,34 @@ POST /v1/communication/requestreceive /v1/communication/on_request   the provide
 Reasons, on `Task.reasonCode`: `tatquery`, `grievance`, `walletupdate`, `policychange`, `additionalinfo`, `claimArbitration`. The last is sent automatically when an appeal Task is received, so the provider knows it is in the Committee's queue.
 
 On the general network, `additionalinfo` is how a payer asks for documents outside a formal query. Under PMJAY, document queries go through the queried `ClaimResponse` instead, and this channel is for the other five.
+
+### Which workflow to send
+
+Choose the outbound workflow from the event that raised it. If the original event action contains preauth, send 24. If it contains claim, send 27. Otherwise the bundle is built as a wallet upgrade, and you set 34 explicitly when that is what is meant. Do not use a new workflow id when the hospital answers a resubmit, and do not treat a wallet upgrade or a TAT notice as a Task reprocess.
+
+| Scenario                        | Workflow | What you send                                                                                | What the hospital receives                                                |
+| ------------------------------- | -------- | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| Preauthorisation document query | 24       | `casenumber`, `remarks`, `referencecorrelationid`, `referenceaction`                         | Task and CommunicationRequest on the case                                 |
+| Claim document query            | 27       | The same four fields                                                                         | Task and CommunicationRequest on the case                                 |
+| Wallet upgrade                  | 34       | `programid`, `hhid`, `careplan`, `amount`, `remarks`, `attachment`, and the coverage wallets | Task, Communication, Patient, and Coverage wallets on benefit type `30`   |
+| Arbitration intimation          | 36       | `registrationid` and `caseid` only                                                           | Task, code `poll` with an `include`, and a Communication keyed by case id |
+
+36 is also the code a hospital's reprocess Task arrives on, so route inbound messages by the Task, never by the workflow code alone.
+
+### Taking the hospital's answer
+
+- Accept an 18 acknowledgement, `response.partial`, only against a query you raised on 24 or 27.
+- Accept a 19 reply only while the case is still Pending. A completed case does not reopen from a reply.
+- A reference payload in the reply must resolve to a `Procedure` in the same bundle. `Procedure.identifier` of type `SNO` is the item sequence when the hospital answers line by line, and `Procedure.note` carries the item remarks.
+- On a wallet upgrade, read the hospital's 35 acknowledgement Task and persist it against the member, not against a new case number.
+
+### A wallet upgrade
+
+A wallet-upgrade intimation is usually not required on the private insurance and TPA track. Send one mid-case only when the available cover changes during an admission, for example when a top-up or a restoration benefit increases it. Reuse the 34 shape above.
+
+### A protocol response-error notice
+
+If a hospital-facing response cannot be built, send a Communication whose payload is the error code and description, instead of dropping the case silently. It is a fallback notice, not an adjudicator query. It does not replace a coded reject on the original `on_submit`; coded rejects still belong there.
 
 ### What goes in the bundle
 
@@ -62834,6 +63027,18 @@ Sending all three matters more than it looks, because the provider's case state 
 | 33       | The bank has confirmed settlement, and you send the UTR | Marks the case settled, reconciles the UTR against the bank statement, and acknowledges |
 
 Send 33 only when the bank has actually confirmed. Under PMJAY the acknowledgement of 33 is the gate that opens the provider's shortfall window, so sending it early opens that window against a payment that has not landed.
+
+The hospital screen maps your payment status to its own words:
+
+| Your status                | What the hospital shows |
+| -------------------------- | ----------------------- |
+| Initiated                  | paid                    |
+| Paid                       | cleared                 |
+| Recovered                  | adjusted                |
+| Re-Initiated               | Re-Initiated            |
+| Anything else, or an error | Rejected                |
+
+The checkpoint is done when, after a test settlement, the hospital screen shows Paid or Initiated as designed.
 
 ## Notifying the beneficiary
 
@@ -62881,7 +63086,7 @@ The flags are the scheme's rules made machine-readable, and the provider's scree
 /v1/insuranceplan/request      answer on /v1/insuranceplan/on_request
 ```
 
-The request is a `Task` with code `poll` and inputs `policyNumber` and `providerId`. The answer is scoped to that provider: only the specialties and packages its empanelment allows. That scoping is a validation as much as a filter. The payer's own error codes reject a policy not allowed for the hospital, a renewal code that does not match, a policy with no specialty configured, and an HFR ID it has no enrolment for.
+The request is a `Task` with code `poll` and inputs `policyNumber` and `providerId`. The answer is scoped to that provider: only the specialties and packages its empanelment allows. That scoping is a validation as much as a filter. The payer's own error codes reject a policy not allowed for the hospital, a renewal code that does not match, a policy with no specialty configured, and an HFR ID it has no enrolment for. The sender's HFR id must match the registry unless the sender is a PHR application. A request without `policyNumber` is refused with `PAYR-1035`.
 
 Answer with a collection bundle: one `InsurancePlan`, the `Organization`s, and one `Questionnaire` per requirement. The reference sample carries 2,215 questionnaires and is 21 MB; that is what a real PMJAY plan looks like. Build the bundle from the plan master, never by hand.
 
@@ -62899,6 +63104,149 @@ Element tables for both are in the FHIR Reference.
 
 - Refresh is the provider's job, but a `policychange` communication from the payer is what tells providers to do it early. Send one whenever a rate or package changes.
 - Concurrency: a second plan request while the first is still being answered is refused by the reference payer with a wait-and-retry error. Design the request handler to be idempotent per correlation ID.
+- An empty plan stops the hospital: if the plan is empty, the hospital cannot start cashless. An empty specialities list in your plan master becomes an empty coverage list, and the hospital receives a plan with no packages. Treat that as a configuration fault on your side, not a gateway one.
+- The plan is done when `policyNumber` on the Task resolves to exactly one product, whose `careplancode` matches the `productid` returned on Get policy. And when a test hospital system can pick a package, see its rate and its document list, and render the STG form without a second download. [Insurance plan response, package-based](/docs/pr-90/docs/nhcx/v1/reference/fhir/insurance-plan-response-package-based) has the field mapping from a plan master to the bundle.
+
+
+---
+
+# Private insurers and TPAs
+
+An IRDAI-regulated insurer or a third-party administrator (TPA) integrates on the private insurance and TPA track. It runs the same fifteen exchanges as a scheme payer, listed in [Payer checklist](/docs/pr-90/docs/nhcx/v1/roles/payer/payer-checklist), with commercial products, attachments in place of a package master, and no scheme adjudication rules. This page is what differs on that track, and the rules that hold whatever you build behind the endpoints.
+
+## In short
+
+- One cashless case is five conversations: plan, eligibility, preauthorisation, claim and payment notice.
+- The network enforces the contract on the wire. How you split listeners, queues and adjudication is your own decision.
+- Fields the network does not read are dropped. Extra FHIR content does not make up for a missing identifier type.
+- Only benefit type `30` reaches the hospital's wallet display, and only `ClaimResponse.outcome` reaches its case screen.
+- A checkpoint is done only against a recording: the request, the 202 within 30 seconds, the callback, and the hospital screen.
+
+## One case, five conversations
+
+A cashless case on the private track is five conversations between the hospital and you. Each is a request and a callback on its own correlation id.
+
+1. Plan. The hospital fetches your insurance plan and builds its screens from it.
+2. Eligibility. The hospital asks whether the policy is in force and what is left.
+3. Preauthorisation. The hospital asks permission to treat, and you decide.
+4. Claim. The hospital sends the bill, and you decide again.
+5. Payment notice. You tell the hospital the money has moved.
+
+Discharge is usually a distinct hospital step before the claim, not an exchange of its own. Documents are typically attachments and questionnaires: the hospital sends files under the codes your plan names and answers the questionnaires your plan carries. A scheme payer drives documents from a package master instead; [PMJAY on NHCX](/docs/pr-90/docs/nhcx/v1/concepts/pmjay-on-nhcx) has that shape.
+
+Accident and emergency (AAE) variants of preauthorisation and claim exist on some stacks. They are not among the fifteen sandbox exit checkpoints, so treat them as out of scope here.
+
+## The contract the network enforces
+
+The exchange checks the envelope, the four validations on every response in [Payer overview](/docs/pr-90/docs/nhcx/v1/roles/payer/), and the FHIR profile. It does not look at how you are built. How a payer splits listeners, queues and adjudication is entirely its own decision. What the network does hold you to:
+
+- **Fields the network does not read are dropped.** A boolean such as `authorizationRequired` does not appear on the hospital screen. Adding extra FHIR content will not compensate for a payload that is missing the identifier types below.
+- **Capacity is sized for every hospital on the network, not a single partner.** A closed two-party integration misreads NHCX: it is a network, not a bilateral link. Every hospital on the network can reach you the day you go live.
+- **`processingid` and `payerid` are two codes.** An insurer that adjudicates its own claims carries the same value in both. A TPA-mediated book carries the TPA's code as `processingid`. Get the pair right for both kinds of book; the [Policy registry](/docs/pr-90/docs/nhcx/v1/registries/policy) explains the split.
+- **Only your backend obtains the session token.** Never a browser application. The client secret stays on the server that hosts your callbacks.
+
+## The identifier types a payload must carry
+
+Your own intake and the hospital's mapper both key on `identifier.type`. A payload missing one of these is not rescued by anything else in the bundle.
+
+| Type   | Where                                           | What it is                                                              |
+| ------ | ----------------------------------------------- | ----------------------------------------------------------------------- |
+| `PI`   | `Patient.identifier`                            | The case reference. Generate one if the request has none; do not reject |
+| `ADN`  | `Patient.identifier`                            | The Aadhaar number                                                      |
+| `NPI`  | `Organization` (prov)                           | The provider's HFR id                                                   |
+| `NIIP` | `Organization` (pay)                            | The payer's registry id                                                 |
+| `CLN`  | `Claim`, `ClaimResponse`, `Task`                | The claim number                                                        |
+| `OIN`  | `ServiceRequest.identifier` on a claim          | The referral number, when present                                       |
+| `SNO`  | `Procedure.identifier` in a Communication reply | The item sequence, when the hospital answers line by line               |
+
+One benefit type matters on the hospital side: `30` is the wallet, and it is the only benefit type the hospital keeps. The hospital shows `allowedMoney` plus `usedMoney` on benefit type `30` only. Wallet figures on any other benefit type never reach the screen.
+
+## What reaches the hospital screen
+
+Hospital systems built on the reference mapper show a fixed set of fields and drop the rest. Build your answers for what is shown.
+
+| Exchange                           | What the hospital shows                                                                                                                                                            | What its mapper drops                                                                           |
+| ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| Eligibility                        | The wallet on benefit type `30`, and the items                                                                                                                                     | `purpose`, `outcome`, `inforce`, `status`, `disposition`, `period` and `authorizationRequired`  |
+| Preauthorisation and claim answers | `ClaimResponse.outcome` with the adjudication reason, the benefit amounts, `processNote` and `disposition`                                                                         | `x-hcx-status`. Omitted, it defaults to `response.complete`, which is not what the screen shows |
+| Task answer                        | `outcome` `complete` takes the preauthorisation-cancelled path, anything else the claim path. A `disposition` starting "Erroneous claim is rejected" shows as "Erroneous Rejected" | `Task.status`. A Task answer without `ClaimResponse.outcome` does not display at all            |
+| Payment notice                     | Initiated as paid, Paid as cleared, Recovered as adjusted, Re-Initiated as itself, and any error as Rejected                                                                       |                                                                                                 |
+
+[Eligibility response](/docs/pr-90/docs/nhcx/v1/roles/payer/eligibility-response), [Adjudicating preauthorisation](/docs/pr-90/docs/nhcx/v1/roles/payer/adjudicating-preauthorisation), [Adjudicating claims](/docs/pr-90/docs/nhcx/v1/roles/payer/adjudicating-claims) and [Payment notice and communication](/docs/pr-90/docs/nhcx/v1/roles/payer/payment-notice-and-communication) carry the detail behind each row.
+
+## When a checkpoint is done
+
+Tick a checkpoint as done only against a sandbox or staging recording that shows four things: the request, the 202 acknowledgement within 30 seconds, the callback, and the hospital screen. [Sandbox exit evidence](/docs/pr-90/docs/nhcx/v1/roles/payer/sandbox-exit-evidence) lists what that recording has to show for each checkpoint, and the evidence pack the demonstration is scored on.
+
+
+---
+
+# Sandbox exit evidence
+
+[Payer checklist](/docs/pr-90/docs/nhcx/v1/roles/payer/payer-checklist) names the fifteen use cases and the test cases under them. This page is how you prove each one: the recording a checkpoint is ticked against, what done looks like, the mistake that most often fails it, and the evidence pack the demonstration is scored on.
+
+## In short
+
+- A checkpoint is done only against a sandbox or staging recording: the request, the 202 within 30 seconds, the callback, and the hospital screen.
+- The evidence pack is correlation ids with timestamps, hospital screenshots, master data, the money trail, and the negative tests.
+- Every acknowledgement in a recording is within 30 seconds. Decisions travel later.
+
+## The recording
+
+Four things, for every checkpoint:
+
+1. The request as sent.
+2. The 202 acknowledgement, timestamped within 30 seconds of the request.
+3. The callback, `on_*`, that carried the answer.
+4. The hospital screen after the callback.
+
+A checkpoint with a decision but no acknowledgement timestamp, or an acknowledgement but no hospital screen, is not done.
+
+## Done when, and the watch-out
+
+| Checkpoint                   | Done when                                                                                                                                                                                                          | Watch out for                                                                                                                  |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| 01 Link ABHA with policy     | Linking runs from issuance and endorsement, so a member is linked the day cover starts. A duplicate member and payer pair is refused with `NHCX-1043`, an ABHA of the wrong length with `NHCX-1041` or `NHCX-1042` | Linking under a token that belongs to neither the `payerid` nor the `processingid` on the link, refused with `NHCX-1048`       |
+| 03 De-link ABHA from policy  | The association is removed by `memberid` plus `payerid`, under the token that created the link, and your own audit records who de-linked and why                                                                   | De-linking by ABHA alone. Expecting NHCX to hold the business reason, which it does not store                                  |
+| 04 Get participant list      | Operations can list `ACTIVE` providers with HFR or participant codes, to accept or to monitor                                                                                                                      | Building a closed two-party integration. NHCX is a network, not a bilateral link                                               |
+| 06 Get auth token            | Your backend holds the token and refreshes it                                                                                                                                                                      | A browser application obtaining a token                                                                                        |
+| 08 Coverage eligibility      | The 202 is within 30 seconds and the wallet shows on the hospital screen                                                                                                                                           | Wallet figures on a benefit type other than `30`, which never reach the screen                                                 |
+| 10 Raise a communication     | The hospital's acknowledgement on 18 arrives against the query you raised on 24 or 27                                                                                                                              | A new workflow id when the hospital answers a resubmit. A wallet upgrade or a TAT notice treated as a Task reprocess           |
+| 12 Respond to search         | An unknown member returns an empty result or a coded miss, never a 500                                                                                                                                             | A search implemented against a partial store, so historic cases stay invisible                                                 |
+| 13 Send payment notice       | After a test settlement, the hospital screen shows Paid or Initiated as designed                                                                                                                                   | A notice sent before a UTR or settlement reference exists. Telling the hospital payment happened "on NHCX"                     |
+| 14 Task cancel and reprocess | Four recordings, listed below                                                                                                                                                                                      | A Task answer without `ClaimResponse.outcome`, which does not display. A `release` left hanging instead of refused with a code |
+| 15 Get status                | Status after queued, after approve, and after payment notice are each distinct                                                                                                                                     | Treating status as a submit. Returning queued forever because no terminal outcome was stored                                   |
+
+The four recordings for checkpoint 14:
+
+1. A preauthorisation cancel by `intimationNumber`. The hospital shows Preauthorization Cancelled, and a later claim on that `CLN` is refused.
+2. A claim cancel by `claimNumber`.
+3. A reprocess of a rejected claim.
+4. A coded refusal of an unknown Task combination.
+
+## The evidence pack
+
+| Evidence                      | What to capture                                                                    |
+| ----------------------------- | ---------------------------------------------------------------------------------- |
+| Correlation id and timestamps | The 202 acknowledgement under 30 seconds, and the `on_*` callback later            |
+| Hospital screenshot           | Approved, Rejected and Queried, plus the Communication cycle if you use it         |
+| Master data                   | The IRDAI product, and the TPA's `processingid`                                    |
+| Money                         | The bank UTR, then the `PaymentNotice` that carries it                             |
+| Negative tests                | `NHCX-1016`, `NHCX-1043`, `NHCX-1048` and `NHCX-1049`; `PAYR-1032` and `PAYR-1035` |
+
+## Mistakes the demonstration catches
+
+- Deciding before acknowledging. Send the 202 first; decide later.
+- The wallet on the wrong benefit. Only type `30` reaches the hospital eligibility screen.
+- A decision with a blank `outcome`. A later true decision beats a fake Submitted.
+
+## The NHA documents the demonstration follows
+
+- NHCX Payer Side Use Cases: Sandbox Exit Process.
+- Onboarding Providers and Payers, sandbox and production.
+- Policy Linking and De-Linking Process.
+- The Coverage Eligibility, Preauthorization, Claim and Payment specifications.
+- Standard Error Codes and Common Mistakes.
 
 
 ---
@@ -63354,6 +63702,8 @@ The Task names the case by claim number and carries a reason: `claimrejected` fo
 A provider system is the hospital's side of the exchange. It takes a patient from the front desk to a settled claim without anyone leaving the HMIS. It does that by making a fixed set of calls to the exchange and hosting a fixed set of callbacks for the payer's answers.
 
 This section assumes the base framework from Getting Started is working: you have a token, a participant record, your own key, and a callback endpoint that opens messages. Everything here is what goes on top.
+
+The NHCX interface in an HMIS primarily supports three claim-related activities: accessing the claim information a payer needs, processing claims, and tracking claim status. To do that it integrates the clinical, financial, billing, discharge, procedure, authentication and other relevant information the HMIS already captures.
 
 Registration and Eligibility, Insurance Plan, Preauthorisation, Discharge and Claim, and Payment and Communication describe the flow as NHCX defines it for any payer. PMJAY runs the same endpoints with different rules around them; those rules are collected in PMJAY Provider so the generic flow stays readable and the scheme's additions are in one place, and Biometric Authentication covers the scheme's proof that the beneficiary was present. UI Guide turns all of it into screens, for whoever is designing the hospital's interface rather than its integration. Provider Checklist is the checklist you have to demonstrate to leave the sandbox.
 
@@ -64837,6 +65187,10 @@ A report without these cannot be traced:
 - The error code and message exactly as returned.
 
 Never send a token, a client secret or a private key.
+
+## NHA's office
+
+National Health Authority, 3rd, 4th, 7th and 9th Floor, Tower 1, Jeevan Bharti Building, Connaught Place, New Delhi 110001.
 
 
 ---

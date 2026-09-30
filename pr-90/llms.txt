@@ -564,6 +564,8 @@ Add `.md` to any link below to get that page as markdown. Individual API operati
 - [Payer checklist](https://nha-in.github.io/docs/pr-90/docs/nhcx/v1/roles/payer/payer-checklist): Payer sandbox exit list, the four validations, 26 test cases by family (T-ELG, T-PLN, T-PRE, T-CLM, T-TSK, T-PAY, T-COM, T-ENV)
 - [Payment notice and communication](https://nha-in.github.io/docs/pr-90/docs/nhcx/v1/roles/payer/payment-notice-and-communication): Dispatching payment notices and operational intimations
 - [Policies and plans](https://nha-in.github.io/docs/pr-90/docs/nhcx/v1/roles/payer/policies-and-plans): Publishing policy master and 21 MB plan bundles
+- [Private insurers and TPAs](https://nha-in.github.io/docs/pr-90/docs/nhcx/v1/roles/payer/private-insurers-and-tpas): The private insurance and TPA track, the contract the network enforces, the identifier types every payload needs, and what reaches the hospital screen.
+- [Sandbox exit evidence](https://nha-in.github.io/docs/pr-90/docs/nhcx/v1/roles/payer/sandbox-exit-evidence): What to record for each payer checkpoint, when each is done, the watch-out on it, the evidence pack, and the NHA documents the demonstration follows.
 - [Payer UI guide](https://nha-in.github.io/docs/pr-90/docs/nhcx/v1/roles/payer/ui-guide): Payer adjudication desk screens and workflow
 - [Provider overview](https://nha-in.github.io/docs/pr-90/docs/nhcx/v1/roles/provider): Hospital integration architecture and queue flow
 - [Biometric authentication](https://nha-in.github.io/docs/pr-90/docs/nhcx/v1/roles/provider/biometric-authentication): ABDM biometric pipeline: Fingerprint, Iris, FaceAuth, and exemption consent

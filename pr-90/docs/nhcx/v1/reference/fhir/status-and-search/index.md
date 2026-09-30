@@ -89,6 +89,8 @@ The `Patient`, `Organization` entries are shaped as in the chapters that introdu
 
 No bundle and no `Task`. Send an empty payload with the correlation id set to the call id of the request you are asking about, and read the answer from the callback's protected header.
 
+Where the enquiry reaches the payer, its answer is consistent with the last `ClaimResponse.outcome` or `PaymentNotice` status the hospital already holds. The payer persists correlation ids so that queued and complete are truthful. A status that stays queued forever means a terminal outcome was never written.
+
 ### Search
 
 `Task.code` `search` in `ndhm-task-codes`, with inputs from the task input-type value set, such as `ClaimNumber`, `PolicyNumber`, `FromDate` and `ToDate`. The answer is a `Task`, `completed`, whose outputs reference the matching `ClaimResponse` resources in the same bundle, possibly across several callbacks on one correlation id.

@@ -4,6 +4,8 @@ A provider system is the hospital's side of the exchange. It takes a patient fro
 
 This section assumes the base framework from Getting Started is working: you have a token, a participant record, your own key, and a callback endpoint that opens messages. Everything here is what goes on top.
 
+The NHCX interface in an HMIS primarily supports three claim-related activities: accessing the claim information a payer needs, processing claims, and tracking claim status. To do that it integrates the clinical, financial, billing, discharge, procedure, authentication and other relevant information the HMIS already captures.
+
 Registration and Eligibility, Insurance Plan, Preauthorisation, Discharge and Claim, and Payment and Communication describe the flow as NHCX defines it for any payer. PMJAY runs the same endpoints with different rules around them; those rules are collected in PMJAY Provider so the generic flow stays readable and the scheme's additions are in one place, and Biometric Authentication covers the scheme's proof that the beneficiary was present. UI Guide turns all of it into screens, for whoever is designing the hospital's interface rather than its integration. Provider Checklist is the checklist you have to demonstrate to leave the sandbox.
 
 ## What the hospital sees

@@ -26,7 +26,7 @@ The contents of `certificate.b64` go into the `encryption_cert` field in the nex
 
 ## Keeping it
 
-- Store `private.key` where your callback service can read it and nothing else can.
+- Store `private.key` where your callback service can read it and nothing else can. In production that is a hardware security module (HSM) or a key management service (KMS), not a file beside the application.
 - Note the expiry. A year from now the certificate lapses and every sender's encryption for you fails.
 - NHA recommends replacing the key once a year. Replacing it is a certificate update on the participant record, covered next; there is no passcode step for a certificate-only change.
 - If the private key may have leaked, generate a new pair, update the record, and tell NHA.
