@@ -1,0 +1,11 @@
+# 30 September 2026
+
+2 changes
+
+### One Participant registry call withdrawn
+
+`POST /get/session`. If you call it, stop: the reference no longer carries it. [Open the Participant registry reference](/docs/pr-90/docs/nhcx/v1/api/registry/).
+
+### The uhi-integrators-assistant plugin is 0.1.1
+
+Reinstall to move from 0.1.0. [Build with AI](/docs/pr-90/docs/hiecm/v3/getting-started/build-with-ai).
