@@ -29,10 +29,10 @@
   "expected_sources": [
     "shared.glossary.phr"
   ],
-  "expected_shape": "how-do-i",
+  "expected_shape": "overview",
   "expected_behaviour": "answer",
   "derived_from": null,
   "source_row": "annexure#glossary",
   "catalogue_version": "2026.09.16",
-  "notes": "NHA PHR review, 30 September 2026, case 2: the panel described P1 in detail and built 'in this order' P1 to P3, with P4 missing. Source lines: catalogue/shared/glossary/phr.md as in naive-phr-milestones-01; 'P4 applies to an app that stores a person's records rather than only displaying them'."
+  "notes": "NHA PHR review, 30 September 2026, case 2: the panel described P1 in detail and built 'in this order' P1 to P3, with P4 missing. Source lines: catalogue/shared/glossary/phr.md as in naive-phr-milestones-01; 'P4 applies to an app that stores a person's records rather than only displaying them'. Routed to the overview shape."
 }

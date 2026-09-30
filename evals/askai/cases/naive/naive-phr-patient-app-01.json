@@ -1,0 +1,38 @@
+{
+  "id": "naive-phr-patient-app-01",
+  "slice": "naive",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "Is there a Patient app in ABDM and how do I build one?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "gateway": "hiecm",
+  "must_contain": [
+    "Yes: the patient app is a PHR application, the patient's own app on ABDM",
+    "Building one is four ABDM milestones in order, P1, P2, P3 and P4, and the answer names all four"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom",
+    "three milestones",
+    "/abha/api/v3/phr/app/enrollment/request/otp"
+  ],
+  "expected_sources": [
+    "shared.glossary.phr"
+  ],
+  "expected_shape": "overview",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#glossary",
+  "catalogue_version": "2026.09.16",
+  "notes": "NHA PHR review, 30 September 2026, case 5: the answer explained P1's creation and login routes in full and stopped at P3. NHA asked for what a patient app is, all four milestones briefly, and a question back about which to open. The enrolment OTP path is forbidden because it marks the P1-in-depth answer. Source lines: catalogue/shared/glossary/phr.md, 'the patient's own app on ABDM', 'To build a PHR application you implement four ABDM milestones, in order'."
+}
