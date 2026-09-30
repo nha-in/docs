@@ -7,6 +7,7 @@
  * moving through its guides.
  */
 
+import {Bot, type LucideIcon} from 'lucide-react';
 import {useLocation} from '@docusaurus/router';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import generatedPlatforms from '../data/platforms.json';
@@ -18,6 +19,12 @@ export type Tab = {
   to: string;
   /** Route prefix that marks this tab active. */
   match: string;
+  /**
+   * A mark rendered before the label. One tab has one, which is the point:
+   * the strip is otherwise six words in a row, and a single icon in it is
+   * read before any of them.
+   */
+  icon?: LucideIcon;
 };
 
 export type Version = {
@@ -52,7 +59,24 @@ export type Platform = {
 // entry here; this file never lists platforms by hand.
 export const platforms: Platform[] = generatedPlatforms;
 
-export type TabId = 'overview' | 'api' | 'resources' | 'whats-new' | 'support';
+export type TabId =
+  | 'overview'
+  | 'api'
+  | 'build-with-ai'
+  | 'resources'
+  | 'whats-new'
+  | 'support';
+
+/**
+ * The one page that is a tab of its own.
+ *
+ * It keeps its published URL under getting-started rather than moving to a
+ * folder of its own, because the tab is a way in, not a section: there is one
+ * page behind it, and moving the file would break every link to it to buy a
+ * tidier path. The overview sidebar drops it instead, so it appears in the
+ * chrome once rather than twice (site/docusaurus.config.ts).
+ */
+export const BUILD_WITH_AI_PATH = 'getting-started/build-with-ai';
 
 // The default platform is the picker's first entry; a tab opened with no
 // gateway chosen lands there.
@@ -84,6 +108,13 @@ const resourcesDefault = `${platforms[0].to}/${SECTION_PAGES.resources[platforms
 export const tabs: Tab[] = [
   {id: 'overview', label: 'Docs', to: platforms[0].to, match: '/docs/'},
   {id: 'api', label: 'API reference', to: platforms[0].apiTo, match: '/api'},
+  {
+    id: 'build-with-ai',
+    label: 'Build with AI',
+    icon: Bot,
+    to: `${platforms[0].to}/${BUILD_WITH_AI_PATH}`,
+    match: `/${BUILD_WITH_AI_PATH}`,
+  },
   {id: 'resources', label: 'Developer resources', to: resourcesDefault, match: '/resources'},
   {id: 'whats-new', label: "What's new", to: '/docs/whats-new', match: '/docs/whats-new'},
   {id: 'support', label: 'Support', to: '/docs/support', match: '/docs/support'},
@@ -93,6 +124,13 @@ export const tabs: Tab[] = [
 export function visibleTabs(_pathname: string): Tab[] {
   return tabs;
 }
+
+/**
+ * The gateways that publish a Build with AI page. Same rule as the resources
+ * tab above: the strip renders on every page, so a gateway without the page
+ * gets the default gateway's rather than a link to nothing.
+ */
+const BUILD_WITH_AI_GATEWAYS = new Set(['hiecm', 'nhcx', 'uhi']);
 
 /** The href for a tab, keeping the gateway the reader already chose. */
 export function tabHref(tab: Tab, pathname: string): string {
@@ -112,6 +150,11 @@ export function tabHref(tab: Tab, pathname: string): string {
   if (tab.id === 'whats-new' || tab.id === 'support') {
     const page = SECTION_PAGES[tab.id][platform.id];
     return page ? `${platform.to}/${page}` : tab.to;
+  }
+  if (tab.id === 'build-with-ai') {
+    return BUILD_WITH_AI_GATEWAYS.has(platform.id)
+      ? `${platform.to}/${BUILD_WITH_AI_PATH}`
+      : tab.to;
   }
   return tab.to;
 }
@@ -183,6 +226,16 @@ export function isApiSideTab(id: TabId | undefined): boolean {
 }
 
 /**
+ * True for the Build with AI page itself, and nothing else under
+ * getting-started. Asked before the API and resources questions in activeTab,
+ * because this page sits inside a gateway's overview tree and would otherwise
+ * light the Docs tab it was moved out of.
+ */
+export function isBuildWithAiRoute(pathname: string): boolean {
+  return new RegExp(`/${BUILD_WITH_AI_PATH}(/|$)`).test(pathname);
+}
+
+/**
  * Which tab a route belongs to. The two short tabs own their own prefixes.
  * Everything else under a gateway is its Developer resources (which include
  * its FHIR reference and error codes), its API section, or its overview.
@@ -205,7 +258,13 @@ export function activeTab(pathname: string): Tab | undefined {
     const apiSide = SPLIT_REFERENCE.has(platform.id)
       ? /\/api(\/|$)/.test(pathname)
       : isApiRoute(pathname);
-    const id: TabId = isResourcesRoute(pathname) ? 'resources' : apiSide ? 'api' : 'overview';
+    const id: TabId = isBuildWithAiRoute(pathname)
+      ? 'build-with-ai'
+      : isResourcesRoute(pathname)
+        ? 'resources'
+        : apiSide
+          ? 'api'
+          : 'overview';
     return tabs.find((tab) => tab.id === id);
   }
   return undefined;

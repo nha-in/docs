@@ -1242,3 +1242,10 @@ body.is-resizing-sidebar {
   padding: 0;
   overflow-wrap: anywhere;
 }
+
+/* A ### on the Build with AI page, under its section in the sidebar: one step
+   further in than the sections, so the sidebar reads as the page's outline. */
+.menu__list-item.sidebar-subsection > .menu__link {
+  padding-inline-start: 1.75rem;
+  font-size: 0.8125rem;
+}

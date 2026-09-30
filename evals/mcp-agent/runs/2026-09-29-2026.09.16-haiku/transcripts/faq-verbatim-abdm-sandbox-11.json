@@ -1,0 +1,452 @@
+{
+  "case_id": "faq-verbatim-abdm-sandbox-11",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "Are there any terms and conditions for joining the sandbox?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01SGZMmjiQ9LDJwvTMEfgnhq",
+            "Name": "search",
+            "Input": {
+              "query": "sandbox terms and conditions join",
+              "type": "sandbox"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "sandbox terms and conditions join",
+            "type": "sandbox"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/sandbox#4-note-the-base-urls",
+                "id": "uhi.sandbox.base-urls",
+                "summary": "The UHI Gateway base URL for the sandbox and for production, and the reference EUA and HSPA apps in the sandbox.",
+                "title": "UHI Gateway base URLs for sandbox and production",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/base-urls",
+                "id": "nhcx.sandbox.environments-and-base-urls",
+                "summary": "The two environments, the web portals, and the two base addresses every call is built on, for testing and for live claims.",
+                "title": "NHCX environments, hosts and base URLs",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/get-your-sandbox-credentials",
+                "id": "nhcx.sandbox.prerequisites",
+                "summary": "The checklist to complete before your system can register on the claims exchange sandbox: a facility registration, sandbox credentials, basic health ID featu...",
+                "title": "What you need before you register on the NHCX sandbox",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/going-live",
+                "id": "shared.sandbox.going-live",
+                "summary": "How an integration leaves the sandbox for production: functional testing and the security audit, the Health Tech Committee demonstration, then production cre...",
+                "title": "Going live, the sandbox exit process",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/first-fifteen-minutes",
+                "id": "shared.sandbox.first-fifteen-minutes",
+                "summary": "Everything you can do before NHA approves your sandbox registration: read one real gateway session exchange and assemble your own first call, ready to paste ...",
+                "title": "Your first fifteen minutes with ABDM",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/going-live#3-switch-to-production",
+                "id": "uhi.sandbox.production-switch",
+                "summary": "Change your IDs and callback URL to production values and point your calls at the production UHI Gateway.",
+                "title": "Switch your UHI integration to production",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/get-your-sandbox-credentials",
+                "id": "nhcx.sandbox.dummy-payer",
+                "summary": "The built-in test insurer in the sandbox, which use cases it answers, and the two test calls that make it approve, reject, query or send a payment notice.",
+                "title": "The dummy payer and what it answers",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/get-your-sandbox-credentials",
+                "id": "nhcx.sandbox.support-contacts",
+                "summary": "Which address to write to for each kind of question, what to put in the message, and what to do while you wait for an answer.",
+                "title": "Where to get help with NHCX",
+                "type": "sandbox"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01WLzwzxxoRz7cnw8RbBLiYN",
+            "Name": "search",
+            "Input": {
+              "query": "sandbox registration onboarding agreement",
+              "limit": 15
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "sandbox registration onboarding agreement",
+            "limit": 15
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/sandbox#4-note-the-base-urls",
+                "id": "uhi.sandbox.base-urls",
+                "summary": "The UHI Gateway base URL for the sandbox and for production, and the reference EUA and HSPA apps in the sandbox.",
+                "title": "UHI Gateway base URLs for sandbox and production",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/base-urls",
+                "id": "nhcx.sandbox.environments-and-base-urls",
+                "summary": "The two environments, the web portals, and the two base addresses every call is built on, for testing and for live claims.",
+                "title": "NHCX environments, hosts and base URLs",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/get-your-sandbox-credentials",
+                "id": "nhcx.sandbox.prerequisites",
+                "summary": "The checklist to complete before your system can register on the claims exchange sandbox: a facility registration, sandbox credentials, basic health ID featu...",
+                "title": "What you need before you register on the NHCX sandbox",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/going-live",
+                "id": "shared.sandbox.going-live",
+                "summary": "How an integration leaves the sandbox for production: functional testing and the security audit, the Health Tech Committee demonstration, then production cre...",
+                "title": "Going live, the sandbox exit process",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/first-fifteen-minutes",
+                "id": "shared.sandbox.first-fifteen-minutes",
+                "summary": "Everything you can do before NHA approves your sandbox registration: read one real gateway session exchange and assemble your own first call, ready to paste ...",
+                "title": "Your first fifteen minutes with ABDM",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/concepts/signing#generate-your-keys-and-headers",
+                "id": "uhi.concept.key-generation",
+                "summary": "The Header Generation Utility creates your Ed25519 key pair and signs each payload; share only the public key and keep the private key on your server.",
+                "title": "Generating UHI signing keys and headers",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/session/endpoints/session-api-hiecm-gateway-v3-sessions",
+                "id": "nhcx.endpoint.session-token",
+                "summary": "Trade your client id and client secret for the access token, valid for 1200 seconds (20 minutes), that every claims exchange call carries.",
+                "title": "POST /api/hiecm/gateway/v3/sessions",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.decision.session-endpoint",
+                "summary": "Get the token that every exchange call carries from one place in your code, and set the address it calls per environment.",
+                "title": "Which session token endpoint to call",
+                "type": "decision"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/going-live#when-it-goes-wrong",
+                "id": "uhi.troubleshooting.go-live",
+                "summary": "A search that worked in the sandbox fails in production. Check the Gateway host, then your production IDs and callback URL.",
+                "title": "When a UHI search fails after the switch to production",
+                "type": "troubleshooting"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#sandbox",
+                "id": "shared.glossary.sandbox",
+                "summary": "NHA's test environment, with its own base URLs and credentials, separate from production.",
+                "title": "Sandbox, the test environment",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.test.payer-uc-04",
+                "summary": "Prove that your insurance system can fetch the registered participants of one role from the claims exchange.",
+                "title": "Payer sandbox exit use case 4: Get participant list",
+                "type": "test"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/get-your-sandbox-credentials",
+                "id": "nhcx.flow.sandbox-onboarding",
+                "summary": "Register your system in the claims exchange test environment so it holds a participant code, a registered certificate and a callback address.",
+                "title": "Onboard as a participant in the NHCX sandbox",
+                "type": "flow"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.test.provider-uc-01",
+                "summary": "Prove that your hospital system can fetch the registered participants of one role, such as every payer, from the claims exchange.",
+                "title": "Provider sandbox exit use case 1: Get participant list",
+                "type": "test"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#nha",
+                "id": "shared.glossary.nha",
+                "summary": "The body that runs ABDM, publishes the specifications and operates the gateways.",
+                "title": "NHA, the National Health Authority",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/services/blood-bank#service-identity",
+                "id": "uhi.concept.blood-bank-service-identity",
+                "summary": "The fixed values every Blood Bank search carries, context.domain nic2008:86906 and fulfillment type BloodStock, and the sandbox reference HSPA.",
+                "title": "Blood Bank service identity",
+                "type": "concept"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_013AcafJcE1WrRf94J4inMmv",
+            "Name": "get",
+            "Input": {
+              "id": "nhcx.flow.sandbox-onboarding"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "nhcx.flow.sandbox-onboarding"
+          },
+          "output": {
+            "body": "# Onboard as a participant in the NHCX sandbox\n\n## In plain words\n\nEvery system that sends or receives claims messages on the [National Health Claims Exchange](../../shared/glossary/nhcx.md) (NHCX) must first exist in its participant registry. Onboarding creates that record.\n\nThe record gives you a [participant code](../glossary/participant-code.md), such as `100001@sbx`. It holds your public encryption certificate and the address where NHCX delivers your messages. Nothing else on NHCX works for you until the record exists.\n\n## Before you start\n\nEach item is something you can check before the first call.\n\n- **Registry identity.** A [provider](../glossary/provider.md) has its facility in the [Health Facility Registry](../../shared/glossary/hfr.md) (HFR) and knows its HFR ID. A [payer](../glossary/payer.md) or [TPA](../glossary/tpa.md) knows the ID its [IRDAI](../glossary/irdai.md) or equivalent authority issued. An end user application, such as a [PHR](../../shared/glossary/phr.md) app, uses its client ID.\n- **Sandbox credentials.** You hold an [ABDM](../../shared/glossary/abdm.md) sandbox client ID and secret. Apply at `https://sandbox.abdm.gov.in/sandbox/v3/` with the intent \"Providers and Payer\" and [Milestone 1](../../hiecm/glossary/m1.md). See [What you need before you register on the NHCX sandbox](../sandbox/prerequisites.md).\n- **Milestone 1 working, for a provider.** Your software creates and verifies [ABHA](../../shared/glossary/abha.md) numbers.\n- **NHCX sandbox access.** You registered at `https://sandbox.abdm.gov.in/sandbox/v3/sandbox-registration` with that client ID and secret, and roles were assigned to you.\n- **A certificate.** You have `certificate_base64.txt` from [Generate an encryption certificate and register it](generate-and-register-certificate.md).\n- **A callback address.** Your HTTPS endpoint meets the [callback address rules](../sandbox/callback-url-requirements.md). It uses a domain name with no IP address or port. The server is in India, and its firewall is open to `3.109.99.210`, `13.126.152.0` and `13.200.129.223`.\n\n## What happens\n\n```mermaid\nsequenceDiagram\n    participant You as Your system\n    participant GW as ABDM session gateway\n    participant PS as NHCX participant service\n    You->>GW: POST /api/hiecm/gateway/v3/sessions\n    GW-->>You: accessToken, expiresIn 1200\n    You->>PS: POST /participant/create\n    PS-->>You: participant_code, for example 100001@sbx\n    opt Create answers with a transactionid instead\n        Note over You: a passcode arrives by SMS on the registered mobile\n        You->>PS: GET /validate with transactionId and passcode\n        PS-->>You: creation confirmed\n    end\n    You->>PS: POST /fetch/certs with your participant code\n    PS-->>You: the encryption_cert you registered\n    opt Change the endpoint or certificate later\n        You->>PS: POST /participant/update\n        PS-->>You: participant_code\n    end\n```\n\nEvery call in this flow answers in its own response. Two waits sit outside the calls. The manual review of your sandbox registration comes before step 1. The SMS passcode arrives in step 3, when that step applies.\n\n### 1. Get a session token\n\nCall the session endpoint with your client ID and secret. [Which session token endpoint to call](../decisions/session-endpoint.md) settles the address. The token lasts 1200 seconds (20 minutes), which the answer states as `expiresIn`. Get a new token before it lapses, and after any `401`.\n\nEvery participant service call below carries this token. The [session token endpoint](../endpoints/session-token.md) shows the header.\n\n### 2. Create the participant\n\nCall `POST /participant/create` on the sandbox participant service, `https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice`. The body carries your profile:\n\n| Field | What to put |\n|---|---|\n| `linked_registry_codes` | Your registry code, from the table below |\n| `registryid` | Your ID in that registry, as listed under Before you start |\n| `participant_name` | Your legal or facility name |\n| `scheme_code`, `state`, `district` | Your scheme, for example `PMJAY`, and your location |\n| `roles` | Your role code, from the table below |\n| `primaryEmail`, `phone`, `primaryMobile` | Your contacts |\n| `signing_cert_path` | Path to your signing certificate, if you have one |\n| `encryption_cert` | The contents of `certificate_base64.txt` |\n| `endpoint_url` | Your callback base address |\n\n| You are | `roles` | `linked_registry_codes` |\n|---|---|---|\n| Provider | `10001` | `10001` (HFR) |\n| Payer | `10002` | `10004` (PAYER) |\n| TPA | `10003` | `10004` (PAYER) |\n| End user application | `10009` | `10001` |\n\nThe answer carries your `participant_code`. The full request is in [POST /participant/create](../endpoints/participant-create.md).\n\nAn entity with several facilities creates one participant code per HFR ID. It uses the same client credentials for all of them.\n\n### 3. Confirm, when the answer asks for it\n\nIf the create answer carries a `transactionid` instead of a participant code, a passcode arrives by SMS on the registered mobile. Confirm with `GET /validate`, passing `transactionId` and `passcode`. The rules for that pair are in [Onboard as a participant in production](production-onboarding.md).\n\n### 4. Read your record back\n\nCall `POST /fetch/certs` with `{\"participantid\": \"<YOUR_PARTICIPANT_CODE>\"}`. The answer carries the `encryption_cert` stored against your code. Compare it with your certificate as shown in [Generate an encryption certificate and register it](generate-and-register-certificate.md).\n\n### 5. Change it later\n\n`POST /participant/update` changes the endpoint address, the certificate or any other attribute. `participant_code` is mandatory in its body.\n\nOn success every call here answers HTTP `200`. Failures answer `400` for a client error, `404` for a resource not found, or `500` when downstream systems are down.\n\n## How you know it worked\n\nYou hold a `participant_code` from `POST /participant/create`, or from `GET /validate` when a passcode was asked for. `POST /fetch/certs` with that code returns an `encryption_cert` whose public key matches your `certificate.crt`.\n\n```observation schema=exit-condition\nchannel: synchronous\ncall: POST /fetch/certs\nrequest:\n  participantid: <YOUR_PARTICIPANT_CODE>\nmatch:\n  encryption_cert: public key equals the one in certificate.crt\n```\n\nNext, build your message handling with [Receive, open and acknowledge a sealed message](receive-a-sealed-callback.md) and [Report a processing failure on /v1/error](report-a-processing-error.md). Then work through [the sandbox exit process](../sandbox/sandbox-exit.md).\n\n## When it goes wrong\n\n- **Every call returns `401`.** The token is missing, lacks the `Bearer ` prefix, or has expired. Get a new token and retry once. See [NHCX-401](../errors/nhcx-401.md) and [Every NHCX call returns 401](../troubleshooting/everything-returns-401.md).\n- **Create is refused with `400`.** Check `roles` and `linked_registry_codes` against the table in step 2. A wrong pairing causes rejection or misrouted traffic later.\n- **Use-case calls say the sender is not registered.** You are calling before the record exists, or with a different code. See [NHCX-1002](../errors/nhcx-1002.md).\n- **Nothing ever reaches your endpoint.** The address uses an IP address or a port, or the server is outside India. A firewall may also block the NHCX addresses. See [Your callback URL is rejected or never called](../troubleshooting/callback-url-rejected.md).\n- **`/fetch/certs` returns a different key.** You registered a certificate from another key pair. Replace it with `POST /participant/update`.\n- **You are still waiting for sandbox access.** Registration approval is a manual review with no published turnaround. You cannot call anything until roles are assigned. See [Where to get help with NHCX](../sandbox/support-contacts.md).",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/nhcx/v1/getting-started/get-your-sandbox-credentials",
+            "gateway": "nhcx",
+            "id": "nhcx.flow.sandbox-onboarding",
+            "milestone": "n/a",
+            "summary": "Register your system in the claims exchange test environment so it holds a participant code, a registered certificate and a callback address.",
+            "title": "Onboard as a participant in the NHCX sandbox",
+            "type": "flow"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_0183P16m3qyxDVBfTCUPQE8c",
+            "Name": "search",
+            "Input": {
+              "query": "terms conditions agreement sandbox HIP HIU provider",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "terms conditions agreement sandbox HIP HIU provider",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/sandbox#4-note-the-base-urls",
+                "id": "uhi.sandbox.base-urls",
+                "summary": "The UHI Gateway base URL for the sandbox and for production, and the reference EUA and HSPA apps in the sandbox.",
+                "title": "UHI Gateway base URLs for sandbox and production",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/base-urls",
+                "id": "nhcx.sandbox.environments-and-base-urls",
+                "summary": "The two environments, the web portals, and the two base addresses every call is built on, for testing and for live claims.",
+                "title": "NHCX environments, hosts and base URLs",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/get-your-sandbox-credentials",
+                "id": "nhcx.sandbox.prerequisites",
+                "summary": "The checklist to complete before your system can register on the claims exchange sandbox: a facility registration, sandbox credentials, basic health ID featu...",
+                "title": "What you need before you register on the NHCX sandbox",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/going-live",
+                "id": "shared.sandbox.going-live",
+                "summary": "How an integration leaves the sandbox for production: functional testing and the security audit, the Health Tech Committee demonstration, then production cre...",
+                "title": "Going live, the sandbox exit process",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/first-fifteen-minutes",
+                "id": "shared.sandbox.first-fifteen-minutes",
+                "summary": "Everything you can do before NHA approves your sandbox registration: read one real gateway session exchange and assemble your own first call, ready to paste ...",
+                "title": "Your first fifteen minutes with ABDM",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/concepts/signing#generate-your-keys-and-headers",
+                "id": "uhi.concept.key-generation",
+                "summary": "The Header Generation Utility creates your Ed25519 key pair and signs each payload; share only the public key and keep the private key on your server.",
+                "title": "Generating UHI signing keys and headers",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/session/endpoints/session-api-hiecm-gateway-v3-sessions",
+                "id": "nhcx.endpoint.session-token",
+                "summary": "Trade your client id and client secret for the access token, valid for 1200 seconds (20 minutes), that every claims exchange call carries.",
+                "title": "POST /api/hiecm/gateway/v3/sessions",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.decision.session-endpoint",
+                "summary": "Get the token that every exchange call carries from one place in your code, and set the address it calls per environment.",
+                "title": "Which session token endpoint to call",
+                "type": "decision"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/going-live#when-it-goes-wrong",
+                "id": "uhi.troubleshooting.go-live",
+                "summary": "A search that worked in the sandbox fails in production. Check the Gateway host, then your production IDs and callback URL.",
+                "title": "When a UHI search fails after the switch to production",
+                "type": "troubleshooting"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#sandbox",
+                "id": "shared.glossary.sandbox",
+                "summary": "NHA's test environment, with its own base URLs and credentials, separate from production.",
+                "title": "Sandbox, the test environment",
+                "type": "glossary"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "Based on my search of the ABDM documentation, **there is no specific mention of terms and conditions for joining the sandbox** in the available portal pages.\n\nThe documentation covers the technical prerequisites and onboarding steps (such as applying at `https://sandbox.abdm.gov.in/sandbox/v3/` with the intent \"Providers and Payer\"), but it doesn't detail any legal terms or conditions that applicants must agree to.\n\nYou may need to:\n- Check the sandbox registration portal itself (`https://sandbox.abdm.gov.in/sandbox/v3/`) when you apply — any T&C would likely appear there\n- Contact NHA support directly through the [support channels in the documentation](https://abdm.gov.in) for clarity on legal requirements\n\nIs there a specific aspect of sandbox eligibility or requirements you're trying to understand?",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "Based on my search of the ABDM documentation, **there is no specific mention of terms and conditions for joining the sandbox** in the available portal pages.\n\nThe documentation covers the technical prerequisites and onboarding steps (such as applying at `https://sandbox.abdm.gov.in/sandbox/v3/` with the intent \"Providers and Payer\"), but it doesn't detail any legal terms or conditions that applicants must agree to.\n\nYou may need to:\n- Check the sandbox registration portal itself (`https://sandbox.abdm.gov.in/sandbox/v3/`) when you apply — any T&C would likely appear there\n- Contact NHA support directly through the [support channels in the documentation](https://abdm.gov.in) for clarity on legal requirements\n\nIs there a specific aspect of sandbox eligibility or requirements you're trying to understand?",
+  "sources": [
+    {
+      "id": "nhcx.flow.sandbox-onboarding",
+      "title": "Onboard as a participant in the NHCX sandbox",
+      "url": "/docs/nhcx/v1/getting-started/get-your-sandbox-credentials"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/uhi/v1/getting-started/sandbox#4-note-the-base-urls\",\"id\":\"uhi.sandbox.base-urls\",\"summary\":\"The UHI Gateway base URL for the sandbox and for production, and the reference EUA and HSPA apps in the sandbox.\",\"title\":\"UHI Gateway base URLs for sandbox and production\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/base-urls\",\"id\":\"nhcx.sandbox.environments-and-base-urls\",\"summary\":\"The two environments, the web portals, and the two base addresses every call is built on, for testing and for live claims.\",\"title\":\"NHCX environments, hosts and base URLs\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/get-your-sandbox-credentials\",\"id\":\"nhcx.sandbox.prerequisites\",\"summary\":\"The checklist to complete before your system can register on the claims exchange sandbox: a facility registration, sandbox credentials, basic health ID featu...\",\"title\":\"What you need before you register on the NHCX sandbox\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/going-live\",\"id\":\"shared.sandbox.going-live\",\"summary\":\"How an integration leaves the sandbox for production: functional testing and the security audit, the Health Tech Committee demonstration, then production cre...\",\"title\":\"Going live, the sandbox exit process\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/first-fifteen-minutes\",\"id\":\"shared.sandbox.first-fifteen-minutes\",\"summary\":\"Everything you can do before NHA approves your sandbox registration: read one real gateway session exchange and assemble your own first call, ready to paste ...\",\"title\":\"Your first fifteen minutes with ABDM\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/going-live#3-switch-to-production\",\"id\":\"uhi.sandbox.production-switch\",\"summary\":\"Change your IDs and callback URL to production values and point your calls at the production UHI Gateway.\",\"title\":\"Switch your UHI integration to production\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/get-your-sandbox-credentials\",\"id\":\"nhcx.sandbox.dummy-payer\",\"summary\":\"The built-in test insurer in the sandbox, which use cases it answers, and the two test calls that make it approve, reject, query or send a payment notice.\",\"title\":\"The dummy payer and what it answers\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/get-your-sandbox-credentials\",\"id\":\"nhcx.sandbox.support-contacts\",\"summary\":\"Which address to write to for each kind of question, what to put in the message, and what to do while you wait for an answer.\",\"title\":\"Where to get help with NHCX\",\"type\":\"sandbox\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/uhi/v1/getting-started/sandbox#4-note-the-base-urls\",\"id\":\"uhi.sandbox.base-urls\",\"summary\":\"The UHI Gateway base URL for the sandbox and for production, and the reference EUA and HSPA apps in the sandbox.\",\"title\":\"UHI Gateway base URLs for sandbox and production\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/base-urls\",\"id\":\"nhcx.sandbox.environments-and-base-urls\",\"summary\":\"The two environments, the web portals, and the two base addresses every call is built on, for testing and for live claims.\",\"title\":\"NHCX environments, hosts and base URLs\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/get-your-sandbox-credentials\",\"id\":\"nhcx.sandbox.prerequisites\",\"summary\":\"The checklist to complete before your system can register on the claims exchange sandbox: a facility registration, sandbox credentials, basic health ID featu...\",\"title\":\"What you need before you register on the NHCX sandbox\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/going-live\",\"id\":\"shared.sandbox.going-live\",\"summary\":\"How an integration leaves the sandbox for production: functional testing and the security audit, the Health Tech Committee demonstration, then production cre...\",\"title\":\"Going live, the sandbox exit process\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/first-fifteen-minutes\",\"id\":\"shared.sandbox.first-fifteen-minutes\",\"summary\":\"Everything you can do before NHA approves your sandbox registration: read one real gateway session exchange and assemble your own first call, ready to paste ...\",\"title\":\"Your first fifteen minutes with ABDM\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/uhi/v1/concepts/signing#generate-your-keys-and-headers\",\"id\":\"uhi.concept.key-generation\",\"summary\":\"The Header Generation Utility creates your Ed25519 key pair and signs each payload; share only the public key and keep the private key on your server.\",\"title\":\"Generating UHI signing keys and headers\",\"type\":\"concept\"},{\"doc_url\":\"/docs/nhcx/v1/api/session/endpoints/session-api-hiecm-gateway-v3-sessions\",\"id\":\"nhcx.endpoint.session-token\",\"summary\":\"Trade your client id and client secret for the access token, valid for 1200 seconds (20 minutes), that every claims exchange call carries.\",\"title\":\"POST /api/hiecm/gateway/v3/sessions\",\"type\":\"endpoint\"},{\"doc_url\":\"\",\"id\":\"nhcx.decision.session-endpoint\",\"summary\":\"Get the token that every exchange call carries from one place in your code, and set the address it calls per environment.\",\"title\":\"Which session token endpoint to call\",\"type\":\"decision\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/going-live#when-it-goes-wrong\",\"id\":\"uhi.troubleshooting.go-live\",\"summary\":\"A search that worked in the sandbox fails in production. Check the Gateway host, then your production IDs and callback URL.\",\"title\":\"When a UHI search fails after the switch to production\",\"type\":\"troubleshooting\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#sandbox\",\"id\":\"shared.glossary.sandbox\",\"summary\":\"NHA's test environment, with its own base URLs and credentials, separate from production.\",\"title\":\"Sandbox, the test environment\",\"type\":\"glossary\"},{\"doc_url\":\"\",\"id\":\"nhcx.test.payer-uc-04\",\"summary\":\"Prove that your insurance system can fetch the registered participants of one role from the claims exchange.\",\"title\":\"Payer sandbox exit use case 4: Get participant list\",\"type\":\"test\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/get-your-sandbox-credentials\",\"id\":\"nhcx.flow.sandbox-onboarding\",\"summary\":\"Register your system in the claims exchange test environment so it holds a participant code, a registered certificate and a callback address.\",\"title\":\"Onboard as a participant in the NHCX sandbox\",\"type\":\"flow\"},{\"doc_url\":\"\",\"id\":\"nhcx.test.provider-uc-01\",\"summary\":\"Prove that your hospital system can fetch the registered participants of one role, such as every payer, from the claims exchange.\",\"title\":\"Provider sandbox exit use case 1: Get participant list\",\"type\":\"test\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#nha\",\"id\":\"shared.glossary.nha\",\"summary\":\"The body that runs ABDM, publishes the specifications and operates the gateways.\",\"title\":\"NHA, the National Health Authority\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/uhi/v1/services/blood-bank#service-identity\",\"id\":\"uhi.concept.blood-bank-service-identity\",\"summary\":\"The fixed values every Blood Bank search carries, context.domain nic2008:86906 and fulfillment type BloodStock, and the sandbox reference HSPA.\",\"title\":\"Blood Bank service identity\",\"type\":\"concept\"}]}\n{\"body\":\"# Onboard as a participant in the NHCX sandbox\\n\\n## In plain words\\n\\nEvery system that sends or receives claims messages on the [National Health Claims Exchange](../../shared/glossary/nhcx.md) (NHCX) must first exist in its participant registry. Onboarding creates that record.\\n\\nThe record gives you a [participant code](../glossary/participant-code.md), such as `100001@sbx`. It holds your public encryption certificate and the address where NHCX delivers your messages. Nothing else on NHCX works for you until the record exists.\\n\\n## Before you start\\n\\nEach item is something you can check before the first call.\\n\\n- **Registry identity.** A [provider](../glossary/provider.md) has its facility in the [Health Facility Registry](../../shared/glossary/hfr.md) (HFR) and knows its HFR ID. A [payer](../glossary/payer.md) or [TPA](../glossary/tpa.md) knows the ID its [IRDAI](../glossary/irdai.md) or equivalent authority issued. An end user application, such as a [PHR](../../shared/glossary/phr.md) app, uses its client ID.\\n- **Sandbox credentials.** You hold an [ABDM](../../shared/glossary/abdm.md) sandbox client ID and secret. Apply at `https://sandbox.abdm.gov.in/sandbox/v3/` with the intent \\\"Providers and Payer\\\" and [Milestone 1](../../hiecm/glossary/m1.md). See [What you need before you register on the NHCX sandbox](../sandbox/prerequisites.md).\\n- **Milestone 1 working, for a provider.** Your software creates and verifies [ABHA](../../shared/glossary/abha.md) numbers.\\n- **NHCX sandbox access.** You registered at `https://sandbox.abdm.gov.in/sandbox/v3/sandbox-registration` with that client ID and secret, and roles were assigned to you.\\n- **A certificate.** You have `certificate_base64.txt` from [Generate an encryption certificate and register it](generate-and-register-certificate.md).\\n- **A callback address.** Your HTTPS endpoint meets the [callback address rules](../sandbox/callback-url-requirements.md). It uses a domain name with no IP address or port. The server is in India, and its firewall is open to `3.109.99.210`, `13.126.152.0` and `13.200.129.223`.\\n\\n## What happens\\n\\n```mermaid\\nsequenceDiagram\\n    participant You as Your system\\n    participant GW as ABDM session gateway\\n    participant PS as NHCX participant service\\n    You->>GW: POST /api/hiecm/gateway/v3/sessions\\n    GW-->>You: accessToken, expiresIn 1200\\n    You->>PS: POST /participant/create\\n    PS-->>You: participant_code, for example 100001@sbx\\n    opt Create answers with a transactionid instead\\n        Note over You: a passcode arrives by SMS on the registered mobile\\n        You->>PS: GET /validate with transactionId and passcode\\n        PS-->>You: creation confirmed\\n    end\\n    You->>PS: POST /fetch/certs with your participant code\\n    PS-->>You: the encryption_cert you registered\\n    opt Change the endpoint or certificate later\\n        You->>PS: POST /participant/update\\n        PS-->>You: participant_code\\n    end\\n```\\n\\nEvery call in this flow answers in its own response. Two waits sit outside the calls. The manual review of your sandbox registration comes before step 1. The SMS passcode arrives in step 3, when that step applies.\\n\\n### 1. Get a session token\\n\\nCall the session endpoint with your client ID and secret. [Which session token endpoint to call](../decisions/session-endpoint.md) settles the address. The token lasts 1200 seconds (20 minutes), which the answer states as `expiresIn`. Get a new token before it lapses, and after any `401`.\\n\\nEvery participant service call below carries this token. The [session token endpoint](../endpoints/session-token.md) shows the header.\\n\\n### 2. Create the participant\\n\\nCall `POST /participant/create` on the sandbox participant service, `https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice`. The body carries your profile:\\n\\n| Field | What to put |\\n|---|---|\\n| `linked_registry_codes` | Your registry code, from the table below |\\n| `registryid` | Your ID in that registry, as listed under Before you start |\\n| `participant_name` | Your legal or facility name |\\n| `scheme_code`, `state`, `district` | Your scheme, for example `PMJAY`, and your location |\\n| `roles` | Your role code, from the table below |\\n| `primaryEmail`, `phone`, `primaryMobile` | Your contacts |\\n| `signing_cert_path` | Path to your signing certificate, if you have one |\\n| `encryption_cert` | The contents of `certificate_base64.txt` |\\n| `endpoint_url` | Your callback base address |\\n\\n| You are | `roles` | `linked_registry_codes` |\\n|---|---|---|\\n| Provider | `10001` | `10001` (HFR) |\\n| Payer | `10002` | `10004` (PAYER) |\\n| TPA | `10003` | `10004` (PAYER) |\\n| End user application | `10009` | `10001` |\\n\\nThe answer carries your `participant_code`. The full request is in [POST /participant/create](../endpoints/participant-create.md).\\n\\nAn entity with several facilities creates one participant code per HFR ID. It uses the same client credentials for all of them.\\n\\n### 3. Confirm, when the answer asks for it\\n\\nIf the create answer carries a `transactionid` instead of a participant code, a passcode arrives by SMS on the registered mobile. Confirm with `GET /validate`, passing `transactionId` and `passcode`. The rules for that pair are in [Onboard as a participant in production](production-onboarding.md).\\n\\n### 4. Read your record back\\n\\nCall `POST /fetch/certs` with `{\\\"participantid\\\": \\\"<YOUR_PARTICIPANT_CODE>\\\"}`. The answer carries the `encryption_cert` stored against your code. Compare it with your certificate as shown in [Generate an encryption certificate and register it](generate-and-register-certificate.md).\\n\\n### 5. Change it later\\n\\n`POST /participant/update` changes the endpoint address, the certificate or any other attribute. `participant_code` is mandatory in its body.\\n\\nOn success every call here answers HTTP `200`. Failures answer `400` for a client error, `404` for a resource not found, or `500` when downstream systems are down.\\n\\n## How you know it worked\\n\\nYou hold a `participant_code` from `POST /participant/create`, or from `GET /validate` when a passcode was asked for. `POST /fetch/certs` with that code returns an `encryption_cert` whose public key matches your `certificate.crt`.\\n\\n```observation schema=exit-condition\\nchannel: synchronous\\ncall: POST /fetch/certs\\nrequest:\\n  participantid: <YOUR_PARTICIPANT_CODE>\\nmatch:\\n  encryption_cert: public key equals the one in certificate.crt\\n```\\n\\nNext, build your message handling with [Receive, open and acknowledge a sealed message](receive-a-sealed-callback.md) and [Report a processing failure on /v1/error](report-a-processing-error.md). Then work through [the sandbox exit process](../sandbox/sandbox-exit.md).\\n\\n## When it goes wrong\\n\\n- **Every call returns `401`.** The token is missing, lacks the `Bearer ` prefix, or has expired. Get a new token and retry once. See [NHCX-401](../errors/nhcx-401.md) and [Every NHCX call returns 401](../troubleshooting/everything-returns-401.md).\\n- **Create is refused with `400`.** Check `roles` and `linked_registry_codes` against the table in step 2. A wrong pairing causes rejection or misrouted traffic later.\\n- **Use-case calls say the sender is not registered.** You are calling before the record exists, or with a different code. See [NHCX-1002](../errors/nhcx-1002.md).\\n- **Nothing ever reaches your endpoint.** The address uses an IP address or a port, or the server is outside India. A firewall may also block the NHCX addresses. See [Your callback URL is rejected or never called](../troubleshooting/callback-url-rejected.md).\\n- **`/fetch/certs` returns a different key.** You registered a certificate from another key pair. Replace it with `POST /participant/update`.\\n- **You are still waiting for sandbox access.** Registration approval is a manual review with no published turnaround. You cannot call anything until roles are assigned. See [Where to get help with NHCX](../sandbox/support-contacts.md).\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/nhcx/v1/getting-started/get-your-sandbox-credentials\",\"gateway\":\"nhcx\",\"id\":\"nhcx.flow.sandbox-onboarding\",\"milestone\":\"n/a\",\"summary\":\"Register your system in the claims exchange test environment so it holds a participant code, a registered certificate and a callback address.\",\"title\":\"Onboard as a participant in the NHCX sandbox\",\"type\":\"flow\"}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/uhi/v1/getting-started/sandbox#4-note-the-base-urls\",\"id\":\"uhi.sandbox.base-urls\",\"summary\":\"The UHI Gateway base URL for the sandbox and for production, and the reference EUA and HSPA apps in the sandbox.\",\"title\":\"UHI Gateway base URLs for sandbox and production\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/base-urls\",\"id\":\"nhcx.sandbox.environments-and-base-urls\",\"summary\":\"The two environments, the web portals, and the two base addresses every call is built on, for testing and for live claims.\",\"title\":\"NHCX environments, hosts and base URLs\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/get-your-sandbox-credentials\",\"id\":\"nhcx.sandbox.prerequisites\",\"summary\":\"The checklist to complete before your system can register on the claims exchange sandbox: a facility registration, sandbox credentials, basic health ID featu...\",\"title\":\"What you need before you register on the NHCX sandbox\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/going-live\",\"id\":\"shared.sandbox.going-live\",\"summary\":\"How an integration leaves the sandbox for production: functional testing and the security audit, the Health Tech Committee demonstration, then production cre...\",\"title\":\"Going live, the sandbox exit process\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/first-fifteen-minutes\",\"id\":\"shared.sandbox.first-fifteen-minutes\",\"summary\":\"Everything you can do before NHA approves your sandbox registration: read one real gateway session exchange and assemble your own first call, ready to paste ...\",\"title\":\"Your first fifteen minutes with ABDM\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/uhi/v1/concepts/signing#generate-your-keys-and-headers\",\"id\":\"uhi.concept.key-generation\",\"summary\":\"The Header Generation Utility creates your Ed25519 key pair and signs each payload; share only the public key and keep the private key on your server.\",\"title\":\"Generating UHI signing keys and headers\",\"type\":\"concept\"},{\"doc_url\":\"/docs/nhcx/v1/api/session/endpoints/session-api-hiecm-gateway-v3-sessions\",\"id\":\"nhcx.endpoint.session-token\",\"summary\":\"Trade your client id and client secret for the access token, valid for 1200 seconds (20 minutes), that every claims exchange call carries.\",\"title\":\"POST /api/hiecm/gateway/v3/sessions\",\"type\":\"endpoint\"},{\"doc_url\":\"\",\"id\":\"nhcx.decision.session-endpoint\",\"summary\":\"Get the token that every exchange call carries from one place in your code, and set the address it calls per environment.\",\"title\":\"Which session token endpoint to call\",\"type\":\"decision\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/going-live#when-it-goes-wrong\",\"id\":\"uhi.troubleshooting.go-live\",\"summary\":\"A search that worked in the sandbox fails in production. Check the Gateway host, then your production IDs and callback URL.\",\"title\":\"When a UHI search fails after the switch to production\",\"type\":\"troubleshooting\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#sandbox\",\"id\":\"shared.glossary.sandbox\",\"summary\":\"NHA's test environment, with its own base URLs and credentials, separate from production.\",\"title\":\"Sandbox, the test environment\",\"type\":\"glossary\"}]}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:03:47.863Z",
+  "usage": {
+    "input_tokens": 40,
+    "output_tokens": 833,
+    "cache_read_input_tokens": 42483,
+    "cache_creation_input_tokens": 11820,
+    "num_turns": 5,
+    "duration_ms": 12235,
+    "cost_usd_equivalent": 0.0320933
+  }
+}

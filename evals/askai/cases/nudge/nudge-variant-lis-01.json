@@ -1,0 +1,36 @@
+{
+  "id": "nudge-variant-lis-01",
+  "slice": "nudge",
+  "class": "define",
+  "turns": [
+    {
+      "role": "user",
+      "text": "Does a LIS have any ABDM obligations, or is that only hospitals?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "LIMS",
+    "A laboratory uses it to publish as the HIP, linking each report as its own care context in M2",
+    "and to fetch a patient's history as the HIU on the rarer occasions it needs to"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.glossary.lims"
+  ],
+  "expected_shape": "define",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#glossary",
+  "catalogue_version": "2026.09.16",
+  "notes": "Nudge group, variant term: the reader wrote LIS, and the case catches an answer that never states the portal's term LIMS or says labs are outside ABDM."
+}

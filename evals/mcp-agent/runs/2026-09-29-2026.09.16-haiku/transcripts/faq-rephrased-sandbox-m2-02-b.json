@@ -1,0 +1,493 @@
+{
+  "case_id": "faq-rephrased-sandbox-m2-02-b",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "who all can become HIP?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01XTMueLjtRCtH8socnSto8s",
+            "Name": "search",
+            "Input": {
+              "query": "HIP health information provider who can become eligibility requirements",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "HIP health information provider who can become eligibility requirements",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_0112ds6urxJtxUb2Pg1FHVby",
+            "Name": "search",
+            "Input": {
+              "query": "HIP actor participant health information provider",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "HIP actor participant health information provider",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01URXGNULgXA2kXdMxwDp5rt",
+            "Name": "search",
+            "Input": {
+              "query": "HIP",
+              "type": "glossary"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "HIP",
+            "type": "glossary"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hip",
+                "id": "hiecm.glossary.hip",
+                "summary": "The role held by a system that holds a patient's records and shares them when a consent allows it.",
+                "title": "HIP, health information provider",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hfr",
+                "id": "shared.glossary.hfr",
+                "summary": "The registry of health facilities, which is where a facility is searched for, onboarded and linked to software.",
+                "title": "HFR, Health Facility Registry",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hrp",
+                "id": "hiecm.glossary.hrp",
+                "summary": "Whoever holds the records. It describes custody, which is why it is neither a position nor a direction.",
+                "title": "HRP, health repository provider",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/fetching-a-recipient-certificate#what-comes-back",
+                "id": "hiecm.glossary.key-material",
+                "summary": "The ECDH key pairs that encrypt health records in transit. A fresh pair per transfer, the HIU keeps its own, and the HIP returns its public half alongside th...",
+                "title": "Key material, who generates it and who keeps it",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#pms",
+                "id": "hiecm.glossary.pms",
+                "summary": "The system a pharmacy runs to dispense and to hold stock. A pharmacy uses it both to read the prescription it is dispensing against and to record what it dis...",
+                "title": "PMS, pharmacy management system",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#lims",
+                "id": "hiecm.glossary.lims",
+                "summary": "The system a diagnostic laboratory uses to manage samples, tests and results.",
+                "title": "LIMS, laboratory information management system, also written LMIS",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#bridge",
+                "id": "hiecm.glossary.bridge",
+                "summary": "The set of callback URLs NHA posts to when it answers one of your calls.",
+                "title": "Bridge, your callback endpoints",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.glossary.m2",
+                "summary": "The milestone covering care context linking, discovery and sending records.",
+                "title": "M2 Health Information Provider: Create and link records",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#ecdh",
+                "id": "hiecm.glossary.ecdh",
+                "summary": "Elliptic Curve Diffie-Hellman, used so only the requester holding a valid consent can read what is sent.",
+                "title": "ECDH, the key exchange that protects records in transit",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#discovery",
+                "id": "hiecm.glossary.discovery",
+                "summary": "The step where a patient's app asks a facility whether it holds records for that patient.",
+                "title": "Discovery, finding whether a facility holds records",
+                "type": "glossary"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01HrpQYU1zz3WQ1yGAd8bDQ6",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.glossary.hip"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.glossary.hip"
+          },
+          "output": {
+            "body": "# HIP, health information provider\n\n## In plain words\n\nA health information provider is the side of an exchange that holds health\nrecords and hands them over. It is identified by a service id, carried in the\n`X-HIP-ID` header, which the specification describes as:\n\n> Identifier of the health information provider to which the request was\n> intended\n\nA hospital, a lab or a clinic system acts in this role when it shares what it\nrecorded.\n\n## Before you start\n\nYou need your bridge registered and its service id in hand, because the\nheader value is that id rather than a name.\n\n## What happens\n\nABDM calls `m2_post_v3_consent_request_hip_notify` at your callback URL to\ntell you a consent covering your records was granted, revoked or expired.\nYour system acknowledges it by calling\n`m2_post_consent_v3_request_hip_on_notify`.\n\n## How you know it worked\n\nYou have understood this when you can say which side of a data exchange holds\nthe records and which side asks for them.\n\n## When it goes wrong\n\nBuilding only the request side and leaving the callback endpoints unbuilt,\nwhich leaves ABDM with nowhere to deliver the notifications this role\nreceives.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/getting-started/glossary#hip",
+            "gateway": "hiecm",
+            "id": "hiecm.glossary.hip",
+            "milestone": "n/a",
+            "summary": "The role held by a system that holds a patient's records and shares them when a consent allows it.",
+            "title": "HIP, health information provider",
+            "type": "glossary"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01Ecf7EeoKC4j8pXpkAQSMFM",
+            "Name": "search",
+            "Input": {
+              "query": "onboarding HIP facility hospital clinic lab eligible",
+              "kind": "atom"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "onboarding HIP facility hospital clinic lab eligible",
+            "kind": "atom"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01GF7YRTBVvmcsH2dujT6rrN",
+            "Name": "search",
+            "Input": {
+              "query": "health facility registry HFR how to register get facility code",
+              "kind": "atom"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "health facility registry HFR how to register get facility code",
+            "kind": "atom"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/get-your-sandbox-credentials",
+                "id": "nhcx.sandbox.prerequisites",
+                "summary": "The checklist to complete before your system can register on the claims exchange sandbox: a facility registration, sandbox credentials, basic health ID featu...",
+                "title": "What you need before you register on the NHCX sandbox",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/get-your-sandbox-credentials",
+                "id": "nhcx.flow.sandbox-onboarding",
+                "summary": "Register your system in the claims exchange test environment so it holds a participant code, a registered certificate and a callback address.",
+                "title": "Onboard as a participant in the NHCX sandbox",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/go-live",
+                "id": "nhcx.flow.production-onboarding",
+                "summary": "Create and confirm your live claims exchange participant record, then register your certificate and callback address, each step confirmed by a passcode sent ...",
+                "title": "Onboard as a participant in production",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/concepts/pmjay-on-nhcx",
+                "id": "nhcx.flow.pmjay-hospital-migration",
+                "summary": "Move a scheme-empanelled hospital from the central claims portal to its own hospital system, by onboarding it on the exchange and having its hospital ID mapp...",
+                "title": "Migrate a PMJAY hospital to HMIS through NHCX",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hpr",
+                "id": "shared.glossary.hpr",
+                "summary": "The registry of individual healthcare professionals across every system of medicine, which issues a Healthcare Professional ID.",
+                "title": "HPR, Healthcare Professionals Registry",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hfr",
+                "id": "shared.glossary.hfr",
+                "summary": "The registry of health facilities, which is where a facility is searched for, onboarded and linked to software.",
+                "title": "HFR, Health Facility Registry",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.glossary.m4",
+                "summary": "The milestone covering professional and facility registration.",
+                "title": "M4 Registry Integration: Register facilities and professionals",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/coverage-eligibility-request",
+                "id": "nhcx.fhir.coverage-eligibility-request",
+                "summary": "The bundle a hospital sends to ask a payer whether a patient's policy is in force, what it covers, and whether a treatment needs prior approval.",
+                "title": "CoverageEligibilityRequest bundle",
+                "type": "fhir"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01Dp85RFDQCoAhY46erB75DT",
+            "Name": "get",
+            "Input": {
+              "id": "shared.glossary.hfr"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "shared.glossary.hfr"
+          },
+          "output": {
+            "body": "# HFR, Health Facility Registry\n\n## In plain words\n\nHFR holds health facilities of every kind, public and private: hospitals,\nclinics, diagnostic laboratories, imaging centres, pharmacies and blood\nbanks, across modern and traditional systems of medicine. A facility must\nexist here, and be linked to the software that acts for it, before the\nfacility can be the HIP.\n\nThe identifier HFR issues is the same identifier you send as the HIP: the\nHFR ID is the HIP ID. There is no separate registration that turns a\nfacility into a HIP, which is why `X-HIP-ID` carries a facility code.\n\nA facility is registered by its facility manager, who needs a Healthcare\nProfessional ID to do it. Registration is a self declaration followed by\nverification, so a facility can exist in a self declared state before it\nis verified.\n\nHFR and the Healthcare Professionals Registry together make up the\nNational Healthcare Professionals and Facilities Registry, NHPR, which\nis milestone M4.\n\n## Before you start\n\nNothing. A glossary entry assumes no prior reading.\n\n## What happens\n\nNothing happens here. This entry defines a term, it does not describe a call.\n\n## How you know it worked\n\nYou have understood this when you can say what HFR is without using the acronym itself.\n\n## When it goes wrong\n\nM2 assumes a facility id that HFR issued. If linking fails with an authorisation error, the facility registration is the first thing to check.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/getting-started/glossary#hfr",
+            "gateway": "shared",
+            "id": "shared.glossary.hfr",
+            "milestone": "n/a",
+            "summary": "The registry of health facilities, which is where a facility is searched for, onboarded and linked to software.",
+            "title": "HFR, Health Facility Registry",
+            "type": "glossary"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "Based on the ABDM documentation, **any healthcare facility registered in the Health Facility Registry (HFR)** can become a HIP (Health Information Provider). This includes:\n\n- **Hospitals**\n- **Clinics**\n- **Diagnostic laboratories**\n- **Imaging centres**\n- **Pharmacies**\n- **Blood banks**\n- **Facilities from modern and traditional systems of medicine** (public and private)\n\n**Key requirements:**\n1. The facility must be registered in HFR first — there's no separate registration to become a HIP\n2. Registration is done by the facility manager using their Healthcare Professional ID (HPR)\n3. Registration is a self-declaration followed by verification, so a facility can exist in a self-declared state before it's officially verified\n4. The HFR ID issued to the facility is the same ID used as the HIP ID (sent in the `X-HIP-ID` header)\n\n**Reference:** [HFR glossary entry](https://docs.nrces.in/docs/hiecm/v3/getting-started/glossary#hfr) from the ABDM developer portal.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "Based on the ABDM documentation, **any healthcare facility registered in the Health Facility Registry (HFR)** can become a HIP (Health Information Provider). This includes:\n\n- **Hospitals**\n- **Clinics**\n- **Diagnostic laboratories**\n- **Imaging centres**\n- **Pharmacies**\n- **Blood banks**\n- **Facilities from modern and traditional systems of medicine** (public and private)\n\n**Key requirements:**\n1. The facility must be registered in HFR first — there's no separate registration to become a HIP\n2. Registration is done by the facility manager using their Healthcare Professional ID (HPR)\n3. Registration is a self-declaration followed by verification, so a facility can exist in a self-declared state before it's officially verified\n4. The HFR ID issued to the facility is the same ID used as the HIP ID (sent in the `X-HIP-ID` header)\n\n**Reference:** [HFR glossary entry](https://docs.nrces.in/docs/hiecm/v3/getting-started/glossary#hfr) from the ABDM developer portal.",
+  "sources": [
+    {
+      "id": "hiecm.glossary.hip",
+      "title": "HIP, health information provider",
+      "url": "/docs/hiecm/v3/getting-started/glossary#hip"
+    },
+    {
+      "id": "shared.glossary.hfr",
+      "title": "HFR, Health Facility Registry",
+      "url": "/docs/hiecm/v3/getting-started/glossary#hfr"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hip\",\"id\":\"hiecm.glossary.hip\",\"summary\":\"The role held by a system that holds a patient's records and shares them when a consent allows it.\",\"title\":\"HIP, health information provider\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hfr\",\"id\":\"shared.glossary.hfr\",\"summary\":\"The registry of health facilities, which is where a facility is searched for, onboarded and linked to software.\",\"title\":\"HFR, Health Facility Registry\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hrp\",\"id\":\"hiecm.glossary.hrp\",\"summary\":\"Whoever holds the records. It describes custody, which is why it is neither a position nor a direction.\",\"title\":\"HRP, health repository provider\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/fetching-a-recipient-certificate#what-comes-back\",\"id\":\"hiecm.glossary.key-material\",\"summary\":\"The ECDH key pairs that encrypt health records in transit. A fresh pair per transfer, the HIU keeps its own, and the HIP returns its public half alongside th...\",\"title\":\"Key material, who generates it and who keeps it\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#pms\",\"id\":\"hiecm.glossary.pms\",\"summary\":\"The system a pharmacy runs to dispense and to hold stock. A pharmacy uses it both to read the prescription it is dispensing against and to record what it dis...\",\"title\":\"PMS, pharmacy management system\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#lims\",\"id\":\"hiecm.glossary.lims\",\"summary\":\"The system a diagnostic laboratory uses to manage samples, tests and results.\",\"title\":\"LIMS, laboratory information management system, also written LMIS\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#bridge\",\"id\":\"hiecm.glossary.bridge\",\"summary\":\"The set of callback URLs NHA posts to when it answers one of your calls.\",\"title\":\"Bridge, your callback endpoints\",\"type\":\"glossary\"},{\"doc_url\":\"\",\"id\":\"hiecm.glossary.m2\",\"summary\":\"The milestone covering care context linking, discovery and sending records.\",\"title\":\"M2 Health Information Provider: Create and link records\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#ecdh\",\"id\":\"hiecm.glossary.ecdh\",\"summary\":\"Elliptic Curve Diffie-Hellman, used so only the requester holding a valid consent can read what is sent.\",\"title\":\"ECDH, the key exchange that protects records in transit\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#discovery\",\"id\":\"hiecm.glossary.discovery\",\"summary\":\"The step where a patient's app asks a facility whether it holds records for that patient.\",\"title\":\"Discovery, finding whether a facility holds records\",\"type\":\"glossary\"}]}\n{\"body\":\"# HIP, health information provider\\n\\n## In plain words\\n\\nA health information provider is the side of an exchange that holds health\\nrecords and hands them over. It is identified by a service id, carried in the\\n`X-HIP-ID` header, which the specification describes as:\\n\\n> Identifier of the health information provider to which the request was\\n> intended\\n\\nA hospital, a lab or a clinic system acts in this role when it shares what it\\nrecorded.\\n\\n## Before you start\\n\\nYou need your bridge registered and its service id in hand, because the\\nheader value is that id rather than a name.\\n\\n## What happens\\n\\nABDM calls `m2_post_v3_consent_request_hip_notify` at your callback URL to\\ntell you a consent covering your records was granted, revoked or expired.\\nYour system acknowledges it by calling\\n`m2_post_consent_v3_request_hip_on_notify`.\\n\\n## How you know it worked\\n\\nYou have understood this when you can say which side of a data exchange holds\\nthe records and which side asks for them.\\n\\n## When it goes wrong\\n\\nBuilding only the request side and leaving the callback endpoints unbuilt,\\nwhich leaves ABDM with nowhere to deliver the notifications this role\\nreceives.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hip\",\"gateway\":\"hiecm\",\"id\":\"hiecm.glossary.hip\",\"milestone\":\"n/a\",\"summary\":\"The role held by a system that holds a patient's records and shares them when a consent allows it.\",\"title\":\"HIP, health information provider\",\"type\":\"glossary\"}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/nhcx/v1/getting-started/get-your-sandbox-credentials\",\"id\":\"nhcx.sandbox.prerequisites\",\"summary\":\"The checklist to complete before your system can register on the claims exchange sandbox: a facility registration, sandbox credentials, basic health ID featu...\",\"title\":\"What you need before you register on the NHCX sandbox\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/get-your-sandbox-credentials\",\"id\":\"nhcx.flow.sandbox-onboarding\",\"summary\":\"Register your system in the claims exchange test environment so it holds a participant code, a registered certificate and a callback address.\",\"title\":\"Onboard as a participant in the NHCX sandbox\",\"type\":\"flow\"},{\"doc_url\":\"/docs/nhcx/v1/go-live\",\"id\":\"nhcx.flow.production-onboarding\",\"summary\":\"Create and confirm your live claims exchange participant record, then register your certificate and callback address, each step confirmed by a passcode sent ...\",\"title\":\"Onboard as a participant in production\",\"type\":\"flow\"},{\"doc_url\":\"/docs/nhcx/v1/concepts/pmjay-on-nhcx\",\"id\":\"nhcx.flow.pmjay-hospital-migration\",\"summary\":\"Move a scheme-empanelled hospital from the central claims portal to its own hospital system, by onboarding it on the exchange and having its hospital ID mapp...\",\"title\":\"Migrate a PMJAY hospital to HMIS through NHCX\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hpr\",\"id\":\"shared.glossary.hpr\",\"summary\":\"The registry of individual healthcare professionals across every system of medicine, which issues a Healthcare Professional ID.\",\"title\":\"HPR, Healthcare Professionals Registry\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hfr\",\"id\":\"shared.glossary.hfr\",\"summary\":\"The registry of health facilities, which is where a facility is searched for, onboarded and linked to software.\",\"title\":\"HFR, Health Facility Registry\",\"type\":\"glossary\"},{\"doc_url\":\"\",\"id\":\"hiecm.glossary.m4\",\"summary\":\"The milestone covering professional and facility registration.\",\"title\":\"M4 Registry Integration: Register facilities and professionals\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/coverage-eligibility-request\",\"id\":\"nhcx.fhir.coverage-eligibility-request\",\"summary\":\"The bundle a hospital sends to ask a payer whether a patient's policy is in force, what it covers, and whether a treatment needs prior approval.\",\"title\":\"CoverageEligibilityRequest bundle\",\"type\":\"fhir\"}]}\n{\"body\":\"# HFR, Health Facility Registry\\n\\n## In plain words\\n\\nHFR holds health facilities of every kind, public and private: hospitals,\\nclinics, diagnostic laboratories, imaging centres, pharmacies and blood\\nbanks, across modern and traditional systems of medicine. A facility must\\nexist here, and be linked to the software that acts for it, before the\\nfacility can be the HIP.\\n\\nThe identifier HFR issues is the same identifier you send as the HIP: the\\nHFR ID is the HIP ID. There is no separate registration that turns a\\nfacility into a HIP, which is why `X-HIP-ID` carries a facility code.\\n\\nA facility is registered by its facility manager, who needs a Healthcare\\nProfessional ID to do it. Registration is a self declaration followed by\\nverification, so a facility can exist in a self declared state before it\\nis verified.\\n\\nHFR and the Healthcare Professionals Registry together make up the\\nNational Healthcare Professionals and Facilities Registry, NHPR, which\\nis milestone M4.\\n\\n## Before you start\\n\\nNothing. A glossary entry assumes no prior reading.\\n\\n## What happens\\n\\nNothing happens here. This entry defines a term, it does not describe a call.\\n\\n## How you know it worked\\n\\nYou have understood this when you can say what HFR is without using the acronym itself.\\n\\n## When it goes wrong\\n\\nM2 assumes a facility id that HFR issued. If linking fails with an authorisation error, the facility registration is the first thing to check.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hfr\",\"gateway\":\"shared\",\"id\":\"shared.glossary.hfr\",\"milestone\":\"n/a\",\"summary\":\"The registry of health facilities, which is where a facility is searched for, onboarded and linked to software.\",\"title\":\"HFR, Health Facility Registry\",\"type\":\"glossary\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:02:10.283Z",
+  "usage": {
+    "input_tokens": 80,
+    "output_tokens": 1371,
+    "cache_read_input_tokens": 92779,
+    "cache_creation_input_tokens": 9214,
+    "num_turns": 8,
+    "duration_ms": 21013,
+    "cost_usd_equivalent": 0.0346409
+  }
+}

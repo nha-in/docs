@@ -1,6 +1,19 @@
 ---
 name: abdm-record-share
 description: Use when building, debugging or testing ABDM patient scan and record share: a PHR app shares chosen records with an HIU after scanning its QR code, on either side.
+type: skill
+domain: record-share
+agent_consumers:
+  - abdm-integration-agent
+  - abdm-call-debugger
+requires:
+  - gateway-session-token
+  - hip-registration
+  - callback-url
+produces:
+  - shared-record
+can_execute: true
+can_orchestrate: false
 ---
 
 # ABDM Patient scan and record share
@@ -27,7 +40,7 @@ This file is the map. Each line above is a file beside it, opened one at a time 
 
 ## Before anything else
 
-- No call in this skill has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.
+- Treat every request and response shape in this skill as unconfirmed until the sandbox has answered you. Check a response before you rely on its shape.
 
 ## Practices that hold across every call
 

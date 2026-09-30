@@ -1,0 +1,38 @@
+{
+  "id": "naive-hiecm-m1-create-abha-aadhaar-01",
+  "slice": "naive",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "how do i create abha for a patient using aadhar otp, which apis in what order"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "The journey starts with POST /abha/api/v3/enrollment/request/otp with scope abha-enrol, loginHint aadhaar, the encrypted Aadhaar number as loginId and otpSystem aadhaar, and you keep the txnId it returns.",
+    "The account is created by POST /abha/api/v3/enrollment/enrol/byAadhaar, sending the txnId, the encrypted OTP, the communication mobile and the consent block.",
+    "If the Aadhaar already has an ABHA, enrol/byAadhaar returns that account with isNew false instead of creating a second one, so read isNew before telling the person anything was created."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.flow.m1-create-abha-aadhaar-otp",
+    "hiecm.endpoint.m1-enrolment-request-otp",
+    "hiecm.endpoint.m1-enrolment-by-aadhaar"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-abha-m1-abha-collection-json",
+  "catalogue_version": "2026.09.16",
+  "notes": "First-day developer asking for the call order of the main M1 create journey, with the 'aadhar' misspelling. The isNew fact is the one a wrong answer misses. Source lines: catalogue/hiecm/flows/m1-create-abha-aadhaar-otp.md, 'POST /abha/api/v3/enrollment/request/otp<br/>scope [abha-enrol], loginHint aadhaar, loginId (encrypted Aadhaar), otpSystem aadhaar'; 'Request the OTP with scope `abha-enrol` and keep the `txnId`. Enrol with `enrol/byAadhaar`, sending the encrypted OTP, the communication mobile and the consent block'; 'Enrolment for an Aadhaar that already has an ABHA returns that account with `isNew` false, so read `isNew` before telling the person anything was created.' catalogue/hiecm/endpoints/m1-enrolment-by-aadhaar.md, 'If an ABHA already exists for that Aadhaar, the call returns it instead of creating a second one, and `isNew` is false.'"
+}

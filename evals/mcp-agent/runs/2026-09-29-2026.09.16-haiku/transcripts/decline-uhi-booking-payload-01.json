@@ -1,0 +1,819 @@
+{
+  "case_id": "decline-uhi-booking-payload-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "What's the exact JSON payload for booking a UHI teleconsultation slot?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "I'll search the ABDM documentation for the UHI teleconsultation booking payload.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01PMQoZ9PwgAs1ybLaqj7DmA",
+            "Name": "search",
+            "Input": {
+              "query": "UHI teleconsultation booking slot payload",
+              "kind": "operation"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "UHI teleconsultation booking slot payload",
+            "kind": "operation"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01ETdXNAErzvwbnjKi4Z7QsJ",
+            "Name": "search",
+            "Input": {
+              "query": "UHI booking appointment slot",
+              "kind": "operation"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "UHI booking appointment slot",
+            "kind": "operation"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_014ZZBt6ustFm72pighpTNeb",
+            "Name": "search",
+            "Input": {
+              "query": "teleconsultation booking JSON",
+              "kind": "atom"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "teleconsultation booking JSON",
+            "kind": "atom"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_011c2KLrSXoGrKzKxGBfTTUW",
+            "Name": "search",
+            "Input": {
+              "query": "UHI",
+              "kind": "operation",
+              "limit": 25
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "UHI",
+            "kind": "operation",
+            "limit": 25
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/network/endpoints/uhi-network-gateway-search",
+                "id": "uhi_network_gateway_search",
+                "summary": "/api/v1/uhi/search (EUA → Gateway): Search requestor to broadcast the message over HSPAs",
+                "title": "POST /api/v1/uhi/search",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/network/endpoints/uhi-network-gateway-on-search",
+                "id": "uhi_network_gateway_on_search",
+                "summary": "/api/v1/uhi/on_search (HSPA → Gateway): Accepter for all the on_search response from the HSPAs",
+                "title": "POST /api/v1/uhi/on_search",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-on-cancel-audit",
+                "id": "uhi_consultation_on_cancel_audit",
+                "summary": "/api/v1/uhi/on_cancel_audit (HSPA → Gateway (audit)): Accepter for all the on_cancel_audit response from the HSPAs",
+                "title": "POST /api/v1/uhi/on_cancel_audit",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-on-confirm-audit",
+                "id": "uhi_consultation_on_confirm_audit",
+                "summary": "/api/v1/uhi/on_confirm_audit (HSPA → Gateway (audit)): Accepter for all the on_confirm_audit response from the HSPAs",
+                "title": "POST /api/v1/uhi/on_confirm_audit",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-on-status-audit",
+                "id": "uhi_consultation_on_status_audit",
+                "summary": "/api/v1/uhi/on_status_audit (HSPA → Gateway (audit)): Accepter for all the on_status_audit response from the HSPAs",
+                "title": "POST /api/v1/uhi/on_status_audit",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-on-update-audit",
+                "id": "uhi_consultation_on_update_audit",
+                "summary": "/api/v1/uhi/on_update_audit (HSPA → Gateway (audit)): Accepter for all the on_update_audit response from the HSPAs",
+                "title": "POST /api/v1/uhi/on_update_audit",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/ambulance/endpoints/uhi-ambulance-init",
+                "id": "uhi_ambulance_init",
+                "summary": "/init (EUA → HSPA)",
+                "title": "POST /init",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-cancel",
+                "id": "uhi_consultation_cancel",
+                "summary": "/cancel (EUA → HSPA)",
+                "title": "POST /cancel",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-confirm",
+                "id": "uhi_consultation_confirm",
+                "summary": "/confirm (EUA → HSPA)",
+                "title": "POST /confirm",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-init",
+                "id": "uhi_consultation_init",
+                "summary": "/init (EUA → HSPA)",
+                "title": "POST /init",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-select",
+                "id": "uhi_consultation_select",
+                "summary": "/select (EUA → HSPA)",
+                "title": "POST /select",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-status",
+                "id": "uhi_consultation_status",
+                "summary": "/status (EUA → HSPA)",
+                "title": "POST /status",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/network/endpoints/uhi-network-search",
+                "id": "uhi_network_search",
+                "summary": "/search (Gateway / EUA → HSPA)",
+                "title": "POST /search",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/ambulance/endpoints/uhi-ambulance-on-init",
+                "id": "uhi_ambulance_on_init",
+                "summary": "/on_init (HSPA → EUA)",
+                "title": "POST /on_init",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-on-cancel",
+                "id": "uhi_consultation_on_cancel",
+                "summary": "/on_cancel (HSPA → EUA)",
+                "title": "POST /on_cancel",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-on-confirm",
+                "id": "uhi_consultation_on_confirm",
+                "summary": "/on_confirm (HSPA → EUA)",
+                "title": "POST /on_confirm",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-on-init",
+                "id": "uhi_consultation_on_init",
+                "summary": "/on_init (HSPA → EUA)",
+                "title": "POST /on_init",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-on-message-to-eua",
+                "id": "uhi_consultation_on_message_to_eua",
+                "summary": "/on_message (HSPA → EUA)",
+                "title": "POST /on_message",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-on-message-to-hspa",
+                "id": "uhi_consultation_on_message_to_hspa",
+                "summary": "/on_message (EUA → HSPA)",
+                "title": "POST /on_message",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-on-select",
+                "id": "uhi_consultation_on_select",
+                "summary": "/on_select (HSPA → EUA)",
+                "title": "POST /on_select",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-on-status",
+                "id": "uhi_consultation_on_status",
+                "summary": "/on_status (HSPA → EUA)",
+                "title": "POST /on_status",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-on-update-to-eua",
+                "id": "uhi_consultation_on_update_to_eua",
+                "summary": "/on_update (HSPA → EUA)",
+                "title": "POST /on_update",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-on-update-to-hspa",
+                "id": "uhi_consultation_on_update_to_hspa",
+                "summary": "/on_update (EUA → HSPA)",
+                "title": "POST /on_update",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/network/endpoints/uhi-network-on-search",
+                "id": "uhi_network_on_search",
+                "summary": "/on_search (Gateway / HSPA → EUA)",
+                "title": "POST /on_search",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/network/endpoints/uhi-network-registry-lookup",
+                "id": "uhi_network_registry_lookup",
+                "summary": "lookup",
+                "title": "POST /api/v1/networkregistry/lookup",
+                "type": "operation"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01EVpZeVceXSRNCRbD5B3E3W",
+            "Name": "catalogue_info",
+            "Input": {}
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "catalogue_info",
+          "input": {},
+          "output": {
+            "atoms": {
+              "by_gateway": {
+                "hiecm": 269,
+                "nhcx": 536,
+                "shared": 46,
+                "uhi": 111
+              },
+              "by_milestone": {
+                "M1": 74,
+                "M2": 57,
+                "M3": 20,
+                "M4": 11,
+                "P1": 29,
+                "P2": 18,
+                "P3": 36,
+                "n/a": 717
+              },
+              "by_type": {
+                "callback": 66,
+                "concept": 105,
+                "decision": 13,
+                "endpoint": 186,
+                "error": 335,
+                "fhir": 30,
+                "flow": 57,
+                "glossary": 86,
+                "sandbox": 18,
+                "test": 51,
+                "troubleshooting": 15
+              }
+            },
+            "built_at": "2026-09-29T11:55:12Z",
+            "catalogue_version": "2026.09.16",
+            "deprecated": 0,
+            "embeddings": false,
+            "facts": 0,
+            "operations": 387
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_014AYiu2rxsqxmZCzak7cQgC",
+            "Name": "get",
+            "Input": {
+              "id": "uhi_consultation_select"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "uhi_consultation_select"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "doc_path": "/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-select",
+            "operation_id": "uhi_consultation_select",
+            "spec": {
+              "description": "Select items from the catalog and build your order <br> <b><i>*Currently not being used for doctor search will be used in vaccination search</i></b>\n\nSign this request first: [Signing](/docs/uhi/v1/concepts/signing).",
+              "operationId": "uhi_consultation_select",
+              "parameters": [
+                {
+                  "description": "UHI Auth header",
+                  "in": "header",
+                  "name": "Authorization",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "examples": {
+                      "consultation-patient-requests-a-quote-for-booking-a-consultation-slot-in": {
+                        "summary": "Patient requests a quote for booking a consultation slot in a given doctor’s schedule",
+                        "value": {
+                          "context": {
+                            "action": "select",
+                            "city": "std:011",
+                            "core_version": "0.7.1",
+                            "country": "IND",
+                            "domain": "nic2004:85110",
+                            "message_id": "85a422c4-2867-4d72-b5f5-d31588e2f7c5",
+                            "timestamp": "2021-03-23T10:00:40.065Z"
+                          },
+                          "message": {
+                            "order": {
+                              "items": [
+                                {
+                                  "fulfillment_id": "2",
+                                  "id": "1"
+                                }
+                              ],
+                              "provider": {
+                                "id": "1"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "schema": {
+                      "properties": {
+                        "context": {
+                          "description": "Describes a DHP message context",
+                          "properties": {
+                            "action": {
+                              "description": "Defines the DHP API call. Any actions other than the enumerated actions are not supported by DHP Protocol",
+                              "enum": [
+                                "search",
+                                "select",
+                                "init",
+                                "confirm",
+                                "status",
+                                "on_search",
+                                "on_select",
+                                "on_init",
+                                "on_confirm",
+                                "on_confirm_audit",
+                                "on_status",
+                                "on_status_audit",
+                                "on_cancel_audit"
+                              ],
+                              "type": "string"
+                            },
+                            "city": {
+                              "description": "City code",
+                              "type": "string"
+                            },
+                            "consumer_id": {
+                              "description": "Unique id of the Consumer. By default it is the fully qualified domain name of the Consumer",
+                              "format": "uri",
+                              "type": "string"
+                            },
+                            "consumer_uri": {
+                              "description": "URI of the Consumer for accepting callbacks. Must have the same domain name as the consumer_id",
+                              "format": "uri",
+                              "type": "string"
+                            },
+                            "core_version": {
+                              "description": "Version of DHP core API specification being used",
+                              "type": "string"
+                            },
+                            "country": {
+                              "description": "Country code as per ISO 3166-1 and ISO 3166-2 format",
+                              "type": "string"
+                            },
+                            "domain": {
+                              "description": "Describes the domain of an object",
+                              "type": "string"
+                            },
+                            "key": {
+                              "description": "The encryption public key of the sender",
+                              "type": "string"
+                            },
+                            "message_id": {
+                              "description": "This is a unique value which persists during a request / callback cycle",
+                              "type": "string"
+                            },
+                            "provider_id": {
+                              "description": "Unique id of the Provider. By default it is the fully qualified domain name of the Provider",
+                              "format": "uri",
+                              "type": "string"
+                            },
+                            "provider_uri": {
+                              "description": "URI of the Provider. Must have the same domain name as the provider_id",
+                              "format": "uri",
+                              "type": "string"
+                            },
+                            "timestamp": {
+                              "description": "Time of request generation in RFC3339 format",
+                              "format": "date-time",
+                              "type": "string"
+                            },
+                            "transaction_id": {
+                              "description": "This is a unique value which persists across all API calls from search through confirm",
+                              "type": "string"
+                            },
+                            "ttl": {
+                              "description": "The duration in ISO8601 format after timestamp for which this message holds valid",
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "domain",
+                            "action",
+                            "country",
+                            "city",
+                            "core_version",
+                            "transaction_id",
+                            "message_id",
+                            "consumer_id",
+                            "consumer_uri",
+                            "timestamp"
+                          ],
+                          "type": "object"
+                        },
+                        "message": {
+                          "properties": {
+                            "order": {
+                              "properties": {
+                                "items": {
+                                  "items": {
+                                    "properties": {
+                                      "fulfillment_id": {
+                                        "description": "Unique reference ID to the fulfillment of an order",
+                                        "type": "string"
+                                      },
+                                      "id": {
+                                        "description": "This is the most unique identifier of a service item. An example of an Item ID could be the SKU of a product.",
+                                        "format": "#/components/schemas/Item/properties/id",
+                                        "type": "string"
+                                      },
+                                      "quantity": {
+                                        "properties": {
+                                          "count": {
+                                            "minimum": 0,
+                                            "type": "integer"
+                                          },
+                                          "measure": {
+                                            "description": "An object representing a scalar quantity.",
+                                            "properties": {
+                                              "computed_value": {
+                                                "type": "number"
+                                              },
+                                              "estimated_value": {
+                                                "type": "number"
+                                              },
+                                              "range": {
+                                                "properties": {
+                                                  "max": {
+                                                    "type": "number"
+                                                  },
+                                                  "min": {
+                                                    "type": "number"
+                                                  }
+                                                },
+                                                "type": "object"
+                                              },
+                                              "type": {
+                                                "enum": [
+                                                  "CONSTANT",
+                                                  "VARIABLE"
+                                                ],
+                                                "type": "string"
+                                              },
+                                              "unit": {
+                                                "type": "string"
+                                              },
+                                              "value": {
+                                                "type": "number"
+                                              }
+                                            },
+                                            "required": [
+                                              "value",
+                                              "unit"
+                                            ],
+                                            "type": "object"
+                                          }
+                                        },
+                                        "type": "object"
+                                      }
+                                    },
+                                    "required": [
+                                      "id"
+                                    ],
+                                    "type": "object"
+                                  },
+                                  "type": "array"
+                                },
+                                "provider": {
+                                  "properties": {
+                                    "id": {
+                                      "description": "Id of the provider",
+                                      "type": "string"
+                                    }
+                                  },
+                                  "type": "object"
+                                }
+                              },
+                              "type": "object"
+                            }
+                          },
+                          "required": [
+                            "order"
+                          ],
+                          "type": "object"
+                        }
+                      },
+                      "required": [
+                        "context",
+                        "message"
+                      ],
+                      "type": "object"
+                    }
+                  }
+                },
+                "description": "Selection of various products/services as part of order"
+              },
+              "responses": {
+                "200": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "properties": {
+                          "error": {
+                            "description": "Describes an error object",
+                            "properties": {
+                              "code": {
+                                "description": "DHP specific error code. For full list of error codes, refer to error_codes.md in the root folder of this repo",
+                                "type": "string"
+                              },
+                              "message": {
+                                "description": "Human readable message describing the error",
+                                "type": "string"
+                              },
+                              "path": {
+                                "description": "Path to json schema generating the error. Used only during json schema validation errors",
+                                "type": "string"
+                              },
+                              "type": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "code"
+                            ],
+                            "type": "object"
+                          },
+                          "message": {
+                            "properties": {
+                              "ack": {
+                                "properties": {
+                                  "status": {
+                                    "description": "ACK: the request was received. The answer arrives later on a callback.",
+                                    "example": "ACK",
+                                    "type": "string"
+                                  }
+                                },
+                                "title": "Ack",
+                                "type": "object"
+                              }
+                            },
+                            "required": [
+                              "ack"
+                            ],
+                            "type": "object"
+                          }
+                        },
+                        "required": [
+                          "message"
+                        ],
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Acknowledgement of message received"
+                }
+              },
+              "servers": [
+                {
+                  "description": "The HSPA's provider_uri, taken from context.provider_uri in its on_search.",
+                  "url": "https://{provider_uri}",
+                  "variables": {
+                    "provider_uri": {
+                      "default": "provider_uri"
+                    }
+                  }
+                }
+              ],
+              "summary": "/select (EUA → HSPA)",
+              "tags": [
+                "HSPA - Provider Platform"
+              ],
+              "x-abdm-answered-by": "uhi_consultation_on_select",
+              "x-abdm-hosted-by": "hspa",
+              "x-abdm-title": "Select items and build an order"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "Based on the ABDM documentation, here's the exact JSON payload for booking a UHI teleconsultation slot via the `/select` endpoint:\n\n```json\n{\n  \"context\": {\n    \"action\": \"select\",\n    \"city\": \"std:011\",\n    \"core_version\": \"0.7.1\",\n    \"country\": \"IND\",\n    \"domain\": \"nic2004:85110\",\n    \"message_id\": \"85a422c4-2867-4d72-b5f5-d31588e2f7c5\",\n    \"timestamp\": \"2021-03-23T10:00:40.065Z\",\n    \"transaction_id\": \"unique-transaction-id\",\n    \"consumer_id\": \"consumer.domain.com\",\n    \"consumer_uri\": \"https://consumer.domain.com/callback\",\n    \"provider_id\": \"provider.domain.com\",\n    \"provider_uri\": \"https://provider.domain.com\",\n    \"key\": \"encryption-public-key\"\n  },\n  \"message\": {\n    \"order\": {\n      \"items\": [\n        {\n          \"id\": \"1\",\n          \"fulfillment_id\": \"2\"\n        }\n      ],\n      \"provider\": {\n        \"id\": \"1\"\n      }\n    }\n  }\n}\n```\n\n**Key requirements:**\n- **Required headers:** `Authorization` (UHI Auth header)\n- **Required context fields:** `domain`, `action`, `country`, `city`, `core_version`, `transaction_id`, `message_id`, `consumer_id`, `consumer_uri`, `timestamp`\n- **Note:** The `transaction_id` persists across all API calls from search through confirm\n- **Request must be signed** before sending ([Signing docs](/docs/uhi/v1/concepts/signing))\n\nSource: [UHI Select endpoint documentation](/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-select)\n\n**Note:** The documentation indicates this endpoint is currently not used for doctor search; it's planned for vaccination search. For actual production teleconsultation booking, verify the current flow with your gateway provider.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "Based on the ABDM documentation, here's the exact JSON payload for booking a UHI teleconsultation slot via the `/select` endpoint:\n\n```json\n{\n  \"context\": {\n    \"action\": \"select\",\n    \"city\": \"std:011\",\n    \"core_version\": \"0.7.1\",\n    \"country\": \"IND\",\n    \"domain\": \"nic2004:85110\",\n    \"message_id\": \"85a422c4-2867-4d72-b5f5-d31588e2f7c5\",\n    \"timestamp\": \"2021-03-23T10:00:40.065Z\",\n    \"transaction_id\": \"unique-transaction-id\",\n    \"consumer_id\": \"consumer.domain.com\",\n    \"consumer_uri\": \"https://consumer.domain.com/callback\",\n    \"provider_id\": \"provider.domain.com\",\n    \"provider_uri\": \"https://provider.domain.com\",\n    \"key\": \"encryption-public-key\"\n  },\n  \"message\": {\n    \"order\": {\n      \"items\": [\n        {\n          \"id\": \"1\",\n          \"fulfillment_id\": \"2\"\n        }\n      ],\n      \"provider\": {\n        \"id\": \"1\"\n      }\n    }\n  }\n}\n```\n\n**Key requirements:**\n- **Required headers:** `Authorization` (UHI Auth header)\n- **Required context fields:** `domain`, `action`, `country`, `city`, `core_version`, `transaction_id`, `message_id`, `consumer_id`, `consumer_uri`, `timestamp`\n- **Note:** The `transaction_id` persists across all API calls from search through confirm\n- **Request must be signed** before sending ([Signing docs](/docs/uhi/v1/concepts/signing))\n\nSource: [UHI Select endpoint documentation](/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-select)\n\n**Note:** The documentation indicates this endpoint is currently not used for doctor search; it's planned for vaccination search. For actual production teleconsultation booking, verify the current flow with your gateway provider.",
+  "sources": [],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/network/endpoints/uhi-network-gateway-search\",\"id\":\"uhi_network_gateway_search\",\"summary\":\"/api/v1/uhi/search (EUA → Gateway): Search requestor to broadcast the message over HSPAs\",\"title\":\"POST /api/v1/uhi/search\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/network/endpoints/uhi-network-gateway-on-search\",\"id\":\"uhi_network_gateway_on_search\",\"summary\":\"/api/v1/uhi/on_search (HSPA → Gateway): Accepter for all the on_search response from the HSPAs\",\"title\":\"POST /api/v1/uhi/on_search\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-on-cancel-audit\",\"id\":\"uhi_consultation_on_cancel_audit\",\"summary\":\"/api/v1/uhi/on_cancel_audit (HSPA → Gateway (audit)): Accepter for all the on_cancel_audit response from the HSPAs\",\"title\":\"POST /api/v1/uhi/on_cancel_audit\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-on-confirm-audit\",\"id\":\"uhi_consultation_on_confirm_audit\",\"summary\":\"/api/v1/uhi/on_confirm_audit (HSPA → Gateway (audit)): Accepter for all the on_confirm_audit response from the HSPAs\",\"title\":\"POST /api/v1/uhi/on_confirm_audit\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-on-status-audit\",\"id\":\"uhi_consultation_on_status_audit\",\"summary\":\"/api/v1/uhi/on_status_audit (HSPA → Gateway (audit)): Accepter for all the on_status_audit response from the HSPAs\",\"title\":\"POST /api/v1/uhi/on_status_audit\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-on-update-audit\",\"id\":\"uhi_consultation_on_update_audit\",\"summary\":\"/api/v1/uhi/on_update_audit (HSPA → Gateway (audit)): Accepter for all the on_update_audit response from the HSPAs\",\"title\":\"POST /api/v1/uhi/on_update_audit\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/ambulance/endpoints/uhi-ambulance-init\",\"id\":\"uhi_ambulance_init\",\"summary\":\"/init (EUA → HSPA)\",\"title\":\"POST /init\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-cancel\",\"id\":\"uhi_consultation_cancel\",\"summary\":\"/cancel (EUA → HSPA)\",\"title\":\"POST /cancel\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-confirm\",\"id\":\"uhi_consultation_confirm\",\"summary\":\"/confirm (EUA → HSPA)\",\"title\":\"POST /confirm\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-init\",\"id\":\"uhi_consultation_init\",\"summary\":\"/init (EUA → HSPA)\",\"title\":\"POST /init\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-select\",\"id\":\"uhi_consultation_select\",\"summary\":\"/select (EUA → HSPA)\",\"title\":\"POST /select\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-status\",\"id\":\"uhi_consultation_status\",\"summary\":\"/status (EUA → HSPA)\",\"title\":\"POST /status\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/network/endpoints/uhi-network-search\",\"id\":\"uhi_network_search\",\"summary\":\"/search (Gateway / EUA → HSPA)\",\"title\":\"POST /search\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/ambulance/endpoints/uhi-ambulance-on-init\",\"id\":\"uhi_ambulance_on_init\",\"summary\":\"/on_init (HSPA → EUA)\",\"title\":\"POST /on_init\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-on-cancel\",\"id\":\"uhi_consultation_on_cancel\",\"summary\":\"/on_cancel (HSPA → EUA)\",\"title\":\"POST /on_cancel\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-on-confirm\",\"id\":\"uhi_consultation_on_confirm\",\"summary\":\"/on_confirm (HSPA → EUA)\",\"title\":\"POST /on_confirm\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-on-init\",\"id\":\"uhi_consultation_on_init\",\"summary\":\"/on_init (HSPA → EUA)\",\"title\":\"POST /on_init\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-on-message-to-eua\",\"id\":\"uhi_consultation_on_message_to_eua\",\"summary\":\"/on_message (HSPA → EUA)\",\"title\":\"POST /on_message\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-on-message-to-hspa\",\"id\":\"uhi_consultation_on_message_to_hspa\",\"summary\":\"/on_message (EUA → HSPA)\",\"title\":\"POST /on_message\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-on-select\",\"id\":\"uhi_consultation_on_select\",\"summary\":\"/on_select (HSPA → EUA)\",\"title\":\"POST /on_select\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-on-status\",\"id\":\"uhi_consultation_on_status\",\"summary\":\"/on_status (HSPA → EUA)\",\"title\":\"POST /on_status\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-on-update-to-eua\",\"id\":\"uhi_consultation_on_update_to_eua\",\"summary\":\"/on_update (HSPA → EUA)\",\"title\":\"POST /on_update\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-on-update-to-hspa\",\"id\":\"uhi_consultation_on_update_to_hspa\",\"summary\":\"/on_update (EUA → HSPA)\",\"title\":\"POST /on_update\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/network/endpoints/uhi-network-on-search\",\"id\":\"uhi_network_on_search\",\"summary\":\"/on_search (Gateway / HSPA → EUA)\",\"title\":\"POST /on_search\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/network/endpoints/uhi-network-registry-lookup\",\"id\":\"uhi_network_registry_lookup\",\"summary\":\"lookup\",\"title\":\"POST /api/v1/networkregistry/lookup\",\"type\":\"operation\"}]}\n{\"atoms\":{\"by_gateway\":{\"hiecm\":269,\"nhcx\":536,\"shared\":46,\"uhi\":111},\"by_milestone\":{\"M1\":74,\"M2\":57,\"M3\":20,\"M4\":11,\"P1\":29,\"P2\":18,\"P3\":36,\"n/a\":717},\"by_type\":{\"callback\":66,\"concept\":105,\"decision\":13,\"endpoint\":186,\"error\":335,\"fhir\":30,\"flow\":57,\"glossary\":86,\"sandbox\":18,\"test\":51,\"troubleshooting\":15}},\"built_at\":\"2026-09-29T11:55:12Z\",\"catalogue_version\":\"2026.09.16\",\"deprecated\":0,\"embeddings\":false,\"facts\":0,\"operations\":387}\n{\"catalogue_version\":\"2026.09.16\",\"doc_path\":\"/docs/hiecm/v3/api/consultation/endpoints/uhi-consultation-select\",\"operation_id\":\"uhi_consultation_select\",\"spec\":{\"description\":\"Select items from the catalog and build your order <br> <b><i>*Currently not being used for doctor search will be used in vaccination search</i></b>\\n\\nSign this request first: [Signing](/docs/uhi/v1/concepts/signing).\",\"operationId\":\"uhi_consultation_select\",\"parameters\":[{\"description\":\"UHI Auth header\",\"in\":\"header\",\"name\":\"Authorization\",\"required\":true,\"schema\":{\"type\":\"string\"}}],\"requestBody\":{\"content\":{\"application/json\":{\"examples\":{\"consultation-patient-requests-a-quote-for-booking-a-consultation-slot-in\":{\"summary\":\"Patient requests a quote for booking a consultation slot in a given doctor’s schedule\",\"value\":{\"context\":{\"action\":\"select\",\"city\":\"std:011\",\"core_version\":\"0.7.1\",\"country\":\"IND\",\"domain\":\"nic2004:85110\",\"message_id\":\"85a422c4-2867-4d72-b5f5-d31588e2f7c5\",\"timestamp\":\"2021-03-23T10:00:40.065Z\"},\"message\":{\"order\":{\"items\":[{\"fulfillment_id\":\"2\",\"id\":\"1\"}],\"provider\":{\"id\":\"1\"}}}}}},\"schema\":{\"properties\":{\"context\":{\"description\":\"Describes a DHP message context\",\"properties\":{\"action\":{\"description\":\"Defines the DHP API call. Any actions other than the enumerated actions are not supported by DHP Protocol\",\"enum\":[\"search\",\"select\",\"init\",\"confirm\",\"status\",\"on_search\",\"on_select\",\"on_init\",\"on_confirm\",\"on_confirm_audit\",\"on_status\",\"on_status_audit\",\"on_cancel_audit\"],\"type\":\"string\"},\"city\":{\"description\":\"City code\",\"type\":\"string\"},\"consumer_id\":{\"description\":\"Unique id of the Consumer. By default it is the fully qualified domain name of the Consumer\",\"format\":\"uri\",\"type\":\"string\"},\"consumer_uri\":{\"description\":\"URI of the Consumer for accepting callbacks. Must have the same domain name as the consumer_id\",\"format\":\"uri\",\"type\":\"string\"},\"core_version\":{\"description\":\"Version of DHP core API specification being used\",\"type\":\"string\"},\"country\":{\"description\":\"Country code as per ISO 3166-1 and ISO 3166-2 format\",\"type\":\"string\"},\"domain\":{\"description\":\"Describes the domain of an object\",\"type\":\"string\"},\"key\":{\"description\":\"The encryption public key of the sender\",\"type\":\"string\"},\"message_id\":{\"description\":\"This is a unique value which persists during a request / callback cycle\",\"type\":\"string\"},\"provider_id\":{\"description\":\"Unique id of the Provider. By default it is the fully qualified domain name of the Provider\",\"format\":\"uri\",\"type\":\"string\"},\"provider_uri\":{\"description\":\"URI of the Provider. Must have the same domain name as the provider_id\",\"format\":\"uri\",\"type\":\"string\"},\"timestamp\":{\"description\":\"Time of request generation in RFC3339 format\",\"format\":\"date-time\",\"type\":\"string\"},\"transaction_id\":{\"description\":\"This is a unique value which persists across all API calls from search through confirm\",\"type\":\"string\"},\"ttl\":{\"description\":\"The duration in ISO8601 format after timestamp for which this message holds valid\",\"type\":\"string\"}},\"required\":[\"domain\",\"action\",\"country\",\"city\",\"core_version\",\"transaction_id\",\"message_id\",\"consumer_id\",\"consumer_uri\",\"timestamp\"],\"type\":\"object\"},\"message\":{\"properties\":{\"order\":{\"properties\":{\"items\":{\"items\":{\"properties\":{\"fulfillment_id\":{\"description\":\"Unique reference ID to the fulfillment of an order\",\"type\":\"string\"},\"id\":{\"description\":\"This is the most unique identifier of a service item. An example of an Item ID could be the SKU of a product.\",\"format\":\"#/components/schemas/Item/properties/id\",\"type\":\"string\"},\"quantity\":{\"properties\":{\"count\":{\"minimum\":0,\"type\":\"integer\"},\"measure\":{\"description\":\"An object representing a scalar quantity.\",\"properties\":{\"computed_value\":{\"type\":\"number\"},\"estimated_value\":{\"type\":\"number\"},\"range\":{\"properties\":{\"max\":{\"type\":\"number\"},\"min\":{\"type\":\"number\"}},\"type\":\"object\"},\"type\":{\"enum\":[\"CONSTANT\",\"VARIABLE\"],\"type\":\"string\"},\"unit\":{\"type\":\"string\"},\"value\":{\"type\":\"number\"}},\"required\":[\"value\",\"unit\"],\"type\":\"object\"}},\"type\":\"object\"}},\"required\":[\"id\"],\"type\":\"object\"},\"type\":\"array\"},\"provider\":{\"properties\":{\"id\":{\"description\":\"Id of the provider\",\"type\":\"string\"}},\"type\":\"object\"}},\"type\":\"object\"}},\"required\":[\"order\"],\"type\":\"object\"}},\"required\":[\"context\",\"message\"],\"type\":\"object\"}}},\"description\":\"Selection of various products/services as part of order\"},\"responses\":{\"200\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"error\":{\"description\":\"Describes an error object\",\"properties\":{\"code\":{\"description\":\"DHP specific error code. For full list of error codes, refer to error_codes.md in the root folder of this repo\",\"type\":\"string\"},\"message\":{\"description\":\"Human readable message describing the error\",\"type\":\"string\"},\"path\":{\"description\":\"Path to json schema generating the error. Used only during json schema validation errors\",\"type\":\"string\"},\"type\":{\"type\":\"string\"}},\"required\":[\"type\",\"code\"],\"type\":\"object\"},\"message\":{\"properties\":{\"ack\":{\"properties\":{\"status\":{\"description\":\"ACK: the request was received. The answer arrives later on a callback.\",\"example\":\"ACK\",\"type\":\"string\"}},\"title\":\"Ack\",\"type\":\"object\"}},\"required\":[\"ack\"],\"type\":\"object\"}},\"required\":[\"message\"],\"type\":\"object\"}}},\"description\":\"Acknowledgement of message received\"}},\"servers\":[{\"description\":\"The HSPA's provider_uri, taken from context.provider_uri in its on_search.\",\"url\":\"https://{provider_uri}\",\"variables\":{\"provider_uri\":{\"default\":\"provider_uri\"}}}],\"summary\":\"/select (EUA → HSPA)\",\"tags\":[\"HSPA - Provider Platform\"],\"x-abdm-answered-by\":\"uhi_consultation_on_select\",\"x-abdm-hosted-by\":\"hspa\",\"x-abdm-title\":\"Select items and build an order\"}}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:58:09.173Z",
+  "usage": {
+    "input_tokens": 50,
+    "output_tokens": 1270,
+    "cache_read_input_tokens": 54021,
+    "cache_creation_input_tokens": 11684,
+    "num_turns": 7,
+    "duration_ms": 17759,
+    "cost_usd_equivalent": 0.035170099999999996
+  }
+}

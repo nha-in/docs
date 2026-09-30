@@ -1,7 +1,7 @@
 import {readFileSync, readdirSync, existsSync} from 'node:fs';
 import {join} from 'node:path';
 import {parse} from 'yaml';
-import {listSpecTree} from '../specs.mjs';
+import {listSpecTree, specDir} from '../specs.mjs';
 
 const METHODS = ['get', 'post', 'put', 'patch', 'delete'];
 
@@ -9,11 +9,11 @@ const METHODS = ['get', 'post', 'put', 'patch', 'delete'];
 export const stepDataName = (op, journeyId, index) =>
   `${op.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}--${journeyId}-${String(index + 1).padStart(2, '0')}`;
 
-/** operationId -> {module, method, path, op, kind} across every hiecm/v3 spec. */
-export function operationIndex() {
+/** operationId -> {module, method, path, op, kind} across every spec of one gateway version. */
+export function operationIndex({platform: wantPlatform = 'hiecm', version: wantVersion = 'v3'} = {}) {
   const index = new Map();
   for (const {platform, version, files} of listSpecTree()) {
-    if (platform !== 'hiecm' || version !== 'v3') continue;
+    if (platform !== wantPlatform || version !== wantVersion) continue;
     for (const file of files) {
       const spec = parse(readFileSync(file.path, 'utf8'));
       const module = spec.info?.['x-portal']?.module;
@@ -27,11 +27,12 @@ export function operationIndex() {
   return index;
 }
 
-/** moduleId -> journeys, from catalogue/openapi/hiecm/v3/journeys/<module>.yaml. */
-export function loadJourneys(dir) {
-  dir ??= join(new URL('../../catalogue/openapi/hiecm/v3/journeys/', import.meta.url).pathname);
+/** moduleId -> journeys, from the gateway's <version>/journeys/<module>.yaml (see specs.mjs). */
+export function loadJourneys({platform = 'hiecm', version = 'v3', dir} = {}) {
+  const base = specDir(platform);
+  dir ??= base && join(base, version, 'journeys');
   const out = new Map();
-  if (!existsSync(dir)) return out;
+  if (!dir || !existsSync(dir)) return out;
   for (const name of readdirSync(dir).sort()) {
     if (!name.endsWith('.yaml')) continue;
     out.set(name.replace(/\.yaml$/, ''), parse(readFileSync(join(dir, name), 'utf8')) ?? []);

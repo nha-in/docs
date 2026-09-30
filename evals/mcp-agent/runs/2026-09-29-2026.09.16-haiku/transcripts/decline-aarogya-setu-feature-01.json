@@ -1,0 +1,438 @@
+{
+  "case_id": "decline-aarogya-setu-feature-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "How do I add the QR scanner feature that Aarogya Setu already has to my app?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01PTPDeZjeKrpYRzsb8CYcue",
+            "Name": "search",
+            "Input": {
+              "query": "QR scanner Aarogya Setu QR code feature",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "QR scanner Aarogya Setu QR code feature",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01KXXi5m7ZHaNgAEHbVWKA97",
+            "Name": "search",
+            "Input": {
+              "query": "QR code ABDM flow scanning",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "QR code ABDM flow scanning",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#abdm",
+                "id": "shared.glossary.abdm",
+                "summary": "India's national programme for connecting health records, identities and facilities across providers.",
+                "title": "ABDM, Ayushman Bharat Digital Mission",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/claim-request",
+                "id": "nhcx.fhir.claim-request",
+                "summary": "The bundle a hospital sends after discharge to claim payment, with the final amounts, the discharge details and the documents the policy requires.",
+                "title": "Claim request bundle",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.terminologies",
+                "summary": "The code systems every claims bundle draws on, where each one is used, and how strictly each binding applies.",
+                "title": "Code systems and value sets used in NHCX bundles",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.pmjay-insurance-plan",
+                "summary": "How the government scheme's policy is laid out as data: specialties, packages, rates, claim rules, required documents and treatment-guideline questionnaires.",
+                "title": "The PMJAY InsurancePlan profile, packages and questionnaires",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/payment-notice-and-acknowledgement",
+                "id": "nhcx.fhir.payment-notice",
+                "summary": "The bundle a payer sends to tell a hospital a claim has been paid, with the amount and bank reference, and the short task the hospital sends back to acknowle...",
+                "title": "PaymentNotice bundle and its acknowledgement",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.preauth-cancel",
+                "summary": "The task a hospital sends to cancel a preauthorisation it no longer needs, and the payer's confirmation that the case is cancelled.",
+                "title": "Preauthorisation cancel request and response bundles",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.task",
+                "summary": "The task a hospital sends to dispute a rejected or underpaid claim, which routes the case to the claim review committee, and the task that carries the payer'...",
+                "title": "Task bundle for reprocess and CRC",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/coverage-eligibility-request",
+                "id": "nhcx.fhir.coverage-eligibility-request",
+                "summary": "The bundle a hospital sends to ask a payer whether a patient's policy is in force, what it covers, and whether a treatment needs prior approval.",
+                "title": "CoverageEligibilityRequest bundle",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.fhir.query-update",
+                "summary": "How to recognise a payer's query on a preauthorisation or claim, and how to resend the same claim with the documents and answers the payer asked for.",
+                "title": "Query update bundles for preauthorisation and claim",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/preauthorisation-request",
+                "id": "nhcx.fhir.preauth-request",
+                "summary": "The bundle a hospital sends to ask a payer to approve a planned treatment before it happens, with the package, the diagnosis and the required documents.",
+                "title": "Preauthorisation request bundle, a Claim with use preauthorization",
+                "type": "fhir"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01H1S5QcAAMSUAzzvZXqQPcY",
+            "Name": "search",
+            "Input": {
+              "query": "deep link QR code PHR sharing consent",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "deep link QR code PHR sharing consent",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01VDkKUTWTmv46jsgAFtHRhw",
+            "Name": "search",
+            "Input": {
+              "query": "authenticate link health ID otp verification",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "authenticate link health ID otp verification",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#abha",
+                "id": "shared.glossary.abha",
+                "summary": "The patient's identity in ABDM, in two forms that look alike and are not: a 14 digit ABHA number and a readable ABHA address.",
+                "title": "ABHA",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.abha-identifiers",
+                "summary": "NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...",
+                "title": "Carrying an ABHA number and an ABHA address on a FHIR Patient",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/01-m1-post-v3-profile-benefit-linkanddelink-x-token#m1-benefit-link-or-delink",
+                "id": "hiecm.endpoint.m1-benefit-link-or-delink",
+                "summary": "Links or unlinks the programme named in the BENEFIT_NAME header for an ABHA.",
+                "title": "Link or unlink a benefit record from an ABHA",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/errors#abdm-1094",
+                "id": "hiecm.error.abdm-1094",
+                "summary": "Your client or the person's token is not allowed to do what the call tried, and the message says which of three cases applies.",
+                "title": "ABDM-1094, access to this feature is refused",
+                "type": "error"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.profile-and-example-together",
+                "summary": "A NRCeS profile gives the cardinalities and a NRCeS example gives the shape, and a generator written from either one alone is wrong in a different way.",
+                "title": "Read the profile and the example together, because each omits what the other carries",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/01-p2-post-v3-phr-app-login-profile-request-otp#p1-link-abha-number-via-mobile-request-otp",
+                "id": "hiecm.endpoint.p1-link-abha-number-via-mobile-request-otp",
+                "summary": "Starts linking an ABHA number to the signed in ABHA address with an OTP to the ABHA number's mobile.",
+                "title": "Link ABHA number via Mobile-Request OTP",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-link-abha-number-abha-otp/03-p2-post-v3-phr-app-login-profile-link#p1-process-link-request-via-abha-number",
+                "id": "hiecm.endpoint.p1-process-link-request-via-abha-number",
+                "summary": "Links the ABHA number to the signed in ABHA address after the OTP to the ABHA number's mobile is verified.",
+                "title": "Process Link Request via ABHA OTP",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/01-p2-post-v3-phr-app-login-profile-request-otp#p1-link-abha-number-via-aadhaar-request-otp",
+                "id": "hiecm.endpoint.p1-link-abha-number-via-aadhaar-request-otp",
+                "summary": "Starts linking an ABHA number to the signed in ABHA address with an Aadhaar OTP.",
+                "title": "Link ABHA number via AADHAAR-Request OTP",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-child-abha/02-m1-get-v3-enrollment-profile-children-child-abha#m1-enrolment-list-children",
+                "id": "hiecm.endpoint.m1-enrolment-list-children",
+                "summary": "Returns the child ABHA accounts held under a parent's ABHA.",
+                "title": "List the child ABHA accounts linked to this account",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/registries/abha#abha-number-and-address",
+                "id": "hiecm.concept.abha-number-and-address",
+                "summary": "Two identifiers, the ABHA number for who the person is and the ABHA address for where their records are routed.",
+                "title": "ABHA number and ABHA address, and why there are two",
+                "type": "concept"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01UYqWTjDehSd6E2VyzoWyxi",
+            "Name": "search",
+            "Input": {
+              "query": "request health record link consent flow HIU HIP",
+              "kind": "flow",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "request health record link consent flow HIU HIP",
+            "kind": "flow",
+            "limit": 10
+          },
+          "output": "kind \"flow\" is not one of atom, operation, fhir_profile"
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01EaeEJpQwZtCVDZstFNUiRZ",
+            "Name": "search",
+            "Input": {
+              "query": "health information request discovery link records",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "health information request discovery link records",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/03-p2-post-user-initiated-linking-v3-patient-care-context-discover#p2-care-context-discover",
+                "id": "hiecm.endpoint.p2-care-context-discover",
+                "summary": "Ask one facility whether it holds records for the logged-in person; the answer arrives on a callback.",
+                "title": "Ask a facility what records it holds",
+                "type": "endpoint"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "I searched the ABDM documentation but it doesn't contain guidance on implementing a QR scanner feature. The portal covers ABDM-specific flows like ABHA authentication, health record discovery, and consent management, but doesn't document Aarogya Setu's QR scanning implementation.\n\nThis could mean:\n\n1. **The feature is outside ABDM scope** — If Aarogya Setu's QR scanner is for a general use case (like scanning any QR code), that's a standard mobile app feature, not an ABDM integration. You'd implement it using your platform's camera APIs (Apple Vision on iOS, ML Kit on Android).\n\n2. **It's proprietary to Aarogya Setu** — The government app may have features beyond what's documented in the public ABDM developer portal.\n\nCan you clarify what the QR code contains or what action it triggers? For example:\n- Does it scan ABHA addresses, health IDs, or other ABDM identifiers?\n- Does it initiate a health record request or consent flow?\n- Is it used during patient linking or registration?\n\nIf it's ABDM-related, I can search for the specific flow once I understand what data the QR encodes.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "I searched the ABDM documentation but it doesn't contain guidance on implementing a QR scanner feature. The portal covers ABDM-specific flows like ABHA authentication, health record discovery, and consent management, but doesn't document Aarogya Setu's QR scanning implementation.\n\nThis could mean:\n\n1. **The feature is outside ABDM scope** — If Aarogya Setu's QR scanner is for a general use case (like scanning any QR code), that's a standard mobile app feature, not an ABDM integration. You'd implement it using your platform's camera APIs (Apple Vision on iOS, ML Kit on Android).\n\n2. **It's proprietary to Aarogya Setu** — The government app may have features beyond what's documented in the public ABDM developer portal.\n\nCan you clarify what the QR code contains or what action it triggers? For example:\n- Does it scan ABHA addresses, health IDs, or other ABDM identifiers?\n- Does it initiate a health record request or consent flow?\n- Is it used during patient linking or registration?\n\nIf it's ABDM-related, I can search for the specific flow once I understand what data the QR encodes.",
+  "sources": [],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#abdm\",\"id\":\"shared.glossary.abdm\",\"summary\":\"India's national programme for connecting health records, identities and facilities across providers.\",\"title\":\"ABDM, Ayushman Bharat Digital Mission\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/claim-request\",\"id\":\"nhcx.fhir.claim-request\",\"summary\":\"The bundle a hospital sends after discharge to claim payment, with the final amounts, the discharge details and the documents the policy requires.\",\"title\":\"Claim request bundle\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.terminologies\",\"summary\":\"The code systems every claims bundle draws on, where each one is used, and how strictly each binding applies.\",\"title\":\"Code systems and value sets used in NHCX bundles\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.pmjay-insurance-plan\",\"summary\":\"How the government scheme's policy is laid out as data: specialties, packages, rates, claim rules, required documents and treatment-guideline questionnaires.\",\"title\":\"The PMJAY InsurancePlan profile, packages and questionnaires\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/payment-notice-and-acknowledgement\",\"id\":\"nhcx.fhir.payment-notice\",\"summary\":\"The bundle a payer sends to tell a hospital a claim has been paid, with the amount and bank reference, and the short task the hospital sends back to acknowle...\",\"title\":\"PaymentNotice bundle and its acknowledgement\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.preauth-cancel\",\"summary\":\"The task a hospital sends to cancel a preauthorisation it no longer needs, and the payer's confirmation that the case is cancelled.\",\"title\":\"Preauthorisation cancel request and response bundles\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.task\",\"summary\":\"The task a hospital sends to dispute a rejected or underpaid claim, which routes the case to the claim review committee, and the task that carries the payer'...\",\"title\":\"Task bundle for reprocess and CRC\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/coverage-eligibility-request\",\"id\":\"nhcx.fhir.coverage-eligibility-request\",\"summary\":\"The bundle a hospital sends to ask a payer whether a patient's policy is in force, what it covers, and whether a treatment needs prior approval.\",\"title\":\"CoverageEligibilityRequest bundle\",\"type\":\"fhir\"},{\"doc_url\":\"\",\"id\":\"nhcx.fhir.query-update\",\"summary\":\"How to recognise a payer's query on a preauthorisation or claim, and how to resend the same claim with the documents and answers the payer asked for.\",\"title\":\"Query update bundles for preauthorisation and claim\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/preauthorisation-request\",\"id\":\"nhcx.fhir.preauth-request\",\"summary\":\"The bundle a hospital sends to ask a payer to approve a planned treatment before it happens, with the package, the diagnosis and the required documents.\",\"title\":\"Preauthorisation request bundle, a Claim with use preauthorization\",\"type\":\"fhir\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#abha\",\"id\":\"shared.glossary.abha\",\"summary\":\"The patient's identity in ABDM, in two forms that look alike and are not: a 14 digit ABHA number and a readable ABHA address.\",\"title\":\"ABHA\",\"type\":\"glossary\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.abha-identifiers\",\"summary\":\"NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...\",\"title\":\"Carrying an ABHA number and an ABHA address on a FHIR Patient\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/01-m1-post-v3-profile-benefit-linkanddelink-x-token#m1-benefit-link-or-delink\",\"id\":\"hiecm.endpoint.m1-benefit-link-or-delink\",\"summary\":\"Links or unlinks the programme named in the BENEFIT_NAME header for an ABHA.\",\"title\":\"Link or unlink a benefit record from an ABHA\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/errors#abdm-1094\",\"id\":\"hiecm.error.abdm-1094\",\"summary\":\"Your client or the person's token is not allowed to do what the call tried, and the message says which of three cases applies.\",\"title\":\"ABDM-1094, access to this feature is refused\",\"type\":\"error\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.profile-and-example-together\",\"summary\":\"A NRCeS profile gives the cardinalities and a NRCeS example gives the shape, and a generator written from either one alone is wrong in a different way.\",\"title\":\"Read the profile and the example together, because each omits what the other carries\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/01-p2-post-v3-phr-app-login-profile-request-otp#p1-link-abha-number-via-mobile-request-otp\",\"id\":\"hiecm.endpoint.p1-link-abha-number-via-mobile-request-otp\",\"summary\":\"Starts linking an ABHA number to the signed in ABHA address with an OTP to the ABHA number's mobile.\",\"title\":\"Link ABHA number via Mobile-Request OTP\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-link-abha-number-abha-otp/03-p2-post-v3-phr-app-login-profile-link#p1-process-link-request-via-abha-number\",\"id\":\"hiecm.endpoint.p1-process-link-request-via-abha-number\",\"summary\":\"Links the ABHA number to the signed in ABHA address after the OTP to the ABHA number's mobile is verified.\",\"title\":\"Process Link Request via ABHA OTP\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/01-p2-post-v3-phr-app-login-profile-request-otp#p1-link-abha-number-via-aadhaar-request-otp\",\"id\":\"hiecm.endpoint.p1-link-abha-number-via-aadhaar-request-otp\",\"summary\":\"Starts linking an ABHA number to the signed in ABHA address with an Aadhaar OTP.\",\"title\":\"Link ABHA number via AADHAAR-Request OTP\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-child-abha/02-m1-get-v3-enrollment-profile-children-child-abha#m1-enrolment-list-children\",\"id\":\"hiecm.endpoint.m1-enrolment-list-children\",\"summary\":\"Returns the child ABHA accounts held under a parent's ABHA.\",\"title\":\"List the child ABHA accounts linked to this account\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/registries/abha#abha-number-and-address\",\"id\":\"hiecm.concept.abha-number-and-address\",\"summary\":\"Two identifiers, the ABHA number for who the person is and the ABHA address for where their records are routed.\",\"title\":\"ABHA number and ABHA address, and why there are two\",\"type\":\"concept\"}]}\nkind \"flow\" is not one of atom, operation, fhir_profile\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/03-p2-post-user-initiated-linking-v3-patient-care-context-discover#p2-care-context-discover\",\"id\":\"hiecm.endpoint.p2-care-context-discover\",\"summary\":\"Ask one facility whether it holds records for the logged-in person; the answer arrives on a callback.\",\"title\":\"Ask a facility what records it holds\",\"type\":\"endpoint\"}]}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:57:31.787Z",
+  "usage": {
+    "input_tokens": 48,
+    "output_tokens": 1438,
+    "cache_read_input_tokens": 55336,
+    "cache_creation_input_tokens": 9002,
+    "num_turns": 7,
+    "duration_ms": 20381,
+    "cost_usd_equivalent": 0.0307756
+  }
+}

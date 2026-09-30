@@ -57,3 +57,9 @@ them from the same commit, which `deploy.sh` does by building both, or the
 skills a developer downloads and the answers docs-mcp gives can disagree.
 Every skill file and every MCP response carries the catalogue version, so a
 mismatch is at least visible.
+
+## MCP registry
+
+Not submitted yet. Once `docs.abdm.gov.in` is live, submit the server at
+registry.modelcontextprotocol.io, pointing at `https://docs.abdm.gov.in/mcp`
+and `/.well-known/mcp.json`, and record the submission date and entry here.

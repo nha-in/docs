@@ -63,12 +63,8 @@ type Props = {
 function ContextRing({earlier, window, percent, full}: Props['memory']) {
   const r = 7;
   const around = 2 * Math.PI * r;
-  const detail =
-    earlier > window
-      ? `The last ${window} of ${earlier} exchanges go with your next question. Earlier ones are no longer sent; New starts afresh.`
-      : full
-        ? `All ${window} exchanges go with your next question. From here, the oldest stop being sent.`
-        : `${earlier} of ${window} earlier exchanges go with your next question. Very long answers go shortened.`;
+  // One plain line: how far through the window the conversation is.
+  const detail = `${Math.min(earlier, window)} of ${window} conversation exchanges completed.`;
   return (
     <span class={`ask-ai__ring${full ? ' ask-ai__ring--full' : ''}`}>
       <span
@@ -93,7 +89,6 @@ function ContextRing({earlier, window, percent, full}: Props['memory']) {
         </svg>
       </span>
       <span class="ask-ai__ring-tip" id="ask-ai-ring-tip" role="tooltip">
-        <strong>Context window: {percent}%</strong>
         <span>{detail}</span>
       </span>
     </span>

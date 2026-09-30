@@ -44,12 +44,13 @@ export default function InstallToolsDialog({
   onOpenChange,
 }: InstallToolsDialogProps): React.ReactNode {
   // The tools belong to the gateway the reader is on: NHCX pages offer the
-  // nhcx-docs server, the nhcx plugin and the NHCX skills; every other page
-  // keeps ABDM's, with HIE-CM's Build with AI page as the long form.
+  // nhcx-docs server, the nhcx plugin and the NHCX skills; UHI pages offer
+  // the uhi plugin and the UHI skills over ABDM's abdm-docs server; every
+  // other page keeps ABDM's, with HIE-CM's Build with AI page as the long form.
   const platform = activePlatform(useRoutePath());
-  const set = platform?.id === 'nhcx' ? 'nhcx' : 'abdm';
+  const set = platform?.id === 'nhcx' || platform?.id === 'uhi' ? platform.id : 'abdm';
   const buildWithAi =
-    set === 'nhcx' ? `${platform!.to}/getting-started/build-with-ai` : '/docs/hiecm/v3/getting-started/build-with-ai';
+    set === 'abdm' ? '/docs/hiecm/v3/getting-started/build-with-ai' : `${platform!.to}/getting-started/build-with-ai`;
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="flex max-h-[85vh] flex-col gap-0 p-0 sm:max-w-[720px]">
@@ -74,7 +75,7 @@ export default function InstallToolsDialog({
                 time as your agent works. It cannot go stale, because it is this
                 site answering.
               </p>
-              <McpInstall set={set} />
+              <McpInstall set={set === 'nhcx' ? 'nhcx' : 'abdm'} />
             </TabsContent>
             <TabsContent value="plugin">
               <p className="install-tools__lead">
@@ -87,6 +88,8 @@ export default function InstallToolsDialog({
               <p className="install-tools__lead">
                 {set === 'nhcx'
                   ? 'One folder per NHCX use case, or one for the whole integration: the steps, the specs and the tests. Works offline, and ages until you update it.'
+                  : set === 'uhi'
+                  ? 'One folder per UHI service: the journeys, the signing, the specs and the tests. Works offline, and ages until you update it.'
                   : 'One file per job, carrying a whole milestone: every endpoint, header, error code and test. Works offline, and ages until you update it.'}
               </p>
               <SkillPicker set={set} />

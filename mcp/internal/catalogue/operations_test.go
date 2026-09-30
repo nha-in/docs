@@ -6,11 +6,14 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"testing"
+
+	"github.com/getkin/kin-openapi/openapi3"
 )
 
 func TestParseOperations(t *testing.T) {
-	ops, err := ParseOperations(filepath.Join("testdata", "catalogue", "openapi", "hiecm", "v3", "hiecm-v3.yaml"))
+	ops, err := ParseOperations(filepath.Join("testdata", "catalogue", "hiecm", "openapi", "v3", "hiecm-v3.yaml"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -51,7 +54,7 @@ func TestParseOperations(t *testing.T) {
 }
 
 func TestParseSpecReadsModuleAndErrorCodes(t *testing.T) {
-	data, err := ParseSpec(filepath.Join("testdata", "catalogue", "openapi", "hiecm", "v3", "hiecm-v3.yaml"))
+	data, err := ParseSpec(filepath.Join("testdata", "catalogue", "hiecm", "openapi", "v3", "hiecm-v3.yaml"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -346,7 +349,7 @@ components:
 // errors page (site/docs/hiecm/v3/api/m1/errors.md) shows. A sorted walk
 // named different operations for these three codes.
 func TestSpecErrorCodesFollowDocumentOrder(t *testing.T) {
-	data, err := ParseSpec(filepath.Join(repoRoot, "catalogue", "openapi", "hiecm", "v3", "hiecm-m1.yaml"))
+	data, err := ParseSpec(filepath.Join(repoRoot, "catalogue", "hiecm", "openapi", "v3", "hiecm-m1.yaml"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -376,7 +379,7 @@ func TestSpecErrorCodesMatchNode(t *testing.T) {
 		t.Skip("node_modules/yaml not installed")
 	}
 	root, _ := filepath.Abs(repoRoot)
-	specs, _ := filepath.Glob(filepath.Join(root, "catalogue", "openapi", "hiecm", "v3", "hiecm-*.yaml"))
+	specs, _ := filepath.Glob(filepath.Join(root, "catalogue", "hiecm", "openapi", "v3", "hiecm-*.yaml"))
 	if len(specs) == 0 {
 		t.Fatal("no specs found")
 	}
@@ -421,3 +424,100 @@ console.log(JSON.stringify(out));`
 }
 
 var repoRoot = filepath.Join("..", "..", "..")
+
+func TestChunkOperationIsFlatAndNamesErrors(t *testing.T) {
+	op := Operation{Gateway: "hiecm", OperationID: "m1_post_profile_verify", Method: "POST", Path: "/abha/api/v3/profile/login/verify", Summary: "Verify the OTP", Params: []string{"txnId", "otp"}, ResponseCodes: []string{"200", "401"}, ErrorCodes: []string{"ABDM-1062"}}
+	c := ChunkOperation(op)
+	for _, want := range []string{"hiecm > operation > POST /abha/api/v3/profile/login/verify", "Verify the OTP", "parameters: txnId, otp", "responses: 200, 401", "errors: ABDM-1062"} {
+		if !strings.Contains(c.Text, want) {
+			t.Errorf("missing %q in %q", want, c.Text)
+		}
+	}
+	if strings.Contains(c.Text, "{") {
+		t.Errorf("chunk carries schema JSON: %q", c.Text)
+	}
+	if c.Kind != "operation" || c.AtomID != op.OperationID {
+		t.Errorf("chunk kind %q id %q, want operation %s", c.Kind, c.AtomID, op.OperationID)
+	}
+}
+
+// The real M1 specification yields operations with their gateway, parameter
+// names, response codes and the error codes their examples return.
+func TestParsedOperationsCarryWhatTheirChunkNeeds(t *testing.T) {
+	data, err := ParseSpec("../../../catalogue/hiecm/openapi/v3/hiecm-m1.yaml")
+	if err != nil {
+		t.Fatal(err)
+	}
+	// NHCX's specifications have not moved into catalogue/nhcx/ and still
+	// name their gateway.
+	nhcx, err := ParseSpec("../../../catalogue/openapi/nhcx/v1/nhcx-claim.yaml")
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, op := range nhcx.Operations {
+		if op.Gateway != "nhcx" {
+			t.Fatalf("%s: gateway %q, want nhcx", op.OperationID, op.Gateway)
+		}
+	}
+	withParams, withResponses, withErrors := 0, 0, 0
+	for _, op := range data.Operations {
+		if op.Gateway != "hiecm" {
+			t.Fatalf("%s: gateway %q, want hiecm", op.OperationID, op.Gateway)
+		}
+		if len(op.Params) > 0 {
+			withParams++
+		}
+		if len(op.ResponseCodes) > 0 {
+			withResponses++
+		}
+		if len(op.ErrorCodes) > 0 {
+			withErrors++
+		}
+	}
+	if withParams == 0 || withResponses == 0 || withErrors == 0 {
+		t.Errorf("params on %d, responses on %d, error codes on %d of %d operations; want each on some", withParams, withResponses, withErrors, len(data.Operations))
+	}
+}
+
+// A path key carrying a #suffix, as M1's per-use-case split and UHI's two
+// directions of on_update use, is reported as the real endpoint.
+func TestActualPath(t *testing.T) {
+	withExt := &openapi3.Operation{Extensions: map[string]any{"x-actual-path": "/on_update"}}
+	if got := actualPath("/on_update#to-eua", withExt); got != "/on_update" {
+		t.Fatalf("x-actual-path: got %q", got)
+	}
+	if got := actualPath("/v3/otp#aadhaar-otp", &openapi3.Operation{}); got != "/v3/otp" {
+		t.Fatalf("suffix without extension: got %q", got)
+	}
+	if got := actualPath("/search", &openapi3.Operation{}); got != "/search" {
+		t.Fatalf("plain path: got %q", got)
+	}
+}
+
+// Every specification in the catalogue parses and marshals. A schema that
+// refers to itself, as NHA's UHI Ack does, must not send the indexer round
+// the cycle until the stack overflows.
+func TestParseSpecEveryCatalogueSpec(t *testing.T) {
+	specs, err := filepath.Glob(filepath.Join("..", "..", "..", "catalogue", "*", "openapi", "*", "*.yaml"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	nhcx, err := filepath.Glob(filepath.Join("..", "..", "..", "catalogue", "openapi", "*", "*", "*.yaml"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	specs = append(specs, nhcx...)
+	n := 0
+	for _, spec := range specs {
+		if strings.Contains(spec, string(filepath.Separator)+".raw"+string(filepath.Separator)) {
+			continue
+		}
+		if _, err := ParseSpec(spec); err != nil {
+			t.Fatalf("%s: %v", spec, err)
+		}
+		n++
+	}
+	if n < 20 {
+		t.Fatalf("parsed only %d specs; the glob is wrong", n)
+	}
+}

@@ -1,0 +1,11 @@
+## Acknowledge a new record notification {/* #p3-subscription-hiu-on-notify */}
+
+Your answer to a new record notification. After ABDM tells you a care context was linked or updated under a subscription, send this call, quoting the event's id in `acknowledgement.eventId`.
+
+<AgentOnly>
+**What happens.** Send `status`, for example `OK`, and `eventId` set to the event's `id`, both in `acknowledgement`. Set `response.requestId` to the `REQUEST-ID` of the notification.
+
+**How you know it worked.** You receive `202`.
+
+**When it goes wrong.** `400` with `ABDM-1015` means the acknowledgement was rejected. Check `acknowledgement.eventId` against the notification.
+</AgentOnly>

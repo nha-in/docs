@@ -1,0 +1,490 @@
+[
+  {
+    "id": "e47750af4c5e",
+    "date": "2026-09-29",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "abdm-integrators-assistant",
+        "from": "0.5.0",
+        "to": "0.9.0"
+      }
+    ]
+  },
+  {
+    "id": "95c9cde69071",
+    "date": "2026-09-29",
+    "kind": "coverage-module",
+    "gateway": "uhi",
+    "version": "v1",
+    "module": "ambulance",
+    "label": "Ambulance Booking",
+    "link": "/docs/uhi/v1/api/ambulance",
+    "count": 2,
+    "items": [
+      {
+        "method": "POST",
+        "path": "/init",
+        "kind": "call"
+      },
+      {
+        "method": "POST",
+        "path": "/on_init",
+        "kind": "call"
+      }
+    ],
+    "roles": [
+      "eua",
+      "hspa"
+    ]
+  },
+  {
+    "id": "b614cd337651",
+    "date": "2026-09-29",
+    "kind": "coverage-module",
+    "gateway": "uhi",
+    "version": "v1",
+    "module": "consultation",
+    "label": "Physical Consultation",
+    "link": "/docs/uhi/v1/api/consultation",
+    "count": 18,
+    "items": [
+      {
+        "method": "POST",
+        "path": "/api/v1/uhi/on_cancel_audit",
+        "kind": "call"
+      },
+      {
+        "method": "POST",
+        "path": "/api/v1/uhi/on_confirm_audit",
+        "kind": "call"
+      },
+      {
+        "method": "POST",
+        "path": "/api/v1/uhi/on_status_audit",
+        "kind": "call"
+      },
+      {
+        "method": "POST",
+        "path": "/api/v1/uhi/on_update_audit",
+        "kind": "call"
+      },
+      {
+        "method": "POST",
+        "path": "/cancel",
+        "kind": "call"
+      },
+      {
+        "method": "POST",
+        "path": "/confirm",
+        "kind": "call"
+      },
+      {
+        "method": "POST",
+        "path": "/init",
+        "kind": "call"
+      },
+      {
+        "method": "POST",
+        "path": "/on_cancel",
+        "kind": "call"
+      },
+      {
+        "method": "POST",
+        "path": "/on_confirm",
+        "kind": "call"
+      },
+      {
+        "method": "POST",
+        "path": "/on_init",
+        "kind": "call"
+      },
+      {
+        "method": "POST",
+        "path": "/on_message#to-eua",
+        "kind": "call"
+      },
+      {
+        "method": "POST",
+        "path": "/on_message#to-hspa",
+        "kind": "call"
+      },
+      {
+        "method": "POST",
+        "path": "/on_select",
+        "kind": "call"
+      },
+      {
+        "method": "POST",
+        "path": "/on_status",
+        "kind": "call"
+      },
+      {
+        "method": "POST",
+        "path": "/on_update#to-eua",
+        "kind": "call"
+      },
+      {
+        "method": "POST",
+        "path": "/on_update#to-hspa",
+        "kind": "call"
+      },
+      {
+        "method": "POST",
+        "path": "/select",
+        "kind": "call"
+      },
+      {
+        "method": "POST",
+        "path": "/status",
+        "kind": "call"
+      }
+    ],
+    "roles": [
+      "eua",
+      "hspa"
+    ]
+  },
+  {
+    "id": "6f74dbcd2676",
+    "date": "2026-09-29",
+    "kind": "coverage-module",
+    "gateway": "uhi",
+    "version": "v1",
+    "module": "network",
+    "label": "Network and discovery",
+    "link": "/docs/uhi/v1/api/",
+    "count": 5,
+    "items": [
+      {
+        "method": "POST",
+        "path": "/api/v1/networkregistry/lookup",
+        "kind": "call"
+      },
+      {
+        "method": "POST",
+        "path": "/api/v1/uhi/on_search",
+        "kind": "call"
+      },
+      {
+        "method": "POST",
+        "path": "/api/v1/uhi/search",
+        "kind": "call"
+      },
+      {
+        "method": "POST",
+        "path": "/on_search",
+        "kind": "call"
+      },
+      {
+        "method": "POST",
+        "path": "/search",
+        "kind": "call"
+      }
+    ],
+    "roles": [
+      "eua",
+      "hspa"
+    ]
+  },
+  {
+    "id": "d394f8023f7a",
+    "date": "2026-09-29",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "abdm-contributors-assistant",
+        "from": "0.3.0",
+        "to": "0.3.4"
+      }
+    ]
+  },
+  {
+    "id": "21c529102e1d",
+    "date": "2026-09-29",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "abdm-integrators-assistant",
+        "from": "0.9.0",
+        "to": "0.9.2"
+      }
+    ]
+  },
+  {
+    "id": "909c4cd8b134",
+    "date": "2026-09-29",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "nhcx",
+        "from": "1.0.0",
+        "to": "1.0.1"
+      }
+    ]
+  },
+  {
+    "id": "704b2402222e",
+    "date": "2026-09-29",
+    "kind": "artefact-added",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": "/docs/hiecm/v3/getting-started/build-with-ai",
+    "count": 1,
+    "items": [
+      {
+        "artefact": "skill",
+        "name": "hiecm-m1-test"
+      }
+    ]
+  },
+  {
+    "id": "55703b80165d",
+    "date": "2026-09-29",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "abdm-integrators-assistant",
+        "from": "0.9.2",
+        "to": "0.10.0"
+      }
+    ]
+  },
+  {
+    "id": "4bf8048a3c39",
+    "date": "2026-09-29",
+    "kind": "withdrawn",
+    "gateway": "hiecm",
+    "version": "v3",
+    "module": "m1",
+    "label": "M1 Identity",
+    "link": "/docs/hiecm/v3/api/m1/",
+    "count": 1,
+    "items": [
+      {
+        "method": "PATCH",
+        "path": "/abha/api/v3/profile/account#profile-photo",
+        "kind": "call"
+      }
+    ]
+  },
+  {
+    "id": "5803a43a65a1",
+    "date": "2026-09-29",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "abdm-integrators-assistant",
+        "from": "0.10.0",
+        "to": "0.10.1"
+      }
+    ]
+  },
+  {
+    "id": "219d42399700",
+    "date": "2026-09-29",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "abdm-contributors-assistant",
+        "from": "0.3.4",
+        "to": "0.4.2"
+      }
+    ]
+  },
+  {
+    "id": "ef0bf9d54feb",
+    "date": "2026-09-29",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "nhcx",
+        "from": "1.0.1",
+        "to": "1.0.2"
+      }
+    ]
+  },
+  {
+    "id": "b459aabe2082",
+    "date": "2026-09-29",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "abdm-contributors-assistant",
+        "from": "0.4.2",
+        "to": "0.4.3"
+      }
+    ]
+  },
+  {
+    "id": "7d6f78ea997d",
+    "date": "2026-09-29",
+    "kind": "artefact-added",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": "/docs/hiecm/v3/getting-started/build-with-ai",
+    "count": 12,
+    "items": [
+      {
+        "artefact": "skill",
+        "name": "uhi-ambulance-build"
+      },
+      {
+        "artefact": "skill",
+        "name": "uhi-ambulance-debug"
+      },
+      {
+        "artefact": "skill",
+        "name": "uhi-blood-bank-build"
+      },
+      {
+        "artefact": "skill",
+        "name": "uhi-blood-bank-debug"
+      },
+      {
+        "artefact": "skill",
+        "name": "uhi-consultation-build"
+      },
+      {
+        "artefact": "skill",
+        "name": "uhi-consultation-debug"
+      },
+      {
+        "artefact": "skill",
+        "name": "uhi-jan-aushadhi-build"
+      },
+      {
+        "artefact": "skill",
+        "name": "uhi-jan-aushadhi-debug"
+      },
+      {
+        "artefact": "skill",
+        "name": "uhi-notto-build"
+      },
+      {
+        "artefact": "skill",
+        "name": "uhi-notto-debug"
+      },
+      {
+        "artefact": "skill",
+        "name": "uhi-pmjay-hem-build"
+      },
+      {
+        "artefact": "skill",
+        "name": "uhi-pmjay-hem-debug"
+      }
+    ]
+  },
+  {
+    "id": "8a2dfd77ff56",
+    "date": "2026-09-29",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "abdm-contributors-assistant",
+        "from": "0.3.5",
+        "to": "0.3.6"
+      }
+    ]
+  },
+  {
+    "id": "bb6c54f6654f",
+    "date": "2026-09-29",
+    "kind": "artefact-added",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "artefact": "plugin",
+        "name": "uhi-integrators-assistant",
+        "version": "0.1.0"
+      }
+    ]
+  },
+  {
+    "id": "c83dff46ff16",
+    "date": "2026-09-29",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "abdm-contributors-assistant",
+        "from": "0.4.3",
+        "to": "0.4.4"
+      }
+    ]
+  }
+]

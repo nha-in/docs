@@ -1,0 +1,11 @@
+## List government programmes {/* #p2-govt-programs */}
+
+Returns the list of government health programmes. Each entry carries the same `identifier` shape as a provider in the provider search.
+
+<AgentOnly>
+**Before you start.** A gateway session token and `X-CM-ID`.
+
+**How you know it worked.** You receive `200` with an array of entries, each with an `identifier` holding `id` and `name`.
+
+**When it goes wrong.** `204` with `ABDM-1001` means no programme is listed.
+</AgentOnly>

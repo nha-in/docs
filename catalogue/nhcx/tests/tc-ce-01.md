@@ -80,7 +80,7 @@ related:
 
 ## In plain words
 
-Before a [PMJAY](../glossary/pmjay.md) preauthorisation, your [HMIS](../../shared/glossary/hmis.md) asks the payer about the exact package it plans to treat. The coverage eligibility purpose `auth-requirements` returns whether the package is covered at your hospital. It also lists the questionnaires and documents the preauthorisation needs.
+Before a [PMJAY](../glossary/pmjay.md) preauthorisation, your [HMIS](../../hiecm/glossary/hmis.md) asks the payer about the exact package it plans to treat. The coverage eligibility purpose `auth-requirements` returns whether the package is covered at your hospital. It also lists the questionnaires and documents the preauthorisation needs.
 
 This test case checks a package the wallet can afford.
 

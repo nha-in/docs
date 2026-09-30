@@ -1,0 +1,36 @@
+{
+  "id": "diagnose-hiecm-m1-abdm-1016-01",
+  "slice": "diagnose",
+  "class": "diagnose",
+  "turns": [
+    {
+      "role": "user",
+      "text": "Profile API gives 404 with ABDM-1016 Invalid Timestamp. Is my URL wrong?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "ABDM-1016 means the service refused the TIMESTAMP header, and on the profile calls it comes back as HTTP 404, so the 404 does not mean the path is wrong.",
+    "Send TIMESTAMP as ISO 8601 in UTC with milliseconds and the Z suffix, for example 2022-10-06T15:10:00.587Z, generated with a date library.",
+    "The code arrives as ABDM-1016 followed by a colon and a space, so match on its prefix rather than an exact ABDM-1016."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.error.abdm-1016"
+  ],
+  "expected_shape": "diagnose",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-abha-m1-abha-swagger-1-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "A 404 that is really a header problem sends people hunting for a wrong path. Source lines: catalogue/hiecm/errors/abdm-1016.md, 'The service refused the `TIMESTAMP` header before it read the rest of the request. The message is \"Invalid Timestamp\". The profile calls return it with HTTP 404'; 'A 404 here does not mean the path is wrong'; 'Send `TIMESTAMP` as ISO 8601 in UTC, with milliseconds and the `Z` suffix, for example `2022-10-06T15:10:00.587Z`'; 'Generate the value with a date library, never by hand'; 'Trim the code, or match on its prefix, because an exact match on `ABDM-1016` misses the trailing colon and space.'"
+}

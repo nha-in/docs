@@ -15,6 +15,8 @@
   },
   "built_at": "2026-08-24T00:00:00Z",
   "catalogue_version": "2026.08.24",
+  "deprecated": 0,
   "embeddings": false,
+  "facts": 0,
   "operations": 1
 }

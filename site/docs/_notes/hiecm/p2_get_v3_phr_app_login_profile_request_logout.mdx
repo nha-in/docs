@@ -1,0 +1,9 @@
+## Logout User {/* #p1-logout-user */}
+
+Ends the session of the person signed in to a [PHR](/docs/hiecm/v3/getting-started/glossary#phr) app, identified by the user token in `X-token`. The call takes no body. Discard the stored tokens afterwards.
+
+<AgentOnly>
+**How you know it worked.** `message` is `You have been logged out`.
+
+**When it goes wrong.** A `401` with `900902` and `Missing Credentials` means the token header is missing.
+</AgentOnly>

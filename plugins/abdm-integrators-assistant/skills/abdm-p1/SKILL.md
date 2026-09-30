@@ -1,6 +1,18 @@
 ---
 name: abdm-p1
 description: Use when building, debugging or testing ABDM P1 in a PHR app: creating an ABHA address and logging in to it.
+type: skill
+domain: p1
+agent_consumers:
+  - abdm-integration-agent
+  - abdm-call-debugger
+requires:
+  - gateway-session-token
+produces:
+  - phr-login
+  - abha-profile
+can_execute: true
+can_orchestrate: false
 ---
 
 # ABDM P1, PHR registration and login
@@ -36,7 +48,7 @@ This file is the map. Each line above is a file beside it, opened one at a time 
 
 ## Before anything else
 
-- No call in this skill has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.
+- Treat every request and response shape in this skill as unconfirmed until the sandbox has answered you. Check a response before you rely on its shape.
 
 ## Practices that hold across every call
 

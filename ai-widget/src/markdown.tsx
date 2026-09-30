@@ -1,4 +1,5 @@
 import {useEffect, useState} from 'preact/hooks';
+import type {Link} from './sse';
 import type {ComponentChildren} from 'preact';
 import {Check, Copy} from './icons';
 import {ASSET_BASE, loadScript} from './assets';
@@ -31,17 +32,40 @@ export function absolute(href: string, docsOrigin: string): string | null {
   return null;
 }
 
-function renderInline(text: string, docsOrigin: string): ComponentChildren[] {
+/**
+ * The page an inline code span points at, when the server said the literal
+ * has one. Exact match only: a path with a query string or a trailing word
+ * is not the documented route.
+ */
+export function linkFor(literal: string, links: Link[] | undefined, docsOrigin: string): string | null {
+  // The model often writes the method inside the span: `POST /api/x`. The
+  // link is keyed by the path alone, so the method is set aside for the
+  // match and stays in the text.
+  const path = literal.replace(/^(?:GET|POST|PUT|PATCH|DELETE)\s+/, '');
+  const hit = links?.find((l) => l.literal === path);
+  return hit ? absolute(hit.url, docsOrigin) : null;
+}
+
+function renderInline(text: string, docsOrigin: string, links?: Link[]): ComponentChildren[] {
   const parts = text.split(INLINE);
   return parts.map((part, i) => {
     if (part.startsWith('`') && part.endsWith('`') && part.length > 2) {
-      return <code key={i}>{part.slice(1, -1)}</code>;
+      const literal = part.slice(1, -1);
+      const href = linkFor(literal, links, docsOrigin);
+      if (href) {
+        return (
+          <a key={i} class="ask-ai__code-link" href={href} target="_blank" rel="noopener">
+            <code>{literal}</code>
+          </a>
+        );
+      }
+      return <code key={i}>{literal}</code>;
     }
     if (part.startsWith('**') && part.endsWith('**') && part.length > 4) {
-      return <b key={i}>{renderInline(part.slice(2, -2), docsOrigin)}</b>;
+      return <b key={i}>{renderInline(part.slice(2, -2), docsOrigin, links)}</b>;
     }
     if (part.startsWith('*') && part.endsWith('*') && part.length > 2) {
-      return <em key={i}>{renderInline(part.slice(1, -1), docsOrigin)}</em>;
+      return <em key={i}>{renderInline(part.slice(1, -1), docsOrigin, links)}</em>;
     }
     const link = /^\[([^\]]+)\]\(([^)\s]+)\)$/.exec(part);
     if (link) {
@@ -288,15 +312,18 @@ export function toBlocks(text: string): Block[] {
 export default function ChatMarkdown({
   text,
   docsOrigin,
+  links,
 }: {
   text: string;
   docsOrigin: string;
+  /** Literals the server paired with a reference page this turn. */
+  links?: Link[];
 }) {
   return (
     <>
       {toBlocks(text).map((block, i) => {
         if (block.kind === 'p') {
-          return <p key={i}>{renderInline(block.text, docsOrigin)}</p>;
+          return <p key={i}>{renderInline(block.text, docsOrigin, links)}</p>;
         }
         if (block.kind === 'code') {
           // Only once the fence has closed: half a diagram is a syntax error,
@@ -321,7 +348,7 @@ export default function ChatMarkdown({
         return (
           <ListTag key={i}>
             {block.items.map((item, j) => (
-              <li key={j}>{renderInline(item, docsOrigin)}</li>
+              <li key={j}>{renderInline(item, docsOrigin, links)}</li>
             ))}
           </ListTag>
         );

@@ -1,0 +1,892 @@
+{
+  "case_id": "followup-hiecm-m1-choose-address-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "The conversation so far:\nDeveloper: how do i create an ABHA with aadhaar otp\nYou: Request an OTP with scope abha-enrol and loginHint aadhaar, then call enrol/byAadhaar with the txnId and the encrypted OTP. The response carries ABHAProfile with the ABHANumber.\n\nThe developer's new message:\nok got the number back. now how does the person pick their address"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01PKHGp3Zp9REs9d53p24EcV",
+            "Name": "search",
+            "Input": {
+              "query": "ABHA address selection enrol",
+              "kind": "operation"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "ABHA address selection enrol",
+            "kind": "operation"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/p1/endpoints/p1-post-v3-phr-app-enrollment-enrol",
+                "id": "p1_post_v3_phr_app_enrollment_enrol",
+                "summary": "3 flows: Enroll ABHA Address",
+                "title": "POST /abha/api/v3/phr/app/enrollment/enrol",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-search-abha-address-login-a-de8184",
+                "id": "m1_post_v3_phr_web_login_abha_search_abha_address_login_a_de8184",
+                "summary": "Search ABHA address (auth methods)",
+                "title": "POST /abha/api/v3/phr/web/login/abha/search",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-verify-fingerprint",
+                "id": "m1_post_v3_phr_web_login_abha_verify_fingerprint",
+                "summary": "ABHA address login via Fingerprint - verify",
+                "title": "POST /abha/api/v3/phr/web/login/abha/verify",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-verify-iris",
+                "id": "m1_post_v3_phr_web_login_abha_verify_iris",
+                "summary": "ABHA address login via IRIS - verify",
+                "title": "POST /abha/api/v3/phr/web/login/abha/verify",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-phr-web-login-profile-abha-profile-abha-address-809900",
+                "id": "m1_get_v3_phr_web_login_profile_abha_profile_abha_address_809900",
+                "summary": "Get ABHA-address profile",
+                "title": "GET /abha/api/v3/phr/web/login/profile/abha-profile",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-phr-web-login-profile-abha-profile-abha-address-8ec4ee",
+                "id": "m1_get_v3_phr_web_login_profile_abha_profile_abha_address_8ec4ee",
+                "summary": "Get ABHA-address profile",
+                "title": "GET /abha/api/v3/phr/web/login/profile/abha-profile",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-phr-web-login-profile-abha-profile-abha-address-b038c4",
+                "id": "m1_get_v3_phr_web_login_profile_abha_profile_abha_address_b038c4",
+                "summary": "Get ABHA-address profile",
+                "title": "GET /abha/api/v3/phr/web/login/profile/abha-profile",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-phr-web-login-profile-abha-profile-abha-address-c04e83",
+                "id": "m1_get_v3_phr_web_login_profile_abha_profile_abha_address_c04e83",
+                "summary": "Get ABHA-address profile",
+                "title": "GET /abha/api/v3/phr/web/login/profile/abha-profile",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-verify-aadhaar-otp",
+                "id": "m1_post_v3_phr_web_login_abha_verify_aadhaar_otp",
+                "summary": "ABHA address login via Aadhaar OTP - verify",
+                "title": "POST /abha/api/v3/phr/web/login/abha/verify",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-verify-mobile-otp",
+                "id": "m1_post_v3_phr_web_login_abha_verify_mobile_otp",
+                "summary": "ABHA address login via Mobile OTP - verify",
+                "title": "POST /abha/api/v3/phr/web/login/abha/verify",
+                "type": "operation"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01EXYW6RpW4SkKydPm3BKAAD",
+            "Name": "search",
+            "Input": {
+              "query": "ABHA address verification Aadhaar",
+              "kind": "atom"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "ABHA address verification Aadhaar",
+            "kind": "atom"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m1#m1-create-abha-face-auth",
+                "id": "hiecm.flow.m1-create-abha-face-auth",
+                "summary": "Create an ABHA for someone who cannot receive an Aadhaar OTP, using face authentication in the ABHA app.",
+                "title": "Create an ABHA using Aadhaar face authentication",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/encryption#input-encryption",
+                "id": "hiecm.concept.input-encryption",
+                "summary": "Aadhaar numbers, mobile numbers, OTPs and passwords are encrypted with the published certificate before they go in a request body.",
+                "title": "Encrypting sensitive inputs, Aadhaar, mobile, OTP and passwords",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m1#m1-create-abha-demographic-auth",
+                "id": "hiecm.flow.m1-create-abha-demographic-auth",
+                "summary": "Create an ABHA by matching name, date of birth and gender against Aadhaar with no OTP, for approved integrators only.",
+                "title": "Create an ABHA using Aadhaar demographic authentication",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m1#m1-create-abha-aadhaar-otp",
+                "id": "hiecm.flow.m1-create-abha-aadhaar-otp",
+                "summary": "Verify a person against Aadhaar with an OTP, create their ABHA number, then let them choose an address.",
+                "title": "Create an ABHA using an Aadhaar OTP",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-manager-hiu-hip/01-p2-get-hip-v3-link-patient-links#m2-get-all-link-records",
+                "id": "hiecm.endpoint.m2-get-all-link-records",
+                "summary": "Lists every care context already linked to an ABHA address.",
+                "title": "GET All Link records",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#otp",
+                "id": "shared.glossary.otp",
+                "summary": "A short code sent to a mobile number or an email, used once to prove the person is present.",
+                "title": "OTP, one time password",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m1-avoiding-duplicate-abha",
+                "summary": "A second ABHA number for one person is the expensive failure in M1, nothing merges two, and four decisions in the journey are what cause it.",
+                "title": "The branch that creates a duplicate ABHA, and how to close it",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#discovery",
+                "id": "hiecm.glossary.discovery",
+                "summary": "The step where a patient's app asks a facility whether it holds records for that patient.",
+                "title": "Discovery, finding whether a facility holds records",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/notifications-and-patient-apps#subscribing",
+                "id": "nhcx.flow.notification-subscribe",
+                "summary": "Have a patient's health record app receive plain-language updates on their pre-authorisations, claims and payments, by subscribing each time the patient logs...",
+                "title": "Subscribe a patient app to notifications",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/03-m1-post-v3-phr-web-login-abha-verify-mobile-otp#m1-phr-verify",
+                "id": "hiecm.endpoint.m1-phr-verify",
+                "summary": "Completes an ABHA address login and returns the X-token for the profile, card and QR calls.",
+                "title": "Verify OTP or biometric for ABHA address login",
+                "type": "endpoint"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_017CHy9o3uMsZFzwFgv5Asvt",
+            "Name": "get",
+            "Input": {
+              "id": "p1_post_v3_phr_app_enrollment_enrol"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "p1_post_v3_phr_app_enrollment_enrol"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "doc_path": "/docs/hiecm/v3/api/p1/endpoints/p1-post-v3-phr-app-enrollment-enrol",
+            "operation_id": "p1_post_v3_phr_app_enrollment_enrol",
+            "spec": {
+              "description": "Flows in the Postman collection:\n- P1-Registration-login › P1 - Create ABHA Address Flow › Enrolment via Mobile › Enroll ABHA Address\n- P1-Registration-login › P1 - Create ABHA Address Flow › Enrolment via ABHA Number-ABHA OTP › Enroll ABHA Address\n- P1-Registration-login › P1 - Create ABHA Address Flow › Enrolment via ABHA Number-Aadhaar OTP › Enroll ABHA Address",
+              "operationId": "p1_post_v3_phr_app_enrollment_enrol",
+              "parameters": [
+                {
+                  "description": "Unique UUID for each request.",
+                  "example": "18235d89-cb13-479d-ad71-7a57d5f669a8",
+                  "in": "header",
+                  "name": "REQUEST-ID",
+                  "required": true,
+                  "schema": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                {
+                  "description": "Request timestamp in UTC, ISO-8601 with Z.",
+                  "example": "2022-10-06T15:10:00.587Z",
+                  "in": "header",
+                  "name": "TIMESTAMP",
+                  "required": true,
+                  "schema": {
+                    "format": "date-time",
+                    "type": "string"
+                  }
+                }
+              ],
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "examples": {
+                      "Enroll ABHA Address": {
+                        "summary": "Enrolment via Mobile › Enroll ABHA Address",
+                        "value": {
+                          "phrDetails": {
+                            "abhaAddress": "<ABHA_ADDRESS>",
+                            "address": "<ADDRESS>",
+                            "dayOfBirth": "",
+                            "districtCode": "123",
+                            "districtName": "<ADDRESS>",
+                            "email": "",
+                            "firstName": "John",
+                            "gender": "M",
+                            "lastName": "Doe",
+                            "middleName": "",
+                            "mobile": "<ENCRYPTED_MOBILE>",
+                            "monthOfBirth": "<DOB>",
+                            "password": "<ENCRYPTED_PASSWORD>",
+                            "pinCode": "<PINCODE>",
+                            "profilePhoto": "",
+                            "stateCode": "27",
+                            "stateName": "Maharashtra",
+                            "yearOfBirth": "<DOB>"
+                          },
+                          "txnId": "27d444b7-2a3d-46d8-bf67-e5590b6c46b6"
+                        }
+                      },
+                      "Enroll ABHA Address (2)": {
+                        "summary": "Enrolment via ABHA Number-ABHA OTP › Enroll ABHA Address",
+                        "value": {
+                          "phrDetails": {
+                            "abhaAddress": "<ABHA_ADDRESS>",
+                            "address": "<ADDRESS>",
+                            "dayOfBirth": "<DOB>",
+                            "districtCode": "123",
+                            "districtName": "<ADDRESS>",
+                            "email": "",
+                            "firstName": "John",
+                            "gender": "M",
+                            "lastName": "Doe",
+                            "middleName": "",
+                            "mobile": "<ENCRYPTED_MOBILE>",
+                            "monthOfBirth": "<DOB>",
+                            "password": "<ENCRYPTED_PASSWORD>",
+                            "pinCode": "<PINCODE>",
+                            "stateCode": "27",
+                            "stateName": "Maharashtra",
+                            "yearOfBirth": "<DOB>"
+                          },
+                          "txnId": "37d8d312-35a0-41e7-a6e4-1074eb18a5fa"
+                        }
+                      },
+                      "Enroll ABHA Address (3)": {
+                        "summary": "Enrolment via ABHA Number-Aadhaar OTP › Enroll ABHA Address",
+                        "value": {
+                          "phrDetails": {
+                            "abhaAddress": "<ABHA_ADDRESS>",
+                            "address": "<ADDRESS>",
+                            "dayOfBirth": "<DOB>",
+                            "districtCode": "123",
+                            "districtName": "<ADDRESS>",
+                            "email": "",
+                            "firstName": "John",
+                            "gender": "M",
+                            "lastName": "Doe",
+                            "middleName": "",
+                            "mobile": "<ENCRYPTED_MOBILE>",
+                            "monthOfBirth": "<DOB>",
+                            "password": "<ENCRYPTED_PASSWORD>",
+                            "pinCode": "<PINCODE>",
+                            "stateCode": "27",
+                            "stateName": "Maharashtra",
+                            "yearOfBirth": "<DOB>"
+                          },
+                          "txnId": "37d8d312-35a0-41e7-a6e4-1074eb18a5fa"
+                        }
+                      }
+                    },
+                    "schema": {
+                      "properties": {
+                        "phrDetails": {
+                          "properties": {
+                            "abhaAddress": {
+                              "type": "string"
+                            },
+                            "address": {
+                              "type": "string"
+                            },
+                            "dayOfBirth": {
+                              "type": "string"
+                            },
+                            "districtCode": {
+                              "type": "string"
+                            },
+                            "districtName": {
+                              "type": "string"
+                            },
+                            "email": {
+                              "type": "string"
+                            },
+                            "firstName": {
+                              "type": "string"
+                            },
+                            "gender": {
+                              "type": "string"
+                            },
+                            "lastName": {
+                              "type": "string"
+                            },
+                            "middleName": {
+                              "type": "string"
+                            },
+                            "mobile": {
+                              "type": "string"
+                            },
+                            "monthOfBirth": {
+                              "type": "string"
+                            },
+                            "password": {
+                              "type": "string"
+                            },
+                            "pinCode": {
+                              "type": "string"
+                            },
+                            "profilePhoto": {
+                              "type": "string"
+                            },
+                            "stateCode": {
+                              "type": "string"
+                            },
+                            "stateName": {
+                              "type": "string"
+                            },
+                            "yearOfBirth": {
+                              "type": "string"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "txnId": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "txnId",
+                        "phrDetails"
+                      ],
+                      "type": "object"
+                    }
+                  }
+                },
+                "required": true
+              },
+              "responses": {
+                "200": {
+                  "content": {
+                    "application/json": {
+                      "examples": {
+                        "Enroll ABHA Address": {
+                          "value": {
+                            "message": "ABHA Address Created Successfully",
+                            "phrDetails": {
+                              "abhaAddress": [
+                                "<ABHA_ADDRESS>",
+                                "<ABHA_ADDRESS>",
+                                "<ABHA_ADDRESS>"
+                              ],
+                              "address": "<ADDRESS>",
+                              "dateOfBirth": "<DOB>",
+                              "dayOfBirth": "<DOB>",
+                              "districtCode": "123",
+                              "districtName": "<ADDRESS>",
+                              "email": "<EMAIL>",
+                              "firstName": "John",
+                              "fullName": "John Doe",
+                              "gender": "M",
+                              "lastName": "Doe",
+                              "middleName": "",
+                              "mobile": "******1234",
+                              "monthOfBirth": "<DOB>",
+                              "pinCode": "<PINCODE>",
+                              "stateCode": "27",
+                              "stateName": "Maharashtra",
+                              "yearOfBirth": "<DOB>"
+                            },
+                            "tokens": {
+                              "expiresIn": 1800,
+                              "refreshExpiresIn": 1296000,
+                              "refreshToken": "<JWT TOKEN>",
+                              "token": "<JWT TOKEN>"
+                            },
+                            "txnId": "6907ebb5-ff71-47f9-8052-6dd5554df5df"
+                          }
+                        },
+                        "Enroll ABHA Address (2)": {
+                          "value": {
+                            "message": "ABHA Address Created Successfully",
+                            "phrDetails": {
+                              "abhaAddress": [
+                                "<ABHA_ADDRESS>",
+                                "<ABHA_ADDRESS>",
+                                "<ABHA_ADDRESS>"
+                              ],
+                              "address": "<ADDRESS>",
+                              "dateOfBirth": "<DOB>",
+                              "dayOfBirth": "<DOB>",
+                              "districtCode": "123",
+                              "districtName": "<ADDRESS>",
+                              "email": "<EMAIL>",
+                              "firstName": "John",
+                              "fullName": "John Doe",
+                              "gender": "M",
+                              "lastName": "Doe",
+                              "middleName": "",
+                              "mobile": "******0903",
+                              "monthOfBirth": "<DOB>",
+                              "pinCode": "<PINCODE>",
+                              "stateCode": "27",
+                              "stateName": "Maharashtra",
+                              "yearOfBirth": "<DOB>"
+                            },
+                            "tokens": {
+                              "expiresIn": 1800,
+                              "refreshExpiresIn": 1296000,
+                              "refreshToken": "<JWT TOKEN>",
+                              "token": "<JWT TOKEN>"
+                            },
+                            "txnId": "6907ebb5-ff71-47f9-8052-6dd4254df5df"
+                          }
+                        },
+                        "Enroll ABHA Address (3)": {
+                          "value": {
+                            "message": "ABHA Address Created Successfully",
+                            "phrDetails": {
+                              "abhaAddress": [
+                                "<ABHA_ADDRESS>",
+                                "<ABHA_ADDRESS>",
+                                "<ABHA_ADDRESS>"
+                              ],
+                              "address": "<ADDRESS>",
+                              "dateOfBirth": "<DOB>",
+                              "dayOfBirth": "<DOB>",
+                              "districtCode": "123",
+                              "districtName": "<ADDRESS>",
+                              "email": "<EMAIL>",
+                              "firstName": "John",
+                              "fullName": "John Doe",
+                              "gender": "M",
+                              "lastName": "Doe",
+                              "middleName": "",
+                              "mobile": "******0903",
+                              "monthOfBirth": "<DOB>",
+                              "pinCode": "<PINCODE>",
+                              "stateCode": "27",
+                              "stateName": "Maharashtra",
+                              "yearOfBirth": "<DOB>"
+                            },
+                            "tokens": {
+                              "expiresIn": 1800,
+                              "refreshExpiresIn": 1296000,
+                              "refreshToken": "<JWT TOKEN>",
+                              "token": "<JWT TOKEN>"
+                            },
+                            "txnId": "6907ebb5-ff71-47f9-8052-6dd4254df5df"
+                          }
+                        }
+                      },
+                      "schema": {
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          },
+                          "phrDetails": {
+                            "properties": {
+                              "abhaAddress": {
+                                "items": {
+                                  "type": "string"
+                                },
+                                "type": "array"
+                              },
+                              "address": {
+                                "type": "string"
+                              },
+                              "dateOfBirth": {
+                                "type": "string"
+                              },
+                              "dayOfBirth": {
+                                "type": "string"
+                              },
+                              "districtCode": {
+                                "type": "string"
+                              },
+                              "districtName": {
+                                "type": "string"
+                              },
+                              "email": {
+                                "type": "string"
+                              },
+                              "firstName": {
+                                "type": "string"
+                              },
+                              "fullName": {
+                                "type": "string"
+                              },
+                              "gender": {
+                                "type": "string"
+                              },
+                              "lastName": {
+                                "type": "string"
+                              },
+                              "middleName": {
+                                "type": "string"
+                              },
+                              "mobile": {
+                                "type": "string"
+                              },
+                              "monthOfBirth": {
+                                "type": "string"
+                              },
+                              "pinCode": {
+                                "type": "string"
+                              },
+                              "stateCode": {
+                                "type": "string"
+                              },
+                              "stateName": {
+                                "type": "string"
+                              },
+                              "yearOfBirth": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "tokens": {
+                            "properties": {
+                              "expiresIn": {
+                                "type": "integer"
+                              },
+                              "refreshExpiresIn": {
+                                "type": "integer"
+                              },
+                              "refreshToken": {
+                                "type": "string"
+                              },
+                              "token": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "txnId": {
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "OK"
+                },
+                "400": {
+                  "content": {
+                    "application/json": {
+                      "examples": {
+                        "Enroll ABHA Address-ABHA Address already exists": {
+                          "value": {
+                            "code": "ABDM-9999: ",
+                            "message": "This ABHA Address already exists. Please create with unique ABHA address"
+                          }
+                        },
+                        "Enroll ABHA Address-ABHA Address already exists (2)": {
+                          "value": {
+                            "code": "ABDM-9999: ",
+                            "message": "This ABHA Address already exists. Please create with unique ABHA address"
+                          }
+                        },
+                        "Enroll ABHA Address-ABHA Address already exists (3)": {
+                          "value": {
+                            "code": "ABDM-9999: ",
+                            "message": "This ABHA Address already exists. Please create with unique ABHA address"
+                          }
+                        },
+                        "Enroll ABHA Address-Invalid Day and Month Of Birth": {
+                          "value": [
+                            {
+                              "code": "ABDM-9999: ",
+                              "message": "Invalid Month Of Birth"
+                            },
+                            {
+                              "code": "ABDM-9999: ",
+                              "message": "Invalid Day Of Birth"
+                            }
+                          ]
+                        },
+                        "Enroll ABHA Address-Invalid Day and Month Of Birth (2)": {
+                          "value": [
+                            {
+                              "code": "ABDM-9999: ",
+                              "message": "Invalid Month Of Birth"
+                            },
+                            {
+                              "code": "ABDM-9999: ",
+                              "message": "Invalid Day Of Birth"
+                            }
+                          ]
+                        },
+                        "Enroll ABHA Address-Invalid Day and Month Of Birth (3)": {
+                          "value": [
+                            {
+                              "code": "ABDM-9999: ",
+                              "message": "Invalid Month Of Birth"
+                            },
+                            {
+                              "code": "ABDM-9999: ",
+                              "message": "Invalid Day Of Birth"
+                            }
+                          ]
+                        },
+                        "Enroll ABHA Address-Invalid First Name": {
+                          "value": [
+                            {
+                              "code": "ABDM-9999: ",
+                              "message": "Invalid First Name"
+                            }
+                          ]
+                        },
+                        "Enroll ABHA Address-Invalid First Name (2)": {
+                          "value": [
+                            {
+                              "code": "ABDM-9999: ",
+                              "message": "Invalid First Name"
+                            }
+                          ]
+                        },
+                        "Enroll ABHA Address-Invalid First Name (3)": {
+                          "value": [
+                            {
+                              "code": "ABDM-9999: ",
+                              "message": "Invalid First Name"
+                            }
+                          ]
+                        },
+                        "Enroll ABHA Address-Invalid Transaction Id": {
+                          "value": [
+                            {
+                              "code": "ABDM-9999: ",
+                              "message": "Invalid Transaction Id"
+                            }
+                          ]
+                        },
+                        "Enroll ABHA Address-Invalid Transaction Id (2)": {
+                          "value": [
+                            {
+                              "code": "ABDM-9999: ",
+                              "message": "Invalid Transaction Id"
+                            }
+                          ]
+                        },
+                        "Enroll ABHA Address-Invalid Transaction Id (3)": {
+                          "value": [
+                            {
+                              "code": "ABDM-9999: ",
+                              "message": "Invalid Transaction Id"
+                            }
+                          ]
+                        }
+                      },
+                      "schema": {
+                        "anyOf": [
+                          {
+                            "properties": {
+                              "code": {
+                                "type": "string"
+                              },
+                              "message": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          {
+                            "items": {
+                              "properties": {
+                                "code": {
+                                  "type": "string"
+                                },
+                                "message": {
+                                  "type": "string"
+                                }
+                              },
+                              "type": "object"
+                            },
+                            "type": "array"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "description": "Bad Request"
+                }
+              },
+              "security": [
+                {
+                  "bearerAuth": []
+                }
+              ],
+              "summary": "3 flows: Enroll ABHA Address",
+              "tags": [
+                "P1 - Create ABHA Address Flow"
+              ],
+              "x-abdm-nha-operation-id": "postEnrollmentEnrol"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_0136xDmKoPiSreLPkGmRJm9U",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.flow.m1-create-abha-aadhaar-otp"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.flow.m1-create-abha-aadhaar-otp"
+          },
+          "output": {
+            "body": "# Create an ABHA using an Aadhaar OTP\n\n## In plain words\n\nThe individual provides their Aadhaar number. The ABHA service sends a one time\npassword ([OTP](/docs/hiecm/v3/getting-started/glossary#otp)) to the mobile number registered against that Aadhaar.\nUpon successful verification, the individual selects an ABHA address, and the\nABHA number is issued.\n\n```mermaid\nsequenceDiagram\n    autonumber\n    actor P as Person\n    participant S as Your system\n    participant A as ABHA service\n    Note over S: Holds the gateway access token and the<br/>public key from GET /abha/api/v3/profile/public/certificate\n    P->>S: Aadhaar number and consent\n    S->>A: POST /abha/api/v3/enrollment/request/otp<br/>scope [abha-enrol], loginHint aadhaar,<br/>loginId (encrypted Aadhaar), otpSystem aadhaar\n    A-->>S: txnId\n    A-)P: OTP by SMS to the Aadhaar linked mobile\n    P->>S: OTP, and the mobile number for ABHA communication\n    S->>A: POST /abha/api/v3/enrollment/enrol/byAadhaar<br/>authData.authMethods [otp], otp {txnId,<br/>otpValue (encrypted), mobile}, consent\n    A-->>S: ABHAProfile (ABHANumber, name, dob, gender, photo),<br/>tokens.token, isNew\n    Note over S,A: Optional: verify the communication mobile\n    S->>A: POST /abha/api/v3/enrollment/request/otp<br/>scope [abha-enrol, mobile-verify], loginHint mobile,<br/>loginId (encrypted mobile), txnId\n    A-->>S: txnId\n    A-)P: OTP by SMS to the communication mobile\n    P->>S: Mobile OTP\n    S->>A: POST /abha/api/v3/enrollment/auth/byAbdm<br/>scope [abha-enrol, mobile-verify],<br/>authData.authMethods [otp], otp {txnId,<br/>otpValue (encrypted)}\n    A-->>S: authResult success, accounts [ABHANumber]\n    S->>A: GET /abha/api/v3/enrollment/enrol/suggestion<br/>header TRANSACTION_ID txnId\n    A-->>S: abhaAddressList\n    P->>S: Picks or types an ABHA address\n    S->>A: POST /abha/api/v3/enrollment/enrol/abha-address<br/>txnId, abhaAddress, preferred 1\n    A-->>S: healthIdNumber, preferredAbhaAddress\n```\n\nEvery step answers in its own response, so nothing here waits on a callback.\nThe enrolment call is the one with a lasting effect: it creates the account.\n\n## Before you start\n\nA gateway access token, the Aadhaar number encrypted with the M1 certificate, the person present to read the OTP, and their consent to create an ABHA.\n\n## What happens\n\nRequest the OTP with scope `abha-enrol` and keep the `txnId`. Enrol with `enrol/byAadhaar`, sending the encrypted OTP, the communication mobile and the consent block. Optionally verify the communication mobile. Fetch suggestions with the `TRANSACTION_ID` header, and claim the chosen address with `preferred` set to 1.\n\n## How you know it worked\n\nThe enrolment response carries `ABHAProfile` with an `ABHANumber`, and the address step returns the chosen address as `preferredAbhaAddress`. An account left with only its default address is a half finished job the person will not recognise later.\n\n## When it goes wrong\n\nThe OTP goes only to the mobile registered against the Aadhaar, which may not be the phone in the room: see [the OTP never arrives](/docs/hiecm/v3/troubleshooting/otp-never-arrives). Enrolment for an Aadhaar that already has an ABHA returns that account with `isNew` false, so read `isNew` before telling the person anything was created. Every call failing the same way is a session or header problem: see [everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401).",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/milestones/m1#m1-create-abha-aadhaar-otp",
+            "gateway": "hiecm",
+            "id": "hiecm.flow.m1-create-abha-aadhaar-otp",
+            "milestone": "M1",
+            "summary": "Verify a person against Aadhaar with an OTP, create their ABHA number, then let them choose an address.",
+            "title": "Create an ABHA using an Aadhaar OTP",
+            "type": "flow"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "After you get the ABHA number, the person picks an address through two steps:\n\n**1. Get suggestions:**\n```\nGET /abha/api/v3/enrollment/enrol/suggestion\nheader: TRANSACTION_ID: <txnId>\n```\nThis returns a list of suggested ABHA addresses.\n\n**2. Claim the chosen address:**\n```\nPOST /abha/api/v3/phr/app/enrollment/enrol\n{\n  \"txnId\": \"<txnId>\",\n  \"phrDetails\": {\n    \"abhaAddress\": \"<chosen_address>\",\n    \"firstName\": \"...\",\n    \"lastName\": \"...\",\n    \"gender\": \"...\",\n    // ... other profile fields ...\n    \"mobile\": \"<encrypted>\",\n    \"password\": \"<encrypted>\"\n  }\n}\n```\n\nThe response includes the list of active addresses as `phrDetails.abhaAddress` (array), plus tokens for subsequent profile calls. An ABHA without a chosen address is incomplete—the flow guide notes \"An account left with only its default address is a half finished job the person will not recognise later.\"\n\nSee the [Create an ABHA using an Aadhaar OTP flow](/docs/hiecm/v3/milestones/m1#m1-create-abha-aadhaar-otp) and the [Enroll ABHA Address endpoint](/docs/hiecm/v3/api/p1/endpoints/p1-post-v3-phr-app-enrollment-enrol) on the developer portal for full details.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "After you get the ABHA number, the person picks an address through two steps:\n\n**1. Get suggestions:**\n```\nGET /abha/api/v3/enrollment/enrol/suggestion\nheader: TRANSACTION_ID: <txnId>\n```\nThis returns a list of suggested ABHA addresses.\n\n**2. Claim the chosen address:**\n```\nPOST /abha/api/v3/phr/app/enrollment/enrol\n{\n  \"txnId\": \"<txnId>\",\n  \"phrDetails\": {\n    \"abhaAddress\": \"<chosen_address>\",\n    \"firstName\": \"...\",\n    \"lastName\": \"...\",\n    \"gender\": \"...\",\n    // ... other profile fields ...\n    \"mobile\": \"<encrypted>\",\n    \"password\": \"<encrypted>\"\n  }\n}\n```\n\nThe response includes the list of active addresses as `phrDetails.abhaAddress` (array), plus tokens for subsequent profile calls. An ABHA without a chosen address is incomplete—the flow guide notes \"An account left with only its default address is a half finished job the person will not recognise later.\"\n\nSee the [Create an ABHA using an Aadhaar OTP flow](/docs/hiecm/v3/milestones/m1#m1-create-abha-aadhaar-otp) and the [Enroll ABHA Address endpoint](/docs/hiecm/v3/api/p1/endpoints/p1-post-v3-phr-app-enrollment-enrol) on the developer portal for full details.",
+  "sources": [
+    {
+      "id": "hiecm.flow.m1-create-abha-aadhaar-otp",
+      "title": "Create an ABHA using an Aadhaar OTP",
+      "url": "/docs/hiecm/v3/milestones/m1#m1-create-abha-aadhaar-otp"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/p1/endpoints/p1-post-v3-phr-app-enrollment-enrol\",\"id\":\"p1_post_v3_phr_app_enrollment_enrol\",\"summary\":\"3 flows: Enroll ABHA Address\",\"title\":\"POST /abha/api/v3/phr/app/enrollment/enrol\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-search-abha-address-login-a-de8184\",\"id\":\"m1_post_v3_phr_web_login_abha_search_abha_address_login_a_de8184\",\"summary\":\"Search ABHA address (auth methods)\",\"title\":\"POST /abha/api/v3/phr/web/login/abha/search\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-verify-fingerprint\",\"id\":\"m1_post_v3_phr_web_login_abha_verify_fingerprint\",\"summary\":\"ABHA address login via Fingerprint - verify\",\"title\":\"POST /abha/api/v3/phr/web/login/abha/verify\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-verify-iris\",\"id\":\"m1_post_v3_phr_web_login_abha_verify_iris\",\"summary\":\"ABHA address login via IRIS - verify\",\"title\":\"POST /abha/api/v3/phr/web/login/abha/verify\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-phr-web-login-profile-abha-profile-abha-address-809900\",\"id\":\"m1_get_v3_phr_web_login_profile_abha_profile_abha_address_809900\",\"summary\":\"Get ABHA-address profile\",\"title\":\"GET /abha/api/v3/phr/web/login/profile/abha-profile\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-phr-web-login-profile-abha-profile-abha-address-8ec4ee\",\"id\":\"m1_get_v3_phr_web_login_profile_abha_profile_abha_address_8ec4ee\",\"summary\":\"Get ABHA-address profile\",\"title\":\"GET /abha/api/v3/phr/web/login/profile/abha-profile\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-phr-web-login-profile-abha-profile-abha-address-b038c4\",\"id\":\"m1_get_v3_phr_web_login_profile_abha_profile_abha_address_b038c4\",\"summary\":\"Get ABHA-address profile\",\"title\":\"GET /abha/api/v3/phr/web/login/profile/abha-profile\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-phr-web-login-profile-abha-profile-abha-address-c04e83\",\"id\":\"m1_get_v3_phr_web_login_profile_abha_profile_abha_address_c04e83\",\"summary\":\"Get ABHA-address profile\",\"title\":\"GET /abha/api/v3/phr/web/login/profile/abha-profile\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-verify-aadhaar-otp\",\"id\":\"m1_post_v3_phr_web_login_abha_verify_aadhaar_otp\",\"summary\":\"ABHA address login via Aadhaar OTP - verify\",\"title\":\"POST /abha/api/v3/phr/web/login/abha/verify\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-verify-mobile-otp\",\"id\":\"m1_post_v3_phr_web_login_abha_verify_mobile_otp\",\"summary\":\"ABHA address login via Mobile OTP - verify\",\"title\":\"POST /abha/api/v3/phr/web/login/abha/verify\",\"type\":\"operation\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/milestones/m1#m1-create-abha-face-auth\",\"id\":\"hiecm.flow.m1-create-abha-face-auth\",\"summary\":\"Create an ABHA for someone who cannot receive an Aadhaar OTP, using face authentication in the ABHA app.\",\"title\":\"Create an ABHA using Aadhaar face authentication\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/encryption#input-encryption\",\"id\":\"hiecm.concept.input-encryption\",\"summary\":\"Aadhaar numbers, mobile numbers, OTPs and passwords are encrypted with the published certificate before they go in a request body.\",\"title\":\"Encrypting sensitive inputs, Aadhaar, mobile, OTP and passwords\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m1#m1-create-abha-demographic-auth\",\"id\":\"hiecm.flow.m1-create-abha-demographic-auth\",\"summary\":\"Create an ABHA by matching name, date of birth and gender against Aadhaar with no OTP, for approved integrators only.\",\"title\":\"Create an ABHA using Aadhaar demographic authentication\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m1#m1-create-abha-aadhaar-otp\",\"id\":\"hiecm.flow.m1-create-abha-aadhaar-otp\",\"summary\":\"Verify a person against Aadhaar with an OTP, create their ABHA number, then let them choose an address.\",\"title\":\"Create an ABHA using an Aadhaar OTP\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-consent-manager-hiu-hip/01-p2-get-hip-v3-link-patient-links#m2-get-all-link-records\",\"id\":\"hiecm.endpoint.m2-get-all-link-records\",\"summary\":\"Lists every care context already linked to an ABHA address.\",\"title\":\"GET All Link records\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#otp\",\"id\":\"shared.glossary.otp\",\"summary\":\"A short code sent to a mobile number or an email, used once to prove the person is present.\",\"title\":\"OTP, one time password\",\"type\":\"glossary\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m1-avoiding-duplicate-abha\",\"summary\":\"A second ABHA number for one person is the expensive failure in M1, nothing merges two, and four decisions in the journey are what cause it.\",\"title\":\"The branch that creates a duplicate ABHA, and how to close it\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#discovery\",\"id\":\"hiecm.glossary.discovery\",\"summary\":\"The step where a patient's app asks a facility whether it holds records for that patient.\",\"title\":\"Discovery, finding whether a facility holds records\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/reference/notifications-and-patient-apps#subscribing\",\"id\":\"nhcx.flow.notification-subscribe\",\"summary\":\"Have a patient's health record app receive plain-language updates on their pre-authorisations, claims and payments, by subscribing each time the patient logs...\",\"title\":\"Subscribe a patient app to notifications\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/03-m1-post-v3-phr-web-login-abha-verify-mobile-otp#m1-phr-verify\",\"id\":\"hiecm.endpoint.m1-phr-verify\",\"summary\":\"Completes an ABHA address login and returns the X-token for the profile, card and QR calls.\",\"title\":\"Verify OTP or biometric for ABHA address login\",\"type\":\"endpoint\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"doc_path\":\"/docs/hiecm/v3/api/p1/endpoints/p1-post-v3-phr-app-enrollment-enrol\",\"operation_id\":\"p1_post_v3_phr_app_enrollment_enrol\",\"spec\":{\"description\":\"Flows in the Postman collection:\\n- P1-Registration-login › P1 - Create ABHA Address Flow › Enrolment via Mobile › Enroll ABHA Address\\n- P1-Registration-login › P1 - Create ABHA Address Flow › Enrolment via ABHA Number-ABHA OTP › Enroll ABHA Address\\n- P1-Registration-login › P1 - Create ABHA Address Flow › Enrolment via ABHA Number-Aadhaar OTP › Enroll ABHA Address\",\"operationId\":\"p1_post_v3_phr_app_enrollment_enrol\",\"parameters\":[{\"description\":\"Unique UUID for each request.\",\"example\":\"18235d89-cb13-479d-ad71-7a57d5f669a8\",\"in\":\"header\",\"name\":\"REQUEST-ID\",\"required\":true,\"schema\":{\"format\":\"uuid\",\"type\":\"string\"}},{\"description\":\"Request timestamp in UTC, ISO-8601 with Z.\",\"example\":\"2022-10-06T15:10:00.587Z\",\"in\":\"header\",\"name\":\"TIMESTAMP\",\"required\":true,\"schema\":{\"format\":\"date-time\",\"type\":\"string\"}}],\"requestBody\":{\"content\":{\"application/json\":{\"examples\":{\"Enroll ABHA Address\":{\"summary\":\"Enrolment via Mobile › Enroll ABHA Address\",\"value\":{\"phrDetails\":{\"abhaAddress\":\"<ABHA_ADDRESS>\",\"address\":\"<ADDRESS>\",\"dayOfBirth\":\"\",\"districtCode\":\"123\",\"districtName\":\"<ADDRESS>\",\"email\":\"\",\"firstName\":\"John\",\"gender\":\"M\",\"lastName\":\"Doe\",\"middleName\":\"\",\"mobile\":\"<ENCRYPTED_MOBILE>\",\"monthOfBirth\":\"<DOB>\",\"password\":\"<ENCRYPTED_PASSWORD>\",\"pinCode\":\"<PINCODE>\",\"profilePhoto\":\"\",\"stateCode\":\"27\",\"stateName\":\"Maharashtra\",\"yearOfBirth\":\"<DOB>\"},\"txnId\":\"27d444b7-2a3d-46d8-bf67-e5590b6c46b6\"}},\"Enroll ABHA Address (2)\":{\"summary\":\"Enrolment via ABHA Number-ABHA OTP › Enroll ABHA Address\",\"value\":{\"phrDetails\":{\"abhaAddress\":\"<ABHA_ADDRESS>\",\"address\":\"<ADDRESS>\",\"dayOfBirth\":\"<DOB>\",\"districtCode\":\"123\",\"districtName\":\"<ADDRESS>\",\"email\":\"\",\"firstName\":\"John\",\"gender\":\"M\",\"lastName\":\"Doe\",\"middleName\":\"\",\"mobile\":\"<ENCRYPTED_MOBILE>\",\"monthOfBirth\":\"<DOB>\",\"password\":\"<ENCRYPTED_PASSWORD>\",\"pinCode\":\"<PINCODE>\",\"stateCode\":\"27\",\"stateName\":\"Maharashtra\",\"yearOfBirth\":\"<DOB>\"},\"txnId\":\"37d8d312-35a0-41e7-a6e4-1074eb18a5fa\"}},\"Enroll ABHA Address (3)\":{\"summary\":\"Enrolment via ABHA Number-Aadhaar OTP › Enroll ABHA Address\",\"value\":{\"phrDetails\":{\"abhaAddress\":\"<ABHA_ADDRESS>\",\"address\":\"<ADDRESS>\",\"dayOfBirth\":\"<DOB>\",\"districtCode\":\"123\",\"districtName\":\"<ADDRESS>\",\"email\":\"\",\"firstName\":\"John\",\"gender\":\"M\",\"lastName\":\"Doe\",\"middleName\":\"\",\"mobile\":\"<ENCRYPTED_MOBILE>\",\"monthOfBirth\":\"<DOB>\",\"password\":\"<ENCRYPTED_PASSWORD>\",\"pinCode\":\"<PINCODE>\",\"stateCode\":\"27\",\"stateName\":\"Maharashtra\",\"yearOfBirth\":\"<DOB>\"},\"txnId\":\"37d8d312-35a0-41e7-a6e4-1074eb18a5fa\"}}},\"schema\":{\"properties\":{\"phrDetails\":{\"properties\":{\"abhaAddress\":{\"type\":\"string\"},\"address\":{\"type\":\"string\"},\"dayOfBirth\":{\"type\":\"string\"},\"districtCode\":{\"type\":\"string\"},\"districtName\":{\"type\":\"string\"},\"email\":{\"type\":\"string\"},\"firstName\":{\"type\":\"string\"},\"gender\":{\"type\":\"string\"},\"lastName\":{\"type\":\"string\"},\"middleName\":{\"type\":\"string\"},\"mobile\":{\"type\":\"string\"},\"monthOfBirth\":{\"type\":\"string\"},\"password\":{\"type\":\"string\"},\"pinCode\":{\"type\":\"string\"},\"profilePhoto\":{\"type\":\"string\"},\"stateCode\":{\"type\":\"string\"},\"stateName\":{\"type\":\"string\"},\"yearOfBirth\":{\"type\":\"string\"}},\"type\":\"object\"},\"txnId\":{\"type\":\"string\"}},\"required\":[\"txnId\",\"phrDetails\"],\"type\":\"object\"}}},\"required\":true},\"responses\":{\"200\":{\"content\":{\"application/json\":{\"examples\":{\"Enroll ABHA Address\":{\"value\":{\"message\":\"ABHA Address Created Successfully\",\"phrDetails\":{\"abhaAddress\":[\"<ABHA_ADDRESS>\",\"<ABHA_ADDRESS>\",\"<ABHA_ADDRESS>\"],\"address\":\"<ADDRESS>\",\"dateOfBirth\":\"<DOB>\",\"dayOfBirth\":\"<DOB>\",\"districtCode\":\"123\",\"districtName\":\"<ADDRESS>\",\"email\":\"<EMAIL>\",\"firstName\":\"John\",\"fullName\":\"John Doe\",\"gender\":\"M\",\"lastName\":\"Doe\",\"middleName\":\"\",\"mobile\":\"******1234\",\"monthOfBirth\":\"<DOB>\",\"pinCode\":\"<PINCODE>\",\"stateCode\":\"27\",\"stateName\":\"Maharashtra\",\"yearOfBirth\":\"<DOB>\"},\"tokens\":{\"expiresIn\":1800,\"refreshExpiresIn\":1296000,\"refreshToken\":\"<JWT TOKEN>\",\"token\":\"<JWT TOKEN>\"},\"txnId\":\"6907ebb5-ff71-47f9-8052-6dd5554df5df\"}},\"Enroll ABHA Address (2)\":{\"value\":{\"message\":\"ABHA Address Created Successfully\",\"phrDetails\":{\"abhaAddress\":[\"<ABHA_ADDRESS>\",\"<ABHA_ADDRESS>\",\"<ABHA_ADDRESS>\"],\"address\":\"<ADDRESS>\",\"dateOfBirth\":\"<DOB>\",\"dayOfBirth\":\"<DOB>\",\"districtCode\":\"123\",\"districtName\":\"<ADDRESS>\",\"email\":\"<EMAIL>\",\"firstName\":\"John\",\"fullName\":\"John Doe\",\"gender\":\"M\",\"lastName\":\"Doe\",\"middleName\":\"\",\"mobile\":\"******0903\",\"monthOfBirth\":\"<DOB>\",\"pinCode\":\"<PINCODE>\",\"stateCode\":\"27\",\"stateName\":\"Maharashtra\",\"yearOfBirth\":\"<DOB>\"},\"tokens\":{\"expiresIn\":1800,\"refreshExpiresIn\":1296000,\"refreshToken\":\"<JWT TOKEN>\",\"token\":\"<JWT TOKEN>\"},\"txnId\":\"6907ebb5-ff71-47f9-8052-6dd4254df5df\"}},\"Enroll ABHA Address (3)\":{\"value\":{\"message\":\"ABHA Address Created Successfully\",\"phrDetails\":{\"abhaAddress\":[\"<ABHA_ADDRESS>\",\"<ABHA_ADDRESS>\",\"<ABHA_ADDRESS>\"],\"address\":\"<ADDRESS>\",\"dateOfBirth\":\"<DOB>\",\"dayOfBirth\":\"<DOB>\",\"districtCode\":\"123\",\"districtName\":\"<ADDRESS>\",\"email\":\"<EMAIL>\",\"firstName\":\"John\",\"fullName\":\"John Doe\",\"gender\":\"M\",\"lastName\":\"Doe\",\"middleName\":\"\",\"mobile\":\"******0903\",\"monthOfBirth\":\"<DOB>\",\"pinCode\":\"<PINCODE>\",\"stateCode\":\"27\",\"stateName\":\"Maharashtra\",\"yearOfBirth\":\"<DOB>\"},\"tokens\":{\"expiresIn\":1800,\"refreshExpiresIn\":1296000,\"refreshToken\":\"<JWT TOKEN>\",\"token\":\"<JWT TOKEN>\"},\"txnId\":\"6907ebb5-ff71-47f9-8052-6dd4254df5df\"}}},\"schema\":{\"properties\":{\"message\":{\"type\":\"string\"},\"phrDetails\":{\"properties\":{\"abhaAddress\":{\"items\":{\"type\":\"string\"},\"type\":\"array\"},\"address\":{\"type\":\"string\"},\"dateOfBirth\":{\"type\":\"string\"},\"dayOfBirth\":{\"type\":\"string\"},\"districtCode\":{\"type\":\"string\"},\"districtName\":{\"type\":\"string\"},\"email\":{\"type\":\"string\"},\"firstName\":{\"type\":\"string\"},\"fullName\":{\"type\":\"string\"},\"gender\":{\"type\":\"string\"},\"lastName\":{\"type\":\"string\"},\"middleName\":{\"type\":\"string\"},\"mobile\":{\"type\":\"string\"},\"monthOfBirth\":{\"type\":\"string\"},\"pinCode\":{\"type\":\"string\"},\"stateCode\":{\"type\":\"string\"},\"stateName\":{\"type\":\"string\"},\"yearOfBirth\":{\"type\":\"string\"}},\"type\":\"object\"},\"tokens\":{\"properties\":{\"expiresIn\":{\"type\":\"integer\"},\"refreshExpiresIn\":{\"type\":\"integer\"},\"refreshToken\":{\"type\":\"string\"},\"token\":{\"type\":\"string\"}},\"type\":\"object\"},\"txnId\":{\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"OK\"},\"400\":{\"content\":{\"application/json\":{\"examples\":{\"Enroll ABHA Address-ABHA Address already exists\":{\"value\":{\"code\":\"ABDM-9999: \",\"message\":\"This ABHA Address already exists. Please create with unique ABHA address\"}},\"Enroll ABHA Address-ABHA Address already exists (2)\":{\"value\":{\"code\":\"ABDM-9999: \",\"message\":\"This ABHA Address already exists. Please create with unique ABHA address\"}},\"Enroll ABHA Address-ABHA Address already exists (3)\":{\"value\":{\"code\":\"ABDM-9999: \",\"message\":\"This ABHA Address already exists. Please create with unique ABHA address\"}},\"Enroll ABHA Address-Invalid Day and Month Of Birth\":{\"value\":[{\"code\":\"ABDM-9999: \",\"message\":\"Invalid Month Of Birth\"},{\"code\":\"ABDM-9999: \",\"message\":\"Invalid Day Of Birth\"}]},\"Enroll ABHA Address-Invalid Day and Month Of Birth (2)\":{\"value\":[{\"code\":\"ABDM-9999: \",\"message\":\"Invalid Month Of Birth\"},{\"code\":\"ABDM-9999: \",\"message\":\"Invalid Day Of Birth\"}]},\"Enroll ABHA Address-Invalid Day and Month Of Birth (3)\":{\"value\":[{\"code\":\"ABDM-9999: \",\"message\":\"Invalid Month Of Birth\"},{\"code\":\"ABDM-9999: \",\"message\":\"Invalid Day Of Birth\"}]},\"Enroll ABHA Address-Invalid First Name\":{\"value\":[{\"code\":\"ABDM-9999: \",\"message\":\"Invalid First Name\"}]},\"Enroll ABHA Address-Invalid First Name (2)\":{\"value\":[{\"code\":\"ABDM-9999: \",\"message\":\"Invalid First Name\"}]},\"Enroll ABHA Address-Invalid First Name (3)\":{\"value\":[{\"code\":\"ABDM-9999: \",\"message\":\"Invalid First Name\"}]},\"Enroll ABHA Address-Invalid Transaction Id\":{\"value\":[{\"code\":\"ABDM-9999: \",\"message\":\"Invalid Transaction Id\"}]},\"Enroll ABHA Address-Invalid Transaction Id (2)\":{\"value\":[{\"code\":\"ABDM-9999: \",\"message\":\"Invalid Transaction Id\"}]},\"Enroll ABHA Address-Invalid Transaction Id (3)\":{\"value\":[{\"code\":\"ABDM-9999: \",\"message\":\"Invalid Transaction Id\"}]}},\"schema\":{\"anyOf\":[{\"properties\":{\"code\":{\"type\":\"string\"},\"message\":{\"type\":\"string\"}},\"type\":\"object\"},{\"items\":{\"properties\":{\"code\":{\"type\":\"string\"},\"message\":{\"type\":\"string\"}},\"type\":\"object\"},\"type\":\"array\"}]}}},\"description\":\"Bad Request\"}},\"security\":[{\"bearerAuth\":[]}],\"summary\":\"3 flows: Enroll ABHA Address\",\"tags\":[\"P1 - Create ABHA Address Flow\"],\"x-abdm-nha-operation-id\":\"postEnrollmentEnrol\"}}\n{\"body\":\"# Create an ABHA using an Aadhaar OTP\\n\\n## In plain words\\n\\nThe individual provides their Aadhaar number. The ABHA service sends a one time\\npassword ([OTP](/docs/hiecm/v3/getting-started/glossary#otp)) to the mobile number registered against that Aadhaar.\\nUpon successful verification, the individual selects an ABHA address, and the\\nABHA number is issued.\\n\\n```mermaid\\nsequenceDiagram\\n    autonumber\\n    actor P as Person\\n    participant S as Your system\\n    participant A as ABHA service\\n    Note over S: Holds the gateway access token and the<br/>public key from GET /abha/api/v3/profile/public/certificate\\n    P->>S: Aadhaar number and consent\\n    S->>A: POST /abha/api/v3/enrollment/request/otp<br/>scope [abha-enrol], loginHint aadhaar,<br/>loginId (encrypted Aadhaar), otpSystem aadhaar\\n    A-->>S: txnId\\n    A-)P: OTP by SMS to the Aadhaar linked mobile\\n    P->>S: OTP, and the mobile number for ABHA communication\\n    S->>A: POST /abha/api/v3/enrollment/enrol/byAadhaar<br/>authData.authMethods [otp], otp {txnId,<br/>otpValue (encrypted), mobile}, consent\\n    A-->>S: ABHAProfile (ABHANumber, name, dob, gender, photo),<br/>tokens.token, isNew\\n    Note over S,A: Optional: verify the communication mobile\\n    S->>A: POST /abha/api/v3/enrollment/request/otp<br/>scope [abha-enrol, mobile-verify], loginHint mobile,<br/>loginId (encrypted mobile), txnId\\n    A-->>S: txnId\\n    A-)P: OTP by SMS to the communication mobile\\n    P->>S: Mobile OTP\\n    S->>A: POST /abha/api/v3/enrollment/auth/byAbdm<br/>scope [abha-enrol, mobile-verify],<br/>authData.authMethods [otp], otp {txnId,<br/>otpValue (encrypted)}\\n    A-->>S: authResult success, accounts [ABHANumber]\\n    S->>A: GET /abha/api/v3/enrollment/enrol/suggestion<br/>header TRANSACTION_ID txnId\\n    A-->>S: abhaAddressList\\n    P->>S: Picks or types an ABHA address\\n    S->>A: POST /abha/api/v3/enrollment/enrol/abha-address<br/>txnId, abhaAddress, preferred 1\\n    A-->>S: healthIdNumber, preferredAbhaAddress\\n```\\n\\nEvery step answers in its own response, so nothing here waits on a callback.\\nThe enrolment call is the one with a lasting effect: it creates the account.\\n\\n## Before you start\\n\\nA gateway access token, the Aadhaar number encrypted with the M1 certificate, the person present to read the OTP, and their consent to create an ABHA.\\n\\n## What happens\\n\\nRequest the OTP with scope `abha-enrol` and keep the `txnId`. Enrol with `enrol/byAadhaar`, sending the encrypted OTP, the communication mobile and the consent block. Optionally verify the communication mobile. Fetch suggestions with the `TRANSACTION_ID` header, and claim the chosen address with `preferred` set to 1.\\n\\n## How you know it worked\\n\\nThe enrolment response carries `ABHAProfile` with an `ABHANumber`, and the address step returns the chosen address as `preferredAbhaAddress`. An account left with only its default address is a half finished job the person will not recognise later.\\n\\n## When it goes wrong\\n\\nThe OTP goes only to the mobile registered against the Aadhaar, which may not be the phone in the room: see [the OTP never arrives](/docs/hiecm/v3/troubleshooting/otp-never-arrives). Enrolment for an Aadhaar that already has an ABHA returns that account with `isNew` false, so read `isNew` before telling the person anything was created. Every call failing the same way is a session or header problem: see [everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401).\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/milestones/m1#m1-create-abha-aadhaar-otp\",\"gateway\":\"hiecm\",\"id\":\"hiecm.flow.m1-create-abha-aadhaar-otp\",\"milestone\":\"M1\",\"summary\":\"Verify a person against Aadhaar with an OTP, create their ABHA number, then let them choose an address.\",\"title\":\"Create an ABHA using an Aadhaar OTP\",\"type\":\"flow\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:06:38.752Z",
+  "usage": {
+    "input_tokens": 30,
+    "output_tokens": 1108,
+    "cache_read_input_tokens": 30934,
+    "cache_creation_input_tokens": 15533,
+    "num_turns": 5,
+    "duration_ms": 15330,
+    "cost_usd_equivalent": 0.0397294
+  }
+}

@@ -14,6 +14,8 @@ export type SkillInstallProps = {
 };
 
 type Entry = {
+  /** "uhi" or "nhcx" for a gateway with its own plugin; absent for ABDM's. */
+  gateway?: string;
   /** Absent on module skills; "guided" marks a committed procedure skill. */
   kind?: 'guided';
   module: string;
@@ -138,11 +140,15 @@ const TARGETS: Record<AgentId, Target> = {
  */
 const DETAIL: Record<string, (entry: Entry) => string> = {
   scaffold: (entry) =>
-    entry.folder
+    entry.gateway === 'uhi'
+      ? 'Registration on the network, then each journey as a loop that ends on its observed exit condition rather than on an ACK.'
+      : entry.folder
       ? 'The eight steps that build the use case into your system, from discovery and mapping through code to tests on the sandbox, each logged as it goes.'
       : 'The loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.',
   test: (entry) =>
-    (entry.tests ?? 0) > 0
+    entry.gateway === 'uhi'
+      ? 'The checks the service is held to before go-live, and the steps to production.'
+      : (entry.tests ?? 0) > 0
       ? `${entry.tests} test matrix rows, from offline pins up to a live payer on the sandbox.`
       : 'The test pyramid, from offline pins up to a live payer on the sandbox.',
   design: () =>
@@ -157,13 +163,15 @@ function capabilities(entry: Entry) {
       label: 'Integrate',
       detail:
         (entry.operations ?? 0) > 0
-          ? `${entry.operations} operations, with their hosts and headers.`
+          ? `${entry.operations} operations, with their hosts and headers${entry.gateway === 'uhi' ? ', and how each is signed' : ''}.`
           : 'No operation is recorded yet.',
     },
     {
       label: 'Debug',
       detail:
-        (entry.codes ?? 0) > 0
+        entry.gateway === 'uhi'
+          ? 'The loop from a status, an error object or a missing callback to a named fix. UHI publishes no error codes.'
+          : (entry.codes ?? 0) > 0
           ? `${entry.codes} error codes, each with what to do about it.`
           : 'No error code is recorded yet.',
     },

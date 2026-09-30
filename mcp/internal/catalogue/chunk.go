@@ -3,9 +3,10 @@ package catalogue
 import "strings"
 
 type Chunk struct {
-	AtomID  string
+	AtomID  string // the atom id, or the operationId for an operation chunk
 	Heading string
 	Text    string
+	Kind    string // "operation" for an operation chunk; empty means atom
 }
 
 // ChunkAtom emits one leading chunk of title plus frontmatter summary,

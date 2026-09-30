@@ -75,8 +75,11 @@ export type Operation = {
   /** NHCX: the fields of the JWE protected header of `payload`. Never HTTP
       headers, so never in the samples or sent by Try it. */
   protectedHeader?: Field[];
-  /** The gateway the page belongs to: hiecm, nhcx. */
+  /** The gateway the page belongs to: hiecm, nhcx, uhi. */
   gateway?: string;
+  /** False where this site cannot make the call: a UHI request is signed
+      with the sender's private key, which a browser console cannot hold. */
+  tryIt?: boolean;
   /** The specification the page was generated from: its served file name,
       the OpenAPI version it declares, and the gateway version folder. */
   spec?: {file: string; openapi: string; version: string};
@@ -494,7 +497,9 @@ function ResponsePanel({operation}: {operation: Operation}) {
   );
 }
 
-export default function ApiEndpoint({operation}: {operation: Operation}) {
+// children: a hand-written notes partial the generated page passes in
+// (scripts/lib/notes.mjs), shown between the request bar and the tabs.
+export default function ApiEndpoint({operation, children}: {operation: Operation; children?: React.ReactNode}) {
   const heading = operation.title || operation.summary;
   const [opening, rest] = splitLede(operation.description);
   // A lede that only repeats the heading is noise between the title and the call.
@@ -673,7 +678,7 @@ export default function ApiEndpoint({operation}: {operation: Operation}) {
           {/* A callback is an endpoint the integrator implements and NHA calls
               into, not one this site can call. A Try it console would be
               inviting the reader to send a request nobody is listening for. */}
-          {operation.kind === 'callback' ? null : (
+          {operation.kind === 'callback' || operation.tryIt === false ? null : (
             <Dialog>
               <DialogTrigger className="api-try-trigger">
                 <Play className="size-3.5" aria-hidden="true" />
@@ -695,6 +700,8 @@ export default function ApiEndpoint({operation}: {operation: Operation}) {
             </Dialog>
           )}
         </div>
+
+        {children ? <div className="api-page__body">{children}</div> : null}
 
         {panels.length ? (
           <Tabs.Root className="api-tabs" value={tab} onValueChange={setTab}>

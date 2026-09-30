@@ -1,0 +1,264 @@
+{
+  "case_id": "conversation-link-token-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "The conversation so far:\nDeveloper: What is a link token?\nYou: A link token is what authorises your system to link a care context to a patient's ABHA address. Your system obtains it when the patient registers, and stores it against that patient.\n\nThe developer's new message:\nDoes it expire?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01AsQ5NdCVRmtgnmAAARz2x3",
+            "Name": "search",
+            "Input": {
+              "query": "link token expiration expire validity",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "link token expiration expire validity",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_016ASfTTnuu2BNey863Q2PW9",
+            "Name": "search",
+            "Input": {
+              "query": "link token lifetime",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "link token lifetime",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_017QymsRr7ATwagBTHbCAovi",
+            "Name": "search",
+            "Input": {
+              "query": "link token",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "link token",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#link-token",
+                "id": "hiecm.glossary.link-token",
+                "summary": "The token that authorises your system to link a care context to a patient's ABHA address.",
+                "title": "Link token, the token that authorises linking",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1026",
+                "id": "hiecm.error.abdm-1026",
+                "summary": "The link token you sent cannot authorise this link, so generate a new one rather than retrying.",
+                "title": "ABDM-1026, the link token is not valid",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-on-generate-token-result",
+                "id": "hiecm.callback.m2-on-generate-token-result",
+                "summary": "The link token arrives here; store it against the patient, because it is valid for six months.",
+                "title": "The link token you asked for, or why it was refused",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-link-token-hip/01-m2-post-v3-token-generate-token#m2-generate-link-token",
+                "id": "hiecm.endpoint.m2-generate-link-token",
+                "summary": "Ask for a link token for one patient; it arrives on your bridge and is valid for six months.",
+                "title": "Generate Link Token",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-link-token-generation-call-back",
+                "id": "hiecm.callback.m2-link-token-generation-call-back",
+                "summary": "ABDM answers a link token request on the HIP's bridge, with the token or an error.",
+                "title": "Link token generation – Call Back API",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/01-m2-post-hip-v3-link-carecontext#m2-hip-link-care-context",
+                "id": "hiecm.endpoint.m2-hip-link-care-context",
+                "summary": "The HIP links one or more care contexts to a patient's ABHA address, using the patient's link token.",
+                "title": "Link care contexts to an ABHA address",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m2#m2-link-care-context",
+                "id": "hiecm.flow.m2-link-care-context",
+                "summary": "Tell ABDM that this patient had a visit at your facility so their records can be found and fetched later.",
+                "title": "Link a care context to a patient's ABHA",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/07-m2-post-v3-hip-link-care-context-confirm#m2-on-link-confirm",
+                "id": "hiecm.callback.m2-on-link-confirm",
+                "summary": "ABDM posts the code the patient entered and the link reference number; the HIP checks them and answers on-confirm.",
+                "title": "Confirmation of a link, carrying the token the patient approved",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1063",
+                "id": "hiecm.error.abdm-1063",
+                "summary": "In linking the provider id does not match the link token, and in a consent flow the date range is not valid.",
+                "title": "ABDM-1063, HIP id mismatch, or an invalid date range",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/registry/endpoints/registry-v2-participant-link-abha-policy",
+                "id": "nhcx.endpoint.v2-participant-link-abha-policy",
+                "summary": "The second path for linking a beneficiary to the products they hold; it takes the same body as the main link call.",
+                "title": "POST /v2/participant/link/abha/policy",
+                "type": "endpoint"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "Yes, link tokens expire after **six months**. You should store the link token against the patient when you receive it, since it remains valid for that six-month period.\n\nThis is documented in the ABDM developer portal under the [Link token generation callback](https://abdm.gov.in/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-on-generate-token-result) and [Generate Link Token endpoint](https://abdm.gov.in/docs/hiecm/v3/api/m2/endpoints/m2-abdm-link-token-hip/01-m2-post-v3-token-generate-token#m2-generate-link-token) pages.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "Yes, link tokens expire after **six months**. You should store the link token against the patient when you receive it, since it remains valid for that six-month period.\n\nThis is documented in the ABDM developer portal under the [Link token generation callback](https://abdm.gov.in/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-on-generate-token-result) and [Generate Link Token endpoint](https://abdm.gov.in/docs/hiecm/v3/api/m2/endpoints/m2-abdm-link-token-hip/01-m2-post-v3-token-generate-token#m2-generate-link-token) pages.",
+  "sources": [
+    {
+      "id": "hiecm.callback.m2-link-token-generation-call-back",
+      "title": "Link token generation – Call Back API",
+      "url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-link-token-generation-call-back"
+    },
+    {
+      "id": "hiecm.endpoint.m2-generate-link-token",
+      "title": "Generate Link Token",
+      "url": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-link-token-hip/01-m2-post-v3-token-generate-token#m2-generate-link-token"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#link-token\",\"id\":\"hiecm.glossary.link-token\",\"summary\":\"The token that authorises your system to link a care context to a patient's ABHA address.\",\"title\":\"Link token, the token that authorises linking\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1026\",\"id\":\"hiecm.error.abdm-1026\",\"summary\":\"The link token you sent cannot authorise this link, so generate a new one rather than retrying.\",\"title\":\"ABDM-1026, the link token is not valid\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-on-generate-token-result\",\"id\":\"hiecm.callback.m2-on-generate-token-result\",\"summary\":\"The link token arrives here; store it against the patient, because it is valid for six months.\",\"title\":\"The link token you asked for, or why it was refused\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-abdm-link-token-hip/01-m2-post-v3-token-generate-token#m2-generate-link-token\",\"id\":\"hiecm.endpoint.m2-generate-link-token\",\"summary\":\"Ask for a link token for one patient; it arrives on your bridge and is valid for six months.\",\"title\":\"Generate Link Token\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-link-token-generation-call-back\",\"id\":\"hiecm.callback.m2-link-token-generation-call-back\",\"summary\":\"ABDM answers a link token request on the HIP's bridge, with the token or an error.\",\"title\":\"Link token generation – Call Back API\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/01-m2-post-hip-v3-link-carecontext#m2-hip-link-care-context\",\"id\":\"hiecm.endpoint.m2-hip-link-care-context\",\"summary\":\"The HIP links one or more care contexts to a patient's ABHA address, using the patient's link token.\",\"title\":\"Link care contexts to an ABHA address\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m2#m2-link-care-context\",\"id\":\"hiecm.flow.m2-link-care-context\",\"summary\":\"Tell ABDM that this patient had a visit at your facility so their records can be found and fetched later.\",\"title\":\"Link a care context to a patient's ABHA\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/07-m2-post-v3-hip-link-care-context-confirm#m2-on-link-confirm\",\"id\":\"hiecm.callback.m2-on-link-confirm\",\"summary\":\"ABDM posts the code the patient entered and the link reference number; the HIP checks them and answers on-confirm.\",\"title\":\"Confirmation of a link, carrying the token the patient approved\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1063\",\"id\":\"hiecm.error.abdm-1063\",\"summary\":\"In linking the provider id does not match the link token, and in a consent flow the date range is not valid.\",\"title\":\"ABDM-1063, HIP id mismatch, or an invalid date range\",\"type\":\"error\"},{\"doc_url\":\"/docs/nhcx/v1/api/registry/endpoints/registry-v2-participant-link-abha-policy\",\"id\":\"nhcx.endpoint.v2-participant-link-abha-policy\",\"summary\":\"The second path for linking a beneficiary to the products they hold; it takes the same body as the main link call.\",\"title\":\"POST /v2/participant/link/abha/policy\",\"type\":\"endpoint\"}]}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:56:56.073Z",
+  "usage": {
+    "input_tokens": 40,
+    "output_tokens": 745,
+    "cache_read_input_tokens": 39403,
+    "cache_creation_input_tokens": 6973,
+    "num_turns": 4,
+    "duration_ms": 10915,
+    "cost_usd_equivalent": 0.0216513
+  }
+}

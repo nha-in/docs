@@ -1,0 +1,2345 @@
+{
+  "case_id": "faq-verbatim-sandbox-m1-03",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "What are the different Milestones in ABDM Sandbox?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_015tprAjHQ2eQ5BNgaatQDsN",
+            "Name": "catalogue_info",
+            "Input": {}
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "catalogue_info",
+          "input": {},
+          "output": {
+            "atoms": {
+              "by_gateway": {
+                "hiecm": 269,
+                "nhcx": 536,
+                "shared": 46,
+                "uhi": 111
+              },
+              "by_milestone": {
+                "M1": 74,
+                "M2": 57,
+                "M3": 20,
+                "M4": 11,
+                "P1": 29,
+                "P2": 18,
+                "P3": 36,
+                "n/a": 717
+              },
+              "by_type": {
+                "callback": 66,
+                "concept": 105,
+                "decision": 13,
+                "endpoint": 186,
+                "error": 335,
+                "fhir": 30,
+                "flow": 57,
+                "glossary": 86,
+                "sandbox": 18,
+                "test": 51,
+                "troubleshooting": 15
+              }
+            },
+            "built_at": "2026-09-29T11:55:12Z",
+            "catalogue_version": "2026.09.16",
+            "deprecated": 0,
+            "embeddings": false,
+            "facts": 0,
+            "operations": 387
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01NkNydioP6gymy8GRf6t7gw",
+            "Name": "search",
+            "Input": {
+              "query": "sandbox milestones",
+              "kind": "atom",
+              "type": "sandbox"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "sandbox milestones",
+            "kind": "atom",
+            "type": "sandbox"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/going-live",
+                "id": "shared.sandbox.going-live",
+                "summary": "How an integration leaves the sandbox for production: functional testing and the security audit, the Health Tech Committee demonstration, then production cre...",
+                "title": "Going live, the sandbox exit process",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/first-fifteen-minutes",
+                "id": "shared.sandbox.first-fifteen-minutes",
+                "summary": "Everything you can do before NHA approves your sandbox registration: read one real gateway session exchange and assemble your own first call, ready to paste ...",
+                "title": "Your first fifteen minutes with ABDM",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/sandbox#4-note-the-base-urls",
+                "id": "uhi.sandbox.base-urls",
+                "summary": "The UHI Gateway base URL for the sandbox and for production, and the reference EUA and HSPA apps in the sandbox.",
+                "title": "UHI Gateway base URLs for sandbox and production",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/base-urls",
+                "id": "nhcx.sandbox.environments-and-base-urls",
+                "summary": "The two environments, the web portals, and the two base addresses every call is built on, for testing and for live claims.",
+                "title": "NHCX environments, hosts and base URLs",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/get-your-sandbox-credentials",
+                "id": "nhcx.sandbox.prerequisites",
+                "summary": "The checklist to complete before your system can register on the claims exchange sandbox: a facility registration, sandbox credentials, basic health ID featu...",
+                "title": "What you need before you register on the NHCX sandbox",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/going-live#3-switch-to-production",
+                "id": "uhi.sandbox.production-switch",
+                "summary": "Change your IDs and callback URL to production values and point your calls at the production UHI Gateway.",
+                "title": "Switch your UHI integration to production",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/get-your-sandbox-credentials",
+                "id": "nhcx.sandbox.dummy-payer",
+                "summary": "The built-in test insurer in the sandbox, which use cases it answers, and the two test calls that make it approve, reject, query or send a payment notice.",
+                "title": "The dummy payer and what it answers",
+                "type": "sandbox"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/get-your-sandbox-credentials",
+                "id": "nhcx.sandbox.support-contacts",
+                "summary": "Which address to write to for each kind of question, what to put in the message, and what to do while you wait for an answer.",
+                "title": "Where to get help with NHCX",
+                "type": "sandbox"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_018Sku13QoBLE5nmnTz6AytF",
+            "Name": "search",
+            "Input": {
+              "query": "milestone M1 M2 M3 M4 P1 P2 P3 phases",
+              "limit": 5
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "milestone M1 M2 M3 M4 P1 P2 P3 phases",
+            "limit": 5
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/how-it-fits#roles",
+                "id": "hiecm.concept.roles",
+                "summary": "Your role, IMS or PHR, is fixed by the entity your software acts for, while HIP and HIU change with the direction each record moves.",
+                "title": "Roles, which entity your software acts for and which way the record moves",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/api-specifications#spec-per-module",
+                "id": "hiecm.decision.spec-per-module",
+                "summary": "Each HIE-CM module is published as its own complete OpenAPI file, in YAML and JSON.",
+                "title": "One OpenAPI file per module",
+                "type": "decision"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/services/consultation#cancellation-and-override-reason-codes",
+                "id": "uhi.concept.consultation-reason-codes",
+                "summary": "The fixed patient, doctor and override reason codes for cancel, on_cancel and PIN override, sent exactly as listed with labels of your own.",
+                "title": "Physical Consultation cancellation and PIN override reason codes",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m4#m4-link-bridge",
+                "id": "hiecm.flow.m4-link-bridge",
+                "summary": "Connect an onboarded facility to the software that will act for it, say whether the facility publishes records through it, fetches them, or both, and name it...",
+                "title": "Link a facility to its bridge",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hmis",
+                "id": "hiecm.glossary.hmis",
+                "summary": "The day to day software of a hospital, under any of its three names. A hospital uses it both to publish its own records and to fetch a patient's history from...",
+                "title": "HMIS, HIS or HIMS, the software a hospital runs",
+                "type": "glossary"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01QXPtrbjcGKpusTLdHNJeax",
+            "Name": "search",
+            "Input": {
+              "query": "milestones overview phases development implementation",
+              "type": "concept",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "milestones overview phases development implementation",
+            "type": "concept",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01CCQqu8e8kk3EuXLA7MmW2A",
+            "Name": "search",
+            "Input": {
+              "query": "M1 M2 M3 M4",
+              "limit": 15
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "M1 M2 M3 M4",
+            "limit": 15
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/how-it-fits#roles",
+                "id": "hiecm.concept.roles",
+                "summary": "Your role, IMS or PHR, is fixed by the entity your software acts for, while HIP and HIU change with the direction each record moves.",
+                "title": "Roles, which entity your software acts for and which way the record moves",
+                "type": "concept"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01DYcBtnKQbMriy6feXLNixJ",
+            "Name": "search",
+            "Input": {
+              "query": "",
+              "milestone": "M1",
+              "limit": 3
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "",
+            "milestone": "M1",
+            "limit": 3
+          },
+          "output": {
+            "atoms": [
+              {
+                "doc_url": "/docs/hiecm/v3/registries/abha#abha-address-policy",
+                "id": "hiecm.concept.abha-address-policy",
+                "milestone": "M1",
+                "title": "What an ABHA address is allowed to be",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/registries/abha#abha-number-and-address",
+                "id": "hiecm.concept.abha-number-and-address",
+                "milestone": "M1",
+                "title": "ABHA number and ABHA address, and why there are two",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/encryption#encrypted-identifiers",
+                "id": "hiecm.concept.encrypted-identifiers",
+                "milestone": "M1",
+                "title": "Why identifiers are encrypted, and where to do it",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/gateway#gateway-session",
+                "id": "hiecm.concept.gateway-session",
+                "milestone": "M1",
+                "title": "The gateway session, the first call in every integration",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/encryption#input-encryption",
+                "id": "hiecm.concept.input-encryption",
+                "milestone": "M1",
+                "title": "Encrypting sensitive inputs, Aadhaar, mobile, OTP and passwords",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m1-avoiding-duplicate-abha",
+                "milestone": "M1",
+                "title": "The branch that creates a duplicate ABHA, and how to close it",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m1-confirm-the-filled-form",
+                "milestone": "M1",
+                "title": "Present the filled form for confirmation rather than saving it unseen",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m1-counter-journey-order",
+                "milestone": "M1",
+                "title": "The ABHA step comes before the registration form and fills it",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m1-deployment-interview",
+                "milestone": "M1",
+                "title": "Ask the integrator about the deployment, not the patient about the journey",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m1-honest-screen-states",
+                "milestone": "M1",
+                "title": "Telling the truth on screen at the counter",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m1-identifier-and-auth-method",
+                "milestone": "M1",
+                "title": "An identifier and an auth method are two different questions",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m1-journey-completes-without-abha",
+                "milestone": "M1",
+                "title": "A journey has to complete without an ABHA",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/abha-journey#m1-journey-design",
+                "id": "hiecm.concept.m1-journey-design",
+                "milestone": "M1",
+                "title": "A suggested ABHA journey, and what holds if you design your own",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m1-never-ask-twice",
+                "milestone": "M1",
+                "title": "Never ask a patient the same thing twice, enforced by structure",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m1-operations-not-a-journey",
+                "milestone": "M1",
+                "title": "ABDM publishes operations, not a journey",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m1-screen-contract",
+                "milestone": "M1",
+                "title": "The six counter screens, and what each is forbidden to ask",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m1-the-whole-surface",
+                "milestone": "M1",
+                "title": "The surface is more than a registration form",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m1-two-routes-to-the-profile",
+                "milestone": "M1",
+                "title": "Two routes to the profile, and the form is the destination of both",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/encryption#encrypt-locally",
+                "id": "hiecm.decision.encrypt-locally",
+                "milestone": "M1",
+                "title": "Encrypting identifiers locally rather than through a hosted helper",
+                "type": "decision"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/02-gateway-get-gateway-v3-bridge-service-serviceid-service-id#gateway-get-bridge-service-by-id",
+                "id": "hiecm.endpoint.gateway-get-bridge-service-by-id",
+                "milestone": "M1",
+                "title": "Find a bridge service by its service id",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/01-gateway-get-gateway-v3-bridge-services#gateway-list-bridge-services",
+                "id": "hiecm.endpoint.gateway-list-bridge-services",
+                "milestone": "M1",
+                "title": "List the services registered on your bridge",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-multiple-hrp-api/01-m4-post-v1-bridges-mutiplehrpaddupdateservices#gateway-register-bridge-services",
+                "id": "hiecm.endpoint.gateway-register-bridge-services",
+                "milestone": "M1",
+                "title": "Register or update bridge services for an HIU",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions#gateway-sessions",
+                "id": "hiecm.endpoint.gateway-sessions",
+                "milestone": "M1",
+                "title": "Create a session and get an access token",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/03-gateway-patch-gateway-v3-bridge-url#gateway-update-bridge-url",
+                "id": "hiecm.endpoint.gateway-update-bridge-url",
+                "milestone": "M1",
+                "title": "Update the bridge callback URL",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions#m1-auth-token",
+                "id": "hiecm.endpoint.m1-auth-token",
+                "milestone": "M1",
+                "title": "Auth token API",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-search/03-m1-get-v3-profile-benefit-abha-abhanumber#m1-benefit-get-by-abha",
+                "id": "hiecm.endpoint.m1-benefit-get-by-abha",
+                "milestone": "M1",
+                "title": "Get the benefit record for an ABHA number",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/01-m1-post-v3-profile-benefit-linkanddelink-x-token#m1-benefit-link-or-delink",
+                "id": "hiecm.endpoint.m1-benefit-link-or-delink",
+                "milestone": "M1",
+                "title": "Link or unlink a benefit record from an ABHA",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-search/01-m1-post-v3-profile-benefit-search-xmluid#m1-benefit-search",
+                "id": "hiecm.endpoint.m1-benefit-search",
+                "milestone": "M1",
+                "title": "Search benefit records for a person",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/05-m1-get-v3-phr-web-login-profile-abha-phr-card-abha-addres-e1bae9#m1-download-phr-card",
+                "id": "hiecm.endpoint.m1-download-phr-card",
+                "milestone": "M1",
+                "title": "Download PHR card",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/06-m1-get-v3-phr-web-login-profile-abha-qr-code-abha-address-a48785#m1-download-phr-qr-code",
+                "id": "hiecm.endpoint.m1-download-phr-qr-code",
+                "milestone": "M1",
+                "title": "Download PHR QR code",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/07-m1-get-v3-enrollment-enrol-suggestion-create-abha-aadhaar-otp#m1-enrolment-address-suggestions",
+                "id": "hiecm.endpoint.m1-enrolment-address-suggestions",
+                "milestone": "M1",
+                "title": "Get suggested ABHA addresses for a new account",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/02-m1-post-v3-enrollment-enrol-byaadhaar-otp#m1-enrolment-by-aadhaar",
+                "id": "hiecm.endpoint.m1-enrolment-by-aadhaar",
+                "milestone": "M1",
+                "title": "Create an ABHA from a verified Aadhaar OTP",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-face-authentication/02-m1-post-v3-enrollment-enrol-capturepid-create-abha-face-a-417d5e#m1-enrolment-capture-pid",
+                "id": "hiecm.endpoint.m1-enrolment-capture-pid",
+                "milestone": "M1",
+                "title": "Track face authentication status",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/08-m1-post-v3-enrollment-enrol-abha-address-create-abha-aadhaar-otp#m1-enrolment-claim-abha-address",
+                "id": "hiecm.endpoint.m1-enrolment-claim-abha-address",
+                "milestone": "M1",
+                "title": "Claim a chosen ABHA address",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-face-authentication/01-m1-post-v3-enrollment-enrol-auth-init-create-abha-face-au-4dea33#m1-enrolment-face-auth-init",
+                "id": "hiecm.endpoint.m1-enrolment-face-auth-init",
+                "milestone": "M1",
+                "title": "Start face authentication and get a transaction id",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-child-abha/02-m1-get-v3-enrollment-profile-children-child-abha#m1-enrolment-list-children",
+                "id": "hiecm.endpoint.m1-enrolment-list-children",
+                "milestone": "M1",
+                "title": "List the child ABHA accounts linked to this account",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/01-m1-post-v3-enrollment-request-otp-aadhaar-otp#m1-enrolment-request-otp",
+                "id": "hiecm.endpoint.m1-enrolment-request-otp",
+                "milestone": "M1",
+                "title": "Send an OTP to begin or continue an enrolment",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/04-m1-post-v3-enrollment-auth-byabdm-mobile-verify-create-ab-091285#m1-enrolment-verify-abdm-otp",
+                "id": "hiecm.endpoint.m1-enrolment-verify-abdm-otp",
+                "milestone": "M1",
+                "title": "Verify an OTP that ABDM sent, during enrolment",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-find-abha-mobile-otp/01-m1-post-v3-profile-account-abha-search-find-abha-mobile-otp#m1-find-abha-search",
+                "id": "hiecm.endpoint.m1-find-abha-search",
+                "milestone": "M1",
+                "title": "Find an ABHA for somebody who does not know theirs",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/04-m1-get-v3-phr-web-login-profile-abha-profile-abha-address-b038c4#m1-get-phr-profile",
+                "id": "hiecm.endpoint.m1-get-phr-profile",
+                "milestone": "M1",
+                "title": "Get PHR profile",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-access-tokens-encryption/02-m1-get-v3-profile-public-certificate#m1-get-public-certificate",
+                "id": "hiecm.endpoint.m1-get-public-certificate",
+                "milestone": "M1",
+                "title": "Get the public certificate",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-login-mobile-number/01-m1-post-v3-profile-login-request-otp-mobile#m1-login-request-otp",
+                "id": "hiecm.endpoint.m1-login-request-otp",
+                "milestone": "M1",
+                "title": "Send a login OTP",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-login-mobile-number/03-m1-post-v3-profile-login-verify-user#m1-login-select-account",
+                "id": "hiecm.endpoint.m1-login-select-account",
+                "milestone": "M1",
+                "title": "Choose which ABHA to sign in to",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-login-mobile-number/02-m1-post-v3-profile-login-verify-mobile-otp#m1-login-verify",
+                "id": "hiecm.endpoint.m1-login-verify",
+                "milestone": "M1",
+                "title": "Verify a login OTP",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-login-biometric-v3-1/01-m1-post-v3-1-profile-login-verify-fingerprint#m1-login-verify-v31",
+                "id": "hiecm.endpoint.m1-login-verify-v31",
+                "milestone": "M1",
+                "title": "Sign in with a biometric, v3.1",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/02-scan-and-register-post-patient-share-v3-on-share#m1-on-share-acknowledgement",
+                "id": "hiecm.endpoint.m1-on-share-acknowledgement",
+                "milestone": "M1",
+                "title": "Send share acknowledgement",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/02-m1-post-v3-phr-web-login-abha-request-otp-mobile-otp#m1-phr-request-otp",
+                "id": "hiecm.endpoint.m1-phr-request-otp",
+                "milestone": "M1",
+                "title": "Send an OTP for ABHA address login",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/01-m1-post-v3-phr-web-login-abha-search-abha-address-login-m-27a20f#m1-phr-search-abha-address",
+                "id": "hiecm.endpoint.m1-phr-search-abha-address",
+                "milestone": "M1",
+                "title": "Search an ABHA address and get its sign in methods",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/03-m1-post-v3-phr-web-login-abha-verify-mobile-otp#m1-phr-verify",
+                "id": "hiecm.endpoint.m1-phr-verify",
+                "milestone": "M1",
+                "title": "Verify OTP or biometric for ABHA address login",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-card-profile/04-m1-get-v3-profile-account-download-abha-card#m1-profile-download-abha-card",
+                "id": "hiecm.endpoint.m1-profile-download-abha-card",
+                "milestone": "M1",
+                "title": "Download the ABHA card as a file",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-card-profile/02-m1-get-v3-profile-account-abha-card#m1-profile-get-abha-card",
+                "id": "hiecm.endpoint.m1-profile-get-abha-card",
+                "milestone": "M1",
+                "title": "Get the ABHA card",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-card-profile/03-m1-get-v3-profile-account#m1-profile-get-account",
+                "id": "hiecm.endpoint.m1-profile-get-account",
+                "milestone": "M1",
+                "title": "Read the signed in person's ABHA profile",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-card-profile/01-m1-get-v3-profile-account-qrcode#m1-profile-get-qr-code",
+                "id": "hiecm.endpoint.m1-profile-get-qr-code",
+                "milestone": "M1",
+                "title": "Get the ABHA QR code",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-update-mobile/01-m1-post-v3-profile-account-request-otp-update-mobile#m1-profile-request-otp",
+                "id": "hiecm.endpoint.m1-profile-request-otp",
+                "milestone": "M1",
+                "title": "Send an OTP to change something on the profile",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-child-abha/03-m1-patch-v3-profile-account-child-child-abha#m1-profile-update-account",
+                "id": "hiecm.endpoint.m1-profile-update-account",
+                "milestone": "M1",
+                "title": "Update fields on an ABHA profile",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-update-mobile/02-m1-post-v3-profile-account-verify-update-mobile#m1-profile-verify-otp",
+                "id": "hiecm.endpoint.m1-profile-verify-otp",
+                "milestone": "M1",
+                "title": "Verify the OTP for a profile change",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/01-scan-and-register-post-v3-hip-patient-share#m1-receive-patient-share",
+                "id": "hiecm.endpoint.m1-receive-patient-share",
+                "milestone": "M1",
+                "title": "Receive a patient's shared profile",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-multiple-hrp-api/01-m4-post-v1-bridges-mutiplehrpaddupdateservices#m1-register-hrp-services",
+                "id": "hiecm.endpoint.m1-register-hrp-services",
+                "milestone": "M1",
+                "title": "Register or update HIP and HIU services for a facility",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-number-aadhaar-otp/05-p1-post-v3-profile-account-request-emailverificationlink#m1-send-email-verification-link",
+                "id": "hiecm.endpoint.m1-send-email-verification-link",
+                "milestone": "M1",
+                "title": "Send email verification link",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-card-profile/05-m1-get-v3-profile-account-request-token#m1-token-refresh",
+                "id": "hiecm.endpoint.m1-token-refresh",
+                "milestone": "M1",
+                "title": "Get a new user token from a refresh token",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/errors#900900",
+                "id": "hiecm.error.900900",
+                "milestone": "M1",
+                "title": "900900, authentication failed without a reason",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/errors#900901",
+                "id": "hiecm.error.900901",
+                "milestone": "M1",
+                "title": "900901, the credentials are not valid",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/errors#abdm-1016",
+                "id": "hiecm.error.abdm-1016",
+                "milestone": "M1",
+                "title": "ABDM-1016, the timestamp is not valid",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/errors#abdm-1094",
+                "id": "hiecm.error.abdm-1094",
+                "milestone": "M1",
+                "title": "ABDM-1094, access to this feature is refused",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m1#m1-create-abha-aadhaar-otp",
+                "id": "hiecm.flow.m1-create-abha-aadhaar-otp",
+                "milestone": "M1",
+                "title": "Create an ABHA using an Aadhaar OTP",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m1#m1-create-abha-demographic-auth",
+                "id": "hiecm.flow.m1-create-abha-demographic-auth",
+                "milestone": "M1",
+                "title": "Create an ABHA using Aadhaar demographic authentication",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m1#m1-create-abha-face-auth",
+                "id": "hiecm.flow.m1-create-abha-face-auth",
+                "milestone": "M1",
+                "title": "Create an ABHA using Aadhaar face authentication",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m1#m1-create-child-abha",
+                "id": "hiecm.flow.m1-create-child-abha",
+                "milestone": "M1",
+                "title": "Create a child ABHA under a parent's account",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m1#m1-find-abha",
+                "id": "hiecm.flow.m1-find-abha",
+                "milestone": "M1",
+                "title": "Find somebody's ABHA when they do not know it",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m1#m1-login-by-mobile",
+                "id": "hiecm.flow.m1-login-by-mobile",
+                "milestone": "M1",
+                "title": "Log somebody in to their existing ABHA",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m1#m1-update-mobile",
+                "id": "hiecm.flow.m1-update-mobile",
+                "milestone": "M1",
+                "title": "Change the mobile number on an ABHA profile",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/encryption#m1-encryption-padding",
+                "id": "hiecm.test.m1-encryption-padding",
+                "milestone": "M1",
+                "title": "Prove your encryption padding before you build anything else",
+                "type": "test"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/troubleshooting/everything-returns-401#everything-returns-401",
+                "id": "hiecm.troubleshooting.everything-returns-401",
+                "milestone": "M1",
+                "title": "Everything returns 401",
+                "type": "troubleshooting"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/troubleshooting/otp-never-arrives#otp-never-arrives",
+                "id": "hiecm.troubleshooting.otp-never-arrives",
+                "milestone": "M1",
+                "title": "The OTP never arrives",
+                "type": "troubleshooting"
+              }
+            ],
+            "catalogue_version": "2026.09.16"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01TpuruTLNFrFXUjTjy91pL2",
+            "Name": "search",
+            "Input": {
+              "query": "",
+              "milestone": "M2",
+              "limit": 3
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "",
+            "milestone": "M2",
+            "limit": 3
+          },
+          "output": {
+            "atoms": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/03-m2-post-v3-links-context-on-notify#m2-call-back-api-for-notify-care-context-update",
+                "id": "hiecm.callback.m2-call-back-api-for-notify-care-context-update",
+                "milestone": "M2",
+                "title": "Call back API for notify care context update",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/04-m2-post-v3-patients-sms-on-notify#m2-callback-api-for-sms-notification-to-patients",
+                "id": "hiecm.callback.m2-callback-api-for-sms-notification-to-patients",
+                "milestone": "M2",
+                "title": "Callback API for SMS Notification to patients",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-link-token-generation-call-back",
+                "id": "hiecm.callback.m2-link-token-generation-call-back",
+                "milestone": "M2",
+                "title": "Link token generation – Call Back API",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/02-m2-post-v3-link-on-carecontext#m2-linking-care-context-call-back",
+                "id": "hiecm.callback.m2-linking-care-context-call-back",
+                "milestone": "M2",
+                "title": "Linking care context Call back API",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/02-m2-post-v3-link-on-carecontext#m2-on-carecontext-result",
+                "id": "hiecm.callback.m2-on-carecontext-result",
+                "milestone": "M2",
+                "title": "The outcome of the care context linking call you made",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/03-m3-post-v3-hiu-consent-request-notify#m2-on-consent-notify-hiu",
+                "id": "hiecm.callback.m2-on-consent-notify-hiu",
+                "milestone": "M2",
+                "title": "A consent notification to an HIU bridge",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/03-m2-post-v3-links-context-on-notify#m2-on-context-notify-result",
+                "id": "hiecm.callback.m2-on-context-notify-result",
+                "milestone": "M2",
+                "title": "The outcome of the care context notify call you made",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/10-m2-post-health-information-transfer#m2-on-data-notification",
+                "id": "hiecm.callback.m2-on-data-notification",
+                "milestone": "M2",
+                "title": "The provider pushes encrypted health information to the URL named in the request",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/05-m2-post-v3-hip-patient-care-context-discover#m2-on-discovery-request",
+                "id": "hiecm.callback.m2-on-discovery-request",
+                "milestone": "M2",
+                "title": "A discovery request for a patient you may hold records for",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-on-generate-token-result",
+                "id": "hiecm.callback.m2-on-generate-token-result",
+                "milestone": "M2",
+                "title": "The link token you asked for, or why it was refused",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/09-m2-post-v3-hip-health-information-request#m2-on-health-information-request",
+                "id": "hiecm.callback.m2-on-health-information-request",
+                "milestone": "M2",
+                "title": "A request for the records a consent covers",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/07-m2-post-v3-hip-link-care-context-confirm#m2-on-link-confirm",
+                "id": "hiecm.callback.m2-on-link-confirm",
+                "milestone": "M2",
+                "title": "Confirmation of a link, carrying the token the patient approved",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/06-m2-post-v3-hip-link-care-context-init#m2-on-link-init",
+                "id": "hiecm.callback.m2-on-link-init",
+                "milestone": "M2",
+                "title": "A request to start linking a care context",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/04-m2-post-v3-patients-sms-on-notify#m2-on-sms-notify-result",
+                "id": "hiecm.callback.m2-on-sms-notify-result",
+                "milestone": "M2",
+                "title": "The outcome of the SMS notify call you made",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/gateway#asynchronous-callbacks",
+                "id": "hiecm.concept.asynchronous-callbacks",
+                "milestone": "M2",
+                "title": "Asynchronous calls and callbacks, why a 200 means very little",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/callback-authenticity#callback-authenticity",
+                "id": "hiecm.concept.callback-authenticity",
+                "milestone": "M2",
+                "title": "Proving a callback really came from ABDM",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/care-context#care-context",
+                "id": "hiecm.concept.care-context",
+                "milestone": "M2",
+                "title": "Care contexts, how records are grouped so they can be found",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/build-it-well#error-codes",
+                "id": "hiecm.concept.error-codes",
+                "milestone": "M2",
+                "title": "Reading an ABDM error code",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m2-care-context-and-records",
+                "milestone": "M2",
+                "title": "A care context and its records are one thing",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m2-exchange-not-call",
+                "milestone": "M2",
+                "title": "The unit of work is an exchange, not a call",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m2-inbound-is-a-surface",
+                "milestone": "M2",
+                "title": "Inbound is a surface, and silence there is a failure state",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m2-integrator-call-panel",
+                "milestone": "M2",
+                "title": "What the integrator needs on screen, separately from the patient",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m2-never-block-the-desk",
+                "milestone": "M2",
+                "title": "Nobody is standing there, so never block and never lose the state",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m2-retry-is-a-duplicate",
+                "milestone": "M2",
+                "title": "A refused request is still remembered, so a retry is a duplicate",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/how-it-fits#roles",
+                "id": "hiecm.concept.roles",
+                "milestone": "M2",
+                "title": "Roles, which entity your software acts for and which way the record moves",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/01-m2-post-consent-v3-request-hip-on-notify#m2-consent-hip-on-notify",
+                "id": "hiecm.endpoint.m2-consent-hip-on-notify",
+                "milestone": "M2",
+                "title": "Acknowledge a consent notification",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-link-token-hip/01-m2-post-v3-token-generate-token#m2-generate-link-token",
+                "id": "hiecm.endpoint.m2-generate-link-token",
+                "milestone": "M2",
+                "title": "Generate Link Token",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-manager-hiu-hip/01-p2-get-hip-v3-link-patient-links#m2-get-all-link-records",
+                "id": "hiecm.endpoint.m2-get-all-link-records",
+                "milestone": "M2",
+                "title": "GET All Link records",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/03-m2-post-data-flow-v3-health-information-notify#m2-hip-data-flow-notify",
+                "id": "hiecm.endpoint.m2-hip-data-flow-notify",
+                "milestone": "M2",
+                "title": "Notify the gateway that a data transfer finished",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request#m2-hip-health-information-on-request",
+                "id": "hiecm.endpoint.m2-hip-health-information-on-request",
+                "milestone": "M2",
+                "title": "Acknowledge a health information data request",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/01-m2-post-hip-v3-link-carecontext#m2-hip-link-care-context",
+                "id": "hiecm.endpoint.m2-hip-link-care-context",
+                "milestone": "M2",
+                "title": "Link care contexts to an ABHA address",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/02-m2-post-hip-v3-link-context-notify#m2-link-care-context-notify",
+                "id": "hiecm.endpoint.m2-link-care-context-notify",
+                "milestone": "M2",
+                "title": "Notify an update to a linked care context",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/01-m2-post-user-initiated-linking-v3-patient-care-context-on-8c9340#m2-on-discover-care-contexts",
+                "id": "hiecm.endpoint.m2-on-discover-care-contexts",
+                "milestone": "M2",
+                "title": "On Discovery, HIP responds with found care contexts",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/03-m2-post-user-initiated-linking-v3-link-care-context-on-confirm#m2-on-link-confirm",
+                "id": "hiecm.endpoint.m2-on-link-confirm",
+                "milestone": "M2",
+                "title": "Link On-Confirm, HIP confirms linked care contexts",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/02-m2-post-user-initiated-linking-v3-link-care-context-on-init#m2-on-link-init",
+                "id": "hiecm.endpoint.m2-on-link-init",
+                "milestone": "M2",
+                "title": "Link On-Init, HIP responds with OTP communication details",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/03-m2-post-hip-v3-link-patient-links-sms-notify2#m2-sms-deep-link-notify",
+                "id": "hiecm.endpoint.m2-sms-deep-link-notify",
+                "milestone": "M2",
+                "title": "Send an SMS telling the patient a care context is linked",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1013",
+                "id": "hiecm.error.abdm-1013",
+                "milestone": "M2",
+                "title": "ABDM-1013, the ABHA number is not valid",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1022",
+                "id": "hiecm.error.abdm-1022",
+                "milestone": "M2",
+                "title": "ABDM-1022, too many requests",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1026",
+                "id": "hiecm.error.abdm-1026",
+                "milestone": "M2",
+                "title": "ABDM-1026, the link token is not valid",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1032",
+                "id": "hiecm.error.abdm-1032",
+                "milestone": "M2",
+                "title": "ABDM-1032, a required header is missing or malformed",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1035",
+                "id": "hiecm.error.abdm-1035",
+                "milestone": "M2",
+                "title": "ABDM-1035, the HIP id is not recognised",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1056",
+                "id": "hiecm.error.abdm-1056",
+                "milestone": "M2",
+                "title": "ABDM-1056, already linked, or an invalid link reference",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1062",
+                "id": "hiecm.error.abdm-1062",
+                "milestone": "M2",
+                "title": "ABDM-1062, ABHA number mismatch, or consent not granted",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1063",
+                "id": "hiecm.error.abdm-1063",
+                "milestone": "M2",
+                "title": "ABDM-1063, HIP id mismatch, or an invalid date range",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1064",
+                "id": "hiecm.error.abdm-1064",
+                "milestone": "M2",
+                "title": "ABDM-1064, a repeated request id, or a missing body",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1170",
+                "id": "hiecm.error.abdm-1170",
+                "milestone": "M2",
+                "title": "ABDM-1170, the ABHA address is not valid",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1407",
+                "id": "hiecm.error.abdm-1407",
+                "milestone": "M2",
+                "title": "ABDM-1407, the ABHA number is deactivated",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-2401",
+                "id": "hiecm.error.abdm-2401",
+                "milestone": "M2",
+                "title": "ABDM-2401, the X Auth token is not valid",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-2402",
+                "id": "hiecm.error.abdm-2402",
+                "milestone": "M2",
+                "title": "ABDM-2402, the timestamp is not valid",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-2403",
+                "id": "hiecm.error.abdm-2403",
+                "milestone": "M2",
+                "title": "ABDM-2403, the X-CM-ID is not valid",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-2404",
+                "id": "hiecm.error.abdm-2404",
+                "milestone": "M2",
+                "title": "ABDM-2404, the REQUEST-ID is not valid",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-2406",
+                "id": "hiecm.error.abdm-2406",
+                "milestone": "M2",
+                "title": "ABDM-2406, the calls are out of order",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-2500",
+                "id": "hiecm.error.abdm-2500",
+                "milestone": "M2",
+                "title": "ABDM-2500, no Authorization header, or no matching request",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-9999",
+                "id": "hiecm.error.abdm-9999",
+                "milestone": "M2",
+                "title": "ABDM-9999, a catch-all, so read the message",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m2#m2-link-care-context",
+                "id": "hiecm.flow.m2-link-care-context",
+                "milestone": "M2",
+                "title": "Link a care context to a patient's ABHA",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/troubleshooting/accepted-then-nothing#accepted-then-nothing",
+                "id": "hiecm.troubleshooting.accepted-then-nothing",
+                "milestone": "M2",
+                "title": "Discovery or linking was accepted, then nothing happens",
+                "type": "troubleshooting"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/troubleshooting/callback-never-arrives#callback-never-arrives",
+                "id": "hiecm.troubleshooting.callback-never-arrives",
+                "milestone": "M2",
+                "title": "The callback never arrives",
+                "type": "troubleshooting"
+              }
+            ],
+            "catalogue_version": "2026.09.16"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01Pg31uNPRpnGXFyGki5HQFo",
+            "Name": "search",
+            "Input": {
+              "query": "",
+              "milestone": "M3",
+              "limit": 3
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "",
+            "milestone": "M3",
+            "limit": 3
+          },
+          "output": {
+            "atoms": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/04-m3-post-v3-hiu-consent-on-fetch#m3-on-consent-fetch",
+                "id": "hiecm.callback.m3-on-consent-fetch",
+                "milestone": "M3",
+                "title": "The consent artefact detail, fetched by artefact id",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/01-m3-post-v3-hiu-consent-request-on-init#m3-on-consent-request-init",
+                "id": "hiecm.callback.m3-on-consent-request-init",
+                "milestone": "M3",
+                "title": "The consent request was accepted, with its request id",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/08-m2-post-v3-consent-request-hip-notify#m3-on-consent-request-notify-hip",
+                "id": "hiecm.callback.m3-on-consent-request-notify-hip",
+                "milestone": "M3",
+                "title": "The patient's decision, sent to the record holder",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/03-m3-post-v3-hiu-consent-request-notify#m3-on-consent-request-notify-hiu",
+                "id": "hiecm.callback.m3-on-consent-request-notify-hiu",
+                "milestone": "M3",
+                "title": "The patient's decision, sent to the requester",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/02-m3-post-v3-hiu-consent-request-on-status#m3-on-consent-request-status",
+                "id": "hiecm.callback.m3-on-consent-request-status",
+                "milestone": "M3",
+                "title": "The consent manager reports the state of a consent request you asked about",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/05-m3-post-v3-hiu-health-information-on-request#m3-on-health-information-request",
+                "id": "hiecm.callback.m3-on-health-information-request",
+                "milestone": "M3",
+                "title": "Acknowledgement of a health information request",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/consent#consent-artefact",
+                "id": "hiecm.concept.consent-artefact",
+                "milestone": "M3",
+                "title": "Consent, what it authorises and how it ends",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m3-plural-artefacts-and-codes",
+                "milestone": "M3",
+                "title": "Read plural as plural, and never translate a code into a meaning",
+                "type": "concept"
+              },
+              {
+                "doc_url": "",
+                "id": "hiecm.concept.m3-refuse-to-guess",
+                "milestone": "M3",
+                "title": "Refuse to guess an undocumented step, and say so before the work starts",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/04-m3-post-consent-v3-fetch#m3-consent-fetch",
+                "id": "hiecm.endpoint.m3-consent-fetch",
+                "milestone": "M3",
+                "title": "Fetch the full consent artefact",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/03-m3-post-consent-v3-request-hiu-on-notify#m3-consent-hiu-on-notify",
+                "id": "hiecm.endpoint.m3-consent-hiu-on-notify",
+                "milestone": "M3",
+                "title": "Acknowledge a consent notification",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/01-m3-post-consent-v3-request-init#m3-consent-request-init",
+                "id": "hiecm.endpoint.m3-consent-request-init",
+                "milestone": "M3",
+                "title": "Initiate a consent request",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/02-m3-post-consent-v3-request-status#m3-consent-request-status",
+                "id": "hiecm.endpoint.m3-consent-request-status",
+                "milestone": "M3",
+                "title": "Check the status of a consent request",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/06-m3-post-data-flow-v3-health-information-notify#m3-hiu-data-flow-notify",
+                "id": "hiecm.endpoint.m3-hiu-data-flow-notify",
+                "milestone": "M3",
+                "title": "Notify the gateway that data was received",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/05-m3-post-data-flow-v3-health-information-request#m3-hiu-health-information-request",
+                "id": "hiecm.endpoint.m3-hiu-health-information-request",
+                "milestone": "M3",
+                "title": "Request a patient's health information",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1040",
+                "id": "hiecm.error.abdm-1040",
+                "milestone": "M3",
+                "title": "ABDM-1040, the HIU id is not recognised",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/errors#abdm-1112",
+                "id": "hiecm.error.abdm-1112",
+                "milestone": "M3",
+                "title": "ABDM-1112, the consent artefact is invalid or expired",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m3#m3-fetch-records",
+                "id": "hiecm.flow.m3-fetch-records",
+                "milestone": "M3",
+                "title": "Fetch the records a granted consent artefact covers",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m3#m3-request-consent",
+                "id": "hiecm.flow.m3-request-consent",
+                "milestone": "M3",
+                "title": "Request consent for a patient's health records",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/troubleshooting/consent-stuck-requested#consent-stuck-requested",
+                "id": "hiecm.troubleshooting.consent-stuck-requested",
+                "milestone": "M3",
+                "title": "The consent request is stuck in Requested",
+                "type": "troubleshooting"
+              }
+            ],
+            "catalogue_version": "2026.09.16"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01V48CQg6XwesNGYKRqMhfRT",
+            "Name": "search",
+            "Input": {
+              "query": "",
+              "milestone": "M4",
+              "limit": 3
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "",
+            "milestone": "M4",
+            "limit": 3
+          },
+          "output": {
+            "atoms": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-search/02-m4-post-facilitymanagement-v1-5-facility-search#m4-hfr-search-facility",
+                "id": "hiecm.endpoint.m4-hfr-search-facility",
+                "milestone": "M4",
+                "title": "Search the facility registry before creating anything",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-registration-api-s-collection-via-aadhaar/09-m4-post-v2-registration-aadhaar-createhpridwithpreverified#m4-hpr-create-hprid",
+                "id": "hiecm.endpoint.m4-hpr-create-hprid",
+                "milestone": "M4",
+                "title": "Create the HPID",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-registration-api-s-collection-via-aadhaar/04-m4-post-v2-registration-aadhaar-demographicauthviamobile#m4-hpr-demographic-auth-mobile",
+                "id": "hiecm.endpoint.m4-hpr-demographic-auth-mobile",
+                "milestone": "M4",
+                "title": "Check whether the mobile number is the one on the Aadhaar record",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-enrollment/03-m4-post-v1-doctors-fetch-documents-list#m4-hpr-fetch-documents-list",
+                "id": "hiecm.endpoint.m4-hpr-fetch-documents-list",
+                "milestone": "M4",
+                "title": "List the documents this professional must upload",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-enrollment/05-m4-post-v1-doctors-fetch-professional-info#m4-hpr-fetch-professional-info",
+                "id": "hiecm.endpoint.m4-hpr-fetch-professional-info",
+                "milestone": "M4",
+                "title": "Read a professional's profile",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-enrollment/01-m4-post-v1-doctors-register-professional-new#m4-hpr-register-professional",
+                "id": "hiecm.endpoint.m4-hpr-register-professional",
+                "milestone": "M4",
+                "title": "Register the professional's profile",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-enrollment/04-m4-post-v1-uploads-upload-document#m4-hpr-upload-document",
+                "id": "hiecm.endpoint.m4-hpr-upload-document",
+                "milestone": "M4",
+                "title": "Upload one of the professional's documents",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m4#m4-create-hpid",
+                "id": "hiecm.flow.m4-create-hpid",
+                "milestone": "M4",
+                "title": "Get a healthcare professional an HPID",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m4#m4-link-bridge",
+                "id": "hiecm.flow.m4-link-bridge",
+                "milestone": "M4",
+                "title": "Link a facility to its bridge",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m4#m4-onboard-facility",
+                "id": "hiecm.flow.m4-onboard-facility",
+                "milestone": "M4",
+                "title": "Onboard a facility to the HFR",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m4#m4-register-professional",
+                "id": "hiecm.flow.m4-register-professional",
+                "milestone": "M4",
+                "title": "Register a professional's profile on the HPR",
+                "type": "flow"
+              }
+            ],
+            "catalogue_version": "2026.09.16"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01J4oVj159jDYsehJtxLK3L7",
+            "Name": "search",
+            "Input": {
+              "query": "",
+              "milestone": "P1",
+              "limit": 3
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "",
+            "milestone": "P1",
+            "limit": 3
+          },
+          "output": {
+            "atoms": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/p1/endpoints/p1-certificate-and-session/01-p1-get-v3-phr-app-login-public-certificate#p1-encrypt-data-aadhaar-mobile-otp-password",
+                "id": "hiecm.endpoint.p1-encrypt-data-aadhaar-mobile-otp-password",
+                "milestone": "P1",
+                "title": "Encrypt data (Aadhaar/Mobile/OTP/Password)",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/04-p1-get-v3-phr-app-enrollment-isexists#p1-enrollment-address-exists",
+                "id": "hiecm.endpoint.p1-enrollment-address-exists",
+                "milestone": "P1",
+                "title": "Check whether an address is taken",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/03-p1-post-v3-phr-app-enrollment-suggestion#p1-enrollment-address-suggestion",
+                "id": "hiecm.endpoint.p1-enrollment-address-suggestion",
+                "milestone": "P1",
+                "title": "Ask for address suggestions",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/05-p1-post-v3-phr-app-enrollment-enrol#p1-enrollment-enrol",
+                "id": "hiecm.endpoint.p1-enrollment-enrol",
+                "milestone": "P1",
+                "title": "Create the health address",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/01-p1-post-v3-phr-app-enrollment-request-otp#p1-enrollment-request-otp",
+                "id": "hiecm.endpoint.p1-enrollment-request-otp",
+                "milestone": "P1",
+                "title": "Send the OTP that starts a registration",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/02-p1-post-v3-phr-app-enrollment-verify#p1-enrollment-verify-otp",
+                "id": "hiecm.endpoint.p1-enrollment-verify-otp",
+                "milestone": "P1",
+                "title": "Verify the registration OTP",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-profile/05-p2-get-v3-phr-app-login-profile-request-token#p1-generate-refresh-token",
+                "id": "hiecm.endpoint.p1-generate-refresh-token",
+                "milestone": "P1",
+                "title": "Generate Refresh Token",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p1/endpoints/p1-certificate-and-session/01-p1-get-v3-phr-app-login-public-certificate#p1-get-certificate-public-key",
+                "id": "hiecm.endpoint.p1-get-certificate-public-key",
+                "milestone": "P1",
+                "title": "GET Certificate (Public key)",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-profile/03-p2-get-v3-phr-app-login-profile-phrcard#p1-get-user-phr-card",
+                "id": "hiecm.endpoint.p1-get-user-phr-card",
+                "milestone": "P1",
+                "title": "Get User PHR Card",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-profile/01-p2-get-v3-phr-app-login-profile#p1-get-user-profile",
+                "id": "hiecm.endpoint.p1-get-user-profile",
+                "milestone": "P1",
+                "title": "Get User Profile",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-profile/02-p2-get-v3-phr-app-login-profile-qrcode#p1-get-user-qr-code",
+                "id": "hiecm.endpoint.p1-get-user-qr-code",
+                "milestone": "P1",
+                "title": "Get User QR Code",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/01-p2-post-v3-phr-app-login-profile-request-otp#p1-link-abha-number-via-aadhaar-request-otp",
+                "id": "hiecm.endpoint.p1-link-abha-number-via-aadhaar-request-otp",
+                "milestone": "P1",
+                "title": "Link ABHA number via AADHAAR-Request OTP",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/02-p2-post-v3-phr-app-login-profile-verify#p1-link-abha-number-via-aadhaar-verify-otp",
+                "id": "hiecm.endpoint.p1-link-abha-number-via-aadhaar-verify-otp",
+                "milestone": "P1",
+                "title": "Link ABHA number via AADHAAR-Verify OTP",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/01-p2-post-v3-phr-app-login-profile-request-otp#p1-link-abha-number-via-mobile-request-otp",
+                "id": "hiecm.endpoint.p1-link-abha-number-via-mobile-request-otp",
+                "milestone": "P1",
+                "title": "Link ABHA number via Mobile-Request OTP",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/02-p2-post-v3-phr-app-login-profile-verify#p1-link-abha-number-via-mobile-verify-otp",
+                "id": "hiecm.endpoint.p1-link-abha-number-via-mobile-verify-otp",
+                "milestone": "P1",
+                "title": "Link ABHA number via Mobile-Verify OTP",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p1/endpoints/p1-login-mobile/01-p1-post-v3-phr-app-login-request-otp#p1-login-request-otp",
+                "id": "hiecm.endpoint.p1-login-request-otp",
+                "milestone": "P1",
+                "title": "Send the OTP that starts a login",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p1/endpoints/p1-login-abha-address-password/01-p1-post-v3-phr-app-login-search#p1-login-using-password-search-user",
+                "id": "hiecm.endpoint.p1-login-using-password-search-user",
+                "milestone": "P1",
+                "title": "Login using Password Search user",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p1/endpoints/p1-login-mobile/02-p1-post-v3-phr-app-login-verify#p1-login-verify-otp",
+                "id": "hiecm.endpoint.p1-login-verify-otp",
+                "milestone": "P1",
+                "title": "Verify the login OTP",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p1/endpoints/p1-login-mobile/03-p1-post-v3-phr-app-login-verify-user#p1-login-verify-user",
+                "id": "hiecm.endpoint.p1-login-verify-user",
+                "milestone": "P1",
+                "title": "Say which address is signing in",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-profile/06-p2-get-v3-phr-app-login-profile-request-logout#p1-logout-user",
+                "id": "hiecm.endpoint.p1-logout-user",
+                "milestone": "P1",
+                "title": "Logout User",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-link-abha-number-abha-otp/03-p2-post-v3-phr-app-login-profile-link#p1-process-link-request-via-aadhaar-number",
+                "id": "hiecm.endpoint.p1-process-link-request-via-aadhaar-number",
+                "milestone": "P1",
+                "title": "Process Link Request via Aadhaar OTP",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-link-abha-number-abha-otp/03-p2-post-v3-phr-app-login-profile-link#p1-process-link-request-via-abha-number",
+                "id": "hiecm.endpoint.p1-process-link-request-via-abha-number",
+                "milestone": "P1",
+                "title": "Process Link Request via ABHA OTP",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-switch-profile/01-p2-get-v3-phr-app-login-profile-switch-profile#p1-switch-profile-request",
+                "id": "hiecm.endpoint.p1-switch-profile-request",
+                "milestone": "P1",
+                "title": "Switch Profile Request",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-switch-profile/02-p2-post-v3-phr-app-login-profile-verify-switch-profile-user#p1-switch-profile-verify",
+                "id": "hiecm.endpoint.p1-switch-profile-verify",
+                "milestone": "P1",
+                "title": "Switch Profile Verify",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/01-p2-post-v3-phr-app-login-profile-request-otp#p1-update-mobile-request-otp",
+                "id": "hiecm.endpoint.p1-update-mobile-request-otp",
+                "milestone": "P1",
+                "title": "Update the mobile number, request the OTP",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/02-p2-post-v3-phr-app-login-profile-verify#p1-update-mobile-verify-otp",
+                "id": "hiecm.endpoint.p1-update-mobile-verify-otp",
+                "milestone": "P1",
+                "title": "Update Mobile Verify-OTP",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p1/errors#abdm-1107",
+                "id": "hiecm.error.abdm-1107",
+                "milestone": "P1",
+                "title": "ABDM-1107, the combination of scopes is not valid",
+                "type": "error"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/p1#p1-create-abha-address",
+                "id": "hiecm.flow.p1-create-abha-address",
+                "milestone": "P1",
+                "title": "Create an ABHA address in a PHR application",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/p1#p1-login",
+                "id": "hiecm.flow.p1-login",
+                "milestone": "P1",
+                "title": "Sign a user in to a PHR application",
+                "type": "flow"
+              }
+            ],
+            "catalogue_version": "2026.09.16"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01Uek1GFrLP2SWwCyrBpuj9U",
+            "Name": "search",
+            "Input": {
+              "query": "",
+              "milestone": "P2",
+              "limit": 3
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "",
+            "milestone": "P2",
+            "limit": 3
+          },
+          "output": {
+            "atoms": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/07-m2-post-v3-hip-link-care-context-confirm#p2-callback-for-health-record-confirmation",
+                "id": "hiecm.callback.p2-callback-for-health-record-confirmation",
+                "milestone": "P2",
+                "title": "Link confirm request to the HIP",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/04-p2-post-v3-hiu-patient-care-context-on-discover#p2-callback-on-health-record-discover",
+                "id": "hiecm.callback.p2-callback-on-health-record-discover",
+                "milestone": "P2",
+                "title": "Discovery result callback",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/06-m2-post-v3-hip-link-care-context-init#p2-callback-on-health-record-link-init",
+                "id": "hiecm.callback.p2-callback-on-health-record-link-init",
+                "milestone": "P2",
+                "title": "Link init request to the HIP",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/05-m2-post-v3-hip-patient-care-context-discover#p2-callback-to-hip-discovery",
+                "id": "hiecm.callback.p2-callback-to-hip-discovery",
+                "milestone": "P2",
+                "title": "Discovery request to the HIP",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-hiecm-patient-share-phr/02-p2-post-v3-hiu-patient-on-share#p2-profile-on-share-callback",
+                "id": "hiecm.callback.p2-profile-on-share-callback",
+                "milestone": "P2",
+                "title": "Profile share result callback",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/01-scan-and-register-post-v3-hip-patient-share#p2-profile-share-callback",
+                "id": "hiecm.callback.p2-profile-share-callback",
+                "milestone": "P2",
+                "title": "Profile share callback",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/06-p2-post-v3-hiu-patient-care-context-on-init#p2-response-on-health-record-link",
+                "id": "hiecm.callback.p2-response-on-health-record-link",
+                "milestone": "P2",
+                "title": "Link init result callback",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/08-p2-post-v3-hiu-patient-care-context-on-confirm#p2-response-on-health-record-on-confirm",
+                "id": "hiecm.callback.p2-response-on-health-record-on-confirm",
+                "milestone": "P2",
+                "title": "Link confirm result callback",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/01-p2-get-gateway-v3-providers#p2-all-providers",
+                "id": "hiecm.endpoint.p2-all-providers",
+                "milestone": "P2",
+                "title": "Search providers by name",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/03-p2-post-user-initiated-linking-v3-patient-care-context-discover#p2-care-context-discover",
+                "id": "hiecm.endpoint.p2-care-context-discover",
+                "milestone": "P2",
+                "title": "Ask a facility what records it holds",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/09-p2-get-gateway-v3-govt-programs#p2-govt-programs",
+                "id": "hiecm.endpoint.p2-govt-programs",
+                "milestone": "P2",
+                "title": "List government programmes",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/07-p2-post-user-initiated-linking-v3-link-care-context-confirm#p2-link-care-context-confirm",
+                "id": "hiecm.endpoint.p2-link-care-context-confirm",
+                "milestone": "P2",
+                "title": "Confirm the link with the code the person received",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/05-p2-post-user-initiated-linking-v3-link-care-context-init#p2-link-care-context-init",
+                "id": "hiecm.endpoint.p2-link-care-context-init",
+                "milestone": "P2",
+                "title": "Start linking the care contexts the person chose",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-hiecm-patient-share-phr/01-p2-post-patient-share-v3-share#p2-patient-share",
+                "id": "hiecm.endpoint.p2-patient-share",
+                "milestone": "P2",
+                "title": "Share the profile with the facility whose code was scanned",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/02-scan-and-register-post-patient-share-v3-on-share#p2-profile-on-share",
+                "id": "hiecm.endpoint.p2-profile-on-share",
+                "milestone": "P2",
+                "title": "Answer a profile share with a token number",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/02-p2-get-gateway-v3-providers-provider-id#p2-provider-by-provider-id",
+                "id": "hiecm.endpoint.p2-provider-by-provider-id",
+                "milestone": "P2",
+                "title": "Get a provider by its id",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/p2#p2-discover-and-link",
+                "id": "hiecm.flow.p2-discover-and-link",
+                "milestone": "P2",
+                "title": "Find records held elsewhere and link them",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/p2#p2-scan-and-share",
+                "id": "hiecm.flow.p2-scan-and-share",
+                "milestone": "P2",
+                "title": "Share a profile at a facility by scanning its code",
+                "type": "flow"
+              }
+            ],
+            "catalogue_version": "2026.09.16"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_019Ew2EJkkkButaZRxzK583z",
+            "Name": "search",
+            "Input": {
+              "query": "",
+              "milestone": "P3",
+              "limit": 3
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "",
+            "milestone": "P3",
+            "limit": 3
+          },
+          "output": {
+            "atoms": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/03-p3-post-v3-hiu-subscription-requests-hiu-notify#p3-approve-subscription-request-call-back",
+                "id": "hiecm.callback.p3-approve-subscription-request-call-back",
+                "milestone": "P3",
+                "title": "Subscription approved callback",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/05-m3-post-v3-hiu-health-information-on-request#p3-call-back-to-hiu",
+                "id": "hiecm.callback.p3-call-back-to-hiu",
+                "milestone": "P3",
+                "title": "Health information request acknowledgement",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/02-m3-post-v3-hiu-consent-request-on-status#p3-consent-request-on-status-callback",
+                "id": "hiecm.callback.p3-consent-request-on-status-callback",
+                "milestone": "P3",
+                "title": "Consent request status callback",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/03-p3-post-v3-hiu-subscription-requests-hiu-notify#p3-deny-subscription-call-back",
+                "id": "hiecm.callback.p3-deny-subscription-call-back",
+                "milestone": "P3",
+                "title": "Subscription denied callback",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/05-p3-post-v3-hiu-subscription-notify#p3-subscription-hiu-notify",
+                "id": "hiecm.callback.p3-subscription-hiu-notify",
+                "milestone": "P3",
+                "title": "New record notification callback",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/02-p3-post-v3-hiu-hiecm-subscription-requests-on-init#p3-user-subscription-request-initiate-call-back",
+                "id": "hiecm.callback.p3-user-subscription-request-initiate-call-back",
+                "milestone": "P3",
+                "title": "Subscription request result callback",
+                "type": "callback"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/consent#consent-in-a-phr-app",
+                "id": "hiecm.concept.consent-in-a-phr-app",
+                "milestone": "P3",
+                "title": "The five things a personal health record application must let a person do with consent",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/p3#phr-subscriptions",
+                "id": "hiecm.concept.phr-subscriptions",
+                "milestone": "P3",
+                "title": "Subscriptions, and why a personal health record application needs one",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/01-p3-post-subscription-requests-v3-request-id-approve#p3-approve-subscription-request",
+                "id": "hiecm.endpoint.p3-approve-subscription-request",
+                "milestone": "P3",
+                "title": "Approve a subscription request",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/01-p2-post-consent-v3-auto-approve#p3-consent-auto-approve",
+                "id": "hiecm.endpoint.p3-consent-auto-approve",
+                "milestone": "P3",
+                "title": "Set an auto approval policy",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/02-p2-post-consent-v3-auto-approve-auto-approval-id-disable#p3-consent-disable-auto-approve",
+                "id": "hiecm.endpoint.p3-consent-disable-auto-approve",
+                "milestone": "P3",
+                "title": "Disable an auto approval policy",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/03-p2-post-consent-v3-auto-approve-auto-approval-id-enable#p3-consent-enable-auto-approve",
+                "id": "hiecm.endpoint.p3-consent-enable-auto-approve",
+                "milestone": "P3",
+                "title": "Enable an auto approval policy",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/04-m3-post-consent-v3-fetch#p3-consent-fetch",
+                "id": "hiecm.endpoint.p3-consent-fetch",
+                "milestone": "P3",
+                "title": "Fetch a consent artefact in full",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/07-p2-post-consent-v3-request-request-id-deny#p3-deny-consent-request",
+                "id": "hiecm.endpoint.p3-deny-consent-request",
+                "milestone": "P3",
+                "title": "Deny a consent request",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/02-p3-post-subscription-requests-v3-request-id-deny#p3-deny-subscription-request",
+                "id": "hiecm.endpoint.p3-deny-subscription-request",
+                "milestone": "P3",
+                "title": "Deny a subscription request",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/07-p3-get-subscription-requests-v3-request-request-id#p3-details-by-request-id",
+                "id": "hiecm.endpoint.p3-details-by-request-id",
+                "milestone": "P3",
+                "title": "Get a subscription request by its request id",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/08-p3-get-subscription-requests-v3-subscription-id#p3-details-by-subscription-id",
+                "id": "hiecm.endpoint.p3-details-by-subscription-id",
+                "milestone": "P3",
+                "title": "Get a subscription by its subscription id",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/04-p3-put-subscription-requests-v3-patients-subscription-id#p3-edit-subscription",
+                "id": "hiecm.endpoint.p3-edit-subscription",
+                "milestone": "P3",
+                "title": "Edit a subscription",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/09-p2-get-consent-v3-artefact-request-request-id#p3-get-all-consent-artefact-details-by-request-id",
+                "id": "hiecm.endpoint.p3-get-all-consent-artefact-details-by-request-id",
+                "milestone": "P3",
+                "title": "Get the consent artefacts of one consent request",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/11-p2-get-consent-v3-artefact#p3-get-all-consent-artifact-details-for-an-abha-address",
+                "id": "hiecm.endpoint.p3-get-all-consent-artifact-details-for-an-abha-address",
+                "milestone": "P3",
+                "title": "List the consent artefacts of an ABHA address",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/04-p2-get-consent-v3-request#p3-get-all-consent-request-for-an-abha-address",
+                "id": "hiecm.endpoint.p3-get-all-consent-request-for-an-abha-address",
+                "milestone": "P3",
+                "title": "List the consent requests of an ABHA address",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-manager-hiu-hip/01-p2-get-hip-v3-link-patient-links#p3-get-all-links-records",
+                "id": "hiecm.endpoint.p3-get-all-links-records",
+                "milestone": "P3",
+                "title": "Get all linked records",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/04-p4-get-subscription-requests-v3-patients-requests#p3-get-all-subscription-request",
+                "id": "hiecm.endpoint.p3-get-all-subscription-request",
+                "milestone": "P3",
+                "title": "List consent and subscription requests together",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/03-p3-get-subscription-requests-v3-requests#p3-get-all-subscription-requests-for-an-abha-address",
+                "id": "hiecm.endpoint.p3-get-all-subscription-requests-for-an-abha-address",
+                "milestone": "P3",
+                "title": "List the subscription requests of an ABHA address",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/10-p2-get-consent-v3-artefact-artefact-id#p3-get-consent-artefact-details-by-artifact-id",
+                "id": "hiecm.endpoint.p3-get-consent-artefact-details-by-artifact-id",
+                "milestone": "P3",
+                "title": "Get one consent artefact by its id",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/05-p2-get-consent-v3-request-request-id#p3-get-consent-request-details-by-consent-request-id",
+                "id": "hiecm.endpoint.p3-get-consent-request-details-by-consent-request-id",
+                "milestone": "P3",
+                "title": "Get one consent request by its id",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/02-p4-get-subscription-requests-v3-patients-lockers#p3-get-patient-subscribed-lockers",
+                "id": "hiecm.endpoint.p3-get-patient-subscribed-lockers",
+                "milestone": "P3",
+                "title": "List the health lockers an ABHA address subscribes to",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/03-p4-get-subscription-requests-v3-patients-lockers-lockerid#p3-patient-locker-details-by-locker-id",
+                "id": "hiecm.endpoint.p3-patient-locker-details-by-locker-id",
+                "milestone": "P3",
+                "title": "Get a health locker by its id",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/07-m3-get-data-flow-v3-health-information-request-status-tra-550104#p3-request-status",
+                "id": "hiecm.endpoint.p3-request-status",
+                "milestone": "P3",
+                "title": "Get the status of a health information request",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/08-p2-post-consent-v3-revoke#p3-revoke-consent-request",
+                "id": "hiecm.endpoint.p3-revoke-consent-request",
+                "milestone": "P3",
+                "title": "Revoke a granted consent",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/01-p4-post-subscription-requests-v3-setup-locker#p3-setup-locker",
+                "id": "hiecm.endpoint.p3-setup-locker",
+                "milestone": "P3",
+                "title": "Set up a health locker",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/06-p3-post-subscription-requests-v3-hiu-care-context-on-notify#p3-subscription-hiu-on-notify",
+                "id": "hiecm.endpoint.p3-subscription-hiu-on-notify",
+                "milestone": "P3",
+                "title": "Acknowledge a new record notification",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/01-p3-post-subscription-requests-v3-init#p3-subscription-init",
+                "id": "hiecm.endpoint.p3-subscription-init",
+                "milestone": "P3",
+                "title": "Request a subscription to a person's records",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/04-p3-post-subscription-requests-v3-hiu-on-notify#p3-subscription-request-hiu-on-notify",
+                "id": "hiecm.endpoint.p3-subscription-request-hiu-on-notify",
+                "milestone": "P3",
+                "title": "Acknowledge a subscription decision",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/p3#p3-fetch-records",
+                "id": "hiecm.flow.p3-fetch-records",
+                "milestone": "P3",
+                "title": "Fetch and store the records a linked care context points at",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/p3#p3-subscribe-and-auto-approve",
+                "id": "hiecm.flow.p3-subscribe-and-auto-approve",
+                "milestone": "P3",
+                "title": "Subscribe to a user's account and set an auto approval policy",
+                "type": "flow"
+              }
+            ],
+            "catalogue_version": "2026.09.16"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "Based on the ABDM developer portal documentation, here are the **7 different Milestones in ABDM Sandbox**:\n\n## **M-Series Milestones (HIP/HIU Integration)**\n\n**M1** — ABHA Creation & User Authentication\n- Create ABHA using Aadhaar OTP, demographic auth, or face auth\n- User login and profile management\n- ABHA discovery and child ABHA creation\n- Mobile number updates on ABHA profile\n- 74 documentation atoms covering these flows\n\n**M2** — Care Context Linking & Record Exchange\n- Link care contexts to ABHA addresses\n- User-initiated and HIP-initiated linking\n- Asynchronous callbacks and link confirmation\n- SMS notifications for care context updates\n- 57 documentation atoms\n\n**M3** — Consent Management & Data Request (HIU)\n- Initiate and manage consent requests\n- Fetch consent artefacts\n- Request health information with consent\n- Consent status tracking and notifications\n- 20 documentation atoms\n\n**M4** — Facility & Professional Registration\n- Onboard facilities to the Health Facility Registry (HFR)\n- Register healthcare professionals (HPID)\n- Link facilities to bridges\n- Facility search and management\n- 11 documentation atoms\n\n## **P-Series Milestones (PHR App Integration)**\n\n**P1** — PHR App Enrollment & Login\n- Create ABHA address in PHR applications\n- Mobile OTP-based login and verification\n- User profile and PHR card management\n- Refresh token generation\n- 29 documentation atoms\n\n**P2** — PHR App Discovery & Profile Sharing\n- Discover records held at facilities\n- Link care contexts from search results\n- Share profile by scanning facility QR codes\n- Provider search and selection\n- 18 documentation atoms\n\n**P3** — PHR App Consent & Subscriptions\n- Manage consent requests and auto-approval policies\n- Subscribe to patient record updates\n- Revoke and fetch consent artefacts\n- Health locker setup and management\n- 36 documentation atoms\n\nEach milestone builds sequentially on the previous one, starting with basic ABHA creation (M1), progressing through record linking and consent (M2-M3), facility setup (M4), and then PHR app-specific flows (P1-P3).",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "Based on the ABDM developer portal documentation, here are the **7 different Milestones in ABDM Sandbox**:\n\n## **M-Series Milestones (HIP/HIU Integration)**\n\n**M1** — ABHA Creation & User Authentication\n- Create ABHA using Aadhaar OTP, demographic auth, or face auth\n- User login and profile management\n- ABHA discovery and child ABHA creation\n- Mobile number updates on ABHA profile\n- 74 documentation atoms covering these flows\n\n**M2** — Care Context Linking & Record Exchange\n- Link care contexts to ABHA addresses\n- User-initiated and HIP-initiated linking\n- Asynchronous callbacks and link confirmation\n- SMS notifications for care context updates\n- 57 documentation atoms\n\n**M3** — Consent Management & Data Request (HIU)\n- Initiate and manage consent requests\n- Fetch consent artefacts\n- Request health information with consent\n- Consent status tracking and notifications\n- 20 documentation atoms\n\n**M4** — Facility & Professional Registration\n- Onboard facilities to the Health Facility Registry (HFR)\n- Register healthcare professionals (HPID)\n- Link facilities to bridges\n- Facility search and management\n- 11 documentation atoms\n\n## **P-Series Milestones (PHR App Integration)**\n\n**P1** — PHR App Enrollment & Login\n- Create ABHA address in PHR applications\n- Mobile OTP-based login and verification\n- User profile and PHR card management\n- Refresh token generation\n- 29 documentation atoms\n\n**P2** — PHR App Discovery & Profile Sharing\n- Discover records held at facilities\n- Link care contexts from search results\n- Share profile by scanning facility QR codes\n- Provider search and selection\n- 18 documentation atoms\n\n**P3** — PHR App Consent & Subscriptions\n- Manage consent requests and auto-approval policies\n- Subscribe to patient record updates\n- Revoke and fetch consent artefacts\n- Health locker setup and management\n- 36 documentation atoms\n\nEach milestone builds sequentially on the previous one, starting with basic ABHA creation (M1), progressing through record linking and consent (M2-M3), facility setup (M4), and then PHR app-specific flows (P1-P3).",
+  "sources": [],
+  "corpus": "{\"atoms\":{\"by_gateway\":{\"hiecm\":269,\"nhcx\":536,\"shared\":46,\"uhi\":111},\"by_milestone\":{\"M1\":74,\"M2\":57,\"M3\":20,\"M4\":11,\"P1\":29,\"P2\":18,\"P3\":36,\"n/a\":717},\"by_type\":{\"callback\":66,\"concept\":105,\"decision\":13,\"endpoint\":186,\"error\":335,\"fhir\":30,\"flow\":57,\"glossary\":86,\"sandbox\":18,\"test\":51,\"troubleshooting\":15}},\"built_at\":\"2026-09-29T11:55:12Z\",\"catalogue_version\":\"2026.09.16\",\"deprecated\":0,\"embeddings\":false,\"facts\":0,\"operations\":387}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/going-live\",\"id\":\"shared.sandbox.going-live\",\"summary\":\"How an integration leaves the sandbox for production: functional testing and the security audit, the Health Tech Committee demonstration, then production cre...\",\"title\":\"Going live, the sandbox exit process\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/first-fifteen-minutes\",\"id\":\"shared.sandbox.first-fifteen-minutes\",\"summary\":\"Everything you can do before NHA approves your sandbox registration: read one real gateway session exchange and assemble your own first call, ready to paste ...\",\"title\":\"Your first fifteen minutes with ABDM\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/sandbox#4-note-the-base-urls\",\"id\":\"uhi.sandbox.base-urls\",\"summary\":\"The UHI Gateway base URL for the sandbox and for production, and the reference EUA and HSPA apps in the sandbox.\",\"title\":\"UHI Gateway base URLs for sandbox and production\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/base-urls\",\"id\":\"nhcx.sandbox.environments-and-base-urls\",\"summary\":\"The two environments, the web portals, and the two base addresses every call is built on, for testing and for live claims.\",\"title\":\"NHCX environments, hosts and base URLs\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/get-your-sandbox-credentials\",\"id\":\"nhcx.sandbox.prerequisites\",\"summary\":\"The checklist to complete before your system can register on the claims exchange sandbox: a facility registration, sandbox credentials, basic health ID featu...\",\"title\":\"What you need before you register on the NHCX sandbox\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/going-live#3-switch-to-production\",\"id\":\"uhi.sandbox.production-switch\",\"summary\":\"Change your IDs and callback URL to production values and point your calls at the production UHI Gateway.\",\"title\":\"Switch your UHI integration to production\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/get-your-sandbox-credentials\",\"id\":\"nhcx.sandbox.dummy-payer\",\"summary\":\"The built-in test insurer in the sandbox, which use cases it answers, and the two test calls that make it approve, reject, query or send a payment notice.\",\"title\":\"The dummy payer and what it answers\",\"type\":\"sandbox\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/get-your-sandbox-credentials\",\"id\":\"nhcx.sandbox.support-contacts\",\"summary\":\"Which address to write to for each kind of question, what to put in the message, and what to do while you wait for an answer.\",\"title\":\"Where to get help with NHCX\",\"type\":\"sandbox\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/concepts/how-it-fits#roles\",\"id\":\"hiecm.concept.roles\",\"summary\":\"Your role, IMS or PHR, is fixed by the entity your software acts for, while HIP and HIU change with the direction each record moves.\",\"title\":\"Roles, which entity your software acts for and which way the record moves\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/api-specifications#spec-per-module\",\"id\":\"hiecm.decision.spec-per-module\",\"summary\":\"Each HIE-CM module is published as its own complete OpenAPI file, in YAML and JSON.\",\"title\":\"One OpenAPI file per module\",\"type\":\"decision\"},{\"doc_url\":\"/docs/uhi/v1/services/consultation#cancellation-and-override-reason-codes\",\"id\":\"uhi.concept.consultation-reason-codes\",\"summary\":\"The fixed patient, doctor and override reason codes for cancel, on_cancel and PIN override, sent exactly as listed with labels of your own.\",\"title\":\"Physical Consultation cancellation and PIN override reason codes\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m4#m4-link-bridge\",\"id\":\"hiecm.flow.m4-link-bridge\",\"summary\":\"Connect an onboarded facility to the software that will act for it, say whether the facility publishes records through it, fetches them, or both, and name it...\",\"title\":\"Link a facility to its bridge\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hmis\",\"id\":\"hiecm.glossary.hmis\",\"summary\":\"The day to day software of a hospital, under any of its three names. A hospital uses it both to publish its own records and to fetch a patient's history from...\",\"title\":\"HMIS, HIS or HIMS, the software a hospital runs\",\"type\":\"glossary\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/concepts/how-it-fits#roles\",\"id\":\"hiecm.concept.roles\",\"summary\":\"Your role, IMS or PHR, is fixed by the entity your software acts for, while HIP and HIU change with the direction each record moves.\",\"title\":\"Roles, which entity your software acts for and which way the record moves\",\"type\":\"concept\"}]}\n{\"atoms\":[{\"doc_url\":\"/docs/hiecm/v3/registries/abha#abha-address-policy\",\"id\":\"hiecm.concept.abha-address-policy\",\"milestone\":\"M1\",\"title\":\"What an ABHA address is allowed to be\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/registries/abha#abha-number-and-address\",\"id\":\"hiecm.concept.abha-number-and-address\",\"milestone\":\"M1\",\"title\":\"ABHA number and ABHA address, and why there are two\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/encryption#encrypted-identifiers\",\"id\":\"hiecm.concept.encrypted-identifiers\",\"milestone\":\"M1\",\"title\":\"Why identifiers are encrypted, and where to do it\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/gateway#gateway-session\",\"id\":\"hiecm.concept.gateway-session\",\"milestone\":\"M1\",\"title\":\"The gateway session, the first call in every integration\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/encryption#input-encryption\",\"id\":\"hiecm.concept.input-encryption\",\"milestone\":\"M1\",\"title\":\"Encrypting sensitive inputs, Aadhaar, mobile, OTP and passwords\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m1-avoiding-duplicate-abha\",\"milestone\":\"M1\",\"title\":\"The branch that creates a duplicate ABHA, and how to close it\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m1-confirm-the-filled-form\",\"milestone\":\"M1\",\"title\":\"Present the filled form for confirmation rather than saving it unseen\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m1-counter-journey-order\",\"milestone\":\"M1\",\"title\":\"The ABHA step comes before the registration form and fills it\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m1-deployment-interview\",\"milestone\":\"M1\",\"title\":\"Ask the integrator about the deployment, not the patient about the journey\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m1-honest-screen-states\",\"milestone\":\"M1\",\"title\":\"Telling the truth on screen at the counter\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m1-identifier-and-auth-method\",\"milestone\":\"M1\",\"title\":\"An identifier and an auth method are two different questions\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m1-journey-completes-without-abha\",\"milestone\":\"M1\",\"title\":\"A journey has to complete without an ABHA\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/abha-journey#m1-journey-design\",\"id\":\"hiecm.concept.m1-journey-design\",\"milestone\":\"M1\",\"title\":\"A suggested ABHA journey, and what holds if you design your own\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m1-never-ask-twice\",\"milestone\":\"M1\",\"title\":\"Never ask a patient the same thing twice, enforced by structure\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m1-operations-not-a-journey\",\"milestone\":\"M1\",\"title\":\"ABDM publishes operations, not a journey\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m1-screen-contract\",\"milestone\":\"M1\",\"title\":\"The six counter screens, and what each is forbidden to ask\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m1-the-whole-surface\",\"milestone\":\"M1\",\"title\":\"The surface is more than a registration form\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m1-two-routes-to-the-profile\",\"milestone\":\"M1\",\"title\":\"Two routes to the profile, and the form is the destination of both\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/encryption#encrypt-locally\",\"id\":\"hiecm.decision.encrypt-locally\",\"milestone\":\"M1\",\"title\":\"Encrypting identifiers locally rather than through a hosted helper\",\"type\":\"decision\"},{\"doc_url\":\"/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/02-gateway-get-gateway-v3-bridge-service-serviceid-service-id#gateway-get-bridge-service-by-id\",\"id\":\"hiecm.endpoint.gateway-get-bridge-service-by-id\",\"milestone\":\"M1\",\"title\":\"Find a bridge service by its service id\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/01-gateway-get-gateway-v3-bridge-services#gateway-list-bridge-services\",\"id\":\"hiecm.endpoint.gateway-list-bridge-services\",\"milestone\":\"M1\",\"title\":\"List the services registered on your bridge\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-multiple-hrp-api/01-m4-post-v1-bridges-mutiplehrpaddupdateservices#gateway-register-bridge-services\",\"id\":\"hiecm.endpoint.gateway-register-bridge-services\",\"milestone\":\"M1\",\"title\":\"Register or update bridge services for an HIU\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions#gateway-sessions\",\"id\":\"hiecm.endpoint.gateway-sessions\",\"milestone\":\"M1\",\"title\":\"Create a session and get an access token\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/03-gateway-patch-gateway-v3-bridge-url#gateway-update-bridge-url\",\"id\":\"hiecm.endpoint.gateway-update-bridge-url\",\"milestone\":\"M1\",\"title\":\"Update the bridge callback URL\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions#m1-auth-token\",\"id\":\"hiecm.endpoint.m1-auth-token\",\"milestone\":\"M1\",\"title\":\"Auth token API\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-benefit-search/03-m1-get-v3-profile-benefit-abha-abhanumber#m1-benefit-get-by-abha\",\"id\":\"hiecm.endpoint.m1-benefit-get-by-abha\",\"milestone\":\"M1\",\"title\":\"Get the benefit record for an ABHA number\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/01-m1-post-v3-profile-benefit-linkanddelink-x-token#m1-benefit-link-or-delink\",\"id\":\"hiecm.endpoint.m1-benefit-link-or-delink\",\"milestone\":\"M1\",\"title\":\"Link or unlink a benefit record from an ABHA\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-benefit-search/01-m1-post-v3-profile-benefit-search-xmluid#m1-benefit-search\",\"id\":\"hiecm.endpoint.m1-benefit-search\",\"milestone\":\"M1\",\"title\":\"Search benefit records for a person\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/05-m1-get-v3-phr-web-login-profile-abha-phr-card-abha-addres-e1bae9#m1-download-phr-card\",\"id\":\"hiecm.endpoint.m1-download-phr-card\",\"milestone\":\"M1\",\"title\":\"Download PHR card\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/06-m1-get-v3-phr-web-login-profile-abha-qr-code-abha-address-a48785#m1-download-phr-qr-code\",\"id\":\"hiecm.endpoint.m1-download-phr-qr-code\",\"milestone\":\"M1\",\"title\":\"Download PHR QR code\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/07-m1-get-v3-enrollment-enrol-suggestion-create-abha-aadhaar-otp#m1-enrolment-address-suggestions\",\"id\":\"hiecm.endpoint.m1-enrolment-address-suggestions\",\"milestone\":\"M1\",\"title\":\"Get suggested ABHA addresses for a new account\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/02-m1-post-v3-enrollment-enrol-byaadhaar-otp#m1-enrolment-by-aadhaar\",\"id\":\"hiecm.endpoint.m1-enrolment-by-aadhaar\",\"milestone\":\"M1\",\"title\":\"Create an ABHA from a verified Aadhaar OTP\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-face-authentication/02-m1-post-v3-enrollment-enrol-capturepid-create-abha-face-a-417d5e#m1-enrolment-capture-pid\",\"id\":\"hiecm.endpoint.m1-enrolment-capture-pid\",\"milestone\":\"M1\",\"title\":\"Track face authentication status\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/08-m1-post-v3-enrollment-enrol-abha-address-create-abha-aadhaar-otp#m1-enrolment-claim-abha-address\",\"id\":\"hiecm.endpoint.m1-enrolment-claim-abha-address\",\"milestone\":\"M1\",\"title\":\"Claim a chosen ABHA address\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-face-authentication/01-m1-post-v3-enrollment-enrol-auth-init-create-abha-face-au-4dea33#m1-enrolment-face-auth-init\",\"id\":\"hiecm.endpoint.m1-enrolment-face-auth-init\",\"milestone\":\"M1\",\"title\":\"Start face authentication and get a transaction id\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-child-abha/02-m1-get-v3-enrollment-profile-children-child-abha#m1-enrolment-list-children\",\"id\":\"hiecm.endpoint.m1-enrolment-list-children\",\"milestone\":\"M1\",\"title\":\"List the child ABHA accounts linked to this account\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/01-m1-post-v3-enrollment-request-otp-aadhaar-otp#m1-enrolment-request-otp\",\"id\":\"hiecm.endpoint.m1-enrolment-request-otp\",\"milestone\":\"M1\",\"title\":\"Send an OTP to begin or continue an enrolment\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/04-m1-post-v3-enrollment-auth-byabdm-mobile-verify-create-ab-091285#m1-enrolment-verify-abdm-otp\",\"id\":\"hiecm.endpoint.m1-enrolment-verify-abdm-otp\",\"milestone\":\"M1\",\"title\":\"Verify an OTP that ABDM sent, during enrolment\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-find-abha-mobile-otp/01-m1-post-v3-profile-account-abha-search-find-abha-mobile-otp#m1-find-abha-search\",\"id\":\"hiecm.endpoint.m1-find-abha-search\",\"milestone\":\"M1\",\"title\":\"Find an ABHA for somebody who does not know theirs\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/04-m1-get-v3-phr-web-login-profile-abha-profile-abha-address-b038c4#m1-get-phr-profile\",\"id\":\"hiecm.endpoint.m1-get-phr-profile\",\"milestone\":\"M1\",\"title\":\"Get PHR profile\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-access-tokens-encryption/02-m1-get-v3-profile-public-certificate#m1-get-public-certificate\",\"id\":\"hiecm.endpoint.m1-get-public-certificate\",\"milestone\":\"M1\",\"title\":\"Get the public certificate\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-login-mobile-number/01-m1-post-v3-profile-login-request-otp-mobile#m1-login-request-otp\",\"id\":\"hiecm.endpoint.m1-login-request-otp\",\"milestone\":\"M1\",\"title\":\"Send a login OTP\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-login-mobile-number/03-m1-post-v3-profile-login-verify-user#m1-login-select-account\",\"id\":\"hiecm.endpoint.m1-login-select-account\",\"milestone\":\"M1\",\"title\":\"Choose which ABHA to sign in to\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-login-mobile-number/02-m1-post-v3-profile-login-verify-mobile-otp#m1-login-verify\",\"id\":\"hiecm.endpoint.m1-login-verify\",\"milestone\":\"M1\",\"title\":\"Verify a login OTP\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-login-biometric-v3-1/01-m1-post-v3-1-profile-login-verify-fingerprint#m1-login-verify-v31\",\"id\":\"hiecm.endpoint.m1-login-verify-v31\",\"milestone\":\"M1\",\"title\":\"Sign in with a biometric, v3.1\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/02-scan-and-register-post-patient-share-v3-on-share#m1-on-share-acknowledgement\",\"id\":\"hiecm.endpoint.m1-on-share-acknowledgement\",\"milestone\":\"M1\",\"title\":\"Send share acknowledgement\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/02-m1-post-v3-phr-web-login-abha-request-otp-mobile-otp#m1-phr-request-otp\",\"id\":\"hiecm.endpoint.m1-phr-request-otp\",\"milestone\":\"M1\",\"title\":\"Send an OTP for ABHA address login\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/01-m1-post-v3-phr-web-login-abha-search-abha-address-login-m-27a20f#m1-phr-search-abha-address\",\"id\":\"hiecm.endpoint.m1-phr-search-abha-address\",\"milestone\":\"M1\",\"title\":\"Search an ABHA address and get its sign in methods\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/03-m1-post-v3-phr-web-login-abha-verify-mobile-otp#m1-phr-verify\",\"id\":\"hiecm.endpoint.m1-phr-verify\",\"milestone\":\"M1\",\"title\":\"Verify OTP or biometric for ABHA address login\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-abha-card-profile/04-m1-get-v3-profile-account-download-abha-card#m1-profile-download-abha-card\",\"id\":\"hiecm.endpoint.m1-profile-download-abha-card\",\"milestone\":\"M1\",\"title\":\"Download the ABHA card as a file\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-abha-card-profile/02-m1-get-v3-profile-account-abha-card#m1-profile-get-abha-card\",\"id\":\"hiecm.endpoint.m1-profile-get-abha-card\",\"milestone\":\"M1\",\"title\":\"Get the ABHA card\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-abha-card-profile/03-m1-get-v3-profile-account#m1-profile-get-account\",\"id\":\"hiecm.endpoint.m1-profile-get-account\",\"milestone\":\"M1\",\"title\":\"Read the signed in person's ABHA profile\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-abha-card-profile/01-m1-get-v3-profile-account-qrcode#m1-profile-get-qr-code\",\"id\":\"hiecm.endpoint.m1-profile-get-qr-code\",\"milestone\":\"M1\",\"title\":\"Get the ABHA QR code\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-profile-update-mobile/01-m1-post-v3-profile-account-request-otp-update-mobile#m1-profile-request-otp\",\"id\":\"hiecm.endpoint.m1-profile-request-otp\",\"milestone\":\"M1\",\"title\":\"Send an OTP to change something on the profile\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-child-abha/03-m1-patch-v3-profile-account-child-child-abha#m1-profile-update-account\",\"id\":\"hiecm.endpoint.m1-profile-update-account\",\"milestone\":\"M1\",\"title\":\"Update fields on an ABHA profile\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-profile-update-mobile/02-m1-post-v3-profile-account-verify-update-mobile#m1-profile-verify-otp\",\"id\":\"hiecm.endpoint.m1-profile-verify-otp\",\"milestone\":\"M1\",\"title\":\"Verify the OTP for a profile change\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/01-scan-and-register-post-v3-hip-patient-share#m1-receive-patient-share\",\"id\":\"hiecm.endpoint.m1-receive-patient-share\",\"milestone\":\"M1\",\"title\":\"Receive a patient's shared profile\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-multiple-hrp-api/01-m4-post-v1-bridges-mutiplehrpaddupdateservices#m1-register-hrp-services\",\"id\":\"hiecm.endpoint.m1-register-hrp-services\",\"milestone\":\"M1\",\"title\":\"Register or update HIP and HIU services for a facility\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-number-aadhaar-otp/05-p1-post-v3-profile-account-request-emailverificationlink#m1-send-email-verification-link\",\"id\":\"hiecm.endpoint.m1-send-email-verification-link\",\"milestone\":\"M1\",\"title\":\"Send email verification link\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-abha-card-profile/05-m1-get-v3-profile-account-request-token#m1-token-refresh\",\"id\":\"hiecm.endpoint.m1-token-refresh\",\"milestone\":\"M1\",\"title\":\"Get a new user token from a refresh token\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/errors#900900\",\"id\":\"hiecm.error.900900\",\"milestone\":\"M1\",\"title\":\"900900, authentication failed without a reason\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/errors#900901\",\"id\":\"hiecm.error.900901\",\"milestone\":\"M1\",\"title\":\"900901, the credentials are not valid\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/errors#abdm-1016\",\"id\":\"hiecm.error.abdm-1016\",\"milestone\":\"M1\",\"title\":\"ABDM-1016, the timestamp is not valid\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/errors#abdm-1094\",\"id\":\"hiecm.error.abdm-1094\",\"milestone\":\"M1\",\"title\":\"ABDM-1094, access to this feature is refused\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m1#m1-create-abha-aadhaar-otp\",\"id\":\"hiecm.flow.m1-create-abha-aadhaar-otp\",\"milestone\":\"M1\",\"title\":\"Create an ABHA using an Aadhaar OTP\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m1#m1-create-abha-demographic-auth\",\"id\":\"hiecm.flow.m1-create-abha-demographic-auth\",\"milestone\":\"M1\",\"title\":\"Create an ABHA using Aadhaar demographic authentication\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m1#m1-create-abha-face-auth\",\"id\":\"hiecm.flow.m1-create-abha-face-auth\",\"milestone\":\"M1\",\"title\":\"Create an ABHA using Aadhaar face authentication\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m1#m1-create-child-abha\",\"id\":\"hiecm.flow.m1-create-child-abha\",\"milestone\":\"M1\",\"title\":\"Create a child ABHA under a parent's account\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m1#m1-find-abha\",\"id\":\"hiecm.flow.m1-find-abha\",\"milestone\":\"M1\",\"title\":\"Find somebody's ABHA when they do not know it\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m1#m1-login-by-mobile\",\"id\":\"hiecm.flow.m1-login-by-mobile\",\"milestone\":\"M1\",\"title\":\"Log somebody in to their existing ABHA\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m1#m1-update-mobile\",\"id\":\"hiecm.flow.m1-update-mobile\",\"milestone\":\"M1\",\"title\":\"Change the mobile number on an ABHA profile\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/encryption#m1-encryption-padding\",\"id\":\"hiecm.test.m1-encryption-padding\",\"milestone\":\"M1\",\"title\":\"Prove your encryption padding before you build anything else\",\"type\":\"test\"},{\"doc_url\":\"/docs/hiecm/v3/troubleshooting/everything-returns-401#everything-returns-401\",\"id\":\"hiecm.troubleshooting.everything-returns-401\",\"milestone\":\"M1\",\"title\":\"Everything returns 401\",\"type\":\"troubleshooting\"},{\"doc_url\":\"/docs/hiecm/v3/troubleshooting/otp-never-arrives#otp-never-arrives\",\"id\":\"hiecm.troubleshooting.otp-never-arrives\",\"milestone\":\"M1\",\"title\":\"The OTP never arrives\",\"type\":\"troubleshooting\"}],\"catalogue_version\":\"2026.09.16\"}\n{\"atoms\":[{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/03-m2-post-v3-links-context-on-notify#m2-call-back-api-for-notify-care-context-update\",\"id\":\"hiecm.callback.m2-call-back-api-for-notify-care-context-update\",\"milestone\":\"M2\",\"title\":\"Call back API for notify care context update\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/04-m2-post-v3-patients-sms-on-notify#m2-callback-api-for-sms-notification-to-patients\",\"id\":\"hiecm.callback.m2-callback-api-for-sms-notification-to-patients\",\"milestone\":\"M2\",\"title\":\"Callback API for SMS Notification to patients\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-link-token-generation-call-back\",\"id\":\"hiecm.callback.m2-link-token-generation-call-back\",\"milestone\":\"M2\",\"title\":\"Link token generation – Call Back API\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/02-m2-post-v3-link-on-carecontext#m2-linking-care-context-call-back\",\"id\":\"hiecm.callback.m2-linking-care-context-call-back\",\"milestone\":\"M2\",\"title\":\"Linking care context Call back API\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/02-m2-post-v3-link-on-carecontext#m2-on-carecontext-result\",\"id\":\"hiecm.callback.m2-on-carecontext-result\",\"milestone\":\"M2\",\"title\":\"The outcome of the care context linking call you made\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/03-m3-post-v3-hiu-consent-request-notify#m2-on-consent-notify-hiu\",\"id\":\"hiecm.callback.m2-on-consent-notify-hiu\",\"milestone\":\"M2\",\"title\":\"A consent notification to an HIU bridge\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/03-m2-post-v3-links-context-on-notify#m2-on-context-notify-result\",\"id\":\"hiecm.callback.m2-on-context-notify-result\",\"milestone\":\"M2\",\"title\":\"The outcome of the care context notify call you made\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/10-m2-post-health-information-transfer#m2-on-data-notification\",\"id\":\"hiecm.callback.m2-on-data-notification\",\"milestone\":\"M2\",\"title\":\"The provider pushes encrypted health information to the URL named in the request\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/05-m2-post-v3-hip-patient-care-context-discover#m2-on-discovery-request\",\"id\":\"hiecm.callback.m2-on-discovery-request\",\"milestone\":\"M2\",\"title\":\"A discovery request for a patient you may hold records for\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token#m2-on-generate-token-result\",\"id\":\"hiecm.callback.m2-on-generate-token-result\",\"milestone\":\"M2\",\"title\":\"The link token you asked for, or why it was refused\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/09-m2-post-v3-hip-health-information-request#m2-on-health-information-request\",\"id\":\"hiecm.callback.m2-on-health-information-request\",\"milestone\":\"M2\",\"title\":\"A request for the records a consent covers\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/07-m2-post-v3-hip-link-care-context-confirm#m2-on-link-confirm\",\"id\":\"hiecm.callback.m2-on-link-confirm\",\"milestone\":\"M2\",\"title\":\"Confirmation of a link, carrying the token the patient approved\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/06-m2-post-v3-hip-link-care-context-init#m2-on-link-init\",\"id\":\"hiecm.callback.m2-on-link-init\",\"milestone\":\"M2\",\"title\":\"A request to start linking a care context\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/04-m2-post-v3-patients-sms-on-notify#m2-on-sms-notify-result\",\"id\":\"hiecm.callback.m2-on-sms-notify-result\",\"milestone\":\"M2\",\"title\":\"The outcome of the SMS notify call you made\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/gateway#asynchronous-callbacks\",\"id\":\"hiecm.concept.asynchronous-callbacks\",\"milestone\":\"M2\",\"title\":\"Asynchronous calls and callbacks, why a 200 means very little\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/callback-authenticity#callback-authenticity\",\"id\":\"hiecm.concept.callback-authenticity\",\"milestone\":\"M2\",\"title\":\"Proving a callback really came from ABDM\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/care-context#care-context\",\"id\":\"hiecm.concept.care-context\",\"milestone\":\"M2\",\"title\":\"Care contexts, how records are grouped so they can be found\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/build-it-well#error-codes\",\"id\":\"hiecm.concept.error-codes\",\"milestone\":\"M2\",\"title\":\"Reading an ABDM error code\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m2-care-context-and-records\",\"milestone\":\"M2\",\"title\":\"A care context and its records are one thing\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m2-exchange-not-call\",\"milestone\":\"M2\",\"title\":\"The unit of work is an exchange, not a call\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m2-inbound-is-a-surface\",\"milestone\":\"M2\",\"title\":\"Inbound is a surface, and silence there is a failure state\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m2-integrator-call-panel\",\"milestone\":\"M2\",\"title\":\"What the integrator needs on screen, separately from the patient\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m2-never-block-the-desk\",\"milestone\":\"M2\",\"title\":\"Nobody is standing there, so never block and never lose the state\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m2-retry-is-a-duplicate\",\"milestone\":\"M2\",\"title\":\"A refused request is still remembered, so a retry is a duplicate\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/how-it-fits#roles\",\"id\":\"hiecm.concept.roles\",\"milestone\":\"M2\",\"title\":\"Roles, which entity your software acts for and which way the record moves\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/01-m2-post-consent-v3-request-hip-on-notify#m2-consent-hip-on-notify\",\"id\":\"hiecm.endpoint.m2-consent-hip-on-notify\",\"milestone\":\"M2\",\"title\":\"Acknowledge a consent notification\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-abdm-link-token-hip/01-m2-post-v3-token-generate-token#m2-generate-link-token\",\"id\":\"hiecm.endpoint.m2-generate-link-token\",\"milestone\":\"M2\",\"title\":\"Generate Link Token\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-consent-manager-hiu-hip/01-p2-get-hip-v3-link-patient-links#m2-get-all-link-records\",\"id\":\"hiecm.endpoint.m2-get-all-link-records\",\"milestone\":\"M2\",\"title\":\"GET All Link records\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/03-m2-post-data-flow-v3-health-information-notify#m2-hip-data-flow-notify\",\"id\":\"hiecm.endpoint.m2-hip-data-flow-notify\",\"milestone\":\"M2\",\"title\":\"Notify the gateway that a data transfer finished\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request#m2-hip-health-information-on-request\",\"id\":\"hiecm.endpoint.m2-hip-health-information-on-request\",\"milestone\":\"M2\",\"title\":\"Acknowledge a health information data request\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/01-m2-post-hip-v3-link-carecontext#m2-hip-link-care-context\",\"id\":\"hiecm.endpoint.m2-hip-link-care-context\",\"milestone\":\"M2\",\"title\":\"Link care contexts to an ABHA address\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/02-m2-post-hip-v3-link-context-notify#m2-link-care-context-notify\",\"id\":\"hiecm.endpoint.m2-link-care-context-notify\",\"milestone\":\"M2\",\"title\":\"Notify an update to a linked care context\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/01-m2-post-user-initiated-linking-v3-patient-care-context-on-8c9340#m2-on-discover-care-contexts\",\"id\":\"hiecm.endpoint.m2-on-discover-care-contexts\",\"milestone\":\"M2\",\"title\":\"On Discovery, HIP responds with found care contexts\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/03-m2-post-user-initiated-linking-v3-link-care-context-on-confirm#m2-on-link-confirm\",\"id\":\"hiecm.endpoint.m2-on-link-confirm\",\"milestone\":\"M2\",\"title\":\"Link On-Confirm, HIP confirms linked care contexts\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/02-m2-post-user-initiated-linking-v3-link-care-context-on-init#m2-on-link-init\",\"id\":\"hiecm.endpoint.m2-on-link-init\",\"milestone\":\"M2\",\"title\":\"Link On-Init, HIP responds with OTP communication details\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/03-m2-post-hip-v3-link-patient-links-sms-notify2#m2-sms-deep-link-notify\",\"id\":\"hiecm.endpoint.m2-sms-deep-link-notify\",\"milestone\":\"M2\",\"title\":\"Send an SMS telling the patient a care context is linked\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1013\",\"id\":\"hiecm.error.abdm-1013\",\"milestone\":\"M2\",\"title\":\"ABDM-1013, the ABHA number is not valid\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1022\",\"id\":\"hiecm.error.abdm-1022\",\"milestone\":\"M2\",\"title\":\"ABDM-1022, too many requests\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1026\",\"id\":\"hiecm.error.abdm-1026\",\"milestone\":\"M2\",\"title\":\"ABDM-1026, the link token is not valid\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1032\",\"id\":\"hiecm.error.abdm-1032\",\"milestone\":\"M2\",\"title\":\"ABDM-1032, a required header is missing or malformed\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1035\",\"id\":\"hiecm.error.abdm-1035\",\"milestone\":\"M2\",\"title\":\"ABDM-1035, the HIP id is not recognised\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1056\",\"id\":\"hiecm.error.abdm-1056\",\"milestone\":\"M2\",\"title\":\"ABDM-1056, already linked, or an invalid link reference\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1062\",\"id\":\"hiecm.error.abdm-1062\",\"milestone\":\"M2\",\"title\":\"ABDM-1062, ABHA number mismatch, or consent not granted\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1063\",\"id\":\"hiecm.error.abdm-1063\",\"milestone\":\"M2\",\"title\":\"ABDM-1063, HIP id mismatch, or an invalid date range\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1064\",\"id\":\"hiecm.error.abdm-1064\",\"milestone\":\"M2\",\"title\":\"ABDM-1064, a repeated request id, or a missing body\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1170\",\"id\":\"hiecm.error.abdm-1170\",\"milestone\":\"M2\",\"title\":\"ABDM-1170, the ABHA address is not valid\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1407\",\"id\":\"hiecm.error.abdm-1407\",\"milestone\":\"M2\",\"title\":\"ABDM-1407, the ABHA number is deactivated\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-2401\",\"id\":\"hiecm.error.abdm-2401\",\"milestone\":\"M2\",\"title\":\"ABDM-2401, the X Auth token is not valid\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-2402\",\"id\":\"hiecm.error.abdm-2402\",\"milestone\":\"M2\",\"title\":\"ABDM-2402, the timestamp is not valid\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-2403\",\"id\":\"hiecm.error.abdm-2403\",\"milestone\":\"M2\",\"title\":\"ABDM-2403, the X-CM-ID is not valid\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-2404\",\"id\":\"hiecm.error.abdm-2404\",\"milestone\":\"M2\",\"title\":\"ABDM-2404, the REQUEST-ID is not valid\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-2406\",\"id\":\"hiecm.error.abdm-2406\",\"milestone\":\"M2\",\"title\":\"ABDM-2406, the calls are out of order\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-2500\",\"id\":\"hiecm.error.abdm-2500\",\"milestone\":\"M2\",\"title\":\"ABDM-2500, no Authorization header, or no matching request\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-9999\",\"id\":\"hiecm.error.abdm-9999\",\"milestone\":\"M2\",\"title\":\"ABDM-9999, a catch-all, so read the message\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m2#m2-link-care-context\",\"id\":\"hiecm.flow.m2-link-care-context\",\"milestone\":\"M2\",\"title\":\"Link a care context to a patient's ABHA\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/troubleshooting/accepted-then-nothing#accepted-then-nothing\",\"id\":\"hiecm.troubleshooting.accepted-then-nothing\",\"milestone\":\"M2\",\"title\":\"Discovery or linking was accepted, then nothing happens\",\"type\":\"troubleshooting\"},{\"doc_url\":\"/docs/hiecm/v3/troubleshooting/callback-never-arrives#callback-never-arrives\",\"id\":\"hiecm.troubleshooting.callback-never-arrives\",\"milestone\":\"M2\",\"title\":\"The callback never arrives\",\"type\":\"troubleshooting\"}],\"catalogue_version\":\"2026.09.16\"}\n{\"atoms\":[{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/04-m3-post-v3-hiu-consent-on-fetch#m3-on-consent-fetch\",\"id\":\"hiecm.callback.m3-on-consent-fetch\",\"milestone\":\"M3\",\"title\":\"The consent artefact detail, fetched by artefact id\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/01-m3-post-v3-hiu-consent-request-on-init#m3-on-consent-request-init\",\"id\":\"hiecm.callback.m3-on-consent-request-init\",\"milestone\":\"M3\",\"title\":\"The consent request was accepted, with its request id\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/08-m2-post-v3-consent-request-hip-notify#m3-on-consent-request-notify-hip\",\"id\":\"hiecm.callback.m3-on-consent-request-notify-hip\",\"milestone\":\"M3\",\"title\":\"The patient's decision, sent to the record holder\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/03-m3-post-v3-hiu-consent-request-notify#m3-on-consent-request-notify-hiu\",\"id\":\"hiecm.callback.m3-on-consent-request-notify-hiu\",\"milestone\":\"M3\",\"title\":\"The patient's decision, sent to the requester\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/02-m3-post-v3-hiu-consent-request-on-status#m3-on-consent-request-status\",\"id\":\"hiecm.callback.m3-on-consent-request-status\",\"milestone\":\"M3\",\"title\":\"The consent manager reports the state of a consent request you asked about\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/05-m3-post-v3-hiu-health-information-on-request#m3-on-health-information-request\",\"id\":\"hiecm.callback.m3-on-health-information-request\",\"milestone\":\"M3\",\"title\":\"Acknowledgement of a health information request\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/consent#consent-artefact\",\"id\":\"hiecm.concept.consent-artefact\",\"milestone\":\"M3\",\"title\":\"Consent, what it authorises and how it ends\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m3-plural-artefacts-and-codes\",\"milestone\":\"M3\",\"title\":\"Read plural as plural, and never translate a code into a meaning\",\"type\":\"concept\"},{\"doc_url\":\"\",\"id\":\"hiecm.concept.m3-refuse-to-guess\",\"milestone\":\"M3\",\"title\":\"Refuse to guess an undocumented step, and say so before the work starts\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/04-m3-post-consent-v3-fetch#m3-consent-fetch\",\"id\":\"hiecm.endpoint.m3-consent-fetch\",\"milestone\":\"M3\",\"title\":\"Fetch the full consent artefact\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/03-m3-post-consent-v3-request-hiu-on-notify#m3-consent-hiu-on-notify\",\"id\":\"hiecm.endpoint.m3-consent-hiu-on-notify\",\"milestone\":\"M3\",\"title\":\"Acknowledge a consent notification\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/01-m3-post-consent-v3-request-init#m3-consent-request-init\",\"id\":\"hiecm.endpoint.m3-consent-request-init\",\"milestone\":\"M3\",\"title\":\"Initiate a consent request\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/02-m3-post-consent-v3-request-status#m3-consent-request-status\",\"id\":\"hiecm.endpoint.m3-consent-request-status\",\"milestone\":\"M3\",\"title\":\"Check the status of a consent request\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/06-m3-post-data-flow-v3-health-information-notify#m3-hiu-data-flow-notify\",\"id\":\"hiecm.endpoint.m3-hiu-data-flow-notify\",\"milestone\":\"M3\",\"title\":\"Notify the gateway that data was received\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/05-m3-post-data-flow-v3-health-information-request#m3-hiu-health-information-request\",\"id\":\"hiecm.endpoint.m3-hiu-health-information-request\",\"milestone\":\"M3\",\"title\":\"Request a patient's health information\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1040\",\"id\":\"hiecm.error.abdm-1040\",\"milestone\":\"M3\",\"title\":\"ABDM-1040, the HIU id is not recognised\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/errors#abdm-1112\",\"id\":\"hiecm.error.abdm-1112\",\"milestone\":\"M3\",\"title\":\"ABDM-1112, the consent artefact is invalid or expired\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m3#m3-fetch-records\",\"id\":\"hiecm.flow.m3-fetch-records\",\"milestone\":\"M3\",\"title\":\"Fetch the records a granted consent artefact covers\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m3#m3-request-consent\",\"id\":\"hiecm.flow.m3-request-consent\",\"milestone\":\"M3\",\"title\":\"Request consent for a patient's health records\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/troubleshooting/consent-stuck-requested#consent-stuck-requested\",\"id\":\"hiecm.troubleshooting.consent-stuck-requested\",\"milestone\":\"M3\",\"title\":\"The consent request is stuck in Requested\",\"type\":\"troubleshooting\"}],\"catalogue_version\":\"2026.09.16\"}\n{\"atoms\":[{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-search/02-m4-post-facilitymanagement-v1-5-facility-search#m4-hfr-search-facility\",\"id\":\"hiecm.endpoint.m4-hfr-search-facility\",\"milestone\":\"M4\",\"title\":\"Search the facility registry before creating anything\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-registration-api-s-collection-via-aadhaar/09-m4-post-v2-registration-aadhaar-createhpridwithpreverified#m4-hpr-create-hprid\",\"id\":\"hiecm.endpoint.m4-hpr-create-hprid\",\"milestone\":\"M4\",\"title\":\"Create the HPID\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-registration-api-s-collection-via-aadhaar/04-m4-post-v2-registration-aadhaar-demographicauthviamobile#m4-hpr-demographic-auth-mobile\",\"id\":\"hiecm.endpoint.m4-hpr-demographic-auth-mobile\",\"milestone\":\"M4\",\"title\":\"Check whether the mobile number is the one on the Aadhaar record\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-enrollment/03-m4-post-v1-doctors-fetch-documents-list#m4-hpr-fetch-documents-list\",\"id\":\"hiecm.endpoint.m4-hpr-fetch-documents-list\",\"milestone\":\"M4\",\"title\":\"List the documents this professional must upload\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-enrollment/05-m4-post-v1-doctors-fetch-professional-info#m4-hpr-fetch-professional-info\",\"id\":\"hiecm.endpoint.m4-hpr-fetch-professional-info\",\"milestone\":\"M4\",\"title\":\"Read a professional's profile\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-enrollment/01-m4-post-v1-doctors-register-professional-new#m4-hpr-register-professional\",\"id\":\"hiecm.endpoint.m4-hpr-register-professional\",\"milestone\":\"M4\",\"title\":\"Register the professional's profile\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-enrollment/04-m4-post-v1-uploads-upload-document#m4-hpr-upload-document\",\"id\":\"hiecm.endpoint.m4-hpr-upload-document\",\"milestone\":\"M4\",\"title\":\"Upload one of the professional's documents\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m4#m4-create-hpid\",\"id\":\"hiecm.flow.m4-create-hpid\",\"milestone\":\"M4\",\"title\":\"Get a healthcare professional an HPID\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m4#m4-link-bridge\",\"id\":\"hiecm.flow.m4-link-bridge\",\"milestone\":\"M4\",\"title\":\"Link a facility to its bridge\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m4#m4-onboard-facility\",\"id\":\"hiecm.flow.m4-onboard-facility\",\"milestone\":\"M4\",\"title\":\"Onboard a facility to the HFR\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m4#m4-register-professional\",\"id\":\"hiecm.flow.m4-register-professional\",\"milestone\":\"M4\",\"title\":\"Register a professional's profile on the HPR\",\"type\":\"flow\"}],\"catalogue_version\":\"2026.09.16\"}\n{\"atoms\":[{\"doc_url\":\"/docs/hiecm/v3/api/p1/endpoints/p1-certificate-and-session/01-p1-get-v3-phr-app-login-public-certificate#p1-encrypt-data-aadhaar-mobile-otp-password\",\"id\":\"hiecm.endpoint.p1-encrypt-data-aadhaar-mobile-otp-password\",\"milestone\":\"P1\",\"title\":\"Encrypt data (Aadhaar/Mobile/OTP/Password)\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/04-p1-get-v3-phr-app-enrollment-isexists#p1-enrollment-address-exists\",\"id\":\"hiecm.endpoint.p1-enrollment-address-exists\",\"milestone\":\"P1\",\"title\":\"Check whether an address is taken\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/03-p1-post-v3-phr-app-enrollment-suggestion#p1-enrollment-address-suggestion\",\"id\":\"hiecm.endpoint.p1-enrollment-address-suggestion\",\"milestone\":\"P1\",\"title\":\"Ask for address suggestions\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/05-p1-post-v3-phr-app-enrollment-enrol#p1-enrollment-enrol\",\"id\":\"hiecm.endpoint.p1-enrollment-enrol\",\"milestone\":\"P1\",\"title\":\"Create the health address\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/01-p1-post-v3-phr-app-enrollment-request-otp#p1-enrollment-request-otp\",\"id\":\"hiecm.endpoint.p1-enrollment-request-otp\",\"milestone\":\"P1\",\"title\":\"Send the OTP that starts a registration\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/02-p1-post-v3-phr-app-enrollment-verify#p1-enrollment-verify-otp\",\"id\":\"hiecm.endpoint.p1-enrollment-verify-otp\",\"milestone\":\"P1\",\"title\":\"Verify the registration OTP\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-profile/05-p2-get-v3-phr-app-login-profile-request-token#p1-generate-refresh-token\",\"id\":\"hiecm.endpoint.p1-generate-refresh-token\",\"milestone\":\"P1\",\"title\":\"Generate Refresh Token\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p1/endpoints/p1-certificate-and-session/01-p1-get-v3-phr-app-login-public-certificate#p1-get-certificate-public-key\",\"id\":\"hiecm.endpoint.p1-get-certificate-public-key\",\"milestone\":\"P1\",\"title\":\"GET Certificate (Public key)\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-profile/03-p2-get-v3-phr-app-login-profile-phrcard#p1-get-user-phr-card\",\"id\":\"hiecm.endpoint.p1-get-user-phr-card\",\"milestone\":\"P1\",\"title\":\"Get User PHR Card\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-profile/01-p2-get-v3-phr-app-login-profile#p1-get-user-profile\",\"id\":\"hiecm.endpoint.p1-get-user-profile\",\"milestone\":\"P1\",\"title\":\"Get User Profile\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-profile/02-p2-get-v3-phr-app-login-profile-qrcode#p1-get-user-qr-code\",\"id\":\"hiecm.endpoint.p1-get-user-qr-code\",\"milestone\":\"P1\",\"title\":\"Get User QR Code\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/01-p2-post-v3-phr-app-login-profile-request-otp#p1-link-abha-number-via-aadhaar-request-otp\",\"id\":\"hiecm.endpoint.p1-link-abha-number-via-aadhaar-request-otp\",\"milestone\":\"P1\",\"title\":\"Link ABHA number via AADHAAR-Request OTP\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/02-p2-post-v3-phr-app-login-profile-verify#p1-link-abha-number-via-aadhaar-verify-otp\",\"id\":\"hiecm.endpoint.p1-link-abha-number-via-aadhaar-verify-otp\",\"milestone\":\"P1\",\"title\":\"Link ABHA number via AADHAAR-Verify OTP\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/01-p2-post-v3-phr-app-login-profile-request-otp#p1-link-abha-number-via-mobile-request-otp\",\"id\":\"hiecm.endpoint.p1-link-abha-number-via-mobile-request-otp\",\"milestone\":\"P1\",\"title\":\"Link ABHA number via Mobile-Request OTP\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/02-p2-post-v3-phr-app-login-profile-verify#p1-link-abha-number-via-mobile-verify-otp\",\"id\":\"hiecm.endpoint.p1-link-abha-number-via-mobile-verify-otp\",\"milestone\":\"P1\",\"title\":\"Link ABHA number via Mobile-Verify OTP\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p1/endpoints/p1-login-mobile/01-p1-post-v3-phr-app-login-request-otp#p1-login-request-otp\",\"id\":\"hiecm.endpoint.p1-login-request-otp\",\"milestone\":\"P1\",\"title\":\"Send the OTP that starts a login\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p1/endpoints/p1-login-abha-address-password/01-p1-post-v3-phr-app-login-search#p1-login-using-password-search-user\",\"id\":\"hiecm.endpoint.p1-login-using-password-search-user\",\"milestone\":\"P1\",\"title\":\"Login using Password Search user\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p1/endpoints/p1-login-mobile/02-p1-post-v3-phr-app-login-verify#p1-login-verify-otp\",\"id\":\"hiecm.endpoint.p1-login-verify-otp\",\"milestone\":\"P1\",\"title\":\"Verify the login OTP\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p1/endpoints/p1-login-mobile/03-p1-post-v3-phr-app-login-verify-user#p1-login-verify-user\",\"id\":\"hiecm.endpoint.p1-login-verify-user\",\"milestone\":\"P1\",\"title\":\"Say which address is signing in\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-profile/06-p2-get-v3-phr-app-login-profile-request-logout#p1-logout-user\",\"id\":\"hiecm.endpoint.p1-logout-user\",\"milestone\":\"P1\",\"title\":\"Logout User\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-link-abha-number-abha-otp/03-p2-post-v3-phr-app-login-profile-link#p1-process-link-request-via-aadhaar-number\",\"id\":\"hiecm.endpoint.p1-process-link-request-via-aadhaar-number\",\"milestone\":\"P1\",\"title\":\"Process Link Request via Aadhaar OTP\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-link-abha-number-abha-otp/03-p2-post-v3-phr-app-login-profile-link#p1-process-link-request-via-abha-number\",\"id\":\"hiecm.endpoint.p1-process-link-request-via-abha-number\",\"milestone\":\"P1\",\"title\":\"Process Link Request via ABHA OTP\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-switch-profile/01-p2-get-v3-phr-app-login-profile-switch-profile#p1-switch-profile-request\",\"id\":\"hiecm.endpoint.p1-switch-profile-request\",\"milestone\":\"P1\",\"title\":\"Switch Profile Request\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-switch-profile/02-p2-post-v3-phr-app-login-profile-verify-switch-profile-user#p1-switch-profile-verify\",\"id\":\"hiecm.endpoint.p1-switch-profile-verify\",\"milestone\":\"P1\",\"title\":\"Switch Profile Verify\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/01-p2-post-v3-phr-app-login-profile-request-otp#p1-update-mobile-request-otp\",\"id\":\"hiecm.endpoint.p1-update-mobile-request-otp\",\"milestone\":\"P1\",\"title\":\"Update the mobile number, request the OTP\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-update-mobile/02-p2-post-v3-phr-app-login-profile-verify#p1-update-mobile-verify-otp\",\"id\":\"hiecm.endpoint.p1-update-mobile-verify-otp\",\"milestone\":\"P1\",\"title\":\"Update Mobile Verify-OTP\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p1/errors#abdm-1107\",\"id\":\"hiecm.error.abdm-1107\",\"milestone\":\"P1\",\"title\":\"ABDM-1107, the combination of scopes is not valid\",\"type\":\"error\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/p1#p1-create-abha-address\",\"id\":\"hiecm.flow.p1-create-abha-address\",\"milestone\":\"P1\",\"title\":\"Create an ABHA address in a PHR application\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/p1#p1-login\",\"id\":\"hiecm.flow.p1-login\",\"milestone\":\"P1\",\"title\":\"Sign a user in to a PHR application\",\"type\":\"flow\"}],\"catalogue_version\":\"2026.09.16\"}\n{\"atoms\":[{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/07-m2-post-v3-hip-link-care-context-confirm#p2-callback-for-health-record-confirmation\",\"id\":\"hiecm.callback.p2-callback-for-health-record-confirmation\",\"milestone\":\"P2\",\"title\":\"Link confirm request to the HIP\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/04-p2-post-v3-hiu-patient-care-context-on-discover#p2-callback-on-health-record-discover\",\"id\":\"hiecm.callback.p2-callback-on-health-record-discover\",\"milestone\":\"P2\",\"title\":\"Discovery result callback\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/06-m2-post-v3-hip-link-care-context-init#p2-callback-on-health-record-link-init\",\"id\":\"hiecm.callback.p2-callback-on-health-record-link-init\",\"milestone\":\"P2\",\"title\":\"Link init request to the HIP\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/05-m2-post-v3-hip-patient-care-context-discover#p2-callback-to-hip-discovery\",\"id\":\"hiecm.callback.p2-callback-to-hip-discovery\",\"milestone\":\"P2\",\"title\":\"Discovery request to the HIP\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-abdm-hiecm-patient-share-phr/02-p2-post-v3-hiu-patient-on-share#p2-profile-on-share-callback\",\"id\":\"hiecm.callback.p2-profile-on-share-callback\",\"milestone\":\"P2\",\"title\":\"Profile share result callback\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/01-scan-and-register-post-v3-hip-patient-share#p2-profile-share-callback\",\"id\":\"hiecm.callback.p2-profile-share-callback\",\"milestone\":\"P2\",\"title\":\"Profile share callback\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/06-p2-post-v3-hiu-patient-care-context-on-init#p2-response-on-health-record-link\",\"id\":\"hiecm.callback.p2-response-on-health-record-link\",\"milestone\":\"P2\",\"title\":\"Link init result callback\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/08-p2-post-v3-hiu-patient-care-context-on-confirm#p2-response-on-health-record-on-confirm\",\"id\":\"hiecm.callback.p2-response-on-health-record-on-confirm\",\"milestone\":\"P2\",\"title\":\"Link confirm result callback\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/01-p2-get-gateway-v3-providers#p2-all-providers\",\"id\":\"hiecm.endpoint.p2-all-providers\",\"milestone\":\"P2\",\"title\":\"Search providers by name\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/03-p2-post-user-initiated-linking-v3-patient-care-context-discover#p2-care-context-discover\",\"id\":\"hiecm.endpoint.p2-care-context-discover\",\"milestone\":\"P2\",\"title\":\"Ask a facility what records it holds\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/09-p2-get-gateway-v3-govt-programs#p2-govt-programs\",\"id\":\"hiecm.endpoint.p2-govt-programs\",\"milestone\":\"P2\",\"title\":\"List government programmes\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/07-p2-post-user-initiated-linking-v3-link-care-context-confirm#p2-link-care-context-confirm\",\"id\":\"hiecm.endpoint.p2-link-care-context-confirm\",\"milestone\":\"P2\",\"title\":\"Confirm the link with the code the person received\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/05-p2-post-user-initiated-linking-v3-link-care-context-init#p2-link-care-context-init\",\"id\":\"hiecm.endpoint.p2-link-care-context-init\",\"milestone\":\"P2\",\"title\":\"Start linking the care contexts the person chose\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-abdm-hiecm-patient-share-phr/01-p2-post-patient-share-v3-share#p2-patient-share\",\"id\":\"hiecm.endpoint.p2-patient-share\",\"milestone\":\"P2\",\"title\":\"Share the profile with the facility whose code was scanned\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/02-scan-and-register-post-patient-share-v3-on-share#p2-profile-on-share\",\"id\":\"hiecm.endpoint.p2-profile-on-share\",\"milestone\":\"P2\",\"title\":\"Answer a profile share with a token number\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/02-p2-get-gateway-v3-providers-provider-id#p2-provider-by-provider-id\",\"id\":\"hiecm.endpoint.p2-provider-by-provider-id\",\"milestone\":\"P2\",\"title\":\"Get a provider by its id\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/p2#p2-discover-and-link\",\"id\":\"hiecm.flow.p2-discover-and-link\",\"milestone\":\"P2\",\"title\":\"Find records held elsewhere and link them\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/p2#p2-scan-and-share\",\"id\":\"hiecm.flow.p2-scan-and-share\",\"milestone\":\"P2\",\"title\":\"Share a profile at a facility by scanning its code\",\"type\":\"flow\"}],\"catalogue_version\":\"2026.09.16\"}\n{\"atoms\":[{\"doc_url\":\"/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/03-p3-post-v3-hiu-subscription-requests-hiu-notify#p3-approve-subscription-request-call-back\",\"id\":\"hiecm.callback.p3-approve-subscription-request-call-back\",\"milestone\":\"P3\",\"title\":\"Subscription approved callback\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/05-m3-post-v3-hiu-health-information-on-request#p3-call-back-to-hiu\",\"id\":\"hiecm.callback.p3-call-back-to-hiu\",\"milestone\":\"P3\",\"title\":\"Health information request acknowledgement\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/02-m3-post-v3-hiu-consent-request-on-status#p3-consent-request-on-status-callback\",\"id\":\"hiecm.callback.p3-consent-request-on-status-callback\",\"milestone\":\"P3\",\"title\":\"Consent request status callback\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/03-p3-post-v3-hiu-subscription-requests-hiu-notify#p3-deny-subscription-call-back\",\"id\":\"hiecm.callback.p3-deny-subscription-call-back\",\"milestone\":\"P3\",\"title\":\"Subscription denied callback\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/05-p3-post-v3-hiu-subscription-notify#p3-subscription-hiu-notify\",\"id\":\"hiecm.callback.p3-subscription-hiu-notify\",\"milestone\":\"P3\",\"title\":\"New record notification callback\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/02-p3-post-v3-hiu-hiecm-subscription-requests-on-init#p3-user-subscription-request-initiate-call-back\",\"id\":\"hiecm.callback.p3-user-subscription-request-initiate-call-back\",\"milestone\":\"P3\",\"title\":\"Subscription request result callback\",\"type\":\"callback\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/consent#consent-in-a-phr-app\",\"id\":\"hiecm.concept.consent-in-a-phr-app\",\"milestone\":\"P3\",\"title\":\"The five things a personal health record application must let a person do with consent\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/p3#phr-subscriptions\",\"id\":\"hiecm.concept.phr-subscriptions\",\"milestone\":\"P3\",\"title\":\"Subscriptions, and why a personal health record application needs one\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/01-p3-post-subscription-requests-v3-request-id-approve#p3-approve-subscription-request\",\"id\":\"hiecm.endpoint.p3-approve-subscription-request\",\"milestone\":\"P3\",\"title\":\"Approve a subscription request\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/01-p2-post-consent-v3-auto-approve#p3-consent-auto-approve\",\"id\":\"hiecm.endpoint.p3-consent-auto-approve\",\"milestone\":\"P3\",\"title\":\"Set an auto approval policy\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/02-p2-post-consent-v3-auto-approve-auto-approval-id-disable#p3-consent-disable-auto-approve\",\"id\":\"hiecm.endpoint.p3-consent-disable-auto-approve\",\"milestone\":\"P3\",\"title\":\"Disable an auto approval policy\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/03-p2-post-consent-v3-auto-approve-auto-approval-id-enable#p3-consent-enable-auto-approve\",\"id\":\"hiecm.endpoint.p3-consent-enable-auto-approve\",\"milestone\":\"P3\",\"title\":\"Enable an auto approval policy\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/04-m3-post-consent-v3-fetch#p3-consent-fetch\",\"id\":\"hiecm.endpoint.p3-consent-fetch\",\"milestone\":\"P3\",\"title\":\"Fetch a consent artefact in full\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/07-p2-post-consent-v3-request-request-id-deny#p3-deny-consent-request\",\"id\":\"hiecm.endpoint.p3-deny-consent-request\",\"milestone\":\"P3\",\"title\":\"Deny a consent request\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/02-p3-post-subscription-requests-v3-request-id-deny#p3-deny-subscription-request\",\"id\":\"hiecm.endpoint.p3-deny-subscription-request\",\"milestone\":\"P3\",\"title\":\"Deny a subscription request\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/07-p3-get-subscription-requests-v3-request-request-id#p3-details-by-request-id\",\"id\":\"hiecm.endpoint.p3-details-by-request-id\",\"milestone\":\"P3\",\"title\":\"Get a subscription request by its request id\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/08-p3-get-subscription-requests-v3-subscription-id#p3-details-by-subscription-id\",\"id\":\"hiecm.endpoint.p3-details-by-subscription-id\",\"milestone\":\"P3\",\"title\":\"Get a subscription by its subscription id\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/04-p3-put-subscription-requests-v3-patients-subscription-id#p3-edit-subscription\",\"id\":\"hiecm.endpoint.p3-edit-subscription\",\"milestone\":\"P3\",\"title\":\"Edit a subscription\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/09-p2-get-consent-v3-artefact-request-request-id#p3-get-all-consent-artefact-details-by-request-id\",\"id\":\"hiecm.endpoint.p3-get-all-consent-artefact-details-by-request-id\",\"milestone\":\"P3\",\"title\":\"Get the consent artefacts of one consent request\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/11-p2-get-consent-v3-artefact#p3-get-all-consent-artifact-details-for-an-abha-address\",\"id\":\"hiecm.endpoint.p3-get-all-consent-artifact-details-for-an-abha-address\",\"milestone\":\"P3\",\"title\":\"List the consent artefacts of an ABHA address\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/04-p2-get-consent-v3-request#p3-get-all-consent-request-for-an-abha-address\",\"id\":\"hiecm.endpoint.p3-get-all-consent-request-for-an-abha-address\",\"milestone\":\"P3\",\"title\":\"List the consent requests of an ABHA address\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-consent-manager-hiu-hip/01-p2-get-hip-v3-link-patient-links#p3-get-all-links-records\",\"id\":\"hiecm.endpoint.p3-get-all-links-records\",\"milestone\":\"P3\",\"title\":\"Get all linked records\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-locker/04-p4-get-subscription-requests-v3-patients-requests#p3-get-all-subscription-request\",\"id\":\"hiecm.endpoint.p3-get-all-subscription-request\",\"milestone\":\"P3\",\"title\":\"List consent and subscription requests together\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/03-p3-get-subscription-requests-v3-requests#p3-get-all-subscription-requests-for-an-abha-address\",\"id\":\"hiecm.endpoint.p3-get-all-subscription-requests-for-an-abha-address\",\"milestone\":\"P3\",\"title\":\"List the subscription requests of an ABHA address\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/10-p2-get-consent-v3-artefact-artefact-id#p3-get-consent-artefact-details-by-artifact-id\",\"id\":\"hiecm.endpoint.p3-get-consent-artefact-details-by-artifact-id\",\"milestone\":\"P3\",\"title\":\"Get one consent artefact by its id\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/05-p2-get-consent-v3-request-request-id#p3-get-consent-request-details-by-consent-request-id\",\"id\":\"hiecm.endpoint.p3-get-consent-request-details-by-consent-request-id\",\"milestone\":\"P3\",\"title\":\"Get one consent request by its id\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-locker/02-p4-get-subscription-requests-v3-patients-lockers#p3-get-patient-subscribed-lockers\",\"id\":\"hiecm.endpoint.p3-get-patient-subscribed-lockers\",\"milestone\":\"P3\",\"title\":\"List the health lockers an ABHA address subscribes to\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-locker/03-p4-get-subscription-requests-v3-patients-lockers-lockerid#p3-patient-locker-details-by-locker-id\",\"id\":\"hiecm.endpoint.p3-patient-locker-details-by-locker-id\",\"milestone\":\"P3\",\"title\":\"Get a health locker by its id\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/07-m3-get-data-flow-v3-health-information-request-status-tra-550104#p3-request-status\",\"id\":\"hiecm.endpoint.p3-request-status\",\"milestone\":\"P3\",\"title\":\"Get the status of a health information request\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/08-p2-post-consent-v3-revoke#p3-revoke-consent-request\",\"id\":\"hiecm.endpoint.p3-revoke-consent-request\",\"milestone\":\"P3\",\"title\":\"Revoke a granted consent\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-locker/01-p4-post-subscription-requests-v3-setup-locker#p3-setup-locker\",\"id\":\"hiecm.endpoint.p3-setup-locker\",\"milestone\":\"P3\",\"title\":\"Set up a health locker\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/06-p3-post-subscription-requests-v3-hiu-care-context-on-notify#p3-subscription-hiu-on-notify\",\"id\":\"hiecm.endpoint.p3-subscription-hiu-on-notify\",\"milestone\":\"P3\",\"title\":\"Acknowledge a new record notification\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/01-p3-post-subscription-requests-v3-init#p3-subscription-init\",\"id\":\"hiecm.endpoint.p3-subscription-init\",\"milestone\":\"P3\",\"title\":\"Request a subscription to a person's records\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/04-p3-post-subscription-requests-v3-hiu-on-notify#p3-subscription-request-hiu-on-notify\",\"id\":\"hiecm.endpoint.p3-subscription-request-hiu-on-notify\",\"milestone\":\"P3\",\"title\":\"Acknowledge a subscription decision\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/p3#p3-fetch-records\",\"id\":\"hiecm.flow.p3-fetch-records\",\"milestone\":\"P3\",\"title\":\"Fetch and store the records a linked care context points at\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/p3#p3-subscribe-and-auto-approve\",\"id\":\"hiecm.flow.p3-subscribe-and-auto-approve\",\"milestone\":\"P3\",\"title\":\"Subscribe to a user's account and set an auto approval policy\",\"type\":\"flow\"}],\"catalogue_version\":\"2026.09.16\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:04:57.152Z",
+  "usage": {
+    "input_tokens": 60,
+    "output_tokens": 2173,
+    "cache_read_input_tokens": 70196,
+    "cache_creation_input_tokens": 36921,
+    "num_turns": 13,
+    "duration_ms": 27495,
+    "cost_usd_equivalent": 0.0917866
+  }
+}

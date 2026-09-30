@@ -31,6 +31,15 @@ var forbidden = []string{
 	"the catalogue", "atom", "system prompt", "\u2014",
 }
 
+func isPanelVoice(p string) bool {
+	for _, f := range forbidden {
+		if strings.EqualFold(f, p) {
+			return true
+		}
+	}
+	return false
+}
+
 var (
 	sentenceEndRe = regexp.MustCompile(`[.!?](\s|$)`)
 	headingRe     = regexp.MustCompile(`(?m)^#{1,6}\s`)
@@ -74,12 +83,26 @@ func Check(c Case, t Transcript) CheckResult {
 	answer := t.Answer
 	lower := strings.ToLower(answer)
 
-	for _, p := range append(append([]string{}, forbidden...), c.MustNotContain...) {
+	// The panel's voice (no em dash, no "let me", no "atom") and its chat
+	// formatting are the panel's own rules. An agent answering through the
+	// MCP writes in its own voice, so it keeps only a case's own entries: a
+	// wrong literal, or a masked value leaking back.
+	agent := t.Surface == SurfaceMCPAgent
+	phrases := append(append([]string{}, forbidden...), c.MustNotContain...)
+	if agent {
+		phrases = nil
+		for _, p := range c.MustNotContain {
+			if !isPanelVoice(p) {
+				phrases = append(phrases, p)
+			}
+		}
+	}
+	for _, p := range phrases {
 		if phraseMatches(lower, p) {
 			add("forbidden: %s", p)
 		}
 	}
-	if headingRe.MatchString(answer) {
+	if headingRe.MatchString(answer) && !agent {
 		add("shape: heading in a chat answer")
 	}
 
@@ -96,7 +119,9 @@ func Check(c Case, t Transcript) CheckResult {
 	}
 	stripped := codeSpanRe.ReplaceAllString(fencedBlockRe.ReplaceAllString(answer, ""), "")
 	for _, lit := range guard.Literals(stripped) {
-		add("shape: literal %s outside a code span", lit)
+		if !agent {
+			add("shape: literal %s outside a code span", lit)
+		}
 	}
 
 	switch c.ExpectedBehaviour {
@@ -115,7 +140,15 @@ func Check(c Case, t Transcript) CheckResult {
 				add("expected_source: %s absent", want)
 			}
 		}
-		if c.ExpectedShape == "define" {
+		// The define shape is the panel's; an agent answering through the MCP
+		// writes for whoever asked it, and is not scored on it.
+		// One question at most, after the substance. Two or more is the
+		// model asking instead of answering, the failure a nudge rule can
+		// reintroduce. Counted outside code, where a ? is part of a URL.
+		if n := strings.Count(stripped, "?"); n > 1 && t.Surface != SurfaceMCPAgent {
+			add("shape: %d questions in an answer", n)
+		}
+		if c.ExpectedShape == "define" && t.Surface != SurfaceMCPAgent {
 			if listRe.MatchString(answer) {
 				add("shape: define has a list")
 			}
@@ -124,6 +157,11 @@ func Check(c Case, t Transcript) CheckResult {
 			}
 		}
 	case "decline":
+		// Two sentences and a link to the portal's support page are the
+		// panel's decline shape; an MCP agent declines in its own words.
+		if agent {
+			break
+		}
 		if n := sentences(answer); n > 2 {
 			add("decline: %d sentences", n)
 		}
@@ -142,7 +180,7 @@ func Check(c Case, t Transcript) CheckResult {
 	if budgetShape == "" {
 		budgetShape = c.ExpectedShape
 	}
-	if n, max, over := guard.OverBudget(budgetShape, answer); over {
+	if n, max, over := guard.OverBudget(budgetShape, answer); over && t.Surface != SurfaceMCPAgent {
 		add("budget: %s answer is %d words, over %d", budgetShape, n, max)
 	}
 	if t.Blocked {

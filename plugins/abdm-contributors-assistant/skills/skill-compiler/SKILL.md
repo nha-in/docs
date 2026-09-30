@@ -9,11 +9,13 @@ Skills are build outputs. Nobody writes a SKILL.md for ABDM by hand. If a compil
 
 ## What runs today
 
-The HIE-CM module skills do not compile from atoms. No HIE-CM atom exists since the 16 September 2026 reset. Three scripts build them from the specifications and the journey files:
+The HIE-CM module skills compile from the specifications and the journey files, not from the endpoint, callback and error atoms. HIE-CM has atoms again: 227 of the 256 the 16 September 2026 reset deleted were rebuilt on 29 September 2026 as page sections and notes partials, beside the 20 design rules, but only concept atoms carrying a milestone reach a skill, as its `references/design.md`. Three scripts build them:
 
-1. `node scripts/build-api-reference.mjs` writes one data file per operation and per journey step from `catalogue/openapi/hiecm/v3/*.yaml` and `journeys/*.yaml`.
+1. `node scripts/build-api-reference.mjs` writes one data file per operation and per journey step from `catalogue/hiecm/openapi/v3/*.yaml` and `journeys/*.yaml`.
 2. `node scripts/compile-skills.mjs` writes the guided loops under `skills-src/`: `hiecm-<module>-build` for a module with journeys, and `hiecm-<module>-debug` for a module whose specification's response examples return error codes.
 3. `node scripts/build-skills.mjs` writes one folder per module, `abdm-gateway`, `abdm-m1` to `abdm-m4`, `abdm-p1` to `abdm-p4` and `abdm-scan-and-pay`, plus `abdm-fhir`, to `site/static/skills/` and to the integrators plugin. It folds the loops in as `references/scaffold.md` and `references/debug.md`, writes `references/integrate.md` from the specifications and `references/design.md` from atoms, adds the module's call facts held in the script, and injects the practices from `shared.concept.integration-practices`.
+
+UHI keeps its own plugin, `plugins/uhi-integrators-assistant/`, one skill per service. `compile-skills.mjs` writes `uhi-<service>-build` from the UHI journeys and `uhi-<service>-debug` from the troubleshooting and flow atoms, and `scripts/lib/uhi-skills.mjs` assembles each folder from the UHI atoms: design from the service's concept atoms, integrate from the step data and the signing atoms, test from the test and go-live atoms. It carries no practices and no codebase survey, because both are written for HIE-CM.
 
 `npm run validate:skills` checks the output. The selector, templates, prose pass and identifier diff described below are the design for atom-fed skills, and the parts of it that run today are the three below.
 
@@ -113,7 +115,7 @@ Runs after the prose pass. Failures here are build blockers.
 | Exit conditions | Every loop in a build, test or debug skill has an exit condition traceable to an atom's section 4. |
 | Loop limits | Every loop declares a limit and an escalation. |
 
-**When the identifier diff fails, the system worked.** The prose pass invented something. Regenerate. Never add the invented token to the Catalogue to make the build pass, unless it turns out to be real, in which case it needs a source and a verification like any other fact.
+**When the identifier diff fails, the system worked.** The prose pass invented something. Regenerate. Never add the invented token to the Catalogue to make the build pass, unless it turns out to be real, in which case it needs a source like any other fact.
 
 ## The index
 

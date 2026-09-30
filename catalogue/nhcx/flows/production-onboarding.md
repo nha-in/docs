@@ -84,7 +84,7 @@ The first pair creates the participant and returns a [participant code](../gloss
 ## Before you start
 
 - **Sandbox sign-off.** You passed the [sandbox exit](../glossary/sandbox-exit.md): bundle validation by [NRCeS](../../shared/glossary/nrces.md), an internal demo, a Health Tech Committee demo, and NHA's confirmation email. See [The sandbox exit process and sign-off](../sandbox/sandbox-exit.md).
-- **Production credentials.** NHA has assigned your role to your [Milestone 1](../../shared/glossary/m1.md) production client ID. You use that client ID for every production call.
+- **Production credentials.** NHA has assigned your role to your [Milestone 1](../../hiecm/glossary/m1.md) production client ID. You use that client ID for every production call.
 - **The registered mobile.** For a [provider](../glossary/provider.md), the number recorded against the facility in the [Health Facility Registry](../../shared/glossary/hfr.md) (HFR). For a [payer](../glossary/payer.md), the number in the NHCX payer details. A person with that phone is available during the calls.
 - **Your registry ID.** The HFR ID for a provider. The [IRDAI](../glossary/irdai.md) registry ID for a payer, without leading zeros: `0123` is sent as `123`.
 - **A production certificate** in base64, from [Generate an encryption certificate and register it](generate-and-register-certificate.md).

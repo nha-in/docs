@@ -23,7 +23,7 @@ Binding, not advisory. The compiler's prose pass is given this file. CI enforces
 
 **Every code sample runs as written** once placeholders are filled. Placeholders are named for what they are and where they came from: `<ACCESS_TOKEN_FROM_SESSIONS_CALL>`, not `<TOKEN>`.
 
-**When we are not sure, we do not publish the guess.** Atoms carry no verification status and the reader is never told one; a gap is left as a gap or settled by `npm run verify:atoms` before it ships. Never guess and never smooth over a gap with confident phrasing. The portal is published in NHA's voice, so a page cannot tell an integrator that NHA has not run its own endpoint: see `nha-voice` for the ladder that replaces that sentence. This supersedes the earlier rule that put "We have not run this against sandbox yet" in the prose.
+**When we are not sure, we do not publish the guess.** Atoms carry no verification status and the reader is never told one; a gap is left as a gap or settled before it ships. Never guess and never smooth over a gap with confident phrasing. The portal is published in NHA's voice, so a page cannot tell an integrator that NHA has not run its own endpoint: see `nha-voice` for the ladder that replaces that sentence. This supersedes the earlier rule that put "We have not run this against sandbox yet" in the prose.
 
 **Name the observable, not the feeling.** "You receive a callback with `status: SUCCESS` within 60 seconds", not "it should work".
 

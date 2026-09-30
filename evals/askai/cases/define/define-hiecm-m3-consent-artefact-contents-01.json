@@ -1,0 +1,37 @@
+{
+  "id": "define-hiecm-m3-consent-artefact-contents-01",
+  "slice": "define",
+  "class": "define",
+  "turns": [
+    {
+      "role": "user",
+      "text": "what is actually inside a consent artefact when I fetch it"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "It lists the care contexts approved, the health information types permitted and the date range the records may fall in.",
+    "It gives the date by which you must erase the data, dataEraseAt.",
+    "It names the HIP and the HIU and carries a signature."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.endpoint.m3-consent-fetch",
+    "hiecm.callback.m3-on-consent-fetch"
+  ],
+  "expected_shape": "define",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-hiecm-consent-management-data-flow-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "Defines the artefact by what an HIU receives, which bounds the health information request that follows. Source lines: catalogue/hiecm/endpoints/m3-consent-fetch.md, 'It lists: the care contexts approved; the health information types permitted; the date range, and the date to erase the data; the [HIP] and [HIU], and a signature'; catalogue/hiecm/callbacks/m3-on-consent-fetch.md, 'It carries the artefact's `status`, its detail and its `signature`. The detail says which care contexts, health information types and dates you may request, and when to erase the data.' and 'Erase stored data by `dataEraseAt`.'"
+}

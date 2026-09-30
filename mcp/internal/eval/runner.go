@@ -106,6 +106,7 @@ func Run(ctx context.Context, cfg RunConfig, cases []Case) (int, error) {
 		svc := &chat.Service{Model: rec, Tools: cfg.Tools, MaxTokens: cfg.MaxTokens, MCPURL: cfg.MCPURL, TraceTools: true}
 		if cfg.RoutedTools != nil {
 			svc.Lookup, svc.ToolsFor = server.ChatHooks(cfg.RoutedTools)
+			svc.LinkFor = cfg.RoutedTools.LinkFor
 		}
 		svc.Skill, svc.SkillModules = cfg.Skill, cfg.SkillModules
 		// Class mirrors the shape route.Route assigns the last user turn in
@@ -157,7 +158,7 @@ func Run(ctx context.Context, cfg RunConfig, cases []Case) (int, error) {
 			return nil
 		}
 		turns, page := toTurns(c)
-		if err := svc.RespondCommand(ctx, turns, page, chat.Command{Name: c.Command, Module: c.Module}, emit); err != nil {
+		if err := svc.RespondCommand(ctx, turns, page, chat.Command{Name: c.Command, Module: c.Module, Gateway: c.Gateway}, emit); err != nil {
 			tr.Flags = append(tr.Flags, "error: "+err.Error())
 			if first == nil {
 				first = fmt.Errorf("%s: %w", c.ID, err)

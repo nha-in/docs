@@ -1,21 +1,29 @@
 // Every error code a spec's response examples carry, plus the codes NHA lists
-// for the module in catalogue/openapi/hiecm/v3/errors/<module>.yaml. Nothing
+// for the module in catalogue/hiecm/openapi/v3/errors/<module>.yaml. Nothing
 // is invented: a code is here because an example on some operation returns it
 // or because NHA's own list for the module names it.
-import {existsSync, readFileSync} from 'node:fs';
-import {join, dirname} from 'node:path';
-import {fileURLToPath} from 'node:url';
+import {existsSync, readFileSync, readdirSync} from 'node:fs';
+import {join} from 'node:path';
 import {parse} from 'yaml';
+import {specDir} from '../specs.mjs';
 
 const METHODS = ['get', 'post', 'put', 'patch', 'delete'];
-const LIST_DIR = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'catalogue', 'openapi', 'hiecm', 'v3', 'errors');
 
-/** NHA's own code list for the module, or null when it supplied none. */
-export function moduleErrorList(spec) {
+/**
+ * NHA's own code list for the module, from errors/<module>.yaml beside its
+ * specification, or null when it supplied none. `where` names the gateway
+ * version; without it the spec's own x-abdm-gateway is searched across its
+ * versions, as the MCP does (mcp/internal/catalogue/operations.go).
+ */
+export function moduleErrorList(spec, where) {
   const module = spec?.info?.['x-portal']?.module;
-  if (!module || spec?.info?.['x-abdm-gateway'] !== 'hiecm') return null;
-  const file = join(LIST_DIR, `${module}.yaml`);
-  if (!existsSync(file)) return null;
+  const platform = where?.platform ?? spec?.info?.['x-abdm-gateway'];
+  if (!module || !platform) return null;
+  const base = specDir(platform);
+  if (!base) return null;
+  const versions = where?.version ? [where.version] : readdirSync(base).filter((v) => !v.startsWith('.')).sort((a, b) => a.localeCompare(b, undefined, {numeric: true}));
+  const file = versions.map((v) => join(base, v, 'errors', `${module}.yaml`)).find((f) => existsSync(f));
+  if (!file) return null;
   const list = parse(readFileSync(file, 'utf8')) ?? {};
   return {intro: list.intro ?? '', source: list.source ?? '', codes: list.codes ?? []};
 }

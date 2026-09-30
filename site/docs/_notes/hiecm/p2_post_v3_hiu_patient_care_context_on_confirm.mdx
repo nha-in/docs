@@ -1,0 +1,9 @@
+## Link confirm result callback {/* #p2-response-on-health-record-on-confirm */}
+
+ABDM posts the outcome of the confirm call here. On success it lists the care contexts now linked to the person's [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address). On failure it carries an `error` instead.
+
+<AgentOnly>
+**How you know it worked.** `careContexts` lists the linked records. Answer with `200`. The links then appear in the get all links call.
+
+**When it goes wrong.** An `error` object instead of `patient` means nothing was linked. Show the error `message` to the person and do not mark the records as linked.
+</AgentOnly>

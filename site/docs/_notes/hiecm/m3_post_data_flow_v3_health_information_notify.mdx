@@ -1,0 +1,11 @@
+## Notify the gateway that data was received {/* #m3-hiu-data-flow-notify */}
+
+After the records reach your `dataPushUrl`, call this to report receipt. Set `notifier.type` to `HIU`. Set `sessionStatus` to `RECEIVED`, or to `FAILED` when data was not sent or was invalid. Give each care context a `hiStatus` of `OK` or `ERRORED`.
+
+<AgentOnly>
+**Before you start.** A gateway session token and the `transactionId` of your health information request. Send the `REQUEST-ID`, `TIMESTAMP` and `X-CM-ID` headers.
+
+**What happens.** The HIP uses the same path and reports `TRANSFERRED` and `DELIVERED` instead. The call returns 202 Accepted.
+
+**When it goes wrong.** `ABDM-1031` (Invalid request): check the body. `ABDM-2402` (Invalid Timestamp): check `TIMESTAMP` against your clock. `ABDM-2404` (Invalid Request Id): send a fresh UUID in `REQUEST-ID`. `ABDM-2500` (Authorization header is missing): send the session token. `ABDM-9999` (Unknown exception) gives no cause.
+</AgentOnly>

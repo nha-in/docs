@@ -5,7 +5,7 @@ sidebar_position: 9
 sidebar_custom_props:
   roles: [phr]
 description: 'The patient side of M1: how a person registers in your PHR app, logs in, and which login routes are mandatory.'
-source: catalogue/openapi/hiecm/v3/hiecm-p1.yaml
+source: catalogue/hiecm/openapi/v3/hiecm-p1.yaml
 covers: [hiecm.flow.p1-login]
 sidebar_class_name: sidebar-icon sidebar-icon--contact-round
 ---
@@ -36,7 +36,7 @@ and how it maintains the account afterwards.
 Registration and login. The profile the patient reads and edits is
 [P2](./p2).
 
-## Creating an ABHA address
+## Creating an ABHA address {/* #p1-create-abha-address */}
 
 A person does not need an [ABHA number](/docs/hiecm/v3/getting-started/glossary#abha-number),
 and does not need Aadhaar, to get an ABHA address here. A mobile number and
@@ -75,7 +75,17 @@ A Self-Declared profile needs a "Link ABHA number" action. The user enters the
 14 digit number and validates by Aadhaar OTP or ABHA OTP. Profile details
 then follow the ABHA number, and the status changes to KYC Verified.
 
-## Login
+<AgentOnly>
+**Before you start.** A gateway session token, the PHR certificate from `GET /abha/api/v3/phr/app/login/public/certificate`, and secure storage for the refresh token, because login follows at once.
+
+**What happens.** Request the OTP at `/abha/api/v3/phr/app/enrollment/request/otp`, with scope `abha-address-enroll` and `mobile-verify` on the mobile path, and verify it at `/abha/api/v3/phr/app/enrollment/verify`. List the addresses already linked and let the person pick one. Only when there is none, offer suggestions from `/abha/api/v3/phr/app/enrollment/suggestion`, check the choice with `/abha/api/v3/phr/app/enrollment/isExists`, and create it with `/abha/api/v3/phr/app/enrollment/enrol`.
+
+**How you know it worked.** The person holds an address such as `name@abdm`, the profile shows Self-Declared or KYC Verified by the path taken, and listing the addresses on that mobile or ABHA number now returns it.
+
+**When it goes wrong.** A duplicate address, because the existing addresses were not shown first. A mandatory field missing on the mobile path, refused as validation: first name, year of birth, gender, address, state, district and pin code are the mandatory set, and day and month of birth are not in it. An expired OTP: resend unlocks after 60 seconds, so say so on the screen.
+</AgentOnly>
+
+## Login {/* #p1-login */}
 
 Sign a user in to a PHR application by any of these routes. Every route is
 mandatory.
@@ -94,6 +104,16 @@ call.
 Resend OTP unlocks after 60 seconds in every flow. You also need a reset
 password screen behind login, secure storage of the refresh token, and more
 than one user profile per install with sign in and sign out.
+
+<AgentOnly>
+**Before you start.** The person holds an ABHA address, and you hold a gateway session token and the PHR certificate.
+
+**What happens.** For an address, read the auth methods it supports with `/abha/api/v3/phr/app/login/search` and offer only those. Request the OTP at `/abha/api/v3/phr/app/login/request/otp` and verify at `/abha/api/v3/phr/app/login/verify`; the scope and login hint say which route a call belongs to. When the verify response lists addresses, let the person choose and confirm with `/abha/api/v3/phr/app/login/verify/user`. Store the refresh token securely.
+
+**How you know it worked.** The app holds a session for one named ABHA address, and signing out and back in returns the person to that address without repeating the choice.
+
+**When it goes wrong.** A password is asked of an address that has none, because the auth methods were not read. A mobile carrying several addresses signs the person in as the wrong one, because no chooser was shown. Resend offered before 60 seconds, or with no word that the wait is deliberate.
+</AgentOnly>
 
 ## Tokens and base URLs
 

@@ -1,0 +1,11 @@
+## Link On-Confirm, HIP confirms linked care contexts {/* #m2-on-link-confirm */}
+
+Answer a [link confirm request](/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/07-m2-post-v3-hip-link-care-context-confirm) here. Check the code the patient entered against the one you sent for that link reference number. On success, return the linked care contexts in `patient`. On failure, return `error`. Include `response.requestId` either way.
+
+<AgentOnly>
+**Before you start.** A gateway session token and the confirm request. Send the `REQUEST-ID`, `TIMESTAMP` and `X-CM-ID` headers.
+
+**What happens.** `hiType` is one value per patient entry, such as `Prescription`, and `count` must equal its care contexts. The call returns 202 Accepted.
+
+**When it goes wrong.** `ABDM-2402` (Invalid Timestamp): check `TIMESTAMP` against your clock. `ABDM-2404` (Invalid Request Id): send a fresh UUID in `REQUEST-ID`. `ABDM-2500` (Authorization header is missing): send the session token. `ABDM-9999` (Unknown exception) gives no cause.
+</AgentOnly>

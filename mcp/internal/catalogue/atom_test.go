@@ -129,3 +129,56 @@ func TestExtractErrorCodesCoversTheClaimsExchange(t *testing.T) {
 		}
 	}
 }
+
+func TestFrontmatterCarriesContractV2Fields(t *testing.T) {
+	src := "---\nid: hiecm.endpoint.verify\ntype: endpoint\ngateway: hiecm\nmilestone: M1\ntitle: Verify\nsummary: s\noperation: m1_post_profile_verify\nside: hip\nstatus: deprecated\nsuperseded_by: hiecm.endpoint.verify-v2\nfacts:\n  - {key: http_status, value: 202, source: 0}\n  - {key: link_token_validity, value: 6 months, source: 1}\n---\n\n## In plain words\n\nx\n"
+	a, err := ParseAtom("catalogue/hiecm/endpoints/verify.md", []byte(src))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if a.Operation != "m1_post_profile_verify" || a.Side != "hip" || a.Status != "deprecated" || a.SupersededBy != "hiecm.endpoint.verify-v2" {
+		t.Errorf("contract v2 fields = %q %q %q %q", a.Operation, a.Side, a.Status, a.SupersededBy)
+	}
+	if len(a.Facts) != 2 || a.Facts[0] != (Fact{Key: "http_status", Value: "202", Source: 0}) || a.Facts[1].Value != "6 months" {
+		t.Errorf("facts = %+v", a.Facts)
+	}
+	plain, err := ParseAtom("catalogue/shared/glossary/x.md", []byte("---\nid: shared.glossary.x\ntype: glossary\ngateway: shared\ntitle: X\n---\n\nbody\n"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if plain.Status != "current" {
+		t.Errorf("an atom with no status is current, got %q", plain.Status)
+	}
+}
+
+// The gateway's numeric codes were read only as a JSON "code" value, so a
+// reader writing "code 900901" in prose got no code extracted, and nothing
+// pinned the error atom that explains it.
+func TestExtractErrorCodesReadsAGatewayCodeInProse(t *testing.T) {
+	for q, want := range map[string][]string{
+		"abha enrolment call returns 401 with code 900901 Invalid Credentials": {"900901"},
+		"getting error 900902 on the session call":                             {"900902"},
+		"error code: 900900 when I fetch the profile":                          {"900900"},
+		"enter the OTP 912345 the patient received":                            nil,
+		"it failed at 900901 ms":                                               nil,
+	} {
+		if got := ExtractErrorCodes(q); !reflect.DeepEqual(got, want) {
+			t.Errorf("ExtractErrorCodes(%q) = %v, want %v", q, got, want)
+		}
+	}
+}
+
+// An error atom for a numeric gateway code states its code in its title and
+// id, never as a JSON value, so its own code went unindexed and
+// decode_error could not reach it.
+func TestParseAtomIndexesAnErrorAtomsOwnGatewayCode(t *testing.T) {
+	content := []byte("---\nid: hiecm.error.900901\ntype: error\ngateway: hiecm\nmilestone: M1\n" +
+		"title: 900901, the credentials are not valid\nsummary: s\n---\n\n# 900901\n\nThe ABHA service rejected the token.\n")
+	a, err := ParseAtom("hiecm/errors/900901.md", content)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := []string{"900901"}; !reflect.DeepEqual(a.ErrorCodes, want) {
+		t.Errorf("ErrorCodes = %v, want %v", a.ErrorCodes, want)
+	}
+}

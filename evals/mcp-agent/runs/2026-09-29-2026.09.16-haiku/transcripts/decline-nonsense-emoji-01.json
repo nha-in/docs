@@ -1,0 +1,53 @@
+{
+  "case_id": "decline-nonsense-emoji-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "🤔🤷"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "Hey! I'm here to help with ABDM integration questions. What are you wondering about or working on? Feel free to ask about:\n\n- Gateway APIs (HIE-CM, UHI, NHCX)\n- FHIR bundles and validation\n- Error codes and troubleshooting\n- Endpoints, flows, and operations\n- Any integration challenges you're running into\n\nWhat's on your mind?",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "Hey! I'm here to help with ABDM integration questions. What are you wondering about or working on? Feel free to ask about:\n\n- Gateway APIs (HIE-CM, UHI, NHCX)\n- FHIR bundles and validation\n- Error codes and troubleshooting\n- Endpoints, flows, and operations\n- Any integration challenges you're running into\n\nWhat's on your mind?",
+  "sources": [],
+  "corpus": "",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:57:41.513Z",
+  "usage": {
+    "input_tokens": 10,
+    "output_tokens": 167,
+    "cache_read_input_tokens": 5899,
+    "cache_creation_input_tokens": 4977,
+    "num_turns": 1,
+    "duration_ms": 2669,
+    "cost_usd_equivalent": 0.011388899999999999
+  }
+}

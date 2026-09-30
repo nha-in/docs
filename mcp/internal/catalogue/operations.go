@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
@@ -24,7 +25,54 @@ type Operation struct {
 	SpecJSON          []byte
 	RequestSchemaJSON []byte
 	RequiredParams    []string
+	// What an operation chunk is built from: the gateway its specification
+	// sits under, every parameter name, the documented response codes, and
+	// the error codes its response examples return.
+	Gateway       string
+	Params        []string
+	ResponseCodes []string
+	ErrorCodes    []string
 }
+
+// ChunkOperation is an operation as one flat search chunk: method and path,
+// summary, then parameter names, response codes and error codes. No example
+// payloads and no nested schemas: raw schema JSON is noise to an embedder,
+// flattened field names are signal.
+func ChunkOperation(op Operation) Chunk {
+	var b strings.Builder
+	b.WriteString(op.Gateway + " > operation > " + strings.ToUpper(op.Method) + " " + op.Path)
+	if s := strings.TrimSpace(op.Summary); s != "" {
+		b.WriteString("\n" + s)
+	}
+	for _, f := range []struct {
+		label string
+		vals  []string
+	}{{"parameters", op.Params}, {"responses", op.ResponseCodes}, {"errors", op.ErrorCodes}} {
+		if len(f.vals) > 0 {
+			b.WriteString("\n" + f.label + ": " + strings.Join(f.vals, ", "))
+		}
+	}
+	return Chunk{AtomID: op.OperationID, Heading: "operation", Text: b.String(), Kind: "operation"}
+}
+
+// specGateway is the gateway a specification belongs to: the folder holding
+// its openapi/ (catalogue/hiecm/openapi/v3/...), or, where a gateway's specs
+// have not moved yet, the folder under openapi/ (catalogue/openapi/nhcx/v1/...).
+func specGateway(specPath string) string {
+	parts := strings.Split(filepath.ToSlash(specPath), "/")
+	for i := len(parts) - 2; i >= 0; i-- {
+		if parts[i] != "openapi" {
+			continue
+		}
+		if i > 0 && gatewayNames[parts[i-1]] {
+			return parts[i-1]
+		}
+		return parts[i+1]
+	}
+	return ""
+}
+
+var gatewayNames = map[string]bool{"hiecm": true, "nhcx": true, "uhi": true, "shared": true}
 
 // SpecErrorCode is one error code found in a specification's 4xx/5xx
 // response examples: the code as the gateway returns it, the recorded
@@ -276,33 +324,44 @@ func listedErrorCodes(path, module string) ([]SpecErrorCode, error) {
 	return out, nil
 }
 
-// inlineRefs clears $ref markers recursively (depth-capped against
-// cycles) so the schema marshals with component contents inlined and can
-// be validated standalone at query time.
+// inlineRefs clears $ref markers recursively (depth-capped) so the schema
+// marshals with component contents inlined and can be validated standalone
+// at query time. A reference back to a schema already on the current path,
+// such as NHA's UHI Ack whose ack property refers to Ack, keeps its $ref:
+// clearing it would leave a pointer cycle that json.Marshal never leaves.
 func inlineRefs(ref *openapi3.SchemaRef, depth int) {
+	inlineRefsOn(ref, depth, map[*openapi3.Schema]bool{})
+}
+
+func inlineRefsOn(ref *openapi3.SchemaRef, depth int, path map[*openapi3.Schema]bool) {
 	if ref == nil || depth > 10 {
 		return
 	}
-	ref.Ref = ""
 	s := ref.Value
+	if s != nil && path[s] {
+		return
+	}
+	ref.Ref = ""
 	if s == nil {
 		return
 	}
+	path[s] = true
+	defer delete(path, s)
 	for _, p := range s.Properties {
-		inlineRefs(p, depth+1)
+		inlineRefsOn(p, depth+1, path)
 	}
-	inlineRefs(s.Items, depth+1)
+	inlineRefsOn(s.Items, depth+1, path)
 	for _, sub := range s.AllOf {
-		inlineRefs(sub, depth+1)
+		inlineRefsOn(sub, depth+1, path)
 	}
 	for _, sub := range s.AnyOf {
-		inlineRefs(sub, depth+1)
+		inlineRefsOn(sub, depth+1, path)
 	}
 	for _, sub := range s.OneOf {
-		inlineRefs(sub, depth+1)
+		inlineRefsOn(sub, depth+1, path)
 	}
 	if s.AdditionalProperties.Schema != nil {
-		inlineRefs(s.AdditionalProperties.Schema, depth+1)
+		inlineRefsOn(s.AdditionalProperties.Schema, depth+1, path)
 	}
 }
 
@@ -402,6 +461,13 @@ func ParseSpec(specPath string) (SpecData, error) {
 	if err != nil {
 		return SpecData{}, err
 	}
+	codesByOp := map[string][]string{}
+	for _, c := range errCodes {
+		if !slices.Contains(codesByOp[c.OperationID], c.Code) {
+			codesByOp[c.OperationID] = append(codesByOp[c.OperationID], c.Code)
+		}
+	}
+	gateway := specGateway(specPath)
 	var ops []Operation
 	for path, item := range doc.Paths.Map() {
 		for method, op := range item.Operations() {
@@ -458,10 +524,30 @@ func ParseSpec(specPath string) (SpecData, error) {
 				}
 			}
 			sort.Strings(required)
+			var params []string
+			for _, p := range paramMap {
+				if p.Value != nil && !slices.Contains(params, p.Value.Name) {
+					params = append(params, p.Value.Name)
+				}
+			}
+			sort.Strings(params)
+			var responses []string
+			if op.Responses != nil {
+				for code := range op.Responses.Map() {
+					responses = append(responses, code)
+				}
+			}
+			sort.Strings(responses)
+			codes := codesByOp[op.OperationID]
+			sort.Strings(codes)
 			ops = append(ops, Operation{
+				Gateway:           gateway,
+				Params:            params,
+				ResponseCodes:     responses,
+				ErrorCodes:        codes,
 				OperationID:       op.OperationID,
 				Method:            method,
-				Path:              path,
+				Path:              actualPath(path, op),
 				Summary:           op.Summary,
 				Tag:               tag,
 				Module:            module,
@@ -473,4 +559,18 @@ func ParseSpec(specPath string) (SpecData, error) {
 	}
 	sort.Slice(ops, func(i, j int) bool { return ops[i].OperationID < ops[j].OperationID })
 	return SpecData{Module: module, Operations: ops, ErrorCodes: errCodes}, nil
+}
+
+// actualPath is the endpoint an operation is sent to. A path key may carry a
+// #suffix so one endpoint appears more than once in a file, as M1's split per
+// use case and UHI's two directions of on_update do; x-actual-path names the
+// real one, and without it the suffix is dropped.
+func actualPath(path string, op *openapi3.Operation) string {
+	if v, ok := op.Extensions["x-actual-path"].(string); ok && v != "" {
+		return v
+	}
+	if i := strings.Index(path, "#"); i >= 0 {
+		return path[:i]
+	}
+	return path
 }

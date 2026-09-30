@@ -1,0 +1,9 @@
+## Track face authentication status {/* #m1-enrolment-capture-pid */}
+
+Reports how far the person has got with face authentication in the [ABHA](/docs/hiecm/v3/getting-started/glossary#abha) app. Send the `txnId` from the init call, with `scope` set to `["abha-enrol","face-verify"]`. `status` comes back as `PENDING`, `VERIFIED`, `FAILED` or `COMPLETE`. Once it is `COMPLETE`, continue to the create call.
+
+<AgentOnly>
+**What happens.** Poll every 5 to 10 seconds. You can also skip polling and call the create call once the ABHA app shows that the capture was submitted. Face login and Find ABHA by face use the same call.
+
+**When it goes wrong.** A 400 with `ABDM-1017` means the `txnId` is invalid or expired. Start again with the init call.
+</AgentOnly>

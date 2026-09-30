@@ -9,14 +9,14 @@ name: publish-postman
 #
 # One-time setting: Settings -> Secrets and variables -> Actions ->
 # POSTMAN_API_KEY, a key for the Postman account that owns the workspace named
-# in catalogue/postman.json.
+# in catalogue/hiecm/postman.json.
 
 on:
   push:
     branches: [main]
     paths:
-      - catalogue/openapi/**
-      - catalogue/postman.json
+      - catalogue/hiecm/openapi/**
+      - catalogue/hiecm/postman.json
       - scripts/build-api-reference.mjs
       - scripts/build-postman.mjs
       - scripts/publish-postman.mjs

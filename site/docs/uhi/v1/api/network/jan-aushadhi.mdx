@@ -1,0 +1,48 @@
+---
+title: Jan Aushadhi
+sidebar_label: Jan Aushadhi
+description: "Jan Aushadhi: the Gateway searches for Kendras and generic medicines and the on_search that answers each, and the Postman collection that sends them."
+source: "UHI Gateway spec v2.0.2; UHI developer guide as of 22 September 2026, sections 1.2 and 2.5"
+---
+
+import PostmanCollection from '@site/src/components/docs/PostmanCollection';
+
+{/* The service's overview in the API reference. It sits in the network
+    module's folder, which the reference generator keeps, because four
+    services share that module's specification. */}
+
+# Jan Aushadhi
+
+Find Jan Aushadhi Kendras and generic medicines. The [EUA](/docs/uhi/v1/getting-started/glossary#eua) searches through the [UHI Gateway](/docs/uhi/v1/getting-started/glossary#uhi-gateway), and the PMBI [HSPA](/docs/uhi/v1/getting-started/glossary#hspa) answers with `on_search`. Three flows share one domain: find a Kendra, find a medicine, then find the Kendras that stock it.
+
+## Postman collection
+
+<PostmanCollection service="jan-aushadhi" />
+
+## What it holds
+
+| Call | Served by | What it does |
+| --- | --- | --- |
+| `POST /api/v1/uhi/search` | UHI Gateway | Takes the EUA's search and passes it to the HSPA |
+| `POST /search` | HSPA | Receives the search the Gateway forwards |
+| `POST /api/v1/uhi/on_search` | UHI Gateway | Takes the HSPA's catalog and passes it to the EUA |
+| `POST /on_search` | EUA | Receives the catalog at its `consumer_uri` |
+
+Every Jan Aushadhi call uses `context.domain` `nic2008:47721`. The flow is set by `fulfillment.type`: `JANAUSHADHI`, `JANAUSHADHI_MEDICINE` or `JANAUSHADHI_KENDRA`.
+
+## Journeys
+
+| Journey | What it covers |
+| --- | --- |
+| [Kendra search](/docs/uhi/v1/api/network/endpoints/uhi-jan-aushadhi-kendra-search/01-uhi-network-gateway-search) | Find Kendras near a location or in a district |
+| [Medicine search](/docs/uhi/v1/api/network/endpoints/uhi-jan-aushadhi-medicine-search/01-uhi-network-gateway-search) | Find a generic medicine by name |
+| [Kendras for a selected medicine](/docs/uhi/v1/api/network/endpoints/uhi-jan-aushadhi-medicine-stock/01-uhi-network-gateway-search) | Find the Kendras that stock the medicine chosen in the medicine search |
+
+Sign every call first. See [Signing](/docs/uhi/v1/concepts/signing).
+
+## Pairs with
+
+- [Look up a network participant](/docs/uhi/v1/api/network/endpoints/uhi-network-registry-lookup) returns the public key you check the HSPA's signature with.
+- [Routes](/docs/uhi/v1/concepts/routes) shows which calls go through the Gateway.
+
+New to this? Start with [Jan Aushadhi](/docs/uhi/v1/services/jan-aushadhi).

@@ -1,0 +1,439 @@
+{
+  "case_id": "followup-hiecm-m1-token-refresh-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "The conversation so far:\nDeveloper: how do I get the X-token after a mobile OTP login\nYou: Call /abha/api/v3/profile/login/verify/user with the chosen ABHANumber, the txnId and the verify token in the T-token header. The response carries token, which is the X-token, with expiresIn and refreshToken.\n\nThe developer's new message:\nand when it expires? do they have to login again"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01EPN2dZjQeDTzifQo2QuiY5",
+            "Name": "search",
+            "Input": {
+              "query": "token refresh login verify user expiresIn refreshToken",
+              "kind": "operation",
+              "limit": 5
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "token refresh login verify user expiresIn refreshToken",
+            "kind": "operation",
+            "limit": 5
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_019x4LyojLt6W4HRsZ9pA1bs",
+            "Name": "search",
+            "Input": {
+              "query": "refresh token",
+              "kind": "operation"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "refresh token",
+            "kind": "operation"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/biometric/endpoints/biometric-hcx-abha-biometric-auth-refresh-token",
+                "id": "biometric_hcx_abha_biometric_auth_refresh_token",
+                "summary": "Biometric auth refresh token",
+                "title": "GET /hcx/abha/biometric/auth/refresh/token",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-get-v3-phr-app-login-profile-request-token",
+                "id": "p2_get_v3_phr_app_login_profile_request_token",
+                "summary": "Refresh Token",
+                "title": "GET /abha/api/v3/phr/app/login/profile/request/token",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-profile-account-request-token",
+                "id": "m1_get_v3_profile_account_request_token",
+                "summary": "Refresh user token",
+                "title": "GET /abha/api/v3/profile/account/request/token",
+                "type": "operation"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01TBAo4xvf9smnmzzrWkaoWi",
+            "Name": "search",
+            "Input": {
+              "query": "token expiration refresh"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "token expiration refresh"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01WYsk5pvVhWkyJcarebHbeZ",
+            "Name": "get",
+            "Input": {
+              "id": "m1_get_v3_profile_account_request_token"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "m1_get_v3_profile_account_request_token"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "doc_path": "/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-profile-account-request-token",
+            "operation_id": "m1_get_v3_profile_account_request_token",
+            "spec": {
+              "description": "**Endpoint:** `GET /abha/api/v3/profile/account/request/token`\n\n**Flow:** **Access Tokens & Encryption** - independent API; call the one that fits your identifier / modality.\n\n---\n\nThis API endpoint is used to request a token for accessing a user’s ABHA (Ayushman Bharat Health Account) profile. This token is essential for authenticating and authorizing the user to perform various actions within their profile.",
+              "operationId": "m1_get_v3_profile_account_request_token",
+              "parameters": [
+                {
+                  "description": "Refresh token (`Bearer <refreshToken>`) received at login.",
+                  "example": "Bearer {{R-jwtToken}}",
+                  "in": "header",
+                  "name": "R-token",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "description": "Current UTC timestamp in ISO-8601 format.",
+                  "example": "2022-10-06T15:10:00.587Z",
+                  "in": "header",
+                  "name": "TIMESTAMP",
+                  "required": true,
+                  "schema": {
+                    "format": "date-time",
+                    "type": "string"
+                  }
+                },
+                {
+                  "description": "Unique UUID for every request.",
+                  "example": "18235d89-cb13-479d-ad71-7a57d5f669a8",
+                  "in": "header",
+                  "name": "REQUEST-ID",
+                  "required": true,
+                  "schema": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                }
+              ],
+              "responses": {
+                "200": {
+                  "content": {
+                    "application/json": {
+                      "examples": {
+                        "Token Generated- Positive flow": {
+                          "value": {
+                            "expiresIn": 1800,
+                            "refreshExpiresIn": 1296000,
+                            "refreshToken": "<TOKEN>",
+                            "token": "<TOKEN>"
+                          }
+                        }
+                      },
+                      "schema": {
+                        "properties": {
+                          "expiresIn": {
+                            "example": 1800,
+                            "type": "integer"
+                          },
+                          "refreshExpiresIn": {
+                            "example": 1296000,
+                            "type": "integer"
+                          },
+                          "refreshToken": {
+                            "example": "<TOKEN>",
+                            "type": "string"
+                          },
+                          "token": {
+                            "example": "<TOKEN>",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "The token was successfully generated and sent to the user’s registered contact method."
+                },
+                "400": {
+                  "content": {
+                    "application/json": {
+                      "examples": {
+                        "Invalid Scope": {
+                          "value": {
+                            "message": "Invalid R-token",
+                            "timestamp": "2025-01-08T15:44:30.000Z"
+                          }
+                        }
+                      },
+                      "schema": {
+                        "properties": {
+                          "message": {
+                            "example": "Invalid R-token",
+                            "type": "string"
+                          },
+                          "timestamp": {
+                            "example": "2025-01-08T15:44:30.000Z",
+                            "format": "date-time",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "The 400 response code indicates a bad request"
+                },
+                "401": {
+                  "content": {
+                    "application/json": {
+                      "examples": {
+                        "Token request - Unauthorized": {
+                          "value": {
+                            "code": "900902",
+                            "description": "Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'",
+                            "message": "Missing Credentials"
+                          }
+                        }
+                      },
+                      "schema": {
+                        "properties": {
+                          "value": {
+                            "properties": {
+                              "code": {
+                                "example": "900902",
+                                "type": "string"
+                              },
+                              "description": {
+                                "example": "Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'",
+                                "type": "string"
+                              },
+                              "message": {
+                                "example": "Missing Credentials",
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "The 401 response code indicates an unauthorized request. In this context, it refers to the lack of proper authentication during the operation of the Invalid Credentials <br><br>  "
+                },
+                "404": {
+                  "content": {
+                    "application/json": {
+                      "examples": {
+                        "Not Found - Invalid Request ID": {
+                          "value": {
+                            "error": {
+                              "code": "ABDM-1030: ",
+                              "message": "Invalid request ID"
+                            }
+                          }
+                        },
+                        "Not Found - Invalid Timestamp": {
+                          "value": {
+                            "error": {
+                              "code": "ABDM-1016: ",
+                              "message": "Invalid Timestamp"
+                            }
+                          }
+                        }
+                      },
+                      "schema": {
+                        "properties": {
+                          "error": {
+                            "properties": {
+                              "code": {
+                                "example": "ABDM-1016:, ABDM-1030: ",
+                                "type": "string"
+                              },
+                              "message": {
+                                "example": "Invalid Timestamp, Invalid request ID",
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "A 404 Not Found error occurs when a server cannot find the requested resource. This error indicates that the server is reachable, but the specific page or resource is not available"
+                },
+                "500": {
+                  "description": "<b>Internal Server Error</b><br><br>  An Internal Server Error (500) indicates that the server encountered an unexpected condition that prevented it from fulfilling the request."
+                }
+              },
+              "security": [
+                {
+                  "bearerAuth": []
+                }
+              ],
+              "summary": "Refresh user token",
+              "tags": [
+                "Access Tokens & Encryption"
+              ],
+              "x-abdm-nha-operation-id": "utilRefreshToken",
+              "x-abdm-title": "Refresh user token",
+              "x-journey": {
+                "journey": "Access Tokens & Encryption",
+                "kind": "set",
+                "of": 1,
+                "step": 1
+              },
+              "x-stoplight": {
+                "id": "rzx3lv9ybtbv3"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "No, they don't need to login again. The response includes a **refreshToken** alongside the X-token.\n\nWhen the X-token expires (after `expiresIn` seconds, typically 1800 seconds / 30 minutes), call **`GET /abha/api/v3/profile/account/request/token`** with the `refreshToken` in the `R-token` header to get a fresh X-token without requiring re-login.\n\nThe refreshToken itself lasts longer—`refreshExpiresIn` (typically 1,296,000 seconds / 15 days). Only when *that* expires do they need to login again.\n\nSee the [Refresh user token endpoint](https://abdm.gov.in/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-profile-account-request-token) in the portal.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "No, they don't need to login again. The response includes a **refreshToken** alongside the X-token.\n\nWhen the X-token expires (after `expiresIn` seconds, typically 1800 seconds / 30 minutes), call **`GET /abha/api/v3/profile/account/request/token`** with the `refreshToken` in the `R-token` header to get a fresh X-token without requiring re-login.\n\nThe refreshToken itself lasts longer—`refreshExpiresIn` (typically 1,296,000 seconds / 15 days). Only when *that* expires do they need to login again.\n\nSee the [Refresh user token endpoint](https://abdm.gov.in/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-profile-account-request-token) in the portal.",
+  "sources": [],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/biometric/endpoints/biometric-hcx-abha-biometric-auth-refresh-token\",\"id\":\"biometric_hcx_abha_biometric_auth_refresh_token\",\"summary\":\"Biometric auth refresh token\",\"title\":\"GET /hcx/abha/biometric/auth/refresh/token\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-get-v3-phr-app-login-profile-request-token\",\"id\":\"p2_get_v3_phr_app_login_profile_request_token\",\"summary\":\"Refresh Token\",\"title\":\"GET /abha/api/v3/phr/app/login/profile/request/token\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-profile-account-request-token\",\"id\":\"m1_get_v3_profile_account_request_token\",\"summary\":\"Refresh user token\",\"title\":\"GET /abha/api/v3/profile/account/request/token\",\"type\":\"operation\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"doc_path\":\"/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-profile-account-request-token\",\"operation_id\":\"m1_get_v3_profile_account_request_token\",\"spec\":{\"description\":\"**Endpoint:** `GET /abha/api/v3/profile/account/request/token`\\n\\n**Flow:** **Access Tokens & Encryption** - independent API; call the one that fits your identifier / modality.\\n\\n---\\n\\nThis API endpoint is used to request a token for accessing a user’s ABHA (Ayushman Bharat Health Account) profile. This token is essential for authenticating and authorizing the user to perform various actions within their profile.\",\"operationId\":\"m1_get_v3_profile_account_request_token\",\"parameters\":[{\"description\":\"Refresh token (`Bearer <refreshToken>`) received at login.\",\"example\":\"Bearer {{R-jwtToken}}\",\"in\":\"header\",\"name\":\"R-token\",\"required\":true,\"schema\":{\"type\":\"string\"}},{\"description\":\"Current UTC timestamp in ISO-8601 format.\",\"example\":\"2022-10-06T15:10:00.587Z\",\"in\":\"header\",\"name\":\"TIMESTAMP\",\"required\":true,\"schema\":{\"format\":\"date-time\",\"type\":\"string\"}},{\"description\":\"Unique UUID for every request.\",\"example\":\"18235d89-cb13-479d-ad71-7a57d5f669a8\",\"in\":\"header\",\"name\":\"REQUEST-ID\",\"required\":true,\"schema\":{\"format\":\"uuid\",\"type\":\"string\"}}],\"responses\":{\"200\":{\"content\":{\"application/json\":{\"examples\":{\"Token Generated- Positive flow\":{\"value\":{\"expiresIn\":1800,\"refreshExpiresIn\":1296000,\"refreshToken\":\"<TOKEN>\",\"token\":\"<TOKEN>\"}}},\"schema\":{\"properties\":{\"expiresIn\":{\"example\":1800,\"type\":\"integer\"},\"refreshExpiresIn\":{\"example\":1296000,\"type\":\"integer\"},\"refreshToken\":{\"example\":\"<TOKEN>\",\"type\":\"string\"},\"token\":{\"example\":\"<TOKEN>\",\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"The token was successfully generated and sent to the user’s registered contact method.\"},\"400\":{\"content\":{\"application/json\":{\"examples\":{\"Invalid Scope\":{\"value\":{\"message\":\"Invalid R-token\",\"timestamp\":\"2025-01-08T15:44:30.000Z\"}}},\"schema\":{\"properties\":{\"message\":{\"example\":\"Invalid R-token\",\"type\":\"string\"},\"timestamp\":{\"example\":\"2025-01-08T15:44:30.000Z\",\"format\":\"date-time\",\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"The 400 response code indicates a bad request\"},\"401\":{\"content\":{\"application/json\":{\"examples\":{\"Token request - Unauthorized\":{\"value\":{\"code\":\"900902\",\"description\":\"Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'\",\"message\":\"Missing Credentials\"}}},\"schema\":{\"properties\":{\"value\":{\"properties\":{\"code\":{\"example\":\"900902\",\"type\":\"string\"},\"description\":{\"example\":\"Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'\",\"type\":\"string\"},\"message\":{\"example\":\"Missing Credentials\",\"type\":\"string\"}},\"type\":\"object\"}},\"type\":\"object\"}}},\"description\":\"The 401 response code indicates an unauthorized request. In this context, it refers to the lack of proper authentication during the operation of the Invalid Credentials <br><br>  \"},\"404\":{\"content\":{\"application/json\":{\"examples\":{\"Not Found - Invalid Request ID\":{\"value\":{\"error\":{\"code\":\"ABDM-1030: \",\"message\":\"Invalid request ID\"}}},\"Not Found - Invalid Timestamp\":{\"value\":{\"error\":{\"code\":\"ABDM-1016: \",\"message\":\"Invalid Timestamp\"}}}},\"schema\":{\"properties\":{\"error\":{\"properties\":{\"code\":{\"example\":\"ABDM-1016:, ABDM-1030: \",\"type\":\"string\"},\"message\":{\"example\":\"Invalid Timestamp, Invalid request ID\",\"type\":\"string\"}},\"type\":\"object\"}},\"type\":\"object\"}}},\"description\":\"A 404 Not Found error occurs when a server cannot find the requested resource. This error indicates that the server is reachable, but the specific page or resource is not available\"},\"500\":{\"description\":\"<b>Internal Server Error</b><br><br>  An Internal Server Error (500) indicates that the server encountered an unexpected condition that prevented it from fulfilling the request.\"}},\"security\":[{\"bearerAuth\":[]}],\"summary\":\"Refresh user token\",\"tags\":[\"Access Tokens & Encryption\"],\"x-abdm-nha-operation-id\":\"utilRefreshToken\",\"x-abdm-title\":\"Refresh user token\",\"x-journey\":{\"journey\":\"Access Tokens & Encryption\",\"kind\":\"set\",\"of\":1,\"step\":1},\"x-stoplight\":{\"id\":\"rzx3lv9ybtbv3\"}}}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:06:38.652Z",
+  "usage": {
+    "input_tokens": 40,
+    "output_tokens": 925,
+    "cache_read_input_tokens": 40162,
+    "cache_creation_input_tokens": 8293,
+    "num_turns": 5,
+    "duration_ms": 13658,
+    "cost_usd_equivalent": 0.025267200000000004
+  }
+}

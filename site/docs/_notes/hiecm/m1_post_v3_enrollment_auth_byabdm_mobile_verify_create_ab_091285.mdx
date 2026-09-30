@@ -1,0 +1,9 @@
+## Verify an OTP that ABDM sent, during enrolment {/* #m1-enrolment-verify-abdm-otp */}
+
+Confirms the mobile number or email address the person gave during enrolment, and links it to the new [ABHA](/docs/hiecm/v3/getting-started/glossary#abha). The [OTP](/docs/hiecm/v3/getting-started/glossary#otp) came from [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm), not from Aadhaar, which is why this call is separate from the create call. Send the same `scope` you used to request it, the `txnId` and the encrypted OTP.
+
+<AgentOnly>
+**How you know it worked.** A 200 with `authResult` `success`. A 200 can also carry `authResult` `failed` with an expired OTP message, so read `authResult` and not the status alone.
+
+**When it goes wrong.** A 400 names the refused part: `Invalid Transaction Id`, `Invalid Scope`, `Invalid Auth Method` or `Invalid OTP value`. For an expired OTP, request a new one and verify again.
+</AgentOnly>

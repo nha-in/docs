@@ -1,0 +1,38 @@
+{
+  "id": "define-abdm-milestone-m1-01",
+  "slice": "define",
+  "class": "define",
+  "turns": [
+    {
+      "role": "user",
+      "text": "what is M1"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "gateway": "hiecm",
+  "must_contain": [
+    "M1 is ABDM Milestone 1, M1 Identity: creating and verifying ABHA, including ABHA number and ABHA address creation and verification"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom",
+    "hie-cm milestone",
+    "milestone of hie-cm",
+    "milestone in hie-cm"
+  ],
+  "expected_sources": [
+    "hiecm.glossary.m1"
+  ],
+  "expected_shape": "define",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#glossary",
+  "catalogue_version": "2026.09.16",
+  "notes": "NHA review of 30 September 2026: the panel answered 'M1 is the HIE-CM milestone for creating and verifying an ABHA'. M1 to M4 are ABDM milestones, implemented through the HIE-CM gateway; the gateway may be named, but M1 is not a HIE-CM milestone. Source lines: site/docs/_glossary/_hiecm.mdx, M1: 'Milestone 1 (M1 Identity), Create and verify ABHA, covers ABHA-related functions ... creation of an ABHA Number ... creation of an ABHA Address, verification during patient registration'."
+}

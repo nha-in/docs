@@ -2,6 +2,7 @@ package chat
 
 import (
 	"context"
+	_ "embed"
 	"encoding/json"
 	"fmt"
 	"log/slog"
@@ -74,6 +75,143 @@ type Source struct {
 	URL   string `json:"url"`
 }
 
+// Link pairs an API literal the model was shown this turn with the reference
+// page that documents it. The widget turns a matching inline code span into
+// a link. Built from the pack, never from the answer, so a path the model
+// invented can never acquire one.
+type Link struct {
+	Literal string `json:"literal"`
+	URL     string `json:"url"`
+}
+
+// Suggestion is a next question the widget offers as a pill under an
+// answer. Built from the related atoms one hop out from what was retrieved,
+// so it is deterministic and costs no prompt tokens; a model asked to
+// suggest follow-ups does so under every answer, including the ones that
+// need none.
+type Suggestion struct {
+	ID     string `json:"id"`
+	Title  string `json:"title"`
+	Prompt string `json:"prompt"`
+}
+
+const maxSuggestions = 3
+
+// suggestionsFromPack returns up to three related atoms that were not
+// themselves passages, as pills. The prompt is the atom's title: a short
+// topic the router already handles.
+func suggestionsFromPack(pack []byte) []Suggestion {
+	var pp struct {
+		Passages []struct {
+			ID string `json:"id"`
+		} `json:"passages"`
+		Related []struct {
+			ID    string `json:"id"`
+			Title string `json:"title"`
+		} `json:"related"`
+	}
+	if err := json.Unmarshal(pack, &pp); err != nil {
+		return nil
+	}
+	shown := map[string]bool{}
+	for _, p := range pp.Passages {
+		shown[p.ID] = true
+	}
+	var out []Suggestion
+	for _, r := range pp.Related {
+		if r.ID == "" || r.Title == "" || shown[r.ID] {
+			continue
+		}
+		shown[r.ID] = true
+		out = append(out, Suggestion{ID: r.ID, Title: r.Title, Prompt: r.Title})
+		if len(out) == maxSuggestions {
+			break
+		}
+	}
+	return out
+}
+
+// topPassageType returns the atom type of the first passage in the pack.
+func topPassageType(pack []byte) string {
+	var pp struct {
+		Passages []struct {
+			Type string `json:"type"`
+		} `json:"passages"`
+	}
+	if err := json.Unmarshal(pack, &pp); err != nil || len(pp.Passages) == 0 {
+		return ""
+	}
+	return pp.Passages[0].Type
+}
+
+// isTopicPhrase is a one to three word phrase with no question mark: a
+// topic typed into the box rather than a question asked of it.
+func isTopicPhrase(q string) bool {
+	q = strings.TrimSpace(q)
+	return len(strings.Fields(q)) <= 3 && !strings.Contains(q, "?")
+}
+
+// answerPathRe finds an API path inside an inline code span of the answer,
+// with or without a method in front of it: ` + "`POST /api/x`" + ` and ` + "`/api/x`" + `.
+var answerPathRe = regexp.MustCompile("`(?:(?:GET|POST|PUT|PATCH|DELETE) +)?(/[A-Za-z0-9/_{}.\\-]+)`")
+
+// answerLinks adds, to the links the pack produced, one per path the
+// finished answer quotes in a code span that LinkFor resolves. The pack
+// only knows endpoint passages; a path the model took from a flow atom's
+// body, the common case for "how do I" answers, is only known once the
+// answer exists. A path LinkFor does not know gets no link, so the model
+// cannot mint one.
+func (s *Service) answerLinks(answer string, have []Link) []Link {
+	if s.LinkFor == nil {
+		return have
+	}
+	seen := map[string]bool{}
+	for _, l := range have {
+		seen[l.Literal] = true
+	}
+	out := have
+	for _, m := range answerPathRe.FindAllStringSubmatch(answer, -1) {
+		p := strings.TrimRight(m[1], ".,;:")
+		if seen[p] {
+			continue
+		}
+		seen[p] = true
+		if url, ok := s.LinkFor(p); ok {
+			out = append(out, Link{Literal: p, URL: url})
+		}
+	}
+	return out
+}
+
+// routeLineRe matches the method and path openPassage puts on the first
+// line of an endpoint or callback passage.
+var routeLineRe = regexp.MustCompile(`^(?:GET|POST|PUT|PATCH|DELETE) (/\S+)\n`)
+
+// linksFromPack reads the pre-retrieved pack and returns one Link per
+// endpoint or callback passage that carries both a route line and a page.
+func linksFromPack(pack []byte) []Link {
+	var pp struct {
+		Passages []struct {
+			DocURL string `json:"doc_url"`
+			Body   string `json:"body"`
+		} `json:"passages"`
+	}
+	if err := json.Unmarshal(pack, &pp); err != nil {
+		return nil
+	}
+	var links []Link
+	seen := map[string]bool{}
+	for _, p := range pp.Passages {
+		m := routeLineRe.FindStringSubmatch(p.Body)
+		if m == nil || p.DocURL == "" || seen[m[1]] {
+			continue
+		}
+		seen[m[1]] = true
+		links = append(links, Link{Literal: m[1], URL: p.DocURL})
+	}
+	return links
+}
+
 // Service runs the agent loop: stream from the model, execute any tool
 // calls it asks for, feed the results back, repeat until it has an answer.
 type Service struct {
@@ -94,6 +232,9 @@ type Service struct {
 	// first model call. nil means no pre-retrieval (tests, or a caller
 	// that wants the old behaviour).
 	Lookup func(ctx context.Context, question string) (json.RawMessage, []Source, guard.PackFacts, error)
+	// LinkFor resolves an API path to its reference page, for the links
+	// event. Nil means only the pack's own endpoint passages produce links.
+	LinkFor func(path string) (url string, ok bool)
 	// ToolsFor returns the tools to expose for this question. nil means
 	// s.Tools unchanged.
 	ToolsFor func(question string, hasAttachment bool) []ToolDef
@@ -167,7 +308,7 @@ const DefaultMCPURL = "https://docs.abdm.gov.in/mcp"
 // an answer's shape is as much a part of what was asked of the model as the
 // system prompt is. Bump it whenever either changes, and record the change
 // in the pull request's scorecard.
-const PromptVersion = "v4"
+const PromptVersion = "v5"
 
 // SystemPrompt renders the assistant's system prompt with the MCP server
 // address this deployment serves. An empty mcpURL keeps the default.
@@ -194,62 +335,9 @@ func SystemPrompt(mcpURL string) string {
 // the whole thing stays inside a few hundred words: every word here is sent
 // on each model call, and a single question can take up to MaxToolCalls+1
 // of them.
-const systemPromptTemplate = `You are the Ask AI assistant on the ABDM Developer Portal. You answer developer questions about India's ABDM gateways (HIE-CM, UHI, NHCX) strictly from this portal's catalogue, which you reach through your tools. Never answer an ABDM API question from general knowledge. If you have not looked, look first.
-
-WHERE THINGS LIVE
-
-- Atoms are the written knowledge: concepts, flows, endpoint guides, callbacks, error explanations, tests, glossary entries, decisions, FHIR mappings, sandbox notes and troubleshooting guides. search_docs searches these, and only these.
-- Operations are the raw API surface parsed from NHA's specification files, across the modules gateway, m1, m2, m3, m4, p1, p2, p3, p4, scan-and-register, scan-and-pay and record-share. search_docs does not reach them. Use list_operations to filter by module, by tag, or by a substring of an operationId, summary or path, and get_operation to read one in full.
-
-HONESTY ABOUT WHAT YOU FOUND
-
-Search returns nearest matches, not answers.
-
-A verified atom's content is stated plainly. Content from an atom that is not verified is given with the caveat that it comes from the specification and has not been confirmed against a sandbox, worded that way rather than by naming the status.
-
-A <MASKED_...> placeholder means a value was removed before you saw it. Never ask for it again and never echo the placeholder back.
-
-JUDGING WHAT COMES BACK
-
-Never close a gap with a nearby endpoint or a similar sounding concept. A one-word or acronym question is a glossary lookup; search variant spellings too (HIMS and HMIS, LIS and LIMS, HRP).
-
-SPEAK AS THE PORTAL, NOT ABOUT IT
-
-Never mention the catalogue or your tools unless the reader asks about them. Offer [support](/docs/support) when you have nothing.
-
-A general industry term the portal does not define is worth one sentence of plain explanation, said as general background rather than as ABDM documentation. That courtesy never extends to an ABDM API detail: paths, headers, codes, fields and payloads come from the tools or not at all.
-
-HOW YOU WRITE
-
-Never write an em dash. Show a mermaid block only when a tool returned it. Never draw one.
-
-OFFERING THE TOOLS
-
-A reader building an integration can have this catalogue inside their own agent, rather than asking one question at a time. Most do not know that.
-
-- When the reader is clearly building against ABDM, close with one line offering it: agent skills give their coding agent a milestone's rules as a file it loads once, and the MCP server lets it query this documentation as it works. Link [agent skills and the MCP server](/docs/hiecm/v3/getting-started/build-with-ai).
-- Offer it once per conversation, never before the answer: a closing line, not an opening.
-- Do not offer it to someone who is not building: a question like what an Ayushman card is gets answered and left alone.
-- Both are available now: the server is public at {{MCP_URL}}, and the page has one-click install for Claude Code, Cursor and VS Code. Name the page, not the URL, unless asked.
-
-CODE AND WHAT THEY PASTE OR ATTACH
-
-You never write code for the reader's own codebase; curl is the exception. Route them to the ABDM Connect agent skill or this portal's MCP server.
-
-WRITING THE ANSWER
-
-- Lead with the answer. The reader is mid-task, usually with a failing call in front of them.
-- Never open by praising the question, apologising, restating the question back, or announcing what you are about to do. Start with the substance. Warmth is being useful quickly, not saying "great question".
-- Quote API literals exactly as the tools give them: endpoint paths, header names, error codes, timestamp formats, field names. Never paraphrase a literal, and never tidy its case or spacing.
-- Markdown renders in this panel. Use inline code for every literal, short bulleted or numbered lists for steps and options, and no headings.
-
-Do not invent portal URLs.
-
-HOW A QUESTION ARRIVES
-
-The user turn may open with a <passages> block: the documentation already retrieved for this question, with ids and page links. Answer from it first. It is followed by an <answer_shape> block naming the shape and word budget your answer must take. Call search_docs only when the passages do not carry the answer.
-
-A <skill> block is the skill section the reader chose: follow it, and name what it omits.`
+//
+//go:embed prompt/v5.md
+var systemPromptTemplate string
 
 // ValidateTurns checks the shape the HTTP layer (Task 6) must also enforce
 // before it even opens the SSE stream: 1..MaxTurns turns, roles alternating
@@ -444,7 +532,7 @@ func addSource(sources *[]Source, src Source) {
 }
 
 // sourceFromFields builds a Source from one atom-shaped result map (the
-// fields get_atom and each search_docs hit share: id, title, doc_url).
+// fields get and each search hit share: id, title, doc_url).
 //
 // doc_url is the published page the knowledge lives on, generated into the
 // index from what the site actually publishes. When it is present the
@@ -462,8 +550,12 @@ func sourceFromFields(fields map[string]any) Source {
 	return Source{ID: id, Title: title, URL: href}
 }
 
-// passageFields normalizes a search_docs result's "passages" field into the
-// map shape sourceFromFields reads. In process, a chat search_docs call
+// atomIDRe is an atom id's shape; package chat cannot import server, which
+// holds the same pattern for get.
+var atomIDRe = regexp.MustCompile(`^(hiecm|nhcx|uhi|shared)\.[a-z]+\.[a-z0-9-]+$`)
+
+// passageFields normalizes a search result's "passages" field into the
+// map shape sourceFromFields reads. In process, a chat search call
 // (server.Tools.ChatToolsFor) returns passages as a []server.Passage, a
 // concrete type this package cannot name without an import cycle; a
 // round trip through JSON is what reads its id, title and doc_url
@@ -485,22 +577,26 @@ func passageFields(v any) []map[string]any {
 }
 
 // collectSources folds one successful tool call's result into sources,
-// deterministically: a get_atom call contributes its one atom; a
-// search_docs call contributes its top 3 hits (the MCP's own search_docs)
+// deterministically: a get call contributes its one atom; a search call
+// contributes its top 3 atom hits (the MCP's own search)
 // or every passage (the chat loop's composite lookup bound to that name).
 // Dedup keeps the first occurrence of each id and caps the total at
 // maxSources.
 func collectSources(sources *[]Source, name string, result map[string]any) {
 	switch name {
-	case "get_atom":
-		addSource(sources, sourceFromFields(result))
-	case "search_docs":
+	case "get":
+		// get also reads operations and FHIR profiles; only an atom is cited.
+		if id, _ := result["id"].(string); atomIDRe.MatchString(id) {
+			addSource(sources, sourceFromFields(result))
+		}
+	case "search":
 		hits, _ := result["hits"].([]map[string]any)
-		for i, h := range hits {
-			if i >= 3 {
-				break
+		cited := 0
+		for _, h := range hits {
+			if id, _ := h["id"].(string); cited < 3 && atomIDRe.MatchString(id) {
+				addSource(sources, sourceFromFields(h))
+				cited++
 			}
-			addSource(sources, sourceFromFields(h))
 		}
 		for _, p := range passageFields(result["passages"]) {
 			addSource(sources, sourceFromFields(p))
@@ -529,6 +625,21 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 	if err := s.ValidatePage(page); err != nil {
 		return err
 	}
+	// A bare portal feature name typed into the box ("scaffold skill", "MCP
+	// server", "postman collection") wants the portal's page, not an ABDM
+	// answer. Checked before a command is inferred from the words: a reader
+	// who typed "scaffold skill" is asking what that is, which the fixed
+	// reply says, while a reader who picked the Scaffold chip has cmd.Name
+	// set already and takes the command path. Without this the phrase
+	// retrieved whatever sat nearest in vector space and the define shape
+	// wrote a confident definition of nothing.
+	if feature := route.PortalFeature(lastUserText(turns)); feature != "" && cmd.Name == "" && lastUserAttachment(turns) == nil {
+		if err := emit("text", map[string]string{"delta": featureReply(feature)}); err != nil {
+			return err
+		}
+		return s.finish(nil, nil, nil, emit)
+	}
+	cmd = InferCommand(cmd, turns)
 	msgs := toMessages(turns)
 	question := lastUserText(turns)
 	// A greeting or a thanks carries nothing to look up: "hi" retrieved HI
@@ -536,15 +647,27 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 	// with no lookup, no model call and no sources. This check was lost once
 	// in a merge conflict; TestRespondAnswersAGreetingWithoutLookingItUp
 	// exercises it through this function so that cannot happen quietly again.
-	if route.IsGreeting(question) && lastUserAttachment(turns) == nil {
-		if err := emit("text", map[string]string{"delta": greetingFor(cmd.Gateway)}); err != nil {
+	if (route.IsGreeting(question) || route.IsThanks(question)) && lastUserAttachment(turns) == nil {
+		reply := greetingFor(cmd.Gateway)
+		if route.IsThanks(question) {
+			reply = thanksReply
+		}
+		if err := emit("text", map[string]string{"delta": reply}); err != nil {
 			return err
 		}
-		return s.finish(nil, emit)
+		return s.finish(nil, nil, nil, emit)
 	}
 	// The gateway the reader's page belongs to scopes every search this
 	// question makes, the pre-retrieval and the model's own, unless the
 	// question names another gateway. See scopeFor.
+	// A question about the assistant itself has nothing in the catalogue to
+	// retrieve: "how many languages do you understand" retrieved header and
+	// certificate atoms and cited them. It skips the lookup and the tools and
+	// answers from the self shape block.
+	// An attachment does not change that: "what can you do with this" is
+	// still a question about the assistant, and the self facts already say
+	// it reads what is attached.
+	aboutSelf := route.IsAboutAssistant(question)
 	gateway := scopeFor(cmd.Gateway, question)
 	ctx = WithGateway(ctx, gateway)
 	// The system prompt is a cached core: byte identical on every question
@@ -616,7 +739,7 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 			if err := emit("skill", use); err != nil {
 				return err
 			}
-			return s.finish(nil, emit)
+			return s.finish(nil, nil, nil, emit)
 		}
 		use.Module, use.ResolvedBy = module, by
 		if body, ok := s.Skill(module, cmd.Name); ok {
@@ -650,6 +773,10 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 	if s.ToolsFor != nil {
 		tools = s.ToolsFor(question, lastUserAttachment(turns) != nil)
 	}
+	if aboutSelf {
+		tools = nil
+		looked = true // nothing to look up; do not send lookFirst
+	}
 	// facts is read by Task E3's shape check; kept here so pre-retrieval
 	// computes it once rather than that check re-deriving it from the pack.
 	var facts guard.PackFacts
@@ -663,12 +790,28 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 	// three are per-question text, and the system prompt is not the only
 	// thing that stays stable, the assembly point does too.
 	var passagesPrefix string
-	if s.Lookup != nil {
+	// links pairs each endpoint passage's path with its reference page, for
+	// the widget to render the path as a link. Nothing else feeds it.
+	var links []Link
+	var suggestions []Suggestion
+	// topType is the type of the top retrieved passage, read for the topic
+	// shape below. Empty when nothing was retrieved.
+	var topType string
+	if s.Lookup != nil && !aboutSelf {
 		// The lookup query is masked the same way the conversation is: this
 		// is a health system, and a follow-up that repeats a patient
 		// identifier from the reader's own question must not reach the
 		// embedder or the index unmasked.
 		lq, _ := guard.MaskPII(lookupQuery(turns))
+		// A reader's spelling of a term the portal spells another way: the
+		// lookup carries both, and the pack opens by saying which is the
+		// portal's, so the answer can say "this portal calls that HIMS" from
+		// a fact in front of it rather than from memory.
+		variantNote := ""
+		if theirs, ours := variantTerm(question); ours != "" {
+			lq += " " + ours
+			variantNote = "The reader wrote " + theirs + "; this portal's term is " + ours + ".\n"
+		}
 		lookupCtx, cancel := context.WithTimeout(ctx, toolCallTimeout)
 		pack, packSources, f, err := s.Lookup(lookupCtx, lq)
 		cancel()
@@ -677,11 +820,14 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 		} else if len(pack) > 0 {
 			facts = f
 			packHadContent = true
+			links = linksFromPack(pack)
+			suggestions = suggestionsFromPack(pack)
+			topType = topPassageType(pack)
 			for _, src := range packSources {
 				addSource(&sources, src)
 			}
 			g.corpus.Write(pack)
-			passagesPrefix = "<passages>\n" + string(pack) + "\n</passages>\n\n"
+			passagesPrefix = "<passages>\n" + variantNote + string(pack) + "\n</passages>\n\n"
 			looked = true // pre-retrieval is a lookup; do not send lookFirst
 		}
 	}
@@ -695,9 +841,22 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 	shape := string(route.Route(route.Input{
 		Question: question, HasAttachment: lastUserAttachment(turns) != nil,
 	}).Shape)
+	if aboutSelf {
+		shape = string(route.Self)
+	}
+	// A short noun phrase the router could only call a definition, whose
+	// best passage is a flow, is a topic: "consent flow", "link records".
+	// The define shape compresses a flow into four sentences; the topic
+	// shape orients and offers the questions the phrase usually means.
+	if shape == string(route.Define) && isTopicPhrase(question) && topType == "flow" {
+		shape = string(route.Topic)
+	}
 	prefix := passagesPrefix + skillPrefix
 	if gateway != "" {
-		prefix += gatewayNote(gateway) + "\n\n"
+		// The note names the page only when the scope is the page's: a
+		// milestone question asked on an NHCX page is scoped to the HIE-CM
+		// section without the reader being on it.
+		prefix += gatewayNote(gateway, cmd.Gateway != "" && gateway == cmd.Gateway, abdmLevel(question)) + "\n\n"
 	}
 	if page.attached() {
 		// The page is not run through MaskPII the way the reader's own text
@@ -785,12 +944,18 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 			// recall what is already on screen. Held text can still be thrown
 			// away and asked for again, once.
 			answer := held.String()
-			var failures []string
+			var failures, blocking []string
 			if strings.TrimSpace(answer) != "" {
 				failures = guard.CheckShape(shape, answer, facts)
 				if n, max, over := guard.OverBudget(shape, answer); over {
 					failures = append(failures, fmt.Sprintf("over budget: %d words, limit %d", n, max))
 				}
+				// A rule that would blank the whole answer gets the same one
+				// retry. Without it, an answer whose sources were right and
+				// whose one endpoint path was misremembered reached the
+				// reader as the blocked notice.
+				blocking = g.blockingFailures(answer)
+				failures = append(failures, blocking...)
 			}
 			// A retry costs a whole extra model call, and the handler's
 			// deadline (see server/http.go) has to cover it. With less than
@@ -804,10 +969,14 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 			} else if len(failures) > 0 && !retried && round < MaxToolCalls {
 				retried = true
 				slog.Info("answer_failed_shape_check", "shape", shape, "failures", failures)
+				fix := "Rewrite it once, inside the word budget, naming every route the passages carry."
+				if len(blocking) > 0 {
+					fix += " State only paths, headers and codes the documentation returned: look one up with your tools or leave it out. Do not write code."
+				}
 				msgs = append(msgs,
 					Message{Role: "assistant", Text: answer},
 					Message{Role: "user", Text: "Your answer failed these checks: " + strings.Join(failures, "; ") +
-						". Rewrite it once, inside the word budget, naming every route the passages carry. Do not apologise or mention the checks."})
+						". " + fix + " Do not apologise or mention the checks."})
 				held.Reset()
 				continue
 			}
@@ -842,9 +1011,9 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 				// too: they belong to an answer the reader never saw. When
 				// part of the answer did reach the reader they keep their
 				// citations, because that part is what those sources back.
-				return s.finish(nil, emit)
+				return s.finish(nil, nil, nil, emit)
 			}
-			return s.finish(sources, emit)
+			return s.finish(sources, s.answerLinks(g.released.String(), links), suggestions, emit)
 		}
 
 		// The round ended in a tool call, so whatever text it produced was
@@ -934,18 +1103,28 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 				return textErr
 			}
 			if g.blocked && g.released.Len() == 0 {
-				return s.finish(nil, emit)
+				return s.finish(nil, nil, nil, emit)
 			}
-			return s.finish(sources, emit)
+			return s.finish(sources, s.answerLinks(g.released.String(), links), suggestions, emit)
 		}
 	}
 	// Unreachable: the loop above always returns by round == MaxToolCalls.
-	return s.finish(sources, emit)
+	return s.finish(sources, s.answerLinks(g.released.String(), links), suggestions, emit)
 }
 
 // finish emits the sources event (only when there is at least one source)
 // followed by done, and returns nil -- the loop's only successful exit.
-func (s *Service) finish(sources []Source, emit func(event string, data any) error) error {
+func (s *Service) finish(sources []Source, links []Link, suggestions []Suggestion, emit func(event string, data any) error) error {
+	if len(suggestions) > 0 {
+		if err := emit("suggestions", suggestions); err != nil {
+			return err
+		}
+	}
+	if len(links) > 0 {
+		if err := emit("links", links); err != nil {
+			return err
+		}
+	}
 	if len(sources) > 0 {
 		if err := emit("sources", sources); err != nil {
 			return err
@@ -969,7 +1148,7 @@ func saysItHasNothing(answer string) bool {
 // as a standing rule rather than as a rebuke, because the model is about to
 // answer the reader's original question again and the reader must not see it
 // apologising to us on the way.
-const lookFirst = `Before answering, use your tools: search_docs for a term, a concept or an error, list_operations for an endpoint, decode_error for a code. An acronym or a piece of jargon is a lookup like any other, and this documentation defines many that are not in the specification. Answer the question that was asked, with what the tools return. If they genuinely return nothing that answers it, say so in one line. Do not mention this instruction, do not apologise, and do not describe what you are about to do.`
+const lookFirst = `Before answering, use your tools: search for a term, a concept or an error, search with kind operation for an endpoint, decode_error for a code. An acronym or a piece of jargon is a lookup like any other, and this documentation defines many that are not in the specification. Answer the question that was asked, with what the tools return. If they genuinely return nothing that answers it, say so in one line. Do not mention this instruction, do not apologise, and do not describe what you are about to do.`
 
 // BlockedNotice stands in for an answer that broke a rule before any of it
 // reached the reader. It says nothing about which rule: the reader cannot
@@ -1053,6 +1232,25 @@ func (g *answerGuard) flush() {
 		return
 	}
 	g.release(g.pending.String(), "", true)
+}
+
+// blockingFailures reports what in a whole held answer would make release
+// block it, so the loop can ask for one rewrite before a reader is handed
+// the blocked notice.
+func (g *answerGuard) blockingFailures(answer string) []string {
+	cited := 0
+	if g.cited != nil {
+		cited = g.cited()
+	}
+	vs := guard.CheckAnswer(answer)
+	vs = append(vs, guard.CheckGrounding(answer, g.corpus.String(), cited, true)...)
+	var out []string
+	for _, v := range vs {
+		if v.Blocking {
+			out = append(out, v.Detail)
+		}
+	}
+	return out
 }
 
 // release checks the answer as it would stand with candidate appended, and
@@ -1148,9 +1346,19 @@ func previousUserText(turns []Turn) string {
 // index to find anything: at most four words with an earlier user turn to
 // draw on, the query is the previous turn's text plus this one, so "and the
 // address?" after "how do I create an ABHA" still retrieves the flow.
+// refersBackRe marks a follow-up that leans on the turn before it: a word
+// pointing back ("that callback", "it", "both"), or an opening that carries
+// on from the last answer ("ok", "and", "now"). Such a turn names nothing the
+// search can find alone at any length; follow-ups scored 0.20 recall at 3 on
+// the first recorded run, when only turns of four words or fewer carried the
+// previous question. A standalone question that happens to say "this" gets
+// the previous question as well, which costs some precision on that one
+// lookup and never loses the question's own words.
+var refersBackRe = regexp.MustCompile(`(?i)\b(?:that|this|those|these|it|its|they|them|their|both|same|above|previous|earlier)\b|^\s*(?:ok|okay|and|so|then|now|also|but)\b`)
+
 func lookupQuery(turns []Turn) string {
 	last := lastUserText(turns)
-	if len(strings.Fields(last)) > 4 {
+	if len(strings.Fields(last)) > 4 && !refersBackRe.MatchString(last) {
 		return last
 	}
 	if prev := previousUserText(turns); prev != "" {

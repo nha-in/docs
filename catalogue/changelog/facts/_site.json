@@ -16,9 +16,10 @@
     "validate_request"
   ],
   "plugins": {
-    "abdm-contributors-assistant": "0.3.0",
-    "abdm-integrators-assistant": "0.5.0",
-    "nhcx": "1.0.0"
+    "abdm-contributors-assistant": "0.4.4",
+    "abdm-integrators-assistant": "0.10.1",
+    "nhcx": "1.0.2",
+    "uhi-integrators-assistant": "0.1.1"
   },
   "procedures": {},
   "skills": [
@@ -27,6 +28,7 @@
     "hiecm-gateway-build",
     "hiecm-m1-build",
     "hiecm-m1-debug",
+    "hiecm-m1-test",
     "hiecm-m2-build",
     "hiecm-m2-debug",
     "hiecm-m3-build",
@@ -46,6 +48,18 @@
     "nhcx-full",
     "nhcx-payment",
     "nhcx-preauth",
-    "nhcx-reprocess"
+    "nhcx-reprocess",
+    "uhi-ambulance-build",
+    "uhi-ambulance-debug",
+    "uhi-blood-bank-build",
+    "uhi-blood-bank-debug",
+    "uhi-consultation-build",
+    "uhi-consultation-debug",
+    "uhi-jan-aushadhi-build",
+    "uhi-jan-aushadhi-debug",
+    "uhi-notto-build",
+    "uhi-notto-debug",
+    "uhi-pmjay-hem-build",
+    "uhi-pmjay-hem-debug"
   ]
 }

@@ -644,6 +644,22 @@
   font-weight: 500;
 }
 
+/* The Build with AI row, marked the way its tab is in the strip: an outline
+   and an accent mark, never a fill that reads as the current row. */
+.mobile-nav-tab--feature {
+  display: flex;
+  align-items: center;
+  box-shadow: inset 0 0 0 1px hsl(220 54% 36% / 0.28);
+}
+
+[data-theme='dark'] .mobile-nav-tab--feature {
+  box-shadow: inset 0 0 0 1px hsl(216 40% 72% / 0.3);
+}
+
+.mobile-nav-tab--feature svg {
+  color: var(--accent);
+}
+
 /* The sidebar arrives as Docusaurus' own `.menu__list`, already styled. */
 .mobile-nav-sidebar .menu__list {
   padding: 0;

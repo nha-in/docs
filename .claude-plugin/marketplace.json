@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "abdm-portal",
-  "description": "The ABDM Developer Portal: integration skills for ABDM and NHCX integrators, and the contributor's assistant for building the portal itself",
+  "description": "The ABDM Developer Portal: integration skills for ABDM, UHI and NHCX integrators, one plugin per gateway, and the contributor's assistant for building the portal itself",
   "owner": {
     "name": "ABDM Developer Portal working group",
     "url": "https://github.com/nha-in/docs"
@@ -10,7 +10,7 @@
     {
       "name": "abdm-integrators-assistant",
       "source": "./plugins/abdm-integrators-assistant",
-      "description": "Build and debug an ABDM integration. Build skills scaffold a milestone flow by flow against the sandbox, M1 to M4 on the provider side and P1 to P3 inside a PHR application. Debug skills walk a failed call to a named fix, citing the Catalogue atom behind every step. fhir-generate and fhir-audit build or audit NRCES compliant FHIR document bundles against the Docs MCP validator.",
+      "description": "Build and debug an ABDM integration. One skill per module, gateway, M1 to M4 on the provider side, P1 to P4 inside a PHR application, Scan and Register, Scan and Pay, Record Share and FHIR, each with scaffold, integrate and debug references. Three agents plan above them: an integration agent that sequences skills toward a goal, a call debugger that takes one failing call to a fix proved by the original call succeeding, and a FHIR compliance agent that validates bundles against the Docs MCP validator.",
       "category": "documentation",
       "keywords": [
         "abdm",
@@ -34,6 +34,22 @@
         "insurance",
         "pmjay",
         "fhir",
+        "healthcare",
+        "india-health"
+      ],
+      "homepage": "https://github.com/nha-in/docs"
+    },
+    {
+      "name": "uhi-integrators-assistant",
+      "source": "./plugins/uhi-integrators-assistant",
+      "description": "Build and debug a UHI integration, one skill per service: Physical Consultation, Ambulance Booking, PM-JAY HEM hospital discovery, Blood Bank, Jan Aushadhi and NOTTO. Each carries scaffold, design, integrate, debug and test references for an EUA, or an HSPA where the service is open to one. Two agents plan above them: an integration agent that picks the role and sequences the service skills toward a goal, and a call debugger that takes one failing call or missing callback to a fix proved by the original step succeeding.",
+      "category": "documentation",
+      "keywords": [
+        "uhi",
+        "beckn",
+        "eua",
+        "hspa",
+        "pmjay",
         "healthcare",
         "india-health"
       ],

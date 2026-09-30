@@ -59,7 +59,7 @@ related:
   - nhcx.concept.policy-linking
   - nhcx.concept.jwe-envelope
   glossary:
-  - shared.glossary.consent-manager
+  - hiecm.glossary.consent-manager
   - shared.glossary.abha
   - shared.glossary.kyc
   - shared.glossary.otp
@@ -92,7 +92,7 @@ Read [access control](./access-control.md).
 | Insurance self network platforms | Individual claims only with the patient's consent |
 | The patient | The audit trail of events on their claims |
 
-An insurance self network platform submits the patient's consent in the domain header of its request. The consent flow works with the existing [consent manager](../../shared/glossary/consent-manager.md) infrastructure.
+An insurance self network platform submits the patient's consent in the domain header of its request. The consent flow works with the existing [consent manager](../../hiecm/glossary/consent-manager.md) infrastructure.
 
 ### Consent before notifications
 

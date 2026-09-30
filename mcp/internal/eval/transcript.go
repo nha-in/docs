@@ -11,6 +11,10 @@ import (
 	"github.com/nha-in/docs/mcp/internal/chat"
 )
 
+// SurfaceMCPAgent marks a transcript answered by an external agent through
+// the MCP (scripts/eval-mcp-agent.mjs), not by the Ask AI panel.
+const SurfaceMCPAgent = "mcp-agent"
+
 type ToolTrace struct {
 	Name   string          `json:"name"`
 	Input  json.RawMessage `json:"input"`
@@ -51,7 +55,12 @@ type Transcript struct {
 	// still carries whatever shape its question routed to here; checks.go
 	// falls back to ExpectedShape when Class is empty, which happens only
 	// for a transcript recorded before this field was written.
-	Class      string `json:"class"`
+	Class string `json:"class"`
+	// Surface names what answered: empty for the Ask AI panel, the only
+	// surface before the MCP agent eval, and SurfaceMCPAgent for an external
+	// agent that had only the MCP tools. Checks that belong to the panel's
+	// answer shapes skip the agent; see Check.
+	Surface    string `json:"surface,omitempty"`
 	RecordedAt string `json:"recorded_at"`
 }
 

@@ -21,12 +21,13 @@ import {fileURLToPath} from 'node:url';
 import {parse} from 'yaml';
 import {cleanDescription} from './lib/titles.mjs';
 import {errorsFromSpec} from './lib/spec-errors.mjs';
-import {loadJourneys} from './lib/journeys.mjs';
+import {loadJourneys, stepDataName} from './lib/journeys.mjs';
+import {UHI_SERVICES, skillFolder, uhiHostedBy} from './lib/uhi-skills.mjs';
 import {loadAtoms} from './lib/atoms.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dataDir = join(root, 'site', 'src', 'data', 'api');
-const specDir = join(root, 'catalogue', 'openapi', 'hiecm', 'v3');
+const specDir = join(root, 'catalogue', 'hiecm', 'openapi', 'v3');
 const outDir = join(root, 'site', 'static', 'skills');
 
 // Provenance for the snapshot header. A downloaded skill is frozen while the
@@ -61,12 +62,12 @@ const skillUrl = (slug, url) =>
 // skill that had been run, and a reader who discounts it loses the rules that
 // stop a journey asking twice.
 const UNVERIFIED =
-  'No call in this skill has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.';
+  'Treat every request and response shape in this skill as unconfirmed until the sandbox has answered you. Check a response before you rely on its shape.';
 
 // Added only where a design section exists, immediately after UNVERIFIED, so
 // the two claims are read together rather than a page apart.
 const DESIGN_OBSERVED =
-  'The design section is the exception. Its rules come from building a working front desk against the sandbox, and each atom it cites names what was observed and the date it was seen.';
+  'The design section is different in kind. Its rules come from building a working front desk against the sandbox, and each atom it cites names what was observed and the date it was seen.';
 
 // Practices, as distinct from rules. A rule is a fact about one module. A
 // practice is how to work so a wrong assumption surfaces in a minute rather
@@ -345,6 +346,60 @@ const MODULES = [
 // that walks it, so a gateway call used by four journeys counted four times
 // over. Dedupe by operationId first, keeping the base file (no `journey`
 // field) when one exists, so every operation appears here exactly once.
+// Each skill declares its role. An agent sequences skills by `requires` and
+// `produces`, so these are the handles a plan is written in, coarse on purpose:
+// they name what an integrator must already hold and what the module leaves
+// behind, not endpoints. `can_orchestrate` is false for every skill, because a
+// skill is a known procedure and the planning lives in agents/.
+const CONTRACT = {
+  gateway: {requires: ['sandbox-client-credentials'], produces: ['gateway-session-token', 'bridge-url']},
+  m1: {requires: ['gateway-session-token'], produces: ['abha-number', 'abha-address', 'user-token', 'abha-profile']},
+  m2: {requires: ['gateway-session-token', 'hip-registration', 'callback-url', 'nrces-document-bundle'], produces: ['care-context', 'link-token', 'health-information-push']},
+  m3: {requires: ['gateway-session-token', 'hiu-registration', 'callback-url', 'abha-address'], produces: ['consent-request-id', 'consent-artefact']},
+  m4: {requires: ['gateway-session-token'], produces: ['hpid', 'facility-id', 'bridge-facility-link']},
+  p1: {requires: ['gateway-session-token'], produces: ['phr-login', 'abha-profile']},
+  p2: {requires: ['phr-login'], produces: ['consent-decision']},
+  p3: {requires: ['phr-login'], produces: ['subscription']},
+  p4: {requires: ['phr-login'], produces: ['locker-record']},
+  'scan-and-register': {requires: ['gateway-session-token', 'facility-id'], produces: ['abha-profile', 'registration']},
+  'scan-and-pay': {requires: ['gateway-session-token', 'facility-id', 'callback-url'], produces: ['order', 'payment-status']},
+  'record-share': {requires: ['gateway-session-token', 'hip-registration', 'callback-url'], produces: ['shared-record']},
+  fhir: {requires: ['abdm-docs-mcp'], produces: ['nrces-document-bundle']},
+};
+
+// Labels an integrator brings from outside the plugin: portal registration,
+// credentials, a deployment, a connected server. Every other `requires` must
+// be some skill's `produces`, or an agent is told to sequence a step nothing
+// can satisfy. The build fails rather than shipping that plan.
+const EXTERNAL = new Set(['sandbox-client-credentials', 'hip-registration', 'hiu-registration', 'callback-url', 'abdm-docs-mcp']);
+{
+  const produced = new Set(Object.values(CONTRACT).flatMap((c) => c.produces));
+  for (const [id, {requires}] of Object.entries(CONTRACT)) {
+    for (const label of requires) {
+      if (!produced.has(label) && !EXTERNAL.has(label)) {
+        throw new Error(`CONTRACT: ${id} requires "${label}", which no skill produces and EXTERNAL does not list`);
+      }
+    }
+  }
+}
+
+const yamlList = (key, items) => (items.length ? [`${key}:`, ...items.map((i) => `  - ${i}`)] : [`${key}: []`]);
+
+function roleFrontmatter(id, consumers) {
+  const {requires, produces} = CONTRACT[id];
+  return [
+    'type: skill',
+    `domain: ${id}`,
+    ...yamlList('agent_consumers', consumers),
+    ...yamlList('requires', requires),
+    ...yamlList('produces', produces),
+    'can_execute: true',
+    'can_orchestrate: false',
+  ];
+}
+
+const MODULE_CONSUMERS = ['abdm-integration-agent', 'abdm-call-debugger'];
+
 const byOperationId = new Map();
 for (const file of readdirSync(dataDir)) {
   if (!file.endsWith('.json')) continue;
@@ -388,6 +443,7 @@ function build(module, url) {
   lines.push('---');
   lines.push(`name: ${module.slug}`);
   lines.push(`description: ${module.description}`);
+  lines.push(...roleFrontmatter(module.id, MODULE_CONSUMERS));
   lines.push('---');
   lines.push('');
   lines.push(`# ABDM ${module.title}`);
@@ -674,7 +730,11 @@ function withSurvey(scaffold) {
 const FOLD = Object.fromEntries(
   MODULES.map((module) => [
     module.slug,
-    {scaffold: `hiecm-${module.id}-build`, debug: `hiecm-${module.id}-debug`},
+    {
+      scaffold: `hiecm-${module.id}-build`,
+      debug: `hiecm-${module.id}-debug`,
+      test: `hiecm-${module.id}-test`,
+    },
   ]),
 );
 
@@ -794,6 +854,17 @@ for (const module of MODULES) {
         : `- **Debug.** ${
             debugLoop ? 'The loop from a failed call to a named fix. ' : ''
           }The specification's examples return no error code for this module. [references/debug.md](references/debug.md)`,
+    );
+  }
+
+  // Test after debug: the functional test cases are what an integrator walks
+  // once the build runs, and each case names the evidence a reviewer can
+  // check against the gateway rather than a screenshot.
+  const test = fold.test ? guided(fold.test) : '';
+  if (test) {
+    files['references/test.md'] = test;
+    covers.push(
+      `- **Test.** The functional test cases, one loop each, with the evidence the sandbox can vouch for and the manifest that replaces a screenshot report. [references/test.md](references/test.md)`,
     );
   }
 
@@ -932,6 +1003,7 @@ const fhirSkillMd = (url) =>
     '---',
     'name: abdm-fhir',
     'description: Use when producing or checking FHIR for ABDM: building NRCES compliant document bundle generation into a codebase, or auditing the bundles an existing FHIR store already emits. Covers the resource profiles ABDM requires, the Composition rules, and the validator to check against.',
+    ...roleFrontmatter('fhir', [...MODULE_CONSUMERS, 'fhir-compliance-agent']),
     '---',
     '',
     '# ABDM FHIR',
@@ -1109,6 +1181,63 @@ writeFileSync(
         archive: `${slug}.tar.gz`,
         files: filesUnder(join(nhcxDir, slug)),
       })),
+    },
+    null,
+    2,
+  )}\n`,
+);
+
+// UHI keeps its own integrators plugin, one skill per service, compiled here
+// from the UHI atoms, journeys and step data by scripts/lib/uhi-skills.mjs,
+// with the two loops compile-skills.mjs wrote into skills-src/. Each ships at
+// /skills/<name>/ and as /skills/<name>.tar.gz, as NHCX's do, and is set up
+// through its own prompt, so an ABDM integrator is never offered UHI skills.
+const uhiPluginDir = join(root, 'plugins', 'uhi-integrators-assistant', 'skills');
+rmSync(uhiPluginDir, {recursive: true, force: true});
+mkdirSync(uhiPluginDir, {recursive: true});
+const uhiCtx = {
+  journeys: loadJourneys({platform: 'uhi', version: 'v1'}),
+  // A journey step has its own data file; the registry lookup, named by no
+  // journey, is read from its operation's own.
+  stepData: (op, journeyId, i) => {
+    const name = journeyId ? stepDataName(op, journeyId, i) : op.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    const file = join(dataDir, `${name}.json`);
+    if (!existsSync(file)) throw new Error(`run build-api-reference first: ${file} missing`);
+    return JSON.parse(readFileSync(file, 'utf8'));
+  },
+  hostedBy: uhiHostedBy(join(root, 'catalogue', 'uhi', 'openapi', 'v1')),
+  atoms: loadAtoms().atoms,
+  // No practices: shared.concept.integration-practices is written for
+  // HIE-CM (certificates, REQUEST-ID, its TIMESTAMP), and a UHI integrator
+  // told another gateway's rule is worse off than one told nothing.
+  buildDate,
+  catalogueVersion,
+};
+const uhiSlugs = [];
+for (const service of UHI_SERVICES) {
+  const common = {...uhiCtx, scaffold: guided(`${service.slug}-build`), debug: guided(`${service.slug}-debug`)};
+  const {files, manifest: entry} = skillFolder(service, {...common, skillUrl: skillUrl(service.slug, siteUrl)});
+  const {files: pluginFiles} = skillFolder(service, {...common, skillUrl: skillUrl(service.slug, null)});
+  for (const [base, entries] of [[outDir, files], [uhiPluginDir, pluginFiles]]) {
+    mkdirSync(join(base, service.slug, 'references'), {recursive: true});
+    for (const [path, body] of Object.entries(entries)) writeFileSync(join(base, service.slug, path), body.endsWith('\n') ? body : `${body}\n`);
+  }
+  // Archived from the site's folder, so the archive and the folder beside it
+  // carry the same SKILL.md.
+  execFileSync('tar', ['-czf', join(outDir, `${service.slug}.tar.gz`), '-C', outDir, service.slug], {
+    env: {...process.env, COPYFILE_DISABLE: '1'},
+  });
+  manifest[service.slug] = {...entry, folder: true, files: Object.keys(files).length};
+  uhiSlugs.push(service.slug);
+  console.log(`Built ${service.slug}: ${files['SKILL.md'].split('\n').length} line router, ${Object.keys(files).length - 1} reference(s).`);
+}
+writeFileSync(
+  join(outDir, 'uhi-index.json'),
+  `${JSON.stringify(
+    {
+      catalogue_version: catalogueVersion,
+      built: buildDate,
+      skills: uhiSlugs.map((slug) => ({name: slug, title: manifest[slug].title, archive: `${slug}.tar.gz`, files: filesUnder(join(uhiPluginDir, slug))})),
     },
     null,
     2,
@@ -1333,4 +1462,68 @@ const nhcxPromptLines = [
   '',
 ];
 writeFileSync(join(promptDir, 'nhcx.md'), `${nhcxPromptLines.join('\n')}\n`);
+
+// The UHI setup prompt, fetched by the UHI Build with AI page's one line setup.
+// UHI keeps its own integrators plugin, so the prompt installs that plugin and
+// only UHI skills, from the same repository and marketplace as the others.
+const uhiPromptLines = [
+  `These are official instructions from the ABDM Developer Portal (catalogue version ${catalogueVersion}) to set up an AI development environment for integrating with UHI, the Unified Health Interface.`,
+  '',
+  'Complete the steps yourself by running the commands directly. Ask the user only the questions in step 1.',
+  '',
+  '## 1. Establish scope',
+  '',
+  'There is one skill per UHI service. Ask the user which services this project builds, and whether it is the patient app (EUA) or the provider system (HSPA), and install only those skills:',
+  '',
+  ...uhiSlugs.map((slug) => `- \`${slug}\`: ${manifest[slug].title}. ${manifest[slug].example}.`),
+  '',
+  'Each skill installs and runs alone. An EUA completes Milestone 2 on HIE-CM before any UHI onboarding, which the `abdm-integrators-assistant` plugin carries as `abdm-m2`.',
+  '',
+  '## 2. Install the skills',
+  '',
+  'The plugin carries all six and updates in place, so prefer it wherever it installs.',
+  '',
+  '### Claude Code',
+  '',
+  '```',
+  `claude plugin marketplace add ${pluginRepo} && claude plugin install uhi-integrators-assistant@${marketplaceName}`,
+  '```',
+  '',
+  '### Codex',
+  '',
+  '```',
+  `codex plugin marketplace add ${pluginRepo}`,
+  '```',
+  '',
+  'Then open /plugins in Codex and install `uhi-integrators-assistant`.',
+  '',
+  '### Every other agent',
+  '',
+  'Cursor, GitHub Copilot and the others install plugins only from their own marketplaces, where this plugin is not listed yet. Install the skills one at a time instead, which is also the fallback anywhere the marketplace add above fails:',
+  '',
+  '```',
+  `npx skills add ${pluginRepo}/plugins/uhi-integrators-assistant/skills/uhi-pmjay-hem`,
+  '```',
+  '',
+  ...uhiSlugs.map((slug) => `- \`${pluginRepo}/plugins/uhi-integrators-assistant/skills/${slug}\``),
+  '',
+  `\`${promptRef('/skills/uhi-index.json')}\` lists every UHI skill, its archive and the exact files it is made of, so take the archive rather than fetching files one at a time.`,
+  '',
+  '## 3. Connect the Docs MCP server',
+  '',
+  'A live MCP server over the documentation. Register it with your agent:',
+  '',
+  '```',
+  `claude mcp add --transport http abdm-docs ${mcpUrl}`,
+  '```',
+  '',
+  `For other agents, add an HTTP MCP server named \`abdm-docs\` at \`${mcpUrl}\` using their config format.`,
+  '',
+  '## 4. Report back',
+  '',
+  'Tell the user what you installed and where you suggest starting.',
+  `The skills are snapshots. The current documentation lives at ${promptRef('/docs/uhi/v1')}; prefer it, and the MCP server when connected, over any downloaded copy that has aged.`,
+  '',
+];
+writeFileSync(join(promptDir, 'uhi.md'), `${uhiPromptLines.join('\n')}\n`);
 console.log('Wrote agent-setup/nhcx.md.');

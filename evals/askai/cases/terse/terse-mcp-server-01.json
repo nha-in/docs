@@ -1,0 +1,32 @@
+{
+  "id": "terse-mcp-server-01",
+  "slice": "terse",
+  "class": "out-of-scope",
+  "turns": [
+    {
+      "role": "user",
+      "text": "MCP server"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "/docs/hiecm/v3/getting-started/build-with-ai"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [],
+  "expected_shape": "decline",
+  "expected_behaviour": "decline",
+  "derived_from": null,
+  "source_row": "annexure#build-with-ai",
+  "catalogue_version": "2026.09.16",
+  "notes": "Group C, a portal feature name: the right reply names the Docs MCP server section of Build with AI, and the fail is an ABDM gateway or bridge answer, or an invented endpoint, in the define shape."
+}

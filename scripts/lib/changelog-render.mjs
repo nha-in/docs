@@ -112,7 +112,7 @@ const lastSegment = (route) => cap(route.split('/').filter(Boolean).at(-1).repla
 const BUILD_WITH_AI = '/docs/hiecm/v3/getting-started/build-with-ai';
 
 /** A role as the page names it: the acronyms stay, the words take a plural. */
-const ROLES = {his: 'HIS integrators', phr: 'PHR apps', payer: 'payers', provider: 'providers'};
+const ROLES = {his: 'HIS integrators', phr: 'PHR apps', payer: 'payers', provider: 'providers', eua: 'EUAs', hspa: 'HSPAs'};
 const roleName = (r) => ROLES[r] ?? `${r}s`;
 
 /** The `###` heading of an entry, the change stated as a fact. */
@@ -198,7 +198,9 @@ export function render(e) {
       const parts = [];
       if (calls) parts.push(`${words(calls)} ${calls === 1 ? 'call' : 'calls'}`);
       if (hooks) parts.push(`${words(hooks)} ${hooks === 1 ? 'callback' : 'callbacks'}`);
-      return `${cap(parts.join(' and ') || 'no calls yet')}${roles}, each on its own page with a request you can send. ${open(e)}.`;
+      // UHI pages carry signed samples and no request builder.
+      const sample = e.gateway === 'uhi' ? 'a signed sample request' : 'a request you can send';
+      return `${cap(parts.join(' and ') || 'no calls yet')}${roles}, each on its own page with ${sample}. ${open(e)}.`;
     }
     case 'coverage-role':
       return `The ${e.label} calls now say what ${items.map((i) => roleName(i.role)).join(' and ')} send and receive. ${open(e)}.`;

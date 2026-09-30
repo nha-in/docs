@@ -1,6 +1,7 @@
 package index
 
 import (
+	"cmp"
 	"database/sql"
 	"encoding/json"
 	"fmt"
@@ -55,9 +56,19 @@ func Build(dbPath string, atoms []catalogue.Atom, questions map[string]catalogue
 	}
 	defer tx.Rollback()
 	for _, a := range atoms {
-		if _, err := tx.Exec(`INSERT INTO atoms VALUES (?,?,?,?,?,?,?,?,?,?)`,
+		facts, err := json.Marshal(a.Facts)
+		if err != nil {
+			return fmt.Errorf("atom %s facts: %w", a.ID, err)
+		}
+		if a.Facts == nil {
+			facts = []byte("[]")
+		}
+		if _, err := tx.Exec(`INSERT INTO atoms (id, type, gateway, milestone, title, summary,
+            body, source_path, doc_url, doc_anchor, operation, side, status, superseded_by, facts_json)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
 			a.ID, a.Type, a.Gateway, a.Milestone, a.Title, a.Summary,
-			a.Body, a.SourcePath, a.DocURL, a.DocAnchor); err != nil {
+			a.Body, a.SourcePath, a.DocURL, a.DocAnchor,
+			a.Operation, a.Side, cmp.Or(a.Status, "current"), a.SupersededBy, string(facts)); err != nil {
 			return fmt.Errorf("atom %s: %w", a.ID, err)
 		}
 		qs := strings.Join(questions[a.ID].Questions, "\n")
@@ -95,6 +106,10 @@ func Build(dbPath string, atoms []catalogue.Atom, questions map[string]catalogue
 			string(o.SpecJSON), reqSchema, string(reqParams)); err != nil {
 			return fmt.Errorf("operation %s: %w", o.OperationID, err)
 		}
+		if _, err := tx.Exec(`INSERT INTO operations_fts (operation_id, text, error_codes) VALUES (?,?,?)`,
+			o.OperationID, catalogue.ChunkOperation(o).Text, strings.Join(o.ErrorCodes, " ")); err != nil {
+			return fmt.Errorf("operation fts %s: %w", o.OperationID, err)
+		}
 	}
 	for _, e := range specErrors {
 		if _, err := tx.Exec(`INSERT INTO spec_error_codes VALUES (?,?,?,?,?)`,
@@ -108,8 +123,8 @@ func Build(dbPath string, atoms []catalogue.Atom, questions map[string]catalogue
 			blob = vecToBlob(c.Vector)
 		}
 		if _, err := tx.Exec(
-			`INSERT INTO chunks (atom_id, heading, text, embedding) VALUES (?,?,?,?)`,
-			c.AtomID, c.Heading, c.Text, blob); err != nil {
+			`INSERT INTO chunks (atom_id, heading, text, embedding, kind) VALUES (?,?,?,?,?)`,
+			c.AtomID, c.Heading, c.Text, blob, chunkKind(c.Kind)); err != nil {
 			return fmt.Errorf("chunk for %s: %w", c.AtomID, err)
 		}
 	}
@@ -153,4 +168,13 @@ func Build(dbPath string, atoms []catalogue.Atom, questions map[string]catalogue
 		}
 	}
 	return tx.Commit()
+}
+
+// chunkKind is what a chunk's kind column holds: "operation", or "atom" for
+// an atom chunk, whose Kind is left empty.
+func chunkKind(k string) string {
+	if k == "" {
+		return "atom"
+	}
+	return k
 }

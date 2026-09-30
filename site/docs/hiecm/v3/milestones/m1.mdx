@@ -5,7 +5,7 @@ sidebar_position: 1
 sidebar_custom_props:
   roles: [ims, phr]
 description: Milestone 1 focuses on the creation and management of ABHA, the unique health identifier under ABDM, through ABDM-compliant workflows.
-source: NHA content review of 15 September 2026 (Sandbox2.0 M1, getting started and glossary); catalogue/openapi/hiecm/v3/hiecm-m1.yaml for the call order in the diagrams
+source: NHA content review of 15 September 2026 (Sandbox2.0 M1, getting started and glossary); catalogue/hiecm/openapi/v3/hiecm-m1.yaml for the call order in the diagrams
 sidebar_class_name: sidebar-icon sidebar-icon--user-round-plus
 ---
 
@@ -89,9 +89,7 @@ assistant in one click.
 <LegacyAnchor id="abha-with-aadhaar" />
 <LegacyAnchor id="the-page-map" />
 
-### ABHA creation by an Aadhaar OTP
-
-<LegacyAnchor id="journey-1-abha-creation-by-aadhaar-otp" />
+### ABHA creation by an Aadhaar OTP <LegacyAnchor id="journey-1-abha-creation-by-aadhaar-otp" /> {/* #m1-create-abha-aadhaar-otp */}
 
 The individual provides their Aadhaar number. The ABHA service sends a one time
 password ([OTP](/docs/hiecm/v3/getting-started/glossary#otp)) to the mobile number registered against that Aadhaar.
@@ -126,9 +124,20 @@ sequenceDiagram
     A-->>S: healthIdNumber, preferredAbhaAddress
 ```
 
-### ABHA creation by face authentication
+Every step answers in its own response, so nothing here waits on a callback.
+The enrolment call is the one with a lasting effect: it creates the account.
 
-<LegacyAnchor id="journey-2-abha-creation-by-face-authentication" />
+<AgentOnly>
+**Before you start.** A gateway access token, the Aadhaar number encrypted with the M1 certificate, the person present to read the OTP, and their consent to create an ABHA.
+
+**What happens.** Request the OTP with scope `abha-enrol` and keep the `txnId`. Enrol with `enrol/byAadhaar`, sending the encrypted OTP, the communication mobile and the consent block. Optionally verify the communication mobile. Fetch suggestions with the `TRANSACTION_ID` header, and claim the chosen address with `preferred` set to 1.
+
+**How you know it worked.** The enrolment response carries `ABHAProfile` with an `ABHANumber`, and the address step returns the chosen address as `preferredAbhaAddress`. An account left with only its default address is a half finished job the person will not recognise later.
+
+**When it goes wrong.** The OTP goes only to the mobile registered against the Aadhaar, which may not be the phone in the room: see [the OTP never arrives](/docs/hiecm/v3/troubleshooting/otp-never-arrives). Enrolment for an Aadhaar that already has an ABHA returns that account with `isNew` false, so read `isNew` before telling the person anything was created. Every call failing the same way is a session or header problem: see [everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401).
+</AgentOnly>
+
+### ABHA creation by face authentication <LegacyAnchor id="journey-2-abha-creation-by-face-authentication" /> {/* #m1-create-abha-face-auth */}
 
 Individuals who are unable to use OTP-based authentication, including cases
 where the mobile number linked to Aadhaar is unavailable or inaccessible, may
@@ -169,6 +178,19 @@ sequenceDiagram
     A-->>S: healthIdNumber, preferredAbhaAddress
 ```
 
+The middle of this journey happens on the person's phone, not in your system.
+Show that you are waiting for them rather than a spinner.
+
+<AgentOnly>
+**Before you start.** Everything the Aadhaar OTP journey needs, the ABHA app on the person's phone, and a screen that can show a QR code.
+
+**What happens.** Call `enrol/auth/init` for a `txnId` and show it as a QR code. Poll `capturePID` every 5 to 10 seconds: its status moves through PENDING, VERIFIED, FAILED and COMPLETE. On COMPLETE, call `enrol/byAadhaar` with the face auth method and the same `txnId`, then claim an address as in the OTP journey.
+
+**How you know it worked.** `capturePID` reports COMPLETE and `enrol/byAadhaar` returns an `ABHAProfile` with an `ABHANumber`. The capture being accepted is the event, not the app saying the scan succeeded.
+
+**When it goes wrong.** The person has no ABHA app: installing it is part of the journey, not an error. The capture reports FAILED: capture again rather than resubmitting. Nothing pushes the result to you, so keep polling or continue once the person confirms.
+</AgentOnly>
+
 ### ABHA creation by fingerprint or iris
 
 Aadhaar Biometric-Based ABHA Creation enables users to create an Ayushman
@@ -187,9 +209,7 @@ link:
 The calls, in order, are on the [M1 API reference](/docs/hiecm/v3/api/m1)
 under ABHA creation, fingerprint and ABHA creation, iris.
 
-### ABHA creation by demographic authentication
-
-<LegacyAnchor id="journey-3-abha-creation-by-demographic-authentication" />
+### ABHA creation by demographic authentication <LegacyAnchor id="journey-3-abha-creation-by-demographic-authentication" /> {/* #m1-create-abha-demographic-auth */}
 
 This onboarding pathway is intended for eligible government programme
 integrations in accordance with ABDM guidelines. Unlike OTP-based or biometric
@@ -222,9 +242,17 @@ more user-friendly ABHA address where permitted. Any demographic verification
 failures should be handled in accordance with the error codes and response
 specifications published by ABDM.
 
-### Create a child ABHA
+<AgentOnly>
+**Before you start.** Approval for this route, the gateway access token, the M1 certificate, the `Benefit-Name` header value, and the person's name exactly as Aadhaar holds it, with date of birth and gender. A near miss on any of them is a refusal, not a warning.
 
-<LegacyAnchor id="child-abha" />
+**What happens.** One call creates the account: `enrol/byAadhaar` with `authMethods` set to `demo_auth` and a `demo_auth` block carrying the encrypted `aadhaarNumber`, `name`, `dateOfBirth`, `gender`, `stateCode` and `districtCode`. If an ABHA already exists for the Aadhaar, the call returns it rather than creating a second.
+
+**How you know it worked.** The response carries the ABHA number and a user token, and the profile read with that token returns the same account. The response has two shapes: the token is either `tokens.token` or a top level `token` beside `healthIdNumber`. Parse both.
+
+**When it goes wrong.** Parsing only `tokens.token` reads nothing from the other shape. The account arrives with a default address nobody can remember, so offer a readable one from the address suggestions.
+</AgentOnly>
+
+### Create a child ABHA <LegacyAnchor id="child-abha" /> {/* #m1-create-child-abha */}
 
 ABDM supports guardian-based management of ABHA accounts for eligible children
 in accordance with applicable policies and implementation guidelines. This
@@ -234,10 +262,17 @@ workflow includes creation of a child ABHA linked to a verified parent or
 guardian account, updating child profile information, and retrieval of child
 accounts associated with the parent or guardian.
 
-## ABHA login via mobile number
+<AgentOnly>
+**Before you start.** Approval for this route, the parent or guardian logged in so you hold their `X-token`, and the child's name, date of birth and gender.
 
-<LegacyAnchor id="abha-login-by-mobile-number" />
-<LegacyAnchor id="journey-5-abha-login-by-mobile-number" />
+**What happens.** Create with `enrol/byAadhaar`, `authMethods` set to `child`, and a `child` block carrying `name`, `dayOfBirth`, `monthOfBirth`, `yearOfBirth`, `gender` and `parentConsent`, sent with the parent's `X-token` and the `Benefit-Name` header. Correct a child's details through `PATCH /abha/api/v3/profile/account`; a child ABHA without KYC can be updated once. List the children with `/abha/api/v3/enrollment/profile/children`.
+
+**How you know it worked.** The create response carries the child's `ABHANumber`, and listing the parent's children returns that child. The listing is the proof that the account hangs off the right parent.
+
+**When it goes wrong.** The parent's account has reached its limit of child accounts, and the next create is refused. The parent's token has expired, which reads as an authorisation failure rather than a validation one.
+</AgentOnly>
+
+## ABHA login via mobile number <LegacyAnchor id="abha-login-by-mobile-number" /><LegacyAnchor id="journey-5-abha-login-by-mobile-number" /> {/* #m1-login-by-mobile */}
 
 ABHA login using a registered mobile number enables individuals to securely
 access their ABHA-linked profile and services through a mobile OTP-based
@@ -265,10 +300,17 @@ sequenceDiagram
     A-->>S: token (X-token), expiresIn, refreshToken,<br/>refreshExpiresIn
 ```
 
-## Find ABHA from mobile number
+<AgentOnly>
+**Before you start.** A gateway access token, the mobile number encrypted with the M1 certificate, and the person present to read the OTP.
 
-<LegacyAnchor id="find-an-abha-the-person-has-forgotten" />
-<LegacyAnchor id="journey-6-finding-an-abha-the-person-has-forgotten" />
+**What happens.** Request the OTP with scope `abha-login` and `mobile-verify` and `loginHint` set to `mobile`. Verify it: the response carries a short lived token and `accounts`. Always call `/abha/api/v3/profile/login/verify/user` with the chosen `ABHANumber`, the same `txnId` and that token in the `T-token` header, even when `accounts` holds one entry. It returns the `X-token` profile calls need.
+
+**How you know it worked.** A profile read with the `X-token` returns the account the person expected. With several accounts on one mobile, the account read back is the check, not the presence of a token.
+
+**When it goes wrong.** Several accounts are normal on a shared family phone, so show a chooser. A profile call refused with `ABDM-1094`, X-token expired, on a new token usually means the token from login verify was sent instead of the one from verify user. Never send the gateway session token in `X-token`.
+</AgentOnly>
+
+## Find ABHA from mobile number <LegacyAnchor id="find-an-abha-the-person-has-forgotten" /><LegacyAnchor id="journey-6-finding-an-abha-the-person-has-forgotten" /> {/* #m1-find-abha */}
 
 This workflow enables discovery of an existing ABHA using a registered mobile
 number when an individual does not readily know their ABHA details. Upon
@@ -302,10 +344,17 @@ information must be encrypted and processed within the integrating system in
 accordance with ABDM security, privacy, and data protection requirements. See
 [encryption](/docs/hiecm/v3/concepts/encryption) for how to do it locally.
 
-## ABHA Profile Management
+<AgentOnly>
+**Before you start.** A gateway access token, the mobile number the person remembers, encrypted with the M1 certificate, and the person present to read the OTP.
 
-<LegacyAnchor id="profile-abha-card-and-quick-response-qr-code" />
-<LegacyAnchor id="journey-7-profile-abha-card-and-quick-response-qr-code" />
+**What happens.** Search with scope `search-abha`. The response carries a `txnId` and the accounts on that mobile, each with an `index`, a masked ABHA number, name and gender. Show those and let the person pick. Request the OTP with `loginHint` set to `index`, the encrypted index as `loginId` and the same `txnId`, then verify it.
+
+**How you know it worked.** Verification succeeds and returns the account the person recognised from the masked details.
+
+**When it goes wrong.** The search finds nothing: the number may hold no ABHA, or the ABHA may sit in the other environment. The person does not recognise any account: stop, because continuing would disclose somebody else's. Never skip the OTP because the search already returned an account: search alone is a lookup of somebody's identity.
+</AgentOnly>
+
+## ABHA Profile Management <LegacyAnchor id="profile-abha-card-and-quick-response-qr-code" /><LegacyAnchor id="journey-7-profile-abha-card-and-quick-response-qr-code" /> {/* #m1-update-mobile */}
 
 This functionality enables retrieval and management of an individual's ABHA
 profile following successful authentication. Authorized users can access
@@ -331,6 +380,22 @@ The workflow also supports profile updates in accordance with applicable ABDM
 guidelines, ensuring that health identity information remains accurate and up
 to date while complying with prescribed security, privacy, and authentication
 requirements.
+
+Changing the mobile number is two calls with an OTP to the new number between
+them: `POST /abha/api/v3/profile/account/request/otp` with scope
+`abha-profile` and `mobile-verify`, then
+`POST /abha/api/v3/profile/account/verify` with the same scope and the OTP.
+Both carry the person's `X-token`.
+
+<AgentOnly>
+**Before you start.** The person logged in, so you hold their `X-token`, the new mobile number encrypted with the M1 certificate, and the person holding the new phone.
+
+**What happens.** Request the OTP with scope `abha-profile` and `mobile-verify`, `loginHint` set to `mobile` and the encrypted new number as `loginId`. Verify with the same scope, the `txnId` and the encrypted OTP.
+
+**How you know it worked.** Verify answers with `authResult` success, and a profile read afterwards shows the new number.
+
+**When it goes wrong.** The OTP goes to the new number, not the old one, so a person who cannot receive it there cannot change it. A scope on the verify call that differs from the request is refused: send the same array on both.
+</AgentOnly>
 
 ## Next
 

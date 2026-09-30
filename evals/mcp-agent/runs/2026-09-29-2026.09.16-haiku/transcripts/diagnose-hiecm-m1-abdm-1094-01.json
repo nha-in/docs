@@ -1,0 +1,139 @@
+{
+  "case_id": "diagnose-hiecm-m1-abdm-1094-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "user just logged in by mobile OTP, but profile call says ABDM-1094 X-token expired. token is brand new, why?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "I'll look up that error code to understand what's happening.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01SJ48n5dkVNe4fE4ZcntvPP",
+            "Name": "decode_error",
+            "Input": {
+              "input": "ABDM-1094"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "decode_error",
+          "input": {
+            "input": "ABDM-1094"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "codes": [
+              "ABDM-1094"
+            ],
+            "matches": {
+              "ABDM-1094": {
+                "atoms": [
+                  {
+                    "body": "# ABDM-1094, access to this feature is refused\n\n## In plain words\n\nYour client, or the person's token, is not allowed to do what the call tried. The M1 calls return `ABDM-1094` with HTTP 401 and one of three messages:\n\n- \"X-token expired\", on child ABHA enrolment. The parent's `X-token` has expired.\n- \"Invalid Benefit Name\", on benefit link and de-link. The `BENEFIT_NAME` header does not name a benefit programme your client can use.\n- \"Access to this feature is restricted. Please contact NHA to enable it.\", on benefit link and de-link. Your client is not enabled for this feature.\n\n## What happens\n\nThis code arrives with `code` at the top level beside a `timestamp`, while other M1 errors wrap it in an `error` object. Read the `code` inside `error` when it is present, and fall back to the top level `code`.\n\n## When it goes wrong\n\nRetrying does not help. For \"X-token expired\", have the parent log in again and send the new `X-token`. For \"Invalid Benefit Name\", send the benefit name exactly as registered, as in the example `healthid api`. For the restricted message, stop calling the feature until NHA enables it for your client.",
+                    "id": "hiecm.error.abdm-1094",
+                    "summary": "Your client or the person's token is not allowed to do what the call tried, and the message says which of three cases applies.",
+                    "title": "ABDM-1094, access to this feature is refused"
+                  }
+                ],
+                "source": "specification response example",
+                "specification": [
+                  {
+                    "code": "ABDM-1094",
+                    "message": "X-token expired",
+                    "http": "401",
+                    "operation_id": "m1_post_v3_enrollment_enrol_byaadhaar_child_child_abha",
+                    "module": "m1"
+                  },
+                  {
+                    "code": "ABDM-1094",
+                    "message": "Duplicate bridge patch request",
+                    "http": "",
+                    "operation_id": "",
+                    "module": "m2"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "The error is specific to **child ABHA enrollment** — the parent's `X-token` has expired. That's the documented reason for ABDM-1094 with \"X-token expired\".\n\nEven though your token is fresh from login, if you're a child ABHA trying to access using a parent's token, the parent's session may have timed out. \n\n**What to do:**\n- **If you're a child:** have the parent re-authenticate and send you their new `X-token`\n- **If you're not in a child scenario:** there may be a clock skew issue or the token endpoint itself is rejecting it — check that the system time on both client and gateway are synchronized, and verify the token response includes a valid expiry time\n\nWhich scenario applies — are you authenticating as a child ABHA, or are you the primary account holder?",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "The error is specific to **child ABHA enrollment** — the parent's `X-token` has expired. That's the documented reason for ABDM-1094 with \"X-token expired\".\n\nEven though your token is fresh from login, if you're a child ABHA trying to access using a parent's token, the parent's session may have timed out. \n\n**What to do:**\n- **If you're a child:** have the parent re-authenticate and send you their new `X-token`\n- **If you're not in a child scenario:** there may be a clock skew issue or the token endpoint itself is rejecting it — check that the system time on both client and gateway are synchronized, and verify the token response includes a valid expiry time\n\nWhich scenario applies — are you authenticating as a child ABHA, or are you the primary account holder?",
+  "sources": [
+    {
+      "id": "hiecm.error.abdm-1094",
+      "title": "ABDM-1094, access to this feature is refused",
+      "url": ""
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"codes\":[\"ABDM-1094\"],\"matches\":{\"ABDM-1094\":{\"atoms\":[{\"body\":\"# ABDM-1094, access to this feature is refused\\n\\n## In plain words\\n\\nYour client, or the person's token, is not allowed to do what the call tried. The M1 calls return `ABDM-1094` with HTTP 401 and one of three messages:\\n\\n- \\\"X-token expired\\\", on child ABHA enrolment. The parent's `X-token` has expired.\\n- \\\"Invalid Benefit Name\\\", on benefit link and de-link. The `BENEFIT_NAME` header does not name a benefit programme your client can use.\\n- \\\"Access to this feature is restricted. Please contact NHA to enable it.\\\", on benefit link and de-link. Your client is not enabled for this feature.\\n\\n## What happens\\n\\nThis code arrives with `code` at the top level beside a `timestamp`, while other M1 errors wrap it in an `error` object. Read the `code` inside `error` when it is present, and fall back to the top level `code`.\\n\\n## When it goes wrong\\n\\nRetrying does not help. For \\\"X-token expired\\\", have the parent log in again and send the new `X-token`. For \\\"Invalid Benefit Name\\\", send the benefit name exactly as registered, as in the example `healthid api`. For the restricted message, stop calling the feature until NHA enables it for your client.\",\"id\":\"hiecm.error.abdm-1094\",\"summary\":\"Your client or the person's token is not allowed to do what the call tried, and the message says which of three cases applies.\",\"title\":\"ABDM-1094, access to this feature is refused\"}],\"source\":\"specification response example\",\"specification\":[{\"code\":\"ABDM-1094\",\"message\":\"X-token expired\",\"http\":\"401\",\"operation_id\":\"m1_post_v3_enrollment_enrol_byaadhaar_child_child_abha\",\"module\":\"m1\"},{\"code\":\"ABDM-1094\",\"message\":\"Duplicate bridge patch request\",\"http\":\"\",\"operation_id\":\"\",\"module\":\"m2\"}]}}}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:59:18.293Z",
+  "usage": {
+    "input_tokens": 20,
+    "output_tokens": 630,
+    "cache_read_input_tokens": 16800,
+    "cache_creation_input_tokens": 5844,
+    "num_turns": 2,
+    "duration_ms": 8486,
+    "cost_usd_equivalent": 0.016538
+  }
+}

@@ -1,0 +1,11 @@
+## Check whether an address is taken {/* #p1-enrollment-address-exists */}
+
+Checks one [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address) before you try to create it. The person learns at once that a name is taken, rather than being refused at the end. Pass the candidate as the `abhaAddress` query parameter. The response is a bare boolean: `false` means the address is free.
+
+<AgentOnly>
+**What happens.** A `GET` with the `abhaAddress` query parameter and no body.
+
+**How you know it worked.** A `200` with `false`. Offer that address to the enrol call.
+
+**When it goes wrong.** `ABDM-1006` with `Invalid ABHA Address` means the candidate is malformed. A `401` with `900902` and `Missing Credentials` means the access token is missing.
+</AgentOnly>

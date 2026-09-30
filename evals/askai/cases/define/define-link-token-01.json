@@ -25,12 +25,12 @@
     "atom"
   ],
   "expected_sources": [
-    "shared.glossary.link-token"
+    "hiecm.glossary.link-token"
   ],
   "expected_shape": "define",
   "expected_behaviour": "answer",
   "derived_from": null,
   "source_row": "annexure#glossary",
-  "catalogue_version": "2026.08.24",
-  "notes": "reader ran the two words together as 'linktoken'; catalogue atom shared.glossary.link-token spells it link token, two words."
+  "catalogue_version": "2026.09.16",
+  "notes": "reader ran the two words together as 'linktoken'; catalogue atom hiecm.glossary.link-token spells it link token, two words."
 }

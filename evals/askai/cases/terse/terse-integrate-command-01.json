@@ -1,0 +1,32 @@
+{
+  "id": "terse-integrate-command-01",
+  "slice": "terse",
+  "class": "out-of-scope",
+  "turns": [
+    {
+      "role": "user",
+      "text": "integrate command"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "/docs/hiecm/v3/getting-started/build-with-ai"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [],
+  "expected_shape": "decline",
+  "expected_behaviour": "decline",
+  "derived_from": null,
+  "source_row": "annexure#build-with-ai",
+  "catalogue_version": "2026.09.16",
+  "notes": "Group C, a portal feature name: Integrate is one of the four commands under the chat bar that draw on a module's agent skill, and the fail is an ABDM integration how-to written in place of naming the command and the Build with AI page."
+}

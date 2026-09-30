@@ -1,0 +1,13 @@
+## Share the profile with the facility whose code was scanned {/* #p2-patient-share */}
+
+The call behind scan and share. When the person scans a facility's code and agrees to share, your [Personal Health Record (PHR)](/docs/hiecm/v3/getting-started/glossary#phr) app sends their profile to that facility. The facility and counter come from the code, in `metaData.hipId` and `metaData.context`. The facility answers on your on-share callback.
+
+<AgentOnly>
+**Before you start.** The person's agreement to share, taken before the call. The person's `X-AUTH-TOKEN`, your `X-HIU-ID`, and `X-CM-ID`.
+
+**What happens.** Set `intent` to `PROFILE_SHARE`. You receive `202`. The facility's answer arrives at `/api/v3/hiu/patient/on-share`.
+
+**How you know it worked.** The on-share callback carries `tokenNumber`, the token the person shows at the counter.
+
+**When it goes wrong.** `408` with `ABDM-1007` means the facility did not answer in time. `429` with `ABDM-1022` means too many requests: wait before retrying. `400` with `ABDM-1006` means the body is invalid.
+</AgentOnly>

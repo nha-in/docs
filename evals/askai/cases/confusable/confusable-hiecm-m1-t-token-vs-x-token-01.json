@@ -1,0 +1,38 @@
+{
+  "id": "confusable-hiecm-m1-t-token-vs-x-token-01",
+  "slice": "confusable",
+  "class": "compare",
+  "turns": [
+    {
+      "role": "user",
+      "text": "what's the difference between T-token and X-token in abha login?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "The T-token is the short lived token returned by the login OTP verify call, and it is sent as the T-token header to the select account call.",
+    "The X-token is the person's token returned by the select account call in token, with expiresIn and refreshToken, and it is sent as the X-token header on profile calls.",
+    "A 400 with Invalid T-token at the select account call means the verify token is wrong or expired, so verify the OTP again."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom",
+    "they are the same token"
+  ],
+  "expected_sources": [
+    "hiecm.endpoint.m1-login-verify",
+    "hiecm.endpoint.m1-login-select-account"
+  ],
+  "expected_shape": "compare",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-abha-m1-abha-swagger-1-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "Two person tokens with confusingly similar header names; sending one where the other belongs is a common M1 failure. Distinct from confusable-session-vs-user-token-01, which contrasts the gateway token with the user token. Source lines: catalogue/hiecm/endpoints/m1-login-verify.md, 'it returns a short lived `token` ... That token is not the `X-token`. Send it as the `T-token` header to the select account call, which returns the `X-token` for the account the person picks.' catalogue/hiecm/endpoints/m1-login-select-account.md, 'The response carries the person's `X-token` in `token`, with a refresh token'; 'A 200 with `token`, `expiresIn` and `refreshToken`. Send `token` as the `X-token` on profile calls'; 'A 400 with `Invalid T-token` means the verify token is wrong or expired: verify the OTP again.' Operation m1_post_v3_profile_login_verify_user; path from catalogue/hiecm/flows/m1-login-by-mobile.md. Review: path dropped; neither expected atom carries it."
+}

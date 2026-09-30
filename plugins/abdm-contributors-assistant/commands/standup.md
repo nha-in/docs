@@ -17,7 +17,7 @@ Produce the ABDM Developer Portal standup. Load the `portal-planning` skill for 
 
 Three sections, in this order, kept short.
 
-**Moved.** Atoms written and checked against sandbox, skills compiling, what an integrator can now do that they could not before. State it as capability, not activity. "M1 endpoint atoms match sandbox evidence" rather than "worked on M1".
+**Moved.** Atoms written, skills compiling, what an integrator can now do that they could not before. State it as capability, not activity. "M1 endpoint atoms reach dummy-proof depth" rather than "worked on M1".
 
 **Blocked.** Each blocker with its owner and the decision it needs. A blocker with no named decision is not a blocker, it is a worry. Sandbox credentials, NHA-side reviews and unreachable sources belong here even though nobody on the team can fix them, because they change what is plannable.
 
@@ -25,14 +25,13 @@ Three sections, in this order, kept short.
 
 ## Numbers worth reporting
 
-- Endpoint atoms on the dummy-proof paths with matching evidence under `catalogue/verification/`, which is the number the definition of done actually turns on
 - Open issues filed against atom ids
 - Eval score, if it has been run since the last standup
 - Days until the next checkpoint
 
 ## Numbers not worth reporting
 
-Total atom count. It rises steadily regardless of whether anything has been run, and it makes a stalled project look busy.
+Total atom count. It rises steadily regardless of whether an integrator can use any of it, and it makes a stalled project look busy.
 
 ## Against the definition of done
 

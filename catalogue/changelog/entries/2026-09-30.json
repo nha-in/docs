@@ -1,19 +1,19 @@
 [
   {
-    "id": "135cf7d29a1f",
+    "id": "836b9feb03d1",
     "date": "2026-09-30",
-    "kind": "withdrawn",
-    "gateway": "nhcx",
-    "version": "v1",
-    "module": "registry",
-    "label": "Participant registry",
-    "link": "/docs/nhcx/v1/api/registry/",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
     "count": 1,
     "items": [
       {
-        "method": "POST",
-        "path": "/get/session",
-        "kind": "call"
+        "name": "uhi-integrators-assistant",
+        "from": "0.1.0",
+        "to": "0.1.1"
       }
     ]
   }

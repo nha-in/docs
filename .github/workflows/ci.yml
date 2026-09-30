@@ -43,6 +43,13 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run lint:atoms
+      # The postman and API sample tests read site/src/data/api and
+      # site/src/data/postman.json, which are gitignored build outputs.
+      - run: node scripts/build-api-reference.mjs && node scripts/build-postman.mjs
+        env:
+          DOCUSAURUS_URL: ''
+      - run: npm run test:scripts
+      - run: npm run check:sections
       - run: npm run lint:questions
 
   lint-sources:
@@ -74,12 +81,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
       - run: npm ci
       - run: npm run check:plugins
+      - run: npm run check:plugin-version
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_REF: origin/${{ github.base_ref }}
 
   validate-skills:
     name: Validate compiled agent skills
@@ -114,7 +127,7 @@ jobs:
         env:
           DOCUSAURUS_URL: ''
       - name: Compiled skills match the catalogue
-        run: git diff --exit-code -- plugins/abdm-integrators-assistant/skills site/static/skills
+        run: git diff --exit-code -- plugins/abdm-integrators-assistant/skills plugins/uhi-integrators-assistant/skills site/static/skills
 
   lint-agent-readiness:
     name: Check specs are agent readable
@@ -164,6 +177,10 @@ jobs:
       # The build wrote the Postman collections; this checks what it wrote.
       - run: npm run test:postman
       - run: npm run test:changelog
+      # The generator and redactor tests: journeys and error lists stay within
+      # their own gateway version, and the samples the build wrote carry no
+      # suffix or raw server variable.
+      - run: npm run test:scripts
       # What's New is a function of the catalogue. A change a reader can act
       # on without its entry fails here; npm run changelog writes it.
       - run: npm run check:changelog
@@ -234,6 +251,11 @@ jobs:
       # embeddings for the published image.
       - run: go run ./cmd/indexer -catalogue ../catalogue -out catalogue.db
         working-directory: mcp
+      # The tool contract: every MCP tool promise, checked against the whole
+      # snapshot through the protocol an agent speaks, with no model. A
+      # failure not in eval/contract-baseline.json fails the build.
+      - run: go run ./cmd/contract -db catalogue.db
+        working-directory: mcp
       - uses: actions/upload-artifact@v4
         with:
           name: catalogue-db
@@ -266,6 +288,8 @@ jobs:
           # In the marketplace since 21 September 2026, and carrying commands
           # and an agent of its own, so it is validated like the other two.
           claude plugin validate ./plugins/nhcx --strict
+          # UHI keeps its own integrators plugin, one skill per service.
+          claude plugin validate ./plugins/uhi-integrators-assistant --strict
       - name: agent frontmatter parses
         run: python3 scripts/check-agent-frontmatter.py
       - name: no skill shares a name with a command

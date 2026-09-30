@@ -1,0 +1,13 @@
+## Verify a login OTP {/* #m1-login-verify */}
+
+Checks the [OTP](/docs/hiecm/v3/getting-started/glossary#otp) the person received. On a mobile number login it returns a short lived `token` and, in `accounts`, every [ABHA](/docs/hiecm/v3/getting-started/glossary#abha) held against that mobile number. That token is not the `X-token`. Send it as the `T-token` header to the select account call, which returns the `X-token` for the account the person picks.
+
+Each entry in `accounts` carries the ABHA number, the preferred ABHA address and the name, enough to show the choice.
+
+<AgentOnly>
+**Before you start.** The `txnId` from the login OTP call, and the OTP encrypted with the public certificate key.
+
+**What happens.** Call the select account call next even when `accounts` holds one entry.
+
+**When it goes wrong.** A 400 names the refused part, such as `Invalid OTP Value` or `Invalid Transaction Id`. A 404 with `ABDM-1114` means no account matched.
+</AgentOnly>

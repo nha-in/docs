@@ -1,0 +1,189 @@
+{
+  "case_id": "define-hiu-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "What is HIU?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01QGd1Lx6jWrgmotdUNGq8XG",
+            "Name": "search",
+            "Input": {
+              "query": "HIU",
+              "type": "glossary",
+              "limit": 5
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "HIU",
+            "type": "glossary",
+            "limit": 5
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hiu",
+                "id": "hiecm.glossary.hiu",
+                "summary": "The role held by a system that asks a patient for consent and then fetches records held elsewhere.",
+                "title": "HIU, health information user",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/getting-started/fetching-a-recipient-certificate#what-comes-back",
+                "id": "hiecm.glossary.key-material",
+                "summary": "The ECDH key pairs that encrypt health records in transit. A fresh pair per transfer, the HIU keeps its own, and the HIP returns its public half alongside th...",
+                "title": "Key material, who generates it and who keeps it",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#pms",
+                "id": "hiecm.glossary.pms",
+                "summary": "The system a pharmacy runs to dispense and to hold stock. A pharmacy uses it both to read the prescription it is dispensing against and to record what it dis...",
+                "title": "PMS, pharmacy management system",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#lims",
+                "id": "hiecm.glossary.lims",
+                "summary": "The system a diagnostic laboratory uses to manage samples, tests and results.",
+                "title": "LIMS, laboratory information management system, also written LMIS",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#bridge",
+                "id": "hiecm.glossary.bridge",
+                "summary": "The set of callback URLs NHA posts to when it answers one of your calls.",
+                "title": "Bridge, your callback endpoints",
+                "type": "glossary"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01Q46AiKY2NPjmAAPw9rRnbs",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.glossary.hiu"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.glossary.hiu"
+          },
+          "output": {
+            "body": "# HIU, health information user\n\n## In plain words\n\nA health information user is the side of an exchange that wants records it\ndoes not hold. It is identified by a service id, carried in the `X-HIU-ID`\nheader, which the specification describes as:\n\n> Identifier of the health information user to which the request was intended\n\nThe same organisation often holds both roles, one for the records it keeps\nand one for the records it wants to read.\n\n## Before you start\n\nYou need a consent request the patient has approved, because this role reads\nnothing without one.\n\n## What happens\n\n`m3_post_consent_v3_request_init` raises the consent request that this role\nbegins every exchange with.\n\n## How you know it worked\n\nYou have understood this when you can say which role a consent request is\nraised by and which role it is served against.\n\n## When it goes wrong\n\nRequesting health information on a consent artefact that has expired or been\nrevoked, which the specification states must not be done.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/getting-started/glossary#hiu",
+            "gateway": "hiecm",
+            "id": "hiecm.glossary.hiu",
+            "milestone": "n/a",
+            "summary": "The role held by a system that asks a patient for consent and then fetches records held elsewhere.",
+            "title": "HIU, health information user",
+            "type": "glossary"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "**HIU** stands for **Health Information User**. It's one of the two key roles in ABDM's health data exchange.\n\nFrom the [ABDM glossary](https://abdm-developer.nha.gov.in/docs/hiecm/v3/getting-started/glossary#hiu):\n\nA health information user is a system that:\n- **Requests health records it doesn't hold** — it's the side of an exchange that wants to read records from elsewhere\n- **Gets patient consent first** — HIUs must have the patient's approved consent before fetching any records\n- **Is identified by a service ID** — carried in the `X-HIU-ID` header\n\nThe same organization often holds both roles simultaneously: one as a **HIP** (Health Information Provider, for records it keeps) and one as an **HIU** (for records it wants to read).\n\nWhen things go wrong, the most common issue is requesting health information on an expired or revoked consent artefact.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "**HIU** stands for **Health Information User**. It's one of the two key roles in ABDM's health data exchange.\n\nFrom the [ABDM glossary](https://abdm-developer.nha.gov.in/docs/hiecm/v3/getting-started/glossary#hiu):\n\nA health information user is a system that:\n- **Requests health records it doesn't hold** — it's the side of an exchange that wants to read records from elsewhere\n- **Gets patient consent first** — HIUs must have the patient's approved consent before fetching any records\n- **Is identified by a service ID** — carried in the `X-HIU-ID` header\n\nThe same organization often holds both roles simultaneously: one as a **HIP** (Health Information Provider, for records it keeps) and one as an **HIU** (for records it wants to read).\n\nWhen things go wrong, the most common issue is requesting health information on an expired or revoked consent artefact.",
+  "sources": [
+    {
+      "id": "hiecm.glossary.hiu",
+      "title": "HIU, health information user",
+      "url": "/docs/hiecm/v3/getting-started/glossary#hiu"
+    },
+    {
+      "id": "hiecm.glossary.bridge",
+      "title": "Bridge, your callback endpoints",
+      "url": "/docs/hiecm/v3/getting-started/glossary#bridge"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hiu\",\"id\":\"hiecm.glossary.hiu\",\"summary\":\"The role held by a system that asks a patient for consent and then fetches records held elsewhere.\",\"title\":\"HIU, health information user\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/getting-started/fetching-a-recipient-certificate#what-comes-back\",\"id\":\"hiecm.glossary.key-material\",\"summary\":\"The ECDH key pairs that encrypt health records in transit. A fresh pair per transfer, the HIU keeps its own, and the HIP returns its public half alongside th...\",\"title\":\"Key material, who generates it and who keeps it\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#pms\",\"id\":\"hiecm.glossary.pms\",\"summary\":\"The system a pharmacy runs to dispense and to hold stock. A pharmacy uses it both to read the prescription it is dispensing against and to record what it dis...\",\"title\":\"PMS, pharmacy management system\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#lims\",\"id\":\"hiecm.glossary.lims\",\"summary\":\"The system a diagnostic laboratory uses to manage samples, tests and results.\",\"title\":\"LIMS, laboratory information management system, also written LMIS\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#bridge\",\"id\":\"hiecm.glossary.bridge\",\"summary\":\"The set of callback URLs NHA posts to when it answers one of your calls.\",\"title\":\"Bridge, your callback endpoints\",\"type\":\"glossary\"}]}\n{\"body\":\"# HIU, health information user\\n\\n## In plain words\\n\\nA health information user is the side of an exchange that wants records it\\ndoes not hold. It is identified by a service id, carried in the `X-HIU-ID`\\nheader, which the specification describes as:\\n\\n> Identifier of the health information user to which the request was intended\\n\\nThe same organisation often holds both roles, one for the records it keeps\\nand one for the records it wants to read.\\n\\n## Before you start\\n\\nYou need a consent request the patient has approved, because this role reads\\nnothing without one.\\n\\n## What happens\\n\\n`m3_post_consent_v3_request_init` raises the consent request that this role\\nbegins every exchange with.\\n\\n## How you know it worked\\n\\nYou have understood this when you can say which role a consent request is\\nraised by and which role it is served against.\\n\\n## When it goes wrong\\n\\nRequesting health information on a consent artefact that has expired or been\\nrevoked, which the specification states must not be done.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hiu\",\"gateway\":\"hiecm\",\"id\":\"hiecm.glossary.hiu\",\"milestone\":\"n/a\",\"summary\":\"The role held by a system that asks a patient for consent and then fetches records held elsewhere.\",\"title\":\"HIU, health information user\",\"type\":\"glossary\"}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:59:00.552Z",
+  "usage": {
+    "input_tokens": 30,
+    "output_tokens": 520,
+    "cache_read_input_tokens": 28401,
+    "cache_creation_input_tokens": 6293,
+    "num_turns": 3,
+    "duration_ms": 8839,
+    "cost_usd_equivalent": 0.0180561
+  }
+}

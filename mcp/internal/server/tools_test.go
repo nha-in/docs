@@ -15,9 +15,7 @@ import (
 func TestToolDefsMatchMCP(t *testing.T) {
 	r := fixtureReader(t, false)
 	defs := NewTools(r, nil).Defs()
-	want := []string{"search_docs", "get_atom", "related_atoms", "decode_error",
-		"list_operations", "get_operation", "catalogue_info",
-		"list_fhir_profiles", "get_fhir_profile", "get_fhir_example"}
+	want := []string{"search", "get", "related", "decode_error", "catalogue_info"}
 	if len(defs) != len(want) {
 		t.Fatalf("got %d defs, want %d", len(defs), len(want))
 	}
@@ -65,8 +63,8 @@ func keys(m map[string]any) []string {
 
 func TestChatToolsForBindsSearchDocsToLookup(t *testing.T) {
 	tools := newTestTools(t)
-	defs := tools.ChatToolsFor([]string{"search_docs", "decode_error", "list_operations"})
-	if len(defs) != 3 || defs[0].Name != "search_docs" || defs[1].Name != "decode_error" || defs[2].Name != "list_operations" {
+	defs := tools.ChatToolsFor([]string{"search", "decode_error", "get"})
+	if len(defs) != 3 || defs[0].Name != "search" || defs[1].Name != "decode_error" || defs[2].Name != "get" {
 		t.Fatalf("got %+v", defs)
 	}
 	out, err := defs[0].Call(context.Background(), json.RawMessage(`{"query":"link care contexts"}`))
@@ -74,7 +72,7 @@ func TestChatToolsForBindsSearchDocsToLookup(t *testing.T) {
 		t.Fatal(err)
 	}
 	if _, ok := out["passages"]; !ok {
-		t.Errorf("chat search_docs must return a passage pack, got keys %v", keys(out))
+		t.Errorf("chat search must return a passage pack, got keys %v", keys(out))
 	}
 	if !strings.Contains(defs[0].Description, "Call this when") {
 		t.Errorf("description must state when to call it, got %q", defs[0].Description)
@@ -84,8 +82,8 @@ func TestChatToolsForBindsSearchDocsToLookup(t *testing.T) {
 func TestChatToolsForBindsValidateRequest(t *testing.T) {
 	r := fixtureReader(t, false)
 	tools := NewTools(r, nil)
-	defs := tools.ChatToolsFor([]string{"search_docs", "validate_request"})
-	if len(defs) != 2 || defs[0].Name != "search_docs" || defs[1].Name != "validate_request" {
+	defs := tools.ChatToolsFor([]string{"search", "validate"})
+	if len(defs) != 2 || defs[0].Name != "search" || defs[1].Name != "validate" {
 		t.Fatalf("got %+v", defs)
 	}
 	out, err := defs[1].Call(context.Background(), json.RawMessage(
@@ -97,7 +95,7 @@ func TestChatToolsForBindsValidateRequest(t *testing.T) {
 		t.Errorf("valid body rejected: %v", out)
 	}
 	if _, ok := out["required_parameters"]; !ok {
-		t.Errorf("chat validate_request must return required_parameters, got keys %v", keys(out))
+		t.Errorf("chat validate must return required_parameters, got keys %v", keys(out))
 	}
 }
 
@@ -115,7 +113,7 @@ func defByName(t *testing.T, defs []ToolDef, name string) ToolDef {
 func TestToolDefCallListFHIRProfiles(t *testing.T) {
 	r := fixtureReader(t, false)
 	defs := NewTools(r, nil).Defs()
-	out, err := defByName(t, defs, "list_fhir_profiles").Call(context.Background(), json.RawMessage(`{}`))
+	out, err := defByName(t, defs, "search").Call(context.Background(), json.RawMessage(`{"kind":"fhir_profile"}`))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -131,9 +129,9 @@ func TestToolDefCallListFHIRProfiles(t *testing.T) {
 func TestToolDefCallGetFHIRProfile(t *testing.T) {
 	r := fixtureReader(t, false)
 	defs := NewTools(r, nil).Defs()
-	def := defByName(t, defs, "get_fhir_profile")
+	def := defByName(t, defs, "get")
 
-	out, err := def.Call(context.Background(), json.RawMessage(`{"profile":"OPConsultRecord"}`))
+	out, err := def.Call(context.Background(), json.RawMessage(`{"id":"fhir:OPConsultRecord"}`))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -142,7 +140,7 @@ func TestToolDefCallGetFHIRProfile(t *testing.T) {
 	}
 
 	// Same digest, looked up by its ABDM hiType instead of its profile name.
-	out, err = def.Call(context.Background(), json.RawMessage(`{"profile":"OPConsultation"}`))
+	out, err = def.Call(context.Background(), json.RawMessage(`{"id":"fhir:OPConsultation"}`))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -150,7 +148,7 @@ func TestToolDefCallGetFHIRProfile(t *testing.T) {
 		t.Fatalf("get_fhir_profile by hiType = %v", out)
 	}
 
-	if _, err := def.Call(context.Background(), json.RawMessage(`{"profile":"NoSuchProfile"}`)); err == nil {
+	if _, err := def.Call(context.Background(), json.RawMessage(`{"id":"fhir:NoSuchProfile"}`)); err == nil {
 		t.Fatal("want an error for an unknown profile")
 	}
 }
@@ -158,9 +156,9 @@ func TestToolDefCallGetFHIRProfile(t *testing.T) {
 func TestToolDefCallGetFHIRExample(t *testing.T) {
 	r := fixtureReader(t, false)
 	defs := NewTools(r, nil).Defs()
-	def := defByName(t, defs, "get_fhir_example")
+	def := defByName(t, defs, "get")
 
-	out, err := def.Call(context.Background(), json.RawMessage(`{"record_type":"OPConsultation"}`))
+	out, err := def.Call(context.Background(), json.RawMessage(`{"id":"fhir-example:OPConsultation"}`))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -175,7 +173,7 @@ func TestToolDefCallGetFHIRExample(t *testing.T) {
 		t.Fatalf("get_fhir_example example missing bundle content: %s", exJSON)
 	}
 
-	if _, err := def.Call(context.Background(), json.RawMessage(`{"record_type":"NoSuchType"}`)); err == nil {
+	if _, err := def.Call(context.Background(), json.RawMessage(`{"id":"fhir-example:NoSuchType"}`)); err == nil {
 		t.Fatal("want an error for an unknown record type")
 	}
 }
@@ -219,6 +217,46 @@ func (failingOpener) RelatedAtoms(id string) ([]index.RelatedGroup, error) {
 	return nil, nil
 }
 
+func (failingOpener) OperationRoute(id string) (string, string, bool) { return "", "", false }
+
+// routedOpener returns an endpoint atom that names an operation, and knows
+// that operation's route, so the passage can be checked for the path line.
+type routedOpener struct{ known bool }
+
+func (routedOpener) GetAtom(id string) (catalogue.Atom, error) {
+	return catalogue.Atom{ID: id, Type: "endpoint", Operation: "m2_post_v3_link_token_generate",
+		Body: "Generates a link token for the patient."}, nil
+}
+
+func (routedOpener) RelatedAtoms(id string) ([]index.RelatedGroup, error) { return nil, nil }
+
+func (o routedOpener) OperationRoute(id string) (string, string, bool) {
+	if !o.known || id != "m2_post_v3_link_token_generate" {
+		return "", "", false
+	}
+	return "POST", "/api/hiecm/v3/token/generate-token", true
+}
+
+// The endpoint atom's body never carries its path; the guard grounds
+// literals against the pack, so the passage has to carry the route or every
+// answer quoting the real path is withheld.
+func TestOpenPassageCarriesTheOperationRoute(t *testing.T) {
+	hit := index.SearchHit{ID: "hiecm.endpoint.m2-generate-link-token", Type: "endpoint"}
+	p, _ := openPassage(routedOpener{known: true}, hit)
+	if !strings.HasPrefix(p.Body, "POST /api/hiecm/v3/token/generate-token\n\n") {
+		t.Errorf("Body should open with the method and path, got %q", p.Body)
+	}
+	if !strings.HasSuffix(p.Body, "Generates a link token for the patient.") {
+		t.Errorf("Body should still end with the atom body, got %q", p.Body)
+	}
+	// An operation the index does not know leaves the body as it was, rather
+	// than writing an empty route line.
+	p, _ = openPassage(routedOpener{known: false}, hit)
+	if p.Body != "Generates a link token for the patient." {
+		t.Errorf("unknown operation should leave the body untouched, got %q", p.Body)
+	}
+}
+
 func TestOpenPassageDegradesToSummaryOnGetAtomError(t *testing.T) {
 	hit := index.SearchHit{ID: "hiecm.flow.m2-link-care-context", Type: "flow",
 		Title: "Link a care context", Summary: "the search hit's own summary"}
@@ -231,5 +269,49 @@ func TestOpenPassageDegradesToSummaryOnGetAtomError(t *testing.T) {
 	}
 	if related != nil {
 		t.Errorf("related = %v, want nil: the related walk must be skipped when GetAtom fails", related)
+	}
+}
+
+// A code in the question names the one atom that explains it, and that atom
+// goes first whatever the rest of the wording ranks: "401 with code 900901"
+// retrieved five M1 enrolment atoms and not the error atom. Only an error
+// atom is pinned; a flow that merely mentions the code keeps its rank.
+type codeStub map[string][]index.AtomRef
+
+func (s codeStub) AtomsByErrorCode(code string) ([]index.AtomRef, error) { return s[code], nil }
+
+func TestPinErrorAtomsPutsTheCodesErrorAtomFirst(t *testing.T) {
+	stub := codeStub{"900901": {
+		{ID: "hiecm.flow.m1-create-abha", Type: "flow"},
+		{ID: "hiecm.error.900901", Type: "error", Title: "900901, the credentials are not valid"},
+	}}
+	hits := []index.SearchHit{{ID: "hiecm.endpoint.m1-enrolment-by-aadhaar"}, {ID: "hiecm.error.900901"}, {ID: "shared.glossary.abha"}}
+	got := pinErrorAtoms(stub, "abha enrolment returns 401 with code 900901 Invalid Credentials", hits, 5)
+	var ids []string
+	for _, h := range got {
+		ids = append(ids, h.ID)
+	}
+	want := []string{"hiecm.error.900901", "hiecm.endpoint.m1-enrolment-by-aadhaar", "shared.glossary.abha"}
+	if strings.Join(ids, ",") != strings.Join(want, ",") {
+		t.Errorf("ids = %v, want %v (error atom first, no duplicate, the flow not pinned)", ids, want)
+	}
+	if got := pinErrorAtoms(stub, "how do I create an ABHA", hits, 5); len(got) != 3 || got[0].ID != hits[0].ID {
+		t.Errorf("a question with no code must keep search order, got %v", got)
+	}
+}
+
+// An agent that read "900901" in a response passes exactly that. The code
+// alone was not read as one, because a bare six-digit number is only a code
+// in a JSON "code" value or after a word like "error"; an input that is
+// nothing but the code has no other reading.
+func TestDecodeErrorReadsABareGatewayCode(t *testing.T) {
+	tools := NewTools(fixtureReader(t, false), nil)
+	out, err := tools.DecodeError(context.Background(), decodeIn{Input: " 900901 "})
+	if err != nil {
+		t.Fatal(err)
+	}
+	codes, _ := out["codes"].([]string)
+	if len(codes) != 1 || codes[0] != "900901" {
+		t.Errorf("codes = %v, want [900901]", out["codes"])
 	}
 }

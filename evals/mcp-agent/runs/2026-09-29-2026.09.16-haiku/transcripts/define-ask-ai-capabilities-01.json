@@ -1,0 +1,53 @@
+{
+  "case_id": "define-ask-ai-capabilities-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "What can the Ask AI assistant do?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "I'm an AI assistant that helps you integrate with India's ABDM (Ayushman Bharat Digital Mission) gateways. Here's what I can help with:\n\n**Documentation & Reference**\n- Search the official ABDM developer portal for concepts, flows, endpoints, and guides\n- Look up specific API operations and their exact contracts\n- Find error codes and their fixes\n- Access FHIR profiles and example bundles for health records\n\n**Validation & Debugging**\n- Decode error responses from the gateway and explain what went wrong\n- Validate your request bodies against API schemas before sending them\n- Validate FHIR document bundles against NRCES profiles\n- Check FHIR record structure and required elements\n\n**Integration Help**\n- Understand flows for data sharing, consent, discovery, and other ABDM operations\n- Map between ABDM record types (OPConsultation, Prescription, etc.) and their FHIR profiles\n- Get example payloads and test cases from the portal's test suite\n- Navigate the gateway's sandbox environment\n\n**Quick Answers**\n- Explain what operations are available and when to use them\n- Clarify ABDM concepts and terminology\n- Help troubleshoot common integration issues\n\nJust ask me anything about ABDM integration, and I'll search the official documentation to give you accurate, authoritative answers. If the docs don't have an answer, I'll say so explicitly.\n\nWhat are you trying to build or fix?",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "I'm an AI assistant that helps you integrate with India's ABDM (Ayushman Bharat Digital Mission) gateways. Here's what I can help with:\n\n**Documentation & Reference**\n- Search the official ABDM developer portal for concepts, flows, endpoints, and guides\n- Look up specific API operations and their exact contracts\n- Find error codes and their fixes\n- Access FHIR profiles and example bundles for health records\n\n**Validation & Debugging**\n- Decode error responses from the gateway and explain what went wrong\n- Validate your request bodies against API schemas before sending them\n- Validate FHIR document bundles against NRCES profiles\n- Check FHIR record structure and required elements\n\n**Integration Help**\n- Understand flows for data sharing, consent, discovery, and other ABDM operations\n- Map between ABDM record types (OPConsultation, Prescription, etc.) and their FHIR profiles\n- Get example payloads and test cases from the portal's test suite\n- Navigate the gateway's sandbox environment\n\n**Quick Answers**\n- Explain what operations are available and when to use them\n- Clarify ABDM concepts and terminology\n- Help troubleshoot common integration issues\n\nJust ask me anything about ABDM integration, and I'll search the official documentation to give you accurate, authoritative answers. If the docs don't have an answer, I'll say so explicitly.\n\nWhat are you trying to build or fix?",
+  "sources": [],
+  "corpus": "",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T11:58:17.737Z",
+  "usage": {
+    "input_tokens": 10,
+    "output_tokens": 550,
+    "cache_read_input_tokens": 5899,
+    "cache_creation_input_tokens": 4977,
+    "num_turns": 1,
+    "duration_ms": 7110,
+    "cost_usd_equivalent": 0.0133039
+  }
+}

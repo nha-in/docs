@@ -39,10 +39,28 @@ Example:
 This documentation is catalogue version 2026.08.24. Every answer here comes from it and names its sources.
 </answer_shape>`,
 
-	"decline": `<answer_shape name="decline" budget="60 words">
-Say in one sentence that this is not covered here, then name the closest page or the support route. Never guess a value, a host or a path.
+	"self": `<answer_shape name="self" budget="90 words">
+The reader is asking about you, not about ABDM. Answer from these facts only, in two to four sentences, then say what they could ask next:
+- You are the Ask AI assistant on this portal. You answer questions about building on ABDM's gateways: HIE-CM (ABHA, linking records, consent, health data exchange, registries), UHI and NHCX, from this portal's documentation, and each answer names the pages it drew on.
+- You read and reply in the language the reader writes in, including Hindi and other Indian languages. The documentation itself is written in English, so API names, fields and codes stay in English.
+- You explain calls, fields, flows and error codes, and you read a request, response or log they attach. You do not write code for their codebase, and you cannot see their account, credentials or sandbox.
+- Nothing a reader types or attaches is stored. Identifiers such as ABHA numbers, mobiles and tokens are masked before you see them, and the conversation lives in their browser session and ends with it.
+- You can be wrong. For anything account specific, the route is /docs/support.
+Do not name the model or company behind you. Do not search.
 Example:
-NHCX claim endpoints are not documented on this portal. The NHCX section at /docs/nhcx/v1 says what it is and where NHA documents it, and /docs/support lists the channels.
+I am the portal's Ask AI assistant. I answer questions about building on ABDM, such as creating an ABHA, linking records, consent or an error code, from this documentation, and I can reply in Hindi or another Indian language if you write in it. What are you working on?
+</answer_shape>`,
+
+	"topic": `<answer_shape name="topic" budget="80 words">
+The reader typed a topic, not a question. One sentence saying what it is and which module owns it, then the two or three questions a reader usually means by it, one line each, so they can pick rather than rephrase. No steps yet.
+Example:
+Linking records is attaching a facility's care contexts to a patient's ABHA address, and it lives in M2 for a HIP and in P1 for a PHR app. Readers who type this usually want one of: how a HIP links its own records; how a PHR app discovers and links on the patient's behalf; or why a link call returned ABDM-1010. Which is yours?
+</answer_shape>`,
+
+	"decline": `<answer_shape name="decline" budget="60 words">
+Say in one sentence that this is not covered here, then in one more name the closest page or the support route and one question this portal can answer that is nearest to theirs. Never guess a value, a host or a path.
+Example:
+NHCX claim endpoints are not documented on this portal. The NHCX section at /docs/nhcx/v1 says what it is and where NHA documents it, /docs/support lists the channels, and if you are sending claims through HIE-CM instead, ask about the M3 consent request and this portal can walk you through it.
 </answer_shape>`,
 }
 
@@ -50,7 +68,7 @@ NHCX claim endpoints are not documented on this portal. The NHCX section at /doc
 // the router picked, the model is still free to drop it and decline instead
 // when the passages and its tools do not cover the question, rather than
 // forcing an answer into a shape that does not fit one it does not have.
-const standingDecline = "\nIf the passages and your tools do not cover the question, drop this shape and decline in two sentences that name the nearest /docs/ page and the support route."
+const standingDecline = "\nIf the passages and your tools do not cover the question, drop this shape and decline in two sentences that name the nearest /docs/ page, the support route, and one question this portal can answer that is nearest to theirs."
 
 // ShapeBlock returns the user-turn text for the given answer shape. An
 // unknown shape falls back to how-do-i, the shape a question defaults to
@@ -59,6 +77,9 @@ func ShapeBlock(shape string) string {
 	b, ok := shapeBlocks[shape]
 	if !ok {
 		b = shapeBlocks["how-do-i"]
+	}
+	if shape == "self" {
+		return b // nothing to decline: the answer comes from the block itself
 	}
 	return b + standingDecline
 }

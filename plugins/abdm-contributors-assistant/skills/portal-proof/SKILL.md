@@ -29,6 +29,22 @@ Two things to note about task 5. The exit condition is the original push succeed
 - A task that needs a human step is not a failure. It is recorded as needs-human, and the reason is checked against the atom's `human: true` marker. An unmarked human step is an atom bug.
 - Record which atoms the agent cited. An agent that reached the right outcome citing nothing is a warning sign: it used ambient knowledge, and it will be wrong on something the Catalogue contradicts.
 
+## The retrieval gate
+
+A different instrument from the six tasks: it measures whether search finds the right atom, not whether an agent finishes a job. Any change to chunking, ranking, indexing or the tools runs it before and after (plan#p9-3-retrieval-gate).
+
+```bash
+mcp/eval/gate.sh before-<change>     # on the code before the change
+mcp/eval/gate.sh after-<change>      # on the code after it
+python3 mcp/eval/compare.py mcp/eval/results/before-<change>.json mcp/eval/results/after-<change>.json
+```
+
+It needs Ollama serving `nomic-embed-text` on :11434 and nothing on :8085. `gate.sh` builds from the working tree, so run the "before" before editing. `compare.py` exits 1 when any question's first right answer falls in rank or disappears, or a probe that passed now fails; a probe already failing is reported, not gated. Paste its output in the pull request.
+
+Read the averages it prints, never gate on them. MRR, mean reciprocal rank, scores each question 1 over the rank of its first right answer (rank 1 scores 1, rank 2 scores 0.5, not found scores 0) and averages them; hit@1, hit@3 and hit@10 count questions with a right answer that high. An average can rise while two questions fall, which is why the gate is per question. The baseline on 29 September 2026 was MRR 0.503 over 109 questions.
+
+A pass is evidence, not proof: the gate uses Ollama's embeddings, production uses Bedrock's. Two changes it has already rejected: retrying keyword search on any single word, and a breadcrumb line on every chunk. Re-measure before proposing either again.
+
 ## When an eval fails
 
 Diagnose in this order, because the cheapest fix is usually the right one:

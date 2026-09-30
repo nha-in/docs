@@ -1,0 +1,23 @@
+## Call back API for notify care context update {/* #m2-call-back-api-for-notify-care-context-update */}
+
+After you [notify a care context update](/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/02-m2-post-hip-v3-link-context-notify), ABDM answers on your bridge at `/api/v3/links/context/on-notify`. The path is relative to the callback URL you registered, not to an ABDM host.
+
+<AgentOnly>
+**Before you start.** A callback URL registered for your bridge and reachable from the public internet.
+
+**What happens.** ABDM posts with the `REQUEST-ID`, `TIMESTAMP` and `X-HIP-ID` headers. The body carries `acknowledgement`, `response` and, on failure, `error`.
+
+**When it goes wrong.** `ABDM-1006` (Bad Request, invalid request Body): fix the notify request before you send it again.
+</AgentOnly>
+
+## The outcome of the care context notify call you made {/* #m2-on-context-notify-result */}
+
+Match the callback to your notify call by `response.requestId`, which echoes the `REQUEST-ID` you sent. An `acknowledgement.status` of `SUCCESS` means ABDM accepted the update. `ERRORED` means it did not, and `error` says why.
+
+<AgentOnly>
+**Before you start.** Store the `REQUEST-ID` of the notify call before you send it, so a fast callback still finds a match.
+
+**How you know it worked.** A callback with `acknowledgement.status` of `SUCCESS` and a `requestId` equal to your stored `REQUEST-ID`. Answer it with 200 OK.
+
+**When it goes wrong.** No callback arrives: check that the callback URL is public, registered and quick to answer. Make the handler idempotent on `requestId`, so a repeated delivery changes nothing.
+</AgentOnly>

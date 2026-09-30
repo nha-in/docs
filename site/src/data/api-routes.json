@@ -955,21 +955,6 @@
     "callbacks": []
   },
   {
-    "key": "profile/account",
-    "hosts": [
-      "abhasbx.abdm.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "m1_patch_v3_profile_account_profile_photo",
-    "module": "M1 Identity",
-    "moduleDir": "m1",
-    "method": "PATCH",
-    "path": "/abha/api/v3/profile/account#profile-photo",
-    "summary": "Update profile photo",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-update-photo/01-m1-patch-v3-profile-account-profile-photo",
-    "callbacks": []
-  },
-  {
     "key": "v3.1/profile/login/verify",
     "hosts": [
       "abhasbx.abdm.gov.in"
@@ -6786,6 +6771,395 @@
     "path": "/v1/task/submit",
     "summary": "Payer receives a reprocess or cancel task",
     "route": "/docs/nhcx/v1/api/task/endpoints/task-webhook-v1-task-submit",
+    "callbacks": []
+  },
+  {
+    "key": "init",
+    "hosts": [
+      "{provider_uri}"
+    ],
+    "kind": "operation",
+    "operationId": "uhi_ambulance_init",
+    "module": "Ambulance Booking",
+    "moduleDir": "ambulance",
+    "method": "POST",
+    "path": "/init",
+    "summary": "/init (EUA → HSPA)",
+    "route": "/docs/uhi/v1/api/ambulance/endpoints/uhi-ambulance-order/01-uhi-ambulance-init",
+    "callbacks": []
+  },
+  {
+    "key": "on_init",
+    "hosts": [
+      "{consumer_uri}"
+    ],
+    "kind": "operation",
+    "operationId": "uhi_ambulance_on_init",
+    "module": "Ambulance Booking",
+    "moduleDir": "ambulance",
+    "method": "POST",
+    "path": "/on_init",
+    "summary": "/on_init (HSPA → EUA)",
+    "route": "/docs/uhi/v1/api/ambulance/endpoints/uhi-ambulance-order/02-uhi-ambulance-on-init",
+    "callbacks": []
+  },
+  {
+    "key": "cancel",
+    "hosts": [
+      "{provider_uri}"
+    ],
+    "kind": "operation",
+    "operationId": "uhi_consultation_cancel",
+    "module": "Physical Consultation",
+    "moduleDir": "consultation",
+    "method": "POST",
+    "path": "/cancel",
+    "summary": "/cancel (EUA → HSPA)",
+    "route": "/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-post-fulfilment/01-uhi-consultation-cancel",
+    "callbacks": []
+  },
+  {
+    "key": "confirm",
+    "hosts": [
+      "{provider_uri}"
+    ],
+    "kind": "operation",
+    "operationId": "uhi_consultation_confirm",
+    "module": "Physical Consultation",
+    "moduleDir": "consultation",
+    "method": "POST",
+    "path": "/confirm",
+    "summary": "/confirm (EUA → HSPA)",
+    "route": "/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-order/03-uhi-consultation-confirm",
+    "callbacks": []
+  },
+  {
+    "key": "init",
+    "hosts": [
+      "{provider_uri}"
+    ],
+    "kind": "operation",
+    "operationId": "uhi_consultation_init",
+    "module": "Physical Consultation",
+    "moduleDir": "consultation",
+    "method": "POST",
+    "path": "/init",
+    "summary": "/init (EUA → HSPA)",
+    "route": "/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-order/01-uhi-consultation-init",
+    "callbacks": []
+  },
+  {
+    "key": "on_cancel",
+    "hosts": [
+      "{consumer_uri}"
+    ],
+    "kind": "operation",
+    "operationId": "uhi_consultation_on_cancel",
+    "module": "Physical Consultation",
+    "moduleDir": "consultation",
+    "method": "POST",
+    "path": "/on_cancel",
+    "summary": "/on_cancel (HSPA → EUA)",
+    "route": "/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-post-fulfilment/02-uhi-consultation-on-cancel",
+    "callbacks": []
+  },
+  {
+    "key": "uhi/on_cancel_audit",
+    "hosts": [
+      "uhigatewaysandbox.abdm.gov.in",
+      "uhigateway.abdm.gov.in",
+      "uhigatewaybeta.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "uhi_consultation_on_cancel_audit",
+    "module": "Physical Consultation",
+    "moduleDir": "consultation",
+    "method": "POST",
+    "path": "/api/v1/uhi/on_cancel_audit",
+    "summary": "/api/v1/uhi/on_cancel_audit (HSPA → Gateway (audit)): Accepter for all the on_cancel_audit response from the HSPAs",
+    "route": "/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-post-fulfilment/03-uhi-consultation-on-cancel-audit",
+    "callbacks": []
+  },
+  {
+    "key": "on_confirm",
+    "hosts": [
+      "{consumer_uri}"
+    ],
+    "kind": "operation",
+    "operationId": "uhi_consultation_on_confirm",
+    "module": "Physical Consultation",
+    "moduleDir": "consultation",
+    "method": "POST",
+    "path": "/on_confirm",
+    "summary": "/on_confirm (HSPA → EUA)",
+    "route": "/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-order/04-uhi-consultation-on-confirm",
+    "callbacks": []
+  },
+  {
+    "key": "uhi/on_confirm_audit",
+    "hosts": [
+      "uhigatewaysandbox.abdm.gov.in",
+      "uhigateway.abdm.gov.in",
+      "uhigatewaybeta.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "uhi_consultation_on_confirm_audit",
+    "module": "Physical Consultation",
+    "moduleDir": "consultation",
+    "method": "POST",
+    "path": "/api/v1/uhi/on_confirm_audit",
+    "summary": "/api/v1/uhi/on_confirm_audit (HSPA → Gateway (audit)): Accepter for all the on_confirm_audit response from the HSPAs",
+    "route": "/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-order/05-uhi-consultation-on-confirm-audit",
+    "callbacks": []
+  },
+  {
+    "key": "on_init",
+    "hosts": [
+      "{consumer_uri}"
+    ],
+    "kind": "operation",
+    "operationId": "uhi_consultation_on_init",
+    "module": "Physical Consultation",
+    "moduleDir": "consultation",
+    "method": "POST",
+    "path": "/on_init",
+    "summary": "/on_init (HSPA → EUA)",
+    "route": "/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-order/02-uhi-consultation-on-init",
+    "callbacks": []
+  },
+  {
+    "key": "on_message",
+    "hosts": [
+      "{consumer_uri}"
+    ],
+    "kind": "operation",
+    "operationId": "uhi_consultation_on_message_to_eua",
+    "module": "Physical Consultation",
+    "moduleDir": "consultation",
+    "method": "POST",
+    "path": "/on_message#to-eua",
+    "summary": "/on_message (HSPA → EUA)",
+    "route": "/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-post-fulfilment/05-uhi-consultation-on-message-to-eua",
+    "callbacks": []
+  },
+  {
+    "key": "on_message",
+    "hosts": [
+      "{provider_uri}"
+    ],
+    "kind": "operation",
+    "operationId": "uhi_consultation_on_message_to_hspa",
+    "module": "Physical Consultation",
+    "moduleDir": "consultation",
+    "method": "POST",
+    "path": "/on_message#to-hspa",
+    "summary": "/on_message (EUA → HSPA)",
+    "route": "/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-post-fulfilment/04-uhi-consultation-on-message-to-hspa",
+    "callbacks": []
+  },
+  {
+    "key": "on_select",
+    "hosts": [
+      "{consumer_uri}"
+    ],
+    "kind": "operation",
+    "operationId": "uhi_consultation_on_select",
+    "module": "Physical Consultation",
+    "moduleDir": "consultation",
+    "method": "POST",
+    "path": "/on_select",
+    "summary": "/on_select (HSPA → EUA)",
+    "route": "/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-on-select",
+    "callbacks": []
+  },
+  {
+    "key": "on_status",
+    "hosts": [
+      "{consumer_uri}"
+    ],
+    "kind": "operation",
+    "operationId": "uhi_consultation_on_status",
+    "module": "Physical Consultation",
+    "moduleDir": "consultation",
+    "method": "POST",
+    "path": "/on_status",
+    "summary": "/on_status (HSPA → EUA)",
+    "route": "/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-fulfilment/02-uhi-consultation-on-status",
+    "callbacks": []
+  },
+  {
+    "key": "uhi/on_status_audit",
+    "hosts": [
+      "uhigatewaysandbox.abdm.gov.in",
+      "uhigateway.abdm.gov.in",
+      "uhigatewaybeta.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "uhi_consultation_on_status_audit",
+    "module": "Physical Consultation",
+    "moduleDir": "consultation",
+    "method": "POST",
+    "path": "/api/v1/uhi/on_status_audit",
+    "summary": "/api/v1/uhi/on_status_audit (HSPA → Gateway (audit)): Accepter for all the on_status_audit response from the HSPAs",
+    "route": "/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-fulfilment/03-uhi-consultation-on-status-audit",
+    "callbacks": []
+  },
+  {
+    "key": "uhi/on_update_audit",
+    "hosts": [
+      "uhigatewaysandbox.abdm.gov.in",
+      "uhigateway.abdm.gov.in",
+      "uhigatewaybeta.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "uhi_consultation_on_update_audit",
+    "module": "Physical Consultation",
+    "moduleDir": "consultation",
+    "method": "POST",
+    "path": "/api/v1/uhi/on_update_audit",
+    "summary": "/api/v1/uhi/on_update_audit (HSPA → Gateway (audit)): Accepter for all the on_update_audit response from the HSPAs",
+    "route": "/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-fulfilment/06-uhi-consultation-on-update-audit",
+    "callbacks": []
+  },
+  {
+    "key": "on_update",
+    "hosts": [
+      "{consumer_uri}"
+    ],
+    "kind": "operation",
+    "operationId": "uhi_consultation_on_update_to_eua",
+    "module": "Physical Consultation",
+    "moduleDir": "consultation",
+    "method": "POST",
+    "path": "/on_update#to-eua",
+    "summary": "/on_update (HSPA → EUA)",
+    "route": "/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-fulfilment/05-uhi-consultation-on-update-to-eua",
+    "callbacks": []
+  },
+  {
+    "key": "on_update",
+    "hosts": [
+      "{provider_uri}"
+    ],
+    "kind": "operation",
+    "operationId": "uhi_consultation_on_update_to_hspa",
+    "module": "Physical Consultation",
+    "moduleDir": "consultation",
+    "method": "POST",
+    "path": "/on_update#to-hspa",
+    "summary": "/on_update (EUA → HSPA)",
+    "route": "/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-fulfilment/04-uhi-consultation-on-update-to-hspa",
+    "callbacks": []
+  },
+  {
+    "key": "select",
+    "hosts": [
+      "{provider_uri}"
+    ],
+    "kind": "operation",
+    "operationId": "uhi_consultation_select",
+    "module": "Physical Consultation",
+    "moduleDir": "consultation",
+    "method": "POST",
+    "path": "/select",
+    "summary": "/select (EUA → HSPA)",
+    "route": "/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-select",
+    "callbacks": []
+  },
+  {
+    "key": "status",
+    "hosts": [
+      "{provider_uri}"
+    ],
+    "kind": "operation",
+    "operationId": "uhi_consultation_status",
+    "module": "Physical Consultation",
+    "moduleDir": "consultation",
+    "method": "POST",
+    "path": "/status",
+    "summary": "/status (EUA → HSPA)",
+    "route": "/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-fulfilment/01-uhi-consultation-status",
+    "callbacks": []
+  },
+  {
+    "key": "uhi/on_search",
+    "hosts": [
+      "uhigatewaysandbox.abdm.gov.in",
+      "uhigateway.abdm.gov.in",
+      "uhigatewaybeta.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "uhi_network_gateway_on_search",
+    "module": "Network and discovery",
+    "moduleDir": "network",
+    "method": "POST",
+    "path": "/api/v1/uhi/on_search",
+    "summary": "/api/v1/uhi/on_search (HSPA → Gateway): Accepter for all the on_search response from the HSPAs",
+    "route": "/docs/uhi/v1/api/network/endpoints/uhi-pmjay-hem/03-uhi-network-gateway-on-search",
+    "callbacks": []
+  },
+  {
+    "key": "uhi/search",
+    "hosts": [
+      "uhigatewaysandbox.abdm.gov.in",
+      "uhigateway.abdm.gov.in",
+      "uhigatewaybeta.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "uhi_network_gateway_search",
+    "module": "Network and discovery",
+    "moduleDir": "network",
+    "method": "POST",
+    "path": "/api/v1/uhi/search",
+    "summary": "/api/v1/uhi/search (EUA → Gateway): Search requestor to broadcast the message over HSPAs",
+    "route": "/docs/uhi/v1/api/network/endpoints/uhi-pmjay-hem/01-uhi-network-gateway-search",
+    "callbacks": []
+  },
+  {
+    "key": "on_search",
+    "hosts": [
+      "{consumer_uri}"
+    ],
+    "kind": "operation",
+    "operationId": "uhi_network_on_search",
+    "module": "Network and discovery",
+    "moduleDir": "network",
+    "method": "POST",
+    "path": "/on_search",
+    "summary": "/on_search (Gateway / HSPA → EUA)",
+    "route": "/docs/uhi/v1/api/network/endpoints/uhi-pmjay-hem/04-uhi-network-on-search",
+    "callbacks": []
+  },
+  {
+    "key": "networkregistry/lookup",
+    "hosts": [
+      "uhigatewaysandbox.abdm.gov.in",
+      "uhigateway.abdm.gov.in",
+      "uhigatewaybeta.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "uhi_network_registry_lookup",
+    "module": "Network and discovery",
+    "moduleDir": "network",
+    "method": "POST",
+    "path": "/api/v1/networkregistry/lookup",
+    "summary": "lookup",
+    "route": "/docs/uhi/v1/api/network/endpoints/uhi-network-registry-lookup",
+    "callbacks": []
+  },
+  {
+    "key": "search",
+    "hosts": [
+      "{provider_uri}"
+    ],
+    "kind": "operation",
+    "operationId": "uhi_network_search",
+    "module": "Network and discovery",
+    "moduleDir": "network",
+    "method": "POST",
+    "path": "/search",
+    "summary": "/search (Gateway / EUA → HSPA)",
+    "route": "/docs/uhi/v1/api/network/endpoints/uhi-pmjay-hem/02-uhi-network-search",
     "callbacks": []
   }
 ]

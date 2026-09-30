@@ -1,0 +1,500 @@
+{
+  "errors": [],
+  "file": "uhi-consultation.yaml",
+  "gateway": "uhi",
+  "label": "Physical Consultation",
+  "module": "consultation",
+  "operations": {
+    "POST /api/v1/uhi/on_cancel_audit": {
+      "encrypted": [],
+      "id": "uhi_consultation_on_cancel_audit",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization!"
+      ],
+      "path": "/api/v1/uhi/on_cancel_audit",
+      "properties": [
+        "context",
+        "error",
+        "message"
+      ],
+      "required": [
+        "context"
+      ],
+      "responses": [
+        "200"
+      ],
+      "security": [],
+      "server": "https://uhigatewaysandbox.abdm.gov.in",
+      "servers": [
+        "https://uhigateway.abdm.gov.in",
+        "https://uhigatewaybeta.abdm.gov.in",
+        "https://uhigatewaysandbox.abdm.gov.in"
+      ]
+    },
+    "POST /api/v1/uhi/on_confirm_audit": {
+      "encrypted": [],
+      "id": "uhi_consultation_on_confirm_audit",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization!"
+      ],
+      "path": "/api/v1/uhi/on_confirm_audit",
+      "properties": [
+        "context",
+        "error",
+        "message"
+      ],
+      "required": [
+        "context"
+      ],
+      "responses": [
+        "200"
+      ],
+      "security": [],
+      "server": "https://uhigatewaysandbox.abdm.gov.in",
+      "servers": [
+        "https://uhigateway.abdm.gov.in",
+        "https://uhigatewaybeta.abdm.gov.in",
+        "https://uhigatewaysandbox.abdm.gov.in"
+      ]
+    },
+    "POST /api/v1/uhi/on_status_audit": {
+      "encrypted": [],
+      "id": "uhi_consultation_on_status_audit",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization!"
+      ],
+      "path": "/api/v1/uhi/on_status_audit",
+      "properties": [
+        "context",
+        "error",
+        "message"
+      ],
+      "required": [
+        "context"
+      ],
+      "responses": [
+        "200"
+      ],
+      "security": [],
+      "server": "https://uhigatewaysandbox.abdm.gov.in",
+      "servers": [
+        "https://uhigateway.abdm.gov.in",
+        "https://uhigatewaybeta.abdm.gov.in",
+        "https://uhigatewaysandbox.abdm.gov.in"
+      ]
+    },
+    "POST /api/v1/uhi/on_update_audit": {
+      "encrypted": [],
+      "id": "uhi_consultation_on_update_audit",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization!"
+      ],
+      "path": "/api/v1/uhi/on_update_audit",
+      "properties": [
+        "context",
+        "error",
+        "message"
+      ],
+      "required": [
+        "context"
+      ],
+      "responses": [
+        "200"
+      ],
+      "security": [],
+      "server": "https://uhigatewaysandbox.abdm.gov.in",
+      "servers": [
+        "https://uhigateway.abdm.gov.in",
+        "https://uhigatewaybeta.abdm.gov.in",
+        "https://uhigatewaysandbox.abdm.gov.in"
+      ]
+    },
+    "POST /cancel": {
+      "encrypted": [],
+      "id": "uhi_consultation_cancel",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization!"
+      ],
+      "path": "/cancel",
+      "properties": [
+        "context",
+        "error",
+        "message"
+      ],
+      "required": [
+        "context"
+      ],
+      "responses": [
+        "200"
+      ],
+      "security": [],
+      "server": "https://{provider_uri}",
+      "servers": [
+        "https://{provider_uri}"
+      ]
+    },
+    "POST /confirm": {
+      "encrypted": [],
+      "id": "uhi_consultation_confirm",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization!"
+      ],
+      "path": "/confirm",
+      "properties": [
+        "context",
+        "message"
+      ],
+      "required": [
+        "context",
+        "message"
+      ],
+      "responses": [
+        "200"
+      ],
+      "security": [],
+      "server": "https://{provider_uri}",
+      "servers": [
+        "https://{provider_uri}"
+      ]
+    },
+    "POST /init": {
+      "encrypted": [],
+      "id": "uhi_consultation_init",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization!"
+      ],
+      "path": "/init",
+      "properties": [
+        "context",
+        "message"
+      ],
+      "required": [
+        "context",
+        "message"
+      ],
+      "responses": [
+        "200"
+      ],
+      "security": [],
+      "server": "https://{provider_uri}",
+      "servers": [
+        "https://{provider_uri}"
+      ]
+    },
+    "POST /on_cancel": {
+      "encrypted": [],
+      "id": "uhi_consultation_on_cancel",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization!"
+      ],
+      "path": "/on_cancel",
+      "properties": [
+        "context",
+        "error",
+        "message"
+      ],
+      "required": [
+        "context"
+      ],
+      "responses": [
+        "200"
+      ],
+      "security": [],
+      "server": "https://{consumer_uri}",
+      "servers": [
+        "https://{consumer_uri}"
+      ]
+    },
+    "POST /on_confirm": {
+      "encrypted": [],
+      "id": "uhi_consultation_on_confirm",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization!"
+      ],
+      "path": "/on_confirm",
+      "properties": [
+        "context",
+        "error",
+        "message"
+      ],
+      "required": [
+        "context"
+      ],
+      "responses": [
+        "200"
+      ],
+      "security": [],
+      "server": "https://{consumer_uri}",
+      "servers": [
+        "https://{consumer_uri}"
+      ]
+    },
+    "POST /on_init": {
+      "encrypted": [],
+      "id": "uhi_consultation_on_init",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization!"
+      ],
+      "path": "/on_init",
+      "properties": [
+        "context",
+        "error",
+        "message"
+      ],
+      "required": [
+        "context"
+      ],
+      "responses": [
+        "200"
+      ],
+      "security": [],
+      "server": "https://{consumer_uri}",
+      "servers": [
+        "https://{consumer_uri}"
+      ]
+    },
+    "POST /on_message#to-eua": {
+      "encrypted": [],
+      "id": "uhi_consultation_on_message_to_eua",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization!"
+      ],
+      "path": "/on_message#to-eua",
+      "properties": [
+        "context",
+        "error",
+        "message"
+      ],
+      "required": [
+        "context"
+      ],
+      "responses": [
+        "200"
+      ],
+      "security": [],
+      "server": "https://{consumer_uri}",
+      "servers": [
+        "https://{consumer_uri}"
+      ]
+    },
+    "POST /on_message#to-hspa": {
+      "encrypted": [],
+      "id": "uhi_consultation_on_message_to_hspa",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization!"
+      ],
+      "path": "/on_message#to-hspa",
+      "properties": [
+        "context",
+        "error",
+        "message"
+      ],
+      "required": [
+        "context"
+      ],
+      "responses": [
+        "200"
+      ],
+      "security": [],
+      "server": "https://{provider_uri}",
+      "servers": [
+        "https://{provider_uri}"
+      ]
+    },
+    "POST /on_select": {
+      "encrypted": [],
+      "id": "uhi_consultation_on_select",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization!"
+      ],
+      "path": "/on_select",
+      "properties": [
+        "context",
+        "error",
+        "message"
+      ],
+      "required": [
+        "context"
+      ],
+      "responses": [
+        "200"
+      ],
+      "security": [],
+      "server": "https://{consumer_uri}",
+      "servers": [
+        "https://{consumer_uri}"
+      ]
+    },
+    "POST /on_status": {
+      "encrypted": [],
+      "id": "uhi_consultation_on_status",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization!"
+      ],
+      "path": "/on_status",
+      "properties": [
+        "context",
+        "error",
+        "message"
+      ],
+      "required": [
+        "context"
+      ],
+      "responses": [
+        "200"
+      ],
+      "security": [],
+      "server": "https://{consumer_uri}",
+      "servers": [
+        "https://{consumer_uri}"
+      ]
+    },
+    "POST /on_update#to-eua": {
+      "encrypted": [],
+      "id": "uhi_consultation_on_update_to_eua",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization!"
+      ],
+      "path": "/on_update#to-eua",
+      "properties": [
+        "context",
+        "error",
+        "message"
+      ],
+      "required": [
+        "context"
+      ],
+      "responses": [
+        "200"
+      ],
+      "security": [],
+      "server": "https://{consumer_uri}",
+      "servers": [
+        "https://{consumer_uri}"
+      ]
+    },
+    "POST /on_update#to-hspa": {
+      "encrypted": [],
+      "id": "uhi_consultation_on_update_to_hspa",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization!"
+      ],
+      "path": "/on_update#to-hspa",
+      "properties": [
+        "context",
+        "error",
+        "message"
+      ],
+      "required": [
+        "context"
+      ],
+      "responses": [
+        "200"
+      ],
+      "security": [],
+      "server": "https://{provider_uri}",
+      "servers": [
+        "https://{provider_uri}"
+      ]
+    },
+    "POST /select": {
+      "encrypted": [],
+      "id": "uhi_consultation_select",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization!"
+      ],
+      "path": "/select",
+      "properties": [
+        "context",
+        "message"
+      ],
+      "required": [
+        "context",
+        "message"
+      ],
+      "responses": [
+        "200"
+      ],
+      "security": [],
+      "server": "https://{provider_uri}",
+      "servers": [
+        "https://{provider_uri}"
+      ]
+    },
+    "POST /status": {
+      "encrypted": [],
+      "id": "uhi_consultation_status",
+      "kind": "call",
+      "method": "POST",
+      "params": [
+        "header:Authorization!"
+      ],
+      "path": "/status",
+      "properties": [
+        "context",
+        "error",
+        "message"
+      ],
+      "required": [
+        "context"
+      ],
+      "responses": [
+        "200"
+      ],
+      "security": [],
+      "server": "https://{provider_uri}",
+      "servers": [
+        "https://{provider_uri}"
+      ]
+    }
+  },
+  "roles": [
+    "eua",
+    "hspa"
+  ],
+  "sources": {
+    "nha-2026-09-28-uhi/gateway/UHI Documentation Requirements.yaml": {
+      "fetched": "2026-09-28",
+      "hash": "sha256:af065b1acc1032286c5b10ba43a39c048bfd8ce8afe1017b92e11b783a43d158"
+    },
+    "nha-2026-09-28-uhi/gateway/UHI Gateway Service.yaml": {
+      "fetched": "2026-09-28",
+      "hash": "sha256:a04a7a18f19f9fb448f747d84b19aa10908b9118ac32a4bf84cf330440984d47"
+    }
+  },
+  "version": "v1"
+}

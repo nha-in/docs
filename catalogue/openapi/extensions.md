@@ -109,6 +109,41 @@ the spec carries only the pointer, so no divergence is silent.
         x-abdm-correction: C3   # corrections/2026-08-25-m1-m2-m3-ingest.md
 ```
 
+### `x-actual-path`
+
+The real endpoint of an operation whose path key carries a `#suffix`, used
+where one endpoint appears more than once in a file. The M1 split per use case
+and UHI's two directions of `on_update` and `on_message` use it.
+`scripts/build-api-reference.mjs` shows it in place of the key.
+
+```yaml
+  /on_update#to-eua:
+    post:
+      x-actual-path: /on_update
+```
+
+### `x-abdm-hosted-by`
+
+UHI only. Who serves the call: `gateway`, `eua` or `hspa`. A UHI callback is
+the EUA's or the HSPA's depending on which role you build, so the page says
+who hosts it rather than modelling it as a webhook. Written by
+`scripts/ingest-uhi.mjs`, read by `scripts/build-api-reference.mjs`.
+
+```yaml
+      x-abdm-hosted-by: hspa
+```
+
+### `x-abdm-answered-by`, `x-abdm-triggered-by`
+
+The operationId of the call that answers this one, or that this one answers.
+HIE-CM carries them on webhooks; UHI carries them on paths, pairing a request
+with its `on_` callback. `scripts/build-api-reference.mjs` links the two pages.
+
+```yaml
+      x-abdm-answered-by: uhi_consultation_on_init
+      x-abdm-triggered-by: uhi_consultation_init
+```
+
 ## Adding one
 
 Add the extension here in the same shape, with a real example taken from a

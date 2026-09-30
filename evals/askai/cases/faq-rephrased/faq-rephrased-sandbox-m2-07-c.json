@@ -26,12 +26,12 @@
     "atom"
   ],
   "expected_sources": [
-    "shared.glossary.auth-modes"
+    "hiecm.glossary.auth-modes"
   ],
   "expected_shape": "define",
   "expected_behaviour": "answer",
   "derived_from": "faq-verbatim-sandbox-m2-07",
   "source_row": "annexure#sandbox-faq-m2",
-  "catalogue_version": "2026.08.24",
+  "catalogue_version": "2026.09.16",
   "notes": "variant c of faq-verbatim-sandbox-m2-07, the same question reduced to the noun it is asking about"
 }

@@ -69,3 +69,17 @@ func TestPromptTakesTheDeploymentsMCPURL(t *testing.T) {
 		t.Error("an empty MCPURL should fall back to DefaultMCPURL")
 	}
 }
+
+func TestSystemPromptNamesNoVerificationStatus(t *testing.T) {
+	for _, banned := range []string{"verified atom", "not verified"} {
+		if strings.Contains(systemPromptTemplate, banned) {
+			t.Errorf("system prompt still mentions %q; atoms carry no verification status since 2026-09-19", banned)
+		}
+	}
+}
+
+func TestSystemPromptSaysAgentNotesAreForTheAssistant(t *testing.T) {
+	if !strings.Contains(systemPromptTemplate, "Notes for AI agents") {
+		t.Error("system prompt must tell the assistant that notes for AI agents are instructions to it, not text to repeat to the reader")
+	}
+}

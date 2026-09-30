@@ -1,0 +1,189 @@
+{
+  "failing_cases": {
+    "abstain-m3-postman-collection-01": [
+      "decline: 6 sentences",
+      "decline: no route"
+    ],
+    "abstain-python-sdk-01": [
+      "decline: 5 sentences"
+    ],
+    "confusable-hiecm-m1-t-token-vs-x-token-01": [
+      "expected_source: hiecm.endpoint.m1-login-verify absent"
+    ],
+    "confusable-hiecm-m3-request-id-vs-artefact-id-01": [
+      "expected_source: hiecm.endpoint.m3-consent-fetch absent"
+    ],
+    "confusable-sandbox-vs-prod-host-01": [
+      "expected_source: shared.sandbox.going-live absent"
+    ],
+    "conversation-hip-vs-hiu-01": [
+      "shape: define has a list",
+      "shape: define has 10 sentences"
+    ],
+    "conversation-link-token-01": [
+      "shape: define has a list",
+      "shape: define has 6 sentences"
+    ],
+    "conversation-m1-vs-m2-01": [
+      "shape: define has a list",
+      "shape: define has 6 sentences"
+    ],
+    "decline-aarogya-setu-feature-01": [
+      "decline: 15 sentences"
+    ],
+    "decline-injection-trailing-instruction-01": [
+      "forbidden: approved by NHA"
+    ],
+    "decline-nhcx-claim-adjudication-01": [
+      "decline: 6 sentences"
+    ],
+    "decline-nonsense-emoji-01": [
+      "decline: 3 sentences",
+      "decline: no route"
+    ],
+    "decline-nonsense-question-marks-01": [
+      "decline: no route"
+    ],
+    "decline-production-cert-timeline-01": [
+      "forbidden: business days"
+    ],
+    "define-elliptic-curve-01": [
+      "expected_source: hiecm.glossary.ecdh absent"
+    ],
+    "define-health-professional-id-01": [
+      "expected_source: shared.glossary.hpid absent"
+    ],
+    "diagnose-hiecm-m1-900901-01": [
+      "expected_source: hiecm.error.900901 absent"
+    ],
+    "diagnose-hiecm-m1-abdm-1016-01": [
+      "shape: literal ABDM-1016 outside a code span"
+    ],
+    "diagnose-hiecm-m2-on-generate-token-never-arrives-01": [
+      "expected_source: hiecm.troubleshooting.callback-never-arrives absent"
+    ],
+    "diagnose-hiecm-m3-abdm-1040-01": [
+      "shape: literal ABDM-1040 outside a code span"
+    ],
+    "diagnose-hiecm-m3-notify-keeps-arriving-01": [
+      "expected_source: hiecm.endpoint.m3-consent-hiu-on-notify absent"
+    ],
+    "faq-rephrased-abdm-sandbox-02-c": [
+      "expected_source: shared.sandbox.first-fifteen-minutes absent"
+    ],
+    "faq-rephrased-sandbox-general-01-a": [
+      "expected_source: shared.sandbox.first-fifteen-minutes absent"
+    ],
+    "faq-rephrased-sandbox-general-01-b": [
+      "expected_source: shared.sandbox.first-fifteen-minutes absent"
+    ],
+    "faq-rephrased-sandbox-m1-03-a": [
+      "expected_source: hiecm.glossary.m1 absent",
+      "expected_source: hiecm.glossary.m2 absent",
+      "expected_source: hiecm.glossary.m3 absent"
+    ],
+    "faq-rephrased-sandbox-m1-03-b": [
+      "expected_source: hiecm.glossary.m1 absent",
+      "expected_source: hiecm.glossary.m3 absent",
+      "shape: define has 6 sentences"
+    ],
+    "faq-rephrased-sandbox-m1-03-c": [
+      "expected_source: hiecm.glossary.m1 absent",
+      "expected_source: hiecm.glossary.m2 absent",
+      "expected_source: hiecm.glossary.m3 absent"
+    ],
+    "faq-rephrased-sandbox-m2-02-a": [
+      "shape: define has a list",
+      "shape: define has 7 sentences"
+    ],
+    "faq-rephrased-sandbox-m2-07-a": [
+      "shape: define has a list",
+      "shape: define has 6 sentences"
+    ],
+    "faq-rephrased-sandbox-m3-03-a": [
+      "expected_source: hiecm.glossary.hi-type absent"
+    ],
+    "faq-rephrased-sandbox-m3-03-b": [
+      "expected_source: hiecm.glossary.hi-type absent"
+    ],
+    "faq-rephrased-sandbox-m3-03-c": [
+      "expected_source: hiecm.glossary.hi-type absent"
+    ],
+    "faq-verbatim-abdm-sandbox-03": [
+      "expected_source: shared.sandbox.wasa absent"
+    ],
+    "faq-verbatim-abdm-sandbox-04": [
+      "expected_source: shared.sandbox.going-live absent"
+    ],
+    "faq-verbatim-sandbox-general-01": [
+      "expected_source: shared.sandbox.first-fifteen-minutes absent"
+    ],
+    "faq-verbatim-sandbox-m1-02": [
+      "expected_source: hiecm.glossary.hmis absent",
+      "expected_source: shared.glossary.phr absent"
+    ],
+    "faq-verbatim-sandbox-m1-03": [
+      "expected_source: hiecm.glossary.m1 absent",
+      "expected_source: hiecm.glossary.m3 absent",
+      "shape: define has 7 sentences"
+    ],
+    "faq-verbatim-sandbox-m2-04": [
+      "citations: none",
+      "expected_source: shared.sandbox.going-live absent",
+      "blocked: the guard withheld the answer"
+    ],
+    "faq-verbatim-sandbox-m3-03": [
+      "expected_source: hiecm.glossary.hi-type absent"
+    ],
+    "faq-verbatim-sandbox-m3-06": [
+      "expected_source: shared.fhir.document-bundle absent"
+    ],
+    "followup-hiecm-m1-choose-address-01": [
+      "expected_source: hiecm.flow.m1-create-abha-aadhaar-otp absent"
+    ],
+    "followup-hiecm-m2-match-link-token-callback-01": [
+      "expected_source: hiecm.callback.m2-on-generate-token-result absent"
+    ],
+    "followup-hiecm-m3-multiple-artefacts-01": [
+      "expected_source: hiecm.concept.m3-plural-artefacts-and-codes absent",
+      "expected_source: hiecm.callback.m3-on-consent-request-notify-hiu absent",
+      "expected_source: hiecm.endpoint.m3-consent-fetch absent"
+    ],
+    "naive-hiecm-m1-create-abha-aadhaar-01": [
+      "expected_source: hiecm.endpoint.m1-enrolment-request-otp absent"
+    ],
+    "naive-hiecm-m1-encrypt-aadhaar-01": [
+      "expected_source: hiecm.endpoint.m1-get-public-certificate absent"
+    ],
+    "naive-hiecm-m1-face-auth-01": [
+      "expected_source: hiecm.endpoint.m1-enrolment-capture-pid absent"
+    ],
+    "naive-hiecm-m1-login-mobile-01": [
+      "expected_source: hiecm.endpoint.m1-login-verify absent",
+      "expected_source: hiecm.endpoint.m1-login-select-account absent"
+    ],
+    "naive-hiecm-m2-202-is-linked-01": [
+      "expected_source: hiecm.callback.m2-on-carecontext-result absent"
+    ],
+    "naive-hiecm-m2-discovery-request-01": [
+      "expected_source: hiecm.callback.m2-on-discovery-request absent",
+      "expected_source: hiecm.endpoint.m2-on-discover-care-contexts absent"
+    ],
+    "naive-hiecm-m2-link-record-01": [
+      "expected_source: hiecm.flow.m2-link-care-context absent"
+    ],
+    "naive-hiecm-m2-send-records-to-hiu-01": [
+      "expected_source: hiecm.endpoint.m2-hip-health-information-on-request absent"
+    ],
+    "naive-hiecm-m2-update-linked-care-context-01": [
+      "expected_source: hiecm.endpoint.m2-link-care-context-notify absent"
+    ],
+    "naive-hiecm-m3-notify-after-decrypt-01": [
+      "expected_source: hiecm.endpoint.m3-hiu-data-flow-notify absent",
+      "expected_source: hiecm.flow.m3-fetch-records absent"
+    ],
+    "naive-hiecm-m3-where-records-arrive-01": [
+      "expected_source: hiecm.flow.m3-fetch-records absent"
+    ]
+  }
+}

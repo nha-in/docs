@@ -103,7 +103,51 @@ RANK_CASES = [
       "nhcx.concept.policy-linking"}),
     ("the exchange rejected my retry saying the correlation id was already used",
      {"nhcx.error.nhcx-1006", "nhcx.concept.message-identifiers"}),
+    # -- the first atom whose words live on its page ---------------------------
+    # The rebuilt link token endpoint and its callback both state the
+    # six-month lifetime, so either answers.
+    ("how long can I keep using the token that lets me link a patient's records",
+     {"hiecm.glossary.link-token", "hiecm.endpoint.m2-generate-link-token",
+      "hiecm.callback.m2-on-generate-token-result"}),
+    ("linking care contexts fails because my stored link token has expired",
+     {"hiecm.glossary.link-token"}),
+    # -- UHI, phrased the way an app or provider developer asks ----------------
+    ("my search goes through but no results ever come back to my app",
+     {"uhi.troubleshooting.first-search", "uhi.troubleshooting.http-statuses",
+      "uhi.concept.ack-then-answer"}),
+    ("which headers do I need to sign a request to the uhi gateway",
+     {"uhi.concept.signing-headers", "uhi.concept.signature-construction"}),
+    ("find pm-jay empanelled hospitals near a patient by pin code or gps",
+     {"uhi.flow.pmjay-hem-discovery", "uhi.concept.pmjay-hem-search-variants"}),
+    ("after the patient picks a doctor does the booking still go through the gateway",
+     {"uhi.concept.direct-calls", "uhi.concept.gateway-routes"}),
+    ("the clinic system has to send a copy of every confirmed appointment to the gateway",
+     {"uhi.concept.audit-copies", "uhi.endpoint.consultation-on-confirm-audit"}),
+    ("get another app's public key so I can check the signature on its call",
+     {"uhi.endpoint.network-registry-lookup", "uhi.concept.registry-lookup",
+      "uhi.concept.verifying-signatures"}),
+    ("which domain code and fulfillment type do I send to search blood banks",
+     {"uhi.concept.blood-bank-service-identity", "uhi.glossary.context-domain",
+      "uhi.concept.blood-bank-search-variants"}),
+    ("the doctor never turned up for the appointment, what does the patient app send",
+     {"uhi.concept.consultation-reason-codes", "uhi.flow.consultation-post-fulfilment",
+      "uhi.flow.consultation-fulfilment", "uhi.callback.consultation-on-update-to-hspa"}),
+    ("how long is the appointment slot held after init before it lapses",
+     {"uhi.flow.consultation-order", "uhi.endpoint.consultation-init",
+      "uhi.callback.consultation-on-init"}),
+    ("several providers answer one search, how long do I wait and how do I merge them",
+     {"uhi.concept.aggregate-answers", "uhi.concept.timeouts",
+      "uhi.concept.render-as-results-arrive"}),
+    ("register my app on the uhi sandbox and get a subscriber id",
+     {"uhi.sandbox.registration-form", "uhi.sandbox.express-intent", "uhi.sandbox.key-pair"}),
+    ("ask for an ambulance quote with pickup and drop, what terms come back",
+     {"uhi.flow.ambulance-order", "uhi.callback.ambulance-on-init", "uhi.endpoint.ambulance-init"}),
 ]
+
+# Single-turn Ask AI cases that name their answering atoms, from seed_cases.py.
+_seeded = Path(__file__).parent / "cases_seeded.json"
+if _seeded.exists():
+    RANK_CASES += [(c["query"], set(c["expect"])) for c in json.loads(_seeded.read_text())]
 
 # ---------------------------------------------------------------------------
 # Content probes. For each query, the TOP hit's snippet+summary (lowercased)
@@ -187,7 +231,10 @@ def main() -> None:
     # A case belongs to the gateway its expected atoms carry; shared atoms
     # count with HIE-CM, whose cases they answer.
     def gateway(row: dict) -> str:
-        return "nhcx" if all(e.startswith("nhcx.") for e in row["expect"]) else "hiecm+shared"
+        for g in ("nhcx", "uhi"):
+            if all(e.startswith(f"{g}.") for e in row["expect"]):
+                return g
+        return "hiecm+shared"
 
     summary = {
         "name": name,
@@ -195,7 +242,7 @@ def main() -> None:
         "content_pass": sum(1 for p in probes if p["passed"]),
         "content_total": len(probes),
         "by_gateway": {g: scores([r for r in rows if gateway(r) == g])
-                       for g in ("hiecm+shared", "nhcx")},
+                       for g in ("hiecm+shared", "nhcx", "uhi")},
     }
     out_dir = Path(__file__).parent / "results"
     out_dir.mkdir(exist_ok=True)

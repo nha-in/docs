@@ -1,0 +1,1914 @@
+{
+  "case_id": "naive-hiecm-m1-find-abha-01",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "patient doesnt remember his abha number, only knows mobile. how to find it"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01JwHPddPJExe2ZfZ2tqS14C",
+            "Name": "search",
+            "Input": {
+              "query": "find ABHA number by mobile phone lookup recovery",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "find ABHA number by mobile phone lookup recovery",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#abha",
+                "id": "shared.glossary.abha",
+                "summary": "The patient's identity in ABDM, in two forms that look alike and are not: a 14 digit ABHA number and a readable ABHA address.",
+                "title": "ABHA",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.abha-identifiers",
+                "summary": "NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...",
+                "title": "Carrying an ABHA number and an ABHA address on a FHIR Patient",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/01-m1-post-v3-profile-benefit-linkanddelink-x-token#m1-benefit-link-or-delink",
+                "id": "hiecm.endpoint.m1-benefit-link-or-delink",
+                "summary": "Links or unlinks the programme named in the BENEFIT_NAME header for an ABHA.",
+                "title": "Link or unlink a benefit record from an ABHA",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/errors#abdm-1094",
+                "id": "hiecm.error.abdm-1094",
+                "summary": "Your client or the person's token is not allowed to do what the call tried, and the message says which of three cases applies.",
+                "title": "ABDM-1094, access to this feature is refused",
+                "type": "error"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.profile-and-example-together",
+                "summary": "A NRCeS profile gives the cardinalities and a NRCeS example gives the shape, and a generator written from either one alone is wrong in a different way.",
+                "title": "Read the profile and the example together, because each omits what the other carries",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/07-m3-get-data-flow-v3-health-information-request-status-tra-550104#p3-request-status",
+                "id": "hiecm.endpoint.p3-request-status",
+                "summary": "Check how far a health information request has got, by its transaction id.",
+                "title": "Get the status of a health information request",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/03-p4-get-subscription-requests-v3-patients-lockers-lockerid#p3-patient-locker-details-by-locker-id",
+                "id": "hiecm.endpoint.p3-patient-locker-details-by-locker-id",
+                "summary": "Fetch one health locker's settings for the logged-in person.",
+                "title": "Get a health locker by its id",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/01-p4-post-subscription-requests-v3-setup-locker#p3-setup-locker",
+                "id": "hiecm.endpoint.p3-setup-locker",
+                "summary": "Set up a health locker for the logged-in person.",
+                "title": "Set up a health locker",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request#m2-hip-health-information-on-request",
+                "id": "hiecm.endpoint.m2-hip-health-information-on-request",
+                "summary": "The HIP acknowledges a health information request, then encrypts the records and pushes them to the requester.",
+                "title": "Acknowledge a health information data request",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/05-m3-post-v3-hiu-health-information-on-request#m3-on-health-information-request",
+                "id": "hiecm.callback.m3-on-health-information-request",
+                "summary": "ABDM acknowledges an HIU's data request with its transaction id and status; the records come separately.",
+                "title": "Acknowledgement of a health information request",
+                "type": "callback"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01FE6Qb88SVB82H4yY9UfNon",
+            "Name": "search",
+            "Input": {
+              "query": "ABHA lookup verify search by mobile",
+              "kind": "operation",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "ABHA lookup verify search by mobile",
+            "kind": "operation",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-post-data-flow-v3-health-information-request",
+                "id": "m3_post_data_flow_v3_health_information_request",
+                "summary": "Health information data request from HIU.",
+                "title": "POST /api/hiecm/data-flow/v3/health-information/request",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-post-data-flow-v3-health-information-hip-on-request",
+                "id": "m2_post_data_flow_v3_health_information_hip_on_request",
+                "summary": "Health information data request acknowledgement from HIP.",
+                "title": "POST /api/hiecm/data-flow/v3/health-information/hip/on-request",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-get-gateway-v3-health-lockers",
+                "id": "p4_get_gateway_v3_health_lockers",
+                "summary": "This API is invoked to fetch the record with health locker enabled provider details.",
+                "title": "GET /api/hiecm/gateway/v3/health-lockers",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-get-data-flow-v3-health-information-request-status-tra-550104",
+                "id": "m3_get_data_flow_v3_health_information_request_status_tra_550104",
+                "summary": "API to get the current status of the Health Information Request.",
+                "title": "GET /api/hiecm/data-flow/v3/health-information/request/status/{transaction-id}",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-post-v1-forgot-hprid-aadhaar",
+                "id": "m4_post_v1_forgot_hprid_aadhaar",
+                "summary": "Retrieval Health Id By Aadhaar",
+                "title": "POST /v1/forgot/hprId/aadhaar",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-post-v1-forgot-hprid-mobile",
+                "id": "m4_post_v1_forgot_hprid_mobile",
+                "summary": "Retrieval Health Id By Mobile",
+                "title": "POST /v1/forgot/hprId/mobile",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-post-data-flow-v3-health-information-notify",
+                "id": "m2_post_data_flow_v3_health_information_notify",
+                "summary": "Notifications corresponding to events during data flow",
+                "title": "POST /api/hiecm/data-flow/v3/health-information/notify",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-post-data-flow-v3-health-information-notify",
+                "id": "m3_post_data_flow_v3_health_information_notify",
+                "summary": "Notifications corresponding to events during data flow",
+                "title": "POST /api/hiecm/data-flow/v3/health-information/notify",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-post-v3-token-generate-token",
+                "id": "m2_post_v3_token_generate_token",
+                "summary": "API used to generate link token to link the health records",
+                "title": "POST /api/hiecm/v3/token/generate-token",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-get-subscription-requests-v3-patients-lockers",
+                "id": "p4_get_subscription_requests_v3_patients_lockers",
+                "summary": "The API provides the list of health locker that the ABHA address is subscribed to.",
+                "title": "GET /api/hiecm/subscription-requests/v3/patients/lockers",
+                "type": "operation"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01Jg9AQqt4vN8S1G3sJD9KpY",
+            "Name": "get",
+            "Input": {
+              "id": "m4_post_v1_forgot_hprid_mobile"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "m4_post_v1_forgot_hprid_mobile"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "doc_path": "/docs/hiecm/v3/api/m4/endpoints/m4-post-v1-forgot-hprid-mobile",
+            "operation_id": "m4_post_v1_forgot_hprid_mobile",
+            "spec": {
+              "operationId": "m4_post_v1_forgot_hprid_mobile",
+              "parameters": [
+                {
+                  "in": "header",
+                  "name": "Authorization",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "properties": {
+                        "dayOfBirth": {
+                          "pattern": "^(0?[1-9]|[12][0-9]|3[01])$",
+                          "type": "string"
+                        },
+                        "firstName": {
+                          "type": "string"
+                        },
+                        "gender": {
+                          "pattern": "^(M|F|O|U)$",
+                          "type": "string"
+                        },
+                        "lastName": {
+                          "type": "string"
+                        },
+                        "middleName": {
+                          "type": "string"
+                        },
+                        "monthOfBirth": {
+                          "pattern": "^(0?[1-9]|1[012])$",
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "otp": {
+                          "type": "string"
+                        },
+                        "txnId": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "yearOfBirth": {
+                          "pattern": "^(\\d{4})$",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "firstName",
+                        "gender",
+                        "name",
+                        "otp",
+                        "txnId",
+                        "yearOfBirth"
+                      ],
+                      "type": "object"
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "content": {
+                    "*/*": {
+                      "schema": {
+                        "properties": {
+                          "hprId": {
+                            "type": "string"
+                          },
+                          "hprIdNumber": {
+                            "type": "string"
+                          },
+                          "token": {
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "OK"
+                },
+                "404": {
+                  "content": {
+                    "*/*": {
+                      "schema": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "description": "Not Found"
+                }
+              },
+              "summary": "Retrieval Health Id By Mobile",
+              "tags": [
+                "Forgot Healthcare Professional ID/number"
+              ],
+              "x-abdm-nha-operation-id": "retrievalHealthIdByMobile",
+              "x-abdm-summary-derived": true
+            }
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01AmC58W7dwD4qUBJKzSEBJP",
+            "Name": "search",
+            "Input": {
+              "query": "patient discover ABHA address health ID mobile OTP",
+              "kind": "atom",
+              "limit": 15
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "patient discover ABHA address health ID mobile OTP",
+            "kind": "atom",
+            "limit": 15
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#abha",
+                "id": "shared.glossary.abha",
+                "summary": "The patient's identity in ABDM, in two forms that look alike and are not: a 14 digit ABHA number and a readable ABHA address.",
+                "title": "ABHA",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/p2#p2-discover-and-link",
+                "id": "hiecm.flow.p2-discover-and-link",
+                "summary": "Let a person search for a facility they visited, discover the records it holds for them, and attach those records to their health address after an OTP confir...",
+                "title": "Find records held elsewhere and link them",
+                "type": "flow"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.fhir.abha-identifiers",
+                "summary": "NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...",
+                "title": "Carrying an ABHA number and an ABHA address on a FHIR Patient",
+                "type": "fhir"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-manager-hiu-hip/01-p2-get-hip-v3-link-patient-links#m2-get-all-link-records",
+                "id": "hiecm.endpoint.m2-get-all-link-records",
+                "summary": "Lists every care context already linked to an ABHA address.",
+                "title": "GET All Link records",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/03-m1-post-v3-phr-web-login-abha-verify-mobile-otp#m1-phr-verify",
+                "id": "hiecm.endpoint.m1-phr-verify",
+                "summary": "Completes an ABHA address login and returns the X-token for the profile, card and QR calls.",
+                "title": "Verify OTP or biometric for ABHA address login",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/notifications-and-patient-apps#subscribing",
+                "id": "nhcx.flow.notification-subscribe",
+                "summary": "Have a patient's health record app receive plain-language updates on their pre-authorisations, claims and payments, by subscribing each time the patient logs...",
+                "title": "Subscribe a patient app to notifications",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#discovery",
+                "id": "hiecm.glossary.discovery",
+                "summary": "The step where a patient's app asks a facility whether it holds records for that patient.",
+                "title": "Discovery, finding whether a facility holds records",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#abha-address",
+                "id": "shared.glossary.abha-address",
+                "summary": "The readable name, such as name@sbx, that ABDM uses to route a person's health records.",
+                "title": "ABHA address",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m3#m3-request-consent",
+                "id": "hiecm.flow.m3-request-consent",
+                "summary": "Ask a patient, by ABHA address, for permission to read records held elsewhere, and collect the consent artefact ids once they grant it.",
+                "title": "Request consent for a patient's health records",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/api/other/endpoints/other-v1-notification-subscribe",
+                "id": "nhcx.endpoint.notification-subscribe",
+                "summary": "Let a patient's health record app receive plain-language updates about that patient's insurance claims.",
+                "title": "POST /v1/notification/subscribe",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/troubleshooting/consent-stuck-requested#consent-stuck-requested",
+                "id": "hiecm.troubleshooting.consent-stuck-requested",
+                "summary": "A consent request has stayed in Requested and never moved to Granted or Denied.",
+                "title": "The consent request is stuck in Requested",
+                "type": "troubleshooting"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/m2#m2-link-care-context",
+                "id": "hiecm.flow.m2-link-care-context",
+                "summary": "Tell ABDM that this patient had a visit at your facility so their records can be found and fetched later.",
+                "title": "Link a care context to a patient's ABHA",
+                "type": "flow"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.concept.notifications",
+                "summary": "A patient's health record app subscribes on login to claim events for that person, and the exchange then pushes short readable updates to the app, with only ...",
+                "title": "Notifications to patient apps",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/05-m1-get-v3-phr-web-login-profile-abha-phr-card-abha-addres-e1bae9#m1-download-phr-card",
+                "id": "hiecm.endpoint.m1-download-phr-card",
+                "summary": "Returns the card for the ABHA address the person signed in with.",
+                "title": "Download PHR card",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/04-m1-get-v3-phr-web-login-profile-abha-profile-abha-address-b038c4#m1-get-phr-profile",
+                "id": "hiecm.endpoint.m1-get-phr-profile",
+                "summary": "Returns the profile behind the ABHA address the person signed in with.",
+                "title": "Get PHR profile",
+                "type": "endpoint"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01LRCERn5FPatfT1s3d94K5m",
+            "Name": "get",
+            "Input": {
+              "id": "hiecm.endpoint.m1-phr-verify"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "hiecm.endpoint.m1-phr-verify"
+          },
+          "output": {
+            "body": "# Verify OTP or biometric for ABHA address login\n\n## In plain words\n\nCompletes the [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address) login. Send the same `scope` as the request call and the `txnId`, with the encrypted [OTP](/docs/hiecm/v3/getting-started/glossary#otp) or, for fingerprint, the capture in `fingerPrintAuthPid`. The response lists the person's ABHA addresses in `users` and carries `tokens.token`. Send that token as the `X-token` header to the profile, PHR card and QR code calls.\n\n## How you know it worked\n\nA 200 with `authResult` `success`. A 200 can also report an expired OTP, so read `authResult` and not the status alone.\n\n## When it goes wrong\n\nA 400 with `ABDM-9999` names the refused part in its message, such as an invalid scope or transaction id. Request a new OTP when the `txnId` is refused.",
+            "catalogue_version": "2026.09.16",
+            "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/03-m1-post-v3-phr-web-login-abha-verify-mobile-otp#m1-phr-verify",
+            "gateway": "hiecm",
+            "id": "hiecm.endpoint.m1-phr-verify",
+            "milestone": "M1",
+            "operation": "m1_post_v3_phr_web_login_abha_verify_mobile_otp",
+            "summary": "Completes an ABHA address login and returns the X-token for the profile, card and QR calls.",
+            "title": "Verify OTP or biometric for ABHA address login",
+            "type": "endpoint"
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01P7T5qTGRBRJt9sdcgGisrK",
+            "Name": "search",
+            "Input": {
+              "query": "mobile OTP generate request ABHA login send",
+              "kind": "operation",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "mobile OTP generate request ABHA login send",
+            "kind": "operation",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-post-data-flow-v3-health-information-request",
+                "id": "m3_post_data_flow_v3_health_information_request",
+                "summary": "Health information data request from HIU.",
+                "title": "POST /api/hiecm/data-flow/v3/health-information/request",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-post-data-flow-v3-health-information-hip-on-request",
+                "id": "m2_post_data_flow_v3_health_information_hip_on_request",
+                "summary": "Health information data request acknowledgement from HIP.",
+                "title": "POST /api/hiecm/data-flow/v3/health-information/hip/on-request",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-get-gateway-v3-health-lockers",
+                "id": "p4_get_gateway_v3_health_lockers",
+                "summary": "This API is invoked to fetch the record with health locker enabled provider details.",
+                "title": "GET /api/hiecm/gateway/v3/health-lockers",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-get-data-flow-v3-health-information-request-status-tra-550104",
+                "id": "m3_get_data_flow_v3_health_information_request_status_tra_550104",
+                "summary": "API to get the current status of the Health Information Request.",
+                "title": "GET /api/hiecm/data-flow/v3/health-information/request/status/{transaction-id}",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-post-v1-forgot-hprid-aadhaar",
+                "id": "m4_post_v1_forgot_hprid_aadhaar",
+                "summary": "Retrieval Health Id By Aadhaar",
+                "title": "POST /v1/forgot/hprId/aadhaar",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-post-v1-forgot-hprid-mobile",
+                "id": "m4_post_v1_forgot_hprid_mobile",
+                "summary": "Retrieval Health Id By Mobile",
+                "title": "POST /v1/forgot/hprId/mobile",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-post-data-flow-v3-health-information-notify",
+                "id": "m2_post_data_flow_v3_health_information_notify",
+                "summary": "Notifications corresponding to events during data flow",
+                "title": "POST /api/hiecm/data-flow/v3/health-information/notify",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-post-data-flow-v3-health-information-notify",
+                "id": "m3_post_data_flow_v3_health_information_notify",
+                "summary": "Notifications corresponding to events during data flow",
+                "title": "POST /api/hiecm/data-flow/v3/health-information/notify",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-post-v3-token-generate-token",
+                "id": "m2_post_v3_token_generate_token",
+                "summary": "API used to generate link token to link the health records",
+                "title": "POST /api/hiecm/v3/token/generate-token",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-get-subscription-requests-v3-patients-lockers",
+                "id": "p4_get_subscription_requests_v3_patients_lockers",
+                "summary": "The API provides the list of health locker that the ABHA address is subscribed to.",
+                "title": "GET /api/hiecm/subscription-requests/v3/patients/lockers",
+                "type": "operation"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01DgyTcFbbVQjSkAqfRguS1d",
+            "Name": "search",
+            "Input": {
+              "query": "request OTP mobile ABHA login initiate",
+              "kind": "operation",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "request OTP mobile ABHA login initiate",
+            "kind": "operation",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-post-data-flow-v3-health-information-request",
+                "id": "m3_post_data_flow_v3_health_information_request",
+                "summary": "Health information data request from HIU.",
+                "title": "POST /api/hiecm/data-flow/v3/health-information/request",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-post-data-flow-v3-health-information-hip-on-request",
+                "id": "m2_post_data_flow_v3_health_information_hip_on_request",
+                "summary": "Health information data request acknowledgement from HIP.",
+                "title": "POST /api/hiecm/data-flow/v3/health-information/hip/on-request",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-get-gateway-v3-health-lockers",
+                "id": "p4_get_gateway_v3_health_lockers",
+                "summary": "This API is invoked to fetch the record with health locker enabled provider details.",
+                "title": "GET /api/hiecm/gateway/v3/health-lockers",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-get-data-flow-v3-health-information-request-status-tra-550104",
+                "id": "m3_get_data_flow_v3_health_information_request_status_tra_550104",
+                "summary": "API to get the current status of the Health Information Request.",
+                "title": "GET /api/hiecm/data-flow/v3/health-information/request/status/{transaction-id}",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-post-v1-forgot-hprid-aadhaar",
+                "id": "m4_post_v1_forgot_hprid_aadhaar",
+                "summary": "Retrieval Health Id By Aadhaar",
+                "title": "POST /v1/forgot/hprId/aadhaar",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m4/endpoints/m4-post-v1-forgot-hprid-mobile",
+                "id": "m4_post_v1_forgot_hprid_mobile",
+                "summary": "Retrieval Health Id By Mobile",
+                "title": "POST /v1/forgot/hprId/mobile",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-post-data-flow-v3-health-information-notify",
+                "id": "m2_post_data_flow_v3_health_information_notify",
+                "summary": "Notifications corresponding to events during data flow",
+                "title": "POST /api/hiecm/data-flow/v3/health-information/notify",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m3/endpoints/m3-post-data-flow-v3-health-information-notify",
+                "id": "m3_post_data_flow_v3_health_information_notify",
+                "summary": "Notifications corresponding to events during data flow",
+                "title": "POST /api/hiecm/data-flow/v3/health-information/notify",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m2/endpoints/m2-post-v3-token-generate-token",
+                "id": "m2_post_v3_token_generate_token",
+                "summary": "API used to generate link token to link the health records",
+                "title": "POST /api/hiecm/v3/token/generate-token",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-get-subscription-requests-v3-patients-lockers",
+                "id": "p4_get_subscription_requests_v3_patients_lockers",
+                "summary": "The API provides the list of health locker that the ABHA address is subscribed to.",
+                "title": "GET /api/hiecm/subscription-requests/v3/patients/lockers",
+                "type": "operation"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "Let me search for ABHA login operations specifically in M1:",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01LkmSPArPL2mDYTUj17FWYz",
+            "Name": "search",
+            "Input": {
+              "query": "mobile login ABHA",
+              "kind": "operation",
+              "module": "m1",
+              "limit": 15
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "mobile login ABHA",
+            "kind": "operation",
+            "module": "m1",
+            "limit": 15
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "operations": []
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "Let me search more broadly for ABHA login endpoints:",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_0184w3W5DEnhD8rBwYXKmLWr",
+            "Name": "search",
+            "Input": {
+              "query": "phr web login",
+              "kind": "operation",
+              "limit": 15
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "phr web login",
+            "kind": "operation",
+            "limit": 15
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-phr-web-login-profile-abha-phr-card-abha-addres-817c0d",
+                "id": "m1_get_v3_phr_web_login_profile_abha_phr_card_abha_addres_817c0d",
+                "summary": "Get PHR card",
+                "title": "GET /abha/api/v3/phr/web/login/profile/abha/phr-card",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-phr-web-login-profile-abha-phr-card-abha-addres-b64ebf",
+                "id": "m1_get_v3_phr_web_login_profile_abha_phr_card_abha_addres_b64ebf",
+                "summary": "Get PHR card",
+                "title": "GET /abha/api/v3/phr/web/login/profile/abha/phr-card",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-phr-web-login-profile-abha-phr-card-abha-addres-e1bae9",
+                "id": "m1_get_v3_phr_web_login_profile_abha_phr_card_abha_addres_e1bae9",
+                "summary": "Get PHR card",
+                "title": "GET /abha/api/v3/phr/web/login/profile/abha/phr-card",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-phr-web-login-profile-abha-phr-card-abha-addres-e751bf",
+                "id": "m1_get_v3_phr_web_login_profile_abha_phr_card_abha_addres_e751bf",
+                "summary": "Get PHR card",
+                "title": "GET /abha/api/v3/phr/web/login/profile/abha/phr-card",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-verify-fingerprint",
+                "id": "m1_post_v3_phr_web_login_abha_verify_fingerprint",
+                "summary": "ABHA address login via Fingerprint - verify",
+                "title": "POST /abha/api/v3/phr/web/login/abha/verify",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-verify-iris",
+                "id": "m1_post_v3_phr_web_login_abha_verify_iris",
+                "summary": "ABHA address login via IRIS - verify",
+                "title": "POST /abha/api/v3/phr/web/login/abha/verify",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-verify-aadhaar-otp",
+                "id": "m1_post_v3_phr_web_login_abha_verify_aadhaar_otp",
+                "summary": "ABHA address login via Aadhaar OTP - verify",
+                "title": "POST /abha/api/v3/phr/web/login/abha/verify",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-verify-mobile-otp",
+                "id": "m1_post_v3_phr_web_login_abha_verify_mobile_otp",
+                "summary": "ABHA address login via Mobile OTP - verify",
+                "title": "POST /abha/api/v3/phr/web/login/abha/verify",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-request-otp-aadhaar-otp",
+                "id": "m1_post_v3_phr_web_login_abha_request_otp_aadhaar_otp",
+                "summary": "ABHA address login via Aadhaar OTP - send OTP",
+                "title": "POST /abha/api/v3/phr/web/login/abha/request/otp",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-request-otp-fingerprint",
+                "id": "m1_post_v3_phr_web_login_abha_request_otp_fingerprint",
+                "summary": "ABHA address login via Fingerprint - send authentication request",
+                "title": "POST /abha/api/v3/phr/web/login/abha/request/otp",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-request-otp-iris",
+                "id": "m1_post_v3_phr_web_login_abha_request_otp_iris",
+                "summary": "ABHA address login via IRIS - send authentication request",
+                "title": "POST /abha/api/v3/phr/web/login/abha/request/otp",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-request-otp-mobile-otp",
+                "id": "m1_post_v3_phr_web_login_abha_request_otp_mobile_otp",
+                "summary": "ABHA address login via Mobile OTP - send OTP",
+                "title": "POST /abha/api/v3/phr/web/login/abha/request/otp",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-search-abha-address-login-a-de8184",
+                "id": "m1_post_v3_phr_web_login_abha_search_abha_address_login_a_de8184",
+                "summary": "Search ABHA address (auth methods)",
+                "title": "POST /abha/api/v3/phr/web/login/abha/search",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-phr-web-login-profile-abha-profile-abha-address-809900",
+                "id": "m1_get_v3_phr_web_login_profile_abha_profile_abha_address_809900",
+                "summary": "Get ABHA-address profile",
+                "title": "GET /abha/api/v3/phr/web/login/profile/abha-profile",
+                "type": "operation"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-phr-web-login-profile-abha-profile-abha-address-8ec4ee",
+                "id": "m1_get_v3_phr_web_login_profile_abha_profile_abha_address_8ec4ee",
+                "summary": "Get ABHA-address profile",
+                "title": "GET /abha/api/v3/phr/web/login/profile/abha-profile",
+                "type": "operation"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "Perfect! I found the flow. Let me get the details of the search and mobile OTP endpoints:",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_012qLj7dji2jXU2cehqR12WF",
+            "Name": "get",
+            "Input": {
+              "id": "m1_post_v3_phr_web_login_abha_search_abha_address_login_a_de8184"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "m1_post_v3_phr_web_login_abha_search_abha_address_login_a_de8184"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "doc_path": "/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-search-abha-address-login-a-de8184",
+            "operation_id": "m1_post_v3_phr_web_login_abha_search_abha_address_login_a_de8184",
+            "spec": {
+              "description": "**Endpoint:** `POST /abha/api/v3/phr/web/login/abha/search`\n\n**Flow:** **ABHA Address Login - Aadhaar OTP** - step 1 of 6\n- Previous: none (first call of this flow)\n- Next: *ABHA address login via Aadhaar OTP - send OTP*\n\n---\n\nThis API endpoint is used to search for ABHA (Ayushman Bharat Health Account) profiles. It allows users to retrieve information about their ABHA profiles using  identifier ABHA address. This is essential for verifying the user’s identity and ensuring secure access to their ABHA profile <br>",
+              "operationId": "m1_post_v3_phr_web_login_abha_search_abha_address_login_a_de8184",
+              "parameters": [
+                {
+                  "description": "Unique UUID for every request.",
+                  "example": "18235d89-cb13-479d-ad71-7a57d5f669a8",
+                  "in": "header",
+                  "name": "REQUEST-ID",
+                  "required": true,
+                  "schema": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                {
+                  "description": "Current UTC timestamp in ISO-8601 format.",
+                  "example": "2022-10-06T15:10:00.587Z",
+                  "in": "header",
+                  "name": "TIMESTAMP",
+                  "required": true,
+                  "schema": {
+                    "format": "date-time",
+                    "type": "string"
+                  }
+                }
+              ],
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "examples": {
+                      "ABHA Address": {
+                        "value": {
+                          "abhaAddress": "<ABHA_ADDRESS>"
+                        }
+                      }
+                    },
+                    "schema": {
+                      "properties": {
+                        "abhaAddress": {
+                          "description": "The ABHA address chosen for the account, without the @ suffix.",
+                          "example": "<ABHA_ADDRESS>",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "abhaAddress"
+                      ],
+                      "type": "object"
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "content": {
+                    "application/json": {
+                      "examples": {
+                        "ABHA search": {
+                          "value": {
+                            "abhaAddress": "<ABHA_ADDRESS>",
+                            "authMethods": [
+                              "MOBILE_OTP",
+                              "AADHAAR_OTP"
+                            ],
+                            "blockedAuthMethods": [],
+                            "fullName": "<NAME>",
+                            "healthIdNumber": "<ABHA_NUMBER>",
+                            "message": null,
+                            "mobile": "9340******",
+                            "status": "ACTIVE"
+                          }
+                        }
+                      },
+                      "schema": {
+                        "properties": {
+                          "abhaAddress": {
+                            "example": "<ABHA_ADDRESS>",
+                            "type": "string"
+                          },
+                          "authMethods": {
+                            "example": [
+                              "MOBILE_OTP",
+                              "AADHAAR_OTP"
+                            ],
+                            "items": {
+                              "example": "MOBILE_OTP, AADHAAR_OTP",
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          "blockedAuthMethods": {
+                            "items": {
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          "fullName": {
+                            "example": "<NAME>",
+                            "type": "string"
+                          },
+                          "healthIdNumber": {
+                            "example": "<ABHA_NUMBER>",
+                            "type": "string"
+                          },
+                          "message": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "mobile": {
+                            "example": "9340******",
+                            "type": "string"
+                          },
+                          "status": {
+                            "example": "ACTIVE",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "The 200 response code indicates a successful request. In this context, it refers to the successful retrieve of user details based on the ABHA address<br>  "
+                },
+                "400": {
+                  "content": {
+                    "application/json": {
+                      "examples": {
+                        "User not found": {
+                          "value": {
+                            "code": "ABDM-1211",
+                            "message": "User not found."
+                          }
+                        }
+                      },
+                      "schema": {
+                        "properties": {
+                          "code": {
+                            "example": "ABDM-1211",
+                            "type": "string"
+                          },
+                          "message": {
+                            "example": "User not found.",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "The 400 response code signifies a bad request. In this context, it means that no user was found for the provided ABHA address."
+                },
+                "401": {
+                  "content": {
+                    "application/json": {
+                      "examples": {
+                        "Missing Credentials": {
+                          "value": {
+                            "code": "900902",
+                            "description": "Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'",
+                            "message": "Missing Credentials"
+                          }
+                        }
+                      },
+                      "schema": {
+                        "properties": {
+                          "code": {
+                            "example": "900902",
+                            "type": "string"
+                          },
+                          "description": {
+                            "example": "Invalid Credentials. Make sure your API invocation call has a header: \\Authorization : Bearer ACCESS_TOKEN or Authorization : Basic ACCESS_TOKEN or apikey: API_KEY",
+                            "type": "string"
+                          },
+                          "message": {
+                            "example": "Missing Credentials",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "A 401 Unauthorized error occurs when a server receives a request without valid authentication credentials or with incorrect credentials. This error indicates that the server cannot authenticate the user,"
+                },
+                "404": {
+                  "content": {
+                    "application/json": {
+                      "examples": {
+                        "Not found": {
+                          "value": {
+                            "code": "ABDM-1030: ",
+                            "message": "Invalid request ID"
+                          }
+                        }
+                      },
+                      "schema": {
+                        "properties": {
+                          "code": {
+                            "example": "ABDM-1030",
+                            "type": "string"
+                          },
+                          "message": {
+                            "example": "Invalid request ID",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "A 404 Not Found error occurs when a server cannot find the requested resource. This error indicates that the server is reachable, but the specific page or resource is not available"
+                },
+                "500": {
+                  "description": "<b>Internal Server Error</b><br><br>  An Internal Server Error (500) indicates that the server encountered an unexpected condition that prevented it from fulfilling the request."
+                }
+              },
+              "security": [
+                {
+                  "basicAuth": []
+                }
+              ],
+              "summary": "Search ABHA address (auth methods)",
+              "tags": [
+                "ABHA Address Login - Aadhaar OTP"
+              ],
+              "x-abdm-nha-operation-id": "abhaAddressSearch_AbhaAddressLoginAadhaarOtp",
+              "x-abdm-title": "Search ABHA address (auth methods)",
+              "x-actual-path": "/abha/api/v3/phr/web/login/abha/search",
+              "x-also-used-in": [
+                "ABHA Address Login - Mobile OTP"
+              ],
+              "x-canonical-operationId": "abhaAddressSearch",
+              "x-journey": {
+                "journey": "ABHA Address Login - Aadhaar OTP",
+                "kind": "flow",
+                "of": 6,
+                "step": 1
+              },
+              "x-stoplight": {
+                "id": "lp2tjncuobfqu"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_014FzJicvL8qDvrErWAw74a4",
+            "Name": "get",
+            "Input": {
+              "id": "m1_post_v3_phr_web_login_abha_request_otp_mobile_otp"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "m1_post_v3_phr_web_login_abha_request_otp_mobile_otp"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "doc_path": "/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-request-otp-mobile-otp",
+            "operation_id": "m1_post_v3_phr_web_login_abha_request_otp_mobile_otp",
+            "spec": {
+              "description": "Starts login with an ABHA address. ABDM sends an OTP to the mobile linked with the ABHA address. `loginId` is the RSA-encrypted ABHA address. Use *Search ABHA address (auth methods)* first to check that `MOBILE_OTP` is allowed.\n\n**Endpoint:** `POST /abha/api/v3/phr/web/login/abha/request/otp`\n\n**Flow:** **ABHA Address Login - Mobile OTP** - step 2 of 6\n- Previous: *Search ABHA address (auth methods)*\n- Next: *ABHA address login via Mobile OTP - verify*\n\n**Headers** (plus `Authorization: Bearer <gateway token>`):\n\n| Header | Required | Description |\n|---|---|---|\n| REQUEST-ID | yes | Unique UUID for every request. |\n| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |\n\n**Request body for this use case:**\n\n| Field | Value / Type | Required | Description |\n|---|---|---|---|\n| `scope` | `[\"abha-address-login\", \"mobile-verify\"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |\n| `loginHint` | `\"abha-address\"` | yes | Type of identifier sent in `loginId`. |\n| `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |\n| `otpSystem` | `\"abdm\"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |",
+              "operationId": "m1_post_v3_phr_web_login_abha_request_otp_mobile_otp",
+              "parameters": [
+                {
+                  "description": "Unique UUID for every request.",
+                  "example": "18235d89-cb13-479d-ad71-7a57d5f669a8",
+                  "in": "header",
+                  "name": "REQUEST-ID",
+                  "required": true,
+                  "schema": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                {
+                  "description": "Current UTC timestamp in ISO-8601 format.",
+                  "example": "2022-10-06T15:10:00.587Z",
+                  "in": "header",
+                  "name": "TIMESTAMP",
+                  "required": true,
+                  "schema": {
+                    "format": "date-time",
+                    "type": "string"
+                  }
+                }
+              ],
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "examples": {
+                      "ABHA address login via Mobile OTP - send OTP": {
+                        "summary": "ABHA address login via Mobile OTP - send OTP",
+                        "value": {
+                          "loginHint": "abha-address",
+                          "loginId": "{{encryptedAbhaAddress}}",
+                          "otpSystem": "abdm",
+                          "scope": [
+                            "abha-address-login",
+                            "mobile-verify"
+                          ]
+                        }
+                      }
+                    },
+                    "schema": {
+                      "properties": {
+                        "loginHint": {
+                          "description": "Type of identifier sent in `loginId`.",
+                          "enum": [
+                            "abha-address"
+                          ],
+                          "type": "string"
+                        },
+                        "loginId": {
+                          "description": "Identifier value, RSA-encrypted with the ABHA public certificate.",
+                          "type": "string"
+                        },
+                        "otpSystem": {
+                          "description": "System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM).",
+                          "enum": [
+                            "abdm"
+                          ],
+                          "type": "string"
+                        },
+                        "scope": {
+                          "description": "Scope that selects this use case. Send exactly the values listed for this API.",
+                          "example": [
+                            "abha-address-login",
+                            "mobile-verify"
+                          ],
+                          "items": {
+                            "enum": [
+                              "abha-address-login",
+                              "mobile-verify"
+                            ],
+                            "type": "string"
+                          },
+                          "maxItems": 2,
+                          "minItems": 2,
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "scope",
+                        "loginHint",
+                        "loginId",
+                        "otpSystem"
+                      ],
+                      "type": "object"
+                    }
+                  }
+                },
+                "required": true
+              },
+              "responses": {
+                "200": {
+                  "content": {
+                    "application/json": {
+                      "examples": {
+                        "OTP send-Success- Mobile Number": {
+                          "value": {
+                            "message": "OTP is sent to Mobile number ending with ******9127",
+                            "txnId": "37d8d312-35a0-41e7-a6e4-1074eb18a5fa"
+                          }
+                        }
+                      },
+                      "schema": {
+                        "properties": {
+                          "message": {
+                            "example": "OTP is sent to Mobile number ending with ******9127, FingerPrint authentication request successfully sent, Face authentication request successfully sent, Iris authentication request successfully sent",
+                            "type": "string"
+                          },
+                          "txnId": {
+                            "example": "37d8d312-35a0-41e7-a6e4-1074eb18a5fa",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Success: OTP send-Success- Mobile Number"
+                },
+                "400": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "items": {
+                          "properties": {
+                            "code": {
+                              "example": "ABDM-1211",
+                              "type": "string"
+                            },
+                            "message": {
+                              "example": "User not found.",
+                              "type": "string"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      }
+                    }
+                  },
+                  "description": "Bad Request (request validation failed)."
+                },
+                "401": {
+                  "content": {
+                    "application/json": {
+                      "examples": {
+                        "Missing Credentials (generic)": {
+                          "value": {
+                            "code": "900902",
+                            "description": "Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'",
+                            "message": "Missing Credentials"
+                          }
+                        }
+                      },
+                      "schema": {
+                        "properties": {
+                          "code": {
+                            "example": "900902",
+                            "type": "string"
+                          },
+                          "description": {
+                            "example": "Invalid Credentials. Make sure your API invocation call has a header: Authorization : Bearer ACCESS_TOKEN or Authorization : Basic ACCESS_TOKEN or apikey: API_KEY",
+                            "type": "string"
+                          },
+                          "message": {
+                            "example": "Missing Credentials.",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "Unauthorized (invalid / expired gateway token, X-token or benefit access): Missing Credentials (generic)"
+                },
+                "500": {
+                  "description": "Internal Server Error."
+                }
+              },
+              "security": [
+                {
+                  "bearerAuth": []
+                }
+              ],
+              "summary": "ABHA address login via Mobile OTP - send OTP",
+              "tags": [
+                "ABHA Address Login - Mobile OTP"
+              ],
+              "x-abdm-nha-operation-id": "abhaAddressRequestMobileOtp",
+              "x-abdm-title": "ABHA address login via Mobile OTP - send OTP",
+              "x-actual-path": "/abha/api/v3/phr/web/login/abha/request/otp",
+              "x-journey": {
+                "journey": "ABHA Address Login - Mobile OTP",
+                "kind": "flow",
+                "of": 6,
+                "step": 2
+              },
+              "x-stoplight": {
+                "id": "gsfoezruh6s6t"
+              },
+              "x-use-case": "mobile-otp"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01KJZPjU6g7Hf2azPKVMHwyT",
+            "Name": "get",
+            "Input": {
+              "id": "m1_get_v3_phr_web_login_profile_abha_profile_abha_address_809900"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "get",
+          "input": {
+            "id": "m1_get_v3_phr_web_login_profile_abha_profile_abha_address_809900"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "doc_path": "/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-phr-web-login-profile-abha-profile-abha-address-809900",
+            "operation_id": "m1_get_v3_phr_web_login_profile_abha_profile_abha_address_809900",
+            "spec": {
+              "description": "**Endpoint:** `GET /abha/api/v3/phr/web/login/profile/abha-profile`\n\n**Flow:** **ABHA Address Login - IRIS** - step 3 of 5\n- Previous: *ABHA address login via IRIS - verify*\n- Next: *Get PHR card*\n\n---\n\nThis API endpoint retrieves the user’s ABHA (Ayushman Bharat Health Account) profile. Access to this profile is granted after the successful verification of the OTP, ensuring the user’s profile information is secure.",
+              "operationId": "m1_get_v3_phr_web_login_profile_abha_profile_abha_address_809900",
+              "parameters": [
+                {
+                  "description": "User token (`Bearer <token>`) received after ABHA creation / login.",
+                  "example": "Bearer {{jwtToken}}",
+                  "in": "header",
+                  "name": "X-token",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "description": "Unique UUID for every request.",
+                  "example": "18235d89-cb13-479d-ad71-7a57d5f669a8",
+                  "in": "header",
+                  "name": "REQUEST-ID",
+                  "required": true,
+                  "schema": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                {
+                  "description": "Current UTC timestamp in ISO-8601 format.",
+                  "example": "2022-10-06T15:10:00.587Z",
+                  "in": "header",
+                  "name": "TIMESTAMP",
+                  "required": true,
+                  "schema": {
+                    "format": "date-time",
+                    "type": "string"
+                  }
+                }
+              ],
+              "responses": {
+                "200": {
+                  "content": {
+                    "application/json": {
+                      "examples": {
+                        "ABHA Address Profile-Get Profile": {
+                          "summary": "Get Profile",
+                          "value": {
+                            "abhaAddress": "<ABHA_ADDRESS>",
+                            "abhaNumber": "<ABHA_NUMBER>",
+                            "address": "<ADDRESS>",
+                            "authMethods": [
+                              "AADHAAR_OTP",
+                              "MOBILE_OTP"
+                            ],
+                            "dateOfBirth": "<DOB>",
+                            "dayOfBirth": "<DOB>",
+                            "districtCode": "487",
+                            "email": "<EMAIL>",
+                            "emailVerified": "false",
+                            "firstName": "<NAME>",
+                            "fullName": "<NAME>",
+                            "gender": "M",
+                            "kycStatus": "VERIFIED",
+                            "lastName": "<NAME>",
+                            "middleName": "<NAME>",
+                            "mobile": "<MOBILE_NUMBER>",
+                            "mobileVerified": "true",
+                            "monthOfBirth": "<DOB>",
+                            "pinCode": "<PINCODE>",
+                            "profilePhoto": "<BASE64_PHOTO>",
+                            "stateCode": "27",
+                            "stateName": "MAHARASHTRA",
+                            "status": "ACTIVE",
+                            "subDistrictCode": "",
+                            "subDistrictName": "",
+                            "yearOfBirth": "<DOB>"
+                          }
+                        }
+                      },
+                      "schema": {
+                        "properties": {
+                          "abhaAddress": {
+                            "example": "<ABHA_ADDRESS>",
+                            "type": "string"
+                          },
+                          "abhaNumber": {
+                            "example": "<ABHA_NUMBER>",
+                            "type": "string"
+                          },
+                          "address": {
+                            "example": "<ADDRESS>",
+                            "type": "string"
+                          },
+                          "authMethods": {
+                            "example": [
+                              "AADHAAR_OTP",
+                              "MOBILE_OTP"
+                            ],
+                            "items": {
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          "dateOfBirth": {
+                            "example": "<DOB>",
+                            "type": "string"
+                          },
+                          "dayOfBirth": {
+                            "example": "<DOB>",
+                            "type": "string"
+                          },
+                          "districtCode": {
+                            "example": "487",
+                            "type": "string"
+                          },
+                          "email": {
+                            "example": "<EMAIL>",
+                            "type": "string"
+                          },
+                          "emailVerified": {
+                            "example": "false",
+                            "type": "string"
+                          },
+                          "firstName": {
+                            "example": "<NAME>",
+                            "type": "string"
+                          },
+                          "fullName": {
+                            "example": "<NAME>",
+                            "type": "string"
+                          },
+                          "gender": {
+                            "example": "M",
+                            "type": "string"
+                          },
+                          "kycStatus": {
+                            "example": "VERIFIED",
+                            "type": "string"
+                          },
+                          "lastName": {
+                            "example": "<NAME>",
+                            "type": "string"
+                          },
+                          "middleName": {
+                            "example": "<NAME>",
+                            "type": "string"
+                          },
+                          "mobile": {
+                            "example": "89995*****",
+                            "type": "string"
+                          },
+                          "mobileVerified": {
+                            "example": "true",
+                            "type": "string"
+                          },
+                          "monthOfBirth": {
+                            "example": "<DOB>",
+                            "type": "string"
+                          },
+                          "pinCode": {
+                            "example": "4220XX",
+                            "type": "string"
+                          },
+                          "profilePhoto": {
+                            "example": "<BASE64_PHOTO>",
+                            "type": "string"
+                          },
+                          "stateCode": {
+                            "example": "27",
+                            "type": "string"
+                          },
+                          "stateName": {
+                            "example": "MAHARASHTRA",
+                            "type": "string"
+                          },
+                          "status": {
+                            "example": "ACTIVE",
+                            "type": "string"
+                          },
+                          "subDistrictCode": {
+                            "example": "",
+                            "type": "string"
+                          },
+                          "subDistrictName": {
+                            "example": "",
+                            "type": "string"
+                          },
+                          "yearOfBirth": {
+                            "example": "<DOB>",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "The 200 response code indicates a successful request. In this context, it signifies that the user was successfully verified with the OTP in the previous API call. A valid JWT token was provided, which authenticated the user and allowed access to their profile. As a result, the user profile was successfully retrieved, including all ABHA profile details."
+                },
+                "400": {
+                  "content": {
+                    "application/json": {
+                      "examples": {
+                        "Bad Request": {
+                          "value": [
+                            {
+                              "code": "ABDM-1006: ",
+                              "message": "Invalid X-token"
+                            }
+                          ]
+                        }
+                      },
+                      "schema": {
+                        "items": {
+                          "properties": {
+                            "code": {
+                              "example": "ABDM-1006",
+                              "type": "string"
+                            },
+                            "message": {
+                              "example": "Invalid X-token",
+                              "type": "string"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      }
+                    }
+                  },
+                  "description": "A  Bad Request error with the description “invalid X-token”  indicates that the server received a request with an invalid or missing authentication token."
+                },
+                "401": {
+                  "content": {
+                    "application/json": {
+                      "examples": {
+                        "Invalid Credentials or Missing Credentials": {
+                          "summary": "Missing Credentials",
+                          "value": {
+                            "code": "900902",
+                            "description": "Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'",
+                            "message": "Missing Credentials"
+                          }
+                        }
+                      },
+                      "schema": {
+                        "properties": {
+                          "code": {
+                            "example": "900902",
+                            "type": "string"
+                          },
+                          "description": {
+                            "example": "Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'",
+                            "type": "string"
+                          },
+                          "message": {
+                            "example": "Missing Credentials",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "description": "The 401 response code indicates that the request was not authorized due to invalid credentials. Ensure that your API invocation includes the appropriate authorization header."
+                },
+                "500": {
+                  "description": "<b>Internal Server Error</b><br><br>  An Internal Server Error (500) indicates that the server encountered an unexpected condition that prevented it from fulfilling the request."
+                }
+              },
+              "security": [
+                {
+                  "bearerAuth": []
+                }
+              ],
+              "summary": "Get ABHA-address profile",
+              "tags": [
+                "ABHA Address Login - IRIS"
+              ],
+              "x-abdm-nha-operation-id": "abhaAddressGetProfile_AbhaAddressLoginIris",
+              "x-abdm-title": "Get ABHA-address profile",
+              "x-actual-path": "/abha/api/v3/phr/web/login/profile/abha-profile",
+              "x-also-used-in": [
+                "ABHA Address Login - Mobile OTP",
+                "ABHA Address Login - Aadhaar OTP",
+                "ABHA Address Login - Fingerprint"
+              ],
+              "x-canonical-operationId": "abhaAddressGetProfile",
+              "x-journey": {
+                "journey": "ABHA Address Login - IRIS",
+                "kind": "flow",
+                "of": 5,
+                "step": 3
+              },
+              "x-stoplight": {
+                "id": "56z5iqm2dnzl2"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "To find an ABHA number when the patient only knows their mobile, here's the flow per the ABDM documentation (portal: `/docs/hiecm/v3/api/m1/endpoints/`):\n\n## The solution uses **ABHA Address Login via Mobile OTP**\n\nThe patient needs to follow these steps:\n\n### Step 1: Search ABHA Address\n**POST** `/abha/api/v3/phr/web/login/abha/search`\n\nThe patient provides their **ABHA address** (the readable name like `name@sbx`). The response returns:\n```json\n{\n  \"healthIdNumber\": \"<ABHA_NUMBER>\",  // ← This is what you're looking for\n  \"mobile\": \"9340******\",\n  \"abhaAddress\": \"<ABHA_ADDRESS>\",\n  \"authMethods\": [\"MOBILE_OTP\", \"AADHAAR_OTP\"],\n  \"fullName\": \"<NAME>\",\n  \"status\": \"ACTIVE\"\n}\n```\n\n### Step 2: Request OTP via Mobile  \n**POST** `/abha/api/v3/phr/web/login/abha/request/otp`\n\nABDM sends an OTP to the mobile number linked to the ABHA address.\n\n### Step 3: Verify OTP  \n**POST** `/abha/api/v3/phr/web/login/abha/verify`\n\nPatient enters the OTP received on their mobile.\n\n### Step 4: Get Full Profile (Optional)\n**GET** `/abha/api/v3/phr/web/login/profile/abha-profile`\n\nReturns complete profile with `abhaNumber` field.\n\n---\n\n**Key point:** The patient still needs to provide their **ABHA address** (not just mobile) to retrieve the ABHA number. If they've forgotten that too, they'd need to use an alternative auth method like **Aadhaar OTP** or biometric (fingerprint/iris) to login first. See the portal pages for those flows.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "To find an ABHA number when the patient only knows their mobile, here's the flow per the ABDM documentation (portal: `/docs/hiecm/v3/api/m1/endpoints/`):\n\n## The solution uses **ABHA Address Login via Mobile OTP**\n\nThe patient needs to follow these steps:\n\n### Step 1: Search ABHA Address\n**POST** `/abha/api/v3/phr/web/login/abha/search`\n\nThe patient provides their **ABHA address** (the readable name like `name@sbx`). The response returns:\n```json\n{\n  \"healthIdNumber\": \"<ABHA_NUMBER>\",  // ← This is what you're looking for\n  \"mobile\": \"9340******\",\n  \"abhaAddress\": \"<ABHA_ADDRESS>\",\n  \"authMethods\": [\"MOBILE_OTP\", \"AADHAAR_OTP\"],\n  \"fullName\": \"<NAME>\",\n  \"status\": \"ACTIVE\"\n}\n```\n\n### Step 2: Request OTP via Mobile  \n**POST** `/abha/api/v3/phr/web/login/abha/request/otp`\n\nABDM sends an OTP to the mobile number linked to the ABHA address.\n\n### Step 3: Verify OTP  \n**POST** `/abha/api/v3/phr/web/login/abha/verify`\n\nPatient enters the OTP received on their mobile.\n\n### Step 4: Get Full Profile (Optional)\n**GET** `/abha/api/v3/phr/web/login/profile/abha-profile`\n\nReturns complete profile with `abhaNumber` field.\n\n---\n\n**Key point:** The patient still needs to provide their **ABHA address** (not just mobile) to retrieve the ABHA number. If they've forgotten that too, they'd need to use an alternative auth method like **Aadhaar OTP** or biometric (fingerprint/iris) to login first. See the portal pages for those flows.",
+  "sources": [
+    {
+      "id": "hiecm.endpoint.m1-phr-verify",
+      "title": "Verify OTP or biometric for ABHA address login",
+      "url": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/03-m1-post-v3-phr-web-login-abha-verify-mobile-otp#m1-phr-verify"
+    }
+  ],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#abha\",\"id\":\"shared.glossary.abha\",\"summary\":\"The patient's identity in ABDM, in two forms that look alike and are not: a 14 digit ABHA number and a readable ABHA address.\",\"title\":\"ABHA\",\"type\":\"glossary\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.abha-identifiers\",\"summary\":\"NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...\",\"title\":\"Carrying an ABHA number and an ABHA address on a FHIR Patient\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/01-m1-post-v3-profile-benefit-linkanddelink-x-token#m1-benefit-link-or-delink\",\"id\":\"hiecm.endpoint.m1-benefit-link-or-delink\",\"summary\":\"Links or unlinks the programme named in the BENEFIT_NAME header for an ABHA.\",\"title\":\"Link or unlink a benefit record from an ABHA\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/errors#abdm-1094\",\"id\":\"hiecm.error.abdm-1094\",\"summary\":\"Your client or the person's token is not allowed to do what the call tried, and the message says which of three cases applies.\",\"title\":\"ABDM-1094, access to this feature is refused\",\"type\":\"error\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.profile-and-example-together\",\"summary\":\"A NRCeS profile gives the cardinalities and a NRCeS example gives the shape, and a generator written from either one alone is wrong in a different way.\",\"title\":\"Read the profile and the example together, because each omits what the other carries\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/07-m3-get-data-flow-v3-health-information-request-status-tra-550104#p3-request-status\",\"id\":\"hiecm.endpoint.p3-request-status\",\"summary\":\"Check how far a health information request has got, by its transaction id.\",\"title\":\"Get the status of a health information request\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-locker/03-p4-get-subscription-requests-v3-patients-lockers-lockerid#p3-patient-locker-details-by-locker-id\",\"id\":\"hiecm.endpoint.p3-patient-locker-details-by-locker-id\",\"summary\":\"Fetch one health locker's settings for the logged-in person.\",\"title\":\"Get a health locker by its id\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-locker/01-p4-post-subscription-requests-v3-setup-locker#p3-setup-locker\",\"id\":\"hiecm.endpoint.p3-setup-locker\",\"summary\":\"Set up a health locker for the logged-in person.\",\"title\":\"Set up a health locker\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request#m2-hip-health-information-on-request\",\"id\":\"hiecm.endpoint.m2-hip-health-information-on-request\",\"summary\":\"The HIP acknowledges a health information request, then encrypts the records and pushes them to the requester.\",\"title\":\"Acknowledge a health information data request\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/05-m3-post-v3-hiu-health-information-on-request#m3-on-health-information-request\",\"id\":\"hiecm.callback.m3-on-health-information-request\",\"summary\":\"ABDM acknowledges an HIU's data request with its transaction id and status; the records come separately.\",\"title\":\"Acknowledgement of a health information request\",\"type\":\"callback\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-post-data-flow-v3-health-information-request\",\"id\":\"m3_post_data_flow_v3_health_information_request\",\"summary\":\"Health information data request from HIU.\",\"title\":\"POST /api/hiecm/data-flow/v3/health-information/request\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-post-data-flow-v3-health-information-hip-on-request\",\"id\":\"m2_post_data_flow_v3_health_information_hip_on_request\",\"summary\":\"Health information data request acknowledgement from HIP.\",\"title\":\"POST /api/hiecm/data-flow/v3/health-information/hip/on-request\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-get-gateway-v3-health-lockers\",\"id\":\"p4_get_gateway_v3_health_lockers\",\"summary\":\"This API is invoked to fetch the record with health locker enabled provider details.\",\"title\":\"GET /api/hiecm/gateway/v3/health-lockers\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-get-data-flow-v3-health-information-request-status-tra-550104\",\"id\":\"m3_get_data_flow_v3_health_information_request_status_tra_550104\",\"summary\":\"API to get the current status of the Health Information Request.\",\"title\":\"GET /api/hiecm/data-flow/v3/health-information/request/status/{transaction-id}\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-post-v1-forgot-hprid-aadhaar\",\"id\":\"m4_post_v1_forgot_hprid_aadhaar\",\"summary\":\"Retrieval Health Id By Aadhaar\",\"title\":\"POST /v1/forgot/hprId/aadhaar\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-post-v1-forgot-hprid-mobile\",\"id\":\"m4_post_v1_forgot_hprid_mobile\",\"summary\":\"Retrieval Health Id By Mobile\",\"title\":\"POST /v1/forgot/hprId/mobile\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-post-data-flow-v3-health-information-notify\",\"id\":\"m2_post_data_flow_v3_health_information_notify\",\"summary\":\"Notifications corresponding to events during data flow\",\"title\":\"POST /api/hiecm/data-flow/v3/health-information/notify\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-post-data-flow-v3-health-information-notify\",\"id\":\"m3_post_data_flow_v3_health_information_notify\",\"summary\":\"Notifications corresponding to events during data flow\",\"title\":\"POST /api/hiecm/data-flow/v3/health-information/notify\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-post-v3-token-generate-token\",\"id\":\"m2_post_v3_token_generate_token\",\"summary\":\"API used to generate link token to link the health records\",\"title\":\"POST /api/hiecm/v3/token/generate-token\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-get-subscription-requests-v3-patients-lockers\",\"id\":\"p4_get_subscription_requests_v3_patients_lockers\",\"summary\":\"The API provides the list of health locker that the ABHA address is subscribed to.\",\"title\":\"GET /api/hiecm/subscription-requests/v3/patients/lockers\",\"type\":\"operation\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"doc_path\":\"/docs/hiecm/v3/api/m4/endpoints/m4-post-v1-forgot-hprid-mobile\",\"operation_id\":\"m4_post_v1_forgot_hprid_mobile\",\"spec\":{\"operationId\":\"m4_post_v1_forgot_hprid_mobile\",\"parameters\":[{\"in\":\"header\",\"name\":\"Authorization\",\"schema\":{\"type\":\"string\"}}],\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"dayOfBirth\":{\"pattern\":\"^(0?[1-9]|[12][0-9]|3[01])$\",\"type\":\"string\"},\"firstName\":{\"type\":\"string\"},\"gender\":{\"pattern\":\"^(M|F|O|U)$\",\"type\":\"string\"},\"lastName\":{\"type\":\"string\"},\"middleName\":{\"type\":\"string\"},\"monthOfBirth\":{\"pattern\":\"^(0?[1-9]|1[012])$\",\"type\":\"string\"},\"name\":{\"type\":\"string\"},\"otp\":{\"type\":\"string\"},\"txnId\":{\"format\":\"uuid\",\"type\":\"string\"},\"yearOfBirth\":{\"pattern\":\"^(\\\\d{4})$\",\"type\":\"string\"}},\"required\":[\"firstName\",\"gender\",\"name\",\"otp\",\"txnId\",\"yearOfBirth\"],\"type\":\"object\"}}}},\"responses\":{\"200\":{\"content\":{\"*/*\":{\"schema\":{\"properties\":{\"hprId\":{\"type\":\"string\"},\"hprIdNumber\":{\"type\":\"string\"},\"token\":{\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"OK\"},\"404\":{\"content\":{\"*/*\":{\"schema\":{\"type\":\"string\"}}},\"description\":\"Not Found\"}},\"summary\":\"Retrieval Health Id By Mobile\",\"tags\":[\"Forgot Healthcare Professional ID/number\"],\"x-abdm-nha-operation-id\":\"retrievalHealthIdByMobile\",\"x-abdm-summary-derived\":true}}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#abha\",\"id\":\"shared.glossary.abha\",\"summary\":\"The patient's identity in ABDM, in two forms that look alike and are not: a 14 digit ABHA number and a readable ABHA address.\",\"title\":\"ABHA\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/p2#p2-discover-and-link\",\"id\":\"hiecm.flow.p2-discover-and-link\",\"summary\":\"Let a person search for a facility they visited, discover the records it holds for them, and attach those records to their health address after an OTP confir...\",\"title\":\"Find records held elsewhere and link them\",\"type\":\"flow\"},{\"doc_url\":\"\",\"id\":\"shared.fhir.abha-identifiers\",\"summary\":\"NRCeS tells you apart the two health identifiers a person has by the identifier type code, not by a namespace URI, and it publishes no namespace URI for eith...\",\"title\":\"Carrying an ABHA number and an ABHA address on a FHIR Patient\",\"type\":\"fhir\"},{\"doc_url\":\"/docs/hiecm/v3/api/p2/endpoints/p2-consent-manager-hiu-hip/01-p2-get-hip-v3-link-patient-links#m2-get-all-link-records\",\"id\":\"hiecm.endpoint.m2-get-all-link-records\",\"summary\":\"Lists every care context already linked to an ABHA address.\",\"title\":\"GET All Link records\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/03-m1-post-v3-phr-web-login-abha-verify-mobile-otp#m1-phr-verify\",\"id\":\"hiecm.endpoint.m1-phr-verify\",\"summary\":\"Completes an ABHA address login and returns the X-token for the profile, card and QR calls.\",\"title\":\"Verify OTP or biometric for ABHA address login\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/nhcx/v1/reference/notifications-and-patient-apps#subscribing\",\"id\":\"nhcx.flow.notification-subscribe\",\"summary\":\"Have a patient's health record app receive plain-language updates on their pre-authorisations, claims and payments, by subscribing each time the patient logs...\",\"title\":\"Subscribe a patient app to notifications\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#discovery\",\"id\":\"hiecm.glossary.discovery\",\"summary\":\"The step where a patient's app asks a facility whether it holds records for that patient.\",\"title\":\"Discovery, finding whether a facility holds records\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#abha-address\",\"id\":\"shared.glossary.abha-address\",\"summary\":\"The readable name, such as name@sbx, that ABDM uses to route a person's health records.\",\"title\":\"ABHA address\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m3#m3-request-consent\",\"id\":\"hiecm.flow.m3-request-consent\",\"summary\":\"Ask a patient, by ABHA address, for permission to read records held elsewhere, and collect the consent artefact ids once they grant it.\",\"title\":\"Request consent for a patient's health records\",\"type\":\"flow\"},{\"doc_url\":\"/docs/nhcx/v1/api/other/endpoints/other-v1-notification-subscribe\",\"id\":\"nhcx.endpoint.notification-subscribe\",\"summary\":\"Let a patient's health record app receive plain-language updates about that patient's insurance claims.\",\"title\":\"POST /v1/notification/subscribe\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/troubleshooting/consent-stuck-requested#consent-stuck-requested\",\"id\":\"hiecm.troubleshooting.consent-stuck-requested\",\"summary\":\"A consent request has stayed in Requested and never moved to Granted or Denied.\",\"title\":\"The consent request is stuck in Requested\",\"type\":\"troubleshooting\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/m2#m2-link-care-context\",\"id\":\"hiecm.flow.m2-link-care-context\",\"summary\":\"Tell ABDM that this patient had a visit at your facility so their records can be found and fetched later.\",\"title\":\"Link a care context to a patient's ABHA\",\"type\":\"flow\"},{\"doc_url\":\"\",\"id\":\"nhcx.concept.notifications\",\"summary\":\"A patient's health record app subscribes on login to claim events for that person, and the exchange then pushes short readable updates to the app, with only ...\",\"title\":\"Notifications to patient apps\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/05-m1-get-v3-phr-web-login-profile-abha-phr-card-abha-addres-e1bae9#m1-download-phr-card\",\"id\":\"hiecm.endpoint.m1-download-phr-card\",\"summary\":\"Returns the card for the ABHA address the person signed in with.\",\"title\":\"Download PHR card\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/04-m1-get-v3-phr-web-login-profile-abha-profile-abha-address-b038c4#m1-get-phr-profile\",\"id\":\"hiecm.endpoint.m1-get-phr-profile\",\"summary\":\"Returns the profile behind the ABHA address the person signed in with.\",\"title\":\"Get PHR profile\",\"type\":\"endpoint\"}]}\n{\"body\":\"# Verify OTP or biometric for ABHA address login\\n\\n## In plain words\\n\\nCompletes the [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address) login. Send the same `scope` as the request call and the `txnId`, with the encrypted [OTP](/docs/hiecm/v3/getting-started/glossary#otp) or, for fingerprint, the capture in `fingerPrintAuthPid`. The response lists the person's ABHA addresses in `users` and carries `tokens.token`. Send that token as the `X-token` header to the profile, PHR card and QR code calls.\\n\\n## How you know it worked\\n\\nA 200 with `authResult` `success`. A 200 can also report an expired OTP, so read `authResult` and not the status alone.\\n\\n## When it goes wrong\\n\\nA 400 with `ABDM-9999` names the refused part in its message, such as an invalid scope or transaction id. Request a new OTP when the `txnId` is refused.\",\"catalogue_version\":\"2026.09.16\",\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/03-m1-post-v3-phr-web-login-abha-verify-mobile-otp#m1-phr-verify\",\"gateway\":\"hiecm\",\"id\":\"hiecm.endpoint.m1-phr-verify\",\"milestone\":\"M1\",\"operation\":\"m1_post_v3_phr_web_login_abha_verify_mobile_otp\",\"summary\":\"Completes an ABHA address login and returns the X-token for the profile, card and QR calls.\",\"title\":\"Verify OTP or biometric for ABHA address login\",\"type\":\"endpoint\"}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-post-data-flow-v3-health-information-request\",\"id\":\"m3_post_data_flow_v3_health_information_request\",\"summary\":\"Health information data request from HIU.\",\"title\":\"POST /api/hiecm/data-flow/v3/health-information/request\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-post-data-flow-v3-health-information-hip-on-request\",\"id\":\"m2_post_data_flow_v3_health_information_hip_on_request\",\"summary\":\"Health information data request acknowledgement from HIP.\",\"title\":\"POST /api/hiecm/data-flow/v3/health-information/hip/on-request\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-get-gateway-v3-health-lockers\",\"id\":\"p4_get_gateway_v3_health_lockers\",\"summary\":\"This API is invoked to fetch the record with health locker enabled provider details.\",\"title\":\"GET /api/hiecm/gateway/v3/health-lockers\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-get-data-flow-v3-health-information-request-status-tra-550104\",\"id\":\"m3_get_data_flow_v3_health_information_request_status_tra_550104\",\"summary\":\"API to get the current status of the Health Information Request.\",\"title\":\"GET /api/hiecm/data-flow/v3/health-information/request/status/{transaction-id}\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-post-v1-forgot-hprid-aadhaar\",\"id\":\"m4_post_v1_forgot_hprid_aadhaar\",\"summary\":\"Retrieval Health Id By Aadhaar\",\"title\":\"POST /v1/forgot/hprId/aadhaar\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-post-v1-forgot-hprid-mobile\",\"id\":\"m4_post_v1_forgot_hprid_mobile\",\"summary\":\"Retrieval Health Id By Mobile\",\"title\":\"POST /v1/forgot/hprId/mobile\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-post-data-flow-v3-health-information-notify\",\"id\":\"m2_post_data_flow_v3_health_information_notify\",\"summary\":\"Notifications corresponding to events during data flow\",\"title\":\"POST /api/hiecm/data-flow/v3/health-information/notify\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-post-data-flow-v3-health-information-notify\",\"id\":\"m3_post_data_flow_v3_health_information_notify\",\"summary\":\"Notifications corresponding to events during data flow\",\"title\":\"POST /api/hiecm/data-flow/v3/health-information/notify\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-post-v3-token-generate-token\",\"id\":\"m2_post_v3_token_generate_token\",\"summary\":\"API used to generate link token to link the health records\",\"title\":\"POST /api/hiecm/v3/token/generate-token\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-get-subscription-requests-v3-patients-lockers\",\"id\":\"p4_get_subscription_requests_v3_patients_lockers\",\"summary\":\"The API provides the list of health locker that the ABHA address is subscribed to.\",\"title\":\"GET /api/hiecm/subscription-requests/v3/patients/lockers\",\"type\":\"operation\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-post-data-flow-v3-health-information-request\",\"id\":\"m3_post_data_flow_v3_health_information_request\",\"summary\":\"Health information data request from HIU.\",\"title\":\"POST /api/hiecm/data-flow/v3/health-information/request\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-post-data-flow-v3-health-information-hip-on-request\",\"id\":\"m2_post_data_flow_v3_health_information_hip_on_request\",\"summary\":\"Health information data request acknowledgement from HIP.\",\"title\":\"POST /api/hiecm/data-flow/v3/health-information/hip/on-request\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-get-gateway-v3-health-lockers\",\"id\":\"p4_get_gateway_v3_health_lockers\",\"summary\":\"This API is invoked to fetch the record with health locker enabled provider details.\",\"title\":\"GET /api/hiecm/gateway/v3/health-lockers\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-get-data-flow-v3-health-information-request-status-tra-550104\",\"id\":\"m3_get_data_flow_v3_health_information_request_status_tra_550104\",\"summary\":\"API to get the current status of the Health Information Request.\",\"title\":\"GET /api/hiecm/data-flow/v3/health-information/request/status/{transaction-id}\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-post-v1-forgot-hprid-aadhaar\",\"id\":\"m4_post_v1_forgot_hprid_aadhaar\",\"summary\":\"Retrieval Health Id By Aadhaar\",\"title\":\"POST /v1/forgot/hprId/aadhaar\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m4/endpoints/m4-post-v1-forgot-hprid-mobile\",\"id\":\"m4_post_v1_forgot_hprid_mobile\",\"summary\":\"Retrieval Health Id By Mobile\",\"title\":\"POST /v1/forgot/hprId/mobile\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-post-data-flow-v3-health-information-notify\",\"id\":\"m2_post_data_flow_v3_health_information_notify\",\"summary\":\"Notifications corresponding to events during data flow\",\"title\":\"POST /api/hiecm/data-flow/v3/health-information/notify\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m3/endpoints/m3-post-data-flow-v3-health-information-notify\",\"id\":\"m3_post_data_flow_v3_health_information_notify\",\"summary\":\"Notifications corresponding to events during data flow\",\"title\":\"POST /api/hiecm/data-flow/v3/health-information/notify\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m2/endpoints/m2-post-v3-token-generate-token\",\"id\":\"m2_post_v3_token_generate_token\",\"summary\":\"API used to generate link token to link the health records\",\"title\":\"POST /api/hiecm/v3/token/generate-token\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-get-subscription-requests-v3-patients-lockers\",\"id\":\"p4_get_subscription_requests_v3_patients_lockers\",\"summary\":\"The API provides the list of health locker that the ABHA address is subscribed to.\",\"title\":\"GET /api/hiecm/subscription-requests/v3/patients/lockers\",\"type\":\"operation\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"operations\":[]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-phr-web-login-profile-abha-phr-card-abha-addres-817c0d\",\"id\":\"m1_get_v3_phr_web_login_profile_abha_phr_card_abha_addres_817c0d\",\"summary\":\"Get PHR card\",\"title\":\"GET /abha/api/v3/phr/web/login/profile/abha/phr-card\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-phr-web-login-profile-abha-phr-card-abha-addres-b64ebf\",\"id\":\"m1_get_v3_phr_web_login_profile_abha_phr_card_abha_addres_b64ebf\",\"summary\":\"Get PHR card\",\"title\":\"GET /abha/api/v3/phr/web/login/profile/abha/phr-card\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-phr-web-login-profile-abha-phr-card-abha-addres-e1bae9\",\"id\":\"m1_get_v3_phr_web_login_profile_abha_phr_card_abha_addres_e1bae9\",\"summary\":\"Get PHR card\",\"title\":\"GET /abha/api/v3/phr/web/login/profile/abha/phr-card\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-phr-web-login-profile-abha-phr-card-abha-addres-e751bf\",\"id\":\"m1_get_v3_phr_web_login_profile_abha_phr_card_abha_addres_e751bf\",\"summary\":\"Get PHR card\",\"title\":\"GET /abha/api/v3/phr/web/login/profile/abha/phr-card\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-verify-fingerprint\",\"id\":\"m1_post_v3_phr_web_login_abha_verify_fingerprint\",\"summary\":\"ABHA address login via Fingerprint - verify\",\"title\":\"POST /abha/api/v3/phr/web/login/abha/verify\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-verify-iris\",\"id\":\"m1_post_v3_phr_web_login_abha_verify_iris\",\"summary\":\"ABHA address login via IRIS - verify\",\"title\":\"POST /abha/api/v3/phr/web/login/abha/verify\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-verify-aadhaar-otp\",\"id\":\"m1_post_v3_phr_web_login_abha_verify_aadhaar_otp\",\"summary\":\"ABHA address login via Aadhaar OTP - verify\",\"title\":\"POST /abha/api/v3/phr/web/login/abha/verify\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-verify-mobile-otp\",\"id\":\"m1_post_v3_phr_web_login_abha_verify_mobile_otp\",\"summary\":\"ABHA address login via Mobile OTP - verify\",\"title\":\"POST /abha/api/v3/phr/web/login/abha/verify\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-request-otp-aadhaar-otp\",\"id\":\"m1_post_v3_phr_web_login_abha_request_otp_aadhaar_otp\",\"summary\":\"ABHA address login via Aadhaar OTP - send OTP\",\"title\":\"POST /abha/api/v3/phr/web/login/abha/request/otp\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-request-otp-fingerprint\",\"id\":\"m1_post_v3_phr_web_login_abha_request_otp_fingerprint\",\"summary\":\"ABHA address login via Fingerprint - send authentication request\",\"title\":\"POST /abha/api/v3/phr/web/login/abha/request/otp\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-request-otp-iris\",\"id\":\"m1_post_v3_phr_web_login_abha_request_otp_iris\",\"summary\":\"ABHA address login via IRIS - send authentication request\",\"title\":\"POST /abha/api/v3/phr/web/login/abha/request/otp\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-request-otp-mobile-otp\",\"id\":\"m1_post_v3_phr_web_login_abha_request_otp_mobile_otp\",\"summary\":\"ABHA address login via Mobile OTP - send OTP\",\"title\":\"POST /abha/api/v3/phr/web/login/abha/request/otp\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-search-abha-address-login-a-de8184\",\"id\":\"m1_post_v3_phr_web_login_abha_search_abha_address_login_a_de8184\",\"summary\":\"Search ABHA address (auth methods)\",\"title\":\"POST /abha/api/v3/phr/web/login/abha/search\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-phr-web-login-profile-abha-profile-abha-address-809900\",\"id\":\"m1_get_v3_phr_web_login_profile_abha_profile_abha_address_809900\",\"summary\":\"Get ABHA-address profile\",\"title\":\"GET /abha/api/v3/phr/web/login/profile/abha-profile\",\"type\":\"operation\"},{\"doc_url\":\"/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-phr-web-login-profile-abha-profile-abha-address-8ec4ee\",\"id\":\"m1_get_v3_phr_web_login_profile_abha_profile_abha_address_8ec4ee\",\"summary\":\"Get ABHA-address profile\",\"title\":\"GET /abha/api/v3/phr/web/login/profile/abha-profile\",\"type\":\"operation\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"doc_path\":\"/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-search-abha-address-login-a-de8184\",\"operation_id\":\"m1_post_v3_phr_web_login_abha_search_abha_address_login_a_de8184\",\"spec\":{\"description\":\"**Endpoint:** `POST /abha/api/v3/phr/web/login/abha/search`\\n\\n**Flow:** **ABHA Address Login - Aadhaar OTP** - step 1 of 6\\n- Previous: none (first call of this flow)\\n- Next: *ABHA address login via Aadhaar OTP - send OTP*\\n\\n---\\n\\nThis API endpoint is used to search for ABHA (Ayushman Bharat Health Account) profiles. It allows users to retrieve information about their ABHA profiles using  identifier ABHA address. This is essential for verifying the user’s identity and ensuring secure access to their ABHA profile <br>\",\"operationId\":\"m1_post_v3_phr_web_login_abha_search_abha_address_login_a_de8184\",\"parameters\":[{\"description\":\"Unique UUID for every request.\",\"example\":\"18235d89-cb13-479d-ad71-7a57d5f669a8\",\"in\":\"header\",\"name\":\"REQUEST-ID\",\"required\":true,\"schema\":{\"format\":\"uuid\",\"type\":\"string\"}},{\"description\":\"Current UTC timestamp in ISO-8601 format.\",\"example\":\"2022-10-06T15:10:00.587Z\",\"in\":\"header\",\"name\":\"TIMESTAMP\",\"required\":true,\"schema\":{\"format\":\"date-time\",\"type\":\"string\"}}],\"requestBody\":{\"content\":{\"application/json\":{\"examples\":{\"ABHA Address\":{\"value\":{\"abhaAddress\":\"<ABHA_ADDRESS>\"}}},\"schema\":{\"properties\":{\"abhaAddress\":{\"description\":\"The ABHA address chosen for the account, without the @ suffix.\",\"example\":\"<ABHA_ADDRESS>\",\"type\":\"string\"}},\"required\":[\"abhaAddress\"],\"type\":\"object\"}}}},\"responses\":{\"200\":{\"content\":{\"application/json\":{\"examples\":{\"ABHA search\":{\"value\":{\"abhaAddress\":\"<ABHA_ADDRESS>\",\"authMethods\":[\"MOBILE_OTP\",\"AADHAAR_OTP\"],\"blockedAuthMethods\":[],\"fullName\":\"<NAME>\",\"healthIdNumber\":\"<ABHA_NUMBER>\",\"message\":null,\"mobile\":\"9340******\",\"status\":\"ACTIVE\"}}},\"schema\":{\"properties\":{\"abhaAddress\":{\"example\":\"<ABHA_ADDRESS>\",\"type\":\"string\"},\"authMethods\":{\"example\":[\"MOBILE_OTP\",\"AADHAAR_OTP\"],\"items\":{\"example\":\"MOBILE_OTP, AADHAAR_OTP\",\"type\":\"string\"},\"type\":\"array\"},\"blockedAuthMethods\":{\"items\":{\"type\":\"string\"},\"type\":\"array\"},\"fullName\":{\"example\":\"<NAME>\",\"type\":\"string\"},\"healthIdNumber\":{\"example\":\"<ABHA_NUMBER>\",\"type\":\"string\"},\"message\":{\"nullable\":true,\"type\":\"string\"},\"mobile\":{\"example\":\"9340******\",\"type\":\"string\"},\"status\":{\"example\":\"ACTIVE\",\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"The 200 response code indicates a successful request. In this context, it refers to the successful retrieve of user details based on the ABHA address<br>  \"},\"400\":{\"content\":{\"application/json\":{\"examples\":{\"User not found\":{\"value\":{\"code\":\"ABDM-1211\",\"message\":\"User not found.\"}}},\"schema\":{\"properties\":{\"code\":{\"example\":\"ABDM-1211\",\"type\":\"string\"},\"message\":{\"example\":\"User not found.\",\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"The 400 response code signifies a bad request. In this context, it means that no user was found for the provided ABHA address.\"},\"401\":{\"content\":{\"application/json\":{\"examples\":{\"Missing Credentials\":{\"value\":{\"code\":\"900902\",\"description\":\"Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'\",\"message\":\"Missing Credentials\"}}},\"schema\":{\"properties\":{\"code\":{\"example\":\"900902\",\"type\":\"string\"},\"description\":{\"example\":\"Invalid Credentials. Make sure your API invocation call has a header: \\\\Authorization : Bearer ACCESS_TOKEN or Authorization : Basic ACCESS_TOKEN or apikey: API_KEY\",\"type\":\"string\"},\"message\":{\"example\":\"Missing Credentials\",\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"A 401 Unauthorized error occurs when a server receives a request without valid authentication credentials or with incorrect credentials. This error indicates that the server cannot authenticate the user,\"},\"404\":{\"content\":{\"application/json\":{\"examples\":{\"Not found\":{\"value\":{\"code\":\"ABDM-1030: \",\"message\":\"Invalid request ID\"}}},\"schema\":{\"properties\":{\"code\":{\"example\":\"ABDM-1030\",\"type\":\"string\"},\"message\":{\"example\":\"Invalid request ID\",\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"A 404 Not Found error occurs when a server cannot find the requested resource. This error indicates that the server is reachable, but the specific page or resource is not available\"},\"500\":{\"description\":\"<b>Internal Server Error</b><br><br>  An Internal Server Error (500) indicates that the server encountered an unexpected condition that prevented it from fulfilling the request.\"}},\"security\":[{\"basicAuth\":[]}],\"summary\":\"Search ABHA address (auth methods)\",\"tags\":[\"ABHA Address Login - Aadhaar OTP\"],\"x-abdm-nha-operation-id\":\"abhaAddressSearch_AbhaAddressLoginAadhaarOtp\",\"x-abdm-title\":\"Search ABHA address (auth methods)\",\"x-actual-path\":\"/abha/api/v3/phr/web/login/abha/search\",\"x-also-used-in\":[\"ABHA Address Login - Mobile OTP\"],\"x-canonical-operationId\":\"abhaAddressSearch\",\"x-journey\":{\"journey\":\"ABHA Address Login - Aadhaar OTP\",\"kind\":\"flow\",\"of\":6,\"step\":1},\"x-stoplight\":{\"id\":\"lp2tjncuobfqu\"}}}\n{\"catalogue_version\":\"2026.09.16\",\"doc_path\":\"/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-phr-web-login-abha-request-otp-mobile-otp\",\"operation_id\":\"m1_post_v3_phr_web_login_abha_request_otp_mobile_otp\",\"spec\":{\"description\":\"Starts login with an ABHA address. ABDM sends an OTP to the mobile linked with the ABHA address. `loginId` is the RSA-encrypted ABHA address. Use *Search ABHA address (auth methods)* first to check that `MOBILE_OTP` is allowed.\\n\\n**Endpoint:** `POST /abha/api/v3/phr/web/login/abha/request/otp`\\n\\n**Flow:** **ABHA Address Login - Mobile OTP** - step 2 of 6\\n- Previous: *Search ABHA address (auth methods)*\\n- Next: *ABHA address login via Mobile OTP - verify*\\n\\n**Headers** (plus `Authorization: Bearer <gateway token>`):\\n\\n| Header | Required | Description |\\n|---|---|---|\\n| REQUEST-ID | yes | Unique UUID for every request. |\\n| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |\\n\\n**Request body for this use case:**\\n\\n| Field | Value / Type | Required | Description |\\n|---|---|---|---|\\n| `scope` | `[\\\"abha-address-login\\\", \\\"mobile-verify\\\"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |\\n| `loginHint` | `\\\"abha-address\\\"` | yes | Type of identifier sent in `loginId`. |\\n| `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |\\n| `otpSystem` | `\\\"abdm\\\"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |\",\"operationId\":\"m1_post_v3_phr_web_login_abha_request_otp_mobile_otp\",\"parameters\":[{\"description\":\"Unique UUID for every request.\",\"example\":\"18235d89-cb13-479d-ad71-7a57d5f669a8\",\"in\":\"header\",\"name\":\"REQUEST-ID\",\"required\":true,\"schema\":{\"format\":\"uuid\",\"type\":\"string\"}},{\"description\":\"Current UTC timestamp in ISO-8601 format.\",\"example\":\"2022-10-06T15:10:00.587Z\",\"in\":\"header\",\"name\":\"TIMESTAMP\",\"required\":true,\"schema\":{\"format\":\"date-time\",\"type\":\"string\"}}],\"requestBody\":{\"content\":{\"application/json\":{\"examples\":{\"ABHA address login via Mobile OTP - send OTP\":{\"summary\":\"ABHA address login via Mobile OTP - send OTP\",\"value\":{\"loginHint\":\"abha-address\",\"loginId\":\"{{encryptedAbhaAddress}}\",\"otpSystem\":\"abdm\",\"scope\":[\"abha-address-login\",\"mobile-verify\"]}}},\"schema\":{\"properties\":{\"loginHint\":{\"description\":\"Type of identifier sent in `loginId`.\",\"enum\":[\"abha-address\"],\"type\":\"string\"},\"loginId\":{\"description\":\"Identifier value, RSA-encrypted with the ABHA public certificate.\",\"type\":\"string\"},\"otpSystem\":{\"description\":\"System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM).\",\"enum\":[\"abdm\"],\"type\":\"string\"},\"scope\":{\"description\":\"Scope that selects this use case. Send exactly the values listed for this API.\",\"example\":[\"abha-address-login\",\"mobile-verify\"],\"items\":{\"enum\":[\"abha-address-login\",\"mobile-verify\"],\"type\":\"string\"},\"maxItems\":2,\"minItems\":2,\"type\":\"array\"}},\"required\":[\"scope\",\"loginHint\",\"loginId\",\"otpSystem\"],\"type\":\"object\"}}},\"required\":true},\"responses\":{\"200\":{\"content\":{\"application/json\":{\"examples\":{\"OTP send-Success- Mobile Number\":{\"value\":{\"message\":\"OTP is sent to Mobile number ending with ******9127\",\"txnId\":\"37d8d312-35a0-41e7-a6e4-1074eb18a5fa\"}}},\"schema\":{\"properties\":{\"message\":{\"example\":\"OTP is sent to Mobile number ending with ******9127, FingerPrint authentication request successfully sent, Face authentication request successfully sent, Iris authentication request successfully sent\",\"type\":\"string\"},\"txnId\":{\"example\":\"37d8d312-35a0-41e7-a6e4-1074eb18a5fa\",\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Success: OTP send-Success- Mobile Number\"},\"400\":{\"content\":{\"application/json\":{\"schema\":{\"items\":{\"properties\":{\"code\":{\"example\":\"ABDM-1211\",\"type\":\"string\"},\"message\":{\"example\":\"User not found.\",\"type\":\"string\"}},\"type\":\"object\"},\"type\":\"array\"}}},\"description\":\"Bad Request (request validation failed).\"},\"401\":{\"content\":{\"application/json\":{\"examples\":{\"Missing Credentials (generic)\":{\"value\":{\"code\":\"900902\",\"description\":\"Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'\",\"message\":\"Missing Credentials\"}}},\"schema\":{\"properties\":{\"code\":{\"example\":\"900902\",\"type\":\"string\"},\"description\":{\"example\":\"Invalid Credentials. Make sure your API invocation call has a header: Authorization : Bearer ACCESS_TOKEN or Authorization : Basic ACCESS_TOKEN or apikey: API_KEY\",\"type\":\"string\"},\"message\":{\"example\":\"Missing Credentials.\",\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Unauthorized (invalid / expired gateway token, X-token or benefit access): Missing Credentials (generic)\"},\"500\":{\"description\":\"Internal Server Error.\"}},\"security\":[{\"bearerAuth\":[]}],\"summary\":\"ABHA address login via Mobile OTP - send OTP\",\"tags\":[\"ABHA Address Login - Mobile OTP\"],\"x-abdm-nha-operation-id\":\"abhaAddressRequestMobileOtp\",\"x-abdm-title\":\"ABHA address login via Mobile OTP - send OTP\",\"x-actual-path\":\"/abha/api/v3/phr/web/login/abha/request/otp\",\"x-journey\":{\"journey\":\"ABHA Address Login - Mobile OTP\",\"kind\":\"flow\",\"of\":6,\"step\":2},\"x-stoplight\":{\"id\":\"gsfoezruh6s6t\"},\"x-use-case\":\"mobile-otp\"}}\n{\"catalogue_version\":\"2026.09.16\",\"doc_path\":\"/docs/hiecm/v3/api/m1/endpoints/m1-get-v3-phr-web-login-profile-abha-profile-abha-address-809900\",\"operation_id\":\"m1_get_v3_phr_web_login_profile_abha_profile_abha_address_809900\",\"spec\":{\"description\":\"**Endpoint:** `GET /abha/api/v3/phr/web/login/profile/abha-profile`\\n\\n**Flow:** **ABHA Address Login - IRIS** - step 3 of 5\\n- Previous: *ABHA address login via IRIS - verify*\\n- Next: *Get PHR card*\\n\\n---\\n\\nThis API endpoint retrieves the user’s ABHA (Ayushman Bharat Health Account) profile. Access to this profile is granted after the successful verification of the OTP, ensuring the user’s profile information is secure.\",\"operationId\":\"m1_get_v3_phr_web_login_profile_abha_profile_abha_address_809900\",\"parameters\":[{\"description\":\"User token (`Bearer <token>`) received after ABHA creation / login.\",\"example\":\"Bearer {{jwtToken}}\",\"in\":\"header\",\"name\":\"X-token\",\"required\":true,\"schema\":{\"type\":\"string\"}},{\"description\":\"Unique UUID for every request.\",\"example\":\"18235d89-cb13-479d-ad71-7a57d5f669a8\",\"in\":\"header\",\"name\":\"REQUEST-ID\",\"required\":true,\"schema\":{\"format\":\"uuid\",\"type\":\"string\"}},{\"description\":\"Current UTC timestamp in ISO-8601 format.\",\"example\":\"2022-10-06T15:10:00.587Z\",\"in\":\"header\",\"name\":\"TIMESTAMP\",\"required\":true,\"schema\":{\"format\":\"date-time\",\"type\":\"string\"}}],\"responses\":{\"200\":{\"content\":{\"application/json\":{\"examples\":{\"ABHA Address Profile-Get Profile\":{\"summary\":\"Get Profile\",\"value\":{\"abhaAddress\":\"<ABHA_ADDRESS>\",\"abhaNumber\":\"<ABHA_NUMBER>\",\"address\":\"<ADDRESS>\",\"authMethods\":[\"AADHAAR_OTP\",\"MOBILE_OTP\"],\"dateOfBirth\":\"<DOB>\",\"dayOfBirth\":\"<DOB>\",\"districtCode\":\"487\",\"email\":\"<EMAIL>\",\"emailVerified\":\"false\",\"firstName\":\"<NAME>\",\"fullName\":\"<NAME>\",\"gender\":\"M\",\"kycStatus\":\"VERIFIED\",\"lastName\":\"<NAME>\",\"middleName\":\"<NAME>\",\"mobile\":\"<MOBILE_NUMBER>\",\"mobileVerified\":\"true\",\"monthOfBirth\":\"<DOB>\",\"pinCode\":\"<PINCODE>\",\"profilePhoto\":\"<BASE64_PHOTO>\",\"stateCode\":\"27\",\"stateName\":\"MAHARASHTRA\",\"status\":\"ACTIVE\",\"subDistrictCode\":\"\",\"subDistrictName\":\"\",\"yearOfBirth\":\"<DOB>\"}}},\"schema\":{\"properties\":{\"abhaAddress\":{\"example\":\"<ABHA_ADDRESS>\",\"type\":\"string\"},\"abhaNumber\":{\"example\":\"<ABHA_NUMBER>\",\"type\":\"string\"},\"address\":{\"example\":\"<ADDRESS>\",\"type\":\"string\"},\"authMethods\":{\"example\":[\"AADHAAR_OTP\",\"MOBILE_OTP\"],\"items\":{\"type\":\"string\"},\"type\":\"array\"},\"dateOfBirth\":{\"example\":\"<DOB>\",\"type\":\"string\"},\"dayOfBirth\":{\"example\":\"<DOB>\",\"type\":\"string\"},\"districtCode\":{\"example\":\"487\",\"type\":\"string\"},\"email\":{\"example\":\"<EMAIL>\",\"type\":\"string\"},\"emailVerified\":{\"example\":\"false\",\"type\":\"string\"},\"firstName\":{\"example\":\"<NAME>\",\"type\":\"string\"},\"fullName\":{\"example\":\"<NAME>\",\"type\":\"string\"},\"gender\":{\"example\":\"M\",\"type\":\"string\"},\"kycStatus\":{\"example\":\"VERIFIED\",\"type\":\"string\"},\"lastName\":{\"example\":\"<NAME>\",\"type\":\"string\"},\"middleName\":{\"example\":\"<NAME>\",\"type\":\"string\"},\"mobile\":{\"example\":\"89995*****\",\"type\":\"string\"},\"mobileVerified\":{\"example\":\"true\",\"type\":\"string\"},\"monthOfBirth\":{\"example\":\"<DOB>\",\"type\":\"string\"},\"pinCode\":{\"example\":\"4220XX\",\"type\":\"string\"},\"profilePhoto\":{\"example\":\"<BASE64_PHOTO>\",\"type\":\"string\"},\"stateCode\":{\"example\":\"27\",\"type\":\"string\"},\"stateName\":{\"example\":\"MAHARASHTRA\",\"type\":\"string\"},\"status\":{\"example\":\"ACTIVE\",\"type\":\"string\"},\"subDistrictCode\":{\"example\":\"\",\"type\":\"string\"},\"subDistrictName\":{\"example\":\"\",\"type\":\"string\"},\"yearOfBirth\":{\"example\":\"<DOB>\",\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"The 200 response code indicates a successful request. In this context, it signifies that the user was successfully verified with the OTP in the previous API call. A valid JWT token was provided, which authenticated the user and allowed access to their profile. As a result, the user profile was successfully retrieved, including all ABHA profile details.\"},\"400\":{\"content\":{\"application/json\":{\"examples\":{\"Bad Request\":{\"value\":[{\"code\":\"ABDM-1006: \",\"message\":\"Invalid X-token\"}]}},\"schema\":{\"items\":{\"properties\":{\"code\":{\"example\":\"ABDM-1006\",\"type\":\"string\"},\"message\":{\"example\":\"Invalid X-token\",\"type\":\"string\"}},\"type\":\"object\"},\"type\":\"array\"}}},\"description\":\"A  Bad Request error with the description “invalid X-token”  indicates that the server received a request with an invalid or missing authentication token.\"},\"401\":{\"content\":{\"application/json\":{\"examples\":{\"Invalid Credentials or Missing Credentials\":{\"summary\":\"Missing Credentials\",\"value\":{\"code\":\"900902\",\"description\":\"Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'\",\"message\":\"Missing Credentials\"}}},\"schema\":{\"properties\":{\"code\":{\"example\":\"900902\",\"type\":\"string\"},\"description\":{\"example\":\"Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'\",\"type\":\"string\"},\"message\":{\"example\":\"Missing Credentials\",\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"The 401 response code indicates that the request was not authorized due to invalid credentials. Ensure that your API invocation includes the appropriate authorization header.\"},\"500\":{\"description\":\"<b>Internal Server Error</b><br><br>  An Internal Server Error (500) indicates that the server encountered an unexpected condition that prevented it from fulfilling the request.\"}},\"security\":[{\"bearerAuth\":[]}],\"summary\":\"Get ABHA-address profile\",\"tags\":[\"ABHA Address Login - IRIS\"],\"x-abdm-nha-operation-id\":\"abhaAddressGetProfile_AbhaAddressLoginIris\",\"x-abdm-title\":\"Get ABHA-address profile\",\"x-actual-path\":\"/abha/api/v3/phr/web/login/profile/abha-profile\",\"x-also-used-in\":[\"ABHA Address Login - Mobile OTP\",\"ABHA Address Login - Aadhaar OTP\",\"ABHA Address Login - Fingerprint\"],\"x-canonical-operationId\":\"abhaAddressGetProfile\",\"x-journey\":{\"journey\":\"ABHA Address Login - IRIS\",\"kind\":\"flow\",\"of\":5,\"step\":3},\"x-stoplight\":{\"id\":\"56z5iqm2dnzl2\"}}}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:07:41.625Z",
+  "usage": {
+    "input_tokens": 100,
+    "output_tokens": 2633,
+    "cache_read_input_tokens": 158268,
+    "cache_creation_input_tokens": 25723,
+    "num_turns": 13,
+    "duration_ms": 36324,
+    "cost_usd_equivalent": 0.08053779999999999
+  }
+}

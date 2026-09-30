@@ -396,13 +396,14 @@ function main() {
   let emitted = 0;
   let skipped = 0;
   const unrendered = [];
-  // module id -> [{title, route}], for the per-module llms.txt under hiecm/v3/api.
+  // <gateway>/<version>/api/<module> -> [{title, route}], for the per-module
+  // llms.txt under every gateway's api/ tree.
   const apiModulePages = new Map();
 
   for (const src of walk(DOCS_SRC)) {
     if (!/\.(md|mdx)$/.test(src)) continue;
     if (/README\.md$|_category_\.json/.test(src)) continue;
-    if (/[\\/]_glossary[\\/]/.test(src)) continue; // partials, not routes
+    if (/[\\/]_(glossary|notes)[\\/]/.test(src)) continue; // partials, not routes
 
     const raw = readFileSync(src, 'utf8');
     const route = routeFor(src, raw);
@@ -446,9 +447,9 @@ function main() {
     full.push(md);
     emitted += 1;
 
-    const moduleMatch = /^docs[\\/]hiecm[\\/]v3[\\/]api[\\/]([\w-]+)([\\/]|$)/.exec(route);
+    const moduleMatch = /^docs[\\/]([\w-]+)[\\/](v\d+)[\\/]api[\\/]([\w-]+)([\\/]|$)/.exec(route);
     if (moduleMatch) {
-      const moduleId = moduleMatch[1];
+      const moduleId = `${moduleMatch[1]}/${moduleMatch[2]}/api/${moduleMatch[3]}`;
       const description =
         /^description:\s*"?([^"\n]+)"?/m.exec(raw)?.[1]?.trim() ?? '';
       if (!apiModulePages.has(moduleId)) apiModulePages.set(moduleId, []);
@@ -475,9 +476,9 @@ function main() {
   // summary, one `## section`, then `- [Title](url): description` lines.
   for (const [moduleId, pages] of apiModulePages) {
     pages.sort((a, b) => a.route.localeCompare(b.route));
-    const outDir = join(BUILD, 'docs', 'hiecm', 'v3', 'api', moduleId);
+    const outDir = join(BUILD, 'docs', moduleId);
     if (!existsSync(outDir)) continue;
-    const label = moduleId.toUpperCase();
+    const label = moduleId.split('/').pop().toUpperCase();
     const lines = [
       `# ${label}`,
       '',

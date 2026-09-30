@@ -1,0 +1,36 @@
+{
+  "id": "terse-consent-artefact-01",
+  "slice": "terse",
+  "class": "define",
+  "turns": [
+    {
+      "role": "user",
+      "text": "consent artefact"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "Reading somebody else's records needs a consent artefact naming who, what and for how long, and the patient can end it at any time.",
+    "A granted request returns at least one artefact id, and a fetch under it is accepted while the artefact is within its validity period and not revoked.",
+    "The consent validity period is how long access lasts once granted, set by the patient as they grant, and it is not the date range, which says which records are in scope by when the care happened."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.concept.consent-artefact"
+  ],
+  "expected_shape": "define",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-hiecm-consent-management-data-flow-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "Group B, a bare topic noun phrase: it catches a definition that conflates the validity period with the date range, or presents a granted artefact as permanent. Source lines: catalogue/hiecm/concepts/consent-artefact.md summary, 'Reading somebody else's records needs a consent artefact naming who, what and for how long, and the patient can end it at any time.'; 'A granted request returns at least one artefact id, and a fetch under it is accepted while the artefact is within its validity period and not revoked.'; 'The **consent validity period** is how long access lasts once granted, set by the patient as they grant'; 'Neither is the **date range**, which says which records are in scope by when the care happened'."
+}

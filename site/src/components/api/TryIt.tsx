@@ -38,6 +38,7 @@ import {
   writeCarried,
   writeToken,
 } from './session';
+import {uhiAuthorization} from './uhi-sign';
 import {carriedValues, fillFrom} from './carry';
 
 // The V3 public certificate lives at this path under the M1 server. It is the
@@ -73,7 +74,7 @@ type Result =
   | {state: 'idle'}
   | {state: 'sending'}
   | {state: 'done'; status: number; statusText: string; body: string; ms: number}
-  | {state: 'failed'; message: string};
+  | {state: 'failed'; message: string; local?: boolean};
 
 /** One collapsible band in the left column. */
 function Group({
@@ -223,6 +224,20 @@ function Row({
  */
 export default function TryIt({operation}: {operation: Operation}) {
   const [server, setServer] = useState(operation.servers[0]?.url ?? '');
+
+  // UHI: every call is signed with the sender's Ed25519 key over the exact
+  // body (uhi-sign.ts). The key is held in this component's memory only:
+  // never stored, never sent, gone when the page closes. Only the signature
+  // it makes leaves the browser.
+  const isUhi = operation.gateway === 'uhi';
+  const [signer, setSigner] = useState({subscriberId: '', keyId: '', privateKey: ''});
+  const signing = isUhi && signer.privateKey.trim() !== '';
+  // A peer-to-peer call is served from the other side's consumer_uri or
+  // provider_uri, which the specification can only name, so the reader types it.
+  const [host, setHost] = useState('');
+  const placeholderHost = isUhi && /<[^>]+>|\{[^}]+\}/.test(server);
+  const target = placeholderHost ? host.trim().replace(/\/+$/, '') : server;
+  const productionGateway = /\/\/uhigateway(beta)?\.abdm\.gov\.in/.test(target);
   // The token is held for the browser session, so running the sessions call
   // once fills this in on every other endpoint's panel.
   const [token, setToken] = useState(readToken);
@@ -474,7 +489,7 @@ export default function TryIt({operation}: {operation: Operation}) {
       if (typed) query.set(param.name, typed);
     }
     const search = query.toString();
-    return `${server}${path}${search ? `?${search}` : ''}`;
+    return `${target}${path}${search ? `?${search}` : ''}`;
   }
 
   /** Every header that will be sent, in the order cURL should print them. */
@@ -482,6 +497,7 @@ export default function TryIt({operation}: {operation: Operation}) {
     const sent: Record<string, string> = {};
     for (const [name, value] of Object.entries(headers)) if (value) sent[name] = value;
     if (hasAuth && token) sent[authHeader] = authValue(token);
+    if (signing) sent.Authorization = '<signed when you send>';
     if (hasBody && bodyText()) sent['Content-Type'] = 'application/json';
     return sent;
   }
@@ -496,7 +512,7 @@ export default function TryIt({operation}: {operation: Operation}) {
         headers: outgoingHeaders(),
         body: hasBody ? bodyText() : undefined,
       }),
-    [server, pathValues, queryValues, headers, token, mode, values, raw],
+    [server, target, pathValues, queryValues, headers, token, mode, values, raw, signing],
   );
 
   /**
@@ -586,6 +602,22 @@ export default function TryIt({operation}: {operation: Operation}) {
       if (hasAuth && token) sent[authHeader] = authValue(token);
       const payload = await outgoingBody();
       if (hasBody && payload) sent['Content-Type'] = 'application/json';
+      if (placeholderHost && !target) {
+        throw Object.assign(new Error('Enter the host this call goes to: the consumer_uri or provider_uri of the other side'), {local: true});
+      }
+      if (signing) {
+        if (productionGateway) {
+          throw Object.assign(
+            new Error('Signing in the browser is off for the production and beta Gateways. Sign on your server, or pick the sandbox'),
+            {local: true},
+          );
+        }
+        // Signed over the exact bytes about to go out, at the moment of
+        // sending: the header expires ten seconds after it is made.
+        const authorization = uhiAuthorization({body: payload, ...signer});
+        sent.Authorization = authorization;
+        setHeaders((current) => ({...current, Authorization: authorization}));
+      }
 
       const response = await fetch(requestUrl(), {
         method: operation.method,
@@ -627,6 +659,8 @@ export default function TryIt({operation}: {operation: Operation}) {
         state: 'failed',
         message:
           error instanceof Error ? error.message : 'The request did not complete.',
+        // Stopped here, before anything was sent: not a blocked request.
+        local: Boolean((error as {local?: boolean})?.local),
       });
       setTab('live');
     }
@@ -860,6 +894,58 @@ export default function TryIt({operation}: {operation: Operation}) {
                   }
                 />
               ))}
+            </Group>
+          ) : null}
+
+          {placeholderHost ? (
+            <Group title="Host" count={1}>
+              <Row
+                id={`try-${operation.id}-host`}
+                field={{
+                  name: 'host',
+                  type: 'url',
+                  required: true,
+                  description:
+                    "The other side's consumer_uri or provider_uri, from context in the request it sent you.",
+                }}
+                value={host}
+                placeholder={server}
+                onChange={setHost}
+              />
+            </Group>
+          ) : null}
+
+          {isUhi ? (
+            <Group title="Sign in this browser" count={undefined} open>
+              <Note
+                id={`try-${operation.id}-sign-note`}
+                short="Your key signs here and goes nowhere."
+                full="Fill all three and the request is signed over its exact body when you send it, with a header that expires ten seconds later. The key stays in this page's memory: it is never stored or sent, and it is gone when you leave. Use a sandbox key. Leave these empty to send the Authorization header you paste above."
+              />
+              <Row
+                id={`try-${operation.id}-sign-subscriber`}
+                field={{name: 'subscriber_id', type: 'string', required: true, description: 'Your subscriber ID on the network.'}}
+                value={signer.subscriberId}
+                onChange={(next) => setSigner((current) => ({...current, subscriberId: next}))}
+              />
+              <Row
+                id={`try-${operation.id}-sign-key-id`}
+                field={{name: 'pub_key_id', type: 'string', required: true, description: 'The key ID you registered with your public key.'}}
+                value={signer.keyId}
+                onChange={(next) => setSigner((current) => ({...current, keyId: next}))}
+              />
+              <Row
+                id={`try-${operation.id}-sign-key`}
+                field={{
+                  name: 'private_key',
+                  type: 'base64',
+                  required: true,
+                  description: 'The Ed25519 private key the Header Generation Utility gave you.',
+                }}
+                masked
+                value={signer.privateKey}
+                onChange={(next) => setSigner((current) => ({...current, privateKey: next}))}
+              />
             </Group>
           ) : null}
 
@@ -1155,6 +1241,13 @@ export default function TryIt({operation}: {operation: Operation}) {
                     ) : null}
                   </p>
 
+                  {isUhi && result.state === 'done' && result.status < 300 ? (
+                    <p className="api-console__meaning">
+                      This is the receipt. The answer arrives later as a callback at the
+                      consumer_uri in the request, matched by its transaction_id.
+                    </p>
+                  ) : null}
+
                   {result.state === 'done' ? (
                     <>
                       {result.status === 403 && !result.body.trim() ? (
@@ -1183,10 +1276,9 @@ export default function TryIt({operation}: {operation: Operation}) {
 
                   {result.state === 'failed' ? (
                     <p className="api-console__failed">
-                      {result.message}. A request that never reaches the server
-                      usually means the browser blocked it: the ABDM hosts do not
-                      send the cross origin headers a browser needs. Copy the cURL
-                      above and run it from your terminal instead.
+                      {result.local
+                        ? `${result.message}.`
+                        : `${result.message}. A request that never reaches the server usually means the browser blocked it: the ABDM hosts do not send the cross origin headers a browser needs. Copy the cURL above and run it from your terminal instead.`}
                     </p>
                   ) : null}
                 </>

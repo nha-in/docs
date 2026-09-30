@@ -10,8 +10,8 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {join} from 'node:path';
-import {entriesFor} from './lib/changelog-rules.mjs';
-import {normalisePath, operationKey} from './lib/changelog-facts.mjs';
+import {entriesFor, republish} from './lib/changelog-rules.mjs';
+import {normalisePath, operationKey, sourceKey} from './lib/changelog-facts.mjs';
 import {render, headingFor, slug} from './lib/changelog-render.mjs';
 
 const fixture = (name) =>
@@ -146,4 +146,11 @@ test('every template renders as the writing guide asks', () => {
     assert.ok(!/undefined|null|\[object/.test(heading + body), `${e.kind}: ${body}`);
   }
   assert.ok(seen.size >= 8, [...seen].join(','));
+});
+
+test('a source that only moved folders is not a republish', () => {
+  const prev = {sources: {'catalogue/openapi/.raw/nha-2026-09-16/a.yaml': {hash: 'h', fetched: '2026-09-16'}}};
+  const next = {sources: {'catalogue/hiecm/openapi/.raw/nha-2026-09-16/a.yaml': {hash: 'h', fetched: '2026-09-16'}}};
+  assert.equal(republish(prev, next, {'hiecm-m1': prev}), null);
+  assert.equal(sourceKey('catalogue/hiecm/openapi/.raw/nha-2026-09-16/a.yaml'), 'nha-2026-09-16/a.yaml');
 });

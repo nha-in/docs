@@ -1,0 +1,23 @@
+## Create a session and get an access token {/* #gateway-sessions */}
+
+Every call to [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) carries an access token, and this call issues it. Send the `clientId` and `clientSecret` issued to you at registration, with `grantType` set to `client_credentials`. It is the one gateway call that needs no bearer token.
+
+The response carries `accessToken`, its lifetime in `expiresIn`, and a `refreshToken`. Read the lifetime from the response rather than assuming one. Create a new session before the token runs out, instead of waiting for a 401.
+
+<AgentOnly>
+**Before you start.** The client id and client secret for the environment you are calling. Send `REQUEST-ID`, `TIMESTAMP` and `X-CM-ID` on this call too.
+
+**How you know it worked.** A 202 whose body carries `accessToken` and `expiresIn`. Send the token as `Authorization: Bearer <gateway token>` on every later call.
+
+**When it goes wrong.** A 401 with `900901` means the client id or secret is wrong for this environment. A 400 with `ABDM-1015` means the body was refused: check that `grantType` is `client_credentials`.
+</AgentOnly>
+
+## Auth token API {/* #m1-auth-token */}
+
+A [PHR](/docs/hiecm/v3/getting-started/glossary#phr) app gets its access token from the same session call as every other integrator. Send your `clientId` and `clientSecret` with `grantType` set to `client_credentials`. Send the `accessToken` that comes back as the bearer token on every [ABHA](/docs/hiecm/v3/getting-started/glossary#abha) call the app makes.
+
+<AgentOnly>
+**What happens.** The path is `/api/hiecm/gateway/v3/sessions`, plural. The response carries the token and its lifetime in `expiresIn`.
+
+**When it goes wrong.** A 401 with `900901` means the client id or secret is wrong for this environment.
+</AgentOnly>

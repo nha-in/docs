@@ -40,8 +40,11 @@ type Case struct {
 	// Command and Module are the command pill the reader had on and the
 	// module they chose when asked, as the panel sends them. Empty for a
 	// case asked with no command, which is every case written before them.
-	Command           string   `json:"command,omitempty"`
-	Module            string   `json:"module,omitempty"`
+	Command string `json:"command,omitempty"`
+	Module  string `json:"module,omitempty"`
+	// Gateway is the gateway of the page the question is asked from, as the
+	// panel sends it: hiecm, nhcx or uhi, or empty for a page outside any.
+	Gateway           string   `json:"gateway,omitempty"`
 	MustContain       []string `json:"must_contain"`
 	MustNotContain    []string `json:"must_not_contain"`
 	ExpectedSources   []string `json:"expected_sources"`
@@ -55,9 +58,9 @@ type Case struct {
 
 var (
 	slices = set("faq-verbatim", "faq-rephrased", "define", "diagnose", "decline", "conversation",
-		"naive", "confusable", "followup", "abstain")
+		"naive", "confusable", "followup", "abstain", "terse", "injection", "nudge", "meta")
 	classes    = set("define", "how-do-i", "diagnose", "compare", "meta", "out-of-scope", "unclear")
-	shapes     = set("define", "how-do-i", "diagnose", "compare", "meta", "decline")
+	shapes     = set("define", "how-do-i", "diagnose", "compare", "meta", "decline", "topic")
 	behaviours = set("answer", "decline")
 )
 

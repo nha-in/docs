@@ -1,0 +1,372 @@
+{
+  "case_id": "faq-verbatim-sandbox-general-02",
+  "catalogue_version": "2026.09.16",
+  "model_id": "claude-haiku-4-5-20251001",
+  "temperature": 0,
+  "prompt_version": "mcp-agent-v1",
+  "embed_provider": "none",
+  "db_path": "/var/folders/3w/t6b79ggs28b2njqdh7s8lz_m0000gp/T/abdm-mcp-agent-mZxkfX/catalogue.db",
+  "calls": [
+    {
+      "system": "",
+      "messages": [
+        {
+          "Role": "user",
+          "Text": "What is Patient App?"
+        }
+      ],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01LDQpiR6Z2LvtQZTwNbzhTF",
+            "Name": "search",
+            "Input": {
+              "query": "Patient App",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "Patient App",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#phr",
+                "id": "shared.glossary.phr",
+                "summary": "The application a patient uses to see consent requests and to approve, deny or revoke them.",
+                "title": "PHR, personal health record application",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hrp",
+                "id": "hiecm.glossary.hrp",
+                "summary": "Whoever holds the records. It describes custody, which is why it is neither a position nor a direction.",
+                "title": "HRP, health repository provider",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.decision.role-model-two-axes",
+                "summary": "HIP, HIU, HRP and the health locker read as one list of four roles. This catalogue separates the entity that holds the role from what that entity is doing, b...",
+                "title": "Roles belong to the entity, and split into two axes, position and direction",
+                "type": "decision"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/p1#p1-login",
+                "id": "hiecm.flow.p1-login",
+                "summary": "Sign a person in to a personal health record app by any of the mandatory routes, and hold the session afterwards.",
+                "title": "Sign a user in to a PHR application",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/consent#consent-in-a-phr-app",
+                "id": "hiecm.concept.consent-in-a-phr-app",
+                "summary": "A personal health record app must let a person see a consent request, change it, allow or refuse it, see what is allowed, and take it back.",
+                "title": "The five things a personal health record application must let a person do with consent",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#discovery",
+                "id": "hiecm.glossary.discovery",
+                "summary": "The step where a patient's app asks a facility whether it holds records for that patient.",
+                "title": "Discovery, finding whether a facility holds records",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/how-it-fits#roles",
+                "id": "hiecm.concept.roles",
+                "summary": "Your role, IMS or PHR, is fixed by the entity your software acts for, while HIP and HIU change with the direction each record moves.",
+                "title": "Roles, which entity your software acts for and which way the record moves",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#emr",
+                "id": "hiecm.glossary.emr",
+                "summary": "The system a hospital or clinic records consultations, prescriptions and results in. A facility uses it both to publish its own records and to fetch a patien...",
+                "title": "EMR, the clinical system a provider runs, also written EHR",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/01-p4-post-subscription-requests-v3-setup-locker#p3-setup-locker",
+                "id": "hiecm.endpoint.p3-setup-locker",
+                "summary": "Set up a health locker for the logged-in person.",
+                "title": "Set up a health locker",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/glossary#eua",
+                "id": "uhi.glossary.eua",
+                "summary": "In UHI, the consumer facing side: the app a patient uses to search for a service and book it.",
+                "title": "EUA, end user application",
+                "type": "glossary"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_0152q1vHU8xvDUtm3nHafDu9",
+            "Name": "search",
+            "Input": {
+              "query": "Patient App consumer application",
+              "kind": "atom",
+              "limit": 10
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "Patient App consumer application",
+            "kind": "atom",
+            "limit": 10
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/p1#p1-login",
+                "id": "hiecm.flow.p1-login",
+                "summary": "Sign a person in to a personal health record app by any of the mandatory routes, and hold the session afterwards.",
+                "title": "Sign a user in to a PHR application",
+                "type": "flow"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/consent#consent-in-a-phr-app",
+                "id": "hiecm.concept.consent-in-a-phr-app",
+                "summary": "A personal health record app must let a person see a consent request, change it, allow or refuse it, see what is allowed, and take it back.",
+                "title": "The five things a personal health record application must let a person do with consent",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/01-p4-post-subscription-requests-v3-setup-locker#p3-setup-locker",
+                "id": "hiecm.endpoint.p3-setup-locker",
+                "summary": "Set up a health locker for the logged-in person.",
+                "title": "Set up a health locker",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/03-p4-get-subscription-requests-v3-patients-lockers-lockerid#p3-patient-locker-details-by-locker-id",
+                "id": "hiecm.endpoint.p3-patient-locker-details-by-locker-id",
+                "summary": "Fetch one health locker's settings for the logged-in person.",
+                "title": "Get a health locker by its id",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "",
+                "id": "shared.decision.role-model-two-axes",
+                "summary": "HIP, HIU, HRP and the health locker read as one list of four roles. This catalogue separates the entity that holds the role from what that entity is doing, b...",
+                "title": "Roles belong to the entity, and split into two axes, position and direction",
+                "type": "decision"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/01-p3-post-subscription-requests-v3-init#p3-subscription-init",
+                "id": "hiecm.endpoint.p3-subscription-init",
+                "summary": "Ask for a subscription that tells your system when a person's records change, without polling.",
+                "title": "Request a subscription to a person's records",
+                "type": "endpoint"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/concepts/how-it-fits#roles",
+                "id": "hiecm.concept.roles",
+                "summary": "Your role, IMS or PHR, is fixed by the entity your software acts for, while HIP and HIU change with the direction each record moves.",
+                "title": "Roles, which entity your software acts for and which way the record moves",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#phr",
+                "id": "shared.glossary.phr",
+                "summary": "The application a patient uses to see consent requests and to approve, deny or revoke them.",
+                "title": "PHR, personal health record application",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/milestones/p3#phr-subscriptions",
+                "id": "hiecm.concept.phr-subscriptions",
+                "summary": "A subscription tells a personal health record app when a record is linked to a person's address, and the person must agree to it first.",
+                "title": "Subscriptions, and why a personal health record application needs one",
+                "type": "concept"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hrp",
+                "id": "hiecm.glossary.hrp",
+                "summary": "Whoever holds the records. It describes custody, which is why it is neither a position nor a direction.",
+                "title": "HRP, health repository provider",
+                "type": "glossary"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [
+          {
+            "ID": "toolu_01LfrmvMR7pPCWxmtvE2ZR5F",
+            "Name": "search",
+            "Input": {
+              "query": "Patient App",
+              "type": "glossary"
+            }
+          }
+        ],
+        "StopReason": "tool_use"
+      },
+      "tool_results": [
+        {
+          "name": "search",
+          "input": {
+            "query": "Patient App",
+            "type": "glossary"
+          },
+          "output": {
+            "catalogue_version": "2026.09.16",
+            "hits": [
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#phr",
+                "id": "shared.glossary.phr",
+                "summary": "The application a patient uses to see consent requests and to approve, deny or revoke them.",
+                "title": "PHR, personal health record application",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#hrp",
+                "id": "hiecm.glossary.hrp",
+                "summary": "Whoever holds the records. It describes custody, which is why it is neither a position nor a direction.",
+                "title": "HRP, health repository provider",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#discovery",
+                "id": "hiecm.glossary.discovery",
+                "summary": "The step where a patient's app asks a facility whether it holds records for that patient.",
+                "title": "Discovery, finding whether a facility holds records",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/hiecm/v3/getting-started/glossary#emr",
+                "id": "hiecm.glossary.emr",
+                "summary": "The system a hospital or clinic records consultations, prescriptions and results in. A facility uses it both to publish its own records and to fetch a patien...",
+                "title": "EMR, the clinical system a provider runs, also written EHR",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/uhi/v1/getting-started/glossary#eua",
+                "id": "uhi.glossary.eua",
+                "summary": "In UHI, the consumer facing side: the app a patient uses to search for a service and book it.",
+                "title": "EUA, end user application",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "",
+                "id": "nhcx.glossary.rd-service",
+                "summary": "The Aadhaar software that runs a biometric capture.",
+                "title": "RD service, registered device service",
+                "type": "glossary"
+              },
+              {
+                "doc_url": "/docs/nhcx/v1/reference/fhir/codes-and-value-sets#supporting-info-categories",
+                "id": "shared.glossary.dsc",
+                "summary": "The company that builds ABDM compliant software for patients or health facilities. It is the entity that certifies, as distinct from the software that integr...",
+                "title": "DSC, Digital Solution Company",
+                "type": "glossary"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    },
+    {
+      "system": "",
+      "messages": [],
+      "reply": {
+        "Text": "The ABDM documentation doesn't have a specific definition for \"Patient App\" as a standalone term. However, it refers to patient-facing applications:\n\n1. **PHR (Personal Health Record application)** — The application a patient uses to see consent requests and approve, deny, or revoke them. This is the main patient-facing app in HIE-CM for managing health record access and consent.\n\n2. **EUA (End User Application)** — In UHI, this is the app a patient uses to search for a service and book it (e.g., appointments).\n\nIf you're referring to a specific application or need clarification on which patient-facing app you should integrate with, let me know the context (HIE-CM consent management, UHI service booking, etc.) and I can point you to the relevant documentation.",
+        "ToolCalls": [],
+        "StopReason": "end_turn"
+      },
+      "tool_results": []
+    }
+  ],
+  "answer": "The ABDM documentation doesn't have a specific definition for \"Patient App\" as a standalone term. However, it refers to patient-facing applications:\n\n1. **PHR (Personal Health Record application)** — The application a patient uses to see consent requests and approve, deny, or revoke them. This is the main patient-facing app in HIE-CM for managing health record access and consent.\n\n2. **EUA (End User Application)** — In UHI, this is the app a patient uses to search for a service and book it (e.g., appointments).\n\nIf you're referring to a specific application or need clarification on which patient-facing app you should integrate with, let me know the context (HIE-CM consent management, UHI service booking, etc.) and I can point you to the relevant documentation.",
+  "sources": [],
+  "corpus": "{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#phr\",\"id\":\"shared.glossary.phr\",\"summary\":\"The application a patient uses to see consent requests and to approve, deny or revoke them.\",\"title\":\"PHR, personal health record application\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hrp\",\"id\":\"hiecm.glossary.hrp\",\"summary\":\"Whoever holds the records. It describes custody, which is why it is neither a position nor a direction.\",\"title\":\"HRP, health repository provider\",\"type\":\"glossary\"},{\"doc_url\":\"\",\"id\":\"shared.decision.role-model-two-axes\",\"summary\":\"HIP, HIU, HRP and the health locker read as one list of four roles. This catalogue separates the entity that holds the role from what that entity is doing, b...\",\"title\":\"Roles belong to the entity, and split into two axes, position and direction\",\"type\":\"decision\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/p1#p1-login\",\"id\":\"hiecm.flow.p1-login\",\"summary\":\"Sign a person in to a personal health record app by any of the mandatory routes, and hold the session afterwards.\",\"title\":\"Sign a user in to a PHR application\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/consent#consent-in-a-phr-app\",\"id\":\"hiecm.concept.consent-in-a-phr-app\",\"summary\":\"A personal health record app must let a person see a consent request, change it, allow or refuse it, see what is allowed, and take it back.\",\"title\":\"The five things a personal health record application must let a person do with consent\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#discovery\",\"id\":\"hiecm.glossary.discovery\",\"summary\":\"The step where a patient's app asks a facility whether it holds records for that patient.\",\"title\":\"Discovery, finding whether a facility holds records\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/how-it-fits#roles\",\"id\":\"hiecm.concept.roles\",\"summary\":\"Your role, IMS or PHR, is fixed by the entity your software acts for, while HIP and HIU change with the direction each record moves.\",\"title\":\"Roles, which entity your software acts for and which way the record moves\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#emr\",\"id\":\"hiecm.glossary.emr\",\"summary\":\"The system a hospital or clinic records consultations, prescriptions and results in. A facility uses it both to publish its own records and to fetch a patien...\",\"title\":\"EMR, the clinical system a provider runs, also written EHR\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-locker/01-p4-post-subscription-requests-v3-setup-locker#p3-setup-locker\",\"id\":\"hiecm.endpoint.p3-setup-locker\",\"summary\":\"Set up a health locker for the logged-in person.\",\"title\":\"Set up a health locker\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/glossary#eua\",\"id\":\"uhi.glossary.eua\",\"summary\":\"In UHI, the consumer facing side: the app a patient uses to search for a service and book it.\",\"title\":\"EUA, end user application\",\"type\":\"glossary\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/milestones/p1#p1-login\",\"id\":\"hiecm.flow.p1-login\",\"summary\":\"Sign a person in to a personal health record app by any of the mandatory routes, and hold the session afterwards.\",\"title\":\"Sign a user in to a PHR application\",\"type\":\"flow\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/consent#consent-in-a-phr-app\",\"id\":\"hiecm.concept.consent-in-a-phr-app\",\"summary\":\"A personal health record app must let a person see a consent request, change it, allow or refuse it, see what is allowed, and take it back.\",\"title\":\"The five things a personal health record application must let a person do with consent\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-locker/01-p4-post-subscription-requests-v3-setup-locker#p3-setup-locker\",\"id\":\"hiecm.endpoint.p3-setup-locker\",\"summary\":\"Set up a health locker for the logged-in person.\",\"title\":\"Set up a health locker\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/api/p4/endpoints/p4-locker/03-p4-get-subscription-requests-v3-patients-lockers-lockerid#p3-patient-locker-details-by-locker-id\",\"id\":\"hiecm.endpoint.p3-patient-locker-details-by-locker-id\",\"summary\":\"Fetch one health locker's settings for the logged-in person.\",\"title\":\"Get a health locker by its id\",\"type\":\"endpoint\"},{\"doc_url\":\"\",\"id\":\"shared.decision.role-model-two-axes\",\"summary\":\"HIP, HIU, HRP and the health locker read as one list of four roles. This catalogue separates the entity that holds the role from what that entity is doing, b...\",\"title\":\"Roles belong to the entity, and split into two axes, position and direction\",\"type\":\"decision\"},{\"doc_url\":\"/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/01-p3-post-subscription-requests-v3-init#p3-subscription-init\",\"id\":\"hiecm.endpoint.p3-subscription-init\",\"summary\":\"Ask for a subscription that tells your system when a person's records change, without polling.\",\"title\":\"Request a subscription to a person's records\",\"type\":\"endpoint\"},{\"doc_url\":\"/docs/hiecm/v3/concepts/how-it-fits#roles\",\"id\":\"hiecm.concept.roles\",\"summary\":\"Your role, IMS or PHR, is fixed by the entity your software acts for, while HIP and HIU change with the direction each record moves.\",\"title\":\"Roles, which entity your software acts for and which way the record moves\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#phr\",\"id\":\"shared.glossary.phr\",\"summary\":\"The application a patient uses to see consent requests and to approve, deny or revoke them.\",\"title\":\"PHR, personal health record application\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/milestones/p3#phr-subscriptions\",\"id\":\"hiecm.concept.phr-subscriptions\",\"summary\":\"A subscription tells a personal health record app when a record is linked to a person's address, and the person must agree to it first.\",\"title\":\"Subscriptions, and why a personal health record application needs one\",\"type\":\"concept\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hrp\",\"id\":\"hiecm.glossary.hrp\",\"summary\":\"Whoever holds the records. It describes custody, which is why it is neither a position nor a direction.\",\"title\":\"HRP, health repository provider\",\"type\":\"glossary\"}]}\n{\"catalogue_version\":\"2026.09.16\",\"hits\":[{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#phr\",\"id\":\"shared.glossary.phr\",\"summary\":\"The application a patient uses to see consent requests and to approve, deny or revoke them.\",\"title\":\"PHR, personal health record application\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#hrp\",\"id\":\"hiecm.glossary.hrp\",\"summary\":\"Whoever holds the records. It describes custody, which is why it is neither a position nor a direction.\",\"title\":\"HRP, health repository provider\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#discovery\",\"id\":\"hiecm.glossary.discovery\",\"summary\":\"The step where a patient's app asks a facility whether it holds records for that patient.\",\"title\":\"Discovery, finding whether a facility holds records\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/hiecm/v3/getting-started/glossary#emr\",\"id\":\"hiecm.glossary.emr\",\"summary\":\"The system a hospital or clinic records consultations, prescriptions and results in. A facility uses it both to publish its own records and to fetch a patien...\",\"title\":\"EMR, the clinical system a provider runs, also written EHR\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/uhi/v1/getting-started/glossary#eua\",\"id\":\"uhi.glossary.eua\",\"summary\":\"In UHI, the consumer facing side: the app a patient uses to search for a service and book it.\",\"title\":\"EUA, end user application\",\"type\":\"glossary\"},{\"doc_url\":\"\",\"id\":\"nhcx.glossary.rd-service\",\"summary\":\"The Aadhaar software that runs a biometric capture.\",\"title\":\"RD service, registered device service\",\"type\":\"glossary\"},{\"doc_url\":\"/docs/nhcx/v1/reference/fhir/codes-and-value-sets#supporting-info-categories\",\"id\":\"shared.glossary.dsc\",\"summary\":\"The company that builds ABDM compliant software for patients or health facilities. It is the entity that certifies, as distinct from the software that integr...\",\"title\":\"DSC, Digital Solution Company\",\"type\":\"glossary\"}]}",
+  "blocked": false,
+  "flags": [],
+  "class": "agent",
+  "surface": "mcp-agent",
+  "recorded_at": "2026-09-29T12:04:16.565Z",
+  "usage": {
+    "input_tokens": 40,
+    "output_tokens": 1015,
+    "cache_read_input_tokens": 42665,
+    "cache_creation_input_tokens": 8767,
+    "num_turns": 4,
+    "duration_ms": 14604,
+    "cost_usd_equivalent": 0.026915500000000002
+  }
+}
