@@ -47,6 +47,24 @@ func (l *Limiter) evictStale(at time.Time) {
 }
 
 func (l *Limiter) Allow(ip string, at time.Time) bool {
+	return l.Deny(ip, at).Limit == ""
+}
+
+// Denial says why a request was refused: Limit is "minute" or "day", and
+// RetryAfter is how long until that window opens again. A zero Denial is an
+// allowed request.
+type Denial struct {
+	Limit      string
+	RetryAfter time.Duration
+	// Cap is the limit's size, for a message that can name it.
+	Cap int
+}
+
+// Deny counts one request against ip's minute and day windows and returns
+// why it was refused, or a zero Denial when it was allowed. The panel shows
+// the reader which limit and how long to wait; before it could, every
+// refusal reached them as "The assistant is unreachable".
+func (l *Limiter) Deny(ip string, at time.Time) Denial {
 	l.mu.Lock()
 	defer l.mu.Unlock()
 	l.evictStale(at)
@@ -61,10 +79,15 @@ func (l *Limiter) Allow(ip string, at time.Time) bool {
 	if d := at.UTC().Format("2006-01-02"); d != b.day {
 		b.day, b.dayCount = d, 0
 	}
-	if b.minuteCount >= l.perMin || b.dayCount >= l.perDay {
-		return false
+	if b.dayCount >= l.perDay {
+		y, m, d := at.UTC().Date()
+		midnight := time.Date(y, m, d+1, 0, 0, 0, 0, time.UTC)
+		return Denial{Limit: "day", RetryAfter: midnight.Sub(at), Cap: l.perDay}
+	}
+	if b.minuteCount >= l.perMin {
+		return Denial{Limit: "minute", RetryAfter: b.minuteStart.Add(time.Minute).Sub(at), Cap: l.perMin}
 	}
 	b.minuteCount++
 	b.dayCount++
-	return true
+	return Denial{}
 }

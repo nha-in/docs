@@ -101,8 +101,19 @@ func Handler(r *index.Reader, emb embed.Embedder, allowOrigin string, chatSvc *c
 			writeJSON(w, 405, map[string]string{"error": "POST only"})
 			return
 		}
-		if !limiter.Allow(clientIP(req, trustedHops), time.Now()) {
-			writeJSON(w, 429, map[string]string{"error": "rate limit reached, try again in a minute"})
+		if d := limiter.Deny(clientIP(req, trustedHops), time.Now()); d.Limit != "" {
+			// The panel reads limit and retry_after_seconds to tell the reader
+			// what happened; any other client gets the standard header.
+			secs := int(d.RetryAfter.Seconds() + 0.999)
+			if secs < 1 {
+				secs = 1
+			}
+			msg := fmt.Sprintf("rate limit reached: %d questions a minute; try again in %d seconds", d.Cap, secs)
+			if d.Limit == "day" {
+				msg = fmt.Sprintf("rate limit reached: %d questions a day; it resets at midnight UTC", d.Cap)
+			}
+			w.Header().Set("Retry-After", strconv.Itoa(secs))
+			writeJSON(w, 429, map[string]any{"error": msg, "limit": d.Limit, "retry_after_seconds": secs})
 			return
 		}
 		var in struct {
