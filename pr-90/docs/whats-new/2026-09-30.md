@@ -1,6 +1,6 @@
 # 30 September 2026
 
-2 changes
+3 changes
 
 ### One Participant registry call withdrawn
 
@@ -9,3 +9,7 @@
 ### The uhi-integrators-assistant plugin is 0.1.1
 
 Reinstall to move from 0.1.0. [Build with AI](/docs/pr-90/docs/hiecm/v3/getting-started/build-with-ai).
+
+### The nhcx plugin is 1.0.3
+
+Reinstall to move from 1.0.2. [Build with AI](/docs/pr-90/docs/hiecm/v3/getting-started/build-with-ai).

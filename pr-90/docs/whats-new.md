@@ -4,10 +4,11 @@ Changes that affect what you can build against, newest first. Each entry links t
 
 ## 30 September 2026
 
-2 changes
+3 changes
 
 - [One Participant registry call withdrawn](/docs/pr-90/docs/whats-new/2026-09-30#one-participant-registry-call-withdrawn)
 - [The uhi-integrators-assistant plugin is 0.1.1](/docs/pr-90/docs/whats-new/2026-09-30#the-uhi-integrators-assistant-plugin-is-011)
+- [The nhcx plugin is 1.0.3](/docs/pr-90/docs/whats-new/2026-09-30#the-nhcx-plugin-is-103)
 
 ## 29 September 2026
 
