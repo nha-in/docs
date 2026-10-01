@@ -63,10 +63,10 @@ A Laboratory Information Management System (LIMS), also referred to in some cont
 
 ### Link token {/* #link-token */}
 
-The token that authorises a [Health Information Provider](#hip) to link [care contexts](#care-context) to a patient's [ABHA Address](#abha-address). It is generated through the link token API and is valid for six months.
+The token that authorises a [Health Information Provider](#hip) to link [care contexts](#care-context) to a patient's [ABHA Address](#abha-address).
 
 <AgentOnly>
-**How you know it worked.** You can say how long a link token lasts and what to do when it has expired.
+**How you know it worked.** You can say what a link token authorises and what to do when it has expired.
 
 **When it goes wrong.** A stored link token is used without checking that it is still valid. Validate it before every link. If it has expired, generate a new one through demographic authentication, then link.
 </AgentOnly>

@@ -1,4 +1,4 @@
-/* "Who are you?" on the Get started page: four cards that set the reader's
+/* "Select your role" on the Get started page: three cards that set the reader's
    role, and the journey that follows from it. Same hairline and radius as the
    MDX cards, so the block reads as part of the page rather than a widget. */
 
@@ -17,7 +17,7 @@
 
 .role-selector__choices {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.75rem;
 }
 

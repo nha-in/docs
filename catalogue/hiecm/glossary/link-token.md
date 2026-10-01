@@ -21,11 +21,11 @@ related:
 
 ## In plain words
 
-The token that authorises a [Health Information Provider](/docs/hiecm/v3/getting-started/glossary#hip) to link [care contexts](/docs/hiecm/v3/getting-started/glossary#care-context) to a patient's [ABHA Address](/docs/hiecm/v3/getting-started/glossary#abha-address). It is generated through the link token API and is valid for six months.
+The token that authorises a [Health Information Provider](/docs/hiecm/v3/getting-started/glossary#hip) to link [care contexts](/docs/hiecm/v3/getting-started/glossary#care-context) to a patient's [ABHA Address](/docs/hiecm/v3/getting-started/glossary#abha-address).
 
 ## How you know it worked
 
-You can say how long a link token lasts and what to do when it has expired.
+You can say what a link token authorises and what to do when it has expired.
 
 ## When it goes wrong
 
