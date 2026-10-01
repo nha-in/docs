@@ -28,6 +28,7 @@ Walks the ABDM M1 functional test cases, ABHA creation and verification, against
 - "Walk the M1 test cases against my sandbox and log each one."
 - "Run only the ABHA verification cases, VRFY_ABHA_101 to 405."
 - "Re-run CRT_ABHA_112, the address suggestion case failed yesterday."
+- "Write a terminal script that runs the M1 test cases and asks me for the Aadhaar number and each OTP."
 
 ## What happens first
 
@@ -77,6 +78,34 @@ body: {"message":"Account created successfully","txnId":"...","tokens":{"token":
 matched: exit condition for CRT_ABHA_101, step 2
 next: CRT_ABHA_113
 ```
+
+### When the run is a script
+
+Asked for a test script, a test command or automated tests, build one interactive terminal runner that walks the cases below. It does the typing. Every rule above still holds.
+
+| Rule | Why |
+|---|---|
+| Name every check by its case id from this skill, such as `CRT_ABHA_101`. Never invent a numbering such as `TC01` | The functional testing report quotes these ids. A check with no case id answers nothing a reviewer asks |
+| At each `human` step, stop and prompt in the terminal for the value: Aadhaar number, mobile, OTP, the chosen address. Read it from stdin, encrypt it, send it | Every M1 success path passes through an OTP. A runner that never asks never reaches one |
+| Never write a typed value to disk, a log or the manifest, and never hard code one | An Aadhaar number and an OTP belong to the person, not the run |
+| Run each `sandbox` case's success path and the refusal its exit condition names, as separate checks | The case passes only when both are observed |
+| Compare the status and the body literal the exit condition names, such as `200` with `tokens.token` present, or `422` with `error.code` `ABDM-1204` | A status alone never passes a check |
+| A `4xx` passes only where the case's exit condition names that refusal | A `400` on a success path step is `failed` |
+| A blank answer at a prompt records the case `needs-human` and moves to the next case | Nobody present is neither a pass nor a fail |
+| A `screen` case prints its check, then asks `passed? y/n` and the evidence file name | No call proves a screen, so the case is attested |
+| At the end, print one line per case id with its outcome and request ids, then write the manifest in the last section | The person reads outcomes by case id, not by script step |
+
+A run reads like this. The person's values are typed at the prompts and never echoed back.
+
+```text
+CRT_ABHA_105  POST /v3/enrollment/request/otp  REQUEST-ID 3b9e...  HTTP 200  txnId present  matched
+  Enter the OTP sent to the mobile ending 1234, or leave blank if nobody is here:
+CRT_ABHA_107  wrong OTP  REQUEST-ID 7c02...  HTTP 422  error.code ABDM-1204  matched
+CRT_ABHA_107  right OTP  REQUEST-ID 9a41...  HTTP 200  tokens.token present  matched
+CRT_ABHA_107  passed
+```
+
+Nudge: calls with a bad `scope`, a bad `loginHint` or a made up `txnId` test your client, not a case. Run them first if you want them, label them `preflight`, and keep them out of the case counts.
 
 ## Test cases
 
