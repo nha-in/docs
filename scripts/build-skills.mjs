@@ -1062,31 +1062,31 @@ const abdmSlugs = Object.keys(manifest);
 const NHCX = {
   'nhcx-full': {
     title: 'NHCX, end to end',
-    example: 'Build the whole provider-side NHCX integration into this hospital system',
+    example: 'Build the whole NHCX integration into this system, on whichever side it sits',
   },
   'nhcx-coverage': {
     title: 'NHCX coverage',
-    example: 'Add NHCX policy search and coverage eligibility to this hospital system',
+    example: 'Add NHCX policy search and coverage eligibility to this system',
   },
   'nhcx-preauth': {
     title: 'NHCX pre-authorisation',
-    example: "Add NHCX pre-authorisation, with the payer's plan and its authorisation requirements, to this system",
+    example: 'Add NHCX pre-authorisation, with the insurance plan and its authorisation requirements, to this system',
   },
   'nhcx-claim': {
     title: 'NHCX claim',
-    example: 'File the NHCX claim at discharge from this system',
+    example: 'Add the NHCX claim at discharge, and its adjudication, to this system',
   },
   'nhcx-communication': {
     title: 'NHCX communication',
-    example: "Handle the payer's NHCX queries and notifications in this system",
+    example: 'Add NHCX queries, notifications and their acknowledgements to this system',
   },
   'nhcx-payment': {
     title: 'NHCX payment',
-    example: 'Record and acknowledge NHCX payment notices',
+    example: 'Add NHCX payment notices, sent and acknowledged, to this system',
   },
   'nhcx-reprocess': {
     title: 'NHCX reprocess',
-    example: 'Ask the payer to reprocess a rejected NHCX claim',
+    example: 'Add the NHCX reprocess and shortfall Tasks, asked and answered, to this system',
   },
 };
 
@@ -1399,7 +1399,7 @@ const nhcxPromptLines = [
   '',
   '## 1. Establish scope',
   '',
-  'There is one skill for the whole provider-side integration, `nhcx-full`, and one per NHCX use case. Ask the user which this project builds, and install only those:',
+  'There is one skill for the whole integration, `nhcx-full`, and one per NHCX use case. Each carries both the hospital side and the payer side of its exchanges. Ask the user which this project builds, and install only those:',
   '',
   ...nhcxSlugs.map((slug) => `- \`${slug}\`: ${manifest[slug].title}. ${manifest[slug].example}.`),
   '',

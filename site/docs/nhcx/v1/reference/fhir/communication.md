@@ -192,6 +192,14 @@ A notification carries its reason under the communication-category system, such 
 
 A `Task` coded `deliver`, `completed`, whose `include` input references a `Communication` with `basedOn` naming the request. Same correlation id. Take each organisation's role from `Organization.type`, not from the identifier type.
 
+### The reply
+
+A reply is taken only while the case is pending; a completed case does not reopen from one. A reference payload must resolve to a `Procedure` in the same bundle. `Procedure.identifier` of type `SNO` is the item sequence when the hospital answers line by line, and `Procedure.note` is the item remarks.
+
+### A protocol response-error notice
+
+When a hospital-facing response cannot be built, a Communication whose payload is the error code and description may be sent in place of a silent drop. It is a fallback notice, not an adjudicator query, and it does not replace a coded reject on the original `on_submit`.
+
 ## PMJAY
 
 The generic bundle above is what every payer takes, IRDAI-regulated insurers and TPAs included. PMJAY takes it with the changes and requirements below.

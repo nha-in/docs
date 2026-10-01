@@ -5896,22 +5896,6 @@
     "callbacks": []
   },
   {
-    "key": "get/session",
-    "hosts": [
-      "apisbx.abdm.gov.in",
-      "apisprod.nha.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "registry_get_session",
-    "module": "Participant registry",
-    "moduleDir": "registry",
-    "method": "POST",
-    "path": "/get/session",
-    "summary": "Get session token",
-    "route": "/docs/nhcx/v1/api/registry/endpoints/registry-get-session",
-    "callbacks": []
-  },
-  {
     "key": "participant/delink/policy",
     "hosts": [
       "apisbx.abdm.gov.in",

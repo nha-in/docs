@@ -4,7 +4,7 @@
 One row is the payer's authorisation-requirements ruling on a claim's procedure set; primary key `id`; parent table [D9. claim](D9-claim.md) (one row per claim).
 
 #### D13D. DESCRIPTION
-After the lines are chosen, the procedure set is sent as a coverage eligibility check with purpose `auth-requirements` (A2, answered on C3). The check carries the same items the Claim will. The payer answers per line ([D14. claim_auth_item](D14-claim-auth-item.md)): is authorisation required, is the line excluded, what is allowed. It also names the documents and questionnaires the set needs ([D15. claim_auth_requirement](D15-claim-auth-requirement.md)). A `ready` ruling is the source of the required documents and forms for both legs. Without one, the package master (D10 (in nhcx-preauth)) is used instead.
+After the lines are chosen, the procedure set is sent as a coverage eligibility check with purpose `auth-requirements` (A2, answered on C3). The check carries the same items the Claim will. The payer answers per line ([D14. claim_auth_item](D14-claim-auth-item.md)): is authorisation required, is the line excluded, what is allowed. It also names the documents and questionnaires the set needs ([D15. claim_auth_requirement](D15-claim-auth-requirement.md)). A `ready` ruling is the source of the required documents and forms for both legs. Without one, the package master ([D10](D10-claim-plan.md)) is used instead.
 
 When it is sent:
 - By hand from S8 ("Validate"). This needs `claim.status = 'eligible'` ("Check the policy's eligibility before validating a procedure set against it."). A failed send raises the error.
@@ -58,4 +58,4 @@ Delete: never directly. The row goes with its claim (`ON DELETE CASCADE`) or wit
 - APIs: [A2. Coverage Eligibility Check](../apis/A2-coverage-eligibility-check.md), [A10. Transaction Related](../apis/A10-txn-related.md), [A11. Transaction Dispatch](../apis/A11-txn-dispatch.md), [A13. Transaction List](../apis/A13-txn-list.md), [A17. Claim State](../apis/A17-claim-state.md)
 - Callbacks: [C1. Callback Door](../callbacks/C1-callback-door.md)
 - FHIR: [F3. CoverageEligibilityResponse](../fhir/F3-coverage-eligibility-response.md)
-- Database: [D9. claim](D9-claim.md), [D14. claim_auth_item](D14-claim-auth-item.md), [D15. claim_auth_requirement](D15-claim-auth-requirement.md)
+- Database: [D9. claim](D9-claim.md), [D10. claim_plan](D10-claim-plan.md), [D12. claim_plan_form](D12-claim-plan-form.md), [D14. claim_auth_item](D14-claim-auth-item.md), [D15. claim_auth_requirement](D15-claim-auth-requirement.md)

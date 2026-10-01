@@ -58,3 +58,4 @@ Use:
 - APIs: [A14. Adjudicator User Role](A14-adjudicator-user-role.md), [A15. Adjudicator Process Case](A15-adjudicator-process-case.md)
 - Database: [D1. organization](../database/D1-organization.md)
 - Gateway: [G1. Embedding](../gateway/G1-embedding.md), [G3. Session Token](../gateway/G3-session-token.md)
+- Tests: [T1. Test Configuration](../tests/T1-test-configuration.md)

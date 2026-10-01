@@ -15,7 +15,7 @@ Read from each `authorizationSupporting` entry of every item in the payer's `aut
 Entries are de-duplicated on (`kind`, `code`, `form_url`) across the whole reply.
 
 How it is used, when the ruling is `ready`:
-- Pre-authorisation (S9): the documents with `at_preauth = 1` are required, and the forms with `at_preauth = 1` are looked up in D12 (in nhcx-preauth) by `form_url`.
+- Pre-authorisation (S9): the documents with `at_preauth = 1` are required, and the forms with `at_preauth = 1` are looked up in [D12](D12-claim-plan-form.md) by `form_url`.
 - Claim (S11): the documents with `at_preauth = 0` are required. Forms with `at_preauth = 0` would be asked for too, but every form is written with `at_preauth = 1`, so the claim leg in practice carries the policy-wide forms from the plan.
 - Requirements are listed ordered by `kind, seq`.
 
@@ -43,9 +43,9 @@ Lifecycle:
 - `auth_id` references [D13. claim_auth](D13-claim-auth.md) `id`, `ON DELETE CASCADE`.
 - No unique constraint (de-duplication is done by the parser).
 - Index: `ix_claim_auth_req (auth_id, seq)`.
-- `form_url` names a D12. claim_plan_form (in nhcx-preauth) `url`, and `for_code` a D16. claim_line (in nhcx-preauth) `code` (no foreign keys). Uploaded files are matched to a document requirement by `code` in D28. claim_document (in nhcx-preauth).
+- `form_url` names a [D12. claim_plan_form](D12-claim-plan-form.md) `url`, and `for_code` a D16. claim_line (in nhcx-preauth) `code` (no foreign keys). Uploaded files are matched to a document requirement by `code` in D28. claim_document (in nhcx-preauth).
 
 #### D15U. USED BY
 - APIs: [A2. Coverage Eligibility Check](../apis/A2-coverage-eligibility-check.md), [A17. Claim State](../apis/A17-claim-state.md)
 - FHIR: [F3. CoverageEligibilityResponse](../fhir/F3-coverage-eligibility-response.md)
-- Database: [D13. claim_auth](D13-claim-auth.md)
+- Database: [D12. claim_plan_form](D12-claim-plan-form.md), [D13. claim_auth](D13-claim-auth.md)

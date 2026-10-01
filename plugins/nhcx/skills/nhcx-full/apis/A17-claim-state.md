@@ -55,7 +55,7 @@ Row objects are the stored rows with every column, or `null` when the row does n
 | `preauth` | object or null | The pre-authorisation row. |
 | `preauth_items` | array | The payer's per-item verdict on the pre-authorisation (see below). |
 | `next_send` | object | `preauth` and `claim`: the kind of the next send, or `{"refused": "<reason>"}` when nothing may be sent. Pre-authorisation kinds: `preauth`, `preauth_query_response`, `enhancement`, `enhancement_resubmit`. Claim kinds: `claim`, `claim_query_response`, `claim_resubmit`. |
-| `adapter` | string | The payer adapter's key (for example `pmjay`, `xyz`, `generic`). |
+| `adapter` | string | The payer adapter's key (for example `pmjay`, `kyrocare`, `generic`). |
 | `desk` | string or null | Where the payer's decision is taken: `nhcx-payer-service`, `irdai-payer`, or `null` for none (see A14). |
 | `predeterminations` | array | Quote rows, newest first. |
 | `enhancement_lines` | array | Lines quoted since the pre-authorisation was decided. Empty when nothing was added or nothing is decided yet. |

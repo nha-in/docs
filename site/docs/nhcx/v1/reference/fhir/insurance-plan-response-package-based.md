@@ -187,6 +187,69 @@ NRCeS profile: [InsurancePlan](https://nrces.in/ndhm/fhir/r4/StructureDefinition
 | Family History | 7 | `choice` | `text` |
 | Admission Details | 4 | `dateTime`, `choice` | `text` |
 
+## Building the bundle from the plan master
+
+A payer builds the plan from its own master, through a data transfer object (DTO), rather than generating FHIR by hand. This is how each DTO field lands in the bundle. If the plan is empty, the hospital cannot start cashless, and an empty specialities list means an empty coverage list: the hospital receives a plan with no packages.
+
+### The plan
+
+| DTO field | Required | Where it lands |
+| :-- | :-- | :-- |
+| `providerid` | Yes | The suffix of `InsurancePlan.id`, and the Bundle id |
+| `careplanid` | Yes | `InsurancePlan.id` is `careplanid-providerid` |
+| `careplancode` | Yes | Matches the `productid` already returned on Get policy |
+| `specialitycode`, `speciality` | Yes | `coverage.type.coding.code` and `.display`, for example `BM` and Burns Management |
+| `incentives[]` | Optional | `plan.specificCost` benefit cost type `splinc`, the hospital or speciality incentive |
+| `standaloneyn` | Optional | Written on `plan.specificCost`; omitted if blank |
+| `parentprocedures` | Optional | On `plan.specificCost`, for a combination package |
+
+Do not collapse every package into a single coverage row. Hospital package pickers group by speciality, and mixing codes breaks their search and their speciality-wise empanelment checks.
+
+### Packages, rates and add-ons
+
+| DTO field | Where it lands |
+| :-- | :-- |
+| `procedurecost` | The `Procedure` cost line, and the `limit[]` rate |
+| `stratifications[]`, `stratamount` | One extra `limit[]` per stratification code, and a `Stratification` cost line. A blank or null amount becomes `0`, not `null` |
+| `implants[]`, `implantamount` | An `Implant` cost line per code |
+| `cost[splinc]` | The speciality incentive |
+
+The flags in the DTO have to agree with the lists beside them, or a hospital allows a picker with an empty list or blocks a package the payer meant to allow:
+
+- If `ImplantApplicable` is `Y`, `implants[]` must be present with codes and amounts.
+- If `StratificationAllowed` is `Y`, `stratifications[]` must be present.
+- If `CyclicProcedure` is `Y`, `MaximumCyclesAllowed` must be a number.
+
+For a large catalogue keep JSON numbers as strings where the DTO expects strings: `procedurecost`, `stratamount`, `implantamount`.
+
+### STG questionnaires
+
+A package's clinical checklist is a supporting-information requirement with code `STG`, Standard Treatment Guidelines, whose `documentationUrl` points at a `Questionnaire` in the same bundle. The hospital matcher is case-insensitive on the `STG` code. The pointer follows the pattern `https://payer.gov.in/policy/stgquestionnaire/{questionnaire.identifier}`; a policy questionnaire lives under `/policy/questionnaire/` instead, and the two identifiers are never swapped, because the URLs live in different path prefixes. If the pointer is omitted, the hospital logs "No STG details received" for that package, and clinicians never see the checklist.
+
+| DTO field | Where it lands |
+| :-- | :-- |
+| `name`, `title` | `Questionnaire.name`, `Questionnaire.title` |
+| `questionnaireitem.linkid` | `item.linkId` |
+| `questionnaireitem.required` `Yes` | `item.required` `true` |
+| `questionnaireitem.type` `date` | `item.type` `dateTime` |
+| `questionnaireitem.type` `file` | `item.type` `attachment` |
+| `questionnaireitem.type` `radio` or `select` | `item.type` `choice`, with `answerOption[]` |
+| any other `questionnaireitem.type` | `item.type` `string` |
+| `answeroptions[].value` | `answerOption.valueString` |
+| `answeroptions[].initialselected` `Yes` | `answerOption.initialSelected` `true` |
+| `parentfieldid`, `parentfieldanswer` | `item.enableWhen`: `question` the parent, `operator` `equal`, `answerString` the parent answer; `enableBehavior` `all` |
+
+- Skip an STG questionnaire that has no `questionnaireitem` list. An empty `Questionnaire` in the bundle is worse than omitting it.
+- Questionnaire identifiers are unique across policy forms and STG forms in the same bundle.
+- A package without an STG is a package the hospital can bill without answering the clinical checklist. If the medical policy requires a guideline, it is on this plan.
+- Version the questionnaire identifier when the STG text changes, so cached hospital copies refresh.
+- A claim that fails `PAYR-1030` or `PAYR-1084` for a questionnaire the plan demands is working as designed. Do not drop the questionnaire from the plan to make claims pass.
+
+### Done when
+
+1. `policyNumber` on the Task resolves to exactly one product, and `careplancode` matches Get policy.
+2. A test hospital system can pick a package, see its rate and its document list, and render the STG form without a second download.
+
 ## Rules
 
 ### Two parallel structures

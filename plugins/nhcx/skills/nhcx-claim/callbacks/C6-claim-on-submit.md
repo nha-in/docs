@@ -66,3 +66,4 @@ A reply without `preAuthRef` writes `preauth_ref` empty here (only C5 keeps the 
 - APIs: [A5. Claim Submit](../apis/A5-claim-submit.md), [A10. Transaction Related](../apis/A10-txn-related.md), [A12. Transaction FHIR](../apis/A12-txn-fhir.md), [A17. Claim State](../apis/A17-claim-state.md)
 - Callbacks: [C1. Callback Door](C1-callback-door.md), [C8. Enquiry Reply](C8-enquiry-on-submit.md)
 - Database: [D20. claim_submission](../database/D20-claim-submission.md)
+- Tests: [T10. IRDAI Claim Approved, Part-approved and Rejected](../tests/T10-irdai-claim.md), [T17. PMJAY Claim Through the Role Walk](../tests/T17-pmjay-claim-adjudicated.md)

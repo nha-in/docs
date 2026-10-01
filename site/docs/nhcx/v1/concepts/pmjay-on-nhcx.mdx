@@ -10,11 +10,20 @@ covers:
   - nhcx.flow.pmjay-hospital-migration
 ---
 
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
 # PMJAY on NHCX
 
 Ayushman Bharat Pradhan Mantri Jan Arogya Yojana, known as PMJAY, was launched on 23 September 2018. It is the largest health assurance scheme in the world, providing a health cover of Rs. 5 lakh per family per year for secondary and tertiary care hospitalisation to over 10.74 crore poor and vulnerable families, roughly 50 crore beneficiaries, forming the bottom 40 percent of the population. It is fully funded by government, with the cost of implementation shared between the Centre and the states.
 
+<div className="pmjay-adjudication">
+<div className="pmjay-adjudication__text">
+
 Claim adjudication under PMJAY runs through three integrated systems: the Beneficiary Identification System (BIS), the Transaction Management System (TMS), and the Hospital Empanelment Module (HEM). The key decisions sit in TMS, taken at preauthorisation by the Preauthorisation Processing Doctor (PPD) and at settlement by the Claim Processing Doctor (CPD).
+
+</div>
+<img className="pmjay-adjudication__emblem" src={useBaseUrl('/img/pmjay-emblem.svg')} alt="Ayushman Bharat PM-JAY emblem" width="160" height="160" />
+</div>
 
 The previous chapters described how a claim moves between a Provider and a private insurer over NHCX. This chapter covers what changes when the Payer is PMJAY.
 

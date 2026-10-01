@@ -628,6 +628,8 @@ const config: Config = {
           {from: '/reference/nhcx-predetermination', to: '/docs/nhcx/v1/api/'},
           // The internal registry master call was removed from the registry.
           {from: '/docs/nhcx/v1/api/registry/endpoints/registry-get-linked-registry-mst', to: '/docs/nhcx/v1/api/registry/'},
+          // The participant service's own token call was removed from the registry.
+          {from: '/docs/nhcx/v1/api/registry/endpoints/registry-get-session', to: '/docs/nhcx/v1/getting-started/session-token'},
           // Update ABHA number moved from the registry to the PMJAY payer APIs.
           {from: '/docs/nhcx/v1/api/registry/endpoints/registry-update-abhanumber', to: '/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-update-abhanumber'},
           // Eleven NHCX endpoint pages were renamed so every slug is derived
@@ -719,6 +721,9 @@ const config: Config = {
           mirrorActors: false,
           useMaxWidth: true,
         },
+        // Mermaid 11 reads htmlLabels here, not under flowchart. Left as HTML,
+        // labels sit in boxes sized before the page font applies, and clip.
+        htmlLabels: false,
         flowchart: {htmlLabels: false, curve: 'basis', padding: 16, nodeSpacing: 40, rankSpacing: 44, useMaxWidth: true},
         themeVariables: {sequenceNumberColor: '#ffffff', fontSize: '14px'},
       },

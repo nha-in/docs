@@ -13,7 +13,7 @@ How to build NHCX claims into an existing HMIS (the target system), from first l
 | L7 | [Dry-run Tests](L7-dry-run-tests.md) | code.json, validation.json | test files, `nhcx-plan/dry-run.json` |
 | L8 | [End-to-end Tests](L8-e2e-tests.md) | dry-run.json, sandbox credentials | test files, `nhcx-plan/e2e.json` |
 | all | [Knowledge Source](../references/KNOWLEDGE.md) | nhcx-docs MCP, or the GitHub package | `nhcx-plan/knowledge.json`, `nhcx-plan/knowledge/` |
-| all | [Progress Log](LOG.md) | every step | `nhcx-plan/progress.json`, `nhcx-plan/progress.md` |
+| all | [Progress Log](LOG.md) | every step | `nhcx-plan/progress.json`, `nhcx-plan/progress.md`, and `nhcx-plan/report.html` at the end of every prompt, built by `report.py` (or the target language's equivalent) with `make-report.sh` and `make-report.bat` |
 
 ## Spec ids
 

@@ -257,6 +257,7 @@ export default function SkillInstall({slug, note}: SkillInstallProps): React.Rea
   // The router, for the copy button. The install commands take the whole
   // folder, because the router alone has links to files that are not there.
   const download = useBaseUrl(`/skills/${slug}/SKILL.md`);
+  const archive = useBaseUrl(`/skills/${slug}.tar.gz`);
   const entry = (manifest as Record<string, Entry>)[slug];
 
   if (!entry) return null;
@@ -274,17 +275,32 @@ export default function SkillInstall({slug, note}: SkillInstallProps): React.Rea
           <p className="skill-install__note">{note}</p>
         </div>
         <div className="skill-install__actions">
-          <CopySkillButton url={download} />
-          {/* The router only. Named for what it is, because the folder is
-              what installs and the command above is what fetches it. */}
-          <a
-            className="skill-install__download"
-            href={download}
-            download
-            title="The router. Use the command below to take the references with it.">
-            <Download className="size-4" aria-hidden="true" />
-            SKILL.md
-          </a>
+          {entry.folder ? (
+            // A folder skill is useless as its router alone, so the one
+            // button hands over the whole archive the generator writes.
+            <a
+              className="skill-install__download"
+              href={archive}
+              download
+              title="The whole skill folder, as a .tar.gz archive.">
+              <Download className="size-4" aria-hidden="true" />
+              Download skill
+            </a>
+          ) : (
+            <>
+              <CopySkillButton url={download} />
+              {/* The router only. Named for what it is, because the folder is
+                  what installs and the command above is what fetches it. */}
+              <a
+                className="skill-install__download"
+                href={download}
+                download
+                title="The router. Use the command below to take the references with it.">
+                <Download className="size-4" aria-hidden="true" />
+                SKILL.md
+              </a>
+            </>
+          )}
         </div>
       </div>
 

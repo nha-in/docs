@@ -16,5 +16,41 @@
         "to": "0.1.1"
       }
     ]
+  },
+  {
+    "id": "135cf7d29a1f",
+    "date": "2026-09-30",
+    "kind": "withdrawn",
+    "gateway": "nhcx",
+    "version": "v1",
+    "module": "registry",
+    "label": "Participant registry",
+    "link": "/docs/nhcx/v1/api/registry/",
+    "count": 1,
+    "items": [
+      {
+        "method": "POST",
+        "path": "/get/session",
+        "kind": "call"
+      }
+    ]
+  },
+  {
+    "id": "e6e823071577",
+    "date": "2026-09-30",
+    "kind": "plugin-version",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": null,
+    "count": 1,
+    "items": [
+      {
+        "name": "nhcx",
+        "from": "1.0.2",
+        "to": "1.0.3"
+      }
+    ]
   }
 ]

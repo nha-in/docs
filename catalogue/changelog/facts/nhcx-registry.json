@@ -110,34 +110,6 @@
         "https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice"
       ]
     },
-    "POST /get/session": {
-      "encrypted": [],
-      "id": "registry_get_session",
-      "kind": "call",
-      "method": "POST",
-      "params": [
-        "header:bearer_auth!"
-      ],
-      "path": "/get/session",
-      "properties": [
-        "_contentType",
-        "client_id",
-        "client_secret",
-        "grant_type"
-      ],
-      "required": [],
-      "responses": [
-        "200"
-      ],
-      "security": [
-        "bearerAuth"
-      ],
-      "server": "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
-      "servers": [
-        "https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice",
-        "https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice"
-      ]
-    },
     "POST /participant/delink/abha/policy": {
       "encrypted": [],
       "id": "registry_participant_delink_abha_policy",

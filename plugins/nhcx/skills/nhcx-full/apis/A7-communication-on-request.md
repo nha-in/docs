@@ -168,3 +168,4 @@ function acknowledge_notification(query_id):
 - FHIR: [F11. CommunicationRequest](../fhir/F11-communicationrequest.md), [F12. Communication](../fhir/F12-communication.md), [F15. Patient](../fhir/F15-patient.md), [F18. Coverage](../fhir/F18-coverage.md)
 - Database: [D23. claim_query](../database/D23-claim-query.md)
 - Gateway: [G7. Send](../gateway/G7-send.md)
+- Tests: [T7. IRDAI Query Answered](../tests/T7-irdai-query-answered.md)
