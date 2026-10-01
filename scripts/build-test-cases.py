@@ -249,13 +249,31 @@ def lost_zero(number, last):
 def extract(path, tab=None, prefix=""):
     book = openpyxl.load_workbook(path, data_only=True)
     sheet = book[tab] if tab else book.worksheets[0]
-    rows = [[clean(cell) for cell in row] for row in sheet.iter_rows(values_only=True)]
-    rows = [row for row in rows if any(row)]
+    # A value merged down one column, such as one API list or one marking
+    # over several cases, belongs to every row it spans, not only the first.
+    filled = set()
+    for span in list(sheet.merged_cells.ranges):
+        if span.min_col == span.max_col and span.max_row > span.min_row:
+            value = sheet.cell(span.min_row, span.min_col).value
+            sheet.unmerge_cells(str(span))
+            for r in range(span.min_row, span.max_row + 1):
+                sheet.cell(r, span.min_col).value = value
+                if r > span.min_row:
+                    filled.add((r, span.min_col - 1))
+    rows = [(n, [clean(c) for c in row]) for n, row in enumerate(sheet.iter_rows(values_only=True), 1)]
+    rows = [(n, row) for n, row in rows if any(row)]
     header = next(
-        i for i, row in enumerate(rows)
+        i for i, (_, row) in enumerate(rows)
         if any(c.lower().startswith(("test case id", "test title")) for c in row)
     )
-    column = columns(rows[header])
+    column = columns(rows[header][1])
+    # Except a case's own id or number: merged down, it marks one case that
+    # runs over several rows, so the rows below it continue that case.
+    for n, row in rows:
+        for key in ("id", "number"):
+            if (n, column.get(key)) in filled:
+                row[column[key]] = ""
+    rows = [row for _, row in rows]
 
     session = ""
     for row in rows[:header]:
@@ -310,7 +328,7 @@ def extract(path, tab=None, prefix=""):
                 start(f"{number}. {name}" if number else name, applies)
             continue
 
-        if cell("function"):
+        if cell("function") and (current is None or flat(cell("function")) != current["label"]):
             start(flat(cell("function")), flat(cell("applies")))
         if current is None:
             start("Test cases")
