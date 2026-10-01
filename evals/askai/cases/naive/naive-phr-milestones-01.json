@@ -29,10 +29,10 @@
   "expected_sources": [
     "shared.glossary.phr"
   ],
-  "expected_shape": "how-do-i",
+  "expected_shape": "overview",
   "expected_behaviour": "answer",
   "derived_from": null,
   "source_row": "annexure#glossary",
   "catalogue_version": "2026.09.16",
-  "notes": "NHA PHR review, 30 September 2026, case 3: the panel said 'three milestones' and left P4 out, because the milestones page's own description said 'the three PHR milestones' and the PHR entry named none. Source lines: catalogue/shared/glossary/phr.md, 'Building one is four ABDM milestones, in order: P1 ... P2 ... P3 ... P4'."
+  "notes": "NHA PHR review, 30 September 2026, case 3: the panel said 'three milestones' and left P4 out, because the milestones page's own description said 'the three PHR milestones' and the PHR entry named none. Source lines: catalogue/shared/glossary/phr.md, 'Building one is four ABDM milestones, in order: P1 ... P2 ... P3 ... P4'. Routed to the overview shape."
 }

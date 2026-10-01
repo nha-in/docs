@@ -5,6 +5,7 @@ package route
 
 import (
 	"regexp"
+	"slices"
 	"strings"
 
 	"github.com/nha-in/docs/mcp/internal/catalogue"
@@ -23,6 +24,16 @@ const (
 	// noun phrase whose top passage is a flow is a topic, and a topic wants
 	// orientation and a choice rather than a definition.
 	Topic Shape = "topic"
+	// Overview is a reader starting a whole build: a PHR app, a HIP, an
+	// integration with ABDM, or asking which milestones one takes. The
+	// answer names every milestone in order and asks which to open, rather
+	// than expanding the first one (NHA PHR review, 30 September 2026).
+	Overview Shape = "overview"
+	// Walkthrough is a reader asking for a complete flow across parties,
+	// from one end to the other. It gets a bigger budget and must cover
+	// every party the passages mention, where a how-do-i answer stopped at
+	// the HIU's side of the consent and data flow.
+	Walkthrough Shape = "walkthrough"
 )
 
 type Input struct {
@@ -47,6 +58,17 @@ var (
 	thanksRe = regexp.MustCompile(`(?i)^(thanks?|thank you|thank you (?:so|very) much|ty|ok(?:ay)?|cool|great|got it|perfect|nice)(?: there| all| team| a lot)?[\s.!?]*$`)
 	selfRe   = regexp.MustCompile(`(?i)\b(?:who|what) are you\b|\bwhat can you (?:do|help)|\b(?:how many |which |what )languages?\b.*\byou\b|\bdo you (?:understand|speak|remember)\b|\bcan you (?:speak|understand)\b|\bare you (?:an? )?(?:bot|ai|human|robot|real|person|chatgpt|gpt|claude|llm)\b|\bwho (?:made|built|created|trained|runs) you\b|\bwhat (?:model|llm) (?:are|is) (?:you|this)\b|\byour (?:name|capabilit\w*|limit\w*)\b|\babout yourself\b|\bhow (?:do|does) (?:you|this assistant) work\b`)
 	whRe     = regexp.MustCompile(`(?i)^(what is|what's|whats|what are|what makes|define|meaning of|explain)\b`)
+	// overviewRe: a build verb near a whole-system noun, either order, or a
+	// question about milestones. Bare "app" is not a noun here: "create an
+	// ABHA in my app" is a how-do-i.
+	overviewRe = regexp.MustCompile(`(?i)\b(build|building|develop|developing|integrate|integrating|onboard|onboarding|get started|getting started)\b[^.?!]{0,40}\b(phr|patient[- ]?app\w*|health locker|hip|hiu|hmis|lims|abdm)\b` +
+		`|\b(phr|patient[- ]?app\w*|health locker|hip|hiu|hmis|lims|abdm)\b[^.?!]{0,40}\b(build|develop|integrate|onboard|get started)\b` +
+		`|\bmilestones?\b[^.?!]{0,40}\b(phr|patient|hip|hiu|hmis|abdm|need\w*|requir\w*|integrat\w*|build\w*|creat\w*)\b` +
+		`|\b(need|require|which)\b[^.?!]{0,20}\bmilestones?\b`)
+	// walkthroughRe: a flow asked for whole, or from one end to another.
+	walkthroughRe = regexp.MustCompile(`(?i)\b(complete|entire|whole|full|end[- ]to[- ]end|step[- ]by[- ]step|overall)\b[^.?!]{0,40}\b(flow|process|journey|sequence|lifecycle)\b` +
+		`|\b(flow|process|journey|sequence)\b[^.?!]{0,40}(\bend[- ]to[- ]end\b|\bfrom\b[^.?!]{3,60}\b(until|till|to)\b)` +
+		`|\bwalk me through\b`)
 	// featureRe matches a bare portal feature name: the command chips, the
 	// agent skills, the MCP server, the plugin, the Postman collections. A
 	// reader typing one wants the portal's page, not an ABDM definition,
@@ -77,6 +99,10 @@ func Route(in Input) Result {
 	switch {
 	case in.HasAttachment, len(r.ErrorCodes) > 0:
 		r.Shape = Diagnose
+	case walkthroughRe.MatchString(q):
+		r.Shape = Walkthrough
+	case overviewRe.MatchString(q):
+		r.Shape = Overview
 	case whRe.MatchString(q):
 		r.Shape = Define
 	case failRe.MatchString(q):
@@ -100,6 +126,11 @@ func Route(in Input) Result {
 	// A path-shaped ref is found with search, kind operation; an exact
 	// operationId is read with get.
 	if r.OperationRef != "" && !strings.HasPrefix(r.OperationRef, "/") {
+		r.Tools = append(r.Tools, "get")
+	}
+	// A walkthrough spans atoms the pack may not carry in full, so the
+	// model may open one.
+	if r.Shape == Walkthrough && !slices.Contains(r.Tools, "get") {
 		r.Tools = append(r.Tools, "get")
 	}
 	if in.HasAttachment {

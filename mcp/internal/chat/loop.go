@@ -100,7 +100,14 @@ const maxSuggestions = 3
 // suggestionsFromPack returns up to three related atoms that were not
 // themselves passages, as pills. The prompt is the atom's title: a short
 // topic the router already handles.
-func suggestionsFromPack(pack []byte) []Suggestion {
+//
+// A pill stays in the answer's gateway. The related walk runs both ways, and
+// a shared term is cited by every gateway: shared.glossary.abha has one edge
+// out and 29 in from NHCX and UHI, so "what is abha" offered three NHCX claim
+// callbacks. The gateway is the question's scope, else the top passage's,
+// else HIE-CM, where ABDM's own milestones are documented. Shared atoms are
+// always in.
+func suggestionsFromPack(pack []byte, scope string) []Suggestion {
 	var pp struct {
 		Passages []struct {
 			ID string `json:"id"`
@@ -113,6 +120,13 @@ func suggestionsFromPack(pack []byte) []Suggestion {
 	if err := json.Unmarshal(pack, &pp); err != nil {
 		return nil
 	}
+	gateway := scope
+	if gateway == "" && len(pp.Passages) > 0 {
+		gateway = atomGateway(pp.Passages[0].ID)
+	}
+	if gateway == "" || gateway == "shared" {
+		gateway = "hiecm"
+	}
 	shown := map[string]bool{}
 	for _, p := range pp.Passages {
 		shown[p.ID] = true
@@ -122,6 +136,9 @@ func suggestionsFromPack(pack []byte) []Suggestion {
 		if r.ID == "" || r.Title == "" || shown[r.ID] {
 			continue
 		}
+		if g := atomGateway(r.ID); g != gateway && g != "shared" {
+			continue
+		}
 		shown[r.ID] = true
 		out = append(out, Suggestion{ID: r.ID, Title: r.Title, Prompt: r.Title})
 		if len(out) == maxSuggestions {
@@ -129,6 +146,13 @@ func suggestionsFromPack(pack []byte) []Suggestion {
 		}
 	}
 	return out
+}
+
+// atomGateway is the gateway an atom id names first: hiecm, nhcx, uhi or
+// shared.
+func atomGateway(id string) string {
+	g, _, _ := strings.Cut(id, ".")
+	return g
 }
 
 // topPassageType returns the atom type of the first passage in the pack.
@@ -146,6 +170,10 @@ func topPassageType(pack []byte) string {
 
 // isTopicPhrase is a one to three word phrase with no question mark: a
 // topic typed into the box rather than a question asked of it.
+// abhaQuestionRe is a question that names ABHA, for the identifier rule in
+// guard.CheckShape.
+var abhaQuestionRe = regexp.MustCompile(`(?i)\babha\b|\bhealth ?id\b`)
+
 func isTopicPhrase(q string) bool {
 	q = strings.TrimSpace(q)
 	return len(strings.Fields(q)) <= 3 && !strings.Contains(q, "?")
@@ -819,9 +847,10 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 			slog.Warn("pre-retrieval failed, continuing without it", "error", err)
 		} else if len(pack) > 0 {
 			facts = f
+			facts.QuestionNamesABHA = abhaQuestionRe.MatchString(question)
 			packHadContent = true
 			links = linksFromPack(pack)
-			suggestions = suggestionsFromPack(pack)
+			suggestions = suggestionsFromPack(pack, gateway)
 			topType = topPassageType(pack)
 			for _, src := range packSources {
 				addSource(&sources, src)
