@@ -14,6 +14,19 @@ type PackFacts struct {
 	MentionsABHAAddress bool
 }
 
+// IdentifiersInPlay reports which ABHA identifiers a question puts in play:
+// the question has to be about ABHA, and the pack has to carry the phrase.
+// The pack alone is not enough. Nearly every HIE-CM pack names both
+// somewhere, and a question about FHIR bundles or a 401 was failed by the
+// identifier rule and rewritten to open with a sentence about them.
+func IdentifiersInPlay(question, pack string) (number, address bool) {
+	if !strings.Contains(strings.ToLower(question), "abha") {
+		return false, false
+	}
+	lower := strings.ToLower(pack)
+	return strings.Contains(lower, "abha number"), strings.Contains(lower, "abha address")
+}
+
 var (
 	firstSentenceRe = regexp.MustCompile(`^[^.!?\n]*[.!?]`)
 	// listMarkerRe matches a leading list marker ("1. ", "1) ", "- ", "* ")

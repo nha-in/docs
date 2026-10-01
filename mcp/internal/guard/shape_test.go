@@ -106,3 +106,28 @@ func TestCheckShapeSkipsDefineAndDecline(t *testing.T) {
 		}
 	}
 }
+
+// TestIdentifiersInPlayNeedsAnABHAQuestion covers the stray opener NHA's
+// demo run of 1 October 2026 showed: nearly every HIE-CM pack carries both
+// phrases somewhere, so a question about FHIR bundles or RSA padding failed
+// the identifier rule and was rewritten to open with ABHA number and ABHA
+// address. Both are in play only when the question is about ABHA.
+func TestIdentifiersInPlayNeedsAnABHAQuestion(t *testing.T) {
+	pack := `{"passages":[{"body":"Link the care context to the ABHA address. The ABHA number is 14 digits."}]}`
+	for _, q := range []string{
+		"Which FHIR bundle types can I share?",
+		"Which RSA padding does ABDM use to encrypt Aadhaar and OTP?",
+		"Everything returns 401. Why?",
+		"I got ABDM-2402, what does it mean and how do I fix it?",
+	} {
+		if number, address := IdentifiersInPlay(q, pack); number || address {
+			t.Errorf("%q is not about ABHA; identifiers must not be in play", q)
+		}
+	}
+	if number, address := IdentifiersInPlay("How do I create an ABHA?", pack); !number || !address {
+		t.Error("an ABHA question over a pack carrying both identifiers must put both in play")
+	}
+	if number, _ := IdentifiersInPlay("How do I create an ABHA?", `{"body":"Claim an ABHA address."}`); number {
+		t.Error("a pack without the ABHA number must not put it in play")
+	}
+}

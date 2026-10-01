@@ -753,9 +753,7 @@ func ChatHooks(tools *Tools) (
 				facts.FlowTitles = append(facts.FlowTitles, p.Title)
 			}
 		}
-		lower := strings.ToLower(string(b))
-		facts.MentionsABHANumber = strings.Contains(lower, "abha number")
-		facts.MentionsABHAAddress = strings.Contains(lower, "abha address")
+		facts.MentionsABHANumber, facts.MentionsABHAAddress = guard.IdentifiersInPlay(q, string(b))
 		return b, srcs, facts, nil
 	}
 	toolsFor = func(q string, hasAttachment bool) []chat.ToolDef {
