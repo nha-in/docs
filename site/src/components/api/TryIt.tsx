@@ -25,7 +25,7 @@ import type {BodyNode} from './body';
 import {compose, leaves, seed, toTree} from './body';
 import {curlFrom} from './curl';
 import type {Padding} from './rsa';
-import {encryptValue, paddingFromAlgorithm} from './rsa';
+import {certificateUrl, encryptValue, paddingFromAlgorithm} from './rsa';
 import {
   consentManagerFor,
   findToken,
@@ -40,12 +40,6 @@ import {
 } from './session';
 import {uhiAuthorization} from './uhi-sign';
 import {carriedValues, fillFrom} from './carry';
-
-// The V3 public certificate lives at this path under the M1 server. It is the
-// key that encrypts the identifiers in an M1 request body, and its response
-// names its own algorithm. Only M1 request bodies carry encrypted fields, so
-// this is the only certificate the console fetches.
-const CERT_PATH = '/v3/profile/public/certificate';
 
 /**
  * Sandbox or production, read from the description the specification gives the
@@ -317,7 +311,7 @@ export default function TryIt({operation}: {operation: Operation}) {
         Accept: 'application/json',
       };
       if (token) requestHeaders.Authorization = `Bearer ${token}`;
-      const response = await fetch(`${server}${CERT_PATH}`, {headers: requestHeaders});
+      const response = await fetch(certificateUrl(server, operation.path), {headers: requestHeaders});
       if (!response.ok) {
         const text = await response.text();
         throw new Error(
