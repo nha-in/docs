@@ -1,0 +1,38 @@
+{
+  "id": "naive-hiecm-scan-and-pay-01",
+  "slice": "naive",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "How does Scan and Pay work?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "gateway": "hiecm",
+  "must_contain": [
+    "In Scan and Pay a patient scans the QR code at the counter, sees their open orders in their PHR app and pays there, and the facility's system learns the payment status.",
+    "The facility answers with every open order for the patient, and after the patient picks, answers with the payment bundle and its procedures."
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom",
+    "does not cover",
+    "not covered"
+  ],
+  "expected_sources": [
+    "hiecm.flow.scan-and-pay"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#final-hiecm-scan-and-pay-yaml",
+  "catalogue_version": "2026.09.16",
+  "notes": "Live run of 1 October 2026: the panel answered that this documentation does not cover Scan and Pay and offered Scan and Share, although the use case page and its specification exist. No atom carried the flow, so nothing was retrieved. Source lines: catalogue/hiecm/flows/scan-and-pay.md, 'The patient scans the counter QR code and the PHR app sends their payment details. You answer with every open order for the patient. The app sends back the orders the patient picked, and you answer with the payment bundle and its procedures. After the patient pays, you send the payment status and the app confirms it received it.'"
+}
