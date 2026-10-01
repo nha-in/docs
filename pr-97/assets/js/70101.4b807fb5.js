@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["70101"],{73972(e,s,a){a.r(s),a.d(s,{__iconNode:()=>k,default:()=>t});var d=a(34438);let k=[["path",{d:"M5 3v14",key:"9nsxs2"}],["path",{d:"M12 3v8",key:"1h2ygw"}],["path",{d:"M19 3v18",key:"1sk56x"}]],t=(0,d.A)("kanban",k)}}]);
