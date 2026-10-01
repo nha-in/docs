@@ -8,10 +8,8 @@ Search by code, name or status, and switch between the codes a provider sends, t
 
 Search by code, name or status
 
-Spellings are as published, such as `Initimation`, `Reimburstment` and `protocal`, so that searching for what you saw in a payload finds the row.
-
 - `12`Preauth Request Initiatedrequest.initiated
-- `121`Preauth Reprocess(Resubmission) Initimationrequest.initiated
+- `121`Preauth Reprocess(Resubmission) Intimationrequest.initiated
 - `13`Enhancement Request Initiatedrequest.initiated
 - `131`Enhancement Query Ack Successresponse.partial
 - `131`Enhancement Query Ack Failedresponse.error
@@ -47,7 +45,7 @@ Spellings are as published, such as `Initimation`, `Reimburstment` and `protocal
 - `261`Discharge Request Approvedresponse.partial
 - `262`Discharge Request Rejectedresponse.complete
 - `263`Discharge Request Queriedrequest.initiated
-- `45`Final Bill Initimationrequest.initiated
+- `45`Final Bill Intimationrequest.initiated
 - `45`Final Bill Ack Successresponse.partial
 - `45`Final Bill Ack Failedresponse.error
 - `15`Claim Request Initiatedrequest.initiated
@@ -68,16 +66,16 @@ Spellings are as published, such as `Initimation`, `Reimburstment` and `protocal
 - `30`Payment Notice Initmationrequest.initiated
 - `30`Payment Notice Ack Successresponse.partial
 - `30`Payment Notice Ack Failedresponse.error
-- `R122`Reimburstment Claim Reprocess Requestedrequest.initiated
-- `R15`Reimburstment Claim Submittedrequest.initiated
-- `R151`Reimburstment Claim Query Response Submittedresponse.complete
-- `R252`Reimburstment Claim Reprocess Request Approvedresponse.complete
-- `R253`Reimburstment Claim Reprocess Request Rejectedresponse.complete
-- `R254`Reimburstment Claim Reprocess Request Queriedrequest.initiated
-- `R26`Reimburstment Claim Approvedresponse.complete
-- `R27`Reimburstment Claim Queriedrequest.initiated
-- `R28`Reimburstment Claim Evaluation In Processresponse.partial
-- `R291`Reimburstment Claim Rejectedresponse.complete
+- `R122`Reimbursement Claim Reprocess Requestedrequest.initiated
+- `R15`Reimbursement Claim Submittedrequest.initiated
+- `R151`Reimbursement Claim Query Response Submittedresponse.complete
+- `R252`Reimbursement Claim Reprocess Request Approvedresponse.complete
+- `R253`Reimbursement Claim Reprocess Request Rejectedresponse.complete
+- `R254`Reimbursement Claim Reprocess Request Queriedrequest.initiated
+- `R26`Reimbursement Claim Approvedresponse.complete
+- `R27`Reimbursement Claim Queriedrequest.initiated
+- `R28`Reimbursement Claim Evaluation In Processresponse.partial
+- `R291`Reimbursement Claim Rejectedresponse.complete
 - `34`Wallet Upgrade Intimationrequest.initiated
 - `36`Claim Arbitration Intimationrequest.initiated
 - `38`Fraud Alertrequest.initiated

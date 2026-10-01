@@ -24,6 +24,8 @@ NHA's payer exit process names fifteen use cases.
 
 Plus `/v1/error` and, where the payer is a scheme, the biometric token validation.
 
+[Private insurers and TPAs](/docs/main/docs/nhcx/v1/roles/payer/private-insurers-and-tpas) sets out what differs on that track. [Sandbox exit evidence](/docs/main/docs/nhcx/v1/roles/payer/sandbox-exit-evidence) says what to record for each use case, when each is done, and the evidence pack the demonstration is scored on.
+
 ## The four validations on every response
 
 The checklist repeats them for every answering use case, so the certification will check them on every one:

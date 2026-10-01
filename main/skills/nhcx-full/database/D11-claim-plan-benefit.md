@@ -70,3 +70,4 @@ Reads:
 - Callbacks: [C4. Insurance Plan Reply](../callbacks/C4-insuranceplan-on-request.md)
 - FHIR: [F5. InsurancePlan](../fhir/F5-insuranceplan.md), [F8. Claim](../fhir/F8-claim.md)
 - Database: [D10. claim_plan](D10-claim-plan.md), [D12. claim_plan_form](D12-claim-plan-form.md), [D16. claim_line](D16-claim-line.md), [D28. claim_document](D28-claim-document.md)
+- Tests: [T13. PMJAY Eligibility, Package Master and Ruling](../tests/T13-pmjay-eligibility-and-package-master.md)

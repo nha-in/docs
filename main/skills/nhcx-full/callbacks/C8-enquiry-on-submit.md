@@ -75,3 +75,4 @@ Status answers: the payer's `entity_status` (`preauth-pending`, `claim-approved`
 - Callbacks: [C1. Callback Door](C1-callback-door.md), [C6. Claim Reply](C6-claim-on-submit.md), [C7. Cancel Reply](C7-cancel-on-submit.md)
 - FHIR: [F10. Task (claim actions)](../fhir/F10-task-claim-actions.md)
 - Database: [D20. claim_submission](../database/D20-claim-submission.md), [D29. claim_enquiry](../database/D29-claim-enquiry.md)
+- Tests: [T9. IRDAI Status Enquiry and Cancel](../tests/T9-irdai-cancel-and-status.md), [T12. IRDAI Reprocess and Balance Release](../tests/T12-irdai-reprocess-and-release.md)

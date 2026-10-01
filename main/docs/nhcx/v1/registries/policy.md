@@ -22,4 +22,8 @@ The reason an ABHA number works as a policy identifier at all is that someone li
 
 Linking is a Payer-side action, performed when the policy is created. The insurer links the beneficiary's ABHA number, mobile and member ID to the policy's products, naming itself as the payer and its TPA, or itself, as the processor. Only the party named as payer or processor can de-link it later; the exchange checks the caller's credentials against the link. If an insurer changes TPA, every affected policy is de-linked and re-linked with the new processor.
 
+The exchange enforces the link with its own codes. Only a participant with the payer or TPA role may link; any other role is refused with `NHCX-1048`. The token used must belong to the `payerid` or the `processingid` on the link. A duplicate member and payer combination returns `NHCX-1043`. An ABHA of the wrong length returns `NHCX-1041` or `NHCX-1042`. Wire linking into policy issuance and endorsement, so a member is linked the day cover starts.
+
+De-linking removes the association by `memberid` plus `payerid`, not by ABHA alone. Only the token that created the link may de-link; another token is refused with `NHCX-1049`. More than one row for the same pair returns `NHCX-1047`. NHCX does not store the business reason for a de-link, so keep your own audit of who de-linked which member and why.
+
 The effect is felt at the point of care. A beneficiary who walks in with only an ABHA number can be resolved to a policy without a card or a member ID, which is the whole point of linking it in the first place.

@@ -199,7 +199,7 @@ post_with_token(url, body, label):               // shared with G4 and G10 (labe
             bearer_auth: Bearer <token>  (lower case, written as is),
             Authorization: Bearer <token>
         on transport error: raise <label>_UNREACHABLE (retryable)
-        read up to 4 MiB; on read error raise <label>_READ_ERROR (retryable)
+        read the whole answer; on read error raise <label>_READ_ERROR (retryable)
         if status == 401 and attempt == 0:
             refresh_token()                      // errors propagate
             continue

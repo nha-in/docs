@@ -12,7 +12,7 @@ This page lists every module, including any that the role you have chosen does n
 
 ## [Participant registry](/docs/main/docs/nhcx/v1/api/registry/)
 
-21 endpoints, each with its own page in the sidebar.
+20 endpoints, each with its own page in the sidebar.
 
 [Open the Participant registry overview](/docs/main/docs/nhcx/v1/api/registry/). The whole specification is also on [one page](/docs/main/reference/nhcx-registry).
 

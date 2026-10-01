@@ -143,29 +143,29 @@ The setup also connects the [Docs MCP server](/docs/main/docs/hiecm/v3/getting-s
 
 ## Install a skill
 
-There is one skill for the whole provider-side integration, `nhcx-full`, and one per NHCX use case. Each builds into an existing hospital information system through eight logged steps, from discovery and mapping to tests on the sandbox. It finds what your system already has and builds only what is missing. It takes its NHCX facts from the nhcx-docs MCP server when it is connected, and from a release of the NHCX package otherwise.
+There is one skill for the whole integration, `nhcx-full`, and one per NHCX use case. Each carries both sides of its exchanges: the hospital system that asks, and the payer system that answers. It builds into an existing system through eight logged steps, from discovery and mapping to tests on the sandbox, finds what your system already has, and builds only what is missing. It takes its NHCX facts from the nhcx-docs MCP server when it is connected, and from a release of the NHCX package otherwise.
 
 Each skill is self-contained, so install only the ones your integration needs. `npx skills` finds every coding agent in the project and sets the skill up for each. With git alone, the command fetches just the skill's folder into the directory your agent reads skills from.
 
-| Skill                | What it builds                                                                                                                                 | [Use cases](/docs/main/docs/nhcx/v1/concepts/nhcx-use-cases) |
-| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| `nhcx-full`          | The whole provider-side integration, every exchange end to end, with the NHCX gateway embedded in the application                              | All provider use cases                                       |
-| `nhcx-coverage`      | Beneficiary policy search and coverage eligibility: validation, benefits and discovery                                                         | A2, B1, D3                                                   |
-| `nhcx-preauth`       | The payer's insurance plan, line items, authorisation requirements, the pre-authorisation, enhancement, query answers, cancellation and status | B2, B3, B8 cancel, D1, D2, D4 to D8                          |
-| `nhcx-claim`         | Discharge details, claim documents and forms, the claim and its query answers, the payer's verdict and status enquiries                        | A5, B5, D9, D10                                              |
-| `nhcx-communication` | Payer queries, notifications and notes on a case, replies with text and documents, and acknowledgements                                        | B4                                                           |
-| `nhcx-payment`       | The payer's payment notice and its breakdown, matched to the claim and acknowledged                                                            | B7, D13                                                      |
-| `nhcx-reprocess`     | Asking the payer to look again at a decided claim, and asking for the unpaid balance of a partly paid claim                                    | B8 reprocess, D11, D12                                       |
+| Skill                | What it builds                                                                                                                                     | Download                                                |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| `nhcx-full`          | The whole integration, every exchange end to end on either side, with the NHCX gateway embedded in the application                                 | [Download](/docs/main/skills/nhcx-full.tar.gz)          |
+| `nhcx-coverage`      | Beneficiary policy search and coverage eligibility: validation, benefits and discovery                                                             | [Download](/docs/main/skills/nhcx-coverage.tar.gz)      |
+| `nhcx-preauth`       | The insurance plan, line items, authorisation requirements, the pre-authorisation, enhancement, queries and their answers, cancellation and status | [Download](/docs/main/skills/nhcx-preauth.tar.gz)       |
+| `nhcx-claim`         | Discharge details, claim documents and forms, the claim, its queries and answers, the verdict and status enquiries                                 | [Download](/docs/main/skills/nhcx-claim.tar.gz)         |
+| `nhcx-communication` | Queries, notifications and notes on a case, replies with text and documents, and acknowledgements                                                  | [Download](/docs/main/skills/nhcx-communication.tar.gz) |
+| `nhcx-payment`       | The payment notice and its breakdown, sent, matched to the claim and acknowledged                                                                  | [Download](/docs/main/skills/nhcx-payment.tar.gz)       |
+| `nhcx-reprocess`     | A second look at a decided claim, and the unpaid balance of a partly paid one, asked for and answered                                              | [Download](/docs/main/skills/nhcx-reprocess.tar.gz)     |
 
 NHCX agent skill
 
-The whole provider-side integration, every exchange end to end, with the NHCX gateway embedded in the application.
+The whole integration, every exchange end to end on either side, with the NHCX gateway embedded in the application.
 
-[SKILL.md](/docs/main/skills/nhcx-full/SKILL.md "The router. Use the command below to take the references with it.")
+[Download skill](/docs/main/skills/nhcx-full.tar.gz "The whole skill folder, as a .tar.gz archive.")
 
 - ScaffoldThe eight steps that build the use case into your system, from discovery and mapping through code to tests on the sandbox, each logged as it goes.
 - Integrate26 operations, with their hosts and headers.
-- Test10 test matrix rows, from offline pins up to a live payer on the sandbox.
+- TestThe test pyramid, from offline pins up to a live payer on the sandbox.
 
 `mkdir -p .claude/skills && curl -fsSL https://nha-in.github.io/docs/main/skills/nhcx-full.tar.gz | tar -xzf - -C .claude/skills`
 
@@ -176,7 +176,7 @@ Drops the skill into this project. Claude loads it when a task matches.
 How to use it
 
 1. Run the command above in the repository you are integrating.
-2. Ask your agent for the job in your own words. "Build the whole provider-side NHCX integration into this hospital system". The skill loads when the task matches it.
+2. Ask your agent for the job in your own words. "Build the whole NHCX integration into this system, on whichever side it sits". The skill loads when the task matches it.
 3. Check what it writes against these pages. The skill names the cases it could not reach on the NHCX sandbox, and nothing in it is re-verified here.
 4. Open in Claude needs that app installed. It fills the composer and waits: nothing runs until you read it and press Enter.
 

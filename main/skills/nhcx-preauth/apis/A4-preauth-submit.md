@@ -29,7 +29,7 @@ A line counts as added when its code (or a ward tier code riding as a modifier) 
 
 **Workflow ids (`x-hcx-workflow_id`).** Read from the payer adapter chosen by the claim's payer participant code (see [PAYERS.md](../references/PAYERS.md)) [PAYER](../references/PAYERS.md#markers). An unmapped payer uses Generic.
 
-| Kind | `pmjay` | `xyz` (Sandbox Payer) | `generic` |
+| Kind | `pmjay` | `kyrocare` (Sandbox Payer) | `generic` |
 |---|---|---|---|
 | `preauth` | 12 | 12 | 12 |
 | `preauth_query_response` | 19 | 19 | 19 |
@@ -257,3 +257,4 @@ function ask_predetermination(case_id):
 - Callbacks: [C5. Pre-auth Reply](../callbacks/C5-preauth-on-submit.md)
 - FHIR: [F8. Claim](../fhir/F8-claim.md), [F9. ClaimResponse](../fhir/F9-claimresponse.md), [F15. Patient](../fhir/F15-patient.md), [F17. Organization](../fhir/F17-organization.md), [F18. Coverage](../fhir/F18-coverage.md)
 - Gateway: [G5. Protocol Headers](../gateway/G5-protocol-headers.md)
+- Tests: [T5. IRDAI Pre-authorisation Approved](../tests/T5-irdai-preauth-approved.md), [T6. IRDAI Pre-authorisation Rejected and Sent Again](../tests/T6-irdai-preauth-rejected.md), [T7. IRDAI Query Answered](../tests/T7-irdai-query-answered.md), [T8. IRDAI Enhancement](../tests/T8-irdai-enhancement.md), [T14. PMJAY Pre-authorisation Through the Payer Service](../tests/T14-pmjay-preauth-adjudicated.md), [T15. PMJAY Query Answered by Resubmission](../tests/T15-pmjay-query-by-resubmission.md), [T16. PMJAY Rejection and Enhancement](../tests/T16-pmjay-rejection-and-enhancement.md)

@@ -22,6 +22,19 @@ Four actions: approve, approve at a reduced amount with a note, query, reject wi
 
 The workflow code says which kind of request it is: 12 new, 121 resubmission, 13 enhancement, 19 an answer to your query. Acknowledge receipt at once with code 20 and `response.partial`, so the provider knows it is in the queue.
 
+Route on the address, not on `Claim.use`. The URL is the domain: what arrives on `/v1/preauth/submit` is a preauthorisation whatever `Claim.use` says, and what arrives on `/v1/claim/submit` is a claim. Do not branch preauthorisation, claim or predetermination on that field.
+
+## Acknowledge after the flatten, decide later
+
+Two hops. The 30-second acknowledgement follows the flatten, the step that opens the envelope, validates the bundle and writes the case. It does not wait for the medical decision, which travels later as a `ClaimResponse` on `on_submit`.
+
+- If the flatten succeeds but a decision is not yet possible, withhold `on_submit`. A fake Submitted with a blank `outcome` is worse than a later true decision.
+- Set `x-hcx-status` on every `on_submit`. Omitted, it defaults to `response.complete`, and that is not what the hospital screen shows. The hospital reads `ClaimResponse.outcome`; drive its screen from that.
+- Persist `x-user-token` from the inbound request with the case. Echo `x-hcx-ben-abha-id` on `on_submit` when it is available.
+- `Claim.priority` `stat` is an emergency case, `E`. Anything else is planned, `P`.
+- Practitioner resources not referenced from `Claim.careTeam` are dropped. They never reach adjudication.
+- A Communication reply does not go through the claim flatten. And a preauthorisation submit carrying 19 is the answer to your query on the case thread, not a Communication acknowledgement.
+
 ## Validate before queueing
 
 The reference payer's preauthorisation errors are the checklist. Run them on arrival and refuse with a protocol response rather than wasting a doctor's time:

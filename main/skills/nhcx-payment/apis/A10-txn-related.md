@@ -70,7 +70,7 @@ Errors:
 
 When: once per leg on every load of S6 Claim Detail (and its Refresh) and on every A17 read. No timer. One pass, no retry inside a poll.
 
-Rows: `claim` ([D9](../database/D9-claim.md)), `claim_plan` (D10 (in nhcx-preauth)), `claim_auth` (D13 (in nhcx-coverage)), `claim_preauth` (D18 (in nhcx-preauth)), `claim_predetermination` (D19 (in nhcx-preauth)), `claim_submission` ([D20](../database/D20-claim-submission.md)), `claim_enquiry` (D29 (in nhcx-preauth)).
+Rows: `claim` ([D9](../database/D9-claim.md)), `claim_plan` (D10 (in nhcx-coverage)), `claim_auth` (D13 (in nhcx-coverage)), `claim_preauth` (D18 (in nhcx-preauth)), `claim_predetermination` (D19 (in nhcx-preauth)), `claim_submission` ([D20](../database/D20-claim-submission.md)), `claim_enquiry` (D29 (in nhcx-preauth)).
 
 ```text
 LEGS (row, waiting status, reply resource, applied as, protocol-scan type, send time):
@@ -168,3 +168,4 @@ CANCEL POLL (claim_preauth row, cancel_txn_id):
 - Callbacks: [C1. Callback Door](../callbacks/C1-callback-door.md)
 - FHIR: [F1. Bundle](../fhir/F1-bundle.md)
 - Gateway: [G1. Embedding](../gateway/G1-embedding.md), [G7. Send](../gateway/G7-send.md), [G9. Ledger](../gateway/G9-ledger.md)
+- Tests: [T1. Test Configuration](../tests/T1-test-configuration.md), [T2. Test Runners](../tests/T2-test-runners.md)

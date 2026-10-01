@@ -110,6 +110,17 @@ On securities exchanges like NSE & BSE, anyone can buy or sell independently by 
 
 ### Benefits of using NHCX
 
+Claims processing in India today is fragmented, manual and costly. That causes delays, inefficiencies and a cumbersome experience for citizens, and the constraints grow as utilisation rises. NHCX changes that for each participant:
+
+- Providers gain simplified workflows and a lower administrative burden.
+- Insurers gain more efficient adjudication, stronger fraud controls and better-quality data.
+- Policymakers gain the data for data-driven decisions, enabling targeted interventions and more coordinated care delivery.
+- Citizens gain faster, more predictable and more transparent claims.
+
+Standardised, machine-readable claims data unlocks more than efficiency. It enables advanced analytics, coordination across several payers, and the design of more responsive, need-based insurance products. NHCX is a networked public good: its value compounds with participation, and what any one participant gains depends on the depth and breadth of adoption across the ecosystem. Early adopters realise the efficiency gains first, and help shape the standards, workflows and innovation pathways of health insurance in India. For a private insurer or TPA the path is to adopt, integrate, and transact end-to-end claims through NHCX.
+
+The bullets below say what that means for the data itself.
+
 - It is imperative that in the present day context almost every healthcare provider or hospital is generating digitised health records. But there is no point if the hospital has to convert that data into a “pdf” or a “jpg” file and transmit the same to the insurance company in a human readable format. NHCX is the only solution to this widespread problem
 - Let us consider a diagnostic report of a patient like “Lipid Profile” that has some 10 parameter values, all very important to understand the criticality of the case. It would be very helpful for the insurance company to have those 10 different values for the individual parameters of Lipid Profile in adjudication of the case. Using NHCX such values for each of these parameters under Lipid Profile can be passed on from Provider to Payer
 - Since any standard hospital HMIS already captures data pertaining to a patient like medical history, allergies, medication, line of treatment, etc. it would be apt to convey those same details to the insurance company instead of taking a printout and scanning them again for email attachments or uploads, thereby ensuring chastity of data

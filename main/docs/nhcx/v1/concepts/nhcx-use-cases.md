@@ -79,7 +79,7 @@ The ABDM session token every NHCX call carries, minted with your ABDM sandbox cl
 - **You send:** your client ID and client secret.
 - **You get back:** an access token and how long it stays valid.
 
-API call[`/get/session`API reference](/docs/main/docs/nhcx/v1/api/registry/endpoints/registry-get-session)
+API call[`/get/session`API reference](/docs/main/docs/nhcx/v1/getting-started/session-token#the-other-call-named-session)
 
 CallbackNone
 

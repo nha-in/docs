@@ -23,7 +23,7 @@ FHIR: [F1. Bundle](../fhir/F1-bundle.md) (the bundle id and Claim anchor of each
 
 **Workflow ids (`x-hcx-workflow_id`)**, from the payer adapter (see [PAYERS.md](../references/PAYERS.md)) [PAYER](../references/PAYERS.md#markers), overridable per environment (a JSON object of kind to workflow id):
 
-| Kind | `pmjay` | `xyz` (Sandbox Payer) | `generic` |
+| Kind | `pmjay` | `kyrocare` (Sandbox Payer) | `generic` |
 |---|---|---|---|
 | `claim` | 15 | 15 | 15 |
 | `claim_query_response` | 161 | 151 | 151 |
@@ -190,3 +190,4 @@ function claim_send_kind(case_id):
 - Callbacks: [C6. Claim Reply](../callbacks/C6-claim-on-submit.md)
 - FHIR: [F8. Claim](../fhir/F8-claim.md), [F9. ClaimResponse](../fhir/F9-claimresponse.md), [F15. Patient](../fhir/F15-patient.md), [F17. Organization](../fhir/F17-organization.md), [F18. Coverage](../fhir/F18-coverage.md)
 - Gateway: [G5. Protocol Headers](../gateway/G5-protocol-headers.md)
+- Tests: [T10. IRDAI Claim Approved, Part-approved and Rejected](../tests/T10-irdai-claim.md), [T17. PMJAY Claim Through the Role Walk](../tests/T17-pmjay-claim-adjudicated.md)

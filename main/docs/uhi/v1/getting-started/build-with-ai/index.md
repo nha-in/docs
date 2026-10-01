@@ -136,7 +136,7 @@ UHI agent skill
 
 Lets patients in your app book a physical consultation, as an EUA or an HSPA.
 
-[SKILL.md](/docs/main/skills/uhi-consultation/SKILL.md "The router. Use the command below to take the references with it.")
+[Download skill](/docs/main/skills/uhi-consultation.tar.gz "The whole skill folder, as a .tar.gz archive.")
 
 - ScaffoldRegistration on the network, then each journey as a loop that ends on its observed exit condition rather than on an ACK.
 - DesignWhat the journey around the calls has to do, and what a screen is forbidden to claim.

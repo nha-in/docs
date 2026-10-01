@@ -20,12 +20,15 @@ Search the whole target once for NHCX signatures before matching spec by spec: `
 
 ### L1.2 Identify the technology
 Read the build files, entry points and folder layout. Record:
+- which side of the exchange the target is, `provider` or `payer`, by the test in SKILL.md (WHICH SIDE). A `payer` target ends this skill's discovery here: log it, tell the user, and continue with the payer folder's SKILL.md and its own L1
 - languages and versions; web framework; UI technology (server-rendered, SPA, mobile)
 - database engine, ORM or query layer, migration tool and where migrations live
 - how routes are declared; how background jobs or schedulers run
 - test framework and how tests run; lint, type-check and build commands
 - how configuration and secrets are read
 - the HMIS navigation shell (sidebar, navbar, home screen) where a "Claims" entry would go
+
+Then, the language being known, write the report builder and its wrappers ([LOG.md](LOG.md#logh-reporthtml)): `nhcx-plan/report.py` (or `report.mjs`, `report.php`, the target language's equivalent, standard library only), `nhcx-plan/make-report.sh` and `nhcx-plan/make-report.bat`. Run `make-report.sh once` (or the `.bat`) and open the page: at this point it shows the target, the skill and its version, L1 in progress, and every other file as "not yet written". Every later step rebuilds it through the same script.
 
 ### L1.3 Find the domain entities
 Locate patient, practitioner (doctor, staff), organization (facility), encounter (admission, visit), diagnosis, procedure, billing and insurance entities. For each: model or table name, file and lines, primary key, and the fields that look relevant to D3, D2, D1, D4, D5 and D9.
@@ -55,6 +58,7 @@ One entry per spec id. A spec with no match is still listed, as `missing`.
 {
   "target": {"repo": "<name>", "commit": "<sha>", "discovered_at": "<ISO time>"},
   "technology": {
+    "side": "provider",
     "languages": [{"name": "", "version": ""}],
     "framework": "", "ui": "", "database": "", "orm": "",
     "migrations": {"tool": "", "dir": ""},
@@ -82,7 +86,7 @@ One entry per spec id. A spec with no match is still listed, as `missing`.
 ```
 
 #### L1L. LOG
-Record in `nhcx-plan/progress.json` and regenerate `nhcx-plan/progress.md`, as [LOG.md](LOG.md) describes. One entry per sub-step. L1.0 logs the source chosen, and for the package the download, extraction and `MANIFEST` check. L1.1 logs the scan's hits (or that there were none). L1.4 to L1.8 also log the spec ids they matched, and L1.9 logs `nhcx-plan/discovery.json` as created or modified.
+Record in `nhcx-plan/progress.json` and regenerate `nhcx-plan/progress.md`, as [LOG.md](LOG.md) describes. One entry per sub-step. L1.0 logs the source chosen, and for the package the download, extraction and `MANIFEST` check. L1.1 logs the scan's hits (or that there were none). L1.2 logs the report builder and the two wrapper scripts as created, and the first build of `nhcx-plan/report.html`. L1.4 to L1.8 also log the spec ids they matched, and L1.9 logs `nhcx-plan/discovery.json` as created or modified.
 
 #### L1X. EXIT
 - `nhcx-plan/knowledge.json` names the source and its version; for the package, the zip and extracted folder are under `nhcx-plan/knowledge/` and match `MANIFEST`.

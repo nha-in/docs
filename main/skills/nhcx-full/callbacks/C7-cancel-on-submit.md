@@ -81,3 +81,4 @@ State changes (each D18 write restamps D9 `stage` / `sub_stage`):
 - Callbacks: [C1. Callback Door](C1-callback-door.md), [C5. Pre-auth Reply](C5-preauth-on-submit.md), [C8. Enquiry Reply](C8-enquiry-on-submit.md)
 - FHIR: [F10. Task (claim actions)](../fhir/F10-task-claim-actions.md)
 - Database: [D18. claim_preauth](../database/D18-claim-preauth.md), [D30. counter](../database/D30-counter.md)
+- Tests: [T9. IRDAI Status Enquiry and Cancel](../tests/T9-irdai-cancel-and-status.md), [T18. PMJAY Payment Notice, Status Refusal and Cancel](../tests/T18-pmjay-payment-status-cancel.md)

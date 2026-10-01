@@ -129,7 +129,15 @@ A response can carry more than one `Patient` or `Organization`. Index by `fullUr
 
 ### Money
 
-`allowedMoney` is the balance remaining and `usedMoney` the amount used, not the sum insured. There is one benefit per wallet; read them all.
+`allowedMoney` is the balance remaining and `usedMoney` the amount used, not the sum insured. There is one benefit per wallet; read them all. The hospital-side reference keeps the wallet from benefit type `30` only, as `allowedMoney` plus `usedMoney`; a wallet on any other benefit type never reaches the hospital screen.
+
+### Several purposes
+
+`purpose` may carry more than one value. The payer processes them in the defined order, discovery, validation, benefits, then authorization requirements, and answers all of them in one response. Validation covers discovery, so the two together need no separate transaction.
+
+### What the hospital mapper drops
+
+`purpose`, `outcome`, `inforce`, `status`, `disposition`, `period` and `authorizationRequired` are not carried to the hospital screen. The screen is driven from the items, the wallet and the insurance plan.
 
 ### Build for the fuller form
 

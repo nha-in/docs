@@ -84,7 +84,7 @@ API: [A17. Claim State](../apis/A17-claim-state.md)
 
 Data: [D9. claim](../database/D9-claim.md)
 
-Data: D10. claim_plan (in nhcx-preauth)
+Data: [D10. claim_plan](../database/D10-claim-plan.md)
 
 Data: [D13. claim_auth](../database/D13-claim-auth.md)
 

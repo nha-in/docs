@@ -10,7 +10,7 @@ Kinds the claim flow reads:
 - `diagnosis`: SNOMED CT concept in `code` / `display`, with the ICD-10 code in `alt_code` / `alt_display`. The pre-auth quotes the ICD-10 (`alt_code`, else `code`).
 - `claim_package`: local HBP package list used only when the payer's package master ([D10](D10-claim-plan.md)) is not `ready`; `extra` is the package rate in rupees [PAYER](../references/PAYERS.md#markers).
 - `charge`: charge master for a non-package case; `extra` is `price|invoice type code`, and the price is the unit price of a [D27. claim_item](D27-claim-item.md).
-- `payer_adapter`: maps a payer's NHCX participant code (`code`, for example `<payer code>`) to the adapter key in `extra` (`pmjay`, `xyz` or `generic`, see [PAYERS.md](../references/PAYERS.md)). The claim's `payer_id` is matched on its numeric part, so `<n>`, `<n>@hcx` and `<n>@HCX` reach the same row. A payer with no row falls back to `generic`.
+- `payer_adapter`: maps a payer's NHCX participant code (`code`, for example `<payer code>`) to the adapter key in `extra` (`pmjay`, `kyrocare` or `generic`, see [PAYERS.md](../references/PAYERS.md)). The claim's `payer_id` is matched on its numeric part, so `<n>`, `<n>@hcx` and `<n>@HCX` reach the same row. A payer with no row falls back to `generic`.
 - `department`, `service_type`: practitioner department and specialty ([D2](D2-practitioner.md)).
 - `vital`: the vitals written to [D6](D6-observation.md), with `unit`, `ref_low`, `ref_high`.
 - `allergen`, `reaction`: allergies ([D7](D7-allergy.md)); an allergen's `extra` is its default category.

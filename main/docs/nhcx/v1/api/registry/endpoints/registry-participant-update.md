@@ -38,7 +38,7 @@ The registry record now holds the new values. Other participants see the change 
 
 ### Related scenario
 
-A hospital migrates its claims callback service to a new domain. Before touching the registry the team deploys the service, verifies the NHCX NAT IPs are whitelisted and copies the existing PKCS8 private key across. They fetch a Bearer token via /get/session, read the current record with /participant/search, and call /participant/update with participant_code, roles and the new endpoint_URL. The registry returns 200. The next /v1/preauth/on_submit callback from the payer arrives at the new domain and is acknowledged with 202 within 30 seconds.
+A hospital migrates its claims callback service to a new domain. Before touching the registry the team deploys the service, verifies the NHCX NAT IPs are whitelisted and copies the existing PKCS8 private key across. They fetch a session token, read the current record with /participant/search, and call /participant/update with participant_code, roles and the new endpoint_URL. The registry returns 200. The next /v1/preauth/on_submit callback from the payer arrives at the new domain and is acknowledged with 202 within 30 seconds.
 
 ### Specification
 

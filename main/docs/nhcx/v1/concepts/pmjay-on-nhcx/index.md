@@ -4,6 +4,8 @@ Ayushman Bharat Pradhan Mantri Jan Arogya Yojana, known as PMJAY, was launched o
 
 Claim adjudication under PMJAY runs through three integrated systems: the Beneficiary Identification System (BIS), the Transaction Management System (TMS), and the Hospital Empanelment Module (HEM). The key decisions sit in TMS, taken at preauthorisation by the Preauthorisation Processing Doctor (PPD) and at settlement by the Claim Processing Doctor (CPD).
 
+![Ayushman Bharat PM-JAY emblem](/docs/main/img/pmjay-emblem.svg)
+
 The previous chapters described how a claim moves between a Provider and a private insurer over NHCX. This chapter covers what changes when the Payer is PMJAY.
 
 ## The problem with a TMS-only workflow

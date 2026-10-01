@@ -320,7 +320,7 @@ The `Patient`, `Organization`, `Coverage` entries are shaped as in the chapters 
 
 ### Cancel
 
-`Task.code` `cancel`, a reason from `ndhm-reason-code` (`treatmentplanchanged`, `patientrequest`, `financialconstraints`, `alternativetreatment`, `duplicateclaim`, `administrativeerror`, `other`), and the inputs `claimNumber` and `intimationNumber`.
+`Task.code` `cancel`, a reason from `ndhm-reason-code` (`treatmentplanchanged`, `patientrequest`, `financialconstraints`, `alternativetreatment`, `duplicateclaim`, `administrativeerror`, `other`), and the inputs `claimNumber` and `intimationNumber`. `reasonCode` carries both `code` and `display`; a payer refuses it otherwise (`PAYR-1018`). An optional `document` input, valid base64 with a content type, may accompany it. A cancelled preauthorisation releases the blocked sum insured at once.
 
 ### Reprocess
 
@@ -328,7 +328,7 @@ The `Patient`, `Organization`, `Coverage` entries are shaped as in the chapters 
 
 ### Release
 
-`Task.code` `release`, reason `partialpayment`, with the claim number and the amount sought as a `valueMoney` input.
+`Task.code` `release`, reason `partialpayment`, with the claim number and the amount sought as a `valueMoney` input. A payer that does not implement release, or does not reopen a partially paid claim, answers with a coded refusal rather than leaving the Task hanging.
 
 ### Nullify
 
@@ -341,6 +341,8 @@ The Reprocess sheet of the requests-and-responses workbook gives `Task.code` on 
 ### The answer
 
 A `Task` whose `output` of type `include` references a `ClaimResponse` in the same bundle. Read the result from that `ClaimResponse`'s adjudication reason, not from `outcome` and not from `Task.code`. A cancellation is `completed` with reason `cancelled`; a reprocess is `accepted` with the `ClaimResponse` `queued`, and the new verdict follows on the claim's own thread.
+
+The payer still sets `ClaimResponse.outcome` on every answer: the hospital-side reference walks the `ClaimResponse`, not the `Task`, shows nothing for an answer without an outcome, and takes `complete` as the preauthorisation-cancelled path. A `disposition` starting "Erroneous claim is rejected" is shown as Erroneous Rejected.
 
 ### Switch on system and code together
 
