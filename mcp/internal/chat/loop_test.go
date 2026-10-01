@@ -1513,19 +1513,19 @@ func TestRespondEmitsLinksForEndpointPassages(t *testing.T) {
 // The related atoms one hop out from the pack become up to three pills, none
 // of them a passage the reader was already shown.
 func TestSuggestionsFromPack(t *testing.T) {
-	pack := []byte(`{"passages":[{"id":"a"}],"related":[
-		{"id":"a","type":"flow","title":"Already shown"},
-		{"id":"b","type":"flow","title":"Link a care context"},
+	pack := []byte(`{"passages":[{"id":"hiecm.x.a"}],"related":[
+		{"id":"hiecm.x.a","type":"flow","title":"Already shown"},
+		{"id":"hiecm.x.b","type":"flow","title":"Link a care context"},
 		{"id":"","type":"flow","title":"No id"},
-		{"id":"c","type":"error","title":"ABDM-1016"},
-		{"id":"b","type":"flow","title":"Duplicate"},
-		{"id":"d","type":"concept","title":"Care context"},
-		{"id":"e","type":"concept","title":"One too many"}]}`)
-	got := suggestionsFromPack(pack)
+		{"id":"hiecm.x.c","type":"error","title":"ABDM-1016"},
+		{"id":"hiecm.x.b","type":"flow","title":"Duplicate"},
+		{"id":"hiecm.x.d","type":"concept","title":"Care context"},
+		{"id":"hiecm.x.e","type":"concept","title":"One too many"}]}`)
+	got := suggestionsFromPack(pack, "")
 	want := []Suggestion{
-		{ID: "b", Title: "Link a care context", Prompt: "Link a care context"},
-		{ID: "c", Title: "ABDM-1016", Prompt: "ABDM-1016"},
-		{ID: "d", Title: "Care context", Prompt: "Care context"},
+		{ID: "hiecm.x.b", Title: "Link a care context", Prompt: "Link a care context"},
+		{ID: "hiecm.x.c", Title: "ABDM-1016", Prompt: "ABDM-1016"},
+		{ID: "hiecm.x.d", Title: "Care context", Prompt: "Care context"},
 	}
 	if len(got) != len(want) {
 		t.Fatalf("got %v, want %v", got, want)
@@ -1534,6 +1534,44 @@ func TestSuggestionsFromPack(t *testing.T) {
 		if got[i] != want[i] {
 			t.Errorf("suggestion %d = %v, want %v", i, got[i], want[i])
 		}
+	}
+}
+
+// A pill stays in the answer's gateway. "what is abha" opened the shared
+// ABHA entry, which NHCX callbacks cite, and offered three of them.
+func TestSuggestionsStayInTheGateway(t *testing.T) {
+	pack := []byte(`{"passages":[{"id":"shared.glossary.abha"}],"related":[
+		{"id":"nhcx.callback.claim-on-submit","title":"Receiving POST /v1/claim/on_submit"},
+		{"id":"uhi.flow.search","title":"Search for a doctor"},
+		{"id":"shared.glossary.ayushman-card","title":"Ayushman card"},
+		{"id":"hiecm.flow.m1-create-abha","title":"Create an ABHA number"}]}`)
+	ids := func(s []Suggestion) []string {
+		var out []string
+		for _, x := range s {
+			out = append(out, x.ID)
+		}
+		return out
+	}
+	cases := []struct {
+		scope string
+		want  []string
+	}{
+		// No scope and a shared top passage: HIE-CM, ABDM's own gateway.
+		{"", []string{"shared.glossary.ayushman-card", "hiecm.flow.m1-create-abha"}},
+		{"hiecm", []string{"shared.glossary.ayushman-card", "hiecm.flow.m1-create-abha"}},
+		{"nhcx", []string{"nhcx.callback.claim-on-submit", "shared.glossary.ayushman-card"}},
+	}
+	for _, c := range cases {
+		if got := ids(suggestionsFromPack(pack, c.scope)); strings.Join(got, ",") != strings.Join(c.want, ",") {
+			t.Errorf("scope %q: got %v, want %v", c.scope, got, c.want)
+		}
+	}
+	// No scope: a gateway top passage sets the gateway.
+	nhcxTop := []byte(`{"passages":[{"id":"nhcx.concept.policy-linking"}],"related":[
+		{"id":"hiecm.flow.m1-create-abha","title":"Create an ABHA number"},
+		{"id":"nhcx.flow.coverage","title":"Check coverage"}]}`)
+	if got := ids(suggestionsFromPack(nhcxTop, "")); strings.Join(got, ",") != "nhcx.flow.coverage" {
+		t.Errorf("nhcx top passage: got %v, want [nhcx.flow.coverage]", got)
 	}
 }
 

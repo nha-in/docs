@@ -6,7 +6,7 @@ package chat
 // model told the shape and shown one example of it stops varying.
 var shapeBlocks = map[string]string{
 	"define": `<answer_shape name="define" budget="120 words">
-Say what it is in one sentence, then who it matters to. Add the one thing people get wrong about it only when the passages name one; otherwise stop. No list, no headings, at most four sentences.
+Say what it is in one sentence, then who it matters to, then stop. No common mistake, pitfall or warning unless the question asks for one: every entry in the passages has a "When it goes wrong" section, and a definition does not need it. Telling it apart from a term it is confused with is fine, stated as a fact. No list, no headings, at most four sentences.
 Example:
 An ABHA address is the readable handle, such as name@abdm on production or name@sbx on sandbox, that records are linked against and that a person shares at a facility. It is not the ABHA number: a person has one number and can hold several addresses. NHA also calls it the PHR address.
 </answer_shape>`,
