@@ -2138,6 +2138,15 @@
     "url": "/docs/hiecm/v3/milestones/p4#p4-receive-records"
   },
   {
+    "id": "hiecm.flow.scan-and-pay",
+    "type": "flow",
+    "gateway": "hiecm",
+    "source": "page",
+    "page": "site/docs/hiecm/v3/use-cases/scan-and-pay.mdx",
+    "heading": "scan-and-pay-calls",
+    "url": "/docs/hiecm/v3/use-cases/scan-and-pay#scan-and-pay-calls"
+  },
+  {
     "id": "hiecm.glossary.auth-modes",
     "type": "glossary",
     "gateway": "hiecm",

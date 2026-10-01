@@ -63,7 +63,7 @@ Paths are under `/api/hiecm/scan-gateway/v3` on the gateway, and under `/v3`
 on your bridge. Every call carries `REQUEST-ID`, `TIMESTAMP`, the gateway
 `Authorization` token and `X-CM-ID`.
 
-## The calls
+## The calls {/* #scan-and-pay-calls */}
 
 | Step | Who calls | Path | Carries |
 |---|---|---|---|
@@ -79,8 +79,17 @@ on your bridge. Every call carries `REQUEST-ID`, `TIMESTAMP`, the gateway
 | Any time | PHR app to HIE-CM | `GET /patient/scan-pay/details` | Everything held for the patient |
 
 The request and response bodies, with every field, are on the
-[Scan and Pay API reference](/docs/hiecm/v3/api/scan-and-pay/endpoints/scan-and-pay-abdm-scan-pay-hip/01-scan-and-pay-post-v3-patient-share-open-order). No call on
-this page has been run against sandbox.
+[Scan and Pay API reference](/docs/hiecm/v3/api/scan-and-pay/endpoints/scan-and-pay-abdm-scan-pay-hip/01-scan-and-pay-post-v3-patient-share-open-order).
+
+<AgentOnly>
+**Before you start.** Your system is a HIP with a bridge registered for M2, and the counter shows the same QR code as Scan and Register. Paths are under `/api/hiecm/scan-gateway/v3` on the gateway, and under `/v3` on your bridge. Every call carries `REQUEST-ID`, `TIMESTAMP`, the gateway `Authorization` token and `X-CM-ID`.
+
+**What happens.** The patient scans the counter QR code and the PHR app sends their payment details. You answer with every open order for the patient. The app sends back the orders the patient picked, and you answer with the payment bundle and its procedures. After the patient pays, you send the payment status and the app confirms it received it. Either side can ask for the order status later. Every callback is a POST on your bridge: answer 202 at once, then send the matching reply.
+
+**How you know it worked.** Step 2 arrives on your bridge, your step 3 and step 6 return 202, and step 8 comes back on your bridge with the same transaction id after you send the payment status.
+
+**When it goes wrong.** No selection after step 3: the patient may not have picked anything yet. No step 8 after step 7: check the status callback URL is registered for your bridge, then use the order status pair to ask. A share for a counter you do not know: reject it rather than guess.
+</AgentOnly>
 
 ## What you see when it works
 

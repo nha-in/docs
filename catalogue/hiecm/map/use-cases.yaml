@@ -1,0 +1,22 @@
+# HIE-CM content map, use cases: the use case pages' sections. An atom listed
+# here has no hand-written file; scripts/build-sections.mjs writes its file
+# from the page, marked generated: true.
+hiecm.flow.scan-and-pay:
+  type: flow
+  gateway: hiecm
+  milestone: n/a
+  title: "Scan and Pay: take payment for a patient's open orders"
+  summary: A patient scans the QR code at your counter, sees their open orders
+    in their PHR app, pays there, and your system learns the payment status.
+  page: site/docs/hiecm/v3/use-cases/scan-and-pay.mdx
+  heading: scan-and-pay-calls
+  url: /docs/hiecm/v3/use-cases/scan-and-pay#scan-and-pay-calls
+  related:
+    flows:
+    - hiecm.flow.p2-scan-and-share
+    glossary:
+    - hiecm.glossary.hip
+    - hiecm.glossary.hiu
+    - hiecm.glossary.bridge
+    - shared.glossary.phr
+    - shared.glossary.hie-cm
