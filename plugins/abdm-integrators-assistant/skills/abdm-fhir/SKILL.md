@@ -29,6 +29,13 @@ This file is a snapshot. Re-download the whole folder from the portal's /skills/
 
 Open one when the work calls for it. This file is the map, not the material.
 
+## Try asking
+
+- "Add ABDM compliant FHIR bundle generation to this codebase"
+- "Audit the FHIR bundles this codebase already emits"
+
+Loaded with no task? Say in three lines what this skill does. Offer the prompts above. Then ask what the person is building, and whether the code for it exists yet.
+
 ## Before anything else
 
 - Treat every request and response shape in this skill as unconfirmed until the sandbox has answered you. Check a response before you rely on its shape.

@@ -16,6 +16,14 @@ This folder is a snapshot. Re-download the whole folder from the portal's /skill
 If the nhcx-docs MCP server is connected, trust its answers over this folder. It serves the Catalogue live, which holds 536 NHCX atoms, and this folder cites none of them.
 
 What the claims here rest on. The protocol comes from the knowledge source the skill records at its first step: the nhcx-docs MCP server, or a release of the NHCX package checked against its `MANIFEST`. What was seen only on the NHCX sandbox is marked [SANDBOX], and what depends on the payer is marked [PAYER].
+
+**Try asking**
+
+- "Add the NHCX claim at discharge, and its adjudication, to this system"
+- "What has to be in place before my first NHCX claim call?"
+- "Walk me through the NHCX claim test cases before go-live"
+
+Loaded with no task? Say in three lines what this skill does. Offer the prompts above. Then ask what the person is building, and whether the code for it exists yet.
 <!-- /provenance -->
 
 # READ FIRST: CORE

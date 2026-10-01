@@ -13,6 +13,7 @@ import {readdirSync, readFileSync} from 'node:fs';
 import {join} from 'node:path';
 import {parse} from 'yaml';
 import {section} from './atoms.mjs';
+import {tryAskingSection} from './try-asking.mjs';
 
 /** operationId -> x-abdm-hosted-by, across the UHI specifications. */
 export function uhiHostedBy(specDir) {
@@ -297,6 +298,10 @@ export function skillFolder(s, ctx) {
     '- **Debug.** The loop from a status, an error object or a missing callback to a named fix. [references/debug.md](references/debug.md)',
     '- **Test.** The checks this service is held to, and the steps to production. [references/test.md](references/test.md)',
   ];
+  const manifest = {
+    gateway: 'uhi', module: 'UHI', title: s.title, docs: s.page, example: s.example, errorExample: null,
+    operations: ops.length, codes: 0, sections: ['scaffold', 'design', 'integrate', 'debug', 'test'],
+  };
   const router = [
     '---', `name: ${s.slug}`,
     `description: "Use when building, debugging or testing UHI ${s.title}: ${s.does}. Carries the journeys as loops, the calls with their signing, the screen rules, the symptoms of a failed call, and the go-live checks, in references/."`,
@@ -308,6 +313,7 @@ export function skillFolder(s, ctx) {
     'If the abdm-docs MCP server is connected, trust its answers over this file: it serves the current catalogue and stamps every response with its catalogue_version.', '',
     `## What you can do with ${s.title}`, '',
     ...[...new Set(s.journeys.map((j) => j.flow))].map((id) => `- ${need(atoms, id).fm.summary}`), '',
+    ...tryAskingSection(manifest),
     '## What is in this folder', '', ...covers, '',
     'This file is the map. Each line above is a file beside it, opened one at a time rather than read through.', '',
     '## Before anything else', '',
@@ -323,10 +329,6 @@ export function skillFolder(s, ctx) {
     'references/integrate.md': integrate,
     'references/debug.md': ctx.debug,
     'references/test.md': testFile,
-  };
-  const manifest = {
-    gateway: 'uhi', module: 'UHI', title: s.title, docs: s.page, example: s.example, errorExample: null,
-    operations: ops.length, codes: 0, sections: ['scaffold', 'design', 'integrate', 'debug', 'test'],
   };
   return {files, manifest};
 }

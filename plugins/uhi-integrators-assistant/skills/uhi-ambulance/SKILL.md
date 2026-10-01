@@ -29,6 +29,15 @@ If the abdm-docs MCP server is connected, trust its answers over this file: it s
 - An emergency search with the pickup location reaches every ambulance HSPA; those serving the area answer with ambulances, arrival windows and prices.
 - The EUA sends the patient's details directly to the chosen HSPA, which returns a quote and five terms; the provider then calls to arrange dispatch.
 
+## Try asking
+
+- "Add ambulance search and a quote to our app"
+- "What has to be in place before my first UHI Ambulance Booking call?"
+- "My UHI Ambulance Booking call failed. Here is the response: what is wrong, and how do I fix it?"
+- "Walk me through the UHI Ambulance Booking test cases before go-live"
+
+Loaded with no task? Say in three lines what this skill does. Offer the prompts above. Then ask what the person is building, and whether the code for it exists yet.
+
 ## What is in this folder
 
 - **Scaffold.** Register on the network first, then build each journey as a loop that ends when its exit condition holds. [references/scaffold.md](references/scaffold.md)

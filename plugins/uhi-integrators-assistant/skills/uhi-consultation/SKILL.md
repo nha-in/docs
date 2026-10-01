@@ -31,6 +31,15 @@ If the abdm-docs MCP server is connected, trust its answers over this file: it s
 - The patient checks in with the PIN, the HSPA pushes each state change in on_update, and the EUA calls status only when an update never arrives.
 - The patient cancels through the EUA or the doctor through the HSPA, each with a reason code and who cancelled; either side can message the other.
 
+## Try asking
+
+- "Let patients in our app book a physical consultation"
+- "What has to be in place before my first UHI Physical Consultation call?"
+- "My UHI Physical Consultation call failed. Here is the response: what is wrong, and how do I fix it?"
+- "Walk me through the UHI Physical Consultation test cases before go-live"
+
+Loaded with no task? Say in three lines what this skill does. Offer the prompts above. Then ask what the person is building, and whether the code for it exists yet.
+
 ## What is in this folder
 
 - **Scaffold.** Register on the network first, then build each journey as a loop that ends when its exit condition holds. [references/scaffold.md](references/scaffold.md)
