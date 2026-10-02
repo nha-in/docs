@@ -28,6 +28,15 @@ If the abdm-docs MCP server is connected, trust its answers over this file: it s
 
 - One search through the Gateway reaches every registered Blood Bank HSPA; aggregate their on_search answers by transaction_id within 10 to 15 seconds.
 
+## Try asking
+
+- "Show blood banks near the patient that hold the group they need"
+- "What has to be in place before my first UHI Blood Bank discovery call?"
+- "My UHI Blood Bank discovery call failed. Here is the response: what is wrong, and how do I fix it?"
+- "Walk me through the UHI Blood Bank discovery test cases before go-live"
+
+Loaded with no task? Say in three lines what this skill does. Offer the prompts above. Then ask what the person is building, and whether the code for it exists yet.
+
 ## What is in this folder
 
 - **Scaffold.** Register on the network first, then build each journey as a loop that ends when its exit condition holds. [references/scaffold.md](references/scaffold.md)

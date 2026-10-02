@@ -72,7 +72,7 @@ For Cursor, add `{ "mcpServers": { "nhcx-docs": { "url": "https://docs.abdm.gov.
 
 ## 4. Report back
 
-Tell the user what you installed and where you suggest starting. Two cautions to keep for the whole engagement:
+Tell the user what you installed and where you suggest starting. Offer three prompts from the **Try asking** section of the skills that fit, and ask what they are building. Two cautions to keep for the whole engagement:
 
 - The skills hold the bundles they send to the pinned samples in the NHCX package. Check response shapes against real sandbox calls before relying on them.
 - The skills are snapshots. The current documentation lives at https://docs.abdm.gov.in/docs/nhcx/v1; prefer it, and the MCP server when connected, over any downloaded copy that has aged.

@@ -16,6 +16,8 @@
 import {readdirSync, readFileSync, writeFileSync, existsSync} from 'node:fs';
 import {join} from 'node:path';
 import {root, loadAtoms} from './lib/atoms.mjs';
+import {NHCX, nhcxEntry} from './lib/nhcx-skills.mjs';
+import {tryAsking, IDLE_RULE} from './lib/try-asking.mjs';
 
 const check = process.argv.includes('--check');
 const skillsDir = join(root, 'plugins', 'nhcx', 'skills');
@@ -47,6 +49,13 @@ function folders(slug) {
   return dirs.length > 1 ? `${dirs.slice(0, -1).join(', ')} and ${dirs.at(-1)}` : dirs.join('');
 }
 
+/** The prompts a person can paste once this skill is installed. */
+function tryAskingLines(slug) {
+  if (!NHCX[slug]) return [];
+  const prompts = tryAsking(nhcxEntry(slug, join(skillsDir, slug)));
+  return ['', '**Try asking**', '', ...prompts.map((p) => `- "${p}"`), '', IDLE_RULE];
+}
+
 function block(slug) {
   const {repo, taken, commit} = upstream();
   const {nhcxAtoms} = catalogueCounts();
@@ -60,6 +69,7 @@ function block(slug) {
     `If the nhcx-docs MCP server is connected, trust its answers over this folder. It serves the Catalogue live, which holds ${nhcxAtoms} NHCX atoms, and this folder cites none of them.`,
     '',
     `What the claims here rest on. The protocol comes from the knowledge source the skill records at its first step: the nhcx-docs MCP server, or a release of the NHCX package checked against its \`MANIFEST\`. What was seen only on the NHCX sandbox is marked [SANDBOX], and what depends on the payer is marked [PAYER].`,
+    ...tryAskingLines(slug),
     CLOSE,
   ].join('\n');
 }

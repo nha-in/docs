@@ -46,7 +46,9 @@ const maxUnfilteredOperations = 60
 // aliases: the old names, each delegating as before. emb may be nil
 // (keyword-only).
 func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
-	s := mcp.NewServer(&mcp.Implementation{Name: "abdm-docs", Version: serverVersion}, nil)
+	skills := skillNames(r)
+	s := mcp.NewServer(&mcp.Implementation{Name: "abdm-docs", Version: serverVersion},
+		&mcp.ServerOptions{Instructions: onboarding(skills)})
 	s.AddReceivingMiddleware(toolCallLoggingMiddleware)
 	versioned := func(fields map[string]any) map[string]any {
 		fields["catalogue_version"] = r.CatalogueVersion()
@@ -248,6 +250,9 @@ func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 	// registers nothing, so an older database still serves.
 	if err := addSkills(s, r); err != nil {
 		slog.Warn("skills not registered", "err", err)
+	}
+	if len(skills) > 0 {
+		addStartPrompt(s, skills)
 	}
 
 	return s
