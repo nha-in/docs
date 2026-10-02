@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from '@docusaurus/Link';
+import {House} from 'lucide-react';
 import {cn} from '@site/src/lib/utils';
 import {
   activeTab,
@@ -25,6 +26,9 @@ export default function DocsTabs() {
 
   return (
     <nav className="docs-tabs" aria-label="Documentation sections">
+      <Link to="/" className="docs-tab" aria-label="Home" title="Home">
+        <House className="size-4" aria-hidden="true" />
+      </Link>
       {visibleTabs(pathname).map((tab) => {
         const isActive = tab === current;
         const Icon = tab.icon;
