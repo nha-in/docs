@@ -4,6 +4,7 @@ import {createStorageSlot} from '@docusaurus/theme-common';
 import {Moon, Sun} from 'lucide-react';
 import {isLanding, useRoutePath} from '@site/src/config/navigation';
 import LandingHero from './LandingHero';
+import MissionLockup from '@site/src/components/chrome/MissionLockup';
 
 /**
  * The colour mode control, written by hand.
@@ -274,16 +275,7 @@ export default function LandingCurtain(): React.ReactNode {
           colour mode provider, so anything that reads that context throws
           during static rendering. CSS picks the mark instead. */}
       <div className="curtain__bar">
-        <img
-          className="curtain__mark curtain__mark--light"
-          src="/img/nha-logo.svg"
-          alt="National Health Authority"
-        />
-        <img
-          className="curtain__mark curtain__mark--dark"
-          src="/img/nha-logo-dark.svg"
-          alt=""
-        />
+        <MissionLockup />
         <CurtainThemeToggle />
       </div>
       <LandingHero />
