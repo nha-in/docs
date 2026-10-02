@@ -5,7 +5,7 @@ sidebar_position: 1
 sidebar_custom_props:
   roles: [his, phr]
 description: Milestone 1 focuses on the creation and management of ABHA, the unique health identifier under ABDM, through ABDM-compliant workflows.
-source: NHA content review of 15 September 2026 (Sandbox2.0 M1, getting started and glossary); catalogue/hiecm/openapi/v3/hiecm-m1.yaml for the call order in the diagrams
+source: the ABHA creation terms and conditions as supplied on 3 October 2026 for the consent text; NHA content review of 15 September 2026 (Sandbox2.0 M1, getting started and glossary); catalogue/hiecm/openapi/v3/hiecm-m1.yaml for the call order in the diagrams
 sidebar_class_name: sidebar-icon sidebar-icon--user-round-plus
 ---
 
@@ -88,6 +88,38 @@ assistant in one click.
 
 <LegacyAnchor id="abha-with-aadhaar" />
 <LegacyAnchor id="the-page-map" />
+
+### Consent before creating an ABHA {/* #m1-abha-consent */}
+
+Before your system sends a person's Aadhaar number, show them the terms and
+conditions below and collect their agreement, through an "I agree" checkbox or
+another form of signature. Keep a record that they agreed. Every journey that
+creates an ABHA from Aadhaar starts here, and functional testing checks it in
+[CRT_ABHA_102](/docs/hiecm/v3/resources/test-cases/m1#crt_abha_102).
+
+Show the text exactly as written:
+
+<div className="consent-text">
+
+**Terms and Conditions**
+
+I, hereby declare that I am voluntarily sharing my Aadhaar number and demographic information issued by UIDAI, with National Health Authority (NHA) for the sole purpose of creation of ABHA number. I understand that my ABHA number can be used and shared for purposes as may be notified by ABDM from time to time including provision of healthcare services. Further, I am aware that my personal identifiable information (Name, Address, Age, Date of Birth, Gender and Photograph) may be made available to the entities working in the National Digital Health Ecosystem (NDHE) which inter alia includes stakeholders and entities such as healthcare professionals (e.g. doctors), facilities (e.g. hospitals, laboratories) and data fiduciaries (e.g. health programmes), which are registered with or linked to the Ayushman Bharat Digital Mission (ABDM), and various processes there under. I authorize NHA to use my Aadhaar number for performing Aadhaar based authentication with UIDAI as per the provisions of the Aadhaar (Targeted Delivery of Financial and other Subsidies, Benefits and Services) Act, 2016 for the aforesaid purpose. I understand that UIDAI will share my e-KYC details, or response of “Yes” with NHA upon successful authentication. I have been duly informed about the option of using other IDs apart from Aadhaar; however, I consciously choose to use Aadhaar number for the purpose of availing benefits across the NDHE. I am aware that my personal identifiable information excluding Aadhaar number / VID number can be used and shared for purposes as mentioned above. I reserve the right to revoke the given consent at any point of time as per provisions of Aadhaar Act and Regulations.
+
+</div>
+
+The `consent` block in the `enrol/byAadhaar` request records the agreement:
+`code` is `abha-enrollment` and `version` is `1.4`. Offering the text in other
+languages is optional.
+
+<AgentOnly>
+**Before you start.** A screen that shows the full terms and conditions above, with nothing truncated, before any field that takes the Aadhaar number is submitted.
+
+**What happens.** Display the text verbatim, require an explicit "I agree" before the OTP request is sent, and store who agreed and when. Send the `consent` block with `code` `abha-enrollment` and `version` `1.4` in `enrol/byAadhaar`.
+
+**How you know it worked.** The OTP request cannot be sent until the person has agreed, and your records show the agreement for every ABHA your system created.
+
+**When it goes wrong.** A creation flow that sends the Aadhaar number before consent is collected fails functional testing at CRT_ABHA_102, whatever the API returns.
+</AgentOnly>
 
 ### ABHA creation by an Aadhaar OTP <LegacyAnchor id="journey-1-abha-creation-by-aadhaar-otp" /> {/* #m1-create-abha-aadhaar-otp */}
 

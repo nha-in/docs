@@ -946,3 +946,21 @@ hiecm.troubleshooting.otp-never-arrives:
     glossary:
     - shared.glossary.otp
     - shared.glossary.txn-id
+hiecm.concept.m1-abha-consent:
+  type: concept
+  gateway: hiecm
+  milestone: M1
+  title: The terms and conditions a person agrees to before an ABHA is created
+  summary: The full consent text to show before sending an Aadhaar number, how to
+    collect and record agreement, and the consent block enrol/byAadhaar sends.
+  page: site/docs/hiecm/v3/milestones/m1.mdx
+  heading: m1-abha-consent
+  url: /docs/hiecm/v3/milestones/m1#m1-abha-consent
+  related:
+    flows:
+    - hiecm.flow.m1-create-abha-aadhaar-otp
+    - hiecm.flow.m1-create-abha-face-auth
+    - hiecm.flow.m1-create-abha-demographic-auth
+    endpoints:
+    - hiecm.endpoint.m1-enrolment-request-otp
+    - hiecm.endpoint.m1-enrolment-by-aadhaar

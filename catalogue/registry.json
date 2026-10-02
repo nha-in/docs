@@ -405,6 +405,15 @@
     "url": "/docs/hiecm/v3/concepts/encryption#input-encryption"
   },
   {
+    "id": "hiecm.concept.m1-abha-consent",
+    "type": "concept",
+    "gateway": "hiecm",
+    "source": "page",
+    "page": "site/docs/hiecm/v3/milestones/m1.mdx",
+    "heading": "m1-abha-consent",
+    "url": "/docs/hiecm/v3/milestones/m1#m1-abha-consent"
+  },
+  {
     "id": "hiecm.concept.m1-avoiding-duplicate-abha",
     "type": "concept",
     "gateway": "hiecm",
