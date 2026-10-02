@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["80321"],{36760(e,a,t){t.r(a),t.d(a,{__iconNode:()=>h,default:()=>s});var d=t(34438);let h=[["path",{d:"M6 5h12",key:"fvfigv"}],["path",{d:"M4 12h10",key:"oujl3d"}],["path",{d:"M12 19h8",key:"baeox8"}]],s=(0,d.A)("chart-no-axes-gantt",h)}}]);
