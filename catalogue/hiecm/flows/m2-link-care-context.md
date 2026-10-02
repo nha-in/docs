@@ -41,10 +41,10 @@ related:
 
 ## In plain words
 
-The HIP generates a linking token using the patient's ABHA address and
-demographic details for authentication. After successful verification, a
-linking token valid for 6 months is created, and the patient's care context is
-linked to the ABHA Address.
+The Health Information Provider (HIP) initiates the linking process using the
+patient's ABHA details. Upon successful authentication, a link token valid for
+six months is generated, enabling the relevant Care Contexts to be linked with
+the patient's ABHA Address.
 
 ```mermaid
 sequenceDiagram
