@@ -162,7 +162,7 @@ Drops the skill into this project. Claude loads it when a task matches.
 How to use it
 
 1. Run the command above in the repository you are integrating.
-2. Ask your agent for the job in your own words. "Add ABHA creation by Aadhaar OTP to this codebase", "why am I getting 404". The skill loads when the task matches it.
+2. Ask your agent for the job in your own words. "Add ABHA creation by Aadhaar OTP to this codebase", "why am I getting ABDM-1017". The skill loads when the task matches it.
 3. Check what it writes against these pages. The skill carries the facts, not the sandbox: nothing in it has been run against ABDM.
 4. Open in Claude needs that app installed. It fills the composer and waits: nothing runs until you read it and press Enter.
 

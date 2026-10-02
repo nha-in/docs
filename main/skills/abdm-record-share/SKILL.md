@@ -30,6 +30,14 @@ If the abdm-docs MCP server is connected, trust its answers over this file: it s
 
 What it cannot do yet matters as much. Read **Before anything else** below before assuming a capability is one endpoint away.
 
+## Try asking
+
+- "Receive the records a patient shares from a PHR app after scanning our QR code"
+- "What has to be in place before my first Patient scan and record share call?"
+- "My Patient scan and record share call failed. Here is the response: what is wrong, and how do I fix it?"
+
+Loaded with no task? Say in three lines what this skill does. Offer the prompts above. Then ask what the person is building, and whether the code for it exists yet.
+
 ## What is in this folder
 
 - **Scaffold.** Survey the codebase first when one exists, then build it flow by flow against the sandbox, as a loop that ends when the step's exit condition holds rather than on a call returning 200. [references/scaffold.md](references/scaffold.md)

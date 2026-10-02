@@ -35740,7 +35740,7 @@ Notes for AI agents
 ## Next
 
 - [A 200 means accepted, not done](/docs/main/docs/hiecm/v3/concepts/gateway#asynchronous-callbacks), why answers arrive as callbacks.
-- [The API specifications](/docs/main/docs/hiecm/v3/concepts/api-specifications), where every callback is described.
+- [The API reference](/docs/main/docs/hiecm/v3/api), where every callback is described.
 - [Consent](/docs/main/docs/hiecm/v3/concepts/consent), the artefact whose own signature this page does not cover.
 
 
@@ -36322,7 +36322,7 @@ Nothing goes participant to participant. Every request is addressed to the gatew
 
 One exception. In the health information flow the HIU supplies a data push URL, and the HIP encrypts the records and pushes them there. That URL may differ from the HIU's registered gateway URL, to improve privacy. The permission came through the gateway. The bytes do not.
 
-Match each callback to the call that caused it by `response.requestId`, which carries the `REQUEST-ID` you sent. Callbacks do not arrive in the order you sent the requests, and the same one can arrive twice, so a repeat must change nothing. Where each callback is described in the specifications is on [the API specifications](/docs/main/docs/hiecm/v3/concepts/api-specifications).
+Match each callback to the call that caused it by `response.requestId`, which carries the `REQUEST-ID` you sent. Callbacks do not arrive in the order you sent the requests, and the same one can arrive twice, so a repeat must change nothing. Each callback is described in [the API reference](/docs/main/docs/hiecm/v3/api).
 
 Notes for AI agents
 
@@ -37388,7 +37388,7 @@ Drops the skill into this project. Claude loads it when a task matches.
 How to use it
 
 1. Run the command above in the repository you are integrating.
-2. Ask your agent for the job in your own words. "Add ABHA creation by Aadhaar OTP to this codebase", "why am I getting 404". The skill loads when the task matches it.
+2. Ask your agent for the job in your own words. "Add ABHA creation by Aadhaar OTP to this codebase", "why am I getting ABDM-1017". The skill loads when the task matches it.
 3. Check what it writes against these pages. The skill carries the facts, not the sandbox: nothing in it has been run against ABDM.
 4. Open in Claude needs that app installed. It fills the composer and waits: nothing runs until you read it and press Enter.
 
@@ -37567,7 +37567,7 @@ The Healthcare Professionals Registry (HPR) is the national registry of doctors,
 
 ### KYC
 
-Know Your Customer: the identity check that must pass before an [ABHA number](#abha-number) is issued. The check runs against Aadhaar: by [OTP](#otp), by biometric authentication (face, fingerprint or iris), or, for government entities only, by demographic authentication.
+The identity check required to get an [ABHA number](#abha-number). It verifies identity through Aadhaar using an [OTP](#otp), biometric scan, or demographic data.
 
 ### NHA
 
@@ -37579,7 +37579,7 @@ The National Health Claims Exchange (NHCX) is a digital gateway under ABDM that 
 
 ### OTP
 
-One Time Password: a short code sent to a mobile number or an email address to prove the person holds it. An ABHA OTP is valid for 10 minutes, and it is always verified together with the [txnId](#txnid) of the call that requested it.
+One Time Password: a short code sent to a mobile number or an email address to prove the person holds it.
 
 ### PHR
 
@@ -37595,7 +37595,7 @@ The ABDM Sandbox is a controlled test environment that enables health-technology
 
 ### txnId
 
-Transaction id. Most flows take two or three calls, and the first one returns a `txnId` that the calls after it send back, so ABDM knows which attempt they belong to. It is short lived and single purpose. It is not a session and it is not a token: holding a `txnId` does not authenticate you, and it stops working once the flow it belongs to finishes or expires.
+A short-lived ID used to connect steps in a multi-call API flow.
 
 ### UHI
 
@@ -37667,11 +37667,11 @@ A Laboratory Information Management System (LIMS), also referred to in some cont
 
 ### Link token
 
-The token that authorises a [Health Information Provider](#hip) to link [care contexts](#care-context) to a patient's [ABHA Address](#abha-address). It is generated through the link token API and is valid for six months.
+The token that authorises a [Health Information Provider](#hip) to link [care contexts](#care-context) to a patient's [ABHA Address](#abha-address).
 
 Notes for AI agents
 
-**How you know it worked.** You can say how long a link token lasts and what to do when it has expired.
+**How you know it worked.** You can say what a link token authorises and what to do when it has expired.
 
 **When it goes wrong.** A stored link token is used without checking that it is still valid. Validate it before every link. If it has expired, generate a new one through demographic authentication, then link.
 
@@ -37821,7 +37821,7 @@ Ayushman Bharat Digital Mission (ABDM) is India's national digital health ecosys
 
 ABDM does not maintain a centralized repository of health records. Health records continue to reside with the respective healthcare providers or repositories responsible for creating and maintaining them. Health information remains with the originating healthcare information provider and is shared only upon receipt of valid consent from the individual. The ABDM framework facilitates the secure exchange of consent requests, consent artefacts, and health information between participating systems in accordance with established security and privacy standards. The ABDM gateway infrastructure facilitates routing and exchange of consented health information without accessing, storing, or interpreting the clinical content being exchanged.
 
-Three gateways carry different work, and this section documents the first.
+Each of the three gateways serves a unique purpose. This section explains the first (HIE-CM).
 
 | Gateway                                                            | What it carries                                                                                                                                                                                                                                                                   |
 | ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -37829,11 +37829,9 @@ Three gateways carry different work, and this section documents the first.
 | [UHI](/docs/main/docs/uhi/v1)                                      | Unified Health Interface: discovery and delivery of digital health services through an open and interoperable network                                                                                                                                                             |
 | [NHCX](/docs/main/docs/nhcx/v1)                                    | National Health Claims Exchange: standardised exchange of health insurance claim information among payers, healthcare providers, beneficiaries, third-party administrators and other participating entities                                                                       |
 
-Your work on HIE-CM is [four milestones](/docs/main/docs/hiecm/v3/milestones): Create the identity, Attach your records to it, Retrieve records held elsewhere, Enrol your facility and your professionals.
+## Select your role
 
-## Who are you?
-
-This is where you choose your path. Pick the one that fits and the rest of the documentation follows it, in the sidebar and on every page. You can change it whenever you like from the filter at the top of the sidebar.
+Select your role to view documentation tailored to your integration path. The sidebar and page content will automatically update based on your selection. You can change this selection at any time using the filter at the top of the sidebar.
 
 ## Start here: build with AI
 
@@ -38238,7 +38236,7 @@ Drops the skill into this project. Claude loads it when a task matches.
 How to use it
 
 1. Run the command above in the repository you are integrating.
-2. Ask your agent for the job in your own words. "Add ABHA creation by Aadhaar OTP to this codebase", "why am I getting 404". The skill loads when the task matches it.
+2. Ask your agent for the job in your own words. "Add ABHA creation by Aadhaar OTP to this codebase", "why am I getting ABDM-1017". The skill loads when the task matches it.
 3. Check what it writes against these pages. The skill carries the facts, not the sandbox: nothing in it has been run against ABDM.
 4. Open in Claude needs that app installed. It fills the composer and waits: nothing runs until you read it and press Enter.
 
@@ -78480,7 +78478,7 @@ The Healthcare Professionals Registry (HPR) is the national registry of doctors,
 
 ### KYC
 
-Know Your Customer: the identity check that must pass before an [ABHA number](#abha-number) is issued. The check runs against Aadhaar: by [OTP](#otp), by biometric authentication (face, fingerprint or iris), or, for government entities only, by demographic authentication.
+The identity check required to get an [ABHA number](#abha-number). It verifies identity through Aadhaar using an [OTP](#otp), biometric scan, or demographic data.
 
 ### NHA
 
@@ -78492,7 +78490,7 @@ The National Health Claims Exchange (NHCX) is a digital gateway under ABDM that 
 
 ### OTP
 
-One Time Password: a short code sent to a mobile number or an email address to prove the person holds it. An ABHA OTP is valid for 10 minutes, and it is always verified together with the [txnId](#txnid) of the call that requested it.
+One Time Password: a short code sent to a mobile number or an email address to prove the person holds it.
 
 ### PHR
 
@@ -78508,7 +78506,7 @@ The ABDM Sandbox is a controlled test environment that enables health-technology
 
 ### txnId
 
-Transaction id. Most flows take two or three calls, and the first one returns a `txnId` that the calls after it send back, so ABDM knows which attempt they belong to. It is short lived and single purpose. It is not a session and it is not a token: holding a `txnId` does not authenticate you, and it stops working once the flow it belongs to finishes or expires.
+A short-lived ID used to connect steps in a multi-call API flow.
 
 ### UHI
 

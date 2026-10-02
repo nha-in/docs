@@ -86,7 +86,7 @@ For other agents, add an HTTP MCP server named `abdm-docs` at `https://docs.abdm
 
 ## 4. Report back
 
-Tell the user what you installed and where you suggest starting. Two cautions to keep for the whole engagement:
+Tell the user what you installed and where you suggest starting. Offer three prompts from the **Try asking** section of the skills that fit, and ask what they are building. Two cautions to keep for the whole engagement:
 
 - Nothing in these skills has been run against the ABDM sandbox. Verify response shapes against real calls before relying on them.
 - The skills are snapshots. The current documentation lives at https://nha-in.github.io/docs/main/; prefer it, and the MCP server when connected, over any downloaded copy that has aged.

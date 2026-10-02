@@ -30,6 +30,15 @@ If the abdm-docs MCP server is connected, trust its answers over this file: it s
 - A search of type JANAUSHADHI through the Gateway reaches the PMBI HSPA, which returns Kendras by location or Kendra code in one on_search.
 - A medicine search turns a name into a medicineId, and a second, separate search with that id returns the Kendras that stock it with a stock flag.
 
+## Try asking
+
+- "Let patients find a Jan Aushadhi Kendra that stocks their medicine"
+- "What has to be in place before my first UHI Jan Aushadhi call?"
+- "My UHI Jan Aushadhi call failed. Here is the response: what is wrong, and how do I fix it?"
+- "Walk me through the UHI Jan Aushadhi test cases before go-live"
+
+Loaded with no task? Say in three lines what this skill does. Offer the prompts above. Then ask what the person is building, and whether the code for it exists yet.
+
 ## What is in this folder
 
 - **Scaffold.** Register on the network first, then build each journey as a loop that ends when its exit condition holds. [references/scaffold.md](references/scaffold.md)

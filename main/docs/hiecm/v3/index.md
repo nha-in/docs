@@ -8,7 +8,7 @@ Ayushman Bharat Digital Mission (ABDM) is India's national digital health ecosys
 
 ABDM does not maintain a centralized repository of health records. Health records continue to reside with the respective healthcare providers or repositories responsible for creating and maintaining them. Health information remains with the originating healthcare information provider and is shared only upon receipt of valid consent from the individual. The ABDM framework facilitates the secure exchange of consent requests, consent artefacts, and health information between participating systems in accordance with established security and privacy standards. The ABDM gateway infrastructure facilitates routing and exchange of consented health information without accessing, storing, or interpreting the clinical content being exchanged.
 
-Three gateways carry different work, and this section documents the first.
+Each of the three gateways serves a unique purpose. This section explains the first (HIE-CM).
 
 | Gateway                                                            | What it carries                                                                                                                                                                                                                                                                   |
 | ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -16,11 +16,9 @@ Three gateways carry different work, and this section documents the first.
 | [UHI](/docs/main/docs/uhi/v1)                                      | Unified Health Interface: discovery and delivery of digital health services through an open and interoperable network                                                                                                                                                             |
 | [NHCX](/docs/main/docs/nhcx/v1)                                    | National Health Claims Exchange: standardised exchange of health insurance claim information among payers, healthcare providers, beneficiaries, third-party administrators and other participating entities                                                                       |
 
-Your work on HIE-CM is [four milestones](/docs/main/docs/hiecm/v3/milestones): Create the identity, Attach your records to it, Retrieve records held elsewhere, Enrol your facility and your professionals.
+## Select your role
 
-## Who are you?
-
-This is where you choose your path. Pick the one that fits and the rest of the documentation follows it, in the sidebar and on every page. You can change it whenever you like from the filter at the top of the sidebar.
+Select your role to view documentation tailored to your integration path. The sidebar and page content will automatically update based on your selection. You can change this selection at any time using the filter at the top of the sidebar.
 
 ## Start here: build with AI
 

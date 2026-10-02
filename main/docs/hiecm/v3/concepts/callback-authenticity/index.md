@@ -44,5 +44,5 @@ Notes for AI agents
 ## Next
 
 - [A 200 means accepted, not done](/docs/main/docs/hiecm/v3/concepts/gateway#asynchronous-callbacks), why answers arrive as callbacks.
-- [The API specifications](/docs/main/docs/hiecm/v3/concepts/api-specifications), where every callback is described.
+- [The API reference](/docs/main/docs/hiecm/v3/api), where every callback is described.
 - [Consent](/docs/main/docs/hiecm/v3/concepts/consent), the artefact whose own signature this page does not cover.

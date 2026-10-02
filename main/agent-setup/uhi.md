@@ -62,6 +62,6 @@ For other agents, add an HTTP MCP server named `abdm-docs` at `https://docs.abdm
 
 ## 4. Report back
 
-Tell the user what you installed and where you suggest starting.
+Tell the user what you installed and where you suggest starting. Offer three prompts from the **Try asking** section of the skills that fit, and ask what they are building.
 The skills are snapshots. The current documentation lives at https://nha-in.github.io/docs/main/docs/uhi/v1; prefer it, and the MCP server when connected, over any downloaded copy that has aged.
 

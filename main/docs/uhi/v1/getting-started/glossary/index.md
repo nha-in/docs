@@ -52,7 +52,7 @@ The Healthcare Professionals Registry (HPR) is the national registry of doctors,
 
 ### KYC
 
-Know Your Customer: the identity check that must pass before an [ABHA number](#abha-number) is issued. The check runs against Aadhaar: by [OTP](#otp), by biometric authentication (face, fingerprint or iris), or, for government entities only, by demographic authentication.
+The identity check required to get an [ABHA number](#abha-number). It verifies identity through Aadhaar using an [OTP](#otp), biometric scan, or demographic data.
 
 ### NHA
 
@@ -64,7 +64,7 @@ The National Health Claims Exchange (NHCX) is a digital gateway under ABDM that 
 
 ### OTP
 
-One Time Password: a short code sent to a mobile number or an email address to prove the person holds it. An ABHA OTP is valid for 10 minutes, and it is always verified together with the [txnId](#txnid) of the call that requested it.
+One Time Password: a short code sent to a mobile number or an email address to prove the person holds it.
 
 ### PHR
 
@@ -80,7 +80,7 @@ The ABDM Sandbox is a controlled test environment that enables health-technology
 
 ### txnId
 
-Transaction id. Most flows take two or three calls, and the first one returns a `txnId` that the calls after it send back, so ABDM knows which attempt they belong to. It is short lived and single purpose. It is not a session and it is not a token: holding a `txnId` does not authenticate you, and it stops working once the flow it belongs to finishes or expires.
+A short-lived ID used to connect steps in a multi-call API flow.
 
 ### UHI
 
