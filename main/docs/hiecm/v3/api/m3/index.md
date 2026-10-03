@@ -1,4 +1,4 @@
-# M3 Health Information User: Fetch data with consent
+# M3 Health Information User: Health Information Exchange with Consent
 
 Request patient consent, track its status, and fetch the health records a granted consent artefact covers.
 

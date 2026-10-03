@@ -1,4 +1,4 @@
-# M2 Health Information Provider: Create and link records
+# M2 Health Information Provider: Creation, Linking and Sharing of Health Records
 
 Link care contexts to a patient's ABHA address, answer discovery requests, and share encrypted health records with consent.
 

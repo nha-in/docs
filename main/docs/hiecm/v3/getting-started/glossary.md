@@ -48,7 +48,7 @@ Healthcare Professional ID (HPID) refers to the unique identifier assigned to an
 
 ### HPR
 
-The Healthcare Professionals Registry (HPR) is the national registry of doctors, nurses and pharmacists. Registering a professional on the HPR results in the issuance of an [HPID](#hpid). The HPR Token can also be used to onboard a facility to the [HFR](#hfr).
+The Healthcare Professionals Registry (HPR) is the comprehensive registry of doctors, nurses and pharmacists. Registering a professional on the HPR results in the issuance of an [HPID](#hpid). The HPR Token can also be used to onboard a facility to the [HFR](#hfr).
 
 ### KYC
 
@@ -166,15 +166,15 @@ Milestone 1 (M1 Identity), Create and verify ABHA, covers ABHA-related functions
 
 ### M2
 
-Milestone 2 (M2 [Health Information Provider](#hip)), Create and link records, covers linking health records with an individual’s [ABHA Address](#abha-address). It includes discovery of eligible [care contexts](#care-context), authentication or consent for linking, linking of care contexts by the HIP and notification of newly linked records to the applicable [PHR application](#phr). See [M2 Health Information Provider](/docs/main/docs/hiecm/v3/milestones/m2).
+Milestone 2 (M2 [Health Information Provider](#hip)), Creation, Linking and Sharing of Health Records, covers linking health records with an individual’s [ABHA Address](#abha-address). It includes discovery of eligible [care contexts](#care-context), authentication or consent for linking, linking of care contexts by the HIP and notification of newly linked records to the applicable [PHR application](#phr). See [M2 Health Information Provider](/docs/main/docs/hiecm/v3/milestones/m2).
 
 ### M3
 
-Milestone 3 (M3 [Health Information User](#hiu)), Fetch data with consent, covers consent-based exchange of health information. It includes creation and management of consent requests by an HIU, receipt of the individual’s decision, retrieval of a valid [consent artefact](#consent-artefact) and secure exchange of the authorised health information between participating entities. See [M3 Health Information User](/docs/main/docs/hiecm/v3/milestones/m3).
+Milestone 3 (M3 [Health Information User](#hiu)), Health Information Exchange with Consent, covers consent-based exchange of health information. It includes creation and management of consent requests by an HIU, receipt of the individual’s decision, retrieval of a valid [consent artefact](#consent-artefact) and secure exchange of the authorised health information between participating entities. See [M3 Health Information User](/docs/main/docs/hiecm/v3/milestones/m3).
 
 ### M4
 
-Milestone 4 (M4 Registry Integration), Register facilities and professionals, also referred to as National Healthcare Providers Registry (NHPR) native integration, covers integration of healthcare-professional and health-facility registration functions into eligible applications. The milestone is undertaken in accordance with the roles, sequencing and test requirements prescribed by [NHA](#nha). See [M4 Registry Integration](/docs/main/docs/hiecm/v3/milestones/m4).
+Milestone 4 (M4 Registry Integration), Register Healthcare Professionals and Health Facilities, also referred to as National Healthcare Providers Registry (NHPR) native integration, covers integration of healthcare-professional and health-facility registration functions into eligible applications. The milestone is undertaken in accordance with the roles, sequencing and test requirements prescribed by [NHA](#nha). See [M4 Registry Integration](/docs/main/docs/hiecm/v3/milestones/m4).
 
 ### PMS
 

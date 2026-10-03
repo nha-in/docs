@@ -4,7 +4,7 @@ ABDM integration is divided into milestones. These cover creation and verificati
 
 ## In short
 
-[M1 IdentityCreate and verify ABHA](/docs/main/docs/hiecm/v3/milestones/m1)[M2 Health Information ProviderCreate and link records](/docs/main/docs/hiecm/v3/milestones/m2)[M3 Health Information UserFetch data with consent](/docs/main/docs/hiecm/v3/milestones/m3)[M4 Registry IntegrationRegister facilities and professionals](/docs/main/docs/hiecm/v3/milestones/m4)
+[M1 IdentityCreate and verify ABHA](/docs/main/docs/hiecm/v3/milestones/m1)[M2 Health Information ProviderCreation, Linking and Sharing of Health Records](/docs/main/docs/hiecm/v3/milestones/m2)[M3 Health Information UserHealth Information Exchange with Consent](/docs/main/docs/hiecm/v3/milestones/m3)[M4 Registry IntegrationRegister Healthcare Professionals and Health Facilities](/docs/main/docs/hiecm/v3/milestones/m4)
 
 Three workflows sit on top of the milestones and start at your counter QR code. [Scan and Register](/docs/main/docs/hiecm/v3/use-cases/scan-and-register) belongs to M1, [Patient record share](/docs/main/docs/hiecm/v3/use-cases/patient-record-share) to M3 and [Scan and Pay](/docs/main/docs/hiecm/v3/use-cases/scan-and-pay) to M2. All are under [Use cases](/docs/main/docs/hiecm/v3/use-cases).
 
@@ -78,12 +78,12 @@ The milestones required for integration depend on the role of the software. A He
 
 ## What each milestone gets you
 
-| Milestone                                                                                                | What you get                                | Who needs it                                                   |
-| -------------------------------------------------------------------------------------------------------- | ------------------------------------------- | -------------------------------------------------------------- |
-| [M1 Identity: Create and verify ABHA](/docs/main/docs/hiecm/v3/milestones/m1)                            | Identity and the session token              | Everyone                                                       |
-| [M2 Health Information Provider: Create and link records](/docs/main/docs/hiecm/v3/milestones/m2)        | Linking and sharing records                 | A facility publishing records, and a citizen pushing their own |
-| [M3 Health Information User: Fetch data with consent](/docs/main/docs/hiecm/v3/milestones/m3)            | Consent and record fetching                 | Anyone reading records they did not create, and every PHR app  |
-| [M4 Registry Integration: Register facilities and professionals](/docs/main/docs/hiecm/v3/milestones/m4) | A facility ID and professional registration | Anyone going live as a facility                                |
+| Milestone                                                                                                                  | What you get                                | Who needs it                                                   |
+| -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- | -------------------------------------------------------------- |
+| [M1 Identity: Create and verify ABHA](/docs/main/docs/hiecm/v3/milestones/m1)                                              | Identity and the session token              | Everyone                                                       |
+| [M2 Health Information Provider: Creation, Linking and Sharing of Health Records](/docs/main/docs/hiecm/v3/milestones/m2)  | Linking and sharing records                 | A facility publishing records, and a citizen pushing their own |
+| [M3 Health Information User: Health Information Exchange with Consent](/docs/main/docs/hiecm/v3/milestones/m3)             | Consent and record fetching                 | Anyone reading records they did not create, and every PHR app  |
+| [M4 Registry Integration: Register Healthcare Professionals and Health Facilities](/docs/main/docs/hiecm/v3/milestones/m4) | A facility ID and professional registration | Anyone going live as a facility                                |
 
 These pages give the steps, the order to build them in and the failure modes. Every request URL, header and body sits on the [API reference](/docs/main/docs/hiecm/v3/api) pages, one page per call.
 

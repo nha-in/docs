@@ -48,7 +48,7 @@ Healthcare Professional ID (HPID) refers to the unique identifier assigned to an
 
 ### HPR
 
-The Healthcare Professionals Registry (HPR) is the national registry of doctors, nurses and pharmacists. Registering a professional on the HPR results in the issuance of an [HPID](#hpid). The HPR Token can also be used to onboard a facility to the [HFR](#hfr).
+The Healthcare Professionals Registry (HPR) is the comprehensive registry of doctors, nurses and pharmacists. Registering a professional on the HPR results in the issuance of an [HPID](#hpid). The HPR Token can also be used to onboard a facility to the [HFR](#hfr).
 
 ### KYC
 

@@ -1,32 +1,35 @@
-# M3 Health Information User: Fetch data with consent
+# M3 Health Information User: Health Information Exchange with Consent
 
-Milestone 3 (M3) enables a [Health Information User](/docs/main/docs/hiecm/v3/getting-started/glossary#hiu) (HIU) to request, receive and view a patient's health records from [Health Information Providers](/docs/main/docs/hiecm/v3/getting-started/glossary#hip) (HIPs) in a secure and consent-based manner. The HIU initiates a consent request, and upon approval by the patient, the requested health records are securely transferred in the prescribed [FHIR](/docs/main/docs/hiecm/v3/getting-started/glossary#fhir) format for access by the authorised healthcare professional.
+Milestone 3 (M3) enables a [Health Information User](/docs/main/docs/hiecm/v3/getting-started/glossary#hiu) (HIU) to securely request and receive a patient's health record from [Health Information Providers](/docs/main/docs/hiecm/v3/getting-started/glossary#hip) (HIPs), based on the patient's consent. Upon approval of the consent request, the authorised health record is transferred to the HIU in the prescribed [FHIR](/docs/main/docs/hiecm/v3/getting-started/glossary#fhir) format for permitted use.
 
 ## In short
 
-The HIU initiates a consent request using the patient's [ABHA Address](/docs/main/docs/hiecm/v3/getting-started/glossary#abha-address). The [HIE-CM](/docs/main/docs/hiecm/v3/getting-started/glossary#hie-cm) notifies the patient and communicates the consent status to the HIU through the ABDM Gateway. Upon approval, the HIU fetches the generated [consent artefact](/docs/main/docs/hiecm/v3/getting-started/glossary#consent-artefact)(s) and initiates a request for the authorised health information. The concerned HIP validates the request, encrypts the authorised health information and transfers it to the data-push URL specified by the HIU. The HIU receives and decrypts the information and submits the prescribed receipt-status notification.
+The HIU initiates a consent request using the patient's [ABHA Address](/docs/main/docs/hiecm/v3/getting-started/glossary#abha-address). The patient may approve or deny the request through the [PHR](/docs/main/docs/hiecm/v3/getting-started/glossary#phr) application. Upon approval, the HIU obtains the [consent artefact](/docs/main/docs/hiecm/v3/getting-started/glossary#consent-artefact) and initiates the health-information request. The concerned HIP validates the request and securely transfers the authorised health information to the HIU, which acknowledges its receipt.
 
-## M3 functionality
+## Key functionalities
 
-- **Consent Request:** Enables the HIU to initiate a consent request using the patient's ABHA Address. The patient may approve or deny the request through the [PHR](/docs/main/docs/hiecm/v3/getting-started/glossary#phr) application.
-- **Status of Consent:** Enables the HIU to track the consent status as Requested, Granted, Denied, Revoked or Expired and fetch the consent artefact(s) generated upon approval.
-- **Request Data:** Enables the HIU to request health information against a valid consent artefact, receive and decrypt the FHIR bundle, and display the authorised records in a readable format.
+- **Consent Request:** Facilitates initiation of a consent request by the HIU using the patient's ABHA Address. The patient may grant or deny consent through the PHR application.
+- **Consent Status:** Facilitates tracking of the consent request as Granted, Denied, Revoked or Expired, and retrieval of the consent artefact generated upon approval.
+- **Health Information Request:** Facilitates the request, secure receipt and decryption of health information against a valid consent artefact, and its presentation in a readable format.
 
-## Use cases
+## Use case: patient record share
 
-| Use case                                                                        | What it does                                                                                                                                                                                                                   |
-| ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [Patient record share](/docs/main/docs/hiecm/v3/use-cases/patient-record-share) | A patient scans the QR code at your counter and pushes chosen records from their PHR app to your system. You raise no consent request: you reply with a data push URL and a key, receive the records, and report what arrived. |
+**Patient-Initiated Health Information Sharing:** Enables a patient to scan the QR code displayed by the healthcare facility and share selected health information types from the PHR application with the facility. The receiving system provides the data-push URL and encryption parameters, securely receives the health information, and communicates the transfer status. See [Patient record share](/docs/main/docs/hiecm/v3/use-cases/patient-record-share).
 
-All use cases, and the milestone each belongs to: [Use cases](/docs/main/docs/hiecm/v3/use-cases).
+For details of all supported use cases and their corresponding milestones, refer to the [Use cases](/docs/main/docs/hiecm/v3/use-cases) section.
 
-## Applicable for
+## Applicable to
 
-Milestone 3 applies to entities or applications performing the Health Information User (HIU) role and requiring access to health information held by one or more Health Information Providers. These may include healthcare facilities, insurers, referral-service providers, clinical decision-support applications and [PHR](/docs/main/docs/hiecm/v3/getting-started/glossary#phr) applications acting on behalf of the patient.
+Milestone 3 is applicable to entities or applications performing the Health Information User (HIU) role and requiring access to health information maintained by one or more Health Information Providers (HIPs).
+
+Such entities may include healthcare facilities, insurers, referral-service providers, clinical decision-support applications and [PHR](/docs/main/docs/hiecm/v3/getting-started/glossary#phr) applications acting on behalf of the patient.
 
 ## Prerequisites
 
-Before implementing Milestone 3, the healthcare facility must complete [Milestone 1](/docs/main/docs/hiecm/v3/milestones/m1) requirements and should be registered as an HIU.
+Before implementing Milestone 3, the entity or application shall meet the following requirements:
+
+- Complete the requirements specified under [Milestone 1](/docs/main/docs/hiecm/v3/milestones/m1).
+- Register the entity or application in NHPR to perform the Health Information User (HIU) role.
 
 ## Consent management flow
 

@@ -169,9 +169,9 @@ How to use it
 Download all skills
 
 - [Create and verify ABHA (M1)](https://nha-in.github.io/docs/main/skills/abdm-m1/SKILL.md)
-- [Create and link records (M2)](https://nha-in.github.io/docs/main/skills/abdm-m2/SKILL.md)
-- [Fetch data with consent (M3)](https://nha-in.github.io/docs/main/skills/abdm-m3/SKILL.md)
-- [Register facilities and professionals (M4)](https://nha-in.github.io/docs/main/skills/abdm-m4/SKILL.md)
+- [Creation, Linking and Sharing of Health Records (M2)](https://nha-in.github.io/docs/main/skills/abdm-m2/SKILL.md)
+- [Health Information Exchange with Consent (M3)](https://nha-in.github.io/docs/main/skills/abdm-m3/SKILL.md)
+- [Register Healthcare Professionals and Health Facilities (M4)](https://nha-in.github.io/docs/main/skills/abdm-m4/SKILL.md)
 - [PHR registration and login (P1)](https://nha-in.github.io/docs/main/skills/abdm-p1/SKILL.md)
 - [Consents Management (P2)](https://nha-in.github.io/docs/main/skills/abdm-p2/SKILL.md)
 - [PHR subscriptions (P3)](https://nha-in.github.io/docs/main/skills/abdm-p3/SKILL.md)

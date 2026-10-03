@@ -1,4 +1,4 @@
-# M4 Registry Integration: Register facilities and professionals
+# M4 Registry Integration: Register Healthcare Professionals and Health Facilities
 
 Milestone 4 is the Registries milestone, commonly referred to as NHPR (National Healthcare Professionals and Facilities Registry). It establishes the identity of healthcare professionals and the details of healthcare facilities within the ABDM ecosystem.
 
@@ -6,7 +6,7 @@ The Healthcare Professionals Registry (HPR) is a comprehensive repository of reg
 
 Health Facility Registry (HFR) is a comprehensive repository of health facilities across the country, covering both modern and traditional systems of medicine. It includes public and private health facilities such as hospitals, clinics, diagnostic laboratories, imaging centres, pharmacies, and other healthcare establishments. A healthcare facility is onboarded to the Health Facility Registry (HFR) and is issued a unique Facility ID.
 
-Neither [HPR](/docs/main/docs/hiecm/v3/getting-started/glossary#hpr) nor [HFR](/docs/main/docs/hiecm/v3/getting-started/glossary#hfr) is responsible for moving health records. Instead, these registries establish who the healthcare professional is and what the healthcare facility is, providing a verified identity and facility layer for subsequent ABDM transactions and health-record flows.
+Neither [HPR](/docs/main/docs/hiecm/v3/getting-started/glossary#hpr) nor [HFR](/docs/main/docs/hiecm/v3/getting-started/glossary#hfr) is responsible for moving health records. Instead, these registries establish the identity of healthcare professionals and healthcare facilities, providing a verified identity and facility layer for subsequent ABDM transactions and health record flows.
 
 ## Relationship with M2 and M3
 

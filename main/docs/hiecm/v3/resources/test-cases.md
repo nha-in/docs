@@ -11,7 +11,7 @@ Each module has its own set. Run the cases for every module you integrated.
 | [M1 Identity](/docs/main/docs/hiecm/v3/milestones/m1)                                                         | ABHA creation, verification, profile update and profile sharing | [66 cases](/docs/main/docs/hiecm/v3/resources/test-cases/m1)           |
 | [M2 Health Information Provider](/docs/main/docs/hiecm/v3/milestones/m2)                                      | Linking care contexts, and sharing the records you hold         | [Not yet published](/docs/main/docs/hiecm/v3/resources/test-cases/m2)  |
 | [M3 Health Information User](/docs/main/docs/hiecm/v3/milestones/m3)                                          | Consent requests, and fetching records from other providers     | [Not yet published](/docs/main/docs/hiecm/v3/resources/test-cases/m3)  |
-| [M4 Registry Integration](/docs/main/docs/hiecm/v3/milestones/m4)                                             | Facility and professional registration                          | [Not yet published](/docs/main/docs/hiecm/v3/resources/test-cases/m4)  |
+| [M4 Registry Integration](/docs/main/docs/hiecm/v3/milestones/m4)                                             | Facility and professional registration                          | [190 cases](/docs/main/docs/hiecm/v3/resources/test-cases/m4)          |
 | PHR application, [P1](/docs/main/docs/hiecm/v3/milestones/p1) to [P4](/docs/main/docs/hiecm/v3/milestones/p4) | The PHR application's own flows                                 | [Not yet published](/docs/main/docs/hiecm/v3/resources/test-cases/phr) |
 
 ## How to read a case
