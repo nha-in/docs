@@ -1387,40 +1387,6 @@
         "https://abhasbx.abdm.gov.in"
       ]
     },
-    "POST /abha/api/v3/enrollment/enrol/byAadhaar#demo-auth--benefit-child-abha": {
-      "encrypted": [],
-      "id": "m1_post_v3_enrollment_enrol_byaadhaar_demo_auth_benefit_c_d20a11",
-      "kind": "call",
-      "method": "POST",
-      "params": [
-        "header:BENEFIT_NAME!",
-        "header:REQUEST-ID!",
-        "header:TIMESTAMP!"
-      ],
-      "path": "/abha/api/v3/enrollment/enrol/byAadhaar#demo-auth--benefit-child-abha",
-      "properties": [
-        "authData",
-        "consent"
-      ],
-      "required": [
-        "authData",
-        "consent"
-      ],
-      "responses": [
-        "200",
-        "400",
-        "401",
-        "422",
-        "500"
-      ],
-      "security": [
-        "bearerAuth"
-      ],
-      "server": "https://abhasbx.abdm.gov.in",
-      "servers": [
-        "https://abhasbx.abdm.gov.in"
-      ]
-    },
     "POST /abha/api/v3/enrollment/enrol/byAadhaar#demo-auth--benefit-create-abha-via-demo-auth": {
       "encrypted": [],
       "id": "m1_post_v3_enrollment_enrol_byaadhaar_demo_auth_benefit_c_d5c7c3",
