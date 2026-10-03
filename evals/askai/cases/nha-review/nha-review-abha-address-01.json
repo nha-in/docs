@@ -1,0 +1,38 @@
+{
+  "id": "nha-review-abha-address-01",
+  "slice": "nha-review",
+  "class": "define",
+  "turns": [
+    {
+      "role": "user",
+      "text": "What is ABHA Address"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "gateway": "hiecm",
+  "must_contain": [
+    "An ABHA address is the name a person goes by on ABDM, written like an email address: ajeet123@abdm on production or something@sbx on the sandbox",
+    "A person logs in to their PHR app with it and shares it at a facility so the facility can find them",
+    "Every record linked to the person is linked against it, and a request to see those records is addressed to it"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom",
+    "common mistake"
+  ],
+  "expected_sources": [
+    "shared.glossary.abha-address"
+  ],
+  "expected_shape": "define",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#nha-review-2026-09-30",
+  "catalogue_version": "2026.09.16",
+  "notes": "NHA PHR review, 30 September 2026, case 14: 'The response seems fine, but the language could be more user-friendly.' Verdict group: language and register. The rejected answer ended on a common mistake. terse-abha-address-01 asks the bare noun phrase; this is the reviewer's question."
+}

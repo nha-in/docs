@@ -1,0 +1,37 @@
+{
+  "id": "nha-review-phr-login-01",
+  "slice": "nha-review",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "How can users log in to a PHR app?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "gateway": "hiecm",
+  "must_contain": [
+    "A user signs in by any of four routes, and every route is mandatory: mobile number, ABHA address, ABHA number and Aadhaar number",
+    "Mobile number is validated by mobile OTP, an address by password or mobile OTP, the ABHA number by ABHA OTP or Aadhaar OTP, and the Aadhaar number by Aadhaar OTP",
+    "Every OTP route returns the ABHA addresses linked to that identifier, and the user picks the one to sign in as"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.flow.p1-login"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#nha-review-2026-09-30",
+  "catalogue_version": "2026.09.16",
+  "notes": "NHA PHR review, 30 September 2026, case 12: 'The response seems fine, but the language could be more user-friendly.' Verdict group: language and register. The facts were accepted; the wording was written for an integrator."
+}

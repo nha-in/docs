@@ -1,0 +1,38 @@
+{
+  "id": "nha-review-blocked-24-hours-01",
+  "slice": "nha-review",
+  "class": "diagnose",
+  "turns": [
+    {
+      "role": "user",
+      "text": "Why is there a \"You are blocked for 24 hours\" message in the on-generate token callback while hitting generate token API?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "gateway": "hiecm",
+  "must_contain": [
+    "The block is ABDM-1027 and arrives as an error object on /api/v3/hip/token/on-generate-token, while the generate token call still returned 202 Accepted",
+    "The request itself is not wrong, the number of requests is: the usual reasons are asking for a new token on every visit when the stored one is still good, or software that retries in a loop",
+    "A link token lasts six months: store it against the patient and reuse it, and request a new one only when it has expired",
+    "Stop every generate token call, wait for the 24 hours, and correct the cause before calling again"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.troubleshooting.blocked-for-24-hours-on-generate-token"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#nha-review-2026-09-30",
+  "catalogue_version": "2026.09.16",
+  "notes": "NHA QA sample, 30 September 2026: 'Generated answer of its own out of generic information which doesn't align with the requirement of this question.' Verdict group: missing or thin knowledge. The rejected answer described rate limiting in general and not the situation: a token asked for on every visit, or a retry loop. The router gives this the how-do-i shape today: 'blocked' is not a failure word and the code is not in the question."
+}

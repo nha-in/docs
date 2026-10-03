@@ -1,0 +1,39 @@
+{
+  "id": "nha-review-p4-upload-and-link-01",
+  "slice": "nha-review",
+  "class": "define",
+  "turns": [
+    {
+      "role": "user",
+      "text": "What is P4? Can't we use it for uploading and linking of health records"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "gateway": "hiecm",
+  "must_contain": [
+    "P4 Locker is the fourth PHR milestone: a health locker keeps a person's records for the long term by subscribing, fetching with consent and storing",
+    "P4 is about receiving and keeping records that facilities have linked",
+    "Processing documents the person uploads needs certification as a Health Locker, a Health Repository Provider, which requires M2"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom",
+    "hie-cm milestone"
+  ],
+  "expected_sources": [
+    "hiecm.glossary.health-locker",
+    "hiecm.glossary.p4"
+  ],
+  "expected_shape": "define",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#nha-review-2026-09-30",
+  "catalogue_version": "2026.09.16",
+  "notes": "NHA PHR review, 30 September 2026, case 8: 'Almost clear', kept open as a discrepancy on the failed-case sheet. Verdict group: grounding disputes. define-phr-p4-01 covers the bare 'What is P4?'; this is the reviewer's full question. Whether P4 is the route for uploaded records is in dispute with NHA, so the case asserts only what the locker entry says."
+}
