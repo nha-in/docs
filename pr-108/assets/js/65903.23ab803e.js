@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["65903"],{40850(e,a,s){s.r(a),s.d(a,{__iconNode:()=>d,default:()=>t});var c=s(34438);let d=[["path",{d:"M21 10.656V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h12.344",key:"2acyp4"}],["path",{d:"m9 11 3 3L22 4",key:"1pflzl"}]],t=(0,c.A)("square-check-big",d)}}]);
