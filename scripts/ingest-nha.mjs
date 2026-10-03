@@ -20,7 +20,7 @@ const METHODS = ['get', 'post', 'put', 'patch', 'delete'];
 
 const MODULES = {
   gateway: {label: 'Gateway session', position: 1, icon: 'key-round', roles: ['his', 'phr'], title: 'ABDM gateway, sessions and bridges', summary: 'The access token every call carries, and the bridge registry.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 4},
-  m1: {label: 'M1 Identity', position: 2, icon: 'id-card', roles: ['his'], title: 'ABDM M1, create and verify ABHA', summary: 'Create, find, log into and manage an ABHA.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}], expected: 120},
+  m1: {label: 'M1 Identity', position: 2, icon: 'id-card', roles: ['his'], title: 'ABDM M1, create and verify ABHA', summary: 'Create, find, log into and manage an ABHA.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}], expected: 119},
   m2: {label: 'M2 Health Information Provider', position: 3, icon: 'link', roles: ['his'], title: 'ABDM M2, create and link records', summary: 'Link care contexts to an ABHA address and share records when consent arrives.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 20},
   m3: {label: 'M3 Health Information User', position: 4, icon: 'file-check', roles: ['his'], title: 'ABDM M3, fetch data with consent', summary: 'Raise a consent request, fetch its artefacts, and receive records.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 12},
   m4: {label: 'M4 Registry Integration', position: 5, icon: 'building-2', roles: ['his'], title: 'ABDM M4, register facilities and professionals', summary: 'Register healthcare professionals and facilities on the NHPR.', servers: [{url: 'https://apihspsbx.abdm.gov.in/v4/int', description: 'NHPR, sandbox'}], expected: 87},
@@ -201,7 +201,12 @@ const note = (module, op, what) => log.push(`| ${module} | \`${op}\` | ${what} |
 // to leave out, and value corrections NHA gave for one use case each. Every
 // entry is a string edit on the operation as parsed, recorded in the log.
 const M1_OBS = "NHA's M1 sandbox observations of 28 September 2026";
-const M1_LEFT_OUT = new Set(['PATCH /abha/api/v3/profile/account#profile-photo']);
+const M1_LEFT_OUT = new Map([
+  ['PATCH /abha/api/v3/profile/account#profile-photo', M1_OBS],
+  // The benefit Child ABHA flow opens with the same demographic authentication
+  // call the benefit Demo Auth flow already lists; NHA asked for it once.
+  ['POST /abha/api/v3/enrollment/enrol/byAadhaar#demo-auth--benefit-child-abha', "NHA's M1 observations of 2 October 2026"],
+]);
 const OTP_TO_AADHAAR = [['"abdm"', '"aadhaar"'], ['`\\"abdm\\"` | yes', '`\\"aadhaar\\"` | yes'], ['otpSystem: abdm', 'otpSystem: aadhaar']];
 const M1_VALUES = {
   'POST /abha/api/v3/profile/login/request/otp#biometric-fingerprint': {what: 'otpSystem `abdm` corrected to `aadhaar`', edits: OTP_TO_AADHAAR},
@@ -253,7 +258,7 @@ for (const {file, place, set = 'nha-2026-09-16', fetched = '2026-09-16', titlesF
       if (seenPath.has(key) && seenPath.get(key).file !== file) { const first = seenPath.get(key); note(first.module, key, `dropped from ${file}: already declared by ${first.file} in the ${first.module} module`); continue; }
       if (module === 'm1' && M1_LEFT_OUT.has(`${method.toUpperCase()} ${path}`)) {
         seenPath.set(key, {file, module});
-        note('m1', `${method.toUpperCase()} ${path}`, `left out of the reference, as ${M1_OBS} ask`);
+        note('m1', `${method.toUpperCase()} ${path}`, `left out of the reference, as ${M1_LEFT_OUT.get(`${method.toUpperCase()} ${path}`)} ask`);
         continue;
       }
       if (module === null) {
@@ -887,6 +892,33 @@ specs.m1['x-abdm-sources'].push({file: 'catalogue/hiecm/openapi/.raw/nha-2026-09
     note('m4', op.operationId, `from the HFR APIs document 2.0, section ${entry.section}: ${described} field description(s) and ${required} required field(s) added${conflicts.length ? `; the document types ${conflicts.join(', ')}, and the swagger's type stands` : ''}`);
   }
   for (const gap of FIELDS.gaps) note('m4', 'HFR APIs document 2.0', `${gap}; nothing added`);
+}
+
+// 15. NHA's M1 observations of 2 October 2026: the consent block on ABHA
+// enrolment is static, so Try it must not let it be edited. Its two fields
+// carry their one value only in prose ("Use `abha-enrollment`"); each gets
+// that value as a one value enum, which locks it in Try it.
+{
+  let locked = 0;
+  const walk = (node, opId) => {
+    if (!node || typeof node !== 'object') return;
+    const consent = node.properties?.consent;
+    for (const key of ['code', 'version']) {
+      const field = consent?.properties?.[key];
+      const value = field?.description?.match(/Use `([^`]+)`/)?.[1];
+      if (value && !field.enum) { field.enum = [value]; locked++; note('m1', opId, `consent.${key} is fixed at \`${value}\`, as its description says; NHA's M1 observations of 2 October 2026 ask that the consent block not be editable`); }
+    }
+    for (const v of Object.values(node.properties ?? {})) walk(v, opId);
+    for (const k of ['oneOf', 'anyOf', 'allOf']) for (const v of node[k] ?? []) walk(v, opId);
+    if (node.items) walk(node.items, opId);
+  };
+  for (const item of Object.values(specs.m1.paths)) {
+    for (const method of METHODS) {
+      const op = item[method];
+      if (op) walk(op.requestBody?.content?.['application/json']?.schema, op.operationId);
+    }
+  }
+  if (!locked) throw new Error('correction 15: no consent block found to lock');
 }
 
 for (const [id, m] of Object.entries(MODULES)) {

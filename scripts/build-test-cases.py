@@ -33,17 +33,10 @@ ROUTES = ROOT / "site" / "src" / "data" / "api-routes.json"
 OUT = ROOT / "site" / "docs" / "hiecm" / "v3" / "resources" / "test-cases"
 
 PAGES = {
-    "m1": {
-        "sheet": RAW / "nha-2026-09-29-m1-tests" / "M1_ABHA_CREATION_AND_VERIFICATION_WITH_APIS_UPDATED_V1_1.xlsx",
-        "title": "M1 test cases",
-        "label": "M1 Identity",
-        "position": 2,
-        "milestone": "[M1 Identity](/docs/hiecm/v3/milestones/m1)",
-        "covers": "ABHA creation by Aadhaar OTP, Aadhaar biometric, demographic authentication and driving licence or PAN, then verification, profile update, one ABHA per patient record, and sharing a profile by QR code",
-        "api": "/docs/hiecm/v3/api/m1",
-        "skill": "/docs/hiecm/v3/milestones/m1#build-m1-with-an-ai-coding-assistant",
-        "next": "[M2 test cases](/docs/hiecm/v3/resources/test-cases/m2)",
-    },
+    # M1's page is not generated while NHA approves a revised set: the cases
+    # published from nha-2026-09-29-m1-tests were withdrawn in NHA's M1
+    # observations of 2 October 2026, and the count will change. The sheet
+    # stays stored.
     # M4 comes as two workbooks, HFR with one tab per flow and HPR with one.
     # Each tab is a section of the page, and its heading rows are the groups.
     "m4": {

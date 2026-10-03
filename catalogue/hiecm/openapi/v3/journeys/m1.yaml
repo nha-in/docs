@@ -166,7 +166,6 @@
 - id: m1-benefit-child-abha
   title: Benefit, Child ABHA
   steps:
-    - op: m1_post_v3_enrollment_enrol_byaadhaar_demo_auth_benefit_c_d20a11
     - op: m1_post_v3_enrollment_enrol_byaadhaar_child_benefit_child_abha
     - op: m1_get_v3_enrollment_profile_children_benefit_child_abha
     - op: m1_patch_v3_profile_account_child_benefit_child_abha

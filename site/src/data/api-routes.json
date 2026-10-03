@@ -621,7 +621,7 @@
     "method": "GET",
     "path": "/abha/api/v3/enrollment/profile/children#benefit-child-abha",
     "summary": "Get Child ABHA list of the parent",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-child-abha/03-m1-get-v3-enrollment-profile-children-benefit-child-abha",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-child-abha/02-m1-get-v3-enrollment-profile-children-benefit-child-abha",
     "callbacks": []
   },
   {
@@ -936,7 +936,7 @@
     "method": "PATCH",
     "path": "/abha/api/v3/profile/account#child--benefit-child-abha",
     "summary": "Update Child ABHA profile",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-child-abha/04-m1-patch-v3-profile-account-child-benefit-child-abha",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-child-abha/03-m1-patch-v3-profile-account-child-benefit-child-abha",
     "callbacks": []
   },
   {
@@ -1221,7 +1221,7 @@
     "method": "POST",
     "path": "/abha/api/v3/enrollment/enrol/byAadhaar#child--benefit-child-abha",
     "summary": "Create Child ABHA",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-child-abha/02-m1-post-v3-enrollment-enrol-byaadhaar-child-benefit-child-abha",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-child-abha/01-m1-post-v3-enrollment-enrol-byaadhaar-child-benefit-child-abha",
     "callbacks": []
   },
   {
@@ -1237,21 +1237,6 @@
     "path": "/abha/api/v3/enrollment/enrol/byAadhaar#child--child-abha",
     "summary": "Create Child ABHA",
     "route": "/docs/hiecm/v3/api/m1/endpoints/m1-child-abha/01-m1-post-v3-enrollment-enrol-byaadhaar-child-child-abha",
-    "callbacks": []
-  },
-  {
-    "key": "enrollment/enrol/byaadhaar",
-    "hosts": [
-      "abhasbx.abdm.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "m1_post_v3_enrollment_enrol_byaadhaar_demo_auth_benefit_c_d20a11",
-    "module": "M1 Identity",
-    "moduleDir": "m1",
-    "method": "POST",
-    "path": "/abha/api/v3/enrollment/enrol/byAadhaar#demo-auth--benefit-child-abha",
-    "summary": "Create ABHA - Demographic authentication (Demo Auth)",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-child-abha/01-m1-post-v3-enrollment-enrol-byaadhaar-demo-auth-benefit-c-d20a11",
     "callbacks": []
   },
   {
@@ -1761,7 +1746,7 @@
     "method": "POST",
     "path": "/abha/api/v3/profile/account/request/otp#child-kyc--benefit-child-abha",
     "summary": "Child ABHA KYC - send Aadhaar OTP",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-child-abha/05-m1-post-v3-profile-account-request-otp-child-kyc-benefit-ec9035",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-child-abha/04-m1-post-v3-profile-account-request-otp-child-kyc-benefit-ec9035",
     "callbacks": []
   },
   {
@@ -1821,7 +1806,7 @@
     "method": "POST",
     "path": "/abha/api/v3/profile/account/verify#child-kyc--benefit-child-abha",
     "summary": "Child ABHA KYC - verify Aadhaar OTP",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-child-abha/06-m1-post-v3-profile-account-verify-child-kyc-benefit-child-abha",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-child-abha/05-m1-post-v3-profile-account-verify-child-kyc-benefit-child-abha",
     "callbacks": []
   },
   {

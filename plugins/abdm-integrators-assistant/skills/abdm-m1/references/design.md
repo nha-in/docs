@@ -906,8 +906,7 @@ A wrong padding or digest does not fail when you encrypt. It fails at the API as
 Before your system sends a person's Aadhaar number, show them the terms and
 conditions below and collect their agreement, through an "I agree" checkbox or
 another form of signature. Keep a record that they agreed. Every journey that
-creates an ABHA from Aadhaar starts here, and functional testing checks it in
-[CRT_ABHA_102](/docs/hiecm/v3/resources/test-cases/m1#crt_abha_102).
+creates an ABHA from Aadhaar starts here, and functional testing checks it.
 
 Show the text exactly as written:
 
@@ -933,7 +932,7 @@ The OTP request cannot be sent until the person has agreed, and your records sho
 
 ### When it goes wrong
 
-A creation flow that sends the Aadhaar number before consent is collected fails functional testing at CRT_ABHA_102, whatever the API returns.
+A creation flow that sends the Aadhaar number before consent is collected fails functional testing, whatever the API returns.
 
 ## A suggested ABHA journey, and what holds if you design your own
 
