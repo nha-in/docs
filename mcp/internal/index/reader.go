@@ -537,3 +537,30 @@ func (r *Reader) LinkForPath(path string) (url string, ok bool) {
 	url = OperationDocPath(module, id)
 	return url, url != ""
 }
+
+// RelatedOutbound returns only the atoms this atom's author named as
+// related, in the order they were written. RelatedAtoms also walks the
+// backlinks, which for a hub such as the ABHA glossary entry is every
+// atom in the catalogue that mentions ABHA; that is a fair hint to the
+// model that siblings exist and a wrong list to offer a reader as next
+// questions.
+func (r *Reader) RelatedOutbound(id string) ([]AtomRef, error) {
+	rows, err := r.db.Query(`SELECT to_id FROM related WHERE from_id = ? ORDER BY rowid`, id)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var out []AtomRef
+	for rows.Next() {
+		var to string
+		if err := rows.Scan(&to); err != nil {
+			return nil, err
+		}
+		a, err := r.GetAtom(to)
+		if err != nil {
+			continue // an id named before its atom exists is not a next question
+		}
+		out = append(out, AtomRef{a.ID, a.Type, a.Milestone, a.Title, a.DocURL, a.DocAnchor})
+	}
+	return out, rows.Err()
+}

@@ -97,9 +97,11 @@ type Suggestion struct {
 
 const maxSuggestions = 3
 
-// suggestionsFromPack returns up to three related atoms that were not
-// themselves passages, as pills. The prompt is the atom's title: a short
-// topic the router already handles.
+// suggestionsFromPack returns up to three of the pack's next atoms as pills:
+// the atoms the top passages' authors named as related, flows first. The
+// prompt is the atom's title: a short topic the router already handles. The
+// pack's related list is not read here. It also walks the links that point
+// at an atom, and for a hub that is most of the catalogue.
 //
 // A pill stays in the answer's gateway. The related walk runs both ways, and
 // a shared term is cited by every gateway: shared.glossary.abha has one edge
@@ -115,7 +117,7 @@ func suggestionsFromPack(pack []byte, scope string) []Suggestion {
 		Related []struct {
 			ID    string `json:"id"`
 			Title string `json:"title"`
-		} `json:"related"`
+		} `json:"next"`
 	}
 	if err := json.Unmarshal(pack, &pp); err != nil {
 		return nil
