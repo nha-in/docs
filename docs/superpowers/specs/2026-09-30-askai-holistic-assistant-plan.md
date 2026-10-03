@@ -1,6 +1,6 @@
 # Ask AI, from documentation assistant to ABDM assistant
 
-Date: 30 September 2026. Status: proposal for the owner. Builds on `2026-09-29-askai-prompt-v6-strategy.md`, which stays the plan for the prompt's structure; this document sets the target the prompt serves and works down through the knowledge base, retrieval, the model, reliability and evaluation.
+Date: 30 September 2026. Status: in execution on `feat/askai-assistant`; section 2 says what the branch adds and section 6 what still waits on the owner. Builds on `2026-09-29-askai-prompt-v6-strategy.md`, which stays the plan for the prompt's structure; this document sets the target the prompt serves and works down through the knowledge base, retrieval, the model, reliability and evaluation.
 
 ## 1. What the feedback says
 
@@ -37,6 +37,21 @@ Checked against main at `1c004ad595`. One workstream has moved a long way, one h
 | Evaluation | 239 golden cases; about ten of NHA's forty questions are now cases | The calibration file is empty and no run has been judged, so every change since 30 September is unmeasured |
 
 The `overview` and `walkthrough` shapes are in substance the `orient` shape and the journey budget workstream 4 asks for. Where the sections below describe the `define` shape's mandated mistake or an unexplained "unreachable", they describe the state the testers saw on 30 September; the table above is the state now.
+
+### What `feat/askai-assistant` adds, 3 October
+
+One branch on top of main at `1c004ad595`. Nothing on it has been through a judged run; the cases that will measure it are on the branch too.
+
+| Workstream | On the branch | Still open |
+|---|---|---|
+| 1. Knowledge | Fourteen hand-written atoms: three playbooks (PHR app, HIP software, HIU software), three journeys (consent to records, HIP initiated linking, user initiated linking), six situations (no callback, HIP did not acknowledge consent notify, blocked for 24 hours, unauthorized, consent still requested after approval, linked but no record), sandbox access to HIP or HIU ID, and a health locker definition | Situation causes are assembled from the pages, not from support history. Three situations overlap older generated atoms (`callback-never-arrives`, `everything-returns-401`, `consent-stuck-requested`) and want one owner each. No atom lists the M1 verification methods; that question has no case for that reason |
+| 2. Model | Nothing | The comparison needs Bedrock access this branch was written without |
+| 3. Retrieval | An overview or walkthrough question opens up to three flow or concept atoms the top hit links to, on top of the three it already opens. An atom searched for by its own title comes first | Contextual chunks, reranker, query rewriting, the vector floor's value |
+| 4. Shapes | `diagnose` gives the most likely cause first and ends by asking for the one thing that would settle it. Every shape but `self` carries the reader line: most readers are not developers, plain words first, then the call. Prompt version v5.2 | `how-do-i` unchanged, because the guard requires the route to be named. Reader recognition waits for the query rewriter |
+| 5. Reliability | A Bedrock throttle is retried twice with backoff, never after text has streamed. Every stream that ends without an answer logs a reason, and the widget is told it. `get` and `validate` have 20 seconds. The per-IP limit is 15 a minute by default. The "start a new chat" prompt at fifteen exchanges is gone | Summarising older turns. The one-in-two-hundred exit needs a week of production logs |
+| 6. Next questions | New, below | |
+| 7. Voice | New, below | |
+| Evaluation | A `nha-review` slice of twenty cases, NHA's questions verbatim with the reviewer's expectation as the criteria; with the earlier cases this covers every reviewer question the catalogue can answer | The judged run, the calibration grades, the `persona` slice |
 
 Each row names the layer, the defect the feedback exposes, and the evidence in the repository.
 
@@ -143,6 +158,28 @@ Exit: the eleven "wrong shape" verdicts re-run and accepted; the one-question an
 
 Exit: unanswered streams below one in two hundred over a week; no forced restart within thirty exchanges.
 
+### Workstream 6: next questions, where, when and what
+
+The pill row under an answer is gone. It offered a next step after every answer, including a decline, and its text came from whatever linked to the atoms retrieved, so it read as unrelated.
+
+- Where: in the composer. The next question shows as grey text in the box with a `Tab` key beside it; Tab fills it, the arrow keys move through up to three when the box is focused, Escape dismisses, and typing replaces it. Shift+Tab is untouched, so keyboard navigation out of the box still works.
+- When: only after an open-ended question. Today that is a rule over the routed shape: `overview`, `topic` and `walkthrough` always; `how-do-i` when the question names no operation and no error code. A definition, a comparison, a diagnosis, a question about the assistant, and any answer that declines or says it has nothing get no suggestion, and the box says only "Ask about ABDM". When the query rewriter of workstream 3 exists it returns `open_ended` and the reader type with the rewritten query, and the rule becomes its fallback.
+- What: the first authored question of an atom the answer's own sources link to, flows before concepts, inside the answer's gateway. The model never writes a suggestion. The later step is to let it choose among the authored questions of the linked atoms, by index, for the reader it has recognised; it still writes none.
+
+Exit: no suggestion on any closed-question or declined case in the golden set; on open-ended cases the suggestion's atom is one the reviewers accept as the next step; fill rate (Tab or click over suggestions shown) is logged and reviewed after two weeks.
+
+### Workstream 7: voice
+
+Ninety percent of readers are not developers and many will find speaking easier than typing a question in English.
+
+- Dictation: a microphone in the composer records up to the limit, posts the audio to `POST /api/transcribe`, and puts the text in the box for the reader to check before sending. Nothing is sent as a question without the reader pressing send. The server forwards to any Whisper-compatible `/v1/audio/transcriptions` endpoint named by `TRANSCRIBE_URL`; with none configured the route answers 404 and the microphone does not appear. Audio is capped at 4 MB, shares the chat rate limit and is never logged.
+- Read aloud: a speaker button on each answer uses the browser's own speech synthesis, with code, paths and tables removed from what is spoken. No audio leaves the browser for this.
+- Not in scope: a spoken conversation mode. Dictation in, read aloud out, is what was asked for.
+
+Open: which transcription server (decision 6), and accuracy on Indian-accented English and on Hindi, measured on recorded questions before the microphone is switched on in production.
+
+Exit: twenty recorded questions from NHA's own staff transcribe to text that routes to the same shape as the typed question.
+
 ### Evaluation, throughout
 
 The forty tester verdicts become golden cases this week, with the tester's expectation as the marking criteria, and a `persona` slice of thirty plain-language questions judged on "would a non-technical reader understand and know what to do next". The judge is calibrated against the testers' own grades, which exist and are the best calibration set the project has had. Every workstream above ships against a scorecard delta, as the strategy already requires.
@@ -158,6 +195,7 @@ The playbook's first sentence says the assistant "answers integrator questions" 
 3. Access to the sandbox support ticket corpus and FAQ, which is where the situation atoms come from.
 4. The embedding model to standardise on, so the contextual-chunk work is measured once.
 5. Whether NHA's testers will grade a re-run of their own forty questions at the end of each workstream. That is the acceptance test, and nothing in the repository replaces it.
+6. The transcription server for voice input, and whether a reader's audio may leave the deployment to reach it. A self-hosted Whisper keeps it inside; until this is decided `TRANSCRIBE_URL` stays unset and the microphone stays hidden.
 
 ## Sources
 
