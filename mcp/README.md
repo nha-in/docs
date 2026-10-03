@@ -155,7 +155,7 @@ and output tokens against the 90 second deadline per question. Set it empty
 other model families never receive it.
 
 Guardrails are environment-tunable: `CHAT_MAX_TOKENS` (default 1500),
-`CHAT_RATE_PER_MIN` (default 5) and `CHAT_RATE_PER_DAY` (default 100) cap
+`CHAT_RATE_PER_MIN` (default 15) and `CHAT_RATE_PER_DAY` (default 100) cap
 one IP's spend (behind a reverse proxy set `TRUST_PROXY=true`, and
 `TRUST_PROXY_HOPS` to the number of proxies that each append an
 `X-Forwarded-For` entry, 2 for a CDN in front of a load balancer, so the
@@ -164,6 +164,19 @@ does. The system prompt keeps the assistant strictly inside the catalogue:
 answers only from tool results, honest about what's verified against a
 sandbox versus taken from the specification, and a plain "I don't have
 that" instead of a guess when nothing matches.
+
+A model call that Bedrock throttles, or that fails with a transient
+server-side error, is tried up to two more times after about 400 ms and then
+about 1200 ms, as long as no text has reached the reader yet. One tool call
+may run for 10 seconds, and `get` and `validate` for 20, since they read
+large specification fragments.
+
+Every turn that ends without an answer logs one `answer_missing` line with a
+`reason`: `throttle`, `model_error`, `tool_timeout`, `rate_limit`, `blocked`
+or `client_gone`. The SSE `error` event carries the same `reason` beside its
+`message`. A rate-limited request is refused with a 429 before any stream
+opens, and an answer the guard blocked reaches the reader as its notice in a
+`text` event, so those two reasons appear in the log only.
 
 Credentials for Bedrock come from the environment's default AWS
 credential chain — an EKS pod's IRSA role in production, never a stored

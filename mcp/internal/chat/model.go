@@ -31,6 +31,9 @@ type ToolResult struct {
 	ID      string
 	Content []byte
 	IsError bool
+	// TimedOut is set by the loop when the call ran out of its timeout. It
+	// is for the turn's own bookkeeping and is never sent to the model.
+	TimedOut bool
 }
 
 // Reply is one complete model turn: the assembled text, any tool calls the
