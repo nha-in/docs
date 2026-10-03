@@ -2,7 +2,7 @@
 id: hiecm.concept.m1-verification-methods
 type: concept
 gateway: hiecm
-milestone: M1
+milestone: n/a
 version: abdm-v3
 title: The ways to verify an ABHA in M1, and which are mandatory
 summary: >
