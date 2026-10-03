@@ -28,7 +28,7 @@ import (
 // only stops a body too large to be any of that from being buffered at all.
 const chatBodyLimit = 512 * 1024 // 512 KiB
 
-func Handler(r *index.Reader, emb embed.Embedder, allowOrigin string, chatSvc *chat.Service, limiter *chat.Limiter, trustedHops int) (http.Handler, error) {
+func Handler(r *index.Reader, emb embed.Embedder, allowOrigin string, chatSvc *chat.Service, limiter *chat.Limiter, trustedHops int, opts ...Option) (http.Handler, error) {
 	if emb != nil && r.EmbeddingsEnabled() && emb.Model() != r.EmbeddingModel() {
 		return nil, fmt.Errorf("embedding model mismatch: index built with %q, server configured with %q",
 			r.EmbeddingModel(), emb.Model())
@@ -51,7 +51,13 @@ func Handler(r *index.Reader, emb embed.Embedder, allowOrigin string, chatSvc *c
 		func(*http.Request) *mcp.Server { return mcpServer },
 		&mcp.StreamableHTTPOptions{Stateless: true})
 
+	var o options
+	for _, opt := range opts {
+		opt(&o)
+	}
+
 	mux := http.NewServeMux()
+	mux.HandleFunc("/api/transcribe", transcribeHandler(o.transcriber, allowOrigin, limiter, trustedHops))
 	mux.Handle("/mcp", streamable)
 	mux.Handle("/mcp/", streamable)
 

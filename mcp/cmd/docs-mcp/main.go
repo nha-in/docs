@@ -90,6 +90,9 @@ func main() {
 		"sampling temperature for chat answers, 0.1 to 0.2; low keeps quoted literals and tool choices stable, and 0 is not deterministic on any provider")
 	chatPerMin := flag.Int("chat-rate-per-min", envIntOr("CHAT_RATE_PER_MIN", 15), "chat requests per ip per minute")
 	chatPerDay := flag.Int("chat-rate-per-day", envIntOr("CHAT_RATE_PER_DAY", 100), "chat requests per ip per day")
+	transcribeURL := flag.String("transcribe-url", envOr("TRANSCRIBE_URL", ""),
+		"speech to text endpoint for voice input, a server that speaks /v1/audio/transcriptions; empty turns voice input off")
+	transcribeModel := flag.String("transcribe-model", envOr("TRANSCRIBE_MODEL", "whisper-1"), "model name sent to the transcription server")
 	mcpURL := flag.String("mcp-url", envOr("MCP_URL", ""), "public MCP endpoint the chat assistant names; empty keeps the built-in default")
 	trustProxy := flag.Bool("trust-proxy", envBoolOr("TRUST_PROXY", false),
 		"trust X-Forwarded-For for the chat rate limiter's client IP; "+
@@ -226,7 +229,15 @@ func main() {
 		slog.Info("chat enabled", "model", *chatModel)
 	}
 
-	h, err := server.Handler(r, emb, *allowOrigin, chatSvc, limiter, trustedHops)
+	var opts []server.Option
+	if *transcribeURL != "" {
+		// The key is read from the environment only, so it never shows in a
+		// process listing the way a flag would.
+		opts = append(opts, server.WithTranscriber(server.WhisperHTTP{
+			URL: *transcribeURL, Model: *transcribeModel, APIKey: os.Getenv("TRANSCRIBE_API_KEY")}))
+		slog.Info("voice input enabled", "model", *transcribeModel)
+	}
+	h, err := server.Handler(r, emb, *allowOrigin, chatSvc, limiter, trustedHops, opts...)
 	if err != nil {
 		slog.Error("configure server", "err", err)
 		os.Exit(1)

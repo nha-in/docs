@@ -18,7 +18,8 @@ await build({
                export {forModel, memoryOf, sentFrom} from './src/transcript';
                export {parseLlms, searchPages, pageUrl, markdownUrl, isHtmlDocument} from './src/pages';
                export {moduleLabel, skillNote, COMMANDS} from './src/commands';
-               export {CLOSED, offering, trayKey} from './src/next';`,
+               export {CLOSED, offering, trayKey} from './src/next';
+               export {speakable, speechLang, recordingType} from './src/voice';`,
     resolveDir: import.meta.dirname,
     loader: 'ts',
   },
@@ -41,7 +42,7 @@ const {
   say, answer, wantsTools, needsAgent, TOOLS, AGENTS,
   titleOf, remember, whenSaid, forgetOne, resumable, ABOUT, isAboutQuestion, memoryOf, sentFrom,
   startersFrom, DEFAULT_STARTERS, forModel, parseLlms, searchPages, pageUrl, markdownUrl, isHtmlDocument,
-  moduleLabel, skillNote, COMMANDS, CLOSED, offering, trayKey,
+  moduleLabel, skillNote, COMMANDS, CLOSED, offering, trayKey, speakable, speechLang, recordingType,
 } = await import(out);
 
 // History: one conversation comes out, the rest stay in order.
@@ -390,3 +391,17 @@ assert.equal(failureMessage(502, null), UNREACHABLE);
   assert.deepEqual(trayKey('a', false, s, CLOSED), {kind: 'none'});
   assert.deepEqual(trayKey('Tab', false, [], CLOSED), {kind: 'none'});
 }
+
+// Reading aloud: a path is named, not read out; a fenced example is left on
+// screen; a link says its label; a header or a code is short enough to say.
+assert.equal(
+  speakable('Call `POST /api/hiecm/v3/token/generate-token` with `X-CM-ID`. See [the M2 page](/docs/m2).\n\n```bash\ncurl -X POST\n```'),
+  'Call the path shown on screen with X-CM-ID. See the M2 page.\nThe example is on screen.',
+);
+assert.equal(speakable('`/a` then `/b`'), 'the paths shown on screen');
+assert.equal(speakable('- **M1** creates an ABHA\n- *M2* links records'), 'M1 creates an ABHA\nM2 links records');
+assert.equal(speechLang('ABHA क्या है'), 'hi-IN');
+assert.equal(speechLang('What is ABHA'), 'en-IN');
+// Recording: the first format the browser supports, or none.
+assert.equal(recordingType((t) => t === 'audio/mp4'), 'audio/mp4');
+assert.equal(recordingType(() => false), null);
