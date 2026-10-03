@@ -17,7 +17,6 @@ import {
 import {revealStep} from './pacing';
 import {
   clearCurrentId,
-  continuedId,
   currentId,
   forget,
   forgetOne,
@@ -25,7 +24,6 @@ import {
   remember,
   resumable,
   save as saveHistory,
-  setContinuedId,
   setCurrentId,
   titleOf,
   type Session,
@@ -395,9 +393,6 @@ function Panel({
   const [menu, setMenu] = useState<Menu>('closed');
   const [attaching, setAttaching] = useState<string | null>(null);
   const conversation = useRef(newId());
-  // The conversation the reader chose to carry on past the window with, so
-  // the offer to start a new one is made once per conversation.
-  const [continued, setContinued] = useState<string | null>(continuedId);
   const autoAsked = useRef<string | null>(null);
   const dialog = useRef<HTMLDialogElement>(null);
   const thread = useRef<HTMLDivElement>(null);
@@ -411,6 +406,11 @@ function Panel({
   const attached = page !== null && page.markdown !== '';
   const memory = memoryOf(turns);
   const cut = sentFrom(turns);
+  // The next questions on offer: the latest answer's, once nothing is in
+  // flight. The composer shows the first in the empty box and the rest when
+  // the box has focus.
+  const latest = turns[turns.length - 1];
+  const next = !busy && latest?.from === 'assistant' ? (latest.suggestions ?? []) : [];
 
   // Text that has arrived but has not been shown yet, and the frame loop that
   // shows it. Both are refs: the loop runs from a callback the browser holds,
@@ -1113,27 +1113,6 @@ function Panel({
                 answer rather than above it, because the sources land when
                 the answer ends, and a line appearing above would push the
                 text the reader is on down the panel. */}
-            {/* Next questions, under the latest answer only: a pill row on
-                every earlier turn would be a wall of buttons. They are the
-                titles of the pages one hop out from what the answer used,
-                chosen by the server, never written by the model. */}
-            {turn.from === 'assistant' &&
-              index === turns.length - 1 &&
-              !busy &&
-              turn.suggestions &&
-              turn.suggestions.length > 0 && (
-                <div class="ask-ai__pills ask-ai__followups" aria-label="Ask next">
-                  {turn.suggestions.map((s) => (
-                    <button
-                      key={s.id}
-                      type="button"
-                      class="ask-ai__pill"
-                      onClick={() => void ask(s.prompt)}>
-                      {s.title}
-                    </button>
-                  ))}
-                </div>
-              )}
             {turn.sources && turn.sources.length > 0 && (
               <details class="ask-ai__sources">
                 <summary class="ask-ai__sources-toggle">
@@ -1320,28 +1299,6 @@ function Panel({
           </p>
         )}
 
-        {/* Once the conversation fills what a question carries, the reader
-            is asked, once, whether to go on here or start afresh. Going on
-            is fine: the oldest exchanges simply stop being sent. */}
-        {memory.full && !busy && continued !== conversation.current && (
-          <div class="ask-ai__window-offer" role="status">
-            <p>{`${memory.window} of ${memory.window} conversation exchanges completed.`}</p>
-            <div class="ask-ai__window-offer-actions">
-              <button type="button" class="ask-ai__window-offer-new" onClick={reset}>
-                Start a new chat
-              </button>
-              <button
-                type="button"
-                class="ask-ai__window-offer-stay"
-                onClick={() => {
-                  setContinued(conversation.current);
-                  setContinuedId(conversation.current);
-                }}>
-                Continue here
-              </button>
-            </div>
-          </div>
-        )}
 
       </div>
 
@@ -1368,6 +1325,7 @@ function Panel({
         command={command}
         onCommand={setCommand}
         memory={memory}
+        suggestions={next}
       />
       </>
       )}

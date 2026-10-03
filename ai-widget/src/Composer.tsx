@@ -26,6 +26,8 @@ import {
 import {COMMANDS, type CommandId} from './commands';
 import {loadPages, searchPages, type PageEntry} from './pages';
 import type {Attached, PageAttachment} from './types';
+import {CLOSED, offering, trayKey, type Tray} from './next';
+import type {Suggestion} from './sse';
 
 export type Menu = 'closed' | 'add' | 'pages';
 
@@ -53,6 +55,8 @@ type Props = {
   onCommand: (command: CommandId | null) => void;
   /** How much of the conversation the next question takes. See memoryOf. */
   memory: {earlier: number; window: number; percent: number; full: boolean};
+  /** Next questions for the latest answer; empty when it has none. */
+  suggestions: Suggestion[];
 };
 
 /**
@@ -100,6 +104,16 @@ export function Composer(props: Props) {
   const picker = useRef<HTMLInputElement>(null);
   const addWrap = useRef<HTMLDivElement>(null);
   const pageReady = page !== null && page.markdown !== '';
+
+  // The next question on offer. The empty box shows the active one as grey
+  // text; a new answer brings its own, so the tray starts over with it.
+  const [tray, setTray] = useState<Tray>(CLOSED);
+  const [focused, setFocused] = useState(false);
+  const offered = props.suggestions.map((s) => s.id).join(' ');
+  useEffect(() => setTray(CLOSED), [offered]);
+  const offer = offering(draft, props.suggestions, tray, busy) && menu === 'closed';
+  const at = Math.min(tray.active, props.suggestions.length - 1);
+  const shown = offer ? props.suggestions[at] : null;
 
   // A click anywhere else puts the menu away. The panel lives in a shadow
   // root, so the click is checked against the path it took, not its target.
@@ -184,6 +198,28 @@ export function Composer(props: Props) {
           </p>
         )}
 
+        {/* The other next questions, above the bar while the empty box has
+            focus. One suggestion needs no list: the box already shows it. */}
+        {shown && focused && props.suggestions.length > 1 && (
+          <ul class="ask-ai__next" role="listbox" aria-label="Suggested next questions">
+            {props.suggestions.map((s, i) => (
+              <li key={s.id} role="option" aria-selected={i === at}>
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  class={`ask-ai__next-item${i === at ? ' ask-ai__next-item--active' : ''}`}
+                  // The press must not take the focus from the box, or the
+                  // list it belongs to closes before the click lands.
+                  onMouseDown={(event) => event.preventDefault()}
+                  onMouseEnter={() => setTray({...tray, active: i})}
+                  onClick={() => props.onDraft(s.prompt)}>
+                  {s.prompt}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+
         <div class="ask-ai__bar">
           <div class="ask-ai__add-wrap" ref={addWrap}>
             <button
@@ -250,21 +286,64 @@ export function Composer(props: Props) {
           {/* A textarea, not an input: an error body pasted in should be
               readable before it is sent. Enter sends; shift and enter takes
               a new line. */}
-          <textarea
-            ref={props.field}
-            class="ask-ai__input"
-            value={draft}
-            rows={1}
-            onInput={(event) => props.onDraft(event.currentTarget.value)}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter' && !event.shiftKey) {
-                event.preventDefault();
-                props.onSend();
-              }
-            }}
-            placeholder="Ask about ABDM"
-            aria-label="Ask the assistant"
-          />
+          <div class="ask-ai__field">
+            <textarea
+              ref={props.field}
+              class="ask-ai__input"
+              value={draft}
+              rows={1}
+              onInput={(event) => props.onDraft(event.currentTarget.value)}
+              onFocus={() => setFocused(true)}
+              onBlur={() => setFocused(false)}
+              onKeyDown={(event) => {
+                // While a next question is on offer, Tab takes it, the arrows
+                // move between the others and Escape puts them away. Once the
+                // box holds anything, every key means what it always did.
+                if (shown) {
+                  const act = trayKey(event.key, event.shiftKey, props.suggestions, tray);
+                  if (act.kind !== 'none') {
+                    event.preventDefault();
+                    if (act.kind === 'fill') props.onDraft(act.text);
+                    else setTray(act.tray);
+                    return;
+                  }
+                }
+                if (event.key === 'Enter' && !event.shiftKey) {
+                  event.preventDefault();
+                  props.onSend();
+                }
+              }}
+              placeholder={shown ? '' : 'Ask about ABDM'}
+              aria-label="Ask the assistant"
+              aria-describedby={shown ? 'ask-ai-next-hint' : undefined}
+            />
+            {/* Grey text over the empty box rather than a placeholder: a
+                question is longer than "Ask about ABDM", and a placeholder
+                cannot be cut to one line with an ellipsis in every browser. */}
+            {shown && (
+              <>
+                <span class="ask-ai__ghost" aria-hidden="true">
+                  {shown.prompt}
+                </span>
+                <span class="ask-ai__sr" id="ask-ai-next-hint">
+                  {`Suggested next question: ${shown.prompt}. Press Tab to use it, the arrow keys for others, Escape to dismiss.`}
+                </span>
+              </>
+            )}
+          </div>
+
+          {/* The key that takes the suggestion, shown as a key. It is also a
+              button, for a reader with no Tab key to press. */}
+          {shown && (
+            <button
+              type="button"
+              class="ask-ai__tab"
+              aria-label={`Use the suggestion: ${shown.prompt}`}
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={() => props.onDraft(shown.prompt)}>
+              Tab
+            </button>
+          )}
 
           {props.memory.earlier > 0 && <ContextRing {...props.memory} />}
 
