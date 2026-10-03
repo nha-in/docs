@@ -983,6 +983,37 @@ A person with an ABHA registers with their details arriving from the profile and
 
 Two ABHA numbers for one person: the journey branched into creation without reading `accounts`. The desk types everything and then links an ABHA: the order is wrong, fetch the profile first. A refused encrypted field shown to the person as a wrong number: check the padding before you blame the number, see [encryption](/docs/hiecm/v3/concepts/encryption).
 
+## The counter QR code for scan and register
+
+### In plain words
+
+The QR code at each counter holds this URL. Your system can generate it and
+print one per counter:
+
+```text
+https://phrsbx.abdm.gov.in/share-profile?hip-id=<HIP_ID>&counter-id=<COUNTER_ID>
+```
+
+| Parameter | What it holds |
+| --- | --- |
+| `hip-id` | Your facility's HIP id, the facility ID it holds in the [HFR](/docs/hiecm/v3/getting-started/glossary#hfr). The share arrives with the same value in `X-HIP-ID` and `metaData.hipId`. |
+| `counter-id` | The counter, such as `OPD1`: 1 to 20 alphanumeric characters that you choose. It arrives as `metaData.context`. Never use the facility ID, the HIP id or the HIP name. |
+
+`phrsbx.abdm.gov.in` is the sandbox host. Use one code per counter, so the
+token you hand back belongs to that counter's queue.
+
+### What happens
+
+Build the URL from the facility ID and a counter id of your own, render it as a QR code, and print or display it at the counter. Keep the counter id stable: a reprinted code with a new counter id starts a new queue. `phrsbx.abdm.gov.in` is the sandbox host; confirm the production host at onboarding.
+
+### How you know it worked
+
+A PHR app scans the code, the patient agrees to share, and a POST arrives on your bridge at `/api/v3/hip/patient/share` whose `metaData.context` is the counter id in the code.
+
+### When it goes wrong
+
+The app scans the code but nothing arrives: the bridge URL for that facility points somewhere else. See [the callback never arrives](/docs/hiecm/v3/troubleshooting/callback-never-arrives).
+
 ## Where these came from
 
 - `hiecm.concept.m1-operations-not-a-journey`
@@ -1004,3 +1035,4 @@ Two ABHA numbers for one person: the journey branched into creation without read
 - `hiecm.concept.input-encryption`
 - `hiecm.concept.m1-abha-consent`
 - `hiecm.concept.m1-journey-design`
+- `hiecm.concept.scan-and-register-qr`
