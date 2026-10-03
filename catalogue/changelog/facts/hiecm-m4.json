@@ -909,7 +909,13 @@
         "som",
         "speciality"
       ],
-      "required": [],
+      "required": [
+        "centerLat",
+        "centerLon",
+        "from",
+        "radiusInKm",
+        "size"
+      ],
       "responses": [
         "200",
         "404"
@@ -942,7 +948,10 @@
         "stateLGDCode",
         "subDistrictLGDCode"
       ],
-      "required": [],
+      "required": [
+        "page",
+        "resultsPerPage"
+      ],
       "responses": [
         "200",
         "404"
@@ -1675,7 +1684,11 @@
         "subDistrict",
         "village"
       ],
-      "required": [],
+      "required": [
+        "district",
+        "name",
+        "subDistrict"
+      ],
       "responses": [
         "200",
         "404"
@@ -1789,7 +1802,9 @@
         "specialities",
         "trackingId"
       ],
-      "required": [],
+      "required": [
+        "trackingId"
+      ],
       "responses": [
         "200",
         "404"
@@ -1926,7 +1941,9 @@
       "properties": [
         "facilityId"
       ],
-      "required": [],
+      "required": [
+        "facilityId"
+      ],
       "responses": [
         "200",
         "404"
@@ -1987,7 +2004,13 @@
         "sourceId",
         "transactionId"
       ],
-      "required": [],
+      "required": [
+        "facilityId",
+        "otp",
+        "source",
+        "sourceId",
+        "transactionId"
+      ],
       "responses": [
         "200",
         "404"
