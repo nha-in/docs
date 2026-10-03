@@ -1513,7 +1513,7 @@ func TestRespondEmitsLinksForEndpointPassages(t *testing.T) {
 // The related atoms one hop out from the pack become up to three pills, none
 // of them a passage the reader was already shown.
 func TestSuggestionsFromPack(t *testing.T) {
-	pack := []byte(`{"passages":[{"id":"hiecm.x.a"}],"related":[
+	pack := []byte(`{"passages":[{"id":"hiecm.x.a"}],"next":[
 		{"id":"hiecm.x.a","type":"flow","title":"Already shown"},
 		{"id":"hiecm.x.b","type":"flow","title":"Link a care context"},
 		{"id":"","type":"flow","title":"No id"},
@@ -1540,7 +1540,7 @@ func TestSuggestionsFromPack(t *testing.T) {
 // A pill stays in the answer's gateway. "what is abha" opened the shared
 // ABHA entry, which NHCX callbacks cite, and offered three of them.
 func TestSuggestionsStayInTheGateway(t *testing.T) {
-	pack := []byte(`{"passages":[{"id":"shared.glossary.abha"}],"related":[
+	pack := []byte(`{"passages":[{"id":"shared.glossary.abha"}],"next":[
 		{"id":"nhcx.callback.claim-on-submit","title":"Receiving POST /v1/claim/on_submit"},
 		{"id":"uhi.flow.search","title":"Search for a doctor"},
 		{"id":"shared.glossary.ayushman-card","title":"Ayushman card"},
@@ -1567,7 +1567,7 @@ func TestSuggestionsStayInTheGateway(t *testing.T) {
 		}
 	}
 	// No scope: a gateway top passage sets the gateway.
-	nhcxTop := []byte(`{"passages":[{"id":"nhcx.concept.policy-linking"}],"related":[
+	nhcxTop := []byte(`{"passages":[{"id":"nhcx.concept.policy-linking"}],"next":[
 		{"id":"hiecm.flow.m1-create-abha","title":"Create an ABHA number"},
 		{"id":"nhcx.flow.coverage","title":"Check coverage"}]}`)
 	if got := ids(suggestionsFromPack(nhcxTop, "")); strings.Join(got, ",") != "nhcx.flow.coverage" {
@@ -1700,5 +1700,16 @@ func TestAnswerLinksResolveQuotedPaths(t *testing.T) {
 	}
 	if len(got) != 2 || got["/api/hiecm/v3/token/generate-token"] == "" || got["/api/hiecm/hip/v3/link/carecontext"] == "" {
 		t.Errorf("links = %v; want the two documented paths and not /api/nowhere", links)
+	}
+}
+
+// The pack's related list is the model's hint that siblings exist, backlinks
+// included. Pills never come from it: a pack with related atoms and no next
+// list offers nothing.
+func TestSuggestionsIgnoreTheRelatedList(t *testing.T) {
+	pack := []byte(`{"passages":[{"id":"shared.glossary.abha"}],"related":[
+		{"id":"hiecm.callback.m2-on-generate-token","type":"callback","title":"A backlink"}]}`)
+	if got := suggestionsFromPack(pack, "hiecm"); len(got) != 0 {
+		t.Errorf("pills came from the related list: %v", got)
 	}
 }
