@@ -67,7 +67,7 @@ How to use it
 
 ### Consent before creating an ABHA
 
-Before your system sends a person's Aadhaar number, show them the terms and conditions below and collect their agreement, through an "I agree" checkbox or another form of signature. Keep a record that they agreed. Every journey that creates an ABHA from Aadhaar starts here, and functional testing checks it.
+Before your system sends a person's Aadhaar number, show them the terms and conditions below and collect their agreement, through an "I agree" checkbox or another form of signature. Keep a record that they agreed. Every journey that creates an ABHA from Aadhaar starts here, and functional testing checks it in [CRT\_ABHA\_102](/docs/pr-105/docs/hiecm/v3/resources/test-cases/m1#crt_abha_102).
 
 Show the text exactly as written:
 
@@ -85,7 +85,7 @@ Notes for AI agents
 
 **How you know it worked.** The OTP request cannot be sent until the person has agreed, and your records show the agreement for every ABHA your system created.
 
-**When it goes wrong.** A creation flow that sends the Aadhaar number before consent is collected fails functional testing, whatever the API returns.
+**When it goes wrong.** A creation flow that sends the Aadhaar number before consent is collected fails functional testing at CRT\_ABHA\_102, whatever the API returns.
 
 ### ABHA creation by an Aadhaar OTP
 
@@ -219,7 +219,7 @@ Notes for AI agents
 
 ## Certification
 
-The [M1 test cases](/docs/pr-105/docs/hiecm/v3/resources/test-cases/m1) define the scenarios an M1 integration is tested against. A revised set is being approved and is not yet published. Certification runs once, for the whole integration: [Go live](/docs/pr-105/docs/hiecm/v3/getting-started/going-live).
+The cases M1 is tested against, each with its id, steps, expected result and the calls it exercises: [M1 test cases](/docs/pr-105/docs/hiecm/v3/resources/test-cases/m1). Certification runs once, for the whole integration: [Go live](/docs/pr-105/docs/hiecm/v3/getting-started/going-live).
 
 ## Next
 

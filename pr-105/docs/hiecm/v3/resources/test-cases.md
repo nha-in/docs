@@ -8,7 +8,7 @@ Each module has its own set. Run the cases for every module you integrated.
 
 | Module                                                                                                            | What the cases cover                                            | Cases                                                                    |
 | ----------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| [M1 Identity](/docs/pr-105/docs/hiecm/v3/milestones/m1)                                                           | ABHA creation, verification, profile update and profile sharing | [Not yet published](/docs/pr-105/docs/hiecm/v3/resources/test-cases/m1)  |
+| [M1 Identity](/docs/pr-105/docs/hiecm/v3/milestones/m1)                                                           | ABHA creation, verification, profile update and profile sharing | [66 cases](/docs/pr-105/docs/hiecm/v3/resources/test-cases/m1)           |
 | [M2 Health Information Provider](/docs/pr-105/docs/hiecm/v3/milestones/m2)                                        | Linking care contexts, and sharing the records you hold         | [Not yet published](/docs/pr-105/docs/hiecm/v3/resources/test-cases/m2)  |
 | [M3 Health Information User](/docs/pr-105/docs/hiecm/v3/milestones/m3)                                            | Consent requests, and fetching records from other providers     | [Not yet published](/docs/pr-105/docs/hiecm/v3/resources/test-cases/m3)  |
 | [M4 Registry Integration](/docs/pr-105/docs/hiecm/v3/milestones/m4)                                               | Facility and professional registration                          | [190 cases](/docs/pr-105/docs/hiecm/v3/resources/test-cases/m4)          |
@@ -40,5 +40,5 @@ Some calls answer at once, in the response. Others only acknowledge the request,
 
 ## Next steps
 
-- Start with the [M4 test cases](/docs/pr-105/docs/hiecm/v3/resources/test-cases/m4), the set published so far.
+- Start with the [M1 test cases](/docs/pr-105/docs/hiecm/v3/resources/test-cases/m1).
 - Where functional testing fits in the route to production: [Go live](/docs/pr-105/docs/hiecm/v3/getting-started/going-live).

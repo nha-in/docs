@@ -456,7 +456,7 @@ Add `.md` to any link below to get that page as markdown. Individual API operati
 - [HPR, the professional registry](https://nha-in.github.io/docs/pr-105/docs/hiecm/v3/registries/nhpr/hpr): The Healthcare Professionals Registry, the HPID, what identifies a doctor, and the registration journey.
 - [Developer resources](https://nha-in.github.io/docs/pr-105/docs/hiecm/v3/resources): Test scenarios for ABDM integration and certification, and the documentation, AI-assisted tools and reference projects that support it.
 - [Test cases](https://nha-in.github.io/docs/pr-105/docs/hiecm/v3/resources/test-cases): What the HIE-CM functional test cases are, where you run them, how to read a case, and each module's list.
-- [M1 test cases](https://nha-in.github.io/docs/pr-105/docs/hiecm/v3/resources/test-cases/m1): The functional test cases for M1 Identity.
+- [M1 test cases](https://nha-in.github.io/docs/pr-105/docs/hiecm/v3/resources/test-cases/m1): The 66 M1 Identity functional test cases, each with its id, marking, steps, expected result and the APIs it calls.
 - [M2 test cases](https://nha-in.github.io/docs/pr-105/docs/hiecm/v3/resources/test-cases/m2): The functional test cases for M2 Health Information Provider.
 - [M3 test cases](https://nha-in.github.io/docs/pr-105/docs/hiecm/v3/resources/test-cases/m3): The functional test cases for M3 Health Information User.
 - [M4 test cases](https://nha-in.github.io/docs/pr-105/docs/hiecm/v3/resources/test-cases/m4): The 190 M4 Registry Integration functional test cases, each with its id, marking, steps, expected result and the APIs it calls.
