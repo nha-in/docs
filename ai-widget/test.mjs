@@ -17,7 +17,7 @@ await build({
                export {startersFrom, DEFAULT_STARTERS} from './src/starters';
                export {forModel, memoryOf, sentFrom} from './src/transcript';
                export {parseLlms, searchPages, pageUrl, markdownUrl, isHtmlDocument} from './src/pages';
-               export {moduleLabel, skillNote, COMMANDS} from './src/commands';
+               export {moduleLabel, skillNote, COMMANDS, slashMatches} from './src/commands';
                export {CLOSED, offering, trayKey} from './src/next';`,
     resolveDir: import.meta.dirname,
     loader: 'ts',
@@ -41,7 +41,7 @@ const {
   say, answer, wantsTools, needsAgent, TOOLS, AGENTS,
   titleOf, remember, whenSaid, forgetOne, resumable, ABOUT, isAboutQuestion, memoryOf, sentFrom,
   startersFrom, DEFAULT_STARTERS, forModel, parseLlms, searchPages, pageUrl, markdownUrl, isHtmlDocument,
-  moduleLabel, skillNote, COMMANDS, CLOSED, offering, trayKey,
+  moduleLabel, skillNote, COMMANDS, slashMatches, CLOSED, offering, trayKey,
 } = await import(out);
 
 // History: one conversation comes out, the rest stay in order.
@@ -133,6 +133,11 @@ assert.ok(!isHtmlDocument('<details> in markdown'));
 
 // Commands: four of them, and the lines the panel shows for a skill event.
 assert.deepEqual(COMMANDS.map((c) => c.id), ['scaffold', 'design', 'integrate', 'debug']);
+assert.equal(slashMatches('/').length, 4, 'a bare slash offers every skill');
+assert.deepEqual(slashMatches('/d').map((c) => c.id), ['design', 'debug']);
+assert.deepEqual(slashMatches('/Deb').map((c) => c.id), ['debug']);
+assert.deepEqual(slashMatches('/debug why'), [], 'a space makes it a question');
+assert.deepEqual(slashMatches('a/b'), []);
 assert.equal(moduleLabel('abdm-m2'), 'M2');
 assert.equal(moduleLabel('abdm-scan-and-pay'), 'Scan and pay');
 assert.equal(skillNote({module: 'abdm-m2', section: 'debug', status: 'used'}), 'Using M2 · Debug');

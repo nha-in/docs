@@ -1,7 +1,7 @@
 import {Fragment, render} from 'preact';
 import {useEffect, useRef, useState} from 'preact/hooks';
 import ChatMarkdown, {CopyButton, absolute, headings} from './markdown';
-import {ArrowUp, ChevronRight, FileText, Paperclip, Plus, Sparkles, X} from './icons';
+import {ArrowUp, ChevronRight, FileText, Paperclip, Plus, Sparkles, X, ChevronDown} from './icons';
 import {readStream, UNREACHABLE, type Source, type Link, type Suggestion, failureMessage} from './sse';
 import {
   AGENTS,
@@ -561,10 +561,19 @@ function Panel({
   // following stops for good. A scroll listener sees the difference, since
   // pinning to the bottom lands at a gap of zero and leaves the flag set.
   const stick = useRef(true);
+  // Shown as a way back down once the reader is away from the end.
+  const [away, setAway] = useState(false);
   const onThreadScroll = () => {
     const el = thread.current;
     if (!el) return;
     stick.current = el.scrollHeight - el.scrollTop - el.clientHeight < 40;
+    setAway(!stick.current);
+  };
+  const toEnd = () => {
+    const el = thread.current;
+    if (!el) return;
+    stick.current = true;
+    el.scrollTo({top: el.scrollHeight, behavior: 'smooth'});
   };
 
   useEffect(() => {
@@ -1299,8 +1308,15 @@ function Panel({
           </p>
         )}
 
-
       </div>
+
+      {away && (
+        <div class="ask-ai__to-end-wrap">
+          <button type="button" class="ask-ai__to-end" aria-label="Scroll to the latest" onClick={toEnd}>
+            <ChevronDown />
+          </button>
+        </div>
+      )}
 
       <Composer
         draft={draft}
