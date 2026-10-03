@@ -26,11 +26,11 @@ curl --request POST \
 
 ## Body
 
-- `facilityId` (string)
-- `sourceId` (string)
-- `otp` (string)
-- `source` (string)
-- `transactionId` (string)
+- `facilityId` (string, required): Id of the facility. Should start with 'IN' and have the length of 12 characters.
+- `sourceId` (string, required): Unique hospital identifier. Alphanumeric value.
+- `otp` (string, required): Unique number to verify the mobile number. 6-digit number received from the SendOTPToContact API response. See `POST /v1.5/facility/sendOtpToContact`.
+- `source` (string, required): Facility Source value. Accepted values: UWIN, PMNDP, AB-PMJAY, NHRR, HMIS-CDAC, NIN, eHospital, STHMISID, STINSID, COWIN.
+- `transactionId` (string, required): Unique Id for a transaction. Use the transaction Id received in response from the SendOTPToContact API. See `POST /v1.5/facility/sendOtpToContact`.
 
 ## Responses
 

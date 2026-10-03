@@ -31,13 +31,13 @@ curl --request POST \
 
 ## Body
 
-- `facilityId` (string, required)
-- `facilityName` (string, required)
+- `facilityId` (string, required): Id of the facility. Should start with 'IN' and have the length of 12 characters.
+- `facilityName` (string, required): Name of the facility. Accepted characters: Alphanumeric, -_.(),/. The first character must be an alphabet or digit, and only one space is allowed between words.
 - `HRP` (object[])
-- `HRP.bridgeId` (string, required)
-- `HRP.hipName` (string, required)
-- `HRP.type` (string, required)
-- `HRP.active` (boolean, required)
+- `HRP.bridgeId` (string, required): Valid Bridge Id to be linked. Alphanumeric.
+- `HRP.hipName` (string, required): Name of the hospital which will reflect on ABHA/PHR app when the patient will search for the respective hospital. HIP name can be the Hospital name added with suffix of bridge name. Example: Hospital name=XYZ and bridge name=BRIDGE TEST, so the HIP name = XYZ BRIDGE. HIP name can not be mor than 15 characters. No Special character is allowed (%$*#@(~&!) Should be unique for every bridge for a facility.
+- `HRP.type` (string, required): Type of the bridge to be linked. Accepted values: HIP or HIU.
+- `HRP.active` (boolean, required): Active Status of the bridge to be linked. Accepted values: true or false.
 
 ## Responses
 

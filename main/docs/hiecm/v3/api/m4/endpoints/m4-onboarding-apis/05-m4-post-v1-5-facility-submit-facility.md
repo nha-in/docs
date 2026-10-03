@@ -29,9 +29,9 @@ curl --request POST \
 
 ## Body
 
-- `trackingId` (string, required)
-- `sourceOfInformation` (string)
-- `sourceUniqueID` (string)
+- `trackingId` (string, required): Unique identification number for your facility. Tracking id generated from basic information API.
+- `sourceOfInformation` (string): Source of information of this facility. Should be valid data source provide by HFR team. If you leave this field empty, then your facility will be considered as Submitted entity.
+- `sourceUniqueID` (string): Facility Unique Id as exists in HRP or data source.
 - `facilitySuperUser` (string)
 
 ## Responses

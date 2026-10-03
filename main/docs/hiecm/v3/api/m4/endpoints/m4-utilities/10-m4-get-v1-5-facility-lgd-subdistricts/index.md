@@ -18,7 +18,7 @@ curl --request GET \
 
 ## Query parameters
 
-- `districtCode` (string, required)
+- `districtCode` (string, required): LGD code of the district. Accepted codes are as specified in districts API. See `GET /v1.5/facility/lgd/districts`.
 
 ## Responses
 

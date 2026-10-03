@@ -89,23 +89,23 @@ curl --request POST \
 ## Body
 
 - `facilityInformation` (object)
-- `facilityInformation.facilityName` (string)
-- `facilityInformation.facilityAddressDetails` (object)
-- `facilityInformation.facilityContactInformation` (object)
-- `facilityInformation.ownershipCode` (string)
-- `facilityInformation.ownershipSubTypeCode` (string)
+- `facilityInformation.facilityName` (string, required): Name of the facility that is to be created in HFR. Accepted characters: Alphanumeric, _.(),/. The first character must be an alphabet or digit, and only one space is allowed between words.
+- `facilityInformation.facilityAddressDetails` (object, required)
+- `facilityInformation.facilityContactInformation` (object, required)
+- `facilityInformation.ownershipCode` (string, required): Ownership of the facility. Accepted codes are "G", "P" or "PP".
+- `facilityInformation.ownershipSubTypeCode` (string, required): Ownership subtype of the facility. ownershipCode = "G" Accepted codes are "C" or "S" ownershipCode = "P" or "PP" Accepted codes are "P" or "NP".
 - `facilityInformation.ownershipSubTypeCode2` (string)
-- `facilityInformation.typeOfServiceCode` (string)
-- `facilityInformation.systemOfMedicineCode` (string)
-- `facilityInformation.facilityTypeCode` (string)
-- `facilityInformation.specialityTypeCode` (string)
-- `facilityInformation.facilityUploads` (object)
+- `facilityInformation.typeOfServiceCode` (string): Type of services offered by facility. Accepted codes as specified in getmaster-data API with type='TYPE-SERVICE'. See `GET /v1.5/facility/get-master-data`. typeOfServiceCode is not required if facility type is any of the following ( 'Diagnostic Laboratory (10,45)', 'Imaging Center (74,75)', 'Cath Laboratory (12,47)', 'Dialysis Center (13,48)', 'Blood Bank (9,44)', 'Pharmacy (11,46)' ) If facility type is any of the following, ( 'Ayurveda Dispensary/ Clinic/ Polyclinic (OPD only) (17,52)', 'Unani Dispensary/ Clinic/ Polyclinic (OPD only) (20,55)', 'Siddha Dispensary/ Clinic/ Polyclinic (OPD only) (23,58)', 'Homeopathy Dispensary/ Clinic/ Polyclinic (OPD only) (26,61)', 'Sowa-Rigpa Dispensary/ Clinic/ Polyclinic (OPD only) (29,64)', ) then typeOfServiceCode – IPD is not applicable. Required based on the facility type provided.
+- `facilityInformation.systemOfMedicineCode` (string, required): System of medicine followed by your facility. Accepted codes as specified in getmaster-data API with type= "MEDICINE". In case you have multiple systems of medicine, send a comma separated string of codes. See `GET /v1.5/facility/get-master-data`.
+- `facilityInformation.facilityTypeCode` (string, required): Type of your facility as defined by HFR. Accepted codes as specified in fetchfacility-type API. See `POST /v1.5/facility/fetch-facility-type`.
+- `facilityInformation.specialityTypeCode` (string, required): Whether facility offers Single or Multiple Specialities. Accepted codes as specified in getmaster-data API with type='SPECIALITY-TYPE'. See `GET /v1.5/facility/get-master-data`.
+- `facilityInformation.facilityUploads` (object, required)
 - `facilityInformation.facilityAddressProof` (object[])
-- `facilityInformation.facilitySubType` (string)
+- `facilityInformation.facilitySubType` (string, required): Subtype corresponding to facility type as define by HFR. Accepted codes as specified in fetchfacility-sub-type API. See `POST /v1.5/facility/fetch-facility-Sub-type`.
 - `facilityInformation.workingInPsu` (boolean)
 - `facilityInformation.facPsuName` (string)
-- `facilityInformation.facilityOperationalStatus` (string)
-- `facilityInformation.timingsOfFacility` (object[])
+- `facilityInformation.facilityOperationalStatus` (string, required): Whether your facility is currently operational or not. Accepted codes as specified in getmaster-data API with type='FACSTATUS'. See `GET /v1.5/facility/get-master-data`.
+- `facilityInformation.timingsOfFacility` (object[]): Required if facility operational status is Functional.
 - `facilityInformation.abdmCompliantSoftware` (object[])
 - `trackingId` (string)
 

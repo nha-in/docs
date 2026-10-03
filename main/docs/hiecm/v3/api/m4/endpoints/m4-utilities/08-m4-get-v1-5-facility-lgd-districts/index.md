@@ -18,7 +18,7 @@ curl --request GET \
 
 ## Query parameters
 
-- `stateCode` (string, required)
+- `stateCode` (string, required): LGD code of the state. Accepted codes are as specified in states API. See `GET /v1.5/facility/lgd/states`.
 
 ## Responses
 

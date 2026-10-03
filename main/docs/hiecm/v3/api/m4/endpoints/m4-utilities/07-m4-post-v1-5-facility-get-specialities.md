@@ -22,7 +22,7 @@ curl --request POST \
 
 ## Body
 
-- `systemOfMedicineCode` (string, required)
+- `systemOfMedicineCode` (string, required): System of MedicineCode, as available in HFR, for which you want to know the specializations offered. Accepted codes as specified in get-master-data API with type="MEDICINE". See `GET /v1.5/facility/get-master-data`.
 
 ## Responses
 

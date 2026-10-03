@@ -22,7 +22,7 @@ curl --request POST \
 
 ## Body
 
-- `facilityTypeCode` (string, required)
+- `facilityTypeCode` (string, required): Facility code. Accepted codes as specified in fetch-facilitytype API. See `POST /v1.5/facility/fetch-facility-type`.
 
 ## Responses
 

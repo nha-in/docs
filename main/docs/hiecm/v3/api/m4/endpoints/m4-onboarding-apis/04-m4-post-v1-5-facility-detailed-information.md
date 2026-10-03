@@ -97,24 +97,24 @@ curl --request POST \
 
 ## Body
 
-- `trackingId` (string)
-- `specialities` (object[])
-- `specialities.systemOfMedicineCode` (string)
-- `specialities.isSpecializationAvalaible` (string)
-- `specialities.specialities` (string[])
-- `medicalInfrastructure` (object)
+- `trackingId` (string, required): Unique identification number for your facility. Tracking id generated from basic information API.
+- `specialities` (object[]): Section to capture specializations/services Details. Note: Specialities are not required for the facility types: Blood Bank, Cath Laboratory, Diagnostic Laboratory, Dialysis Centre, Imaging Centre, and Pharmacy. Required based on the facility type and if specializations/services are offered for this system of medicine.
+- `specialities.systemOfMedicineCode` (string, required): System of medicine codes as saved in Basic-Information API. Accepted codes as specified in get-master-data API with type='MEDICINE'. See `GET /v1.5/facility/get-master-data`.
+- `specialities.isSpecializationAvalaible` (string, required): If the facility offers any specializations or services for this system of medicine. Y / N as accepted value.
+- `specialities.specialities` (string[], required): List of specialities for each system of medicine offered by the facility. Accepted codes as specified in the get-specialities API with respect to a system of medicine. See `POST /v1.5/facility/get-specialities`.
+- `medicalInfrastructure` (object): Section to capture medicalInfrastructure Details. Required based on the Type of Service, Facility Type and System of Medicine values.
 - `medicalInfrastructure.countLevel1IcuBedWithOutVentilators` (integer)
-- `medicalInfrastructure.countIPDBedsWithoutOxygen` (integer)
-- `medicalInfrastructure.countIPDBedsWithOxygen` (integer)
-- `medicalInfrastructure.countICUBedsWithVentilators` (integer)
-- `medicalInfrastructure.countICUBedsWithoutVentilators` (integer)
-- `medicalInfrastructure.countHDUBedsWithVentilators` (integer)
-- `medicalInfrastructure.countHDUBedsWithoutVentilators` (integer)
-- `medicalInfrastructure.totalNumberOfVentilators` (integer)
-- `medicalInfrastructure.countDayCareBedsWithoutOxygen` (integer)
-- `medicalInfrastructure.countDayCareBedsWithOxygen` (integer)
-- `medicalInfrastructure.countDentalChairs` (integer)
-- `medicalInfrastructure.totalNumberOfBeds` (integer)
+- `medicalInfrastructure.countIPDBedsWithoutOxygen` (integer): Number of IPD Beds (except ICU beds) without oxygen facility. Numeric Value.
+- `medicalInfrastructure.countIPDBedsWithOxygen` (integer): Number of IPD Beds (except ICU beds) with oxygen facility. Numeric Value.
+- `medicalInfrastructure.countICUBedsWithVentilators` (integer): Number of ICU beds with Ventilators. Numeric Value.
+- `medicalInfrastructure.countICUBedsWithoutVentilators` (integer): Number of ICU beds without Ventilators. Numeric Value.
+- `medicalInfrastructure.countHDUBedsWithVentilators` (integer): Number of HDU beds with Ventilators. Numeric Value.
+- `medicalInfrastructure.countHDUBedsWithoutVentilators` (integer): Number of HDU beds without Ventilators. Numeric Value.
+- `medicalInfrastructure.totalNumberOfVentilators` (integer): Total Number of Ventilators. Numeric Value.
+- `medicalInfrastructure.countDayCareBedsWithoutOxygen` (integer): Number of Daycare beds without oxygen facility. Numeric Value.
+- `medicalInfrastructure.countDayCareBedsWithOxygen` (integer): Number of Daycare beds with oxygen facility. Numeric Value.
+- `medicalInfrastructure.countDentalChairs` (integer): Number of Dental Chairs. Numeric Value. Required if the system of medicine is Dentistry.
+- `medicalInfrastructure.totalNumberOfBeds` (integer, required): Total count which should be equal to or greater than sum of all the above components with beds. Numeric value.
 - `medicalInfrastructure.hasIcuBeds` (string)
 - `medicalInfrastructure.countLevel1IcuBedWithVentilators` (integer)
 - `medicalInfrastructure.CountLevel1IcuBedWithOutVentilators` (integer)
@@ -122,24 +122,24 @@ curl --request POST \
 - `medicalInfrastructure.countLevel3IcuBeds` (integer)
 - `medicalInfrastructure.isIcuContactSameAsManager` (string)
 - `medicalInfrastructure.cmoMoIcuControlMobile` (string)
-- `pharmacyDetails` (object)
-- `pharmacyDetails.isJanAushadhiKendra` (string)
-- `pharmacyDetails.janAushadhiKendraId` (string)
-- `pharmacyDetails.drugLicenseNumber` (string)
-- `pharmacyDetails.pharmacyGstinNumber` (string)
-- `pharmacyDetails.pharmacistRegistrationNumber` (string)
-- `bloodBankDetails` (object)
-- `bloodBankDetails.isFacilityRegisteredInERaktkosh` (string)
-- `bloodBankDetails.eRaktoshId` (string)
-- `bloodBankDetails.bloodBankLicenseNumber` (string)
-- `bloodBankDetails.bloodStorageCenters` (string)
-- `bloodBankDetails.storageCentersCount` (integer)
-- `bloodBankDetails.bloodCollectedPerAnnum` (string)
-- `bloodBankDetails.bloodRequiredPerAnnum` (string)
-- `imagingServices` (object[])
-- `imagingServices.service` (string)
-- `imagingServices.count` (integer)
-- `diagnosticServices` (string[])
+- `pharmacyDetails` (object): Section to capture Pharmacy Details. Required if facility type is Pharmacy.
+- `pharmacyDetails.isJanAushadhiKendra` (string): Is your facility a Jan Aushadhi Kendra?. Y / N as accepted value.
+- `pharmacyDetails.janAushadhiKendraId` (string): Provide jan Aushadhi Kendra Id. Accepted Alphanumeric value and special characters (- and _). Required if facility is Jan Aushadhi Kendra.
+- `pharmacyDetails.drugLicenseNumber` (string): Mention your Drug License Number. Accepted Alphanumeric value and special characters (- and _). Required if facility type is Pharmacy.
+- `pharmacyDetails.pharmacyGstinNumber` (string): Mention GSTIN Number. Accepted Alphanumeric value and special characters (- and _).
+- `pharmacyDetails.pharmacistRegistrationNumber` (string): Mention Pharmacist registration number. Accepted Alphanumeric value and special characters (- and _).
+- `bloodBankDetails` (object): Section to capture blood bank details. Required if facility type is blood bank.
+- `bloodBankDetails.isFacilityRegisteredInERaktkosh` (string, required): Is your facility registered in e-Raktkosh. Y / N as accepted value.
+- `bloodBankDetails.eRaktoshId` (string): Provide e-Raktkosh Id. Accepted Alphanumeric value with special characters (- and _). Required if facility is registered in e-Raktkosh.
+- `bloodBankDetails.bloodBankLicenseNumber` (string, required): Mention your Blood Bank Registration Number. Alphanumeric value.
+- `bloodBankDetails.bloodStorageCenters` (string): Is there any Blood Storage Centres associated with your Blood Bank. Y or N as accepted value.
+- `bloodBankDetails.storageCentersCount` (integer): Count of Blood Storage Centres. Numeric Value greater than 0. Required if storage centers are associated with your blood bank.
+- `bloodBankDetails.bloodCollectedPerAnnum` (string): Please indicate the number of blood units collected per annum. Numeric value.
+- `bloodBankDetails.bloodRequiredPerAnnum` (string): Please mention existing requirement of Blood per annum. Numeric value.
+- `imagingServices` (object[]): Section to capture Imaging Services details. Required if facility type is Imaging center.
+- `imagingServices.service` (string, required): Code of imaging service that is offered by the facility. Accepted codes as specified in get-master-data API with type='IMAGING'. See `GET /v1.5/facility/get-master-data`.
+- `imagingServices.count` (integer): Count of equipment available. Number greater than 0. Required if a service is offered.
+- `diagnosticServices` (string[]): Codes of diagnostic services available at your facility. Comma separated list of Strings. Accepted codes as specified in get-master-data API with type='DIAGNOSTIC'. See `GET /v1.5/facility/get-master-data`. Required if facility type is Diagnostic Lab.
 
 ## Responses
 

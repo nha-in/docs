@@ -23,8 +23,8 @@ curl --request POST \
 
 ## Body
 
-- `ownershipCode` (string, required)
-- `systemOfMedicineCode` (string, required)
+- `ownershipCode` (string, required): Ownership of the facility. Accepted codes are "G" or "P".
+- `systemOfMedicineCode` (string, required): System of medicine followed by the facility. Accepted codes as specified in get-master-data API with type="MEDICINE". In case you have multiple systems of medicine, send a comma separated string of codes. See `GET /v1.5/facility/get-master-data`.
 
 ## Responses
 

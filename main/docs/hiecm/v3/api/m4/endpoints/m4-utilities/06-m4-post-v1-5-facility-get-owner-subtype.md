@@ -23,8 +23,8 @@ curl --request POST \
 
 ## Body
 
-- `ownershipCode` (string, required)
-- `ownerSubtypeCode` (string, required)
+- `ownershipCode` (string, required): Ownership Code as available in HFR. Accepted codes are "G", "P" or "PP".
+- `ownerSubtypeCode` (string, required): Ownership subtype code, as available in HFR, under any Ownership. ownershipCode = "G" Accepted codes are "C". ownershipCode = "P" or "PP" Accepted codes are "P" or "NP".
 
 ## Responses
 

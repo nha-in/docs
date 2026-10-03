@@ -18,7 +18,7 @@ curl --request GET \
 
 ## Query parameters
 
-- `type` (string, required)
+- `type` (string, required): Type of master data set. Accepted codes are types as specified in get-master-type API. See `GET /v1.5/facility/get-master-types`.
 
 ## Responses
 

@@ -28,13 +28,13 @@ curl --request POST \
 
 ## Body
 
-- `name` (string)
-- `address` (string)
-- `district` (string)
-- `subDistrict` (string)
-- `village` (string)
-- `geolocation` (string)
-- `facilityId` (string)
+- `name` (string, required): Name of the facility. Accepted characters: Alphanumeric, with only one space is allowed between words.
+- `address` (string): Address of the facility. Accepted characters: Alphanumeric with -_.(),/ and only one space is allowed between words.
+- `district` (string, required): District of the facility. District LGD Code. See `GET /v1.5/facility/lgd/districts`.
+- `subDistrict` (string, required): Sub District of the facility. Sub District LGD Code. See `GET /v1.5/facility/lgd/subdistricts`.
+- `village` (string): Village of the facility. Village LGD Code. Please visit https://lgdirectory.gov.in/ for more information.
+- `geolocation` (string): Geolocation coordinates of the facility. Latitude - Real Number ranging from - 90.000000 to +90.000000 with 1-6 decimal places Longitude - Real Number ranging from -180.000000 to +180.000000 with 1-6 decimal places.
+- `facilityId` (string): Unique Id of the facility. 6-digit numeric value (fac unique id).
 
 ## Responses
 

@@ -54,24 +54,24 @@ curl --request POST \
 
 ## Body
 
-- `trackingId` (string, required)
+- `trackingId` (string, required): Unique identification number for your facility. Tracking id generated from basic information API.
 - `linkedProgramIds` (object)
-- `linkedProgramIds.nhrrId` (string)
-- `linkedProgramIds.nin` (string)
-- `linkedProgramIds.abpmjayId` (string)
-- `linkedProgramIds.rohiniId` (string)
-- `linkedProgramIds.echsId` (string)
-- `linkedProgramIds.cghsId` (string)
-- `linkedProgramIds.ceaRegistration` (string)
-- `linkedProgramIds.stateInsuranceSchemeId` (string)
+- `linkedProgramIds.nhrrId` (string): National Health Resource Repository Unique ID. Should be a valid NHRR ID.
+- `linkedProgramIds.nin` (string): National Identification Number. Should be a valid NIN id.
+- `linkedProgramIds.abpmjayId` (string): Hospital Id as allotted by ABPMJAY Hospital Empanelment Module. Should be a valid AB-PMJAY Hospital Id.
+- `linkedProgramIds.rohiniId` (string): Rohini Id. Should be a valid Rohini Id.
+- `linkedProgramIds.echsId` (string): Unique id in Ex-Servicemen Contributory Health Scheme. Should be a valid ECHS Id.
+- `linkedProgramIds.cghsId` (string): Unique Id in Central Government Health Scheme. Should be a valid CGHS Id.
+- `linkedProgramIds.ceaRegistration` (string): CEA Registration Number. Should be a valid CEA registration number.
+- `linkedProgramIds.stateInsuranceSchemeId` (string): State Insurance Scheme ID. Alphanumeric value.
 - `generalInformation` (object)
-- `generalInformation.hasDialysisCenter` (string)
-- `generalInformation.hasPharmacy` (string)
-- `generalInformation.hasBloodBank` (string)
-- `generalInformation.hasCathLab` (string)
-- `generalInformation.hasDiagnosticLab` (string)
-- `generalInformation.hasImagingCenter` (string)
-- `generalInformation.servicesByImagingCenter` (object[])
+- `generalInformation.hasDialysisCenter` (string): Value to identify if a facility has dialysis center. Accepted codes as specified in get-master-data API with type='GENERAL-INFO-OPTIONS'. See `GET /v1.5/facility/get-master-data`. Required If facility have dialysis center.
+- `generalInformation.hasPharmacy` (string): Value to identify if a facility has pharmacy. Accepted codes as specified in get-master-data API with type='GENERAL-INFO-OPTIONS'. See `GET /v1.5/facility/get-master-data`. Required If facility have pharmacy.
+- `generalInformation.hasBloodBank` (string): Value to identify if a facility has bloodbank. Accepted codes as specified in get-master-data API with type='GENERAL-INFO-OPTIONS'. See `GET /v1.5/facility/get-master-data`. Required If facility have bloodbank.
+- `generalInformation.hasCathLab` (string): Value to identify if a facility has cath lab. Accepted codes as specified in get-master-data API with type='GENERAL-INFO-OPTIONS'. See `GET /v1.5/facility/get-master-data`. Required If facility have cath lab.
+- `generalInformation.hasDiagnosticLab` (string): Value to identify if a facility has diagnostic center. Accepted codes as specified in get-master-data API with type='GENERAL-INFO-OPTIONS'. See `GET /v1.5/facility/get-master-data`. Required If facility have diagnostic center.
+- `generalInformation.hasImagingCenter` (string): Value to identify if a facility has imaging center. Accepted codes as specified in get-master-data API with type='GENERALINFO-OPTIONS'. See `GET /v1.5/facility/get-master-data`. Required If facility have imaging centre.
+- `generalInformation.servicesByImagingCenter` (object[]): Required if imaging center is present.
 
 ## Responses
 

@@ -2,6 +2,15 @@
 
 Changes that affect what you can build against, newest first. Each entry links to what you can now read, run or consume.
 
+## 3 October 2026
+
+4 changes
+
+- [M4 Registry Integration: required fields corrected on six calls](/docs/main/docs/whats-new/2026-10-03#m4-registry-integration-required-fields-corrected-on-six-calls)
+- [The abdm-integrators-assistant plugin is 0.10.3](/docs/main/docs/whats-new/2026-10-03#the-abdm-integrators-assistant-plugin-is-0103)
+- [The nhcx plugin is 1.0.4](/docs/main/docs/whats-new/2026-10-03#the-nhcx-plugin-is-104)
+- [The uhi-integrators-assistant plugin is 0.1.2](/docs/main/docs/whats-new/2026-10-03#the-uhi-integrators-assistant-plugin-is-012)
+
 ## 30 September 2026
 
 3 changes

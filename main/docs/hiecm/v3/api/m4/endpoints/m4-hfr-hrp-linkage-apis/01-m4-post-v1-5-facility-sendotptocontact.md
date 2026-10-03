@@ -22,7 +22,7 @@ curl --request POST \
 
 ## Body
 
-- `facilityId` (string)
+- `facilityId` (string, required): Id of the facility to be linked. Should start with 'IN' and have the length of 12 characters.
 
 ## Responses
 
