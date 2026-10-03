@@ -115,8 +115,9 @@ func suggestionsFromPack(pack []byte, scope string) []Suggestion {
 			ID string `json:"id"`
 		} `json:"passages"`
 		Related []struct {
-			ID    string `json:"id"`
-			Title string `json:"title"`
+			ID       string `json:"id"`
+			Title    string `json:"title"`
+			Question string `json:"question"`
 		} `json:"next"`
 	}
 	if err := json.Unmarshal(pack, &pp); err != nil {
@@ -142,7 +143,11 @@ func suggestionsFromPack(pack []byte, scope string) []Suggestion {
 			continue
 		}
 		shown[r.ID] = true
-		out = append(out, Suggestion{ID: r.ID, Title: r.Title, Prompt: r.Title})
+		prompt := r.Title
+		if r.Question != "" {
+			prompt = r.Question
+		}
+		out = append(out, Suggestion{ID: r.ID, Title: r.Title, Prompt: prompt})
 		if len(out) == maxSuggestions {
 			break
 		}
@@ -156,6 +161,38 @@ func atomGateway(id string) string {
 	g, _, _ := strings.Cut(id, ".")
 	return g
 }
+
+// openEnded reports whether a question leaves somewhere to go next. One that
+// asks what to build or how to do something gets next steps under its
+// answer. One with a single answer, a definition, a diagnosis, a comparison,
+// a question about one named call or one error code, gets that answer and
+// nothing after it: a suggestion there is noise, and readers said so. These
+// are rules over the routed shape; the plan hands the judgement to the query
+// rewriter once a model sits in that seat.
+func openEnded(shape string, r route.Result) bool {
+	switch route.Shape(shape) {
+	case route.Overview, route.Topic, route.Walkthrough:
+		return true
+	case route.HowDoI:
+		return r.OperationRef == "" && len(r.ErrorCodes) == 0
+	}
+	return false
+}
+
+// nextAfter withholds the suggestions from an answer that said it has
+// nothing. A decline names its own next step, and questions listed under
+// "this is not covered here" read as if they were.
+func nextAfter(answer string, suggestions []Suggestion) []Suggestion {
+	if saysItHasNothing(answer) || declinedRe.MatchString(answer) {
+		return nil
+	}
+	return suggestions
+}
+
+// declinedRe matches the decline shape's own wording, which saysItHasNothing
+// does not: that one spots a first-person refusal made without looking, for
+// the retry, and is left as it is.
+var declinedRe = regexp.MustCompile(`(?i)\b(?:is|are) not (?:documented|covered)\b|\bnot covered (?:here|on this portal)\b|\bdoes not document\b`)
 
 // topPassageType returns the atom type of the first passage in the pack.
 func topPassageType(pack []byte) string {
@@ -869,9 +906,10 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 	// then the reader's own words. Nothing here goes into the system
 	// prompt, which is what keeps it byte identical and the Bedrock cache
 	// point worth having.
-	shape := string(route.Route(route.Input{
+	routed := route.Route(route.Input{
 		Question: question, HasAttachment: lastUserAttachment(turns) != nil,
-	}).Shape)
+	})
+	shape := string(routed.Shape)
 	if aboutSelf {
 		shape = string(route.Self)
 	}
@@ -881,6 +919,10 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 	// shape orients and offers the questions the phrase usually means.
 	if shape == string(route.Define) && isTopicPhrase(question) && topType == "flow" {
 		shape = string(route.Topic)
+	}
+	// Not every answer wants a next question under it. See openEnded.
+	if !openEnded(shape, routed) {
+		suggestions = nil
 	}
 	prefix := passagesPrefix + skillPrefix
 	if gateway != "" {
@@ -1044,7 +1086,7 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 				// citations, because that part is what those sources back.
 				return s.finish(nil, nil, nil, emit)
 			}
-			return s.finish(sources, s.answerLinks(g.released.String(), links), suggestions, emit)
+			return s.finish(sources, s.answerLinks(g.released.String(), links), nextAfter(g.released.String(), suggestions), emit)
 		}
 
 		// The round ended in a tool call, so whatever text it produced was
@@ -1136,11 +1178,11 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 			if g.blocked && g.released.Len() == 0 {
 				return s.finish(nil, nil, nil, emit)
 			}
-			return s.finish(sources, s.answerLinks(g.released.String(), links), suggestions, emit)
+			return s.finish(sources, s.answerLinks(g.released.String(), links), nextAfter(g.released.String(), suggestions), emit)
 		}
 	}
 	// Unreachable: the loop above always returns by round == MaxToolCalls.
-	return s.finish(sources, s.answerLinks(g.released.String(), links), suggestions, emit)
+	return s.finish(sources, s.answerLinks(g.released.String(), links), nextAfter(g.released.String(), suggestions), emit)
 }
 
 // finish emits the sources event (only when there is at least one source)

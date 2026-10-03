@@ -387,8 +387,22 @@ func nextQuestions(r atomOpener, passageID string, shown map[string]bool, scope 
 	// What a reader does next before what a word means: flows, then
 	// concepts, then glossary entries, each in the author's order.
 	sort.SliceStable(next, func(i, j int) bool { return nextRank[next[i]["type"]] < nextRank[next[j]["type"]] })
+	// The ones a reader can be offered carry the question their author
+	// wrote, when there is one: a title is a poor thing to put in a
+	// reader's mouth.
+	for i := 0; i < len(next) && i < maxNextQuestions; i++ {
+		if a, err := r.GetAtom(next[i]["id"]); err == nil {
+			if q := catalogue.FirstQuestion(a.Body); q != "" {
+				next[i]["question"] = q
+			}
+		}
+	}
 	return next
 }
+
+// maxNextQuestions is how many next entries per passage are worth the read
+// that finds their question: the panel offers three in all.
+const maxNextQuestions = 3
 
 // nextTypes are the atom types worth offering as a next question. An error
 // code, a callback, a FHIR note or a test case is something a reader looks

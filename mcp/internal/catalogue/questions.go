@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"os"
+	"regexp"
 	"strings"
 )
 
@@ -57,4 +58,28 @@ func CleanQuestions(raw []string, atomID string) []string {
 		out = append(out, q)
 	}
 	return out
+}
+
+var listMarkerRe = regexp.MustCompile(`^(?:[-*]|\d+\.)\s+`)
+
+// FirstQuestion returns the first question an atom's author listed under
+// its "Questions this answers" heading, or an empty string. A next-question
+// suggestion reads better as something a reader would ask than as the
+// atom's title, and only the author can say what that is.
+func FirstQuestion(body string) string {
+	_, rest, ok := strings.Cut("\n"+body, "\n## "+QuestionsHeading)
+	if !ok {
+		return ""
+	}
+	_, rest, _ = strings.Cut(rest, "\n") // the remainder of the heading line
+	if end := strings.Index(rest, "\n## "); end >= 0 {
+		rest = rest[:end]
+	}
+	for _, line := range strings.Split(rest, "\n") {
+		line = listMarkerRe.ReplaceAllString(strings.TrimSpace(line), "")
+		if line = strings.Trim(line, `"`); line != "" {
+			return line
+		}
+	}
+	return ""
 }

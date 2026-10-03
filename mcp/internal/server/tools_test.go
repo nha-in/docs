@@ -360,3 +360,29 @@ func TestDecodeErrorReadsABareGatewayCode(t *testing.T) {
 		t.Errorf("codes = %v, want [900901]", out["codes"])
 	}
 }
+
+// questionOpener gives one related atom a body with authored questions.
+type questionOpener struct{ outboundOpener }
+
+func (questionOpener) GetAtom(id string) (catalogue.Atom, error) {
+	if id == "hiecm.flow.m2-link-care-context" {
+		return catalogue.Atom{ID: id, Body: "## Questions this answers\n\n- How do I link records as a HIP?\n"}, nil
+	}
+	return catalogue.Atom{ID: id}, nil
+}
+
+// A next entry carries the first question its author listed, and an atom
+// without one is offered by its title alone.
+func TestNextQuestionsCarryTheAuthorsQuestion(t *testing.T) {
+	o := questionOpener{outboundOpener{refs: []index.AtomRef{
+		{ID: "hiecm.flow.m2-link-care-context", Type: "flow", Title: "Link a care context to a patient's ABHA"},
+		{ID: "hiecm.glossary.hip", Type: "glossary", Title: "HIP, health information provider"},
+	}}}
+	got := nextQuestions(o, "hiecm.glossary.m2", map[string]bool{}, "hiecm")
+	if len(got) != 2 || got[0]["question"] != "How do I link records as a HIP?" {
+		t.Fatalf("next = %v, want the flow first with its question", got)
+	}
+	if _, has := got[1]["question"]; has {
+		t.Errorf("an atom with no questions section got one: %v", got[1])
+	}
+}

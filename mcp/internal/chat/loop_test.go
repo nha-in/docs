@@ -10,6 +10,7 @@ import (
 	"unicode/utf8"
 
 	"github.com/nha-in/docs/mcp/internal/guard"
+	"github.com/nha-in/docs/mcp/internal/route"
 )
 
 // fakeModel scripts a sequence of replies, one per call, in order. texts[i],
@@ -1711,5 +1712,70 @@ func TestSuggestionsIgnoreTheRelatedList(t *testing.T) {
 		{"id":"hiecm.callback.m2-on-generate-token","type":"callback","title":"A backlink"}]}`)
 	if got := suggestionsFromPack(pack, "hiecm"); len(got) != 0 {
 		t.Errorf("pills came from the related list: %v", got)
+	}
+}
+
+// Next questions follow an open-ended question and no other. A definition, a
+// diagnosis, a comparison or a how-to about one named call has one answer.
+func TestOpenEnded(t *testing.T) {
+	for _, tc := range []struct {
+		shape route.Shape
+		r     route.Result
+		want  bool
+	}{
+		{route.Overview, route.Result{}, true},
+		{route.Topic, route.Result{}, true},
+		{route.Walkthrough, route.Result{}, true},
+		{route.HowDoI, route.Result{}, true},
+		{route.HowDoI, route.Result{OperationRef: "/api/hiecm/v3/token/generate-token"}, false},
+		{route.HowDoI, route.Result{ErrorCodes: []string{"ABDM-1016"}}, false},
+		{route.Define, route.Result{}, false},
+		{route.Diagnose, route.Result{}, false},
+		{route.Compare, route.Result{}, false},
+		{route.Meta, route.Result{}, false},
+		{route.Self, route.Result{}, false},
+	} {
+		if got := openEnded(string(tc.shape), tc.r); got != tc.want {
+			t.Errorf("openEnded(%s, %+v) = %v, want %v", tc.shape, tc.r, got, tc.want)
+		}
+	}
+}
+
+// The same pack offers next questions under "link records" and none under
+// "what is an abha address", and none under an answer that declined.
+func TestRespondOffersNextOnlyWhenOpenEnded(t *testing.T) {
+	pack := `{"passages":[{"id":"hiecm.flow.m2-link-care-context","type":"flow","title":"Link a care context","body":"A HIP links care contexts."}],
+		"next":[{"id":"hiecm.flow.p2-discover-and-link","type":"flow","title":"Discover and link","question":"How does a PHR app link records?"}]}`
+	for _, tc := range []struct {
+		q, answer string
+		want      int
+	}{
+		{"link records", "Linking records attaches a care context to an ABHA address.", 1},
+		{"what is an abha address", "An ABHA address is a readable handle.", 0},
+		{"how do I link records as a HIP", "Linking for a HIP is not documented on this portal. See /docs/support.", 0},
+		{"how do I link records in bulk", "This is not covered here; the nearest page is /docs/hiecm/v3/milestones/m2.", 0},
+	} {
+		m := &fakeModel{texts: []string{tc.answer}, replies: []Reply{{Text: tc.answer, StopReason: "end_turn"}}}
+		svc := &Service{Model: m, MaxTokens: 100,
+			Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+				return json.RawMessage(pack), []Source{{ID: "hiecm.flow.m2-link-care-context"}}, guard.PackFacts{}, nil
+			},
+		}
+		var got []Suggestion
+		emit := func(event string, data any) error {
+			if event == "suggestions" {
+				got = data.([]Suggestion)
+			}
+			return nil
+		}
+		if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: tc.q}}, nil, emit); err != nil {
+			t.Fatal(err)
+		}
+		if len(got) != tc.want {
+			t.Errorf("%q: %d suggestions, want %d: %v", tc.q, len(got), tc.want, got)
+		}
+		if tc.want == 1 && got[0].Prompt != "How does a PHR app link records?" {
+			t.Errorf("%q: prompt = %q, want the atom's own question", tc.q, got[0].Prompt)
+		}
 	}
 }
