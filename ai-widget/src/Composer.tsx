@@ -16,7 +16,6 @@ import {
   ArrowUp,
   ChevronLeft,
   FileText,
-  Mic,
   Paperclip,
   Plus,
   Search,
@@ -58,10 +57,6 @@ type Props = {
   memory: {earlier: number; window: number; percent: number; full: boolean};
   /** Next questions for the latest answer; empty when it has none. */
   suggestions: Suggestion[];
-  /** Dictation: off where the server does not transcribe or the browser cannot record. */
-  voice: 'off' | 'idle' | 'recording' | 'transcribing';
-  onVoice: () => void;
-  voiceError: string | null;
 };
 
 /**
@@ -131,7 +126,7 @@ export function Composer(props: Props) {
     return () => document.removeEventListener('pointerdown', away, true);
   }, [menu]);
 
-  const hasContext = Boolean(page || attaching || file || fileNote || fileError || props.voiceError);
+  const hasContext = Boolean(page || attaching || file || fileNote || fileError);
 
   return (
     <div class="ask-ai__foot">
@@ -191,7 +186,6 @@ export function Composer(props: Props) {
               )
             )}
             {fileError && <span class="ask-ai__context-error">{fileError}</span>}
-            {props.voiceError && <span class="ask-ai__context-error">{props.voiceError}</span>}
           </div>
         )}
         {/* Identifiers are masked on the way out, but a person's name written
@@ -224,15 +218,6 @@ export function Composer(props: Props) {
               </li>
             ))}
           </ul>
-        )}
-
-        {/* Said while the microphone is open, the way the file note is said
-            beside a file: where the words go, and that they are not kept. */}
-        {props.voice === 'recording' && (
-          <p class="ask-ai__context-note" role="status">
-            Recording. What you say is sent to be turned into text, shown here
-            for you to check, and not kept.
-          </p>
         )}
 
         <div class="ask-ai__bar">
@@ -357,24 +342,6 @@ export function Composer(props: Props) {
               onMouseDown={(event) => event.preventDefault()}
               onClick={() => props.onDraft(shown.prompt)}>
               Tab
-            </button>
-          )}
-
-          {props.voice !== 'off' && (
-            <button
-              type="button"
-              class={`ask-ai__mic${props.voice === 'recording' ? ' ask-ai__mic--on' : ''}`}
-              aria-label={
-                props.voice === 'recording'
-                  ? 'Stop and use what was said'
-                  : props.voice === 'transcribing'
-                    ? 'Turning speech into text'
-                    : 'Dictate the question'
-              }
-              aria-pressed={props.voice === 'recording'}
-              disabled={busy || props.voice === 'transcribing'}
-              onClick={props.onVoice}>
-              {props.voice === 'recording' ? <Square /> : <Mic />}
             </button>
           )}
 

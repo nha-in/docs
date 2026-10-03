@@ -183,23 +183,6 @@ credential chain — an EKS pod's IRSA role in production, never a stored
 key. The IAM policy and Kubernetes manifests are in
 [deploy/nha/](../deploy/nha/).
 
-### Voice input
-
-The panel can take a question by voice. It records in the browser, sends the
-recording to `POST /api/transcribe`, and puts the words in the box for the
-reader to check and send; the chat itself only ever sees text. Set
-`TRANSCRIBE_URL` to a server that speaks the `/v1/audio/transcriptions`
-contract Whisper servers share, self-hosted or hosted, and the panel shows a
-microphone; unset, the endpoint answers 404 and the panel shows none.
-`TRANSCRIBE_MODEL` (default `whisper-1`) is the model name sent, and
-`TRANSCRIBE_API_KEY`, read from the environment only, goes as a bearer token
-when set. A recording is at most 4 MB and a minute, is held in memory for the
-one request, and is never written or logged: the log line carries its size
-and timing only. Transcription shares the chat's rate limit per address.
-
-Reading an answer aloud needs nothing from the server: the panel uses the
-browser's own voice.
-
 ## Tests
 
     go test ./...

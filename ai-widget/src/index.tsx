@@ -30,8 +30,6 @@ import {
 } from './history';
 import {ABOUT, isAboutQuestion} from './about';
 import {Composer, type Menu} from './Composer';
-import {SpeakButton} from './Speak';
-import {canRecord, record, transcribe, voiceInputSeconds, type Recording} from './voice';
 import {HistoryList} from './HistoryList';
 import {Welcome} from './Welcome';
 import {ThinkingOrb} from './orb/frosted-orb';
@@ -413,60 +411,6 @@ function Panel({
   // the box has focus.
   const latest = turns[turns.length - 1];
   const next = !busy && latest?.from === 'assistant' ? (latest.suggestions ?? []) : [];
-
-  // Dictation. Off until the server says it transcribes and this browser can
-  // record; a deployment that has not set it up shows no microphone at all.
-  const [voice, setVoice] = useState<'off' | 'idle' | 'recording' | 'transcribing'>('off');
-  const [voiceError, setVoiceError] = useState<string | null>(null);
-  const recording = useRef<Recording | null>(null);
-  const voiceSeconds = useRef(60);
-  useEffect(() => {
-    if (!apiBase || !canRecord()) return;
-    let live = true;
-    void voiceInputSeconds(apiBase).then((seconds) => {
-      if (!live || seconds <= 0) return;
-      voiceSeconds.current = seconds;
-      setVoice('idle');
-    });
-    return () => {
-      live = false;
-      recording.current?.cancel();
-    };
-  }, [apiBase]);
-
-  // Ends the recording and puts its words in the box. They are added to what
-  // is there, never sent: the reader reads them first.
-  const finishVoice = async () => {
-    const taken = recording.current;
-    recording.current = null;
-    if (!taken) return;
-    setVoice('transcribing');
-    try {
-      const text = await transcribe(apiBase, await taken.stop());
-      if (text) setDraft((prior) => (prior ? `${prior} ${text}` : text));
-      else setVoiceError('Nothing was heard. Try again, or type the question.');
-    } catch {
-      setVoiceError('Could not turn that into text. Try again, or type the question.');
-    }
-    setVoice('idle');
-    composer.current?.focus();
-  };
-
-  const toggleVoice = async () => {
-    if (voice === 'recording') return void finishVoice();
-    if (voice !== 'idle') return;
-    setVoiceError(null);
-    try {
-      recording.current = await record(voiceSeconds.current * 1000, () => void finishVoice());
-      setVoice('recording');
-    } catch (error) {
-      setVoiceError(
-        error instanceof DOMException && error.name === 'NotAllowedError'
-          ? 'Microphone access is blocked. Allow it in the browser to dictate.'
-          : 'Could not start recording. Type the question instead.',
-      );
-    }
-  };
 
   // Text that has arrived but has not been shown yet, and the frame loop that
   // shows it. Both are refs: the loop runs from a callback the browser holds,
@@ -1156,14 +1100,11 @@ function Panel({
               index > 0 &&
               turn.text !== '' &&
               !(busy && index === turns.length - 1) && (
-                <>
-                  <CopyButton
-                    text={turn.text}
-                    label="Copy answer"
-                    className="ask-ai__turn-copy"
-                  />
-                  <SpeakButton text={turn.text} className="ask-ai__turn-copy ask-ai__turn-speak" />
-                </>
+                <CopyButton
+                  text={turn.text}
+                  label="Copy answer"
+                  className="ask-ai__turn-copy"
+                />
               )}
             {/* One line until the reader asks for them, as Stripe's
                 assistant does: "Used 5 sources", which opens to the list.
@@ -1385,9 +1326,6 @@ function Panel({
         onCommand={setCommand}
         memory={memory}
         suggestions={next}
-        voice={voice}
-        onVoice={() => void toggleVoice()}
-        voiceError={voiceError}
       />
       </>
       )}
