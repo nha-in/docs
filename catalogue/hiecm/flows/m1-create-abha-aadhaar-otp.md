@@ -67,9 +67,6 @@ sequenceDiagram
     A-->>S: healthIdNumber, preferredAbhaAddress
 ```
 
-Every step answers in its own response, so nothing here waits on a callback.
-The enrolment call is the one with a lasting effect: it creates the account.
-
 ## Before you start
 
 A gateway access token, the Aadhaar number encrypted with the M1 certificate, the person present to read the OTP, and their consent to create an ABHA.

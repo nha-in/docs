@@ -9,7 +9,7 @@ The calls themselves: where they live, what they need in their headers, and one 
 - `https://apis.abdm.gov.in` ABDM gateway, production
 ## Endpoints
 
-124 operations, grouped by the journey they belong to.
+123 operations, grouped by the journey they belong to.
 
 ### Other operations
 
@@ -34,7 +34,6 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `POST` | `/abha/api/v3/enrollment/enrol/auth/init` | Face auth - generate transaction ID (init) |
 | `POST` | `/abha/api/v3/enrollment/enrol/byAadhaar` | Create Child ABHA |
 | `POST` | `/abha/api/v3/enrollment/enrol/byAadhaar` | Create Child ABHA |
-| `POST` | `/abha/api/v3/enrollment/enrol/byAadhaar` | Create ABHA - Demographic authentication (Demo Auth) |
 | `POST` | `/abha/api/v3/enrollment/enrol/byAadhaar` | Create ABHA - Demographic authentication (Demo Auth) |
 | `POST` | `/abha/api/v3/enrollment/enrol/byAadhaar` | Create ABHA - Demographic authentication (Demo Auth) |
 | `POST` | `/abha/api/v3/enrollment/enrol/byAadhaar` | Create ABHA - Aadhaar face authentication |
