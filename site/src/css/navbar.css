@@ -50,6 +50,57 @@
   height: var(--mark-height);
 }
 
+/* ---------- the mission lockup ----------
+   NHA mark, ABDM mark and the mission's name (MissionLockup). Both marks and
+   the three lines of text share one height, so all three sit on one top and
+   one bottom line, on the landing curtain and in the top bar alike. */
+.mission-lockup {
+  --lockup-height: 2.55rem;
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 1.75rem;
+}
+
+.mission-lockup__mark {
+  display: block;
+  width: auto;
+  height: var(--lockup-height);
+}
+
+.mission-lockup__mark--dark,
+[data-theme='dark'] .mission-lockup__mark--light {
+  display: none;
+}
+
+[data-theme='dark'] .mission-lockup__mark--dark {
+  display: block;
+}
+
+.mission-lockup__text {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: var(--lockup-height);
+  line-height: 1.1;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-heading);
+  white-space: nowrap;
+}
+
+.mission-lockup__tagline {
+  font-size: 0.64rem;
+  font-weight: 500;
+}
+
+/* A phone has room for the marks or the words, not both. */
+@media (max-width: 600px) {
+  .mission-lockup__text {
+    display: none;
+  }
+}
+
 .topbar-wordmark {
   font-family: var(--font-serif);
   font-size: 1.0625rem;

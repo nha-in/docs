@@ -3,7 +3,7 @@ import Link from '@docusaurus/Link';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import ThemedImage from '@theme/ThemedImage';
 import NavbarColorModeToggle from '@theme/Navbar/ColorModeToggle';
-import {Check, ChevronDown, MoreHorizontal, Sparkles} from 'lucide-react';
+import {Check, ChevronDown, House, MoreHorizontal, Sparkles} from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -165,6 +165,12 @@ function OverflowMenu() {
         <MoreHorizontal className="size-5" aria-hidden="true" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
+        <DropdownMenuItem asChild>
+          <Link to="/">
+            <House className="size-4" aria-hidden="true" />
+            Home
+          </Link>
+        </DropdownMenuItem>
         {/* The assistant's own chip is not drawn at these widths: the bar has
             room for one control in the middle and search is the one a reader
             needs there, so Omnibox passes the element `launcher: none`. That
