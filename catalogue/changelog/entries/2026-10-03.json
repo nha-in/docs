@@ -154,23 +154,5 @@
         "to": "0.1.2"
       }
     ]
-  },
-  {
-    "id": "c96dbecff0c1",
-    "date": "2026-10-03",
-    "kind": "withdrawn",
-    "gateway": "hiecm",
-    "version": "v3",
-    "module": "m1",
-    "label": "M1 Identity",
-    "link": "/docs/hiecm/v3/api/m1/",
-    "count": 1,
-    "items": [
-      {
-        "method": "POST",
-        "path": "/abha/api/v3/enrollment/enrol/byAadhaar#demo-auth--benefit-child-abha",
-        "kind": "call"
-      }
-    ]
   }
 ]
