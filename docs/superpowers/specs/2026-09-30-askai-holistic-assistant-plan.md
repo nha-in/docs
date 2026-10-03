@@ -44,14 +44,14 @@ One branch on top of main at `1c004ad595`. Nothing on it has been through a judg
 
 | Workstream | On the branch | Still open |
 |---|---|---|
-| 1. Knowledge | Fourteen hand-written atoms: three playbooks (PHR app, HIP software, HIU software), three journeys (consent to records, HIP initiated linking, user initiated linking), six situations (no callback, HIP did not acknowledge consent notify, blocked for 24 hours, unauthorized, consent still requested after approval, linked but no record), sandbox access to HIP or HIU ID, and a health locker definition | Situation causes are assembled from the pages, not from support history. Three situations overlap older generated atoms (`callback-never-arrives`, `everything-returns-401`, `consent-stuck-requested`) and want one owner each. No atom lists the M1 verification methods; that question has no case for that reason |
+| 1. Knowledge | Fifteen hand-written atoms: three playbooks (PHR app, HIP software, HIU software), three journeys (consent to records, HIP initiated linking, user initiated linking), six situations (no callback, HIP did not acknowledge consent notify, blocked for 24 hours, unauthorized, consent still requested after approval, linked but no record), sandbox access to HIP or HIU ID, a health locker definition, and the six ways M1 tests ABHA verification with which are mandatory | Situation causes are assembled from the pages, not from support history. Three situations overlap older generated atoms (`callback-never-arrives`, `everything-returns-401`, `consent-stuck-requested`) and want one owner each. |
 | 2. Model | Nothing | The comparison needs Bedrock access this branch was written without |
 | 3. Retrieval | An overview or walkthrough question opens up to three flow or concept atoms the top hit links to, on top of the three it already opens. An atom searched for by its own title comes first | Contextual chunks, reranker, query rewriting, the vector floor's value |
 | 4. Shapes | `diagnose` gives the most likely cause first and ends by asking for the one thing that would settle it. Every shape but `self` carries the reader line: most readers are not developers, plain words first, then the call. Prompt version v5.2 | `how-do-i` unchanged, because the guard requires the route to be named. Reader recognition waits for the query rewriter |
 | 5. Reliability | A Bedrock throttle is retried twice with backoff, never after text has streamed. Every stream that ends without an answer logs a reason, and the widget is told it. `get` and `validate` have 20 seconds. The per-IP limit is 15 a minute by default. The "start a new chat" prompt at fifteen exchanges is gone | Summarising older turns. The one-in-two-hundred exit needs a week of production logs |
 | 6. Next questions | New, below | |
-| 7. Voice | New, below | |
-| Evaluation | A `nha-review` slice of twenty cases, NHA's questions verbatim with the reviewer's expectation as the criteria; with the earlier cases this covers every reviewer question the catalogue can answer | The judged run, the calibration grades, the `persona` slice |
+| 7. Voice | Built, then moved to phase 2: it is on `feat/askai-voice`, not on this branch | The transcription server (decision 6) |
+| Evaluation | A `nha-review` slice of twenty-one cases, NHA's questions verbatim with the reviewer's expectation as the criteria; with the earlier cases this covers every reviewer question the catalogue can answer | The judged run, the calibration grades, the `persona` slice |
 
 Each row names the layer, the defect the feedback exposes, and the evidence in the repository.
 
@@ -163,12 +163,16 @@ Exit: unanswered streams below one in two hundred over a week; no forced restart
 The pill row under an answer is gone. It offered a next step after every answer, including a decline, and its text came from whatever linked to the atoms retrieved, so it read as unrelated.
 
 - Where: in the composer. The next question shows as grey text in the box with a `Tab` key beside it; Tab fills it, the arrow keys move through up to three when the box is focused, Escape dismisses, and typing replaces it. Shift+Tab is untouched, so keyboard navigation out of the box still works.
+- Skills: the four skill pills under the composer are gone too. A skill is assigned from the add menu ("Assign a skill") or by typing a slash, which lists the skills as it does in Claude; the one that is on shows as a chip above the box and comes off from there.
+- Scrolling: once the reader scrolls up, a chevron over the end of the thread takes them back to the latest answer.
 - When: only after an open-ended question. Today that is a rule over the routed shape: `overview`, `topic` and `walkthrough` always; `how-do-i` when the question names no operation and no error code. A definition, a comparison, a diagnosis, a question about the assistant, and any answer that declines or says it has nothing get no suggestion, and the box says only "Ask about ABDM". When the query rewriter of workstream 3 exists it returns `open_ended` and the reader type with the rewritten query, and the rule becomes its fallback.
 - What: the first authored question of an atom the answer's own sources link to, flows before concepts, inside the answer's gateway. The model never writes a suggestion. The later step is to let it choose among the authored questions of the linked atoms, by index, for the reader it has recognised; it still writes none.
 
 Exit: no suggestion on any closed-question or declined case in the golden set; on open-ended cases the suggestion's atom is one the reviewers accept as the next step; fill rate (Tab or click over suggestions shown) is logged and reviewed after two weeks.
 
-### Workstream 7: voice
+### Workstream 7: voice, phase 2
+
+Built and held back on `feat/askai-voice` until the transcription server is decided. What follows describes that branch.
 
 Ninety percent of readers are not developers and many will find speaking easier than typing a question in English.
 

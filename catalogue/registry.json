@@ -507,6 +507,13 @@
     "file": "catalogue/hiecm/concepts/m1-two-routes-to-the-profile.md"
   },
   {
+    "id": "hiecm.concept.m1-verification-methods",
+    "type": "concept",
+    "gateway": "hiecm",
+    "source": "file",
+    "file": "catalogue/hiecm/concepts/m1-verification-methods.md"
+  },
+  {
     "id": "hiecm.concept.m2-care-context-and-records",
     "type": "concept",
     "gateway": "hiecm",
