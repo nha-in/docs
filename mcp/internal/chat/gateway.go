@@ -211,3 +211,17 @@ func featureReply(feature string) string {
 		return "Agent skills and the MCP server put this documentation inside your coding agent: the skills as files it loads once, the server as tools it queries as it works. Install steps for Claude Code, Cursor and VS Code are on [agent skills and the MCP server](/docs/hiecm/v3/getting-started/build-with-ai)."
 	}
 }
+
+type expandKey struct{}
+
+// WithExpand marks a lookup as serving a question for a whole build or a
+// whole flow, so the pack also opens what its top passage is made of.
+func WithExpand(ctx context.Context) context.Context {
+	return context.WithValue(ctx, expandKey{}, true)
+}
+
+// ExpandFrom reports whether the lookup was asked to expand.
+func ExpandFrom(ctx context.Context) bool {
+	on, _ := ctx.Value(expandKey{}).(bool)
+	return on
+}

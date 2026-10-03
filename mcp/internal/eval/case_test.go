@@ -72,7 +72,7 @@ func replaceOnce(s, old, new string) string {
 }
 
 func TestNewSlicesAreAccepted(t *testing.T) {
-	for _, slice := range []string{"naive", "confusable", "followup", "abstain", "terse", "injection", "nudge", "meta"} {
+	for _, slice := range []string{"naive", "confusable", "followup", "abstain", "terse", "injection", "nudge", "meta", "nha-review"} {
 		c := Case{
 			ID: "x", Slice: slice, Class: "how-do-i",
 			Turns:             []Turn{{Role: "user", Text: "q"}},

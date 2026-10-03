@@ -440,3 +440,38 @@ func TestVectorFloorDropsNeighbours(t *testing.T) {
 		t.Errorf("floor above every score should drop every hit, got %d", len(hits))
 	}
 }
+
+// An atom searched for by its own title comes first, whatever else shares
+// its words, and a query that is no atom's title is left as ranked.
+func TestSearchPinsTheAtomWhoseTitleIsTheQuery(t *testing.T) {
+	r := openFixture(t, false)
+	a, err := r.GetAtom("hiecm.endpoint.m1-enrolment-by-aadhaar")
+	if err != nil {
+		t.Fatal(err)
+	}
+	hits, err := r.Search(context.Background(), strings.ToUpper(a.Title), "", "", 5, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(hits) == 0 || hits[0].ID != a.ID {
+		t.Fatalf("searching for the title %q did not put its atom first: %+v", a.Title, hits)
+	}
+	seen := 0
+	for _, h := range hits {
+		if h.ID == a.ID {
+			seen++
+		}
+	}
+	if seen != 1 {
+		t.Errorf("the pinned atom appears %d times", seen)
+	}
+	plain, err := r.Search(context.Background(), "care context", "", "", 5, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, h := range plain {
+		if strings.EqualFold(h.Title, "care context") {
+			t.Errorf("a query that is no atom's title was pinned: %+v", h)
+		}
+	}
+}

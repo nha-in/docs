@@ -158,6 +158,28 @@ func run(catDir, outPath, nrcesPath, skillsDir string, emb embed.Embedder) error
 	meta := index.Meta{SourceHashes: hashes,
 		BuiltAt: time.Now().UTC().Format(time.RFC3339)}
 
+	// The journey order travels in the index for the same reason as the
+	// synonym table below. It is what lets an answer offer the next step.
+	var journeyFiles [][]byte
+	for _, pattern := range []string{"*/openapi/*/journeys/*.yaml", "openapi/*/*/journeys/*.yaml"} {
+		paths, _ := filepath.Glob(filepath.Join(catDir, pattern))
+		for _, p := range paths {
+			raw, err := os.ReadFile(p)
+			if err != nil {
+				return fmt.Errorf("read journeys: %w", err)
+			}
+			journeyFiles = append(journeyFiles, raw)
+		}
+	}
+	steps, err := index.ParseJourneys(journeyFiles)
+	if err != nil {
+		return err
+	}
+	if len(steps) > 0 {
+		raw, _ := json.Marshal(steps)
+		meta.NextSteps = string(raw)
+	}
+
 	// The synonym table travels inside the index, so a deployed server
 	// needs the database and not the catalogue. A missing file is not an
 	// error: search then behaves as it did before expansion existed.

@@ -1,0 +1,37 @@
+{
+  "id": "nha-review-subscription-auto-consent-locker-01",
+  "slice": "nha-review",
+  "class": "define",
+  "turns": [
+    {
+      "role": "user",
+      "text": "What is subscription , Auto consent and health locker?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "gateway": "hiecm",
+  "must_contain": [
+    "A subscription is a standing request to be told when something changes on a person's health account, and a notification carries no record",
+    "Auto consent, also called auto approval: the person agrees once that the app may collect new records, each consent request the app raises is then granted at once, and the person can switch it off at any time",
+    "A health locker is a patient's health app that keeps their records for the long term, and it is the fourth PHR milestone, P4 Locker"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.glossary.health-locker"
+  ],
+  "expected_shape": "define",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#nha-review-2026-09-30",
+  "catalogue_version": "2026.09.16",
+  "notes": "NHA PHR review, 30 September 2026, case 13: 'Can add about P4, rest seems fine'. Verdict group: fine, with P4 missing. The rejected answer described the locker without naming P4."
+}

@@ -1,0 +1,38 @@
+{
+  "id": "nha-review-m1-verification-methods-01",
+  "slice": "nha-review",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "How many login methods are there in M1 Verification flow?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "gateway": "hiecm",
+  "must_contain": [
+    "M1's functional test cases cover six ways to verify an ABHA and fetch the profile",
+    "Four are mandatory: Aadhaar OTP, mobile OTP, mobile number and Aadhaar number",
+    "Two are optional: Aadhaar biometric, for government entities, and scanning the ABHA QR code"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom",
+    "authmethods"
+  ],
+  "expected_sources": [
+    "hiecm.concept.m1-verification-methods"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#nha-review-2026-09-30",
+  "catalogue_version": "2026.09.16",
+  "notes": "NHA QA sample, 30 September 2026: 'Providing generic knowledge and not specific about the topic.' Verdict group: generic rather than situational. The rejected answer listed login identifiers and the six authMethods values; the reviewer asked about the verification routes M1 tests."
+}

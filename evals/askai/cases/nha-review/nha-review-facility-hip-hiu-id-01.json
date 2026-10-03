@@ -1,0 +1,38 @@
+{
+  "id": "nha-review-facility-hip-hiu-id-01",
+  "slice": "nha-review",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "How can I register my facility in the sandbox environment or obtain a HIP-ID/HIU-ID?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "gateway": "hiecm",
+  "must_contain": [
+    "Four things are set up in order: sandbox access, a callback URL, a facility registered in the Health Facility Registry, and a link between the facility and your bridge with a role",
+    "The ID sent as the HIP ID or the HIU ID is the facility's ID",
+    "The facility gets its facility ID either on the NHPR portal or through the M4 APIs; many products register on the portal and never build M4",
+    "The facility is linked to the bridge once for each role, with type HIP or HIU, on the NHPR portal or with POST /v1/bridges/MutipleHRPAddUpdateServices"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "shared.sandbox.sandbox-to-hip-or-hiu-id"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#nha-review-2026-09-30",
+  "catalogue_version": "2026.09.16",
+  "notes": "NHA QA sample, 30 September 2026: 'Incorrect Answer, Not providing exact solution, providing information in wrong manner.' Verdict group: missing or thin knowledge. The rejected answer walked the M4 facility calls and never said the portal route exists or that the facility ID is the HIP ID and the HIU ID."
+}

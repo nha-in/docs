@@ -10,8 +10,12 @@ export type Source = {id: string; title: string; status: string; url: string};
  */
 export type Link = {literal: string; url: string};
 
-/** A next question offered as a pill under an answer; prompt is what is sent. */
-export type Suggestion = {id: string; title: string; prompt: string};
+/**
+ * What the composer offers after an answer; prompt is what is sent. A "step"
+ * is the next call in the journey the answer sits in. Without a kind it is a
+ * related question.
+ */
+export type Suggestion = {id: string; title: string; prompt: string; kind?: 'step'};
 
 /** Fallback text when the live backend cannot be reached mid-stream. */
 export const UNREACHABLE =

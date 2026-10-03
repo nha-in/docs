@@ -1,0 +1,37 @@
+{
+  "id": "nha-review-link-carecontext-abha-number-01",
+  "slice": "nha-review",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "Is the ABHA number mandatory in /v3/link/carecontext?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "gateway": "hiecm",
+  "must_contain": [
+    "abhaNumber is not in the required list; the body requires abhaAddress and patient",
+    "If the link token was generated with both abhaNumber and abhaAddress, both are sent again when linking; otherwise one of the two is enough",
+    "When abhaNumber is sent it is 14 digits and nothing else"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.flow.journey-hip-initiated-linking"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#nha-review-2026-09-30",
+  "catalogue_version": "2026.09.16",
+  "notes": "NHA QA sample, 30 September 2026: 'Some parts are correct otherwise unnecessary informations has been provided. It is not providing the exact clarity for this particular situation.' Verdict group: wrong shape for the question. A yes or no question was answered with two routes and three steps. The case asserts only the required list and the token rule; whether this path is a call or a callback is in dispute with NHA and is not asserted."
+}
