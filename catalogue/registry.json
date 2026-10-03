@@ -581,6 +581,15 @@
     "url": "/docs/hiecm/v3/concepts/how-it-fits#roles"
   },
   {
+    "id": "hiecm.concept.scan-and-register-qr",
+    "type": "concept",
+    "gateway": "hiecm",
+    "source": "page",
+    "page": "site/docs/hiecm/v3/use-cases/scan-and-register.mdx",
+    "heading": "scan-and-register-qr",
+    "url": "/docs/hiecm/v3/use-cases/scan-and-register#scan-and-register-qr"
+  },
+  {
     "id": "hiecm.decision.callbacks-as-webhooks",
     "type": "decision",
     "gateway": "hiecm",
@@ -2145,6 +2154,15 @@
     "page": "site/docs/hiecm/v3/milestones/p4.mdx",
     "heading": "p4-receive-records",
     "url": "/docs/hiecm/v3/milestones/p4#p4-receive-records"
+  },
+  {
+    "id": "hiecm.flow.scan-and-register-share",
+    "type": "flow",
+    "gateway": "hiecm",
+    "source": "page",
+    "page": "site/docs/hiecm/v3/use-cases/scan-and-register.mdx",
+    "heading": "scan-and-register-share",
+    "url": "/docs/hiecm/v3/use-cases/scan-and-register#scan-and-register-share"
   },
   {
     "id": "hiecm.glossary.auth-modes",

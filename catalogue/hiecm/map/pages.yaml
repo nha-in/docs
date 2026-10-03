@@ -964,3 +964,44 @@ hiecm.concept.m1-abha-consent:
     endpoints:
     - hiecm.endpoint.m1-enrolment-request-otp
     - hiecm.endpoint.m1-enrolment-by-aadhaar
+hiecm.concept.scan-and-register-qr:
+  type: concept
+  gateway: hiecm
+  milestone: M1
+  title: The counter QR code for scan and register
+  summary: The URL a facility's counter QR code holds, hip-id and counter-id on the
+    PHR share-profile page, and how each comes back in the share.
+  page: site/docs/hiecm/v3/use-cases/scan-and-register.mdx
+  heading: scan-and-register-qr
+  url: /docs/hiecm/v3/use-cases/scan-and-register#scan-and-register-qr
+  related:
+    endpoints:
+    - hiecm.endpoint.m1-receive-patient-share
+    flows:
+    - hiecm.flow.scan-and-register-share
+    - hiecm.flow.p2-scan-and-share
+    glossary:
+    - shared.glossary.hfr
+    - hiecm.glossary.hip
+    troubleshooting:
+    - hiecm.troubleshooting.callback-never-arrives
+hiecm.flow.scan-and-register-share:
+  type: flow
+  gateway: hiecm
+  milestone: M1
+  title: Receive a scanned profile share and reply with a token
+  summary: Every field of the profile share that arrives on your bridge, and the
+    on-share reply with the counter, token number and expiry.
+  page: site/docs/hiecm/v3/use-cases/scan-and-register.mdx
+  heading: scan-and-register-share
+  url: /docs/hiecm/v3/use-cases/scan-and-register#scan-and-register-share
+  related:
+    endpoints:
+    - hiecm.endpoint.m1-receive-patient-share
+    - hiecm.endpoint.m1-on-share-acknowledgement
+    concepts:
+    - hiecm.concept.scan-and-register-qr
+    - hiecm.concept.asynchronous-callbacks
+    - hiecm.concept.callback-authenticity
+    flows:
+    - hiecm.flow.p2-scan-and-share
