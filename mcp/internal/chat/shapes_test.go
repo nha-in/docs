@@ -28,3 +28,19 @@ func TestEveryShapeCarriesTheStandingDecline(t *testing.T) {
 		}
 	}
 }
+
+// Every shape but the assistant's own asks for plain words first, and the
+// diagnose shape says what to do with a symptom that carries no code.
+func TestShapesAskForPlainWordsAndASituationalDiagnosis(t *testing.T) {
+	for _, s := range []string{"define", "how-do-i", "diagnose", "compare", "meta", "topic", "overview", "walkthrough", "decline"} {
+		if !strings.Contains(ShapeBlock(s), standingVoice) {
+			t.Errorf("%s: block does not carry standingVoice", s)
+		}
+	}
+	if strings.Contains(ShapeBlock("self"), standingVoice) {
+		t.Error("the self shape has its own voice and takes no standing line")
+	}
+	if !strings.Contains(ShapeBlock("diagnose"), "most likely first") {
+		t.Error("the diagnose shape lost its situational mode")
+	}
+}
