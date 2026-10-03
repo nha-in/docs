@@ -29,17 +29,17 @@ const CHOICES: Choice[] = [
   },
   {
     slug: 'abdm-m2',
-    label: 'Create and link records (M2)',
+    label: 'Creation, Linking and Sharing of Health Records (M2)',
     note: 'The whole of M2: linking care contexts, discovery, and pushing records to a requester.',
   },
   {
     slug: 'abdm-m3',
-    label: 'Fetch data with consent (M3)',
+    label: 'Health Information Exchange with Consent (M3)',
     note: 'The whole of M3: raising a consent request, reading the artefact, fetching what it covers.',
   },
   {
     slug: 'abdm-m4',
-    label: 'Register facilities and professionals (M4)',
+    label: 'Register Healthcare Professionals and Health Facilities (M4)',
     note: 'The HPR and the HFR: the operations NHA has published, the registration order and the identifier formats.',
   },
   {

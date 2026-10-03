@@ -1,11 +1,11 @@
 ---
-title: 'M2 Health Information Provider: Create and link records'
+title: 'M2 Health Information Provider: Creation, Linking and Sharing of Health Records'
 sidebar_label: M2 Health Information Provider
 sidebar_position: 4
 sidebar_custom_props:
   roles: [hip, his]
 description: Milestone 2 enables a HIP to create digital health records, link them with an ABHA Address, support discovery through a PHR app and share encrypted records.
-source: M2 Sandbox 2.0 Update Sept 22 2026.docx (NHA, 22 September 2026), which selects the suggestive content of 21 September 2026 and supplies the three flowcharts
+source: Milestone2_ContentFlow Sandbox 2.0 - 02-10-2026.docx (NHA, 2 October 2026) for the title, lead, functionalities, prerequisites, FHIR section, journey text and test cases section; M2 Sandbox 2.0 Update Sept 22 2026.docx (NHA, 22 September 2026), which selects the suggestive content of 21 September 2026 and supplies the three flowcharts
 covers: [hiecm.flow.m2-link-care-context]
 sidebar_class_name: sidebar-icon sidebar-icon--link
 ---
@@ -14,67 +14,76 @@ import ApiLinks from '@site/src/components/docs/ApiLinks';
 import SkillInstall from '@site/src/components/docs/SkillInstall';
 import LegacyAnchor from '@site/src/components/mdx/LegacyAnchor';
 
-# M2 Health Information Provider: Create and link records
+# M2 Health Information Provider: Creation, Linking and Sharing of Health Records
 
-Milestone 2 enables a [Health Information Provider](/docs/hiecm/v3/getting-started/glossary#hip)
-(HIP) to create digital health records and link them with a patient's
-[ABHA Address](/docs/hiecm/v3/getting-started/glossary#abha-address), facilitate
-record [discovery](/docs/hiecm/v3/getting-started/glossary#discovery) through a
-Personal Health Record ([PHR](/docs/hiecm/v3/getting-started/glossary#phr))
-application, and securely share encrypted health information across the ABDM
-ecosystem.
+Milestone 2 (M2) enables a healthcare facility, acting as a
+[Health Information Provider](/docs/hiecm/v3/getting-started/glossary#hip) (HIP), to create
+digital health records, organise them into
+[care contexts](/docs/hiecm/v3/concepts/care-context) and link them with the
+patient's [ABHA Address](/docs/hiecm/v3/getting-started/glossary#abha-address). It also
+enables patients to [discover](/docs/hiecm/v3/getting-started/glossary#discovery) and link
+their health records through a Personal Health Record
+([PHR](/docs/hiecm/v3/getting-started/glossary#phr)) application and facilitates the secure
+exchange of encrypted health information within the ABDM ecosystem.
 
 <ApiLinks module="m2" />
+
+<LegacyAnchor id="error-codes" />
+<LegacyAnchor id="custom-error-codes" />
+
+The codes an M2 integration may meet across discovery, linking, consent,
+encryption and data exchange are listed in one place:
+[M2 error codes](/docs/hiecm/v3/api/m2/errors).
 
 ## In short
 
 Health Information Provider (HIP) links a patient's health records with the
-patient's ABHA Address and makes such records available within the ABDM
+patient's ABHA Address and makes the linked records available within the ABDM
 ecosystem.
-The linkage of records may be carried out through either HIP-Initiated
-Linking or User-Initiated Linking.
 
 ## M2 functionalities
 
 <LegacyAnchor id="what-m2-gives-you" />
 <LegacyAnchor id="capabilities-under-m2" />
 
-**Care Context:** A [Care Context](/docs/hiecm/v3/concepts/care-context) represents a patient's visit to a healthcare
-facility and contains the health records generated during that visit. The
-healthcare facility links the Care Context with the patient's ABHA Address.
+**Care Context:** A [Care Context](/docs/hiecm/v3/concepts/care-context)
+represents a logical grouping of a patient's health records generated during
+an episode of care at a healthcare facility. The Health Information Provider
+(HIP) links the Care Context with the patient's ABHA Address.
 
-The records may be linked through either HIP-Initiated Linking or
-User-Initiated Linking.
+Health records may be linked through either the HIP-Initiated Linking flow or
+the User-Initiated Linking flow.
 
-**HIP-Initiated Linking:** In this workflow, an ABDM-enabled healthcare
-facility generates a link token to authenticate the patient and links the care
-contexts with the patient's ABHA Address. The linked care contexts are
-subsequently made available in the patient's [PHR application](/docs/hiecm/v3/concepts/participants/phr).
+**HIP-Initiated Linking:** This flow enables an ABDM-enabled healthcare
+facility to authenticate the patient, generate a link token and link the
+relevant Care Contexts with the patient's ABHA Address. Upon successful
+linking, the Care Contexts are made available in the patient's
+[PHR application](/docs/hiecm/v3/concepts/participants/phr).
 
-**User-Initiated Linking:** This flow allows a patient to find and link health
-records created earlier without an ABHA Address. The records are stored in the
-[HMIS](/docs/hiecm/v3/getting-started/glossary#hmis) using the patient's
-registered details. When the patient selects the fetch option in the
-[PHR application](/docs/hiecm/v3/concepts/participants/phr), the healthcare facility matches the respective demographic details
-and shows the available records for linking with the patient's ABHA Address.
+**User-Initiated Linking:** This flow enables a patient to discover and link
+health records previously created at a healthcare facility. Upon initiation of
+a discovery request through the PHR application, the healthcare facility
+matches the patient's demographic details and returns the available Care
+Contexts. The patient may thereafter select and link the relevant Care
+Contexts with their ABHA Address.
 
-**Data Transfer:** In this flow, each health record is converted into the
-prescribed [FHIR](/docs/hiecm/v3/getting-started/glossary#fhir) format,
-packaged as a FHIR bundle, encrypted, and securely transmitted through the ABDM
-ecosystem.
+**Data Transfer:** This flow enables the HIP to prepare the applicable health
+records in the prescribed [FHIR](/docs/hiecm/v3/getting-started/glossary#fhir) format, package
+them as FHIR Document Bundles, encrypt them and securely transfer them through
+the ABDM ecosystem.
 
 ## Prerequisites
 
-Before implementing Milestone 2 (M2), ensure that the following prerequisites
-are fulfilled:
+Prior to the implementation of Milestone 2 (M2), the following prerequisites
+shall be fulfilled:
 
-1. The healthcare facility must be registered in the Health Facility Registry
-   ([HFR](/docs/hiecm/v3/getting-started/glossary#hfr)) and have a valid HFR ID
-   (facility ID).
-2. The HIP ID (Facility ID) must be linked to the corresponding Client ID to
-   receive callbacks through the NHPR Portal or [M4](./m4) APIs using software
-   linkage.
-3. A valid callback URL must be configured for the Client ID using the
+1. The healthcare facility shall be registered in the Health Facility Registry
+   ([HFR](/docs/hiecm/v3/getting-started/glossary#hfr)) and shall possess a valid HFR ID
+   (Facility ID).
+2. The HIP ID (Facility ID) shall be mapped to the corresponding Client ID to
+   enable receipt of callbacks through the NHPR Portal or through [M4](./m4)
+   APIs using software linkage.
+3. A valid callback URL shall be configured against the Client ID through the
    [Update Bridge API](/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/03-gateway-patch-gateway-v3-bridge-url).
 
 ## FHIR-based health records
@@ -82,19 +91,19 @@ are fulfilled:
 <LegacyAnchor id="record-types-you-can-link" />
 <LegacyAnchor id="health-record-formats" />
 
-In the ABDM ecosystem, every health record is created and shared in a
-standardized format called FHIR (Fast Healthcare Interoperability Resources) to
-enable secure and interoperable exchange of health information.
+Within the ABDM ecosystem, health records shall be created and exchanged in
+accordance with the Fast Healthcare Interoperability Resources (FHIR) standard
+to facilitate the secure and interoperable exchange of health information.
 
-FHIR is a globally recognized standard for structuring and exchanging digital
-health records.
+FHIR is a recognised standard for structuring and exchanging digital health
+information.
 
-FHIR Implementation Guide (ABDM): [nrces.in/ndhm/fhir/r4](https://nrces.in/ndhm/fhir/r4/index.html)
+ABDM FHIR Implementation Guide: [nrces.in/ndhm/fhir/r4](https://nrces.in/ndhm/fhir/r4/index.html)
 
 ### Health information types
 
-ABDM has defined 08 Health Information (HI) Types, comprising 07 Clinical and
-01 Billing artefact.
+ABDM defines eight Health Information (HI) Types, comprising seven clinical
+artefacts and one billing artefact.
 
 | Name | Definition |
 | --- | --- |
@@ -107,8 +116,8 @@ ABDM has defined 08 Health Information (HI) Types, comprising 07 Clinical and
 | [WellnessRecord](https://nrces.in/ndhm/fhir/r4/StructureDefinition-WellnessRecord.html) | The Clinical Artifact represents regular wellness information of patients typically through the Patient Health Record (PHR) application covering clinical information such as vitals, physical examination, general wellness, women wellness, etc., that can be shared across the health ecosystem. |
 | [InvoiceRecord](https://nrces.in/ndhm/fhir/r4/StructureDefinition-InvoiceRecord.html) | The billing artifact represents the invoice details such as pharmacy invoice, consultation invoice etc. along with the support for scanned documents attached for the patient which can be shared across the health ecosystem. |
 
-**Note:** Each applicable Health Information Type is represented as a FHIR
-Document Bundle in accordance with ABDM standards.
+**Note:** Each applicable Health Information Type shall be represented as a
+FHIR Document Bundle in accordance with the prescribed ABDM standards.
 
 ## Build M2 with an AI coding assistant
 
@@ -124,16 +133,17 @@ your assistant in one click.
 
 <LegacyAnchor id="the-journey-one-diagram-per-flow" />
 
-This section explains the key Milestone 2 (M2) workflows using sequence
-diagrams. These diagrams provide a high-level view of how different systems
-interact before the detailed API specifications are discussed.
+This section provides an overview of the key Milestone 2 (M2) workflows through
+sequence diagrams. The diagrams illustrate the high-level interactions among
+the participating systems before the detailed API specifications are
+presented.
 
 ## Journey 1: HIP initiated linking <LegacyAnchor id="linking-care-context" /><LegacyAnchor id="hip-initiated-linking" /> {/* #m2-link-care-context */}
 
-The HIP generates a linking token using the patient's ABHA address and
-demographic details for authentication. After successful verification, a
-linking token valid for 6 months is created, and the patient's care context is
-linked to the ABHA Address.
+The Health Information Provider (HIP) initiates the linking process using the
+patient's ABHA details. Upon successful authentication, a link token valid for
+six months is generated, enabling the relevant Care Contexts to be linked with
+the patient's ABHA Address.
 
 ```mermaid
 sequenceDiagram
@@ -198,13 +208,17 @@ bridge at `/api/v3/links/context/on-notify`.
 <LegacyAnchor id="journey-3-discovery-and-link" />
 <LegacyAnchor id="discovery-and-link" />
 
-ABDM enables users to discover their health records from healthcare facilities
-they have visited through a PHR application. The discovery request is sent by
-the HIE-CM to the respective HRP/HIP, which searches for and returns the user's
-available care contexts.
+The User-Initiated Linking/Discovery flow is initially applicable to patients
+whose health records were created without an ABHA Address. ABDM enables such
+patients to discover health records available at ABDM enabled healthcare
+facilities previously visited through a Personal Health Record (PHR)
+application.
 
-If matching records are found, all relevant care contexts are shared with the
-user. The user can then select and link these care contexts to their ABHA
+The HIE-CM sends the discovery request to the concerned Health Information
+Provider (HIP). The HIP matches the demographic details shared by the PHR
+application against its records and, upon a successful match, returns the
+available Care Contexts corresponding to the patient. The patient may
+thereafter select and link the required Care Contexts with their ABHA
 Address.
 
 ```mermaid
@@ -282,15 +296,16 @@ The steps, as drawn:
 22. The gateway tells the PHR app the linking is confirmed.
 23. The PHR app shows the user that the care contexts are linked.
 
-## Journey 3: data transfer flow
+## Journey 3: health information request and transfer
 
-<LegacyAnchor id="journey-3-health-information-request-and-transfer" />
+<LegacyAnchor id="journey-3-data-transfer-flow" />
 <LegacyAnchor id="journey-4-health-record-request-and-data-transfer" />
 <LegacyAnchor id="request-for-health-records-and-data-transfer" />
 
-The HIP sends structured and unstructured health information types in
-accordance with the NRCES FHIR standards. The FHIR bundle is encrypted and
-securely exchanged through the ABDM ecosystem.
+The Health Information Provider (HIP) prepares the applicable structured and
+unstructured health records in accordance with the prescribed NRCeS FHIR
+standards. The records are packaged as FHIR Document Bundles, encrypted and
+securely transferred through the ABDM ecosystem.
 
 ```mermaid
 sequenceDiagram
@@ -366,17 +381,14 @@ The steps, as drawn:
 17. The gateway notifies the HIU that the data transfer is complete.
 18. The HIU decrypts and processes the FHIR records.
 
-## Error codes
+## Milestone 2 test cases <LegacyAnchor id="certification" />
 
-<LegacyAnchor id="custom-error-codes" />
+The [Milestone 2 (M2) test cases](/docs/hiecm/v3/resources/test-cases/m2)
+define the scenarios against which the integration is tested. Each test case
+includes a unique test case ID, execution steps, expected results and the
+applicable API calls.
 
-The codes an M2 integration may meet across discovery, linking, consent,
-encryption and data exchange are listed in one place:
-[M2 error codes](/docs/hiecm/v3/api/m2/errors).
-
-## Certification
-
-The cases M2 is tested against, each with its id, steps, expected result and the calls it exercises: [M2 test cases](/docs/hiecm/v3/resources/test-cases/m2). Certification runs once, for the whole integration: [Go live](/docs/hiecm/v3/getting-started/going-live).
+**Note:** The test cases have not yet been added.
 
 ## Next
 
