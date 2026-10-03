@@ -1,0 +1,777 @@
+# The HFR request fields, transcribed from NHA's Health Facility Registry APIs
+# document, version 2.0 of 22 June 2026, which NHA cited in its review of
+# 2 October 2026 as the reference for M4 field documentation. The document is
+# not stored under .raw: its sample bodies carry contact numbers, and it is
+# published at the url below. Its sha256 is recorded so a reissue is noticed.
+#
+# One entry per field the document's parameter tables list, keyed by the
+# operation and the field's path in the request schema (`query:<name>` for a
+# query parameter). Each value is the document's own text: required, description,
+# data type and format. "Refer Section n" is rewritten as the call that section
+# describes. scripts/ingest-nha.mjs (correction 14) applies this file to
+# hiecm-m4.yaml and logs every operation it touched. It only adds: NHA's
+# swagger keeps any description or required list it already has, and a data
+# type that disagrees is logged, never changed.
+#
+# `gaps` lists what the document describes that the M4 specification has no
+# place for. They are logged, not invented.
+source:
+  title: Health Facility Registry APIs, document version 2.0, created 22 June 2026
+  url: https://sandboxcms.abdm.gov.in/uploads/HFR_Documentation_PROD_Updated_08_04_2026_50a81b7_converted_1_cad78e99bc.pdf
+  sha256: d7e44d959b31d2f77111ea233edab4f330b7ce6fc8be48bc4368330adb9e0526
+operations:
+  POST /FacilityManagement/v1.5/facility/search:
+    section: 1.1 Search API
+    fields:
+      ownershipCode:
+        required: Yes (if facilityId not present)
+        description: Ownership of the facility to be searched
+        type: String
+        format: Accepted codes are "G", "P" or "PP".
+      stateLGDCode:
+        required: Yes (if facilityId not present)
+        description: State of the facility.
+        type: String
+        format: State LGD code. See `GET /v1.5/facility/lgd/states`.
+      districtLGDCode:
+        required: 'No'
+        description: District of the facility.
+        type: String
+        format: District LGD Code. See `GET /v1.5/facility/lgd/districts`.
+      subDistrictLGDCode:
+        required: 'No'
+        description: Sub district of the facility.
+        type: String
+        format: Sub District LGD Code. See `GET /v1.5/facility/lgd/subdistricts`.
+      pincode:
+        required: 'No'
+        description: Pin code of the facility.
+        type: String
+        format: 6-digit number
+      facilityName:
+        required: Yes (if facilityId not present)
+        description: Name of the facility being searched. This value can be either full or partial name
+        type: String
+        format: 'Accepted characters: Alphanumeric, -_.(),/. The first character must be an alphabet or digit, and only one space is allowed between words.'
+      facilityId:
+        required: Yes (if ownershipCode, stateLGDCode and facilityName not present)
+        description: 12-character Facility Id allotted to each facility at the time of submission.
+        type: String
+        format: Should start with 'IN' and have the length of 12 characters.
+      page:
+        required: 'Yes'
+        description: The page number of which results need to be seen.
+        type: integer
+        format: Numeric value. Minimum value to be passed is 1.
+      resultsPerPage:
+        required: 'Yes'
+        description: Number of facilities what will come in one page.
+        type: integer
+        format: Numeric value. Minimum value to be passed is 10.
+  POST /v1.5/facility/basic-information:
+    section: 2.1 Basic Facility Information API
+    fields:
+      facilityInformation.facilityName:
+        required: 'Yes'
+        description: Name of the facility that is to be created in HFR
+        type: String
+        format: 'Accepted characters: Alphanumeric, _.(),/. The first character must be an alphabet or digit, and only one space is allowed between words.'
+      facilityInformation.ownershipCode:
+        required: 'Yes'
+        description: Ownership of the facility
+        type: String
+        format: Accepted codes are "G", "P" or "PP".
+      facilityInformation.ownershipSubTypeCode:
+        required: 'Yes'
+        description: Ownership subtype of the facility
+        type: String
+        format: ownershipCode = "G" Accepted codes are "C" or "S" ownershipCode = "P" or "PP" Accepted codes are "P" or "NP"
+      facilityInformation.systemOfMedicineCode:
+        required: 'Yes'
+        description: System of medicine followed by your facility.
+        type: String
+        format: Accepted codes as specified in getmaster-data API with type= "MEDICINE". In case you have multiple systems of medicine, send a comma separated string of codes. See `GET /v1.5/facility/get-master-data`.
+      facilityInformation.facilityTypeCode:
+        required: 'Yes'
+        description: Type of your facility as defined by HFR
+        type: String
+        format: Accepted codes as specified in fetchfacility-type API. See `POST /v1.5/facility/fetch-facility-type`.
+      facilityInformation.facilitySubType:
+        required: 'Yes'
+        description: Subtype corresponding to facility type as define by HFR
+        type: String
+        format: Accepted codes as specified in fetchfacility-sub-type API. See `POST /v1.5/facility/fetch-facility-Sub-type`.
+      facilityInformation.specialityTypeCode:
+        required: 'Yes'
+        description: Whether facility offers Single or Multiple Specialities
+        type: String
+        format: Accepted codes as specified in getmaster-data API with type='SPECIALITY-TYPE'. See `GET /v1.5/facility/get-master-data`.
+      facilityInformation.facilityOperationalStatus:
+        required: 'Yes'
+        description: Whether your facility is currently operational or not
+        type: String
+        format: Accepted codes as specified in getmaster-data API with type='FACSTATUS'. See `GET /v1.5/facility/get-master-data`.
+      facilityInformation.typeOfServiceCode:
+        required: Yes, based on the facility type provided.
+        description: Type of services offered by facility
+        type: String
+        format: Accepted codes as specified in getmaster-data API with type='TYPE-SERVICE'. See `GET /v1.5/facility/get-master-data`. typeOfServiceCode is not required if facility type is any of the following ( 'Diagnostic Laboratory (10,45)', 'Imaging Center (74,75)', 'Cath Laboratory (12,47)', 'Dialysis Center (13,48)', 'Blood Bank (9,44)', 'Pharmacy (11,46)' ) If facility type is any of the following, ( 'Ayurveda Dispensary/ Clinic/ Polyclinic (OPD only) (17,52)', 'Unani Dispensary/ Clinic/ Polyclinic (OPD only) (20,55)', 'Siddha Dispensary/ Clinic/ Polyclinic (OPD only) (23,58)', 'Homeopathy Dispensary/ Clinic/ Polyclinic (OPD only) (26,61)', 'Sowa-Rigpa Dispensary/ Clinic/ Polyclinic (OPD only) (29,64)', ) then typeOfServiceCode – IPD is not applicable
+      facilityInformation.facilityAddressDetails:
+        required: 'Yes'
+      facilityInformation.facilityAddressDetails.country:
+        required: 'Yes'
+        description: Country of origin
+        type: String
+        format: By Default, its India
+      facilityInformation.facilityAddressDetails.stateLGDCode:
+        required: 'Yes'
+        description: State of the facility.
+        type: String
+        format: State LGD code. See `GET /v1.5/facility/lgd/states`.
+      facilityInformation.facilityAddressDetails.districtLGDCode:
+        required: 'Yes'
+        description: District of the facility.
+        type: String
+        format: District LGD Code. See `GET /v1.5/facility/lgd/districts`.
+      facilityInformation.facilityAddressDetails.subDistrictLGDCode:
+        required: 'Yes'
+        description: Sub district of the facility.
+        type: String
+        format: Sub District LGD Code. See `GET /v1.5/facility/lgd/subdistricts`.
+      facilityInformation.facilityAddressDetails.facilityRegion:
+        required: 'No'
+        description: Region of the facility
+        type: String
+        format: Contain Single Char Value R/U (R – Rural, U – Urban)
+      facilityInformation.facilityAddressDetails.villageCityTownLGDCode:
+        required: 'No'
+        description: Village/Town of the facility.
+        type: String
+        format: Village LGD Code. Please visit https://lgdirectory.gov.in/ for more information
+      facilityInformation.facilityAddressDetails.addressLine1:
+        required: 'Yes'
+        description: Line 1 of the address of the facility.
+        type: String
+        format: Accepted Alphanumeric string with few special characters(.-,/()_ ) and no space repetition and minimum length required for first word is 2.
+      facilityInformation.facilityAddressDetails.addressLine2:
+        required: 'No'
+        description: Line 2 of the address of the facility.
+        type: String
+        format: Accepted Alphanumeric string with few special characters(.-,/()_ ) and no space repetition
+      facilityInformation.facilityAddressDetails.pincode:
+        required: 'Yes'
+        description: Pin code of the facility.
+        type: String
+        format: 6-digit number
+      facilityInformation.facilityAddressDetails.latitude:
+        required: 'Yes'
+        description: Latitude of the facility
+        type: String
+        format: Real Number ranging from -90.000000 to +90.000000 , with 1-6 decimal places.
+      facilityInformation.facilityAddressDetails.longitude:
+        required: 'Yes'
+        description: Longitude of the facility
+        type: String
+        format: Real Number ranging from - 180.000000 to +180.000000 with 1-6 decimal places.
+      facilityInformation.facilityContactInformation:
+        required: 'Yes'
+      facilityInformation.facilityContactInformation.facilityContactNumber:
+        required: 'No'
+        description: Mobile number of the facility
+        type: String
+        format: Should be a valid 10-digit mobile number
+      facilityInformation.facilityContactInformation.facilityEmailId:
+        required: 'No'
+        description: Email of the facility
+        type: String
+        format: Alphanumeric with _ % + - followed by @ symbol and alphanumeric with . and -
+      facilityInformation.facilityContactInformation.facilityLandlineNumber:
+        required: 'No'
+        description: Landline number of the facility
+        type: String
+        format: Should be a valid landline number ranging between 6-8 digits
+      facilityInformation.facilityContactInformation.facilityStdCode:
+        required: 'No'
+        description: Std Code of the facility
+        type: String
+        format: Should be a valid std code with not more than 5 digits
+      facilityInformation.facilityContactInformation.websiteLink:
+        required: 'No'
+        description: Valid Website link of facility
+        type: String
+        format: 'Accepted format: Should start with either http:// or https://, or www. then a domain name made of letters/digits/hyphens'
+      facilityInformation.facilityUploads:
+        required: 'Yes'
+      facilityInformation.facilityUploads.facilityBoardPhoto:
+        required: 'Yes'
+      facilityInformation.facilityUploads.facilityBoardPhoto.name:
+        required: 'Yes'
+        description: Name of the board photograph
+        type: String
+        format: Accepted format is filename.ext(sample - photo1.jpg) where file extension must be jpg/jpeg/png/pdf and filename is alphanumeric allowing few special characters (-,/()_ )
+      facilityInformation.facilityUploads.facilityBoardPhoto.value:
+        required: 'Yes'
+        description: Board photograph base64 value
+        type: String
+        format: Base 64 encoded value of the file. Maximum file size - 5MB Extension in name field should match with file extension
+      facilityInformation.facilityUploads.facilityBuildingPhoto:
+        required: 'Yes'
+      facilityInformation.facilityUploads.facilityBuildingPhoto.name:
+        required: 'Yes'
+        description: Name of the Building photograph
+        type: String
+        format: Accepted format is filename.ext(sample - photo1.jpg) where file extension must be jpg/jpeg/png/pdf and filename is alphanumeric allowing few special characters (-,/()_ )
+      facilityInformation.facilityUploads.facilityBuildingPhoto.value:
+        required: 'Yes'
+        description: Building photograph base64 value
+        type: String
+        format: Base 64 encoded value of the file. Maximum file size - 5MB Extension in name field should match with file extension
+      facilityInformation.timingsOfFacility:
+        required: Yes, if facility operational status is Functional
+      facilityInformation.timingsOfFacility.workingDays:
+        required: 'Yes'
+        description: The day on which the facility is open/working.
+        type: String
+        format: Accepted codes as (MON, TUE, WED, THU, FRI) specified in get-master-data API with type="DAYS-OF-OPERATION". See `GET /v1.5/facility/get-master-data`.
+      facilityInformation.timingsOfFacility.openingHours:
+        required: 'Yes'
+        description: For the day as specified in working days, please mention the working Hours
+        type: String
+        format: Accepted format is 10:00 Am–2:00 PM or 24*7
+      facilityInformation.facilityAddressProof:
+        required: 'No'
+      facilityInformation.facilityAddressProof.addressProofType:
+        required: 'No'
+        description: Address Proof type that is being added.
+        type: String
+        format: Accepted codes as specified in getmaster-data API with type='ADDRESS-PROOF'. See `GET /v1.5/facility/get-master-data`.
+      facilityInformation.facilityAddressProof.addressProofAttachment:
+        required: 'No'
+      facilityInformation.facilityAddressProof.addressProofAttachment.name:
+        required: 'No'
+        description: Name of Document to be uploaded
+        type: String
+        format: Accepted format is filename.ext(sample - photo1.jpg) where file extension must be jpg/jpeg/png/pdf and filename is alphanumeric allowing few special characters (-,/()_ )
+      facilityInformation.facilityAddressProof.addressProofAttachment.value:
+        required: 'No'
+        description: Valid Doc picture converted into base 64 value
+        type: String
+        format: Base 64 encoded value of the file. Maximum file size - 5MB Extension in name field should match with file extension
+      facilityInformation.abdmCompliantSoftware:
+        required: 'No'
+      facilityInformation.abdmCompliantSoftware.existingSoftwares:
+        required: 'No'
+        description: Existing software code to be linked
+        type: String
+        format: Accepted codes as specified in get Software-details API
+      facilityInformation.abdmCompliantSoftware.anyOther:
+        required: 'No'
+        description: Valid Software code to be linked
+        type: String
+        format: Accepted Alphanumeric with few special characters (.-,/()_ )
+  POST /v1.5/facility/additional-information:
+    section: 2.2 Additional information API
+    fields:
+      trackingId:
+        required: 'Yes'
+        description: Unique identification number for your facility
+        type: String
+        format: Tracking id generated from basic information API
+      generalInformation.hasDialysisCenter:
+        required: Yes (If facility have dialysis center)
+        description: Value to identify if a facility has dialysis center
+        type: String
+        format: Accepted codes as specified in get-master-data API with type='GENERAL-INFO-OPTIONS'. See `GET /v1.5/facility/get-master-data`.
+      generalInformation.hasPharmacy:
+        required: Yes (If facility have pharmacy)
+        description: Value to identify if a facility has pharmacy
+        type: String
+        format: Accepted codes as specified in get-master-data API with type='GENERAL-INFO-OPTIONS'. See `GET /v1.5/facility/get-master-data`.
+      generalInformation.hasBloodBank:
+        required: Yes (If facility have bloodbank)
+        description: Value to identify if a facility has bloodbank
+        type: String
+        format: Accepted codes as specified in get-master-data API with type='GENERAL-INFO-OPTIONS'. See `GET /v1.5/facility/get-master-data`.
+      generalInformation.hasCathLab:
+        required: Yes (If facility have cath lab)
+        description: Value to identify if a facility has cath lab
+        type: String
+        format: Accepted codes as specified in get-master-data API with type='GENERAL-INFO-OPTIONS'. See `GET /v1.5/facility/get-master-data`.
+      generalInformation.hasDiagnosticLab:
+        required: Yes (If facility have diagnostic center)
+        description: Value to identify if a facility has diagnostic center
+        type: String
+        format: Accepted codes as specified in get-master-data API with type='GENERAL-INFO-OPTIONS'. See `GET /v1.5/facility/get-master-data`.
+      generalInformation.hasImagingCenter:
+        required: Yes (If facility have imaging centre)
+        description: Value to identify if a facility has imaging center
+        type: String
+        format: Accepted codes as specified in get-master-data API with type='GENERALINFO-OPTIONS'. See `GET /v1.5/facility/get-master-data`.
+      generalInformation.servicesByImagingCenter:
+        required: Yes, if imaging center is present
+      generalInformation.servicesByImagingCenter.service:
+        required: Yes, if Imaging Service center Present
+        description: Code of the service offered
+        type: String
+        format: Accepted codes as specified in get-master-data API with type='IMAGING'. See `GET /v1.5/facility/get-master-data`.
+      generalInformation.servicesByImagingCenter.count:
+        required: Yes, if a service is available
+        description: Count of equipment
+        type: String
+        format: A valid number greater than 0
+      linkedProgramIds.nhrrId:
+        required: 'No'
+        description: National Health Resource Repository Unique ID
+        type: String
+        format: Should be a valid NHRR ID
+      linkedProgramIds.nin:
+        required: 'No'
+        description: National Identification Number
+        type: String
+        format: Should be a valid NIN id
+      linkedProgramIds.abpmjayId:
+        required: 'No'
+        description: Hospital Id as allotted by ABPMJAY Hospital Empanelment Module.
+        type: String
+        format: Should be a valid AB-PMJAY Hospital Id
+      linkedProgramIds.rohiniId:
+        required: 'No'
+        description: Rohini Id
+        type: String
+        format: Should be a valid Rohini Id
+      linkedProgramIds.echsId:
+        required: 'No'
+        description: Unique id in Ex-Servicemen Contributory Health Scheme
+        type: String
+        format: Should be a valid ECHS Id.
+      linkedProgramIds.cghsId:
+        required: 'No'
+        description: Unique Id in Central Government Health Scheme
+        type: String
+        format: Should be a valid CGHS Id.
+      linkedProgramIds.ceaRegistration:
+        required: 'No'
+        description: CEA Registration Number
+        type: String
+        format: Should be a valid CEA registration number
+      linkedProgramIds.stateInsuranceSchemeId:
+        required: 'No'
+        description: State Insurance Scheme ID
+        type: String
+        format: Alphanumeric value
+  POST /v1.5/facility/detailed-information:
+    section: 2.3 Detailed information API
+    fields:
+      trackingId:
+        required: 'Yes'
+        description: Unique identification number for your facility
+        type: String
+        format: Tracking id generated from basic information API
+      specialities:
+        required: Yes, based on the facility type and if specializations/services are offered for this system of medicine.
+        description: Section to capture specializations/services Details
+        format: 'Note: Specialities are not required for the facility types: Blood Bank, Cath Laboratory, Diagnostic Laboratory, Dialysis Centre, Imaging Centre, and Pharmacy'
+      specialities.systemOfMedicineCode:
+        required: 'Yes'
+        description: System of medicine codes as saved in Basic-Information API
+        type: String
+        format: Accepted codes as specified in get-master-data API with type='MEDICINE'. See `GET /v1.5/facility/get-master-data`.
+      specialities.isSpecializationAvalaible:
+        required: 'Yes'
+        description: If the facility offers any specializations or services for this system of medicine
+        type: String
+        format: Y / N as accepted value
+      specialities.specialities:
+        required: Yes .
+        description: List of specialities for each system of medicine offered by the facility
+        type: List
+        format: Accepted codes as specified in the get-specialities API with respect to a system of medicine. See `POST /v1.5/facility/get-specialities`.
+      medicalInfrastructure:
+        required: Yes, based on the Type of Service, Facility Type and System of Medicine values.
+        description: Section to capture medicalInfrastructure Details
+      medicalInfrastructure.countIPDBedsWithoutOxygen:
+        required: 'No'
+        description: Number of IPD Beds (except ICU beds) without oxygen facility
+        type: Integer
+        format: Numeric Value
+      medicalInfrastructure.countIPDBedsWithOxygen:
+        required: 'No'
+        description: Number of IPD Beds (except ICU beds) with oxygen facility
+        type: Integer
+        format: Numeric Value
+      medicalInfrastructure.countICUBedsWithVentilators:
+        required: 'No'
+        description: Number of ICU beds with Ventilators
+        type: Integer
+        format: Numeric Value
+      medicalInfrastructure.countICUBedsWithoutVentilators:
+        required: 'No'
+        description: Number of ICU beds without Ventilators
+        type: Integer
+        format: Numeric Value
+      medicalInfrastructure.countHDUBedsWithVentilators:
+        required: 'No'
+        description: Number of HDU beds with Ventilators
+        type: Integer
+        format: Numeric Value
+      medicalInfrastructure.countHDUBedsWithoutVentilators:
+        required: 'No'
+        description: Number of HDU beds without Ventilators
+        type: Integer
+        format: Numeric Value
+      medicalInfrastructure.totalNumberOfVentilators:
+        required: 'No'
+        description: Total Number of Ventilators
+        type: Integer
+        format: Numeric Value
+      medicalInfrastructure.countDayCareBedsWithoutOxygen:
+        required: 'No'
+        description: Number of Daycare beds without oxygen facility
+        type: Integer
+        format: Numeric Value
+      medicalInfrastructure.countDayCareBedsWithOxygen:
+        required: 'No'
+        description: Number of Daycare beds with oxygen facility
+        type: Integer
+        format: Numeric Value
+      medicalInfrastructure.totalNumberOfBeds:
+        required: 'Yes'
+        description: Total count which should be equal to or greater than sum of all the above components with beds
+        type: Integer
+        format: Numeric value
+      medicalInfrastructure.countDentalChairs:
+        required: Yes, if the system of medicine is Dentistry
+        description: Number of Dental Chairs
+        type: Integer
+        format: Numeric Value
+      pharmacyDetails:
+        required: Yes, if facility type is Pharmacy
+        description: Section to capture Pharmacy Details
+      pharmacyDetails.isJanAushadhiKendra:
+        required: 'No'
+        description: Is your facility a Jan Aushadhi Kendra?
+        type: String
+        format: Y / N as accepted value
+      pharmacyDetails.janAushadhiKendraId:
+        required: Yes, if facility is Jan Aushadhi Kendra
+        description: Provide jan Aushadhi Kendra Id
+        type: String
+        format: Accepted Alphanumeric value and special characters (- and _)
+      pharmacyDetails.drugLicenseNumber:
+        required: Yes, if facility type is Pharmacy
+        description: Mention your Drug License Number
+        type: String
+        format: Accepted Alphanumeric value and special characters (- and _)
+      pharmacyDetails.pharmacyGstinNumber:
+        required: 'No'
+        description: Mention GSTIN Number
+        type: String
+        format: Accepted Alphanumeric value and special characters (- and _)
+      pharmacyDetails.pharmacistRegistrationNumber:
+        required: 'No'
+        description: Mention Pharmacist registration number
+        type: String
+        format: Accepted Alphanumeric value and special characters (- and _)
+      bloodBankDetails:
+        required: Yes, if facility type is blood bank
+        description: Section to capture blood bank details
+      bloodBankDetails.isFacilityRegisteredInERaktkosh:
+        required: 'Yes'
+        description: Is your facility registered in e-Raktkosh
+        type: String
+        format: Y / N as accepted value
+      bloodBankDetails.eRaktoshId:
+        required: Yes, if facility is registered in e-Raktkosh
+        description: Provide e-Raktkosh Id
+        type: String
+        format: Accepted Alphanumeric value with special characters (- and _)
+      bloodBankDetails.bloodBankLicenseNumber:
+        required: 'Yes'
+        description: Mention your Blood Bank Registration Number
+        type: String
+        format: Alphanumeric value
+      bloodBankDetails.bloodStorageCenters:
+        required: 'No'
+        description: Is there any Blood Storage Centres associated with your Blood Bank
+        type: String
+        format: Y or N as accepted value
+      bloodBankDetails.storageCentersCount:
+        required: Yes, if storage centers are associated with your blood bank
+        description: Count of Blood Storage Centres
+        type: String
+        format: Numeric Value greater than 0
+      bloodBankDetails.bloodCollectedPerAnnum:
+        required: 'No'
+        description: Please indicate the number of blood units collected per annum
+        type: String
+        format: Numeric value
+      bloodBankDetails.bloodRequiredPerAnnum:
+        required: 'No'
+        description: Please mention existing requirement of Blood per annum
+        type: String
+        format: Numeric value
+      imagingServices:
+        required: Yes, if facility type is Imaging center
+        description: Section to capture Imaging Services details
+        type: List
+      imagingServices.service:
+        required: 'Yes'
+        description: Code of imaging service that is offered by the facility
+        type: String
+        format: Accepted codes as specified in get-master-data API with type='IMAGING'. See `GET /v1.5/facility/get-master-data`.
+      imagingServices.count:
+        required: Yes, if a service is offered
+        description: Count of equipment available
+        type: String
+        format: Number greater than 0.
+      diagnosticServices:
+        required: Yes, if facility type is Diagnostic Lab
+        description: Codes of diagnostic services available at your facility
+        type: List
+        format: Comma separated list of Strings. Accepted codes as specified in get-master-data API with type='DIAGNOSTIC'. See `GET /v1.5/facility/get-master-data`.
+  POST /v1.5/facility/submit-facility:
+    section: 2.4 Submit Facility Details API
+    fields:
+      trackingId:
+        required: 'Yes'
+        description: Unique identification number for your facility
+        type: String
+        format: Tracking id generated from basic information API
+      sourceOfInformation:
+        required: 'No'
+        description: Source of information of this facility
+        type: String
+        format: Should be valid data source provide by HFR team. If you leave this field empty, then your facility will be considered as Submitted entity.
+      sourceUniqueID:
+        required: 'No'
+        description: Facility Unique Id as exists in HRP or data source
+        type: String
+  GET /v1.5/facility/get-master-data:
+    section: 3.2 Master Data
+    fields:
+      query:type:
+        required: 'Yes'
+        description: Type of master data set
+        type: String
+        format: Accepted codes are types as specified in get-master-type API. See `GET /v1.5/facility/get-master-types`.
+  GET /v1.5/facility/lgd/districts:
+    section: 3.4 LGD Districts
+    fields:
+      query:stateCode:
+        required: 'Yes'
+        description: LGD code of the state
+        type: Integer
+        format: Accepted codes are as specified in states API. See `GET /v1.5/facility/lgd/states`.
+  GET /v1.5/facility/lgd/subdistricts:
+    section: 3.5 LGD Sub Districts
+    fields:
+      query:districtCode:
+        required: 'Yes'
+        description: LGD code of the district
+        type: Integer
+        format: Accepted codes are as specified in districts API. See `GET /v1.5/facility/lgd/districts`.
+  POST /v1.5/facility/fetch-facility-type:
+    section: 3.6 Facility Type
+    fields:
+      ownershipCode:
+        required: 'Yes'
+        description: Ownership of the facility
+        type: String
+        format: Accepted codes are "G" or "P"
+      systemOfMedicineCode:
+        required: 'Yes'
+        description: System of medicine followed by the facility
+        type: String
+        format: Accepted codes as specified in get-master-data API with type="MEDICINE". In case you have multiple systems of medicine, send a comma separated string of codes. See `GET /v1.5/facility/get-master-data`.
+  POST /v1.5/facility/get-owner-subtype:
+    section: 3.7 Get Owner Subtypes
+    fields:
+      ownershipCode:
+        required: 'Yes'
+        description: Ownership Code as available in HFR
+        type: String
+        format: Accepted codes are "G", "P" or "PP".
+      ownerSubtypeCode:
+        required: 'Yes'
+        description: Ownership subtype code, as available in HFR, under any Ownership
+        type: String
+        format: ownershipCode = "G" Accepted codes are "C". ownershipCode = "P" or "PP" Accepted codes are "P" or "NP"
+  POST /v1.5/facility/get-specialities:
+    section: 3.8 Get Specialities
+    fields:
+      systemOfMedicineCode:
+        required: 'Yes'
+        description: System of MedicineCode, as available in HFR, for which you want to know the specializations offered.
+        type: String
+        format: Accepted codes as specified in get-master-data API with type="MEDICINE". See `GET /v1.5/facility/get-master-data`.
+  POST /v1.5/facility/fetch-facility-Sub-type:
+    section: 3.9 Facility Subtype
+    fields:
+      facilityTypeCode:
+        required: 'Yes'
+        description: Facility code
+        type: String
+        format: Accepted codes as specified in fetch-facilitytype API. See `POST /v1.5/facility/fetch-facility-type`.
+  POST /v1/bridges/MutipleHRPAddUpdateServices:
+    section: 4 Multiple HRP API
+    fields:
+      facilityId:
+        required: 'Yes'
+        description: Id of the facility
+        type: String
+        format: Should start with 'IN' and have the length of 12 characters.
+      facilityName:
+        required: 'Yes'
+        description: Name of the facility
+        type: String
+        format: 'Accepted characters: Alphanumeric, -_.(),/. The first character must be an alphabet or digit, and only one space is allowed between words.'
+      HRP.bridgeId:
+        required: 'Yes'
+        description: Valid Bridge Id to be linked.
+        type: String
+        format: Alphanumeric
+      HRP.hipName:
+        required: 'Yes'
+        description: Name of the hospital which will reflect on ABHA/PHR app when the patient will search for the respective hospital.
+        type: String
+        format: 'HIP name can be the Hospital name added with suffix of bridge name. Example: Hospital name=XYZ and bridge name=BRIDGE TEST, so the HIP name = XYZ BRIDGE. HIP name can not be mor than 15 characters. No Special character is allowed (%$*#@(~&!) Should be unique for every bridge for a facility'
+      HRP.type:
+        required: 'Yes'
+        description: Type of the bridge to be linked
+        type: String
+        format: 'Accepted values: HIP or HIU'
+      HRP.active:
+        required: 'Yes'
+        description: Active Status of the bridge to be linked
+        type: boolean
+        format: 'Accepted values: true or false'
+  POST /v1.5/facility/sendOtpToContact:
+    section: 5 Send OTP to contact
+    fields:
+      facilityId:
+        required: 'Yes'
+        description: Id of the facility to be linked
+        type: String
+        format: Should start with 'IN' and have the length of 12 characters.
+  POST /v1.5/facility/validateOtp:
+    section: 6 Validate OTP
+    fields:
+      facilityId:
+        required: 'Yes'
+        description: Id of the facility
+        type: String
+        format: Should start with 'IN' and have the length of 12 characters.
+      sourceId:
+        required: 'Yes'
+        description: Unique hospital identifier
+        type: String
+        format: Alphanumeric value
+      otp:
+        required: 'Yes'
+        description: Unique number to verify the mobile number
+        type: String
+        format: 6-digit number received from the SendOTPToContact API response. See `POST /v1.5/facility/sendOtpToContact`.
+      source:
+        required: 'Yes'
+        description: Facility Source value
+        type: String
+        format: 'Accepted values: UWIN, PMNDP, AB-PMJAY, NHRR, HMIS-CDAC, NIN, eHospital, STHMISID, STINSID, COWIN'
+      transactionId:
+        required: 'Yes'
+        description: Unique Id for a transaction
+        type: String
+        format: Use the transaction Id received in response from the SendOTPToContact API. See `POST /v1.5/facility/sendOtpToContact`.
+  POST /search/address/filter/deduplicate:
+    section: 8 Deduplicate API for search Facility
+    fields:
+      facilityId:
+        required: 'No'
+        description: Unique Id of the facility
+        type: String
+        format: 6-digit numeric value (fac unique id)
+      name:
+        required: 'Yes'
+        description: Name of the facility
+        type: String
+        format: 'Accepted characters: Alphanumeric, with only one space is allowed between words.'
+      address:
+        required: 'No'
+        description: Address of the facility
+        type: String
+        format: 'Accepted characters: Alphanumeric with -_.(),/ and only one space is allowed between words.'
+      district:
+        required: 'Yes'
+        description: District of the facility
+        type: String
+        format: District LGD Code. See `GET /v1.5/facility/lgd/districts`.
+      subDistrict:
+        required: 'Yes'
+        description: Sub District of the facility
+        type: String
+        format: Sub District LGD Code. See `GET /v1.5/facility/lgd/subdistricts`.
+      village:
+        required: 'No'
+        description: Village of the facility
+        type: String
+        format: Village LGD Code. Please visit https://lgdirectory.gov.in/ for more information.
+      geolocation:
+        required: 'No'
+        description: Geolocation coordinates of the facility
+        type: String
+        format: Latitude - Real Number ranging from - 90.000000 to +90.000000 with 1-6 decimal places Longitude - Real Number ranging from -180.000000 to +180.000000 with 1-6 decimal places
+  POST /FacilityManagement/v1.5/facility/bygeoLocation/searchWithinRadiusWithFilter:
+    section: 9 Nearby Search API
+    fields:
+      abdmSoftware:
+        required: 'No'
+        description: Software identifier
+        type: String
+        format: 'Accepted value: 0 - non-ABDM enabled 1 - ABDM enabled)'
+      centerLat:
+        required: 'Yes'
+        description: Latitude of the center point
+        type: String
+        format: Real Number ranging from -90.000000 to +90.000000, with 1-6 decimal places.
+      centerLon:
+        required: 'Yes'
+        description: Longitude of the center point
+        type: String
+        format: Real Number ranging from -180.000000 to +180.000000 with 1-6 decimal places
+      facilityOwnership:
+        required: 'No'
+        description: Ownership of the facility
+        type: String
+        format: Accepted codes are "G", "P" or "PP".
+      from:
+        required: 'Yes'
+        description: Offset for pagination
+        type: String
+        format: Numeric value. Minimum value to be passed is 0.
+      hospitalSpecialityType:
+        required: 'No'
+        description: Codes for hospital specialities
+        type: String
+        format: Comma separated facility type codes. Accepted cod specified in v1.5/facility/fetchfacilitytype API as per the respective Ownership and system of medicine. See `POST /v1.5/facility/fetch-facility-type`.
+      radiusInKm:
+        required: 'Yes'
+        description: Search radius
+        type: String
+        format: Numeric value (in kilometres)
+      size:
+        required: 'Yes'
+        description: Results per page
+        type: String
+        format: Numeric value. Minimum value to be passed is 1.
+      speciality:
+        required: 'No'
+        description: List of specialities for each system of medicine offered by the facility
+        type: String
+        format: Comma separated list of speciality names Accepted values of the specialities as specified in /v1.5/facility/get-specialities API as per the respective system of medicine. See `POST /v1.5/facility/get-specialities`.
+      facilityName:
+        required: 'No'
+        description: Name of the facility
+        type: String
+        format: 'Accepted characters: Alphanumeric, -_.(),/. The first character must be an alphabet or digit, and only one space is allowed between words.'
+gaps:
+- 'GET /v1.5/facility/lgd/subdistricts: `stateCode` is in the document''s table and not in the request'
+- 'POST /v1.5/facility/fetchFacilityContactDetails: section 7 of the document; the M4 specification has no such operation'

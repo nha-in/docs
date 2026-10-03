@@ -32,6 +32,11 @@ x-abdm-sources:
     role: upstream
     hash: sha256:2cbcab72692ada1b6b07bce3c6c6d3e3bd047bcaca0c5716ac1d691121025081
     fetched: "2026-09-24"
+  - url: https://sandboxcms.abdm.gov.in/uploads/HFR_Documentation_PROD_Updated_08_04_2026_50a81b7_converted_1_cad78e99bc.pdf
+    role: field-reference
+    hash: sha256:d7e44d959b31d2f77111ea233edab4f330b7ce6fc8be48bc4368330adb9e0526
+    fetched: "2026-10-03"
+    note: Health Facility Registry APIs, document version 2.0, created 22 June 2026. Request field descriptions, required fields and formats; see corrections/fields/2026-10-03-hfr.yaml.
 servers:
   - url: https://apihspsbx.abdm.gov.in/v4/int
     description: NHPR, sandbox
@@ -995,6 +1000,7 @@ paths:
           required: true
           schema:
             type: string
+          description: Type of master data set. Accepted codes are types as specified in get-master-type API. See `GET /v1.5/facility/get-master-types`.
       responses:
         "200":
           description: OK
@@ -1153,6 +1159,7 @@ paths:
           required: true
           schema:
             type: string
+          description: LGD code of the state. Accepted codes are as specified in states API. See `GET /v1.5/facility/lgd/states`.
       responses:
         "200":
           description: OK
@@ -1251,6 +1258,7 @@ paths:
           required: true
           schema:
             type: string
+          description: LGD code of the district. Accepted codes are as specified in districts API. See `GET /v1.5/facility/lgd/districts`.
       responses:
         "200":
           description: OK
@@ -3757,8 +3765,10 @@ components:
         facilityId:
           pattern: ^IN\d+$
           type: string
+          description: Id of the facility. Should start with 'IN' and have the length of 12 characters.
         facilityName:
           type: string
+          description: "Name of the facility. Accepted characters: Alphanumeric, -_.(),/. The first character must be an alphabet or digit, and only one space is allowed between words."
         HRP:
           type: array
           items:
@@ -3773,25 +3783,40 @@ components:
       properties:
         bridgeId:
           type: string
+          description: Valid Bridge Id to be linked. Alphanumeric.
         hipName:
           type: string
+          description: "Name of the hospital which will reflect on ABHA/PHR app when the patient will search for the respective hospital. HIP name can be the Hospital name added with suffix of bridge name. Example: Hospital name=XYZ and bridge name=BRIDGE TEST, so the HIP name = XYZ BRIDGE. HIP name can not be mor than 15 characters. No Special character is allowed (%$*#@(~&!) Should be unique for every bridge for a facility."
         type:
           type: string
+          description: "Type of the bridge to be linked. Accepted values: HIP or HIU."
         active:
           type: boolean
+          description: "Active Status of the bridge to be linked. Accepted values: true or false."
     ValidateOtpRequestDto:
       type: object
       properties:
         facilityId:
           type: string
+          description: Id of the facility. Should start with 'IN' and have the length of 12 characters.
         sourceId:
           type: string
+          description: Unique hospital identifier. Alphanumeric value.
         otp:
           type: string
+          description: Unique number to verify the mobile number. 6-digit number received from the SendOTPToContact API response. See `POST /v1.5/facility/sendOtpToContact`.
         source:
           type: string
+          description: "Facility Source value. Accepted values: UWIN, PMNDP, AB-PMJAY, NHRR, HMIS-CDAC, NIN, eHospital, STHMISID, STINSID, COWIN."
         transactionId:
           type: string
+          description: Unique Id for a transaction. Use the transaction Id received in response from the SendOTPToContact API. See `POST /v1.5/facility/sendOtpToContact`.
+      required:
+        - facilityId
+        - sourceId
+        - otp
+        - source
+        - transactionId
     ErrorStatus:
       type: object
       properties:
@@ -3820,10 +3845,13 @@ components:
         trackingId:
           pattern: ^[0-9]+$
           type: string
+          description: Unique identification number for your facility. Tracking id generated from basic information API.
         sourceOfInformation:
           type: string
+          description: Source of information of this facility. Should be valid data source provide by HFR team. If you leave this field empty, then your facility will be considered as Submitted entity.
         sourceUniqueID:
           type: string
+          description: Facility Unique Id as exists in HRP or data source.
         facilitySuperUser:
           type: string
     FacilitySubmitResponse:
@@ -3840,6 +3868,9 @@ components:
       properties:
         facilityId:
           type: string
+          description: Id of the facility to be linked. Should start with 'IN' and have the length of 12 characters.
+      required:
+        - facilityId
     FacilityOtpResponse:
       type: object
       properties:
@@ -3863,6 +3894,7 @@ components:
         systemOfMedicineCode:
           pattern: ^([Aa]|[Dd]|[Dd][Ii][Aa][Gg]|[Hh]|[Ii][Mm][Aa][Gg][Ee]|[Mm]|[Pp]|[Ss][Dd]|[Ss][Rr]|[Uu][Nn]|[Yy][Nn])$
           type: string
+          description: System of MedicineCode, as available in HFR, for which you want to know the specializations offered. Accepted codes as specified in get-master-data API with type="MEDICINE". See `GET /v1.5/facility/get-master-data`.
     SubTypeUtilityRequestDto:
       required:
         - ownerSubtypeCode
@@ -3874,9 +3906,11 @@ components:
           minLength: 0
           pattern: ^([Gg]|[Pp]|[Pp][Pp])$
           type: string
+          description: Ownership Code as available in HFR. Accepted codes are "G", "P" or "PP".
         ownerSubtypeCode:
           pattern: ^([Cc]|[Pp]|[Nn][Pp])$
           type: string
+          description: Ownership subtype code, as available in HFR, under any Ownership. ownershipCode = "G" Accepted codes are "C". ownershipCode = "P" or "PP" Accepted codes are "P" or "NP".
     UtilityFacilityTypeReqDto:
       required:
         - ownershipCode
@@ -3888,9 +3922,11 @@ components:
           minLength: 0
           pattern: ^([Gg]|[Pp]|[Pp][Pp])$
           type: string
+          description: Ownership of the facility. Accepted codes are "G" or "P".
         systemOfMedicineCode:
           pattern: ^[A-Za-z\s,]*$
           type: string
+          description: System of medicine followed by the facility. Accepted codes as specified in get-master-data API with type="MEDICINE". In case you have multiple systems of medicine, send a comma separated string of codes. See `GET /v1.5/facility/get-master-data`.
     UtilityFacilitySubTypeReqDto:
       required:
         - facilityTypeCode
@@ -3899,33 +3935,47 @@ components:
         facilityTypeCode:
           pattern: ^[0-9\s]*$
           type: string
+          description: Facility code. Accepted codes as specified in fetch-facilitytype API. See `POST /v1.5/facility/fetch-facility-type`.
     FacilityBloodBankDetails:
       type: object
       properties:
         isFacilityRegisteredInERaktkosh:
           type: string
+          description: Is your facility registered in e-Raktkosh. Y / N as accepted value.
         eRaktoshId:
           type: string
+          description: Provide e-Raktkosh Id. Accepted Alphanumeric value with special characters (- and _). Required if facility is registered in e-Raktkosh.
         bloodBankLicenseNumber:
           type: string
+          description: Mention your Blood Bank Registration Number. Alphanumeric value.
         bloodStorageCenters:
           type: string
+          description: Is there any Blood Storage Centres associated with your Blood Bank. Y or N as accepted value.
         storageCentersCount:
           type: integer
           format: int32
+          description: Count of Blood Storage Centres. Numeric Value greater than 0. Required if storage centers are associated with your blood bank.
         bloodCollectedPerAnnum:
           type: string
+          description: Please indicate the number of blood units collected per annum. Numeric value.
         bloodRequiredPerAnnum:
           type: string
+          description: Please mention existing requirement of Blood per annum. Numeric value.
+      description: Section to capture blood bank details. Required if facility type is blood bank.
+      required:
+        - isFacilityRegisteredInERaktkosh
+        - bloodBankLicenseNumber
     FacilityDetailedInformationRequest:
       type: object
       properties:
         trackingId:
           type: string
+          description: Unique identification number for your facility. Tracking id generated from basic information API.
         specialities:
           type: array
           items:
             $ref: "#/components/schemas/FacilitySpecialities"
+          description: "Section to capture specializations/services Details. Note: Specialities are not required for the facility types: Blood Bank, Cath Laboratory, Diagnostic Laboratory, Dialysis Centre, Imaging Centre, and Pharmacy. Required based on the facility type and if specializations/services are offered for this system of medicine."
         medicalInfrastructure:
           $ref: "#/components/schemas/FacilityMedicalInfrastructure"
         pharmacyDetails:
@@ -3936,18 +3986,26 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/FacilityImagingServices"
+          description: Section to capture Imaging Services details. Required if facility type is Imaging center.
         diagnosticServices:
           type: array
           items:
             type: string
+          description: Codes of diagnostic services available at your facility. Comma separated list of Strings. Accepted codes as specified in get-master-data API with type='DIAGNOSTIC'. See `GET /v1.5/facility/get-master-data`. Required if facility type is Diagnostic Lab.
+      required:
+        - trackingId
     FacilityImagingServices:
       type: object
       properties:
         service:
           type: string
+          description: Code of imaging service that is offered by the facility. Accepted codes as specified in get-master-data API with type='IMAGING'. See `GET /v1.5/facility/get-master-data`.
         count:
           type: integer
           format: int32
+          description: Count of equipment available. Number greater than 0. Required if a service is offered.
+      required:
+        - service
     FacilityMedicalInfrastructure:
       type: object
       properties:
@@ -3957,36 +4015,47 @@ components:
         countIPDBedsWithoutOxygen:
           type: integer
           format: int32
+          description: Number of IPD Beds (except ICU beds) without oxygen facility. Numeric Value.
         countIPDBedsWithOxygen:
           type: integer
           format: int32
+          description: Number of IPD Beds (except ICU beds) with oxygen facility. Numeric Value.
         countICUBedsWithVentilators:
           type: integer
           format: int32
+          description: Number of ICU beds with Ventilators. Numeric Value.
         countICUBedsWithoutVentilators:
           type: integer
           format: int32
+          description: Number of ICU beds without Ventilators. Numeric Value.
         countHDUBedsWithVentilators:
           type: integer
           format: int32
+          description: Number of HDU beds with Ventilators. Numeric Value.
         countHDUBedsWithoutVentilators:
           type: integer
           format: int32
+          description: Number of HDU beds without Ventilators. Numeric Value.
         totalNumberOfVentilators:
           type: integer
           format: int32
+          description: Total Number of Ventilators. Numeric Value.
         countDayCareBedsWithoutOxygen:
           type: integer
           format: int32
+          description: Number of Daycare beds without oxygen facility. Numeric Value.
         countDayCareBedsWithOxygen:
           type: integer
           format: int32
+          description: Number of Daycare beds with oxygen facility. Numeric Value.
         countDentalChairs:
           type: integer
           format: int32
+          description: Number of Dental Chairs. Numeric Value. Required if the system of medicine is Dentistry.
         totalNumberOfBeds:
           type: integer
           format: int32
+          description: Total count which should be equal to or greater than sum of all the above components with beds. Numeric value.
         hasIcuBeds:
           type: string
         countLevel1IcuBedWithVentilators:
@@ -4005,30 +4074,46 @@ components:
           type: string
         cmoMoIcuControlMobile:
           type: string
+      description: Section to capture medicalInfrastructure Details. Required based on the Type of Service, Facility Type and System of Medicine values.
+      required:
+        - totalNumberOfBeds
     FacilityPharmacyDetails:
       type: object
       properties:
         isJanAushadhiKendra:
           type: string
+          description: Is your facility a Jan Aushadhi Kendra?. Y / N as accepted value.
         janAushadhiKendraId:
           type: string
+          description: Provide jan Aushadhi Kendra Id. Accepted Alphanumeric value and special characters (- and _). Required if facility is Jan Aushadhi Kendra.
         drugLicenseNumber:
           type: string
+          description: Mention your Drug License Number. Accepted Alphanumeric value and special characters (- and _). Required if facility type is Pharmacy.
         pharmacyGstinNumber:
           type: string
+          description: Mention GSTIN Number. Accepted Alphanumeric value and special characters (- and _).
         pharmacistRegistrationNumber:
           type: string
+          description: Mention Pharmacist registration number. Accepted Alphanumeric value and special characters (- and _).
+      description: Section to capture Pharmacy Details. Required if facility type is Pharmacy.
     FacilitySpecialities:
       type: object
       properties:
         systemOfMedicineCode:
           type: string
+          description: System of medicine codes as saved in Basic-Information API. Accepted codes as specified in get-master-data API with type='MEDICINE'. See `GET /v1.5/facility/get-master-data`.
         isSpecializationAvalaible:
           type: string
+          description: If the facility offers any specializations or services for this system of medicine. Y / N as accepted value.
         specialities:
           type: array
           items:
             type: string
+          description: List of specialities for each system of medicine offered by the facility. Accepted codes as specified in the get-specialities API with respect to a system of medicine. See `POST /v1.5/facility/get-specialities`.
+      required:
+        - systemOfMedicineCode
+        - isSpecializationAvalaible
+        - specialities
     FacilityOnboardResponse:
       type: object
       properties:
@@ -4049,45 +4134,73 @@ components:
           type: array
           items:
             type: string
+          description: Existing software code to be linked. Accepted codes as specified in get Software-details API.
         anyOther:
           type: string
+          description: Valid Software code to be linked. Accepted Alphanumeric with few special characters (.-,/()_ ).
     FacilityBasicAttachment:
       type: object
       properties:
         name:
           type: string
+          description: Name of the board photograph. Accepted format is filename.ext(sample - photo1.jpg) where file extension must be jpg/jpeg/png/pdf and filename is alphanumeric allowing few special characters (-,/()_ ).
         value:
           type: string
+          description: Board photograph base64 value. Base 64 encoded value of the file. Maximum file size - 5MB Extension in name field should match with file extension.
+      required:
+        - name
+        - value
     FacilityBasicInfoAddress:
       type: object
       properties:
         country:
           type: string
+          description: Country of origin. By Default, its India.
         stateLGDCode:
           type: string
+          description: State of the facility. State LGD code. See `GET /v1.5/facility/lgd/states`.
         districtLGDCode:
           type: string
+          description: District of the facility. District LGD Code. See `GET /v1.5/facility/lgd/districts`.
         subDistrictLGDCode:
           type: string
+          description: Sub district of the facility. Sub District LGD Code. See `GET /v1.5/facility/lgd/subdistricts`.
         facilityRegion:
           type: string
+          description: Region of the facility. Contain Single Char Value R/U (R – Rural, U – Urban).
         villageCityTownLGDCode:
           type: string
+          description: Village/Town of the facility. Village LGD Code. Please visit https://lgdirectory.gov.in/ for more information.
         addressLine1:
           type: string
+          description: Line 1 of the address of the facility. Accepted Alphanumeric string with few special characters(.-,/()_ ) and no space repetition and minimum length required for first word is 2.
         addressLine2:
           type: string
+          description: Line 2 of the address of the facility. Accepted Alphanumeric string with few special characters(.-,/()_ ) and no space repetition.
         pincode:
           type: string
+          description: Pin code of the facility. 6-digit number.
         latitude:
           type: string
+          description: Latitude of the facility. Real Number ranging from -90.000000 to +90.000000 , with 1-6 decimal places.
         longitude:
           type: string
+          description: Longitude of the facility. Real Number ranging from - 180.000000 to +180.000000 with 1-6 decimal places.
+      required:
+        - country
+        - stateLGDCode
+        - districtLGDCode
+        - subDistrictLGDCode
+        - addressLine1
+        - pincode
+        - latitude
+        - longitude
     FacilityBasicInfoAddressProof:
       type: object
       properties:
         addressProofType:
           type: string
+          description: Address Proof type that is being added. Accepted codes as specified in getmaster-data API with type='ADDRESS-PROOF'. See `GET /v1.5/facility/get-master-data`.
         addressProofAttachment:
           $ref: "#/components/schemas/FacilityBasicAttachment"
     FacilityBasicInfoContact:
@@ -4095,14 +4208,19 @@ components:
       properties:
         facilityEmailId:
           type: string
+          description: Email of the facility. Alphanumeric with _ % + - followed by @ symbol and alphanumeric with . and -.
         facilityContactNumber:
           type: string
+          description: Mobile number of the facility. Should be a valid 10-digit mobile number.
         websiteLink:
           type: string
+          description: "Valid Website link of facility. Accepted format: Should start with either http:// or https://, or www. then a domain name made of letters/digits/hyphens."
         facilityLandlineNumber:
           type: string
+          description: Landline number of the facility. Should be a valid landline number ranging between 6-8 digits.
         facilityStdCode:
           type: string
+          description: Std Code of the facility. Should be a valid std code with not more than 5 digits.
     FacilityBasicInfoUploads:
       type: object
       properties:
@@ -4110,29 +4228,39 @@ components:
           $ref: "#/components/schemas/FacilityBasicAttachment"
         facilityBuildingPhoto:
           $ref: "#/components/schemas/FacilityBasicAttachment"
+      required:
+        - facilityBoardPhoto
+        - facilityBuildingPhoto
     FacilityBasicInformation:
       type: object
       properties:
         facilityName:
           type: string
+          description: "Name of the facility that is to be created in HFR. Accepted characters: Alphanumeric, _.(),/. The first character must be an alphabet or digit, and only one space is allowed between words."
         facilityAddressDetails:
           $ref: "#/components/schemas/FacilityBasicInfoAddress"
         facilityContactInformation:
           $ref: "#/components/schemas/FacilityBasicInfoContact"
         ownershipCode:
           type: string
+          description: Ownership of the facility. Accepted codes are "G", "P" or "PP".
         ownershipSubTypeCode:
           type: string
+          description: Ownership subtype of the facility. ownershipCode = "G" Accepted codes are "C" or "S" ownershipCode = "P" or "PP" Accepted codes are "P" or "NP".
         ownershipSubTypeCode2:
           type: string
         typeOfServiceCode:
           type: string
+          description: Type of services offered by facility. Accepted codes as specified in getmaster-data API with type='TYPE-SERVICE'. See `GET /v1.5/facility/get-master-data`. typeOfServiceCode is not required if facility type is any of the following ( 'Diagnostic Laboratory (10,45)', 'Imaging Center (74,75)', 'Cath Laboratory (12,47)', 'Dialysis Center (13,48)', 'Blood Bank (9,44)', 'Pharmacy (11,46)' ) If facility type is any of the following, ( 'Ayurveda Dispensary/ Clinic/ Polyclinic (OPD only) (17,52)', 'Unani Dispensary/ Clinic/ Polyclinic (OPD only) (20,55)', 'Siddha Dispensary/ Clinic/ Polyclinic (OPD only) (23,58)', 'Homeopathy Dispensary/ Clinic/ Polyclinic (OPD only) (26,61)', 'Sowa-Rigpa Dispensary/ Clinic/ Polyclinic (OPD only) (29,64)', ) then typeOfServiceCode – IPD is not applicable. Required based on the facility type provided.
         systemOfMedicineCode:
           type: string
+          description: System of medicine followed by your facility. Accepted codes as specified in getmaster-data API with type= "MEDICINE". In case you have multiple systems of medicine, send a comma separated string of codes. See `GET /v1.5/facility/get-master-data`.
         facilityTypeCode:
           type: string
+          description: Type of your facility as defined by HFR. Accepted codes as specified in fetchfacility-type API. See `POST /v1.5/facility/fetch-facility-type`.
         specialityTypeCode:
           type: string
+          description: Whether facility offers Single or Multiple Specialities. Accepted codes as specified in getmaster-data API with type='SPECIALITY-TYPE'. See `GET /v1.5/facility/get-master-data`.
         facilityUploads:
           $ref: "#/components/schemas/FacilityBasicInfoUploads"
         facilityAddressProof:
@@ -4141,20 +4269,35 @@ components:
             $ref: "#/components/schemas/FacilityBasicInfoAddressProof"
         facilitySubType:
           type: string
+          description: Subtype corresponding to facility type as define by HFR. Accepted codes as specified in fetchfacility-sub-type API. See `POST /v1.5/facility/fetch-facility-Sub-type`.
         workingInPsu:
           type: boolean
         facPsuName:
           type: string
         facilityOperationalStatus:
           type: string
+          description: Whether your facility is currently operational or not. Accepted codes as specified in getmaster-data API with type='FACSTATUS'. See `GET /v1.5/facility/get-master-data`.
         timingsOfFacility:
           type: array
           items:
             $ref: "#/components/schemas/FacilityTimings"
+          description: Required if facility operational status is Functional.
         abdmCompliantSoftware:
           type: array
           items:
             $ref: "#/components/schemas/AbdmCompliantSoftware"
+      required:
+        - facilityName
+        - ownershipCode
+        - ownershipSubTypeCode
+        - systemOfMedicineCode
+        - facilityTypeCode
+        - facilitySubType
+        - specialityTypeCode
+        - facilityOperationalStatus
+        - facilityAddressDetails
+        - facilityContactInformation
+        - facilityUploads
     FacilityBasicInformationRequest:
       type: object
       properties:
@@ -4167,8 +4310,13 @@ components:
       properties:
         workingDays:
           type: string
+          description: The day on which the facility is open/working. Accepted codes as (MON, TUE, WED, THU, FRI) specified in get-master-data API with type="DAYS-OF-OPERATION". See `GET /v1.5/facility/get-master-data`.
         openingHours:
           type: string
+          description: For the day as specified in working days, please mention the working Hours. Accepted format is 10:00 Am–2:00 PM or 24*7.
+      required:
+        - workingDays
+        - openingHours
     FacilityAdditionalInformationRequest:
       required:
         - trackingId
@@ -4177,6 +4325,7 @@ components:
         trackingId:
           pattern: ^[0-9]+$
           type: string
+          description: Unique identification number for your facility. Tracking id generated from basic information API.
         linkedProgramIds:
           $ref: "#/components/schemas/FacilityLinkedProgramIds"
         generalInformation:
@@ -4187,52 +4336,69 @@ components:
         hasDialysisCenter:
           pattern: ^(YALL|YIN|N)$
           type: string
+          description: Value to identify if a facility has dialysis center. Accepted codes as specified in get-master-data API with type='GENERAL-INFO-OPTIONS'. See `GET /v1.5/facility/get-master-data`. Required If facility have dialysis center.
         hasPharmacy:
           pattern: ^(YALL|YIN|N)$
           type: string
+          description: Value to identify if a facility has pharmacy. Accepted codes as specified in get-master-data API with type='GENERAL-INFO-OPTIONS'. See `GET /v1.5/facility/get-master-data`. Required If facility have pharmacy.
         hasBloodBank:
           pattern: ^(YALL|YIN|N)$
           type: string
+          description: Value to identify if a facility has bloodbank. Accepted codes as specified in get-master-data API with type='GENERAL-INFO-OPTIONS'. See `GET /v1.5/facility/get-master-data`. Required If facility have bloodbank.
         hasCathLab:
           pattern: ^(YALL|YIN|N)$
           type: string
+          description: Value to identify if a facility has cath lab. Accepted codes as specified in get-master-data API with type='GENERAL-INFO-OPTIONS'. See `GET /v1.5/facility/get-master-data`. Required If facility have cath lab.
         hasDiagnosticLab:
           pattern: ^(YALL|YIN|N)$
           type: string
+          description: Value to identify if a facility has diagnostic center. Accepted codes as specified in get-master-data API with type='GENERAL-INFO-OPTIONS'. See `GET /v1.5/facility/get-master-data`. Required If facility have diagnostic center.
         hasImagingCenter:
           type: string
+          description: Value to identify if a facility has imaging center. Accepted codes as specified in get-master-data API with type='GENERALINFO-OPTIONS'. See `GET /v1.5/facility/get-master-data`. Required If facility have imaging centre.
         servicesByImagingCenter:
           type: array
           items:
             $ref: "#/components/schemas/FacilityServices"
+          description: Required if imaging center is present.
     FacilityLinkedProgramIds:
       type: object
       properties:
         nhrrId:
           type: string
+          description: National Health Resource Repository Unique ID. Should be a valid NHRR ID.
         nin:
           type: string
+          description: National Identification Number. Should be a valid NIN id.
         abpmjayId:
           type: string
+          description: Hospital Id as allotted by ABPMJAY Hospital Empanelment Module. Should be a valid AB-PMJAY Hospital Id.
         rohiniId:
           type: string
+          description: Rohini Id. Should be a valid Rohini Id.
         echsId:
           type: string
+          description: Unique id in Ex-Servicemen Contributory Health Scheme. Should be a valid ECHS Id.
         cghsId:
           type: string
+          description: Unique Id in Central Government Health Scheme. Should be a valid CGHS Id.
         ceaRegistration:
           type: string
+          description: CEA Registration Number. Should be a valid CEA registration number.
         stateInsuranceSchemeId:
           type: string
+          description: State Insurance Scheme ID. Alphanumeric value.
     FacilityServices:
       type: object
       properties:
         service:
           type: string
+          description: Code of the service offered. Accepted codes as specified in get-master-data API with type='IMAGING'. See `GET /v1.5/facility/get-master-data`. Required if Imaging Service center Present.
         count:
           minimum: 0
           type: integer
           format: int32
+          description: Count of equipment. A valid number greater than 0. Required if a service is available.
     SearchFacilitiesRequestFacility:
       type: object
       properties:
@@ -4325,18 +4491,29 @@ components:
       properties:
         name:
           type: string
+          description: "Name of the facility. Accepted characters: Alphanumeric, with only one space is allowed between words."
         address:
           type: string
+          description: "Address of the facility. Accepted characters: Alphanumeric with -_.(),/ and only one space is allowed between words."
         district:
           type: string
+          description: District of the facility. District LGD Code. See `GET /v1.5/facility/lgd/districts`.
         subDistrict:
           type: string
+          description: Sub District of the facility. Sub District LGD Code. See `GET /v1.5/facility/lgd/subdistricts`.
         village:
           type: string
+          description: Village of the facility. Village LGD Code. Please visit https://lgdirectory.gov.in/ for more information.
         geolocation:
           type: string
+          description: Geolocation coordinates of the facility. Latitude - Real Number ranging from - 90.000000 to +90.000000 with 1-6 decimal places Longitude - Real Number ranging from -180.000000 to +180.000000 with 1-6 decimal places.
         facilityId:
           type: string
+          description: Unique Id of the facility. 6-digit numeric value (fac unique id).
+      required:
+        - name
+        - district
+        - subDistrict
     DeduplicateResponseDto:
       type: object
       properties:
@@ -4602,24 +4779,36 @@ components:
       properties:
         ownershipCode:
           type: string
+          description: Ownership of the facility to be searched. Accepted codes are "G", "P" or "PP". Required if facilityId not present.
         subDistrictLGDCode:
           type: string
+          description: Sub district of the facility. Sub District LGD Code. See `GET /v1.5/facility/lgd/subdistricts`.
         pincode:
           type: string
+          description: Pin code of the facility. 6-digit number.
         facilityName:
           type: string
+          description: "Name of the facility being searched. This value can be either full or partial name. Accepted characters: Alphanumeric, -_.(),/. The first character must be an alphabet or digit, and only one space is allowed between words. Required if facilityId not present."
         facilityId:
           type: string
+          description: 12-character Facility Id allotted to each facility at the time of submission. Should start with 'IN' and have the length of 12 characters. Required if ownershipCode, stateLGDCode and facilityName not present.
         page:
           type: integer
           format: int32
+          description: The page number of which results need to be seen. Numeric value. Minimum value to be passed is 1.
         resultsPerPage:
           type: integer
           format: int32
+          description: Number of facilities what will come in one page. Numeric value. Minimum value to be passed is 10.
         stateLGDCode:
           type: string
+          description: State of the facility. State LGD code. See `GET /v1.5/facility/lgd/states`. Required if facilityId not present.
         districtLGDCode:
           type: string
+          description: District of the facility. District LGD Code. See `GET /v1.5/facility/lgd/districts`.
+      required:
+        - page
+        - resultsPerPage
     FacilitySearchResponse:
       type: object
       properties:
@@ -4693,20 +4882,28 @@ components:
       properties:
         centerLat:
           type: string
+          description: Latitude of the center point. Real Number ranging from -90.000000 to +90.000000, with 1-6 decimal places.
         centerLon:
           type: string
+          description: Longitude of the center point. Real Number ranging from -180.000000 to +180.000000 with 1-6 decimal places.
         radiusInKm:
           type: string
+          description: Search radius. Numeric value (in kilometres).
         speciality:
           type: string
+          description: List of specialities for each system of medicine offered by the facility. Comma separated list of speciality names Accepted values of the specialities as specified in /v1.5/facility/get-specialities API as per the respective system of medicine. See `POST /v1.5/facility/get-specialities`.
         facilityOwnership:
           type: string
+          description: Ownership of the facility. Accepted codes are "G", "P" or "PP".
         abdmSoftware:
           type: string
+          description: "Software identifier. Accepted value: 0 - non-ABDM enabled 1 - ABDM enabled)."
         hospitalSpecialityType:
           type: string
+          description: Codes for hospital specialities. Comma separated facility type codes. Accepted cod specified in v1.5/facility/fetchfacilitytype API as per the respective Ownership and system of medicine. See `POST /v1.5/facility/fetch-facility-type`.
         facilityName:
           type: string
+          description: "Name of the facility. Accepted characters: Alphanumeric, -_.(),/. The first character must be an alphabet or digit, and only one space is allowed between words."
         facilityStatus:
           type: string
         som:
@@ -4723,8 +4920,16 @@ components:
           type: string
         size:
           type: string
+          description: Results per page. Numeric value. Minimum value to be passed is 1.
         from:
           type: string
+          description: Offset for pagination. Numeric value. Minimum value to be passed is 0.
+      required:
+        - centerLat
+        - centerLon
+        - from
+        - radiusInKm
+        - size
     CriticalMedicalInfrastructureResponseDTO:
       type: object
       properties:

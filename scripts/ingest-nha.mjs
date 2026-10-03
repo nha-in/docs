@@ -836,6 +836,59 @@ specs.m1['x-abdm-sources'].push({file: 'catalogue/hiecm/openapi/.raw/nha-2026-09
   note('p2, p3, p4', 'servers', 'https://dev.abdm.gov.in only, the base URL NHA gave for P2, P3 and P4 on 23 September 2026; the PHR swagger declares https://abhasbx.abdm.gov.in, and P2 had rendered its gateway calls on it');
 }
 
+// 14. NHA's Health Facility Registry APIs document, version 2.0 of 22 June
+// 2026, cited in NHA's review of 2 October 2026 as the reference for M4 field
+// documentation. NHA's swagger carries the HFR request schemas with almost no
+// field descriptions and few required lists; the document gives every field
+// its description, whether it is required, its data type and its format. The
+// tables are transcribed in corrections/fields/2026-10-03-hfr.yaml. This
+// only adds: a description or required list the swagger already has stays,
+// and a data type that disagrees is logged, not changed.
+{
+  const FIELDS = parse(readFileSync(join(root, 'catalogue', 'hiecm', 'openapi', 'corrections', 'fields', '2026-10-03-hfr.yaml'), 'utf8'));
+  const resolve = (node) => { while (node?.$ref) node = node.$ref.split('/').slice(1).reduce((t, k) => t?.[k], specs.m4); return node; };
+  const into = (node) => { node = resolve(node); return node?.type === 'array' && node.items ? resolve(node.items) : node; };
+  const sentence = (t) => (t && !/\.$/.test(t) ? `${t}.` : t);
+  const TYPES = {string: 'string', integer: 'integer', number: 'number', boolean: 'boolean', list: 'array', array: 'array', object: 'object'};
+  specs.m4['x-abdm-sources'].push({url: FIELDS.source.url, role: 'field-reference', hash: `sha256:${FIELDS.source.sha256}`, fetched: '2026-10-03', note: `${FIELDS.source.title}. Request field descriptions, required fields and formats; see corrections/fields/2026-10-03-hfr.yaml.`});
+  for (const [key, entry] of Object.entries(FIELDS.operations)) {
+    const [method, path] = key.split(' ');
+    const op = specs.m4.paths[path]?.[method.toLowerCase()];
+    if (!op) throw new Error(`corrections/fields/2026-10-03-hfr.yaml: ${key} is not an M4 operation`);
+    const body = op.requestBody?.content?.['application/json']?.schema;
+    let described = 0, required = 0;
+    const conflicts = [];
+    for (const [field, f] of Object.entries(entry.fields)) {
+      let node, parent, name;
+      if (field.startsWith('query:')) {
+        node = (op.parameters ?? []).find((x) => x.name === field.slice(6));
+      } else {
+        const segments = field.split('.');
+        name = segments.pop();
+        parent = into(body);
+        for (const s of segments) parent = into(parent?.properties?.[s]);
+        node = resolve(parent?.properties?.[name]);
+      }
+      if (!node) throw new Error(`corrections/fields/2026-10-03-hfr.yaml: ${key} has no field ${field}`);
+      const req = (f.required ?? '').replace(/\s+\.$/, '').trim();
+      const always = /^yes$/i.test(req);
+      const when = !always && /^yes\b/i.test(req) ? req.replace(/^yes[\s,]*/i, '').replace(/^\((.*)\)$/, '$1').trim() : '';
+      const text = [sentence(f.description), sentence(f.format), when ? sentence(`Required ${/^(if|when|based|only)\b/i.test(when) ? '' : 'when '}${when}`.replace(/\s+/g, ' ')) : '']
+        .filter(Boolean).join(' ');
+      const schema = field.startsWith('query:') ? (node.schema ?? {}) : node;
+      if (text && !node.description) { node.description = text; described++; }
+      if (always) {
+        if (field.startsWith('query:')) { if (!node.required) { node.required = true; required++; } }
+        else if (!(parent.required ?? []).includes(name)) { parent.required = [...(parent.required ?? []), name]; required++; }
+      }
+      const docType = TYPES[(f.type ?? '').toLowerCase()];
+      if (docType && schema.type && schema.type !== docType) conflicts.push(`\`${field}\` as ${f.type}, the swagger as ${schema.type}`);
+    }
+    note('m4', op.operationId, `from the HFR APIs document 2.0, section ${entry.section}: ${described} field description(s) and ${required} required field(s) added${conflicts.length ? `; the document types ${conflicts.join(', ')}, and the swagger's type stands` : ''}`);
+  }
+  for (const gap of FIELDS.gaps) note('m4', 'HFR APIs document 2.0', `${gap}; nothing added`);
+}
+
 for (const [id, m] of Object.entries(MODULES)) {
   const count = Object.values(specs[id].paths).reduce((n, i) => n + METHODS.filter((x) => i[x]).length, 0) + Object.values(specs[id].webhooks).reduce((n, i) => n + METHODS.filter((x) => i[x]).length, 0);
   if (count !== m.expected) throw new Error(`${id}: ${count} operations, expected ${m.expected}: ${Object.keys(specs[id].paths).join(' ')}`);
