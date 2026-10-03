@@ -27,7 +27,7 @@ import {
 import {COMMANDS, commandLabel, slashMatches, type CommandId} from './commands';
 import {loadPages, searchPages, type PageEntry} from './pages';
 import type {Attached, PageAttachment} from './types';
-import {CLOSED, offering, trayKey, type Tray} from './next';
+import {CLOSED, offering, related, shownOf, trayKey, type Tray} from './next';
 import type {Suggestion} from './sse';
 
 export type Menu = 'closed' | 'add' | 'pages' | 'skills';
@@ -106,15 +106,16 @@ export function Composer(props: Props) {
   const addWrap = useRef<HTMLDivElement>(null);
   const pageReady = page !== null && page.markdown !== '';
 
-  // The next question on offer. The empty box shows the active one as grey
-  // text; a new answer brings its own, so the tray starts over with it.
+  // What is on offer after the latest answer. The empty box shows the next
+  // step as grey text, or the related question the reader moved to; a new
+  // answer brings its own, so the tray starts over with it.
   const [tray, setTray] = useState<Tray>(CLOSED);
   const [focused, setFocused] = useState(false);
   const offered = props.suggestions.map((s) => s.id).join(' ');
   useEffect(() => setTray(CLOSED), [offered]);
   const offer = offering(draft, props.suggestions, tray, busy) && menu === 'closed';
-  const at = Math.min(tray.active, props.suggestions.length - 1);
-  const shown = offer ? props.suggestions[at] : null;
+  const others = offer ? related(props.suggestions) : [];
+  const shown = offer ? shownOf(props.suggestions, tray) : null;
 
   // A click anywhere else puts the menu away. The panel lives in a shadow
   // root, so the click is checked against the path it took, not its target.
@@ -223,16 +224,16 @@ export function Composer(props: Props) {
           </p>
         )}
 
-        {/* The other next questions, above the bar while the empty box has
-            focus. One suggestion needs no list: the box already shows it. */}
-        {shown && focused && props.suggestions.length > 1 && (
-          <ul class="ask-ai__next" role="listbox" aria-label="Suggested next questions">
-            {props.suggestions.map((s, i) => (
-              <li key={s.id} role="option" aria-selected={i === at}>
+        {/* Related questions, above the bar while the empty box has focus.
+            They are other things to ask, so none takes the box unasked. */}
+        {focused && others.length > 0 && (
+          <ul class="ask-ai__next" role="listbox" aria-label="Related questions">
+            {others.map((s, i) => (
+              <li key={s.id} role="option" aria-selected={i === tray.active}>
                 <button
                   type="button"
                   tabIndex={-1}
-                  class={`ask-ai__next-item${i === at ? ' ask-ai__next-item--active' : ''}`}
+                  class={`ask-ai__next-item${i === tray.active ? ' ask-ai__next-item--active' : ''}`}
                   // The press must not take the focus from the box, or the
                   // list it belongs to closes before the click lands.
                   onMouseDown={(event) => event.preventDefault()}
@@ -371,10 +372,11 @@ export function Composer(props: Props) {
               onFocus={() => setFocused(true)}
               onBlur={() => setFocused(false)}
               onKeyDown={(event) => {
-                // While a next question is on offer, Tab takes it, the arrows
-                // move between the others and Escape puts them away. Once the
-                // box holds anything, every key means what it always did.
-                if (shown) {
+                // While something is on offer, Tab takes what the box shows,
+                // the arrows move between the related questions and Escape
+                // puts them away. Once the box holds anything, every key
+                // means what it always did.
+                if (offer) {
                   const act = trayKey(event.key, event.shiftKey, props.suggestions, tray);
                   if (act.kind !== 'none') {
                     event.preventDefault();
@@ -414,7 +416,7 @@ export function Composer(props: Props) {
                   {shown.prompt}
                 </span>
                 <span class="ask-ai__sr" id="ask-ai-next-hint">
-                  {`Suggested next question: ${shown.prompt}. Press Tab to use it, the arrow keys for others, Escape to dismiss.`}
+                  {`Suggested: ${shown.prompt}. Press Tab to use it, the arrow keys for related questions, Escape to dismiss.`}
                 </span>
               </>
             )}

@@ -30,6 +30,9 @@ type Meta struct {
 	// the index so the server needs the database and nothing else. Empty
 	// when the file is absent, and search then behaves as it did before.
 	Vocabulary string
+	// NextSteps is the journey order as JSON, operation id to the Step that
+	// follows it. Empty when the catalogue has no journey files.
+	NextSteps string
 	// Skills are the compiled integrator skills, carried for the same
 	// reason as Vocabulary: the server reads the database and nothing
 	// else. Empty when the skills directory is absent, and the server then
@@ -135,6 +138,7 @@ func Build(dbPath string, atoms []catalogue.Atom, questions map[string]catalogue
 		{"embedding_dim", strconv.Itoa(meta.EmbeddingDim)},
 		{"fhir_ig_version", meta.FHIRIGVersion},
 		{"vocabulary", meta.Vocabulary},
+		{"next_steps", meta.NextSteps},
 	} {
 		if _, err := tx.Exec(`INSERT INTO meta VALUES (?,?)`, kv[0], kv[1]); err != nil {
 			return err

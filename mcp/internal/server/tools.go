@@ -253,6 +253,10 @@ type PassagePack struct {
 	// conversation's gateway or shared. Related above is what the model
 	// sees; this is what the reader is offered.
 	Next []map[string]string `json:"next,omitempty"`
+	// Step is the call that follows the top passage's in its journey, when
+	// the top passage is a call and is not the journey's last. It is what
+	// the reader does next, where Next is what else they might ask.
+	Step map[string]string `json:"step,omitempty"`
 }
 
 const (
@@ -268,6 +272,12 @@ type atomOpener interface {
 	RelatedAtoms(id string) ([]index.RelatedGroup, error)
 	OperationRoute(id string) (method, path string, ok bool)
 	RelatedOutbound(id string) ([]index.AtomRef, error)
+}
+
+// stepReader is an atomOpener that also knows the journey order.
+type stepReader interface {
+	atomOpener
+	NextStep(operationID string) (index.Step, bool)
 }
 
 // openPassage builds the full-body passage and its one-hop related atoms
@@ -364,6 +374,9 @@ func (t *Tools) Lookup(ctx context.Context, in lookupIn) (PassagePack, error) {
 		}
 		pack.Passages = append(pack.Passages, p)
 	}
+	if len(hits) > 0 {
+		pack.Step = nextStep(t.r, hits[0].ID)
+	}
 	if chat.ExpandFrom(ctx) && len(hits) > 0 {
 		inPack := map[string]bool{}
 		for _, h := range hits {
@@ -406,6 +419,30 @@ func expand(r atomOpener, topID string, inPack map[string]bool, scope string) []
 			DocURL: index.DocLink(a.DocURL, a.DocAnchor), Body: atom.Body})
 	}
 	return out
+}
+
+// nextStep returns the call after the top passage's in its journey, as the
+// question a reader would ask to take it. Nil unless the passage is a call
+// with a step after it.
+func nextStep(r stepReader, topID string) map[string]string {
+	a, err := r.GetAtom(topID)
+	if err != nil || a.Operation == "" {
+		return nil
+	}
+	step, ok := r.NextStep(a.Operation)
+	if !ok {
+		return nil
+	}
+	method, path, ok := r.OperationRoute(step.Next)
+	if !ok {
+		return nil
+	}
+	path, _, _ = strings.Cut(path, "#")
+	return map[string]string{
+		"id":     step.Next,
+		"title":  step.Journey,
+		"prompt": "What is the next step in " + step.Journey + ", " + method + " " + path + "?",
+	}
 }
 
 // nextQuestions returns the atoms one passage's author named as related,

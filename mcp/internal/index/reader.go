@@ -27,6 +27,7 @@ type Reader struct {
 	fhirIGVersion string
 	hasVecs       bool
 	vocab         *Vocabulary
+	nextSteps     map[string]Step
 }
 
 func Open(dbPath string) (*Reader, error) {
@@ -60,6 +61,15 @@ func Open(dbPath string) (*Reader, error) {
 	}
 	r.hasVecs = n > 0 && r.embModel != ""
 
+	// The journey order is optional too: without it no answer offers a
+	// next step.
+	var steps string
+	if err := db.QueryRow(`SELECT value FROM meta WHERE key='next_steps'`).Scan(&steps); err == nil && steps != "" {
+		if err := json.Unmarshal([]byte(steps), &r.nextSteps); err != nil {
+			db.Close()
+			return nil, fmt.Errorf("meta next_steps: %w", err)
+		}
+	}
 	// The vocabulary is optional, and an index built before it existed has
 	// no such row. Either way search still works, so a miss here is not
 	// worth failing the open over.
@@ -536,6 +546,13 @@ func (r *Reader) LinkForPath(path string) (url string, ok bool) {
 	}
 	url = OperationDocPath(module, id)
 	return url, url != ""
+}
+
+// NextStep returns what follows an operation in its journey, and false
+// for the last step or an operation in none.
+func (r *Reader) NextStep(operationID string) (Step, bool) {
+	s, ok := r.nextSteps[operationID]
+	return s, ok
 }
 
 // RelatedOutbound returns only the atoms this atom's author named as

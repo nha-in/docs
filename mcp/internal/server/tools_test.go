@@ -412,3 +412,33 @@ func TestExpandOpensWhatTheTopPassageIsMadeOf(t *testing.T) {
 		}
 	}
 }
+
+// stepOpener is a two-call journey: the atom's call, then the link token's.
+type stepOpener struct {
+	routedOpener
+	op string
+}
+
+func (o stepOpener) GetAtom(id string) (catalogue.Atom, error) {
+	return catalogue.Atom{ID: id, Type: "endpoint", Operation: o.op}, nil
+}
+
+func (stepOpener) NextStep(op string) (index.Step, bool) {
+	if op == "first" {
+		return index.Step{Journey: "HIP initiated linking", Next: "m2_post_v3_link_token_generate"}, true
+	}
+	return index.Step{}, false
+}
+
+// The next step is the call after the top passage's in its journey, asked
+// the way a reader would, and nothing when the passage is the last step.
+func TestNextStepFollowsTheJourney(t *testing.T) {
+	got := nextStep(stepOpener{routedOpener{known: true}, "first"}, "hiecm.endpoint.a")
+	want := "What is the next step in HIP initiated linking, POST /api/hiecm/v3/token/generate-token?"
+	if got["id"] != "m2_post_v3_link_token_generate" || got["prompt"] != want {
+		t.Errorf("step: %v", got)
+	}
+	if nextStep(stepOpener{routedOpener{known: true}, "last"}, "hiecm.endpoint.b") != nil {
+		t.Error("the last step offers nothing")
+	}
+}

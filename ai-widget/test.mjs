@@ -18,7 +18,7 @@ await build({
                export {forModel, memoryOf, sentFrom} from './src/transcript';
                export {parseLlms, searchPages, pageUrl, markdownUrl, isHtmlDocument} from './src/pages';
                export {moduleLabel, skillNote, COMMANDS, slashMatches} from './src/commands';
-               export {CLOSED, offering, trayKey} from './src/next';`,
+               export {CLOSED, offering, related, shownOf, trayKey} from './src/next';`,
     resolveDir: import.meta.dirname,
     loader: 'ts',
   },
@@ -41,7 +41,7 @@ const {
   say, answer, wantsTools, needsAgent, TOOLS, AGENTS,
   titleOf, remember, whenSaid, forgetOne, resumable, ABOUT, isAboutQuestion, memoryOf, sentFrom,
   startersFrom, DEFAULT_STARTERS, forModel, parseLlms, searchPages, pageUrl, markdownUrl, isHtmlDocument,
-  moduleLabel, skillNote, COMMANDS, slashMatches, CLOSED, offering, trayKey,
+  moduleLabel, skillNote, COMMANDS, slashMatches, CLOSED, offering, related, shownOf, trayKey,
 } = await import(out);
 
 // History: one conversation comes out, the rest stay in order.
@@ -373,25 +373,33 @@ assert.equal(failureMessage(429, null), 'Too many questions in a short time. Wai
 assert.equal(failureMessage(500, {error: 'boom'}), UNREACHABLE);
 assert.equal(failureMessage(502, null), UNREACHABLE);
 
-// The next question in the composer: on offer only over an empty box with
-// nothing in flight; Tab takes the one shown, the arrows wrap through the
-// rest, Escape puts them away, and Shift and Tab is never held.
+// What the composer offers: the next step takes the box and Tab; a related
+// question takes it only once the reader moves to it; Escape puts both away,
+// and Shift and Tab is never held.
 {
-  const s = [
+  const step = {id: 's', title: 'S', prompt: 'What is the next step?', kind: 'step'};
+  const rel = [
     {id: 'a', title: 'A', prompt: 'How do I link records as a HIP?'},
     {id: 'b', title: 'B', prompt: 'How do I fetch records with consent?'},
   ];
+  const s = [step, ...rel];
   assert.equal(offering('', s, CLOSED, false), true);
   assert.equal(offering('typed', s, CLOSED, false), false);
   assert.equal(offering('', s, CLOSED, true), false);
   assert.equal(offering('', [], CLOSED, false), false);
-  assert.equal(offering('', s, {active: 0, dismissed: true}, false), false);
-  assert.deepEqual(trayKey('Tab', false, s, CLOSED), {kind: 'fill', text: s[0].prompt});
+  assert.equal(offering('', s, {active: -1, dismissed: true}, false), false);
+  assert.deepEqual(related(s), rel);
+  assert.equal(shownOf(s, CLOSED), step, 'the box shows the next step');
+  assert.equal(shownOf(rel, CLOSED), null, 'a related question never takes the box unasked');
+  assert.deepEqual(trayKey('Tab', false, s, CLOSED), {kind: 'fill', text: step.prompt});
+  assert.deepEqual(trayKey('Tab', false, rel, CLOSED), {kind: 'none'}, 'Tab is left alone with no step');
   assert.deepEqual(trayKey('Tab', true, s, CLOSED), {kind: 'none'});
-  assert.deepEqual(trayKey('ArrowDown', false, s, CLOSED), {kind: 'move', tray: {active: 1, dismissed: false}});
-  assert.deepEqual(trayKey('ArrowUp', false, s, CLOSED), {kind: 'move', tray: {active: 1, dismissed: false}});
-  assert.deepEqual(trayKey('Tab', false, s, {active: 1, dismissed: false}), {kind: 'fill', text: s[1].prompt});
-  assert.deepEqual(trayKey('Escape', false, s, CLOSED), {kind: 'dismiss', tray: {active: 0, dismissed: true}});
+  assert.deepEqual(trayKey('ArrowDown', false, s, CLOSED), {kind: 'move', tray: {active: 0, dismissed: false}});
+  assert.deepEqual(trayKey('ArrowDown', false, s, {active: 1, dismissed: false}), {kind: 'move', tray: {active: 1, dismissed: false}});
+  assert.deepEqual(trayKey('ArrowUp', false, s, {active: 0, dismissed: false}), {kind: 'move', tray: {active: -1, dismissed: false}});
+  assert.deepEqual(trayKey('Tab', false, s, {active: 1, dismissed: false}), {kind: 'fill', text: rel[1].prompt});
+  assert.deepEqual(trayKey('Escape', false, s, CLOSED), {kind: 'dismiss', tray: {active: -1, dismissed: true}});
+  assert.deepEqual(trayKey('ArrowDown', false, [step], CLOSED), {kind: 'none'});
   assert.deepEqual(trayKey('a', false, s, CLOSED), {kind: 'none'});
   assert.deepEqual(trayKey('Tab', false, [], CLOSED), {kind: 'none'});
 }

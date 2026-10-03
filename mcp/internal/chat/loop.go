@@ -94,6 +94,23 @@ type Suggestion struct {
 	ID     string `json:"id"`
 	Title  string `json:"title"`
 	Prompt string `json:"prompt"`
+	// Kind is "step" for the next call in the journey the answer sits in,
+	// which the composer shows in the box, and empty for a related question,
+	// which it lists.
+	Kind string `json:"kind,omitempty"`
+}
+
+// stepFromPack returns the pack's next step, or nil when the top passage is
+// not a call with a step after it.
+func stepFromPack(pack []byte) *Suggestion {
+	var pp struct {
+		Step *Suggestion `json:"step"`
+	}
+	if json.Unmarshal(pack, &pp) != nil || pp.Step == nil || pp.Step.Prompt == "" {
+		return nil
+	}
+	pp.Step.Kind = "step"
+	return pp.Step
 }
 
 const maxSuggestions = 3
@@ -890,6 +907,7 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 	// the widget to render the path as a link. Nothing else feeds it.
 	var links []Link
 	var suggestions []Suggestion
+	var step *Suggestion
 	// topType is the type of the top retrieved passage, read for the topic
 	// shape below. Empty when nothing was retrieved.
 	var topType string
@@ -927,6 +945,7 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 			packHadContent = true
 			links = linksFromPack(pack)
 			suggestions = suggestionsFromPack(pack, gateway)
+			step = stepFromPack(pack)
 			topType = topPassageType(pack)
 			for _, src := range packSources {
 				addSource(&sources, src)
@@ -960,6 +979,11 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 	// Not every answer wants a next question under it. See openEnded.
 	if !openEnded(shape, routed) {
 		suggestions = nil
+	}
+	// The next step in a journey is not a related question: it follows a
+	// closed question about one call as surely as an open one.
+	if step != nil {
+		suggestions = append([]Suggestion{*step}, suggestions...)
 	}
 	prefix := passagesPrefix + skillPrefix
 	if gateway != "" {
