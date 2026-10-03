@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["6408"],{83547(e,a,d){d.r(a),d.d(a,{__iconNode:()=>c,default:()=>t});var s=d(34438);let c=[["path",{d:"m15 6 2 2 4-4",key:"levio8"}],["path",{d:"M2 12h20A10 10 0 1 1 12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 4-10",key:"46evmv"}]],t=(0,s.A)("globe-check",c)}}]);
