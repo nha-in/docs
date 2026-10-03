@@ -427,7 +427,7 @@ export function Composer(props: Props) {
           {shown && (
             <button
               type="button"
-              class="ask-ai__tab"
+              class="ask-ai__tabkey"
               aria-label={`Use the suggestion: ${shown.prompt}`}
               onMouseDown={(event) => event.preventDefault()}
               onClick={() => props.onDraft(shown.prompt)}>
