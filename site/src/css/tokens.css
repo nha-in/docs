@@ -4,7 +4,7 @@
  * The scale and the structure are taken from the Claude Code documentation
  * site (code.claude.com/docs). The one deliberate change is the
  * accent: the ABDM blue in place of the original terracotta, on the reference
- * site's cream page, in both light and dark mode.
+ * site's page structure, on a neutral near-white page in light mode.
  *
  * Everything here is a raw value. Nothing in this file references Infima or
  * Tailwind, so both can be mapped onto it in custom.css.
@@ -43,12 +43,12 @@
   --brand-800: hsl(222 54% 23%);
   --brand-900: hsl(223 50% 17%);
 
-  /* Semantic surfaces: the reference site's cream page, white panels on top */
-  --page: #fdfdf7;
+  /* Semantic surfaces: a near-white page (sarvam.ai's #fcfcfc), white panels on top */
+  --page: #fcfcfc;
   --surface: #ffffff;
   --surface-raised: #ffffff;
-  --surface-sunken: #f7f7f0;
-  --code-surface: #f7f7f0;
+  --surface-sunken: #f5f5f5;
+  --code-surface: #f5f5f5;
   --border: rgb(0 0 0 / 0.09);
   --border-strong: rgb(0 0 0 / 0.16);
 
@@ -63,7 +63,7 @@
      the substituted colour from the percentage with an empty comment and
      leaves an invalid function behind; the declaration is then dropped and the
      bar stays clear at every scroll position. Keep this in step with --page. */
-  --chrome-veil: rgb(253 253 247 / 0.75);
+  --chrome-veil: rgb(252 252 252 / 0.75);
   --hover-soft: rgb(0 0 0 / 0.04);
   --fill-soft: rgb(0 0 0 / 0.06);
 
