@@ -386,3 +386,29 @@ func TestNextQuestionsCarryTheAuthorsQuestion(t *testing.T) {
 		t.Errorf("an atom with no questions section got one: %v", got[1])
 	}
 }
+
+// A whole-flow question opens the flows and concepts the top passage names,
+// in the question's gateway, never one already in the pack, and no more
+// than three.
+func TestExpandOpensWhatTheTopPassageIsMadeOf(t *testing.T) {
+	o := outboundOpener{refs: []index.AtomRef{
+		{ID: "hiecm.flow.m3-request-consent", Type: "flow", Title: "Request consent"},
+		{ID: "hiecm.flow.m3-hip-notify", Type: "flow", Title: "Acknowledge the consent"},
+		{ID: "nhcx.flow.claim-submit", Type: "flow", Title: "Submit a claim"},
+		{ID: "hiecm.glossary.hiu", Type: "glossary", Title: "HIU"},
+		{ID: "hiecm.concept.consent-artefact", Type: "concept", Title: "Consent artefact"},
+		{ID: "hiecm.flow.m3-fetch-records", Type: "flow", Title: "Fetch records"},
+		{ID: "hiecm.flow.m3-data-push", Type: "flow", Title: "Push the data"},
+	}}
+	inPack := map[string]bool{"hiecm.flow.m3-request-consent": true}
+	got := expand(o, "hiecm.flow.m3-consent-journey", inPack, "hiecm")
+	want := []string{"hiecm.flow.m3-hip-notify", "hiecm.concept.consent-artefact", "hiecm.flow.m3-fetch-records"}
+	if len(got) != len(want) {
+		t.Fatalf("expanded %d passages, want %d: %+v", len(got), len(want), got)
+	}
+	for i, w := range want {
+		if got[i].ID != w {
+			t.Errorf("expanded[%d] = %s, want %s", i, got[i].ID, w)
+		}
+	}
+}

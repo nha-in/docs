@@ -1779,3 +1779,32 @@ func TestRespondOffersNextOnlyWhenOpenEnded(t *testing.T) {
 		}
 	}
 }
+
+// A question for a whole flow or a whole build asks the lookup to expand;
+// a definition does not.
+func TestLookupIsAskedToExpandForAWholeFlow(t *testing.T) {
+	for _, tc := range []struct {
+		q    string
+		want bool
+	}{
+		{"Explain the complete consent and data sharing flow from consent request creation until health records are received by the HIU.", true},
+		{"How to build a PHR application", true},
+		{"what is an abha address", false},
+	} {
+		var asked bool
+		m := &fakeModel{texts: []string{"ok."}, replies: []Reply{{Text: "ok.", StopReason: "end_turn"}}}
+		svc := &Service{Model: m, MaxTokens: 100,
+			Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+				asked = ExpandFrom(ctx)
+				return json.RawMessage(`{"passages":[{"id":"hiecm.flow.x","type":"flow","title":"X","body":"x"}]}`),
+					[]Source{{ID: "hiecm.flow.x"}}, guard.PackFacts{}, nil
+			},
+		}
+		if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: tc.q}}, nil, func(string, any) error { return nil }); err != nil {
+			t.Fatal(err)
+		}
+		if asked != tc.want {
+			t.Errorf("%q: expand = %v, want %v", tc.q, asked, tc.want)
+		}
+	}
+}

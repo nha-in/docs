@@ -364,7 +364,48 @@ func (t *Tools) Lookup(ctx context.Context, in lookupIn) (PassagePack, error) {
 		}
 		pack.Passages = append(pack.Passages, p)
 	}
+	if chat.ExpandFrom(ctx) && len(hits) > 0 {
+		inPack := map[string]bool{}
+		for _, h := range hits {
+			inPack[h.ID] = true
+		}
+		pack.Passages = append(pack.Passages, expand(t.r, hits[0].ID, inPack, scope)...)
+	}
 	return pack, nil
+}
+
+// maxExpanded bounds what a whole-flow question adds to the pack: each is a
+// full body, sent on every model call of the turn.
+const maxExpanded = 3
+
+// expand opens the flows and concepts the top passage's author named as
+// related. A question for a whole build or a whole flow needs every role's
+// part in front of the model: the consent walkthrough that retrieved the
+// HIU's flow answered with the HIU's half, because the HIP's was never in
+// the pack.
+func expand(r atomOpener, topID string, inPack map[string]bool, scope string) []Passage {
+	outbound, err := r.RelatedOutbound(topID)
+	if err != nil {
+		return nil
+	}
+	var out []Passage
+	for _, a := range outbound {
+		if len(out) == maxExpanded {
+			break
+		}
+		if inPack[a.ID] || (a.Type != "flow" && a.Type != "concept") ||
+			(gatewayOf(a.ID) != scope && gatewayOf(a.ID) != "shared") {
+			continue
+		}
+		atom, err := r.GetAtom(a.ID)
+		if err != nil {
+			continue
+		}
+		inPack[a.ID] = true
+		out = append(out, Passage{ID: a.ID, Type: a.Type, Milestone: a.Milestone, Title: a.Title,
+			DocURL: index.DocLink(a.DocURL, a.DocAnchor), Body: atom.Body})
+	}
+	return out
 }
 
 // nextQuestions returns the atoms one passage's author named as related,

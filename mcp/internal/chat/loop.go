@@ -909,6 +909,13 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 			variantNote = "The reader wrote " + theirs + "; this portal's term is " + ours + ".\n"
 		}
 		lookupCtx, cancel := context.WithTimeout(ctx, toolCallTimeout)
+		// A question for a whole build or a whole flow asks the lookup to
+		// open what its top passage is made of, so every role's part is in
+		// front of the model. See server.Tools.Lookup.
+		switch route.Route(route.Input{Question: question}).Shape {
+		case route.Overview, route.Walkthrough:
+			lookupCtx = WithExpand(lookupCtx)
+		}
 		pack, packSources, f, err := s.Lookup(lookupCtx, lq)
 		cancel()
 		if err != nil {
