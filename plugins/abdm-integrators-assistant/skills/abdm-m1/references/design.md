@@ -899,6 +899,42 @@ A value your code encrypted is accepted by a real M1 call: the OTP request retur
 
 A wrong padding or digest does not fail when you encrypt. It fails at the API as a validation refusal that names the business field, which reads as a wrong Aadhaar or mobile number. Check the padding, the digest and the key before you doubt the plaintext. A stale cached certificate fails every encrypted call at once.
 
+## The terms and conditions a person agrees to before an ABHA is created
+
+### In plain words
+
+Before your system sends a person's Aadhaar number, show them the terms and
+conditions below and collect their agreement, through an "I agree" checkbox or
+another form of signature. Keep a record that they agreed. Every journey that
+creates an ABHA from Aadhaar starts here, and functional testing checks it in
+[CRT_ABHA_102](/docs/hiecm/v3/resources/test-cases/m1#crt_abha_102).
+
+Show the text exactly as written:
+
+<div className="consent-text">
+
+**Terms and Conditions**
+
+I, hereby declare that I am voluntarily sharing my Aadhaar number and demographic information issued by UIDAI, with National Health Authority (NHA) for the sole purpose of creation of ABHA number. I understand that my ABHA number can be used and shared for purposes as may be notified by ABDM from time to time including provision of healthcare services. Further, I am aware that my personal identifiable information (Name, Address, Age, Date of Birth, Gender and Photograph) may be made available to the entities working in the National Digital Health Ecosystem (NDHE) which inter alia includes stakeholders and entities such as healthcare professionals (e.g. doctors), facilities (e.g. hospitals, laboratories) and data fiduciaries (e.g. health programmes), which are registered with or linked to the Ayushman Bharat Digital Mission (ABDM), and various processes there under. I authorize NHA to use my Aadhaar number for performing Aadhaar based authentication with UIDAI as per the provisions of the Aadhaar (Targeted Delivery of Financial and other Subsidies, Benefits and Services) Act, 2016 for the aforesaid purpose. I understand that UIDAI will share my e-KYC details, or response of “Yes” with NHA upon successful authentication. I have been duly informed about the option of using other IDs apart from Aadhaar; however, I consciously choose to use Aadhaar number for the purpose of availing benefits across the NDHE. I am aware that my personal identifiable information excluding Aadhaar number / VID number can be used and shared for purposes as mentioned above. I reserve the right to revoke the given consent at any point of time as per provisions of Aadhaar Act and Regulations.
+
+</div>
+
+The `consent` block in the `enrol/byAadhaar` request records the agreement:
+`code` is `abha-enrollment` and `version` is `1.4`. Offering the text in other
+languages is optional.
+
+### What happens
+
+Display the text verbatim, require an explicit "I agree" before the OTP request is sent, and store who agreed and when. Send the `consent` block with `code` `abha-enrollment` and `version` `1.4` in `enrol/byAadhaar`.
+
+### How you know it worked
+
+The OTP request cannot be sent until the person has agreed, and your records show the agreement for every ABHA your system created.
+
+### When it goes wrong
+
+A creation flow that sends the Aadhaar number before consent is collected fails functional testing at CRT_ABHA_102, whatever the API returns.
+
 ## A suggested ABHA journey, and what holds if you design your own
 
 ### In plain words
@@ -947,6 +983,37 @@ A person with an ABHA registers with their details arriving from the profile and
 
 Two ABHA numbers for one person: the journey branched into creation without reading `accounts`. The desk types everything and then links an ABHA: the order is wrong, fetch the profile first. A refused encrypted field shown to the person as a wrong number: check the padding before you blame the number, see [encryption](/docs/hiecm/v3/concepts/encryption).
 
+## The counter QR code for scan and register
+
+### In plain words
+
+The QR code at each counter holds this URL. Your system can generate it and
+print one per counter:
+
+```text
+https://phrsbx.abdm.gov.in/share-profile?hip-id=<HIP_ID>&counter-id=<COUNTER_ID>
+```
+
+| Parameter | What it holds |
+| --- | --- |
+| `hip-id` | Your facility's HIP id, the facility ID it holds in the [HFR](/docs/hiecm/v3/getting-started/glossary#hfr). The share arrives with the same value in `X-HIP-ID` and `metaData.hipId`. |
+| `counter-id` | The counter, such as `OPD1`: 1 to 20 alphanumeric characters that you choose. It arrives as `metaData.context`. Never use the facility ID, the HIP id or the HIP name. |
+
+`phrsbx.abdm.gov.in` is the sandbox host. Use one code per counter, so the
+token you hand back belongs to that counter's queue.
+
+### What happens
+
+Build the URL from the facility ID and a counter id of your own, render it as a QR code, and print or display it at the counter. Keep the counter id stable: a reprinted code with a new counter id starts a new queue. `phrsbx.abdm.gov.in` is the sandbox host; confirm the production host at onboarding.
+
+### How you know it worked
+
+A PHR app scans the code, the patient agrees to share, and a POST arrives on your bridge at `/api/v3/hip/patient/share` whose `metaData.context` is the counter id in the code.
+
+### When it goes wrong
+
+The app scans the code but nothing arrives: the bridge URL for that facility points somewhere else. See [the callback never arrives](/docs/hiecm/v3/troubleshooting/callback-never-arrives).
+
 ## Where these came from
 
 - `hiecm.concept.m1-operations-not-a-journey`
@@ -966,4 +1033,6 @@ Two ABHA numbers for one person: the journey branched into creation without read
 - `hiecm.concept.encrypted-identifiers`
 - `hiecm.concept.gateway-session`
 - `hiecm.concept.input-encryption`
+- `hiecm.concept.m1-abha-consent`
 - `hiecm.concept.m1-journey-design`
+- `hiecm.concept.scan-and-register-qr`
