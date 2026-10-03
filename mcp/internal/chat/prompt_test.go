@@ -23,7 +23,9 @@ func TestSystemPromptFile(t *testing.T) {
 	if n := len(strings.Fields(systemPromptTemplate)); n > 1200 {
 		t.Errorf("prompt is %d words, over the 1200 ceiling for the cached core", n)
 	}
-	if PromptVersion != "v5" {
+	// The system prompt file sets the major version; a change to the shape
+	// blocks alone, which ride in the user turn, moves the minor.
+	if !strings.HasPrefix(PromptVersion, "v5") {
 		t.Errorf("PromptVersion is %q but the embedded file is prompt/v5.md; bump both together", PromptVersion)
 	}
 	rendered := SystemPrompt("https://example.test/mcp")
