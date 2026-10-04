@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["7971"],{58416(s){s.exports=JSON.parse('{"name":"@scalar/docusaurus","id":"uhi-ambulance"}')}}]);
