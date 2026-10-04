@@ -323,6 +323,20 @@ hiecm.error.abdm-9999:
     - hiecm.error.abdm-1022
     glossary:
     - shared.glossary.request-id
+hiecm.error.303001:
+  type: error
+  gateway: hiecm
+  milestone: M2
+  title: 303001, the gateway suspended the endpoint
+  summary: A 500 from the gateway after a run of timeouts on one call; back off and
+    retry the same request, and check why the call was timing out.
+  page: site/docs/_notes/hiecm/errors/m2.mdx
+  heading: '303001'
+  url: /docs/hiecm/v3/api/m2/errors#303001
+  related:
+    errors:
+    - hiecm.error.abdm-9999
+    - hiecm.error.abdm-1022
 hiecm.error.abdm-1107:
   type: error
   gateway: hiecm

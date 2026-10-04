@@ -96,19 +96,20 @@ type frontmatter struct {
 // "no error codes found" for all 310 codes the catalogue holds for NHCX.
 var errCodeRe = regexp.MustCompile(`\b(?:(?:ABDM|GATEWAY|MIS|HIS|AS|NHCX|PAYR)-\d{3,5}|ERR-PYR-[A-Z]{2,5}-\d{3})\b`)
 
-// gatewayCodeRe matches the gateway's numeric authentication codes (900900,
-// 900901, 900902) only as a JSON "code" value, so a bare six-digit number
+// gatewayCodeRe matches the gateway's numeric codes, its authentication
+// failures (900900, 900901, 900902) and its endpoint suspension (303001),
+// only as a JSON "code" value, so a bare six-digit number
 // elsewhere in the input (an OTP, a timestamp) is not read as a code.
-var gatewayCodeRe = regexp.MustCompile(`"code"\s*:\s*"?(9\d{5})\b`)
+var gatewayCodeRe = regexp.MustCompile(`"code"\s*:\s*"?(9\d{5}|303\d{3})\b`)
 
 // proseGatewayCodeRe matches the same codes where a reader writes them in
 // words: "code 900901", "error 900902", "error code: 900900". The word
 // before the number is what separates a code from an OTP or a timing.
-var proseGatewayCodeRe = regexp.MustCompile(`(?i)\b(?:code|error|err)\b[\s:#"]*(9\d{5})\b`)
+var proseGatewayCodeRe = regexp.MustCompile(`(?i)\b(?:code|error|err)\b[\s:#"]*(9\d{5}|303\d{3})\b`)
 
 // ownGatewayCodeRe is the last segment of an error atom's id when that
 // atom explains a numeric gateway code, as hiecm.error.900901 does.
-var ownGatewayCodeRe = regexp.MustCompile(`\.(9\d{5})$`)
+var ownGatewayCodeRe = regexp.MustCompile(`\.(9\d{5}|303\d{3})$`)
 
 func ExtractErrorCodes(s string) []string {
 	set := map[string]bool{}

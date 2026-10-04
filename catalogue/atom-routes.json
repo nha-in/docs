@@ -1833,6 +1833,15 @@
       "confidence": "derived"
     },
     {
+      "atom": "hiecm.error.303001",
+      "type": "error",
+      "route": "/docs/hiecm/v3/api/m2/errors",
+      "anchor": "303001",
+      "link": "/docs/hiecm/v3/api/m2/errors#303001",
+      "rule": "named by its content map",
+      "confidence": "derived"
+    },
+    {
       "atom": "hiecm.error.900900",
       "type": "error",
       "route": "/docs/hiecm/v3/api/m1/errors",

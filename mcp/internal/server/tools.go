@@ -550,7 +550,7 @@ func (t *Tools) RelatedAtoms(ctx context.Context, in getAtomIn) (map[string]any,
 	return t.versioned(map[string]any{"id": in.ID, "related": out}), nil
 }
 
-var bareGatewayCodeRe = regexp.MustCompile(`^9\d{5}$`)
+var bareGatewayCodeRe = regexp.MustCompile(`^(9\d{5}|303\d{3})$`)
 
 func (t *Tools) DecodeError(ctx context.Context, in decodeIn) (map[string]any, error) {
 	codes := catalogue.ExtractErrorCodes(in.Input)
