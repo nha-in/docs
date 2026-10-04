@@ -426,6 +426,24 @@ func expand(r atomOpener, topID string, inPack map[string]bool, scope string) []
 	return out
 }
 
+// Finds reports whether the search a question would get returns the
+// candidate: an atom by its id, or a call by an atom that documents it.
+func (t *Tools) Finds(ctx context.Context, question, id string) bool {
+	hits, err := t.r.SearchIn(ctx, question, "", "", chat.GatewayFrom(ctx), lookupHits, t.emb)
+	if err != nil {
+		return false
+	}
+	for _, h := range hits {
+		if h.ID == id {
+			return true
+		}
+		if a, err := t.r.GetAtom(h.ID); err == nil && a.Operation != "" && a.Operation == id {
+			return true
+		}
+	}
+	return false
+}
+
 // nextStep returns the call after the top passage's in its journey, as the
 // question a reader would ask to take it. Nil unless the passage is a call
 // with a step after it.
@@ -444,9 +462,10 @@ func nextStep(r stepReader, topID string) map[string]string {
 	}
 	path, _, _ = strings.Cut(path, "#")
 	return map[string]string{
-		"id":     step.Next,
-		"title":  step.Journey,
-		"prompt": "What is the next step in " + step.Journey + ", " + method + " " + path + "?",
+		"id":      step.Next,
+		"title":   step.Journey,
+		"prompt":  "What is the next step in " + step.Journey + ", " + method + " " + path + "?",
+		"summary": "The call after this one in " + step.Journey + ": " + method + " " + path,
 	}
 }
 
@@ -479,6 +498,11 @@ func nextQuestions(r atomOpener, passageID string, shown map[string]bool, scope 
 			continue
 		}
 		if a, err := r.GetAtom(next[i]["id"]); err == nil {
+			// The summary is what the suggestion model reads to know what
+			// this atom answers.
+			if s := strings.Join(strings.Fields(a.Summary), " "); s != "" {
+				next[i]["summary"] = s
+			}
 			if q := catalogue.FirstQuestion(a.Body); q != "" {
 				next[i]["question"] = q
 			}

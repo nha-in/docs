@@ -154,6 +154,20 @@ and output tokens against the 90 second deadline per question. Set it empty
 (`CHAT_REASONING_EFFORT=`) to send nothing and take the provider's default;
 other model families never receive it.
 
+### Next-question suggestions
+
+After an answer the composer offers a next step and up to three related
+questions. With `CHAT_SUGGEST_MODEL` unset they are made by rule from the
+atoms the answer's sources link to. Set it to a small Bedrock model and that
+model words them instead, after the answer has streamed, from candidates the
+server chose: the next call in the answer's journey and the linked atoms,
+each with its summary. Two checks stand between the model and the reader. A
+suggestion must name a candidate of the right kind and carry no path or code
+the candidate does not, or it is dropped. And the portal's own search must
+return that candidate for the question as worded, or it is dropped. A failed
+or unreadable call falls back to the rule-made list. The prompt is
+`internal/chat/prompt/suggest-v1.md`.
+
 Guardrails are environment-tunable: `CHAT_MAX_TOKENS` (default 1500),
 `CHAT_RATE_PER_MIN` (default 15) and `CHAT_RATE_PER_DAY` (default 100) cap
 one IP's spend (behind a reverse proxy set `TRUST_PROXY=true`, and
