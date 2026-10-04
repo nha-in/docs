@@ -374,6 +374,11 @@ func (t *Tools) Lookup(ctx context.Context, in lookupIn) (PassagePack, error) {
 		}
 		pack.Passages = append(pack.Passages, p)
 	}
+	// What a reader does next before what a word means, across the whole
+	// pack and not only within a passage: "how do I integrate m1?" offered
+	// the P2, P3 and P4 definitions, siblings of its second passage, ahead
+	// of the M1 flows its third passage named.
+	sort.SliceStable(pack.Next, func(i, j int) bool { return nextRank[pack.Next[i]["type"]] < nextRank[pack.Next[j]["type"]] })
 	if len(hits) > 0 {
 		pack.Step = nextStep(t.r, hits[0].ID)
 	}

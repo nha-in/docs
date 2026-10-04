@@ -935,6 +935,15 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 			lookupCtx = WithExpand(lookupCtx)
 		}
 		pack, packSources, f, err := s.Lookup(lookupCtx, lq)
+		// A follow-up also gets what the question before it retrieved. See
+		// mergePacks. A failure here costs only that half.
+		if prev := carriedFrom(turns); err == nil && len(pack) > 0 && prev != "" {
+			pq, _ := guard.MaskPII(prev)
+			if prevPack, prevSources, _, perr := s.Lookup(lookupCtx, pq); perr == nil && len(prevPack) > 0 {
+				pack = mergePacks(pack, prevPack)
+				packSources = append(packSources, prevSources...)
+			}
+		}
 		cancel()
 		if err != nil {
 			slog.Warn("pre-retrieval failed, continuing without it", "error", err)
@@ -973,6 +982,13 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 	// best passage is a flow, is a topic: "consent flow", "link records".
 	// The define shape compresses a flow into four sentences; the topic
 	// shape orients and offers the questions the phrase usually means.
+	// A few words added to the question before them, "as a hmis" after "how
+	// do I integrate m1?", are not a term to define. The answer takes the
+	// shape the two make together.
+	if prev := carriedFrom(turns); shape == string(route.Define) && isTopicPhrase(question) && prev != "" {
+		routed = route.Route(route.Input{Question: prev + " " + question, HasAttachment: lastUserAttachment(turns) != nil})
+		shape = string(routed.Shape)
+	}
 	if shape == string(route.Define) && isTopicPhrase(question) && topType == "flow" {
 		shape = string(route.Topic)
 	}
@@ -1499,11 +1515,66 @@ var refersBackRe = regexp.MustCompile(`(?i)\b(?:that|this|those|these|it|its|the
 
 func lookupQuery(turns []Turn) string {
 	last := lastUserText(turns)
-	if len(strings.Fields(last)) > 4 && !refersBackRe.MatchString(last) {
-		return last
-	}
-	if prev := previousUserText(turns); prev != "" {
+	if prev := carriedFrom(turns); prev != "" {
 		return prev + " " + last
 	}
 	return last
+}
+
+// carriedFrom returns the question a follow-up leans on, or "" when the
+// turn stands alone: it is long enough and points back at nothing, or there
+// is no earlier question.
+func carriedFrom(turns []Turn) string {
+	last := lastUserText(turns)
+	if len(strings.Fields(last)) > 4 && !refersBackRe.MatchString(last) {
+		return ""
+	}
+	return previousUserText(turns)
+}
+
+// mergePacks interleaves two packs' passages, a's first, dropping b's
+// repeats, and keeps everything else of a. A follow-up's own words can
+// crowd out what it follows: "as a hmis" after "how do I integrate m1?"
+// retrieved five definitions of hospital software and nothing about M1,
+// because the rare word wins the search. The earlier question's passages
+// go in beside them, so the answer has both halves in front of it.
+func mergePacks(a, b []byte) []byte {
+	var pa map[string]json.RawMessage
+	var pb struct {
+		Passages []json.RawMessage `json:"passages"`
+	}
+	var as []json.RawMessage
+	if json.Unmarshal(a, &pa) != nil || json.Unmarshal(pa["passages"], &as) != nil || json.Unmarshal(b, &pb) != nil {
+		return a
+	}
+	idOf := func(raw json.RawMessage) string {
+		var p struct {
+			ID string `json:"id"`
+		}
+		_ = json.Unmarshal(raw, &p)
+		return p.ID
+	}
+	seen := map[string]bool{}
+	for _, p := range as {
+		seen[idOf(p)] = true
+	}
+	var out []json.RawMessage
+	for i := 0; i < len(as) || i < len(pb.Passages); i++ {
+		if i < len(as) {
+			out = append(out, as[i])
+		}
+		if i < len(pb.Passages) && !seen[idOf(pb.Passages[i])] {
+			seen[idOf(pb.Passages[i])] = true
+			out = append(out, pb.Passages[i])
+		}
+	}
+	merged, err := json.Marshal(out)
+	if err != nil {
+		return a
+	}
+	pa["passages"] = merged
+	if raw, err := json.Marshal(pa); err == nil {
+		return raw
+	}
+	return a
 }

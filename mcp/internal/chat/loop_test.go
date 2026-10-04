@@ -1808,3 +1808,42 @@ func TestLookupIsAskedToExpandForAWholeFlow(t *testing.T) {
 		}
 	}
 }
+
+// A follow-up's pack carries the earlier question's passages beside its
+// own, each once, and keeps the rest of its own pack.
+func TestMergePacksInterleavesAndDropsRepeats(t *testing.T) {
+	a := []byte(`{"passages":[{"id":"x"},{"id":"y"}],"next":[{"id":"n"}]}`)
+	b := []byte(`{"passages":[{"id":"m1"},{"id":"x"},{"id":"m2"}]}`)
+	var got struct {
+		Passages []struct{ ID string } `json:"passages"`
+		Next     []struct{ ID string } `json:"next"`
+	}
+	if err := json.Unmarshal(mergePacks(a, b), &got); err != nil {
+		t.Fatal(err)
+	}
+	var ids []string
+	for _, p := range got.Passages {
+		ids = append(ids, p.ID)
+	}
+	if strings.Join(ids, " ") != "x m1 y m2" || len(got.Next) != 1 {
+		t.Errorf("merged: %v, next %v", ids, got.Next)
+	}
+	if string(mergePacks(a, []byte("not json"))) != string(a) {
+		t.Error("a pack that cannot be read leaves the first as it was")
+	}
+}
+
+// A short turn after a question leans on it; a full question does not.
+func TestCarriedFrom(t *testing.T) {
+	first := Turn{Role: "user", Text: "how do I integrate m1?"}
+	answer := Turn{Role: "assistant", Text: "..."}
+	if got := carriedFrom([]Turn{first, answer, {Role: "user", Text: "as a hmis"}}); got != first.Text {
+		t.Errorf("a few words carry the question before them, got %q", got)
+	}
+	if got := carriedFrom([]Turn{first, answer, {Role: "user", Text: "what is the encryption algorithm used in data transfer"}}); got != "" {
+		t.Errorf("a full question stands alone, got %q", got)
+	}
+	if got := carriedFrom([]Turn{{Role: "user", Text: "consent flow"}}); got != "" {
+		t.Errorf("a first question has nothing before it, got %q", got)
+	}
+}
