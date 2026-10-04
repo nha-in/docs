@@ -17,6 +17,13 @@ sources:
     note: >
       Section 1.8. Observed by an integrator on 2026-09-16, not yet run
       from this repository.
+  - url: https://github.com/mgrmtech/fidelius-cli
+    status: reference
+    note: >
+      The empty HKDF info, the absent AAD and the 16 byte tag. An
+      integrator's implementation matched the Fidelius CLI byte for byte
+      over 60 rounds on 2026-10-04, and a live data push decrypted and
+      displayed in the ABHA app with the same parameters.
   - url: https://sandbox.abdm.gov.in/sandbox/v3/new-documentation
     status: docs-only
     note: >
@@ -75,11 +82,13 @@ The first 20 bytes are the HKDF salt and the last 12 bytes are the
 AES-GCM IV.
 
 **The key.** `key = HKDF-SHA256(sharedSecretX, salt, 32 bytes)`, where
-`sharedSecretX` is the x coordinate of the ECDH result.
+`sharedSecretX` is the x coordinate of the ECDH result and the HKDF
+`info` is empty.
 
-**The cipher.** AES-256-GCM with that key and IV. The authentication
-tag is appended to the ciphertext, and the whole thing is base64
-encoded into the push entry's `content`.
+**The cipher.** AES-256-GCM with that key and IV, and no additional
+authenticated data. The 16 byte authentication tag is appended to the
+ciphertext, and the whole thing is base64 encoded into the push entry's
+`content`.
 
 ## How you know it worked
 
@@ -101,7 +110,8 @@ the last 65 bytes.
 
 Using the whole XOR as the IV, or the full 32 byte shared secret in
 place of its x coordinate. Both derive a different key and the tag check
-fails.
+fails. So does passing anything as the HKDF `info` or as GCM additional
+data: both are empty.
 
 Reusing a key pair or nonce across transfers. The maths does not
 object; the scheme does. Generate fresh ones per transfer.

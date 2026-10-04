@@ -369,6 +369,15 @@
     "url": "/docs/hiecm/v3/concepts/consent#consent-in-a-phr-app"
   },
   {
+    "id": "hiecm.concept.data-flow-encryption",
+    "type": "concept",
+    "gateway": "hiecm",
+    "source": "page",
+    "page": "site/docs/hiecm/v3/concepts/data-flow.mdx",
+    "heading": "data-flow-encryption",
+    "url": "/docs/hiecm/v3/concepts/data-flow#data-flow-encryption"
+  },
+  {
     "id": "hiecm.concept.encrypted-identifiers",
     "type": "concept",
     "gateway": "hiecm",

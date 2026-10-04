@@ -1005,3 +1005,25 @@ hiecm.flow.scan-and-register-share:
     - hiecm.concept.callback-authenticity
     flows:
     - hiecm.flow.p2-scan-and-share
+hiecm.concept.data-flow-encryption:
+  type: concept
+  gateway: hiecm
+  milestone: M2
+  title: How a health record is encrypted between HIP and HIU
+  summary: ECDH on Curve25519 with a fresh key pair and nonce per transfer, the
+    nonce XOR split into HKDF salt and IV, HKDF-SHA256 with an empty info, and
+    AES-256-GCM with no additional data and the 16 byte tag appended.
+  page: site/docs/hiecm/v3/concepts/data-flow.mdx
+  heading: data-flow-encryption
+  url: /docs/hiecm/v3/concepts/data-flow#data-flow-encryption
+  related:
+    concepts:
+    - shared.concept.fidelius-ecdh-interop
+    glossary:
+    - hiecm.glossary.ecdh
+    - hiecm.glossary.key-material
+    endpoints:
+    - hiecm.endpoint.m2-hip-health-information-on-request
+    - hiecm.endpoint.m3-hiu-health-information-request
+    flows:
+    - hiecm.flow.m3-fetch-records
