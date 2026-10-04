@@ -1,0 +1,277 @@
+# M2 Health Information Provider: Creation, Linking and Sharing of Health Records
+
+Milestone 2 (M2) enables a healthcare facility, acting as a [Health Information Provider](/docs/pr-113/docs/hiecm/v3/getting-started/glossary#hip) (HIP), to create digital health records, organise them into [care contexts](/docs/pr-113/docs/hiecm/v3/concepts/care-context) and link them with the patient's [ABHA Address](/docs/pr-113/docs/hiecm/v3/getting-started/glossary#abha-address). It also enables patients to [discover](/docs/pr-113/docs/hiecm/v3/getting-started/glossary#discovery) and link their health records through a Personal Health Record ([PHR](/docs/pr-113/docs/hiecm/v3/getting-started/glossary#phr)) application and facilitates the secure exchange of encrypted health information within the ABDM ecosystem.
+
+The codes an M2 integration may meet across discovery, linking, consent, encryption and data exchange are listed in one place: [M2 error codes](/docs/pr-113/docs/hiecm/v3/api/m2/errors).
+
+## In short
+
+Health Information Provider (HIP) links a patient's health records with the patient's ABHA Address and makes the linked records available within the ABDM ecosystem.
+
+## M2 functionalities
+
+**Care Context:** A [Care Context](/docs/pr-113/docs/hiecm/v3/concepts/care-context) represents a logical grouping of a patient's health records generated during an episode of care at a healthcare facility. The Health Information Provider (HIP) links the Care Context with the patient's ABHA Address.
+
+Health records may be linked through either the HIP-Initiated Linking flow or the User-Initiated Linking flow.
+
+**HIP-Initiated Linking:** This flow enables an ABDM-enabled healthcare facility to authenticate the patient, generate a link token and link the relevant Care Contexts with the patient's ABHA Address. Upon successful linking, the Care Contexts are made available in the patient's [PHR application](/docs/pr-113/docs/hiecm/v3/concepts/participants/phr).
+
+**User-Initiated Linking:** This flow enables a patient to discover and link health records previously created at a healthcare facility. Upon initiation of a discovery request through the PHR application, the healthcare facility matches the patient's demographic details and returns the available Care Contexts. The patient may thereafter select and link the relevant Care Contexts with their ABHA Address.
+
+**Data Transfer:** This flow enables the HIP to prepare the applicable health records in the prescribed [FHIR](/docs/pr-113/docs/hiecm/v3/getting-started/glossary#fhir) format, package them as FHIR Document Bundles, encrypt them and securely transfer them through the ABDM ecosystem.
+
+## Prerequisites
+
+Prior to the implementation of Milestone 2 (M2), the following prerequisites shall be fulfilled:
+
+1. The healthcare facility shall be registered in the Health Facility Registry ([HFR](/docs/pr-113/docs/hiecm/v3/getting-started/glossary#hfr)) and shall possess a valid HFR ID (Facility ID).
+2. The HIP ID (Facility ID) shall be mapped to the corresponding Client ID to enable receipt of callbacks through the NHPR Portal or through [M4](/docs/pr-113/docs/hiecm/v3/milestones/m4) APIs using software linkage.
+3. A valid callback URL shall be configured against the Client ID through the [Update Bridge API](/docs/pr-113/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/03-gateway-patch-gateway-v3-bridge-url).
+
+## FHIR-based health records
+
+Within the ABDM ecosystem, health records shall be created and exchanged in accordance with the Fast Healthcare Interoperability Resources (FHIR) standard to facilitate the secure and interoperable exchange of health information.
+
+FHIR is a recognised standard for structuring and exchanging digital health information.
+
+ABDM FHIR Implementation Guide: [nrces.in/ndhm/fhir/r4](https://nrces.in/ndhm/fhir/r4/index.html)
+
+### Health information types
+
+ABDM defines eight Health Information (HI) Types, comprising seven clinical artefacts and one billing artefact.
+
+| Name                                                                                                    | Definition                                                                                                                                                                                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [DiagnosticReportRecord](https://nrces.in/ndhm/fhir/r4/StructureDefinition-DiagnosticReportRecord.html) | The Clinical Artifact represents diagnostic reports including Radiology and Laboratory reports that can be shared across the health ecosystem.                                                                                                                                                      |
+| [DischargeSummaryRecord](https://nrces.in/ndhm/fhir/r4/StructureDefinition-DischargeSummaryRecord.html) | Clinical document used to represent the discharge summary record for ABDM HDE data set.                                                                                                                                                                                                             |
+| [HealthDocumentRecord](https://nrces.in/ndhm/fhir/r4/StructureDefinition-HealthDocumentRecord.html)     | The Clinical Artifact represents the unstructured historical health records as a single of multiple Health Record Documents generally uploaded by the patients through the Health Locker and can be shared across the health ecosystem.                                                             |
+| [ImmunizationRecord](https://nrces.in/ndhm/fhir/r4/StructureDefinition-ImmunizationRecord.html)         | The Clinical Artifact represents the Immunization records with any additional documents such as vaccine certificate, the next immunization recommendations, etc. This can be further shared across the health ecosystem.                                                                            |
+| [OPConsultRecord](https://nrces.in/ndhm/fhir/r4/StructureDefinition-OPConsultRecord.html)               | The Clinical Artifact represents the outpatient visit consultation note which may include clinical information on any OP examinations, procedures along with medication administered, and advice that can be shared across the health ecosystem.                                                    |
+| [PrescriptionRecord](https://nrces.in/ndhm/fhir/r4/StructureDefinition-PrescriptionRecord.html)         | The Clinical Artifact represents the medication advice to the patient in compliance with the Pharmacy Council of India (PCI) guidelines, which can be shared across the health ecosystem.                                                                                                           |
+| [WellnessRecord](https://nrces.in/ndhm/fhir/r4/StructureDefinition-WellnessRecord.html)                 | The Clinical Artifact represents regular wellness information of patients typically through the Patient Health Record (PHR) application covering clinical information such as vitals, physical examination, general wellness, women wellness, etc., that can be shared across the health ecosystem. |
+| [InvoiceRecord](https://nrces.in/ndhm/fhir/r4/StructureDefinition-InvoiceRecord.html)                   | The billing artifact represents the invoice details such as pharmacy invoice, consultation invoice etc. along with the support for scanned documents attached for the patient which can be shared across the health ecosystem.                                                                      |
+
+**Note:** Each applicable Health Information Type shall be represented as a FHIR Document Bundle in accordance with the prescribed ABDM standards.
+
+## Build M2 with an AI coding assistant
+
+The M2 skill gives an AI coding assistant this milestone as one file: every M2 call and callback, its error codes and its test cases. Install it, or open it in your assistant in one click.
+
+M2 agent skill
+
+Every M2 call and callback with its error codes in one file: 24 operations, 120 codes.
+
+[SKILL.md](/docs/pr-113/skills/abdm-m2/SKILL.md "The router. Use the command below to take the references with it.")
+
+- ScaffoldThe loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.
+- DesignWhat the journey around the calls has to do, and what a screen is forbidden to claim.
+- Integrate24 operations, with their hosts and headers.
+- Debug120 error codes, each with what to do about it.
+
+`mkdir -p .claude/skills/abdm-m2/references && curl -fsSL https://nha-in.github.io/docs/pr-113/skills/abdm-m2/SKILL.md -o .claude/skills/abdm-m2/SKILL.md && for f in scaffold design integrate debug; do curl -fsSL https://nha-in.github.io/docs/pr-113/skills/abdm-m2/references/$f.md -o .claude/skills/abdm-m2/references/$f.md; done`
+
+[Open in Claude](claude://code/new?q=Install%20the%20ABDM%20M2%20agent%20skill%20into%20this%20project%2C%20then%20help%20me%20use%20it.%0A%0ARun%20this%3A%0Amkdir%20-p%20.claude%2Fskills%2Fabdm-m2%2Freferences%20%26%26%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fpr-113%2Fskills%2Fabdm-m2%2FSKILL.md%20-o%20.claude%2Fskills%2Fabdm-m2%2FSKILL.md%20%26%26%20for%20f%20in%20scaffold%20design%20integrate%20debug%3B%20do%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fpr-113%2Fskills%2Fabdm-m2%2Freferences%2F%24f.md%20-o%20.claude%2Fskills%2Fabdm-m2%2Freferences%2F%24f.md%3B%20done%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
+
+Drops the skill into this project. Claude loads it when a task matches.
+
+How to use it
+
+1. Run the command above in the repository you are integrating.
+2. Ask your agent for the job in your own words. "Link a care context for this patient", "why am I getting ABDM-1000". The skill loads when the task matches it.
+3. Check what it writes against these pages. The skill carries the facts, not the sandbox: nothing in it has been run against ABDM.
+4. Open in Claude needs that app installed. It fills the composer and waits: nothing runs until you read it and press Enter.
+
+## Workflow overview
+
+This section provides an overview of the key Milestone 2 (M2) workflows through sequence diagrams. The diagrams illustrate the high-level interactions among the participating systems before the detailed API specifications are presented.
+
+## Journey 1: HIP initiated linking
+
+The Health Information Provider (HIP) initiates the linking process using the patient's ABHA details. Upon successful authentication, a link token valid for six months is generated, enabling the relevant Care Contexts to be linked with the patient's ABHA Address.
+
+The steps, as drawn:
+
+1. Your system calls `POST /api/hiecm/v3/token/generate-token` with the patient's ABHA number or ABHA address, name, gender and year of birth.
+2. The gateway answers 202 Accepted.
+3. The gateway calls `POST /api/v3/hip/token/on-generate-token` on your bridge with the ABHA address and the link token.
+4. Your system answers 202 Accepted and stores the link token against the patient.
+5. Your system calls `POST /api/hiecm/hip/v3/link/carecontext` with the gateway access token, the link token in `X-Link-Token`, and the patient's care contexts: for each, a reference number and a display name, the HI type and the count of records.
+6. The gateway answers 202 Accepted and queues the care contexts.
+7. The gateway calls `POST /api/v3/link/on_carecontext` on your bridge with the status of the linking.
+8. Your system answers 202 Accepted.
+9. The gateway pushes a notification to the patient's ABHA or PHR app that a record is linked.
+10. The patient sees the new record linked in the app.
+
+When a linked care context changes, tell ABDM with `POST /api/hiecm/hip/v3/link/context/notify`. The outcome arrives on your bridge at `/api/v3/links/context/on-notify`.
+
+Notes for AI agents
+
+**Before you start.** The facility holds a facility ID and a bridge linked with type HIP: see [Journey 4 on M4](/docs/pr-113/docs/hiecm/v3/milestones/m4#m4-link-bridge). You hold a gateway session token, and the patient has an ABHA address.
+
+**What happens.** Generate the link token; the 202 carries nothing, and the token arrives on `/api/v3/hip/token/on-generate-token`. Store it against the patient and reuse it: it is valid for six months. Link with `X-Link-Token` set to it, and wait for `/api/v3/link/on_carecontext`.
+
+**How you know it worked.** A POST reaches `/api/v3/link/on_carecontext` whose `response.requestId` matches the `REQUEST-ID` of your link call and whose status reads Successfully Linked care context. The care context then appears when the patient runs discovery against your facility. The 202 on the link call is receipt, not success.
+
+**When it goes wrong.** `ABDM-1056`: the care context is already linked. `ABDM-1038`: the ABHA address does not match the link token. `ABDM-1026`: the link token is invalid, so generate a fresh one. `ABDM-2406`: calls made out of the logical sequence. No callback at all: see [the callback never arrives](/docs/pr-113/docs/hiecm/v3/troubleshooting/callback-never-arrives).
+
+## Journey 2: user initiated linking
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor U as User
+    participant P as ABHA / PHR app
+    participant G as ABDM Gateway
+    participant B as HIP bridge URL
+    participant S as HIP system
+    Note over U,S: Phase 1: patient triggers discovery
+    U->>P: Search for records at a specific HIP
+    P->>G: Initiate discovery, patient demographics and HIP ID
+    G->>B: POST callback_url/api/v3/hip/patient/care-context/discover<br/>transactionId, patient {id, name, gender, dob, verifiedIdentifiers}
+    B->>S: Look up matching records
+    S->>G: POST /api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover<br/>Authorization: Bearer accessToken<br/>transactionId, patient [referenceNumber, display,<br/>careContexts [referenceNumber, display], hiType, count],<br/>response {requestId}
+    G-->>S: 202 Accepted
+    G->>P: Forward discovered records to the PHR app
+    P->>U: Display discovered care contexts
+    U->>P: Select care contexts to link
+    Note over U,S: Phase 2: patient initiates link
+    P->>G: POST /api/hiecm/user-initiated-linking/v3/link/care-context/init<br/>selected care contexts
+    G->>B: POST callback_url/api/v3/hip/link/care-context/init<br/>transactionId, patient {id, referenceNumber, careContexts}
+    B->>S: Prepare OTP verification
+    S->>G: POST /api/hiecm/user-initiated-linking/v3/link/care-context/on-init<br/>Authorization: Bearer accessToken<br/>transactionId, link {referenceNumber, authenticationType DIRECT,<br/>meta {communicationMedium MOBILE, communicationHint OTP,<br/>communicationExpiry}}, response {requestId}
+    G-->>S: 202 Accepted
+    G->>P: OTP sent to the patient's mobile
+    Note over U,S: Phase 3: patient enters OTP, link confirm
+    U->>P: Enter the OTP received on mobile
+    P->>G: POST /api/hiecm/user-initiated-linking/v3/link/care-context/confirm<br/>OTP and linkRefNumber
+    G->>B: POST callback_url/api/v3/hip/link/care-context/confirm<br/>transactionId, confirmation {linkRefNumber, token}
+    B->>S: Validate the OTP, confirm the link
+    S->>G: POST /api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm<br/>Authorization: Bearer accessToken<br/>patient [referenceNumber, display,<br/>careContexts [referenceNumber, display], hiType, count],<br/>response {requestId}
+    G-->>S: 202 Accepted
+    G->>P: Linking confirmed
+    P->>U: Care contexts linked successfully
+```
+
+The User-Initiated Linking/Discovery flow is initially applicable to patients whose health records were created without an ABHA Address. ABDM enables such patients to discover health records available at ABDM enabled healthcare facilities previously visited through a Personal Health Record (PHR) application.
+
+The HIE-CM sends the discovery request to the concerned Health Information Provider (HIP). The HIP matches the demographic details shared by the PHR application against its records and, upon a successful match, returns the available Care Contexts corresponding to the patient. The patient may thereafter select and link the required Care Contexts with their ABHA Address.
+
+The steps, as drawn:
+
+1. The user searches for records at a specific HIP in the PHR app.
+2. The PHR app initiates discovery with the patient's demographics and the HIP ID.
+3. The gateway calls `POST /api/v3/hip/patient/care-context/discover` on your bridge with the transaction ID and the patient's id, name, gender, date of birth and verified identifiers.
+4. Your system looks up the matching records.
+5. Your system calls `POST /api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover` with the transaction ID, the matching care contexts and the request ID it answers.
+6. The gateway answers 202 Accepted.
+7. The gateway forwards the discovered records to the PHR app.
+8. The PHR app displays the discovered care contexts.
+9. The user selects the care contexts to link.
+10. The PHR app calls `POST /api/hiecm/user-initiated-linking/v3/link/care-context/init` with the selected care contexts.
+11. The gateway calls `POST /api/v3/hip/link/care-context/init` on your bridge with the transaction ID, the patient's id and reference number, and the care contexts.
+12. Your system prepares OTP verification.
+13. Your system calls `POST /api/hiecm/user-initiated-linking/v3/link/care-context/on-init` with the transaction ID, a link reference number, authentication type DIRECT, and the communication medium, hint and expiry.
+14. The gateway answers 202 Accepted.
+15. An OTP is sent to the patient's mobile.
+16. The user enters the OTP received on the mobile.
+17. The PHR app calls `POST /api/hiecm/user-initiated-linking/v3/link/care-context/confirm` with the OTP and the link reference number.
+18. The gateway calls `POST /api/v3/hip/link/care-context/confirm` on your bridge with the transaction ID, the link reference number and the token.
+19. Your system validates the OTP and confirms the link.
+20. Your system calls `POST /api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm` with the linked care contexts and the request ID it answers.
+21. The gateway answers 202 Accepted.
+22. The gateway tells the PHR app the linking is confirmed.
+23. The PHR app shows the user that the care contexts are linked.
+
+## Journey 3: health information request and transfer
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor U as Patient
+    participant H as HIU system (data requester)
+    participant CM as Consent manager (ABDM Gateway)
+    participant B as HIP bridge URL
+    participant S as HIP system
+    participant G as ABDM Gateway
+    Note over U,G: Phase 1: HIU requests consent
+    H->>CM: POST /api/hiecm/consent/v3/request/init<br/>patient ABHA, HI types, date range
+    CM->>U: Notify the patient in the ABHA app, consent request pending
+    U->>CM: Approve consent in the ABHA app
+    Note over U,G: Phase 2: consent artefact delivery to the HIP
+    CM->>B: POST callback_url/api/v3/consent/request/hip/notify<br/>notification {consentId, status GRANTED,<br/>consentDetail {hiTypes, dateRange, careContexts},<br/>signature, grantAcknowledgement}
+    S->>G: POST /api/hiecm/consent/v3/request/hip/on-notify<br/>Authorization: Bearer accessToken<br/>acknowledgement {status OK, consentId}, response {requestId}
+    G-->>S: 202 Accepted, acknowledgement recorded
+    Note over U,G: Phase 3: HIU requests health data
+    H->>G: POST /api/hiecm/data-flow/v3/health-information/request<br/>consent {id: consentId}, dateRange,<br/>dataPushUrl, keyMaterial {publicKey}
+    G->>B: POST callback_url/api/v3/hip/health-information/request<br/>transactionId, hiRequest {consent, dateRange,<br/>dataPushUrl, keyMaterial}
+    S->>G: POST /api/hiecm/data-flow/v3/health-information/hip/on-request<br/>Authorization: Bearer accessToken<br/>hiRequest {transactionId, sessionStatus ACKNOWLEDGED},<br/>response {requestId}
+    G-->>S: 202 Accepted
+    Note over U,G: Phase 4: HIP prepares and pushes encrypted data
+    S->>S: Fetch matching records for the consent date range
+    S->>S: Encrypt FHIR bundles with the HIU public key (ECDH)
+    loop For each page of records
+        S->>H: POST dataPushUrl<br/>pageNumber, pageCount, transactionId,<br/>entries [{content: encrypted FHIR+JSON, media application/fhir+json,<br/>checksum, careContextReference}], keyMaterial {publicKey, nonce}
+        H-->>S: 202 Accepted
+    end
+    Note over U,G: Phase 5: HIP notifies the gateway that the transfer is complete
+    S->>G: POST /api/hiecm/data-flow/v3/health-information/notify<br/>Authorization: Bearer accessToken<br/>notification {consentId, transactionId, doneAt,<br/>notifier {type HIP, id HIP_ID},<br/>statusNotification {sessionStatus TRANSFERRED, hipId,<br/>statusResponses [{careContextReference, hiStatus OK, description}]}}
+    G-->>S: 202 Accepted
+    G->>H: Notify the HIU, data transfer complete
+    H->>H: Decrypt and process the FHIR records
+```
+
+The Health Information Provider (HIP) prepares the applicable structured and unstructured health records in accordance with the prescribed NRCeS FHIR standards. The records are packaged as FHIR Document Bundles, encrypted and securely transferred through the ABDM ecosystem.
+
+The steps, as drawn:
+
+1. The HIU calls `POST /api/hiecm/consent/v3/request/init` with the patient's ABHA address, the HI types and the date range.
+2. The consent manager notifies the patient in the ABHA app that a consent request is pending.
+3. The patient approves the consent in the ABHA app.
+4. The consent manager calls `POST /api/v3/consent/request/hip/notify` on your bridge with the consent ID, status GRANTED, the consent detail (HI types, date range, care contexts), the signature and the grant acknowledgement.
+5. Your system calls `POST /api/hiecm/consent/v3/request/hip/on-notify` with the acknowledgement (status OK, consent ID) and the request ID it answers.
+6. The gateway answers 202 Accepted and records the acknowledgement.
+7. The HIU calls `POST /api/hiecm/data-flow/v3/health-information/request` with the consent ID, the date range, its data push URL and its key material.
+8. The gateway calls `POST /api/v3/hip/health-information/request` on your bridge with the transaction ID and the request: consent, date range, data push URL and key material.
+9. Your system calls `POST /api/hiecm/data-flow/v3/health-information/hip/on-request` with the transaction ID, session status ACKNOWLEDGED and the request ID it answers.
+10. The gateway answers 202 Accepted.
+11. Your system fetches the matching records for the consent date range.
+12. Your system encrypts the FHIR bundles with the HIU's public key ([ECDH](/docs/pr-113/docs/hiecm/v3/getting-started/glossary#ecdh)).
+13. For each page of records, your system posts to the HIU's data push URL: the page number and count, the transaction ID, the entries (encrypted FHIR+JSON content, media type application/fhir+json, checksum, care context reference) and your key material (public key, nonce).
+14. The HIU answers 202 Accepted for each page.
+15. Your system calls `POST /api/hiecm/data-flow/v3/health-information/notify` with the consent ID, the transaction ID, the completion time, the notifier (type HIP, your HIP ID), session status TRANSFERRED and a status response per care context.
+16. The gateway answers 202 Accepted.
+17. The gateway notifies the HIU that the data transfer is complete.
+18. The HIU decrypts and processes the FHIR records.
+
+## Milestone 2 test cases
+
+The [Milestone 2 (M2) test cases](/docs/pr-113/docs/hiecm/v3/resources/test-cases/m2) define the scenarios against which the integration is tested. Each test case includes a unique test case ID, execution steps, expected results and the applicable API calls.
+
+**Note:** The test cases have not yet been added.
+
+## Next
+
+- The calls, callbacks and error codes: [M2 API reference](/docs/pr-113/docs/hiecm/v3/api/m2).
+- The next milestone: [M3 Health Information User](/docs/pr-113/docs/hiecm/v3/milestones/m3).
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant S as Your system (HIP)
+    participant G as ABDM Gateway
+    participant P as ABHA / PHR app
+    Note over S,G: Step 1: generate link token
+    S->>G: POST /api/hiecm/v3/token/generate-token<br/>abhaNumber, abhaAddress, name, gender, yearOfBirth
+    G-->>S: 202 Accepted
+    Note over S,G: Step 2: ABDM responds asynchronously with token details
+    G-)S: POST /api/v3/hip/token/on-generate-token<br/>abhaAddress, linkToken
+    S-->>G: 202 Accepted
+    Note over S,G: Step 3: push care contexts
+    S->>G: POST /api/hiecm/hip/v3/link/carecontext<br/>Authorization: Bearer accessToken, X-Link-Token: linkToken<br/>abhaNumber, abhaAddress, patient [referenceNumber, display,<br/>careContexts [referenceNumber, display], hiType, count]
+    G-->>S: 202 Accepted, care contexts queued
+    Note over S,G: Step 4: ABDM responds asynchronously with the status of linking
+    G-)S: POST /api/v3/link/on_carecontext<br/>status
+    S-->>G: 202 Accepted
+    G-)P: Push notification, record linked
+    P->>P: Patient sees a new record linked
+```
