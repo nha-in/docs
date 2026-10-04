@@ -473,7 +473,11 @@ func nextQuestions(r atomOpener, passageID string, shown map[string]bool, scope 
 	// The ones a reader can be offered carry the question their author
 	// wrote, when there is one: a title is a poor thing to put in a
 	// reader's mouth.
-	for i := 0; i < len(next) && i < maxNextQuestions; i++ {
+	for i := range next {
+		next[i]["question"] = nudge(next[i]["type"], next[i]["title"])
+		if i >= maxNextQuestions {
+			continue
+		}
 		if a, err := r.GetAtom(next[i]["id"]); err == nil {
 			if q := catalogue.FirstQuestion(a.Body); q != "" {
 				next[i]["question"] = q
@@ -481,6 +485,46 @@ func nextQuestions(r atomOpener, passageID string, shown map[string]bool, scope 
 		}
 	}
 	return next
+}
+
+// doVerbs open a flow title that says what to do, and ruleVerbs a design
+// rule's. Either reads as a question once a few words are put before it.
+var (
+	doVerbs = map[string]bool{"Create": true, "Receive": true, "Link": true, "Find": true, "Fetch": true,
+		"Subscribe": true, "Sign": true, "Share": true, "Request": true, "Register": true, "Onboard": true,
+		"Log": true, "Get": true, "Change": true, "Verify": true, "Update": true, "Send": true, "Scan": true,
+		"Download": true, "Approve": true, "Revoke": true, "Raise": true, "Check": true, "Validate": true}
+	ruleVerbs = map[string]bool{"Never": true, "Refuse": true, "Ask": true, "Read": true, "Present": true, "Survey": true}
+)
+
+// nudge turns an atom's title into something a reader would say. Titles
+// are written for an index, "Consent, what it authorises and how it ends",
+// and offered as they stand they read as concepts thrown at the reader.
+// An atom whose author wrote a question keeps it; this is for the rest.
+// ponytail: rules over the title's first word. The questions generator of
+// the routed retrieval plan replaces this when it lands.
+func nudge(typ, title string) string {
+	head, _, _ := strings.Cut(title, ", ")
+	first, _, _ := strings.Cut(head, " ")
+	// Lower the first letter of an ordinary word, never of HIP or M1.
+	said := head
+	if len(first) > 1 && first == strings.ToUpper(first[:1])+strings.ToLower(first[1:]) && !strings.ContainsAny(first, "0123456789") {
+		said = strings.ToLower(head[:1]) + head[1:]
+	}
+	switch {
+	case typ == "glossary":
+		term, _, _ := strings.Cut(head, ": ")
+		return "What does " + term + " mean?"
+	case doVerbs[first]:
+		return "How do I " + said + "?"
+	case ruleVerbs[first]:
+		return "Why should I " + said + "?"
+	case typ == "flow":
+		return "Walk me through " + said
+	case first == "How" || first == "Why" || first == "What":
+		return "Explain " + said
+	}
+	return "Tell me about " + said
 }
 
 // maxNextQuestions is how many next entries per passage are worth the read

@@ -382,8 +382,8 @@ func TestNextQuestionsCarryTheAuthorsQuestion(t *testing.T) {
 	if len(got) != 2 || got[0]["question"] != "How do I link records as a HIP?" {
 		t.Fatalf("next = %v, want the flow first with its question", got)
 	}
-	if _, has := got[1]["question"]; has {
-		t.Errorf("an atom with no questions section got one: %v", got[1])
+	if got[1]["question"] != "What does HIP mean?" {
+		t.Errorf("an atom with no questions section is asked about by its title: %v", got[1])
 	}
 }
 
@@ -440,5 +440,26 @@ func TestNextStepFollowsTheJourney(t *testing.T) {
 	}
 	if nextStep(stepOpener{routedOpener{known: true}, "last"}, "hiecm.endpoint.b") != nil {
 		t.Error("the last step offers nothing")
+	}
+}
+
+// A related question reads as something a reader would say, whatever shape
+// the atom's title has.
+func TestNudgeTurnsATitleIntoAQuestion(t *testing.T) {
+	for _, c := range []struct{ typ, title, want string }{
+		{"flow", "Create an ABHA using an Aadhaar OTP", "How do I create an ABHA using an Aadhaar OTP?"},
+		{"flow", "HIP initiated linking from start to finish, and what the patient then sees", "Walk me through HIP initiated linking from start to finish"},
+		{"flow", "User initiated linking from a PHR app, with the HIP's side of each step", "Walk me through user initiated linking from a PHR app"},
+		{"glossary", "HIP, health information provider", "What does HIP mean?"},
+		{"glossary", "M1 Identity: Create and verify ABHA", "What does M1 Identity mean?"},
+		{"glossary", "Purpose of use, why records are being requested", "What does Purpose of use mean?"},
+		{"concept", "Consent, what it authorises and how it ends", "Tell me about consent"},
+		{"concept", "Why identifiers are encrypted, and where to do it", "Explain why identifiers are encrypted"},
+		{"concept", "Refuse to guess an undocumented step, and say so before the work starts", "Why should I refuse to guess an undocumented step?"},
+		{"concept", "ABHA number and ABHA address", "Tell me about ABHA number and ABHA address"},
+	} {
+		if got := nudge(c.typ, c.title); got != c.want {
+			t.Errorf("%s %q: got %q, want %q", c.typ, c.title, got, c.want)
+		}
 	}
 }
