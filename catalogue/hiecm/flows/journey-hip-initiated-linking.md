@@ -144,7 +144,7 @@ will be used to perform HIP initiated linking." The result does not come back
 on that call. It arrives on your bridge at `/api/v3/link/on_carecontext`.
 
 The body requires `abhaAddress` and `patient`. Each `patient` entry requires
-`referenceNumber`, `display`, `careContexts`, `hiTypes` and `count`, and
+`referenceNumber`, `display`, `careContexts`, `hiType` and `count`, and
 `count` must equal the number of care contexts sent.
 
 `abhaNumber` is not in the required list. One rule sits on top of that: if

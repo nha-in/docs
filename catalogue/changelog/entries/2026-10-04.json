@@ -1,0 +1,21 @@
+[
+  {
+    "id": "76469f09eed8",
+    "date": "2026-10-04",
+    "kind": "declared-correction",
+    "gateway": "site",
+    "version": "",
+    "module": "site",
+    "label": "Site",
+    "link": "/docs/hiecm/v3/milestones/m2",
+    "count": 1,
+    "items": [
+      {
+        "route": "/docs/hiecm/v3/milestones/m2",
+        "date": "2026-10-04",
+        "now": "The field is hiType, one value such as OPConsultation. A body with hiTypes gets no answer from the gateway, not a 400.",
+        "was": "the HIP initiated linking request, POST /api/hiecm/hip/v3/link/carecontext, names each patient entry's health information type hiTypes"
+      }
+    ]
+  }
+]

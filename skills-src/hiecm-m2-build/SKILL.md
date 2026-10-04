@@ -71,7 +71,7 @@ curl --request POST \
           "display": "display 1"
         }
       ],
-      "hiTypes": "DiagnosticReport",
+      "hiType": "DiagnosticReport",
       "count": 1
     }
   ]

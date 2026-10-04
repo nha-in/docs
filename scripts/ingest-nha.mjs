@@ -921,6 +921,23 @@ specs.m1['x-abdm-sources'].push({file: 'catalogue/hiecm/openapi/.raw/nha-2026-09
   if (!locked) throw new Error('correction 15: no consent block found to lock');
 }
 
+// 16. HIP initiated linking: the health information type on each patient
+// entry is `hiType`. NHA's swagger names it `hiTypes`, but NHA's own M2 flow
+// diagram (M2 Sandbox 2.0 Update, 22 September 2026) sends `hiType`, and an
+// integrator's controlled sandbox run of 4 October 2026 showed the gateway
+// answering `hiType` with a 202 and an on_carecontext success while a body
+// with `hiTypes` got no answer at all. The field is renamed; its type, enum
+// and place in the required list do not change.
+{
+  const op = specs.m2.paths['/api/hiecm/hip/v3/link/carecontext']?.post;
+  const resolve = (node) => { while (node?.$ref) node = node.$ref.split('/').slice(1).reduce((t, k) => t?.[k], specs.m2); return node; };
+  const entry = resolve(resolve(resolve(op?.requestBody?.content?.['application/json']?.schema)?.properties?.patient)?.items);
+  if (!entry?.properties?.hiTypes) throw new Error('correction 16: link/carecontext patient entry has no hiTypes');
+  entry.properties = Object.fromEntries(Object.entries(entry.properties).map(([k, v]) => [k === 'hiTypes' ? 'hiType' : k, v]));
+  entry.required = (entry.required ?? []).map((k) => (k === 'hiTypes' ? 'hiType' : k));
+  note('m2', op.operationId, "patient[].hiTypes renamed hiType: NHA's M2 flow diagram of 22 September 2026 sends hiType, and on the sandbox a body with hiTypes gets no answer while hiType is linked (integrator run, 4 October 2026)");
+}
+
 for (const [id, m] of Object.entries(MODULES)) {
   const count = Object.values(specs[id].paths).reduce((n, i) => n + METHODS.filter((x) => i[x]).length, 0) + Object.values(specs[id].webhooks).reduce((n, i) => n + METHODS.filter((x) => i[x]).length, 0);
   if (count !== m.expected) throw new Error(`${id}: ${count} operations, expected ${m.expected}: ${Object.keys(specs[id].paths).join(' ')}`);
