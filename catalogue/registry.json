@@ -1770,6 +1770,15 @@
     "url": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-hiu/04-p3-post-subscription-requests-v3-hiu-on-notify#p3-subscription-request-hiu-on-notify"
   },
   {
+    "id": "hiecm.error.303001",
+    "type": "error",
+    "gateway": "hiecm",
+    "source": "page",
+    "page": "site/docs/_notes/hiecm/errors/m2.mdx",
+    "heading": "303001",
+    "url": "/docs/hiecm/v3/api/m2/errors#303001"
+  },
+  {
     "id": "hiecm.error.900900",
     "type": "error",
     "gateway": "hiecm",

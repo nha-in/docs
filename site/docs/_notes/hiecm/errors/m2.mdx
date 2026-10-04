@@ -74,10 +74,12 @@ The code carries two messages, and the message tells you which case you are in:
 
 In user initiated linking, the link init exchange can carry it in an `error` object. The message there is "This care context has already been linked".
 
+Linking a care context that is already linked, on `POST /api/hiecm/hip/v3/link/carecontext`, is refused at once rather than on the callback. The refusal is a 400 with `ABDM-9999` and the message "Duplicate HIP link request". The error list gives that message under `ABDM-1090`; match on the message, not the code.
+
 <AgentOnly>
 **Before you start.** Keep your own record of the care contexts you have linked and the reference numbers you used. This code usually means your state and the gateway's state disagree.
 
-**When it goes wrong.** Already linked: treat it as done once you have confirmed the care context is linked, and do not retry the link. Invalid reference number: restart the link flow for a fresh reference rather than guessing the value.
+**When it goes wrong.** Already linked, whether as `ABDM-1056` on the callback or as a synchronous 400 with `ABDM-9999` and "Duplicate HIP link request": treat it as done once you have confirmed the care context is linked, and do not retry the link. Invalid reference number: restart the link flow for a fresh reference rather than guessing the value.
 </AgentOnly>
 
 ### ABDM-1062: ABHA number mismatch, or consent not granted {/* #abdm-1062 */}
@@ -227,4 +229,16 @@ Every gateway call except the session call itself needs `Authorization`, carryin
 **How you know it worked.** After a request problem, the corrected request succeeds. After an unavailability message, the same request succeeds later, unchanged.
 
 **When it goes wrong.** For a request problem, fix the field the message names, because a retry repeats the mistake. For an unavailability message, retry with exponential backoff and a cap on attempts, so the loop does not end in [ABDM-1022](#abdm-1022). If it persists for hours, report it through [Support](/docs/support) with your `REQUEST-ID` and `TIMESTAMP`.
+</AgentOnly>
+
+### 303001: the gateway suspended the endpoint {/* #303001 */}
+
+The gateway returns HTTP 500 with `303001` and a message beginning "Runtime Error", naming the address endpoint as suspended. It follows a run of timeouts on the same call: the gateway stops forwarding to the backend for a while. It is not a problem in your request, and the same request succeeds once the endpoint is back.
+
+<AgentOnly>
+**What happens.** The code comes from the gateway, not from an ABDM service, so it has no `ABDM-` prefix. It arrives after several timeouts or 504s on one call.
+
+**How you know it worked.** The same request, unchanged, succeeds after a pause.
+
+**When it goes wrong.** Back off rather than retry at once, or the suspension lasts longer. If the timeouts that preceded it were on `POST /api/hiecm/hip/v3/link/carecontext`, check that each patient entry names its type in `hiType`: a misnamed field gets no answer, and the timeouts lead here.
 </AgentOnly>
