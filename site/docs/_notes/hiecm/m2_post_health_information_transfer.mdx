@@ -2,10 +2,12 @@
 
 The [HIP](/docs/hiecm/v3/getting-started/glossary#hip) posts the encrypted records straight to the `dataPushUrl` the [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) named in its health information request. This call does not pass through the ABDM gateway. `/health-information/transfer` stands for that URL. Each entry is a [FHIR](/docs/hiecm/v3/getting-started/glossary#fhir) bundle of media type `application/fhir+json`, encrypted with keys agreed through [ECDH](/docs/hiecm/v3/getting-started/glossary#ecdh).
 
-<AgentOnly>
-**Before you start.** The HIU exposes the `dataPushUrl` and keeps the private key behind the `keyMaterial` it sent. An authorization token is mandatory on this call.
+Send each page with your gateway access token as `Authorization: Bearer <token>`; the sandbox's PHR push URL accepts it. Put one entry on each page, with fresh `keyMaterial` for that page. The key and IV come from the page's key material, so entries sharing a page share them. `checksum` is the MD5 of the entry's content before encryption, in hexadecimal.
 
-**What happens.** The body carries `transactionId`, `pageNumber`, `pageCount`, `entries` and the sender's `keyMaterial`. Each entry has `content`, `media`, `checksum` and `careContextReference`. `checksum` is the MD5 of the content before encryption.
+<AgentOnly>
+**Before you start.** The HIU exposes the `dataPushUrl` and keeps the private key behind the `keyMaterial` it sent. An authorization token is mandatory on this call: send the gateway access token as `Authorization: Bearer <token>`.
+
+**What happens.** The body carries `transactionId`, `pageNumber`, `pageCount`, `entries` and the sender's `keyMaterial`, in the same shape as the requester's `keyMaterial`. Each entry has `content`, `media`, `checksum` and `careContextReference`. `checksum` is the MD5 of the content before encryption, as a hexadecimal string. Send one entry per page and generate fresh key material and a fresh nonce for every page; several entries on one page would share a key and IV.
 
 **How you know it worked.** The receiver answers 202 Accepted, decrypts every entry, and each MD5 matches.
 
