@@ -80,6 +80,8 @@ func main() {
 	ollamaURL := flag.String("ollama", envOr("OLLAMA_URL", ""), "Ollama base URL, for -embed-provider ollama")
 	region := flag.String("aws-region", envOr("AWS_REGION", ""), "AWS region, for -embed-provider bedrock")
 	chatModel := flag.String("chat-model", envOr("CHAT_MODEL", ""), "Bedrock model id for /api/chat; empty disables chat")
+	suggestModel := flag.String("chat-suggest-model", envOr("CHAT_SUGGEST_MODEL", ""),
+		"Bedrock model id that words the next-question suggestions; empty uses the chat model, off keeps the rule-made list")
 	chatMaxTokens := flag.Int("chat-max-tokens", envIntOr("CHAT_MAX_TOKENS", 1500), "max output tokens per chat answer")
 	// Medium is AWS's documented default for GPT-6; setting it explicitly
 	// keeps the deployment's behaviour from moving if a provider default does.
@@ -218,9 +220,28 @@ func main() {
 			MCPURL:       *mcpURL,
 			Lookup:       lookup,
 			LinkFor:      chatTools.LinkFor,
+			Finds:        chatTools.Finds,
 			ToolsFor:     toolsFor,
 			Skill:        skill,
 			SkillModules: skillModules,
+		}
+		// The suggestions are worded by the chat model unless another is
+		// named, so one deployment has one model to enable and one to
+		// measure. "off" keeps the rule-made list.
+		if *suggestModel == "" {
+			*suggestModel = *chatModel
+		}
+		if !strings.EqualFold(*suggestModel, "off") {
+			// Its own client: no temperature, and low reasoning effort where
+			// the model takes one. It picks among candidates and words a
+			// question; the chat model's effort would only add wait.
+			sm, err := chat.NewBedrockModel(context.Background(), *region, *suggestModel, 0, chat.WithReasoningEffort("low"))
+			if err != nil {
+				slog.Error("configure suggestion model", "err", err)
+				os.Exit(1)
+			}
+			chatSvc.SuggestModel = sm
+			slog.Info("suggestions by model", "model", *suggestModel)
 		}
 		limiter = chat.NewLimiter(*chatPerMin, *chatPerDay)
 		slog.Info("chat enabled", "model", *chatModel)

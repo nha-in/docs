@@ -320,6 +320,12 @@ type Service struct {
 	// LinkFor resolves an API path to its reference page, for the links
 	// event. Nil means only the pack's own endpoint passages produce links.
 	LinkFor func(path string) (url string, ok bool)
+	// SuggestModel words what the composer offers after an answer, from
+	// candidates code has chosen. Nil keeps the rule-made list. See nextFor.
+	SuggestModel Model
+	// Finds reports whether the portal's search returns a candidate for a
+	// question: the check that a suggestion can be answered as worded.
+	Finds func(ctx context.Context, question, candidateID string) bool
 	// ToolsFor returns the tools to expose for this question. nil means
 	// s.Tools unchanged.
 	ToolsFor func(question string, hasAttachment bool) []ToolDef
@@ -908,6 +914,7 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 	var links []Link
 	var suggestions []Suggestion
 	var step *Suggestion
+	var cands []Candidate
 	// topType is the type of the top retrieved passage, read for the topic
 	// shape below. Empty when nothing was retrieved.
 	var topType string
@@ -955,6 +962,7 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 			links = linksFromPack(pack)
 			suggestions = suggestionsFromPack(pack, gateway)
 			step = stepFromPack(pack)
+			cands = candidatesFromPack(pack, gateway)
 			topType = topPassageType(pack)
 			for _, src := range packSources {
 				addSource(&sources, src)
@@ -1166,7 +1174,7 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 				// citations, because that part is what those sources back.
 				return s.finish(nil, nil, nil, emit)
 			}
-			return s.finish(sources, s.answerLinks(g.released.String(), links), nextAfter(g.released.String(), suggestions), emit)
+			return s.finish(sources, s.answerLinks(g.released.String(), links), s.nextFor(ctx, turns, g.released.String(), cands, suggestions), emit)
 		}
 
 		// The round ended in a tool call, so whatever text it produced was
@@ -1259,11 +1267,11 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 			if g.blocked && g.released.Len() == 0 {
 				return s.finish(nil, nil, nil, emit)
 			}
-			return s.finish(sources, s.answerLinks(g.released.String(), links), nextAfter(g.released.String(), suggestions), emit)
+			return s.finish(sources, s.answerLinks(g.released.String(), links), s.nextFor(ctx, turns, g.released.String(), cands, suggestions), emit)
 		}
 	}
 	// Unreachable: the loop above always returns by round == MaxToolCalls.
-	return s.finish(sources, s.answerLinks(g.released.String(), links), nextAfter(g.released.String(), suggestions), emit)
+	return s.finish(sources, s.answerLinks(g.released.String(), links), s.nextFor(ctx, turns, g.released.String(), cands, suggestions), emit)
 }
 
 // finish emits the sources event (only when there is at least one source)
