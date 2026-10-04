@@ -35,9 +35,51 @@ function stepData(step, journeyId, i) {
   return JSON.parse(readFileSync(file, 'utf8'));
 }
 
-const exit = (data) => {
-  const ok = data.responses.find((r) => /^2/.test(r.status));
-  return ok?.example ? `A ${ok.status} whose body matches:\n\n\`\`\`json\n${JSON.stringify(ok.example, null, 2)}\n\`\`\`` : `A ${ok?.status ?? '2xx'} response. The specification gives no body for it, so read what comes back.`;
+// Which callbacks each operation causes or answers, as build-api-reference.mjs
+// read them from x-abdm-triggered-by and x-abdm-answered-by.
+const callbacksOf = (() => {
+  const file = join(root, 'site', 'src', 'data', 'api-routes.json');
+  if (!existsSync(file)) throw new Error(`run build-api-reference first: ${file} missing`);
+  const byId = new Map(JSON.parse(readFileSync(file, 'utf8')).map((e) => [e.operationId, e.callbacks ?? []]));
+  return (id) => byId.get(id) ?? [];
+})();
+
+// What has to be observed before a journey counts as done. On an
+// asynchronous call the response is only receipt: the outcome is the
+// callback it causes. So when the journey's calls cause callbacks, the exit
+// condition is each of them answered on the bridge, matched to its call by
+// request id. A 202 alone proved nothing to an integrator whose link call was
+// accepted and never answered. A journey that ends on a reply to an inbound
+// request is done when the reply carries that request's id.
+const exit = (journey, stepData) => {
+  const steps = journey.steps.map((step, i) => ({op: step.op, data: stepData(step, journey.id, i)}));
+  const lines = [];
+  for (const {op, data} of steps) {
+    for (const c of callbacksOf(op).filter((c) => c.relation === 'triggered-by')) {
+      lines.push(`- \`${data.method} ${data.path}\` is answered by \`${c.method} ${c.path}\` on your bridge.`);
+    }
+  }
+  const last = steps[steps.length - 1];
+  const ok = last.data.responses.find((r) => /^2/.test(r.status));
+  const status = ok?.status ?? '2xx';
+  if (lines.length) {
+    const out = [
+      'Each call you made in this journey answered by its callback, with `response.requestId` equal to the `REQUEST-ID` you sent on that call. The 202 on a call is receipt, not the outcome: the outcome is in the callback\'s body.', '',
+      ...lines,
+    ];
+    // A journey that ends on a call answering in its own response still has
+    // that response to observe.
+    if (ok?.example && !callbacksOf(last.op).some((c) => c.relation === 'triggered-by')) {
+      out.push('', `Then \`${last.data.method} ${last.data.path}\` returns a ${ok.status} whose body matches:`, '', '```json', JSON.stringify(ok.example, null, 2), '```');
+    }
+    return out.join('\n');
+  }
+  const answers = callbacksOf(last.op).filter((c) => c.relation === 'answered-by');
+  if (answers.length) {
+    const what = answers.map((c) => `\`${c.method} ${c.path}\``).join(' or ');
+    return `A ${status} on this reply, sent with \`response.requestId\` set to the \`REQUEST-ID\` of the ${what} request it answers. A reply without that id answers nothing.`;
+  }
+  return ok?.example ? `A ${ok.status} whose body matches:\n\n\`\`\`json\n${JSON.stringify(ok.example, null, 2)}\n\`\`\`` : `A ${status} response. The specification gives no body for it, so read what comes back.`;
 };
 
 function buildSkill(module, hasErrorsPage) {
@@ -56,7 +98,7 @@ function buildSkill(module, hasErrorsPage) {
       return `#### ${i + 1}. ${d.title ?? d.summary}${s.optional ? ' (optional)' : ''} (\`${s.op}\`)\n\n${act}\n`;
     }),
     '**Exit condition (Observe until this is true)**', '',
-    exit(stepData(j.steps[j.steps.length - 1], j.id, j.steps.length - 1)),
+    exit(j, stepData),
   ].join('\n'));
   return `---\nname: hiecm-${module}-build\ndescription: "Use when scaffolding an integration against ABDM ${module.toUpperCase()} (${MODULES[module]}): builds each journey as an observe-orient-decide-act loop against the sandbox."\n---\n` + [
     `# HIE-CM ${module} build`, '',
