@@ -77,8 +77,8 @@ curl --request POST \
 - `authData.otp.otpValue` (string, required): OTP received by the user, RSA-encrypted.
 - `authData.otp.mobile` (string): Mobile number to be linked with the ABHA (plain, 10 digits).
 - `consent` (object, required): Consent captured from the user for ABHA enrolment.
-- `consent.code` (string, required): Consent code. Use `abha-enrollment`.
-- `consent.version` (string, required): Consent version. Use `1.4`.
+- `consent.code` (string, required): Consent code. Use `abha-enrollment`. One of: abha-enrollment.
+- `consent.version` (string, required): Consent version. Use `1.4`. One of: 1.4.
 
 ## Responses
 

@@ -149,7 +149,7 @@ The whole of M1: the calls, the loop that builds them, every error code and the 
 
 - ScaffoldThe loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.
 - DesignWhat the journey around the calls has to do, and what a screen is forbidden to claim.
-- Integrate124 operations, with their hosts and headers.
+- Integrate123 operations, with their hosts and headers.
 - Debug17 error codes, each with what to do about it.
 - TestThe test pyramid, from offline pins up to a live payer on the sandbox.
 

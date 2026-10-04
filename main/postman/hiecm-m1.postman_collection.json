@@ -4329,59 +4329,7 @@
       "name": "Benefit, Child ABHA",
       "item": [
         {
-          "name": "1. Create ABHA - Demographic authentication (Demo Auth)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{accessToken}}"
-              },
-              {
-                "key": "TIMESTAMP",
-                "value": "{{$isoTimestamp}}"
-              },
-              {
-                "key": "REQUEST-ID",
-                "value": "{{$guid}}"
-              },
-              {
-                "key": "BENEFIT_NAME",
-                "value": "{{Benefit Name}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{abhaUrl}}/abha/api/v3/enrollment/enrol/byAadhaar",
-              "host": [
-                "{{abhaUrl}}"
-              ],
-              "path": [
-                "abha",
-                "api",
-                "v3",
-                "enrollment",
-                "enrol",
-                "byAadhaar"
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"authData\": {\n    \"authMethods\": [\n      \"demo_auth\"\n    ],\n    \"demo_auth\": {\n      \"aadhaarNumber\": \"{{encrypted aadhaar number}}\",\n      \"districtCode\": \"{{District code}}\",\n      \"stateCode\": \"{{State code}}\",\n      \"dateOfBirth\": \"{{DOB}}\",\n      \"gender\": \"{{Gender}}\",\n      \"name\": \"{{Full name}}\",\n      \"mobile\": \"{{Mobile number}}\",\n      \"profilePhoto\": \"{{Base64 plain String}}\",\n      \"pinCode\": \"<PINCODE>\",\n      \"address\": \"<ADDRESS>\"\n    }\n  },\n  \"consent\": {\n    \"code\": \"abha-enrollment\",\n    \"version\": \"1.4\"\n  }\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "description": "Creates an ABHA number from Aadhaar demographic details (name, DOB, gender, state/district, mobile), without OTP or biometric. If an ABHA already exists for the Aadhaar, it is returned. **Only for integrators approved by NHA**, who must send the `Benefit-Name` header.\n\n**Endpoint:** `POST /abha/api/v3/enrollment/enrol/byAadhaar`\n\n**Flow:** **Benefit - Child ABHA** - step 1 of 6\n- Previous: none (first call of this flow)\n- Next: *Create Child ABHA*\n\n**Headers** (plus `Authorization: Bearer <gateway token>`):\n\n| Header | Required | Description |\n|---|---|---|\n| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |\n| REQUEST-ID | yes | Unique UUID for every request. |\n| Benefit-Name | yes | **Applicable for user who is enrolling via Benefit Program.** |\n\n**Request body for this use case:**\n\n| Field | Value / Type | Required | Description |\n|---|---|---|---|\n| `authData` | object | yes | Authentication payload for this use case. |\n| `authData.authMethods` | `[\"demo_auth\"]` | yes | Authentication method used in this step. |\n| `authData.demo_auth` | object | yes | Demographic authentication block (Aadhaar demographic match). |\n| `authData.demo_auth.aadhaarNumber` | string | yes | Aadhaar number, RSA-encrypted. |\n| `authData.demo_auth.districtCode` | string | yes | LGD district code. |\n| `authData.demo_auth.stateCode` | string | yes | LGD state code. |\n| `authData.demo_auth.dateOfBirth` | string | yes | Date of birth as per Aadhaar (dd-MM-yyyy). |\n| `authData.demo_auth.gender` | string | yes | Gender (M / F / O). |\n| `authData.demo_auth.name` | string | yes | Full name. |\n| `authData.demo_auth.mobile` | string | no | Mobile number to be linked with the ABHA (plain, 10 digits). |\n| `authData.demo_auth.profilePhoto` | string | no | Base64 encoded profile photo. |\n| `authData.demo_auth.pinCode` | string | no | PIN code of the address. |\n| `authData.demo_auth.address` | string | no | Address as per Aadhaar. |\n| `consent` | object | yes | Consent captured from the user for ABHA enrolment. |\n| `consent.code` | string | yes | Consent code. Use `abha-enrollment`. |\n| `consent.version` | string | yes | Consent version. Use `1.4`. |"
-          }
-        },
-        {
-          "name": "2. Create Child ABHA",
+          "name": "1. Create Child ABHA",
           "request": {
             "method": "POST",
             "header": [
@@ -4437,7 +4385,7 @@
           }
         },
         {
-          "name": "3. Get Child ABHA list of the parent",
+          "name": "2. Get Child ABHA list of the parent",
           "request": {
             "method": "GET",
             "header": [
@@ -4480,7 +4428,7 @@
           }
         },
         {
-          "name": "4. Update Child ABHA profile",
+          "name": "3. Update Child ABHA profile",
           "request": {
             "method": "PATCH",
             "header": [
@@ -4535,7 +4483,7 @@
           }
         },
         {
-          "name": "5. Child ABHA KYC - send Aadhaar OTP",
+          "name": "4. Child ABHA KYC - send Aadhaar OTP",
           "request": {
             "method": "POST",
             "header": [
@@ -4588,7 +4536,7 @@
           }
         },
         {
-          "name": "6. Child ABHA KYC - verify Aadhaar OTP",
+          "name": "5. Child ABHA KYC - verify Aadhaar OTP",
           "request": {
             "method": "POST",
             "header": [

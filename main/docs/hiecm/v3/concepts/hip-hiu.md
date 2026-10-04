@@ -31,7 +31,7 @@ M1 is the registration desk: create an ABHA for a patient who does not have one,
 | Benefit programme search, link and delink                         | Not available       | Government only                                    |
 | Session and refresh token APIs                                    | Mandatory           | Mandatory                                          |
 
-Face authentication runs through the ABHA app and the Aadhaar RD service: your portal generates a QR code, the patient scans it in the ABHA app, and you poll for the result. Biometric creation needs an Aadhaar registered device, and UIDAI publishes the device list at <https://uidai.gov.in/en/ecosystem/authentication-devices-documents/biometric-devices.html>.
+Face authentication runs through the ABHA app and the Aadhaar RD service: your portal generates a QR code, the patient scans it in the ABHA app, and you poll for the result. Biometric creation needs an Aadhaar registered device, and UIDAI publishes the device list at <https://uidai.gov.in/hi/biometric-devices>.
 
 Implement two validation algorithms locally before you spend an API call: Luhn for an ABHA number, Verhoeff for an Aadhaar number.
 

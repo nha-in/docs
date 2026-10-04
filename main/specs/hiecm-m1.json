@@ -554,11 +554,17 @@
                     "properties": {
                       "code": {
                         "type": "string",
-                        "description": "Consent code. Use `abha-enrollment`."
+                        "description": "Consent code. Use `abha-enrollment`.",
+                        "enum": [
+                          "abha-enrollment"
+                        ]
                       },
                       "version": {
                         "type": "string",
-                        "description": "Consent version. Use `1.4`."
+                        "description": "Consent version. Use `1.4`.",
+                        "enum": [
+                          "1.4"
+                        ]
                       }
                     },
                     "required": [
@@ -3243,11 +3249,17 @@
                     "properties": {
                       "code": {
                         "type": "string",
-                        "description": "Consent code. Use `abha-enrollment`."
+                        "description": "Consent code. Use `abha-enrollment`.",
+                        "enum": [
+                          "abha-enrollment"
+                        ]
                       },
                       "version": {
                         "type": "string",
-                        "description": "Consent version. Use `1.4`."
+                        "description": "Consent version. Use `1.4`.",
+                        "enum": [
+                          "1.4"
+                        ]
                       }
                     },
                     "required": [
@@ -5501,11 +5513,17 @@
                     "properties": {
                       "code": {
                         "type": "string",
-                        "description": "Consent code. Use `abha-enrollment`."
+                        "description": "Consent code. Use `abha-enrollment`.",
+                        "enum": [
+                          "abha-enrollment"
+                        ]
                       },
                       "version": {
                         "type": "string",
-                        "description": "Consent version. Use `1.4`."
+                        "description": "Consent version. Use `1.4`.",
+                        "enum": [
+                          "1.4"
+                        ]
                       }
                     },
                     "required": [
@@ -7769,11 +7787,17 @@
                     "properties": {
                       "code": {
                         "type": "string",
-                        "description": "Consent code. Use `abha-enrollment`."
+                        "description": "Consent code. Use `abha-enrollment`.",
+                        "enum": [
+                          "abha-enrollment"
+                        ]
                       },
                       "version": {
                         "type": "string",
-                        "description": "Consent version. Use `1.4`."
+                        "description": "Consent version. Use `1.4`.",
+                        "enum": [
+                          "1.4"
+                        ]
                       }
                     },
                     "required": [
@@ -10059,11 +10083,17 @@
                     "properties": {
                       "code": {
                         "type": "string",
-                        "description": "Consent code. Use `abha-enrollment`."
+                        "description": "Consent code. Use `abha-enrollment`.",
+                        "enum": [
+                          "abha-enrollment"
+                        ]
                       },
                       "version": {
                         "type": "string",
-                        "description": "Consent version. Use `1.4`."
+                        "description": "Consent version. Use `1.4`.",
+                        "enum": [
+                          "1.4"
+                        ]
                       }
                     },
                     "required": [
@@ -10696,11 +10726,17 @@
                     "properties": {
                       "code": {
                         "type": "string",
-                        "description": "Consent code. Use `abha-enrollment`."
+                        "description": "Consent code. Use `abha-enrollment`.",
+                        "enum": [
+                          "abha-enrollment"
+                        ]
                       },
                       "version": {
                         "type": "string",
-                        "description": "Consent version. Use `1.4`."
+                        "description": "Consent version. Use `1.4`.",
+                        "enum": [
+                          "1.4"
+                        ]
                       }
                     },
                     "required": [
@@ -30117,11 +30153,17 @@
                     "properties": {
                       "code": {
                         "type": "string",
-                        "description": "Consent code. Use `abha-enrollment`."
+                        "description": "Consent code. Use `abha-enrollment`.",
+                        "enum": [
+                          "abha-enrollment"
+                        ]
                       },
                       "version": {
                         "type": "string",
-                        "description": "Consent version. Use `1.4`."
+                        "description": "Consent version. Use `1.4`.",
+                        "enum": [
+                          "1.4"
+                        ]
                       }
                     },
                     "required": [
@@ -30667,652 +30709,6 @@
         "x-abdm-title": "Create ABHA - Demographic authentication (Demo Auth)"
       }
     },
-    "/abha/api/v3/enrollment/enrol/byAadhaar#demo-auth--benefit-child-abha": {
-      "post": {
-        "tags": [
-          "Benefit - Child ABHA"
-        ],
-        "summary": "Create ABHA - Demographic authentication (Demo Auth)",
-        "operationId": "m1_post_v3_enrollment_enrol_byaadhaar_demo_auth_benefit_c_d20a11",
-        "description": "Creates an ABHA number from Aadhaar demographic details (name, DOB, gender, state/district, mobile), without OTP or biometric. If an ABHA already exists for the Aadhaar, it is returned. **Only for integrators approved by NHA**, who must send the `Benefit-Name` header.\n\n**Endpoint:** `POST /abha/api/v3/enrollment/enrol/byAadhaar`\n\n**Flow:** **Benefit - Child ABHA** - step 1 of 6\n- Previous: none (first call of this flow)\n- Next: *Create Child ABHA*\n\n**Headers** (plus `Authorization: Bearer <gateway token>`):\n\n| Header | Required | Description |\n|---|---|---|\n| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |\n| REQUEST-ID | yes | Unique UUID for every request. |\n| Benefit-Name | yes | **Applicable for user who is enrolling via Benefit Program.** |\n\n**Request body for this use case:**\n\n| Field | Value / Type | Required | Description |\n|---|---|---|---|\n| `authData` | object | yes | Authentication payload for this use case. |\n| `authData.authMethods` | `[\"demo_auth\"]` | yes | Authentication method used in this step. |\n| `authData.demo_auth` | object | yes | Demographic authentication block (Aadhaar demographic match). |\n| `authData.demo_auth.aadhaarNumber` | string | yes | Aadhaar number, RSA-encrypted. |\n| `authData.demo_auth.districtCode` | string | yes | LGD district code. |\n| `authData.demo_auth.stateCode` | string | yes | LGD state code. |\n| `authData.demo_auth.dateOfBirth` | string | yes | Date of birth as per Aadhaar (dd-MM-yyyy). |\n| `authData.demo_auth.gender` | string | yes | Gender (M / F / O). |\n| `authData.demo_auth.name` | string | yes | Full name. |\n| `authData.demo_auth.mobile` | string | no | Mobile number to be linked with the ABHA (plain, 10 digits). |\n| `authData.demo_auth.profilePhoto` | string | no | Base64 encoded profile photo. |\n| `authData.demo_auth.pinCode` | string | no | PIN code of the address. |\n| `authData.demo_auth.address` | string | no | Address as per Aadhaar. |\n| `consent` | object | yes | Consent captured from the user for ABHA enrolment. |\n| `consent.code` | string | yes | Consent code. Use `abha-enrollment`. |\n| `consent.version` | string | yes | Consent version. Use `1.4`. |",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "authData": {
-                    "type": "object",
-                    "properties": {
-                      "authMethods": {
-                        "type": "array",
-                        "items": {
-                          "type": "string",
-                          "enum": [
-                            "demo_auth"
-                          ]
-                        },
-                        "description": "Authentication method used in this step.",
-                        "minItems": 1,
-                        "maxItems": 1
-                      },
-                      "demo_auth": {
-                        "type": "object",
-                        "properties": {
-                          "aadhaarNumber": {
-                            "type": "string",
-                            "description": "Aadhaar number, RSA-encrypted."
-                          },
-                          "districtCode": {
-                            "type": "string",
-                            "description": "LGD district code."
-                          },
-                          "stateCode": {
-                            "type": "string",
-                            "description": "LGD state code."
-                          },
-                          "dateOfBirth": {
-                            "type": "string",
-                            "description": "Date of birth as per Aadhaar (dd-MM-yyyy)."
-                          },
-                          "gender": {
-                            "type": "string",
-                            "description": "Gender (M / F / O)."
-                          },
-                          "name": {
-                            "type": "string",
-                            "description": "Full name."
-                          },
-                          "mobile": {
-                            "type": "string",
-                            "description": "Mobile number to be linked with the ABHA (plain, 10 digits)."
-                          },
-                          "profilePhoto": {
-                            "type": "string",
-                            "description": "Base64 encoded profile photo."
-                          },
-                          "pinCode": {
-                            "type": "string",
-                            "description": "PIN code of the address."
-                          },
-                          "address": {
-                            "type": "string",
-                            "description": "Address as per Aadhaar."
-                          }
-                        },
-                        "required": [
-                          "aadhaarNumber",
-                          "districtCode",
-                          "stateCode",
-                          "dateOfBirth",
-                          "gender",
-                          "name"
-                        ],
-                        "description": "Demographic authentication block (Aadhaar demographic match)."
-                      }
-                    },
-                    "required": [
-                      "authMethods",
-                      "demo_auth"
-                    ],
-                    "description": "Authentication payload for this use case."
-                  },
-                  "consent": {
-                    "type": "object",
-                    "properties": {
-                      "code": {
-                        "type": "string",
-                        "description": "Consent code. Use `abha-enrollment`."
-                      },
-                      "version": {
-                        "type": "string",
-                        "description": "Consent version. Use `1.4`."
-                      }
-                    },
-                    "required": [
-                      "code",
-                      "version"
-                    ],
-                    "description": "Consent captured from the user for ABHA enrolment."
-                  }
-                },
-                "required": [
-                  "authData",
-                  "consent"
-                ]
-              },
-              "examples": {
-                "Create ABHA - Demographic authentication (Demo Auth)": {
-                  "value": {
-                    "authData": {
-                      "authMethods": [
-                        "demo_auth"
-                      ],
-                      "demo_auth": {
-                        "aadhaarNumber": "{{encrypted aadhaar number}}",
-                        "districtCode": "{{District code}}",
-                        "stateCode": "{{State code}}",
-                        "dateOfBirth": "{{DOB}}",
-                        "gender": "{{Gender}}",
-                        "name": "{{Full name}}",
-                        "mobile": "{{Mobile number}}",
-                        "profilePhoto": "{{Base64 plain String}}",
-                        "pinCode": "<PINCODE>",
-                        "address": "<ADDRESS>"
-                      }
-                    },
-                    "consent": {
-                      "code": "abha-enrollment",
-                      "version": "1.4"
-                    }
-                  },
-                  "summary": "Create ABHA - Demographic authentication (Demo Auth)"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "TIMESTAMP",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "example": "2022-10-06T15:10:00.587Z",
-            "description": "Current UTC timestamp in ISO-8601 format."
-          },
-          {
-            "name": "REQUEST-ID",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            },
-            "example": "18235d89-cb13-479d-ad71-7a57d5f669a8",
-            "description": "Unique UUID for every request."
-          },
-          {
-            "name": "BENEFIT_NAME",
-            "in": "header",
-            "schema": {
-              "type": "string"
-            },
-            "description": "**Applicable for user who is enrolling via Benefit Program.**",
-            "example": "{{Benefit Name}}",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success: DemoAuth API - New ABHA creation; DemoAuth API - In case of Existing ABHA Number",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "anyOf": [
-                    {
-                      "type": "object",
-                      "properties": {
-                        "message": {
-                          "type": "string",
-                          "example": "This account already exist,Account created successfully"
-                        },
-                        "tokens": {
-                          "type": "object",
-                          "properties": {
-                            "token": {
-                              "type": "string"
-                            },
-                            "expiresIn": {
-                              "type": "integer",
-                              "example": 1800
-                            },
-                            "refreshToken": {
-                              "type": "string"
-                            },
-                            "refreshExpiresIn": {
-                              "type": "integer",
-                              "example": 1296000
-                            }
-                          }
-                        },
-                        "ABHAProfile": {
-                          "type": "object",
-                          "properties": {
-                            "firstName": {
-                              "type": "string",
-                              "example": "Username"
-                            },
-                            "middleName": {
-                              "type": "string",
-                              "example": ""
-                            },
-                            "lastName": {
-                              "type": "string",
-                              "example": "<NAME>"
-                            },
-                            "dob": {
-                              "type": "string",
-                              "example": "<DOB>"
-                            },
-                            "gender": {
-                              "type": "string",
-                              "example": "F"
-                            },
-                            "mobile": {
-                              "type": "string",
-                              "example": "******0903"
-                            },
-                            "phrAddress": {
-                              "type": "array",
-                              "items": {
-                                "type": "string"
-                              },
-                              "example": [
-                                "<ABHA_ADDRESS>"
-                              ]
-                            },
-                            "districtCode": {
-                              "type": "string",
-                              "example": "490"
-                            },
-                            "stateCode": {
-                              "type": "string",
-                              "example": "27"
-                            },
-                            "abhaType": {
-                              "type": "string",
-                              "example": "CHILD"
-                            },
-                            "stateName": {
-                              "type": "string",
-                              "example": "Maharashtra"
-                            },
-                            "districtName": {
-                              "type": "string",
-                              "example": "<ADDRESS>"
-                            },
-                            "ABHANumber": {
-                              "type": "string",
-                              "example": "<ABHA_NUMBER>"
-                            },
-                            "abhaStatus": {
-                              "type": "string",
-                              "example": "ACTIVE"
-                            }
-                          }
-                        },
-                        "isNew": {
-                          "type": "boolean",
-                          "example": false
-                        }
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "healthIdNumber": {
-                          "type": "string",
-                          "example": "<ABHA_NUMBER>"
-                        },
-                        "healthId": {
-                          "type": "string",
-                          "example": "<ABHA_ADDRESS>"
-                        },
-                        "mobile": {
-                          "type": "string",
-                          "example": "******0903"
-                        },
-                        "firstName": {
-                          "type": "string",
-                          "example": "Username"
-                        },
-                        "middleName": {
-                          "type": "string",
-                          "example": "<NAME>"
-                        },
-                        "lastName": {
-                          "type": "string",
-                          "example": "<NAME>"
-                        },
-                        "name": {
-                          "type": "string",
-                          "example": "<NAME>"
-                        },
-                        "yearOfBirth": {
-                          "type": "string",
-                          "example": "<DOB>"
-                        },
-                        "dayOfBirth": {
-                          "type": "string",
-                          "example": "<DOB>"
-                        },
-                        "monthOfBirth": {
-                          "type": "string",
-                          "example": "<DOB>"
-                        },
-                        "gender": {
-                          "type": "string",
-                          "example": "F"
-                        },
-                        "stateCode": {
-                          "type": "string",
-                          "example": "27"
-                        },
-                        "districtCode": {
-                          "type": "string",
-                          "example": "490"
-                        },
-                        "stateName": {
-                          "type": "string",
-                          "example": "MAHARASHTRA"
-                        },
-                        "districtName": {
-                          "type": "string",
-                          "example": "<ADDRESS>"
-                        },
-                        "kycVerified": {
-                          "type": "boolean",
-                          "example": true
-                        },
-                        "token": {
-                          "type": "string"
-                        },
-                        "jwtResponse": {
-                          "type": "object",
-                          "properties": {
-                            "token": {
-                              "type": "string"
-                            },
-                            "expiresIn": {
-                              "type": "integer",
-                              "example": 1800
-                            },
-                            "refreshToken": {
-                              "type": "string"
-                            },
-                            "refreshExpiresIn": {
-                              "type": "integer",
-                              "example": 1296000
-                            }
-                          }
-                        },
-                        "status": {
-                          "type": "string",
-                          "example": "ACTIVE"
-                        },
-                        "new": {
-                          "type": "string",
-                          "example": "true,false"
-                        }
-                      }
-                    }
-                  ]
-                },
-                "examples": {
-                  "DemoAuth API - New ABHA creation": {
-                    "value": {
-                      "healthIdNumber": "<ABHA_NUMBER>",
-                      "healthId": "<ABHA_ADDRESS>",
-                      "mobile": "******0903",
-                      "firstName": "Username",
-                      "middleName": "<NAME>",
-                      "lastName": "<NAME>",
-                      "name": "<NAME>",
-                      "yearOfBirth": "<DOB>",
-                      "dayOfBirth": "<DOB>",
-                      "monthOfBirth": "<DOB>",
-                      "gender": "F",
-                      "stateCode": "27",
-                      "districtCode": "490",
-                      "stateName": "MAHARASHTRA",
-                      "districtName": "<ADDRESS>",
-                      "kycVerified": true,
-                      "token": "<TOKEN>",
-                      "jwtResponse": {
-                        "token": "<TOKEN>",
-                        "expiresIn": 1800,
-                        "refreshToken": "<TOKEN>",
-                        "refreshExpiresIn": 1296000
-                      },
-                      "status": "ACTIVE",
-                      "new": true
-                    }
-                  },
-                  "DemoAuth API - In case of Existing ABHA Number": {
-                    "value": {
-                      "healthIdNumber": "<ABHA_NUMBER>",
-                      "healthId": "<ABHA_ADDRESS>",
-                      "mobile": "******0903",
-                      "firstName": "Username",
-                      "middleName": "<NAME>",
-                      "lastName": "<NAME>",
-                      "name": "<NAME>",
-                      "yearOfBirth": "<DOB>",
-                      "dayOfBirth": "<DOB>",
-                      "monthOfBirth": "<DOB>",
-                      "gender": "F",
-                      "stateCode": "27",
-                      "districtCode": "494",
-                      "pincode": "<PINCODE>",
-                      "address": "<ADDRESS>",
-                      "stateName": "MAHARASHTRA",
-                      "districtName": "<ADDRESS>",
-                      "kycVerified": true,
-                      "token": "<TOKEN>",
-                      "jwtResponse": {
-                        "token": "<TOKEN>",
-                        "expiresIn": 1800,
-                        "refreshToken": "<TOKEN>",
-                        "refreshExpiresIn": 1296000
-                      },
-                      "status": "ACTIVE",
-                      "new": false
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request (request validation failed): DemoAuth API-State District not matching",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "anyOf": [
-                    {
-                      "type": "object",
-                      "properties": {
-                        "txnId": {
-                          "type": "string",
-                          "example": "Invalid Transaction Id"
-                        },
-                        "timestamp": {
-                          "type": "string",
-                          "format": "date-time",
-                          "example": "2024-05-10T11:41:47.000Z"
-                        }
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "authMethods": {
-                          "type": "string",
-                          "example": "Invalid Auth Method"
-                        },
-                        "timestamp": {
-                          "type": "string",
-                          "format": "date-time",
-                          "example": "2024-05-10T11:40:16.000Z"
-                        }
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "mobile": {
-                          "type": "string",
-                          "example": "Invalid Mobile Number"
-                        },
-                        "timestamp": {
-                          "type": "string",
-                          "format": "date-time",
-                          "example": "2024-05-10T11:44:46.000Z"
-                        }
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "districtCode": {
-                          "type": "string",
-                          "example": "Invalid state and district code"
-                        },
-                        "timestamp": {
-                          "type": "string",
-                          "format": "date-time",
-                          "example": "2024-05-10T14:37:47.000Z"
-                        }
-                      }
-                    }
-                  ]
-                },
-                "examples": {
-                  "DemoAuth API-State District not matching": {
-                    "value": {
-                      "districtCode": "Invalid state and district code",
-                      "timestamp": "2024-05-10T14:37:47.000Z"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized (invalid / expired gateway token, X-token or benefit access): DemoAuth API-Invalid Benefit Name",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "anyOf": [
-                    {
-                      "type": "object",
-                      "properties": {
-                        "message": {
-                          "type": "string",
-                          "example": "Invalid Benefit Name,X-token expired"
-                        },
-                        "timestamp": {
-                          "type": "string",
-                          "format": "date-time",
-                          "example": "2024-05-10T18:52:59.000Z"
-                        }
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "error": {
-                          "type": "object",
-                          "properties": {
-                            "code": {
-                              "type": "string",
-                              "example": "ABDM-1021"
-                            },
-                            "message": {
-                              "type": "string",
-                              "example": "Lack of required privileges"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  ]
-                },
-                "examples": {
-                  "DemoAuth API-Invalid Benefit Name": {
-                    "value": {
-                      "message": "Invalid Benefit Name",
-                      "timestamp": "2024-05-10T14:25:56.000Z"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity (business rule or UIDAI failure): DemoAuth API-6 ABHA linked to Mobile; DemoAuth API-Details not matches against Aadhaar",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "object",
-                      "properties": {
-                        "code": {
-                          "type": "string",
-                          "example": "ABDM-1157"
-                        },
-                        "message": {
-                          "type": "string",
-                          "example": "Child ABHA’s account limit has been exceeded for the requested Abha ID number ‘<ABHA_NUMBER>, UIDAI Error code : 400 : Invalid Aadhaar OTP value. , UIDAI Error code : 501 : Invalid certificate identifier in ci attribute of Skey,  The information you provided does not match the details on record with Aadhaar. Please verify and provide accurate information., The mobile number provided by you is already linked to 6 ABHA Numbers. Please provide a different Mobile Number"
-                        }
-                      }
-                    }
-                  }
-                },
-                "examples": {
-                  "DemoAuth API-6 ABHA linked to Mobile": {
-                    "value": {
-                      "error": {
-                        "code": "ABDM-1124",
-                        "message": "The mobile number provided by you is already linked to 6 ABHA Numbers. Please provide a different Mobile Number."
-                      }
-                    }
-                  },
-                  "DemoAuth API-Details not matches against Aadhaar": {
-                    "value": {
-                      "error": {
-                        "code": "ABDM-1207",
-                        "message": "The information you provided does not match the details on record with Aadhaar. Please verify and provide accurate information."
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error."
-          }
-        },
-        "x-actual-path": "/abha/api/v3/enrollment/enrol/byAadhaar",
-        "x-use-case": "demo-auth",
-        "x-canonical-operationId": "enrolByAadhaarDemoAuth",
-        "x-also-used-in": [
-          "Create ABHA - Demo Auth",
-          "Benefit - Create ABHA via Demo Auth"
-        ],
-        "x-journey": {
-          "journey": "Benefit - Child ABHA",
-          "step": 1,
-          "of": 6,
-          "kind": "flow"
-        },
-        "x-abdm-nha-operation-id": "enrolByAadhaarDemoAuth_BenefitChildAbha",
-        "x-abdm-title": "Create ABHA - Demographic authentication (Demo Auth)"
-      }
-    },
     "/abha/api/v3/enrollment/enrol/byAadhaar#child--benefit-child-abha": {
       "post": {
         "tags": [
@@ -31400,11 +30796,17 @@
                     "properties": {
                       "code": {
                         "type": "string",
-                        "description": "Consent code. Use `abha-enrollment`."
+                        "description": "Consent code. Use `abha-enrollment`.",
+                        "enum": [
+                          "abha-enrollment"
+                        ]
                       },
                       "version": {
                         "type": "string",
-                        "description": "Consent version. Use `1.4`."
+                        "description": "Consent version. Use `1.4`.",
+                        "enum": [
+                          "1.4"
+                        ]
                       }
                     },
                     "required": [

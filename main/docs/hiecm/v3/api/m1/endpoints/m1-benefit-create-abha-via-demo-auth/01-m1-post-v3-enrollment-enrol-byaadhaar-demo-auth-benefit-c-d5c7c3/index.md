@@ -98,8 +98,8 @@ curl --request POST \
 - `authData.demo_auth.pinCode` (string): PIN code of the address.
 - `authData.demo_auth.address` (string): Address as per Aadhaar.
 - `consent` (object, required): Consent captured from the user for ABHA enrolment.
-- `consent.code` (string, required): Consent code. Use `abha-enrollment`.
-- `consent.version` (string, required): Consent version. Use `1.4`.
+- `consent.code` (string, required): Consent code. Use `abha-enrollment`. One of: abha-enrollment.
+- `consent.version` (string, required): Consent version. Use `1.4`. One of: 1.4.
 
 ## Responses
 

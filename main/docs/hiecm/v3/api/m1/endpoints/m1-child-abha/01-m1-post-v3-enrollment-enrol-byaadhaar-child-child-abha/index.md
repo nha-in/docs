@@ -95,8 +95,8 @@ curl --request POST \
 - `authData.child.profilePhoto` (string): Base64 encoded profile photo.
 - `authData.child.parentConsent` (string): Parent consent flag for creating a child ABHA.
 - `consent` (object, required): Consent captured from the user for ABHA enrolment.
-- `consent.code` (string, required): Consent code. Use `abha-enrollment`.
-- `consent.version` (string, required): Consent version. Use `1.4`.
+- `consent.code` (string, required): Consent code. Use `abha-enrollment`. One of: abha-enrollment.
+- `consent.version` (string, required): Consent version. Use `1.4`. One of: 1.4.
 
 ## Responses
 

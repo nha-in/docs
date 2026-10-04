@@ -418,7 +418,7 @@ Milestone 1 APIs enable the creation, authentication, verification, and manageme
 - ABHA profile management
 - ABHA-related services and operations
 
-121 endpoints across 10 use cases: Create ABHA, Child ABHA, Login, Profile, ABHA Card & Profile, Find ABHA, Forgot ABHA, Benefit, Access Tokens & Encryption, ABHA Address Login. Each endpoint has its own page in the sidebar.
+120 endpoints across 10 use cases: Create ABHA, Child ABHA, Login, Profile, ABHA Card & Profile, Find ABHA, Forgot ABHA, Benefit, Access Tokens & Encryption, ABHA Address Login. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/docs/main/reference/hiecm-m1)
 
@@ -2914,185 +2914,6 @@ Example 200 response. The values are placeholders:
 
 ---
 
-# Create ABHA - Demographic authentication (Demo Auth)
-
-`POST /abha/api/v3/enrollment/enrol/byAadhaar`
-
-Creates an ABHA number from Aadhaar demographic details (name, DOB, gender, state/district, mobile), without OTP or biometric. If an ABHA already exists for the Aadhaar, it is returned. **Only for integrators approved by NHA**, who must send the `Benefit-Name` header.
-
-**Endpoint:** `POST /abha/api/v3/enrollment/enrol/byAadhaar`
-
-**Flow:** **Benefit - Child ABHA** - step 1 of 6
-- Previous: none (first call of this flow)
-- Next: *Create Child ABHA*
-
-**Headers** (plus `Authorization: Bearer <gateway token>`):
-
-| Header | Required | Description |
-|---|---|---|
-| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |
-| REQUEST-ID | yes | Unique UUID for every request. |
-| Benefit-Name | yes | **Applicable for user who is enrolling via Benefit Program.** |
-
-**Request body for this use case:**
-
-| Field | Value / Type | Required | Description |
-|---|---|---|---|
-| `authData` | object | yes | Authentication payload for this use case. |
-| `authData.authMethods` | `["demo_auth"]` | yes | Authentication method used in this step. |
-| `authData.demo_auth` | object | yes | Demographic authentication block (Aadhaar demographic match). |
-| `authData.demo_auth.aadhaarNumber` | string | yes | Aadhaar number, RSA-encrypted. |
-| `authData.demo_auth.districtCode` | string | yes | LGD district code. |
-| `authData.demo_auth.stateCode` | string | yes | LGD state code. |
-| `authData.demo_auth.dateOfBirth` | string | yes | Date of birth as per Aadhaar (dd-MM-yyyy). |
-| `authData.demo_auth.gender` | string | yes | Gender (M / F / O). |
-| `authData.demo_auth.name` | string | yes | Full name. |
-| `authData.demo_auth.mobile` | string | no | Mobile number to be linked with the ABHA (plain, 10 digits). |
-| `authData.demo_auth.profilePhoto` | string | no | Base64 encoded profile photo. |
-| `authData.demo_auth.pinCode` | string | no | PIN code of the address. |
-| `authData.demo_auth.address` | string | no | Address as per Aadhaar. |
-| `consent` | object | yes | Consent captured from the user for ABHA enrolment. |
-| `consent.code` | string | yes | Consent code. Use `abha-enrollment`. |
-| `consent.version` | string | yes | Consent version. Use `1.4`. |
-
-```bash
-curl --request POST \
-  --url https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
-  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'BENEFIT_NAME: {{Benefit Name}}' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "authData": {
-    "authMethods": [
-      "demo_auth"
-    ],
-    "demo_auth": {
-      "aadhaarNumber": "{{encrypted aadhaar number}}",
-      "districtCode": "{{District code}}",
-      "stateCode": "{{State code}}",
-      "dateOfBirth": "{{DOB}}",
-      "gender": "{{Gender}}",
-      "name": "{{Full name}}",
-      "mobile": "{{Mobile number}}",
-      "profilePhoto": "{{Base64 plain String}}",
-      "pinCode": "<PINCODE>",
-      "address": "<ADDRESS>"
-    }
-  },
-  "consent": {
-    "code": "abha-enrollment",
-    "version": "1.4"
-  }
-}'
-```
-
-## Authorization
-
-- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
-
-## Headers
-
-- `TIMESTAMP` (string, required): Current UTC timestamp in ISO-8601 format.
-- `REQUEST-ID` (string, required): Unique UUID for every request.
-- `BENEFIT_NAME` (string, required): **Applicable for user who is enrolling via Benefit Program.**
-
-## Body
-
-- `authData` (object, required): Authentication payload for this use case.
-- `authData.authMethods` (string[], required): Authentication method used in this step.
-- `authData.demo_auth` (object, required): Demographic authentication block (Aadhaar demographic match).
-- `authData.demo_auth.aadhaarNumber` (string, required): Aadhaar number, RSA-encrypted.
-- `authData.demo_auth.districtCode` (string, required): LGD district code.
-- `authData.demo_auth.stateCode` (string, required): LGD state code.
-- `authData.demo_auth.dateOfBirth` (string, required): Date of birth as per Aadhaar (dd-MM-yyyy).
-- `authData.demo_auth.gender` (string, required): Gender (M / F / O).
-- `authData.demo_auth.name` (string, required): Full name.
-- `authData.demo_auth.mobile` (string): Mobile number to be linked with the ABHA (plain, 10 digits).
-- `authData.demo_auth.profilePhoto` (string): Base64 encoded profile photo.
-- `authData.demo_auth.pinCode` (string): PIN code of the address.
-- `authData.demo_auth.address` (string): Address as per Aadhaar.
-- `consent` (object, required): Consent captured from the user for ABHA enrolment.
-- `consent.code` (string, required): Consent code. Use `abha-enrollment`.
-- `consent.version` (string, required): Consent version. Use `1.4`.
-
-## Responses
-
-- `200`: Success: DemoAuth API - New ABHA creation; DemoAuth API - In case of Existing ABHA Number
-  - `message` (string)
-  - `tokens` (object)
-  - `tokens.token` (string)
-  - `tokens.expiresIn` (integer)
-  - `tokens.refreshToken` (string)
-  - `tokens.refreshExpiresIn` (integer)
-  - `ABHAProfile` (object)
-  - `ABHAProfile.firstName` (string)
-  - `ABHAProfile.middleName` (string)
-  - `ABHAProfile.lastName` (string)
-  - `ABHAProfile.dob` (string)
-  - `ABHAProfile.gender` (string)
-  - `ABHAProfile.mobile` (string)
-  - `ABHAProfile.phrAddress` (string[])
-  - `ABHAProfile.districtCode` (string)
-  - `ABHAProfile.stateCode` (string)
-  - `ABHAProfile.abhaType` (string)
-  - `ABHAProfile.stateName` (string)
-  - `ABHAProfile.districtName` (string)
-  - `ABHAProfile.ABHANumber` (string)
-  - `ABHAProfile.abhaStatus` (string)
-  - `isNew` (boolean)
-- `400`: Bad Request (request validation failed): DemoAuth API-State District not matching
-  See Error codes for this module: /docs/hiecm/v3/api/m1/errors
-  - `txnId` (string)
-  - `timestamp` (string)
-- `401`: Unauthorized (invalid / expired gateway token, X-token or benefit access): DemoAuth API-Invalid Benefit Name
-  See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
-  - `message` (string)
-  - `timestamp` (string)
-- `422`: Unprocessable Entity (business rule or UIDAI failure): DemoAuth API-6 ABHA linked to Mobile; DemoAuth API-Details not matches against Aadhaar
-  See Error codes for this module: /docs/hiecm/v3/api/m1/errors
-  - `error` (object)
-  - `error.code` (string)
-  - `error.message` (string)
-- `500`: Internal Server Error.
-  See Error codes for this module: /docs/hiecm/v3/api/m1/errors
-
-Example 200 response. The values are placeholders:
-
-```json
-{
-  "healthIdNumber": "<ABHA_NUMBER>",
-  "healthId": "<ABHA_ADDRESS>",
-  "mobile": "******0903",
-  "firstName": "Username",
-  "middleName": "<NAME>",
-  "lastName": "<NAME>",
-  "name": "<NAME>",
-  "yearOfBirth": "<DOB>",
-  "dayOfBirth": "<DOB>",
-  "monthOfBirth": "<DOB>",
-  "gender": "F",
-  "stateCode": "27",
-  "districtCode": "490",
-  "stateName": "MAHARASHTRA",
-  "districtName": "<ADDRESS>",
-  "kycVerified": true,
-  "token": "<TOKEN>",
-  "jwtResponse": {
-    "token": "<TOKEN>",
-    "expiresIn": 1800,
-    "refreshToken": "<TOKEN>",
-    "refreshExpiresIn": 1296000
-  },
-  "status": "ACTIVE",
-  "new": true
-}
-```
-
-
----
-
 # Create Child ABHA
 
 `POST /abha/api/v3/enrollment/enrol/byAadhaar`
@@ -3190,8 +3011,8 @@ curl --request POST \
 - `authData.child.profilePhoto` (string): Base64 encoded profile photo.
 - `authData.child.parentConsent` (string): Parent consent flag for creating a child ABHA.
 - `consent` (object, required): Consent captured from the user for ABHA enrolment.
-- `consent.code` (string, required): Consent code. Use `abha-enrollment`.
-- `consent.version` (string, required): Consent version. Use `1.4`.
+- `consent.code` (string, required): Consent code. Use `abha-enrollment`. One of: abha-enrollment.
+- `consent.version` (string, required): Consent version. Use `1.4`. One of: 1.4.
 
 ## Responses
 
@@ -3815,8 +3636,8 @@ curl --request POST \
 - `authData.demo_auth.pinCode` (string): PIN code of the address.
 - `authData.demo_auth.address` (string): Address as per Aadhaar.
 - `consent` (object, required): Consent captured from the user for ABHA enrolment.
-- `consent.code` (string, required): Consent code. Use `abha-enrollment`.
-- `consent.version` (string, required): Consent version. Use `1.4`.
+- `consent.code` (string, required): Consent code. Use `abha-enrollment`. One of: abha-enrollment.
+- `consent.version` (string, required): Consent version. Use `1.4`. One of: 1.4.
 
 ## Responses
 
@@ -4520,8 +4341,8 @@ curl --request POST \
 - `authData.child.profilePhoto` (string): Base64 encoded profile photo.
 - `authData.child.parentConsent` (string): Parent consent flag for creating a child ABHA.
 - `consent` (object, required): Consent captured from the user for ABHA enrolment.
-- `consent.code` (string, required): Consent code. Use `abha-enrollment`.
-- `consent.version` (string, required): Consent version. Use `1.4`.
+- `consent.code` (string, required): Consent code. Use `abha-enrollment`. One of: abha-enrollment.
+- `consent.version` (string, required): Consent version. Use `1.4`. One of: 1.4.
 
 ## Responses
 
@@ -5222,8 +5043,8 @@ curl --request POST \
 - `authData.otp.otpValue` (string, required): OTP received by the user, RSA-encrypted.
 - `authData.otp.mobile` (string): Mobile number to be linked with the ABHA (plain, 10 digits).
 - `consent` (object, required): Consent captured from the user for ABHA enrolment.
-- `consent.code` (string, required): Consent code. Use `abha-enrollment`.
-- `consent.version` (string, required): Consent version. Use `1.4`.
+- `consent.code` (string, required): Consent code. Use `abha-enrollment`. One of: abha-enrollment.
+- `consent.version` (string, required): Consent version. Use `1.4`. One of: 1.4.
 
 ## Responses
 
@@ -5964,8 +5785,8 @@ curl --request POST \
 - `authData.demo_auth.pinCode` (string): PIN code of the address.
 - `authData.demo_auth.address` (string): Address as per Aadhaar.
 - `consent` (object, required): Consent captured from the user for ABHA enrolment.
-- `consent.code` (string, required): Consent code. Use `abha-enrollment`.
-- `consent.version` (string, required): Consent version. Use `1.4`.
+- `consent.code` (string, required): Consent code. Use `abha-enrollment`. One of: abha-enrollment.
+- `consent.version` (string, required): Consent version. Use `1.4`. One of: 1.4.
 
 ## Responses
 
@@ -6285,8 +6106,8 @@ curl --request POST \
 - `authData.face.aadhaar` (string, required): Aadhaar number, RSA-encrypted.
 - `authData.face.mobile` (string): Mobile number to be linked with the ABHA (plain, 10 digits).
 - `consent` (object, required): Consent captured from the user for ABHA enrolment.
-- `consent.code` (string, required): Consent code. Use `abha-enrollment`.
-- `consent.version` (string, required): Consent version. Use `1.4`.
+- `consent.code` (string, required): Consent code. Use `abha-enrollment`. One of: abha-enrollment.
+- `consent.version` (string, required): Consent version. Use `1.4`. One of: 1.4.
 
 ## Responses
 
@@ -7007,8 +6828,8 @@ curl --request POST \
 - `authData.bio.fingerPrintAuthPid` (string, required): Base64 PID block captured from a registered fingerprint RD device.
 - `authData.bio.mobile` (string): Mobile number to be linked with the ABHA (plain, 10 digits).
 - `consent` (object, required): Consent captured from the user for ABHA enrolment.
-- `consent.code` (string, required): Consent code. Use `abha-enrollment`.
-- `consent.version` (string, required): Consent version. Use `1.4`.
+- `consent.code` (string, required): Consent code. Use `abha-enrollment`. One of: abha-enrollment.
+- `consent.version` (string, required): Consent version. Use `1.4`. One of: 1.4.
 
 ## Responses
 
@@ -7727,8 +7548,8 @@ curl --request POST \
 - `authData.iris.pid` (string, required): Base64 PID block captured from a registered IRIS RD device.
 - `authData.iris.mobile` (string): Mobile number to be linked with the ABHA (plain, 10 digits).
 - `consent` (object, required): Consent captured from the user for ABHA enrolment.
-- `consent.code` (string, required): Consent code. Use `abha-enrollment`.
-- `consent.version` (string, required): Consent version. Use `1.4`.
+- `consent.code` (string, required): Consent code. Use `abha-enrollment`. One of: abha-enrollment.
+- `consent.version` (string, required): Consent version. Use `1.4`. One of: 1.4.
 
 ## Responses
 
@@ -13042,7 +12863,7 @@ Create an ABHA, authenticate a holder, and read or update the profile, QR code a
 
 ## Postman collection
 
-121 requests in the order you build them, and a sandbox environment to fill in. Each step keeps the txnId and X-token it gets back for the steps after it.
+120 requests in the order you build them, and a sandbox environment to fill in. Each step keeps the txnId and X-token it gets back for the steps after it.
 
 [Collection](/docs/main/postman/hiecm-m1.postman_collection.json)[Environment](/docs/main/postman/hiecm-sandbox.postman_environment.json)[Run in Postman](https://app.getpostman.com/run-collection/58494529-812374a9-3b91-42a0-8cbc-f86a31e0e688?action=collection%2Ffork\&collection-url=entityId%3D58494529-812374a9-3b91-42a0-8cbc-f86a31e0e688%26entityType%3Dcollection%26workspaceId%3D87d6429f-b4ee-4ec4-ac5d-5e6e5700b974)
 
@@ -23016,8 +22837,8 @@ curl --request POST \
 - `authData.otp.otpValue` (string, required): OTP received by the user, RSA-encrypted.
 - `authData.otp.mobile` (string): Mobile number to be linked with the ABHA (plain, 10 digits).
 - `consent` (object, required): Consent captured from the user for ABHA enrolment.
-- `consent.code` (string, required): Consent code. Use `abha-enrollment`.
-- `consent.version` (string, required): Consent version. Use `1.4`.
+- `consent.code` (string, required): Consent code. Use `abha-enrollment`. One of: abha-enrollment.
+- `consent.version` (string, required): Consent version. Use `1.4`. One of: 1.4.
 
 ## Responses
 
@@ -36454,7 +36275,7 @@ M1 is the registration desk: create an ABHA for a patient who does not have one,
 | Benefit programme search, link and delink                         | Not available       | Government only                                    |
 | Session and refresh token APIs                                    | Mandatory           | Mandatory                                          |
 
-Face authentication runs through the ABHA app and the Aadhaar RD service: your portal generates a QR code, the patient scans it in the ABHA app, and you poll for the result. Biometric creation needs an Aadhaar registered device, and UIDAI publishes the device list at <https://uidai.gov.in/en/ecosystem/authentication-devices-documents/biometric-devices.html>.
+Face authentication runs through the ABHA app and the Aadhaar RD service: your portal generates a QR code, the patient scans it in the ABHA app, and you poll for the result. Biometric creation needs an Aadhaar registered device, and UIDAI publishes the device list at <https://uidai.gov.in/hi/biometric-devices>.
 
 Implement two validation algorithms locally before you spend an API call: Luhn for an ABHA number, Verhoeff for an Aadhaar number.
 
@@ -37375,7 +37196,7 @@ The whole of M1: the calls, the loop that builds them, every error code and the 
 
 - ScaffoldThe loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.
 - DesignWhat the journey around the calls has to do, and what a screen is forbidden to claim.
-- Integrate124 operations, with their hosts and headers.
+- Integrate123 operations, with their hosts and headers.
 - Debug17 error codes, each with what to do about it.
 - TestThe test pyramid, from offline pins up to a live payer on the sandbox.
 
@@ -38223,7 +38044,7 @@ Every M1 call, one per use case, with its error codes in one file: 125 operation
 
 - ScaffoldThe loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.
 - DesignWhat the journey around the calls has to do, and what a screen is forbidden to claim.
-- Integrate124 operations, with their hosts and headers.
+- Integrate123 operations, with their hosts and headers.
 - Debug17 error codes, each with what to do about it.
 - TestThe test pyramid, from offline pins up to a live payer on the sandbox.
 
@@ -38268,8 +38089,6 @@ Notes for AI agents
 
 The individual provides their Aadhaar number. The ABHA service sends a one time password ([OTP](/docs/main/docs/hiecm/v3/getting-started/glossary#otp)) to the mobile number registered against that Aadhaar. Upon successful verification, the individual selects an ABHA address, and the ABHA number is issued.
 
-Every step answers in its own response, so nothing here waits on a callback. The enrolment call is the one with a lasting effect: it creates the account.
-
 Notes for AI agents
 
 **Before you start.** A gateway access token, the Aadhaar number encrypted with the M1 certificate, the person present to read the OTP, and their consent to create an ABHA.
@@ -38282,11 +38101,17 @@ Notes for AI agents
 
 ### ABHA creation by face authentication
 
-Individuals who are unable to use OTP-based authentication, including cases where the mobile number linked to Aadhaar is unavailable or inaccessible, may use face authentication as an alternative verification mechanism, subject to ABDM and UIDAI guidelines. Face authentication is performed through authorized Aadhaar Registered Device (RD) services using approved authentication workflows.
+Individuals who are unable to use OTP-based authentication may create an ABHA using Face Authentication. This includes situations where the mobile number linked with Aadhaar is unavailable, inaccessible, or not in active use. It is subject to the applicable guidelines and specifications issued by the ABDM and the Unique Identification Authority of India (UIDAI).
 
-ABDM documentation references biometric-based ABHA creation workflows, including face authentication and other supported biometric modalities where applicable. Organizations should implement authentication methods in accordance with the officially published specifications and follow them before proceeding with production deployment.
+Under this workflow, the beneficiary is authenticated through an authorized Aadhaar Registered Device (RD) Service application using UIDAI-approved face authentication mechanisms. The process is initiated by collecting the beneficiary's Aadhaar number at the participating healthcare facility. Based on the Aadhaar number provided, the facility generates a unique authentication QR code.
 
-The middle of this journey happens on the person's phone, not in your system. Show that you are waiting for them rather than a spinner.
+The beneficiary is required to scan the generated QR code using the **ABHA PHR Application**. To access the QR scanning functionality, the beneficiary should ensure that the ABHA PHR Application is in the logged-out state, as the QR scan option is available on the application's landing page. Upon scanning the QR code, the beneficiary is redirected to the Aadhaar RD Service application installed on the mobile device. In cases where the Aadhaar RD Service application is not available on the device, the beneficiary is redirected to the respective application marketplace (Google Play Store or Apple App Store) for installation.
+
+The beneficiary is then required to complete the face capture process through the Aadhaar RD Service application. Upon successful face authentication and verification by UIDAI, the beneficiary's identity is validated, and the ABHA creation process is completed in accordance with ABDM guidelines.
+
+Organizations implementing Face Authentication based ABHA creation workflows shall ensure compliance with the latest ABDM and UIDAI specifications, approved authentication workflows, and security requirements prior to production deployment. The use of only authorized and compliant RD Service applications is mandatory to maintain the integrity, privacy, and security of the authentication process.
+
+The face authentication happens on the patient's phone, through the Aadhaar RD Service application.
 
 Notes for AI agents
 
@@ -38296,13 +38121,19 @@ Notes for AI agents
 
 **How you know it worked.** `capturePID` reports COMPLETE and `enrol/byAadhaar` returns an `ABHAProfile` with an `ABHANumber`. The capture being accepted is the event, not the app saying the scan succeeded.
 
-**When it goes wrong.** The person has no ABHA app: installing it is part of the journey, not an error. The capture reports FAILED: capture again rather than resubmitting. Nothing pushes the result to you, so keep polling or continue once the person confirms.
+**When it goes wrong.** The person has no ABHA app: installing it is part of the journey, not an error. The person cannot find the scan option: it is on the app's landing page, so they must be logged out of the ABHA PHR app. The capture reports FAILED: capture again rather than resubmitting. Nothing pushes the result to you, so keep polling or continue once the person confirms.
 
 ### ABHA creation by fingerprint or iris
 
-Aadhaar Biometric-Based ABHA Creation enables users to create an Ayushman Bharat Health Account (ABHA) by securely verifying their identity using biometric authentication through an Aadhaar Registered Device (RD). The RD Service captures the user's biometric data and generates an encrypted, digitally signed PID block, which is submitted along with the Aadhaar details for verification. Upon successful authentication and user consent, the user's profile is validated and a unique ABHA number is generated, enabling secure onboarding into the ABDM digital health ecosystem.
+Aadhaar Biometric-Based ABHA Creation enables beneficiaries to create an ABHA using Aadhaar-based biometric authentication, in accordance with the guidelines issued by the ABDM and the Unique Identification Authority of India (UIDAI).
 
-The Registered Device (RD) List and information can be found on the following link: [uidai.gov.in](https://uidai.gov.in/en/ecosystem/authentication-devices-documents/biometric-devices.html).
+Under this workflow, the beneficiary provides their Aadhaar number at the participating healthcare facility. The facility initiates the Aadhaar biometric authentication process. The beneficiary is required to provide a biometric credential, such as a fingerprint or iris scan, using a UIDAI-authorized Registered Device (RD).
+
+The captured biometric information is securely processed through the authorized Aadhaar authentication ecosystem and submitted to UIDAI for identity verification. UIDAI validates the biometric data against the Aadhaar records associated with the Aadhaar number provided by the beneficiary. It returns the authentication response through the approved authentication channels.
+
+Upon successful biometric authentication and obtaining the beneficiary's consent, the demographic details associated with the Aadhaar record are retrieved and used to validate the beneficiary's identity. Following successful verification, a unique ABHA number is generated and linked to the beneficiary, thereby enabling access to the services offered under the ABDM.
+
+The Registered Device (RD) list and information can be found on the following link: [uidai.gov.in](https://uidai.gov.in/hi/biometric-devices).
 
 The calls, in order, are on the [M1 API reference](/docs/main/docs/hiecm/v3/api/m1) under ABHA creation, fingerprint and ABHA creation, iris.
 
