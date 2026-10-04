@@ -1,0 +1,37 @@
+{
+  "id": "nha-review-unauthorized-01",
+  "slice": "nha-review",
+  "class": "diagnose",
+  "turns": [
+    {
+      "role": "user",
+      "text": "Why does an \"Unauthorized\" error appear when calling an API?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "gateway": "hiecm",
+  "must_contain": [
+    "Unauthorized means one of three keys was refused: the organisation's client id and client secret, the short access token, or the person's own token",
+    "Which one was refused depends on which calls fail: the first call, every call after it, or only calls about one person",
+    "The check that separates the causes is to run POST /api/hiecm/gateway/v3/sessions on its own, then send the failing call again at once with the accessToken it returned"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.troubleshooting.unauthorized-on-an-api-call"
+  ],
+  "expected_shape": "diagnose",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#nha-review-2026-09-30",
+  "catalogue_version": "2026.09.16",
+  "notes": "NHA QA sample, 30 September 2026: 'Correct but overly exaggerated thereby causing confusion.' Verdict group: generic rather than situational. The rejected answer listed every possible cause at once; the case asks for the one check that tells the causes apart."
+}

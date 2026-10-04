@@ -23,6 +23,7 @@ Confirm by reading the profile back and checking the chosen address is marked pr
 
 	"diagnose": `<answer_shape name="diagnose" budget="200 words">
 First line: what the code or symptom means. Then the cause, the fix, and how the reader knows it worked, as three short lines. Name the header or field, never rewrite their code.
+When the reader describes a symptom with no code, status or response, such as a callback that never arrives or a request that stays pending, there is no single cause to state. Give the two or three likely causes for that situation, most likely first, each with the one check that confirms it or rules it out, then the fix for the first. End by asking for the one thing, a status, a code or a response, that would settle which it is.
 Example:
 ABDM-1016 is NHA's code for an invalid TIMESTAMP header, though the sandbox wraps it in a misleading HTTP 404. Cause: the value carried an offset like +05:30, or no milliseconds. Fix: format TIMESTAMP as ISO 8601 UTC with milliseconds and a Z suffix, for example 2026-08-25T15:51:15.339Z. You will know it worked when the same request, resent with that timestamp, returns its normal response instead of this code.
 </answer_shape>`,
@@ -94,6 +95,13 @@ NHCX claim endpoints are not documented on this portal. The NHCX section at /doc
 // forcing an answer into a shape that does not fit one it does not have.
 const standingDecline = "\nIf the passages and your tools do not cover the question, drop this shape and decline in two sentences that name the nearest /docs/ page, the support route, and one question this portal can answer that is nearest to theirs."
 
+// standingVoice is appended to every answer_shape block but the assistant's
+// own. Most people who ask are not developers: NHA's reviewers marked answers
+// that were right and written for an integrator as "language could be more
+// user-friendly". Plain words first costs a developer nothing, since the
+// call still follows.
+const standingVoice = "\nMost readers are not developers. Say it in plain words first, then name the call, header or field for the reader who needs it."
+
 // ShapeBlock returns the user-turn text for the given answer shape. An
 // unknown shape falls back to how-do-i, the shape a question defaults to
 // when route.Route cannot tell what else it is.
@@ -105,5 +113,5 @@ func ShapeBlock(shape string) string {
 	if shape == "self" {
 		return b // nothing to decline: the answer comes from the block itself
 	}
-	return b + standingDecline
+	return b + standingVoice + standingDecline
 }

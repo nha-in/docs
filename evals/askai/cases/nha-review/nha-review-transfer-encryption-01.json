@@ -1,0 +1,39 @@
+{
+  "id": "nha-review-transfer-encryption-01",
+  "slice": "nha-review",
+  "class": "define",
+  "turns": [
+    {
+      "role": "user",
+      "text": "What is the encryption algorithm used in data transfer?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "gateway": "hiecm",
+  "must_contain": [
+    "Curve25519 is specified for the key exchange and AES-GCM for the encryption itself",
+    "Both sides generate a short lived key pair and a random 32 byte nonce, exchange the public halves, and derive the same session key",
+    "Each transfer generates its own key pair and nonce"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom",
+    "common mistake"
+  ],
+  "expected_sources": [
+    "hiecm.glossary.ecdh",
+    "hiecm.endpoint.m2-hip-health-information-on-request"
+  ],
+  "expected_shape": "define",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#nha-review-2026-09-30",
+  "catalogue_version": "2026.09.16",
+  "notes": "NHA QA sample, 30 September 2026: 'Providing generic knowledge and not specific about the topic.' Verdict group: generic rather than situational. The rejected answer named the algorithms and closed on a common mistake."
+}

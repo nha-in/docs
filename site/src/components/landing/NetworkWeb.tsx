@@ -708,7 +708,7 @@ export default function NetworkWeb({
      * The same accent, at the chroma a pale page needs.
      *
      * Dark mode has headroom: a low alpha wash over near black is read as
-     * light, and that version stays as it is. Cream has none, so the identical
+     * light, and that version stays as it is. A near-white page has none, so the identical
      * wash is read as a film of grey laid on the paper. A canvas composite
      * does not rescue it either: over a near white ground multiply
      * and source-over resolve to the same pixels. What separates a lamp from a

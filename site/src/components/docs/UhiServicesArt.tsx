@@ -27,7 +27,7 @@ import drawing from './uhi-services-art.json';
  * the search bar, and each row's icon, label and divider. Each stroke carries
  * when it starts and how long it takes, scaled so the pen is done at 5.6
  * seconds: slower for the line, quicker for the details. LineArt.tsx draws it
- * once per visitor.
+ * on every page load.
  *
  * The screen is illustrative: the list shows what a UHI app can offer, not
  * any real app, and the drawing carries no NHA mark or app branding.
@@ -39,7 +39,6 @@ export default function UhiServicesArt(): React.ReactNode {
       width={975}
       height={1024}
       label="Line drawing of two hands holding a phone whose app lists the six UHI services: Physical Consultation, PM-JAY HEM, NOTTO, Blood Bank, Ambulance Booking and Jan Aushadhi."
-      storageKey="abdm:uhi-services-art-seen"
       maskId="uhi-services-art-pen"
     />
   );

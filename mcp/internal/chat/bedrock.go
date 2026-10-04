@@ -3,8 +3,12 @@ package chat
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"log/slog"
+	"math/rand/v2"
 	"strings"
+	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	awsconfig "github.com/aws/aws-sdk-go-v2/config"
@@ -238,8 +242,102 @@ func reasoningFieldsFor(modelID, effort string) document.Interface {
 	return document.NewLazyDocument(map[string]any{"reasoning": map[string]any{"effort": effort}})
 }
 
+// Bedrock failure classes, as classifyBedrockError names them. A throttle
+// and a transient failure are both worth another attempt; they are told
+// apart because the turn's log line names a throttle on its own.
+const (
+	bedrockThrottle  = "throttle"
+	bedrockTransient = "transient"
+)
+
+// classifyBedrockError reports whether err is a throttle, a transient
+// server-side failure, or neither (the empty string). It reads the error
+// code and the HTTP status through two small interfaces rather than the
+// SDK's concrete types: every Bedrock exception and every HTTP response
+// error in the chain satisfies one of them, on the initial call and inside
+// the event stream alike, and a test can build either without AWS.
+func classifyBedrockError(err error) string {
+	var coded interface{ ErrorCode() string }
+	if errors.As(err, &coded) {
+		switch coded.ErrorCode() {
+		case "ThrottlingException", "TooManyRequestsException":
+			return bedrockThrottle
+		case "InternalServerException", "ServiceUnavailableException",
+			"ModelStreamErrorException", "ModelTimeoutException", "ModelNotReadyException":
+			return bedrockTransient
+		}
+	}
+	var status interface{ HTTPStatusCode() int }
+	if errors.As(err, &status) {
+		switch code := status.HTTPStatusCode(); {
+		case code == 429:
+			return bedrockThrottle
+		case code >= 500:
+			return bedrockTransient
+		}
+	}
+	return ""
+}
+
+// streamBackoffs are the waits before the second and third attempts. Two
+// retries is the budget because every question has one 90 second deadline
+// across all its model calls: a third wait would spend it on a provider
+// that is not coming back in time.
+var streamBackoffs = []time.Duration{400 * time.Millisecond, 1200 * time.Millisecond}
+
+// jitter spreads d over plus or minus a quarter, so readers throttled in
+// the same second do not all come back in the same later one.
+func jitter(d time.Duration) time.Duration {
+	return d*3/4 + rand.N(d/2+1)
+}
+
+// sleepCtx waits for d, or returns ctx's error the moment it is cancelled.
+func sleepCtx(ctx context.Context, d time.Duration) error {
+	t := time.NewTimer(d)
+	defer t.Stop()
+	select {
+	case <-ctx.Done():
+		return ctx.Err()
+	case <-t.C:
+		return nil
+	}
+}
+
+// streamWithRetry runs attempt, and runs it again after a backoff when it
+// failed with a throttle or a transient error before any text reached
+// onText. Once a delta has been delivered there is no retry: the reader may
+// already have seen that text, and a second attempt would say it twice. A
+// cancelled ctx ends the waiting at once and the failure that was being
+// retried is returned, since that is the one worth logging.
+func streamWithRetry(ctx context.Context, wait func(context.Context, time.Duration) error,
+	onText func(string), attempt func(onText func(string)) (Reply, error)) (Reply, error) {
+
+	delivered := false
+	counting := func(delta string) {
+		delivered = true
+		if onText != nil {
+			onText(delta)
+		}
+	}
+	for try := 0; ; try++ {
+		reply, err := attempt(counting)
+		if err == nil {
+			return reply, nil
+		}
+		class := classifyBedrockError(err)
+		if class == "" || delivered || try >= len(streamBackoffs) || ctx.Err() != nil {
+			return Reply{}, err
+		}
+		slog.Warn("bedrock_retry", "class", class, "attempt", try+1, "error", err)
+		if wait(ctx, jitter(streamBackoffs[try])) != nil {
+			return Reply{}, err
+		}
+	}
+}
+
 // Stream calls Bedrock's ConverseStream and drains the event stream into one
-// assembled Reply, invoking onText as text deltas arrive.
+// assembled Reply, invoking onText as text deltas arrive. A throttle or a
+// transient failure is retried, see streamWithRetry.
 func (b *bedrockModel) Stream(ctx context.Context, system string, tools []ToolDef,
 	msgs []Message, maxTokens int, onText func(string)) (Reply, error) {
 
@@ -248,11 +346,9 @@ func (b *bedrockModel) Stream(ctx context.Context, system string, tools []ToolDe
 		return Reply{}, err
 	}
 
-	systemBlocks := systemBlocksFor(system, promptCacheable(b.modelID))
-
-	out, err := b.client.ConverseStream(ctx, &bedrockruntime.ConverseStreamInput{
+	input := &bedrockruntime.ConverseStreamInput{
 		ModelId:                      aws.String(b.modelID),
-		System:                       systemBlocks,
+		System:                       systemBlocksFor(system, promptCacheable(b.modelID)),
 		Messages:                     toBedrockMessages(msgs),
 		ToolConfig:                   toolConfig,
 		AdditionalModelRequestFields: reasoningFieldsFor(b.modelID, b.reasoningEffort),
@@ -260,7 +356,17 @@ func (b *bedrockModel) Stream(ctx context.Context, system string, tools []ToolDe
 			MaxTokens:   aws.Int32(int32(maxTokens)),
 			Temperature: temperatureFor(b.modelID, b.temperature),
 		},
+	}
+	return streamWithRetry(ctx, sleepCtx, onText, func(onText func(string)) (Reply, error) {
+		return b.streamOnce(ctx, input, onText)
 	})
+}
+
+// streamOnce is one ConverseStream call, drained to its end.
+func (b *bedrockModel) streamOnce(ctx context.Context, input *bedrockruntime.ConverseStreamInput,
+	onText func(string)) (Reply, error) {
+
+	out, err := b.client.ConverseStream(ctx, input)
 	if err != nil {
 		return Reply{}, fmt.Errorf("bedrock model: converse stream: %w", err)
 	}
