@@ -108,8 +108,9 @@ The Docs MCP indexer parses every `catalogue/<gateway>/openapi/<version>/*.yaml`
 and NHCX's `catalogue/openapi/nhcx/v1/*.yaml` (not `journeys/` or `errors/`), and fails the build on any operation without an
 `operationId`. The extension must be `.yaml`; a `.yml` file is silently
 ignored today. `.md` files under any `openapi/` folder, such as `CONVENTIONS.md` and the corrections logs,
-are skipped as spec-area documentation. `webhooks` sections are not yet
-indexed, only `paths` operations reach `search` and `get`. The full walk
+are skipped as spec-area documentation. `webhooks` operations are indexed
+with the `paths` ones and marked as callbacks, so `search` and `get` reach
+them and `get` says ABDM posts them to your bridge. The full walk
 contract lives at `catalogue/README.md` in the abdm-docs repository.
 
 ## Related

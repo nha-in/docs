@@ -400,6 +400,17 @@ type OperationValidation struct {
 	RequiredParams    []string
 }
 
+// IsCallback reports whether an operation is one ABDM makes to your bridge,
+// read from the spec's webhooks, rather than one you make. False for an
+// unknown id, and for an index built before the column existed.
+func (r *Reader) IsCallback(id string) bool {
+	var cb bool
+	if err := r.db.QueryRow(`SELECT callback FROM operations WHERE operation_id = ?`, id).Scan(&cb); err != nil {
+		return false
+	}
+	return cb
+}
+
 func (r *Reader) GetOperationValidation(id string) (OperationValidation, error) {
 	var schema sql.NullString
 	var params string

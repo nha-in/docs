@@ -685,6 +685,13 @@ func (t *Tools) GetOperation(ctx context.Context, in getOpIn) (map[string]any, e
 	if path := index.OperationDocPath(module, in.OperationID); path != "" {
 		out["doc_path"] = path
 	}
+	if t.r.IsCallback(in.OperationID) {
+		// A callback's path is relative to the integrator's bridge URL, and
+		// its request body is what arrives, not what they send. Said once
+		// here so an agent does not try to call it.
+		out["callback"] = true
+		out["direction"] = "ABDM posts this to your bridge: the path is relative to the callback URL registered for your bridge, and the request body is what you receive. Answer it; do not call it."
+	}
 	return t.versioned(out), nil
 }
 

@@ -4,8 +4,10 @@ import (
 	"bytes"
 	"database/sql"
 	"errors"
+	"path/filepath"
 	"testing"
 
+	"github.com/nha-in/docs/mcp/internal/catalogue"
 	"github.com/nha-in/docs/mcp/internal/fhir"
 )
 
@@ -321,5 +323,33 @@ func TestLinkForPath(t *testing.T) {
 	}
 	if url, ok := r.LinkForPath("/api/nowhere"); ok {
 		t.Errorf("unknown path resolved to %q", url)
+	}
+}
+
+// A webhook operation is stored as a callback and read back as one; a paths
+// operation, an unknown id, and the fixture's ordinary operation are not.
+func TestIsCallback(t *testing.T) {
+	ops := append(fixtureOps(), catalogue.Operation{
+		OperationID: "m2_post_v3_link_on_carecontext", Method: "POST", Path: "/api/v3/link/on_carecontext",
+		Summary: "The outcome of linking", Module: "m2", SpecJSON: []byte(`{}`), Callback: true,
+	})
+	dbPath := filepath.Join(t.TempDir(), "catalogue.db")
+	meta := Meta{CatalogueVersion: "2026.08.24", BuiltAt: "2026-08-24T00:00:00Z"}
+	if err := Build(dbPath, fixtureAtoms(), map[string]catalogue.AtomQuestions{}, ops, nil, nil, nil, nil, meta); err != nil {
+		t.Fatal(err)
+	}
+	r, err := Open(dbPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer r.Close()
+	if !r.IsCallback("m2_post_v3_link_on_carecontext") {
+		t.Error("the webhook operation is not a callback")
+	}
+	if r.IsCallback(fixtureOps()[0].OperationID) {
+		t.Error("a paths operation reads as a callback")
+	}
+	if r.IsCallback("no_such_operation") {
+		t.Error("an unknown id reads as a callback")
 	}
 }

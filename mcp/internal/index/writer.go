@@ -104,9 +104,9 @@ func Build(dbPath string, atoms []catalogue.Atom, questions map[string]catalogue
 		if o.RequestSchemaJSON != nil {
 			reqSchema = string(o.RequestSchemaJSON)
 		}
-		if _, err := tx.Exec(`INSERT INTO operations VALUES (?,?,?,?,?,?,?,?,?)`,
+		if _, err := tx.Exec(`INSERT INTO operations VALUES (?,?,?,?,?,?,?,?,?,?)`,
 			o.OperationID, o.Method, o.Path, o.Summary, o.Tag, o.Module,
-			string(o.SpecJSON), reqSchema, string(reqParams)); err != nil {
+			string(o.SpecJSON), reqSchema, string(reqParams), o.Callback); err != nil {
 			return fmt.Errorf("operation %s: %w", o.OperationID, err)
 		}
 		if _, err := tx.Exec(`INSERT INTO operations_fts (operation_id, text, error_codes) VALUES (?,?,?)`,
