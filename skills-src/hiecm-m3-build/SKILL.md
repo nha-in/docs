@@ -217,7 +217,14 @@ curl --request GET \
 
 **Exit condition (Observe until this is true)**
 
-A 200 whose body matches:
+Each call you made in this journey answered by its callback, with `response.requestId` equal to the `REQUEST-ID` you sent on that call. The 202 on a call is receipt, not the outcome: the outcome is in the callback's body.
+
+- `POST /api/hiecm/consent/v3/request/init` is answered by `POST /api/v3/hiu/consent/request/on-init` on your bridge.
+- `POST /api/hiecm/consent/v3/request/status` is answered by `POST /api/v3/hiu/consent/request/on-status` on your bridge.
+- `POST /api/hiecm/consent/v3/fetch` is answered by `POST /api/v3/hiu/consent/on-fetch` on your bridge.
+- `POST /api/hiecm/data-flow/v3/health-information/request` is answered by `POST /api/v3/hiu/health-information/on-request` on your bridge.
+
+Then `GET /api/hiecm/data-flow/v3/health-information/request/status/{transaction-id}` returns a 200 whose body matches:
 
 ```json
 {
