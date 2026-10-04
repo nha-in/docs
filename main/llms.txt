@@ -587,8 +587,6 @@ Add `.md` to any link below to get that page as markdown. Individual API operati
 - [The recipient cannot decrypt your message](https://nha-in.github.io/docs/main/docs/nhcx/v1/troubleshooting/the-recipient-cannot-decrypt): A `PAYR-1001` protocol response: the certificate, its cache, the algorithms and the compact form
 - [Your callback URL is rejected or never called](https://nha-in.github.io/docs/main/docs/nhcx/v1/troubleshooting/your-callback-url-is-rejected): The endpoint update is refused, or nothing ever reaches your server
 - [What's new in NHCX](https://nha-in.github.io/docs/main/docs/nhcx/v1/whats-new): Dated changes to what you can build against on NHCX, newest first.
-- [21 September 2026](https://nha-in.github.io/docs/main/docs/nhcx/v1/whats-new/2026-09-21): What changed in the NHCX documentation on 21 September 2026.
-- [23 September 2026](https://nha-in.github.io/docs/main/docs/nhcx/v1/whats-new/2026-09-23): What changed in the NHCX documentation on 23 September 2026.
 
 ## docs/support
 
@@ -691,16 +689,6 @@ Add `.md` to any link below to get that page as markdown. Individual API operati
 ## docs/whats-new
 
 - [What's new](https://nha-in.github.io/docs/main/docs/whats-new): Dated changes to what you can build against, newest first.
-- [15 September 2026](https://nha-in.github.io/docs/main/docs/whats-new/2026-09-15): What changed in these pages on 15 September 2026.
-- [16 September 2026](https://nha-in.github.io/docs/main/docs/whats-new/2026-09-16): What changed in these pages on 16 September 2026.
-- [21 September 2026](https://nha-in.github.io/docs/main/docs/whats-new/2026-09-21): What changed in these pages on 21 September 2026.
-- [22 September 2026](https://nha-in.github.io/docs/main/docs/whats-new/2026-09-22): What changed in these pages on 22 September 2026.
-- [23 September 2026](https://nha-in.github.io/docs/main/docs/whats-new/2026-09-23): What changed in these pages on 23 September 2026.
-- [25 September 2026](https://nha-in.github.io/docs/main/docs/whats-new/2026-09-25): What changed in these pages on 25 September 2026.
-- [29 September 2026](https://nha-in.github.io/docs/main/docs/whats-new/2026-09-29): What changed in these pages on 29 September 2026.
-- [30 September 2026](https://nha-in.github.io/docs/main/docs/whats-new/2026-09-30): What changed in these pages on 30 September 2026.
-- [3 October 2026](https://nha-in.github.io/docs/main/docs/whats-new/2026-10-03): What changed in these pages on 3 October 2026.
-- [4 October 2026](https://nha-in.github.io/docs/main/docs/whats-new/2026-10-04): What changed in these pages on 4 October 2026.
 
 ## Optional
 

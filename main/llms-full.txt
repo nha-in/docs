@@ -14870,11 +14870,13 @@ The code carries two messages, and the message tells you which case you are in:
 
 In user initiated linking, the link init exchange can carry it in an `error` object. The message there is "This care context has already been linked".
 
+Linking a care context that is already linked, on `POST /api/hiecm/hip/v3/link/carecontext`, is refused at once rather than on the callback. The refusal is a 400 with `ABDM-9999` and the message "Duplicate HIP link request". The error list gives that message under `ABDM-1090`; match on the message, not the code.
+
 Notes for AI agents
 
 **Before you start.** Keep your own record of the care contexts you have linked and the reference numbers you used. This code usually means your state and the gateway's state disagree.
 
-**When it goes wrong.** Already linked: treat it as done once you have confirmed the care context is linked, and do not retry the link. Invalid reference number: restart the link flow for a fresh reference rather than guessing the value.
+**When it goes wrong.** Already linked, whether as `ABDM-1056` on the callback or as a synchronous 400 with `ABDM-9999` and "Duplicate HIP link request": treat it as done once you have confirmed the care context is linked, and do not retry the link. Invalid reference number: restart the link flow for a fresh reference rather than guessing the value.
 
 ### ABDM-1062: ABHA number mismatch, or consent not granted
 
@@ -15024,6 +15026,18 @@ Notes for AI agents
 **How you know it worked.** After a request problem, the corrected request succeeds. After an unavailability message, the same request succeeds later, unchanged.
 
 **When it goes wrong.** For a request problem, fix the field the message names, because a retry repeats the mistake. For an unavailability message, retry with exponential backoff and a cap on attempts, so the loop does not end in [ABDM-1022](#abdm-1022). If it persists for hours, report it through [Support](/docs/main/docs/support) with your `REQUEST-ID` and `TIMESTAMP`.
+
+### 303001: the gateway suspended the endpoint
+
+The gateway returns HTTP 500 with `303001` and a message beginning "Runtime Error", naming the address endpoint as suspended. It follows a run of timeouts on the same call: the gateway stops forwarding to the backend for a while. It is not a problem in your request, and the same request succeeds once the endpoint is back.
+
+Notes for AI agents
+
+**What happens.** The code comes from the gateway, not from an ABDM service, so it has no `ABDM-` prefix. It arrives after several timeouts or 504s on one call.
+
+**How you know it worked.** The same request, unchanged, succeeds after a pause.
+
+**When it goes wrong.** Back off rather than retry at once, or the suspension lasts longer. If the timeouts that preceded it were on `POST /api/hiecm/hip/v3/link/carecontext`, check that each patient entry names its type in `hiType`: a misnamed field gets no answer, and the timeouts lead here.
 
 [NextStill stuck? Ask for helpWhere to file what you hit, so the answer lands back in these pages.](/docs/support)
 
@@ -35524,17 +35538,18 @@ The callbacks you host carry instructions about a named person's health records:
 ## In short
 
 - Anything can post to your callback URL, so check every callback before your handler acts.
-- Require a bearer token in `Authorization`, and a `response.requestId` that matches a request you sent.
+- Require a bearer token in `Authorization`, a `response.requestId` that matches a request you sent, and a facility header that names one of your facilities.
 - Fail closed. A check that is skipped on error is worse than none.
 
 ## Check every callback before you act on it
 
-Every callback in the specifications declares bearer authentication. The token arrives in the `Authorization` header as `Bearer <token>`. Check two things before your handler does any work:
+Every callback in the specifications declares bearer authentication. The token arrives in the `Authorization` header as `Bearer <token>`. Check three things before your handler does any work:
 
 1. **A bearer token is present.** Reject a callback without one, and log the rejection.
-2. **It answers a call you made.** Its `response.requestId` matches the `REQUEST-ID` of a request you sent. A callback that answers nothing you sent is not yours to act on.
+2. **An answer answers a call you made.** Its `response.requestId` matches the `REQUEST-ID` of a request you sent. A callback that answers nothing you sent is not yours to act on.
+3. **It is for a facility you serve.** `X-HIP-ID` or `X-HIU-ID` names one of your own facilities. This is the only check that covers a callback that answers nothing, such as a discovery request, a link init or a consent notification. A bridge can receive callbacks for services that are not yours: on a shared sandbox bridge, another organisation's consent notifications and link callbacks have arrived at an integrator's URL. Storing one keeps another organisation's patient data, and answering one acts on its behalf.
 
-The keys that verify the token's signature are not among the published gateway calls. Confirm at onboarding how to verify the token, and meanwhile hold the two checks above.
+The keys that verify the token's signature are not among the published gateway calls. Confirm at onboarding how to verify the token, and meanwhile hold the three checks above.
 
 The signature inside a consent artefact is a different thing. It signs the artefact's contents and proves the artefact was not altered. Checking the delivery does not check the artefact, and checking the artefact does not check the delivery.
 
@@ -35552,11 +35567,11 @@ Notes for AI agents
 
 **Before you start.** A callback URL registered for your bridge, and the understanding that a 202 on your own call is not the answer. See [a 200 means accepted, not done](/docs/main/docs/hiecm/v3/concepts/gateway#asynchronous-callbacks).
 
-**What happens.** In the handler, before parsing the body for action: require the `Authorization` header with a bearer token, then require that `response.requestId` matches a `REQUEST-ID` your system sent and has not already handled. Reject otherwise. Do not invent a signature check against a key source the specifications do not publish.
+**What happens.** In the handler, before parsing the body for action: require the `Authorization` header with a bearer token; require that `X-HIP-ID` or `X-HIU-ID` names one of your facilities; and, on a callback that answers a call, require that `response.requestId` matches a `REQUEST-ID` your system sent and has not already handled. Reject otherwise. Do not invent a signature check against a key source the specifications do not publish.
 
 **How you know it worked.** A test posts a valid callback body without `Authorization` and sees it rejected and logged before any handler work.
 
-**When it goes wrong.** Never fall back to processing a callback that failed a check while you investigate. A callback whose request id is unknown to you is logged and dropped, not retried.
+**When it goes wrong.** Never fall back to processing a callback that failed a check while you investigate. A callback whose request id is unknown to you, or whose facility header names a facility you do not serve, is logged and dropped, not stored, answered or retried.
 
 ## Next
 
@@ -35860,8 +35875,8 @@ Six steps, once consent has validated.
 2. Generate a 32 byte random value, RAND(P).
 3. Compute the shared key DHK(U,P) from the HIU's public key DHPK(U) and the HIP's own private key DHSK(P).
 4. Derive the salt and IV by XOR of RAND(P) and RAND(U). The first 20 bytes are the salt for HKDF, the last 12 bytes the IV.
-5. Compute a 256 bit AES-GCM session key SK(U,P) with HKDF, from the shared key and that salt.
-6. Encrypt the data with that key and that IV.
+5. Compute a 256 bit AES-GCM session key SK(U,P) with HKDF-SHA256, from the x coordinate of the shared key and that salt. The HKDF `info` is empty.
+6. Encrypt the data with AES-256-GCM, that key and that IV, with no additional authenticated data. Append the 16 byte authentication tag to the ciphertext and base64 encode the result.
 
 The HIP then sends DHPK(P), RAND(P) and the encrypted data. The HIU derives the same session key from its own private key DHSK(U) and the HIP's public key DHPK(P), with salt and IV from the same XOR.
 
@@ -35870,6 +35885,16 @@ Build the shared key from the HIU's public key and the HIP's private key. That i
 ### Do not write this yourself
 
 Two reference implementations exist. Fidelius, at [github.com/sukreet/fidelius](https://github.com/sukreet/fidelius), and the Fidelius CLI, which is Java, with worked examples for Node.js, Python, Ruby and PHP at [github.com/mgrmtech/fidelius-cli](https://github.com/mgrmtech/fidelius-cli/tree/main/examples) that run the binary as a subprocess. A webinar covers the CLI from both sides, at [youtu.be/rSir2gbkEmk](https://youtu.be/rSir2gbkEmk?t=9232) from 2:33:52.
+
+Notes for AI agents
+
+**Before you start.** The HIU's `keyMaterial` from the health information request: its public key and its 32 byte nonce.
+
+**What happens.** Generate a fresh key pair and nonce per transfer. XOR the two nonces: the first 20 bytes are the HKDF salt, the last 12 the IV. Derive the key with HKDF-SHA256 over the x coordinate of the ECDH result, with an empty `info`, for 32 bytes. Encrypt with AES-256-GCM, no additional authenticated data, and append the 16 byte tag before base64 encoding.
+
+**How you know it worked.** The HIU decrypts every entry and its tag check passes. Before any peer is involved, round trip a record through the Fidelius CLI and compare bytes.
+
+**When it goes wrong.** Every tag check fails: compare the salt and IV split, the HKDF input (the x coordinate, not the whole shared secret) and an `info` or additional data that should be empty. One HIP fails while others work: compare how its public key is encoded.
 
 ## Where this is implemented
 
@@ -36408,7 +36433,7 @@ Decide which level a setting belongs to before you build a settings screen for i
 | Facility ID                   | Each facility                              | [HFR onboarding](/docs/main/docs/hiecm/v3/milestones/m4#journey-3-a-facility-onboards-to-the-hfr)     |
 | `bridgeId`, `hipName`, `type` | Each facility, once per bridge it links to | [The bridge linkage call](/docs/main/docs/hiecm/v3/milestones/m4#m4-link-bridge)                      |
 
-Every callback for every facility arrives at the one bridge URL. The header says which facility it belongs to: `X-HIP-ID` in [M2](/docs/main/docs/hiecm/v3/api/m2), and `X-HIU-ID` in [M3](/docs/main/docs/hiecm/v3/api/m3). That header is what your handler routes a callback on, and the facility ID is what your records key to.
+Every callback for every facility arrives at the one bridge URL. The header says which facility it belongs to: `X-HIP-ID` in [M2](/docs/main/docs/hiecm/v3/api/m2), and `X-HIU-ID` in [M3](/docs/main/docs/hiecm/v3/api/m3). That header is what your handler routes a callback on, and the facility ID is what your records key to. A header naming a facility you do not serve is not yours: drop the callback rather than store or answer it. See [callback authenticity](/docs/main/docs/hiecm/v3/concepts/callback-authenticity).
 
 A callback URL kept in a facility's settings is a design error, and so is a client secret. Either survives the first facility and fails on the next. See [the headers](/docs/main/docs/hiecm/v3/reference/authentication) for what travels on each call.
 
@@ -65754,78 +65779,9 @@ If the update itself keeps failing, write to `hcx.integration@nha.gov.in` with y
 
 ---
 
-# 21 September 2026
-
-4 changes
-
-### NHCX error pages list their codes
-
-This is a correction. [Error codes](/docs/main/docs/nhcx/v1/reference/error-codes) said no code was recorded, and so did the errors page of every NHCX module. 310 codes were recorded all along, and the pages now list them: by who sent them on the reference page, and by the paths they arrive on under each module. An NHCX code reaches you sealed inside a callback rather than in the response to your call, which is why a page built from response examples found none.
-
-### The NHCX plugin installs
-
-This is a correction. The command on [Build with AI](/docs/main/docs/nhcx/v1/getting-started/build-with-ai#install-the-plugin) failed, because the marketplace did not list the plugin it named. It does now. The plugin also carries three commands and an agent for Claude Code: `/nhcx-decode-error`, `/nhcx-preflight`, `/nhcx-prove-seal` and `nhcx-call-debugger`.
-
-### NHCX skills install as a folder
-
-This is a correction. The install box for an NHCX skill was empty, and the command behind it fetched three files that an NHCX skill does not have. Each skill is 59 files across eight directories, so the command now takes the archive. Each also gains a scaffold, and its router says where the folder came from, that it is a snapshot, and what its claims rest on.
-
-### Build it well, for NHCX
-
-[Build it well](/docs/main/docs/nhcx/v1/getting-started/build-it-well) is new. It covers who refused a message, which sends are safe to repeat, how to match an answer to its request, and what to do when no answer comes.
-
-
----
-
-# 23 September 2026
-
-5 changes
-
-### The JWE message format has its own page
-
-[The JWE message format](/docs/main/docs/nhcx/v1/getting-started/jwe-message-format) is new. It lists the five parts of a message, the algorithms, every protected header field with its obligation, the status values, the receipt, protocol errors and the correlation rule in one place. [JWE Secure Messaging](/docs/main/docs/nhcx/v1/concepts/jwe-status-and-errors) now explains how a message is sealed and opened in plain terms.
-
-### Workflow codes follow the Workflow Status Sheet
-
-This is a correction. Where the PMJAY Handbook and the Workflow Status Sheet disagree, the pages now follow the sheet. Cancel a preauthorisation on `PC01`, answered on `PC02`, not `122`. `251` acknowledges a resubmitted preauthorisation and is no longer listed as a reprocess acknowledgement. `25` is the claim document acknowledgement. [Workflow Codes](/docs/main/docs/nhcx/v1/concepts/workflow-codes) also has a searchable list of every code with its status.
-
-### Task inputs use intimationNumber
-
-This is a correction. Pages told a preauthorisation Task to send its reference as `initimationNumber`, the spelling in NHA's PMJAY samples. They now use `intimationNumber`, the standard's spelling. If a payer refuses a Task for an invalid case number, check which spelling it expects.
-
-### The NHCX adapter downloads and runs in Docker
-
-[NHCX adapter](/docs/main/docs/nhcx/v1/getting-started/nhcx-adapter#download) now offers the latest release for your operating system and architecture, with its checksums, and the commands to run the published container image `ghcr.io/nha-in/nhcx-adapter`.
-
-### The NHCX skills are rebuilt
-
-The seven NHCX skills on [Build with AI](/docs/main/docs/nhcx/v1/getting-started/build-with-ai#install-a-skill) are replaced by a new generation. `nhcx-full` builds the whole provider-side integration end to end, and the insurance plan now belongs to `nhcx-preauth`, so `nhcx-insurance` is withdrawn. Each skill works through eight logged steps, from discovery to tests on the sandbox, and takes its NHCX facts from the nhcx-docs MCP server or a release of the NHCX package. The `nhcx` plugin is now version 1.0.0 and connects the nhcx-docs MCP server when it installs. Download a skill again rather than updating a copy from before this date.
-
-
----
-
 # What's new in NHCX
 
 Changes to the NHCX documentation that affect what you build, newest first. Each entry links to what you can now read, run or consume. Changes to other gateways are on the [site-wide What's new](/docs/main/docs/whats-new).
-
-## 23 September 2026
-
-5 changes
-
-- [The JWE message format has its own page](/docs/main/docs/nhcx/v1/whats-new/2026-09-23#the-jwe-message-format-has-its-own-page)
-- [Workflow codes follow the Workflow Status Sheet](/docs/main/docs/nhcx/v1/whats-new/2026-09-23#workflow-codes-follow-the-workflow-status-sheet)
-- [Task inputs use intimationNumber](/docs/main/docs/nhcx/v1/whats-new/2026-09-23#task-inputs-use-intimationnumber)
-- [The NHCX adapter downloads and runs in Docker](/docs/main/docs/nhcx/v1/whats-new/2026-09-23#the-nhcx-adapter-downloads-and-runs-in-docker)
-- [The NHCX skills are rebuilt](/docs/main/docs/nhcx/v1/whats-new/2026-09-23#the-nhcx-skills-are-rebuilt)
-
-## 21 September 2026
-
-4 changes
-
-- [NHCX error pages list their codes](/docs/main/docs/nhcx/v1/whats-new/2026-09-21#nhcx-error-pages-list-their-codes)
-- [The NHCX plugin installs](/docs/main/docs/nhcx/v1/whats-new/2026-09-21#the-nhcx-plugin-installs)
-- [NHCX skills install as a folder](/docs/main/docs/nhcx/v1/whats-new/2026-09-21#nhcx-skills-install-as-a-folder)
-- [Build it well, for NHCX](/docs/main/docs/nhcx/v1/whats-new/2026-09-21#build-it-well-for-nhcx)
 
 ## What gets an entry
 
@@ -81301,531 +81257,9 @@ sequenceDiagram
 
 ---
 
-# 15 September 2026
-
-6 changes
-
-### NHCX has API references
-
-[NHCX API references](/docs/main/docs/nhcx/v1/api) cover the exchange in 14 modules, from the session token and the participant registry to claims, payment notices and biometric authentication. Each of its 63 calls has its own page with the headers, the body and a request you can send, and each of the 21 callbacks you host has a page of its own. [Error codes](/docs/main/docs/nhcx/v1/reference/error-codes) lists the codes recorded for the exchange gateway, the standard payer sheet and the PMJAY reference payer.
-
-### Point your agent at NHCX
-
-[Build with AI](/docs/main/docs/nhcx/v1/getting-started/build-with-ai) connects your coding agent to the Docs MCP server, which searches the NHCX catalogue alongside HIE-CM's. `llms.txt` now lists an index for each NHCX API module, so an agent can fetch one module's pages as Markdown.
-
-### Seven NHCX agent skills
-
-Seven agent skills build NHCX into a hospital information system or a claims desk, one use case each: coverage, the insurance plan, pre-authorisation, the claim, payment, communication and reprocess. [Build with AI](/docs/main/docs/nhcx/v1/getting-started/build-with-ai#install-a-skill) lists them with the command that installs each.
-
-### Start on the NHCX sandbox
-
-[Get your sandbox credentials](/docs/main/docs/nhcx/v1/getting-started/get-your-sandbox-credentials) covers what you need before you register, the test participants and the dummy payer. The [Quickstart](/docs/main/docs/nhcx/v1/getting-started/quickstart) then takes you from a session token to a participant search and a fetched certificate, with nothing built yet.
-
-### The NHCX security audit has a page
-
-[Security audit](/docs/main/docs/nhcx/v1/go-live/security-audit) covers the functional and security tests every participant passes before production, and the certificates production onboarding reviews.
-
-### Troubleshooting NHCX by what you see
-
-[Troubleshooting](/docs/main/docs/nhcx/v1/troubleshooting) starts from what you see rather than from the error code:
-
-- Every call returns 401.
-- Your callback URL is rejected.
-- A 202 arrives and no callback follows.
-- The recipient cannot decrypt your message.
-- The payer rejects your bundle.
-- Responses arrive against the wrong request.
-
-
----
-
-# 16 September 2026
-
-3 changes
-
-### The API reference follows the specifications of 16 September 2026
-
-Every endpoint page is now built from the specification set published on 16 September 2026. It covers eleven modules: the gateway, M1 to M4, P1 to P4, subscriptions, and Scan and Pay. Check the operations you call against [the API references](/docs/main/docs/hiecm/v3/api).
-
-### Each ABHA creation and login method is its own sequence
-
-Every way to create an ABHA and every way to log in that the specification carries has its own sequence in the reference, one page per call in the order you make them. Start from [the M1 API reference](/docs/main/docs/hiecm/v3/api/m1).
-
-### Error pages list the codes the specifications return
-
-Seven modules have an errors page, and each lists the codes its specification returns. Start from [the M1 error codes](/docs/main/docs/hiecm/v3/api/m1/errors).
-
-
----
-
-# 21 September 2026
-
-4 changes
-
-### NHCX error pages list their codes
-
-This is a correction. [Error codes](/docs/main/docs/nhcx/v1/reference/error-codes) said no code was recorded, and so did the errors page of every NHCX module. 310 codes were recorded all along, and the pages now list them: by who sent them on the reference page, and by the paths they arrive on under each module. An NHCX code reaches you sealed inside a callback rather than in the response to your call, which is why a page built from response examples found none.
-
-### The NHCX plugin installs
-
-This is a correction. The command on [Build with AI](/docs/main/docs/nhcx/v1/getting-started/build-with-ai#install-the-plugin) failed, because the marketplace did not list the plugin it named. It does now. The plugin also carries three commands and an agent for Claude Code: `/nhcx-decode-error`, `/nhcx-preflight`, `/nhcx-prove-seal` and `nhcx-call-debugger`.
-
-### NHCX skills install as a folder
-
-This is a correction. The install box for an NHCX skill was empty, and the command behind it fetched three files that an NHCX skill does not have. Each skill is 59 files across eight directories, so the command now takes the archive. Each also gains a scaffold, and its router says where the folder came from, that it is a snapshot, and what its claims rest on.
-
-### Build it well, for NHCX
-
-[Build it well](/docs/main/docs/nhcx/v1/getting-started/build-it-well) is new. It covers who refused a message, which sends are safe to repeat, how to match an answer to its request, and what to do when no answer comes.
-
-
----
-
-# 22 September 2026
-
-3 changes
-
-### PHR calls carry the gateway session token, and their body fields are required
-
-The [P1](/docs/main/reference/hiecm-p1) and [P2](/docs/main/reference/hiecm-p2) references showed 21 PHR application calls with no `Authorization` header and no required body fields. Every one of them takes the access token from the gateway session call, and every field the request body shows is required. Get profile, QR code and PHR card also take `X-AUTH-TOKEN` beside `X-token`. If your app sends those calls without the token, add it.
-
-### The PHR public key is not the ABHA service's key
-
-A [PHR](/docs/main/docs/hiecm/v3/getting-started/glossary#phr) application encrypts the Aadhaar number, mobile number, OTP and password with the key from `GET /abha/api/v3/phr/app/login/public/certificate`, the first call in [P1](/docs/main/docs/hiecm/v3/api/p1/endpoints/p1-certificate-and-session/01-p1-get-v3-phr-app-login-public-certificate). [Encryption](/docs/main/docs/hiecm/v3/concepts/encryption) had sent every reader to the M1 certificate. Encrypt every PHR call with the PHR key.
-
-### Consent request init and context notify take an id only
-
-On [consent request init](/docs/main/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/01-m3-post-consent-v3-request-init) the `hiu` block requires `id` alone; the reference had required `name` too, and the request example still sent it. On [link context notify](/docs/main/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/02-m2-post-hip-v3-link-context-notify) the `notification.hip` block requires `id` alone; the reference had required `name` and `type`. Neither extra field is needed.
-
-
----
-
-# 23 September 2026
-
-6 changes
-
-### P2 consent, linking and share calls go to the gateway
-
-The [P2](/docs/main/reference/hiecm-p2) reference printed 17 calls under `/api/hiecm/` against `https://abhasbx.abdm.gov.in`, the ABHA service. They are gateway calls and go to `https://dev.abdm.gov.in`: consent requests and artefacts, auto approval, linking, discovery and patient share. The `/abha/api/v3/phr/app/` calls stay on the ABHA service. If your app built these URLs from the sample, change the host.
-
-### List calls send their required query parameters
-
-The samples on a list call now carry the query parameters the call requires, for example `?limit=5&offset=5&status=ALL` on listing subscription requests. Before, the sample sent the path alone and the call was refused. Listing subscription requests now requires `limit`, `offset` and `status`.
-
-### PHR registration by Aadhaar number, and no email update
-
-[P1](/docs/main/docs/hiecm/v3/milestones/p1) lists registering an ABHA address from an Aadhaar number again, through the ABHA number the Aadhaar OTP creates. Updating the email on a PHR profile is deprecated and no longer listed in P2. On approving a subscription request, `hip` is optional.
-
-### Subscriptions are part of P3, and gateway calls gain two fields
-
-The subscription request and its notifications, a module of their own until now, are the first journey in [P3](/docs/main/reference/hiecm-p3), beside the approve and deny calls they pair with. Old page links redirect. Listing providers takes optional `stateCode` and `districtCode`, and the discovery reply `on-discover` requires `X-HIU-ID`, as the PHR swagger declares.
-
-### Try it fills in fixed values, and the gateway lists what it owns
-
-In Try it, a field that takes only one value, such as `otpSystem` on an M1 use case or `grantType` on the session call, is filled in and locked. The response panel expands to the whole console, and long lines wrap. Callback bodies declared as a success or an error shape, such as [link on care context](/docs/main/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/02-m2-post-v3-link-on-carecontext), show their fields. The [gateway](/docs/main/reference/hiecm-gateway) lists the bridge calls and the session call. Providers and government programmes are in [P2](/docs/main/reference/hiecm-p2), the health locker list in [P4](/docs/main/reference/hiecm-p4).
-
-### P2 is Consents Management, and the patient share calls are named for the OPD
-
-The P2 reference is [P2 Consents Management](/docs/main/reference/hiecm-p2). Its patient share calls read OPD token generation and OPD Token History, in a journey called Quick OPD Registration. Updating the email is gone from every P2 call, not only from the list of journeys. The two PHR application pages are now [one page](/docs/main/docs/hiecm/v3/concepts/participants/phr), which speaks in P1 to P3. The OpenID configuration, key set and update bridge service pages are gone; their old addresses redirect.
-
-
----
-
-# 25 September 2026
-
-31 changes
-
-### Reprocess, cancel and shortfall has an API reference
-
-Two callbacks, for payers and providers, each on its own page with a request you can send. [Open the Reprocess, cancel and shortfall reference](/docs/main/docs/nhcx/v1/api/task/).
-
-### PMJAY adjudicator is documented for payers
-
-The PMJAY adjudicator calls now say what payers send and receive. [Open the PMJAY adjudicator reference](/docs/main/docs/nhcx/v1/api/adjudicator/).
-
-### M4 Registry Integration follows the specification of 24 September 2026
-
-The M4 Registry Integration reference is built from the specification published on 24 September 2026. Headers or parameters changed on 85 calls, and required fields on five calls. [Open the M4 Registry Integration reference](/docs/main/docs/hiecm/v3/api/m4/) and check the calls you make.
-
-### PMJAY adjudicator: required fields corrected on two calls
-
-`POST /pmjay/hcx/nhcxpayerservice/wrapper/process/case` requires `action`, `casenumber`, `correlationid`, `memberid` and 4 more; `POST /pmjay/sbxhcx/nhcxpayerservice/v1/get/user-role` requires `caseid`, `payerid`. If you built against the earlier reference, check these calls. [Open the PMJAY adjudicator reference](/docs/main/docs/nhcx/v1/api/adjudicator/).
-
-### Other: three calls corrected
-
-`POST /v1/error` no longer takes `x-hcx-api_call_id`, `x-hcx-correlation_id`, `x-hcx-recipient_code`, `x-hcx-sender_code` and 2 more, and can return `202` and no longer returns `200`; `POST /v1/notification/subscribe` no longer takes `x-hcx-correlation_id`, `x-hcx-recipient_code`, `x-hcx-sender_code`, `x-hcx-timestamp`; `POST /v1/on_status` no longer takes `x-hcx-api_call_id`, `x-hcx-correlation_id`, `x-hcx-recipient_code`, `x-hcx-sender_code` and 2 more, and can return `202` and no longer returns `200`. If you built against the earlier reference, check these calls. [Open the Other reference](/docs/main/docs/nhcx/v1/api/other/).
-
-### Participant registry: response codes corrected on two calls
-
-`POST /participant/getProductIdName` can return `400`, `404`, `500`; `POST /product/getowner` can return `400`, `404`, `500`. If you built against the earlier reference, check these calls. [Open the Participant registry reference](/docs/main/docs/nhcx/v1/api/registry/).
-
-### Status and search: headers or parameters corrected on three calls
-
-`POST /v1/search/on_submit` no longer takes `x-hcx-api_call_id`, `x-hcx-ben-abha-id`, `x-hcx-correlation_id`, `x-hcx-recipient_code` and 4 more; `POST /v1/search/submit` no longer takes `x-hcx-api_call_id`, `x-hcx-ben-abha-id`, `x-hcx-correlation_id`, `x-hcx-recipient_code` and 4 more; `POST /v1/status` no longer takes `x-hcx-api_call_id`, `x-hcx-ben-abha-id`, `x-hcx-correlation_id`, `x-hcx-recipient_code` and 4 more. If you built against the earlier reference, check these calls. [Open the Status and search reference](/docs/main/docs/nhcx/v1/api/status/).
-
-### NHCX: 24 calls take Accept
-
-Each of these calls requires `Accept`, across adjudicator, onboarding, registry: `POST /pmjay/hcx/nhcxpayerservice/wrapper/process/case`, `POST /pmjay/sbxhcx/nhcxpayerservice/v1/get/user-role`, `GET /update/validate` and 21 more. If you built against the earlier reference, check them. [Open the NHCX reference](/docs/main/docs/nhcx/v1/api/).
-
-### NHCX: four calls no longer take x-hcx-api\_call\_id, x-hcx-ben-abha-id and 8 more as headers
-
-Each of these calls no longer takes `x-hcx-api_call_id`, `x-hcx-ben-abha-id`, `x-hcx-correlation_id`, `x-hcx-debug_flag` and 6 more, across claim, eligibility, payment-notice, preauth: `POST /v1/claim/on_submit`, `POST /v1/coverageeligibility/on_check`, `POST /v1/paymentnotice/on_request` and 1 more. If you built against the earlier reference, check them. [Open the NHCX reference](/docs/main/docs/nhcx/v1/api/).
-
-### NHCX: eight calls require payload and type
-
-Each of these calls requires `payload`, `type`, across claim, communication, eligibility, insurance-plan, other, payment-notice, preauth, status: `POST /v1/claim/on_submit`, `POST /v1/communication/on_request`, `POST /v1/coverageeligibility/on_check` and 5 more. If you built against the earlier reference, check them. [Open the NHCX reference](/docs/main/docs/nhcx/v1/api/).
-
-### NHCX: two calls no longer take x-hcx-api\_call\_id, x-hcx-ben-abha-id and 8 more as headers
-
-Each of these calls no longer takes `x-hcx-api_call_id`, `x-hcx-ben-abha-id`, `x-hcx-correlation_id`, `x-hcx-recipient_code` and 6 more, across claim, preauth: `POST /v1/claim/submit`, `POST /v1/preauth/submit`. If you built against the earlier reference, check them. [Open the NHCX reference](/docs/main/docs/nhcx/v1/api/).
-
-### NHCX: six calls no longer take x-hcx-api\_call\_id, x-hcx-ben-abha-id and 7 more as headers
-
-Each of these calls no longer takes `x-hcx-api_call_id`, `x-hcx-ben-abha-id`, `x-hcx-correlation_id`, `x-hcx-recipient_code` and 5 more, across communication, eligibility, insurance-plan, payment-notice: `POST /v1/communication/on_request`, `POST /v1/communication/request`, `POST /v1/coverageeligibility/check` and 3 more. If you built against the earlier reference, check them. [Open the NHCX reference](/docs/main/docs/nhcx/v1/api/).
-
-### NHCX: four calls go to apisprod.nha.gov.in/pmjay/hcx/participanthcxservice
-
-Each of these calls goes to `https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice`, not `https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice`, across onboarding, registry: `GET /update/validate`, `GET /validate`, `POST /v2/participant/create` and 1 more. If you built against the earlier reference, check them. [Open the NHCX reference](/docs/main/docs/nhcx/v1/api/).
-
-### Participant registry: three calls changed address
-
-`POST /V2/participant/delink/abha/policy` is now `POST /v2/participant/delink/abha/policy`, `POST /V2/participant/get/policies` is now `POST /v2/participant/get/policies`, `POST /V2/participant/link/abha/policy` is now `POST /v2/participant/link/abha/policy`. If your code sends the old address, change it. [Open the Participant registry reference](/docs/main/docs/nhcx/v1/api/registry/).
-
-### One call moved from Participant registry to PMJAY adjudicator
-
-`POST /update/abhanumber`, now in PMJAY adjudicator rather than Participant registry. The calls are unchanged; their pages moved. [Open the PMJAY adjudicator reference](/docs/main/docs/nhcx/v1/api/adjudicator/).
-
-### Two callbacks moved from Other to Reprocess, cancel and shortfall
-
-`POST /v1/task/on_submit`, `POST /v1/task/submit`, now in Reprocess, cancel and shortfall rather than Other. The calls are unchanged; their pages moved. [Open the Reprocess, cancel and shortfall reference](/docs/main/docs/nhcx/v1/api/task/).
-
-### M4 Registry Integration: 15 calls withdrawn
-
-`POST /FacilityManagement/v1.5/facility/bygeoLocation/searchFacilityAndInfrastructureWithinRadiusWithFilter`, `POST /fetchProfessionalFacility`, `POST /getFacilityCreatedByHprId`, `POST /getFacilityDeclaredByHprId` and 11 more. If you call these, stop: the reference no longer carries them. [Open the M4 Registry Integration reference](/docs/main/docs/hiecm/v3/api/m4/).
-
-### Two Claim calls withdrawn
-
-`POST /internal/v1/claim/on_submit`, `POST /internal/v1/claim/submit`. If you call these, stop: the reference no longer carries them. [Open the Claim reference](/docs/main/docs/nhcx/v1/api/claim/).
-
-### Two Communication calls withdrawn
-
-`POST /internal/v1/communication/on_request`, `POST /internal/v1/communication/request`. If you call these, stop: the reference no longer carries them. [Open the Communication reference](/docs/main/docs/nhcx/v1/api/communication/).
-
-### Two Coverage eligibility calls withdrawn
-
-`POST /internal/v1/coverageeligibility/check`, `POST /internal/v1/coverageeligibility/on_check`. If you call these, stop: the reference no longer carries them. [Open the Coverage eligibility reference](/docs/main/docs/nhcx/v1/api/eligibility/).
-
-### Two Insurance plan calls withdrawn
-
-`POST /internal/v1/insuranceplan/on_request`, `POST /internal/v1/insuranceplan/request`. If you call these, stop: the reference no longer carries them. [Open the Insurance plan reference](/docs/main/docs/nhcx/v1/api/insurance-plan/).
-
-### Two Other calls withdrawn
-
-`POST /internal/v1/task/on_submit`, `POST /internal/v1/task/submit`. If you call these, stop: the reference no longer carries them. [Open the Other reference](/docs/main/docs/nhcx/v1/api/other/).
-
-### Two Payment notice calls withdrawn
-
-`POST /internal/v1/paymentnotice/on_request`, `POST /internal/v1/paymentnotice/request`. If you call these, stop: the reference no longer carries them. [Open the Payment notice reference](/docs/main/docs/nhcx/v1/api/payment-notice/).
-
-### Two Pre-authorisation calls withdrawn
-
-`POST /internal/v1/preauth/on_submit`, `POST /internal/v1/preauth/submit`. If you call these, stop: the reference no longer carries them. [Open the Pre-authorisation reference](/docs/main/docs/nhcx/v1/api/preauth/).
-
-### Two Predetermination calls withdrawn
-
-`POST /v1/predetermination/on_submit`, `POST /v1/predetermination/submit`. If you call these, stop: the reference no longer carries them. [Open the Predetermination reference](/docs/main/docs/nhcx/v1/api/).
-
-### One Participant registry call withdrawn
-
-`POST /get/linked/registry/mst`. If you call it, stop: the reference no longer carries it. [Open the Participant registry reference](/docs/main/docs/nhcx/v1/api/registry/).
-
-### Two M4 Registry Integration calls added
-
-`POST /FacilityManagement/v1.5/facility/bygeoLocation/searchWithinRadiusWithFilter`, `POST /v1.0/facility/search-facilities`. [Open the M4 Registry Integration reference](/docs/main/docs/hiecm/v3/api/m4/).
-
-### Postman collections for every HIE-CM module
-
-Each module's reference page offers its collection and the sandbox environment they share, with the session token fetched for you. [Open the API reference](/docs/main/docs/hiecm/v3/api/).
-
-### The nhcx-full skill is published
-
-Install it with your agent, alongside the others. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
-
-### The nhcx plugin is 1.0.0
-
-Reinstall to move from 0.1.0. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
-
-### Two skills withdrawn: hiecm-subscription-build, nhcx-insurance
-
-They are no longer published; remove them from your agent. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
-
-
----
-
-# 29 September 2026
-
-18 changes
-
-### Ambulance Booking has an API reference
-
-Two calls, for EUAs and HSPAs, each on its own page with a signed sample request. [Open the Ambulance Booking reference](/docs/main/docs/uhi/v1/api/ambulance).
-
-### Physical Consultation has an API reference
-
-18 calls, for EUAs and HSPAs, each on its own page with a signed sample request. [Open the Physical Consultation reference](/docs/main/docs/uhi/v1/api/consultation).
-
-### Network and discovery has an API reference
-
-Five calls, for EUAs and HSPAs, each on its own page with a signed sample request. [Open the Network and discovery reference](/docs/main/docs/uhi/v1/api/).
-
-### One M1 Identity call withdrawn
-
-`PATCH /abha/api/v3/profile/account#profile-photo`. If you call it, stop: the reference no longer carries it. [Open the M1 Identity reference](/docs/main/docs/hiecm/v3/api/m1/).
-
-### The hiecm-m1-test skill is published
-
-Install it with your agent, alongside the others. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
-
-### Twelve skills published: uhi-ambulance-build, uhi-ambulance-debug, uhi-blood-bank-build, uhi-blood-bank-debug, uhi-consultation-build, uhi-consultation-debug, uhi-jan-aushadhi-build, uhi-jan-aushadhi-debug, uhi-notto-build, uhi-notto-debug, uhi-pmjay-hem-build, uhi-pmjay-hem-debug
-
-Install them with your agent, alongside the others. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
-
-### The uhi-integrators-assistant plugin 0.1.0 installs
-
-One install gives your agent every skill in it. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
-
-### The abdm-integrators-assistant plugin is 0.9.0
-
-Reinstall to move from 0.5.0. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
-
-### The abdm-contributors-assistant plugin is 0.3.4
-
-Reinstall to move from 0.3.0. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
-
-### The abdm-integrators-assistant plugin is 0.9.2
-
-Reinstall to move from 0.9.0. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
-
-### The nhcx plugin is 1.0.1
-
-Reinstall to move from 1.0.0. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
-
-### The abdm-integrators-assistant plugin is 0.10.0
-
-Reinstall to move from 0.9.2. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
-
-### The abdm-integrators-assistant plugin is 0.10.1
-
-Reinstall to move from 0.10.0. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
-
-### The abdm-contributors-assistant plugin is 0.4.2
-
-Reinstall to move from 0.3.4. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
-
-### The nhcx plugin is 1.0.2
-
-Reinstall to move from 1.0.1. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
-
-### The abdm-contributors-assistant plugin is 0.4.3
-
-Reinstall to move from 0.4.2. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
-
-### The abdm-contributors-assistant plugin is 0.3.6
-
-Reinstall to move from 0.3.5. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
-
-### The abdm-contributors-assistant plugin is 0.4.4
-
-Reinstall to move from 0.4.3. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
-
-
----
-
-# 30 September 2026
-
-3 changes
-
-### One Participant registry call withdrawn
-
-`POST /get/session`. If you call it, stop: the reference no longer carries it. [Open the Participant registry reference](/docs/main/docs/nhcx/v1/api/registry/).
-
-### The uhi-integrators-assistant plugin is 0.1.1
-
-Reinstall to move from 0.1.0. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
-
-### The nhcx plugin is 1.0.3
-
-Reinstall to move from 1.0.2. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
-
-
----
-
-# 3 October 2026
-
-4 changes
-
-### M4 Registry Integration: required fields corrected on six calls
-
-`POST /FacilityManagement/v1.5/facility/bygeoLocation/searchWithinRadiusWithFilter` requires `centerLat`, `centerLon`, `from`, `radiusInKm` and 1 more; `POST /FacilityManagement/v1.5/facility/search` requires `page`, `resultsPerPage`; `POST /search/address/filter/deduplicate` requires `district`, `name`, `subDistrict`; and 3 more. If you built against the earlier reference, check these calls. [Open the M4 Registry Integration reference](/docs/main/docs/hiecm/v3/api/m4/).
-
-### The abdm-integrators-assistant plugin is 0.10.3
-
-Reinstall to move from 0.10.1. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
-
-### The nhcx plugin is 1.0.4
-
-Reinstall to move from 1.0.3. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
-
-### The uhi-integrators-assistant plugin is 0.1.2
-
-Reinstall to move from 0.1.1. [Build with AI](/docs/main/docs/hiecm/v3/getting-started/build-with-ai).
-
-
----
-
-# 4 October 2026
-
-1 change
-
-### M2: a correction
-
-The page said the HIP initiated linking request, POST /api/hiecm/hip/v3/link/carecontext, names each patient entry's health information type hiTypes. The field is hiType, one value such as OPConsultation. A body with hiTypes gets no answer from the gateway, not a 400. [Read the page](/docs/main/docs/hiecm/v3/milestones/m2).
-
-
----
-
 # What's new
 
 Changes that affect what you can build against, newest first. Each entry links to what you can now read, run or consume.
-
-## 4 October 2026
-
-1 change
-
-- [M2: a correction](/docs/main/docs/whats-new/2026-10-04#m2-a-correction)
-
-## 3 October 2026
-
-4 changes
-
-- [M4 Registry Integration: required fields corrected on six calls](/docs/main/docs/whats-new/2026-10-03#m4-registry-integration-required-fields-corrected-on-six-calls)
-- [The abdm-integrators-assistant plugin is 0.10.3](/docs/main/docs/whats-new/2026-10-03#the-abdm-integrators-assistant-plugin-is-0103)
-- [The nhcx plugin is 1.0.4](/docs/main/docs/whats-new/2026-10-03#the-nhcx-plugin-is-104)
-- [The uhi-integrators-assistant plugin is 0.1.2](/docs/main/docs/whats-new/2026-10-03#the-uhi-integrators-assistant-plugin-is-012)
-
-## 30 September 2026
-
-3 changes
-
-- [One Participant registry call withdrawn](/docs/main/docs/whats-new/2026-09-30#one-participant-registry-call-withdrawn)
-- [The uhi-integrators-assistant plugin is 0.1.1](/docs/main/docs/whats-new/2026-09-30#the-uhi-integrators-assistant-plugin-is-011)
-- [The nhcx plugin is 1.0.3](/docs/main/docs/whats-new/2026-09-30#the-nhcx-plugin-is-103)
-
-## 29 September 2026
-
-18 changes
-
-- [Ambulance Booking has an API reference](/docs/main/docs/whats-new/2026-09-29#ambulance-booking-has-an-api-reference)
-- [Physical Consultation has an API reference](/docs/main/docs/whats-new/2026-09-29#physical-consultation-has-an-api-reference)
-- [Network and discovery has an API reference](/docs/main/docs/whats-new/2026-09-29#network-and-discovery-has-an-api-reference)
-- [One M1 Identity call withdrawn](/docs/main/docs/whats-new/2026-09-29#one-m1-identity-call-withdrawn)
-- [The hiecm-m1-test skill is published](/docs/main/docs/whats-new/2026-09-29#the-hiecm-m1-test-skill-is-published)
-- [Twelve skills published: uhi-ambulance-build, uhi-ambulance-debug, uhi-blood-bank-build, uhi-blood-bank-debug, uhi-consultation-build, uhi-consultation-debug, uhi-jan-aushadhi-build, uhi-jan-aushadhi-debug, uhi-notto-build, uhi-notto-debug, uhi-pmjay-hem-build, uhi-pmjay-hem-debug](/docs/main/docs/whats-new/2026-09-29#twelve-skills-published-uhi-ambulance-build-uhi-ambulance-debug-uhi-blood-bank-build-uhi-blood-bank-debug-uhi-consultation-build-uhi-consultation-debug-uhi-jan-aushadhi-build-uhi-jan-aushadhi-debug-uhi-notto-build-uhi-notto-debug-uhi-pmjay-hem-build-uhi-pmjay-hem-debug)
-- [The uhi-integrators-assistant plugin 0.1.0 installs](/docs/main/docs/whats-new/2026-09-29#the-uhi-integrators-assistant-plugin-010-installs)
-- [The abdm-integrators-assistant plugin is 0.9.0](/docs/main/docs/whats-new/2026-09-29#the-abdm-integrators-assistant-plugin-is-090)
-- [The abdm-contributors-assistant plugin is 0.3.4](/docs/main/docs/whats-new/2026-09-29#the-abdm-contributors-assistant-plugin-is-034)
-- [The abdm-integrators-assistant plugin is 0.9.2](/docs/main/docs/whats-new/2026-09-29#the-abdm-integrators-assistant-plugin-is-092)
-- [The nhcx plugin is 1.0.1](/docs/main/docs/whats-new/2026-09-29#the-nhcx-plugin-is-101)
-- [The abdm-integrators-assistant plugin is 0.10.0](/docs/main/docs/whats-new/2026-09-29#the-abdm-integrators-assistant-plugin-is-0100)
-- [The abdm-integrators-assistant plugin is 0.10.1](/docs/main/docs/whats-new/2026-09-29#the-abdm-integrators-assistant-plugin-is-0101)
-- [The abdm-contributors-assistant plugin is 0.4.2](/docs/main/docs/whats-new/2026-09-29#the-abdm-contributors-assistant-plugin-is-042)
-- [The nhcx plugin is 1.0.2](/docs/main/docs/whats-new/2026-09-29#the-nhcx-plugin-is-102)
-- [The abdm-contributors-assistant plugin is 0.4.3](/docs/main/docs/whats-new/2026-09-29#the-abdm-contributors-assistant-plugin-is-043)
-- [The abdm-contributors-assistant plugin is 0.3.6](/docs/main/docs/whats-new/2026-09-29#the-abdm-contributors-assistant-plugin-is-036)
-- [The abdm-contributors-assistant plugin is 0.4.4](/docs/main/docs/whats-new/2026-09-29#the-abdm-contributors-assistant-plugin-is-044)
-
-## 25 September 2026
-
-31 changes
-
-- [Reprocess, cancel and shortfall has an API reference](/docs/main/docs/whats-new/2026-09-25#reprocess-cancel-and-shortfall-has-an-api-reference)
-- [PMJAY adjudicator is documented for payers](/docs/main/docs/whats-new/2026-09-25#pmjay-adjudicator-is-documented-for-payers)
-- [M4 Registry Integration follows the specification of 24 September 2026](/docs/main/docs/whats-new/2026-09-25#m4-registry-integration-follows-the-specification-of-24-september-2026)
-- [PMJAY adjudicator: required fields corrected on two calls](/docs/main/docs/whats-new/2026-09-25#pmjay-adjudicator-required-fields-corrected-on-two-calls)
-- [Other: three calls corrected](/docs/main/docs/whats-new/2026-09-25#other-three-calls-corrected)
-- [Participant registry: response codes corrected on two calls](/docs/main/docs/whats-new/2026-09-25#participant-registry-response-codes-corrected-on-two-calls)
-- [Status and search: headers or parameters corrected on three calls](/docs/main/docs/whats-new/2026-09-25#status-and-search-headers-or-parameters-corrected-on-three-calls)
-- [NHCX: 24 calls take Accept](/docs/main/docs/whats-new/2026-09-25#nhcx-24-calls-take-accept)
-- [NHCX: four calls no longer take x-hcx-api\_call\_id, x-hcx-ben-abha-id and 8 more as headers](/docs/main/docs/whats-new/2026-09-25#nhcx-four-calls-no-longer-take-x-hcx-api_call_id-x-hcx-ben-abha-id-and-8-more-as-headers)
-- [NHCX: eight calls require payload and type](/docs/main/docs/whats-new/2026-09-25#nhcx-eight-calls-require-payload-and-type)
-- [NHCX: two calls no longer take x-hcx-api\_call\_id, x-hcx-ben-abha-id and 8 more as headers](/docs/main/docs/whats-new/2026-09-25#nhcx-two-calls-no-longer-take-x-hcx-api_call_id-x-hcx-ben-abha-id-and-8-more-as-headers)
-- [NHCX: six calls no longer take x-hcx-api\_call\_id, x-hcx-ben-abha-id and 7 more as headers](/docs/main/docs/whats-new/2026-09-25#nhcx-six-calls-no-longer-take-x-hcx-api_call_id-x-hcx-ben-abha-id-and-7-more-as-headers)
-- [NHCX: four calls go to apisprod.nha.gov.in/pmjay/hcx/participanthcxservice](/docs/main/docs/whats-new/2026-09-25#nhcx-four-calls-go-to-apisprodnhagovinpmjayhcxparticipanthcxservice)
-- [Participant registry: three calls changed address](/docs/main/docs/whats-new/2026-09-25#participant-registry-three-calls-changed-address)
-- [One call moved from Participant registry to PMJAY adjudicator](/docs/main/docs/whats-new/2026-09-25#one-call-moved-from-participant-registry-to-pmjay-adjudicator)
-- [Two callbacks moved from Other to Reprocess, cancel and shortfall](/docs/main/docs/whats-new/2026-09-25#two-callbacks-moved-from-other-to-reprocess-cancel-and-shortfall)
-- [M4 Registry Integration: 15 calls withdrawn](/docs/main/docs/whats-new/2026-09-25#m4-registry-integration-15-calls-withdrawn)
-- [Two Claim calls withdrawn](/docs/main/docs/whats-new/2026-09-25#two-claim-calls-withdrawn)
-- [Two Communication calls withdrawn](/docs/main/docs/whats-new/2026-09-25#two-communication-calls-withdrawn)
-- [Two Coverage eligibility calls withdrawn](/docs/main/docs/whats-new/2026-09-25#two-coverage-eligibility-calls-withdrawn)
-- [Two Insurance plan calls withdrawn](/docs/main/docs/whats-new/2026-09-25#two-insurance-plan-calls-withdrawn)
-- [Two Other calls withdrawn](/docs/main/docs/whats-new/2026-09-25#two-other-calls-withdrawn)
-- [Two Payment notice calls withdrawn](/docs/main/docs/whats-new/2026-09-25#two-payment-notice-calls-withdrawn)
-- [Two Pre-authorisation calls withdrawn](/docs/main/docs/whats-new/2026-09-25#two-pre-authorisation-calls-withdrawn)
-- [Two Predetermination calls withdrawn](/docs/main/docs/whats-new/2026-09-25#two-predetermination-calls-withdrawn)
-- [One Participant registry call withdrawn](/docs/main/docs/whats-new/2026-09-25#one-participant-registry-call-withdrawn)
-- [Two M4 Registry Integration calls added](/docs/main/docs/whats-new/2026-09-25#two-m4-registry-integration-calls-added)
-- [Postman collections for every HIE-CM module](/docs/main/docs/whats-new/2026-09-25#postman-collections-for-every-hie-cm-module)
-- [The nhcx-full skill is published](/docs/main/docs/whats-new/2026-09-25#the-nhcx-full-skill-is-published)
-- [The nhcx plugin is 1.0.0](/docs/main/docs/whats-new/2026-09-25#the-nhcx-plugin-is-100)
-- [Two skills withdrawn: hiecm-subscription-build, nhcx-insurance](/docs/main/docs/whats-new/2026-09-25#two-skills-withdrawn-hiecm-subscription-build-nhcx-insurance)
-
-## 23 September 2026
-
-6 changes
-
-- [P2 consent, linking and share calls go to the gateway](/docs/main/docs/whats-new/2026-09-23#p2-consent-linking-and-share-calls-go-to-the-gateway)
-- [List calls send their required query parameters](/docs/main/docs/whats-new/2026-09-23#list-calls-send-their-required-query-parameters)
-- [PHR registration by Aadhaar number, and no email update](/docs/main/docs/whats-new/2026-09-23#phr-registration-by-aadhaar-number-and-no-email-update)
-- [Subscriptions are part of P3, and gateway calls gain two fields](/docs/main/docs/whats-new/2026-09-23#subscriptions-are-part-of-p3-and-gateway-calls-gain-two-fields)
-- [Try it fills in fixed values, and the gateway lists what it owns](/docs/main/docs/whats-new/2026-09-23#try-it-fills-in-fixed-values-and-the-gateway-lists-what-it-owns)
-- [P2 is Consents Management, and the patient share calls are named for the OPD](/docs/main/docs/whats-new/2026-09-23#p2-is-consents-management-and-the-patient-share-calls-are-named-for-the-opd)
-
-## 22 September 2026
-
-3 changes
-
-- [PHR calls carry the gateway session token, and their body fields are required](/docs/main/docs/whats-new/2026-09-22#phr-calls-carry-the-gateway-session-token-and-their-body-fields-are-required)
-- [The PHR public key is not the ABHA service's key](/docs/main/docs/whats-new/2026-09-22#the-phr-public-key-is-not-the-abha-services-key)
-- [Consent request init and context notify take an id only](/docs/main/docs/whats-new/2026-09-22#consent-request-init-and-context-notify-take-an-id-only)
-
-## 21 September 2026
-
-4 changes
-
-- [NHCX error pages list their codes](/docs/main/docs/whats-new/2026-09-21#nhcx-error-pages-list-their-codes)
-- [The NHCX plugin installs](/docs/main/docs/whats-new/2026-09-21#the-nhcx-plugin-installs)
-- [NHCX skills install as a folder](/docs/main/docs/whats-new/2026-09-21#nhcx-skills-install-as-a-folder)
-- [Build it well, for NHCX](/docs/main/docs/whats-new/2026-09-21#build-it-well-for-nhcx)
-
-## 16 September 2026
-
-3 changes
-
-- [The API reference follows the specifications of 16 September 2026](/docs/main/docs/whats-new/2026-09-16#the-api-reference-follows-the-specifications-of-16-september-2026)
-- [Each ABHA creation and login method is its own sequence](/docs/main/docs/whats-new/2026-09-16#each-abha-creation-and-login-method-is-its-own-sequence)
-- [Error pages list the codes the specifications return](/docs/main/docs/whats-new/2026-09-16#error-pages-list-the-codes-the-specifications-return)
-
-## 15 September 2026
-
-6 changes
-
-- [NHCX has API references](/docs/main/docs/whats-new/2026-09-15#nhcx-has-api-references)
-- [Point your agent at NHCX](/docs/main/docs/whats-new/2026-09-15#point-your-agent-at-nhcx)
-- [Seven NHCX agent skills](/docs/main/docs/whats-new/2026-09-15#seven-nhcx-agent-skills)
-- [Start on the NHCX sandbox](/docs/main/docs/whats-new/2026-09-15#start-on-the-nhcx-sandbox)
-- [The NHCX security audit has a page](/docs/main/docs/whats-new/2026-09-15#the-nhcx-security-audit-has-a-page)
-- [Troubleshooting NHCX by what you see](/docs/main/docs/whats-new/2026-09-15#troubleshooting-nhcx-by-what-you-see)
 
 ## What gets an entry
 
