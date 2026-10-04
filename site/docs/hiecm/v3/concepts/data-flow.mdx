@@ -2,7 +2,7 @@
 title: How a record travels
 sidebar_label: Data flow
 description: The path a health record takes from the system that asks for it to the system that holds it, and the encryption in between.
-source: ABDM__Proposed_Simplified_Milestone_2.md, ABDM__Proposed_Simplified_Milestone_3.md
+source: ABDM__Proposed_Simplified_Milestone_2.md, ABDM__Proposed_Simplified_Milestone_3.md; the HKDF info, the additional data and the tag length from an integrator's byte for byte match with the Fidelius CLI, 4 October 2026
 sidebar_position: 5
 sidebar_class_name: sidebar-icon sidebar-icon--arrow-right-left
 ---
@@ -82,7 +82,7 @@ Both sides call `health-information/notify`: the HIP to say the data was transmi
 
 Treat retrieval and encryption as a background job, not work inside a web request.
 
-## The encryption
+## The encryption {/* #data-flow-encryption */}
 
 The scheme is [Elliptic Curve Diffie-Hellman](/docs/hiecm/v3/getting-started/glossary#ecdh) key exchange on Curve25519, with AES-GCM for the payload and HKDF to derive the session key. Only the HIU holding valid consent can read the data, and the design gives perfect forward secrecy: key material compromised later does not expose data exchanged earlier.
 
@@ -110,8 +110,8 @@ Six steps, once consent has validated.
 2. Generate a 32 byte random value, RAND(P).
 3. Compute the shared key DHK(U,P) from the HIU's public key DHPK(U) and the HIP's own private key DHSK(P).
 4. Derive the salt and IV by XOR of RAND(P) and RAND(U). The first 20 bytes are the salt for HKDF, the last 12 bytes the IV.
-5. Compute a 256 bit AES-GCM session key SK(U,P) with HKDF, from the shared key and that salt.
-6. Encrypt the data with that key and that IV.
+5. Compute a 256 bit AES-GCM session key SK(U,P) with HKDF-SHA256, from the x coordinate of the shared key and that salt. The HKDF `info` is empty.
+6. Encrypt the data with AES-256-GCM, that key and that IV, with no additional authenticated data. Append the 16 byte authentication tag to the ciphertext and base64 encode the result.
 
 The HIP then sends DHPK(P), RAND(P) and the encrypted data. The HIU derives the same session key from its own private key DHSK(U) and the HIP's public key DHPK(P), with salt and IV from the same XOR.
 
@@ -120,6 +120,17 @@ Build the shared key from the HIU's public key and the HIP's private key. That i
 ### Do not write this yourself
 
 Two reference implementations exist. Fidelius, at [github.com/sukreet/fidelius](https://github.com/sukreet/fidelius), and the Fidelius CLI, which is Java, with worked examples for Node.js, Python, Ruby and PHP at [github.com/mgrmtech/fidelius-cli](https://github.com/mgrmtech/fidelius-cli/tree/main/examples) that run the binary as a subprocess. A webinar covers the CLI from both sides, at [youtu.be/rSir2gbkEmk](https://youtu.be/rSir2gbkEmk?t=9232) from 2:33:52.
+
+
+<AgentOnly>
+**Before you start.** The HIU's `keyMaterial` from the health information request: its public key and its 32 byte nonce.
+
+**What happens.** Generate a fresh key pair and nonce per transfer. XOR the two nonces: the first 20 bytes are the HKDF salt, the last 12 the IV. Derive the key with HKDF-SHA256 over the x coordinate of the ECDH result, with an empty `info`, for 32 bytes. Encrypt with AES-256-GCM, no additional authenticated data, and append the 16 byte tag before base64 encoding.
+
+**How you know it worked.** The HIU decrypts every entry and its tag check passes. Before any peer is involved, round trip a record through the Fidelius CLI and compare bytes.
+
+**When it goes wrong.** Every tag check fails: compare the salt and IV split, the HKDF input (the x coordinate, not the whole shared secret) and an `info` or additional data that should be empty. One HIP fails while others work: compare how its public key is encoded.
+</AgentOnly>
 
 ## Where this is implemented
 
