@@ -700,6 +700,7 @@ Add `.md` to any link below to get that page as markdown. Individual API operati
 - [29 September 2026](https://nha-in.github.io/docs/main/docs/whats-new/2026-09-29): What changed in these pages on 29 September 2026.
 - [30 September 2026](https://nha-in.github.io/docs/main/docs/whats-new/2026-09-30): What changed in these pages on 30 September 2026.
 - [3 October 2026](https://nha-in.github.io/docs/main/docs/whats-new/2026-10-03): What changed in these pages on 3 October 2026.
+- [4 October 2026](https://nha-in.github.io/docs/main/docs/whats-new/2026-10-04): What changed in these pages on 4 October 2026.
 
 ## Optional
 

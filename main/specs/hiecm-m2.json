@@ -186,7 +186,7 @@
                         "referenceNumber",
                         "display",
                         "careContexts",
-                        "hiTypes",
+                        "hiType",
                         "count"
                       ],
                       "properties": {
@@ -228,7 +228,7 @@
                             }
                           }
                         },
-                        "hiTypes": {
+                        "hiType": {
                           "type": "string",
                           "description": "Types of health information document.",
                           "enum": [

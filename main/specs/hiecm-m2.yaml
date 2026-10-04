@@ -129,7 +129,7 @@ paths:
                       - referenceNumber
                       - display
                       - careContexts
-                      - hiTypes
+                      - hiType
                       - count
                     properties:
                       referenceNumber:
@@ -162,7 +162,7 @@ paths:
                               nullable: false
                               example: display 1
                               description: The display text for care context reference(regex:^[a-zA-Z0-9_\-@,. "':|()/]{0,255}$)
-                      hiTypes:
+                      hiType:
                         type: string
                         description: Types of health information document.
                         enum:

@@ -224,7 +224,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"abhaNumber\": 12345678901234,\n  \"abhaAddress\": \"<ABHA_ADDRESS>\",\n  \"patient\": [\n    {\n      \"referenceNumber\": \"TMH-PUID-001\",\n      \"display\": \"String\",\n      \"careContexts\": [\n        {\n          \"referenceNumber\": \"TMH-PUID-001\",\n          \"display\": \"display 1\"\n        }\n      ],\n      \"hiTypes\": \"DiagnosticReport\",\n      \"count\": 1\n    }\n  ]\n}",
+              "raw": "{\n  \"abhaNumber\": 12345678901234,\n  \"abhaAddress\": \"<ABHA_ADDRESS>\",\n  \"patient\": [\n    {\n      \"referenceNumber\": \"TMH-PUID-001\",\n      \"display\": \"String\",\n      \"careContexts\": [\n        {\n          \"referenceNumber\": \"TMH-PUID-001\",\n          \"display\": \"display 1\"\n        }\n      ],\n      \"hiType\": \"DiagnosticReport\",\n      \"count\": 1\n    }\n  ]\n}",
               "options": {
                 "raw": {
                   "language": "json"

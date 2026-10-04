@@ -2,6 +2,12 @@
 
 Changes that affect what you can build against, newest first. Each entry links to what you can now read, run or consume.
 
+## 4 October 2026
+
+1 change
+
+- [M2: a correction](/docs/main/docs/whats-new/2026-10-04#m2-a-correction)
+
 ## 3 October 2026
 
 4 changes

@@ -29,7 +29,7 @@ curl --request POST \
           "display": "display 1"
         }
       ],
-      "hiTypes": "DiagnosticReport",
+      "hiType": "DiagnosticReport",
       "count": 1
     }
   ]
@@ -58,7 +58,7 @@ curl --request POST \
 - `patient.careContexts` (object[], required): List of care contexts linked at the HIP end for the identified patient.
 - `patient.careContexts.referenceNumber` (string, required): An identifier of patient's care context created in HIP. A care context is a group of patient's health data (Not the actual health data) and it should be unique for each care-context.Allows alpha numeric character and special characters like ^[a-zA-Z0-9_\-@,. ()/:\\]{0,255}$
 - `patient.careContexts.display` (string, required): The display text for care context reference(regex:^[a-zA-Z0-9_\-@,. "':|()/]{0,255}$)
-- `patient.hiTypes` (string, required): Types of health information document. One of: DiagnosticReport, DischargeSummary, HealthDocumentRecord, ImmunizationRecord, OPConsultation, Prescription, WellnessRecord, Invoice.
+- `patient.hiType` (string, required): Types of health information document. One of: DiagnosticReport, DischargeSummary, HealthDocumentRecord, ImmunizationRecord, OPConsultation, Prescription, WellnessRecord, Invoice.
 - `patient.count` (number, required): The count should match with the number of care contexts
 
 ## Responses
