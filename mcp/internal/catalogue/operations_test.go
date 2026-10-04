@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"slices"
 	"strings"
 	"testing"
 
@@ -519,5 +520,45 @@ func TestParseSpecEveryCatalogueSpec(t *testing.T) {
 	}
 	if n < 20 {
 		t.Fatalf("parsed only %d specs; the glob is wrong", n)
+	}
+}
+
+// A callback lives under webhooks in a module spec (OpenAPI 3.1). It is an
+// operation like any other to an integrator who has to receive it, so the
+// index must carry it: before this, every M2 callback was unreachable
+// through search and get.
+func TestParseSpecIndexesWebhooks(t *testing.T) {
+	data, err := ParseSpec(filepath.Join("testdata", "webhooks.yaml"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	byID := map[string]Operation{}
+	for _, op := range data.Operations {
+		byID[op.OperationID] = op
+	}
+	if len(byID) != 2 {
+		t.Fatalf("operations = %v, want the path and the webhook", byID)
+	}
+	cb, ok := byID["m2_post_v3_link_on_carecontext"]
+	if !ok {
+		t.Fatal("the webhook operation is missing")
+	}
+	if cb.Method != "POST" || cb.Path != "/api/v3/link/on_carecontext" || cb.Module != "m2" {
+		t.Errorf("webhook = %s %s module %s", cb.Method, cb.Path, cb.Module)
+	}
+	if !cb.Callback {
+		t.Error("the webhook is not marked as a callback")
+	}
+	if byID["m2_post_hip_v3_link_carecontext"].Callback {
+		t.Error("a paths operation is marked as a callback")
+	}
+	if len(cb.RequestSchemaJSON) == 0 || !strings.Contains(string(cb.RequestSchemaJSON), "abhaAddress") {
+		t.Errorf("webhook request schema = %s", cb.RequestSchemaJSON)
+	}
+	if !slices.Contains(cb.ErrorCodes, "ABDM-1006") {
+		t.Errorf("webhook error codes = %v", cb.ErrorCodes)
+	}
+	if !slices.Contains(cb.RequiredParams, "REQUEST-ID (header)") {
+		t.Errorf("webhook required params = %v", cb.RequiredParams)
 	}
 }

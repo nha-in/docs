@@ -31,7 +31,8 @@ CREATE TABLE operations (
     module TEXT NOT NULL,
     spec_json TEXT NOT NULL,
     request_schema_json TEXT,
-    required_params_json TEXT NOT NULL
+    required_params_json TEXT NOT NULL,
+    callback INTEGER NOT NULL DEFAULT 0
 );
 CREATE TABLE spec_error_codes (
     code TEXT NOT NULL,

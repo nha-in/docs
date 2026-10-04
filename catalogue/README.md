@@ -82,9 +82,9 @@ What feeds which MCP tool:
 | Atoms | search_docs, get_atom, related_atoms, decode_error, list_atoms, catalogue_info |
 | Specs | list_operations, get_operation, validate_request |
 
-Known limits, tracked for the ingestion phase: `webhooks` sections are
-not yet indexed (only `paths` operations appear in list_operations), and
-`.yml` is not accepted.
+Known limits, tracked for the ingestion phase: `.yml` is not accepted.
+`webhooks` operations are indexed with the `paths` ones and marked as
+callbacks, so `get` on one says ABDM posts it to your bridge.
 
 ## The atom contract, in brief
 

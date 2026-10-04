@@ -32,6 +32,10 @@ type Operation struct {
 	Params        []string
 	ResponseCodes []string
 	ErrorCodes    []string
+	// Callback marks an operation from the spec's webhooks: a call ABDM makes
+	// to your bridge, at Path relative to your callback URL, rather than one
+	// you make.
+	Callback bool
 }
 
 // ChunkOperation is an operation as one flat search chunk: method and path,
@@ -468,8 +472,25 @@ func ParseSpec(specPath string) (SpecData, error) {
 		}
 	}
 	gateway := specGateway(specPath)
-	var ops []Operation
+	// Callbacks are OpenAPI 3.1 webhooks in the module spec that owns them.
+	// They are read with the paths, because an integrator has to receive
+	// them: left out, every M2 callback was unreachable through search and
+	// get, and its body was nowhere an agent could read it.
+	type entry struct {
+		path     string
+		item     *openapi3.PathItem
+		callback bool
+	}
+	var entries []entry
 	for path, item := range doc.Paths.Map() {
+		entries = append(entries, entry{path, item, false})
+	}
+	for path, item := range doc.Webhooks {
+		entries = append(entries, entry{path, item, true})
+	}
+	var ops []Operation
+	for _, e := range entries {
+		path, item := e.path, e.item
 		for method, op := range item.Operations() {
 			if op.OperationID == "" {
 				return SpecData{}, fmt.Errorf("%s: %s %s has no operationId; record a correction per openapi-ingest", specPath, method, path)
@@ -554,6 +575,7 @@ func ParseSpec(specPath string) (SpecData, error) {
 				SpecJSON:          frag,
 				RequestSchemaJSON: reqSchema,
 				RequiredParams:    required,
+				Callback:          e.callback,
 			})
 		}
 	}
