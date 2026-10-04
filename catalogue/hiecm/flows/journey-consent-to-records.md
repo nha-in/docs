@@ -175,7 +175,7 @@ The status call, the fetch call and the health information request also carry
 | Learn of the consent | `/api/v3/consent/request/hip/notify` on your bridge. `GRANTED` carries the full consent artefact and a signature. `REVOKED` and `EXPIRED` name the artefact by `consentId` | `POST /api/hiecm/consent/v3/request/hip/on-notify` with one `acknowledgement` holding `status` and `consentId`, and the notification's request id in `response.requestId` |
 | Receive the request | `/api/v3/hip/health-information/request` with the `transactionId`, the consent id, the date range, the `dataPushUrl` and the requester's `keyMaterial` | `POST /api/hiecm/data-flow/v3/health-information/hip/on-request` with the `transactionId` and `sessionStatus` `ACKNOWLEDGED` |
 | Check | Nothing arrives | Nothing. Check the consent is active, the date range sits inside the artefact's, and the encryption parameters are usable |
-| Send | Nothing arrives | POST each page to the `dataPushUrl`, straight to the HIU and not through the gateway: `pageNumber`, `pageCount`, `transactionId`, `entries` and your `keyMaterial` |
+| Send | Nothing arrives | POST each page to the `dataPushUrl`, straight to the HIU and not through the gateway, with your gateway access token as `Authorization: Bearer`: `pageNumber`, `pageCount`, `transactionId`, `entries` and fresh `keyMaterial` for that page. One entry per page, each `checksum` the hexadecimal MD5 of the entry before encryption |
 | Close | Nothing arrives | `POST /api/hiecm/data-flow/v3/health-information/notify` with `notifier.type` `HIP`, `sessionStatus` `TRANSFERRED` or `FAILED`, and a `hiStatus` of `DELIVERED` or `ERRORED` per care context |
 
 Every callback to your bridge carries `X-HIP-ID`, which names the facility it

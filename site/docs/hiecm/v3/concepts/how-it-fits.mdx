@@ -114,6 +114,9 @@ Every callback for every facility arrives at the one bridge URL. The header says
 which facility it belongs to: `X-HIP-ID` in [M2](/docs/hiecm/v3/api/m2), and
 `X-HIU-ID` in [M3](/docs/hiecm/v3/api/m3). That header is what your
 handler routes a callback on, and the facility ID is what your records key to.
+A header naming a facility you do not serve is not yours: drop the callback
+rather than store or answer it. See
+[callback authenticity](/docs/hiecm/v3/concepts/callback-authenticity).
 
 A callback URL kept in a facility's settings is a design error, and so is a
 client secret. Either survives the first facility and fails on the next. See
