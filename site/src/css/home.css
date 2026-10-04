@@ -692,7 +692,7 @@
   padding: 1.125rem 1.25rem;
   border: 1px solid var(--border);
   border-radius: 0.75rem;
-  background: var(--surface-sunken);
+  background: var(--surface);
   text-decoration: none;
   transition: color 150ms ease, border-color 150ms ease, background-color 150ms ease,
     transform 150ms ease;
@@ -892,6 +892,12 @@
   );
   transform: translate3d(0, calc(var(--lift) * -100%), 0);
   will-change: transform;
+}
+
+/* Light mode keeps the page flat. Against the blue wash, the neutral cards and
+   page read as cream; dark mode keeps the wash. */
+[data-theme='light'] .curtain {
+  background-image: none;
 }
 
 /* No ground of its own. A veil of page colour over the top 64px, even one
