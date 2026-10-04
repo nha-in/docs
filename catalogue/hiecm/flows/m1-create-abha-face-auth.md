@@ -29,18 +29,40 @@ related:
 
 ## In plain words
 
-Individuals who are unable to use OTP-based authentication, including cases
-where the mobile number linked to Aadhaar is unavailable or inaccessible, may
-use face authentication as an alternative verification mechanism, subject to
-ABDM and UIDAI guidelines. Face authentication is performed through authorized
-Aadhaar Registered Device (RD) services using approved authentication
-workflows.
+Individuals who are unable to use OTP-based authentication may create an ABHA
+using Face Authentication. This includes situations where the mobile number
+linked with Aadhaar is unavailable, inaccessible, or not in active use. It is
+subject to the applicable guidelines and specifications issued by the ABDM and
+the Unique Identification Authority of India (UIDAI).
 
-ABDM documentation references biometric-based ABHA creation workflows,
-including face authentication and other supported biometric modalities where
-applicable. Organizations should implement authentication methods in accordance
-with the officially published specifications and follow them before
-proceeding with production deployment.
+Under this workflow, the beneficiary is authenticated through an authorized
+Aadhaar Registered Device (RD) Service application using UIDAI-approved face
+authentication mechanisms. The process is initiated by collecting the
+beneficiary's Aadhaar number at the participating healthcare facility. Based on
+the Aadhaar number provided, the facility generates a unique authentication QR
+code.
+
+The beneficiary is required to scan the generated QR code using the **ABHA PHR
+Application**. To access the QR scanning functionality, the beneficiary should
+ensure that the ABHA PHR Application is in the logged-out state, as the QR scan
+option is available on the application's landing page. Upon scanning the QR
+code, the beneficiary is redirected to the Aadhaar RD Service application
+installed on the mobile device. In cases where the Aadhaar RD Service
+application is not available on the device, the beneficiary is redirected to
+the respective application marketplace (Google Play Store or Apple App Store)
+for installation.
+
+The beneficiary is then required to complete the face capture process through
+the Aadhaar RD Service application. Upon successful face authentication and
+verification by UIDAI, the beneficiary's identity is validated, and the ABHA
+creation process is completed in accordance with ABDM guidelines.
+
+Organizations implementing Face Authentication based ABHA creation workflows
+shall ensure compliance with the latest ABDM and UIDAI specifications, approved
+authentication workflows, and security requirements prior to production
+deployment. The use of only authorized and compliant RD Service applications is
+mandatory to maintain the integrity, privacy, and security of the
+authentication process.
 
 ```mermaid
 sequenceDiagram
@@ -68,8 +90,8 @@ sequenceDiagram
     A-->>S: healthIdNumber, preferredAbhaAddress
 ```
 
-The middle of this journey happens on the person's phone, not in your system.
-Show that you are waiting for them rather than a spinner.
+The face authentication happens on the patient's phone, through the Aadhaar RD
+Service application.
 
 ## Before you start
 
@@ -85,4 +107,4 @@ Call `enrol/auth/init` for a `txnId` and show it as a QR code. Poll `capturePID`
 
 ## When it goes wrong
 
-The person has no ABHA app: installing it is part of the journey, not an error. The capture reports FAILED: capture again rather than resubmitting. Nothing pushes the result to you, so keep polling or continue once the person confirms.
+The person has no ABHA app: installing it is part of the journey, not an error. The person cannot find the scan option: it is on the app's landing page, so they must be logged out of the ABHA PHR app. The capture reports FAILED: capture again rather than resubmitting. Nothing pushes the result to you, so keep polling or continue once the person confirms.

@@ -459,7 +459,7 @@ export default function TryIt({operation}: {operation: Operation}) {
         if (field.encrypted && values[field.name]) {
           if (!key) {
             throw new Error(
-              'Fetch or paste a public key to encrypt the marked fields, or turn encryption off if the values are already encrypted.',
+              'Fetch or paste a public key to encrypt the marked fields, or tick "Skip encryption" if you are pasting values you have already encrypted.',
             );
           }
           effective[field.name] = await encryptValue(key.key, key.padding, values[field.name]);
@@ -566,9 +566,24 @@ export default function TryIt({operation}: {operation: Operation}) {
         field={{...node.field, name: node.leaf}}
         value={values[node.field.name] ?? ''}
         readOnly={node.field.fixed !== undefined}
-        badge={isEncrypted ? 'encrypted on send' : node.field.fixed !== undefined ? 'fixed' : undefined}
+        badge={
+          isEncrypted
+            ? 'encrypted on send'
+            : node.field.encrypted
+              ? 'paste encrypted'
+              : node.field.fixed !== undefined
+                ? 'fixed'
+                : undefined
+        }
         placeholder={
-          isEncrypted ? `enter ${node.leaf} raw, it is encrypted on send` : ghosts[node.field.name]
+          // Each state says what to type. With encryption skipped, the spec's
+          // example ("{{encrypted abha-number}}") read like a template to fill
+          // with the raw value, which is the opposite of what is sent.
+          isEncrypted
+            ? `type the raw ${node.leaf}, encrypted for you`
+            : node.field.encrypted
+              ? `paste the already encrypted ${node.leaf}`
+              : ghosts[node.field.name]
         }
         depth={depth}
         onChange={(next) =>
@@ -1027,7 +1042,7 @@ export default function TryIt({operation}: {operation: Operation}) {
                   checked={sendAsTyped}
                   onChange={(event) => setSendAsTyped(event.target.checked)}
                 />
-                My values are already encrypted, send as typed
+                Skip encryption: I will paste values I have already encrypted
               </label>
             </Group>
           ) : null}

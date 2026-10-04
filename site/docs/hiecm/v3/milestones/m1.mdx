@@ -5,7 +5,7 @@ sidebar_position: 1
 sidebar_custom_props:
   roles: [his, phr]
 description: Milestone 1 focuses on the creation and management of ABHA, the unique health identifier under ABDM, through ABDM-compliant workflows.
-source: the ABHA creation terms and conditions as supplied on 3 October 2026 for the consent text; NHA content review of 15 September 2026 (Sandbox2.0 M1, getting started and glossary); catalogue/hiecm/openapi/v3/hiecm-m1.yaml for the call order in the diagrams
+source: M1 Observations 2 Oct.docx (NHA, 2 October 2026) for the face and biometric ABHA creation text and the RD device link; the ABHA creation terms and conditions as supplied on 3 October 2026 for the consent text; NHA content review of 15 September 2026 (Sandbox2.0 M1, getting started and glossary); catalogue/hiecm/openapi/v3/hiecm-m1.yaml for the call order in the diagrams
 sidebar_class_name: sidebar-icon sidebar-icon--user-round-plus
 ---
 
@@ -156,9 +156,6 @@ sequenceDiagram
     A-->>S: healthIdNumber, preferredAbhaAddress
 ```
 
-Every step answers in its own response, so nothing here waits on a callback.
-The enrolment call is the one with a lasting effect: it creates the account.
-
 <AgentOnly>
 **Before you start.** A gateway access token, the Aadhaar number encrypted with the M1 certificate, the person present to read the OTP, and their consent to create an ABHA.
 
@@ -171,18 +168,40 @@ The enrolment call is the one with a lasting effect: it creates the account.
 
 ### ABHA creation by face authentication <LegacyAnchor id="journey-2-abha-creation-by-face-authentication" /> {/* #m1-create-abha-face-auth */}
 
-Individuals who are unable to use OTP-based authentication, including cases
-where the mobile number linked to Aadhaar is unavailable or inaccessible, may
-use face authentication as an alternative verification mechanism, subject to
-ABDM and UIDAI guidelines. Face authentication is performed through authorized
-Aadhaar Registered Device (RD) services using approved authentication
-workflows.
+Individuals who are unable to use OTP-based authentication may create an ABHA
+using Face Authentication. This includes situations where the mobile number
+linked with Aadhaar is unavailable, inaccessible, or not in active use. It is
+subject to the applicable guidelines and specifications issued by the ABDM and
+the Unique Identification Authority of India (UIDAI).
 
-ABDM documentation references biometric-based ABHA creation workflows,
-including face authentication and other supported biometric modalities where
-applicable. Organizations should implement authentication methods in accordance
-with the officially published specifications and follow them before
-proceeding with production deployment.
+Under this workflow, the beneficiary is authenticated through an authorized
+Aadhaar Registered Device (RD) Service application using UIDAI-approved face
+authentication mechanisms. The process is initiated by collecting the
+beneficiary's Aadhaar number at the participating healthcare facility. Based on
+the Aadhaar number provided, the facility generates a unique authentication QR
+code.
+
+The beneficiary is required to scan the generated QR code using the **ABHA PHR
+Application**. To access the QR scanning functionality, the beneficiary should
+ensure that the ABHA PHR Application is in the logged-out state, as the QR scan
+option is available on the application's landing page. Upon scanning the QR
+code, the beneficiary is redirected to the Aadhaar RD Service application
+installed on the mobile device. In cases where the Aadhaar RD Service
+application is not available on the device, the beneficiary is redirected to
+the respective application marketplace (Google Play Store or Apple App Store)
+for installation.
+
+The beneficiary is then required to complete the face capture process through
+the Aadhaar RD Service application. Upon successful face authentication and
+verification by UIDAI, the beneficiary's identity is validated, and the ABHA
+creation process is completed in accordance with ABDM guidelines.
+
+Organizations implementing Face Authentication based ABHA creation workflows
+shall ensure compliance with the latest ABDM and UIDAI specifications, approved
+authentication workflows, and security requirements prior to production
+deployment. The use of only authorized and compliant RD Service applications is
+mandatory to maintain the integrity, privacy, and security of the
+authentication process.
 
 ```mermaid
 sequenceDiagram
@@ -210,8 +229,8 @@ sequenceDiagram
     A-->>S: healthIdNumber, preferredAbhaAddress
 ```
 
-The middle of this journey happens on the person's phone, not in your system.
-Show that you are waiting for them rather than a spinner.
+The face authentication happens on the patient's phone, through the Aadhaar RD
+Service application.
 
 <AgentOnly>
 **Before you start.** Everything the Aadhaar OTP journey needs, the ABHA app on the person's phone, and a screen that can show a QR code.
@@ -220,23 +239,35 @@ Show that you are waiting for them rather than a spinner.
 
 **How you know it worked.** `capturePID` reports COMPLETE and `enrol/byAadhaar` returns an `ABHAProfile` with an `ABHANumber`. The capture being accepted is the event, not the app saying the scan succeeded.
 
-**When it goes wrong.** The person has no ABHA app: installing it is part of the journey, not an error. The capture reports FAILED: capture again rather than resubmitting. Nothing pushes the result to you, so keep polling or continue once the person confirms.
+**When it goes wrong.** The person has no ABHA app: installing it is part of the journey, not an error. The person cannot find the scan option: it is on the app's landing page, so they must be logged out of the ABHA PHR app. The capture reports FAILED: capture again rather than resubmitting. Nothing pushes the result to you, so keep polling or continue once the person confirms.
 </AgentOnly>
 
 ### ABHA creation by fingerprint or iris
 
-Aadhaar Biometric-Based ABHA Creation enables users to create an Ayushman
-Bharat Health Account (ABHA) by securely verifying their identity using
-biometric authentication through an Aadhaar Registered Device (RD). The RD
-Service captures the user's biometric data and generates an encrypted,
-digitally signed PID block, which is submitted along with the Aadhaar details
-for verification. Upon successful authentication and user consent, the user's
-profile is validated and a unique ABHA number is generated, enabling secure
-onboarding into the ABDM digital health ecosystem.
+Aadhaar Biometric-Based ABHA Creation enables beneficiaries to create an ABHA
+using Aadhaar-based biometric authentication, in accordance with the guidelines
+issued by the ABDM and the Unique Identification Authority of India (UIDAI).
 
-The Registered Device (RD) List and information can be found on the following
-link:
-[uidai.gov.in](https://uidai.gov.in/en/ecosystem/authentication-devices-documents/biometric-devices.html).
+Under this workflow, the beneficiary provides their Aadhaar number at the
+participating healthcare facility. The facility initiates the Aadhaar biometric
+authentication process. The beneficiary is required to provide a biometric
+credential, such as a fingerprint or iris scan, using a UIDAI-authorized
+Registered Device (RD).
+
+The captured biometric information is securely processed through the
+authorized Aadhaar authentication ecosystem and submitted to UIDAI for identity
+verification. UIDAI validates the biometric data against the Aadhaar records
+associated with the Aadhaar number provided by the beneficiary. It returns the
+authentication response through the approved authentication channels.
+
+Upon successful biometric authentication and obtaining the beneficiary's
+consent, the demographic details associated with the Aadhaar record are
+retrieved and used to validate the beneficiary's identity. Following successful
+verification, a unique ABHA number is generated and linked to the beneficiary,
+thereby enabling access to the services offered under the ABDM.
+
+The Registered Device (RD) list and information can be found on the following
+link: [uidai.gov.in](https://uidai.gov.in/hi/biometric-devices).
 
 The calls, in order, are on the [M1 API reference](/docs/hiecm/v3/api/m1)
 under ABHA creation, fingerprint and ABHA creation, iris.
