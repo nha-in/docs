@@ -227,7 +227,10 @@ export function Composer(props: Props) {
         {/* Related questions, above the bar while the empty box has focus.
             They are other things to ask, so none takes the box unasked. */}
         {focused && others.length > 0 && (
-          <ul class="ask-ai__next" role="listbox" aria-label="Related questions">
+          <ul class="ask-ai__next" role="listbox" aria-label="You could also ask">
+            <li class="ask-ai__next-label" role="presentation">
+              You could also ask
+            </li>
             {others.map((s, i) => (
               <li key={s.id} role="option" aria-selected={i === tray.active}>
                 <button
