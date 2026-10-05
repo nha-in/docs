@@ -32,7 +32,7 @@ Nothing goes participant to participant. Every request is addressed to the gatew
 
 One exception. In the health information flow the HIU supplies a data push URL, and the HIP encrypts the records and pushes them there. That URL may differ from the HIU's registered gateway URL, to improve privacy. The permission came through the gateway. The bytes do not.
 
-Match each callback to the call that caused it by `response.requestId`, which carries the `REQUEST-ID` you sent. Callbacks do not arrive in the order you sent the requests, and the same one can arrive twice, so a repeat must change nothing. Where each callback is described in the specifications is on [the API specifications](/docs/hiecm/v3/concepts/api-specifications).
+Match each callback to the call that caused it by `response.requestId`, which carries the `REQUEST-ID` you sent. Callbacks do not arrive in the order you sent the requests, and the same one can arrive twice, so a repeat must change nothing. Each callback is described in [the API reference](/docs/hiecm/v3/api).
 
 ## Before you start
 

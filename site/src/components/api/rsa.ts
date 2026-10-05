@@ -28,6 +28,27 @@ export function paddingFromAlgorithm(algorithm: string | undefined): Padding {
 }
 
 /**
+ * The certificate whose key encrypts an operation's fields. ABHA serves two:
+ * the 4096-bit profile key for the /v3/enrollment and /v3/profile calls, and
+ * a 2048-bit key for the /v3/phr calls, which reject the profile key with
+ * ABDM-1006. The specifications keep the server at the host and put the
+ * /abha/api prefix in each path, so the URL is built on the server's origin:
+ * a fixed path appended to the server lost the prefix when it moved into the
+ * paths, and every fetch went to a 404 the browser reported as CORS.
+ */
+export function certificateUrl(server: string, operationPath: string): string {
+  let origin = server.replace(/\/+$/, '');
+  try {
+    origin = new URL(server).origin;
+  } catch {
+    // Not an absolute URL: append to it as given.
+  }
+  return /\/v3\/phr\//.test(operationPath)
+    ? `${origin}/abha/api/v3/phr/app/login/public/certificate`
+    : `${origin}/abha/api/v3/profile/public/certificate`;
+}
+
+/**
  * Accept a public key as PEM (with or without armour) or as base64 DER, and
  * return the SubjectPublicKeyInfo DER bytes. NHA's certificate endpoint serves
  * base64 DER with no armour; a reader pasting a key may include the armour.

@@ -235,7 +235,9 @@ curl --request POST \
 
 **Exit condition (Observe until this is true)**
 
-A 202 response. The specification gives no body for it, so read what comes back.
+Each call you made in this journey answered by its callback, with `response.requestId` equal to the `REQUEST-ID` you sent on that call. The 202 on a call is receipt, not the outcome: the outcome is in the callback's body.
+
+- `POST /api/hiecm/subscription-requests/v3/init` is answered by `POST /api/v3/hiu/hiecm/subscription-requests/on-init` on your bridge.
 
 ### Subscription approval and management, PHR side (`p3-subscription-phr`)
 

@@ -492,7 +492,11 @@ curl --request GET \
 
 **Exit condition (Observe until this is true)**
 
-A 200 whose body matches:
+Each call you made in this journey answered by its callback, with `response.requestId` equal to the `REQUEST-ID` you sent on that call. The 202 on a call is receipt, not the outcome: the outcome is in the callback's body.
+
+- `POST /api/hiecm/patient-share/v3/share` is answered by `POST /api/v3/hiu/patient/on-share` on your bridge.
+
+Then `GET /api/hiecm/patient-share/v3/profile/getTokenDetails` returns a 200 whose body matches:
 
 ```json
 [
@@ -636,7 +640,13 @@ curl --request GET \
 
 **Exit condition (Observe until this is true)**
 
-A 200 whose body matches:
+Each call you made in this journey answered by its callback, with `response.requestId` equal to the `REQUEST-ID` you sent on that call. The 202 on a call is receipt, not the outcome: the outcome is in the callback's body.
+
+- `POST /api/hiecm/user-initiated-linking/v3/patient/care-context/discover` is answered by `POST /api/v3/hiu/patient/care-context/on-discover` on your bridge.
+- `POST /api/hiecm/user-initiated-linking/v3/link/care-context/init` is answered by `POST /api/v3/hiu/patient/care-context/on-init` on your bridge.
+- `POST /api/hiecm/user-initiated-linking/v3/link/care-context/confirm` is answered by `POST /api/v3/hiu/patient/care-context/on-confirm` on your bridge.
+
+Then `GET /api/hiecm/gateway/v3/govt-programs` returns a 200 whose body matches:
 
 ```json
 [
@@ -809,7 +819,11 @@ curl --request POST \
 
 **Exit condition (Observe until this is true)**
 
-A 202 response. The specification gives no body for it, so read what comes back.
+Each call you made in this journey answered by its callback, with `response.requestId` equal to the `REQUEST-ID` you sent on that call. The 202 on a call is receipt, not the outcome: the outcome is in the callback's body.
+
+- `POST /api/hiecm/consent/v3/request/init` is answered by `POST /api/v3/hiu/consent/request/on-init` on your bridge.
+- `POST /api/hiecm/consent/v3/request/status` is answered by `POST /api/v3/hiu/consent/request/on-status` on your bridge.
+- `POST /api/hiecm/consent/v3/fetch` is answered by `POST /api/v3/hiu/consent/on-fetch` on your bridge.
 
 ### Consent manager, fetch and manage consent requests (`p2-consent-management-data-flow-phr`)
 

@@ -12,6 +12,8 @@ The payer's answer to a request to withdraw the pre-authorisation. PMJAY answers
 
 **An acceptance wins.** Two payers can answer one cancel Task (the sandbox's deployed copy beside the live one) [SANDBOX](../references/PAYERS.md#markers), so a refusal that landed first does not close the thread: while the leg shows the refusal, a later acceptance is applied, and a further refusal or a `ProtocolResponse` is `ignored`. An accepted cancellation stands.
 
+**The Task's own error.** When the payer says why it did not do it (`Task.statusReason`, an output typed as an error, or `ClaimResponse.error` on the response the Task points at), those words are kept in `disposition` and shown under the refusal. `error_message` stays the fixed refusal text, because the logic above matches on it.
+
 **Redelivery.** Once accepted, the leg is `cancelled` and every later copy is `ignored`. A `ProtocolResponse` leaves the leg in `error`, which C1 `failed_send` keeps open, so each redelivery of the same refusal settles again with the same result.
 
 #### C7Q. REQUEST

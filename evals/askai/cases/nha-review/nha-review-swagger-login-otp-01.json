@@ -1,0 +1,37 @@
+{
+  "id": "nha-review-swagger-login-otp-01",
+  "slice": "nha-review",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "According to the provided Swagger, which API is used to request OTP for ABHA login? Give me only the endpoint path, HTTP method, and purpose. Do not use information outside the Swagger."
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "gateway": "hiecm",
+  "must_contain": [
+    "POST /abha/api/v3/profile/login/request/otp",
+    "It starts a login: loginHint names what the person identifies themselves with, loginId carries that value encrypted, and the response carries the txnId for the verify call"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.endpoint.m1-login-request-otp",
+    "hiecm.flow.m1-login-by-mobile"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#nha-review-2026-09-30",
+  "catalogue_version": "2026.09.16",
+  "notes": "NHA test-case workbook, 30 September 2026, specification grounding test: 'Swagger grounding is inconsistent across APIs.' Verdict group: missing or thin knowledge. The reviewer's failure was on other calls, face authentication login among them, where headers, mandatory fields and the sample payload were missing; this case holds the question the test script names."
+}

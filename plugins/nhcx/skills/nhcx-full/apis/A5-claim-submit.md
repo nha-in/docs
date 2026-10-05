@@ -33,6 +33,8 @@ FHIR: [F1. Bundle](../fhir/F1-bundle.md) (the bundle id and Claim anchor of each
 
 PMJAY refuses 16, 151 and 19 on a claim with PAYR-1321 "Invalid workflow id" and takes 161 for a query answer [SANDBOX](../references/PAYERS.md#markers), so a decided PMJAY claim goes back only as a reprocess Task (A6) [PAYER](../references/PAYERS.md#markers).
 
+**Use case (`x-hcx-use_case`).** Every claim send carries it, to every payer, whether or not the payer reads it: `New` for `claim`, `Resubmit` for `claim_query_response` and `claim_resubmit` (see [PAYERS.md](../references/PAYERS.md)).
+
 **Headers set by the application** (G7 generates the rest, [G5. Protocol Headers](../gateway/G5-protocol-headers.md)): `x-hcx-sender_code` = facility participant code; `x-hcx-recipient_code` = the case's processing id (D9 `processing_id`), else the case's processing id, else the claim's payer id, else the configured default payer code; `x-hcx-workflow_id` as above.
 
 **Checks before sending**, in order:
@@ -149,6 +151,7 @@ function submit_claim(case_id, reply):
         jwe_headers: {x-hcx-sender_code: org.participant_code,
                       x-hcx-recipient_code: case.processing_id or case.payer_id or default payer code,
                       x-hcx-workflow_id: workflow,
+                      x-hcx-use_case: use_case_for(kind),      // New, or Resubmit for a query answer or a resubmission
                       x-hcx-status: status_for(adapter, kind)},   // response.complete for a query answer (151, 161), else request.initiated
         fhir: bundle}, case)
 

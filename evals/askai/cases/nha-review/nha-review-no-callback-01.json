@@ -1,0 +1,38 @@
+{
+  "id": "nha-review-no-callback-01",
+  "slice": "nha-review",
+  "class": "diagnose",
+  "turns": [
+    {
+      "role": "user",
+      "text": "Not getting call back on my server?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "gateway": "hiecm",
+  "must_contain": [
+    "Start with GET /api/hiecm/gateway/v3/bridge-services, which returns the bridge and every service registered under it",
+    "Read the url in the bridge object, whether the bridge is active or blocklisted, and the types each service holds, such as HIP or HIU",
+    "The usual reason is that the callback is sent to an address that is wrong, private or switched off, or that the facility is not linked to the bridge",
+    "A wrong URL is set with PATCH /api/hiecm/gateway/v3/bridge/url"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.troubleshooting.no-callback-on-my-server"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#nha-review-2026-09-30",
+  "catalogue_version": "2026.09.16",
+  "notes": "NHA QA sample, 30 September 2026: 'Incorrect Answer, Not providing exact solution, providing information in wrong manner.' Verdict group: generic rather than situational. The rejected answer was a checklist; the case asks for the lookup that says which cause applies. The router gives this the how-do-i shape today: no failure word in the question matches."
+}

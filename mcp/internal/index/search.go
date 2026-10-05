@@ -234,6 +234,58 @@ func (r *Reader) searchAtoms(ctx context.Context, query string, f Filter,
 	if limit > 25 {
 		limit = 25
 	}
+	hits, err := r.rankAtoms(ctx, query, f, limit, emb)
+	if err != nil {
+		return nil, err
+	}
+	return r.pinTitle(query, f, hits, limit), nil
+}
+
+// pinTitle puts the atom whose title is the query first. A title is the most
+// exact thing a query can be, and the panel's next questions are often atom
+// titles; a longer atom that repeats a title's words outranked the atom the
+// title belongs to, so asking for "Set up a locker" by name returned the
+// pages that talk about lockers ahead of the one that is it. One lookup, and
+// a query that is no atom's title changes nothing.
+func (r *Reader) pinTitle(query string, f Filter, hits []SearchHit, limit int) []SearchHit {
+	title := strings.TrimSpace(query)
+	if title == "" {
+		return hits
+	}
+	h := SearchHit{Kind: "atom"}
+	err := r.db.QueryRow(`
+        SELECT id, type, milestone, title, summary, doc_url, doc_anchor FROM atoms
+        WHERE lower(title) = lower(?)
+          AND (? = '' OR type = ?)
+          AND (? = '' OR milestone = ?)
+          AND (? = '' OR gateway = ? OR gateway = 'shared')
+          AND (? = '' OR side = ? OR side = 'both')
+          AND (? OR status != 'deprecated')
+        ORDER BY id LIMIT 1`,
+		title, f.Type, f.Type, f.Milestone, f.Milestone, f.Gateway, f.Gateway, f.Side, f.Side, f.IncludeDeprecated).
+		Scan(&h.ID, &h.Type, &h.Milestone, &h.Title, &h.Summary, &h.DocURL, &h.DocAnchor)
+	if err != nil {
+		return hits // no atom has this title, which is the usual case
+	}
+	h.Snippet = h.Summary
+	out := make([]SearchHit, 0, len(hits)+1)
+	for _, other := range hits {
+		if other.ID == h.ID {
+			h = other // keep the ranked hit's own snippet
+			continue
+		}
+		out = append(out, other)
+	}
+	out = append([]SearchHit{h}, out...)
+	if len(out) > limit {
+		out = out[:limit]
+	}
+	return out
+}
+
+// rankAtoms is the hybrid search itself: keyword and vector lists, fused.
+func (r *Reader) rankAtoms(ctx context.Context, query string, f Filter,
+	limit int, emb embed.Embedder) ([]SearchHit, error) {
 	ftsHits, err := r.ftsSearchF(query, f, limit)
 	if err != nil {
 		return nil, err

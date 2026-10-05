@@ -17,7 +17,7 @@ import drawing from './abha-card-art.json';
  * wrist, then the left baseline, then the card's details nearest first. Each
  * stroke carries when it starts and how long it takes, scaled so the pen is
  * done at 5.6 seconds: slower for the line, quicker for the details.
- * LineArt.tsx draws it once per visitor.
+ * LineArt.tsx draws it on every page load.
  *
  * Every value on the card is a placeholder, the QR pattern encodes nothing,
  * and there is no emblem or NHA mark: the emblem's use is restricted by law,
@@ -30,7 +30,6 @@ export default function AbhaCardArt(): React.ReactNode {
       width={1024}
       height={814}
       label="Line drawing of a hand holding an ABHA card, showing a photo, a name, an ABHA number, an ABHA address and a QR code, all placeholders."
-      storageKey="abdm:abha-art-seen"
       maskId="abha-art-pen"
     />
   );

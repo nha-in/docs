@@ -354,7 +354,7 @@ Nothing goes participant to participant. Every request is addressed to the gatew
 
 One exception. In the health information flow the HIU supplies a data push URL, and the HIP encrypts the records and pushes them there. That URL may differ from the HIU's registered gateway URL, to improve privacy. The permission came through the gateway. The bytes do not.
 
-Match each callback to the call that caused it by `response.requestId`, which carries the `REQUEST-ID` you sent. Callbacks do not arrive in the order you sent the requests, and the same one can arrive twice, so a repeat must change nothing. Where each callback is described in the specifications is on [the API specifications](/docs/hiecm/v3/concepts/api-specifications).
+Match each callback to the call that caused it by `response.requestId`, which carries the `REQUEST-ID` you sent. Callbacks do not arrive in the order you sent the requests, and the same one can arrive twice, so a repeat must change nothing. Each callback is described in [the API reference](/docs/hiecm/v3/api).
 
 ### What happens
 
@@ -373,18 +373,26 @@ Nothing arrives: work through [the callback never arrives](/docs/hiecm/v3/troubl
 ### In plain words
 
 Every callback in the specifications declares bearer authentication. The token
-arrives in the `Authorization` header as `Bearer <token>`. Check two things
+arrives in the `Authorization` header as `Bearer <token>`. Check three things
 before your handler does any work:
 
 1. **A bearer token is present.** Reject a callback without one, and log the
    rejection.
-2. **It answers a call you made.** Its `response.requestId` matches the
+2. **An answer answers a call you made.** Its `response.requestId` matches the
    `REQUEST-ID` of a request you sent. A callback that answers nothing you sent
    is not yours to act on.
+3. **It is for a facility you serve.** `X-HIP-ID` or `X-HIU-ID` names one of
+   your own facilities. This is the only check that covers a callback that
+   answers nothing, such as a discovery request, a link init or a consent
+   notification. A bridge can receive callbacks for services that are not
+   yours: on a shared sandbox bridge, another organisation's consent
+   notifications and link callbacks have arrived at an integrator's URL.
+   Storing one keeps another organisation's patient data, and answering one
+   acts on its behalf.
 
 The keys that verify the token's signature are not among the published gateway
-calls. Confirm at onboarding how to verify the token, and meanwhile hold the two
-checks above.
+calls. Confirm at onboarding how to verify the token, and meanwhile hold the
+three checks above.
 
 The signature inside a consent artefact is a different thing. It signs the
 artefact's contents and proves the artefact was not altered. Checking the
@@ -410,7 +418,7 @@ as safe. Fail closed.
 
 ### What happens
 
-In the handler, before parsing the body for action: require the `Authorization` header with a bearer token, then require that `response.requestId` matches a `REQUEST-ID` your system sent and has not already handled. Reject otherwise. Do not invent a signature check against a key source the specifications do not publish.
+In the handler, before parsing the body for action: require the `Authorization` header with a bearer token; require that `X-HIP-ID` or `X-HIU-ID` names one of your facilities; and, on a callback that answers a call, require that `response.requestId` matches a `REQUEST-ID` your system sent and has not already handled. Reject otherwise. Do not invent a signature check against a key source the specifications do not publish.
 
 ### How you know it worked
 
@@ -418,7 +426,7 @@ A test posts a valid callback body without `Authorization` and sees it rejected 
 
 ### When it goes wrong
 
-Never fall back to processing a callback that failed a check while you investigate. A callback whose request id is unknown to you is logged and dropped, not retried.
+Never fall back to processing a callback that failed a check while you investigate. A callback whose request id is unknown to you, or whose facility header names a facility you do not serve, is logged and dropped, not stored, answered or retried.
 
 ## Care contexts, how records are grouped so they can be found
 
@@ -472,6 +480,59 @@ Three tests in one visit are one care context. A display name reads like "OPD re
 ### When it goes wrong
 
 A diagnosis or result in `display` leaks clinical information into a system built never to hold it, visible to anyone who can list the patient's care contexts. One care context per record produces a list no person can navigate.
+
+## How a health record is encrypted between HIP and HIU
+
+### In plain words
+
+The scheme is [Elliptic Curve Diffie-Hellman](/docs/hiecm/v3/getting-started/glossary#ecdh) key exchange on Curve25519, with AES-GCM for the payload and HKDF to derive the session key. Only the HIU holding valid consent can read the data, and the design gives perfect forward secrecy: key material compromised later does not expose data exchanged earlier.
+
+### Who holds which key
+
+| Key material | Generated by | Where it goes |
+| --- | --- | --- |
+| Short term private key, DHSK(U) | HIU | Never leaves the HIU |
+| Short term public key, DHPK(U) | HIU | Sent with the request |
+| Nonce, RAND(U), 32 bytes | HIU | Sent with the request |
+| Short term private key, DHSK(P) | HIP | Never leaves the HIP |
+| Short term public key, DHPK(P) | HIP | Sent with the encrypted data |
+| Nonce, RAND(P), 32 bytes | HIP | Sent with the encrypted data |
+| Shared key, DHK(U,P) | Computed independently by both | Never transmitted |
+| Session key, SK(U,P), 256 bit AES-GCM | Derived independently by both | Never transmitted |
+| Long term private key | HIP | Never leaves the HIP. Signs the encrypted payload. |
+
+A new key pair per exchange is what buys forward secrecy.
+
+### What the HIP does, step by step
+
+Six steps, once consent has validated.
+
+1. Generate a key pair, DHSK(P) and DHPK(P), in the group the HIU specified.
+2. Generate a 32 byte random value, RAND(P).
+3. Compute the shared key DHK(U,P) from the HIU's public key DHPK(U) and the HIP's own private key DHSK(P).
+4. Derive the salt and IV by XOR of RAND(P) and RAND(U). The first 20 bytes are the salt for HKDF, the last 12 bytes the IV.
+5. Compute a 256 bit AES-GCM session key SK(U,P) with HKDF-SHA256, from the x coordinate of the shared key and that salt. The HKDF `info` is empty.
+6. Encrypt the data with AES-256-GCM, that key and that IV, with no additional authenticated data. Append the 16 byte authentication tag to the ciphertext and base64 encode the result.
+
+The HIP then sends DHPK(P), RAND(P) and the encrypted data. The HIU derives the same session key from its own private key DHSK(U) and the HIP's public key DHPK(P), with salt and IV from the same XOR.
+
+Build the shared key from the HIU's public key and the HIP's private key. That is the pairing that makes the Diffie-Hellman exchange work.
+
+### Do not write this yourself
+
+Two reference implementations exist. Fidelius, at [github.com/sukreet/fidelius](https://github.com/sukreet/fidelius), and the Fidelius CLI, which is Java, with worked examples for Node.js, Python, Ruby and PHP at [github.com/mgrmtech/fidelius-cli](https://github.com/mgrmtech/fidelius-cli/tree/main/examples) that run the binary as a subprocess. A webinar covers the CLI from both sides, at [youtu.be/rSir2gbkEmk](https://youtu.be/rSir2gbkEmk?t=9232) from 2:33:52.
+
+### What happens
+
+Generate a fresh key pair and nonce per transfer. XOR the two nonces: the first 20 bytes are the HKDF salt, the last 12 the IV. Derive the key with HKDF-SHA256 over the x coordinate of the ECDH result, with an empty `info`, for 32 bytes. Encrypt with AES-256-GCM, no additional authenticated data, and append the 16 byte tag before base64 encoding.
+
+### How you know it worked
+
+The HIU decrypts every entry and its tag check passes. Before any peer is involved, round trip a record through the Fidelius CLI and compare bytes.
+
+### When it goes wrong
+
+Every tag check fails: compare the salt and IV split, the HKDF input (the x coordinate, not the whole shared secret) and an `info` or additional data that should be empty. One HIP fails while others work: compare how its public key is encoded.
 
 ## Reading an ABDM error code
 
@@ -573,5 +634,6 @@ HIP, HIU, health repository and health locker are chosen as though they were one
 - `hiecm.concept.asynchronous-callbacks`
 - `hiecm.concept.callback-authenticity`
 - `hiecm.concept.care-context`
+- `hiecm.concept.data-flow-encryption`
 - `hiecm.concept.error-codes`
 - `hiecm.concept.roles`

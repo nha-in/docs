@@ -4,6 +4,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"slices"
 	"testing"
 )
 
@@ -180,5 +181,29 @@ func TestParseAtomIndexesAnErrorAtomsOwnGatewayCode(t *testing.T) {
 	}
 	if want := []string{"900901"}; !reflect.DeepEqual(a.ErrorCodes, want) {
 		t.Errorf("ErrorCodes = %v, want %v", a.ErrorCodes, want)
+	}
+}
+
+// The gateway's endpoint suspension, 303001, is a gateway code like 900901,
+// in its own six digit family. It arrives as a JSON code after a run of
+// timeouts, and an error atom explains it.
+func TestExtractErrorCodesReadsTheEndpointSuspension(t *testing.T) {
+	for _, in := range []string{
+		`{"code":"303001","type":"Status report","message":"Runtime Error","description":"Address endpoint suspended"}`,
+		"the gateway returned error 303001",
+	} {
+		if got := ExtractErrorCodes(in); len(got) != 1 || got[0] != "303001" {
+			t.Errorf("ExtractErrorCodes(%q) = %v, want [303001]", in, got)
+		}
+	}
+	if got := ExtractErrorCodes("token 303001 issued"); len(got) != 0 {
+		t.Errorf("a bare number outside a code field is not a code, got %v", got)
+	}
+	a, err := ParseAtom("errors/303001.md", []byte("---\nid: hiecm.error.303001\ntype: error\ngateway: hiecm\nmilestone: M2\nversion: abdm-v3\ntitle: 303001, the gateway suspended the endpoint\nsummary: s\nsources:\n  - url: https://x\n    status: page\n---\n\n# t\n\n## In plain words\n\nx\n\n## Before you start\n\nx\n\n## What happens\n\nx\n\n## How you know it worked\n\nx\n\n## When it goes wrong\n\nx\n"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !slices.Contains(a.ErrorCodes, "303001") {
+		t.Errorf("the 303001 atom carries codes %v", a.ErrorCodes)
 	}
 }

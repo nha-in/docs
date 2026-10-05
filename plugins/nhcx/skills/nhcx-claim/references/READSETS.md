@@ -32,7 +32,7 @@ Always read, whatever the task: [CORE.md](CORE.md) (addresses and the exchange t
 | To implement | What it is | Read with it |
 |---|---|---|
 | [C1](../callbacks/C1-callback-door.md) | Callback Door | nothing else |
-| [C6](../callbacks/C6-claim-on-submit.md) | Claim Reply | [G8](../gateway/G8-receive.md), [G9](../gateway/G9-ledger.md) |
+| [C6](../callbacks/C6-claim-on-submit.md) | Claim Reply | [F9](../fhir/F9-claimresponse.md), [G8](../gateway/G8-receive.md), [G9](../gateway/G9-ledger.md) |
 | [C8](../callbacks/C8-enquiry-on-submit.md) | Enquiry Reply | [G8](../gateway/G8-receive.md) |
 
 ## Gateway

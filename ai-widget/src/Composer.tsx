@@ -4,8 +4,8 @@
  * One card: what is going with the question sits on top of it as pills (the
  * page, the file), and under them one row with add on the left, the field in
  * the middle and send on the right. Add opens a small menu: upload a file
- * from the computer, or find a page to attach. Under the card sit the
- * commands, one of which can be on at a time.
+ * from the computer, find a page to attach, or assign a skill. A skill can
+ * also be assigned by typing a slash, and one can be on at a time.
  *
  * Nothing here decides anything about a conversation. The panel owns the
  * state; this draws it and says what the reader did.
@@ -19,15 +19,18 @@ import {
   Paperclip,
   Plus,
   Search,
+  Sparkles,
   Square,
   Upload,
   X,
 } from './icons';
-import {COMMANDS, type CommandId} from './commands';
+import {COMMANDS, commandLabel, slashMatches, type CommandId} from './commands';
 import {loadPages, searchPages, type PageEntry} from './pages';
 import type {Attached, PageAttachment} from './types';
+import {CLOSED, offering, related, shownOf, trayKey, type Tray} from './next';
+import type {Suggestion} from './sse';
 
-export type Menu = 'closed' | 'add' | 'pages';
+export type Menu = 'closed' | 'add' | 'pages' | 'skills';
 
 type Props = {
   draft: string;
@@ -53,6 +56,8 @@ type Props = {
   onCommand: (command: CommandId | null) => void;
   /** How much of the conversation the next question takes. See memoryOf. */
   memory: {earlier: number; window: number; percent: number; full: boolean};
+  /** Next questions for the latest answer; empty when it has none. */
+  suggestions: Suggestion[];
 };
 
 /**
@@ -101,6 +106,17 @@ export function Composer(props: Props) {
   const addWrap = useRef<HTMLDivElement>(null);
   const pageReady = page !== null && page.markdown !== '';
 
+  // What is on offer after the latest answer. The empty box shows the next
+  // step as grey text, or the related question the reader moved to; a new
+  // answer brings its own, so the tray starts over with it.
+  const [tray, setTray] = useState<Tray>(CLOSED);
+  const [focused, setFocused] = useState(false);
+  const offered = props.suggestions.map((s) => s.id).join(' ');
+  useEffect(() => setTray(CLOSED), [offered]);
+  const offer = offering(draft, props.suggestions, tray, busy) && menu === 'closed';
+  const others = offer ? related(props.suggestions) : [];
+  const shown = offer ? shownOf(props.suggestions, tray) : null;
+
   // A click anywhere else puts the menu away. The panel lives in a shadow
   // root, so the click is checked against the path it took, not its target.
   useEffect(() => {
@@ -112,7 +128,18 @@ export function Composer(props: Props) {
     return () => document.removeEventListener('pointerdown', away, true);
   }, [menu]);
 
-  const hasContext = Boolean(page || attaching || file || fileNote || fileError);
+  // A draft that starts with a slash is choosing a skill, not asking yet.
+  const slash = slashMatches(draft);
+  const [slashAt, setSlashAt] = useState(0);
+  useEffect(() => setSlashAt(0), [draft]);
+  const assign = (id: CommandId) => {
+    props.onCommand(id);
+    props.onDraft('');
+  };
+
+  const hasContext = Boolean(
+    page || attaching || file || fileNote || fileError || props.command,
+  );
 
   return (
     <div class="ask-ai__foot">
@@ -171,6 +198,19 @@ export function Composer(props: Props) {
                 </span>
               )
             )}
+            {props.command && (
+              <span class="ask-ai__chip">
+                <Sparkles />
+                <span class="ask-ai__chip-text">Skill: {commandLabel(props.command)}</span>
+                <button
+                  type="button"
+                  class="ask-ai__chip-remove"
+                  aria-label={`Remove the ${commandLabel(props.command)} skill`}
+                  onClick={() => props.onCommand(null)}>
+                  <X />
+                </button>
+              </span>
+            )}
             {fileError && <span class="ask-ai__context-error">{fileError}</span>}
           </div>
         )}
@@ -184,12 +224,57 @@ export function Composer(props: Props) {
           </p>
         )}
 
+        {/* Related questions, above the bar while the empty box has focus.
+            They are other things to ask, so none takes the box unasked. */}
+        {focused && others.length > 0 && (
+          <ul class="ask-ai__next" role="listbox" aria-label="You could also ask">
+            <li class="ask-ai__next-label" role="presentation">
+              You could also ask
+            </li>
+            {others.map((s, i) => (
+              <li key={s.id} role="option" aria-selected={i === tray.active}>
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  class={`ask-ai__next-item${i === tray.active ? ' ask-ai__next-item--active' : ''}`}
+                  // The press must not take the focus from the box, or the
+                  // list it belongs to closes before the click lands.
+                  onMouseDown={(event) => event.preventDefault()}
+                  onMouseEnter={() => setTray({...tray, active: i})}
+                  onClick={() => props.onDraft(s.prompt)}>
+                  {s.prompt}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {/* The skills a slash is asking for, above the bar like the next
+            questions. Enter or Tab assigns the marked one. */}
+        {slash.length > 0 && (
+          <ul class="ask-ai__next" role="listbox" aria-label="Skills">
+            {slash.map((c, i) => (
+              <li key={c.id} role="option" aria-selected={i === slashAt}>
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  class={`ask-ai__next-item${i === slashAt ? ' ask-ai__next-item--active' : ''}`}
+                  onMouseDown={(event) => event.preventDefault()}
+                  onMouseEnter={() => setSlashAt(i)}
+                  onClick={() => assign(c.id)}>
+                  <span class="ask-ai__slash">/{c.id}</span> {c.hint}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+
         <div class="ask-ai__bar">
           <div class="ask-ai__add-wrap" ref={addWrap}>
             <button
               type="button"
               class="ask-ai__add"
-              aria-label="Add a file or a page"
+              aria-label="Add a file, a page or a skill"
               aria-haspopup="menu"
               aria-expanded={menu !== 'closed'}
               disabled={busy}
@@ -218,6 +303,36 @@ export function Composer(props: Props) {
                   <FileText />
                   Attach a page
                 </button>
+                <button
+                  type="button"
+                  role="menuitem"
+                  class="ask-ai__menu-item"
+                  onClick={() => onMenu('skills')}>
+                  <Sparkles />
+                  Assign a skill
+                </button>
+              </div>
+            )}
+            {/* Each skill points the answer at one section of the module's
+                agent skill. One at a time, and it stays on until removed. */}
+            {menu === 'skills' && (
+              <div class="ask-ai__menu" role="menu" aria-label="Assign a skill">
+                {COMMANDS.map((c, i) => (
+                  <button
+                    key={c.id}
+                    type="button"
+                    role="menuitemradio"
+                    aria-checked={props.command === c.id}
+                    class="ask-ai__menu-item ask-ai__menu-item--skill"
+                    autoFocus={i === 0}
+                    onClick={() => {
+                      onMenu('closed');
+                      props.onCommand(props.command === c.id ? null : c.id);
+                    }}>
+                    <span>{c.label}</span>
+                    <span class="ask-ai__menu-hint">{c.hint}</span>
+                  </button>
+                ))}
               </div>
             )}
             {menu === 'pages' && (
@@ -250,21 +365,78 @@ export function Composer(props: Props) {
           {/* A textarea, not an input: an error body pasted in should be
               readable before it is sent. Enter sends; shift and enter takes
               a new line. */}
-          <textarea
-            ref={props.field}
-            class="ask-ai__input"
-            value={draft}
-            rows={1}
-            onInput={(event) => props.onDraft(event.currentTarget.value)}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter' && !event.shiftKey) {
-                event.preventDefault();
-                props.onSend();
-              }
-            }}
-            placeholder="Ask about ABDM"
-            aria-label="Ask the assistant"
-          />
+          <div class="ask-ai__field">
+            <textarea
+              ref={props.field}
+              class="ask-ai__input"
+              value={draft}
+              rows={1}
+              onInput={(event) => props.onDraft(event.currentTarget.value)}
+              onFocus={() => setFocused(true)}
+              onBlur={() => setFocused(false)}
+              onKeyDown={(event) => {
+                // While something is on offer, Tab takes what the box shows,
+                // the arrows move between the related questions and Escape
+                // puts them away. Once the box holds anything, every key
+                // means what it always did.
+                if (offer) {
+                  const act = trayKey(event.key, event.shiftKey, props.suggestions, tray);
+                  if (act.kind !== 'none') {
+                    event.preventDefault();
+                    if (act.kind === 'fill') props.onDraft(act.text);
+                    else setTray(act.tray);
+                    return;
+                  }
+                }
+                if (slash.length > 0) {
+                  const n = slash.length;
+                  if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+                    event.preventDefault();
+                    setSlashAt((slashAt + (event.key === 'ArrowDown' ? 1 : n - 1)) % n);
+                    return;
+                  }
+                  if ((event.key === 'Enter' || event.key === 'Tab') && !event.shiftKey) {
+                    event.preventDefault();
+                    assign(slash[Math.min(slashAt, n - 1)].id);
+                    return;
+                  }
+                }
+                if (event.key === 'Enter' && !event.shiftKey) {
+                  event.preventDefault();
+                  props.onSend();
+                }
+              }}
+              placeholder={shown ? '' : 'Ask about ABDM'}
+              aria-label="Ask the assistant"
+              aria-describedby={shown ? 'ask-ai-next-hint' : undefined}
+            />
+            {/* Grey text over the empty box rather than a placeholder: a
+                question is longer than "Ask about ABDM", and a placeholder
+                cannot be cut to one line with an ellipsis in every browser. */}
+            {shown && (
+              <>
+                <span class="ask-ai__ghost" aria-hidden="true">
+                  {shown.prompt}
+                </span>
+                <span class="ask-ai__sr" id="ask-ai-next-hint">
+                  {`Suggested: ${shown.prompt}. Press Tab to use it, the arrow keys for related questions, Escape to dismiss.`}
+                </span>
+              </>
+            )}
+          </div>
+
+          {/* The key that takes the suggestion, shown as a key. It is also a
+              button, for a reader with no Tab key to press. */}
+          {shown && (
+            <button
+              type="button"
+              class="ask-ai__tabkey"
+              aria-label={`Use the suggestion: ${shown.prompt}`}
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={() => props.onDraft(shown.prompt)}>
+              Tab
+            </button>
+          )}
 
           {props.memory.earlier > 0 && <ContextRing {...props.memory} />}
 
@@ -287,21 +459,6 @@ export function Composer(props: Props) {
           )}
         </div>
       </form>
-
-      {/* The commands: each points the answer at one section of the module's
-          agent skill. One at a time, and it stays on until turned off. */}
-      <div class="ask-ai__commands" role="group" aria-label="Commands">
-        {COMMANDS.map((command) => (
-          <button
-            key={command.id}
-            type="button"
-            class="ask-ai__command"
-            aria-pressed={props.command === command.id}
-            onClick={() => props.onCommand(props.command === command.id ? null : command.id)}>
-            {command.label}
-          </button>
-        ))}
-      </div>
 
       {/* Said once, under the chat bar, where it is seen before anything is
           asked and after every answer. */}

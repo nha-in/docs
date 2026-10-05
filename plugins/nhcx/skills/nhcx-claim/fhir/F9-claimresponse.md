@@ -14,12 +14,16 @@ The payer's verdict on a Claim (F8). The **first** ClaimResponse in the bundle i
 | any | `cancelled` | `rejected` (but see cancelling, below) |
 | any | `rejected` or `denied` | `rejected` |
 | any | `queried` | `queried` |
-| `error` | any other | `rejected` |
+| `error` | any other | `error`: the payer could not process it. Not a decision |
 | `partial` | `approved` | `partial` |
 | `partial` | anything else | `queried` |
 | `complete` | `approved` or none | `approved` |
 | `complete` | anything else | `queried` |
 | anything else | | `queried` |
+
+**Errors are shown, never obeyed.** A reply is an error when its envelope travels as `x-hcx-status` `response.error`, when the ClaimResponse carries `error[]`, or when its outcome is `error` with no rejecting reason. An error decides nothing and stops nothing: the leg goes to `error` with the payer's words as its message, the screen shows them, and the same send is offered again. A rejection that a payer writes as `outcome: error` with reason `rejected` is still a rejection (the row above it).
+
+**The workflow id comes first.** When the reply's `x-hcx-workflow_id` is one of the payer-side codes in [PAYERS.md](../references/PAYERS.md) (20 received, 21 approved, 23 rejected, 24 queried, and their claim and enhancement counterparts), that code gives the status and the table above is not consulted, except that an error still wins and an approval the bundle marks `partial` stays `partial`. With any other workflow id, or none, the table decides.
 
 The `rejected` row is a correction. The reference implementation had no `rejected` row, so a rejection sent as `outcome: complete` with reason `rejected` was read as `queried`. Check the reason codes each payer uses in the knowledge source [PAYER](../references/PAYERS.md#markers).
 
@@ -50,6 +54,8 @@ Read into the pre-authorisation leg (D18 `claim_preauth`) or the claim leg (D20 
 | `total[]` category `submitted`, `amount.value` | `submitted_amount` | |
 | `item[]` | `items_json` (JSON list, one object per item) | below |
 | `item[].adjudication[]` category `reason` (display) and `processNote[].text` | `query_note` | newline-joined |
+| `error[].code` (coding code and display, else text) | `error_message` on an error reply, one line per entry, followed by the disposition and the process notes | shown on the leg in the danger colour |
+| `form` (an Attachment: `contentType`, `data` or `url`, `title`) | read from `response_json` when shown | the screen offers "Open <title> (PDF)" on the reply; nothing is stored apart from the bundle |
 | envelope `x-hcx-api_call_id` | `api_call_id` | redelivery check |
 | the whole bundle | `response_json` | |
 

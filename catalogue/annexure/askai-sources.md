@@ -18,7 +18,7 @@ One row per NHA document. `id` is stable and is what an eval case or an atom cit
 | abdm-faq-hpr | https://abdm.gov.in/FAQ | abdm.gov.in FAQ, the Healthcare Professionals Registry category | 2026-09-03 | page | 0 | 0 |
 | abdm-faq-hfr | https://abdm.gov.in/FAQ | abdm.gov.in FAQ, the Health Facility Registry category | 2026-09-03 | page | 0 | 0 |
 | abdm-faq-general | https://abdm.gov.in/FAQ | abdm.gov.in FAQ, the General category | 2026-09-03 | page | 0 | 24 |
-| glossary | site/docs/_glossary/_hiecm.mdx | This portal's glossary, from which the shared glossary atoms were moved | 2026-09-17 | sha256:0f8b53081bee4c0e | 0 | 33 |
+| glossary | site/docs/_glossary/_hiecm.mdx | This portal's glossary, from which the shared glossary atoms were moved | 2026-09-17 | sha256:0f8b53081bee4c0e | 0 | 34 |
 | ask-ai-panel | ai-widget/README.md | This portal's Ask AI panel: what the assistant does, what a reader can give it, what it keeps and what it will not do | 2026-09-23 | sha256:969f1a400a866759 | 1 | 5 |
 | build-with-ai | site/docs/hiecm/v3/getting-started/build-with-ai.mdx | This portal's Build with AI page: the Docs MCP server, the plugin, the skills and the Ask AI panel, which the terse portal feature cases point at instead of an ABDM fact | 2026-09-29 | sha256:ebd90fbc86e76710 | 0 | 5 |
 | api-reference-m3 | site/docs/hiecm/v3/api/m3/index.mdx | This portal's M3 API reference overview, one of the module pages that offer a Postman collection and the shared sandbox environment | 2026-09-29 | sha256:ae7c7ecc1d1fbf0c | 0 | 2 |
@@ -28,7 +28,7 @@ One row per NHA document. `id` is stable and is what an eval case or an atom cit
 | final-m4-m4-hpr-json | catalogue/hiecm/openapi/.raw/nha-2026-09-16/M4/M4-HPR.json | NHA's final M4 HPR swagger, 16 September 2026 | 2026-09-16 | sha256:fe3e5b211cf9f1c0 | 0 | 0 |
 | final-abha-m1-abha-collection-json | catalogue/hiecm/openapi/.raw/nha-2026-09-16/abha/M1 ABHA Collection.json | NHA's M1 ABHA Postman collection, supplying the order of M1 calls | 2026-09-16 | sha256:ea48dc0600f8322c | 0 | 7 |
 | final-abha-m1-abha-swagger-1-yaml | catalogue/hiecm/openapi/.raw/nha-2026-09-16/abha/M1 ABHA Swagger 1.yaml | NHA's final M1 ABHA swagger, 16 September 2026 | 2026-09-16 | sha256:6ab5cfe77c29032f | 0 | 13 |
-| final-hiecm-consent-management-data-flow-yaml | catalogue/hiecm/openapi/.raw/nha-2026-09-16/hiecm/consent-management-data-flow.yaml | NHA's final consent management data flow swagger, 16 September 2026 | 2026-09-16 | sha256:4b0af51af2e2b5bf | 0 | 19 |
+| final-hiecm-consent-management-data-flow-yaml | catalogue/hiecm/openapi/.raw/nha-2026-09-16/hiecm/consent-management-data-flow.yaml | NHA's final consent management data flow swagger, 16 September 2026 | 2026-09-16 | sha256:4b0af51af2e2b5bf | 0 | 20 |
 | final-hiecm-gateway-yaml | catalogue/hiecm/openapi/.raw/nha-2026-09-16/hiecm/gateway.yaml | NHA's final gateway swagger, 16 September 2026 | 2026-09-16 | sha256:d3bc599054c2570a | 0 | 4 |
 | final-hiecm-hip-initiated-linking-yaml | catalogue/hiecm/openapi/.raw/nha-2026-09-16/hiecm/hip-initiated-linking.yaml | NHA's final HIP initiated linking swagger, 16 September 2026 | 2026-09-16 | sha256:8c4036b49028e243 | 0 | 10 |
 | final-hiecm-link-token-yaml | catalogue/hiecm/openapi/.raw/nha-2026-09-16/hiecm/link-token.yaml | NHA's final link token swagger, 16 September 2026 | 2026-09-16 | sha256:2e9cdca38bd2b223 | 0 | 6 |
@@ -38,3 +38,4 @@ One row per NHA document. `id` is stable and is what an eval case or an atom cit
 | final-hiecm-user-initiated-linking-yaml | catalogue/hiecm/openapi/.raw/nha-2026-09-16/hiecm/user-initiated-linking.yaml | NHA's final user initiated linking swagger, 16 September 2026 | 2026-09-16 | sha256:848439c9e1fd123e | 0 | 2 |
 | final-phr-phr-and-locker-swagger-yaml | catalogue/hiecm/openapi/.raw/nha-2026-09-16/phr/PHR and Locker Swagger.yaml | NHA's final PHR and Locker swagger, 16 September 2026 | 2026-09-16 | sha256:a7e1b7e0b56b7529 | 0 | 1 |
 | final-phr-phr-and-locker-postman-collection-json | catalogue/hiecm/openapi/.raw/nha-2026-09-16/phr/PHR and locker.postman_collection.json | NHA's PHR and Locker Postman collection, 16 September 2026 | 2026-09-16 | sha256:8f503595767bc080 | 0 | 0 |
+| nha-review-2026-09-30 | docs/superpowers/specs/2026-09-30-askai-holistic-assistant-plan.md | NHA reviewers' verdicts on the Ask AI assistant, 29 and 30 September 2026: the QA sample, the PHR question set, the test-case workbook and the failed-case sheet, received as documents and summarised in section 1 of this plan | 2026-09-30 | sha256:1c9fd4b5005cab7d | 0 | 21 |

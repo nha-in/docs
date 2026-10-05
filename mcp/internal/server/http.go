@@ -112,6 +112,7 @@ func Handler(r *index.Reader, emb embed.Embedder, allowOrigin string, chatSvc *c
 			if d.Limit == "day" {
 				msg = fmt.Sprintf("rate limit reached: %d questions a day; it resets at midnight UTC", d.Cap)
 			}
+			slog.Warn("answer_missing", "reason", chat.ReasonRateLimit, "limit", d.Limit)
 			w.Header().Set("Retry-After", strconv.Itoa(secs))
 			writeJSON(w, 429, map[string]any{"error": msg, "limit": d.Limit, "retry_after_seconds": secs})
 			return
@@ -159,7 +160,12 @@ func Handler(r *index.Reader, emb embed.Embedder, allowOrigin string, chatSvc *c
 		}
 		start := time.Now()
 		if err := chatSvc.RespondCommand(ctx, in.Turns, in.Page, cmd, sw.Event); err != nil {
-			_ = sw.Event("error", map[string]string{"message": "the assistant hit a problem, try again shortly"})
+			// The reason says why the turn has no answer, for the log and for
+			// the panel. The request's own context ends only when the reader
+			// goes away; the 90 second deadline lives on ctx, not on it.
+			reason := chat.FailureReason(err, req.Context().Err() != nil)
+			_ = sw.Event("error", map[string]string{"message": "the assistant hit a problem, try again shortly", "reason": reason})
+			slog.Warn("answer_missing", "reason", reason, "ms", time.Since(start).Milliseconds())
 			slog.Error("chat failed", "err", err)
 			return
 		}

@@ -61,7 +61,7 @@ State changes, D9 claim:
 | `ProtocolResponse` | `error` | `error_message` = `<code>: <message>` |
 
 #### C2U. USED BY
-- Screens: [S3. Policy Discovery](../screens/S3-policy-discovery.md)
+- Screens: [S3. Policy Discovery](../screens/S3-policy-discovery.md), [S17. Beneficiary Discovery](../screens/S17-beneficiary-discovery.md)
 - APIs: [A2. Coverage Eligibility Check](../apis/A2-coverage-eligibility-check.md), [A10. Transaction Related](../apis/A10-txn-related.md), [A11. Transaction Dispatch](../apis/A11-txn-dispatch.md), [A12. Transaction FHIR](../apis/A12-txn-fhir.md), [A17. Claim State](../apis/A17-claim-state.md)
 - Callbacks: [C1. Callback Door](C1-callback-door.md)
 - FHIR: [F3. CoverageEligibilityResponse](../fhir/F3-coverage-eligibility-response.md), [F15. Patient](../fhir/F15-patient.md)

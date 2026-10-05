@@ -56,7 +56,7 @@ git clone --depth 1 --filter=blob:none --sparse https://github.com/nha-in/docs .
 - `nha-in/docs/plugins/nhcx/skills/nhcx-payment`
 - `nha-in/docs/plugins/nhcx/skills/nhcx-reprocess`
 
-`https://docs.abdm.gov.in/skills/nhcx-index.json` lists every NHCX skill, its archive and the exact files it is made of. A skill is 147 to 304 files across its folders, so take the archive rather than fetching files one at a time.
+`https://docs.abdm.gov.in/skills/nhcx-index.json` lists every NHCX skill, its archive and the exact files it is made of. A skill is 147 to 305 files across its folders, so take the archive rather than fetching files one at a time.
 
 ## 3. Connect the Docs MCP server
 
@@ -72,7 +72,7 @@ For Cursor, add `{ "mcpServers": { "nhcx-docs": { "url": "https://docs.abdm.gov.
 
 ## 4. Report back
 
-Tell the user what you installed and where you suggest starting. Two cautions to keep for the whole engagement:
+Tell the user what you installed and where you suggest starting. Offer three prompts from the **Try asking** section of the skills that fit, and ask what they are building. Two cautions to keep for the whole engagement:
 
 - The skills hold the bundles they send to the pinned samples in the NHCX package. Check response shapes against real sandbox calls before relying on them.
 - The skills are snapshots. The current documentation lives at https://docs.abdm.gov.in/docs/nhcx/v1; prefer it, and the MCP server when connected, over any downloaded copy that has aged.

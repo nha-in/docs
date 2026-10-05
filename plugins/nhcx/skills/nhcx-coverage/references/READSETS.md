@@ -13,6 +13,7 @@ Always read, whatever the task: [CORE.md](CORE.md) (addresses and the exchange t
 | [S3](../screens/S3-policy-discovery.md) | Policy Discovery | [D9](../database/D9-claim.md) |
 | [S5](../screens/S5-claim-master.md) | Claim Master | nothing else |
 | [S6](../screens/S6-claim-detail.md) | Claim Detail | nothing else |
+| [S17](../screens/S17-beneficiary-discovery.md) | Beneficiary Discovery | [F2](../fhir/F2-coverage-eligibility-request.md), [F15](../fhir/F15-patient.md), [D9](../database/D9-claim.md) |
 
 ## APIs
 

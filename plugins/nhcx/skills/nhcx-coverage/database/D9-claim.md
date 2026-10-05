@@ -100,7 +100,7 @@ Other writes:
 - Index: `ix_claim_status (status, id DESC)`.
 
 #### D9U. USED BY
-- Screens: [S2. Select Policy](../screens/S2-select-policy.md), [S3. Policy Discovery](../screens/S3-policy-discovery.md), [S5. Claim Master](../screens/S5-claim-master.md), [S6. Claim Detail](../screens/S6-claim-detail.md)
+- Screens: [S2. Select Policy](../screens/S2-select-policy.md), [S3. Policy Discovery](../screens/S3-policy-discovery.md), [S5. Claim Master](../screens/S5-claim-master.md), [S6. Claim Detail](../screens/S6-claim-detail.md), [S17. Beneficiary Discovery](../screens/S17-beneficiary-discovery.md)
 - APIs: [A1. Policy Search](../apis/A1-policy-search.md), [A2. Coverage Eligibility Check](../apis/A2-coverage-eligibility-check.md), [A10. Transaction Related](../apis/A10-txn-related.md), [A11. Transaction Dispatch](../apis/A11-txn-dispatch.md), [A13. Transaction List](../apis/A13-txn-list.md), [A17. Claim State](../apis/A17-claim-state.md)
 - Callbacks: [C1. Callback Door](../callbacks/C1-callback-door.md), [C2. Coverage Eligibility Verdict](../callbacks/C2-coverage-eligibility-on-check.md)
 - FHIR: [F2. CoverageEligibilityRequest](../fhir/F2-coverage-eligibility-request.md), [F3. CoverageEligibilityResponse](../fhir/F3-coverage-eligibility-response.md), [F15. Patient](../fhir/F15-patient.md), [F17. Organization](../fhir/F17-organization.md), [F18. Coverage](../fhir/F18-coverage.md), [F19. Other bundle resources](../fhir/F19-other-resources.md)

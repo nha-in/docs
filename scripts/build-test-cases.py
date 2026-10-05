@@ -44,7 +44,46 @@ PAGES = {
         "skill": "/docs/hiecm/v3/milestones/m1#build-m1-with-an-ai-coding-assistant",
         "next": "[M2 test cases](/docs/hiecm/v3/resources/test-cases/m2)",
     },
+    # M4 comes as two workbooks, HFR with one tab per flow and HPR with one.
+    # Each tab is a section of the page, and its heading rows are the groups.
+    "m4": {
+        "sections": [
+            ("HFR", RAW / "nha-2026-10-02-m4-tests" / "HFR_Test_Cases.xlsx"),
+            ("HPR", RAW / "nha-2026-10-02-m4-tests" / "HPR_Test_Cases.xlsx"),
+        ],
+        "title": "M4 test cases",
+        "label": "M4 Registry Integration",
+        "position": 5,
+        "milestone": "[M4 Registry Integration](/docs/hiecm/v3/milestones/m4)",
+        "covers": "searching the Health Facility Registry, registering a facility in four steps, updating it and linking bridges to it, then creating a Healthcare Professional ID and registering the professional on the HPR",
+        "api": "/docs/hiecm/v3/api/m4",
+        "skill": "/docs/hiecm/v3/milestones/m4#build-m4-with-an-ai-coding-assistant",
+        "next": "[PHR test cases](/docs/hiecm/v3/resources/test-cases/phr)",
+    },
 }
+
+# The HFR sheet names its calls by their sandbox swagger operation rather than
+# by path. These are the ones that are one M4 operation by name; any other
+# stays plain code rather than linking to a guess.
+SWAGGER = {
+    "v15FacilityBasicInformation": "/v1.5/facility/basic-information",
+    "v15FacilityAdditionalInformation": "/v1.5/facility/additional-information",
+    "v15FacilityDetailedInformation": "/v1.5/facility/detailed-information",
+    "v15SubmitFacilityDetails": "/v1.5/facility/submit-facility",
+    "v15FacilityGetLGDStates": "/v1.5/facility/lgd/states",
+    "v15FacilityGetLGDDistricts": "/v1.5/facility/lgd/districts",
+    "v15FacilityGetLGDSubDistricts": "/v1.5/facility/lgd/subdistricts",
+    "v15FacilityGetMasterData": "/v1.5/facility/get-master-data",
+    "v15FacilityGetMasterTypes": "/v1.5/facility/get-master-types",
+    "v15FacilityGetOwnershipSubtype": "/v1.5/facility/get-owner-subtype",
+    "v15FacilityGetSpecialities": "/v1.5/facility/get-specialities",
+    "v15FetchFacilityTypes": "/v1.5/facility/fetch-facility-type",
+    "v15FetchFacilitySubTypes": "/v1.5/facility/fetch-facility-Sub-type",
+    "v1MutipleHRPAddUpdateServices": "/v1/bridges/MutipleHRPAddUpdateServices",
+}
+
+# The M4 sheets mark a case Yes or No where M1 writes Mandatory or Optional.
+MARKINGS = {"yes": "Mandatory", "no": "Optional"}
 
 
 def clean(value):
@@ -93,8 +132,10 @@ def columns(header):
             found["expected"] = index
         elif "suggestion" in key:
             found["tester"] = index
-        elif "v3 api" in key:
+        elif "v3 api" in key or key == "apis":
             found["apis"] = index
+        elif key.startswith("actual name"):
+            found["field"] = index
     return found
 
 
@@ -114,7 +155,13 @@ def call(url, routes, base=""):
     `base` is a prefix every case on the page shares; it is stated once above
     the tables and left off each path, so the APIs column stays narrow.
     """
-    path = urlparse(url).path.rstrip("/") or url
+    parsed = urlparse(url)
+    path = parsed.path.rstrip("/") or url
+    if path.endswith("swagger-ui.html") and parsed.fragment:
+        name = re.sub(r"Using(GET|POST|PUT|PATCH|DELETE)$", "", parsed.fragment.split("/")[-1])
+        if name not in SWAGGER:
+            return f"`{name}`"
+        path = SWAGGER[name]
     shown = path[len(base):] if base and path.startswith(base + "/") else path
     matches = routes.get(path, [])
     if len(matches) == 1:
@@ -139,7 +186,15 @@ def shared_base(groups):
 
 
 def extract(path):
-    sheet = openpyxl.load_workbook(path, data_only=True).worksheets[0]
+    return extract_sheet(openpyxl.load_workbook(path, data_only=True).worksheets[0])
+
+
+def extract_sheet(sheet, unnumbered=False):
+    """One worksheet's session call and its groups of cases.
+
+    `unnumbered` keeps a case row that has no id, shown as "No id", where the
+    default drops it.
+    """
     rows = [[clean(cell) for cell in row] for row in sheet.iter_rows(values_only=True)]
     header = next(i for i, row in enumerate(rows) if any("Test Case ID" in c for c in row))
     column = columns(rows[header])
@@ -164,11 +219,19 @@ def extract(path):
                 # sheet carries is what tells them apart.
                 current = {"label": f"{row[0]}. {flat(row[1])}", "applies": applies, "cases": []}
                 groups.append(current)
-            continue
+                continue
+            # The M4 sheets head a group with its name alone in the first cell.
+            if row and row[0] and not any(row[1:]):
+                current = {"label": flat(row[0]), "applies": "", "cases": []}
+                groups.append(current)
+                continue
+            if not (unnumbered and (cell("functionality") or cell("test"))):
+                continue
+            identifier = "No id"
         if current is None:
             current = {"label": "Test cases", "applies": "", "cases": []}
             groups.append(current)
-        anchor = identifier.lower()
+        anchor = re.sub(r"\s+", "-", identifier.lower())
         seen[anchor] = seen.get(anchor, 0) + 1
         if seen[anchor] > 1:
             anchor = f"{anchor}-{seen[anchor]}"
@@ -183,7 +246,13 @@ def extract(path):
             "expected": cell("expected"),
             "tester": cell("tester"),
             "apis": list(dict.fromkeys(re.findall(r"https?://[^\s,]+", cell("apis")))),
+            "field": flat(cell("field")),
+            "applies": flat(cell("applies")),
         })
+    for group in groups:
+        # A group whose heading names no audience takes it from its rows.
+        if not group["applies"]:
+            group["applies"] = ", ".join(dict.fromkeys(c["applies"] for c in group["cases"] if c["applies"]))
     return session, [g for g in groups if g["cases"]]
 
 
@@ -198,6 +267,7 @@ def cell(text):
 
 def marking(text, anchors):
     """Shorten the sheet's either-of marking and link the two cases it names."""
+    text = MARKINGS.get(text.strip().lower(), re.sub(r"^Yes\b", "Mandatory", text))
     either = re.match(r"Either of the test cases (\S+) or (\S+) is mandatory for Gov\w* Optional for Private", text)
     if not either:
         return cell(text or "Not marked")
@@ -207,6 +277,8 @@ def marking(text, anchors):
 
 def row(case, routes, anchors, base):
     what = f"**{md(case['title'])}**"
+    if case.get("field"):
+        what += f"<br/>Field: {md(case['field'])}"
     if case["test"]:
         what += "<br/>" + cell(case["test"])
     if case["steps"]:
@@ -255,8 +327,14 @@ def render(spec, session, groups, routes):
         f"An AI coding assistant can walk these cases against your own system with the [{spec['label']} skill]({spec['skill']}).",
         "",
     ]
+    level, section = "##", None
+    if any(g.get("section") for g in groups):
+        level = "###"
     for group in groups:
-        out += [f"## {md(group['label'])}", ""]
+        if group.get("section") and group["section"] != section:
+            section = group["section"]
+            out += [f"## {md(section)}", ""]
+        out += [f"{level} {md(group['label'])}", ""]
         if group["applies"]:
             out += [f"Applies to: {md(group['applies'])}.", ""]
         # The wrapper's class top-aligns the rows; see .test-cases in mdx.css.
@@ -279,7 +357,18 @@ def main():
     routes = load_routes()
     stale = False
     for name, spec in PAGES.items():
-        session, groups = extract(spec["sheet"])
+        if "sections" in spec:
+            session, groups = "", []
+            for prefix, path in spec["sections"]:
+                book = openpyxl.load_workbook(path, data_only=True)
+                for sheet in book.worksheets:
+                    title = sheet.title.strip()
+                    label = f"{prefix}: {title}" if len(book.worksheets) > 1 else prefix
+                    for group in extract_sheet(sheet, unnumbered=True)[1]:
+                        group["section"] = label
+                        groups.append(group)
+        else:
+            session, groups = extract(spec["sheet"])
         text = render(spec, session, groups, routes)
         target = OUT / f"{name}.mdx"
         cases = sum(len(g["cases"]) for g in groups)

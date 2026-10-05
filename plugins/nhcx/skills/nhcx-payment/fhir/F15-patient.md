@@ -47,6 +47,9 @@ Not sent: `address`, `photo`, `given`/`family` names, MRN, ABHA address, `active
 | `meta.profile[0]` | `.../StructureDefinition/Patient` |
 | `identifier[0]` | type `PMJAY` (as above), value the member id entered on the check form (A2) |
 | `identifier[1]` | type `MB` (as above), value the same member id |
+| `identifier[]` typed `ABHA` | the ABHA number searched on, only on a discovery that also gives a member id (A2) |
+| `identifier[]` typed `ADN` "Adhaar number" under `ndhm-identifier-type-code` | the Aadhaar number given as additional information on a discovery (A2), 12 digits; absent otherwise |
+| `telecom[0]` | `{system: "phone", value: <mobile>}`, the mobile given as additional information on a discovery; absent otherwise |
 
 **Payer's Patient (received, eligibility reply)**. The reply repeats the request's Patient and appends the payer's; the **last** Patient in the bundle is read onto `D9 claim`:
 

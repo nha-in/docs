@@ -23,7 +23,7 @@ Unmarked statements are the protocol or this application's own design, and are f
 
 ## The profiles
 
-| Property | `pmjay` (PMJAY / Ayushman Bharat scheme payer) | `kyrocare` (the reference sandbox payer) | `generic` |
+| Property | `pmjay` (PMJAY scheme payer, a State Health Agency) | `kyrocare` (the reference sandbox payer) | `generic` |
 |---|---|---|---|
 | Package code system on the plan and the ruling | `https://payer.pmjay.nha.gov.in` | this payer's own procedure system ([F5. InsurancePlan](../fhir/F5-insuranceplan.md)) [REF](PAYERS.md#markers) | this payer's own procedure system |
 | Programme code expected on every claim line | `AB-PMJAY`; a line without it is still filed, with a timeline note [REF](PAYERS.md#markers) | none | none |

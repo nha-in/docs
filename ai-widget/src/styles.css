@@ -1101,40 +1101,55 @@
   color: var(--aa-faint);
 }
 
-/* The commands under the bar: quiet pills, the one that is on filled in. */
-.ask-ai__commands {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.375rem;
+/* The skills menu: a name and what it is for, on one row. */
+.ask-ai__menu-item--skill {
+  justify-content: space-between;
 }
 
-.ask-ai__command {
-  padding: 0.375rem 0.6875rem;
-  border: 1px solid var(--aa-border);
-  border-radius: 999px;
-  background: none;
-  font-family: inherit;
+.ask-ai__menu-item--skill[aria-checked='true'] {
+  background: var(--aa-fill-soft);
+}
+
+.ask-ai__menu-hint {
   font-size: 0.75rem;
-  line-height: 1;
-  color: var(--aa-muted);
-  cursor: pointer;
-  transition: background-color var(--aa-dur-fast) var(--aa-ease-out),
-    border-color var(--aa-dur-fast) var(--aa-ease-out),
-    color var(--aa-dur-fast) var(--aa-ease-out);
+  color: var(--aa-faint);
+  white-space: nowrap;
 }
 
-.ask-ai__command:hover {
-  border-color: var(--aa-border-strong);
+.ask-ai__slash {
+  font-family: var(--aa-font-mono, ui-monospace, monospace);
   color: var(--aa-heading);
 }
 
-.ask-ai__command[aria-pressed='true'] {
-  border-color: var(--aa-accent);
-  background: var(--aa-accent);
-  color: var(--aa-accent-contrast);
+/* The way back to the latest answer: floats over the end of the thread and
+   takes no room of its own. */
+.ask-ai__to-end-wrap {
+  position: relative;
+  height: 0;
 }
 
-.ask-ai__command:focus-visible {
+.ask-ai__to-end {
+  position: absolute;
+  bottom: 0.5rem;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  transform: translateX(-50%);
+  border: 1px solid var(--aa-border);
+  border-radius: 999px;
+  background: var(--aa-surface);
+  box-shadow: 0 4px 12px -4px rgb(0 0 0 / 0.25);
+  color: var(--aa-muted);
+  cursor: pointer;
+}
+
+.ask-ai__to-end:hover {
+  color: var(--aa-heading);
+}
+
+.ask-ai__to-end:focus-visible {
   outline: 2px solid var(--aa-accent);
   outline-offset: 2px;
 }
@@ -1535,56 +1550,6 @@
   text-align: center;
 }
 
-/* Asked once when the conversation fills the window: go on, or start afresh. */
-.ask-ai__window-offer {
-  display: grid;
-  gap: 0.5rem;
-  padding: 0.625rem 0.75rem;
-  border: 1px solid var(--aa-border-strong);
-  border-radius: 0.75rem;
-  font-size: 0.8125rem;
-  line-height: 1.5;
-  color: var(--aa-heading);
-}
-
-.ask-ai__window-offer p {
-  margin: 0;
-}
-
-.ask-ai__window-offer-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.ask-ai__window-offer-new,
-.ask-ai__window-offer-stay {
-  padding: 0.25rem 0.625rem;
-  border-radius: 999px;
-  font: inherit;
-  font-size: 0.75rem;
-  cursor: pointer;
-}
-
-.ask-ai__window-offer-new {
-  border: 0;
-  background: var(--aa-accent);
-  color: var(--aa-accent-contrast);
-}
-
-.ask-ai__window-offer-stay {
-  border: 1px solid var(--aa-border-strong);
-  background: transparent;
-  color: var(--aa-heading);
-}
-
-.ask-ai__window-offer-new:focus-visible,
-.ask-ai__window-offer-stay:focus-visible {
-  outline: 2px solid var(--aa-accent);
-  outline-offset: 2px;
-}
-
-
 /* An endpoint path the server paired with its reference page. It stays code
    to the eye; the underline on hover is what says it goes somewhere. */
 .ask-ai__code-link {
@@ -1598,7 +1563,93 @@
   border-bottom-style: solid;
 }
 
-/* Next-question pills sit under the answer, before the sources line. */
-.ask-ai__followups {
-  margin-top: 10px;
+/* The next question, offered in the box. The field carries the grey text
+   over the empty textarea, cut to one line. */
+.ask-ai__field {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.ask-ai__ghost {
+  position: absolute;
+  inset: 0.375rem 0.25rem auto 0.25rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--aa-faint);
+  pointer-events: none;
+}
+
+.ask-ai__tabkey {
+  align-self: center;
+  padding: 0.0625rem 0.375rem;
+  border: 1px solid var(--aa-border-strong);
+  border-radius: 0.375rem;
+  background: none;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.6875rem;
+  line-height: 1.5;
+  color: var(--aa-muted);
+  cursor: pointer;
+}
+
+.ask-ai__tabkey:hover {
+  color: var(--aa-heading);
+}
+
+.ask-ai__tabkey:focus-visible {
+  outline: 2px solid var(--aa-accent);
+  outline-offset: 2px;
+}
+
+/* The other next questions, above the bar while the empty box has focus. */
+.ask-ai__next {
+  display: grid;
+  gap: 0.0625rem;
+  margin: 0 0 0.25rem;
+  padding: 0 0 0.25rem;
+  border-bottom: 1px solid var(--aa-border);
+  list-style: none;
+}
+
+.ask-ai__next-label {
+  padding: 0.125rem 0.5rem 0.25rem;
+  font-size: 0.6875rem;
+  color: var(--aa-faint);
+}
+
+.ask-ai__next-item {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  padding: 0.375rem 0.5rem;
+  border: 0;
+  border-radius: 0.5rem;
+  background: none;
+  font-family: inherit;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--aa-muted);
+  cursor: pointer;
+}
+
+.ask-ai__next-item--active {
+  background: var(--aa-fill-soft);
+  color: var(--aa-heading);
+}
+
+.ask-ai__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }

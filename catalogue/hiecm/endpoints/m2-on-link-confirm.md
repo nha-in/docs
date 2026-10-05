@@ -37,7 +37,7 @@ A gateway session token and the confirm request. Send the `REQUEST-ID`, `TIMESTA
 
 ## What happens
 
-`hiType` is one value per patient entry, such as `Prescription`, and `count` must equal its care contexts. The call returns 202 Accepted.
+A wrong or expired code is a failure: send `error` with a `code` and a `message` the patient can read. No code is published for a wrong code; the sandbox accepts `ABDM-9999` with a message and answers 202. `hiType` is one value per patient entry, such as `Prescription`, and `count` must equal its care contexts. The call returns 202 Accepted.
 
 ## When it goes wrong
 

@@ -7,7 +7,7 @@ Every call the application makes for NHCX, in one list. Each row links to its fu
 | # | API | Call | What it does | Replies | Screens |
 |---|---|---|---|---|---|
 | [A1](../apis/A1-policy-search.md) | Policy Search | `registry.policies_search` (G10), registry `participant/get/policies` | Finds every policy linked to a member id, mobile number or ABHA number. Synchronous, the first call of every case; "No policies found" reads as an empty list. | none | [S1](../screens/S1-search-policy.md), [S2](../screens/S2-select-policy.md) |
-| [A2](../apis/A2-coverage-eligibility-check.md) | Coverage Eligibility Check | `gateway.send("v1/coverageeligibility/check")` | Sends a CoverageEligibilityRequest for one of four purposes: validation (is the policy in force), benefits, discovery (find the policy) or auth-requirements (rule on the chosen procedure set). | [C1](../callbacks/C1-callback-door.md), [C2](../callbacks/C2-coverage-eligibility-on-check.md) | [S3](../screens/S3-policy-discovery.md) |
+| [A2](../apis/A2-coverage-eligibility-check.md) | Coverage Eligibility Check | `gateway.send("v1/coverageeligibility/check")` | Sends a CoverageEligibilityRequest for one of four purposes: validation (is the policy in force), benefits, discovery (find the policy) or auth-requirements (rule on the chosen procedure set). | [C1](../callbacks/C1-callback-door.md), [C2](../callbacks/C2-coverage-eligibility-on-check.md) | [S3](../screens/S3-policy-discovery.md), [S17](../screens/S17-beneficiary-discovery.md) |
 
 ## Ledger queries (polling)
 

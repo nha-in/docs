@@ -29,7 +29,7 @@ related:
 
 ## In plain words
 
-Link one or more [care contexts](/docs/hiecm/v3/getting-started/glossary#care-context) to a patient's [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address). One call covers one or many: put them in the `careContexts` array and set `count` to how many there are. Send the patient's [link token](/docs/hiecm/v3/getting-started/glossary#link-token) in the `X-LINK-TOKEN` header. The call returns 202 Accepted, and the outcome arrives on [on_carecontext](/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/02-m2-post-v3-link-on-carecontext).
+Link one or more [care contexts](/docs/hiecm/v3/getting-started/glossary#care-context) to a patient's [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address). One call covers one or many: put them in the `careContexts` array and set `count` to how many there are. Each patient entry names its health information type in `hiType`, one value such as `OPConsultation`. Send the patient's [link token](/docs/hiecm/v3/getting-started/glossary#link-token) in the `X-LINK-TOKEN` header. The call returns 202 Accepted, and the outcome arrives on [on_carecontext](/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/02-m2-post-v3-link-on-carecontext).
 
 ## Before you start
 
@@ -37,7 +37,7 @@ A gateway session token and a valid link token for this patient. Send the `REQUE
 
 ## What happens
 
-`hiTypes` on each patient entry is one value, such as `OPConsultation`, not an array. If the token was generated with both `abhaNumber` and `abhaAddress`, send both here too.
+`hiType` on each patient entry is one value, such as `OPConsultation`, not an array, and the field name is singular. If the token was generated with both `abhaNumber` and `abhaAddress`, send both here too.
 
 ## How you know it worked
 
@@ -45,4 +45,4 @@ A callback on `/api/v3/link/on_carecontext` with `status` of `Successfully Linke
 
 ## When it goes wrong
 
-`ABDM-1006` (Bad Request, invalid request Body): check the body against the schema. `ABDM-1037`: `count` does not match the care contexts sent. `ABDM-1038`: the ABHA address does not match the link token. `ABDM-2402` (Invalid Timestamp): check `TIMESTAMP` against your clock. `ABDM-2404` (Invalid Request Id): send a fresh UUID in `REQUEST-ID`. `ABDM-2500` (Authorization header is missing): send the session token. `ABDM-9999` (Unknown exception) gives no cause.
+No 202 and no callback, the call simply hanging or timing out: check that the field is `hiType`, not `hiTypes`. A body with `hiTypes` is not refused with a 400; it gets no answer, which reads like an outage. `ABDM-1006` (Bad Request, invalid request Body): check the body against the schema. `ABDM-1037`: `count` does not match the care contexts sent. `ABDM-1038`: the ABHA address does not match the link token. `ABDM-2402` (Invalid Timestamp): check `TIMESTAMP` against your clock. `ABDM-2404` (Invalid Request Id): send a fresh UUID in `REQUEST-ID`. `ABDM-2500` (Authorization header is missing): send the session token. `ABDM-9999` (Unknown exception) gives no cause.

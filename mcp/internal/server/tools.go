@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log/slog"
 	"regexp"
+	"sort"
 	"strings"
 	"sync"
 
@@ -247,6 +248,15 @@ type PassagePack struct {
 	// Related are one hop out from the top hits: id and title only, so
 	// the model knows a sibling exists without paying to read it.
 	Related []map[string]string `json:"related"`
+	// Next feeds the widget's next-question pills: the atoms the top
+	// passages' authors named as related, outbound links only, in the
+	// conversation's gateway or shared. Related above is what the model
+	// sees; this is what the reader is offered.
+	Next []map[string]string `json:"next,omitempty"`
+	// Step is the call that follows the top passage's in its journey, when
+	// the top passage is a call and is not the journey's last. It is what
+	// the reader does next, where Next is what else they might ask.
+	Step map[string]string `json:"step,omitempty"`
 }
 
 const (
@@ -261,6 +271,13 @@ type atomOpener interface {
 	GetAtom(id string) (catalogue.Atom, error)
 	RelatedAtoms(id string) ([]index.RelatedGroup, error)
 	OperationRoute(id string) (method, path string, ok bool)
+	RelatedOutbound(id string) ([]index.AtomRef, error)
+}
+
+// stepReader is an atomOpener that also knows the journey order.
+type stepReader interface {
+	atomOpener
+	NextStep(operationID string) (index.Step, bool)
 }
 
 // openPassage builds the full-body passage and its one-hop related atoms
@@ -316,6 +333,29 @@ func (t *Tools) Lookup(ctx context.Context, in lookupIn) (PassagePack, error) {
 	hits = pinErrorAtoms(t.r, in.Query, hits, lookupHits)
 	var pack PassagePack
 	seenRelated := map[string]bool{}
+	// The gateway pills may come from: the conversation's scope, else the
+	// top hit's own gateway. Shared atoms are always allowed.
+	scope := chat.GatewayFrom(ctx)
+	if scope == "" {
+		// The first hit that belongs to a gateway decides. A shared atom on
+		// top, the ABDM glossary entry say, must not make "shared" the scope:
+		// that shut out the very milestone atoms the question was about.
+		for _, h := range hits {
+			if g := gatewayOf(h.ID); g != "" && g != "shared" {
+				scope = g
+				break
+			}
+		}
+	}
+	if scope == "" {
+		// Nothing but shared atoms was retrieved: HIE-CM, where ABDM's own
+		// milestones are documented, the default the chat loop gives the pills.
+		scope = "hiecm"
+	}
+	shown := map[string]bool{}
+	for _, h := range hits {
+		shown[h.ID] = true
+	}
 	for i, h := range hits {
 		p := Passage{ID: h.ID, Type: h.Type, Milestone: h.Milestone, Title: h.Title,
 			DocURL: index.DocLink(h.DocURL, h.DocAnchor),
@@ -330,10 +370,181 @@ func (t *Tools) Lookup(ctx context.Context, in lookupIn) (PassagePack, error) {
 				seenRelated[ref["id"]] = true
 				pack.Related = append(pack.Related, ref)
 			}
+			pack.Next = append(pack.Next, nextQuestions(t.r, h.ID, shown, scope)...)
 		}
 		pack.Passages = append(pack.Passages, p)
 	}
+	// What a reader does next before what a word means, across the whole
+	// pack and not only within a passage: "how do I integrate m1?" offered
+	// the P2, P3 and P4 definitions, siblings of its second passage, ahead
+	// of the M1 flows its third passage named.
+	sort.SliceStable(pack.Next, func(i, j int) bool { return nextRank[pack.Next[i]["type"]] < nextRank[pack.Next[j]["type"]] })
+	if len(hits) > 0 {
+		pack.Step = nextStep(t.r, hits[0].ID)
+	}
+	if chat.ExpandFrom(ctx) && len(hits) > 0 {
+		inPack := map[string]bool{}
+		for _, h := range hits {
+			inPack[h.ID] = true
+		}
+		pack.Passages = append(pack.Passages, expand(t.r, hits[0].ID, inPack, scope)...)
+	}
 	return pack, nil
+}
+
+// maxExpanded bounds what a whole-flow question adds to the pack: each is a
+// full body, sent on every model call of the turn.
+const maxExpanded = 3
+
+// expand opens the flows and concepts the top passage's author named as
+// related. A question for a whole build or a whole flow needs every role's
+// part in front of the model: the consent walkthrough that retrieved the
+// HIU's flow answered with the HIU's half, because the HIP's was never in
+// the pack.
+func expand(r atomOpener, topID string, inPack map[string]bool, scope string) []Passage {
+	outbound, err := r.RelatedOutbound(topID)
+	if err != nil {
+		return nil
+	}
+	var out []Passage
+	for _, a := range outbound {
+		if len(out) == maxExpanded {
+			break
+		}
+		if inPack[a.ID] || (a.Type != "flow" && a.Type != "concept") ||
+			(gatewayOf(a.ID) != scope && gatewayOf(a.ID) != "shared") {
+			continue
+		}
+		atom, err := r.GetAtom(a.ID)
+		if err != nil {
+			continue
+		}
+		inPack[a.ID] = true
+		out = append(out, Passage{ID: a.ID, Type: a.Type, Milestone: a.Milestone, Title: a.Title,
+			DocURL: index.DocLink(a.DocURL, a.DocAnchor), Body: atom.Body})
+	}
+	return out
+}
+
+// nextStep returns the call after the top passage's in its journey, as the
+// question a reader would ask to take it. Nil unless the passage is a call
+// with a step after it.
+func nextStep(r stepReader, topID string) map[string]string {
+	a, err := r.GetAtom(topID)
+	if err != nil || a.Operation == "" {
+		return nil
+	}
+	step, ok := r.NextStep(a.Operation)
+	if !ok {
+		return nil
+	}
+	method, path, ok := r.OperationRoute(step.Next)
+	if !ok {
+		return nil
+	}
+	path, _, _ = strings.Cut(path, "#")
+	return map[string]string{
+		"id":     step.Next,
+		"title":  step.Journey,
+		"prompt": "What is the next step in " + step.Journey + ", " + method + " " + path + "?",
+	}
+}
+
+// nextQuestions returns the atoms one passage's author named as related,
+// as pill material: not a passage already shown, in the scope's gateway or
+// shared. shown is updated so a later passage does not offer the same atom
+// twice.
+func nextQuestions(r atomOpener, passageID string, shown map[string]bool, scope string) []map[string]string {
+	outbound, err := r.RelatedOutbound(passageID)
+	if err != nil {
+		return nil
+	}
+	var next []map[string]string
+	for _, a := range outbound {
+		if shown[a.ID] || !nextTypes[a.Type] || (gatewayOf(a.ID) != scope && gatewayOf(a.ID) != "shared") {
+			continue
+		}
+		shown[a.ID] = true
+		next = append(next, map[string]string{"id": a.ID, "type": a.Type, "title": a.Title})
+	}
+	// What a reader does next before what a word means: flows, then
+	// concepts, then glossary entries, each in the author's order.
+	sort.SliceStable(next, func(i, j int) bool { return nextRank[next[i]["type"]] < nextRank[next[j]["type"]] })
+	// The ones a reader can be offered carry the question their author
+	// wrote, when there is one: a title is a poor thing to put in a
+	// reader's mouth.
+	for i := range next {
+		next[i]["question"] = nudge(next[i]["type"], next[i]["title"])
+		if i >= maxNextQuestions {
+			continue
+		}
+		if a, err := r.GetAtom(next[i]["id"]); err == nil {
+			if q := catalogue.FirstQuestion(a.Body); q != "" {
+				next[i]["question"] = q
+			}
+		}
+	}
+	return next
+}
+
+// doVerbs open a flow title that says what to do, and ruleVerbs a design
+// rule's. Either reads as a question once a few words are put before it.
+var (
+	doVerbs = map[string]bool{"Create": true, "Receive": true, "Link": true, "Find": true, "Fetch": true,
+		"Subscribe": true, "Sign": true, "Share": true, "Request": true, "Register": true, "Onboard": true,
+		"Log": true, "Get": true, "Change": true, "Verify": true, "Update": true, "Send": true, "Scan": true,
+		"Download": true, "Approve": true, "Revoke": true, "Raise": true, "Check": true, "Validate": true}
+	ruleVerbs = map[string]bool{"Never": true, "Refuse": true, "Ask": true, "Read": true, "Present": true, "Survey": true}
+)
+
+// nudge turns an atom's title into something a reader would say. Titles
+// are written for an index, "Consent, what it authorises and how it ends",
+// and offered as they stand they read as concepts thrown at the reader.
+// An atom whose author wrote a question keeps it; this is for the rest.
+// ponytail: rules over the title's first word. The questions generator of
+// the routed retrieval plan replaces this when it lands.
+func nudge(typ, title string) string {
+	head, _, _ := strings.Cut(title, ", ")
+	first, _, _ := strings.Cut(head, " ")
+	// Lower the first letter of an ordinary word, never of HIP or M1.
+	said := head
+	if len(first) > 1 && first == strings.ToUpper(first[:1])+strings.ToLower(first[1:]) && !strings.ContainsAny(first, "0123456789") {
+		said = strings.ToLower(head[:1]) + head[1:]
+	}
+	switch {
+	case typ == "glossary":
+		term, _, _ := strings.Cut(head, ": ")
+		return "What does " + term + " mean?"
+	case doVerbs[first]:
+		return "How do I " + said + "?"
+	case ruleVerbs[first]:
+		return "Why should I " + said + "?"
+	case typ == "flow":
+		return "Walk me through " + said
+	case first == "How" || first == "Why" || first == "What":
+		return "Explain " + said
+	}
+	return "Tell me about " + said
+}
+
+// maxNextQuestions is how many next entries per passage are worth the read
+// that finds their question: the panel offers three in all.
+const maxNextQuestions = 3
+
+// nextTypes are the atom types worth offering as a next question. An error
+// code, a callback, a FHIR note or a test case is something a reader looks
+// up when they need it, not somewhere a conversation goes next.
+var nextTypes = map[string]bool{"flow": true, "concept": true, "glossary": true}
+
+var nextRank = map[string]int{"flow": 0, "concept": 1, "glossary": 2}
+
+// gatewayOf reads the gateway from an atom id, the segment before the first
+// dot: hiecm, nhcx, uhi or shared.
+func gatewayOf(atomID string) string {
+	if i := strings.IndexByte(atomID, '.'); i > 0 {
+		return atomID[:i]
+	}
+	return ""
 }
 
 // codeLookup is the one Reader method pinErrorAtoms needs.
@@ -388,7 +599,7 @@ func (t *Tools) RelatedAtoms(ctx context.Context, in getAtomIn) (map[string]any,
 	return t.versioned(map[string]any{"id": in.ID, "related": out}), nil
 }
 
-var bareGatewayCodeRe = regexp.MustCompile(`^9\d{5}$`)
+var bareGatewayCodeRe = regexp.MustCompile(`^(9\d{5}|303\d{3})$`)
 
 func (t *Tools) DecodeError(ctx context.Context, in decodeIn) (map[string]any, error) {
 	codes := catalogue.ExtractErrorCodes(in.Input)
@@ -522,6 +733,13 @@ func (t *Tools) GetOperation(ctx context.Context, in getOpIn) (map[string]any, e
 	}
 	if path := index.OperationDocPath(module, in.OperationID); path != "" {
 		out["doc_path"] = path
+	}
+	if t.r.IsCallback(in.OperationID) {
+		// A callback's path is relative to the integrator's bridge URL, and
+		// its request body is what arrives, not what they send. Said once
+		// here so an agent does not try to call it.
+		out["callback"] = true
+		out["direction"] = "ABDM posts this to your bridge: the path is relative to the callback URL registered for your bridge, and the request body is what you receive. Answer it; do not call it."
 	}
 	return t.versioned(out), nil
 }

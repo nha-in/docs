@@ -946,3 +946,84 @@ hiecm.troubleshooting.otp-never-arrives:
     glossary:
     - shared.glossary.otp
     - shared.glossary.txn-id
+hiecm.concept.m1-abha-consent:
+  type: concept
+  gateway: hiecm
+  milestone: M1
+  title: The terms and conditions a person agrees to before an ABHA is created
+  summary: The full consent text to show before sending an Aadhaar number, how to
+    collect and record agreement, and the consent block enrol/byAadhaar sends.
+  page: site/docs/hiecm/v3/milestones/m1.mdx
+  heading: m1-abha-consent
+  url: /docs/hiecm/v3/milestones/m1#m1-abha-consent
+  related:
+    flows:
+    - hiecm.flow.m1-create-abha-aadhaar-otp
+    - hiecm.flow.m1-create-abha-face-auth
+    - hiecm.flow.m1-create-abha-demographic-auth
+    endpoints:
+    - hiecm.endpoint.m1-enrolment-request-otp
+    - hiecm.endpoint.m1-enrolment-by-aadhaar
+hiecm.concept.scan-and-register-qr:
+  type: concept
+  gateway: hiecm
+  milestone: M1
+  title: The counter QR code for scan and register
+  summary: The URL a facility's counter QR code holds, hip-id and counter-id on the
+    PHR share-profile page, and how each comes back in the share.
+  page: site/docs/hiecm/v3/use-cases/scan-and-register.mdx
+  heading: scan-and-register-qr
+  url: /docs/hiecm/v3/use-cases/scan-and-register#scan-and-register-qr
+  related:
+    endpoints:
+    - hiecm.endpoint.m1-receive-patient-share
+    flows:
+    - hiecm.flow.scan-and-register-share
+    - hiecm.flow.p2-scan-and-share
+    glossary:
+    - shared.glossary.hfr
+    - hiecm.glossary.hip
+    troubleshooting:
+    - hiecm.troubleshooting.callback-never-arrives
+hiecm.flow.scan-and-register-share:
+  type: flow
+  gateway: hiecm
+  milestone: M1
+  title: Receive a scanned profile share and reply with a token
+  summary: Every field of the profile share that arrives on your bridge, and the
+    on-share reply with the counter, token number and expiry.
+  page: site/docs/hiecm/v3/use-cases/scan-and-register.mdx
+  heading: scan-and-register-share
+  url: /docs/hiecm/v3/use-cases/scan-and-register#scan-and-register-share
+  related:
+    endpoints:
+    - hiecm.endpoint.m1-receive-patient-share
+    - hiecm.endpoint.m1-on-share-acknowledgement
+    concepts:
+    - hiecm.concept.scan-and-register-qr
+    - hiecm.concept.asynchronous-callbacks
+    - hiecm.concept.callback-authenticity
+    flows:
+    - hiecm.flow.p2-scan-and-share
+hiecm.concept.data-flow-encryption:
+  type: concept
+  gateway: hiecm
+  milestone: M2
+  title: How a health record is encrypted between HIP and HIU
+  summary: ECDH on Curve25519 with a fresh key pair and nonce per transfer, the
+    nonce XOR split into HKDF salt and IV, HKDF-SHA256 with an empty info, and
+    AES-256-GCM with no additional data and the 16 byte tag appended.
+  page: site/docs/hiecm/v3/concepts/data-flow.mdx
+  heading: data-flow-encryption
+  url: /docs/hiecm/v3/concepts/data-flow#data-flow-encryption
+  related:
+    concepts:
+    - shared.concept.fidelius-ecdh-interop
+    glossary:
+    - hiecm.glossary.ecdh
+    - hiecm.glossary.key-material
+    endpoints:
+    - hiecm.endpoint.m2-hip-health-information-on-request
+    - hiecm.endpoint.m3-hiu-health-information-request
+    flows:
+    - hiecm.flow.m3-fetch-records

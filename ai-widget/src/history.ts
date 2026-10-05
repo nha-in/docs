@@ -134,26 +134,6 @@ export function clearCurrentId(): void {
   } catch {}
 }
 
-/**
- * The conversation the reader chose to carry on past the window with, so the
- * offer to start a new one is made once, and not again after a reload.
- */
-const CONTINUED_KEY = 'abdm-ask-ai-continued';
-
-export function continuedId(): string | null {
-  try {
-    return sessionStorage.getItem(CONTINUED_KEY);
-  } catch {
-    return null;
-  }
-}
-
-export function setContinuedId(id: string): void {
-  try {
-    sessionStorage.setItem(CONTINUED_KEY, id);
-  } catch {}
-}
-
 /** The conversation to put back on screen, if this tab was in one. */
 export function resumable<T extends Said>(list: Session<T>[], id: string | null): Session<T> | null {
   return (id && list.find((session) => session.id === id)) || null;

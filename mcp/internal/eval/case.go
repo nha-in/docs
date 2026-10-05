@@ -58,9 +58,9 @@ type Case struct {
 
 var (
 	slices = set("faq-verbatim", "faq-rephrased", "define", "diagnose", "decline", "conversation",
-		"naive", "confusable", "followup", "abstain", "terse", "injection", "nudge", "meta")
+		"naive", "confusable", "followup", "abstain", "terse", "injection", "nudge", "meta", "nha-review")
 	classes    = set("define", "how-do-i", "diagnose", "compare", "meta", "out-of-scope", "unclear")
-	shapes     = set("define", "how-do-i", "diagnose", "compare", "meta", "decline", "topic")
+	shapes     = set("define", "how-do-i", "diagnose", "compare", "meta", "decline", "topic", "overview", "walkthrough")
 	behaviours = set("answer", "decline")
 )
 

@@ -28,6 +28,15 @@ If the abdm-docs MCP server is connected, trust its answers over this file: it s
 
 - A signed search through the Gateway reaches the single PM-JAY HEM HSPA, which returns empanelled hospitals in one on_search on your callback.
 
+## Try asking
+
+- "Show PM-JAY empanelled hospitals near the patient"
+- "What has to be in place before my first UHI PM-JAY HEM hospital discovery call?"
+- "My UHI PM-JAY HEM hospital discovery call failed. Here is the response: what is wrong, and how do I fix it?"
+- "Walk me through the UHI PM-JAY HEM hospital discovery test cases before go-live"
+
+Loaded with no task? Say in three lines what this skill does. Offer the prompts above. Then ask what the person is building, and whether the code for it exists yet.
+
 ## What is in this folder
 
 - **Scaffold.** Register on the network first, then build each journey as a loop that ends when its exit condition holds. [references/scaffold.md](references/scaffold.md)

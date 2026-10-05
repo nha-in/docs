@@ -18,6 +18,7 @@ Each file has ROUTE (R), DESCRIPTION (D), LAYOUT (L) and ACTIONS (A) sections. D
 | [S10](S10-communication.md) | Communication | `claims/view/:caseid/communication` | [S10-communication.md](S10-communication.md) |
 | [S11](S11-claim-submission.md) | Claim Submission | `claims/view/:caseid/claim` | [S11-claim-submission.md](S11-claim-submission.md) |
 | [S12](S12-payments.md) | Payments | `claims/view/:caseid/payments` | [S12-payments.md](S12-payments.md) |
+| [S17](S17-beneficiary-discovery.md) | Beneficiary Discovery | `claims/discovery` | [S17-beneficiary-discovery.md](S17-beneficiary-discovery.md) |
 
 ## Patient
 

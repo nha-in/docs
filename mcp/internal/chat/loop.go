@@ -4,6 +4,7 @@ import (
 	"context"
 	_ "embed"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log/slog"
 	"net/url"
@@ -93,25 +94,59 @@ type Suggestion struct {
 	ID     string `json:"id"`
 	Title  string `json:"title"`
 	Prompt string `json:"prompt"`
+	// Kind is "step" for the next call in the journey the answer sits in,
+	// which the composer shows in the box, and empty for a related question,
+	// which it lists.
+	Kind string `json:"kind,omitempty"`
+}
+
+// stepFromPack returns the pack's next step, or nil when the top passage is
+// not a call with a step after it.
+func stepFromPack(pack []byte) *Suggestion {
+	var pp struct {
+		Step *Suggestion `json:"step"`
+	}
+	if json.Unmarshal(pack, &pp) != nil || pp.Step == nil || pp.Step.Prompt == "" {
+		return nil
+	}
+	pp.Step.Kind = "step"
+	return pp.Step
 }
 
 const maxSuggestions = 3
 
-// suggestionsFromPack returns up to three related atoms that were not
-// themselves passages, as pills. The prompt is the atom's title: a short
-// topic the router already handles.
-func suggestionsFromPack(pack []byte) []Suggestion {
+// suggestionsFromPack returns up to three of the pack's next atoms as pills:
+// the atoms the top passages' authors named as related, flows first. The
+// prompt is the atom's title: a short topic the router already handles. The
+// pack's related list is not read here. It also walks the links that point
+// at an atom, and for a hub that is most of the catalogue.
+//
+// A pill stays in the answer's gateway. The related walk runs both ways, and
+// a shared term is cited by every gateway: shared.glossary.abha has one edge
+// out and 29 in from NHCX and UHI, so "what is abha" offered three NHCX claim
+// callbacks. The gateway is the question's scope, else the top passage's,
+// else HIE-CM, where ABDM's own milestones are documented. Shared atoms are
+// always in.
+func suggestionsFromPack(pack []byte, scope string) []Suggestion {
 	var pp struct {
 		Passages []struct {
 			ID string `json:"id"`
 		} `json:"passages"`
 		Related []struct {
-			ID    string `json:"id"`
-			Title string `json:"title"`
-		} `json:"related"`
+			ID       string `json:"id"`
+			Title    string `json:"title"`
+			Question string `json:"question"`
+		} `json:"next"`
 	}
 	if err := json.Unmarshal(pack, &pp); err != nil {
 		return nil
+	}
+	gateway := scope
+	if gateway == "" && len(pp.Passages) > 0 {
+		gateway = atomGateway(pp.Passages[0].ID)
+	}
+	if gateway == "" || gateway == "shared" {
+		gateway = "hiecm"
 	}
 	shown := map[string]bool{}
 	for _, p := range pp.Passages {
@@ -122,14 +157,60 @@ func suggestionsFromPack(pack []byte) []Suggestion {
 		if r.ID == "" || r.Title == "" || shown[r.ID] {
 			continue
 		}
+		if g := atomGateway(r.ID); g != gateway && g != "shared" {
+			continue
+		}
 		shown[r.ID] = true
-		out = append(out, Suggestion{ID: r.ID, Title: r.Title, Prompt: r.Title})
+		prompt := r.Title
+		if r.Question != "" {
+			prompt = r.Question
+		}
+		out = append(out, Suggestion{ID: r.ID, Title: r.Title, Prompt: prompt})
 		if len(out) == maxSuggestions {
 			break
 		}
 	}
 	return out
 }
+
+// atomGateway is the gateway an atom id names first: hiecm, nhcx, uhi or
+// shared.
+func atomGateway(id string) string {
+	g, _, _ := strings.Cut(id, ".")
+	return g
+}
+
+// openEnded reports whether a question leaves somewhere to go next. One that
+// asks what to build or how to do something gets next steps under its
+// answer. One with a single answer, a definition, a diagnosis, a comparison,
+// a question about one named call or one error code, gets that answer and
+// nothing after it: a suggestion there is noise, and readers said so. These
+// are rules over the routed shape; the plan hands the judgement to the query
+// rewriter once a model sits in that seat.
+func openEnded(shape string, r route.Result) bool {
+	switch route.Shape(shape) {
+	case route.Overview, route.Topic, route.Walkthrough:
+		return true
+	case route.HowDoI:
+		return r.OperationRef == "" && len(r.ErrorCodes) == 0
+	}
+	return false
+}
+
+// nextAfter withholds the suggestions from an answer that said it has
+// nothing. A decline names its own next step, and questions listed under
+// "this is not covered here" read as if they were.
+func nextAfter(answer string, suggestions []Suggestion) []Suggestion {
+	if saysItHasNothing(answer) || declinedRe.MatchString(answer) {
+		return nil
+	}
+	return suggestions
+}
+
+// declinedRe matches the decline shape's own wording, which saysItHasNothing
+// does not: that one spots a first-person refusal made without looking, for
+// the retry, and is left as it is.
+var declinedRe = regexp.MustCompile(`(?i)\b(?:is|are) not (?:documented|covered)\b|\bnot covered (?:here|on this portal)\b|\bdoes not document\b`)
 
 // topPassageType returns the atom type of the first passage in the pack.
 func topPassageType(pack []byte) string {
@@ -146,6 +227,10 @@ func topPassageType(pack []byte) string {
 
 // isTopicPhrase is a one to three word phrase with no question mark: a
 // topic typed into the box rather than a question asked of it.
+// abhaQuestionRe is a question that names ABHA, for the identifier rule in
+// guard.CheckShape.
+var abhaQuestionRe = regexp.MustCompile(`(?i)\babha\b|\bhealth ?id\b`)
+
 func isTopicPhrase(q string) bool {
 	q = strings.TrimSpace(q)
 	return len(strings.Fields(q)) <= 3 && !strings.Contains(q, "?")
@@ -287,7 +372,8 @@ const (
 	// MaxToolCalls bounds how many tool rounds the loop will run before it
 	// forces the model to answer from whatever it has gathered so far.
 	MaxToolCalls = 6
-	// toolCallTimeout bounds how long any single tool call may run.
+	// toolCallTimeout bounds how long any single tool call may run, unless
+	// toolTimeouts gives the tool longer.
 	toolCallTimeout = 10 * time.Second
 	// maxSources caps how many citations the loop surfaces per answer.
 	maxSources = 6
@@ -308,7 +394,7 @@ const DefaultMCPURL = "https://docs.abdm.gov.in/mcp"
 // an answer's shape is as much a part of what was asked of the model as the
 // system prompt is. Bump it whenever either changes, and record the change
 // in the pull request's scorecard.
-const PromptVersion = "v5"
+const PromptVersion = "v5.2"
 
 // SystemPrompt renders the assistant's system prompt with the MCP server
 // address this deployment serves. An empty mcpURL keeps the default.
@@ -495,20 +581,43 @@ func findTool(tools []ToolDef, name string) (ToolDef, bool) {
 	return ToolDef{}, false
 }
 
+// toolTimeouts names the tools that get longer than toolCallTimeout. get and
+// validate read large specification fragments, and at 10 seconds a slow read
+// came back to the model as an error it could only route around.
+var toolTimeouts = map[string]time.Duration{
+	"get":      20 * time.Second,
+	"validate": 20 * time.Second,
+}
+
+// toolTimeoutFor is how long one call to the named tool may run.
+func toolTimeoutFor(name string) time.Duration {
+	if d, ok := toolTimeouts[name]; ok {
+		return d
+	}
+	return toolCallTimeout
+}
+
 // runTool executes one tool call and returns its ToolResult, plus the raw
 // result map for source collection when the call succeeded. Neither an
 // unknown tool name nor a Call error fails the loop: both become an
-// IsError ToolResult so the model can route around the problem.
+// IsError ToolResult so the model can route around the problem. A call that
+// ran out of its own timeout is marked TimedOut, so a turn that later fails
+// on its deadline can say a tool was what spent it.
 func runTool(ctx context.Context, tools []ToolDef, c ToolCall) (ToolResult, map[string]any) {
 	def, ok := findTool(tools, c.Name)
 	if !ok {
 		return ToolResult{ID: c.ID, Content: []byte("unknown tool"), IsError: true}, nil
 	}
-	callCtx, cancel := context.WithTimeout(ctx, toolCallTimeout)
+	timeout := toolTimeoutFor(c.Name)
+	callCtx, cancel := context.WithTimeout(ctx, timeout)
 	defer cancel()
 	result, err := def.Call(callCtx, c.Input)
 	if err != nil {
-		return ToolResult{ID: c.ID, Content: []byte(err.Error()), IsError: true}, nil
+		timedOut := errors.Is(err, context.DeadlineExceeded)
+		if timedOut {
+			slog.Warn("tool_timeout", "tool", c.Name, "timeout_ms", timeout.Milliseconds())
+		}
+		return ToolResult{ID: c.ID, Content: []byte(err.Error()), IsError: true, TimedOut: timedOut}, nil
 	}
 	content, err := json.Marshal(result)
 	if err != nil {
@@ -764,6 +873,10 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 	// answered-without-looking retry below never fires after a
 	// pre-retrieval already looked on the reader's behalf.
 	looked := false
+	// toolTimedOut records that a lookup or a tool call ran out of its own
+	// timeout this turn. It changes nothing the reader sees; a turn that then
+	// fails on its deadline is logged as tool_timeout rather than model_error.
+	toolTimedOut := false
 
 	// tools is what this question may call: the fixed s.Tools unless a
 	// router narrows it. ToolsFor runs before the first model call, not
@@ -794,6 +907,7 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 	// the widget to render the path as a link. Nothing else feeds it.
 	var links []Link
 	var suggestions []Suggestion
+	var step *Suggestion
 	// topType is the type of the top retrieved passage, read for the topic
 	// shape below. Empty when nothing was retrieved.
 	var topType string
@@ -813,15 +927,34 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 			variantNote = "The reader wrote " + theirs + "; this portal's term is " + ours + ".\n"
 		}
 		lookupCtx, cancel := context.WithTimeout(ctx, toolCallTimeout)
+		// A question for a whole build or a whole flow asks the lookup to
+		// open what its top passage is made of, so every role's part is in
+		// front of the model. See server.Tools.Lookup.
+		switch route.Route(route.Input{Question: question}).Shape {
+		case route.Overview, route.Walkthrough:
+			lookupCtx = WithExpand(lookupCtx)
+		}
 		pack, packSources, f, err := s.Lookup(lookupCtx, lq)
+		// A follow-up also gets what the question before it retrieved. See
+		// mergePacks. A failure here costs only that half.
+		if prev := carriedFrom(turns); err == nil && len(pack) > 0 && prev != "" {
+			pq, _ := guard.MaskPII(prev)
+			if prevPack, prevSources, _, perr := s.Lookup(lookupCtx, pq); perr == nil && len(prevPack) > 0 {
+				pack = mergePacks(pack, prevPack)
+				packSources = append(packSources, prevSources...)
+			}
+		}
 		cancel()
 		if err != nil {
 			slog.Warn("pre-retrieval failed, continuing without it", "error", err)
+			toolTimedOut = toolTimedOut || errors.Is(err, context.DeadlineExceeded)
 		} else if len(pack) > 0 {
 			facts = f
+			facts.QuestionNamesABHA = abhaQuestionRe.MatchString(question)
 			packHadContent = true
 			links = linksFromPack(pack)
-			suggestions = suggestionsFromPack(pack)
+			suggestions = suggestionsFromPack(pack, gateway)
+			step = stepFromPack(pack)
 			topType = topPassageType(pack)
 			for _, src := range packSources {
 				addSource(&sources, src)
@@ -838,9 +971,10 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 	// then the reader's own words. Nothing here goes into the system
 	// prompt, which is what keeps it byte identical and the Bedrock cache
 	// point worth having.
-	shape := string(route.Route(route.Input{
+	routed := route.Route(route.Input{
 		Question: question, HasAttachment: lastUserAttachment(turns) != nil,
-	}).Shape)
+	})
+	shape := string(routed.Shape)
 	if aboutSelf {
 		shape = string(route.Self)
 	}
@@ -848,8 +982,24 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 	// best passage is a flow, is a topic: "consent flow", "link records".
 	// The define shape compresses a flow into four sentences; the topic
 	// shape orients and offers the questions the phrase usually means.
+	// A few words added to the question before them, "as a hmis" after "how
+	// do I integrate m1?", are not a term to define. The answer takes the
+	// shape the two make together.
+	if prev := carriedFrom(turns); shape == string(route.Define) && isTopicPhrase(question) && prev != "" {
+		routed = route.Route(route.Input{Question: prev + " " + question, HasAttachment: lastUserAttachment(turns) != nil})
+		shape = string(routed.Shape)
+	}
 	if shape == string(route.Define) && isTopicPhrase(question) && topType == "flow" {
 		shape = string(route.Topic)
+	}
+	// Not every answer wants a next question under it. See openEnded.
+	if !openEnded(shape, routed) {
+		suggestions = nil
+	}
+	// The next step in a journey is not a related question: it follows a
+	// closed question about one call as surely as an open one.
+	if step != nil {
+		suggestions = append([]Suggestion{*step}, suggestions...)
 	}
 	prefix := passagesPrefix + skillPrefix
 	if gateway != "" {
@@ -896,6 +1046,9 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 	runRound := func() (Reply, error) {
 		reply, err := s.Model.Stream(ctx, system, tools, msgs, s.MaxTokens, onFirst)
 		if err != nil {
+			if toolTimedOut && errors.Is(err, context.DeadlineExceeded) {
+				err = fmt.Errorf("%w: %w", errToolTimeout, err)
+			}
 			return reply, err
 		}
 		if textErr != nil {
@@ -1013,7 +1166,7 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 				// citations, because that part is what those sources back.
 				return s.finish(nil, nil, nil, emit)
 			}
-			return s.finish(sources, s.answerLinks(g.released.String(), links), suggestions, emit)
+			return s.finish(sources, s.answerLinks(g.released.String(), links), nextAfter(g.released.String(), suggestions), emit)
 		}
 
 		// The round ended in a tool call, so whatever text it produced was
@@ -1036,6 +1189,7 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 				return err
 			}
 			result, fields := runTool(ctx, tools, c)
+			toolTimedOut = toolTimedOut || result.TimedOut
 			// tool and tool_result are two separate events, not one, because
 			// they serve two readers who need it at two different times: the
 			// panel's progress cue must fire before the call so the reader
@@ -1105,11 +1259,11 @@ func (s *Service) RespondCommand(ctx context.Context, turns []Turn, page *Page, 
 			if g.blocked && g.released.Len() == 0 {
 				return s.finish(nil, nil, nil, emit)
 			}
-			return s.finish(sources, s.answerLinks(g.released.String(), links), suggestions, emit)
+			return s.finish(sources, s.answerLinks(g.released.String(), links), nextAfter(g.released.String(), suggestions), emit)
 		}
 	}
 	// Unreachable: the loop above always returns by round == MaxToolCalls.
-	return s.finish(sources, s.answerLinks(g.released.String(), links), suggestions, emit)
+	return s.finish(sources, s.answerLinks(g.released.String(), links), nextAfter(g.released.String(), suggestions), emit)
 }
 
 // finish emits the sources event (only when there is at least one source)
@@ -1290,6 +1444,9 @@ func (g *answerGuard) release(candidate, keep string, final bool) {
 		if g.released.Len() > 0 {
 			g.send("\n\n" + truncatedNotice)
 		} else {
+			// The notice is all the reader gets, so this turn ended without
+			// an answer and is counted with the ones that failed outright.
+			slog.Warn("answer_missing", "reason", ReasonBlocked)
 			g.send(BlockedNotice)
 		}
 		return
@@ -1358,11 +1515,66 @@ var refersBackRe = regexp.MustCompile(`(?i)\b(?:that|this|those|these|it|its|the
 
 func lookupQuery(turns []Turn) string {
 	last := lastUserText(turns)
-	if len(strings.Fields(last)) > 4 && !refersBackRe.MatchString(last) {
-		return last
-	}
-	if prev := previousUserText(turns); prev != "" {
+	if prev := carriedFrom(turns); prev != "" {
 		return prev + " " + last
 	}
 	return last
+}
+
+// carriedFrom returns the question a follow-up leans on, or "" when the
+// turn stands alone: it is long enough and points back at nothing, or there
+// is no earlier question.
+func carriedFrom(turns []Turn) string {
+	last := lastUserText(turns)
+	if len(strings.Fields(last)) > 4 && !refersBackRe.MatchString(last) {
+		return ""
+	}
+	return previousUserText(turns)
+}
+
+// mergePacks interleaves two packs' passages, a's first, dropping b's
+// repeats, and keeps everything else of a. A follow-up's own words can
+// crowd out what it follows: "as a hmis" after "how do I integrate m1?"
+// retrieved five definitions of hospital software and nothing about M1,
+// because the rare word wins the search. The earlier question's passages
+// go in beside them, so the answer has both halves in front of it.
+func mergePacks(a, b []byte) []byte {
+	var pa map[string]json.RawMessage
+	var pb struct {
+		Passages []json.RawMessage `json:"passages"`
+	}
+	var as []json.RawMessage
+	if json.Unmarshal(a, &pa) != nil || json.Unmarshal(pa["passages"], &as) != nil || json.Unmarshal(b, &pb) != nil {
+		return a
+	}
+	idOf := func(raw json.RawMessage) string {
+		var p struct {
+			ID string `json:"id"`
+		}
+		_ = json.Unmarshal(raw, &p)
+		return p.ID
+	}
+	seen := map[string]bool{}
+	for _, p := range as {
+		seen[idOf(p)] = true
+	}
+	var out []json.RawMessage
+	for i := 0; i < len(as) || i < len(pb.Passages); i++ {
+		if i < len(as) {
+			out = append(out, as[i])
+		}
+		if i < len(pb.Passages) && !seen[idOf(pb.Passages[i])] {
+			seen[idOf(pb.Passages[i])] = true
+			out = append(out, pb.Passages[i])
+		}
+	}
+	merged, err := json.Marshal(out)
+	if err != nil {
+		return a
+	}
+	pa["passages"] = merged
+	if raw, err := json.Marshal(pa); err == nil {
+		return raw
+	}
+	return a
 }

@@ -88,7 +88,7 @@ func main() {
 		"reasoning effort for OpenAI GPT-5 and GPT-6 chat models: none, low, medium, high, xhigh or max; empty sends none")
 	chatTemperature := flag.Float64("chat-temperature", envFloatOr("CHAT_TEMPERATURE", 0.1),
 		"sampling temperature for chat answers, 0.1 to 0.2; low keeps quoted literals and tool choices stable, and 0 is not deterministic on any provider")
-	chatPerMin := flag.Int("chat-rate-per-min", envIntOr("CHAT_RATE_PER_MIN", 5), "chat requests per ip per minute")
+	chatPerMin := flag.Int("chat-rate-per-min", envIntOr("CHAT_RATE_PER_MIN", 15), "chat requests per ip per minute")
 	chatPerDay := flag.Int("chat-rate-per-day", envIntOr("CHAT_RATE_PER_DAY", 100), "chat requests per ip per day")
 	mcpURL := flag.String("mcp-url", envOr("MCP_URL", ""), "public MCP endpoint the chat assistant names; empty keeps the built-in default")
 	trustProxy := flag.Bool("trust-proxy", envBoolOr("TRUST_PROXY", false),

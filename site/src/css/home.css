@@ -692,7 +692,7 @@
   padding: 1.125rem 1.25rem;
   border: 1px solid var(--border);
   border-radius: 0.75rem;
-  background: var(--surface-sunken);
+  background: var(--surface);
   text-decoration: none;
   transition: color 150ms ease, border-color 150ms ease, background-color 150ms ease,
     transform 150ms ease;
@@ -877,10 +877,10 @@
   overscroll-behavior: contain;
   /* The first screen is the one place the accent is allowed a whole field of
      its own: a wash off the top, fading into the page before the copy ends,
-     so the statement is read on the accent rather than on cream. On the
+     so the statement is read on the accent rather than on the bare page. On the
      curtain and not on the hero inside it, because a wash that begins at the
      hero's top edge begins exactly where the bar ends, and that is a line
-     across the page: the bar reads as a band of cream over a coloured page
+     across the page: the bar reads as a band of page colour over a coloured page
      rather than as part of it. Here it runs the full height, the bar
      included. */
   background-color: var(--page);
@@ -894,9 +894,15 @@
   will-change: transform;
 }
 
+/* Light mode keeps the page flat. Against the blue wash, the neutral cards and
+   page read as cream; dark mode keeps the wash. */
+[data-theme='light'] .curtain {
+  background-image: none;
+}
+
 /* No ground of its own. A veil of page colour over the top 64px, even one
    that fades to nothing, is still 64px the wash behind it does not reach, and
-   it reads as a band of cream laid across a green page. On the landing page
+   it reads as a band of page colour laid across a green page. On the landing page
    this is a row of marks, not a bar. */
 .curtain__bar {
   position: relative;
@@ -938,22 +944,6 @@
     width: 2.75rem;
     height: 2.75rem;
   }
-}
-
-.curtain__mark {
-  display: block;
-  width: auto;
-  /* The same token the top bar's mark uses: one lockup, one size. */
-  height: var(--mark-height);
-}
-
-.curtain__mark--dark,
-[data-theme='dark'] .curtain__mark--light {
-  display: none;
-}
-
-[data-theme='dark'] .curtain__mark--dark {
-  display: block;
 }
 
 /* The hero fills what is left of the curtain, so the fold sits at its foot,

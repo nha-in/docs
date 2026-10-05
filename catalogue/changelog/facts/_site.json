@@ -1,5 +1,13 @@
 {
-  "corrections": {},
+  "corrections": {
+    "/docs/hiecm/v3/milestones/m2": [
+      {
+        "date": "2026-10-04",
+        "now": "The field is hiType, one value such as OPConsultation. A body with hiTypes gets no answer from the gateway, not a 400.",
+        "was": "the HIP initiated linking request, POST /api/hiecm/hip/v3/link/carecontext, names each patient entry's health information type hiTypes"
+      }
+    ]
+  },
   "mcpTools": [
     "catalogue_info",
     "decode_error",
@@ -17,9 +25,9 @@
   ],
   "plugins": {
     "abdm-contributors-assistant": "0.4.4",
-    "abdm-integrators-assistant": "0.10.1",
-    "nhcx": "1.0.3",
-    "uhi-integrators-assistant": "0.1.1"
+    "abdm-integrators-assistant": "0.10.3",
+    "nhcx": "1.0.5",
+    "uhi-integrators-assistant": "0.1.2"
   },
   "procedures": {},
   "skills": [

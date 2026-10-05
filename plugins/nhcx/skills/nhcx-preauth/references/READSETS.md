@@ -43,7 +43,7 @@ Always read, whatever the task: [CORE.md](CORE.md) (addresses and the exchange t
 | [C1](../callbacks/C1-callback-door.md) | Callback Door | nothing else |
 | [C3](../callbacks/C3-auth-requirements-on-check.md) | Authorisation Requirements Ruling | [G8](../gateway/G8-receive.md) |
 | [C4](../callbacks/C4-insuranceplan-on-request.md) | Insurance Plan Reply | [G8](../gateway/G8-receive.md) |
-| [C5](../callbacks/C5-preauth-on-submit.md) | Pre-auth Reply | [G8](../gateway/G8-receive.md), [G9](../gateway/G9-ledger.md) |
+| [C5](../callbacks/C5-preauth-on-submit.md) | Pre-auth Reply | [F9](../fhir/F9-claimresponse.md), [G8](../gateway/G8-receive.md), [G9](../gateway/G9-ledger.md) |
 | [C7](../callbacks/C7-cancel-on-submit.md) | Cancel Reply | [G8](../gateway/G8-receive.md) |
 | [C8](../callbacks/C8-enquiry-on-submit.md) | Enquiry Reply | [G8](../gateway/G8-receive.md) |
 

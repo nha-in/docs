@@ -26,6 +26,21 @@ func TestRoute(t *testing.T) {
 		{"link record", false, HowDoI, []string{"search"}},
 		{"create abha", false, HowDoI, []string{"search"}},
 		{"what makes an address invalid", false, Define, []string{"search"}},
+		// NHA PHR review, 30 September 2026: a whole build gets the overview,
+		// a whole flow the walkthrough, and neither steals a how-do-i.
+		{"How to Build a PHR application", false, Overview, []string{"search"}},
+		{"Is there a Patient app in ABDM and how do I build one?", false, Overview, []string{"search"}},
+		{"What are the milestones in PHR creation", false, Overview, []string{"search"}},
+		{"Do I require any additional milestone rather than P1-P4 for building PHR application?", false, Overview, []string{"search"}},
+		{"how can i integrate with ABDM", false, Overview, []string{"search"}},
+		{"how do I integrate my HMIS with ABDM", false, Overview, []string{"search"}},
+		{"how do I create an ABHA in my app", false, HowDoI, []string{"search"}},
+		{"how do I build the login screen", false, HowDoI, []string{"search"}},
+		{"what is P4", false, Define, []string{"search"}},
+		{"Explain the complete consent and data sharing flow from consent request creation until health records are received by the HIU", false, Walkthrough, []string{"search", "get"}},
+		{"walk me through linking a care context", false, Walkthrough, []string{"search", "get"}},
+		{"what is the consent flow", false, Define, []string{"search"}},
+		{"consent flow", false, Define, []string{"search"}},
 	}
 	for _, c := range cases {
 		got := Route(Input{Question: c.q, HasAttachment: c.att})

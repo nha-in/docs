@@ -13,6 +13,8 @@ Companion endpoint: claims/view/:caseid/state (GET, JSON).
 #### S6D. DESCRIPTION
 The shell for one claim case. It carries a header that says whose case it is and where it stands, a row of next-action buttons that say what the case is waiting for, and a tab bar that walks the episode in the order it happens. Every tab's content is rendered with the page; switching tabs happens in the browser without a reload. An unknown case id shows the standard "Claim" not-found page.
 
+**Correlation id, everywhere.** Wherever a message or a thread of the exchange is on screen (an eligibility check, the ruling, the package master request, the pre-authorisation and claim legs and each reply on them, a payer's query or notification and the reply to it, a payment notice and its acknowledgement), its `x-hcx-correlation_id` is shown beside it, labelled "Correlation id", in full on hover and copied on a click. It is the one id the hospital, the payer, a capture and the exchange's own logs share, so no tab leaves it out.
+
 **Polling on load.** NHCX answers every leg asynchronously. The payer's reply normally arrives by callback ([G8. Receive](../gateway/G8-receive.md) hands it to C1), and each load of this screen is the fallback: before anything is drawn, it reads [G9. Ledger](../gateway/G9-ledger.md) once for every leg that is still out with the payer.
 
 | Leg (tab) | Polled while | Poll failure shows |
