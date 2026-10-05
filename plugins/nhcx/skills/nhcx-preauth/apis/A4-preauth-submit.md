@@ -40,15 +40,16 @@ A line counts as added when its code (or a ward tier code riding as a modifier) 
 
 A per-environment override (a JSON object of kind to workflow id) wins over the adapter, key by key. A kind with no id anywhere is refused with "No workflow id is defined for '<kind>'.".
 
-**Headers set by the application.** Only these three; G7 generates ([G5. Protocol Headers](../gateway/G5-protocol-headers.md)) `x-hcx-api_call_id`, `x-hcx-request_id`, `x-hcx-correlation_id`, the timestamp and the status.
+**Headers set by the application.** Only these four; G7 generates ([G5. Protocol Headers](../gateway/G5-protocol-headers.md)) `x-hcx-api_call_id`, `x-hcx-request_id`, `x-hcx-correlation_id`, the timestamp and the status.
 
 | Header | Value |
 |---|---|
 | `x-hcx-sender_code` | The facility's NHCX participant code (Settings) |
 | `x-hcx-recipient_code` | The case's processing id (D9 `processing_id`), else the case's processing id, else the claim's payer id, else the configured default payer code |
 | `x-hcx-workflow_id` | From the tables above |
+| `x-hcx-use_case` | `New` for `preauth` and a predetermination, `Enhancement` for `enhancement`, `Resubmit` for `preauth_query_response`, `enhancement_resubmit` and `preauth_resubmit`. Sent to every payer, whether or not it reads it (see [PAYERS.md](../references/PAYERS.md)) |
 
-**Before a pre-authorisation send** (not a predetermination), the app fires the payer's `auth-requirements` coverage check (A2) when the adapter supports it (see [PAYERS.md](../references/PAYERS.md)) [PAYER](../references/PAYERS.md#markers), the claim is `eligible`, lines exist, and this procedure set has not been ruled on (or the last ruling is in `error`). It never waits for the answer, and a failure of that check does not stop the send.
+**Before a pre-authorisation send** (not a predetermination), the app fires the payer's `auth-requirements` coverage check (A2) when the adapter sends it unasked (see [PAYERS.md](../references/PAYERS.md)) [PAYER](../references/PAYERS.md#markers), the claim is `eligible`, lines exist, and this procedure set has not been ruled on (or the last ruling is in `error`). It never waits for the answer, and a failure of that check does not stop the send.
 
 **Checks before sending**, in order, each raised as the screen's red message:
 

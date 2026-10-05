@@ -11,6 +11,7 @@ Each file has ROUTE (R), DESCRIPTION (D), LAYOUT (L) and ACTIONS (A) sections. D
 | [S3](S3-policy-discovery.md) | Policy Discovery | `claims/view/:caseid/eligibility` | [S3-policy-discovery.md](S3-policy-discovery.md) |
 | [S5](S5-claim-master.md) | Claim Master | `claims/list` | [S5-claim-master.md](S5-claim-master.md) |
 | [S6](S6-claim-detail.md) | Claim Detail | `claims/view/:caseid` | [S6-claim-detail.md](S6-claim-detail.md) |
+| [S17](S17-beneficiary-discovery.md) | Beneficiary Discovery | `claims/discovery` | [S17-beneficiary-discovery.md](S17-beneficiary-discovery.md) |
 
 ## Flow
 

@@ -18,6 +18,7 @@ Every screen of the claim, patient and practitioner flows, in one list. Each row
 | [S10](../screens/S10-communication.md) | Communication | `claims/view/:caseid/communication` | Shows the payer's queries, notifications and notes per leg, and replies to a query with text and documents. | [A7](../apis/A7-communication-on-request.md) | [C9](../callbacks/C9-communication-request.md) |
 | [S11](../screens/S11-claim-submission.md) | Claim Submission | `claims/view/:caseid/claim` | Records the discharge, collects claim-stage documents and forms, sends the claim, shows the verdict, and asks status, reprocess or release. | [A5](../apis/A5-claim-submit.md), [A6](../apis/A6-task-submit.md), [A10](../apis/A10-txn-related.md), [A11](../apis/A11-txn-dispatch.md) | [C6](../callbacks/C6-claim-on-submit.md), [C8](../callbacks/C8-enquiry-on-submit.md) |
 | [S12](../screens/S12-payments.md) | Payments | `claims/view/:caseid/payments` | Shows each payment notice with its breakdown and acknowledgement, and re-sends a failed acknowledgement. | [A8](../apis/A8-paymentnotice-on-request.md) | [C10](../callbacks/C10-paymentnotice-request.md) |
+| [S17](../screens/S17-beneficiary-discovery.md) | Beneficiary Discovery | `claims/discovery` | A page of its own for a discovery check: the operator picks the payer, names the person by one identifier and adds the Aadhaar, mobile and member id as additional information. | [A2](../apis/A2-coverage-eligibility-check.md) | [C2](../callbacks/C2-coverage-eligibility-on-check.md) |
 
 ## Patient
 

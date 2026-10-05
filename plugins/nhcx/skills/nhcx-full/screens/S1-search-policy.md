@@ -20,6 +20,8 @@ Member ID comes first because it is printed on the card the beneficiary hands ov
 
 API: [A1. Policy Search](../apis/A1-policy-search.md)
 
+When the registry finds nothing, or cannot be reached, the screen offers "Discover with a payer", which opens the discovery page [S17. Beneficiary Discovery](S17-beneficiary-discovery.md) with the identifier already filled in.
+
 Rules:
 - Validation happens before any call. An unknown identifier type gets "Choose what kind of identifier you are searching with." An empty value gets "Enter an identifier value to search for."
 - Any upstream failure shows as a red error message inside a card on the screen, never as a 500.

@@ -60,6 +60,7 @@ Rules:
 Inputs to the other six entries (details in F15 to F19): the member id (the check form's member id, stored in D9 `claim.member_id`; the ruling reads `claim.member_id`), the policy code (form, or D9 `claim.policy_code`), D1 `organization.identifier_value` and `.name` for the facility and location, D9 `claim.payer_id` (default the configured payer code) and `claim.payer_name` for the payer.
 
 #### F2U. USED BY
+- Screens: [S17. Beneficiary Discovery](../screens/S17-beneficiary-discovery.md)
 - APIs: [A2. Coverage Eligibility Check](../apis/A2-coverage-eligibility-check.md)
 - Callbacks: [C2. Coverage Eligibility Verdict](../callbacks/C2-coverage-eligibility-on-check.md)
 - FHIR: [F1. Bundle](F1-bundle.md), [F3. CoverageEligibilityResponse](F3-coverage-eligibility-response.md), [F15. Patient](F15-patient.md), [F16. Practitioner and PractitionerRole](F16-practitioner.md), [F17. Organization](F17-organization.md), [F18. Coverage](F18-coverage.md), [F19. Other bundle resources](F19-other-resources.md)

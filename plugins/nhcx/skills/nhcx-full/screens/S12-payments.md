@@ -47,7 +47,7 @@ Below the text are three stat tiles:
     | `sent` | Acknowledged | success |
     | `error` | Acknowledgement failed | danger |
 
-- **Detail list** (three columns): Amount, Currency, Payment date, UTR, Claim number (the `CLN` the notice named), Received, Acknowledged.
+- **Detail list** (three columns): Amount, Currency, Payment date, UTR, Claim number (the `CLN` the notice named), Received, Acknowledged, Correlation id (the notice's, copied on a click).
 - **Breakdown table.** Shown when the reconciliation carries detail lines. Columns: Reference, Type (display, else code), Date, Amount.
 - **Acknowledgement error.** When the last acknowledgement failed, its error text is shown in red.
 - **Header action.** When the acknowledgement is not `sent`, a primary button with a check icon. It reads "Acknowledge" when pending and "Acknowledge again" after an error.

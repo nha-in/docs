@@ -16,8 +16,8 @@ One bundle shape serves four purposes:
 | `auth-requirements` | on the chosen procedure set, before a pre-authorisation and again before an enhancement | the case's, `NONE` if it has none | the quoted procedure set, required | the ruling (`claim_auth`), not the case |
 
 The first three are the eligibility check, sent from the check form with the operator's purpose, policy code and member ID. `auth-requirements` is the procedure-set ruling, sent two ways:
-- by the operator ("Validate procedure set");
-- automatically, and never waited on, just before a pre-authorisation or enhancement is submitted (A4), when the case is eligible, has lines, the payer's adapter answers this check, and the set has not already been asked about (a ruling not in error whose fingerprint equals the current set). A failure of this automatic send is swallowed and the pre-authorisation goes anyway.
+- by the operator ("Validate procedure set"), to any payer: the check is optional and is not tied to an adapter;
+- automatically, and never waited on, just before a pre-authorisation or enhancement is submitted (A4), when the case is eligible, has lines, the payer's adapter sends this check unasked ([PAYERS.md](../references/PAYERS.md)), and the set has not already been asked about (a ruling not in error whose fingerprint equals the current set). A failure of this automatic send is swallowed and the pre-authorisation goes anyway.
 
 JWE headers: the app sets only these three; G7 generates ([G5. Protocol Headers](../gateway/G5-protocol-headers.md)) `x-hcx-api_call_id`, `x-hcx-request_id`, `x-hcx-correlation_id`, `x-hcx-timestamp` and `x-hcx-status`.
 - `x-hcx-sender_code`: the facility's NHCX participant code (Settings).
@@ -35,9 +35,18 @@ Refused before any call, eligibility check (in this order):
 Refused before any call, auth-requirements:
 - "Claim not found."
 - case not `eligible`: "Check the policy's eligibility before validating a procedure set against it."
-- adapter without the check: "<adapter name> does not answer authorisation requirement checks."
 - no lines: "Choose the line items first, this checks the procedure set, so there has to be one."
 - "Set the facility's HFR ID and NHCX participant code under Settings before checking requirements."
+
+**Additional information on a discovery.** A discovery sent from the discovery page ([S17. Beneficiary Discovery](../screens/S17-beneficiary-discovery.md)) may carry what else the desk knows about the person, so the payer has more than one handle to match on. Each is optional and is left out of the bundle when empty ([F15. Patient](../fhir/F15-patient.md)):
+
+| Field | Rule | In the bundle |
+|---|---|---|
+| Aadhaar number | 12 digits once spaces and hyphens are removed, else "An Aadhaar number has 12 digits" | Patient identifier typed `ADN` |
+| Mobile number | 10 digits, else "A mobile number has 10 digits" | Patient `telecom`, system `phone` |
+| Member ID | free text | becomes the member the bundle names (the `PMJAY` and `MB` identifiers and `Coverage.subscriberId`); the identifier searched on then rides beside it: an ABHA number as an identifier typed `ABHA`, a mobile as the phone |
+
+The Aadhaar number is sent to the payer and kept in the stored bundle; screens that list a check show its last four digits only.
 
 The bundle builder itself refuses a bundle without a member id ("A coverage check needs the member id to ask about."), without the facility registry id ("A coverage check needs the facility's registry id.") or without a payer code ("A coverage check needs the payer's participant code.").
 
@@ -153,9 +162,7 @@ function request_auth(case_id):
     case = claim[case_id]                  or refuse "Claim not found."
     if case.status != eligible:
         refuse "Check the policy's eligibility before validating a procedure set against it."
-    adapter = payer adapter for case
-    if not adapter.auth_requirements:
-        refuse "<adapter name> does not answer authorisation requirement checks."
+    // any payer may be asked: the adapter decides only the automatic send below
     lines = claim_line rows of the case
     if lines empty:
         refuse "Choose the line items first, this checks the procedure set, so there has to be one."
@@ -196,7 +203,7 @@ function ensure_auth_requirements(case_id):
 ```
 
 #### A2U. USED BY
-- Screens: [S3. Policy Discovery](../screens/S3-policy-discovery.md)
+- Screens: [S3. Policy Discovery](../screens/S3-policy-discovery.md), [S17. Beneficiary Discovery](../screens/S17-beneficiary-discovery.md)
 - APIs: [A1. Policy Search](A1-policy-search.md), [A10. Transaction Related](A10-txn-related.md), [A11. Transaction Dispatch](A11-txn-dispatch.md), [A13. Transaction List](A13-txn-list.md)
 - Callbacks: [C1. Callback Door](../callbacks/C1-callback-door.md), [C2. Coverage Eligibility Verdict](../callbacks/C2-coverage-eligibility-on-check.md)
 - FHIR: [F1. Bundle](../fhir/F1-bundle.md), [F15. Patient](../fhir/F15-patient.md), [F18. Coverage](../fhir/F18-coverage.md)

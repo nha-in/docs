@@ -47,6 +47,9 @@ Not sent: `address`, `photo`, `given`/`family` names, MRN, ABHA address, `active
 | `meta.profile[0]` | `.../StructureDefinition/Patient` |
 | `identifier[0]` | type `PMJAY` (as above), value the member id entered on the check form (A2) |
 | `identifier[1]` | type `MB` (as above), value the same member id |
+| `identifier[]` typed `ABHA` | the ABHA number searched on, only on a discovery that also gives a member id (A2) |
+| `identifier[]` typed `ADN` "Adhaar number" under `ndhm-identifier-type-code` | the Aadhaar number given as additional information on a discovery (A2), 12 digits; absent otherwise |
+| `telecom[0]` | `{system: "phone", value: <mobile>}`, the mobile given as additional information on a discovery; absent otherwise |
 
 **Payer's Patient (received, eligibility reply)**. The reply repeats the request's Patient and appends the payer's; the **last** Patient in the bundle is read onto `D9 claim`:
 
@@ -62,6 +65,7 @@ Not sent: `address`, `photo`, `given`/`family` names, MRN, ABHA address, `active
 Empty values are not written. Patients in ClaimResponse, Task, communication and payment bundles are not read.
 
 #### F15U. USED BY
+- Screens: [S17. Beneficiary Discovery](../screens/S17-beneficiary-discovery.md)
 - APIs: [A2. Coverage Eligibility Check](../apis/A2-coverage-eligibility-check.md)
 - Callbacks: [C2. Coverage Eligibility Verdict](../callbacks/C2-coverage-eligibility-on-check.md)
 - FHIR: [F2. CoverageEligibilityRequest](F2-coverage-eligibility-request.md), [F18. Coverage](F18-coverage.md), [F19. Other bundle resources](F19-other-resources.md)
