@@ -1008,7 +1008,7 @@ function fhirDesignSection() {
 const FHIR_ENTRY = {
   module: 'FHIR',
   title: 'FHIR, generating and auditing bundles',
-  docs: '/docs/hiecm/v3/concepts/fhir',
+  docs: '/docs/hiecm/v3/resources/standards/fhir',
   example: 'Add ABDM compliant FHIR bundle generation to this codebase',
   errorExample: null,
   operations: 0,

@@ -1,0 +1,11 @@
+{/* Shared standards partial: how a validated FHIR bundle looks, and the
+    common failures. Every fact here comes from nrces.in. */}
+
+## How you know it worked
+
+The validator reports no errors for your bundle against `ndhm.in#6.5.0`.
+
+## When it goes wrong
+
+- **A coding fails validation.** The system URI differs from the one the profile fixes. Copy it from the profile, not from an older sample.
+- **Anything else.** Read the [FHIR questions in the NRCeS FAQ](https://www.nrces.in/faqs#fhir).
