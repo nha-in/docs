@@ -55,7 +55,7 @@ The application's own endpoints, all behind the session, and what each posts to 
 | `GET biometric?patient_id&payer_code` | | nothing; lists the attempts, the `current` token per stage, and `required` (the payer refuses a request without one) |
 | `POST biometric/init` | `patient_id`, `payer_code`, `preauth_id` (optional), `stage` (`Preauth` or `Discharge`), `method` (`FINGERPRINT`, `IRIS`, `FACE_AUTH`), `abha_no` (optional; else the case's, else the patient's) | `auth/init` with `{scope, loginHint: "abha-number", loginId: <ABHA with hyphens>, otpSystem: "aadhaar", authMode}`; for face `faceauth/init` with `{scope: ["abha-enrol", "face-auth"]}` |
 | `POST biometric/:id/capture` | | face only: `capture/pid` with `{txnId}` |
-| `POST biometric/:id/verify` | `pid` (fingerprint, iris), or `aadhaar` and `mobile` (face; or `aadhaar_encrypted` when the desk sealed it under the same certificate) | `auth/verify` with `{scope, authData: {authMethods: [bio or iris], bio or iris: {txnId, <pid key>: pid}}, authMode}`; for face `v2/auth/verify` with `{authData: {authMethods: ["face_auth"], face: {txnId, aadhaar: <sealed>, mobile}}, authMode: "FACE_AUTH"}` |
+| `POST biometric/:id/verify` | `pid` (fingerprint, iris), or `aadhaar_encrypted` and `mobile` (face: the Aadhaar number sealed **in the page** under the ABHA service's certificate, A19. ABHA Create and Verify (ABDM M1) (in nhcx-coverage)'s `seal`; a number in clear is refused, the server holds no certificate) | `auth/verify` with `{scope, authData: {authMethods: [bio or iris], bio or iris: {txnId, <pid key>: pid}}, authMode}`; for face `v2/auth/verify` with `{authData: {authMethods: ["face_auth"], face: {txnId, aadhaar: <sealed>, mobile}}, authMode: "FACE_AUTH"}` |
 | `POST biometric/:id/refresh` | | `GET auth/refresh/token` with `R-token` |
 
 The capture itself: the RD service of the registered device answers on `http://127.0.0.1:11100` to `11120`, method `CAPTURE`, with a `PidOptions` XML naming `fCount 1`, `fType 2`, `format 0`, `pidVer 2.0`, `env P` and the `wadh` above; the desk screen tries each port and sends the `PidData` XML it gets back as `pid`. A desk whose device is elsewhere pastes the PID block.
@@ -93,9 +93,9 @@ function capture(row):                                   // face only, polled by
     if answer.status == "COMPLETE" and row.status == initiated: row.status = captured
     return row, answer.status
 
-function verify(row, pid, aadhaar, mobile):
+function verify(row, pid, aadhaar_encrypted, mobile):
     if row.method == FACE_AUTH:
-        sealed = seal(digits(aadhaar))                 // A19's seal: the ABHA service's certificate; never logged or stored
+        sealed = aadhaar_encrypted                     // sealed in the page with A19's seal; the server never sees the number
         answer = POST face_base + "/v2/auth/verify" {authData: {authMethods: ["face_auth"],
                      face: {txnId: row.txn_id, aadhaar: sealed, mobile}}, authMode: "FACE_AUTH"}
                  with face_headers(abdm_headers(row.payer_code, row.stage, true))
