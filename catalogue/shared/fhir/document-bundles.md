@@ -26,7 +26,7 @@ sources:
       NRCeS's own download for the package above. The pinned tgz under
       .raw/ is what the catalogue and the validator actually read; this
       URL is recorded so the pin can be renewed deliberately.
-  - file: site/docs/hiecm/v3/concepts/fhir.md
+  - file: site/docs/hiecm/v3/resources/standards/fhir/index.mdx
     status: reference
     note: >
       The published FHIR page: eight record types, Invoice included, and the

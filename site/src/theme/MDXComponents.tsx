@@ -12,6 +12,7 @@ import {
   UseCase,
   WorkflowCodeExplorer,
 } from '@site/src/components/mdx';
+import FhirBuilder from '@site/src/components/fhir/FhirBuilder';
 
 /**
  * A table cannot scroll itself: `display: table` has no overflow box. A table
@@ -37,6 +38,7 @@ export default {
   table: Table,
   Card,
   CardGroup,
+  FhirBuilder,
   Steps,
   Step,
   Expandable,

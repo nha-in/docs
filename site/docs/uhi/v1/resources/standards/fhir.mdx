@@ -1,0 +1,39 @@
+---
+title: FHIR records and profiles
+sidebar_label: FHIR
+description: 'The ABDM FHIR implementation guide: the R4 profiles every ABDM record and claim conforms to, the code systems they bind, and how to validate.'
+source: 'https://nrces.in/ndhm/fhir/r4/index.html; https://www.nrces.in/standards/hl7-international/hl7-fhir; https://www.nrces.in/download/files/pdf/Implementation_Guide_for_Adoption_of_FHIR_in_ABDM_and_NHCX.pdf'
+sidebar_position: 2
+sidebar_class_name: sidebar-icon sidebar-icon--file-heart
+---
+
+import FhirIg from '@site/docs/_standards/_fhir-ig.mdx';
+import FhirValidate from '@site/docs/_standards/_fhir-validate.mdx';
+import FhirTools from '@site/docs/_standards/_fhir-tools.mdx';
+import FhirOutcomes from '@site/docs/_standards/_fhir-outcomes.mdx';
+
+# FHIR records and profiles
+
+Every ABDM health record and claim is a FHIR R4 bundle that conforms to the ABDM FHIR implementation guide. This page gives the guide, the code systems its profiles bind, and how to validate a bundle against it.
+
+## In short
+
+- Every ABDM record and claim conforms to the ABDM FHIR implementation guide, version 6.5.0 on FHIR 4.0.1.
+- Coded fields take SNOMED CT, LOINC, ICD-10 or the guide's own code systems, each by a fixed URI.
+- Validate every bundle against `ndhm.in#6.5.0` before you send it.
+
+<FhirIg />
+
+## Validate a bundle against it
+
+<FhirValidate />
+
+<FhirTools />
+
+<FhirOutcomes />
+
+## Next steps
+
+- [SNOMED CT](/docs/uhi/v1/resources/standards/snomed-ct): the clinical terminology most coded fields take.
+- [LOINC](/docs/uhi/v1/resources/standards/loinc): the codes for laboratory tests and observations.
+- [Standards and terminologies](/docs/uhi/v1/resources/standards): every code system in one table.
