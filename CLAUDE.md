@@ -7,28 +7,17 @@ principles: the skills carry the rules a diff cannot show you, including the
 atom schema, the prose and voice constraints, the DPG no-vendor-dependency
 rule, and what `verified` is allowed to mean.
 
-If the plugin is not installed, install it before making changes. Two commands
-from the repo root, then restart Claude Code:
-
-```sh
-claude plugin marketplace add ./
-claude plugin install abdm-contributors-assistant@abdm-portal
-```
-
-`./` installs from this checkout, so the branch you are on is the version you
-run. Nothing in this repo can install it for you: Claude Code refuses to
-auto-install a plugin that repo-authored settings asked for, which is why this
-is a rule you follow rather than a gate that stops you.
+If the plugin is not installed, install it before making changes:
+[CONTRIBUTING.md](CONTRIBUTING.md) has the two commands.
 
 NHA corrections are applied to docs pages only. Follow `docs/runbook-nha-corrections.md`.
 
 Two things the index will not route for you, because they are repo-wide:
 
-- Generated files are never hand-edited. `site/docs/<gateway>/<version>/api/`,
-  `site/static/specs/`, `plugins/abdm-integrators-assistant/skills/`,
-  `plugins/uhi-integrators-assistant/skills/`, `site/static/llms.txt`,
-  the `*-start.md` command in each integrators plugin, every catalogue atom file marked `generated: true`, and `catalogue/registry.json` are build outputs, except the `index.mdx` pages under `api/`, which are hand-written.
-  If one is wrong, the catalogue or the generator is wrong.
+- Generated files are never hand-edited. `.claude/hooks/guard.sh` holds the
+  list and refuses the edit; it also asks before a command deletes anything
+  under `catalogue/`. If a generated file is wrong, the catalogue or the
+  generator is wrong.
 - Each gateway keeps its own integrators plugin: `abdm-integrators-assistant`
   for HIE-CM, `uhi-integrators-assistant` for UHI and `nhcx` for NHCX. Skills
   ship as one folder per module or service: a `SKILL.md` that routes, and the
