@@ -22,6 +22,8 @@ The screen does three things, in order:
 - Below it, a card reading "The procedure set is validated; the **Pre-authorisation** tab is open. Fill in the dossier there and send it." with a primary button "Go to the pre-authorisation" (arrow-right icon).
 - The pre-authorisation opens without waiting for the ruling. Some payers (the PMJAY sandbox among them) never answer the procedure-set check, so the draft is not blocked on it [SANDBOX](../references/PAYERS.md#markers). When the ruling does arrive it narrows the documents and forms S9 asks for.
 
+**Verification** is the tab before this one, S18: the beneficiary authenticated against their ABHA ([A18. Biometric Authentication](../apis/A18-biometric-authentication.md)), whose token the pre-authorisation carries. Optional for any payer, required by PMJAY, and never a blocker here: without a token the consent questionnaire stands in for a payer that requires one.
+
 **Link block**
 
 Which card shows depends on the case:

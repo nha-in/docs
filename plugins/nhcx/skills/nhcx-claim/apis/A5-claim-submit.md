@@ -55,7 +55,7 @@ The arguments passed to G7 Send:
 
 | Field | Type | Notes |
 |---|---|---|
-| `jwe_headers` | object | The three headers above |
+| `jwe_headers` | object | The three headers above, plus the beneficiary's discharge user token under the configured header and `x-hcx-ben-abha-id` when [A18. Biometric Authentication](A18-biometric-authentication.md) holds a current stage-Discharge authentication (then the Discharge Consent form is left out of the bundle) |
 | `fhir` | Bundle | The Claim bundle |
 
 The resources are those of the pre-authorisation bundle (A4 REQUEST), with the claim leg's differences: `use` claim, the pre-auth reference, the discharge, the claim lines (a LAMA or DAMA discharge before or during surgery collapses them to the single procedure `LM100` [PAYER](../references/PAYERS.md#markers)), the Procedure completed, and only the claim-stage documents and forms.
@@ -188,9 +188,10 @@ function claim_send_kind(case_id):
 ```
 
 #### A5U. USED BY
-- Screens: [S11. Claim Submission](../screens/S11-claim-submission.md)
-- APIs: [A10. Transaction Related](A10-txn-related.md), [A11. Transaction Dispatch](A11-txn-dispatch.md), [A13. Transaction List](A13-txn-list.md)
+- Screens: [S11. Claim Submission](../screens/S11-claim-submission.md), [S18. Beneficiary Verification](../screens/S18-beneficiary-verification.md)
+- APIs: [A10. Transaction Related](A10-txn-related.md), [A11. Transaction Dispatch](A11-txn-dispatch.md), [A13. Transaction List](A13-txn-list.md), [A18. Biometric Authentication](A18-biometric-authentication.md)
 - Callbacks: [C6. Claim Reply](../callbacks/C6-claim-on-submit.md)
 - FHIR: [F8. Claim](../fhir/F8-claim.md), [F9. ClaimResponse](../fhir/F9-claimresponse.md), [F15. Patient](../fhir/F15-patient.md), [F17. Organization](../fhir/F17-organization.md), [F18. Coverage](../fhir/F18-coverage.md)
+- Database: [D31. biometric_auth](../database/D31-biometric-auth.md)
 - Gateway: [G5. Protocol Headers](../gateway/G5-protocol-headers.md)
 - Tests: [T10. IRDAI Claim Approved, Part-approved and Rejected](../tests/T10-irdai-claim.md), [T17. PMJAY Claim Through the Role Walk](../tests/T17-pmjay-claim-adjudicated.md)

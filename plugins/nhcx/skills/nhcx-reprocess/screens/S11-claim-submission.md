@@ -22,7 +22,7 @@ Breadcrumb: Claims (claims/list, S5) > `<claim number>`
 #### S11D. DESCRIPTION
 The claim is filed once the patient has left. The tab records the discharge, collects the documents and forms the payer deferred to the claim, and sends the claim. It then shows the payer's verdict, along with the claim's follow-up requests: status, reprocess and balance release.
 
-**When the claim can start.** The claim needs a pre-authorisation with status `approved` or `queried`. Until one exists, the tab shows a single card titled "Claim": "A claim goes in against an **approved** pre-authorisation, once the patient has left. Get the pre-authorisation answered on the previous tab first." A `partial` pre-authorisation does not open this tab.
+**Discharge verification** is on the Verification tab, S18: once the admission is discharged that tab turns into the discharge verification (A18. Biometric Authentication (in nhcx-coverage), stage Discharge), and the fresh token it takes rides on the claim. The admission's token does not serve the claim, whatever its life. Without one, a payer that requires proof of presence gets the Discharge Consent form answered in the bundle instead.**When the claim can start.** The claim needs a pre-authorisation with status `approved` or `queried`. Until one exists, the tab shows a single card titled "Claim": "A claim goes in against an **approved** pre-authorisation, once the patient has left. Get the pre-authorisation answered on the previous tab first." A `partial` pre-authorisation does not open this tab.
 
 Once open, the tab shows four cards:
 1. Discharge

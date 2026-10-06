@@ -68,4 +68,4 @@ Empty values are not written. Patients in ClaimResponse, Task, communication and
 - Screens: [S17. Beneficiary Discovery](../screens/S17-beneficiary-discovery.md)
 - APIs: [A2. Coverage Eligibility Check](../apis/A2-coverage-eligibility-check.md)
 - Callbacks: [C2. Coverage Eligibility Verdict](../callbacks/C2-coverage-eligibility-on-check.md)
-- FHIR: [F2. CoverageEligibilityRequest](F2-coverage-eligibility-request.md), [F18. Coverage](F18-coverage.md), [F19. Other bundle resources](F19-other-resources.md)
+- FHIR: [F2. CoverageEligibilityRequest](F2-coverage-eligibility-request.md), [F7. QuestionnaireResponse](F7-questionnaireresponse.md), [F18. Coverage](F18-coverage.md), [F19. Other bundle resources](F19-other-resources.md)

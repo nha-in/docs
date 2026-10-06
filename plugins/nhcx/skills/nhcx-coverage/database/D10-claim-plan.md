@@ -57,5 +57,5 @@ Delete: never directly. The row goes with its claim (`ON DELETE CASCADE`) or wit
 - Screens: [S6. Claim Detail](../screens/S6-claim-detail.md)
 - APIs: [A10. Transaction Related](../apis/A10-txn-related.md), [A11. Transaction Dispatch](../apis/A11-txn-dispatch.md), [A13. Transaction List](../apis/A13-txn-list.md), [A17. Claim State](../apis/A17-claim-state.md)
 - Callbacks: [C1. Callback Door](../callbacks/C1-callback-door.md)
-- Database: [D9. claim](D9-claim.md), [D11. claim_plan_benefit](D11-claim-plan-benefit.md), [D12. claim_plan_form](D12-claim-plan-form.md), [D13. claim_auth](D13-claim-auth.md)
+- Database: [D8. terminology](D8-terminology.md), [D9. claim](D9-claim.md), [D11. claim_plan_benefit](D11-claim-plan-benefit.md), [D12. claim_plan_form](D12-claim-plan-form.md), [D13. claim_auth](D13-claim-auth.md)
 - Tests: [T13. PMJAY Eligibility, Package Master and Ruling](../tests/T13-pmjay-eligibility-and-package-master.md)

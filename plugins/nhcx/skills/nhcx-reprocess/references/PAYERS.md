@@ -16,7 +16,7 @@ Unmarked statements are the protocol or this application's own design, and are f
 
 ## Choosing the adapter
 
-- A configuration row maps a payer's participant code to an adapter key: in the reference implementation, rows of kind `payer_adapter` in the code lists (D8. terminology (in nhcx-preauth)), with the participant code as `code`, the operator's name for the payer as `display` and the adapter key as `extra`.
+- A configuration row maps a payer's participant code to an adapter key: in the reference implementation, rows of kind `payer_adapter` in the code lists (D8. terminology (in nhcx-coverage)), with the participant code as `code`, the operator's name for the payer as `display` and the adapter key as `extra`.
 - The adapter is chosen by the policy's **payer id**. Messages are addressed to its **processing id** (the participant that handles the policy on NHCX), which can be a different code; see [CORE.md](CORE.md).
 - Codes are matched on their numeric part, so `1518`, `1518@hcx` and `1518@HCX` are the same payer.
 - A payer with no row is read by its **registered name** on the participant registry ([G4. Registry and Certificates](../gateway/G4-registry.md)): a name that starts with `SHA` (a State Health Agency, which runs the scheme) gets the `pmjay` adapter. The match ignores case and leading spaces. The name is learned from the payer list, or looked up once when the payer is first used and remembered; a lookup that fails is tried again after a few minutes.
@@ -37,6 +37,7 @@ Unmarked statements are the protocol or this application's own design, and are f
 | Multiple-procedure factors (`Claim.item.factor`) | 1, 0.5, 0.25 (costliest in full, second at half, the rest at a quarter) | 1, 0.5, 0.25 | none |
 | How it asks for more (query mode) | `resubmit`: the query is a ClaimResponse on the case's own thread, answered by submitting the leg again under the query-response workflow id; a CommunicationRequest from it is a notification, acknowledged, never answered | `communication`: a CommunicationRequest on a thread of its own, answered with a Communication (A7) | `communication` |
 | Answers a status enquiry (A6 status) | no: it refuses the Task (PAYR-1018, or PAYR-1008 with a reason code); read the case's state from its desk instead | yes | yes |
+| Proof of presence (A18, S18) | required: the beneficiary's user token on the headers of the eligibility check, pre-authorisation and claim, else the Authentication Consent and Discharge Consent forms answered in the bundle; refused by name without either (PAYR-1256, PAYR-1363) | optional: the token is sent when the desk has one, nothing stands in otherwise | optional, the same |
 | Reprocess reason codes | `claimrejected`, `partialpayment`, `rejectiondisputed` | same | same |
 | Adjudication desk (sandbox testing, A14, A15) | the NHCX Payer Service | the sandbox payer portal's own API | none |
 

@@ -72,7 +72,7 @@ The arguments passed to G7 Send:
 
 | Field | Type | Notes |
 |---|---|---|
-| `jwe_headers` | object | The three headers above |
+| `jwe_headers` | object | The three headers above, plus the beneficiary's user token under the configured header and `x-hcx-ben-abha-id` when [A18. Biometric Authentication](A18-biometric-authentication.md) holds a current stage-Preauth authentication (then the Authentication Consent form is left out of the bundle) |
 | `fhir` | Bundle | The Claim bundle |
 
 FHIR: [F1. Bundle](../fhir/F1-bundle.md), [F8. Claim](../fhir/F8-claim.md), [F15. Patient](../fhir/F15-patient.md), [F17. Organization](../fhir/F17-organization.md), [F18. Coverage](../fhir/F18-coverage.md), [F16. Practitioner and PractitionerRole](../fhir/F16-practitioner.md), [F19. Other bundle resources](../fhir/F19-other-resources.md) (Procedure), [F7. QuestionnaireResponse](../fhir/F7-questionnaireresponse.md) (pre-auth only, not predetermination)
@@ -253,9 +253,10 @@ function ask_predetermination(case_id):
 ```
 
 #### A4U. USED BY
-- Screens: [S9. Pre-authorisation](../screens/S9-preauthorisation.md), [S14. Patient Registration Form](../screens/S14-patient-registration-form.md), [S15. Patient Detail](../screens/S15-patient-detail.md), [S16. Practitioner Master](../screens/S16-practitioner-master.md)
-- APIs: [A2. Coverage Eligibility Check](A2-coverage-eligibility-check.md), [A10. Transaction Related](A10-txn-related.md), [A11. Transaction Dispatch](A11-txn-dispatch.md), [A13. Transaction List](A13-txn-list.md)
+- Screens: [S9. Pre-authorisation](../screens/S9-preauthorisation.md), [S14. Patient Registration Form](../screens/S14-patient-registration-form.md), [S15. Patient Detail](../screens/S15-patient-detail.md), [S16. Practitioner Master](../screens/S16-practitioner-master.md), [S18. Beneficiary Verification](../screens/S18-beneficiary-verification.md)
+- APIs: [A2. Coverage Eligibility Check](A2-coverage-eligibility-check.md), [A10. Transaction Related](A10-txn-related.md), [A11. Transaction Dispatch](A11-txn-dispatch.md), [A13. Transaction List](A13-txn-list.md), [A18. Biometric Authentication](A18-biometric-authentication.md)
 - Callbacks: [C5. Pre-auth Reply](../callbacks/C5-preauth-on-submit.md)
 - FHIR: [F8. Claim](../fhir/F8-claim.md), [F9. ClaimResponse](../fhir/F9-claimresponse.md), [F15. Patient](../fhir/F15-patient.md), [F17. Organization](../fhir/F17-organization.md), [F18. Coverage](../fhir/F18-coverage.md)
+- Database: [D31. biometric_auth](../database/D31-biometric-auth.md)
 - Gateway: [G5. Protocol Headers](../gateway/G5-protocol-headers.md)
-- Tests: [T5. IRDAI Pre-authorisation Approved](../tests/T5-irdai-preauth-approved.md), [T6. IRDAI Pre-authorisation Rejected and Sent Again](../tests/T6-irdai-preauth-rejected.md), [T7. IRDAI Query Answered](../tests/T7-irdai-query-answered.md), [T8. IRDAI Enhancement](../tests/T8-irdai-enhancement.md), [T14. PMJAY Pre-authorisation Through the Payer Service](../tests/T14-pmjay-preauth-adjudicated.md), [T15. PMJAY Query Answered by Resubmission](../tests/T15-pmjay-query-by-resubmission.md), [T16. PMJAY Rejection and Enhancement](../tests/T16-pmjay-rejection-and-enhancement.md)
+- Tests: [T5. IRDAI Pre-authorisation Approved](../tests/T5-irdai-preauth-approved.md), [T6. IRDAI Pre-authorisation Rejected and Sent Again](../tests/T6-irdai-preauth-rejected.md), [T7. IRDAI Query Answered](../tests/T7-irdai-query-answered.md), [T8. IRDAI Enhancement](../tests/T8-irdai-enhancement.md), [T14. PMJAY Pre-authorisation Through the Payer Service](../tests/T14-pmjay-preauth-adjudicated.md), [T15. PMJAY Query Answered by Resubmission](../tests/T15-pmjay-query-by-resubmission.md), [T16. PMJAY Rejection and Enhancement](../tests/T16-pmjay-rejection-and-enhancement.md), [T19. PMJAY Beneficiary Verification and ABHA](../tests/T19-pmjay-biometric-and-abha.md)

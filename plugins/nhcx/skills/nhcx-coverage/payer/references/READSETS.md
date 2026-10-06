@@ -31,6 +31,7 @@ Always read, whatever the task: [CORE.md](CORE.md) (addresses and the exchange t
 | [A15](../apis/A15-case-exchange.md) | Case Exchange Log | nothing else |
 | [A16](../apis/A16-abha-policy-link.md) | ABHA Policy Link | [D1](../database/D1-payer.md), [D5](../database/D5-member.md), [D6](../database/D6-subscription.md), [D9](../database/D9-abha-link-event.md), [D12](../database/D12-policy.md), [D31](../database/D31-audit-log.md), [G2](../gateway/G2-configuration.md), [G3](../gateway/G3-session-token.md), [G10](../gateway/G10-beneficiary-registry.md) |
 | [A17](../apis/A17-participant-lookup.md) | Participant Lookup | [D1](../database/D1-payer.md), [D19](../database/D19-case.md), [G2](../gateway/G2-configuration.md), [G3](../gateway/G3-session-token.md), [G4](../gateway/G4-registry.md), [G7](../gateway/G7-send.md) |
+| [A20](../apis/A20-abha-m1.md) | ABHA Create and Verify (ABDM M1) | [D5](../database/D5-member.md), [G3](../gateway/G3-session-token.md) |
 
 ## Callbacks
 

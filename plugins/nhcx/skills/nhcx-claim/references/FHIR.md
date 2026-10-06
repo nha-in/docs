@@ -12,7 +12,7 @@ Every FHIR resource the application builds for NHCX or reads back, in one list. 
 
 | # | Resource | Direction | What it is | Used by |
 |---|---|---|---|---|
-| [F7](../fhir/F7-questionnaireresponse.md) | QuestionnaireResponse | sent | One per payer form answered for the leg being sent, pointed at from the Claim's supportingInfo. | [A5](../apis/A5-claim-submit.md) |
+| [F7](../fhir/F7-questionnaireresponse.md) | QuestionnaireResponse | sent | One per payer form answered for the leg being sent, pointed at from the Claim's supportingInfo. | [A5](../apis/A5-claim-submit.md), [A18](../apis/A18-biometric-authentication.md) |
 
 ## Pre-authorisation and claim
 

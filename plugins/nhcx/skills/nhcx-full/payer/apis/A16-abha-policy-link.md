@@ -151,5 +151,6 @@ FAIL(id, action, request_id, err, actor):
 
 #### A16U. USED BY
 - Screens: [S5. Subscriptions](../screens/S5-subscriptions.md), [S12. Organisation](../screens/S12-organisation.md)
+- APIs: [A20. ABHA Create and Verify (ABDM M1)](A20-abha-m1.md)
 - Database: [D1. payer](../database/D1-payer.md), [D6. subscription](../database/D6-subscription.md), [D9. abha_link_event](../database/D9-abha-link-event.md)
 - Gateway: [G1. Embedding](../gateway/G1-embedding.md), [G4. Registry and Certificates](../gateway/G4-registry.md), [G10. Beneficiary Registry](../gateway/G10-beneficiary-registry.md)

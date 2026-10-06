@@ -37,6 +37,7 @@ Unmarked statements are the protocol or this application's own design, and are f
 | Multiple-procedure factors (`Claim.item.factor`) | 1, 0.5, 0.25 (costliest in full, second at half, the rest at a quarter) | 1, 0.5, 0.25 | none |
 | How it asks for more (query mode) | `resubmit`: the query is a ClaimResponse on the case's own thread, answered by submitting the leg again under the query-response workflow id; a CommunicationRequest from it is a notification, acknowledged, never answered | `communication`: a CommunicationRequest on a thread of its own, answered with a Communication (A7) | `communication` |
 | Answers a status enquiry (A6 status) | no: it refuses the Task (PAYR-1018, or PAYR-1008 with a reason code); read the case's state from its desk instead | yes | yes |
+| Proof of presence (A18, S18) | required: the beneficiary's user token on the headers of the eligibility check, pre-authorisation and claim, else the Authentication Consent and Discharge Consent forms answered in the bundle; refused by name without either (PAYR-1256, PAYR-1363) | optional: the token is sent when the desk has one, nothing stands in otherwise | optional, the same |
 | Reprocess reason codes | `claimrejected`, `partialpayment`, `rejectiondisputed` | same | same |
 | Adjudication desk (sandbox testing, A14, A15) | the NHCX Payer Service | the sandbox payer portal's own API | none |
 

@@ -49,6 +49,8 @@ Terms and behaviours that are easy to mix up, with the reading this skill uses.
 | Predetermination and status routes | NHA lists `v1/predetermination/submit` and `v1/status`; the reference implementation sends predetermination on the pre-auth route and status as a Task [REF](PAYERS.md#markers). Check which the payer accepts. |
 | Step ids, section letters, log ids | `L1` to `L8` are steps; `S1L` is the LAYOUT section of S1; `LOG-0042` is a progress log entry; `X1` to `X10` are the end-to-end exchanges of L8. |
 | A9 | There is no A9: the inbound door it once described became the callbacks, C1 to C10. |
+| Session token, user token, X-token, T-token | The **session token** is the application's own, minted from its client id ([G3. Session Token](../gateway/G3-session-token.md)) and sent as `Authorization: Bearer` on every ABDM call and as `bearer_auth` on the exchange. The **user token** is the beneficiary's, from a biometric verification (A18. Biometric Authentication (in nhcx-coverage)), thirty minutes, carried on the request headers under PMJAY. The **X-token** and **T-token** are ABHA M1's (A19. ABHA Create and Verify (ABDM M1) (in nhcx-coverage)): the X-token opens the person's ABHA profile, the T-token only chooses the account after a mobile login. None of the three is ever sent in another's place. |
+| Biometric authentication and the consent questionnaire | A live capture (A18. Biometric Authentication (in nhcx-coverage), on the Verification tab S18. Beneficiary Verification (in nhcx-coverage)) is optional for any payer and its token rides on the sends whenever the desk holds one. Under PMJAY it is required, and where none is possible the scheme's Authentication Consent and Discharge Consent forms are answered in the bundle instead (F7. QuestionnaireResponse (in nhcx-coverage)): one or the other goes, never both, and a cyclic case takes only the capture. The stage is the stay's: Preauth while admitted, Discharge once discharged. |
 
 ## 1. Environments and base URLs
 
@@ -79,6 +81,8 @@ Plain JSON with the session token: no JWE, no protocol headers, no ledger row.
 | nha:A1 | registry `/fetch/participants/list`, `/participant/search` | participant records | [G4](../gateway/G4-registry.md) |
 | nha:A2 | registry `/participant/get/policies` | a beneficiary's policies by member id, mobile or ABHA number | A1 (in nhcx-coverage), [G10](../gateway/G10-beneficiary-registry.md) |
 | nha:C1, nha:C2 | registry `/participant/link/abha/policy`, `/participant/delink/abha/policy` | link or unlink an ABHA number and a policy | [G10](../gateway/G10-beneficiary-registry.md) |
+| nha:D2 | ABDM biometric service: `auth/init`, `auth/verify`, `auth/refresh/token` on one host, `faceauth/init`, `capture/pid`, `v2/auth/verify` on another | the beneficiary's fingerprint, iris or face authentication against their ABHA; the user token that rides on the eligibility check, pre-authorisation and claim, optional for any payer and required by PMJAY | A18 (in nhcx-coverage), defined in full; the tab is S18 (in nhcx-coverage) |
+| ABDM M1 | ABHA service `/abha/api/v3/...` | create an ABHA from an Aadhaar OTP, or verify an existing one by OTP, and fill the patient file from the profile | A19 (in nhcx-coverage); the calls themselves are read from the MCP's M1 catalogue |
 
 ## 3. Protocol defaults
 
@@ -105,7 +109,7 @@ Plain JSON with the session token: no JWE, no protocol headers, no ledger row.
 
 | Exchange | NHA | Our API | Send route | Bundle sent | Workflow id | Reply route | Bundle back | Callback |
 |---|---|---|---|---|---|---|---|---|
-| Pre-authorisation | nha:B3, nha:D4 | A4 (in nhcx-preauth) | `v1/preauth/submit` | F8 (in nhcx-preauth) (`use: preauthorization`) with F7 (in nhcx-preauth), [F15](../fhir/F15-patient.md) to F19 (in nhcx-coverage) | 12 | `v1/preauth/on_submit` | F9 (in nhcx-preauth) | C5 (in nhcx-preauth) |
+| Pre-authorisation | nha:B3, nha:D4 | A4 (in nhcx-preauth) | `v1/preauth/submit` | F8 (in nhcx-preauth) (`use: preauthorization`) with F7 (in nhcx-coverage), [F15](../fhir/F15-patient.md) to F19 (in nhcx-coverage) | 12 | `v1/preauth/on_submit` | F9 (in nhcx-preauth) | C5 (in nhcx-preauth) |
 | Pre-auth resubmitted after a rejection | nha:D5 | A4 (in nhcx-preauth) | `v1/preauth/submit` | F8 (in nhcx-preauth) | 121 (defined; the reference never sends it [REF](PAYERS.md#markers)) | `v1/preauth/on_submit` | F9 (in nhcx-preauth) | C5 (in nhcx-preauth) |
 | Pre-auth query answer | nha:D7 | A4 (in nhcx-preauth) (resubmit query mode) [PAYER](PAYERS.md#markers) | `v1/preauth/submit` | F8 (in nhcx-preauth) with the answer | 19, status `response.complete` | `v1/preauth/on_submit` | F9 (in nhcx-preauth) | C5 (in nhcx-preauth) |
 | Enhancement | nha:D6 | A4 (in nhcx-preauth) | `v1/preauth/submit` | F8 (in nhcx-preauth) with the added lines | 13 | `v1/preauth/on_submit` | F9 (in nhcx-preauth) | C5 (in nhcx-preauth) |
@@ -119,7 +123,7 @@ Payer workflow ids on pre-auth replies [PAYER](PAYERS.md#markers): 20 received, 
 
 | Exchange | NHA | Our API | Send route | Bundle sent | Workflow id | Reply route | Bundle back | Callback |
 |---|---|---|---|---|---|---|---|---|
-| Claim | nha:B5, nha:D9 | A5 (in nhcx-claim) | `v1/claim/submit` | F8 (in nhcx-preauth) (`use: claim`) with F7 (in nhcx-preauth), [F15](../fhir/F15-patient.md) to F19 (in nhcx-coverage) | 15 | `v1/claim/on_submit` | F9 (in nhcx-preauth) | C6 (in nhcx-claim) |
+| Claim | nha:B5, nha:D9 | A5 (in nhcx-claim) | `v1/claim/submit` | F8 (in nhcx-preauth) (`use: claim`) with F7 (in nhcx-coverage), [F15](../fhir/F15-patient.md) to F19 (in nhcx-coverage) | 15 | `v1/claim/on_submit` | F9 (in nhcx-preauth) | C6 (in nhcx-claim) |
 | Claim query answer | nha:D10 | A5 (in nhcx-claim) | `v1/claim/submit` | F8 (in nhcx-preauth) with the answer | 161 [SANDBOX](PAYERS.md#markers); generic 151; status `response.complete` | `v1/claim/on_submit` | F9 (in nhcx-preauth) | C6 (in nhcx-claim) |
 | Claim resubmitted | | A5 (in nhcx-claim) | `v1/claim/submit` | F8 (in nhcx-preauth) | not offered for PMJAY [PAYER](PAYERS.md#markers); generic 16, which NHA's workflow list does not publish [REF](PAYERS.md#markers) | `v1/claim/on_submit` | F9 (in nhcx-preauth) | C6 (in nhcx-claim) |
 | Reprocess a decided claim | nha:D11 | [A6](../apis/A6-task-submit.md) (reprocess) | `v1/task/submit` | [F10](../fhir/F10-task-claim-actions.md) (Task) | 36 | `v1/task/on_submit` | [F10](../fhir/F10-task-claim-actions.md) | [C8](../callbacks/C8-enquiry-on-submit.md) |
@@ -142,7 +146,7 @@ Payer workflow ids on claim replies [PAYER](PAYERS.md#markers): 25 received, 26 
 | nha:A6 | `v1/error` (inbound) | delivered by [G8](../gateway/G8-receive.md) with type `error`, which [C1](../callbacks/C1-callback-door.md) ignores [REF](PAYERS.md#markers) |
 | nha:B6 | `v1/search/submit`, `v1/search/on_submit` | claim search: not specified here |
 | nha:E1 | `v1/notification/subscribe`, `v1/notification/on_subscribe` | notification subscription: not specified here |
-| nha:D2 | ABHA biometric authentication | not an NHCX exchange |
+| nha:D2 | ABHA biometric authentication | not an NHCX exchange, but built: A18 (in nhcx-coverage), section 2 |
 
 ## 5. Where the details are
 

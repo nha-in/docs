@@ -1,0 +1,119 @@
+# A19. ABHA Create and Verify (ABDM M1)
+
+#### A19E. ENDPOINT
+Not an NHCX exchange: ABDM's ABHA service, called directly with the session token from [G3. Session Token](../gateway/G3-session-token.md) on `Authorization: Bearer`, a fresh `REQUEST-ID` (UUID) and `TIMESTAMP` (UTC, ISO 8601 with milliseconds) on every call, plain JSON, no JWE and no ledger row. Sandbox base `https://abhasbx.abdm.gov.in/abha/api/v3`; production is published by ABDM and confirmed in the onboarding letter.
+
+**The calls, their bodies, headers, responses and errors are read from the MCP, not from this spec.** The `nhcx-docs` MCP server (also published as `abdm-docs`) serves the whole of ABDM's HIE-CM catalogue beside NHCX, and M1 is its first milestone: open its `abdm-m1` prompt (the M1 router), or read these directly with `get`:
+
+| What | MCP id |
+|---|---|
+| Create an ABHA from an Aadhaar OTP, end to end | `hiecm.flow.m1-create-abha-aadhaar-otp` |
+| Verify an existing ABHA by mobile OTP, with the account chooser | `hiecm.flow.m1-login-by-mobile` |
+| Which verification method to offer | `hiecm.concept.m1-verification-methods` |
+| The encryption certificate every sealed field needs | `m1_get_v3_profile_public_certificate` |
+| Send the Aadhaar OTP; verify it and create | `m1_post_v3_enrollment_request_otp_aadhaar_otp`, `m1_post_v3_enrollment_enrol_byaadhaar_otp` |
+| Address suggestions; claim the address | `m1_get_v3_enrollment_enrol_suggestion_create_abha_aadhaar_otp`, `m1_post_v3_enrollment_enrol_abha_address_create_abha_aadhaar_otp` |
+| Send the OTP for an ABHA number; verify it | `m1_post_v3_profile_login_request_otp_abha_number_abha_otp`, `m1_post_v3_profile_login_verify_abha_number_abha_otp` |
+| Send the OTP for a mobile; verify it; choose the account | `m1_post_v3_profile_login_request_otp_mobile`, `m1_post_v3_profile_login_verify_mobile_otp`, `m1_post_v3_profile_login_verify_user` |
+| Read the profile the X-token opens | `m1_get_v3_profile_account` |
+| Why a call failed | `decode_error` with the `ABDM-` code, and the troubleshooting atoms `everything-returns-401` and `otp-never-arrives` |
+
+`search` with `milestone: M1` lists the other M1 flows (demographic, face, fingerprint and iris creation, child ABHA, find ABHA, update mobile), none of which this skill builds. The GitHub package (knowledge source option 2) carries no M1 at all: M1 needs the MCP, or the same atoms read on the ABDM developer portal at the `doc_url` the MCP returns.
+
+#### A19D. DESCRIPTION
+The ABHA number is what links a claim to an admission (S4. Claim Creation Form (in nhcx-preauth), [D3. patient](../database/D3-patient.md)), and under PMJAY it is the account the beneficiary is authenticated against ([A18. Biometric Authentication](A18-biometric-authentication.md)). A number typed at the desk is a number nobody checked. This API puts a **verified** ABHA on the file, two ways, and fills the file from what the ABHA service says about the person: name, gender, date of birth, mobile, ABHA number and address.
+
+**Verify an existing ABHA.** By its number, or by the mobile it is registered against. The identifier is sealed under the service's certificate and sent with `scope ["abha-login", "mobile-verify"]`, `loginHint` `abha-number` or `mobile`, `otpSystem abdm`; the OTP goes to the mobile either way. Verifying the OTP by ABHA number answers the account and the X-token directly, and the profile is read with it. Verifying by mobile answers the accounts on that mobile (a shared family phone holds several) and a short-lived T-token: the desk picks the account, `verify/user` with the chosen `ABHANumber` and the same `txnId` under `T-token` answers the X-token, and then the profile. Always call `verify/user` on the mobile path, even with one account listed.
+
+**Create an ABHA from an Aadhaar OTP.** With the person present and their consent recorded (consent code `abha-enrollment`, version `1.4`): the Aadhaar number sealed as `loginId` with `scope ["abha-enrol"]`, `loginHint aadhaar`, `otpSystem aadhaar`; the OTP goes to the mobile registered against the Aadhaar, which may not be the phone in the room. `enrol/byAadhaar` with the sealed OTP, the communication mobile and the consent answers `ABHAProfile`, the tokens and **`isNew`**: an Aadhaar that already has an ABHA returns that account with `isNew` false, so read it before telling anyone something was created. A new account then gets its address: suggestions with the `TRANSACTION_ID` header, the chosen one claimed with `preferred 1`; an account left with only its default address is a half-finished job the person will not recognise later.
+
+Rules, both ways:
+- The Aadhaar number, the OTP and the identifiers are sealed on the server under the certificate from `/profile/public/certificate` (RSA/ECB/OAEPWithSHA-1AndMGF1Padding, base64), fetched once an hour. None of them is stored or logged; the audit trail keeps the last four digits of an Aadhaar at most.
+- The X-token and T-token stay on the server, keyed by the flow's `txnId`, for fifteen minutes; they are never returned to the screen. The gateway session token is never sent as an X-token.
+- The profile written onto the file: `abha_number` (14 digits, shown as `xx-xxxx-xxxx-xxxx`), `abha_address` (the preferred address, else the first `phrAddress`), `name` (`name`, else first, middle and last), `gender` (`M` `F` `O` to Male, Female, Other), `birth_date` (`dob` as `DD-MM-YYYY`, or day, month and year), `phone` (left blank when the service masks it as `******0903`). A blank field on the form is filled; a typed one is kept.
+- A person already on the register under that ABHA is opened, not registered again; the register's unique ABHA refuses a second file anyway ([D3. patient](../database/D3-patient.md)).
+
+Refused before any call: "An Aadhaar number has 12 digits.", "Ask for the OTP first.", "Enter the OTP that was sent.", "A mobile number has 10 digits.", "An ABHA number has 14 digits.", "Enter the ABHA number, or the mobile it is registered against.", "An ABHA address is 8 to 18 letters, digits, dots or underscores.", "Choose one of the accounts listed.", and on a lapsed login: "The login has lapsed; ask for the OTP again."
+
+A refusal from the service is shown in its words: the `error.code` and `error.message` block, else the field it named invalid. Every call failing the same way is a session or header problem (`everything-returns-401` on the MCP).
+
+#### A19Q. REQUEST
+
+The application's own endpoints, behind the session.
+
+| Endpoint | Body | Answers |
+|---|---|---|
+| `POST abha/enrol/otp` | `aadhaar`; `txn_id` to resend | `txn_id`, `message` (the masked mobile the OTP went to) |
+| `POST abha/enrol/verify` | `txn_id`, `otp`, `mobile` (optional) | `txn_id`, `is_new`, `profile`, `message` |
+| `GET abha/enrol/suggestions?txn_id` | | `addresses` |
+| `POST abha/enrol/address` | `txn_id`, `abha_address` (with or without `@sbx` or `@abdm`) | `abha_no`, `abha_address` |
+| `POST abha/login/otp` | `abha_no` or `mobile` | `txn_id`, `message`, `hint` (`abha-number` or `mobile`) |
+| `POST abha/login/verify` | `txn_id`, `otp` | `txn_id`, `hint`, `accounts`; by number also `profile` |
+| `POST abha/login/select` | `txn_id`, `abha_no` | `profile` |
+
+`profile`: `{abha_no, abha_address, name, gender, dob, mobile, status}`. `accounts`: `[{abha_no, name, abha_address, status}]`.
+
+#### A19S. RESPONSE
+What the screens do with it ([S13. Patient List](../screens/S13-patient-list.md), [S14. Patient Registration Form](../screens/S14-patient-registration-form.md), [S15. Patient Detail](../screens/S15-patient-detail.md)): "Register with ABHA" runs a verify or create first and opens the registration form filled from the profile, so the desk confirms rather than types; the form's own "Verify or create an ABHA" fills a form already open; a patient on file gets "Link ABHA" or "Verify ABHA", which writes the ABHA number and address onto the row. The X-token is not kept beyond the flow: nothing else in this skill reads the ABHA profile, and the biometric calls ([A18. Biometric Authentication](A18-biometric-authentication.md)) take their own tokens.
+
+Data: [D3. patient](../database/D3-patient.md)
+
+#### A19P. PSEUDOCODE
+
+```
+// the calls' exact shapes: get(<MCP id>) from the table in A19E
+function seal(value):   return base64(rsa_oaep_sha1(certificate(), value))     // certificate() cached one hour
+function abha_call(method, path, body, extra):
+    headers = {Authorization: "Bearer " + session_token(), "REQUEST-ID": uuid(), TIMESTAMP: now_utc_iso_ms()} + extra
+    answer = http(method, abha_base + path, body, headers)
+    if answer.status >= 300: raise refusal(answer)        // error.code and error.message, else the invalid field
+    return answer.body
+
+function enrol_otp(aadhaar, txn_id = none):
+    d = digits(aadhaar); if len(d) != 12: refuse "An Aadhaar number has 12 digits."
+    body = {scope: ["abha-enrol"], loginHint: "aadhaar", loginId: seal(d), otpSystem: "aadhaar"} + (txnId: txn_id if given)
+    answer = abha_call(POST, "/enrollment/request/otp", body)
+    audit "abha.enrol_otp_sent" with d[8:]                  // the last four digits, nothing more
+    return {txn_id: answer.txnId, message: answer.message}
+
+function enrol_verify(txn_id, otp, mobile):
+    answer = abha_call(POST, "/enrollment/enrol/byAadhaar", {
+        authData: {authMethods: ["otp"], otp: {txnId: txn_id, otpValue: seal(digits(otp))} + (mobile: last10(mobile) if given)},
+        consent: {code: "abha-enrollment", version: "1.4"}})
+    profile = profile_from(answer.ABHAProfile or answer); remember(answer.txnId, {token: answer.tokens.token, x: true})
+    return {txn_id: answer.txnId or txn_id, is_new: answer.isNew, profile, message: answer.message}
+
+function suggestions(txn_id):  return abha_call(GET, "/enrollment/enrol/suggestion", none, {TRANSACTION_ID: txn_id}).abhaAddressList
+function enrol_address(txn_id, address):
+    a = strip_suffix(address, "@sbx", "@abdm"); check 8..18 chars of [A-Za-z0-9._], first alphanumeric
+    answer = abha_call(POST, "/enrollment/enrol/abha-address", {txnId: txn_id, abhaAddress: a, preferred: 1})
+    return {abha_no: format(answer.healthIdNumber), abha_address: answer.preferredAbhaAddress}
+
+function login_otp(abha_no, mobile):
+    if abha_no: hint, value = "abha-number", digits(abha_no) (14) else hint, value = "mobile", last10(mobile) (10)
+    answer = abha_call(POST, "/profile/login/request/otp", {scope: ["abha-login", "mobile-verify"], loginHint: hint, loginId: seal(value), otpSystem: "abdm"})
+    remember(answer.txnId, {hint}); return {txn_id: answer.txnId, message: answer.message, hint}
+
+function login_verify(txn_id, otp):
+    s = recall(txn_id)
+    answer = abha_call(POST, "/profile/login/verify", {scope: ["abha-login", "mobile-verify"],
+                 authData: {authMethods: ["otp"], otp: {txnId: txn_id, otpValue: seal(digits(otp))}}})
+    if answer.authResult not "success": raise "The ABHA service did not verify the OTP: " + answer.message
+    accounts = [account_from(a) for a in answer.accounts]
+    if s.hint == "mobile": remember(txn_id, {token: answer.token, hint}); return {txn_id, accounts, hint}   // T-token
+    remember(txn_id, {token: answer.token, x: true, hint})
+    return {txn_id, accounts, hint, profile: profile_with(answer.token) or accounts[0]}
+
+function login_select(txn_id, abha_no):
+    s = recall(txn_id) or refuse "The login has lapsed; ask for the OTP again."
+    answer = abha_call(POST, "/profile/login/verify/user", {ABHANumber: format(digits(abha_no)), txnId: txn_id}, {"T-token": "Bearer " + s.token})
+    remember(txn_id, {token: answer.token, x: true}); return {txn_id, profile: profile_with(answer.token)}
+
+function profile_with(x_token):  return profile_from(abha_call(GET, "/profile/account", none, {"X-token": "Bearer " + x_token}))
+```
+
+#### A19U. USED BY
+- Screens: [S13. Patient List](../screens/S13-patient-list.md), [S14. Patient Registration Form](../screens/S14-patient-registration-form.md)
+- APIs: [A18. Biometric Authentication](A18-biometric-authentication.md)
+- Database: [D3. patient](../database/D3-patient.md)
+- Tests: [T19. PMJAY Beneficiary Verification and ABHA](../tests/T19-pmjay-biometric-and-abha.md)
