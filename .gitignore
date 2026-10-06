@@ -13,6 +13,7 @@ site/static/vendor/
 
 # Generated: agent skills compiled from the pages by scripts/build-skills.mjs
 site/static/skills/
+site/static/fhir-builder/
 site/static/agent-setup/prompt.md
 
 # Generated: one Postman collection per module, and the manifest the milestone
