@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import {Check, Copy, Lock, Plug, SquareArrowOutUpRight} from 'lucide-react';
+import {Check, Copy, Lock, Plug} from 'lucide-react';
 import {cn} from '@site/src/lib/utils';
 import {Button} from '@site/src/components/ui/button';
 import {AGENTS, AgentId, MCP_NAME, guarded} from './agents';
+import AgentLogo from './AgentLogo';
 
 /**
  * The Docs MCP server, and the one click that installs it.
@@ -207,6 +208,7 @@ export default function McpInstall({set = 'abdm'}: {set?: 'abdm' | 'nhcx'}): Rea
               agent.id === active && 'skill-install__target--active',
             )}
             onClick={() => setActive(agent.id)}>
+            <AgentLogo id={agent.id} />
             {agent.label}
           </button>
         ))}
@@ -229,7 +231,7 @@ export default function McpInstall({set = 'abdm'}: {set?: 'abdm' | 'nhcx'}): Rea
                 {url ? (
                   <Button asChild variant="outline" size="sm">
                     <a href={surface.link(url)}>
-                      <SquareArrowOutUpRight className="size-3.5" aria-hidden="true" />
+                      <AgentLogo id={agent.id} />
                       Add to {agent.label}
                     </a>
                   </Button>
