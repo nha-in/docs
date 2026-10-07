@@ -40,15 +40,16 @@ A line counts as added when its code (or a ward tier code riding as a modifier) 
 
 A per-environment override (a JSON object of kind to workflow id) wins over the adapter, key by key. A kind with no id anywhere is refused with "No workflow id is defined for '<kind>'.".
 
-**Headers set by the application.** Only these three; G7 generates ([G5. Protocol Headers](../gateway/G5-protocol-headers.md)) `x-hcx-api_call_id`, `x-hcx-request_id`, `x-hcx-correlation_id`, the timestamp and the status.
+**Headers set by the application.** Only these four; G7 generates ([G5. Protocol Headers](../gateway/G5-protocol-headers.md)) `x-hcx-api_call_id`, `x-hcx-request_id`, `x-hcx-correlation_id`, the timestamp and the status.
 
 | Header | Value |
 |---|---|
 | `x-hcx-sender_code` | The facility's NHCX participant code (Settings) |
 | `x-hcx-recipient_code` | The case's processing id (D9 `processing_id`), else the case's processing id, else the claim's payer id, else the configured default payer code |
 | `x-hcx-workflow_id` | From the tables above |
+| `x-hcx-use_case` | `New` for `preauth` and a predetermination, `Enhancement` for `enhancement`, `Resubmit` for `preauth_query_response`, `enhancement_resubmit` and `preauth_resubmit`. Sent to every payer, whether or not it reads it (see [PAYERS.md](../references/PAYERS.md)) |
 
-**Before a pre-authorisation send** (not a predetermination), the app fires the payer's `auth-requirements` coverage check (A2) when the adapter supports it (see [PAYERS.md](../references/PAYERS.md)) [PAYER](../references/PAYERS.md#markers), the claim is `eligible`, lines exist, and this procedure set has not been ruled on (or the last ruling is in `error`). It never waits for the answer, and a failure of that check does not stop the send.
+**Before a pre-authorisation send** (not a predetermination), the app fires the payer's `auth-requirements` coverage check (A2) when the adapter sends it unasked (see [PAYERS.md](../references/PAYERS.md)) [PAYER](../references/PAYERS.md#markers), the claim is `eligible`, lines exist, and this procedure set has not been ruled on (or the last ruling is in `error`). It never waits for the answer, and a failure of that check does not stop the send.
 
 **Checks before sending**, in order, each raised as the screen's red message:
 
@@ -71,7 +72,7 @@ The arguments passed to G7 Send:
 
 | Field | Type | Notes |
 |---|---|---|
-| `jwe_headers` | object | The three headers above |
+| `jwe_headers` | object | The three headers above, plus the beneficiary's user token under the configured header and `x-hcx-ben-abha-id` when [A18. Biometric Authentication](A18-biometric-authentication.md) holds a current stage-Preauth authentication (then the Authentication Consent form is left out of the bundle) |
 | `fhir` | Bundle | The Claim bundle |
 
 FHIR: [F1. Bundle](../fhir/F1-bundle.md), [F8. Claim](../fhir/F8-claim.md), [F15. Patient](../fhir/F15-patient.md), [F17. Organization](../fhir/F17-organization.md), [F18. Coverage](../fhir/F18-coverage.md), [F16. Practitioner and PractitionerRole](../fhir/F16-practitioner.md), [F19. Other bundle resources](../fhir/F19-other-resources.md) (Procedure), [F7. QuestionnaireResponse](../fhir/F7-questionnaireresponse.md) (pre-auth only, not predetermination)
@@ -252,9 +253,10 @@ function ask_predetermination(case_id):
 ```
 
 #### A4U. USED BY
-- Screens: [S9. Pre-authorisation](../screens/S9-preauthorisation.md), [S14. Patient Registration Form](../screens/S14-patient-registration-form.md), [S15. Patient Detail](../screens/S15-patient-detail.md), [S16. Practitioner Master](../screens/S16-practitioner-master.md)
-- APIs: [A2. Coverage Eligibility Check](A2-coverage-eligibility-check.md), [A10. Transaction Related](A10-txn-related.md), [A11. Transaction Dispatch](A11-txn-dispatch.md), [A13. Transaction List](A13-txn-list.md)
+- Screens: [S9. Pre-authorisation](../screens/S9-preauthorisation.md), [S14. Patient Registration Form](../screens/S14-patient-registration-form.md), [S15. Patient Detail](../screens/S15-patient-detail.md), [S16. Practitioner Master](../screens/S16-practitioner-master.md), [S18. Beneficiary Verification](../screens/S18-beneficiary-verification.md)
+- APIs: [A2. Coverage Eligibility Check](A2-coverage-eligibility-check.md), [A10. Transaction Related](A10-txn-related.md), [A11. Transaction Dispatch](A11-txn-dispatch.md), [A13. Transaction List](A13-txn-list.md), [A18. Biometric Authentication](A18-biometric-authentication.md)
 - Callbacks: [C5. Pre-auth Reply](../callbacks/C5-preauth-on-submit.md)
 - FHIR: [F8. Claim](../fhir/F8-claim.md), [F9. ClaimResponse](../fhir/F9-claimresponse.md), [F15. Patient](../fhir/F15-patient.md), [F17. Organization](../fhir/F17-organization.md), [F18. Coverage](../fhir/F18-coverage.md)
+- Database: [D31. biometric_auth](../database/D31-biometric-auth.md)
 - Gateway: [G5. Protocol Headers](../gateway/G5-protocol-headers.md)
-- Tests: [T5. IRDAI Pre-authorisation Approved](../tests/T5-irdai-preauth-approved.md), [T6. IRDAI Pre-authorisation Rejected and Sent Again](../tests/T6-irdai-preauth-rejected.md), [T7. IRDAI Query Answered](../tests/T7-irdai-query-answered.md), [T8. IRDAI Enhancement](../tests/T8-irdai-enhancement.md), [T14. PMJAY Pre-authorisation Through the Payer Service](../tests/T14-pmjay-preauth-adjudicated.md), [T15. PMJAY Query Answered by Resubmission](../tests/T15-pmjay-query-by-resubmission.md), [T16. PMJAY Rejection and Enhancement](../tests/T16-pmjay-rejection-and-enhancement.md)
+- Tests: [T5. IRDAI Pre-authorisation Approved](../tests/T5-irdai-preauth-approved.md), [T6. IRDAI Pre-authorisation Rejected and Sent Again](../tests/T6-irdai-preauth-rejected.md), [T7. IRDAI Query Answered](../tests/T7-irdai-query-answered.md), [T8. IRDAI Enhancement](../tests/T8-irdai-enhancement.md), [T14. PMJAY Pre-authorisation Through the Payer Service](../tests/T14-pmjay-preauth-adjudicated.md), [T15. PMJAY Query Answered by Resubmission](../tests/T15-pmjay-query-by-resubmission.md), [T16. PMJAY Rejection and Enhancement](../tests/T16-pmjay-rejection-and-enhancement.md), [T19. PMJAY Beneficiary Verification and ABHA](../tests/T19-pmjay-biometric-and-abha.md)

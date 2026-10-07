@@ -73,6 +73,7 @@ Plain JSON with the session token: no JWE, no protocol headers, no ledger row.
 | nha:A3 | registry `/fetch/certs` | a participant's encryption certificate, the hospital's before every answer | [G4](../gateway/G4-registry.md) |
 | nha:A1 | registry `/fetch/participants/list`, `/participant/search` | participant records; naming a code on the desk | [G4](../gateway/G4-registry.md), [A17](../apis/A17-participant-lookup.md) |
 | nha:C1, nha:C2 | registry `/participant/link/abha/policy`, `/participant/delink/abha/policy` | link or unlink a member's ABHA number and enrolment | [A16](../apis/A16-abha-policy-link.md), [G10](../gateway/G10-beneficiary-registry.md) |
+| ABDM M1 | ABHA service `/abha/api/v3/...` | create a member's ABHA from an Aadhaar OTP, or verify an existing one by OTP, and fill the member from the profile | [A20](../apis/A20-abha-m1.md); the calls themselves are read from the MCP's M1 catalogue |
 
 ## 3. Protocol defaults
 
@@ -134,7 +135,7 @@ Plain JSON with the session token: no JWE, no protocol headers, no ledger row.
 | nha:A6 | `v1/error` (inbound) | delivered by [G8](../gateway/G8-receive.md) with type `error`, which [C1](../callbacks/C1-callback-door.md) ignores [REF](PAYERS.md#markers) |
 | nha:B6 | `v1/search/submit`, `v1/search/on_submit` | claim search: not specified here |
 | nha:E1 | `v1/notification/subscribe`, `v1/notification/on_subscribe` | notification subscription: not specified here |
-| nha:D2 | ABHA biometric authentication | not an NHCX exchange |
+| nha:D2 | ABHA biometric authentication | not an NHCX exchange; the hospital does it against ABDM and the user token arrives on the headers of its sends ([C2](../callbacks/C2-coverage-eligibility-check.md), C4 (in nhcx-preauth/payer), C5 (in nhcx-claim/payer)), optional for this payer, required by the live PMJAY scheme |
 | a CommunicationRequest from a hospital | `v1/communication/request` | logged and ignored by C9 (in nhcx-communication/payer) [REF](PAYERS.md#markers) |
 
 ## 5. Where the details are

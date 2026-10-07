@@ -6,6 +6,8 @@ Delivered in-process by [G8. Receive](../gateway/G8-receive.md) for NHCX route `
 #### C2D. DESCRIPTION
 The first question a hospital asks about a patient, and the only one it may ask several ways at once: `purpose` carries `validation` (is the cover in force), `benefits` (what does it allow), `discovery` (which cover does this person have, sent with no policy code) and `auth-requirements` (what does this payer want with these packages). One reply answers all the purposes sent.
 
+**The beneficiary's user token.** A hospital that has authenticated the beneficiary against their ABHA (ABDM's biometric service, not an NHCX exchange) may carry the user token on the request's protected headers, under the header its onboarding names, with `x-hcx-ben-abha-id` beside it; any hospital may send it to any payer. This payer reads it when present and records it on the delivery (the header name is a module setting, default `x-hcx-user-token`); it never refuses an eligibility check for lacking one. Under the `pmjay` profile the token, or the scheme's consent questionnaire on the later legs, is what proves presence ([PAYERS.md](../references/PAYERS.md)); the live scheme validates the token itself.
+
 **Who it is about.** Every handle the request carries is read the same way, and the enrolment is found by any of them: the ABHA number (14 digits, on the member or on the enrolment the link was made against), the mobile number (compared on its last ten digits, separators stripped), the member id (any identifier on the Patient that is neither ABHA nor mobile), and `Coverage.subscriberId` as the fallback when the typed identifiers said nothing (read as an ABHA when it is 14 digits, a mobile when it is ten, else a member id). The policy code on the Coverage is not a handle: a discovery sends `NONE`, and a hospital's spelling of a product is checked by [A2. Insurance Plan Answer](../apis/A2-insurance-plan-answer.md), not here.
 
 **Three answers.** The lookup goes for cover in force today first (active, today inside the period), then for the most recently ended cover the same person had, so the answer can say "lapsed on" rather than "never heard of you":
@@ -72,7 +74,7 @@ State changes: none on the registry. One [D31. audit_log](../database/D31-audit-
 
 #### C2U. USED BY
 - Screens: [S4. Members](../screens/S4-members.md), [S5. Subscriptions](../screens/S5-subscriptions.md)
-- APIs: [A1. Eligibility Answer](../apis/A1-eligibility-answer.md), [A11. Transaction Related](../apis/A11-txn-related.md), [A15. Case Exchange Log](../apis/A15-case-exchange.md), [A16. ABHA Policy Link](../apis/A16-abha-policy-link.md), [A18. Provider Driver](../apis/A18-provider-driver.md)
+- APIs: [A1. Eligibility Answer](../apis/A1-eligibility-answer.md), [A11. Transaction Related](../apis/A11-txn-related.md), [A15. Case Exchange Log](../apis/A15-case-exchange.md), [A16. ABHA Policy Link](../apis/A16-abha-policy-link.md), [A18. Provider Driver](../apis/A18-provider-driver.md), [A20. ABHA Create and Verify (ABDM M1)](../apis/A20-abha-m1.md)
 - Callbacks: [C1. Callback Door](C1-callback-door.md), [C4. Pre-auth Submit](C4-preauth-submit.md)
 - FHIR: [F1. Bundle](../fhir/F1-bundle.md), [F2. CoverageEligibilityRequest](../fhir/F2-coverage-eligibility-request.md), [F3. CoverageEligibilityResponse](../fhir/F3-coverage-eligibility-response.md)
 - Database: [D5. member](../database/D5-member.md), [D6. subscription](../database/D6-subscription.md), [D7. subscription_family_member](../database/D7-subscription-family-member.md)

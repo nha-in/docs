@@ -23,7 +23,7 @@ Unmarked statements are the protocol or this application's own design, and are f
 
 ## The profiles
 
-| Property | `pmjay` (PMJAY / Ayushman Bharat scheme payer) | `kyrocare` (the reference sandbox payer) | `generic` |
+| Property | `pmjay` (PMJAY scheme payer, a State Health Agency) | `kyrocare` (the reference sandbox payer) | `generic` |
 |---|---|---|---|
 | Package code system on the plan and the ruling | `https://payer.pmjay.nha.gov.in` | this payer's own procedure system ([F5. InsurancePlan](../fhir/F5-insuranceplan.md)) [REF](PAYERS.md#markers) | this payer's own procedure system |
 | Programme code expected on every claim line | `AB-PMJAY`; a line without it is still filed, with a timeline note [REF](PAYERS.md#markers) | none | none |
@@ -35,6 +35,7 @@ Unmarked statements are the protocol or this application's own design, and are f
 | Acknowledges a filing at once ([A3. Pre-auth Answer](../apis/A3-preauth-answer.md), A4. Claim Answer (in nhcx-claim/payer)) | yes, `queued` on 20 or 25 | yes | yes |
 | Answers a status enquiry ([A8. Status Answer](../apis/A8-status-answer.md)) | no: the live scheme refuses the Task; this desk answers anyway [REF](PAYERS.md#markers) | yes | yes |
 | Reprocess reason codes it takes | `claimrejected`, `partialpayment`, `rejectiondisputed` | the same | the same |
+| Proof of presence on a send (C2. Coverage Eligibility Check (in nhcx-coverage/payer), [C4. Pre-auth Submit](../callbacks/C4-preauth-submit.md), C5. Claim Submit (in nhcx-claim/payer)) | required by the live scheme: the beneficiary's biometric user token on the headers, else the Authentication Consent (pre-authorisation) or Discharge Consent (claim) QuestionnaireResponse; this desk records which it found | optional: a token is recorded when sent, nothing is required | optional, the same |
 
 The `kyrocare` profile is the reference desk's own: an IRDAI-style insurer that speaks the PMJAY dialect for plans and rulings and asks by CommunicationRequest. Replace it with the profile of the payer being built.
 

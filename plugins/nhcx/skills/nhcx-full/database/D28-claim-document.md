@@ -59,6 +59,6 @@ Common codes offered on every upload: `CD` Clinical document (the default), `HDS
 
 #### D28U. USED BY
 - Screens: [S9. Pre-authorisation](../screens/S9-preauthorisation.md), [S10. Communication](../screens/S10-communication.md), [S11. Claim Submission](../screens/S11-claim-submission.md)
-- APIs: [A7. Communication Reply](../apis/A7-communication-on-request.md), [A17. Claim State](../apis/A17-claim-state.md)
+- APIs: [A7. Communication Reply](../apis/A7-communication-on-request.md), [A17. Claim State](../apis/A17-claim-state.md), [A18. Biometric Authentication](../apis/A18-biometric-authentication.md)
 - FHIR: [F7. QuestionnaireResponse](../fhir/F7-questionnaireresponse.md), [F8. Claim](../fhir/F8-claim.md), [F10. Task (claim actions)](../fhir/F10-task-claim-actions.md), [F12. Communication](../fhir/F12-communication.md)
 - Database: [D9. claim](D9-claim.md), [D15. claim_auth_requirement](D15-claim-auth-requirement.md), [D17. claim_form_answer](D17-claim-form-answer.md), [D18. claim_preauth](D18-claim-preauth.md), [D19. claim_predetermination](D19-claim-predetermination.md), [D23. claim_query](D23-claim-query.md), [D29. claim_enquiry](D29-claim-enquiry.md)

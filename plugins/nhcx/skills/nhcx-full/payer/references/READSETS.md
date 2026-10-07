@@ -44,6 +44,7 @@ Always read, whatever the task: [CORE.md](CORE.md) (addresses and the exchange t
 | [A17](../apis/A17-participant-lookup.md) | Participant Lookup | [D1](../database/D1-payer.md), [D19](../database/D19-case.md), [G2](../gateway/G2-configuration.md), [G3](../gateway/G3-session-token.md), [G4](../gateway/G4-registry.md), [G7](../gateway/G7-send.md) |
 | [A18](../apis/A18-provider-driver.md) | Provider Driver | [G3](../gateway/G3-session-token.md) |
 | [A19](../apis/A19-sandbox-scenarios.md) | Sandbox Scenarios | [D5](../database/D5-member.md), [D6](../database/D6-subscription.md), [D12](../database/D12-policy.md), [D19](../database/D19-case.md), [D27](../database/D27-case-exchange-message.md), [D31](../database/D31-audit-log.md), [G7](../gateway/G7-send.md) |
+| [A20](../apis/A20-abha-m1.md) | ABHA Create and Verify (ABDM M1) | [D5](../database/D5-member.md), [G3](../gateway/G3-session-token.md) |
 
 ## Callbacks
 

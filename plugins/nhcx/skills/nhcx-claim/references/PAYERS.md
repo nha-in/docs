@@ -16,28 +16,34 @@ Unmarked statements are the protocol or this application's own design, and are f
 
 ## Choosing the adapter
 
-- A configuration row maps a payer's participant code to an adapter key: in the reference implementation, rows of kind `payer_adapter` in the code lists (D8. terminology (in nhcx-preauth)), with the participant code as `code`, the operator's name for the payer as `display` and the adapter key as `extra`.
+- A configuration row maps a payer's participant code to an adapter key: in the reference implementation, rows of kind `payer_adapter` in the code lists (D8. terminology (in nhcx-coverage)), with the participant code as `code`, the operator's name for the payer as `display` and the adapter key as `extra`.
 - The adapter is chosen by the policy's **payer id**. Messages are addressed to its **processing id** (the participant that handles the policy on NHCX), which can be a different code; see [CORE.md](CORE.md).
 - Codes are matched on their numeric part, so `1518`, `1518@hcx` and `1518@HCX` are the same payer.
-- A payer with no row gets the **generic** adapter: a plain NRCeS bundle with none of any scheme's extras. The claim screen names the adapter in use, so an unconfigured payer is visible.
+- A payer with no row is read by its **registered name** on the participant registry ([G4. Registry and Certificates](../gateway/G4-registry.md)): a name that starts with `SHA` (a State Health Agency, which runs the scheme) gets the `pmjay` adapter. The match ignores case and leading spaces. The name is learned from the payer list, or looked up once when the payer is first used and remembered; a lookup that fails is tried again after a few minutes.
+- Every other payer with no row gets the **generic** adapter: a plain NRCeS bundle with none of any scheme's extras. A new payer therefore needs no configuration, and is never given the scheme's dialect unless its name says it is a State Health Agency. The claim screen names the adapter in use, so an unconfigured payer is visible.
+- A configuration row always wins over the name.
 - A workflow id missing from an adapter's table falls back to the PMJAY table's value for that kind; a kind no table defines is refused ("No workflow id is defined for '<kind>'.").
 
 ## The adapters
 
-| Property | `pmjay` (PMJAY / Ayushman Bharat) | `kyrocare` (Sandbox Payer) | `generic` |
+| Property | `pmjay` (PMJAY, State Health Agency) | `kyrocare` (Sandbox Payer) | `generic` |
 |---|---|---|---|
 | Payer code system | `https://payer.pmjay.nha.gov.in` | `https://kyro.care/fhir` | `https://nhcx.abdm.gov.in` |
 | Programme code on every claim line | `AB-PMJAY` ("Ayushman Bharat Pradhan Mantri Jan Arogya Yojana (AB-PMJAY)") | none | none |
-| Rules on authorisation requirements (A2 `auth-requirements`, C3) | yes | yes | no: eligibility only |
+| Authorisation requirements check (A2 `auth-requirements`, C3) sent on its own before a pre-authorisation or an enhancement | yes | yes | no |
+| Authorisation requirements check sent by the operator ("Validate procedure set") | allowed, optional | allowed, optional | allowed, optional |
 | Document stages wanted at pre-authorisation | `pre` | `pre` | `pre` |
 | Publishes a package master (A3, C4) | yes | yes | yes |
 | Multiple-procedure factors (`Claim.item.factor`) | 1, 0.5, 0.25 (costliest in full, second at half, the rest at a quarter) | 1, 0.5, 0.25 | none |
 | How it asks for more (query mode) | `resubmit`: the query is a ClaimResponse on the case's own thread, answered by submitting the leg again under the query-response workflow id; a CommunicationRequest from it is a notification, acknowledged, never answered | `communication`: a CommunicationRequest on a thread of its own, answered with a Communication (A7) | `communication` |
 | Answers a status enquiry (A6 status) | no: it refuses the Task (PAYR-1018, or PAYR-1008 with a reason code); read the case's state from its desk instead | yes | yes |
+| Proof of presence (A18, S18) | required: the beneficiary's user token on the headers of the eligibility check, pre-authorisation and claim, else the Authentication Consent and Discharge Consent forms answered in the bundle; refused by name without either (PAYR-1256, PAYR-1363) | optional: the token is sent when the desk has one, nothing stands in otherwise | optional, the same |
 | Reprocess reason codes | `claimrejected`, `partialpayment`, `rejectiondisputed` | same | same |
 | Adjudication desk (sandbox testing, A14, A15) | the NHCX Payer Service | the sandbox payer portal's own API | none |
 
 The `kyrocare` adapter is the reference implementation's own sandbox payer portal; it speaks the PMJAY dialect for plans and rulings. Replace it with the payers the target actually deals with.
+
+The authorisation requirements check is not a PMJAY feature and is not required of anyone. The operator may ask any payer for a ruling; a payer with nothing to say answers without one. No pre-authorisation waits for a ruling, and the adapter only decides whether the check also goes out unasked before a send.
 
 ## Workflow ids
 
@@ -61,7 +67,26 @@ The `x-hcx-workflow_id` each send travels under, per adapter, and the `x-hcx-sta
 
 Eligibility checks (A2) and plan requests (A3) do not take their workflow id from this table: the reference implementation sends the case number [REF](PAYERS.md#markers). NHA publishes no eligibility workflow code; its sample sends `11` (Patient Admitted). Prefer `11` unless the payer is known to accept the case number. A status enquiry sends the leg's own correlation id, else 13 [REF](PAYERS.md#markers). Confirm both against the knowledge source (`workflow.yaml` in the package).
 
-The payer's replies carry workflow ids of their own (for example PMJAY acknowledges a pre-authorisation under 20 and decides under 21, a claim under 25 and 26, a cancel under PC02) [PAYER](PAYERS.md#markers). The callbacks never route on them; they match on correlation ids.
+The payer's replies carry workflow ids of their own [PAYER](PAYERS.md#markers). The callbacks never route on them; they match on correlation ids. They do read them for the **status**: when a reply's `x-hcx-workflow_id` is one of the payer-side codes below, that code says what the reply is, and the bundle is read for the amounts and words only. A workflow id outside the list (a case number echoed back, for example) says nothing, and the bundle decides as [F9. ClaimResponse](../fhir/F9-claimresponse.md) describes.
+
+| Reply workflow id | Leg status |
+|---|---|
+| 20, 25, 18, 251, 28, 29, 37 | `submitting`: received and under adjudication, an acknowledgement |
+| 21, 22, 26, 252 | `approved` (`partial` when the bundle says the approval is partial) |
+| 23, 231, 291, 253 | `rejected` |
+| 24, 241, 27, 254 | `queried` |
+
+An error wins over both: a reply with `x-hcx-status` `response.error`, a `ClaimResponse.error`, or an `error` outcome that is not a rejection is an error whatever its workflow id (see [F9. ClaimResponse](../fhir/F9-claimresponse.md)).
+
+## Use case
+
+Every pre-authorisation and claim send carries `x-hcx-use_case`, to every payer, whether or not the payer reads it. It is the same for all adapters.
+
+| Send (kind) | `x-hcx-use_case` |
+|---|---|
+| `preauth`, predetermination, `claim` | `New` |
+| `enhancement` | `Enhancement` |
+| `preauth_resubmit`, `preauth_query_response`, `enhancement_resubmit`, `claim_query_response`, `claim_resubmit` | `Resubmit` |
 
 ## Sandbox participant codes
 

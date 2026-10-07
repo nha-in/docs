@@ -49,6 +49,7 @@ Polling is the fallback when a callback is missed. Opening a case runs these for
 | [A15](A15-case-exchange.md) | Case Exchange Log | `GET cases/:id/exchange`, `GET cases/:id/exchange/:msgId`, `GET cases/:id/fhir`, `GET cases/:id/forms` | [A15-case-exchange.md](A15-case-exchange.md) |
 | [A16](A16-abha-policy-link.md) | ABHA Policy Link | `registry.abha_link(body)`, `registry.abha_delink(body)` | [A16-abha-policy-link.md](A16-abha-policy-link.md) |
 | [A17](A17-participant-lookup.md) | Participant Lookup | `registry.participant(code)` | [A17-participant-lookup.md](A17-participant-lookup.md) |
+| [A20](A20-abha-m1.md) | ABHA Create and Verify (ABDM M1) | `abdm.abha.enrol / login` | [A20-abha-m1.md](A20-abha-m1.md) |
 
 ## Sandbox testing
 

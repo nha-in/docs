@@ -10,6 +10,8 @@ Once linked, the claim-side bundles take the patient from this row, falling back
 - eligibility check: `given_name` (else the claim's `beneficiary_name`), `family_name`, `gender`, `birth_date`, `mrn` (as `patientRefId`, else `NA`), `district`, `state`, `phone`.
 - pre-auth and claim: `name`, `gender`, `birth_date`, `phone`.
 
+`abha_number` and `abha_address` are written by hand on the form, or, better, by the ABHA service through A19. ABHA Create and Verify (ABDM M1) (in nhcx-coverage): a verified or newly created ABHA, with the name, gender, date of birth and mobile the service holds filling what the form left blank. The ABHA number is unique across patients, so a second registration under the same ABHA is refused ("Another patient is already registered with that ABHA number").
+
 Lifecycle:
 - Created from the registration form (S14). `name` and `phone` are mandatory ("Name and mobile number are mandatory."). On create the application allocates `mrn` from the `mrn` counter as `MRN` plus five digits (`MRN00001`) [REF](../references/PAYERS.md#markers), stamps `created_at` and `updated_at`, and sets `managing_org_id` to the facility row. `gender` falls back to `unknown`; `country` is always written as `India`.
 - Updated from the same form: every form field is overwritten and `updated_at` is stamped. `mrn` and `managing_org_id` do not change.
@@ -50,10 +52,12 @@ Lifecycle:
 #### D3K. KEYS AND INDEXES
 - Primary key `id` (integer).
 - `managing_org_id` references [D1. organization](D1-organization.md) `id`.
-- Referenced by D4. encounter (in nhcx-preauth), D5. condition (in nhcx-preauth), D6. observation (in nhcx-preauth), D7. allergy (in nhcx-preauth) (`patient_id`, NOT NULL) and [D9. claim](D9-claim.md) (`patient_id`, nullable), and by EMR tables outside this spec.
+- Referenced by D4. encounter (in nhcx-coverage), D5. condition (in nhcx-coverage), D6. observation (in nhcx-coverage), D7. allergy (in nhcx-coverage) (`patient_id`, NOT NULL) and [D9. claim](D9-claim.md) (`patient_id`, nullable), and by EMR tables outside this spec.
 - Unique: `mrn`.
 - Indexes: `ix_patient_name (name)`, `ix_patient_phone (phone)`.
 
 #### D3U. USED BY
+- Screens: [S18. Beneficiary Verification](../screens/S18-beneficiary-verification.md)
+- APIs: [A18. Biometric Authentication](../apis/A18-biometric-authentication.md)
 - FHIR: [F15. Patient](../fhir/F15-patient.md)
-- Database: [D1. organization](D1-organization.md), [D9. claim](D9-claim.md), [D30. counter](D30-counter.md)
+- Database: [D1. organization](D1-organization.md), [D9. claim](D9-claim.md), [D30. counter](D30-counter.md), [D31. biometric_auth](D31-biometric-auth.md)

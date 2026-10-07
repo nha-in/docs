@@ -3,10 +3,10 @@ name: nhcx-payer-claim
 description: >-
   Build the NHCX (India's National Health Claims Exchange) payer-side claim leg into an existing payer system: filing the final bill on a pre-authorised case, LAMA, DAMA and death discharges, deciding the claim and drawing down cover, and reopening a decided claim on a reprocess or balance release, with the embedded NHCX gateway it needs. Use when a payer system must receive and decide cashless claims over NHCX.
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
-**Version 1.0.0**, built 2026-09-30, checked against NHA's NHCX package 1.0.0.
+**Version 1.0.1**, built 2026-10-06, checked against NHA's NHCX package 1.0.0.
 
 # READ FIRST: CORE
 Before anything else, read [references/CORE.md](references/CORE.md) and keep it in mind for the whole task. Its **Instructions** are binding: follow them strictly in every step and every file, and re-read them at the start of each step (L1 to L8). Its **Confusions** settle what easily mixed-up terms mean; when a word is ambiguous, CORE.md decides. It also holds the base URLs and, for every exchange, the route it arrives on, the bundle, the callback that takes it in, the answer and the workflow id the answer travels under.
@@ -77,7 +77,7 @@ Other skills built from the same source:
 - **nhcx-payment/payer**: disbursement, payment notices, their acknowledgement and payment enquiries.
 
 # VERSION
-This is nhcx-payer-claim version 1.0.0, built on 2026-09-30. Its protocol tables (workflow ids, statuses, base URLs) were checked against NHA's NHCX package 1.0.0 ([github.com/nha-in/nhcx-package](https://github.com/nha-in/nhcx-package)).
+This is nhcx-payer-claim version 1.0.1, built on 2026-10-06. Its protocol tables (workflow ids, statuses, base URLs) were checked against NHA's NHCX package 1.0.0 ([github.com/nha-in/nhcx-package](https://github.com/nha-in/nhcx-package)).
 
 - Record it when the work starts: `nhcx-plan/knowledge.json` and the `target` of `nhcx-plan/progress.json` carry `skill` and `skill_version`, and the header of `nhcx-plan/report.html` shows them.
 - If a later prompt runs with a different version of this skill than the one recorded, say so to the user before continuing, log it as a `corrected` entry naming both versions, and re-check the steps already done against the specs that changed.

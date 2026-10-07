@@ -1,7 +1,7 @@
 # D9. claim
 
 #### D9T. TABLE
-One row is one claim episode (case) around one selected policy, from eligibility to payment; primary key `id`; parent tables [D3. patient](D3-patient.md) and D4. encounter (in nhcx-preauth), both optional until the admission is linked.
+One row is one claim episode (case) around one selected policy, from eligibility to payment; primary key `id`; parent tables [D3. patient](D3-patient.md) and D4. encounter (in nhcx-coverage), both optional until the admission is linked.
 
 #### D9D. DESCRIPTION
 The case row. It holds the policy the operator selected, the coverage eligibility exchange and the payer's verdict flattened from it, the link to the admitted patient, the pre-authorisation draft header, and the case's stage. The legs of the case live in child tables: package master D10 (in nhcx-coverage), auth-requirements ruling D13 (in nhcx-coverage), lines [D16](D16-claim-line.md), pre-auth [D18](D18-claim-preauth.md), claim [D20](D20-claim-submission.md), payments [D21](D21-claim-payment.md), queries [D23](D23-claim-query.md) and the others that point here.
@@ -80,7 +80,7 @@ Other writes:
 | patient_photo | TEXT | null | base64 data or URL of the photo, from the search or the payer |
 | response_json | TEXT | null | JSON: the full on_check bundle, for audit |
 | patient_id | INTEGER | null | linked patient ([D3](D3-patient.md)) |
-| encounter_id | INTEGER | null | linked IPD admission (D4 (in nhcx-preauth)) |
+| encounter_id | INTEGER | null | linked IPD admission (D4 (in nhcx-coverage)) |
 | admission_date | TEXT | null | `YYYY-MM-DD`; the check's `servicedDate` and the pre-auth period start |
 | expected_discharge_date | TEXT | null | provisional discharge, `YYYY-MM-DD`; the pre-auth period end |
 | case_type | TEXT | null | `package` or `nonpackage` |
@@ -94,7 +94,7 @@ Other writes:
 #### D9K. KEYS AND INDEXES
 - Primary key `id` (integer).
 - `patient_id` references [D3. patient](D3-patient.md) `id`.
-- `encounter_id` references D4. encounter (in nhcx-preauth) `id`.
+- `encounter_id` references D4. encounter (in nhcx-coverage) `id`.
 - Referenced (`claim_id`, `ON DELETE CASCADE`) by D10 (in nhcx-coverage), D13 (in nhcx-coverage), [D16](D16-claim-line.md), [D17](D17-claim-form-answer.md), [D18](D18-claim-preauth.md), D19 (in nhcx-preauth), [D20](D20-claim-submission.md), [D21](D21-claim-payment.md), [D23](D23-claim-query.md), D24 (in nhcx-preauth), D25 (in nhcx-preauth), D26 (in nhcx-preauth), D27 (in nhcx-preauth), [D28](D28-claim-document.md), [D29](D29-claim-enquiry.md). D10 (in nhcx-coverage), D13 (in nhcx-coverage), [D18](D18-claim-preauth.md) and [D20](D20-claim-submission.md) allow one row per claim.
 - Unique: `claim_no`.
 - Index: `ix_claim_status (status, id DESC)`.

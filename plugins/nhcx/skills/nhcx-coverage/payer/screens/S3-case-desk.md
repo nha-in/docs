@@ -111,7 +111,7 @@ Data: D24. case_document_file (in nhcx-preauth/payer)
 
 "NHCX Exchange", with the hospital's participant code beside the title. Shown only for a case that came off the exchange (`exchange` on the case, [D19. case](../database/D19-case.md)).
 
-Threads, one row each with the correlation id and a chip: "Pre-auth thread" (`answered` once the verdict went, else `awaiting verdict`), "Claim thread" (the same), "Query thread" (`awaiting reply`) while a query is open. While the case is `queried` and no query transaction is recorded, an amber line reads "The query has not reached the gateway. Send it so the hospital knows what is missing." and the header button reads "Send query"; otherwise "Resend query". Both post `query/resend` (A5. Query Request (in nhcx-communication/payer)) and toast "Query sent to `<hospital code>`".
+Threads, one row each with the correlation id (copied on a click) and a chip; a reprocess thread is listed too while one is open ("Reprocess thread", `awaiting verdict`): "Pre-auth thread" (`answered` once the verdict went, else `awaiting verdict`), "Claim thread" (the same), "Query thread" (`awaiting reply`) while a query is open. While the case is `queried` and no query transaction is recorded, an amber line reads "The query has not reached the gateway. Send it so the hospital knows what is missing." and the header button reads "Send query"; otherwise "Resend query". Both post `query/resend` (A5. Query Request (in nhcx-communication/payer)) and toast "Query sent to `<hospital code>`".
 
 Messages ([A15. Case Exchange Log](../apis/A15-case-exchange.md)), oldest first, each with a direction arrow (in blue, out green), a label, the time, the summary, and "from `<code>` · `<correlation>` · txn `<id>`" or "to ...":
 

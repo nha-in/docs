@@ -44,5 +44,6 @@ Lifecycle:
 
 #### D12U. USED BY
 - APIs: [A17. Claim State](../apis/A17-claim-state.md)
+- FHIR: [F7. QuestionnaireResponse](../fhir/F7-questionnaireresponse.md)
 - Database: [D10. claim_plan](D10-claim-plan.md), [D11. claim_plan_benefit](D11-claim-plan-benefit.md), [D15. claim_auth_requirement](D15-claim-auth-requirement.md)
 - Tests: [T13. PMJAY Eligibility, Package Master and Ruling](../tests/T13-pmjay-eligibility-and-package-master.md)

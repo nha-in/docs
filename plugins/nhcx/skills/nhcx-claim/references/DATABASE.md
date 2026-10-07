@@ -8,13 +8,13 @@ Every table behind the claim, patient and practitioner flows, in one list. Each 
 |---|---|---|---|---|---|---|
 | [D1](../database/D1-organization.md) | organization | The healthcare facility this installation represents. | none | [A12](../apis/A12-txn-fhir.md), [A14](../apis/A14-adjudicator-user-role.md), [A15](../apis/A15-adjudicator-process-case.md), [A16](../apis/A16-gateway-token.md) | none | [F17](../fhir/F17-organization.md), [F19](../fhir/F19-other-resources.md) |
 | [D2](../database/D2-practitioner.md) | practitioner | Doctor or staff member of the facility. | none | none | none | [F8](../fhir/F8-claim.md), [F16](../fhir/F16-practitioner.md) |
-| [D3](../database/D3-patient.md) | patient | Registered patient. | none | none | none | [F15](../fhir/F15-patient.md) |
+| [D3](../database/D3-patient.md) | patient | Registered patient. | [S18](../screens/S18-beneficiary-verification.md) | [A18](../apis/A18-biometric-authentication.md) | none | [F15](../fhir/F15-patient.md) |
 
 ## Claim
 
 | # | Table | What one row is | Screens | APIs | Callbacks | FHIR |
 |---|---|---|---|---|---|---|
-| [D9](../database/D9-claim.md) | claim | Claim episode (case) around one selected policy, from eligibility to payment. | [S5](../screens/S5-claim-master.md), [S6](../screens/S6-claim-detail.md), [S11](../screens/S11-claim-submission.md) | [A5](../apis/A5-claim-submit.md), [A6](../apis/A6-task-submit.md), [A10](../apis/A10-txn-related.md), [A11](../apis/A11-txn-dispatch.md), [A13](../apis/A13-txn-list.md), [A14](../apis/A14-adjudicator-user-role.md), [A15](../apis/A15-adjudicator-process-case.md), [A17](../apis/A17-claim-state.md) | [C1](../callbacks/C1-callback-door.md), [C6](../callbacks/C6-claim-on-submit.md), [C8](../callbacks/C8-enquiry-on-submit.md) | [F8](../fhir/F8-claim.md), [F10](../fhir/F10-task-claim-actions.md), [F15](../fhir/F15-patient.md), [F17](../fhir/F17-organization.md), [F18](../fhir/F18-coverage.md), [F19](../fhir/F19-other-resources.md) |
+| [D9](../database/D9-claim.md) | claim | Claim episode (case) around one selected policy, from eligibility to payment. | [S5](../screens/S5-claim-master.md), [S6](../screens/S6-claim-detail.md), [S11](../screens/S11-claim-submission.md) | [A5](../apis/A5-claim-submit.md), [A6](../apis/A6-task-submit.md), [A10](../apis/A10-txn-related.md), [A11](../apis/A11-txn-dispatch.md), [A13](../apis/A13-txn-list.md), [A14](../apis/A14-adjudicator-user-role.md), [A15](../apis/A15-adjudicator-process-case.md), [A17](../apis/A17-claim-state.md), [A18](../apis/A18-biometric-authentication.md) | [C1](../callbacks/C1-callback-door.md), [C6](../callbacks/C6-claim-on-submit.md), [C8](../callbacks/C8-enquiry-on-submit.md) | [F8](../fhir/F8-claim.md), [F10](../fhir/F10-task-claim-actions.md), [F15](../fhir/F15-patient.md), [F17](../fhir/F17-organization.md), [F18](../fhir/F18-coverage.md), [F19](../fhir/F19-other-resources.md) |
 
 ## Package master and ruling
 
@@ -50,8 +50,9 @@ Every table behind the claim, patient and practitioner flows, in one list. Each 
 
 | # | Table | What one row is | Screens | APIs | Callbacks | FHIR |
 |---|---|---|---|---|---|---|
-| [D28](../database/D28-claim-document.md) | claim_document | Supporting file (PDF or image) attached to a claim for one leg, stored inline with the payer requirement it answers. Primary key `id`. Parent table: `claim` (D9). | [S11](../screens/S11-claim-submission.md) | [A17](../apis/A17-claim-state.md) | none | [F7](../fhir/F7-questionnaireresponse.md), [F8](../fhir/F8-claim.md), [F10](../fhir/F10-task-claim-actions.md) |
+| [D28](../database/D28-claim-document.md) | claim_document | Supporting file (PDF or image) attached to a claim for one leg, stored inline with the payer requirement it answers. Primary key `id`. Parent table: `claim` (D9). | [S11](../screens/S11-claim-submission.md) | [A17](../apis/A17-claim-state.md), [A18](../apis/A18-biometric-authentication.md) | none | [F7](../fhir/F7-questionnaireresponse.md), [F8](../fhir/F8-claim.md), [F10](../fhir/F10-task-claim-actions.md) |
 | [D29](../database/D29-claim-enquiry.md) | claim_enquiry | Small Task exchange a claim starts beside its main legs: a status enquiry, a reprocess request or a balance release request. Primary key `id`. Parent table: `claim` (D9), many rows per claim. | [S6](../screens/S6-claim-detail.md), [S11](../screens/S11-claim-submission.md) | [A6](../apis/A6-task-submit.md), [A10](../apis/A10-txn-related.md), [A11](../apis/A11-txn-dispatch.md), [A13](../apis/A13-txn-list.md), [A17](../apis/A17-claim-state.md) | [C1](../callbacks/C1-callback-door.md), [C8](../callbacks/C8-enquiry-on-submit.md) | [F10](../fhir/F10-task-claim-actions.md) |
+| [D31](../database/D31-biometric-auth.md) | biometric_auth | One biometric authentication of a beneficiary against their ABHA (fingerprint, iris or face), for one payer at one stage of the case, holding the user token that rides on the exchange and the refresh token that renews it. Primary key `id`. Parent tables: `patient` (D3), `claim` (D9, optional). | [S18](../screens/S18-beneficiary-verification.md) | [A18](../apis/A18-biometric-authentication.md) | none | none |
 
 ## Numbering
 

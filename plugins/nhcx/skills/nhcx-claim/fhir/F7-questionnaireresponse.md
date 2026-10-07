@@ -61,5 +61,5 @@ Pointer on the Claim (F8):
 | `supportingInfo[].valueReference.display` | D12 `claim_plan_form.title`, else `Questionnaire` | |
 
 #### F7U. USED BY
-- APIs: [A5. Claim Submit](../apis/A5-claim-submit.md)
+- APIs: [A5. Claim Submit](../apis/A5-claim-submit.md), [A18. Biometric Authentication](../apis/A18-biometric-authentication.md)
 - FHIR: [F8. Claim](F8-claim.md)

@@ -66,5 +66,5 @@ Reads:
 
 #### D11U. USED BY
 - APIs: [A17. Claim State](../apis/A17-claim-state.md)
-- Database: [D10. claim_plan](D10-claim-plan.md), [D12. claim_plan_form](D12-claim-plan-form.md)
+- Database: [D10. claim_plan](D10-claim-plan.md), [D12. claim_plan_form](D12-claim-plan-form.md), [D28. claim_document](D28-claim-document.md)
 - Tests: [T13. PMJAY Eligibility, Package Master and Ruling](../tests/T13-pmjay-eligibility-and-package-master.md)

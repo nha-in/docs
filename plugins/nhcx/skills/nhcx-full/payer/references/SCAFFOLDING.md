@@ -107,6 +107,7 @@ One file per API. Each follows its spec's pseudocode (AnP): the refusals with th
 | `disburse` | A14 | Raise, complete (one step or later) and fail a payment; settle the case; triggers A6. | S10 |
 | `exchange` | A15 | The exchange log, the forms and the FHIR preview of a case, for drivers and tests. | S3, S11, A15 route |
 | `abha` | A16 | Link and delink through G10; every attempt recorded; local when no gateway. | S5 |
+| `abha_m1` | A20 | Create a member's ABHA from an Aadhaar OTP, or verify one by OTP, through ABDM's ABHA service (the calls from the MCP's M1 catalogue); seals the identifiers and keeps the flow's tokens for its few minutes. | S4 |
 | `participants` | A17 | Name participant codes through G4. | S12, S2 |
 | `provider_driver` | A18 | The sandbox provider EMR driven by token login, for L8. Off in production. | L8 |
 | `scenarios` | A19 | Member-id presets and fault injection, sandbox only. Off in production. | S3, L8 |

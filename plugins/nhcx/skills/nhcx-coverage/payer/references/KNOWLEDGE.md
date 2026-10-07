@@ -45,6 +45,21 @@ What the package holds:
 
 Links inside the package's `docs/README.md` are absolute paths from the machine that built it. Follow them by their folder and file name under `nhcx-plan/knowledge/nhcx-package/docs/`, not as written.
 
+## ABHA, ABDM's M1
+
+A member's ABHA is created or verified through ABDM's ABHA service ([A20. ABHA Create and Verify (ABDM M1)](../apis/A20-abha-m1.md)), and that is ABDM's HIE-CM milestone M1, not NHCX. The same MCP server serves it (the server is published as `nhcx-docs` and as `abdm-docs`; both answer `catalogue_info`), and it is the only source: the NHCX package has no M1 at all. Read M1 like this:
+
+| Need | Call |
+|---|---|
+| The router for the milestone | the `abdm-m1` prompt |
+| The flows this skill builds | `get hiecm.flow.m1-create-abha-aadhaar-otp`, `get hiecm.flow.m1-login-by-mobile` |
+| Every M1 flow, concept and endpoint | `search` with `milestone: M1` and a `type` |
+| One call's exact body, headers and responses | `get <operation id>`, the ids listed in A20 |
+| The encryption certificate and what it seals | `get m1_get_v3_profile_public_certificate` |
+| Why a call failed | `decode_error` with the `ABDM-` code; the troubleshooting atoms `everything-returns-401` and `otp-never-arrives` |
+
+Without the MCP, open the same atoms on the ABDM developer portal at the `doc_url` an earlier `search` returned, and record `"m1": "portal"` in `knowledge.json`.
+
 ## Which lookup for which question
 
 | Question | MCP | Package |

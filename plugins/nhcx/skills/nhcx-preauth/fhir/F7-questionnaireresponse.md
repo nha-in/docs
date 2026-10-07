@@ -61,5 +61,6 @@ Pointer on the Claim (F8):
 | `supportingInfo[].valueReference.display` | D12 `claim_plan_form.title`, else `Questionnaire` | |
 
 #### F7U. USED BY
-- APIs: [A4. Pre-auth Submit](../apis/A4-preauth-submit.md)
+- APIs: [A4. Pre-auth Submit](../apis/A4-preauth-submit.md), [A18. Biometric Authentication](../apis/A18-biometric-authentication.md)
 - FHIR: [F6. Questionnaire](F6-questionnaire.md), [F8. Claim](F8-claim.md)
+- Tests: [T19. PMJAY Beneficiary Verification and ABHA](../tests/T19-pmjay-biometric-and-abha.md)
