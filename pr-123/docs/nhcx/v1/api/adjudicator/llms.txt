@@ -1,0 +1,12 @@
+# ADJUDICATOR
+
+> Every page of the ADJUDICATOR module of the ABDM Developer Portal, fetchable as markdown.
+
+## Pages
+
+- [PMJAY adjudicator](https://nha-in.github.io/docs/pr-123/docs/nhcx/v1/api/adjudicator): The PMJAY adjudicator calls on NHCX: what each one does, the hosts they go to, and the guides that use them.
+- [Provider: make the dummy payer send a payment notice](https://nha-in.github.io/docs/pr-123/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-paymentnotice-init): Makes the sandbox dummy payer send a payment notice to the provider named, on /v1/paymentnotice/request.
+- [Adjudicator: act on a case](https://nha-in.github.io/docs/pr-123/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-pmjay-hcx-nhcxpayerservice-wrapper-process-case): Approves, rejects, queries, forwards or pends a PMJAY case in the State Health Agency's Transaction Management System, as the role that currently holds it.
+- [Adjudicator: get the user role for a case](https://nha-in.github.io/docs/pr-123/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-pmjay-sbxhcx-nhcxpayerservice-v1-get-user-role): Asks the NHCX Payer Service which role in the State Health Agency's Transaction Management System holds a PMJAY case, and so which actions may be taken on...
+- [Provider: make the dummy payer act on a request](https://nha-in.github.io/docs/pr-123/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-process-request): Makes the sandbox dummy payer, participant 1000003538@hcx, approve, reject or query a pre-authorisation or claim you have submitted, by correlation ID.
+- [Update ABHA number](https://nha-in.github.io/docs/pr-123/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-update-abhanumber): Replaces a placeholder (dummy) ABHA number with the beneficiary's real ABHA number in the ABHA_AUTH_TRANSACTION table.

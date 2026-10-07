@@ -1,0 +1,31 @@
+# CONSULTATION
+
+> Every page of the CONSULTATION module of the ABDM Developer Portal, fetchable as markdown.
+
+## Pages
+
+- [Physical Consultation](https://nha-in.github.io/docs/pr-123/docs/uhi/v1/api/consultation): Physical Consultation's calls from init to on_message, direct between EUA and HSPA, and the four audit copies the HSPA sends the UHI Gateway.
+- [Search through the Gateway](https://nha-in.github.io/docs/pr-123/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-discovery/01-uhi-network-gateway-search): Search for services by intent
+- [Search an HSPA](https://nha-in.github.io/docs/pr-123/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-discovery/02-uhi-network-search): Search for services by intent * First search coming from UHI gateway will include header(X-Gateway-Authorisation) Second search will be a peer to peer...
+- [Send a catalog through the Gateway](https://nha-in.github.io/docs/pr-123/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-discovery/03-uhi-network-gateway-on-search): Accepter for all the on_search response from the HSPAs
+- [Send a catalog to the EUA](https://nha-in.github.io/docs/pr-123/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-discovery/04-uhi-network-on-search): Sends catalogue.
+- [Search the chosen HSPA for slots](https://nha-in.github.io/docs/pr-123/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-discovery/05-uhi-network-search): Search for services by intent * First search coming from UHI gateway will include header(X-Gateway-Authorisation) Second search will be a peer to peer...
+- [Send the doctor's slots](https://nha-in.github.io/docs/pr-123/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-discovery/06-uhi-network-on-search): Sends catalogue.
+- [Request the order status](https://nha-in.github.io/docs/pr-123/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-fulfilment/01-uhi-consultation-status): Requests current status of the order.
+- [Send the order status](https://nha-in.github.io/docs/pr-123/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-fulfilment/02-uhi-consultation-on-status): Send order object's current status
+- [Copy on_status to the Gateway audit](https://nha-in.github.io/docs/pr-123/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-fulfilment/03-uhi-consultation-on-status-audit): Accepter for all the on_status_audit response from the HSPAs
+- [Send an order update to the HSPA](https://nha-in.github.io/docs/pr-123/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-fulfilment/04-uhi-consultation-on-update-to-hspa): Order status update API between consumer and provider *(Both HSPA and EUA will be consuming the same on_update API)*
+- [Send an order update to the EUA](https://nha-in.github.io/docs/pr-123/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-fulfilment/05-uhi-consultation-on-update-to-eua): Order status update API between consumer and provider *(Both HSPA and EUA will be consuming the same on_update API)*
+- [Copy on_update to the Gateway audit](https://nha-in.github.io/docs/pr-123/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-fulfilment/06-uhi-consultation-on-update-audit): Accepter for all the on_update_audit response from the HSPAs
+- [Send a quoted draft order](https://nha-in.github.io/docs/pr-123/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-on-select): Send draft order object with quoted price for selected items Currently not being used for doctor search will be used in vaccination search***
+- [Initialise an order](https://nha-in.github.io/docs/pr-123/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-order/01-uhi-consultation-init): Initialise an order by providing billing and/or shipping details
+- [Send the order with its quote and terms](https://nha-in.github.io/docs/pr-123/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-order/02-uhi-consultation-on-init): Send order object with payment details updated
+- [Confirm the order](https://nha-in.github.io/docs/pr-123/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-order/03-uhi-consultation-confirm): Confirms the order by agreeing to the fullfillment terms
+- [Send the confirmed order and PIN](https://nha-in.github.io/docs/pr-123/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-order/04-uhi-consultation-on-confirm): Send active order object
+- [Copy on_confirm to the Gateway audit](https://nha-in.github.io/docs/pr-123/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-order/05-uhi-consultation-on-confirm-audit): Accepter for all the on_confirm_audit response from the HSPAs
+- [Cancel the order](https://nha-in.github.io/docs/pr-123/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-post-fulfilment/01-uhi-consultation-cancel): Sends the cancellation request to other party.
+- [Send the cancelled order](https://nha-in.github.io/docs/pr-123/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-post-fulfilment/02-uhi-consultation-on-cancel): Receives the cancellation request from other party.
+- [Copy on_cancel to the Gateway audit](https://nha-in.github.io/docs/pr-123/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-post-fulfilment/03-uhi-consultation-on-cancel-audit): Accepter for all the on_cancel_audit response from the HSPAs
+- [Send a message to the HSPA](https://nha-in.github.io/docs/pr-123/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-post-fulfilment/04-uhi-consultation-on-message-to-hspa): Inter-operable communication API between consumer and provider *(Both HSPA and EUA will be consuming the same on_message API)*
+- [Send a message to the EUA](https://nha-in.github.io/docs/pr-123/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-post-fulfilment/05-uhi-consultation-on-message-to-eua): Inter-operable communication API between consumer and provider *(Both HSPA and EUA will be consuming the same on_message API)*
+- [Select items and build an order](https://nha-in.github.io/docs/pr-123/docs/uhi/v1/api/consultation/endpoints/uhi-consultation-select): Select items from the catalogue and build your order Currently not being used for doctor search will be used in vaccination search***
