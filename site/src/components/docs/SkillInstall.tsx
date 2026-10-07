@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import useBaseUrl from '@docusaurus/useBaseUrl';
-import {Check, Copy, Download, Sparkles, SquareArrowOutUpRight} from 'lucide-react';
+import {Check, Copy, Download, Sparkles} from 'lucide-react';
 import {cn} from '@site/src/lib/utils';
 import manifest from '@site/src/data/skills.json';
 import {AGENTS, AgentId} from './agents';
+import AgentLogo from './AgentLogo';
 
 export type SkillInstallProps = {
   /** The skill's folder name, for example "abdm-m1". Keys into skills.json. */
@@ -325,6 +326,7 @@ export default function SkillInstall({slug, note}: SkillInstallProps): React.Rea
               option.id === agent.id && 'skill-install__target--active',
             )}
             onClick={() => setAgent(option)}>
+            <AgentLogo id={option.id} />
             {option.label}
           </button>
         ))}
@@ -336,7 +338,7 @@ export default function SkillInstall({slug, note}: SkillInstallProps): React.Rea
         <a
           className="skill-launch"
           href={target.link(target.command(base, slug, entry), entry.module)}>
-          <SquareArrowOutUpRight className="size-3.5" aria-hidden="true" />
+          <AgentLogo id={agent.id} />
           Open in {agent.label}
         </a>
       )}
