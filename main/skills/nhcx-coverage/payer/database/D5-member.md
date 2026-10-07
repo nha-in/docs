@@ -41,7 +41,7 @@ Ownership [SANDBOX](../references/PAYERS.md#markers): `owner_client_id` names th
 
 #### D5U. USED BY
 - Screens: [S1. Overview](../screens/S1-overview.md), [S4. Members](../screens/S4-members.md)
-- APIs: [A1. Eligibility Answer](../apis/A1-eligibility-answer.md), [A16. ABHA Policy Link](../apis/A16-abha-policy-link.md)
+- APIs: [A1. Eligibility Answer](../apis/A1-eligibility-answer.md), [A16. ABHA Policy Link](../apis/A16-abha-policy-link.md), [A20. ABHA Create and Verify (ABDM M1)](../apis/A20-abha-m1.md)
 - Callbacks: [C2. Coverage Eligibility Check](../callbacks/C2-coverage-eligibility-check.md)
 - FHIR: [F2. CoverageEligibilityRequest](../fhir/F2-coverage-eligibility-request.md), [F3. CoverageEligibilityResponse](../fhir/F3-coverage-eligibility-response.md), [F15. Patient](../fhir/F15-patient.md)
 - Database: [D6. subscription](D6-subscription.md), [D19. case](D19-case.md), [D32. id_sequence](D32-id-sequence.md)

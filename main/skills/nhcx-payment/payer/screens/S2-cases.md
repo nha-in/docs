@@ -37,7 +37,7 @@ The list of every case this payer holds, whichever way it arrived: filed by a ho
 
 **Case cards**, one per case:
 
-- The claim number (monospace), and on the right the stage label (Pre-Auth Stage, Final Claim, Payment Queue, or the stage word) coloured settled green, rejected red, otherwise purple, with the adjudication status under it.
+- The claim number (monospace) with the correlation id of the thread the case arrived on under it (the claim's once there is one, the pre-authorisation's until then; copied on a click), and on the right the stage label (Pre-Auth Stage, Final Claim, Payment Queue, or the stage word) coloured settled green, rejected red, otherwise purple, with the adjudication status under it.
 - The patient's name with a "Minor" flag when `patient.is_minor`, then "`<age>` Yrs (`<gender>`) | Member: `<member id>`".
 - The hospital name and city, then "Admission: `<date>` | Stay: `<n>` Days (`<discharge type or Normal Discharge>`)".
 - "Claimed / Approved": `₹` claimed, and the approved amount in brackets, green.

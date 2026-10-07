@@ -22,7 +22,8 @@ The IRDAI tests run against the IRDAI test payer and decide its side through the
 | # | Test | Payer | File |
 |---|---|---|---|
 | [T13](T13-pmjay-eligibility-and-package-master.md) | PMJAY Eligibility, Package Master and Ruling | PMJAY test payer | [T13-pmjay-eligibility-and-package-master.md](T13-pmjay-eligibility-and-package-master.md) |
+| [T19](T19-pmjay-biometric-and-abha.md) | PMJAY Beneficiary Verification and ABHA | PMJAY test payer | [T19-pmjay-biometric-and-abha.md](T19-pmjay-biometric-and-abha.md) |
 
 ## Order
 
-T1 and T2 first: nothing runs without the configuration and the two runners. Then the IRDAI tests in order, T3 to T12, then the PMJAY tests, T13 to T18. Within a payer the order is the claim's own: eligibility and plan, pre-authorisation, the payer's questions, claim, payment, and what follows a decision. Each test opens its own claim, so a failure in one does not leave the next without a starting point.
+T1 and T2 first: nothing runs without the configuration and the two runners. Then the IRDAI tests in order, T3 to T12, then the PMJAY tests, T13 to T19. Within a payer the order is the claim's own: eligibility and plan, pre-authorisation, the payer's questions, claim, payment, and what follows a decision. Each test opens its own claim, so a failure in one does not leave the next without a starting point.

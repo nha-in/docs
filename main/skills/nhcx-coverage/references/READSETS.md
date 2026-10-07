@@ -13,6 +13,11 @@ Always read, whatever the task: [CORE.md](CORE.md) (addresses and the exchange t
 | [S3](../screens/S3-policy-discovery.md) | Policy Discovery | [D9](../database/D9-claim.md) |
 | [S5](../screens/S5-claim-master.md) | Claim Master | nothing else |
 | [S6](../screens/S6-claim-detail.md) | Claim Detail | nothing else |
+| [S13](../screens/S13-patient-list.md) | Patient List | [D3](../database/D3-patient.md) |
+| [S14](../screens/S14-patient-registration-form.md) | Patient Registration Form | [D3](../database/D3-patient.md) |
+| [S15](../screens/S15-patient-detail.md) | Patient Detail | [D3](../database/D3-patient.md), [D4](../database/D4-encounter.md), [D5](../database/D5-condition.md), [D6](../database/D6-observation.md), [D7](../database/D7-allergy.md), [D8](../database/D8-terminology.md) |
+| [S17](../screens/S17-beneficiary-discovery.md) | Beneficiary Discovery | [F2](../fhir/F2-coverage-eligibility-request.md), [F15](../fhir/F15-patient.md), [D9](../database/D9-claim.md) |
+| [S18](../screens/S18-beneficiary-verification.md) | Beneficiary Verification | [D3](../database/D3-patient.md), [D31](../database/D31-biometric-auth.md) |
 
 ## APIs
 
@@ -25,6 +30,8 @@ Always read, whatever the task: [CORE.md](CORE.md) (addresses and the exchange t
 | [A12](../apis/A12-txn-fhir.md) | Transaction FHIR | nothing else |
 | [A13](../apis/A13-txn-list.md) | Transaction List | nothing else |
 | [A17](../apis/A17-claim-state.md) | Claim State | nothing else |
+| [A18](../apis/A18-biometric-authentication.md) | Biometric Authentication | [F7](../fhir/F7-questionnaireresponse.md), [D3](../database/D3-patient.md), [D9](../database/D9-claim.md), [D28](../database/D28-claim-document.md), [D31](../database/D31-biometric-auth.md), [G3](../gateway/G3-session-token.md) |
+| [A19](../apis/A19-abha-m1.md) | ABHA Create and Verify (ABDM M1) | [D3](../database/D3-patient.md), [G3](../gateway/G3-session-token.md) |
 
 ## Callbacks
 

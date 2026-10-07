@@ -1,7 +1,7 @@
 # D9. claim
 
 #### D9T. TABLE
-One row is one claim episode (case) around one selected policy, from eligibility to payment; primary key `id`; parent tables [D3. patient](D3-patient.md) and D4. encounter (in nhcx-preauth), both optional until the admission is linked.
+One row is one claim episode (case) around one selected policy, from eligibility to payment; primary key `id`; parent tables [D3. patient](D3-patient.md) and [D4. encounter](D4-encounter.md), both optional until the admission is linked.
 
 #### D9D. DESCRIPTION
 The case row. It holds the policy the operator selected, the coverage eligibility exchange and the payer's verdict flattened from it, the link to the admitted patient, the pre-authorisation draft header, and the case's stage. The legs of the case live in child tables: package master [D10](D10-claim-plan.md), auth-requirements ruling [D13](D13-claim-auth.md), lines D16 (in nhcx-preauth), pre-auth D18 (in nhcx-preauth), claim D20 (in nhcx-preauth), payments D21 (in nhcx-claim), queries D23 (in nhcx-preauth) and the others that point here.
@@ -80,7 +80,7 @@ Other writes:
 | patient_photo | TEXT | null | base64 data or URL of the photo, from the search or the payer |
 | response_json | TEXT | null | JSON: the full on_check bundle, for audit |
 | patient_id | INTEGER | null | linked patient ([D3](D3-patient.md)) |
-| encounter_id | INTEGER | null | linked IPD admission (D4 (in nhcx-preauth)) |
+| encounter_id | INTEGER | null | linked IPD admission ([D4](D4-encounter.md)) |
 | admission_date | TEXT | null | `YYYY-MM-DD`; the check's `servicedDate` and the pre-auth period start |
 | expected_discharge_date | TEXT | null | provisional discharge, `YYYY-MM-DD`; the pre-auth period end |
 | case_type | TEXT | null | `package` or `nonpackage` |
@@ -94,14 +94,14 @@ Other writes:
 #### D9K. KEYS AND INDEXES
 - Primary key `id` (integer).
 - `patient_id` references [D3. patient](D3-patient.md) `id`.
-- `encounter_id` references D4. encounter (in nhcx-preauth) `id`.
-- Referenced (`claim_id`, `ON DELETE CASCADE`) by [D10](D10-claim-plan.md), [D13](D13-claim-auth.md), D16 (in nhcx-preauth), D17 (in nhcx-preauth), D18 (in nhcx-preauth), D19 (in nhcx-preauth), D20 (in nhcx-preauth), D21 (in nhcx-claim), D23 (in nhcx-preauth), D24 (in nhcx-preauth), D25 (in nhcx-preauth), D26 (in nhcx-preauth), D27 (in nhcx-preauth), D28 (in nhcx-preauth), D29 (in nhcx-preauth). [D10](D10-claim-plan.md), [D13](D13-claim-auth.md), D18 (in nhcx-preauth) and D20 (in nhcx-preauth) allow one row per claim.
+- `encounter_id` references [D4. encounter](D4-encounter.md) `id`.
+- Referenced (`claim_id`, `ON DELETE CASCADE`) by [D10](D10-claim-plan.md), [D13](D13-claim-auth.md), D16 (in nhcx-preauth), D17 (in nhcx-preauth), D18 (in nhcx-preauth), D19 (in nhcx-preauth), D20 (in nhcx-preauth), D21 (in nhcx-claim), D23 (in nhcx-preauth), D24 (in nhcx-preauth), D25 (in nhcx-preauth), D26 (in nhcx-preauth), D27 (in nhcx-preauth), [D28](D28-claim-document.md), D29 (in nhcx-preauth). [D10](D10-claim-plan.md), [D13](D13-claim-auth.md), D18 (in nhcx-preauth) and D20 (in nhcx-preauth) allow one row per claim.
 - Unique: `claim_no`.
 - Index: `ix_claim_status (status, id DESC)`.
 
 #### D9U. USED BY
-- Screens: [S2. Select Policy](../screens/S2-select-policy.md), [S3. Policy Discovery](../screens/S3-policy-discovery.md), [S5. Claim Master](../screens/S5-claim-master.md), [S6. Claim Detail](../screens/S6-claim-detail.md)
-- APIs: [A1. Policy Search](../apis/A1-policy-search.md), [A2. Coverage Eligibility Check](../apis/A2-coverage-eligibility-check.md), [A10. Transaction Related](../apis/A10-txn-related.md), [A11. Transaction Dispatch](../apis/A11-txn-dispatch.md), [A13. Transaction List](../apis/A13-txn-list.md), [A17. Claim State](../apis/A17-claim-state.md)
+- Screens: [S2. Select Policy](../screens/S2-select-policy.md), [S3. Policy Discovery](../screens/S3-policy-discovery.md), [S5. Claim Master](../screens/S5-claim-master.md), [S6. Claim Detail](../screens/S6-claim-detail.md), [S17. Beneficiary Discovery](../screens/S17-beneficiary-discovery.md)
+- APIs: [A1. Policy Search](../apis/A1-policy-search.md), [A2. Coverage Eligibility Check](../apis/A2-coverage-eligibility-check.md), [A10. Transaction Related](../apis/A10-txn-related.md), [A11. Transaction Dispatch](../apis/A11-txn-dispatch.md), [A13. Transaction List](../apis/A13-txn-list.md), [A17. Claim State](../apis/A17-claim-state.md), [A18. Biometric Authentication](../apis/A18-biometric-authentication.md)
 - Callbacks: [C1. Callback Door](../callbacks/C1-callback-door.md), [C2. Coverage Eligibility Verdict](../callbacks/C2-coverage-eligibility-on-check.md)
 - FHIR: [F2. CoverageEligibilityRequest](../fhir/F2-coverage-eligibility-request.md), [F3. CoverageEligibilityResponse](../fhir/F3-coverage-eligibility-response.md), [F15. Patient](../fhir/F15-patient.md), [F17. Organization](../fhir/F17-organization.md), [F18. Coverage](../fhir/F18-coverage.md), [F19. Other bundle resources](../fhir/F19-other-resources.md)
-- Database: [D1. organization](D1-organization.md), [D3. patient](D3-patient.md), [D10. claim_plan](D10-claim-plan.md), [D13. claim_auth](D13-claim-auth.md), [D30. counter](D30-counter.md)
+- Database: [D1. organization](D1-organization.md), [D3. patient](D3-patient.md), [D4. encounter](D4-encounter.md), [D10. claim_plan](D10-claim-plan.md), [D13. claim_auth](D13-claim-auth.md), [D28. claim_document](D28-claim-document.md), [D30. counter](D30-counter.md), [D31. biometric_auth](D31-biometric-auth.md)

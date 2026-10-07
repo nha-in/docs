@@ -2,6 +2,18 @@
 
 Changes that affect what you can build against, newest first. Each entry links to what you can now read, run or consume.
 
+## 6 October 2026
+
+1 change
+
+- [The nhcx plugin is 1.0.6](/docs/main/docs/whats-new/2026-10-06#the-nhcx-plugin-is-106)
+
+## 5 October 2026
+
+1 change
+
+- [The nhcx plugin is 1.0.5](/docs/main/docs/whats-new/2026-10-05#the-nhcx-plugin-is-105)
+
 ## What gets an entry
 
 An entry has to change what you build or what you must go back and fix. Six kinds qualify:

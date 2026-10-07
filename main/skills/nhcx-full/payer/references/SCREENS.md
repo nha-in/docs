@@ -14,7 +14,7 @@ Every screen of the desk, the registry, the configuration and the finance flows,
 
 | # | Screen | Route | What it does | APIs | Callbacks |
 |---|---|---|---|---|---|
-| [S4](../screens/S4-members.md) | Members | `/members` | The beneficiary directory: register, edit and retire members, with the ABHA number the exchange matches on. | [A1](../apis/A1-eligibility-answer.md) | [C2](../callbacks/C2-coverage-eligibility-check.md), [C4](../callbacks/C4-preauth-submit.md) |
+| [S4](../screens/S4-members.md) | Members | `/members` | The beneficiary directory: register, edit and retire members, with the ABHA number the exchange matches on. | [A1](../apis/A1-eligibility-answer.md), [A20](../apis/A20-abha-m1.md) | [C2](../callbacks/C2-coverage-eligibility-check.md), [C4](../callbacks/C4-preauth-submit.md) |
 | [S5](../screens/S5-subscriptions.md) | Subscriptions | `/subscriptions` | Enrolments of a member on a product: cover period, wallet and its ledger, family members, pause and resume, and the ABHA policy link through the registry. | [A1](../apis/A1-eligibility-answer.md), [A13](../apis/A13-adjudicate.md), [A16](../apis/A16-abha-policy-link.md) | [C2](../callbacks/C2-coverage-eligibility-check.md) |
 
 ## Configuration

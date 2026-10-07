@@ -177,6 +177,6 @@ post_with_token(client, url, body, label):
 ```
 
 #### G3U. USED BY
-- APIs: [A1. Policy Search](../apis/A1-policy-search.md)
+- APIs: [A1. Policy Search](../apis/A1-policy-search.md), [A18. Biometric Authentication](../apis/A18-biometric-authentication.md), [A19. ABHA Create and Verify (ABDM M1)](../apis/A19-abha-m1.md)
 - Database: [D1. organization](../database/D1-organization.md)
 - Gateway: [G1. Embedding](G1-embedding.md), [G2. Configuration and Participants](G2-configuration.md), [G4. Registry and Certificates](G4-registry.md), [G5. Protocol Headers](G5-protocol-headers.md), [G6. Encryption](G6-encryption.md), [G7. Send](G7-send.md), [G10. Beneficiary Registry](G10-beneficiary-registry.md), [G11. Startup Checks and Health](G11-startup-checks.md)

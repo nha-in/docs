@@ -164,7 +164,7 @@ The whole integration, every exchange end to end on either side, with the NHCX g
 [Download skill](/docs/main/skills/nhcx-full.tar.gz "The whole skill folder, as a .tar.gz archive.")
 
 - ScaffoldThe eight steps that build the use case into your system, from discovery and mapping through code to tests on the sandbox, each logged as it goes.
-- Integrate26 operations, with their hosts and headers.
+- Integrate28 operations, with their hosts and headers.
 - TestThe test pyramid, from offline pins up to a live payer on the sandbox.
 
 `mkdir -p .claude/skills && curl -fsSL https://nha-in.github.io/docs/main/skills/nhcx-full.tar.gz | tar -xzf - -C .claude/skills`

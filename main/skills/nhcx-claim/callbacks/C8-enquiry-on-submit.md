@@ -67,6 +67,8 @@ State changes:
 | D29 claim_enquiry | `status` `answered`, `answered_at`, `answer`, `detail`, `response_json`; or `error` with `error_message` `<code>: <message>` |
 | D20 claim_submission | reprocess or release reopened: `status` `submitting`, `settled_at` null, `error_message` null (restamps D9 `stage` / `sub_stage`) |
 
+A refused or failed Task that gives a reason (`Task.statusReason`, an output typed as an error, or `ClaimResponse.error` on the response it points at) has that reason kept in `detail` and shown with the answer; it stops nothing, and the ask can be sent again.
+
 Status answers: the payer's `entity_status` (`preauth-pending`, `claim-approved`, `settled`, ...), `not-found`, or `unknown`. Reprocess and release answers: `reopened` or `refused`.
 
 #### C8U. USED BY

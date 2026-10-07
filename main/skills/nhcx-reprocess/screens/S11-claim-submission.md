@@ -22,7 +22,7 @@ Breadcrumb: Claims (claims/list, S5) > `<claim number>`
 #### S11D. DESCRIPTION
 The claim is filed once the patient has left. The tab records the discharge, collects the documents and forms the payer deferred to the claim, and sends the claim. It then shows the payer's verdict, along with the claim's follow-up requests: status, reprocess and balance release.
 
-**When the claim can start.** The claim needs a pre-authorisation with status `approved` or `queried`. Until one exists, the tab shows a single card titled "Claim": "A claim goes in against an **approved** pre-authorisation, once the patient has left. Get the pre-authorisation answered on the previous tab first." A `partial` pre-authorisation does not open this tab.
+**Discharge verification** is on the Verification tab, S18: once the admission is discharged that tab turns into the discharge verification (A18. Biometric Authentication (in nhcx-coverage), stage Discharge), and the fresh token it takes rides on the claim. The admission's token does not serve the claim, whatever its life. Without one, a payer that requires proof of presence gets the Discharge Consent form answered in the bundle instead.**When the claim can start.** The claim needs a pre-authorisation with status `approved` or `queried`. Until one exists, the tab shows a single card titled "Claim": "A claim goes in against an **approved** pre-authorisation, once the patient has left. Get the pre-authorisation answered on the previous tab first." A `partial` pre-authorisation does not open this tab.
 
 Once open, the tab shows four cards:
 1. Discharge
@@ -63,6 +63,7 @@ Money shows as `₹12,345`. A missing value shows as `-`.
 - "Enter the discharge date."
 - "The discharge date cannot be before the admission date."
 - "The surgery date cannot be before the admission date."
+- "The discharge date cannot be before the surgery date."
 - "Enter the date and time of death." (type Death with no time of death)
 - "Enter the time of death as well as the date." (a date with no time)
 
@@ -116,8 +117,8 @@ API: A5. Claim Submit (in nhcx-claim) (answered forms)
 States of the card:
 
 1. **Not sent** (not yet started, or `draft`). The card shows what the claim will quote. Table columns: Kind (chip: Procedure info, Implant warning), Item (display with code sub-line), Rate, Quantity, Amount. A bold "Total ₹X" line sits right-aligned under it. With a LAMA / DAMA discharge before or during surgery, the table shows only `LM100`. Empty text: "Nothing to claim, quote the line items on the pre-authorisation tab first." Header action: "Submit claim" (primary, send icon), with the confirm "Send this claim to the payer?".
-2. **`submitting`.** The card reads "Claim submitted; awaiting the payer's `on_submit` reply. Use Refresh to check for it, or ask the payer where it stands." Below it: Sent at, Claimed, Transaction, Correlation. It also shows the Communication pointer (S10) when there is an open query on the claim, the status enquiry rows, and the reprocess rows. Header action: "Ask where it stands" only.
-3. **`error`.** The error text in red, or "The exchange failed.". Header action: the send button. A send the exchange refused is sent again as the same kind.
+2. **`submitting`.** The card reads "Claim submitted; awaiting the payer's `on_submit` reply. Use Refresh to check for it, or ask the payer where it stands." Once the payer has acknowledged it (workflow 25, or a `queued` ClaimResponse, C6) it reads "Acknowledged by the payer. The claim is under adjudication." Below it: Sent at, Claimed, Transaction, Correlation. It also shows the Communication pointer (S10) when there is an open query on the claim, the status enquiry rows, and the reprocess rows. Header action: "Ask where it stands" only.
+3. **`error`.** The error text in red, or "The exchange failed.". Header action: the send button. A send the exchange refused is sent again as the same kind. An error the payer answered with (`ClaimResponse.error`, a `response.error` reply, a failed Task's reason) is shown line by line with its process notes and an "Open <title> (PDF)" link when the reply carries a `form`. It is shown, never obeyed: nothing is decided and the claim can be sent again.
 4. **Decided or queried** (`approved`, `partial`, `rejected`, `queried`):
    - Three stat tiles: "Claimed"; "Approved" (green when `approved`, amber otherwise); "Status" (the label above).
    - Detail list: Disposition; Outcome (`<outcome> · <adjudication>`); Claimed under (the claim number sent); Settled at; Correlation; Sent as (button words of the last send); Our reply; and Submitted / eligible, when the payer gave an eligible amount.

@@ -20,7 +20,9 @@ A screen most payer systems already have. What NHCX adds is one field and one ru
 
 **Search** matches name, id, mobile and ABHA number. Empty states: "No members match" with "Nothing matches "`<term>`". Try a name, ID, mobile or ABHA number." and a "Clear search" button; "No members registered" with "Register a policyholder to start building the member registry." and a "Register member" button.
 
-**Register / edit dialog**, "Register New Policyholder Member" or "Edit Member Details", sub-title "Enter member demographic details and optional 14-digit ABHA Health ID":
+**Register with ABHA**, a second button beside "Register New Member": runs the ABHA service first ([A20. ABHA Create and Verify (ABDM M1)](../apis/A20-abha-m1.md): verify an existing ABHA by its number or the mobile it is registered against, with an OTP and an account chooser when one mobile holds several; or create one from an Aadhaar OTP with the person's consent recorded and an address chosen) and opens the register dialog filled from the profile, sub-title "Filled from ABHA `<number>`. Confirm the details and register." A member already on the register under that ABHA is opened for editing instead, with "`<name>` is already registered as `<id>` with this ABHA".
+
+**Register / edit dialog**, "Register New Policyholder Member" or "Edit Member Details", sub-title "Enter member demographic details and optional 14-digit ABHA Health ID, or verify or create the ABHA with the ABHA service":
 
 | Field | Control | Rule |
 |---|---|---|
@@ -29,6 +31,7 @@ A screen most payer systems already have. What NHCX adds is one field and one ru
 | Date of Birth | date | "Enter a date of birth"; "Use the date picker, the date must be YYYY-MM-DD" |
 | Mobile Number | text | "Enter a mobile number"; "Enter a valid mobile number" |
 | 14-Digit ABHA ID (Optional) | text | separators are stripped; "An ABHA number is 14 digits" when a partial one is typed; two members cannot share one ([D5. member](../database/D5-member.md)) |
+| Verify or create an ABHA | button (secondary) | the ABHA dialog of [A20. ABHA Create and Verify (ABDM M1)](../apis/A20-abha-m1.md); on success the ABHA number is filled in, and name, gender, date of birth and mobile where the dialog still has them blank; a typed value is kept |
 
 The id is issued by the server from the member sequence ([D32. id_sequence](../database/D32-id-sequence.md)). Toasts: "Member `<id>` registered!", "Member `<id>` updated successfully!". Field errors come back per field (`422`, "Some details need correcting") and the first is shown.
 
@@ -37,6 +40,8 @@ The id is issued by the server from the member sequence ([D32. id_sequence](../d
 **Ownership** [SANDBOX](../references/PAYERS.md#markers): in the reference every record carries the client id that made it; another account's members answer 404 and the shared seeded set is read-only ("This is preconfigured, shared with every account, and cannot be changed or removed"). A single-payer deployment has no owners.
 
 API: [A1. Eligibility Answer](../apis/A1-eligibility-answer.md)
+
+API: [A20. ABHA Create and Verify (ABDM M1)](../apis/A20-abha-m1.md)
 
 Callback: [C2. Coverage Eligibility Check](../callbacks/C2-coverage-eligibility-check.md)
 

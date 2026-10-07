@@ -6,7 +6,7 @@ Every call the application makes for NHCX, in one list. Each row links to its fu
 
 | # | API | Call | What it does | Replies | Screens |
 |---|---|---|---|---|---|
-| [A5](../apis/A5-claim-submit.md) | Claim Submit | `gateway.send("v1/claim/submit")` | Files the claim after discharge: the pre-auth bundle with `use: claim`, the pre-auth reference, the completed procedure, discharge details and claim-stage documents; also answers a claim query. | [C1](../callbacks/C1-callback-door.md), [C6](../callbacks/C6-claim-on-submit.md) | [S11](../screens/S11-claim-submission.md) |
+| [A5](../apis/A5-claim-submit.md) | Claim Submit | `gateway.send("v1/claim/submit")` | Files the claim after discharge: the pre-auth bundle with `use: claim`, the pre-auth reference, the completed procedure, discharge details and claim-stage documents; also answers a claim query. | [C1](../callbacks/C1-callback-door.md), [C6](../callbacks/C6-claim-on-submit.md) | [S11](../screens/S11-claim-submission.md), [S18](../screens/S18-beneficiary-verification.md) |
 | [A6](../apis/A6-task-submit.md) | Task Submit (cancel, status, reprocess, release) | `gateway.send("v1/task/submit")` | Sends a Task for a follow-up: cancel the pre-authorisation, ask the status of a leg, ask for a decided claim to be reprocessed, or ask for the unpaid balance to be released. | [C1](../callbacks/C1-callback-door.md), [C8](../callbacks/C8-enquiry-on-submit.md) | [S11](../screens/S11-claim-submission.md) |
 
 ## Ledger queries (polling)
@@ -27,6 +27,14 @@ Polling is the fallback when a callback is missed. Opening a claim runs these fo
 | [A14](../apis/A14-adjudicator-user-role.md) | Adjudicator User Role | payer service `get/user-role`, or the IRDAI desk | Reads which payer role holds a case now, and so which actions are legal. | none | none |
 | [A15](../apis/A15-adjudicator-process-case.md) | Adjudicator Process Case | payer service `process/case`, or the IRDAI desk | Takes one decision on a pre-auth or claim, or walks a case through every role (at most 8 rounds) until it is decided. | none | none |
 | [A16](../apis/A16-gateway-token.md) | Gateway Token | `gateway.token(participant)` (G3) | Supplies the ABDM session token the payer service calls need, unless a payer service token is configured. | none | none |
+
+## ABDM calls beside the exchange
+
+Plain JSON to ABDM with the session token: the beneficiary's biometric authentication and their ABHA. No JWE, no protocol headers, no ledger row.
+
+| # | API | Call | What it does | Replies | Screens |
+|---|---|---|---|---|---|
+| [A18](../apis/A18-biometric-authentication.md) | Biometric Authentication | `abdm.biometric.init / capture / verify / refresh` | Proves the beneficiary is at the hospital: a fingerprint, iris or face authentication against their ABHA through ABDM's biometric service, on the Verification tab, before the pre-authorisation while admitted and again once discharged. Optional for any payer, required by PMJAY. The user token it yields rides on the eligibility check, the pre-authorisation and the claim; PMJAY's consent questionnaire stands in only where no capture is possible. | none | [S11](../screens/S11-claim-submission.md), [S18](../screens/S18-beneficiary-verification.md) |
 
 ## Application
 

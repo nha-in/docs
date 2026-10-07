@@ -193,8 +193,7 @@ States:
 
 | State | Body | Header action |
 |---|---|---|
-| The payer's adapter does not answer this check (the generic NHCX payer) | "<adapter name> does not answer a procedure-set check, so the pre-authorisation goes in on the eligibility verdict alone." | none |
-| Never asked | "Before sending the pre-authorisation, the <n> quoted line(s) go to the payer as a `auth-requirements` check: it rules on each one and names the documents and forms this particular procedure set needs." | primary "Validate procedure set" (shield-check icon) |
+| Never asked | "The <n> quoted line(s) can go to the payer as a `auth-requirements` check: it rules on each one and names the documents and forms this particular procedure set needs. The check is optional; the pre-authorisation can be sent without it." | primary "Validate procedure set" (shield-check icon) |
 | `checking` | "Procedure set sent; awaiting the payer's ruling. Use Refresh to check for it." with Sent at, Transaction, Correlation | "Check again" |
 | `error` | The error in the danger colour, or "The exchange failed." | "Check again" |
 | `ready` | Ruling (below) | "Check again" |
@@ -212,7 +211,6 @@ Requirement tables: columns Kind (chip `Form` info or `Document` warning), Code,
 
 **Sending.** Checked before any call (red flash on S4):
 - Case not eligible: "Check the policy's eligibility before validating a procedure set against it."
-- Adapter without the check: "<adapter name> does not answer authorisation requirement checks."
 - No lines: "Choose the line items first, this checks the procedure set, so there has to be one."
 - Facility setup missing: "Set the facility's HFR ID and NHCX participant code under Settings before checking requirements."
 
@@ -252,7 +250,7 @@ Data: [D15. claim_auth_requirement](../database/D15-claim-auth-requirement.md)
 |  > Needed for this pre-authorisation (3)                         |
 |    Kind | Code | What | For | Stage                             |
 |  > Needed later, with the claim (1)                              |
-|  Payer adapter: PMJAY / Ayushman Bharat                          |
+|  Payer adapter: PMJAY, State Health Agency                         |
 |------------------------------------------------------------------|
 ```
 

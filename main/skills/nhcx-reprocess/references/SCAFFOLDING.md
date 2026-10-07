@@ -23,14 +23,14 @@ Names and folders here are placeholders. [L4 Code Planning](../steps/L4-code-pla
     settings                           the module's own settings (see section 6)
     gateway/                           G1 to G11
     fhir/                              F1 to F19
-    services/                          A1 to A17
+    services/                          A1 to A19
     callbacks/                         C1 to C10
-    models/                            D9 to D30
-    migrations/                        D1 to D30 changes
-    screens/                           S1 to S12
-    routes                             application routes for S1 to S12 and A17
+    models/                            D9 to D31
+    migrations/                        D1 to D31 changes
+    screens/                           S1 to S12, S18
+    routes                             application routes for S1 to S12, S18 and A17
     archive                            the per-case message archive C1 writes
-  <existing patient module>            S13 to S15 changes
+  <existing patient module>            S13 to S15 changes (ABHA verify and create, A19)
   <existing practitioner module>       S16 changes
   <existing facility settings>         D1 changes (HFR id, participant code)
   <existing navigation>                the "Claims" entry
@@ -89,7 +89,7 @@ Pure functions. Builders take a plain input object assembled by a service from t
 | `read/payment` | F13 | Amount, status, date, UTR, breakdown and the claim number, with the fallbacks. |
 | `codes` | F8, F16, D8 | Code systems and lookups: ICD-10, SNOMED, document type codes, degree codes, gender and relationship. |
 
-### 3.3 `nhcx/services/` (A1 to A17)
+### 3.3 `nhcx/services/` (A1 to A19)
 
 One file per API. Each follows its spec's pseudocode (AnP): pre-send checks with the verbatim refusal messages, gather data from models, build with `fhir/`, call `gateway.send`, record the ids and status on the leg's row, handle a failed send that names ids.
 
@@ -105,6 +105,8 @@ One file per API. Each follows its spec's pseudocode (AnP): pre-send checks with
 | `polling` | A10 to A13 | For each leg still waiting: find the reply in the ledger and apply it through its callback handler, or record a dispatch failure or protocol rejection. | S6 on open, A17 |
 | `adjudicator` | A14 to A16 | Payer role lookup and decisions for sandbox testing. Off in production. | adjudicator console, L8 |
 | `state` | A17 | The claim state JSON for drivers and tests. | A17 route |
+| `biometric` | A18 | The beneficiary's fingerprint, iris or face authentication against ABDM's biometric service, for any payer; the current user token per stage, refreshed on the way out. Plain JSON with the session token, never through G7. | S18; A2, A4, A5 read it |
+| `abha` | A19 | Create an ABHA from an Aadhaar OTP, or verify one by OTP, through ABDM's ABHA service (the calls from the MCP's M1 catalogue); seals the identifiers and keeps the flow's tokens for its few minutes. | S13, S14, S15 |
 | `stage` | D9 | Recomputes a case's `stage` and `sub_stage` after any write. Every service and handler calls it. | services, callbacks |
 
 ### 3.4 `nhcx/callbacks/` (C1 to C10)
@@ -156,6 +158,7 @@ C1 archives every inbound envelope, and services archive every outbound one, bes
 | Patient | S13, S14, S15, D3 | ABHA number and address fields on the form, the ABHA search in the list, the ABHA chip on the chart. The ABHA number is what links a claim to an admission. |
 | Practitioner | S16, D2 | HPR id, registration number and qualification; retired practitioners drop out of pickers. The care team on the pre-auth comes from here. |
 | Facility settings | D1 | HFR id and NHCX participant code. |
+| Patient (ABHA) | D3, A19 | "Register with ABHA" on the list and "Verify or create an ABHA" on the form and the chart, filling the file from the ABHA service's profile. |
 | Admission (encounter) | D4 | Nothing new if the HMIS already marks the current admission and its dates; S4 links a case to it. |
 | Navigation | L3 | A "Claims" entry on the home screen, sidebar or navbar, opening S5. |
 
@@ -190,6 +193,8 @@ Forbidden: screens to gateway, screens to fhir, fhir to models, fhir to gateway,
 | Archive directory | module settings | C1 |
 | Payer service token, IRDAI desk URL and account | module settings, sandbox only | A14 to A16 |
 | Adjudicator console on or off | module settings, off in production | A14, A15 |
+| Biometric hosts (`biometric_base_url`, `faceauth_base_url`, `faceauth_qr_url`) and the user-token header name (`biometric_token_header`); the face Aadhaar is sealed under the ABHA service's certificate (A19), no key of its own | module settings | A18, A2, A4, A5 |
+| ABHA service base (`abha_base_url`) | module settings | A19 |
 
 ## 7. Background work
 

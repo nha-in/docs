@@ -3,10 +3,10 @@ name: nhcx-payer-coverage
 description: >-
   Build the NHCX (India's National Health Claims Exchange) payer-side eligibility and plan answers into an existing payer system: members and enrolments, products and procedures, the coverage eligibility response (validation, benefits, discovery, auth-requirements) and the InsurancePlan package master, with the embedded NHCX gateway they need. Use when a payer system must answer a hospital's eligibility check or serve its package master over NHCX.
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
-**Version 1.0.0**, built 2026-09-30, checked against NHA's NHCX package 1.0.0.
+**Version 1.0.1**, built 2026-10-06, checked against NHA's NHCX package 1.0.0.
 
 # READ FIRST: CORE
 Before anything else, read [references/CORE.md](references/CORE.md) and keep it in mind for the whole task. Its **Instructions** are binding: follow them strictly in every step and every file, and re-read them at the start of each step (L1 to L8). Its **Confusions** settle what easily mixed-up terms mean; when a word is ambiguous, CORE.md decides. It also holds the base URLs and, for every exchange, the route it arrives on, the bundle, the callback that takes it in, the answer and the workflow id the answer travels under.
@@ -61,7 +61,7 @@ L4 maps these placeholder names onto the target's own conventions (a Django app,
 The specs this skill holds:
 
 - **Screens** (11): [S1](screens/S1-overview.md), [S2](screens/S2-cases.md), [S3](screens/S3-case-desk.md), [S4](screens/S4-members.md), [S5](screens/S5-subscriptions.md), [S6](screens/S6-policies.md), [S7](screens/S7-policy-configurator.md), [S8](screens/S8-procedures.md), [S9](screens/S9-procedure-configurator.md), [S11](screens/S11-fhir-preview.md), [S12](screens/S12-organisation.md)
-- **APIs** (7): [A1](apis/A1-eligibility-answer.md), [A2](apis/A2-insurance-plan-answer.md), [A11](apis/A11-txn-related.md), [A12](apis/A12-txn-fhir.md), [A15](apis/A15-case-exchange.md), [A16](apis/A16-abha-policy-link.md), [A17](apis/A17-participant-lookup.md)
+- **APIs** (8): [A1](apis/A1-eligibility-answer.md), [A2](apis/A2-insurance-plan-answer.md), [A11](apis/A11-txn-related.md), [A12](apis/A12-txn-fhir.md), [A15](apis/A15-case-exchange.md), [A16](apis/A16-abha-policy-link.md), [A17](apis/A17-participant-lookup.md), [A20](apis/A20-abha-m1.md)
 - **Callbacks** (3): [C1](callbacks/C1-callback-door.md), [C2](callbacks/C2-coverage-eligibility-check.md), [C3](callbacks/C3-insurance-plan-request.md)
 - **FHIR** (12): [F1](fhir/F1-bundle.md), [F2](fhir/F2-coverage-eligibility-request.md), [F3](fhir/F3-coverage-eligibility-response.md), [F4](fhir/F4-task-insuranceplan.md), [F5](fhir/F5-insuranceplan.md), [F6](fhir/F6-questionnaire.md), [F9](fhir/F9-claimresponse.md), [F10](fhir/F10-task-claim-actions.md), [F15](fhir/F15-patient.md), [F16](fhir/F16-practitioner.md), [F17](fhir/F17-organization.md), [F18](fhir/F18-coverage.md)
 - **Database** (26): [D1](database/D1-payer.md), [D2](database/D2-staff.md), [D3](database/D3-document-type.md), [D4](database/D4-terminology-code.md), [D5](database/D5-member.md), [D6](database/D6-subscription.md), [D7](database/D7-subscription-family-member.md), [D8](database/D8-wallet-entry.md), [D9](database/D9-abha-link-event.md), [D10](database/D10-procedure-rule.md), [D11](database/D11-procedure-rule-doc.md), [D12](database/D12-policy.md), [D13](database/D13-policy-procedure.md), [D14](database/D14-policy-coverage-clause.md), [D15](database/D15-policy-clause-benefit.md), [D16](database/D16-policy-alias.md), [D17](database/D17-policy-exclusion.md), [D18](database/D18-policy-sub-limit.md), [D19](database/D19-case.md), [D25](database/D25-case-line-item.md), [D26](database/D26-case-timeline.md), [D27](database/D27-case-exchange-message.md), [D28](database/D28-nhcx-delivery.md), [D30](database/D30-payment.md), [D31](database/D31-audit-log.md), [D32](database/D32-id-sequence.md)
@@ -77,7 +77,7 @@ Other skills built from the same source:
 - **nhcx-payment/payer**: disbursement, payment notices, their acknowledgement and payment enquiries.
 
 # VERSION
-This is nhcx-payer-coverage version 1.0.0, built on 2026-09-30. Its protocol tables (workflow ids, statuses, base URLs) were checked against NHA's NHCX package 1.0.0 ([github.com/nha-in/nhcx-package](https://github.com/nha-in/nhcx-package)).
+This is nhcx-payer-coverage version 1.0.1, built on 2026-10-06. Its protocol tables (workflow ids, statuses, base URLs) were checked against NHA's NHCX package 1.0.0 ([github.com/nha-in/nhcx-package](https://github.com/nha-in/nhcx-package)).
 
 - Record it when the work starts: `nhcx-plan/knowledge.json` and the `target` of `nhcx-plan/progress.json` carry `skill` and `skill_version`, and the header of `nhcx-plan/report.html` shows them.
 - If a later prompt runs with a different version of this skill than the one recorded, say so to the user before continuing, log it as a `corrected` entry naming both versions, and re-check the steps already done against the specs that changed.
