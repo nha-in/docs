@@ -6,6 +6,10 @@ This section contains the test scenarios applicable for ABDM integration and cer
 
 The checks your integration has to pass before it goes live, one page per module, each case with its id and the APIs it calls. [Test cases](/docs/main/docs/hiecm/v3/resources/test-cases) explains how to read them and lists every module.
 
+## Standards and terminologies
+
+The FHIR profiles and code systems a record is built and coded with: SNOMED CT, LOINC, ICD, the Indian code sets and DICOM. [Standards and terminologies](/docs/main/docs/hiecm/v3/resources/standards) lists each one with its system URI.
+
 ## ABDM integration resources
 
 Access the documentation, AI-assisted tools and reference projects required to support your ABDM integration.

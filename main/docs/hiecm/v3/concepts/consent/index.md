@@ -97,7 +97,7 @@ What kind of record you are asking for. See [HI type](/docs/main/docs/hiecm/v3/g
 | `HealthDocumentRecord` | Record artifact     |
 | `WellnessRecord`       | Wellness Record     |
 
-The M2 error message for an invalid HI type lists these seven and adds `Invoice`. The two disagree by one value, so check the swagger before you send `Invoice`. What each type carries as a [FHIR](/docs/main/docs/hiecm/v3/getting-started/glossary#fhir) bundle is on [FHIR and health record formats](/docs/main/docs/hiecm/v3/concepts/fhir).
+The M2 error message for an invalid HI type lists these seven and adds `Invoice`. The two disagree by one value, so check the swagger before you send `Invoice`. What each type carries as a [FHIR](/docs/main/docs/hiecm/v3/getting-started/glossary#fhir) bundle is on [FHIR](/docs/main/docs/hiecm/v3/resources/standards/fhir).
 
 ## Expiry and revocation
 

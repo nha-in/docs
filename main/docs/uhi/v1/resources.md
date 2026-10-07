@@ -13,6 +13,10 @@ Run your service's test cases before you ask for sign-off. Each service has one 
 | Jan Aushadhi                  | [Jan Aushadhi test cases](/docs/main/docs/uhi/v1/resources/jan-aushadhi)          |
 | NOTTO Hospital Discovery      | [NOTTO test cases](/docs/main/docs/uhi/v1/resources/notto)                        |
 
+## Standards and terminologies
+
+The FHIR profiles and code systems a record is built and coded with: SNOMED CT, LOINC, ICD, the Indian code sets and DICOM. [Standards and terminologies](/docs/main/docs/uhi/v1/resources/standards) lists each one with its system URI.
+
 ## Walkthroughs and tools
 
 - [Recorded walkthroughs of UHI services in Aarogya Setu](https://drive.google.com/drive/folders/1JvlWPouPNlyfLT3RmsjuUzeAVkdhlKrD?usp=drive_link). Your sign-off demo follows the same flow.

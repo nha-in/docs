@@ -26,4 +26,4 @@ A report you link reaches the patient's own app. The doctor who ordered it can a
 
 ## Next
 
-[Hospital, lab and pharmacy systems](/docs/main/docs/hiecm/v3/concepts/hip-hiu) is the build guide, and [FHIR](/docs/main/docs/hiecm/v3/concepts/fhir) has the record formats.
+[Hospital, lab and pharmacy systems](/docs/main/docs/hiecm/v3/concepts/hip-hiu) is the build guide, and [FHIR](/docs/main/docs/hiecm/v3/resources/standards/fhir) has the record formats.

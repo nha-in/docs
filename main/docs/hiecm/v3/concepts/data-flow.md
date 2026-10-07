@@ -128,4 +128,4 @@ Notes for AI agents
 - [M2 Health Information Provider: Creation, Linking and Sharing of Health Records](/docs/main/docs/hiecm/v3/api/m2), the sending side.
 - [M3 Health Information User: Health Information Exchange with Consent](/docs/main/docs/hiecm/v3/api/m3), the receiving side.
 - [Consent](/docs/main/docs/hiecm/v3/concepts/consent), the artefact this flow depends on.
-- [FHIR and health record formats](/docs/main/docs/hiecm/v3/concepts/fhir), what is inside the payload.
+- [FHIR](/docs/main/docs/hiecm/v3/resources/standards/fhir), what is inside the payload.

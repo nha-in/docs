@@ -35735,7 +35735,7 @@ What kind of record you are asking for. See [HI type](/docs/main/docs/hiecm/v3/g
 | `HealthDocumentRecord` | Record artifact     |
 | `WellnessRecord`       | Wellness Record     |
 
-The M2 error message for an invalid HI type lists these seven and adds `Invoice`. The two disagree by one value, so check the swagger before you send `Invoice`. What each type carries as a [FHIR](/docs/main/docs/hiecm/v3/getting-started/glossary#fhir) bundle is on [FHIR and health record formats](/docs/main/docs/hiecm/v3/concepts/fhir).
+The M2 error message for an invalid HI type lists these seven and adds `Invoice`. The two disagree by one value, so check the swagger before you send `Invoice`. What each type carries as a [FHIR](/docs/main/docs/hiecm/v3/getting-started/glossary#fhir) bundle is on [FHIR](/docs/main/docs/hiecm/v3/resources/standards/fhir).
 
 ## Expiry and revocation
 
@@ -35902,7 +35902,7 @@ Notes for AI agents
 - [M2 Health Information Provider: Creation, Linking and Sharing of Health Records](/docs/main/docs/hiecm/v3/api/m2), the sending side.
 - [M3 Health Information User: Health Information Exchange with Consent](/docs/main/docs/hiecm/v3/api/m3), the receiving side.
 - [Consent](/docs/main/docs/hiecm/v3/concepts/consent), the artefact this flow depends on.
-- [FHIR and health record formats](/docs/main/docs/hiecm/v3/concepts/fhir), what is inside the payload.
+- [FHIR](/docs/main/docs/hiecm/v3/resources/standards/fhir), what is inside the payload.
 
 
 ---
@@ -36045,102 +36045,19 @@ sequenceDiagram
 
 ---
 
-# FHIR and health record formats
+# FHIR
 
-Every health record that moves inside [ABDM](/docs/main/docs/hiecm/v3/getting-started/glossary#abdm) travels as a [FHIR](/docs/main/docs/hiecm/v3/getting-started/glossary#fhir) bundle, not a PDF in an envelope of your own design and not your database rows. This page gives the version, the profiles, the bundle shape and how to validate one; the packaging detail is in the [M2 guide](/docs/main/docs/hiecm/v3/api/m2).
+Fast Healthcare Interoperability Resources, FHIR, is a standard from Health Level Seven International, HL7, for exchanging health information electronically. It defines resources such as `Patient`, `Observation` and `MedicationRequest`, and a `Bundle` that carries them together.
 
-## R4, with Indian profiles
+ABDM uses FHIR release 4, R4. Base FHIR says a resource exists but not which fields an Indian record must fill. The profiles that say so are published by the National Resource Centre for EHR Standards, [NRCeS](https://nrces.in/ndhm/fhir/r4/index.html). An ABDM health record is an R4 document bundle that conforms to those profiles.
 
-ABDM uses FHIR release 4. Base FHIR is loose: it says a `MedicationRequest` exists, not which fields an Indian prescription must fill. That second layer is a profile, and for ABDM the profiles are published by the National Resource Centre for EHR Standards, NRCES, at [nrces.in/ndhm/fhir/r4](https://nrces.in/ndhm/fhir/r4/index.html). "ABDM compliant FHIR" means R4 conforming to those profiles. Read the NRCES implementation guide for field level questions. It is not restated here.
+FHIR gives a record its shape. Code systems such as SNOMED CT and LOINC give its content meaning.
 
-## Two ways to build any record
+## Next steps
 
-| Shape             | What it is                                                             | When you use it                                          |
-| ----------------- | ---------------------------------------------------------------------- | -------------------------------------------------------- |
-| Simple bundle     | A FHIR bundle wrapping a PDF or image attachment that holds the detail | Your source document is a scan, a signed PDF or an image |
-| Structured bundle | A FHIR bundle with coded health information in FHIR resources          | Your system holds the data as fields, and can code it    |
-
-Both are compliant. A structured bundle is more useful to the receiver, because it can be searched rather than only displayed.
-
-## The record types
-
-There are eight record types. Implementing all of them is mandatory for an [HMIS](/docs/main/docs/hiecm/v3/getting-started/glossary#hmis).
-
-| Record type              | What it holds                                                                                                                              | [HI type](/docs/main/docs/hiecm/v3/getting-started/glossary#hi-type) code |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------- |
-| Diagnostic Report Record | Radiology and laboratory reports                                                                                                           | `DiagnosticReport`                                                        |
-| Discharge Summary Record | The discharge summary for the ABDM health data set                                                                                         | `DischargeSummary`                                                        |
-| Health Document Record   | Unstructured historical records, usually uploaded by patients through a health locker                                                      | `HealthDocumentRecord`                                                    |
-| Immunization Record      | Immunisations, vaccine certificates and next dose recommendations                                                                          | `ImmunizationRecord`                                                      |
-| OP Consult Record        | Outpatient notes: examinations, procedures, medications and clinical advice                                                                | `OPConsultation`                                                          |
-| Prescription Record      | Medication advice, following Pharmacy Council of India guidelines                                                                          | `Prescription`                                                            |
-| Wellness Record          | Vitals, physical examination and general health data, often captured in a [PHR](/docs/main/docs/hiecm/v3/getting-started/glossary#phr) app | `WellnessRecord`                                                          |
-| Invoice Record           | Pharmacy invoices, consultation invoices and other billing                                                                                 | `Invoice`                                                                 |
-
-The codes are the eight `hiTypes` values the linking and consent requests accept, `Invoice` included.
-
-## Which resources a record carries
-
-The reference service on the [HIU](/docs/main/docs/hiecm/v3/getting-started/glossary#hiu) side supports these resources inside a bundle.
-
-- **Clinical content:** `Observation`, `Condition`, `MedicationRequest`, `DocumentReference`, `DiagnosticReport`, `Procedure`.
-- **Context and reference entities:** `Medication`, `Practitioner`, `Patient`, `Organization`, `Encounter`.
-
-That is the union across record types, not a mapping. Which resources belong to which record type is not documented here. The NRCES profile for each type is the authority.
-
-## The bundle shape
-
-Every record is a `Bundle` of `type: document`, and the first entry must be a `Composition`.
-
-```json
-{  "resourceType": "Bundle",  "id": "bundle01",  "timestamp": "2020-01-01T15:32:26.605+05:30",  "type": "document",  "entry": [    {      "fullUrl": "Composition/1",      "resource": {        "resourceType": "Composition",        "id": "1",        "status": "final",        "type": {          "coding": [            {              "system": "https://ndhm.gov.in/sct",              "code": "440545006",              "display": "Prescription record"            }          ]        }      }    }  ]}
-```
-
-That is the skeleton.
-
-### Why the Composition comes first
-
-A bundle on its own is a bag of resources. The Composition turns it into a document: what this is, who it is about, who wrote it, who attests to it, and which resources make up its sections. Without it, a receiving system has a `MedicationRequest` and no idea whether it belongs to a prescription, a discharge summary or a draft.
-
-`Composition.type` carries the SNOMED CT code that answers "what is this". Two are documented: `440545006` for a prescription record and `721981007` for a diagnostic report. The rest have their own codes in the NRCES profiles.
-
-### The rules that fail validation
-
-| Field                         | Rule                                                                                                                                                                                                |
-| ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `id`                          | Unique per bundle, and resolvable inside your own system for traceability                                                                                                                           |
-| `timestamp`                   | The time the document was issued                                                                                                                                                                    |
-| `identifier`                  | Traces the document back to your system                                                                                                                                                             |
-| `type`                        | Must be `document`                                                                                                                                                                                  |
-| `meta.versionId`              | Set it on the bundle, so updates can be checked against the latest version                                                                                                                          |
-| `entry[].fullUrl`             | A logical URL of the form `resource-type/id`, resolvable inside the bundle. Never an absolute URL.                                                                                                  |
-| `Composition.attester.party`  | References an `Organization` whose `identifier.value` is the facility's [HIP](/docs/main/docs/hiecm/v3/getting-started/glossary#hip) id as registered in the facility registry. Mode is `official`. |
-| `Composition.section.entry[]` | Top level resources only. Referenced resources such as Patient, Encounter and Practitioner belong in the bundle, not in the section entries.                                                        |
-
-The attester rule has an environment trap. The organization identifier system is the ABDM facility registry at [nhpr.abdm.gov.in](https://nhpr.abdm.gov.in/nhpr/v4/home) for production and [hspsbx.abdm.gov.in](https://hspsbx.abdm.gov.in/nhpr/v4/home) for sandbox. A bundle that passes in sandbox with the sandbox value is not right in production.
-
-One more thing to watch. `Composition.type.coding.system` is `https://ndhm.gov.in/sct` in the sample above, while `section.code.coding.system` in the same sample is `https://affinitydomain.in/sct`. The two differ in the sample itself. Take the system values from the NRCES profile, not from the sample.
-
-## Validate before you ship
-
-Run this procedure locally. You need JDK 8 or higher.
-
-1. Create a folder and download the FHIR validator CLI, version 6.2.1, from [the HAPI FHIR core release](https://github.com/hapifhir/org.hl7.fhir.core/releases/download/6.2.1/validator_cli.jar). Save `validator_cli.jar` into it.
-2. Get a bundle to test: one your own system produced, or an NRCES example from [nrces.in/ndhm/fhir/r4](https://nrces.in/ndhm/fhir/r4/index.html), switching to the JSON tab to download it.
-3. Run the validator from that folder:
-
-```shell
-java -jar validator_cli.jar <YOUR_BUNDLE_FILENAME>.json -ig https://nrces.in/ndhm/fhir/r4
-```
-
-It checks structural correctness, conformance to the NRCES profiles, and required fields and constraints. Editing an NRCES example that already validates towards your own data is faster than starting from an empty file.
-
-## Where this is implemented
-
-- [M2 use cases](/docs/main/reference/hiecm-m2), the transfer call that carries the encrypted bundle.
-- [How a record travels](/docs/main/docs/hiecm/v3/concepts/data-flow), what happens to the bundle after you build it.
-- [Care contexts and linking](/docs/main/docs/hiecm/v3/concepts/linking), how records are grouped and made findable.
-- [Consent](/docs/main/docs/hiecm/v3/concepts/consent), where the HI type codes above are chosen and read.
+- [FHIR](/docs/main/docs/hiecm/v3/resources/standards/fhir): the implementation guide, the record types and their profiles, the bundle shape and how to validate one.
+- [Standards and terminologies](/docs/main/docs/hiecm/v3/resources/standards): the code systems a record is coded with.
+- [How a record travels](/docs/main/docs/hiecm/v3/concepts/data-flow): what happens to the bundle after you build it.
 
 
 ---
@@ -36308,7 +36225,7 @@ Implement two validation algorithms locally before you spend an API call: Luhn f
 
 Five things have to work.
 
-1. **Health records in the right format.** A [FHIR](/docs/main/docs/hiecm/v3/getting-started/glossary#fhir) R4 bundle following the NRCES profiles at <https://nrces.in/ndhm/fhir/r4/index.html>, either simple with a PDF or image attachment or structured with coded information. There are eight record types, all mandatory for an HMIS. See [FHIR and health record formats](/docs/main/docs/hiecm/v3/concepts/fhir).
+1. **Health records in the right format.** A [FHIR](/docs/main/docs/hiecm/v3/getting-started/glossary#fhir) R4 bundle following the NRCES profiles at <https://nrces.in/ndhm/fhir/r4/index.html>, either simple with a PDF or image attachment or structured with coded information. There are eight record types, all mandatory for an HMIS. See [FHIR health records](/docs/main/docs/hiecm/v3/resources/standards/fhir).
 2. **Care contexts.** The unit that attaches to an ABHA address. The [HIE-CM](/docs/main/docs/hiecm/v3/getting-started/glossary#hie-cm) is data blind and holds two fields per care context: your internal reference ID, and a display name with nothing clinical in it. Use one per outpatient visit and one per inpatient admission.
 3. **Linking.** Two routes: HIP initiated with their ABHA address, and discovery when the patient comes looking from their [PHR](/docs/main/docs/hiecm/v3/getting-started/glossary#phr) app. Linking needs a linking token, stored at registration, valid 6 months, regenerated with the generate link token call. See [Care contexts and linking](/docs/main/docs/hiecm/v3/concepts/linking).
 4. **Answering discovery.** Mandatory for every HIP. Match on the verified identifiers the gateway sends, weight them above the patient declared ones, and return reference ID and display name pairs. The response carries no clinical or sensitive information. Metadata only.
@@ -36831,7 +36748,7 @@ A report you link reaches the patient's own app. The doctor who ordered it can a
 
 ## Next
 
-[Hospital, lab and pharmacy systems](/docs/main/docs/hiecm/v3/concepts/hip-hiu) is the build guide, and [FHIR](/docs/main/docs/hiecm/v3/concepts/fhir) has the record formats.
+[Hospital, lab and pharmacy systems](/docs/main/docs/hiecm/v3/concepts/hip-hiu) is the build guide, and [FHIR](/docs/main/docs/hiecm/v3/resources/standards/fhir) has the record formats.
 
 
 ---
@@ -36902,7 +36819,7 @@ A record you link reaches the patient's own app, so their medication history sit
 
 ## Next
 
-[Hospital, lab and pharmacy systems](/docs/main/docs/hiecm/v3/concepts/hip-hiu) is the build guide, and [FHIR](/docs/main/docs/hiecm/v3/concepts/fhir) has the record formats.
+[Hospital, lab and pharmacy systems](/docs/main/docs/hiecm/v3/concepts/hip-hiu) is the build guide, and [FHIR](/docs/main/docs/hiecm/v3/resources/standards/fhir) has the record formats.
 
 
 ---
@@ -40257,6 +40174,10 @@ This section contains the test scenarios applicable for ABDM integration and cer
 
 The checks your integration has to pass before it goes live, one page per module, each case with its id and the APIs it calls. [Test cases](/docs/main/docs/hiecm/v3/resources/test-cases) explains how to read them and lists every module.
 
+## Standards and terminologies
+
+The FHIR profiles and code systems a record is built and coded with: SNOMED CT, LOINC, ICD, the Indian code sets and DICOM. [Standards and terminologies](/docs/main/docs/hiecm/v3/resources/standards) lists each one with its system URI.
+
 ## ABDM integration resources
 
 Access the documentation, AI-assisted tools and reference projects required to support your ABDM integration.
@@ -40281,6 +40202,710 @@ Explore planned reference workflows for ABDM integration and follow the progress
 
 - The checks your integration has to pass: [Test cases](/docs/main/docs/hiecm/v3/resources/test-cases).
 - Where functional testing fits in the route to production: [Go live](/docs/main/docs/hiecm/v3/getting-started/going-live).
+
+
+---
+
+# Bharat Health Terminology Service
+
+The Bharat Health Terminology Service, BHTS, is the national terminology service NRCeS runs at C-DAC Pune for the Ministry of Health and Family Welfare. It lets your system look up, validate, expand and translate codes over FHIR R4. Read [About BHTS](https://www.nrces.in/bhts/resources/documentation/).
+
+## In short
+
+- One FHIR R4 terminology server for SNOMED CT with the India extensions, LOINC, ICD-10 and the ABDM code systems.
+- The APIs are public, need no key, and are rate limited.
+- Use it to build, test and validate. Production or high-volume use needs NRCeS's authorization or a local instance.
+
+## What it holds
+
+BHTS serves these code systems:
+
+- SNOMED CT, with the India national extensions
+- LOINC
+- ICD-10 and ICD-10-CM
+- The ABDM FHIR code systems and value sets
+
+It is also the national repository for the code sets NRCeS maintains:
+
+- Common Drug Codes for India
+- The India AYUSH terminology for Ayurveda, Siddha and Unani
+- Patient instructions in several Indian languages
+- Common Lab Codes for India
+- Geographical location codes, harmonised with Local Government Directory codes
+
+## The five components
+
+| Component          | Use it for                                                          | Link                                                     |
+| ------------------ | ------------------------------------------------------------------- | -------------------------------------------------------- |
+| Terminology Server | FHIR R4 code systems, value sets and concept maps, from your system | [termserv](https://www.nrces.in/bhts/termserv/)          |
+| CSNOServ           | SNOMED CT search, lookup, validation and mapping over REST          | [csnoserv](https://www.nrces.in/bhts/api/v1/csnoserv/)   |
+| LOINCServ          | LOINC search, lookup and panels over REST                           | [loincserv](https://www.nrces.in/bhts/api/v1/loincserv/) |
+| CSNOFinder         | Browsing SNOMED CT and the India extensions, with ECL queries       | [browser](https://www.nrces.in/bhts/browser/)            |
+| Aarogyawali        | Searching medical terms in Indian languages                         | [aarogyawali](https://www.nrces.in/bhts/aarogyawali/)    |
+
+## Call the terminology server
+
+The base URL is `https://www.nrces.in/bhts/api/v1/ts/fhir`. Read the [Terminology Server Overview](https://www.nrces.in/bhts/resources/documentation/terminology-service-about-terminology-server) for every API.
+
+| Operation        | What it answers                                                                             | Path                                                     |
+| ---------------- | ------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| `$lookup`        | The display, properties and status of one code                                              | `/CodeSystem/$lookup`                                    |
+| `$validate-code` | Whether a code is valid in a code system or value set                                       | `/CodeSystem/$validate-code`, `/ValueSet/$validate-code` |
+| `$subsumes`      | Whether one code is a kind of another                                                       | `/CodeSystem/$subsumes`                                  |
+| `$expand`        | Every code in a value set                                                                   | `/ValueSet/$expand`                                      |
+| `$translate`     | The matching code in another system, such as SNOMED CT to ICD-10                            | `/ConceptMap/$translate`                                 |
+| Read             | A SNOMED CT clinical drug as a FHIR `Medication`, with ingredients, strengths and dose form | `/Medication/{id}`                                       |
+
+Look up the SNOMED CT code for a prescription record:
+
+```bash
+curl 'https://www.nrces.in/bhts/api/v1/ts/fhir/CodeSystem/$lookup?system=http://snomed.info/sct&code=440545006'
+```
+
+The answer is a FHIR `Parameters` resource. Its `display` is `Prescription record`, and its `version` names the SNOMED CT release it came from.
+
+## Limits on use
+
+The [BHTS Terms of Service](https://www.nrces.in/bhts/terms-of-service/) set these limits.
+
+| Use                                                        | Allowed                                                                                     |
+| ---------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| Lookup and validation while you build, test and evaluate   | Yes, within the rate limits                                                                 |
+| Continuous, large-scale or production use through the APIs | Only with NRCeS's prior authorization. Ask NRCeS for a local setup or a dedicated instance. |
+| Use from outside India                                     | May be restricted or blocked without notice                                                 |
+| SNOMED CT content in your own system                       | Still needs your SNOMED CT Affiliate Licence                                                |
+
+Verify any code, relationship or mapping before you put it in a production or clinical system.
+
+## How you know it worked
+
+A `$lookup` returns `Parameters` with the code's `display`. A `$validate-code` returns `result` as `true` for a valid code.
+
+## When it goes wrong
+
+- **Requests are throttled or refused.** You are over the rate limit. Cache what you look up, and ask NRCeS for a local instance if you need volume.
+- **A code is reported as not found.** Check that the `system` URI matches the code system exactly, such as `http://snomed.info/sct`.
+- **A term, translation or mapping is wrong or missing.** Report it to NRCeS.
+- **Anything else.** Read the [BHTS FAQs](https://www.nrces.in/bhts/resources/faqs/).
+
+## Next steps
+
+- [SNOMED CT](/docs/main/docs/hiecm/v3/resources/standards/snomed-ct): the licence BHTS's SNOMED CT content still needs.
+- [LOINC](/docs/main/docs/hiecm/v3/resources/standards/loinc): Common Lab Codes for India, which BHTS also serves.
+- [Standards and terminologies](/docs/main/docs/hiecm/v3/resources/standards): every code system in one table.
+
+
+---
+
+# DICOM
+
+DICOM, Digital Imaging and Communications in Medicine, is the standard for medical images and the data that travels with them. A CT scan, an X-ray or an MRI is stored and exchanged as DICOM. It is managed by the Medical Imaging and Technology Alliance, a division of NEMA. Read [DICOM at NRCeS](https://www.nrces.in/standards/dicom).
+
+## In short
+
+- DICOM is the standard for medical images and their data.
+- Every record system that holds imaging needs it.
+- An imaging report references a DICOM study through an `ImagingStudy` resource.
+
+## Who needs it
+
+Every health record system that holds imaging as part of the patient record needs DICOM. The [EHR Standards for India](https://www.nrces.in/standards/ehr-standards-for-india) notify DICOM PS3.0-2015, using DIMSE services and Part 10 files.
+
+## Where a record uses it
+
+The [ABDM FHIR implementation guide](https://nrces.in/ndhm/fhir/r4/index.html) has an `ImagingStudy` profile for a DICOM study. The study is referenced from an imaging diagnostic report.
+
+The guide's [imaging report example](https://nrces.in/ndhm/fhir/r4/Bundle-DiagnosticReport-Imaging-DCM-example-01.html) shows the shape. Its SOP class is a DICOM UID, written as `urn:oid:1.2.840.10008.5.1.4.1.1.2`.
+
+## The licence
+
+The DICOM standard documents are free of charge, from the [DICOM standard site](http://dicom.nema.org/standard.html).
+
+## Tools
+
+The C-DAC DICOM SDK, version 3.5 for PS3.0-2015, is listed on [DICOM at NRCeS](https://www.nrces.in/standards/dicom).
+
+## How you know it worked
+
+- Your imaging system stores and sends studies as DICOM Part 10 files.
+- Your imaging report bundle validates against the ABDM FHIR implementation guide, with its `ImagingStudy` resource present.
+
+## When it goes wrong
+
+- **Anything else.** Read the [DICOM questions in the NRCeS FAQ](https://www.nrces.in/faqs#dicom).
+
+## Next steps
+
+- [FHIR](/docs/main/docs/hiecm/v3/resources/standards/fhir): the imaging report profile.
+- [LOINC](/docs/main/docs/hiecm/v3/resources/standards/loinc): the codes imaging reports carry.
+- [Standards and terminologies](/docs/main/docs/hiecm/v3/resources/standards): every code system in one table.
+
+
+---
+
+# Build a FHIR record
+
+Pick a record type to start from its NRCeS example bundle. Each step shows only the fields you fill in, marked with what their profile requires. Copy the JSON at the end and validate it.
+
+1.
+2.
+3.
+4.
+5.
+
+Pick a record type to start.
+
+### Pick a record type
+
+Use test data. Nothing you type leaves this page.
+
+### Patient
+
+Who the record is about.
+
+Pick a record type in step 1 first.
+
+### Author
+
+Who wrote the record, and where.
+
+Pick a record type in step 1 first.
+
+### Clinical details
+
+What the record says. Each item opens on its own.
+
+Pick a record type in step 1 first.
+
+### Review and copy
+
+Copy the bundle, then run the validator on it before you send it.
+
+Pick a record type in step 1 first.
+
+## Next steps
+
+- [Bundles and validation](/docs/main/docs/hiecm/v3/resources/standards/fhir/bundles#validate-before-you-ship): validate the bundle you copied.
+- [FHIR overview](/docs/main/docs/hiecm/v3/resources/standards/fhir): the eight record types and their profiles.
+
+
+---
+
+# FHIR bundles and validation
+
+Build a record as a FHIR R4 document bundle, then validate it before you send it. The packaging detail is in the [M2 guide](/docs/main/docs/hiecm/v3/api/m2), and the eight record types are on the [FHIR overview](/docs/main/docs/hiecm/v3/resources/standards/fhir).
+
+## In short
+
+- Every record is a `Bundle` of `type: document` that conforms to the [ABDM FHIR implementation guide](/docs/main/docs/hiecm/v3/resources/standards/fhir/nrces), version 6.5.0.
+- The first entry is always a `Composition`, whose SNOMED CT type says what the record is.
+- Build it simple, around a PDF or image, or structured, with coded resources.
+- Validate every bundle against the guide before you send it.
+
+## Two ways to build any record
+
+| Shape             | What it is                                                             | When you use it                                          |
+| ----------------- | ---------------------------------------------------------------------- | -------------------------------------------------------- |
+| Simple bundle     | A FHIR bundle wrapping a PDF or image attachment that holds the detail | Your source document is a scan, a signed PDF or an image |
+| Structured bundle | A FHIR bundle with coded health information in FHIR resources          | Your system holds the data as fields, and can code it    |
+
+Both are compliant. A structured bundle is more useful to the receiver, because it can be searched rather than only displayed.
+
+## Which resources a record carries
+
+The reference service on the [HIU](/docs/main/docs/hiecm/v3/getting-started/glossary#hiu) side supports these resources inside a bundle.
+
+- **Clinical content:** `Observation`, `Condition`, `MedicationRequest`, `DocumentReference`, `DiagnosticReport`, `Procedure`.
+- **Context and reference entities:** `Medication`, `Practitioner`, `Patient`, `Organization`, `Encounter`.
+
+That is the union across record types, not a mapping. Which resources belong to which record type is not documented here. The NRCeS profile for each type is the authority.
+
+## The bundle shape
+
+Every record is a `Bundle` of `type: document`, and the first entry must be a `Composition`.
+
+```json
+{  "resourceType": "Bundle",  "id": "bundle01",  "timestamp": "2020-01-01T15:32:26.605+05:30",  "type": "document",  "entry": [    {      "fullUrl": "Composition/1",      "resource": {        "resourceType": "Composition",        "id": "1",        "status": "final",        "type": {          "coding": [            {              "system": "https://ndhm.gov.in/sct",              "code": "440545006",              "display": "Prescription record"            }          ]        }      }    }  ]}
+```
+
+That is the skeleton.
+
+### Why the Composition comes first
+
+A bundle on its own is a bag of resources. The Composition turns it into a document: what this is, who it is about, who wrote it, who attests to it, and which resources make up its sections. Without it, a receiving system has a `MedicationRequest` and no idea whether it belongs to a prescription, a discharge summary or a draft.
+
+`Composition.type` carries the SNOMED CT code that answers "what is this". Two are documented: `440545006` for a prescription record and `721981007` for a diagnostic report. The rest have their own codes in the NRCeS profiles.
+
+### The rules that fail validation
+
+| Field                         | Rule                                                                                                                                                                                                |
+| ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`                          | Unique per bundle, and resolvable inside your own system for traceability                                                                                                                           |
+| `timestamp`                   | The time the document was issued                                                                                                                                                                    |
+| `identifier`                  | Traces the document back to your system                                                                                                                                                             |
+| `type`                        | Must be `document`                                                                                                                                                                                  |
+| `meta.versionId`              | Set it on the bundle, so updates can be checked against the latest version                                                                                                                          |
+| `entry[].fullUrl`             | A logical URL of the form `resource-type/id`, resolvable inside the bundle. Never an absolute URL.                                                                                                  |
+| `Composition.attester.party`  | References an `Organization` whose `identifier.value` is the facility's [HIP](/docs/main/docs/hiecm/v3/getting-started/glossary#hip) id as registered in the facility registry. Mode is `official`. |
+| `Composition.section.entry[]` | Top level resources only. Referenced resources such as Patient, Encounter and Practitioner belong in the bundle, not in the section entries.                                                        |
+
+The attester rule has an environment trap. The organization identifier system is the ABDM facility registry at [nhpr.abdm.gov.in](https://nhpr.abdm.gov.in/nhpr/v4/home) for production and [hspsbx.abdm.gov.in](https://hspsbx.abdm.gov.in/nhpr/v4/home) for sandbox. A bundle that passes in sandbox with the sandbox value is not right in production.
+
+One more thing to watch. `Composition.type.coding.system` is `https://ndhm.gov.in/sct` in the sample above, while `section.code.coding.system` in the same sample is `https://affinitydomain.in/sct`. The two differ in the sample itself. Take the system values from the NRCeS profile, not from the sample.
+
+## Validate before you ship
+
+Run this procedure locally. You need JDK 8 or higher.
+
+1. Create a folder and download the FHIR validator CLI, version 6.2.1, from [the HAPI FHIR core release](https://github.com/hapifhir/org.hl7.fhir.core/releases/download/6.2.1/validator_cli.jar). Save `validator_cli.jar` into it.
+2. Get a bundle to test: one your own system produced, or an NRCeS example from [nrces.in/ndhm/fhir/r4](https://nrces.in/ndhm/fhir/r4/index.html), switching to the JSON tab to download it.
+3. Run the validator from that folder:
+
+```shell
+java -jar validator_cli.jar <YOUR_BUNDLE_FILENAME>.json -ig https://nrces.in/ndhm/fhir/r4
+```
+
+It checks structural correctness, conformance to the NRCeS profiles, and required fields and constraints. Editing an NRCeS example that already validates towards your own data is faster than starting from an empty file.
+
+### Other ways to validate
+
+The [Implementation Guide for Adoption of FHIR in ABDM and NHCX](https://www.nrces.in/download/files/pdf/Implementation_Guide_for_Adoption_of_FHIR_in_ABDM_and_NHCX.pdf) gives three ways to validate.
+
+| Way          | How                                                                                  |
+| ------------ | ------------------------------------------------------------------------------------ |
+| Command line | `java -jar validator_cli.jar <file_name> -ig ndhm.in#6.5.0`                          |
+| Browser      | Open [validator.fhir.org](https://validator.fhir.org) and select the `ndhm.in` guide |
+| In your code | Load `package.tgz` into the HAPI FHIR validator from your classpath                  |
+
+The validator checks structure, profile conformance and coding. Every coding must carry the correct system URL, code and display.
+
+## How you know it worked
+
+The validator reports no errors for your bundle against `ndhm.in#6.5.0`.
+
+## When it goes wrong
+
+- **A coding fails validation.** The system URI differs from the one the profile fixes. Copy it from the profile, not from an older sample.
+- **Anything else.** Read the [FHIR questions in the NRCeS FAQ](https://www.nrces.in/faqs#fhir).
+
+## Where this is implemented
+
+- [M2 use cases](/docs/main/reference/hiecm-m2), the transfer call that carries the encrypted bundle.
+- [How a record travels](/docs/main/docs/hiecm/v3/concepts/data-flow), what happens to the bundle after you build it.
+- [Care contexts and linking](/docs/main/docs/hiecm/v3/concepts/linking), how records are grouped and made findable.
+- [Consent](/docs/main/docs/hiecm/v3/concepts/consent), where the [HI type codes](/docs/main/docs/hiecm/v3/resources/standards/fhir#the-record-types) are chosen and read.
+- [Standards and terminologies](/docs/main/docs/hiecm/v3/resources/standards), the code systems a structured bundle codes its content with.
+
+
+---
+
+# FHIR
+
+Every health record that moves inside [ABDM](/docs/main/docs/hiecm/v3/getting-started/glossary#abdm) travels as a [FHIR](/docs/main/docs/hiecm/v3/getting-started/glossary#fhir) R4 document bundle that conforms to the NRCeS profiles. What FHIR is, and why ABDM uses it, is in [FHIR](/docs/main/docs/hiecm/v3/concepts/fhir).
+
+[NRCeS documentation](/docs/main/docs/hiecm/v3/resources/standards/fhir/nrces)
+
+[The ABDM FHIR implementation guide NRCeS publishes: its version, sections, code systems, tools and samples.](/docs/main/docs/hiecm/v3/resources/standards/fhir/nrces)
+
+[Bundles and validation](/docs/main/docs/hiecm/v3/resources/standards/fhir/bundles)
+
+[How to build a record bundle: its shape, the rules that fail validation, and how to validate before you ship.](/docs/main/docs/hiecm/v3/resources/standards/fhir/bundles)
+
+[Build a FHIR record](/docs/main/docs/hiecm/v3/resources/standards/fhir/build)
+
+[Pick a record type, fill in test values step by step, and copy a bundle in the right shape.](/docs/main/docs/hiecm/v3/resources/standards/fhir/build)
+
+## The record types
+
+There are eight record types. Implementing all of them is mandatory for an [HMIS](/docs/main/docs/hiecm/v3/getting-started/glossary#hmis).
+
+| Record type                                                                                               | What it holds                                                                                                                              | [HI type](/docs/main/docs/hiecm/v3/getting-started/glossary#hi-type) code |
+| --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------- |
+| [Diagnostic Report Record](https://nrces.in/ndhm/fhir/r4/StructureDefinition-DiagnosticReportRecord.html) | Radiology and laboratory reports                                                                                                           | `DiagnosticReport`                                                        |
+| [Discharge Summary Record](https://nrces.in/ndhm/fhir/r4/StructureDefinition-DischargeSummaryRecord.html) | The discharge summary for the ABDM health data set                                                                                         | `DischargeSummary`                                                        |
+| [Health Document Record](https://nrces.in/ndhm/fhir/r4/StructureDefinition-HealthDocumentRecord.html)     | Unstructured historical records, usually uploaded by patients through a health locker                                                      | `HealthDocumentRecord`                                                    |
+| [Immunization Record](https://nrces.in/ndhm/fhir/r4/StructureDefinition-ImmunizationRecord.html)          | Immunisations, vaccine certificates and next dose recommendations                                                                          | `ImmunizationRecord`                                                      |
+| [OP Consult Record](https://nrces.in/ndhm/fhir/r4/StructureDefinition-OPConsultRecord.html)               | Outpatient notes: examinations, procedures, medications and clinical advice                                                                | `OPConsultation`                                                          |
+| [Prescription Record](https://nrces.in/ndhm/fhir/r4/StructureDefinition-PrescriptionRecord.html)          | Medication advice, following Pharmacy Council of India guidelines                                                                          | `Prescription`                                                            |
+| [Wellness Record](https://nrces.in/ndhm/fhir/r4/StructureDefinition-WellnessRecord.html)                  | Vitals, physical examination and general health data, often captured in a [PHR](/docs/main/docs/hiecm/v3/getting-started/glossary#phr) app | `WellnessRecord`                                                          |
+| [Invoice Record](https://nrces.in/ndhm/fhir/r4/StructureDefinition-InvoiceRecord.html)                    | Pharmacy invoices, consultation invoices and other billing                                                                                 | `Invoice`                                                                 |
+
+The codes are the eight `hiTypes` values the linking and consent requests accept, `Invoice` included.
+
+## Next steps
+
+- [Bundles and validation](/docs/main/docs/hiecm/v3/resources/standards/fhir/bundles): build and validate your first bundle.
+- [Build a FHIR record](/docs/main/docs/hiecm/v3/resources/standards/fhir/build): start from an NRCeS example instead of an empty file.
+
+
+---
+
+# NRCeS FHIR documentation
+
+The National Resource Centre for EHR Standards, NRCeS, publishes the profiles every ABDM record conforms to. This page lists what it publishes and where to find each part.
+
+## The ABDM FHIR implementation guide
+
+The ABDM FHIR implementation guide is the set of FHIR R4 profiles every ABDM health record and claim conforms to. Base FHIR says a resource exists. The guide says which fields an Indian record must fill, and which code systems those fields take.
+
+The guide is published by the National Resource Centre for EHR Standards, NRCeS, at [nrces.in/ndhm/fhir/r4](https://nrces.in/ndhm/fhir/r4/index.html).
+
+| Field           | Value                                                                                                                               |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Current version | 6.5.0, published 8 May 2025                                                                                                         |
+| FHIR version    | 4.0.1                                                                                                                               |
+| Package id      | `ndhm.in#6.5.0`                                                                                                                     |
+| Canonical URL   | `https://nrces.in/ndhm/fhir/r4/ImplementationGuide/ndhm.in`                                                                         |
+| Licence         | FHIR is free to use, redistribute and build on. See [HL7 FHIR at NRCeS](https://www.nrces.in/standards/hl7-international/hl7-fhir). |
+
+### What the guide holds
+
+| Section                                                         | What you find there                                                                                                                                  |
+| --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Profiles](https://nrces.in/ndhm/fhir/r4/profiles.html)         | The health record profiles: OP consultation, prescription, diagnostic report, discharge summary, immunisation, wellness, health document and invoice |
+| [NHCX profiles](https://nrces.in/ndhm/fhir/r4/hcx-profile.html) | The claim, coverage eligibility, insurance plan, communication and payment profiles for health claims                                                |
+| [Terminology](https://nrces.in/ndhm/fhir/r4/terminology.html)   | The guide's own code systems and value sets                                                                                                          |
+| [Examples](https://nrces.in/ndhm/fhir/r4/all-examples.html)     | A worked example for every profile, in JSON and XML                                                                                                  |
+| [Downloads](https://nrces.in/ndhm/fhir/r4/downloads.html)       | `package.tgz`, the definitions and the examples as zip files                                                                                         |
+| [History](https://nrces.in/ndhm/fhir/r4/history.html)           | Every published version, from 1.0.0 in August 2020                                                                                                   |
+
+Pin the version you build against. Read the history before you move to a newer one.
+
+## The code systems it binds
+
+A coded field names its code system by URI. The URI is an identifier, not a web address: send it exactly as the profile fixes it, in the coding's `system`.
+
+| Code system                                                          | System URI                                     | Where the guide uses it                                                                       |
+| -------------------------------------------------------------------- | ---------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| [SNOMED CT](https://www.nrces.in/standards/snomed-ct)                | `http://snomed.info/sct`                       | Record types, conditions, procedures, allergies, medicines, specimens and most clinical codes |
+| [LOINC](https://www.nrces.in/standards/loinc)                        | `http://loinc.org`                             | Laboratory and imaging report codes, and vital sign and body measurement observations         |
+| [ICD-10](https://www.nrces.in/standards/whofic/icd)                  | `http://hl7.org/fhir/sid/icd-10`               | Diagnoses on `Condition`, and on claims                                                       |
+| [Guide code systems](https://nrces.in/ndhm/fhir/r4/terminology.html) | `https://nrces.in/ndhm/fhir/r4/CodeSystem/...` | Administrative and claim codes, such as identifier types and billing codes                    |
+
+Quantities in the guide's examples carry units from `http://unitsofmeasure.org`. See [an Observation example](https://nrces.in/ndhm/fhir/r4/Observation-example-03.html).
+
+## Tools and samples
+
+- [ABDM FHIR R4 usage samples in Java](https://www.nrces.in/download/files/zip/abdm-fhir-r4-usage-samples-java.zip) and [in .NET](https://www.nrces.in/download/files/zip/abdm-fhir-r4-usage-samples-dotnet.zip), which build bundles in code.
+- The [NRCeS terminology server](https://www.nrces.in/bhts/termserv/), which supports `$lookup`, `$validate-code` and `$translate`.
+- [Tools and technologies](https://www.nrces.in/services/tools-and-technologies), the full list of NRCeS tools.
+
+## Next steps
+
+- [Bundles and validation](/docs/main/docs/hiecm/v3/resources/standards/fhir/bundles): use the guide to build and validate a bundle.
+- [FHIR overview](/docs/main/docs/hiecm/v3/resources/standards/fhir): the eight record types and their profiles.
+
+
+---
+
+# ICD-10 and ICD-11
+
+The International Classification of Diseases, ICD, groups diagnoses into classes for counting and reporting. SNOMED CT records what a clinician found. ICD classifies it for statistics, claims and public health. ICD is published by the World Health Organization, WHO. Read [ICD at NRCeS](https://www.nrces.in/standards/whofic/icd).
+
+The [EHR Standards for India](https://www.nrces.in/standards/ehr-standards-for-india) notify four WHO classifications for aggregated, statistical and epidemiological use.
+
+- ICD, diseases
+- ICF, functioning and disability
+- ICHI, health interventions
+- ICD-O, oncology
+
+## In short
+
+- ICD classifies diagnoses for statistics and claims, with system `http://hl7.org/fhir/sid/icd-10`.
+- The ABDM FHIR implementation guide binds ICD-10, alongside SNOMED CT on `Condition.code`.
+- Use it without a licence. Reproducing it needs WHO's permission.
+
+## Where a record uses it
+
+The system URI is `http://hl7.org/fhir/sid/icd-10`. The [ABDM FHIR implementation guide](https://nrces.in/ndhm/fhir/r4/index.html) uses it on these fields.
+
+| Field                                                    | What the code says                                                        |
+| -------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `Condition.code`                                         | A diagnosis, in the ICD-10 slice                                          |
+| `Claim.diagnosis.diagnosis[x]`                           | The diagnosis a claim is made for, bound at example strength              |
+| `CoverageEligibilityRequest.item.diagnosis.diagnosis[x]` | The diagnosis an eligibility check is made for, bound at example strength |
+
+`Condition.code` is sliced on its system into an ICD-10 slice and a SNOMED CT slice. Send a coding in either, or both.
+
+## ICD-10 and ICD-11
+
+The ABDM FHIR implementation guide binds ICD-10. WHO stopped maintaining ICD-10 in 2018, and new content goes into ICD-11 only.
+
+## The licence
+
+You need no licence to use ICD-10, whether or not you hold a SNOMED CT Affiliate Licence. Reproducing, reprinting or translating ICD-10 needs permission from WHO.
+
+## Get it
+
+| Resource                                | Link                                                                                                     |
+| --------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| ICD-10 package                          | [icdcdn.who.int/icd10](https://icdcdn.who.int/icd10/index.html)                                          |
+| ICD-10 Volume 2, the instruction manual | [ICD-10 Volume 2, 2019](https://icd.who.int/browse10/Content/statichtml/ICD10Volume2_en_2019.pdf)        |
+| Online browser                          | [ICD-10, 2019 edition](https://icd.who.int/browse10/2019/en)                                             |
+| SNOMED CT to ICD-10 maps                | [snomed.org/maps](https://www.snomed.org/maps), and inside the SNOMED CT International Edition from MLDS |
+
+## How you know it worked
+
+- Every ICD-10 coding you send carries `http://hl7.org/fhir/sid/icd-10` as its system.
+- Your `Condition` validates against the ABDM FHIR implementation guide with its ICD-10 slice filled.
+
+## When it goes wrong
+
+- **You hold SNOMED CT codes and need ICD-10.** Use the SNOMED CT to ICD-10 map rather than mapping by hand.
+- **Anything else.** Read the [ICD questions in the NRCeS FAQ](https://www.nrces.in/faqs#icd).
+
+## Next steps
+
+- [SNOMED CT](/docs/main/docs/hiecm/v3/resources/standards/snomed-ct): the terminology ICD-10 is mapped from.
+- [FHIR](/docs/main/docs/hiecm/v3/resources/standards/fhir): the `Condition` profile that carries both.
+- [Standards and terminologies](/docs/main/docs/hiecm/v3/resources/standards): every code system in one table.
+
+
+---
+
+# Standards and terminologies
+
+An ABDM record has a shape and a meaning. FHIR gives it the shape. Code systems give each coded field its meaning, so a receiving system reads a diagnosis, a test or a medicine the same way you wrote it.
+
+Each standard below is published or distributed in India through the National Resource Centre for EHR Standards, [NRCeS](https://www.nrces.in/).
+
+| Standard                                                                          | What it codes                                                                        | System URI                                 |
+| --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ | ------------------------------------------ |
+| [FHIR](/docs/main/docs/hiecm/v3/resources/standards/fhir)                         | The implementation guide every record and claim conforms to, and the record profiles | `ndhm.in#6.5.0`                            |
+| [SNOMED CT](/docs/main/docs/hiecm/v3/resources/standards/snomed-ct)               | Clinical meaning: record types, conditions, procedures, medicines                    | `http://snomed.info/sct`                   |
+| [LOINC](/docs/main/docs/hiecm/v3/resources/standards/loinc)                       | Laboratory tests and clinical observations                                           | `http://loinc.org`                         |
+| [ICD-10 and ICD-11](/docs/main/docs/hiecm/v3/resources/standards/icd)             | Diagnoses, classified for statistics and claims                                      | `http://hl7.org/fhir/sid/icd-10`           |
+| [Indian code sets](/docs/main/docs/hiecm/v3/resources/standards/indian-code-sets) | Medicines sold in India, AYUSH, geography and languages                              | `http://snomed.info/sct`                   |
+| [DICOM](/docs/main/docs/hiecm/v3/resources/standards/dicom)                       | Medical images and their data                                                        | DICOM UIDs, as `urn:oid:`                  |
+| [BHTS](/docs/main/docs/hiecm/v3/resources/standards/bhts)                         | A FHIR R4 terminology service to look up, validate and translate all of the above    | `https://www.nrces.in/bhts/api/v1/ts/fhir` |
+
+## Next steps
+
+- [FHIR](/docs/main/docs/hiecm/v3/resources/standards/fhir): the implementation guide and the record profiles. Start here if you build records.
+- [SNOMED CT](/docs/main/docs/hiecm/v3/resources/standards/snomed-ct): get your licence early, because the release files take days to arrive.
+
+
+---
+
+# Indian code sets
+
+India publishes its own code sets on top of the international ones. They cover medicines sold in India, AYUSH systems of medicine, Indian geography and Indian languages. Each is listed on the [NRCeS national releases page](https://www.nrces.in/services/national-releases).
+
+## In short
+
+- Common Drug Codes for India codes medicines, as a SNOMED CT extension or as flat files.
+- The AYUSH, geography, language and COVID-19 extensions also extend SNOMED CT.
+- All of them come through MLDS with a SNOMED CT Affiliate Licence, or from the NRCeS national releases page.
+
+## Common Drug Codes for India
+
+Common Drug Codes for India, CDCI, codes the medicines prescribed and dispensed in India. It covers generic clinical drugs, suppliers and branded medicines. Devices, surgical implants and combination packs are out of scope.
+
+Its content is drawn from these lists:
+
+- The National List of Essential Medicines 2015
+- Pradhan Mantri Bhartiya Janaushadhi Pariyojana, Jan Aushadhi
+- AMRIT pharmacies
+- The Telemedicine Practice Guidelines
+- The NACO HIV drug list
+- The COVID-19 clinical management protocol and COVID-19 vaccine products
+
+| Package                        | What it is                                                                                               | Get it                                                                                                                                 |
+| ------------------------------ | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Terminology Integrated Package | The India Drug Extension for SNOMED CT                                                                   | [MLDS](https://mlds.ihtsdotools.org/#/viewReleases/viewRelease/395763), with a SNOMED CT Affiliate Licence                             |
+| Flat Files Package             | Tab separated text files: substances, trade names, suppliers, drug forms, generics and branded medicines | The [NRCeS national releases page](https://www.nrces.in/services/national-releases#drug_codes), under the licence in its `License.txt` |
+
+In a record, CDCI codes travel as SNOMED CT, with system `http://snomed.info/sct`. The ABDM Medicine Codes value set binds `MedicationRequest.medication[x]` and `MedicationStatement.medication[x]` at example strength. It draws on clinical drugs from the International Edition and on clinical drugs and branded medicines from CDCI.
+
+## India AYUSH Extension
+
+The India AYUSH Extension adds Ayurveda, Siddha and Unani concepts to SNOMED CT, with terms in Sanskrit, Tamil and Urdu. It is distributed through [MLDS](https://mlds.ihtsdotools.org/#/viewReleases/viewRelease/600189) with a SNOMED CT Affiliate Licence.
+
+## The other India extensions
+
+Each is a SNOMED CT extension, released through MLDS to Affiliate Licensees.
+
+| Release                                                                                                         | What it adds                                                                    | Release date   |
+| --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------- |
+| [India Reference Sets](https://mlds.ihtsdotools.org/#/viewReleases/viewRelease/194856)                          | 30 simple reference sets: 12 for national health programmes, 18 for specialties | 6 August 2021  |
+| [India Geographical Location Extension](https://mlds.ihtsdotools.org/#/viewReleases/viewRelease/480480)         | 7,628 location concepts, mapped to Local Government Directory codes             | 6 August 2021  |
+| [India Patient Instructions Language Extension](https://mlds.ihtsdotools.org/#/viewReleases/viewRelease/480580) | Patient instructions in Hindi, Marathi, Tamil and Urdu                          | 31 August 2026 |
+| [India COVID-19 Extension](https://mlds.ihtsdotools.org/#/viewReleases/viewRelease/442922)                      | 50 COVID-19 terms                                                               | 6 August 2021  |
+
+Common Lab Codes for India, CLCI, is the Indian subset of LOINC rather than a SNOMED CT extension. It is described with LOINC.
+
+## How you know it worked
+
+- Medicines your system dispenses resolve to a CDCI concept, generic or branded.
+- Your SNOMED CT release on MLDS includes the India extensions your system uses.
+- Every extension code you send carries `http://snomed.info/sct` as its system.
+
+## When it goes wrong
+
+- **A medicine is not in CDCI.** Code it to the generic clinical drug in the SNOMED CT International Edition.
+- **An India concept is not found in the International Edition browser.** Search [CSNOFinder](https://www.nrces.in/bhts/browser/), which carries the India extensions.
+- **Anything else.** Read the [NRCeS FAQ](https://www.nrces.in/faqs).
+
+## Next steps
+
+- [SNOMED CT](/docs/main/docs/hiecm/v3/resources/standards/snomed-ct): the licence these extensions come under.
+- [LOINC](/docs/main/docs/hiecm/v3/resources/standards/loinc): Common Lab Codes for India.
+- [Standards and terminologies](/docs/main/docs/hiecm/v3/resources/standards): every code system in one table.
+
+
+---
+
+# LOINC
+
+LOINC is the code system for laboratory tests and clinical observations. A lab report, a blood pressure reading and a body weight each carry a LOINC code that says what was measured. LOINC is owned, maintained and distributed by the Regenstrief Institute. Read [LOINC at NRCeS](https://www.nrces.in/standards/loinc).
+
+## In short
+
+- LOINC codes laboratory tests and observations, with system `http://loinc.org`.
+- It is free, from loinc.org.
+- Common Lab Codes for India is the subset to start from.
+
+## Where a record uses it
+
+The system URI is `http://loinc.org`. The [ABDM FHIR implementation guide](https://nrces.in/ndhm/fhir/r4/index.html) uses it on these fields.
+
+| Field                   | What the code says                                                       |
+| ----------------------- | ------------------------------------------------------------------------ |
+| `DiagnosticReport.code` | The laboratory or imaging report, in the lab and imaging report profiles |
+| `Observation.code`      | What was observed, in the LOINC slice                                    |
+
+Observations bind to these value sets, at extensible strength, each in the profile of the same name.
+
+- Vital Signs
+- Body Measurement
+- Physical Activity
+- Women Health
+- General Assessment, which adds one SNOMED CT code
+
+The [EHR Standards for India](https://www.nrces.in/standards/ehr-standards-for-india) require LOINC for results and reports in laboratory and imaging systems.
+
+## The licence
+
+LOINC is free of charge. Download it from [loinc.org](https://loinc.org/) under the [LOINC licence](https://loinc.org/license). New versions of LOINC and RELMA are released twice a year, in February and August.
+
+## Common Lab Codes for India
+
+Common Lab Codes for India, CLCI, is a curated subset of LOINC. It covers 1,473 commonly referred laboratory tests. Start here before you search all of LOINC.
+
+| Field          | Value                                                                                                                   |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Format         | One CSV file, `common_lab_codes_for_india.csv`                                                                          |
+| Columns        | General Name, LOINC Code, FSN and LCN                                                                                   |
+| Latest release | [Release notes, 29 June 2026](https://www.nrces.in/download/files/pdf/CommonLabCodesForIndia_ReleaseNotes_20260629.pdf) |
+| Download       | The [NRCeS national releases page](https://www.nrces.in/services/national-releases#lab_codes)                           |
+
+## Tools and guidance
+
+| Resource                                                                                                                                               | Use it for                                                  |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------- |
+| [Guide for using LOINC in ABDM FHIR Resources](https://www.nrces.in/download/files/pdf/Guide%20for%20using%20LOINC%20in%20ABDM%20FHIR%20Resources.pdf) | Which LOINC codes go in which ABDM resource                 |
+| RELMA, from [loinc.org](https://loinc.org/)                                                                                                            | Mapping your local test names to LOINC codes, free          |
+| [LOINCServ](https://www.nrces.in/bhts/api/v1/loincserv/)                                                                                               | Looking codes up from your system over a public REST API    |
+| [CLNtk](https://cdac.in/index.aspx?id=hi_hs_medinfo_loinc_home)                                                                                        | Building LOINC into your application with the C-DAC toolkit |
+
+## How you know it worked
+
+- Each test your laboratory reports maps to one LOINC code, held against your local test name.
+- Every LOINC coding you send carries `http://loinc.org` as its system.
+- Your bundle validates against the ABDM FHIR implementation guide.
+
+## When it goes wrong
+
+- **A local test has no obvious code.** Look in CLCI first, then map it with RELMA.
+- **An observation fails validation.** Check that the coding carries `http://loinc.org` as its system, and a code and display.
+- **Anything else.** Read the [LOINC questions in the NRCeS FAQ](https://www.nrces.in/faqs#loinc).
+
+## Next steps
+
+- [SNOMED CT](/docs/main/docs/hiecm/v3/resources/standards/snomed-ct): the clinical terminology for everything that is not a test.
+- [NRCeS FHIR documentation](/docs/main/docs/hiecm/v3/resources/standards/fhir/nrces): the profiles LOINC codes sit in.
+- [BHTS](/docs/main/docs/hiecm/v3/resources/standards/bhts): look LOINC codes up from your system.
+- [Standards and terminologies](/docs/main/docs/hiecm/v3/resources/standards): every code system in one table.
+
+
+---
+
+# SNOMED CT
+
+SNOMED CT is the clinical terminology an ABDM health record codes its content with. FHIR gives a record its shape; SNOMED CT says what each part means. It is owned, maintained and distributed by SNOMED International.
+
+India became a SNOMED International member country in April 2014. The Ministry of Health and Family Welfare designated C-DAC Pune, through NRCeS, to distribute and manage SNOMED CT in India. Read [SNOMED CT at NRCeS](https://www.nrces.in/standards/snomed-ct).
+
+## In short
+
+- SNOMED CT codes what a record means, with system `http://snomed.info/sct`.
+- It is free in India and still needs an Affiliate Licence, from MLDS.
+- India's drug, AYUSH and other extensions come through the same licence.
+
+## Where a record uses it
+
+The system URI is `http://snomed.info/sct`. The [ABDM FHIR implementation guide](https://nrces.in/ndhm/fhir/r4/index.html) fixes it on these fields, among others.
+
+| Field                                                             | What the code says                                     |
+| ----------------------------------------------------------------- | ------------------------------------------------------ |
+| `Composition.type` and `Composition.section.code`                 | Which record type this is, and what each section holds |
+| `Condition.code`                                                  | A diagnosis or problem, in the SNOMED CT slice         |
+| `Procedure.code`                                                  | The procedure performed                                |
+| `AllergyIntolerance.code`                                         | The allergen or intolerance                            |
+| `MedicationRequest.medication[x]`                                 | The medicine prescribed                                |
+| `DiagnosticReport.category` and `DiagnosticReport.conclusionCode` | The kind of report and its coded conclusion            |
+| `Specimen.type` and `ServiceRequest.code`                         | The specimen collected, and the service ordered        |
+
+The [EHR Standards for India](https://www.nrces.in/standards/ehr-standards-for-india) require a health record system to use SNOMED CT as its primary internal encoding.
+
+## The licence
+
+SNOMED CT is free to use in India, and it still needs a licence. The [NRCeS FAQ](https://www.nrces.in/faqs#snomedct) sets out the terms.
+
+| Case                                  | What you need                                                                                                                                              |
+| ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A system used in India                | An Affiliate Licence, free of charge                                                                                                                       |
+| Each deployment of your system        | A sub-licence under your Affiliate Licence                                                                                                                 |
+| An app deployed or used outside India | An International Affiliate Licence from SNOMED International                                                                                               |
+| Every licence period                  | A [usage report](https://www.nrces.in/download/files/pdf/SNOMED_CT_Usage_Report_Submission.pdf), filed before the period you declared at registration ends |
+
+## Get it
+
+1. Register on the [Member Licensing and Distribution Service for India](https://mlds.ihtsdotools.org/#/landing/IN?lang=en), MLDS.
+2. Accept the [SNOMED CT Affiliate Licence Agreement](https://www.nrces.in/download/files/pdf/SNOMED%20CT%20Affiliate%20License%20Agreement%202023.pdf).
+3. Download the International Edition release files. The link arrives in four to five business days.
+
+India's own extensions, such as drugs and AYUSH, are released through the same MLDS account. They are listed on the [NRCeS national releases page](https://www.nrces.in/services/national-releases).
+
+## Browse and look up codes
+
+| Tool                                                                | Use it for                                                             |
+| ------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| [SNOMED CT Browser](http://browser.ihtsdotools.org/)                | Browsing the International Edition                                     |
+| [CSNOFinder](https://www.nrces.in/bhts/browser/)                    | Browsing with the India extensions, including ECL queries              |
+| [CSNOServ](https://www.nrces.in/bhts/api/v1/csnoserv/)              | Looking codes up from your system over a public REST API, rate limited |
+| [CSNOtk](https://cdac.in/index.aspx?id=hi_hs_medinfo_csno_overview) | Building SNOMED CT into your application with the C-DAC toolkit        |
+
+The SNOMED CT to ICD-10 map ships inside the International Edition you download from MLDS.
+
+## How you know it worked
+
+- You hold an Affiliate Licence and can download release files from MLDS.
+- Every SNOMED CT coding you send carries `http://snomed.info/sct` as its system.
+- Your bundle validates against the ABDM FHIR implementation guide.
+
+## When it goes wrong
+
+- **You skipped the licence because the terminology is free.** Free in India still means licensed. Register on MLDS before you ship.
+- **A code is not found.** It may sit in an India extension rather than the International Edition. Search CSNOFinder, which carries both.
+- **Anything else.** Read the [SNOMED CT questions in the NRCeS FAQ](https://www.nrces.in/faqs#snomedct).
+
+## Next steps
+
+- [Indian code sets](/docs/main/docs/hiecm/v3/resources/standards/indian-code-sets): the India extensions to SNOMED CT.
+- [ICD-10 and ICD-11](/docs/main/docs/hiecm/v3/resources/standards/icd): classifying what SNOMED CT records.
+- [BHTS](/docs/main/docs/hiecm/v3/resources/standards/bhts): look SNOMED CT codes up and validate them from your system.
+- [Standards and terminologies](/docs/main/docs/hiecm/v3/resources/standards): every code system in one table.
 
 
 ---
@@ -79291,6 +79916,10 @@ Run your service's test cases before you ask for sign-off. Each service has one 
 | Jan Aushadhi                  | [Jan Aushadhi test cases](/docs/main/docs/uhi/v1/resources/jan-aushadhi)          |
 | NOTTO Hospital Discovery      | [NOTTO test cases](/docs/main/docs/uhi/v1/resources/notto)                        |
 
+## Standards and terminologies
+
+The FHIR profiles and code systems a record is built and coded with: SNOMED CT, LOINC, ICD, the Indian code sets and DICOM. [Standards and terminologies](/docs/main/docs/uhi/v1/resources/standards) lists each one with its system URI.
+
 ## Walkthroughs and tools
 
 - [Recorded walkthroughs of UHI services in Aarogya Setu](https://drive.google.com/drive/folders/1JvlWPouPNlyfLT3RmsjuUzeAVkdhlKrD?usp=drive_link). Your sign-off demo follows the same flow.
@@ -79398,6 +80027,541 @@ Check these by walking through your app on a test device and inspecting the scre
 - [PM-JAY HEM Hospital Discovery](/docs/main/docs/uhi/v1/services/pmjay-hem): the flow these test cases cover.
 - [Errors on UHI](/docs/main/docs/uhi/v1/concepts/errors): what to log when a test case fails.
 - [Record a demo and request sign-off](/docs/main/docs/uhi/v1/getting-started/going-live#2-record-a-demo-and-request-sign-off): the onboarding step that follows your test cases.
+
+
+---
+
+# Bharat Health Terminology Service
+
+The Bharat Health Terminology Service, BHTS, is the national terminology service NRCeS runs at C-DAC Pune for the Ministry of Health and Family Welfare. It lets your system look up, validate, expand and translate codes over FHIR R4. Read [About BHTS](https://www.nrces.in/bhts/resources/documentation/).
+
+## In short
+
+- One FHIR R4 terminology server for SNOMED CT with the India extensions, LOINC, ICD-10 and the ABDM code systems.
+- The APIs are public, need no key, and are rate limited.
+- Use it to build, test and validate. Production or high-volume use needs NRCeS's authorization or a local instance.
+
+## What it holds
+
+BHTS serves these code systems:
+
+- SNOMED CT, with the India national extensions
+- LOINC
+- ICD-10 and ICD-10-CM
+- The ABDM FHIR code systems and value sets
+
+It is also the national repository for the code sets NRCeS maintains:
+
+- Common Drug Codes for India
+- The India AYUSH terminology for Ayurveda, Siddha and Unani
+- Patient instructions in several Indian languages
+- Common Lab Codes for India
+- Geographical location codes, harmonised with Local Government Directory codes
+
+## The five components
+
+| Component          | Use it for                                                          | Link                                                     |
+| ------------------ | ------------------------------------------------------------------- | -------------------------------------------------------- |
+| Terminology Server | FHIR R4 code systems, value sets and concept maps, from your system | [termserv](https://www.nrces.in/bhts/termserv/)          |
+| CSNOServ           | SNOMED CT search, lookup, validation and mapping over REST          | [csnoserv](https://www.nrces.in/bhts/api/v1/csnoserv/)   |
+| LOINCServ          | LOINC search, lookup and panels over REST                           | [loincserv](https://www.nrces.in/bhts/api/v1/loincserv/) |
+| CSNOFinder         | Browsing SNOMED CT and the India extensions, with ECL queries       | [browser](https://www.nrces.in/bhts/browser/)            |
+| Aarogyawali        | Searching medical terms in Indian languages                         | [aarogyawali](https://www.nrces.in/bhts/aarogyawali/)    |
+
+## Call the terminology server
+
+The base URL is `https://www.nrces.in/bhts/api/v1/ts/fhir`. Read the [Terminology Server Overview](https://www.nrces.in/bhts/resources/documentation/terminology-service-about-terminology-server) for every API.
+
+| Operation        | What it answers                                                                             | Path                                                     |
+| ---------------- | ------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| `$lookup`        | The display, properties and status of one code                                              | `/CodeSystem/$lookup`                                    |
+| `$validate-code` | Whether a code is valid in a code system or value set                                       | `/CodeSystem/$validate-code`, `/ValueSet/$validate-code` |
+| `$subsumes`      | Whether one code is a kind of another                                                       | `/CodeSystem/$subsumes`                                  |
+| `$expand`        | Every code in a value set                                                                   | `/ValueSet/$expand`                                      |
+| `$translate`     | The matching code in another system, such as SNOMED CT to ICD-10                            | `/ConceptMap/$translate`                                 |
+| Read             | A SNOMED CT clinical drug as a FHIR `Medication`, with ingredients, strengths and dose form | `/Medication/{id}`                                       |
+
+Look up the SNOMED CT code for a prescription record:
+
+```bash
+curl 'https://www.nrces.in/bhts/api/v1/ts/fhir/CodeSystem/$lookup?system=http://snomed.info/sct&code=440545006'
+```
+
+The answer is a FHIR `Parameters` resource. Its `display` is `Prescription record`, and its `version` names the SNOMED CT release it came from.
+
+## Limits on use
+
+The [BHTS Terms of Service](https://www.nrces.in/bhts/terms-of-service/) set these limits.
+
+| Use                                                        | Allowed                                                                                     |
+| ---------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| Lookup and validation while you build, test and evaluate   | Yes, within the rate limits                                                                 |
+| Continuous, large-scale or production use through the APIs | Only with NRCeS's prior authorization. Ask NRCeS for a local setup or a dedicated instance. |
+| Use from outside India                                     | May be restricted or blocked without notice                                                 |
+| SNOMED CT content in your own system                       | Still needs your SNOMED CT Affiliate Licence                                                |
+
+Verify any code, relationship or mapping before you put it in a production or clinical system.
+
+## How you know it worked
+
+A `$lookup` returns `Parameters` with the code's `display`. A `$validate-code` returns `result` as `true` for a valid code.
+
+## When it goes wrong
+
+- **Requests are throttled or refused.** You are over the rate limit. Cache what you look up, and ask NRCeS for a local instance if you need volume.
+- **A code is reported as not found.** Check that the `system` URI matches the code system exactly, such as `http://snomed.info/sct`.
+- **A term, translation or mapping is wrong or missing.** Report it to NRCeS.
+- **Anything else.** Read the [BHTS FAQs](https://www.nrces.in/bhts/resources/faqs/).
+
+## Next steps
+
+- [SNOMED CT](/docs/main/docs/uhi/v1/resources/standards/snomed-ct): the licence BHTS's SNOMED CT content still needs.
+- [LOINC](/docs/main/docs/uhi/v1/resources/standards/loinc): Common Lab Codes for India, which BHTS also serves.
+- [Standards and terminologies](/docs/main/docs/uhi/v1/resources/standards): every code system in one table.
+
+
+---
+
+# DICOM
+
+DICOM, Digital Imaging and Communications in Medicine, is the standard for medical images and the data that travels with them. A CT scan, an X-ray or an MRI is stored and exchanged as DICOM. It is managed by the Medical Imaging and Technology Alliance, a division of NEMA. Read [DICOM at NRCeS](https://www.nrces.in/standards/dicom).
+
+## In short
+
+- DICOM is the standard for medical images and their data.
+- Every record system that holds imaging needs it.
+- An imaging report references a DICOM study through an `ImagingStudy` resource.
+
+## Who needs it
+
+Every health record system that holds imaging as part of the patient record needs DICOM. The [EHR Standards for India](https://www.nrces.in/standards/ehr-standards-for-india) notify DICOM PS3.0-2015, using DIMSE services and Part 10 files.
+
+## Where a record uses it
+
+The [ABDM FHIR implementation guide](https://nrces.in/ndhm/fhir/r4/index.html) has an `ImagingStudy` profile for a DICOM study. The study is referenced from an imaging diagnostic report.
+
+The guide's [imaging report example](https://nrces.in/ndhm/fhir/r4/Bundle-DiagnosticReport-Imaging-DCM-example-01.html) shows the shape. Its SOP class is a DICOM UID, written as `urn:oid:1.2.840.10008.5.1.4.1.1.2`.
+
+## The licence
+
+The DICOM standard documents are free of charge, from the [DICOM standard site](http://dicom.nema.org/standard.html).
+
+## Tools
+
+The C-DAC DICOM SDK, version 3.5 for PS3.0-2015, is listed on [DICOM at NRCeS](https://www.nrces.in/standards/dicom).
+
+## How you know it worked
+
+- Your imaging system stores and sends studies as DICOM Part 10 files.
+- Your imaging report bundle validates against the ABDM FHIR implementation guide, with its `ImagingStudy` resource present.
+
+## When it goes wrong
+
+- **Anything else.** Read the [DICOM questions in the NRCeS FAQ](https://www.nrces.in/faqs#dicom).
+
+## Next steps
+
+- [FHIR records and profiles](/docs/main/docs/uhi/v1/resources/standards/fhir): the imaging report profile.
+- [LOINC](/docs/main/docs/uhi/v1/resources/standards/loinc): the codes imaging reports carry.
+- [Standards and terminologies](/docs/main/docs/uhi/v1/resources/standards): every code system in one table.
+
+
+---
+
+# FHIR records and profiles
+
+Every ABDM health record and claim is a FHIR R4 bundle that conforms to the ABDM FHIR implementation guide. This page gives the guide, the code systems its profiles bind, and how to validate a bundle against it.
+
+## In short
+
+- Every ABDM record and claim conforms to the ABDM FHIR implementation guide, version 6.5.0 on FHIR 4.0.1.
+- Coded fields take SNOMED CT, LOINC, ICD-10 or the guide's own code systems, each by a fixed URI.
+- Validate every bundle against `ndhm.in#6.5.0` before you send it.
+
+## The ABDM FHIR implementation guide
+
+The ABDM FHIR implementation guide is the set of FHIR R4 profiles every ABDM health record and claim conforms to. Base FHIR says a resource exists. The guide says which fields an Indian record must fill, and which code systems those fields take.
+
+The guide is published by the National Resource Centre for EHR Standards, NRCeS, at [nrces.in/ndhm/fhir/r4](https://nrces.in/ndhm/fhir/r4/index.html).
+
+| Field           | Value                                                                                                                               |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Current version | 6.5.0, published 8 May 2025                                                                                                         |
+| FHIR version    | 4.0.1                                                                                                                               |
+| Package id      | `ndhm.in#6.5.0`                                                                                                                     |
+| Canonical URL   | `https://nrces.in/ndhm/fhir/r4/ImplementationGuide/ndhm.in`                                                                         |
+| Licence         | FHIR is free to use, redistribute and build on. See [HL7 FHIR at NRCeS](https://www.nrces.in/standards/hl7-international/hl7-fhir). |
+
+### What the guide holds
+
+| Section                                                         | What you find there                                                                                                                                  |
+| --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Profiles](https://nrces.in/ndhm/fhir/r4/profiles.html)         | The health record profiles: OP consultation, prescription, diagnostic report, discharge summary, immunisation, wellness, health document and invoice |
+| [NHCX profiles](https://nrces.in/ndhm/fhir/r4/hcx-profile.html) | The claim, coverage eligibility, insurance plan, communication and payment profiles for health claims                                                |
+| [Terminology](https://nrces.in/ndhm/fhir/r4/terminology.html)   | The guide's own code systems and value sets                                                                                                          |
+| [Examples](https://nrces.in/ndhm/fhir/r4/all-examples.html)     | A worked example for every profile, in JSON and XML                                                                                                  |
+| [Downloads](https://nrces.in/ndhm/fhir/r4/downloads.html)       | `package.tgz`, the definitions and the examples as zip files                                                                                         |
+| [History](https://nrces.in/ndhm/fhir/r4/history.html)           | Every published version, from 1.0.0 in August 2020                                                                                                   |
+
+Pin the version you build against. Read the history before you move to a newer one.
+
+## The code systems it binds
+
+A coded field names its code system by URI. The URI is an identifier, not a web address: send it exactly as the profile fixes it, in the coding's `system`.
+
+| Code system                                                          | System URI                                     | Where the guide uses it                                                                       |
+| -------------------------------------------------------------------- | ---------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| [SNOMED CT](https://www.nrces.in/standards/snomed-ct)                | `http://snomed.info/sct`                       | Record types, conditions, procedures, allergies, medicines, specimens and most clinical codes |
+| [LOINC](https://www.nrces.in/standards/loinc)                        | `http://loinc.org`                             | Laboratory and imaging report codes, and vital sign and body measurement observations         |
+| [ICD-10](https://www.nrces.in/standards/whofic/icd)                  | `http://hl7.org/fhir/sid/icd-10`               | Diagnoses on `Condition`, and on claims                                                       |
+| [Guide code systems](https://nrces.in/ndhm/fhir/r4/terminology.html) | `https://nrces.in/ndhm/fhir/r4/CodeSystem/...` | Administrative and claim codes, such as identifier types and billing codes                    |
+
+Quantities in the guide's examples carry units from `http://unitsofmeasure.org`. See [an Observation example](https://nrces.in/ndhm/fhir/r4/Observation-example-03.html).
+
+## Validate a bundle against it
+
+The [Implementation Guide for Adoption of FHIR in ABDM and NHCX](https://www.nrces.in/download/files/pdf/Implementation_Guide_for_Adoption_of_FHIR_in_ABDM_and_NHCX.pdf) gives three ways to validate.
+
+| Way          | How                                                                                  |
+| ------------ | ------------------------------------------------------------------------------------ |
+| Command line | `java -jar validator_cli.jar <file_name> -ig ndhm.in#6.5.0`                          |
+| Browser      | Open [validator.fhir.org](https://validator.fhir.org) and select the `ndhm.in` guide |
+| In your code | Load `package.tgz` into the HAPI FHIR validator from your classpath                  |
+
+The validator checks structure, profile conformance and coding. Every coding must carry the correct system URL, code and display.
+
+## Tools and samples
+
+- [ABDM FHIR R4 usage samples in Java](https://www.nrces.in/download/files/zip/abdm-fhir-r4-usage-samples-java.zip) and [in .NET](https://www.nrces.in/download/files/zip/abdm-fhir-r4-usage-samples-dotnet.zip), which build bundles in code.
+- The [NRCeS terminology server](https://www.nrces.in/bhts/termserv/), which supports `$lookup`, `$validate-code` and `$translate`.
+- [Tools and technologies](https://www.nrces.in/services/tools-and-technologies), the full list of NRCeS tools.
+
+## How you know it worked
+
+The validator reports no errors for your bundle against `ndhm.in#6.5.0`.
+
+## When it goes wrong
+
+- **A coding fails validation.** The system URI differs from the one the profile fixes. Copy it from the profile, not from an older sample.
+- **Anything else.** Read the [FHIR questions in the NRCeS FAQ](https://www.nrces.in/faqs#fhir).
+
+## Next steps
+
+- [SNOMED CT](/docs/main/docs/uhi/v1/resources/standards/snomed-ct): the clinical terminology most coded fields take.
+- [LOINC](/docs/main/docs/uhi/v1/resources/standards/loinc): the codes for laboratory tests and observations.
+- [Standards and terminologies](/docs/main/docs/uhi/v1/resources/standards): every code system in one table.
+
+
+---
+
+# ICD-10 and ICD-11
+
+The International Classification of Diseases, ICD, groups diagnoses into classes for counting and reporting. SNOMED CT records what a clinician found. ICD classifies it for statistics, claims and public health. ICD is published by the World Health Organization, WHO. Read [ICD at NRCeS](https://www.nrces.in/standards/whofic/icd).
+
+The [EHR Standards for India](https://www.nrces.in/standards/ehr-standards-for-india) notify four WHO classifications for aggregated, statistical and epidemiological use.
+
+- ICD, diseases
+- ICF, functioning and disability
+- ICHI, health interventions
+- ICD-O, oncology
+
+## In short
+
+- ICD classifies diagnoses for statistics and claims, with system `http://hl7.org/fhir/sid/icd-10`.
+- The ABDM FHIR implementation guide binds ICD-10, alongside SNOMED CT on `Condition.code`.
+- Use it without a licence. Reproducing it needs WHO's permission.
+
+## Where a record uses it
+
+The system URI is `http://hl7.org/fhir/sid/icd-10`. The [ABDM FHIR implementation guide](https://nrces.in/ndhm/fhir/r4/index.html) uses it on these fields.
+
+| Field                                                    | What the code says                                                        |
+| -------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `Condition.code`                                         | A diagnosis, in the ICD-10 slice                                          |
+| `Claim.diagnosis.diagnosis[x]`                           | The diagnosis a claim is made for, bound at example strength              |
+| `CoverageEligibilityRequest.item.diagnosis.diagnosis[x]` | The diagnosis an eligibility check is made for, bound at example strength |
+
+`Condition.code` is sliced on its system into an ICD-10 slice and a SNOMED CT slice. Send a coding in either, or both.
+
+## ICD-10 and ICD-11
+
+The ABDM FHIR implementation guide binds ICD-10. WHO stopped maintaining ICD-10 in 2018, and new content goes into ICD-11 only.
+
+## The licence
+
+You need no licence to use ICD-10, whether or not you hold a SNOMED CT Affiliate Licence. Reproducing, reprinting or translating ICD-10 needs permission from WHO.
+
+## Get it
+
+| Resource                                | Link                                                                                                     |
+| --------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| ICD-10 package                          | [icdcdn.who.int/icd10](https://icdcdn.who.int/icd10/index.html)                                          |
+| ICD-10 Volume 2, the instruction manual | [ICD-10 Volume 2, 2019](https://icd.who.int/browse10/Content/statichtml/ICD10Volume2_en_2019.pdf)        |
+| Online browser                          | [ICD-10, 2019 edition](https://icd.who.int/browse10/2019/en)                                             |
+| SNOMED CT to ICD-10 maps                | [snomed.org/maps](https://www.snomed.org/maps), and inside the SNOMED CT International Edition from MLDS |
+
+## How you know it worked
+
+- Every ICD-10 coding you send carries `http://hl7.org/fhir/sid/icd-10` as its system.
+- Your `Condition` validates against the ABDM FHIR implementation guide with its ICD-10 slice filled.
+
+## When it goes wrong
+
+- **You hold SNOMED CT codes and need ICD-10.** Use the SNOMED CT to ICD-10 map rather than mapping by hand.
+- **Anything else.** Read the [ICD questions in the NRCeS FAQ](https://www.nrces.in/faqs#icd).
+
+## Next steps
+
+- [SNOMED CT](/docs/main/docs/uhi/v1/resources/standards/snomed-ct): the terminology ICD-10 is mapped from.
+- [FHIR records and profiles](/docs/main/docs/uhi/v1/resources/standards/fhir): the `Condition` profile that carries both.
+- [Standards and terminologies](/docs/main/docs/uhi/v1/resources/standards): every code system in one table.
+
+
+---
+
+# Standards and terminologies
+
+An ABDM record has a shape and a meaning. FHIR gives it the shape. Code systems give each coded field its meaning, so a receiving system reads a diagnosis, a test or a medicine the same way you wrote it.
+
+Each standard below is published or distributed in India through the National Resource Centre for EHR Standards, [NRCeS](https://www.nrces.in/).
+
+| Standard                                                                        | What it codes                                                                        | System URI                                 |
+| ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ | ------------------------------------------ |
+| [FHIR records and profiles](/docs/main/docs/uhi/v1/resources/standards/fhir)    | The implementation guide every record and claim conforms to, and the record profiles | `ndhm.in#6.5.0`                            |
+| [SNOMED CT](/docs/main/docs/uhi/v1/resources/standards/snomed-ct)               | Clinical meaning: record types, conditions, procedures, medicines                    | `http://snomed.info/sct`                   |
+| [LOINC](/docs/main/docs/uhi/v1/resources/standards/loinc)                       | Laboratory tests and clinical observations                                           | `http://loinc.org`                         |
+| [ICD-10 and ICD-11](/docs/main/docs/uhi/v1/resources/standards/icd)             | Diagnoses, classified for statistics and claims                                      | `http://hl7.org/fhir/sid/icd-10`           |
+| [Indian code sets](/docs/main/docs/uhi/v1/resources/standards/indian-code-sets) | Medicines sold in India, AYUSH, geography and languages                              | `http://snomed.info/sct`                   |
+| [DICOM](/docs/main/docs/uhi/v1/resources/standards/dicom)                       | Medical images and their data                                                        | DICOM UIDs, as `urn:oid:`                  |
+| [BHTS](/docs/main/docs/uhi/v1/resources/standards/bhts)                         | A FHIR R4 terminology service to look up, validate and translate all of the above    | `https://www.nrces.in/bhts/api/v1/ts/fhir` |
+
+## Next steps
+
+- [FHIR records and profiles](/docs/main/docs/uhi/v1/resources/standards/fhir): the implementation guide and the record profiles. Start here if you build records.
+- [SNOMED CT](/docs/main/docs/uhi/v1/resources/standards/snomed-ct): get your licence early, because the release files take days to arrive.
+
+
+---
+
+# Indian code sets
+
+India publishes its own code sets on top of the international ones. They cover medicines sold in India, AYUSH systems of medicine, Indian geography and Indian languages. Each is listed on the [NRCeS national releases page](https://www.nrces.in/services/national-releases).
+
+## In short
+
+- Common Drug Codes for India codes medicines, as a SNOMED CT extension or as flat files.
+- The AYUSH, geography, language and COVID-19 extensions also extend SNOMED CT.
+- All of them come through MLDS with a SNOMED CT Affiliate Licence, or from the NRCeS national releases page.
+
+## Common Drug Codes for India
+
+Common Drug Codes for India, CDCI, codes the medicines prescribed and dispensed in India. It covers generic clinical drugs, suppliers and branded medicines. Devices, surgical implants and combination packs are out of scope.
+
+Its content is drawn from these lists:
+
+- The National List of Essential Medicines 2015
+- Pradhan Mantri Bhartiya Janaushadhi Pariyojana, Jan Aushadhi
+- AMRIT pharmacies
+- The Telemedicine Practice Guidelines
+- The NACO HIV drug list
+- The COVID-19 clinical management protocol and COVID-19 vaccine products
+
+| Package                        | What it is                                                                                               | Get it                                                                                                                                 |
+| ------------------------------ | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Terminology Integrated Package | The India Drug Extension for SNOMED CT                                                                   | [MLDS](https://mlds.ihtsdotools.org/#/viewReleases/viewRelease/395763), with a SNOMED CT Affiliate Licence                             |
+| Flat Files Package             | Tab separated text files: substances, trade names, suppliers, drug forms, generics and branded medicines | The [NRCeS national releases page](https://www.nrces.in/services/national-releases#drug_codes), under the licence in its `License.txt` |
+
+In a record, CDCI codes travel as SNOMED CT, with system `http://snomed.info/sct`. The ABDM Medicine Codes value set binds `MedicationRequest.medication[x]` and `MedicationStatement.medication[x]` at example strength. It draws on clinical drugs from the International Edition and on clinical drugs and branded medicines from CDCI.
+
+## India AYUSH Extension
+
+The India AYUSH Extension adds Ayurveda, Siddha and Unani concepts to SNOMED CT, with terms in Sanskrit, Tamil and Urdu. It is distributed through [MLDS](https://mlds.ihtsdotools.org/#/viewReleases/viewRelease/600189) with a SNOMED CT Affiliate Licence.
+
+## The other India extensions
+
+Each is a SNOMED CT extension, released through MLDS to Affiliate Licensees.
+
+| Release                                                                                                         | What it adds                                                                    | Release date   |
+| --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------- |
+| [India Reference Sets](https://mlds.ihtsdotools.org/#/viewReleases/viewRelease/194856)                          | 30 simple reference sets: 12 for national health programmes, 18 for specialties | 6 August 2021  |
+| [India Geographical Location Extension](https://mlds.ihtsdotools.org/#/viewReleases/viewRelease/480480)         | 7,628 location concepts, mapped to Local Government Directory codes             | 6 August 2021  |
+| [India Patient Instructions Language Extension](https://mlds.ihtsdotools.org/#/viewReleases/viewRelease/480580) | Patient instructions in Hindi, Marathi, Tamil and Urdu                          | 31 August 2026 |
+| [India COVID-19 Extension](https://mlds.ihtsdotools.org/#/viewReleases/viewRelease/442922)                      | 50 COVID-19 terms                                                               | 6 August 2021  |
+
+Common Lab Codes for India, CLCI, is the Indian subset of LOINC rather than a SNOMED CT extension. It is described with LOINC.
+
+## How you know it worked
+
+- Medicines your system dispenses resolve to a CDCI concept, generic or branded.
+- Your SNOMED CT release on MLDS includes the India extensions your system uses.
+- Every extension code you send carries `http://snomed.info/sct` as its system.
+
+## When it goes wrong
+
+- **A medicine is not in CDCI.** Code it to the generic clinical drug in the SNOMED CT International Edition.
+- **An India concept is not found in the International Edition browser.** Search [CSNOFinder](https://www.nrces.in/bhts/browser/), which carries the India extensions.
+- **Anything else.** Read the [NRCeS FAQ](https://www.nrces.in/faqs).
+
+## Next steps
+
+- [SNOMED CT](/docs/main/docs/uhi/v1/resources/standards/snomed-ct): the licence these extensions come under.
+- [LOINC](/docs/main/docs/uhi/v1/resources/standards/loinc): Common Lab Codes for India.
+- [Standards and terminologies](/docs/main/docs/uhi/v1/resources/standards): every code system in one table.
+
+
+---
+
+# LOINC
+
+LOINC is the code system for laboratory tests and clinical observations. A lab report, a blood pressure reading and a body weight each carry a LOINC code that says what was measured. LOINC is owned, maintained and distributed by the Regenstrief Institute. Read [LOINC at NRCeS](https://www.nrces.in/standards/loinc).
+
+## In short
+
+- LOINC codes laboratory tests and observations, with system `http://loinc.org`.
+- It is free, from loinc.org.
+- Common Lab Codes for India is the subset to start from.
+
+## Where a record uses it
+
+The system URI is `http://loinc.org`. The [ABDM FHIR implementation guide](https://nrces.in/ndhm/fhir/r4/index.html) uses it on these fields.
+
+| Field                   | What the code says                                                       |
+| ----------------------- | ------------------------------------------------------------------------ |
+| `DiagnosticReport.code` | The laboratory or imaging report, in the lab and imaging report profiles |
+| `Observation.code`      | What was observed, in the LOINC slice                                    |
+
+Observations bind to these value sets, at extensible strength, each in the profile of the same name.
+
+- Vital Signs
+- Body Measurement
+- Physical Activity
+- Women Health
+- General Assessment, which adds one SNOMED CT code
+
+The [EHR Standards for India](https://www.nrces.in/standards/ehr-standards-for-india) require LOINC for results and reports in laboratory and imaging systems.
+
+## The licence
+
+LOINC is free of charge. Download it from [loinc.org](https://loinc.org/) under the [LOINC licence](https://loinc.org/license). New versions of LOINC and RELMA are released twice a year, in February and August.
+
+## Common Lab Codes for India
+
+Common Lab Codes for India, CLCI, is a curated subset of LOINC. It covers 1,473 commonly referred laboratory tests. Start here before you search all of LOINC.
+
+| Field          | Value                                                                                                                   |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Format         | One CSV file, `common_lab_codes_for_india.csv`                                                                          |
+| Columns        | General Name, LOINC Code, FSN and LCN                                                                                   |
+| Latest release | [Release notes, 29 June 2026](https://www.nrces.in/download/files/pdf/CommonLabCodesForIndia_ReleaseNotes_20260629.pdf) |
+| Download       | The [NRCeS national releases page](https://www.nrces.in/services/national-releases#lab_codes)                           |
+
+## Tools and guidance
+
+| Resource                                                                                                                                               | Use it for                                                  |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------- |
+| [Guide for using LOINC in ABDM FHIR Resources](https://www.nrces.in/download/files/pdf/Guide%20for%20using%20LOINC%20in%20ABDM%20FHIR%20Resources.pdf) | Which LOINC codes go in which ABDM resource                 |
+| RELMA, from [loinc.org](https://loinc.org/)                                                                                                            | Mapping your local test names to LOINC codes, free          |
+| [LOINCServ](https://www.nrces.in/bhts/api/v1/loincserv/)                                                                                               | Looking codes up from your system over a public REST API    |
+| [CLNtk](https://cdac.in/index.aspx?id=hi_hs_medinfo_loinc_home)                                                                                        | Building LOINC into your application with the C-DAC toolkit |
+
+## How you know it worked
+
+- Each test your laboratory reports maps to one LOINC code, held against your local test name.
+- Every LOINC coding you send carries `http://loinc.org` as its system.
+- Your bundle validates against the ABDM FHIR implementation guide.
+
+## When it goes wrong
+
+- **A local test has no obvious code.** Look in CLCI first, then map it with RELMA.
+- **An observation fails validation.** Check that the coding carries `http://loinc.org` as its system, and a code and display.
+- **Anything else.** Read the [LOINC questions in the NRCeS FAQ](https://www.nrces.in/faqs#loinc).
+
+## Next steps
+
+- [SNOMED CT](/docs/main/docs/uhi/v1/resources/standards/snomed-ct): the clinical terminology for everything that is not a test.
+- [FHIR records and profiles](/docs/main/docs/uhi/v1/resources/standards/fhir): the profiles LOINC codes sit in.
+- [BHTS](/docs/main/docs/uhi/v1/resources/standards/bhts): look LOINC codes up from your system.
+- [Standards and terminologies](/docs/main/docs/uhi/v1/resources/standards): every code system in one table.
+
+
+---
+
+# SNOMED CT
+
+SNOMED CT is the clinical terminology an ABDM health record codes its content with. FHIR gives a record its shape; SNOMED CT says what each part means. It is owned, maintained and distributed by SNOMED International.
+
+India became a SNOMED International member country in April 2014. The Ministry of Health and Family Welfare designated C-DAC Pune, through NRCeS, to distribute and manage SNOMED CT in India. Read [SNOMED CT at NRCeS](https://www.nrces.in/standards/snomed-ct).
+
+## In short
+
+- SNOMED CT codes what a record means, with system `http://snomed.info/sct`.
+- It is free in India and still needs an Affiliate Licence, from MLDS.
+- India's drug, AYUSH and other extensions come through the same licence.
+
+## Where a record uses it
+
+The system URI is `http://snomed.info/sct`. The [ABDM FHIR implementation guide](https://nrces.in/ndhm/fhir/r4/index.html) fixes it on these fields, among others.
+
+| Field                                                             | What the code says                                     |
+| ----------------------------------------------------------------- | ------------------------------------------------------ |
+| `Composition.type` and `Composition.section.code`                 | Which record type this is, and what each section holds |
+| `Condition.code`                                                  | A diagnosis or problem, in the SNOMED CT slice         |
+| `Procedure.code`                                                  | The procedure performed                                |
+| `AllergyIntolerance.code`                                         | The allergen or intolerance                            |
+| `MedicationRequest.medication[x]`                                 | The medicine prescribed                                |
+| `DiagnosticReport.category` and `DiagnosticReport.conclusionCode` | The kind of report and its coded conclusion            |
+| `Specimen.type` and `ServiceRequest.code`                         | The specimen collected, and the service ordered        |
+
+The [EHR Standards for India](https://www.nrces.in/standards/ehr-standards-for-india) require a health record system to use SNOMED CT as its primary internal encoding.
+
+## The licence
+
+SNOMED CT is free to use in India, and it still needs a licence. The [NRCeS FAQ](https://www.nrces.in/faqs#snomedct) sets out the terms.
+
+| Case                                  | What you need                                                                                                                                              |
+| ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A system used in India                | An Affiliate Licence, free of charge                                                                                                                       |
+| Each deployment of your system        | A sub-licence under your Affiliate Licence                                                                                                                 |
+| An app deployed or used outside India | An International Affiliate Licence from SNOMED International                                                                                               |
+| Every licence period                  | A [usage report](https://www.nrces.in/download/files/pdf/SNOMED_CT_Usage_Report_Submission.pdf), filed before the period you declared at registration ends |
+
+## Get it
+
+1. Register on the [Member Licensing and Distribution Service for India](https://mlds.ihtsdotools.org/#/landing/IN?lang=en), MLDS.
+2. Accept the [SNOMED CT Affiliate Licence Agreement](https://www.nrces.in/download/files/pdf/SNOMED%20CT%20Affiliate%20License%20Agreement%202023.pdf).
+3. Download the International Edition release files. The link arrives in four to five business days.
+
+India's own extensions, such as drugs and AYUSH, are released through the same MLDS account. They are listed on the [NRCeS national releases page](https://www.nrces.in/services/national-releases).
+
+## Browse and look up codes
+
+| Tool                                                                | Use it for                                                             |
+| ------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| [SNOMED CT Browser](http://browser.ihtsdotools.org/)                | Browsing the International Edition                                     |
+| [CSNOFinder](https://www.nrces.in/bhts/browser/)                    | Browsing with the India extensions, including ECL queries              |
+| [CSNOServ](https://www.nrces.in/bhts/api/v1/csnoserv/)              | Looking codes up from your system over a public REST API, rate limited |
+| [CSNOtk](https://cdac.in/index.aspx?id=hi_hs_medinfo_csno_overview) | Building SNOMED CT into your application with the C-DAC toolkit        |
+
+The SNOMED CT to ICD-10 map ships inside the International Edition you download from MLDS.
+
+## How you know it worked
+
+- You hold an Affiliate Licence and can download release files from MLDS.
+- Every SNOMED CT coding you send carries `http://snomed.info/sct` as its system.
+- Your bundle validates against the ABDM FHIR implementation guide.
+
+## When it goes wrong
+
+- **You skipped the licence because the terminology is free.** Free in India still means licensed. Register on MLDS before you ship.
+- **A code is not found.** It may sit in an India extension rather than the International Edition. Search CSNOFinder, which carries both.
+- **Anything else.** Read the [SNOMED CT questions in the NRCeS FAQ](https://www.nrces.in/faqs#snomedct).
+
+## Next steps
+
+- [Indian code sets](/docs/main/docs/uhi/v1/resources/standards/indian-code-sets): the India extensions to SNOMED CT.
+- [ICD-10 and ICD-11](/docs/main/docs/uhi/v1/resources/standards/icd): classifying what SNOMED CT records.
+- [BHTS](/docs/main/docs/uhi/v1/resources/standards/bhts): look SNOMED CT codes up and validate them from your system.
+- [Standards and terminologies](/docs/main/docs/uhi/v1/resources/standards): every code system in one table.
 
 
 ---
