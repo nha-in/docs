@@ -1,0 +1,36 @@
+# What's new
+
+Changes that affect what you can build against, newest first. Each entry links to what you can now read, run or consume.
+
+## 9 October 2026
+
+1 change
+
+- [The nhcx plugin is 1.0.7](/docs/pr-124/docs/whats-new/2026-10-09#the-nhcx-plugin-is-107)
+
+## 6 October 2026
+
+1 change
+
+- [The nhcx plugin is 1.0.6](/docs/pr-124/docs/whats-new/2026-10-06#the-nhcx-plugin-is-106)
+
+## 5 October 2026
+
+1 change
+
+- [The nhcx plugin is 1.0.5](/docs/pr-124/docs/whats-new/2026-10-05#the-nhcx-plugin-is-105)
+
+## What gets an entry
+
+An entry has to change what you build or what you must go back and fix. Six kinds qualify:
+
+| Kind                                      | Example                                                                |
+| ----------------------------------------- | ---------------------------------------------------------------------- |
+| New coverage                              | A module, role or gateway you can now build against                    |
+| A correction                              | A documented fact was wrong, so what you built against it may be wrong |
+| A source republished                      | A specification changed, so a documented behaviour changed             |
+| An operation renamed, added or withdrawn  | Your calls have to change                                              |
+| A new artefact you can consume            | An OpenAPI file, an agent skill, an MCP server, the Markdown routes    |
+| A procedure documented for the first time | The sandbox exit process, the security audit                           |
+
+Page layout, navigation, wording and visual changes do not get an entry. They change nothing you have to act on, and a changelog that carries them buries the entries that do.
