@@ -6,14 +6,15 @@ One row is one payer questionnaire (dynamic form) shipped with a claim's package
 #### D12D. DESCRIPTION
 The payer's InsurancePlan bundle carries Questionnaire resources: policy forms and standard-treatment-guideline (STG) checklists that a document requirement points at through its `documentationUrl`. The payer sends the same form once for every benefit that needs it, so forms are collected by `url` and stored once per plan. Answers are stored per claim in [D17. claim_form_answer](D17-claim-form-answer.md), keyed by the same url (`form_url`).
 
-Which forms a leg must carry:
+Which forms a leg must carry (the one rule; F6, F7, A4, A5, S9 and S11 all follow it):
 - With a `ready` auth-requirements ruling ([D13](D13-claim-auth.md)): the forms named by its `form` requirements ([D15](D15-claim-auth-requirement.md) `form_url`) for that stage (`at_preauth = 1` for the pre-authorisation, `0` for the claim).
-- Without a ruling, pre-authorisation only: the forms named in `supporting_info[].form` of the quoted packages ([D11](D11-claim-plan-benefit.md)).
+- On both legs, ruling or not: the quoted packages' own forms, named in `supporting_info[].form` of the quoted packages ([D11](D11-claim-plan-benefit.md)), their standard treatment guideline (STG) checklists. PMJAY lists an STG requirement per stage on every benefit, and its ruling (C3) never names the STG, so a claim that offered only the ruling's forms never carried the STG [PAYER](../references/PAYERS.md#markers). The ruling adds to this list; it does not replace it.
 - On both legs, always: the policy-wide forms named in the plan's `policy_documents[].form` ([D10](D10-claim-plan.md)). A form answered earlier is offered again with the earlier answers filled in.
+- Without a biometric token for the stage, the scheme's consent form for the stage, whether or not anything lists it ([A18. Biometric Authentication](../apis/A18-biometric-authentication.md): Authentication Consent at pre-authorisation, Discharge Consent at the claim) [PAYER](../references/PAYERS.md#markers).
 - Nothing is required unless the plan is `ready`.
 
 Each question in `items` is a flattened Questionnaire item:
-- `linkId`, `type`, `text` (the item's `prefix`, else its `text`), `required`.
+- `linkId` (this spelling, the FHIR name, never `link_id`: a parser that stores `link_id` leaves every screen reading `linkId` blank), `type`, `text` (the item's `prefix`, else its `text`), `required`.
 - `depth`: nesting level, `0` for top-level items.
 - `options`: `answerOption` `valueString`, else the valueCoding's display or code.
 - `initial`: the first option marked `initialSelected`, the payer's default answer.
@@ -44,7 +45,7 @@ Lifecycle:
 
 #### D12U. USED BY
 - Screens: [S7. Insurance Plan](../screens/S7-insurance-plan.md), [S9. Pre-authorisation](../screens/S9-preauthorisation.md)
-- APIs: [A3. Insurance Plan Request](../apis/A3-insurance-plan-request.md), [A17. Claim State](../apis/A17-claim-state.md)
+- APIs: [A3. Insurance Plan Request](../apis/A3-insurance-plan-request.md), [A4. Pre-auth Submit](../apis/A4-preauth-submit.md), [A17. Claim State](../apis/A17-claim-state.md)
 - Callbacks: [C4. Insurance Plan Reply](../callbacks/C4-insuranceplan-on-request.md)
 - FHIR: [F5. InsurancePlan](../fhir/F5-insuranceplan.md), [F6. Questionnaire](../fhir/F6-questionnaire.md), [F7. QuestionnaireResponse](../fhir/F7-questionnaireresponse.md)
 - Database: [D10. claim_plan](D10-claim-plan.md), [D11. claim_plan_benefit](D11-claim-plan-benefit.md), [D15. claim_auth_requirement](D15-claim-auth-requirement.md), [D17. claim_form_answer](D17-claim-form-answer.md)

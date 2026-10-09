@@ -2,6 +2,12 @@
 
 Changes that affect what you can build against, newest first. Each entry links to what you can now read, run or consume.
 
+## 9 October 2026
+
+1 change
+
+- [The nhcx plugin is 1.0.7](/docs/main/docs/whats-new/2026-10-09#the-nhcx-plugin-is-107)
+
 ## 6 October 2026
 
 1 change

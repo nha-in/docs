@@ -59,7 +59,7 @@ Every call to ABDM (registry, NHCX gateway) carries a session token minted from 
 | `post_with_token` | `body` | required | any JSON value |
 | `post_with_token` | `label` | `CERT_FETCH` | error prefix: `CERT_FETCH` for every registry call, `GATEWAY` for the NHCX dispatch |
 
-Request headers on the session call, `sessions` mode: `Content-Type: application/json`, `Accept: application/json`, `REQUEST-ID: <fresh UUID>`, `TIMESTAMP: <now, UTC, RFC 3339, for example 2026-09-21T06:30:00Z>`, `X-CM-ID: <cmId>`. `get-session` mode: `Content-Type: application/x-www-form-urlencoded`, `Accept: application/json`.
+Request headers on the session call, `sessions` mode: `Content-Type: application/json`, `Accept: application/json`, `REQUEST-ID: <fresh UUID>`, `TIMESTAMP: <now, UTC, with milliseconds and a trailing Z, for example 2026-09-04T06:15:51.975Z>` (the knowledge source's `nhcx.endpoint.session-token`; a value to the second was refused by the sandbox), `X-CM-ID: <cmId>`. `get-session` mode: `Content-Type: application/x-www-form-urlencoded`, `Accept: application/json`.
 
 Request headers on `post_with_token`: `Content-Type: application/json`, `Accept: application/json`, `bearer_auth: Bearer <token>`, `Authorization: Bearer <token>`.
 
@@ -131,7 +131,7 @@ fetch_locked(client):
         request = POST urls.sessions, form {client_id: id, client_secret: secret, grant_type: "client_credentials"}
     else:
         request = POST urls.sessions, JSON {clientId: id, clientSecret: secret, grantType: "client_credentials"}
-                  headers REQUEST-ID = new UUID, TIMESTAMP = now UTC RFC 3339, X-CM-ID = cmId
+                  headers REQUEST-ID = new UUID, TIMESTAMP = now UTC with milliseconds and Z (2026-09-04T06:15:51.975Z), X-CM-ID = cmId
     if request cannot be built: fail TOKEN_REQUEST
     header Accept: application/json
     response = send (timeout outboundTimeoutSeconds) or fail TOKEN_UNREACHABLE (retryable)

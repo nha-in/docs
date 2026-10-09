@@ -15,7 +15,7 @@ Use it when it is connected. Test by calling `catalogue_info`: an answer means i
 | `list_operations`, `get_operation` | list the NHCX APIs; read one API's method, path, headers and body |
 | `list_atoms`, `get_atom`, `related_atoms` | read one unit of documentation (concept, flow, endpoint, callback, error, test) and what it links to |
 | `list_fhir_profiles`, `get_fhir_profile`, `get_fhir_example` | read an NRCeS profile and an example bundle |
-| `validate_fhir` | check a built bundle against the NHCX profiles |
+| `validate_fhir` | check an ABDM **DocumentBundle** (an HIE-CM clinical record) against the NRCeS profiles. With catalogue 2026.09.16 it knows only that family: it cannot validate a `ClaimBundle`, `TaskBundle` or `CoverageEligibilityRequestBundle`, reports DocumentBundle findings against them and false "points outside the bundle" warnings for the absolute `https://nhcx.abdm.gov.in/...` fullUrls. Do not use it on an NHCX bundle; compare with the example bundles instead, or run the HL7 validator with the NRCeS package |
 | `validate_request` | check a request envelope and headers |
 | `decode_error` | explain an NHCX or payer error code (for example `NHCX-1016`, `PAYR-1008`) |
 
@@ -67,7 +67,7 @@ Without the MCP, open the same atoms on the ABDM developer portal at the `doc_ur
 | What is the path, method and header set of an NHCX call? | `get_operation` | `apis/<group>/*.bru` |
 | What does a bundle for this exchange look like? | `get_fhir_example` | `fhir/<use case>/*.json` |
 | What does a profile require? | `get_fhir_profile` | `docs/05-FHIR Reference/` |
-| Is this bundle valid? | `validate_fhir` | compare with `fhir/` and `mappings/`; no offline validator ships |
+| Is this bundle valid? | compare it with `get_fhir_example` for the exchange and with the knowledge package's bundles; `validate_fhir` does **not** validate NHCX bundles (below) | compare with `fhir/` and `mappings/`; no offline validator ships |
 | Where does this data element go? | `get_atom`, `related_atoms` | `mappings/<use case>.yaml` |
 | What does this workflow id or status mean? | `search_docs` | `workflow.yaml` |
 | What does this error code mean? | `decode_error` | `nhcx-error.yaml`, `docs/06-Reference/` |
@@ -90,7 +90,7 @@ The package and the MCP catalogue number things by NHA's own use-case codes (A1 
 | L1 | L1.0 picks the source and writes `nhcx-plan/knowledge.json`; L1.1, L1.5 and L1.6 use it to recognise NHCX code in the target |
 | L2 | FHIR elements, code systems and data element placement |
 | L5 | paths, headers, profiles and codes while writing |
-| L6 | `validate_fhir` and `validate_request`, or comparison with the package bundles |
+| L6 | `validate_request` for envelopes; for bundles, comparison with `get_fhir_example` or the package bundles (not `validate_fhir`, which knows only the DocumentBundle family) |
 | L7 | example bundles as test fixtures for callbacks and parsers |
 | L8 | error decoding and troubleshooting; go-live rules |
 

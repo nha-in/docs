@@ -23,7 +23,7 @@ Always read, whatever the task: [CORE.md](CORE.md) (addresses and the exchange t
 
 | To implement | What it is | Read with it |
 |---|---|---|
-| [A1](../apis/A1-policy-search.md) | Policy Search | [D9](../database/D9-claim.md), [G3](../gateway/G3-session-token.md), [G10](../gateway/G10-beneficiary-registry.md) |
+| [A1](../apis/A1-policy-search.md) | Policy Search | [D9](../database/D9-claim.md), [G3](../gateway/G3-session-token.md), [G4](../gateway/G4-registry.md), [G10](../gateway/G10-beneficiary-registry.md) |
 | [A2](../apis/A2-coverage-eligibility-check.md) | Coverage Eligibility Check | [F1](../fhir/F1-bundle.md), [F2](../fhir/F2-coverage-eligibility-request.md), [F15](../fhir/F15-patient.md), [F16](../fhir/F16-practitioner.md), [F17](../fhir/F17-organization.md), [F18](../fhir/F18-coverage.md), [F19](../fhir/F19-other-resources.md), [D9](../database/D9-claim.md), [D13](../database/D13-claim-auth.md), [D14](../database/D14-claim-auth-item.md), [D15](../database/D15-claim-auth-requirement.md), [G5](../gateway/G5-protocol-headers.md), [G7](../gateway/G7-send.md), [G8](../gateway/G8-receive.md), [G9](../gateway/G9-ledger.md) |
 | [A10](../apis/A10-txn-related.md) | Transaction Related | nothing else |
 | [A11](../apis/A11-txn-dispatch.md) | Transaction Dispatch | nothing else |

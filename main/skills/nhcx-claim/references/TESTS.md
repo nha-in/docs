@@ -7,7 +7,7 @@ Every end-to-end test the skill writes, in one list. Each row links to its full 
 | # | Test | Payer | What it proves | Screens | APIs | Callbacks |
 |---|---|---|---|---|---|---|
 | [T1](../tests/T1-test-configuration.md) | Test Configuration | both | The one configuration every end-to-end test reads: which payers, which member ids, which mode, how long to wait, and where the credentials come from. | none | [A10](../apis/A10-txn-related.md), [A13](../apis/A13-txn-list.md), [A14](../apis/A14-adjudicator-user-role.md), [A16](../apis/A16-gateway-token.md) | none |
-| [T2](../tests/T2-test-runners.md) | Test Runners | both | The two runners every test is written for, GUI and CLI, and the contract they share: setup checks, live output, waiting for the payer, deciding the payer's side, and the report. | [S5](../screens/S5-claim-master.md), [S6](../screens/S6-claim-detail.md) | [A10](../apis/A10-txn-related.md), [A13](../apis/A13-txn-list.md), [A14](../apis/A14-adjudicator-user-role.md), [A15](../apis/A15-adjudicator-process-case.md) | none |
+| [T2](../tests/T2-test-runners.md) | Test Runners | both | The two runners every test is written for, GUI and CLI, and the contract they share: setup checks, live output, waiting for the payer, deciding the payer's side, and the report. | [S5](../screens/S5-claim-master.md), [S6](../screens/S6-claim-detail.md) | [A6](../apis/A6-task-submit.md), [A10](../apis/A10-txn-related.md), [A13](../apis/A13-txn-list.md), [A14](../apis/A14-adjudicator-user-role.md), [A15](../apis/A15-adjudicator-process-case.md) | none |
 
 ## IRDAI payer
 

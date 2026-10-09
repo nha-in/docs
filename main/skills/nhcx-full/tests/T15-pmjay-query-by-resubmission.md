@@ -6,7 +6,7 @@ PMJAY asks in `resubmit` mode ([PAYERS.md](../references/PAYERS.md)): the query 
 
 #### T15S. SETUP
 
-A PMJAY pre-authorisation sent and acknowledged, as step 1 of [T14. PMJAY Pre-authorisation Through the Payer Service](T14-pmjay-preauth-adjudicated.md) leaves it.
+A PMJAY pre-authorisation sent and acknowledged, as step 1 of [T14. PMJAY Pre-authorisation Through the Payer Service](T14-pmjay-preauth-adjudicated.md) leaves it, **quoting the package named by `NHCX_TEST_PMJAY_MANUAL_PACKAGE`** ([T1. Test Configuration](T1-test-configuration.md)): the sandbox auto-approves `SB043F` within seconds, before any desk can query it, so this test is not drivable on it. With no manual package configured the test ends `blocked`, cause `sandbox`, with that reason [SANDBOX](../references/PAYERS.md#markers).
 
 #### T15G. GUI
 

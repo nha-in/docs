@@ -6,7 +6,7 @@ The PMJAY claim leg ([A5. Claim Submit](../apis/A5-claim-submit.md)) is decided 
 
 #### T17S. SETUP
 
-Two PMJAY claims with an approved pre-authorisation (T14. PMJAY Pre-authorisation Through the Payer Service (in nhcx-preauth)) and a discharge recorded.
+Two PMJAY claims with an approved pre-authorisation (T14. PMJAY Pre-authorisation Through the Payer Service (in nhcx-preauth)) and a discharge recorded, each with the Discharge Consent answered on the claim's forms card ([S11. Claim Submission](../screens/S11-claim-submission.md)) unless a stage-Discharge token is held (T19. PMJAY Beneficiary Verification and ABHA (in nhcx-coverage)): without either the claim is refused PAYR-1363 [SANDBOX](../references/PAYERS.md#markers). The sandbox may decide a claim by itself as it does a pre-authorisation; the desk steps are then recorded `skipped (sandbox auto-decided)` and the test passes on the decision, and the second claim (the query) ends `blocked`, cause `sandbox`, when the package is auto-decided.
 
 #### T17G. GUI
 
@@ -20,7 +20,7 @@ Two PMJAY claims with an approved pre-authorisation (T14. PMJAY Pre-authorisatio
 
 #### T17X. EXPECT
 
-- The approve cycle's trail walks the roles in the order above, with each role's own action name (CEX-Trust `Forward`, CPD-Trust `cpdApprove`, the rest `Approve`), and stops `completed` at Claim Review Committee within 8 rounds.
+- The approve cycle's trail walks the roles in the order above, with each role's own action name (CEX-Trust `Forward`, CPD-Trust `cpdApprove`, the rest `Approve`), and stops `completed` at Claim Review Committee within 8 rounds; or the sandbox auto-decided and the steps read `skipped (sandbox auto-decided)` [SANDBOX](../references/PAYERS.md#markers).
 - The first claim ends `approved` with PMJAY's amount, shown on [S11. Claim Submission](../screens/S11-claim-submission.md).
 - The query answer goes out under PMJAY's claim query-response workflow id with `response.complete`, and the second claim ends `approved`.
 - The provider never offers a claim resubmission to PMJAY.

@@ -1,7 +1,7 @@
 # A19. ABHA Create and Verify (ABDM M1)
 
 #### A19E. ENDPOINT
-Not an NHCX exchange: ABDM's ABHA service, called **from the page, in the operator's browser**, never from the application's server. The server's part is two doors behind its session: `GET abha/session` hands the page the ABDM session token from [G3. Session Token](../gateway/G3-session-token.md) (the gateway mints it for the facility's participant, and the page cannot hold the credentials that mint it), its expiry and the service's base URL; `POST abha/events` takes one audit line per step. The page carries the token on `Authorization: Bearer`, a fresh `REQUEST-ID` (UUID) and `TIMESTAMP` (UTC, ISO 8601 with milliseconds) on every call, plain JSON, no JWE and no ledger row. Sandbox base `https://abhasbx.abdm.gov.in/abha/api/v3`; production is published by ABDM and confirmed in the onboarding letter. The service answers CORS preflights for the page's origin (the sandbox for any origin), which is what makes the page the caller; the server, which may run where the service's host does not even resolve, makes no ABHA call. [SANDBOX](../references/PAYERS.md#markers) Production's CORS policy is confirmed before go-live.
+Not an NHCX exchange: ABDM's ABHA service, called **from the application's server**, never from the operator's browser. The server carries the ABDM session token from [G3. Session Token](../gateway/G3-session-token.md) on `Authorization: Bearer`, a fresh `REQUEST-ID` (UUID) and `TIMESTAMP` (UTC, ISO 8601 with milliseconds) on every call, plain JSON, no JWE and no ledger row. Sandbox base `https://abhasbx.abdm.gov.in/abha/api/v3`; production is published by ABDM and confirmed in the onboarding letter. The page talks only to the application's own endpoints (A19Q) and holds only the flow's `txn_id`: **the session token, the X-token and the T-token never reach the browser.** Handing the facility's session token to a page would let any operator act as the facility on every ABDM call for as long as the token lives, so it stays server-side; the flow's X-token and T-token are kept on the server for the flow's few minutes, keyed by `txnId` and the signed-in user, and discarded after. The identifiers the person types are still sealed in the page under the service's public certificate before they are posted, so an Aadhaar number or OTP never travels in clear (the server seals a value only when the page could not).
 
 **The calls, their bodies, headers, responses and errors are read from the MCP, not from this spec.** The `nhcx-docs` MCP server (also published as `abdm-docs`) serves the whole of ABDM's HIE-CM catalogue beside NHCX, and M1 is its first milestone: open its `abdm-m1` prompt (the M1 router), or read these directly with `get`:
 
@@ -23,13 +23,13 @@ Not an NHCX exchange: ABDM's ABHA service, called **from the page, in the operat
 #### A19D. DESCRIPTION
 The ABHA number is what links a claim to an admission ([S4. Claim Creation Form](../screens/S4-claim-creation-form.md), [D3. patient](../database/D3-patient.md)), and under PMJAY it is the account the beneficiary is authenticated against ([A18. Biometric Authentication](A18-biometric-authentication.md)). A number typed at the desk is a number nobody checked. This API puts a **verified** ABHA on the file, two ways, and fills the file from what the ABHA service says about the person: name, gender, date of birth, mobile, ABHA number and address.
 
-**Verify an existing ABHA.** By its number, or by the mobile it is registered against. The identifier is sealed under the service's certificate and sent with `scope ["abha-login", "mobile-verify"]`, `loginHint` `abha-number` or `mobile`, `otpSystem abdm`; the OTP goes to the mobile either way. Verifying the OTP by ABHA number answers the account and the X-token directly, and the profile is read with it. Verifying by mobile answers the accounts on that mobile (a shared family phone holds several) and a short-lived T-token: the desk picks the account, `verify/user` with the chosen `ABHANumber` and the same `txnId` under `T-token` answers the X-token, and then the profile. Always call `verify/user` on the mobile path, even with one account listed.
+**Verify an existing ABHA.** By its number, or by the mobile it is registered against. The identifier is sealed under the service's certificate and sent with `scope ["abha-login", "mobile-verify"]`, `loginHint` `abha-number` or `mobile`, `otpSystem abdm`; the OTP goes to the mobile either way. Verifying the OTP by ABHA number answers the account and the X-token directly, and the profile is read with it. Verifying by mobile answers the accounts on that mobile (a shared family phone holds several) and a short-lived T-token: the desk picks the account, `verify/user` with the chosen `ABHANumber` and the same `txnId` under `T-token` answers the X-token, and then the profile. Always call `verify/user` on the mobile path, even with one account listed. The account list carries **masked** ABHA numbers (`xx-xxxx-xxxx-1234`, `m1_post_v3_profile_login_verify_mobile_otp`), so `verify/user` sends the listed value exactly as given, or a full 14-digit number whose last digits match it; never reformat the masked value as digits.
 
 **Create an ABHA from an Aadhaar OTP.** With the person present and their consent recorded (consent code `abha-enrollment`, version `1.4`): the Aadhaar number sealed as `loginId` with `scope ["abha-enrol"]`, `loginHint aadhaar`, `otpSystem aadhaar`; the OTP goes to the mobile registered against the Aadhaar, which may not be the phone in the room. `enrol/byAadhaar` with the sealed OTP, the communication mobile and the consent answers `ABHAProfile`, the tokens and **`isNew`**: an Aadhaar that already has an ABHA returns that account with `isNew` false, so read it before telling anyone something was created. A new account then gets its address: suggestions with the `TRANSACTION_ID` header, the chosen one claimed with `preferred 1`; an account left with only its default address is a half-finished job the person will not recognise later.
 
 Rules, both ways:
-- The Aadhaar number, the OTP and the identifiers are sealed **in the page** under the certificate from `/profile/public/certificate` (RSA/ECB/OAEPWithSHA-1AndMGF1Padding, base64; WebCrypto's `RSA-OAEP` with `SHA-1` on an `spki` import of the key), fetched once an hour. None of them reaches the server, is stored or logged; the audit event for the OTP step carries the last four digits of an Aadhaar at most.
-- The X-token and T-token stay in the page's memory, keyed by the flow's `txnId`, for fifteen minutes; they are never sent to the server. The gateway session token is never sent as an X-token, and the page re-reads `abha/session` when the one it holds is within a minute of its expiry or the service answers 401.
+- The Aadhaar number, the OTP and the identifiers are sealed **in the page** under the certificate from `/profile/public/certificate` (RSA/ECB/OAEPWithSHA-1AndMGF1Padding, base64; WebCrypto's `RSA-OAEP` with `SHA-1` on an `spki` import of the key; the server hands the certificate to the page and caches it for an hour). The server passes the sealed values through to the service and never stores or logs them; the audit event for the OTP step carries the last four digits of an Aadhaar at most.
+- The session token, the X-token and the T-token stay **on the server**, keyed by the flow's `txnId` and the signed-in user, for fifteen minutes; none of them is ever sent to the browser, and the page holds only `txn_id`. The gateway session token is never sent as an X-token; the server refreshes it through [G3. Session Token](../gateway/G3-session-token.md) when the service answers 401.
 - The profile written onto the file: `abha_number` (14 digits, shown as `xx-xxxx-xxxx-xxxx`), `abha_address` (the preferred address, else the first `phrAddress`), `name` (`name`, else first, middle and last), `gender` (`M` `F` `O` to Male, Female, Other), `birth_date` (`dob` as `DD-MM-YYYY`, or day, month and year), `phone` (left blank when the service masks it as `******0903`). A blank field on the form is filled; a typed one is kept.
 - A person already on the register under that ABHA is opened, not registered again; the register's unique ABHA refuses a second file anyway ([D3. patient](../database/D3-patient.md)).
 
@@ -39,14 +39,16 @@ A refusal from the service is shown in its words: the `error.code` and `error.me
 
 #### A19Q. REQUEST
 
-The server's two endpoints, behind the session.
+The application's endpoints, behind the session, one per step of the flow; each makes the service call named in A19E **on the server** and answers the page only what the next step needs. The page never sees a token.
 
 | Endpoint | Body | Answers |
 |---|---|---|
-| `GET abha/session` | | `token` (the ABDM session token for this participant), `expires_at`, `expires_in`, `base_url` (the ABHA service) |
-| `POST abha/events` | `action` (one of `enrol_otp_sent`, `enrolled`, `address_set`, `login_otp_sent`, `login_verified`, `login_selected`), `subject` (the ABHA number or the `txnId`), `detail` (a few words) | `recorded`; any other `action` is refused (422), so the page cannot write arbitrary lines into the trail |
+| `GET abha/certificate` | | `public_key` (the service's certificate, for the page to seal with), `expires_at` |
+| `POST abha/enrol/otp`, `/enrol/verify`, `GET abha/enrol/suggestions`, `POST abha/enrol/address`, `POST abha/login/otp`, `/login/verify`, `/login/select` | the function's inputs below, sealed values as sealed by the page | the function's answer below, never a token |
 
-The page's ABHA client, which the screens call, exposes the flow as seven functions with these shapes; each makes the service call named in A19E.
+Each step writes one audit line (`enrol_otp_sent`, `enrolled`, `address_set`, `login_otp_sent`, `login_verified`, `login_selected`) on the server; the page cannot write the trail.
+
+The server's ABHA client, which the endpoints call, exposes the flow as these functions; each makes the service call named in A19E.
 
 | Function | Takes | Answers |
 |---|---|---|
@@ -57,34 +59,33 @@ The page's ABHA client, which the screens call, exposes the flow as seven functi
 | `loginOtp` | `abha_no` or `mobile` | `txn_id`, `message`, `hint` (`abha-number` or `mobile`) |
 | `loginVerify` | `txn_id`, `otp` | `txn_id`, `hint`, `accounts`; by number also `profile` |
 | `loginSelect` | `txn_id`, `abha_no` | `profile` |
-| `seal` | a value | the value sealed under the service's certificate, for the face authentication's Aadhaar ([A18. Biometric Authentication](A18-biometric-authentication.md)) |
+| `seal` (page side) | a value | the value sealed under the service's certificate (from `GET abha/certificate`), for every identifier and OTP above and for the face authentication's Aadhaar ([A18. Biometric Authentication](A18-biometric-authentication.md)) |
 
 `profile`: `{abha_no, abha_address, name, gender, dob, mobile, status}`. `accounts`: `[{abha_no, name, abha_address, status}]`.
 
 #### A19S. RESPONSE
-What the screens do with it ([S13. Patient List](../screens/S13-patient-list.md), [S14. Patient Registration Form](../screens/S14-patient-registration-form.md), [S15. Patient Detail](../screens/S15-patient-detail.md)): "Register with ABHA" runs a verify or create first and opens the registration form filled from the profile, so the desk confirms rather than types; the form's own "Verify or create an ABHA" fills a form already open; a patient on file gets "Link ABHA" or "Verify ABHA", which writes the ABHA number and address onto the row. The X-token is not kept beyond the flow: nothing else in this skill reads the ABHA profile, and the biometric calls ([A18. Biometric Authentication](A18-biometric-authentication.md)) take their own tokens.
+What the screens do with it ([S13. Patient List](../screens/S13-patient-list.md), [S14. Patient Registration Form](../screens/S14-patient-registration-form.md), [S15. Patient Detail](../screens/S15-patient-detail.md)): "Register with ABHA" runs a verify or create first and opens the registration form filled from the profile, so the desk confirms rather than types; the form's own "Verify or create an ABHA" fills a form already open; a patient on file gets "Link ABHA" or "Verify ABHA", which writes the ABHA number and address onto the row. The X-token is not kept beyond the flow and never leaves the server: nothing else in this skill reads the ABHA profile, and the biometric calls ([A18. Biometric Authentication](A18-biometric-authentication.md)) take their own tokens.
 
 Data: [D3. patient](../database/D3-patient.md)
 
 #### A19P. PSEUDOCODE
 
 ```
-// SERVER: the two doors
-GET abha/session:   info = gateway_token(sender)          // the adapter's GET /token for the participant, with expires_at
-                    return {token: info.token, expires_at: info.expires_at, expires_in: info.expires_in, base_url: abha_base}
-POST abha/events:   if action not in {enrol_otp_sent, enrolled, address_set, login_otp_sent, login_verified, login_selected}: refuse 422
-                    audit "abha." + action, entity abha, id subject[:64], detail[:200]
-
-// PAGE: the calls' exact shapes: get(<MCP id>) from the table in A19E; runs in the browser
-function session():     cached {token, base_url} from GET abha/session, re-read within a minute of expires_at or after a 401
-function certificate(): webcrypto.importKey("spki", der(GET /profile/public/certificate .publicKey), {name: "RSA-OAEP", hash: "SHA-1"})  // cached one hour
+// PAGE: seals what the person types, holds only txn_id, calls the application's endpoints
+function certificate(): webcrypto.importKey("spki", der(GET abha/certificate .public_key), {name: "RSA-OAEP", hash: "SHA-1"})  // the server caches it one hour
 function seal(value):   return base64(webcrypto.encrypt({name: "RSA-OAEP"}, certificate(), utf8(value)))
+// every screen step: POST abha/<step> with the sealed values; the answer never carries a token
+
+// SERVER: the calls' exact shapes: get(<MCP id>) from the table in A19E; runs in the application
 function abha_call(method, path, body, extra):
-    headers = {Authorization: "Bearer " + session().token, "REQUEST-ID": uuid(), TIMESTAMP: now_utc_iso_ms()} + extra
-    answer = fetch(method, session().base_url + path, body, headers)       // CORS: the service allows the page's origin
+    headers = {Authorization: "Bearer " + gateway.token().token, "REQUEST-ID": uuid(), TIMESTAMP: now_utc_iso_ms()} + extra   // G3
+    answer = http(method, abha_base + path, body, headers)
+    if answer.status == 401 and first attempt: gateway.refresh_token(); retry once
     if answer.status >= 300: raise refusal(answer)        // error.code and error.message, else the invalid field
     return answer.body
-function audit(action, subject, detail):  POST abha/events {action, subject, detail}, failure ignored
+function remember(txn_id, state): server-side store keyed (txn_id, current user), expires in 15 minutes; never returned to the page
+function recall(txn_id):          that state, or none
+function audit(action, subject, detail):  audit "abha." + action, entity abha, id subject[:64], detail[:200]
 
 function enrol_otp(aadhaar, txn_id = none):
     d = digits(aadhaar); if len(d) != 12: refuse "An Aadhaar number has 12 digits."
@@ -124,7 +125,9 @@ function login_verify(txn_id, otp):
 
 function login_select(txn_id, abha_no):
     s = recall(txn_id) or refuse "The login has lapsed; ask for the OTP again."
-    answer = abha_call(POST, "/profile/login/verify/user", {ABHANumber: format(digits(abha_no)), txnId: txn_id}, {"T-token": "Bearer " + s.token})
+    chosen = the listed account whose ABHANumber equals abha_no as given, or whose last digits match a full number typed
+             or refuse "Choose one of the accounts listed."
+    answer = abha_call(POST, "/profile/login/verify/user", {ABHANumber: chosen.ABHANumber /* masked, as listed */, txnId: txn_id}, {"T-token": "Bearer " + s.token})
     remember(txn_id, {token: answer.token, x: true}); audit("login_selected", abha_no, "by mobile"); return {txn_id, profile: profile_with(answer.token)}
 
 function profile_with(x_token):  return profile_from(abha_call(GET, "/profile/account", none, {"X-token": "Bearer " + x_token}))

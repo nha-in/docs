@@ -40,7 +40,7 @@ A predetermination asks "what would the policy pay for this?" before anything is
 - Primary key `id` (integer).
 - Foreign key `claim_id` references `claim (id)` (D9), `ON DELETE CASCADE`.
 - Index `ix_claim_predetermination_corr` on `(correlation_id)`.
-- Index `ix_claim_predetermination_claim` on `(claim_id, id)`; asks are listed newest first.
+- Index `ix_claim_predet_claim` on `(claim_id, id)`; asks are listed newest first. (Kept under 30 characters: some ORMs and databases refuse a longer index name; a target with such a limit shortens any other name the same way and records it in mapping.json.)
 
 #### D19U. USED BY
 - Screens: [S6. Claim Detail](../screens/S6-claim-detail.md), [S9. Pre-authorisation](../screens/S9-preauthorisation.md)

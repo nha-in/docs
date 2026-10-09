@@ -18,7 +18,7 @@ Every FHIR resource the application builds for NHCX or reads back, in one list. 
 
 | # | Resource | Direction | What it is | Used by |
 |---|---|---|---|---|
-| [F8](../fhir/F8-claim.md) | Claim | sent | One document for every leg: pre-auth, enhancement, predetermination, claim and query answers; items, diagnoses, care team, supportingInfo documents, total. | [A5](../apis/A5-claim-submit.md) |
+| [F8](../fhir/F8-claim.md) | Claim | sent | One document for every leg: pre-auth, enhancement, predetermination, claim and query answers; items, diagnoses, care team, supportingInfo documents, total. | [A5](../apis/A5-claim-submit.md), [A17](../apis/A17-claim-state.md) |
 | [F9](../fhir/F9-claimresponse.md) | ClaimResponse | received | The payer's verdict on a Claim: decision from the adjudication, not `outcome` alone; approved, eligible and submitted totals; per-item results; pre-auth reference. | [A17](../apis/A17-claim-state.md), [C6](../callbacks/C6-claim-on-submit.md), [C8](../callbacks/C8-enquiry-on-submit.md) |
 | [F10](../fhir/F10-task-claim-actions.md) | Task (claim actions) | sent and received | A follow-up on a case: cancel, status, reprocess or release, and the payer's Task answers to them. | [A6](../apis/A6-task-submit.md), [C8](../callbacks/C8-enquiry-on-submit.md) |
 

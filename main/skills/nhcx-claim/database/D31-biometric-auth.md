@@ -40,7 +40,7 @@ Never on a screen or in an API answer: `user_token` and `refresh_token`. The API
 #### D31K. KEYS AND INDEXES
 - Primary key `id`.
 - Foreign keys: `patient_id` to [D3. patient](D3-patient.md) (on delete cascade); `claim_id` to [D9. claim](D9-claim.md) (on delete set null).
-- Index `(patient_id, payer_code, stage, created_at)`: the current-token lookup every send makes.
+- Index `ix_biometric_auth_current` on `(patient_id, payer_code, stage, created_at)`: the current-token lookup every send makes.
 
 #### D31U. USED BY
 - Screens: [S18. Beneficiary Verification](../screens/S18-beneficiary-verification.md)

@@ -70,7 +70,7 @@ Behaviour worth keeping:
 - A new problem is saved as medical history. A coded pick fills the SNOMED and ICD-10 codes and its display wins over the typed description.
 - A new allergy takes the typed description, or the allergen's display if none was typed. Category falls back to the allergen's own category. Status is saved as active.
 
-Claims: this screen has no claim tab and no link to claims. The link runs the other way: a claim is attached to one of this patient's current IPD admissions on the Claim Creation Form S4, and the claim screens (S4, S6) link back here by the patient's name.
+Claims: two actions in the header, beside "Admit": **"Search insurance policy"** opens the policy search [S1. Search Policy](S1-search-policy.md) prefilled with the patient's ABHA number (else the mobile number; the desk may switch to Member ID) and carries the patient through [S2. Select Policy](S2-select-policy.md), so the case opens linked to this patient (the case-opening API already takes `patient`); **"Claims"** opens the claim list [S5. Claim Master](S5-claim-master.md) filtered to this patient's cases. The admission is still linked on the Claim Creation Form S4, and the claim screens (S4, S6) link back here by the patient's name.
 
 NHCX use: the header's ABHA chip is the quickest check that the patient can be matched to a policy. The IPD admissions in the Encounters tab are what a claim links to. The diagnoses recorded on that admission and its consultant become the pre-authorisation's diagnoses and treating doctor, so a diagnosis added to the admission (it shows here with that admission as Source) is what the payer sees.
 

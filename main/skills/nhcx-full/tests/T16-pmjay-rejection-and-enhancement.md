@@ -6,7 +6,7 @@ A rejection is taken once at the role holding the case and ends the leg `rejecte
 
 #### T16S. SETUP
 
-Two PMJAY claims with a package and its ruling ([T13. PMJAY Eligibility, Package Master and Ruling](T13-pmjay-eligibility-and-package-master.md)).
+Two PMJAY claims with a package and its ruling ([T13. PMJAY Eligibility, Package Master and Ruling](T13-pmjay-eligibility-and-package-master.md)), the first quoting the package named by `NHCX_TEST_PMJAY_MANUAL_PACKAGE` ([T1. Test Configuration](T1-test-configuration.md)): the sandbox auto-approves `SB043F` before any desk can reject it, so a rejection is not drivable on it, and the test ends `blocked`, cause `sandbox`, when no manual package is configured [SANDBOX](../references/PAYERS.md#markers). Before each claim is opened the runner cancels any open PMJAY pre-authorisation of the beneficiary ([T2. Test Runners](T2-test-runners.md)).
 
 #### T16G. GUI
 

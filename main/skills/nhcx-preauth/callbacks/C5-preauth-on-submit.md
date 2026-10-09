@@ -18,7 +18,7 @@ A pre-authorisation is answered several times on one correlation id: an acknowle
 
 **Failed sends.** A leg whose send was reported failed (C1 `failed_send`) is reopened as `submitting` when the payer answers it, then the reply applied.
 
-**A denied enhancement.** A rejection that answers an enhancement leg denies the enhancement only: the approved pre-authorisation keeps its status and its approved amount, the payer's reason is recorded against the enhancement, and nothing is added to the approved total. Only a rejection of the pre-authorisation itself ends the leg `rejected`.
+**A denied enhancement.** A rejection that answers an enhancement leg denies the enhancement only: the approved pre-authorisation keeps its status, its approved amount and every other approval column (`request_json` of the last accepted send, `eligible_amount`, `outcome`, `adjudication`, `disposition`, `preauth_ref`, `items_json`, `settled_at`); the payer's reason is recorded in `error_message`, the reply in `response_json`, and nothing is added to the approved total (D18, A4). Only a rejection of the pre-authorisation itself ends the leg `rejected`.
 
 #### C5Q. REQUEST
 `fhir` is an F1 Bundle carrying the payer's F9 ClaimResponse (`use: preauthorization`, or `predetermination` for a quote), usually beside F15 Patient, F17 Organizations and F18 Coverage; some payers send the ClaimResponse alone.
@@ -57,9 +57,12 @@ C5(envelope, corr):
         # PMJAY denies the enhancement only (workflow 231): the approved
         # pre-authorisation and its amounts stand. The denial is kept as the
         # payer's reason, and the enhancement's amount is not added.
-        leg_write(D18, row, {status: "approved", error_message: parsed.reason or disposition,
-                             api_call_id: api_call_id or null, settled_at: now,
-                             response_json: body, enhancement_status: "rejected"})
+        # the approval's own columns were not cleared by the enhancement send (D18), so
+        # they are not touched here; the status goes back to what those columns say
+        leg_write(D18, row, {status: "partial" if (row.outcome == "partial" and row.adjudication == "approved") else "approved",
+                             error_message: parsed.reason or disposition,
+                             api_call_id: api_call_id or null,
+                             response_json: body})      # the denial lives in error_message; D18 has no enhancement_status column
         return "settled"
     values = parsed, dropping preauth_ref when the reply carries none (the stored one stays)
     leg_write(D18, row, values + {status,

@@ -54,7 +54,7 @@ Money shows as `₹12,345`. A missing value shows as `-`.
 | Surgery date | Date | "Leave blank for a conservative case." |
 | Date and time of death | Date and time | "Required when the discharge type is death." |
 
-**LAMA / DAMA rule.** When the type is LAMA or DAMA and the stage is Before Surgery or During Surgery, an amber badge "Claimed as LM100 only" appears [PAYER](../references/PAYERS.md#markers). It reads: "The payer accepts only **LM100** for a LAMA / DAMA case that ended before or during surgery, and disqualifies everything the pre-authorisation approved. The claim below quotes it in their place." The claim then quotes the single procedure `LM100` at the plan's rate in place of every pre-authorised line. The display name falls back to "LAMA / DAMA procedure", and the rate falls back to 0 when the plan has no such package.
+**LAMA / DAMA rule.** When the type is LAMA or DAMA and the stage is Before Surgery or During Surgery, an amber badge "Claimed as LM100 only" appears [PAYER](../references/PAYERS.md#markers). It reads: "The payer accepts only **LM100** for a LAMA / DAMA case that ended before or during surgery, and disqualifies everything the pre-authorisation approved. The claim below quotes it in their place." The claim then quotes the single procedure `LM100` at the plan's rate, quantity the number of days admitted (admission to discharge, at least 1), in place of every pre-authorised line. The display name falls back to "LAMA / DAMA procedure", and the rate falls back to 0 when the plan has no such package.
 
 "Save discharge" (primary, save icon) is hidden while the claim is `submitting`. The server refuses the save then too. Validation, each shown as a red flash:
 - "The claim is with the payer; wait for its answer before changing the discharge."
@@ -83,11 +83,11 @@ Each code keeps one file, and a new file replaces the old one. The summary is fi
 
 *Everything attached for the claim.* A table of the claim-stage documents. Columns: File (opens inline in a new tab), Filed as (label with code sub-line), Size, Uploaded, and a "Remove" button with the confirm "Remove this document from the claim?". Empty text: "Nothing beyond the requirements yet." Below it is the upload row: "Files (PDF or image)" (multiple, required), "Filed as" (the ruling's codes, then the common codes listed on S9, default `CD`), "Label", and "Attach". Hidden field `stage=claim`. Errors: "Choose a PDF or image to attach." plus the upload rules. Success: "N document(s) attached."
 
-**Forms for the claim card.** The payer's questionnaires to answer for the claim leg. The card is left out when no form applies. Two sets of forms apply:
+**Forms for the claim card.** The payer's questionnaires to answer for the claim leg (the rule is D12's). The card is left out when no form applies. The forms listed are:
 - With an auth-requirements ruling, the questionnaires it names for the stage after pre-authorisation.
-- The policy's own forms, offered on this leg whether or not there is a ruling. The scheme asks for the authentication consent again at discharge [PAYER](../references/PAYERS.md#markers).
-
-Without a ruling, the claim leg lists only the policy's forms. Package treatment guidelines belong to the pre-authorisation.
+- The quoted packages' own forms (their standard treatment guideline checklists), on this leg as on the pre-authorisation, whether or not there is a ruling: PMJAY lists an STG requirement per stage on every benefit and its ruling never names the STG [PAYER](../references/PAYERS.md#markers).
+- The policy's own forms, offered on this leg whether or not there is a ruling.
+- Without a stage-Discharge token on the Verification tab (S18), the scheme's Discharge Consent form, even when nothing lists it; its question is an attachment (the signed declaration), so the desk uploads it here, and the claim is refused PAYR-1363 without it [PAYER](../references/PAYERS.md#markers).
 
 Each form is one accordion item titled `<form title> - <answered>/<total> answered`, and several can be open at once. Inside it, the questions sit in a two-column grid. Each question uses the same typed controls and help text as S9. Every form posts multipart to `claims/:caseid/forms` with hidden `form_url` and `stage=claim`. Its own "Save answers" button sits right-aligned under the grid.
 
@@ -141,7 +141,7 @@ States of the card:
 A decided PMJAY claim goes back only as a reprocess request [PAYER](../references/PAYERS.md#markers). A direct post there is refused with "The payer has decided this claim; it goes back for another look as a reprocess request, not as a claim sent again."
 
 **Replying to a query** (status `queried`). The reply form depends on how the payer raises queries:
-- *Query inside the payer's verdict* (`resubmit` mode, PMJAY, see [PAYERS.md](../references/PAYERS.md)) [PAYER](../references/PAYERS.md#markers). An inline form with a required textarea, "Reply to the payer's query". Help text: "Goes to the payer as the claim query detail, with everything attached and answered on this tab since the query." The small primary button "Answer the query (161)" [SANDBOX](../references/PAYERS.md#markers) posts to `claims/:caseid/claim` with `reply`. The question being answered is kept, so the card can still show it while the answer is out.
+- *Query inside the payer's verdict* (`resubmit` mode, PMJAY, see [PAYERS.md](../references/PAYERS.md)) [PAYER](../references/PAYERS.md#markers). An inline form with a required textarea, "Reply to the payer's query". Help text: "Goes to the payer as the claim query detail, with everything attached and answered on this tab since the query." The small primary button "Answer the query (<workflow id>)" (151, or 161 under the sandbox override [SANDBOX](../references/PAYERS.md#markers)) posts to `claims/:caseid/claim` with `reply`. The question being answered is kept, so the card can still show it while the answer is out.
 - *Query on a separate communication thread* (`communication` mode). Only the pointer to S10, with the button "Open the Communication tab". The claim is not submitted again.
 
 **Submit validation**, in order, each shown as a red flash:

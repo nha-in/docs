@@ -47,4 +47,5 @@ Lifecycle:
 #### D2U. USED BY
 - Screens: [S4. Claim Creation Form](../screens/S4-claim-creation-form.md), [S16. Practitioner Master](../screens/S16-practitioner-master.md)
 - FHIR: [F8. Claim](../fhir/F8-claim.md), [F16. Practitioner and PractitionerRole](../fhir/F16-practitioner.md)
-- Database: [D4. encounter](D4-encounter.md), [D8. terminology](D8-terminology.md), [D26. claim_care_team](D26-claim-care-team.md)
+- Database: [D4. encounter](D4-encounter.md), [D8. terminology](D8-terminology.md), [D9. claim](D9-claim.md), [D26. claim_care_team](D26-claim-care-team.md)
+- Tests: [T1. Test Configuration](../tests/T1-test-configuration.md)

@@ -9,8 +9,8 @@ Turn discovery and mapping into an ordered integration plan for this target: pha
 
 ### L3.1 Fix the order
 Build in the order a claim happens, so each phase can be exercised on its own. These are the phases of [references/SCAFFOLDING.md](../references/SCAFFOLDING.md) section 12:
-1. Foundation: gateway embedded (G1 to G11), configuration, ledger, the inbound route and the C1 dispatcher.
-2. Data: new tables and columns from mapping.json (D), master-data fixes (ABHA, HPR, HFR, participant codes).
+1. Foundation: gateway embedded (G1 to G11), configuration, ledger, the inbound route (wired to a stub receive answering `unmatched` until C1 exists).
+2. Data: new tables and columns from mapping.json (D), master-data fixes (ABHA, HPR, HFR, participant codes); then the C1 dispatcher and the archive, which match on D9 and the leg tables (D10, D13, D18 to D29) and so come after them, not in phase 1.
 3. Policy and eligibility: S1, S2, S3, S5, S6 shell; A1, A2; C2; F2, F3, F15 to F18.
 4. Plan and line items: S7, S8; A3, A2 (auth-requirements); C3, C4; F4 to F6.
 5. Pre-authorisation: S4, S9; A4, A6 (cancel, status); C5, C7, C8; F7, F8, F9, F10.

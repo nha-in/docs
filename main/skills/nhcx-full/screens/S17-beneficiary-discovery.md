@@ -83,7 +83,7 @@ The arrangement below is the reference implementation's [REF](../references/PAYE
 ```
 
 #### S17A. ACTIONS
-1. Discover: validate, send the discovery (A2) with the additional information, and wait for the reply on this page.
+1. Discover: validate, open a draft case for the patient and payer when the page was not opened for a case (A2 `discover`: the facility guard is checked first, so a refusal creates no case), send the discovery (A2) on it with the additional information, and wait for the reply on this page.
 2. Stop waiting: stop polling; the check stays in the list and can still be opened.
-3. Choose a policy tile: with no case, open a new case on that policy for the patient (as S2 does) and land on its Eligibility tab S3; with a case, fill the policy in on that case and return to S3.
+3. Choose a policy tile: fill the policy in on the case the discovery ran on (the draft case `discover` opened, or the case the page was opened for) and land on its Eligibility tab S3.
 4. Back: to the case's Eligibility tab when the page was opened for a case, else to the claim list S5.

@@ -12,10 +12,11 @@ Prove the code behaves as specified without touching NHCX or the ABDM registry. 
 - Registry fixtures for G4 (a participant record and certificate) and G10 (a policy search reply, and the "No policies found" error).
 - A test key pair, so G6 encrypts and decrypts for real.
 - A test database with the migrations applied.
+- **The test process never opens the real gateway configuration or the participant's private key**, and never starts the gateway's loops (G1). A target that reads its environment file at start-up does this by accident: in the target's test settings pin the NHCX settings off, point the gateway at a throwaway configuration with a key pair generated for the run, add a loopback-only network guard (any connection to a host other than the fakes fails the test), use a temporary archive and ledger directory, and keep the tests off any shared cache or queue, so a developer's or CI's run can never send to NHCX or read another process's state.
 - Received bundles taken from the knowledge source: `get_fhir_example` (MCP) or `nhcx-plan/knowledge/nhcx-package/fhir/` (package), copied into `tests/nhcx/fixtures/bundles/` with their source noted.
 
 ### L7.2 Test the FHIR mappers (F)
-For each builder, build from fixture rows and check every FnF element and the F1 bundle order. Run the result through `validate_fhir` when the MCP is the source; otherwise compare it with the package's example bundle for the same exchange. For each parser, feed a bundle written from the FnF description and check the D columns it fills.
+For each builder, build from fixture rows and check every FnF element and the F1 bundle order. Compare it element by element with the knowledge source's example bundle for the same exchange (`get_fhir_example`, or the package's `fhir/<use case>/` bundle); `validate_fhir` is not used on NHCX bundles ([KNOWLEDGE.md](../references/KNOWLEDGE.md)). For each parser, feed a bundle written from the FnF description and check the D columns it fills.
 
 ### L7.3 Test the APIs (A)
 For each A, drive its pseudocode: every pre-send refusal (message verbatim), the successful send (the request G7 made, the D rows and statuses written), a send failure that names ids, and one that names none.

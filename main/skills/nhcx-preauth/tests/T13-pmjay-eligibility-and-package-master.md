@@ -4,7 +4,7 @@
 
 The PMJAY start of a claim, as T3. IRDAI Policy Search and Eligibility (in nhcx-coverage) and [T4. IRDAI Insurance Plan and Authorisation Requirements](T4-irdai-plan-and-auth-requirements.md) are for IRDAI, under the `pmjay` adapter ([PAYERS.md](../references/PAYERS.md)): the policy search (A1. Policy Search (in nhcx-coverage)), eligibility ([A2. Coverage Eligibility Check](../apis/A2-coverage-eligibility-check.md), C2. Coverage Eligibility Verdict (in nhcx-coverage)), the package master ([A3. Insurance Plan Request](../apis/A3-insurance-plan-request.md)) and the ruling on authorisation requirements ([A2. Coverage Eligibility Check](../apis/A2-coverage-eligibility-check.md) `auth-requirements`, [C3. Authorisation Requirements Ruling](../callbacks/C3-auth-requirements-on-check.md)). PMJAY messages go to the policy's processing id (for PMJAY the state health agency), which the search returns; the payer id only chooses the adapter (CORE confusions).
 
-**The package master is requested and then left alone.** PMJAY answers a plan request in 15 to 60 minutes, often about 30, and refuses a second request meanwhile (PAYR-1406) [SANDBOX](../references/PAYERS.md#markers). So this test sends [A3. Insurance Plan Request](../apis/A3-insurance-plan-request.md) once, records the correlation id, and does not wait: it seeds a package master for the claim's policy and every PMJAY test runs on that. The seed is a few fixed packages that PMJAY approves at PPD-Trust without the plan being read back (fixed rates, no tiers, no implants, no documents beyond the ruling's), so a decision can be taken on them in [T14. PMJAY Pre-authorisation Through the Payer Service](T14-pmjay-preauth-adjudicated.md) to T18. PMJAY Payment Notice, Status Refusal and Cancel (in nhcx-payment). When the real plan does arrive on [C4. Insurance Plan Reply](../callbacks/C4-insuranceplan-on-request.md), it replaces the seed for that claim and the tests from then on use it.
+**The package master is requested and then left alone.** PMJAY answers a plan request in 15 to 60 minutes, or not at all within a session, and refuses a second request meanwhile (PAYR-1406) [SANDBOX](../references/PAYERS.md#markers). No test may depend on its arrival, and the seed is the only source of PMJAY STG and consent questions in a sandbox run. So this test sends [A3. Insurance Plan Request](../apis/A3-insurance-plan-request.md) once, records the correlation id, and does not wait: it seeds a package master for the claim's policy and every PMJAY test runs on that. The seed is a few fixed packages that PMJAY approves at PPD-Trust without the plan being read back (fixed rates, no tiers, no implants, no documents beyond the ruling's), so a decision can be taken on them in [T14. PMJAY Pre-authorisation Through the Payer Service](T14-pmjay-preauth-adjudicated.md) to T18. PMJAY Payment Notice, Status Refusal and Cancel (in nhcx-payment). When the real plan does arrive on [C4. Insurance Plan Reply](../callbacks/C4-insuranceplan-on-request.md), it replaces the seed for that claim and the tests from then on use it.
 
 #### T13S. SETUP
 
@@ -90,59 +90,72 @@ The PMJAY start of a claim, as T3. IRDAI Policy Search and Eligibility (in nhcx-
     {
       "url": "https://payer.gov.in/policy/questionnaire/100020", "title": "Admission Details",
       "items": [
-        {"link_id": "100075", "type": "dateTime", "text": "Admission Date", "required": true},
-        {"link_id": "100074", "type": "dateTime", "text": "Surgery/Treatment Start Date", "required": true},
-        {"link_id": "100073", "type": "choice", "text": "Admission Type", "required": true, "options": ["PLANNED", "EMERGENCY"]},
-        {"link_id": "100076", "type": "choice", "text": "Medico Legal Case", "required": true, "options": ["Yes", "No"]}
+        {"linkId": "100075", "type": "dateTime", "text": "Admission Date", "required": true},
+        {"linkId": "100074", "type": "dateTime", "text": "Surgery/Treatment Start Date", "required": true},
+        {"linkId": "100073", "type": "choice", "text": "Admission Type", "required": true, "options": ["PLANNED", "EMERGENCY"]},
+        {"linkId": "100076", "type": "choice", "text": "Medico Legal Case", "required": true, "options": ["Yes", "No"]}
       ]
     },
     {
       "url": "https://payer.gov.in/policy/questionnaire/100008", "title": "General Findings",
       "items": [
-        {"link_id": "100019", "type": "string", "text": "Temperature"},
-        {"link_id": "100020", "type": "string", "text": "Pulse Rate Per Minute"},
-        {"link_id": "100021", "type": "string", "text": "Height(in CM)"},
-        {"link_id": "100022", "type": "string", "text": "Weight(in KG)"},
-        {"link_id": "100023", "type": "string", "text": "BMI"},
-        {"link_id": "100024", "type": "choice", "text": "Cyanosis"},
-        {"link_id": "100025", "type": "choice", "text": "Pallor"},
-        {"link_id": "100027", "type": "choice", "text": "Malnutrition"},
-        {"link_id": "100029", "type": "choice", "text": "Oedema in Feet"}
+        {"linkId": "100019", "type": "string", "text": "Temperature"},
+        {"linkId": "100020", "type": "string", "text": "Pulse Rate Per Minute"},
+        {"linkId": "100021", "type": "string", "text": "Height(in CM)"},
+        {"linkId": "100022", "type": "string", "text": "Weight(in KG)"},
+        {"linkId": "100023", "type": "string", "text": "BMI"},
+        {"linkId": "100024", "type": "choice", "text": "Cyanosis"},
+        {"linkId": "100025", "type": "choice", "text": "Pallor"},
+        {"linkId": "100027", "type": "choice", "text": "Malnutrition"},
+        {"linkId": "100029", "type": "choice", "text": "Oedema in Feet"}
       ]
     },
     {
       "url": "https://payer.gov.in/policy/questionnaire/100010", "title": "Personal History",
       "items": [
-        {"link_id": "100035", "type": "choice", "text": "Appetite"},
-        {"link_id": "100038", "type": "choice", "text": "Bowels"},
-        {"link_id": "100039", "type": "choice", "text": "Nutrition"},
-        {"link_id": "100040", "type": "choice", "text": "Known Allergies"},
-        {"link_id": "100037", "type": "choice", "text": "Diet"},
-        {"link_id": "100041", "type": "choice", "text": "Habits/Addictions"}
+        {"linkId": "100035", "type": "choice", "text": "Appetite"},
+        {"linkId": "100038", "type": "choice", "text": "Bowels"},
+        {"linkId": "100039", "type": "choice", "text": "Nutrition"},
+        {"linkId": "100040", "type": "choice", "text": "Known Allergies"},
+        {"linkId": "100037", "type": "choice", "text": "Diet"},
+        {"linkId": "100041", "type": "choice", "text": "Habits/Addictions"}
       ]
     },
     {
       "url": "https://payer.gov.in/policy/questionnaire/100011", "title": "Family History",
       "items": [
-        {"link_id": "100036", "type": "choice", "text": "Diabetes"},
-        {"link_id": "100042", "type": "choice", "text": "Hypertension"},
-        {"link_id": "100043", "type": "choice", "text": "Heart Disease"},
-        {"link_id": "100044", "type": "choice", "text": "Stroke"},
-        {"link_id": "100055", "type": "choice", "text": "Cancer"},
-        {"link_id": "100056", "type": "choice", "text": "Tuberculosis"},
-        {"link_id": "100057", "type": "choice", "text": "Asthma"}
+        {"linkId": "100036", "type": "choice", "text": "Diabetes"},
+        {"linkId": "100042", "type": "choice", "text": "Hypertension"},
+        {"linkId": "100043", "type": "choice", "text": "Heart Disease"},
+        {"linkId": "100044", "type": "choice", "text": "Stroke"},
+        {"linkId": "100055", "type": "choice", "text": "Cancer"},
+        {"linkId": "100056", "type": "choice", "text": "Tuberculosis"},
+        {"linkId": "100057", "type": "choice", "text": "Asthma"}
+      ]
+    },
+    {
+      "url": "https://payer.gov.in/policy/questionnaire/100024", "title": "Authentication Consent",
+      "items": [
+        {"linkId": "100093", "type": "attachment", "text": "Medical Superintendent Declaration Form (During Admission)", "required": true},
+        {"linkId": "100095", "type": "string", "text": "Remarks"}
+      ]
+    },
+    {
+      "url": "https://payer.gov.in/policy/questionnaire/100466", "title": "Discharge Consent", "stage": "claim",
+      "items": [
+        {"linkId": "135477", "type": "attachment", "text": "Medical Superintendent Declaration Form (During Discharge)", "required": true}
       ]
     },
     {
       "url": "https://payer.gov.in/policy/questionnaire/100005", "title": "Discharge Information", "stage": "claim",
       "items": [
-        {"link_id": "100097", "type": "attachment", "text": "Post Treatment Photo with Doctor/PMAM", "required": true},
-        {"link_id": "100096", "type": "attachment", "text": "Discharge Summary", "required": true},
-        {"link_id": "101799", "type": "choice", "text": "Discharge Stage", "required": true, "options": ["After Surgery/Treatment"]},
-        {"link_id": "100101", "type": "dateTime", "text": "Surgery/Treatment Date", "required": true},
-        {"link_id": "100012", "type": "dateTime", "text": "Discharge Date", "required": true},
-        {"link_id": "103045", "type": "attachment", "text": "Feedback Form", "required": true},
-        {"link_id": "103119", "type": "choice", "text": "Have Hospital provided the medicines during treatment/for post operative care", "required": true, "options": ["Yes", "No"]}
+        {"linkId": "100097", "type": "attachment", "text": "Post Treatment Photo with Doctor/PMAM", "required": true},
+        {"linkId": "100096", "type": "attachment", "text": "Discharge Summary", "required": true},
+        {"linkId": "101799", "type": "choice", "text": "Discharge Stage", "required": true, "options": ["After Surgery/Treatment"]},
+        {"linkId": "100101", "type": "dateTime", "text": "Surgery/Treatment Date", "required": true},
+        {"linkId": "100012", "type": "dateTime", "text": "Discharge Date", "required": true},
+        {"linkId": "103045", "type": "attachment", "text": "Feedback Form", "required": true},
+        {"linkId": "103119", "type": "choice", "text": "Have Hospital provided the medicines during treatment/for post operative care", "required": true, "options": ["Yes", "No"]}
       ]
     }
   ]
@@ -154,7 +167,8 @@ How the seed is used:
 - It is written into the claim's [D10. claim_plan](../database/D10-claim-plan.md) (status `ready`, its source marked as the test seed) and [D11. claim_plan_benefit](../database/D11-claim-plan-benefit.md) rows, and the questionnaires into [D12. claim_plan_form](../database/D12-claim-plan-form.md), through the same code path [C4. Insurance Plan Reply](../callbacks/C4-insuranceplan-on-request.md) uses, so the screens and services see an ordinary plan. Never written where a real plan is already `ready`; removed when the run ends.
 - The pre-authorisation of [T14. PMJAY Pre-authorisation Through the Payer Service](T14-pmjay-preauth-adjudicated.md), [T15. PMJAY Query Answered by Resubmission](T15-pmjay-query-by-resubmission.md), T17. PMJAY Claim Through the Role Walk (in nhcx-claim) and T18. PMJAY Payment Notice, Status Refusal and Cancel (in nhcx-payment) quotes `SB043F` once, ₹18,600. The claim of T17. PMJAY Claim Through the Role Walk (in nhcx-claim) bills the same.
 - The enhancement of [T16. PMJAY Rejection and Enhancement](T16-pmjay-rejection-and-enhancement.md) is on a claim that quoted `MG072C`: one cycle at pre-authorisation, and the enhancement adds a second cycle (₹1,500), which the package allows (cyclic, up to 6). `SB043F` is never enhanced: PMJAY does not allow it.
-- Documents: the tests attach one small PDF under each document code the chosen package lists, at the `pre` stage, before sending ([S9. Pre-authorisation](../screens/S9-preauthorisation.md)). The `Discharge Information` questionnaire and its attachments belong to the claim stage (S11. Claim Submission (in nhcx-claim)); the other four are answered at pre-authorisation, the required items with the options given, the rest with plain values.
+- Documents: the tests attach one small PDF under each document code the chosen package lists, at the `pre` stage, before sending ([S9. Pre-authorisation](../screens/S9-preauthorisation.md)). The `Discharge Information` and `Discharge Consent` questionnaires and their attachments belong to the claim stage (S11. Claim Submission (in nhcx-claim)); the other five (`Admission Details`, `General Findings`, `Personal History`, `Family History`, `Authentication Consent`) are answered at pre-authorisation, the required items with the options given, attachments with a small PDF, the rest with plain values.
+- **The consent questionnaires are not optional in the seed.** A PMJAY pre-authorisation or claim sent without a biometric token ([A18. Biometric Authentication](../apis/A18-biometric-authentication.md), [T19. PMJAY Beneficiary Verification and ABHA](T19-pmjay-biometric-and-abha.md)) is refused unless the Authentication Consent (`100024`, items `100093` attachment and `100095` string) rides on the pre-authorisation and the Discharge Consent (`100466`, item `135477` attachment) on the claim: PAYR-1256 and PAYR-1363 otherwise. They are answered as in the knowledge package's `fhir/D4/D4-request.json` and `fhir/D9/D9-request.json`. PMJAY's ruling names `100024` at pre-authorisation and nothing names `100466`, which is why the forms card offers a consent form whenever no token is held ([S9. Pre-authorisation](../screens/S9-preauthorisation.md), S11. Claim Submission (in nhcx-claim)).
 
 #### T13G. GUI
 
@@ -175,5 +189,5 @@ How the seed is used:
 - The search returns the PMJAY policy with both ids and the beneficiary's ABHA number, and every message is addressed to the processing id (read off the opened claim, as T3. IRDAI Policy Search and Eligibility (in nhcx-coverage) does).
 - Both eligibility checks are answered; every claim line carries the programme code `AB-PMJAY` ([PAYERS.md](../references/PAYERS.md)) and PMJAY's own code system; the facility is named by the HFR id on its own record.
 - The plan request went out (NHCX 202) exactly once for this policy in the run; its correlation id is in the report. Its answer is not waited for. If it arrives, [S7. Insurance Plan](../screens/S7-insurance-plan.md) shows the real plan in place of the seed.
-- The seeded package master reads `ready` on [S7. Insurance Plan](../screens/S7-insurance-plan.md) with exactly the two packages, their rates and documents as given, and the four pre-authorisation questionnaires; [S8. Line Items](../screens/S8-line-items.md) lists both packages.
+- The seeded package master reads `ready` on [S7. Insurance Plan](../screens/S7-insurance-plan.md) with exactly the two packages, their rates and documents as given, and the seven questionnaires: five at pre-authorisation (the four clinical forms and the Authentication Consent) and two at the claim (Discharge Information, Discharge Consent); [S8. Line Items](../screens/S8-line-items.md) lists both packages.
 - The ruling arrives on the auth-requirements correlation id and lists what the chosen package needs at the `pre` stage.

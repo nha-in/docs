@@ -14,7 +14,9 @@ The payer's answer to a request to withdraw the pre-authorisation. PMJAY answers
 
 **The Task's own error.** When the payer says why it did not do it (`Task.statusReason`, an output typed as an error, or `ClaimResponse.error` on the response the Task points at), those words are kept in `disposition` and shown under the refusal. `error_message` stays the fixed refusal text, because the logic above matches on it.
 
-**Redelivery.** Once accepted, the leg is `cancelled` and every later copy is `ignored`. A `ProtocolResponse` leaves the leg in `error`, which C1 `failed_send` keeps open, so each redelivery of the same refusal settles again with the same result.
+**A `ProtocolResponse` to a cancel** is a refusal at the door for a fault on our side (a wrong input spelling, F10; a wrong workflow id), while the pre-authorisation is still approved at the payer. It does **not** leave the leg in `error`: that would stop a corrected cancel from being sent, because A6 allows a cancel only from `submitting`, `approved`, `partial` or `queried`. Instead the leg goes back to `pre_cancel_status` (else `approved`) with the refusal text in `error_message` and the cancel's ids kept, so the desk reads why and cancels again; the first build left the leg in `error` and it had to be restored by hand before the corrected cancel was accepted [SANDBOX](../references/PAYERS.md#markers).
+
+**Redelivery.** Once accepted, the leg is `cancelled` and every later copy is `ignored`. A `ProtocolResponse` after the leg was restored is applied again the same way (the error text is replaced), so each redelivery of the same refusal settles with the same result.
 
 #### C7Q. REQUEST
 `fhir` is an F1 Bundle carrying an F10 Task (claim action reply) whose `output[].valueReference` points at an F9 ClaimResponse in the same bundle, with F15 Patient, F17 Organizations and F18 Coverage; or a `ProtocolResponse`.
@@ -35,7 +37,9 @@ C7(envelope, corr):
     body = payload(envelope)
     if body.type == "ProtocolResponse":
         if refused: return "ignored"
-        leg_write(D18, row, {status: "error", error_message: rejection(body)})
+        # a door refusal of OUR cancel: the pre-authorisation still stands at the payer,
+        # so restore it and let the desk cancel again (A6 allows a cancel from the restored status)
+        leg_write(D18, row, {status: row.pre_cancel_status or "approved", error_message: rejection(body)})
         return "settled"
     parsed = read_task_reply(body)
     if refused and not accepted(parsed): return "ignored"
@@ -75,12 +79,12 @@ State changes (each D18 write restamps D9 `stage` / `sub_stage`):
 |---|---|---|
 | accepted | `status` `cancelled`, `settled_at`, `disposition`, `outcome`, `error_message` null, `response_json` | `claim_no` replaced by a freshly minted number; the episode carries on under it |
 | refused (Task `rejected`, or ClaimResponse `outcome` `error`) | `status` back to `pre_cancel_status` (the status before the cancel; `approved` when none was recorded), `error_message` "The payer did not accept the cancellation.", `settled_at`, `disposition`, `outcome`, `response_json` | none |
-| `ProtocolResponse` | `status` `error`, `error_message` `<code>: <message>` | none |
+| `ProtocolResponse` | `status` back to `pre_cancel_status` (`approved` when none was recorded), `error_message` `<code>: <message>`; the cancel can be sent again | none |
 
 #### C7U. USED BY
-- Screens: [S9. Pre-authorisation](../screens/S9-preauthorisation.md)
+- Screens: [S6. Claim Detail](../screens/S6-claim-detail.md), [S9. Pre-authorisation](../screens/S9-preauthorisation.md)
 - APIs: [A6. Task Submit (cancel, status, reprocess, release)](../apis/A6-task-submit.md), [A10. Transaction Related](../apis/A10-txn-related.md), [A12. Transaction FHIR](../apis/A12-txn-fhir.md), [A17. Claim State](../apis/A17-claim-state.md)
 - Callbacks: [C1. Callback Door](C1-callback-door.md), [C5. Pre-auth Reply](C5-preauth-on-submit.md), [C8. Enquiry Reply](C8-enquiry-on-submit.md)
 - FHIR: [F10. Task (claim actions)](../fhir/F10-task-claim-actions.md)
-- Database: [D18. claim_preauth](../database/D18-claim-preauth.md), [D30. counter](../database/D30-counter.md)
-- Tests: [T9. IRDAI Status Enquiry and Cancel](../tests/T9-irdai-cancel-and-status.md)
+- Database: [D9. claim](../database/D9-claim.md), [D18. claim_preauth](../database/D18-claim-preauth.md), [D30. counter](../database/D30-counter.md)
+- Tests: [T2. Test Runners](../tests/T2-test-runners.md), [T9. IRDAI Status Enquiry and Cancel](../tests/T9-irdai-cancel-and-status.md)

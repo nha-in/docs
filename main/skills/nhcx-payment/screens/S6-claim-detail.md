@@ -4,6 +4,8 @@
 claims/view/:caseid (opens the Eligibility tab)
 claims/view/:caseid/<tab key> (opens that tab; `?tab=<tab key>` is accepted as an alias)
 
+`:caseid` is the case's stable public id (D9 `external_id`, else the row id), **never the claim number**: an accepted cancellation replaces the claim number (C7), and a route keyed on it breaks at that moment.
+
 Page title: Claim <case number>
 
 Breadcrumb: Claims (claims/list, S5) > <case number>
@@ -45,7 +47,8 @@ The page never reloads itself, because that would throw away whatever is being t
 | Stage `eligibility`, status `draft`, `error` or `not-eligible` | Check the cover | Eligibility (S3) |
 | Stage `eligibility`, eligible, no ready plan | Fetch the package master | Insurance plan (S7) |
 | Stage `eligibility`, plan ready, no line items | Quote the treatment | Line items (S8) |
-| Stage `eligibility`, line items present | Send the pre-authorisation | Pre-authorisation (S9) |
+| Stage `eligibility`, line items present, draft not saved (`preauth_saved_at` null) | Save the preauth draft | Pre-authorisation (S4 on S9) |
+| Stage `eligibility`, line items present, draft saved | Send the pre-authorisation | Pre-authorisation (S9) |
 | Stage `preauth`/`enhancement`, `queried` | Answer the query (payer that takes answers by resubmission) | Pre-authorisation (S9) |
 | | Answer the payer's query (payer that takes a Communication, when no query is already listed first) | Communication (S10) |
 | Stage `preauth`/`enhancement`, `draft` or `refused` | Send the pre-authorisation | Pre-authorisation (S9) |
