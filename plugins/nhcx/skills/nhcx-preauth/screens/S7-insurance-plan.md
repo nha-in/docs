@@ -44,7 +44,7 @@ Plan statuses:
 | `empty` | No plan returned | warning |
 | `error` | Error | danger |
 
-A reply that carries no plan is an error ("The payer reply carries no InsurancePlan."). A reply with a plan but zero packages is `empty`, a legitimate answer, not a failure.
+A reply that carries no InsurancePlan at all (only the payer's Organization) settles as `empty` with the F5 message "The payer reply carries no InsurancePlan. The payer has no package master filed under this policy." shown on the card, as C4 and D10 say; it is a legitimate answer, not an error. A reply with a plan but zero packages is `empty` too. Only a `ProtocolResponse` or a transport failure is `error`.
 
 Data: [D10. claim_plan](../database/D10-claim-plan.md)
 

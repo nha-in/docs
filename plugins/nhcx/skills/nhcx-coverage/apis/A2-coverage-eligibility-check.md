@@ -19,10 +19,10 @@ The first three are the eligibility check, sent from the check form with the ope
 - by the operator ("Validate procedure set"), to any payer: the check is optional and is not tied to an adapter;
 - automatically, and never waited on, just before a pre-authorisation or enhancement is submitted (A4), when the case is eligible, has lines, the payer's adapter sends this check unasked ([PAYERS.md](../references/PAYERS.md)), and the set has not already been asked about (a ruling not in error whose fingerprint equals the current set). A failure of this automatic send is swallowed and the pre-authorisation goes anyway.
 
-JWE headers: the app sets only these three, plus the beneficiary's user token and `x-hcx-ben-abha-id` when the desk holds a current stage-Preauth authentication for the patient and this payer ([A18. Biometric Authentication](A18-biometric-authentication.md), any payer, every purpose); G7 generates ([G5. Protocol Headers](../gateway/G5-protocol-headers.md)) `x-hcx-api_call_id`, `x-hcx-request_id`, `x-hcx-correlation_id`, `x-hcx-timestamp` and `x-hcx-status`.
+JWE headers: the app sets only these three, plus the beneficiary's user token when the desk holds a current stage-Preauth authentication for the patient and this payer ([A18. Biometric Authentication](A18-biometric-authentication.md), any payer, every purpose), and `x-hcx-ben-abha-id` whenever an ABHA number is known: the token's ABHA when a token is held, else the case's ABHA number (from the policy search or the payer's earlier reply), else the header is **left out**. The beneficiary's ABHA is never mandatory for a check, whatever the transport notes say: a beneficiary found by Member id with no ABHA is checked without the header, and the search option is labelled "Member id"; G7 generates ([G5. Protocol Headers](../gateway/G5-protocol-headers.md)) `x-hcx-api_call_id`, `x-hcx-request_id`, `x-hcx-correlation_id`, `x-hcx-timestamp` and `x-hcx-status`.
 - `x-hcx-sender_code`: the facility's NHCX participant code (Settings).
 - `x-hcx-recipient_code`: the policy's `processing_id` from the policy search (A1), else its `payer_id`, else the configured default payer code. NHA's documentation is explicit that the recipient is the processing id, not the payer id (NHCX-1003 otherwise) (in the reference implementation the PMJAY payer, see [PAYERS.md](../references/PAYERS.md)) [REF](../references/PAYERS.md#markers).
-- `x-hcx-workflow_id`: the case number, for every purpose [REF](../references/PAYERS.md#markers). NHA publishes no eligibility workflow code; its sample sends `11` (Patient Admitted). The payer adapter decides which to send: take `11` unless the payer is known to accept the case number. It groups every leg of the episode on both sides. (The adapter's workflow-id table is not used for this call; confirm the value against the knowledge source, see [PAYERS.md](../references/PAYERS.md).)
+- `x-hcx-workflow_id`: `11` (Patient Admitted, NHA's own sample) for every purpose, the one default; a module setting (`eligibility_workflow_id`, `11` or `case`) sends the case number instead for a payer that wants it. Both are accepted by the sandbox payers [SANDBOX](../references/PAYERS.md#markers). (The adapter's workflow-id table is not used for this call; see [PAYERS.md](../references/PAYERS.md).)
 
 Refused before any call, eligibility check (in this order):
 - "Claim not found."
@@ -48,6 +48,8 @@ Refused before any call, auth-requirements:
 
 The Aadhaar number is sent to the payer and kept in the stored bundle; screens that list a check show its last four digits only.
 
+**A discovery needs a case to land on.** C2 matches the verdict by correlation id against a D9 row, and a discovery started from [S17. Beneficiary Discovery](../screens/S17-beneficiary-discovery.md) has none yet. So `discover()` opens a draft case for the patient and the chosen payer first (D9: `status` `draft`, `purpose` `discovery`, `patient_id`, `payer_id`, `processing_id` = the payer code, `member_id` the identifier given, no policy yet), then sends on it; the cover the desk picks from the answer is applied to that same case (policy code, member id, product). The facility guard (HFR id and participant code set) is checked **before** the case is created, so a refusal leaves no orphan case.
+
 The bundle builder itself refuses a bundle without a member id ("A coverage check needs the member id to ask about."), without the facility registry id ("A coverage check needs the facility's registry id.") or without a payer code ("A coverage check needs the payer's participant code.").
 
 #### A2Q. REQUEST
@@ -58,7 +60,7 @@ The envelope's fields are the arguments passed to G7 Send.
 |---|---|---|---|
 | `jwe_headers.x-hcx-sender_code` | string | yes | facility participant code |
 | `jwe_headers.x-hcx-recipient_code` | string | yes | payer participant code |
-| `jwe_headers.x-hcx-workflow_id` | string | yes | case number [REF](../references/PAYERS.md#markers) |
+| `jwe_headers.x-hcx-workflow_id` | string | yes | `11`, or the case number under the setting |
 | `fhir` | object | yes | the `CoverageEligibilityRequest` bundle |
 
 FHIR: [F1. Bundle](../fhir/F1-bundle.md), [F2. CoverageEligibilityRequest](../fhir/F2-coverage-eligibility-request.md), [F15. Patient](../fhir/F15-patient.md), [F17. Organization](../fhir/F17-organization.md), [F18. Coverage](../fhir/F18-coverage.md), [F16. Practitioner and PractitionerRole](../fhir/F16-practitioner.md), [F19. Other bundle resources](../fhir/F19-other-resources.md) (Location)
@@ -70,7 +72,7 @@ Envelope, an auth-requirements check from a case file:
  "jwe_headers": {
   "x-hcx-sender_code": "<facility code>",
   "x-hcx-recipient_code": "<payer code>",
-  "x-hcx-workflow_id": "NM-26-0SH000006"
+  "x-hcx-workflow_id": "11"
  },
  "fhir": <F1 Bundle carrying F2 CoverageEligibilityRequest (purpose auth-requirements), F15 Patient, F17 provider and payer Organizations, F19 Location, F18 Coverage, F16 PractitionerRole>
 }
@@ -132,7 +134,7 @@ function run_check(case_id, purpose, policy_code, member_id):
 
     // gather
     adapter = payer adapter for case.payer_id
-    patient = patient[case.patient_id] if linked
+    // no patient row is read: the eligibility Patient (F15) carries identifiers only, no demographics
     items   = (purpose == benefits) ? eligibility items from claim_line (one per package
               or implant, ward tiers as modifiers) : []
 
@@ -146,7 +148,7 @@ function run_check(case_id, purpose, policy_code, member_id):
     ack, failed = SEND("v1/coverageeligibility/check", {
         jwe_headers: {x-hcx-sender_code: org.participant_code,
                       x-hcx-recipient_code: case.processing_id or case.payer_id or default payer code,
-                      x-hcx-workflow_id: case.claim_no},     // [REF](../references/PAYERS.md#markers) case number
+                      x-hcx-workflow_id: case.claim_no if settings.eligibility_workflow_id == "case" else "11"},
         fhir: bundle}, case)
 
     // write
@@ -156,6 +158,19 @@ function run_check(case_id, purpose, policy_code, member_id):
     if failed:
         same update with status = error, error_message = failed.message
         raise failed
+
+// discovery from the discovery page (S17): no case yet
+function discover(patient_id, payer_code, id_type, id_value, extra):
+    org = default organization
+    if org missing or org.identifier_value empty or org.participant_code empty:
+        refuse the Settings message above                    // checked BEFORE any case is created
+    case_id = INSERT claim {status: draft, purpose: discovery, patient_id, payer_id: payer_code,
+                            processing_id: payer_code, member_id: id_value if id_type == member id,
+                            abha_number: id_value if id_type == ABHA, mobile_number: id_value if mobile,
+                            search_id_type: id_type, search_id_value: id_value, claim_no: next number}
+    run_check(case_id, discovery, policy_code = "", member_id = extra.member_id or id_value)
+        with the additional information (Aadhaar, mobile, the searched identifier) on the F15 Patient
+    return case_id                                           // the chosen cover is applied to this case
 
 // auth-requirements, by the operator
 function request_auth(case_id):

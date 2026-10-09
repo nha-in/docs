@@ -1,7 +1,7 @@
 # S2. Select Policy Screen
 
 #### S2R. ROUTE
-claims/search/results?id_type=<type>&id_value=<value>
+claims/search/results?id_type=<type>&id_value=<value>[&patient=<id>]
 
 Breadcrumb: Claims (claims/list, S5) > Policy search
 
@@ -20,7 +20,7 @@ Results table columns:
 |---|---|---|
 | Beneficiary | `name`, or "Unknown" | `member_id`, or "-" |
 | Product / policy | `product_name`, or "-" | `policy_code`, else `product_id` |
-| Payer | `payer_name`, or "-" | `payer_id` |
+| Payer | the payer's registered name from the participant registry (`payer_name`, G4, cached), else the code | `payer_id` |
 | ABHA | `abha_number`, or "-" | |
 | Mobile | `mobile_number`, or "-" | |
 | (blank header) | Select button | |
@@ -35,14 +35,15 @@ Select sends the whole normalised policy back to the server as a JSON string, wi
 POST claims
 id_type=MemberId
 id_value=<the searched value>
+patient=<patient id, when the search was started from the patient master>
 policy={"member_id": "MD5SLS4X5", "name": null, "policy_code": "PMJAY/HP/S/G",
-        "payer_id": "<payer code>", "payer_name": "<adapter name>",
+        "payer_id": "<payer code>", "payer_name": "<registry name, or null>",
         "product_id": "PMJAY/HP/S/G", "product_name": "PMJAY for Himachal",
         "abha_number": "91703412374240", "mobile_number": "", "photo": null,
         "raw": { ...the BIS row... }}
 ```
 
-Opening the claim makes no NHCX call. It saves a new draft claim (status Draft) around the chosen policy and the search identifier (shown on S3 as "Found by"). The case number takes the form `NM-<yy>-<mmdd><serial>`, month-day and serial in base32, so numbers sort by date and then issue order [REF](../references/PAYERS.md#markers). The payer name falls back to the configured adapter's name for the payer id and then to the default payer name.
+Opening the claim makes no NHCX call. It saves a new draft claim (status Draft) around the chosen policy and the search identifier (shown on S3 as "Found by"), with D9 `patient_id` set when a `patient` was carried from the patient master ([S13. Patient List](S13-patient-list.md), [S15. Patient Detail](S15-patient-detail.md)); the admission is still linked on S4. The case number takes the form `NM-<yy>-<mmdd><serial>`, month-day and serial in base32, so numbers sort by date and then issue order [REF](../references/PAYERS.md#markers). The payer name is the registry's (G4), looked up by the payer id and cached; it never falls back to a configured label, the adapter's name or a default name, and a payer whose lookup failed is shown by its code.
 
 Data: [D9. claim](../database/D9-claim.md)
 

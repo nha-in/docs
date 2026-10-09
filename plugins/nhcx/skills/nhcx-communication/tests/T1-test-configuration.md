@@ -10,7 +10,7 @@ The two test payers and their defaults are the table in [PAYERS.md](../reference
 
 **Asked from the integrator.** The PMJAY tests (T13 to T18) need one value only the integrator has: a PMJAY beneficiary's member id the sandbox knows. Before the first PMJAY test, ask the integrator for it when it is unset, and write the answer into `tests/nhcx/e2e/.env`. Never guess it, never take it from an example or another test, and never reuse the IRDAI beneficiary. Without it every PMJAY test is `blocked` with that reason; the IRDAI tests still run. The beneficiary's ABHA number comes back from the registry with the policy, and the facility's HFR id is the one on its own record ([D1. organization](../database/D1-organization.md)): neither is asked for.
 
-**The PMJAY package master is requested, not waited for.** PMJAY answers a plan request in 15 to 60 minutes, often about 30, and refuses a second request meanwhile ([PAYERS.md](../references/PAYERS.md#test-participants)) [SANDBOX](../references/PAYERS.md#markers). The tests send the request once, note its correlation id, and go on with a seeded package master (`NHCX_TEST_PMJAY_PLAN_SEED`, T13. PMJAY Eligibility, Package Master and Ruling (in nhcx-coverage)) so nothing waits on it. Whenever the real plan does arrive (C4. Insurance Plan Reply (in nhcx-preauth)) it replaces the seed for that claim, and later tests use it.
+**The PMJAY package master is requested, not waited for.** PMJAY answers a plan request in 15 to 60 minutes, or not at all within a session, and refuses a second request meanwhile ([PAYERS.md](../references/PAYERS.md#test-participants)) [SANDBOX](../references/PAYERS.md#markers). The tests send the request once, note its correlation id, and go on with a seeded package master (`NHCX_TEST_PMJAY_PLAN_SEED`, T13. PMJAY Eligibility, Package Master and Ruling (in nhcx-coverage)) so nothing waits on it. Whenever the real plan does arrive (C4. Insurance Plan Reply (in nhcx-preauth)) it replaces the seed for that claim, and later tests use it.
 
 #### T1S. SETUP
 
@@ -19,7 +19,13 @@ The two test payers and their defaults are the table in [PAYERS.md](../reference
 | `NHCX_TEST_MODE` | `gui`, `cli` or `both`: which runner the command starts. | `both` |
 | `NHCX_TEST_ONLY` | Comma-separated test ids to run (`T5,T6`), or a payer (`irdai`, `pmjay`). | every test |
 | `NHCX_TEST_APP_URL` | Where the HMIS is served, for the GUI runner. | none: GUI tests are `blocked` without it |
-| `NHCX_TEST_USER`, `NHCX_TEST_PASSWORD` | An HMIS account allowed to open claims, for the GUI runner and, where the CLI needs a session, for the CLI runner. | none |
+| `NHCX_TEST_USER`, `NHCX_TEST_PASSWORD` | An HMIS account allowed to open claims, for the GUI runner and, where the CLI needs a session, for the CLI runner. In a facility-scoped HMIS this is a user holding a role **at the test facility**: a superuser with no facility role is answered 403 by the claim routes. | none |
+| `NHCX_TEST_FACILITY` | The facility the claims are raised at, in a facility-scoped HMIS (its id or external id). | none: `blocked` in a facility-scoped target |
+| `NHCX_TEST_DOCTOR` | A practitioner at that facility with an HPR id, for the care team ([D2. practitioner](../database/D2-practitioner.md)). | none: the runner picks the first practitioner with an HPR id, else `blocked` |
+| `NHCX_TEST_DIAGNOSIS` | The ICD-10 code the pre-authorisation quotes. | the first `diagnosis` concept with an ICD-10 code ([D8. terminology](../database/D8-terminology.md)) |
+| `NHCX_TEST_PMJAY_MANUAL_PACKAGE` | A seeded PMJAY package the sandbox does **not** decide by itself, for the tests that need the desk to query or reject (T15. PMJAY Query Answered by Resubmission (in nhcx-preauth), T16. PMJAY Rejection and Enhancement (in nhcx-preauth)); the sandbox auto-approves `SB043F` [SANDBOX](../references/PAYERS.md#markers). | none: those tests are `blocked (sandbox)` |
+| `NHCX_TEST_SLOWMO_MS` | Milliseconds to pause between GUI actions, for a person watching a headed run. | `0` |
+| `NHCX_TEST_BROWSER_CHANNEL` | The browser channel the GUI runner launches (`chromium`, `chrome`, `msedge`). | `chromium` |
 | `NHCX_TEST_IRDAI_PAYER` | The IRDAI test payer's participant code. | PAYERS.md |
 | `NHCX_TEST_IRDAI_MEMBER_ID` | The IRDAI test beneficiary's member id. | PAYERS.md |
 | `NHCX_TEST_PMJAY_PAYER` | The PMJAY test payer's participant code. | PAYERS.md |

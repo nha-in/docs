@@ -15,6 +15,8 @@ Every follow-up request that is not a Claim goes on this route as a Task bundle.
 
 FHIR: [F1. Bundle](../fhir/F1-bundle.md) (the bundle id and Task anchor of each kind), [F10. Task (claim actions)](../fhir/F10-task-claim-actions.md)
 
+**The intimation input.** Beside `claimNumber`, a cancel and a reprocess name the case once more in an input whose type code comes from the payer adapter, per kind (see [PAYERS.md](../references/PAYERS.md)) [PAYER](../references/PAYERS.md#markers): `intimationNumber` everywhere, except `initimationNumber` (the payer's own misspelling) on a `pmjay` cancel, which the PMJAY sandbox refuses otherwise with ERR-PYR-CLM-007 [SANDBOX](../references/PAYERS.md#markers).
+
 The status Task goes on `task/submit`, not on the NHCX status route, because the NHCX sandbox refuses `v1/status` with NHCX-1012 whatever correlation id it carries [SANDBOX](../references/PAYERS.md#markers).
 
 **Workflow ids (`x-hcx-workflow_id`).** From the payer adapter (see [PAYERS.md](../references/PAYERS.md)) [PAYER](../references/PAYERS.md#markers).
@@ -81,7 +83,7 @@ Envelope, cancel (PMJAY):
   "jwe_headers": {"x-hcx-sender_code": "<facility code>",
                   "x-hcx-recipient_code": "<payer code>",
                   "x-hcx-workflow_id": "PC01"},
-  "fhir": <F1 Bundle carrying F10 Task (code cancel, reason administrativeerror, claimNumber and intimationNumber NM-26-0SH000006), F17 provider and payer Organizations>
+  "fhir": <F1 Bundle carrying F10 Task (code cancel, reason administrativeerror, claimNumber and the intimation input, spelt initimationNumber under pmjay [PAYER](../references/PAYERS.md#markers), both NM-26-0SH000006), F17 provider and payer Organizations>
 }
 ```
 
@@ -99,7 +101,7 @@ A reprocess (PMJAY, workflow `36` [PAYER](../references/PAYERS.md#markers)) and 
 #### A6S. RESPONSE
 
 **Acknowledgement:** the G7 result, `{"ok": true, "gateway_status": 202, "txn_id", "correlation_id", "request_id", "headers", "response", ...}`.
-- Cancel: the pre-auth leg goes to `cancelling` under the cancel's own ids, with the reason and the note.
+- Cancel: the pre-auth leg goes to `cancelling` under the cancel's own ids, with the reason and the note. A `ProtocolResponse` on that thread (C7) puts the leg back to its earlier status with the refusal text, so a corrected cancel can be sent again.
 - Status, reprocess, release: an enquiry row in `asking` under its own ids.
 
 **Failed send.** When the failure names ids: the cancel leaves the pre-auth in `error` with the message under the cancel ids; an enquiry row is stored as `error`. A payer answer that later arrives on those ids reopens the row and is applied.
@@ -136,7 +138,7 @@ function task_parties(case_id):
     if org missing or HFR ID or participant code empty:
         refuse "Set the facility's HFR ID and NHCX participant code under Settings first."
     provider = {id: org HFR ID, name: org.name}
-    payer    = {code: case.payer_id or default payer code, name: case.payer_name or default}
+    payer    = {code: case.payer_id or default payer code, name: case.payer_name or registry_name(code) or code}   // the registry's name, never a configured one
     return case, org, provider, payer
 
 function leg_reference(case_id, stage):          // the number the payer knows the leg by, and its thread
@@ -160,7 +162,8 @@ function cancel_preauth(case_id, reason, note):
         refuse "Describe the reason, with “Other reason” the note is the only thing the payer can read."
     case, org, provider, payer = task_parties(case_id)
     bundle = F1 Bundle carrying F10 Task (cancel, reason code and display, note,
-             claimNumber and intimationNumber = case.claim_no), F17 Organizations
+             claimNumber = case.claim_no, intimation input typed adapter.intimation_input(cancel)
+             = case.claim_no   // [PAYER](../references/PAYERS.md#markers) pmjay: initimationNumber; others: intimationNumber), F17 Organizations
     ack, failed = SEND("v1/task/submit", {
         jwe_headers: {x-hcx-sender_code: org.participant_code,
                       x-hcx-recipient_code: case.processing_id or case.payer_id or default payer code,
@@ -240,4 +243,4 @@ function ask_release(case_id, amount, note):
 - APIs: [A10. Transaction Related](A10-txn-related.md), [A11. Transaction Dispatch](A11-txn-dispatch.md), [A13. Transaction List](A13-txn-list.md)
 - Callbacks: [C1. Callback Door](../callbacks/C1-callback-door.md), [C8. Enquiry Reply](../callbacks/C8-enquiry-on-submit.md)
 - FHIR: [F10. Task (claim actions)](../fhir/F10-task-claim-actions.md)
-- Tests: [T12. IRDAI Reprocess and Balance Release](../tests/T12-irdai-reprocess-and-release.md)
+- Tests: [T2. Test Runners](../tests/T2-test-runners.md), [T12. IRDAI Reprocess and Balance Release](../tests/T12-irdai-reprocess-and-release.md)

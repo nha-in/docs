@@ -8,7 +8,9 @@ One QuestionnaireResponse per payer form (F6) answered for the leg being sent. T
 
 Rules:
 - Sent on the pre-authorisation (request, enhancement, query answer) and claim (request, query answer) bundles. **Not** on a predetermination.
-- Which forms: those the leg requires (see F6 for the rule), in the order they are listed (the ruling's or package's forms by title, then the policy-wide forms). Only answers saved for that leg are used (D17 `claim_form_answer.stage`, where a row with no stage counts as `preauth`).
+- Which forms: those the leg requires (the rule is in D12: the ruling's forms for the stage, the quoted packages' own STG forms on both legs, the policy-wide forms on both legs, and the scheme's consent form for the stage when no token is held), in the order they are listed (the ruling's forms by title, then the packages' forms, then the policy-wide forms). Only answers saved for that leg are used (D17 `claim_form_answer.stage`, where a row with no stage counts as `preauth`).
+- **The scheme's consent forms cannot be answered by the application** [PAYER](../references/PAYERS.md#markers): their questions are attachments. Under PMJAY the Authentication Consent is questionnaire `100024` with items `100093` "Medical Superintendent Declaration Form (During Admission)" (`attachment`) and `100095` "Remarks" (`string`); the Discharge Consent is questionnaire `100466` with item `135477` "Medical Superintendent Declaration Form (During Discharge)" (`attachment`). The desk uploads the signed declaration on the leg's forms card (S9, S11), and the form is offered there whenever no token is held for the stage, even when no ruling lists it (PMJAY's ruling lists `100024` at pre-authorisation and nothing lists `100466` at the claim; without it the claim is refused PAYR-1363). The knowledge package's `fhir/D4/D4-request.json` and `fhir/D9/D9-request.json` show the answered forms.
+- **Filling a question that is not an attachment**, in this order: the saved answer; the payer's `initial` answer (F6); the first option; `yes` for a `boolean`. An unanswered question the payer requires is refused PAYR-1271 [PAYER](../references/PAYERS.md#markers), so a required non-attachment question is never sent empty.
 - A question with no answer is left out. A form with no answered question is left out entirely: a blank response is a different statement to the payer than no response.
 - Entries are numbered from 1 in the order written: `fullUrl` `https://nhcx.abdm.gov.in/questionnaireresponse/<n>`, `id` `"<n>"`.
 - `questionnaire` is the payer's own form url (F6 `url`). The Questionnaire itself is not sent.
@@ -63,3 +65,4 @@ Pointer on the Claim (F8):
 #### F7U. USED BY
 - APIs: [A5. Claim Submit](../apis/A5-claim-submit.md), [A18. Biometric Authentication](../apis/A18-biometric-authentication.md)
 - FHIR: [F8. Claim](F8-claim.md)
+- Database: [D12. claim_plan_form](../database/D12-claim-plan-form.md)

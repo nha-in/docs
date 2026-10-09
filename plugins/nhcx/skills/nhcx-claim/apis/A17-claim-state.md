@@ -25,6 +25,17 @@ When A10 answers not found, the G9 ledger no longer has the transaction. The leg
 
 After the polls the case stage is worked out again and stored on the claim, so `stage` and `sub_stage` reflect what the payer has just said.
 
+**Hooks owned by A4 and A5.** Four keys of the answer are computed by the pre-authorisation and claim services, not by this endpoint, and A17 only calls them. Their contracts, so A17 can be written before them and the services after:
+
+| Hook | Owner | Signature | Answers |
+|---|---|---|---|
+| `next_send` | A4 (`preauth_send_kind`), A5 (`claim_send_kind`) | `(case_id) -> kind or {"refused": "<reason>"}` | the kind the next send would be, or the verbatim refusal the send would meet; never raises |
+| `enhancement_lines` | A4 | `(case_id) -> [line rows]` | the D16 lines whose code is not in the last sent bundle (F8 "Read back"); `[]` when nothing is decided or nothing was added |
+| `required_documents` | A4 (`preauth`), A5 (`claim`) | `(case_id, stage) -> [{code, display, category, package_code, attached_document_id}]` | the ruling's requirements due at the stage, else the package master's, as S9 and S11 list them |
+| `required_forms` | A4 (`preauth`), A5 (`claim`) | `(case_id, stage) -> [{url, title, questions}]` | the forms the stage has to carry by the D12 rule (ruling, packages' STG forms, policy-wide forms, the consent form when no token is held) |
+
+Before a hook exists (phase order, L3), A17 answers `next_send` as `{"refused": "not available yet"}`, `enhancement_lines` as `[]`, and `required_documents` and `required_forms` as `{"preauth": [], "claim": []}`, so drivers written against the shape keep working and a missing hook is visible rather than a crash.
+
 #### A17Q. REQUEST
 
 No body, no query parameters.

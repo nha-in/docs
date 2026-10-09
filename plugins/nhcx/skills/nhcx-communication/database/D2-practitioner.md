@@ -8,7 +8,7 @@ The practitioner master. The claim flow reads it for the treating team: the cons
 
 Lifecycle:
 - Created by seeding and from the practitioner master screen (S16). Save refuses a blank `name` ("a practitioner needs a name") or a blank `identifier_value` ("a practitioner needs a registration or HPID number").
-- The screen always writes `prefix = 'Dr'`, `qualification_code = 'BS'`, `qualification_system` = HL7 v2-0203, `identifier_system = 'https://doctor.abdm.gov.in'`, `role_code = '158965000'`, `role_display = 'Medical practitioner'` and `active = 1` [REF](../references/PAYERS.md#markers). `specialty_*` comes from the `service_type` kind and `department` from the `department` kind of D8. terminology (in nhcx-coverage).
+- The screen always writes `prefix = 'Dr'`, `qualification_code = 'BS'`, `qualification_system` = HL7 v2-0203, `identifier_system = 'https://doctor.abdm.gov.in'`, `role_code = '158965000'`, `role_display = 'Medical practitioner'` and `active = 1` [REF](../references/PAYERS.md#markers). `specialty_*` comes from the `service_type` kind and `department` from the `department` kind of [D8. terminology](D8-terminology.md).
 - Updated by the same form (saving an edit also sets `active = 1`).
 - Retired or reinstated by toggling `active` (`1` active, `0` retired). Never deleted, because the name is on encounters, prescriptions and reports. It is a master table and survives the "clear transactional data" reset.
 - Only `active = 1` rows are accepted onto a pre-auth care team.
@@ -46,3 +46,5 @@ Lifecycle:
 
 #### D2U. USED BY
 - FHIR: [F8. Claim](../fhir/F8-claim.md), [F16. Practitioner and PractitionerRole](../fhir/F16-practitioner.md)
+- Database: [D8. terminology](D8-terminology.md), [D9. claim](D9-claim.md)
+- Tests: [T1. Test Configuration](../tests/T1-test-configuration.md)

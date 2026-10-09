@@ -117,4 +117,5 @@ The pre-authorisation (D18) and claim (D20) legs themselves are not written.
 - Callbacks: [C1. Callback Door](C1-callback-door.md)
 - FHIR: [F11. CommunicationRequest](../fhir/F11-communicationrequest.md)
 - Database: [D23. claim_query](../database/D23-claim-query.md)
+- Gateway: [G7. Send](../gateway/G7-send.md)
 - Tests: [T7. IRDAI Query Answered](../tests/T7-irdai-query-answered.md)

@@ -7,11 +7,11 @@ One row is one claim episode (case) around one selected policy, from eligibility
 The case row. It holds the policy the operator selected, the coverage eligibility exchange and the payer's verdict flattened from it, the link to the admitted patient, the pre-authorisation draft header, and the case's stage. The legs of the case live in child tables: package master D10 (in nhcx-coverage), auth-requirements ruling D13 (in nhcx-coverage), lines [D16](D16-claim-line.md), pre-auth [D18](D18-claim-preauth.md), claim [D20](D20-claim-submission.md), payments [D21](D21-claim-payment.md), queries [D23](D23-claim-query.md) and the others that point here.
 
 Create:
-- Written when the operator picks a policy from the search result (S2). The policy must carry a member ID ("That policy has no member ID; a claim cannot be raised without one."). The row starts with `status = 'draft'` and `created_at` = now. It copies the search inputs (`search_id_type`, `search_id_value`), the policy fields, `patient_photo` and the raw policy as `policy_json`. `payer_name` falls back to the payer adapter's name for `payer_id`, then to the configured default payer name.
+- Written when the operator picks a policy from the search result (S2). The policy must carry a member ID ("That policy has no member ID; a claim cannot be raised without one."). The row starts with `status = 'draft'`, `created_at` = now and a fresh `external_id` (the public id every route uses). When the search was started from the patient master (S13. Patient List (in nhcx-coverage), S15. Patient Detail (in nhcx-coverage)) the carried `patient_id` is written too; the admission is still linked later. It copies the search inputs (`search_id_type`, `search_id_value`), the policy fields, `patient_photo` and the raw policy as `policy_json`. `payer_name` is the payer's **registered name on the NHCX participant registry** ([G4. Registry and Certificates](../gateway/G4-registry.md) participant fetch, cached in the application and refreshed when the lookup is retried), looked up by `payer_id` when the case is opened; it is never the search row's `payerName`, a configuration row's `display`, the adapter's name or a configured default name. Configuration rows only choose the adapter ([PAYERS.md](../references/PAYERS.md)). When the registry lookup fails, `payer_name` stays null, the screens show the payer code, and the lookup is tried again the next time the case is opened.
 - `claim_no` is allocated from the `claim` counter ([D30](D30-counter.md)) as `NM-<yy>-<mmdd><serial>`, month-and-day in 3 base32 characters and the serial in 6 (alphabet `0-9A-V`), so every number has the same length and sorts by date, then issue order [REF](../references/PAYERS.md#markers). Example: `NM-26-0SE000001`.
 
 Eligibility check (A2):
-- Sending sets `status = 'checking'`, `purpose`, `policy_code` (the one entered, else the stored one), `member_id`, `txn_id`, `correlation_id`, `checked_at` = now, `error_message` = null. A send that fails sets `status = 'error'` and `error_message`. The outbound `x-hcx-workflow_id` is `claim_no` [REF](../references/PAYERS.md#markers).
+- Sending sets `status = 'checking'`, `purpose`, `policy_code` (the one entered, else the stored one), `member_id`, `txn_id`, `correlation_id`, `checked_at` = now, `error_message` = null. A send that fails sets `status = 'error'` and `error_message`. The outbound `x-hcx-workflow_id` is `11` by default, or `claim_no` under the `eligibility_workflow_id` setting (A2).
 - The verdict (C2 callback, or polling by `txn_id`) writes `inforce`, `outcome`, `disposition`, `auth_required`, `allowed_amount`, `used_amount` and, when the payer returns them, `beneficiary_name`, `patient_gender`, `patient_dob`, `patient_address`, `abha_number`, `patient_photo`, `plan_name`, `plan_period_start`, `plan_period_end`, `relationship`, plus the whole bundle as `response_json`. Values the payer leaves empty are not written. Then `status`: `error` when `outcome = 'error'`, else `eligible` when in force, else `not-eligible`.
 - `status = 'error'` with `error_message` also results from a ProtocolResponse on the callback, a protocol error found in the ledger, a [G9. Ledger](../gateway/G9-ledger.md) dispatch status of `dispatch_failed`, `dead` or `failed`, or a G9 ledger that no longer knows the `txn_id` (not found).
 - A redelivered verdict for a row that is no longer `checking` is ignored, unless the row's last send is on record as failed (`status = 'error'`). Then the row is revived to `checking`, `error_message` cleared, and the verdict applied.
@@ -42,8 +42,9 @@ Other writes:
 #### D9C. COLUMNS
 | column | type | null/default | meaning (and allowed values) |
 |---|---|---|---|
-| id | INTEGER | primary key | row id; the `:caseid` of the claim screens |
-| claim_no | TEXT | NOT NULL, UNIQUE | case number `NM-<yy>-<mmdd><serial>`; `caseId` and `x-hcx-workflow_id` of the eligibility check [REF](../references/PAYERS.md#markers) |
+| id | INTEGER | primary key | row id |
+| external_id | TEXT | NOT NULL, UNIQUE | a UUID minted when the case is opened; the `:caseid` of every claim route and API. Routes are never keyed on `claim_no`, which C7 replaces on an accepted cancellation. Not in the reference implementation's schema (it routed on `id`); add it, or route on `id` where the HMIS exposes integer ids [REF](../references/PAYERS.md#markers) |
+| claim_no | TEXT | NOT NULL, UNIQUE | case number `<prefix>-<yy>-<mmdd><serial>` (prefix a setting, D30); `caseId`, and the plan request's `x-hcx-workflow_id` [REF](../references/PAYERS.md#markers). Replaced by a fresh number when a cancellation is accepted (C7), so never used in a route |
 | created_at | TEXT | NOT NULL | ISO timestamp the case was opened |
 | status | TEXT | NOT NULL, default `'draft'` | eligibility status: `draft`, `checking`, `eligible`, `not-eligible`, `error` |
 | search_id_type | TEXT | null | how the beneficiary was searched: `MemberId`, `MobileNo`, `AbhaNumber` |
@@ -55,7 +56,7 @@ Other writes:
 | mobile_number | TEXT | null | mobile number from the search |
 | processing_id | TEXT | null | the policy's processing participant code from the policy search (A1); the `x-hcx-recipient_code` of every exchange on the case, falling back to `payer_id` when the registry gave none. Not in the reference implementation's schema, which sent to `payer_id` [REF](../references/PAYERS.md#markers); add it |
 | payer_id | TEXT | null | payer participant code, with or without the `@hcx` suffix (for example `<payer code>`); `x-hcx-recipient_code`, and picks the payer adapter (see [PAYERS.md](../references/PAYERS.md)) |
-| payer_name | TEXT | null | payer name |
+| payer_name | TEXT | null | the payer's registered name from the NHCX participant registry (G4), cached; null until the lookup succeeds, never a guessed or configured name |
 | product_id | TEXT | null | insurance product id |
 | product_name | TEXT | null | insurance product name |
 | policy_json | TEXT | null | JSON: the raw policy row as the search returned it |
@@ -92,9 +93,10 @@ Other writes:
 | sub_stage | TEXT | null | one of the sub-stages listed above; migration only |
 
 #### D9K. KEYS AND INDEXES
-- Primary key `id` (integer).
-- `patient_id` references [D3. patient](D3-patient.md) `id`.
-- `encounter_id` references D4. encounter (in nhcx-coverage) `id`.
+- Primary key `id` (integer). Unique: `external_id` (the public id in routes and APIs).
+- `patient_id` references [D3. patient](D3-patient.md) `id`, `ON DELETE SET NULL` (the case outlives a merged or removed patient record).
+- `encounter_id` references D4. encounter (in nhcx-coverage) `id`, `ON DELETE SET NULL`.
+- D26. claim_care_team (in nhcx-preauth) `practitioner_id` references [D2. practitioner](D2-practitioner.md) `id`, `ON DELETE PROTECT`: a practitioner named on a sent care team cannot be deleted, only retired.
 - Referenced (`claim_id`, `ON DELETE CASCADE`) by D10 (in nhcx-coverage), D13 (in nhcx-coverage), [D16](D16-claim-line.md), [D17](D17-claim-form-answer.md), [D18](D18-claim-preauth.md), D19 (in nhcx-preauth), [D20](D20-claim-submission.md), [D21](D21-claim-payment.md), [D23](D23-claim-query.md), D24 (in nhcx-preauth), D25 (in nhcx-preauth), D26 (in nhcx-preauth), D27 (in nhcx-preauth), [D28](D28-claim-document.md), [D29](D29-claim-enquiry.md). D10 (in nhcx-coverage), D13 (in nhcx-coverage), [D18](D18-claim-preauth.md) and [D20](D20-claim-submission.md) allow one row per claim.
 - Unique: `claim_no`.
 - Index: `ix_claim_status (status, id DESC)`.

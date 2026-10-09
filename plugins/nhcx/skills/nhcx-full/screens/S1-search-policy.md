@@ -3,6 +3,8 @@
 #### S1R. ROUTE
 claims/search
 
+Optional query: `patient` (the patient the search is for, carried through to S2 so the case opens linked to them), `id_type` and `id_value` (prefill). The patient master opens this screen with them: "Search insurance policy" on [S15. Patient Detail](S15-patient-detail.md) or a row of [S13. Patient List](S13-patient-list.md) passes the patient and prefills the ABHA number, else the mobile number; the desk may switch the type to Member ID, which some registries need ([PAYERS.md](../references/PAYERS.md), "Sandbox participant codes").
+
 Breadcrumb: Claims (claims/list, S5) > Policy search
 
 #### S1D. DESCRIPTION
@@ -54,6 +56,6 @@ The arrangement below is the reference implementation's [REF](../references/PAYE
 - Fields in this row have no bottom margin, so labelled fields line up with the button.
 
 #### S1A. ACTIONS
-1. Search: validate, call A1, and go to the Select Policy screen S2 (claims/search/results) with the identifier type, identifier value and returned policies. S2 shows zero results as "No policy matches that identifier."
+1. Search: validate, call A1, and go to the Select Policy screen S2 (claims/search/results) with the identifier type, identifier value, the `patient` when one was passed, and the returned policies. S2 shows zero results as "No policy matches that identifier."
 2. Change identifier type: switch the dropdown. The value field keeps its text.
 3. Breadcrumb "Claims": go back to the Claim Master screen S5 without searching.

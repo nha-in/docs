@@ -54,7 +54,7 @@ How the reply is read:
 | `policy_code` | `policy_number`, `policyNumber`, `policyno`, `policyNo`, `policycode`, `productid` |
 | `payer_id` | `payerid`, `payerId`, `insurer_code` |
 | `processing_id` | `processingid`, `processingId`, `processingID`. The participant that processes the policy on NHCX, which may differ from the payer (for example a state health agency or a TPA). It is the `x-hcx-recipient_code` of every exchange on the case; the payer id only picks the payer adapter. Using the payer id as recipient is refused with NHCX-1003 (receiver not registered). |
-| `payer_name` | `payerName`, `payername`, `insurer_name`, else the name of the payer adapter configured for `payer_id` |
+| `payer_name` | **not read from the row.** The payer's registered name is fetched from the participant registry ([G4. Registry and Certificates](../gateway/G4-registry.md)) by `payer_id` when the row is shown (S2) and when the case is opened (D9), and cached; the row's own `payerName` / `payername` / `insurer_name`, a configuration label, the adapter's name and any default name are never used. A payer whose lookup failed is shown by its code |
 | `product_id` | `productid`, `productId` |
 | `product_name` | `productname`, `productName` |
 | `abha_number` | `abhanumber`, `abhaNumber`, `abha_number` |
@@ -99,8 +99,8 @@ function search_policies(id_type, id_value):
     return [normalise(row) for row in rows if row is an object]
 
 function normalise(row):
-    // first non-empty source field wins (table above); payer_name falls back
-    // to the name of the payer adapter configured for payer_id
+    // first non-empty source field wins (table above)
+    payer_name = registry_name(payer_id)          // G4 participant fetch, cached; null when the lookup failed
     return {member_id, name, policy_code, payer_id, processing_id, payer_name, product_id,
             product_name, abha_number, mobile_number, photo, raw: row}
 ```

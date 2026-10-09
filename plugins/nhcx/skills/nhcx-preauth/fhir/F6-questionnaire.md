@@ -15,7 +15,7 @@ Rules:
 - Items nest. They are flattened depth first, each keeping its depth.
 - Answer options are read from `answerOption[].valueString`, else a `valueCoding` display, else its code. An option marked `initialSelected: true` is the question's default answer (the first such option).
 - Item types seen live: `attachment`, `choice`, `dateTime` [SANDBOX](../references/PAYERS.md#markers). The type decides the answer's value type in F7.
-- Which forms a leg must carry: with an auth-requirements ruling, the forms it names as due at pre-authorisation (for the pre-authorisation leg), plus the policy-wide forms (on both legs). Without a ruling, the pre-authorisation leg takes every form the package master attaches to the quoted packages, plus the policy-wide forms. The claim leg takes the policy-wide forms only (a ruling marks every form as due at pre-authorisation, so it adds none to the claim). A form answered for the pre-authorisation is offered again for the claim with the earlier answers filled in.
+- Which forms a leg must carry is one rule, stated in D12 and followed everywhere: the ruling's forms for the stage (when a ruling is `ready`), **plus** the quoted packages' own forms (their STG checklists) on both legs, ruling or not, **plus** the policy-wide forms on both legs, plus the scheme's consent form for the stage when no biometric token is held (A18) [PAYER](../references/PAYERS.md#markers). PMJAY lists an STG requirement per stage on every benefit and its ruling never names the STG, so the claim leg must take the packages' forms too. A form answered for the pre-authorisation is offered again for the claim with the earlier answers filled in.
 - A referenced form the payer did not ship is shown as missing rather than skipped.
 
 #### F6F. FIELDS
@@ -28,7 +28,7 @@ Into D12 `claim_plan_form`, one row per distinct url:
 | `title`, else `name`, else `url` | `title` | |
 | second-to-last path segment of `url` | `kind` | `questionnaire`, `stgquestionnaire` (or whatever the payer's path says) |
 | `item[]`, flattened | `items` (JSON list) | one entry per item at any depth |
-| `item[].linkId` | `items[].linkId` | the key an answer is stored under in D17 `claim_form_answer.link_id` |
+| `item[].linkId` | `items[].linkId` | spelt `linkId`, the FHIR name, everywhere the question key appears as a JSON key (D12 `items`, A17 `forms`, the screens' `qa_<linkId>` inputs, the T13 seed); the answer row's column is D17 `claim_form_answer.link_id`, a column name only |
 | `item[].type` | `items[].type` | |
 | `item[].prefix`, else `item[].text`, else "" | `items[].text` | the question shown, and sent back as F7 `item.text` |
 | `item[].required` | `items[].required` (boolean) | |
@@ -39,3 +39,4 @@ Into D12 `claim_plan_form`, one row per distinct url:
 #### F6U. USED BY
 - Callbacks: [C4. Insurance Plan Reply](../callbacks/C4-insuranceplan-on-request.md)
 - FHIR: [F1. Bundle](F1-bundle.md), [F5. InsurancePlan](F5-insuranceplan.md), [F7. QuestionnaireResponse](F7-questionnaireresponse.md)
+- Database: [D12. claim_plan_form](../database/D12-claim-plan-form.md)

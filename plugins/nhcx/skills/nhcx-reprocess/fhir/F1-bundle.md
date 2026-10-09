@@ -39,7 +39,7 @@ The application sets only the three headers shown. [G7. Send](../gateway/G7-send
 | Payment acknowledgement (F14) | `payment-notice-ack-generic` | TaskBundle | `/payment/notice-ack` | `/provider`, `/payer` |
 | Communication reply and acknowledgement (F12) | a fresh UUID | TaskBundle | `urn:uuid:<task id>` | see F12 |
 
-Rules for sent bundles:
+Rules for sent bundles (these choices differ from some of the knowledge source's example atoms, which use `urn:uuid` fullUrls, a `Bundle.identifier` and `timestamp`, `facility.abdm.gov.in` as the NPI/NIIP identifier system, a package code in place of SNOMED `71388002` on the Procedure, and no `Claim.subType`; the sandbox accepted the bundles as specified here, pre-authorisation approved under workflow 21, so they are recorded as **confirmed** [SANDBOX](../references/PAYERS.md#markers) and kept):
 - `id` is a fixed string per message kind [REF](../references/PAYERS.md#markers). It does not identify the case. The case number travels in the Claim's `id` and identifier (F8) or a Task's `claimNumber` input (F10), and sometimes in `x-hcx-workflow_id` [REF](../references/PAYERS.md#markers).
 - No `identifier`, no `timestamp` and no `meta.lastUpdated` on the claim-side, coverage and task bundles. Only the communication bundles (F12) carry `identifier`, `timestamp` and `meta.lastUpdated`.
 - Resource `id`s: in a Claim bundle every resource has one (F8). In a coverage bundle and a Task bundle no resource has one.

@@ -25,7 +25,10 @@ Before the first test, both runners run the setup checks of [G11. Startup Checks
 - Sign in through the HMIS login screen, then drive the screens a test names, by their visible labels, the way an operator would: [S5. Claim Master](../screens/S5-claim-master.md) to open a claim, [S6. Claim Detail](../screens/S6-claim-detail.md) and its tabs for everything after.
 - Take a screenshot at the end of each step and on every failure, into `tests/nhcx/e2e/artifacts/<test>/`.
 - Read results off the screen (status chips, amounts, messages) as the S spec describes them, never off the database.
-- Run headless by default; `--headed` shows the browser, for a person watching the run.
+- Run headless by default; `--headed` shows the browser, for a person watching the run, slowed by `NHCX_TEST_SLOWMO_MS` between actions.
+- When the test's patient is already on the patient master, start from it: "Search insurance policy" on the chart ([S15. Patient Detail](../screens/S15-patient-detail.md)) or the patient-list row ([S13. Patient List](../screens/S13-patient-list.md)) opens [S1. Search Policy](../screens/S1-search-policy.md) prefilled, so the case is linked to the patient when it opens.
+- Save the pre-authorisation draft (S4. Claim Creation Form (in nhcx-preauth)) before the first send; S9. Pre-authorisation (in nhcx-preauth) disables the send until it is saved.
+- Read a refusal off the red line under the tabs, and ignore toasts the step did not cause.
 - The payer's side is not a provider screen: no S spec drives A14. Adjudicator User Role (in nhcx-preauth) or A15. Adjudicator Process Case (in nhcx-preauth). The GUI runner takes the payer's decisions through the same payer driver as the CLI (`tests/nhcx/e2e/payer/`), between the screen steps, and reads their outcome back on the screens.
 
 #### T2L. CLI
@@ -55,6 +58,10 @@ It exits 0 when every test asked for passed, 1 when any failed, 2 when any was b
 **Deciding the payer's side.** A decision is always read then taken: the role or case first (A14. Adjudicator User Role (in nhcx-preauth)), then the action (A15. Adjudicator Process Case (in nhcx-preauth)). IRDAI decisions go to the IRDAI payer desk; PMJAY decisions walk the Payer Service roles as A15 describes. The decision taken, its trail and the `cycle_id` are recorded with the test.
 
 **Fresh claims.** Every test opens its own claim for the test beneficiary, so tests run in any order and a failure leaves nothing another test depends on.
+
+**One open pre-authorisation per PMJAY beneficiary.** PMJAY keeps one active pre-authorisation per beneficiary and hospital and refuses a second with PAYR-1238 "Beneficiary is having an active preauthorization request at this hospital ... cancel ... or raise a claim" [PAYER](../references/PAYERS.md#markers). A claim the payer refused does not release it, and earlier runs from other desks on the same participant leave their own open (one from an earlier month had to be closed by hand). So before a PMJAY test opens a fresh claim the runner itself frees the beneficiary: it finds every case of the beneficiary whose pre-authorisation is `submitting`, `approved`, `partial` or `queried` with no claim filed and cancels it (A6. Task Submit (cancel, status, reprocess, release) (in nhcx-preauth) cancel, reason `administrativeerror`), waiting for C7. Cancel Reply (in nhcx-preauth); a case it cannot see (another desk's) is reported as the cause when PAYR-1238 still comes back. Tests are ordered so a pending claim never blocks the next test's pre-authorisation.
+
+**The GUI runner, in particular.** It starts from the patient master when the claim's patient already exists in the HMIS ("Search insurance policy" on the chart or the patient list, [S13. Patient List](../screens/S13-patient-list.md), [S15. Patient Detail](../screens/S15-patient-detail.md)), so the case opens linked to the patient; it saves the S4 draft before the first send (S9 refuses the send until the draft is saved); it reads results off the page, where a red line under the tabs is the refusal to read and unrelated toasts are ignored; and it offers a headed, slowed mode (`--headed`, `NHCX_TEST_SLOWMO_MS`, `NHCX_TEST_BROWSER_CHANNEL`, [T1. Test Configuration](T1-test-configuration.md)) for a person to watch. Checks on codes compare the code alone (for example a line's `programCode` code with the adapter's programme code), never a `(code, display)` tuple.
 
 **The report.** Both runners write into `NHCX_TEST_REPORT`, one entry per test and runner:
 

@@ -91,7 +91,7 @@ Pure functions. Builders take a plain input object assembled by a service from t
 
 ### 3.3 `nhcx/services/` (A1 to A19)
 
-One file per API. Each follows its spec's pseudocode (AnP): pre-send checks with the verbatim refusal messages, gather data from models, build with `fhir/`, call `gateway.send`, record the ids and status on the leg's row, handle a failed send that names ids.
+One file per API. Each follows its spec's pseudocode (AnP): pre-send checks with the verbatim refusal messages, gather data from models, build with `fhir/`, call `gateway.send` **outside any database transaction**, then record the ids and status on the leg's row in a transaction of its own, handle a failed send that names ids (section 8).
 
 | File | Spec | Holds | Called from |
 |---|---|---|---|
@@ -106,7 +106,7 @@ One file per API. Each follows its spec's pseudocode (AnP): pre-send checks with
 | `adjudicator` | A14 to A16 | Payer role lookup and decisions for sandbox testing. Off in production. | adjudicator console, L8 |
 | `state` | A17 | The claim state JSON for drivers and tests. | A17 route |
 | `biometric` | A18 | The beneficiary's fingerprint, iris or face authentication against ABDM's biometric service, for any payer; the current user token per stage, refreshed on the way out. Plain JSON with the session token, never through G7. | S18; A2, A4, A5 read it |
-| `abha` | A19 | Create an ABHA from an Aadhaar OTP, or verify one by OTP, through ABDM's ABHA service (the calls from the MCP's M1 catalogue); seals the identifiers and keeps the flow's tokens for its few minutes. | S13, S14, S15 |
+| `abha` | A19 | Create an ABHA from an Aadhaar OTP, or verify one by OTP, through ABDM's ABHA service (the calls from the MCP's M1 catalogue), **on the server**: the page seals the identifiers and holds only the `txn_id`; the session token, X-token and T-token stay server-side for the flow's few minutes. | S13, S14, S15 |
 | `stage` | D9 | Recomputes a case's `stage` and `sub_stage` after any write. Every service and handler calls it. | services, callbacks |
 
 ### 3.4 `nhcx/callbacks/` (C1 to C10)
@@ -135,6 +135,7 @@ Called only by G8 (inbound) and by `services/polling` (a reply found in the ledg
 - One template or component per screen; the claim detail (S6) is a shell that renders its tabs (S3, S7, S8, S4 with S9, S10, S11, S12) in episode order.
 - Screens read models and call services. They never build FHIR and never call the gateway.
 - Field labels, options, chips, empty states and messages follow each S spec verbatim.
+- Wherever a screen shows a payer, it shows the payer's registered name from the participant registry cache (D9 `payer_name`, G4); a payer whose lookup failed shows its participant code, never a guessed or configured name ([PAYERS.md](PAYERS.md)).
 - Routes:
 
 | Route | Screen or API |
@@ -161,6 +162,10 @@ C1 archives every inbound envelope, and services archive every outbound one, bes
 | Patient (ABHA) | D3, A19 | "Register with ABHA" on the list and "Verify or create an ABHA" on the form and the chart, filling the file from the ABHA service's profile. |
 | Admission (encounter) | D4 | Nothing new if the HMIS already marks the current admission and its dates; S4 links a case to it. |
 | Navigation | L3 | A "Claims" entry on the home screen, sidebar or navbar, opening S5. |
+
+Two patterns are allowed where the HMIS's own tables should not change:
+- **NHCX-owned one-to-one extension tables** for D1 (the facility's HFR id and participant code) and D2 (the practitioner's HPR id and `active` flag), keyed on the HMIS row, instead of altering the HMIS's own tables; the ABHA number goes through the HMIS's own identifier mechanism when it has one (an identifier table or a typed identifier list), else onto D3. Mapping.json records which was chosen.
+- **Coexistence with an ABDM plug** that already owns the ABHA screens (M1, consent): NHCX's entry points sit beside the plug's, never inside them; the two keep separate identifier systems; and claims match a patient only on the NHCX-recorded ABHA number, read through the identifier mechanism above, never on the plug's internal ids.
 
 ## 5. Dependency direction
 
@@ -206,6 +211,7 @@ Forbidden: screens to gateway, screens to fhir, fhir to models, fhir to gateway,
 
 - Services return the spec's refusal messages to the screen as a flash, never a server error.
 - A failed send that names ids keeps them on the leg and marks it failed, because the message may have reached NHCX.
+- **`gateway.send` is never called inside a database transaction** (G7): the ledger row would roll back with the caller and the failed send's ids would be lost. Services send first, then write the leg in their own transaction. A framework with per-request transactions opts the sending routes and the inbound routes (G8) out; C2 to C8 may run in a savepoint, C9 and C10 (which send acknowledgements) may not.
 - Callback handlers never raise for a message they cannot use; they answer `rejected` or `ignored`. Only an unexpected fault is `error`, which makes NHCX redeliver.
 - Log with the target's logger, always with the case number, correlation id and ledger id, so any line can be traced to G9 and the archive.
 
@@ -268,8 +274,8 @@ Matches the plan phases in [L3](../steps/L3-integration-planning.md). Each phase
 
 | Phase | Adds |
 |---|---|
-| 1 Foundation | `gateway/`, `callbacks/dispatch`, `archive`, settings, the inbound route |
-| 2 Data | `models/` and migrations for D9, D30; D1 to D3 field changes |
+| 1 Foundation | `gateway/`, settings, the inbound route wired to a stub receive that answers `unmatched` (202) |
+| 2 Data | `models/` and migrations for D9, D30 and every leg table C1 matches on (D10, D13, D18, D19, D20, D21, D23, D24, D29); D1 to D3 field changes; then `callbacks/dispatch` (C1) and `archive`, which read those tables (`claim_for_correlation`, `claim_named_in`) and cannot be written before them |
 | 3 Policy and eligibility | `services/policy`, `services/eligibility`, `callbacks/eligibility` (C2), F2, F3, F15 to F18, S1, S2, S3, S5, S6 shell |
 | 4 Plan and line items | `services/plan`, auth-requirements, `callbacks/plan`, C3, F4 to F6, D10 to D16, S7, S8 |
 | 5 Pre-authorisation | `services/preauth`, `callbacks/preauth`, `callbacks/enquiry`, F7 to F10, F19, D17 to D19, D25 to D29, S4, S9 |

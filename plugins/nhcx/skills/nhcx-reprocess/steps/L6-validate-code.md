@@ -14,7 +14,7 @@ Take the next file in code.json that has no validation entry, or whose content c
 For every `symbols[].implements` entry, compare the code with the spec:
 - pseudocode (A, C, G): every step present, in order; every branch and failure path handled; status values written exactly as specified
 - messages: every refusal and validation message verbatim
-- FHIR (F): every element in FnF filled from the mapped source, with the right system and code; profiles and bundle order as in F1; a bundle built by the file passes `validate_fhir` (MCP), or matches the package's example bundle for that exchange
+- FHIR (F): every element in FnF filled from the mapped source, with the right system and code; profiles and bundle order as in F1; a bundle built by the file matches the knowledge source's example bundle for that exchange element by element (`get_fhir_example` on the MCP, or the package's `fhir/<use case>/` bundle), or passes the HL7 validator with the NRCeS package. The MCP's `validate_fhir` is not used here: it knows only ABDM's DocumentBundle family and reports false findings against a ClaimBundle, TaskBundle or CoverageEligibilityRequestBundle ([KNOWLEDGE.md](../references/KNOWLEDGE.md))
 - database (D): columns, types, nullability, defaults, keys and indexes as in DnC and DnK
 - screens (S): fields, options, columns, chips, empty states and actions as in SnD, SnL and SnA
 

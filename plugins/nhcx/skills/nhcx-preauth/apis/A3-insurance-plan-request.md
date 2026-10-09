@@ -101,7 +101,7 @@ function request_plan(case_id, refresh = false):
               requested_at: now, fetched_at: null, error_message: null,
               policy_code: policy_code or null, provider_id,
               plan_identifier: null, plan_title: null, plan_type: null,
-              sum_insured: null, response_json: null}
+              sum_insured: null, policy_documents: null, response_json: null}   // every earlier result, D10
     if failed: values.status = error; values.error_message = failed.message
     in one transaction:
         if no claim_plan row for the case: INSERT claim_plan (values, claim_id)

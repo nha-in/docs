@@ -7,7 +7,7 @@ The start of every IRDAI claim: the policy is found on the registry ([A1. Policy
 #### T3S. SETUP
 
 - The IRDAI test payer and member id from [T1. Test Configuration](T1-test-configuration.md).
-- A patient in the HMIS carrying that member id (create it through [S14. Patient Registration Form](../screens/S14-patient-registration-form.md) if the target has none, and reuse it after).
+- A patient in the HMIS carrying that member id (create it through [S14. Patient Registration Form](../screens/S14-patient-registration-form.md) if the target has none, and reuse it after). The search is by **Member id**: the sandbox registry does not find this beneficiary by their ABHA number ([PAYERS.md](../references/PAYERS.md), "Sandbox participant codes") [SANDBOX](../references/PAYERS.md#markers).
 
 #### T3G. GUI
 

@@ -18,7 +18,7 @@ The beneficiary. Three variants are sent, all at fullUrl `https://nhcx.abdm.gov.
 
 **Fallbacks.** The claim-bundle Patient takes each demographic from the admitted patient (`D3 patient`, the one the claim is linked to through `D9 claim.patient_id` when the admission is linked; linking requires a current IPD stay of a patient whose ABHA number matches the claim's, digits only, so a linked claim always has an ABHA to send) and falls back to the claim row. The claim row's values come from the policy search (A1: name, ABHA number, mobile number) and are overwritten by the payer's Patient when an eligibility reply arrives (C2: name, gender, birth date, ABHA, address, photo). A pre-auth or claim cannot be built without a linked admission ("Link the admitted patient before submitting."), so in those bundles the admitted patient normally supplies name, gender and phone, which the patient table requires.
 
-**Eligibility Patient.** Demographics are deliberately not sent: they are the payer's to return. The name, gender, birth date, phone, MRN, district and state handed to the builder are ignored.
+**Eligibility Patient.** Demographics are deliberately not sent: they are the payer's to return. The builder takes the identifiers only, so A2 need not read the linked patient at all (a check runs before any patient is linked); a name, gender, birth date, phone, MRN, district or state handed to it is ignored.
 
 #### F15F. FIELDS
 **Claim-bundle Patient (sent)**
