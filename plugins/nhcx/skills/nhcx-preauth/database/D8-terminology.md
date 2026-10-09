@@ -45,9 +45,10 @@ Lifecycle:
 #### D8K. KEYS AND INDEXES
 - Primary key `id` (integer).
 - No foreign keys in or out. Other tables copy `code` and `display`; nothing references `id`.
-- Unique: `(kind, system, code)`. The master screen also refuses a duplicate `code` inside a `kind`, whatever the system.
+- Unique `ux_terminology` on `(kind, system, code)`. The master screen also refuses a duplicate `code` inside a `kind`, whatever the system.
 - Index: `ix_terminology_kind (kind, sort_order)`.
 
 #### D8U. USED BY
 - Screens: [S4. Claim Creation Form](../screens/S4-claim-creation-form.md), [S15. Patient Detail](../screens/S15-patient-detail.md), [S16. Practitioner Master](../screens/S16-practitioner-master.md)
 - Database: [D1. organization](D1-organization.md), [D2. practitioner](D2-practitioner.md), [D5. condition](D5-condition.md), [D6. observation](D6-observation.md), [D7. allergy](D7-allergy.md), [D25. claim_diagnosis](D25-claim-diagnosis.md), [D27. claim_item](D27-claim-item.md)
+- Tests: [T1. Test Configuration](../tests/T1-test-configuration.md)

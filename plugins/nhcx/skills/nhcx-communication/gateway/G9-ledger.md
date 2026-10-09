@@ -29,6 +29,12 @@ The ledger is the gateway's record of every message it sent or received: headers
 
 The storage described below (one file per message under dated folders, with in-memory indexes) is the reference implementation's [REF](../references/PAYERS.md#markers). A target may keep the ledger in its own database instead, with the same contract; a ledger in the shared database can also be read by every instance ([OPERATIONS.md](../references/OPERATIONS.md)).
 
+**The ledger in the application's database** (the recipe a multi-process host needs, [OPERATIONS.md](../references/OPERATIONS.md)): one table with the entry's fields as columns (`id` text primary key, `direction`, `created_at` as an aware timestamp, `day` the UTC date as text, `path`, `entity`, `action`, `kind`, `format`, `sender`, `recipient`, `correlation_id`, `api_call_id`, `request_id`, `workflow_id`, `hcx_status`, `status`, `error` JSON, `redelivery`, `duration_ms`, `peer` JSON, `headers` JSON, `fhir` JSON, `fhir_summary` JSON).
+- **Id allocation across processes**: the id is still `<day><counter>` in the base32 above. Allocate under a per-day advisory lock (PostgreSQL `pg_advisory_xact_lock(hash(day))`; MySQL `GET_LOCK`), read `max(id)` for the day, add one, insert; on a unique violation (two processes racing without the lock, or SQLite with no advisory lock) retry with the next counter, at most 5 times. The ledger write commits in a transaction of its own, never inside the caller's (G7).
+- **Indexes**: `(direction, api_call_id)` for `seen`; `(correlation_id, id)` for `related` and `thread`; `(direction, kind, entity, sender, workflow_id, id)` for `last_inbound_request`; `(day)` for pruning; `id` is the primary key, which also gives `list` its newest-first order.
+- **Pruning**: `sweep` deletes `where day < cutoff` by the stored UTC day, in batches, and nothing is held in memory, so every instance sees every row and `seen` is the index lookup.
+- `storeBodies` false leaves `fhir` and `peer.response` null as before; `get` reads the row. The contract above is unchanged and A10 to A13 cannot tell the two storages apart.
+
 A transaction id is a ledger id. `send` (G7) returns it as both `ledger_id` and `txn_id`; the application stores it on the leg and polls with it.
 
 Storage, under `ledger.dir` (default `data/ledger`, relative to the gateway config file):

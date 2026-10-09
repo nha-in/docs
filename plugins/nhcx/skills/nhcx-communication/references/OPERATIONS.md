@@ -39,6 +39,16 @@ A few real cases first, with the desk trained, then the whole facility.
 
 Record each of these as a step in `nhcx-plan/plan.json` (L3) with its owner, and log it in the progress log when done.
 
+## Several desks on one participant
+
+In the sandbox, and sometimes in production, several applications (desks) share one participant code: NHCX delivers every message for the code to the one registered `endpoint_url`, and a fan-out proxy in front of it posts the message to every desk and returns the **first** response it gets from any of them. Each desk then sees every message of every desk, and a slow or wrong answer from one desk is the answer NHCX records for all. The rules below keep a desk from spoiling another's exchange; [G8. Receive](../gateway/G8-receive.md) and [C1. Callback Door](../callbacks/C1-callback-door.md) implement them.
+
+1. **A message this desk does not own ends `unmatched`, fast.** When no leg here waits on the correlation id and no case here carries the claim number, C1 answers `unmatched` without writing a row, without sending anything (C9 never acknowledges a notification it does not own, C10 never acknowledges a payment notice for a claim number it does not hold) and with only the `unmatched` archive entry. NHCX gets 202 at once.
+2. **Never a non-2xx for a message that may be another desk's.** A 4xx or 5xx from this desk makes the proxy report failure for every desk. So a message that arrives while this desk's gateway is not open (configuration missing, keys not loaded, the application starting) is answered 202 `unmatched` on `/v1/...` and `/in/...`, not 503; only a message addressed to a code this desk hosts and that it cannot decrypt is refused as G8 says. Readiness is reported on `/readyz`, not by refusing NHCX.
+3. **A ledger read failure is not a reason to refuse.** When `seen` or `last_inbound_request` ([G9. Ledger](../gateway/G9-ledger.md)) fails, the message is treated as not seen and goes on to C1; a failure is logged, never answered to NHCX.
+4. **Claim-number prefixes differ per desk.** Payment notices and payer-started communications match on the claim number alone, so two desks minting `NM-...` numbers would claim each other's notices. The prefix of the claim series ([D30. counter](../database/D30-counter.md)) is a setting, set differently on every desk that shares a participant.
+5. **Payer-side replies may reach every desk twice** (the proxy and NHCX's own redelivery); the dedupe rules of C1 hold.
+
 ## Running more than one instance
 
 The gateway keeps three kinds of state, and they behave differently across instances:

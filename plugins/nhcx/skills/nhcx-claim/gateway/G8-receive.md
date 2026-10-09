@@ -17,6 +17,8 @@ Internal steps, exposed for tests: `gateway.receive(path, body, remote_addr) -> 
 #### G8D. DESCRIPTION
 NHCX posts `{"payload": "<compact JWE>"}` for every message addressed to a participant whose registry `endpoint_url` points at this application. The gateway decrypts it, works out who it was addressed to, hands the decrypted envelope to C1 in-process and waits for C1's result. Only then does it answer NHCX: `202` with the acceptance body when C1 took the message, an error status otherwise. NHCX redelivers a message it did not see accepted, five attempts in all, then drops the correlation id. So C1 must be idempotent on `x-hcx-api_call_id` / `x-hcx-correlation_id`; the gateway marks a repeat with `redelivery = true`.
 
+**One participant, several desks.** Several applications may share one participant code behind a fan-out proxy that returns the first response it gets ([OPERATIONS.md](../references/OPERATIONS.md)). This handler therefore never answers a non-2xx for a message that may belong to another desk: when the gateway is not open (no configuration, keys not loaded, the application still starting), `/in/<path>` and `/v1/<path>` answer `202` with the acceptance body and an `unmatched` outcome, not 503 (a build that answered 503 made every desk's exchange fail); a ledger failure in `seen` is logged and the message is treated as not seen; and C1's `unmatched` is answered as fast as the decryption allows, with no row written. Only a message addressed to a code this desk hosts that no key opens is refused (`DECRYPT_FAILED`), and a wrong recipient with guests off (`WRONG_RECIPIENT`).
+
 A body without `payload` is not encrypted: a `ProtocolResponse` or error notice carries its protocol headers as top-level `x-hcx-*` keys. It is handed to C1 as it is, kind `protocol` (or `json` when it has no `x-hcx-*` key and no `type`).
 
 Recipient resolution, for an encrypted message:
@@ -120,6 +122,7 @@ on POST /in/<p>:  inbound(path = p)
 on POST /v1/<p>:  inbound(path = "v1/" + p)
 
 inbound(path):
+    if gateway not open:  answer 202 acceptance with outcome "unmatched"; return   // never 503: another desk may own the message (OPERATIONS.md)
     body = read request body (limit maxBodyBytes)
         too large -> answer 413 BODY_TOO_LARGE; other read error -> 400 BODY_READ
     try in = receive(path, body, peer_ip)
@@ -158,6 +161,7 @@ receive(path, body, ip):
         in.kind = "protocol" if in.headers non-empty or obj has "type" else "json"
         in.headers = normalise(in.headers)
     in.redelivery = ledger on and ledger.seen("in", in.headers["x-hcx-api_call_id"])
+                    on a ledger read failure: log it; in.redelivery = false     // "not seen", never a refusal
     return in
 
 decrypt_for(code, jwe):
@@ -227,4 +231,4 @@ acceptance(in):
 - APIs: [A5. Claim Submit](../apis/A5-claim-submit.md), [A6. Task Submit (cancel, status, reprocess, release)](../apis/A6-task-submit.md), [A10. Transaction Related](../apis/A10-txn-related.md), [A12. Transaction FHIR](../apis/A12-txn-fhir.md), [A13. Transaction List](../apis/A13-txn-list.md)
 - Callbacks: [C1. Callback Door](../callbacks/C1-callback-door.md), [C6. Claim Reply](../callbacks/C6-claim-on-submit.md), [C8. Enquiry Reply](../callbacks/C8-enquiry-on-submit.md)
 - FHIR: [F1. Bundle](../fhir/F1-bundle.md)
-- Gateway: [G1. Embedding](G1-embedding.md), [G2. Configuration and Participants](G2-configuration.md), [G3. Session Token](G3-session-token.md), [G5. Protocol Headers](G5-protocol-headers.md), [G6. Encryption](G6-encryption.md), [G9. Ledger](G9-ledger.md)
+- Gateway: [G1. Embedding](G1-embedding.md), [G2. Configuration and Participants](G2-configuration.md), [G3. Session Token](G3-session-token.md), [G5. Protocol Headers](G5-protocol-headers.md), [G6. Encryption](G6-encryption.md), [G7. Send](G7-send.md), [G9. Ledger](G9-ledger.md)

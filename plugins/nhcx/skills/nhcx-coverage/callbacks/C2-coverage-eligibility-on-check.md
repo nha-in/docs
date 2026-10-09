@@ -24,9 +24,9 @@ C2(envelope, corr):
     if body.type == "ProtocolResponse":
         write D9: status = "error", error_message = rejection(body)   # stage not restamped
         return "settled"
-    revive(D9, row, "checking")
-    verdict = first CoverageEligibilityResponse in body.entry
+    verdict = first CoverageEligibilityResponse in body.entry     # read and validate before any write
     if none: raise Rejected("The payer reply carries no CoverageEligibilityResponse.")
+    revive(D9, row, "checking")              # a rejected reply leaves the case exactly as it was
     ins = verdict.insurance[0]
     auth_required = last item.authorizationRequired that is present (1/0)
     wallets = every item.benefit with allowedMoney.value, as (type codes, allowed, used)
@@ -49,7 +49,7 @@ C2(envelope, corr):
 Column sources: `beneficiary_name` from `name[0].text`, else the given names, else `family`; `patient_address` joins `line`, `district`, `state`, `postalCode`; `abha_number` from the identifier typed `ABHA`; `patient_photo` from `photo[0].data` or `url`; `plan_name` from `Coverage.class[0].name`; `plan_period_*` from `Coverage.period`; `relationship` from `Coverage.relationship` display, else code.
 
 #### C2S. RESPONSE
-`settled`, `ignored` for a case no longer `checking`, or `rejected` when the bundle carries no CoverageEligibilityResponse (the case is left `checking`, reopened if it had been in error).
+`settled`, `ignored` for a case no longer `checking`, or `rejected` when the bundle carries no CoverageEligibilityResponse (the case is left exactly as it was: the verdict is read and validated before the failed-send revive, so a rejected reply never reopens a case; C1 may also run the handler in a savepoint, which rolls a revive back on `rejected` anyway).
 
 State changes, D9 claim:
 
@@ -66,4 +66,5 @@ State changes, D9 claim:
 - Callbacks: [C1. Callback Door](C1-callback-door.md)
 - FHIR: [F3. CoverageEligibilityResponse](../fhir/F3-coverage-eligibility-response.md), [F15. Patient](../fhir/F15-patient.md)
 - Database: [D9. claim](../database/D9-claim.md)
+- Gateway: [G7. Send](../gateway/G7-send.md)
 - Tests: [T3. IRDAI Policy Search and Eligibility](../tests/T3-irdai-policy-and-eligibility.md), [T13. PMJAY Eligibility, Package Master and Ruling](../tests/T13-pmjay-eligibility-and-package-master.md)

@@ -46,4 +46,5 @@ Lifecycle:
 
 #### D2U. USED BY
 - FHIR: [F16. Practitioner and PractitionerRole](../fhir/F16-practitioner.md)
-- Database: [D4. encounter](D4-encounter.md), [D8. terminology](D8-terminology.md)
+- Database: [D4. encounter](D4-encounter.md), [D8. terminology](D8-terminology.md), [D9. claim](D9-claim.md)
+- Tests: [T1. Test Configuration](../tests/T1-test-configuration.md)

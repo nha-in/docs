@@ -70,5 +70,5 @@ A reply with no `authorizationSupporting` is valid: the ruling is `ready` with n
 - Screens: [S8. Line Items](../screens/S8-line-items.md)
 - APIs: [A2. Coverage Eligibility Check](../apis/A2-coverage-eligibility-check.md), [A10. Transaction Related](../apis/A10-txn-related.md), [A12. Transaction FHIR](../apis/A12-txn-fhir.md), [A17. Claim State](../apis/A17-claim-state.md)
 - Callbacks: [C1. Callback Door](C1-callback-door.md)
-- Database: [D13. claim_auth](../database/D13-claim-auth.md)
+- Database: [D12. claim_plan_form](../database/D12-claim-plan-form.md), [D13. claim_auth](../database/D13-claim-auth.md)
 - Tests: [T4. IRDAI Insurance Plan and Authorisation Requirements](../tests/T4-irdai-plan-and-auth-requirements.md), [T13. PMJAY Eligibility, Package Master and Ruling](../tests/T13-pmjay-eligibility-and-package-master.md)

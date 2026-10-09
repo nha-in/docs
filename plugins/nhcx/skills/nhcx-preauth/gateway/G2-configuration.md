@@ -19,12 +19,12 @@ Environment URLs (`env`), each overridable under `urls`:
 
 | | `sandbox` (default) | `production` |
 |---|---|---|
-| `urls.nhcx` (NHCX gateway base) | `https://apisbx.abdm.gov.in/hcx/v1` | `https://apis.abdm.gov.in/hcx/v1` |
-| `urls.participant` (participant registry base) | `https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice` | `https://apis.abdm.gov.in/pmjay/hcx/participanthcxservice` |
-| `urls.sessions` (session token endpoint) | `https://dev.abdm.gov.in/api/hiecm/gateway/v3/sessions` | `https://live.abdm.gov.in/api/hiecm/gateway/v3/sessions` |
+| `urls.nhcx` (NHCX gateway base) | `https://apisbx.abdm.gov.in/hcx/v1` | not published by NHA: shared after sandbox exit; set it from the onboarding letter (one onboarded build was given `https://apisprod.nha.gov.in/hcx/v1`) |
+| `urls.participant` (participant registry base) | `https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice` | `https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice` |
+| `urls.sessions` (session token endpoint) | `https://dev.abdm.gov.in/api/hiecm/gateway/v3/sessions` | `https://apis.abdm.gov.in/api/hiecm/gateway/v3/sessions` (confirm in the onboarding letter) |
 | `cmId` (`X-CM-ID` on the session call) | `sbx` | `abdm` |
 
-The sandbox values are the verified ones [SANDBOX](../references/PAYERS.md#markers). The production values follow the documented host swap (`apisbx` to `apis`, `sbxhcx` to `hcx`, `dev` to `live`); confirm them against the onboarding letter and override under `urls` when they differ. With `auth.mode` `get-session` and no `urls.sessions`, the session URL is `<urls.participant>/get/session`.
+The sandbox values are the verified ones [SANDBOX](../references/PAYERS.md#markers). The production values are the ones the knowledge source publishes (`baseurl.yaml`, `nhcx.sandbox.environments-and-base-urls`), the same table as [CORE.md](../references/CORE.md) section 1; they are **not** a host swap of the sandbox names (`apis.abdm.gov.in/hcx`, `apis.abdm.gov.in/pmjay/hcx` and `live.abdm.gov.in` are wrong). Production is never left to a default: every production URL is set explicitly under `urls` from the onboarding letter, and a production configuration with an unset `urls.nhcx` is a validation error. With `auth.mode` `get-session` and no `urls.sessions`, the session URL is `<urls.participant>/get/session`.
 
 #### G2D. DESCRIPTION
 
@@ -135,7 +135,7 @@ apply_defaults(cfg):
     ledger.enabled unset -> true;  ledger.storeBodies unset -> true;  ledger.dir "" -> "data/ledger"
     ledger.retentionDays < 0 -> 0;  log.level "" -> "info"
     defaults, cm = env_table(env)             // production table for "production", sandbox otherwise
-    urls.nhcx "" -> defaults.nhcx;  urls.participant "" -> defaults.participant
+    urls.nhcx "" -> defaults.nhcx  (production: none; validation then fails "urls.nhcx: is required");  urls.participant "" -> defaults.participant
     if urls.sessions == "":
         urls.sessions = auth.mode == "get-session" ? trim_right(urls.participant, "/") + "/get/session"
                                                    : defaults.sessions

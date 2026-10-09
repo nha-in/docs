@@ -27,7 +27,7 @@ Every table behind the claim, patient and practitioner flows, in one list. Each 
 |---|---|---|---|---|---|---|
 | [D10](../database/D10-claim-plan.md) | claim_plan | The payer's package master (InsurancePlan) for one claim's policy and provider pair. | [S6](../screens/S6-claim-detail.md), [S7](../screens/S7-insurance-plan.md), [S8](../screens/S8-line-items.md) | [A3](../apis/A3-insurance-plan-request.md), [A10](../apis/A10-txn-related.md), [A11](../apis/A11-txn-dispatch.md), [A13](../apis/A13-txn-list.md), [A17](../apis/A17-claim-state.md) | [C1](../callbacks/C1-callback-door.md), [C4](../callbacks/C4-insuranceplan-on-request.md) | [F4](../fhir/F4-task-insuranceplan.md), [F5](../fhir/F5-insuranceplan.md) |
 | [D11](../database/D11-claim-plan-benefit.md) | claim_plan_benefit | Package (or covered benefit) in a claim's package master. | [S7](../screens/S7-insurance-plan.md), [S8](../screens/S8-line-items.md), [S9](../screens/S9-preauthorisation.md), [S11](../screens/S11-claim-submission.md) | [A3](../apis/A3-insurance-plan-request.md), [A17](../apis/A17-claim-state.md) | [C4](../callbacks/C4-insuranceplan-on-request.md) | [F5](../fhir/F5-insuranceplan.md), [F8](../fhir/F8-claim.md) |
-| [D12](../database/D12-claim-plan-form.md) | claim_plan_form | Payer questionnaire (dynamic form) shipped with a claim's package master. | [S7](../screens/S7-insurance-plan.md), [S9](../screens/S9-preauthorisation.md), [S11](../screens/S11-claim-submission.md) | [A3](../apis/A3-insurance-plan-request.md), [A17](../apis/A17-claim-state.md) | [C4](../callbacks/C4-insuranceplan-on-request.md) | [F5](../fhir/F5-insuranceplan.md), [F6](../fhir/F6-questionnaire.md), [F7](../fhir/F7-questionnaireresponse.md) |
+| [D12](../database/D12-claim-plan-form.md) | claim_plan_form | Payer questionnaire (dynamic form) shipped with a claim's package master. | [S7](../screens/S7-insurance-plan.md), [S9](../screens/S9-preauthorisation.md), [S11](../screens/S11-claim-submission.md) | [A3](../apis/A3-insurance-plan-request.md), [A4](../apis/A4-preauth-submit.md), [A5](../apis/A5-claim-submit.md), [A17](../apis/A17-claim-state.md) | [C4](../callbacks/C4-insuranceplan-on-request.md) | [F5](../fhir/F5-insuranceplan.md), [F6](../fhir/F6-questionnaire.md), [F7](../fhir/F7-questionnaireresponse.md) |
 | [D13](../database/D13-claim-auth.md) | claim_auth | The payer's authorisation-requirements ruling on a claim's procedure set. | [S6](../screens/S6-claim-detail.md), [S8](../screens/S8-line-items.md) | [A2](../apis/A2-coverage-eligibility-check.md), [A10](../apis/A10-txn-related.md), [A11](../apis/A11-txn-dispatch.md), [A13](../apis/A13-txn-list.md), [A17](../apis/A17-claim-state.md) | [C1](../callbacks/C1-callback-door.md), [C3](../callbacks/C3-auth-requirements-on-check.md) | [F3](../fhir/F3-coverage-eligibility-response.md) |
 | [D14](../database/D14-claim-auth-item.md) | claim_auth_item | The payer's ruling on one line of the procedure set. | [S8](../screens/S8-line-items.md) | [A2](../apis/A2-coverage-eligibility-check.md) | [C3](../callbacks/C3-auth-requirements-on-check.md) | [F3](../fhir/F3-coverage-eligibility-response.md) |
 | [D15](../database/D15-claim-auth-requirement.md) | claim_auth_requirement | Document or form the payer's ruling says the procedure set must be accompanied by. | [S8](../screens/S8-line-items.md), [S9](../screens/S9-preauthorisation.md), [S10](../screens/S10-communication.md), [S11](../screens/S11-claim-submission.md) | [A2](../apis/A2-coverage-eligibility-check.md), [A17](../apis/A17-claim-state.md) | [C3](../callbacks/C3-auth-requirements-on-check.md) | [F3](../fhir/F3-coverage-eligibility-response.md) |
@@ -72,3 +72,19 @@ Every table behind the claim, patient and practitioner flows, in one list. Each 
 | # | Table | What one row is | Screens | APIs | Callbacks | FHIR |
 |---|---|---|---|---|---|---|
 | [D30](../database/D30-counter.md) | counter | Named number series and the last value handed out from it. Primary key `name`. No parent table. | [S2](../screens/S2-select-policy.md), [S9](../screens/S9-preauthorisation.md) | none | [C7](../callbacks/C7-cancel-on-submit.md) | none |
+
+## Column types on a typed ORM
+
+The DnC tables give SQLite-style types (`TEXT`, `REAL`, `INTEGER`, `BLOB`). On a typed database or ORM map them once, the same way everywhere:
+
+| DnC type | Becomes | Notes |
+|---|---|---|
+| `TEXT` holding an ISO instant the application writes (`created_at`, `submitted_at`, `settled_at`, `checked_at`, `requested_at`, `fetched_at`, `answered_at`, `received_at`, `acknowledged_at`, `*_at`) | an aware timestamp | stored in UTC, shown in the facility's zone |
+| `TEXT` holding a **payer-supplied FHIR date** (D9 `plan_period_start`, `plan_period_end`, `patient_dob`; D20 `discharge_date`, `surgery_date`, `death_date`; D21 `payment_date`; D22 `date`) | **text, as received** | a FHIR date may be partial (`2026`, `2026-09`) or carry a time; parsing it to a date column loses or refuses values |
+| `REAL` money | `DECIMAL(14, 2)` | never a float |
+| `INTEGER` used as 0/1 (`inforce`, `auth_required`, `required`, `at_preauth`) | boolean | |
+| `TEXT` named `*_json` | a JSON column | indexed only where a DnK says so |
+| `BLOB` (D28 `data`) | the database's binary type, or file storage with the path in the column | |
+| `TEXT` status columns | text with the DnD values as named constants | not an enum type: payers add statuses |
+
+Index and constraint names are given in the DnK sections; a database or ORM that limits name length (30 characters is a common limit) shortens them as D19 does.

@@ -68,7 +68,7 @@ Terms and behaviours that are easy to mix up, with the reading this skill uses.
 | `X-CM-ID` on the session call | `sbx` | `abdm` |
 | This application's inbound route | the public URL registered as the participant's `endpoint_url`, routed to `/in/<path>` or `/v1/<path>` ([G8](../gateway/G8-receive.md)) | the same, on HTTPS (TLS 1.2 or newer), a domain name hosted in India, no IP address and no port; NHCX's source addresses allowed in ([OPERATIONS.md](OPERATIONS.md)) |
 
-The gateway's built-in production defaults ([G2. Configuration and Participants](../gateway/G2-configuration.md)) follow a host-swap guess (`apisbx` to `apis`, `dev` to `live`) that does not match the published production participant service or sessions host above. Set every production URL explicitly in configuration.
+The gateway's production table ([G2. Configuration and Participants](../gateway/G2-configuration.md)) is this table. A host swap of the sandbox names (`apisbx` to `apis`, `sbxhcx` to `hcx`, `dev` to `live`) is wrong and must not be used. Set every production URL explicitly in configuration from the onboarding letter; the NHCX exchange base has no published production address.
 
 ## 2. Calls that are not exchanges
 
@@ -101,8 +101,8 @@ Plain JSON with the session token: no JWE, no protocol headers, no ledger row.
 
 | Exchange | NHA | Our API | Send route | Bundle sent | Workflow id | Reply route | Bundle back | Callback |
 |---|---|---|---|---|---|---|---|---|
-| Coverage eligibility (validation, benefits, discovery) | nha:B1, nha:D3 | A2 (in nhcx-coverage) | `v1/coverageeligibility/check` | F2 (in nhcx-coverage) with [F15](../fhir/F15-patient.md) to [F18](../fhir/F18-coverage.md) | none published; NHA's sample sends 11, the reference sends the case number [REF](PAYERS.md#markers) | `v1/coverageeligibility/on_check` | F3 (in nhcx-coverage) | C2 (in nhcx-coverage) |
-| Authorisation requirements on the chosen lines | nha:B1 | A2 (in nhcx-coverage) (purpose `auth-requirements`) | `v1/coverageeligibility/check` | F2 (in nhcx-coverage) with items | as eligibility: 11, or the case number [REF](PAYERS.md#markers) | `v1/coverageeligibility/on_check` | F3 (in nhcx-coverage) | C3 (in nhcx-preauth) |
+| Coverage eligibility (validation, benefits, discovery) | nha:B1, nha:D3 | A2 (in nhcx-coverage) | `v1/coverageeligibility/check` | F2 (in nhcx-coverage) with [F15](../fhir/F15-patient.md) to [F18](../fhir/F18-coverage.md) | 11 (NHA's sample) by default; a setting sends the case number instead [REF](PAYERS.md#markers) | `v1/coverageeligibility/on_check` | F3 (in nhcx-coverage) | C2 (in nhcx-coverage) |
+| Authorisation requirements on the chosen lines | nha:B1 | A2 (in nhcx-coverage) (purpose `auth-requirements`) | `v1/coverageeligibility/check` | F2 (in nhcx-coverage) with items | as eligibility: 11 by default, the case number under the setting [REF](PAYERS.md#markers) | `v1/coverageeligibility/on_check` | F3 (in nhcx-coverage) | C3 (in nhcx-preauth) |
 | Insurance plan (package master) | nha:B2, nha:D1 | A3 (in nhcx-preauth) | `v1/insuranceplan/request` | F4 (in nhcx-preauth) (Task only) | the case number [REF](PAYERS.md#markers) | `v1/insuranceplan/on_request` | F5 (in nhcx-preauth) with F6 (in nhcx-preauth) | C4 (in nhcx-preauth) |
 
 ### Pre-authorisation
@@ -124,7 +124,7 @@ Payer workflow ids on pre-auth replies [PAYER](PAYERS.md#markers): 20 received, 
 | Exchange | NHA | Our API | Send route | Bundle sent | Workflow id | Reply route | Bundle back | Callback |
 |---|---|---|---|---|---|---|---|---|
 | Claim | nha:B5, nha:D9 | [A5](../apis/A5-claim-submit.md) | `v1/claim/submit` | [F8](../fhir/F8-claim.md) (`use: claim`) with [F7](../fhir/F7-questionnaireresponse.md), [F15](../fhir/F15-patient.md) to [F19](../fhir/F19-other-resources.md) | 15 | `v1/claim/on_submit` | [F9](../fhir/F9-claimresponse.md) | [C6](../callbacks/C6-claim-on-submit.md) |
-| Claim query answer | nha:D10 | [A5](../apis/A5-claim-submit.md) | `v1/claim/submit` | [F8](../fhir/F8-claim.md) with the answer | 161 [SANDBOX](PAYERS.md#markers); generic 151; status `response.complete` | `v1/claim/on_submit` | [F9](../fhir/F9-claimresponse.md) | [C6](../callbacks/C6-claim-on-submit.md) |
+| Claim query answer | nha:D10 | [A5](../apis/A5-claim-submit.md) | `v1/claim/submit` | [F8](../fhir/F8-claim.md) with the answer | 151 (published) for every adapter; the SHA sandbox takes only 161, set as a configuration override [SANDBOX](PAYERS.md#markers); status `response.complete` | `v1/claim/on_submit` | [F9](../fhir/F9-claimresponse.md) | [C6](../callbacks/C6-claim-on-submit.md) |
 | Claim resubmitted | | [A5](../apis/A5-claim-submit.md) | `v1/claim/submit` | [F8](../fhir/F8-claim.md) | not offered for PMJAY [PAYER](PAYERS.md#markers); generic 16, which NHA's workflow list does not publish [REF](PAYERS.md#markers) | `v1/claim/on_submit` | [F9](../fhir/F9-claimresponse.md) | [C6](../callbacks/C6-claim-on-submit.md) |
 | Reprocess a decided claim | nha:D11 | [A6](../apis/A6-task-submit.md) (reprocess) | `v1/task/submit` | [F10](../fhir/F10-task-claim-actions.md) (Task) | 36 | `v1/task/on_submit` | [F10](../fhir/F10-task-claim-actions.md) | [C8](../callbacks/C8-enquiry-on-submit.md) |
 | Release the unpaid balance | nha:D12 | [A6](../apis/A6-task-submit.md) (release) | `v1/task/submit` | [F10](../fhir/F10-task-claim-actions.md) (Task) | 36 | `v1/task/on_submit` | [F10](../fhir/F10-task-claim-actions.md) | [C8](../callbacks/C8-enquiry-on-submit.md) |
