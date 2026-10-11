@@ -51,9 +51,9 @@ Docs MCP server
 
 Your agent queries this catalogue as it works, instead of loading it.
 
-- SearchHybrid keyword and semantic search over every page here, so an agent retrieves the paragraph it needs instead of loading the site.`search_docs, get_atom, related_atoms, list_atoms`
-- DecodeTurn an error code you just received into what it means and what to do, without you finding the right table.`decode_error`
-- ValidateCheck a request body against the specification before you send it, and list or read any operation.`validate_request, list_operations, get_operation`
+- SearchFinds the paragraph it needs on any page.`search_docs, get_atom, related_atoms, list_atoms`
+- DecodeTurns an error code into its cause and fix.`decode_error`
+- ValidateChecks a request body before you send it.`validate_request, list_operations, get_operation`
 
 **Claude**
 
@@ -147,11 +147,11 @@ The whole of M1: the calls, the loop that builds them, every error code and the 
 
 [SKILL.md](/docs/main/skills/abdm-m1/SKILL.md "The router. Use the command below to take the references with it.")
 
-- ScaffoldThe loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.
-- DesignWhat the journey around the calls has to do, and what a screen is forbidden to claim.
-- Integrate123 operations, with their hosts and headers.
-- Debug17 error codes, each with what to do about it.
-- TestThe test pyramid, from offline pins up to a live payer on the sandbox.
+- ScaffoldBuilds each flow until the sandbox confirms it.
+- DesignWhat a screen must do, and never claim.
+- Integrate123 operations, with hosts and headers.
+- Debug17 error codes, each with its fix.
+- TestTests from offline pins to a live sandbox.
 
 `mkdir -p .claude/skills/abdm-m1/references && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m1/SKILL.md -o .claude/skills/abdm-m1/SKILL.md && for f in scaffold design integrate debug test; do curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m1/references/$f.md -o .claude/skills/abdm-m1/references/$f.md; done`
 

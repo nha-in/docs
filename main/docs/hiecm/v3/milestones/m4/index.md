@@ -56,8 +56,8 @@ Every M4 call in one file: 104 operations.
 
 [SKILL.md](/docs/main/skills/abdm-m4/SKILL.md "The router. Use the command below to take the references with it.")
 
-- ScaffoldThe loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.
-- Integrate91 operations, with their hosts and headers.
+- ScaffoldBuilds each flow until the sandbox confirms it.
+- Integrate91 operations, with hosts and headers.
 - DebugNo error code is recorded yet.
 
 `mkdir -p .claude/skills/abdm-m4/references && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m4/SKILL.md -o .claude/skills/abdm-m4/SKILL.md && for f in scaffold integrate debug; do curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m4/references/$f.md -o .claude/skills/abdm-m4/references/$f.md; done`

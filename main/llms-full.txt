@@ -37040,9 +37040,9 @@ Docs MCP server
 
 Your agent queries this catalogue as it works, instead of loading it.
 
-- SearchHybrid keyword and semantic search over every page here, so an agent retrieves the paragraph it needs instead of loading the site.`search_docs, get_atom, related_atoms, list_atoms`
-- DecodeTurn an error code you just received into what it means and what to do, without you finding the right table.`decode_error`
-- ValidateCheck a request body against the specification before you send it, and list or read any operation.`validate_request, list_operations, get_operation`
+- SearchFinds the paragraph it needs on any page.`search_docs, get_atom, related_atoms, list_atoms`
+- DecodeTurns an error code into its cause and fix.`decode_error`
+- ValidateChecks a request body before you send it.`validate_request, list_operations, get_operation`
 
 **Claude**
 
@@ -37136,11 +37136,11 @@ The whole of M1: the calls, the loop that builds them, every error code and the 
 
 [SKILL.md](/docs/main/skills/abdm-m1/SKILL.md "The router. Use the command below to take the references with it.")
 
-- ScaffoldThe loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.
-- DesignWhat the journey around the calls has to do, and what a screen is forbidden to claim.
-- Integrate123 operations, with their hosts and headers.
-- Debug17 error codes, each with what to do about it.
-- TestThe test pyramid, from offline pins up to a live payer on the sandbox.
+- ScaffoldBuilds each flow until the sandbox confirms it.
+- DesignWhat a screen must do, and never claim.
+- Integrate123 operations, with hosts and headers.
+- Debug17 error codes, each with its fix.
+- TestTests from offline pins to a live sandbox.
 
 `mkdir -p .claude/skills/abdm-m1/references && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m1/SKILL.md -o .claude/skills/abdm-m1/SKILL.md && for f in scaffold design integrate debug test; do curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m1/references/$f.md -o .claude/skills/abdm-m1/references/$f.md; done`
 
@@ -37984,11 +37984,11 @@ Every M1 call, one per use case, with its error codes in one file: 125 operation
 
 [SKILL.md](/docs/main/skills/abdm-m1/SKILL.md "The router. Use the command below to take the references with it.")
 
-- ScaffoldThe loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.
-- DesignWhat the journey around the calls has to do, and what a screen is forbidden to claim.
-- Integrate123 operations, with their hosts and headers.
-- Debug17 error codes, each with what to do about it.
-- TestThe test pyramid, from offline pins up to a live payer on the sandbox.
+- ScaffoldBuilds each flow until the sandbox confirms it.
+- DesignWhat a screen must do, and never claim.
+- Integrate123 operations, with hosts and headers.
+- Debug17 error codes, each with its fix.
+- TestTests from offline pins to a live sandbox.
 
 `mkdir -p .claude/skills/abdm-m1/references && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m1/SKILL.md -o .claude/skills/abdm-m1/SKILL.md && for f in scaffold design integrate debug test; do curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m1/references/$f.md -o .claude/skills/abdm-m1/references/$f.md; done`
 
@@ -38355,10 +38355,10 @@ Every M2 call and callback with its error codes in one file: 24 operations, 120 
 
 [SKILL.md](/docs/main/skills/abdm-m2/SKILL.md "The router. Use the command below to take the references with it.")
 
-- ScaffoldThe loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.
-- DesignWhat the journey around the calls has to do, and what a screen is forbidden to claim.
-- Integrate24 operations, with their hosts and headers.
-- Debug120 error codes, each with what to do about it.
+- ScaffoldBuilds each flow until the sandbox confirms it.
+- DesignWhat a screen must do, and never claim.
+- Integrate24 operations, with hosts and headers.
+- Debug120 error codes, each with its fix.
 
 `mkdir -p .claude/skills/abdm-m2/references && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m2/SKILL.md -o .claude/skills/abdm-m2/SKILL.md && for f in scaffold design integrate debug; do curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m2/references/$f.md -o .claude/skills/abdm-m2/references/$f.md; done`
 
@@ -38646,9 +38646,9 @@ Every M3 call and callback in one file: 16 operations.
 
 [SKILL.md](/docs/main/skills/abdm-m3/SKILL.md "The router. Use the command below to take the references with it.")
 
-- ScaffoldThe loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.
-- DesignWhat the journey around the calls has to do, and what a screen is forbidden to claim.
-- Integrate16 operations, with their hosts and headers.
+- ScaffoldBuilds each flow until the sandbox confirms it.
+- DesignWhat a screen must do, and never claim.
+- Integrate16 operations, with hosts and headers.
 - DebugNo error code is recorded yet.
 
 `mkdir -p .claude/skills/abdm-m3/references && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m3/SKILL.md -o .claude/skills/abdm-m3/SKILL.md && for f in scaffold design integrate debug; do curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m3/references/$f.md -o .claude/skills/abdm-m3/references/$f.md; done`
@@ -38836,8 +38836,8 @@ Every M4 call in one file: 104 operations.
 
 [SKILL.md](/docs/main/skills/abdm-m4/SKILL.md "The router. Use the command below to take the references with it.")
 
-- ScaffoldThe loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.
-- Integrate91 operations, with their hosts and headers.
+- ScaffoldBuilds each flow until the sandbox confirms it.
+- Integrate91 operations, with hosts and headers.
 - DebugNo error code is recorded yet.
 
 `mkdir -p .claude/skills/abdm-m4/references && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m4/SKILL.md -o .claude/skills/abdm-m4/SKILL.md && for f in scaffold integrate debug; do curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m4/references/$f.md -o .claude/skills/abdm-m4/references/$f.md; done`
@@ -52888,9 +52888,9 @@ Docs MCP server
 
 Your agent queries this catalogue as it works, instead of loading it.
 
-- SearchHybrid keyword and semantic search over every page here, so an agent retrieves the paragraph it needs instead of loading the site.`search_docs, get_atom, related_atoms, list_atoms`
-- DecodeTurn an error code you just received into what it means and what to do, without you finding the right table.`decode_error`
-- ValidateCheck a request body against the specification before you send it, and list or read any operation.`validate_request, list_operations, get_operation`
+- SearchFinds the paragraph it needs on any page.`search_docs, get_atom, related_atoms, list_atoms`
+- DecodeTurns an error code into its cause and fix.`decode_error`
+- ValidateChecks a request body before you send it.`validate_request, list_operations, get_operation`
 
 **Claude**
 
@@ -52996,9 +52996,9 @@ The whole integration, every exchange end to end on either side, with the NHCX g
 
 [Download skill](/docs/main/skills/nhcx-full.tar.gz "The whole skill folder, as a .tar.gz archive.")
 
-- ScaffoldThe eight steps that build the use case into your system, from discovery and mapping through code to tests on the sandbox, each logged as it goes.
-- Integrate28 operations, with their hosts and headers.
-- TestThe test pyramid, from offline pins up to a live payer on the sandbox.
+- ScaffoldEight steps from discovery to sandbox tests.
+- Integrate28 operations, with hosts and headers.
+- TestTests from offline pins to a live sandbox.
 
 `mkdir -p .claude/skills && curl -fsSL https://nha-in.github.io/docs/main/skills/nhcx-full.tar.gz | tar -xzf - -C .claude/skills`
 
@@ -78975,9 +78975,9 @@ Docs MCP server
 
 Your agent queries this catalogue as it works, instead of loading it.
 
-- SearchHybrid keyword and semantic search over every page here, so an agent retrieves the paragraph it needs instead of loading the site.`search_docs, get_atom, related_atoms, list_atoms`
-- DecodeTurn an error code you just received into what it means and what to do, without you finding the right table.`decode_error`
-- ValidateCheck a request body against the specification before you send it, and list or read any operation.`validate_request, list_operations, get_operation`
+- SearchFinds the paragraph it needs on any page.`search_docs, get_atom, related_atoms, list_atoms`
+- DecodeTurns an error code into its cause and fix.`decode_error`
+- ValidateChecks a request body before you send it.`validate_request, list_operations, get_operation`
 
 **Claude**
 
@@ -79075,11 +79075,11 @@ Lets patients in your app book a physical consultation, as an EUA or an HSPA.
 
 [Download skill](/docs/main/skills/uhi-consultation.tar.gz "The whole skill folder, as a .tar.gz archive.")
 
-- ScaffoldRegistration on the network, then each journey as a loop that ends on its observed exit condition rather than on an ACK.
-- DesignWhat the journey around the calls has to do, and what a screen is forbidden to claim.
-- Integrate21 operations, with their hosts and headers, and how each is signed.
-- DebugThe loop from a status, an error object or a missing callback to a named fix. UHI publishes no error codes.
-- TestThe checks the service is held to before go-live, and the steps to production.
+- ScaffoldRegisters, then builds each journey to its exit.
+- DesignWhat a screen must do, and never claim.
+- Integrate21 operations, with hosts and headers and signing.
+- DebugFrom a status or missing callback to a fix.
+- TestGo-live checks and the steps to production.
 
 `mkdir -p .claude/skills && curl -fsSL https://nha-in.github.io/docs/main/skills/uhi-consultation.tar.gz | tar -xzf - -C .claude/skills`
 

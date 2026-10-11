@@ -38,9 +38,9 @@ Docs MCP server
 
 Your agent queries this catalogue as it works, instead of loading it.
 
-- SearchHybrid keyword and semantic search over every page here, so an agent retrieves the paragraph it needs instead of loading the site.`search_docs, get_atom, related_atoms, list_atoms`
-- DecodeTurn an error code you just received into what it means and what to do, without you finding the right table.`decode_error`
-- ValidateCheck a request body against the specification before you send it, and list or read any operation.`validate_request, list_operations, get_operation`
+- SearchFinds the paragraph it needs on any page.`search_docs, get_atom, related_atoms, list_atoms`
+- DecodeTurns an error code into its cause and fix.`decode_error`
+- ValidateChecks a request body before you send it.`validate_request, list_operations, get_operation`
 
 **Claude**
 
@@ -138,11 +138,11 @@ Lets patients in your app book a physical consultation, as an EUA or an HSPA.
 
 [Download skill](/docs/main/skills/uhi-consultation.tar.gz "The whole skill folder, as a .tar.gz archive.")
 
-- ScaffoldRegistration on the network, then each journey as a loop that ends on its observed exit condition rather than on an ACK.
-- DesignWhat the journey around the calls has to do, and what a screen is forbidden to claim.
-- Integrate21 operations, with their hosts and headers, and how each is signed.
-- DebugThe loop from a status, an error object or a missing callback to a named fix. UHI publishes no error codes.
-- TestThe checks the service is held to before go-live, and the steps to production.
+- ScaffoldRegisters, then builds each journey to its exit.
+- DesignWhat a screen must do, and never claim.
+- Integrate21 operations, with hosts and headers and signing.
+- DebugFrom a status or missing callback to a fix.
+- TestGo-live checks and the steps to production.
 
 `mkdir -p .claude/skills && curl -fsSL https://nha-in.github.io/docs/main/skills/uhi-consultation.tar.gz | tar -xzf - -C .claude/skills`
 

@@ -63,10 +63,10 @@ Every M2 call and callback with its error codes in one file: 24 operations, 120 
 
 [SKILL.md](/docs/main/skills/abdm-m2/SKILL.md "The router. Use the command below to take the references with it.")
 
-- ScaffoldThe loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.
-- DesignWhat the journey around the calls has to do, and what a screen is forbidden to claim.
-- Integrate24 operations, with their hosts and headers.
-- Debug120 error codes, each with what to do about it.
+- ScaffoldBuilds each flow until the sandbox confirms it.
+- DesignWhat a screen must do, and never claim.
+- Integrate24 operations, with hosts and headers.
+- Debug120 error codes, each with its fix.
 
 `mkdir -p .claude/skills/abdm-m2/references && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m2/SKILL.md -o .claude/skills/abdm-m2/SKILL.md && for f in scaffold design integrate debug; do curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m2/references/$f.md -o .claude/skills/abdm-m2/references/$f.md; done`
 

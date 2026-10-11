@@ -44,11 +44,11 @@ Every M1 call, one per use case, with its error codes in one file: 125 operation
 
 [SKILL.md](/docs/main/skills/abdm-m1/SKILL.md "The router. Use the command below to take the references with it.")
 
-- ScaffoldThe loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.
-- DesignWhat the journey around the calls has to do, and what a screen is forbidden to claim.
-- Integrate123 operations, with their hosts and headers.
-- Debug17 error codes, each with what to do about it.
-- TestThe test pyramid, from offline pins up to a live payer on the sandbox.
+- ScaffoldBuilds each flow until the sandbox confirms it.
+- DesignWhat a screen must do, and never claim.
+- Integrate123 operations, with hosts and headers.
+- Debug17 error codes, each with its fix.
+- TestTests from offline pins to a live sandbox.
 
 `mkdir -p .claude/skills/abdm-m1/references && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m1/SKILL.md -o .claude/skills/abdm-m1/SKILL.md && for f in scaffold design integrate debug test; do curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m1/references/$f.md -o .claude/skills/abdm-m1/references/$f.md; done`
 

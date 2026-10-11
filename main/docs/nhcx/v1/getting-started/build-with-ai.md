@@ -55,9 +55,9 @@ Docs MCP server
 
 Your agent queries this catalogue as it works, instead of loading it.
 
-- SearchHybrid keyword and semantic search over every page here, so an agent retrieves the paragraph it needs instead of loading the site.`search_docs, get_atom, related_atoms, list_atoms`
-- DecodeTurn an error code you just received into what it means and what to do, without you finding the right table.`decode_error`
-- ValidateCheck a request body against the specification before you send it, and list or read any operation.`validate_request, list_operations, get_operation`
+- SearchFinds the paragraph it needs on any page.`search_docs, get_atom, related_atoms, list_atoms`
+- DecodeTurns an error code into its cause and fix.`decode_error`
+- ValidateChecks a request body before you send it.`validate_request, list_operations, get_operation`
 
 **Claude**
 
@@ -163,9 +163,9 @@ The whole integration, every exchange end to end on either side, with the NHCX g
 
 [Download skill](/docs/main/skills/nhcx-full.tar.gz "The whole skill folder, as a .tar.gz archive.")
 
-- ScaffoldThe eight steps that build the use case into your system, from discovery and mapping through code to tests on the sandbox, each logged as it goes.
-- Integrate28 operations, with their hosts and headers.
-- TestThe test pyramid, from offline pins up to a live payer on the sandbox.
+- ScaffoldEight steps from discovery to sandbox tests.
+- Integrate28 operations, with hosts and headers.
+- TestTests from offline pins to a live sandbox.
 
 `mkdir -p .claude/skills && curl -fsSL https://nha-in.github.io/docs/main/skills/nhcx-full.tar.gz | tar -xzf - -C .claude/skills`
 

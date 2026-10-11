@@ -73,9 +73,9 @@ Every M3 call and callback in one file: 16 operations.
 
 [SKILL.md](/docs/main/skills/abdm-m3/SKILL.md "The router. Use the command below to take the references with it.")
 
-- ScaffoldThe loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.
-- DesignWhat the journey around the calls has to do, and what a screen is forbidden to claim.
-- Integrate16 operations, with their hosts and headers.
+- ScaffoldBuilds each flow until the sandbox confirms it.
+- DesignWhat a screen must do, and never claim.
+- Integrate16 operations, with hosts and headers.
 - DebugNo error code is recorded yet.
 
 `mkdir -p .claude/skills/abdm-m3/references && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m3/SKILL.md -o .claude/skills/abdm-m3/SKILL.md && for f in scaffold design integrate debug; do curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m3/references/$f.md -o .claude/skills/abdm-m3/references/$f.md; done`
