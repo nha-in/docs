@@ -79,7 +79,7 @@ export default function Omnibox() {
     if (!root) return;
     root
       .querySelector('input.navbar__search-input')
-      ?.setAttribute('placeholder', 'Search or ask AI');
+      ?.setAttribute('placeholder', 'Search...');
 
     // The search theme hardcodes the Apple command mark. On Windows, Linux and
     // Android that key does not exist, so the hint tells the reader to press

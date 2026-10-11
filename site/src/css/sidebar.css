@@ -750,11 +750,12 @@ body.is-resizing-sidebar {
   text-decoration: none;
 }
 
-/* What the skill can do. Three jobs, one row on a wide screen, stacked when
-   there is no room for three. */
+/* What the skill or server can do. Every job on one row on a wide screen,
+   however many the panel carries, stacked when there is no room. */
 .skill-caps {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
   gap: 1rem;
   margin: 1.5rem 0 0;
   padding: 1.25rem 0 0;
@@ -766,8 +767,15 @@ body.is-resizing-sidebar {
   padding-left: 0;
 }
 
+/* The prose list rule spaces every item after the first, which dropped each
+   label below the first one's and put the row's headers out of line. */
+.markdown .skill-caps > .skill-caps__item {
+  margin: 0;
+}
+
 @media (max-width: 767px) {
   .skill-caps {
+    grid-auto-flow: row;
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -1006,45 +1014,65 @@ body.is-resizing-sidebar {
 .navbar-sidebar .menu__link.api-method::before,
 .navbar-sidebar .api-method > .menu__link::before {
   flex: 0 0 auto;
-  min-width: 2.5rem;
-  padding: 0;
-  border-radius: 0;
-  background: none;
+  box-sizing: border-box;
+  min-width: 2.75rem;
+  margin-top: 0.125rem;
+  padding: 0 0.3125rem;
+  border-radius: var(--radius-chip);
+  background: var(--method-get-soft);
   color: var(--method-get);
   font-family: var(--font-mono);
   font-size: 0.625rem;
   font-weight: 600;
-  line-height: 1.25rem;
-  letter-spacing: 0.06em;
-  text-align: left;
+  line-height: 1rem;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
+/* The row the reader is on fills its pill with the verb's own colour, so
+   the highlight and the method say the same thing at a glance. */
+.theme-doc-sidebar-container .menu__link.menu__link--active.api-method::before,
+.theme-doc-sidebar-container .api-method > .menu__link.menu__link--active::before,
+.navbar-sidebar .menu__link.menu__link--active.api-method::before,
+.navbar-sidebar .api-method > .menu__link.menu__link--active::before {
+  background: var(--method-active, var(--method-get));
+  color: var(--surface);
 }
 
 .theme-doc-sidebar-container .menu__link.api-method--post::before,
 .theme-doc-sidebar-container .api-method--post > .menu__link::before,
 .navbar-sidebar .menu__link.api-method--post::before,
 .navbar-sidebar .api-method--post > .menu__link::before {
+  background: var(--method-post-soft);
   color: var(--method-post);
+  --method-active: var(--method-post);
 }
 
 .theme-doc-sidebar-container .menu__link.api-method--put::before,
 .theme-doc-sidebar-container .api-method--put > .menu__link::before,
 .navbar-sidebar .menu__link.api-method--put::before,
 .navbar-sidebar .api-method--put > .menu__link::before {
+  background: var(--method-put-soft);
   color: var(--method-put);
+  --method-active: var(--method-put);
 }
 
 .theme-doc-sidebar-container .menu__link.api-method--patch::before,
 .theme-doc-sidebar-container .api-method--patch > .menu__link::before,
 .navbar-sidebar .menu__link.api-method--patch::before,
 .navbar-sidebar .api-method--patch > .menu__link::before {
+  background: var(--method-patch-soft);
   color: var(--method-patch);
+  --method-active: var(--method-patch);
 }
 
 .theme-doc-sidebar-container .menu__link.api-method--delete::before,
 .theme-doc-sidebar-container .api-method--delete > .menu__link::before,
 .navbar-sidebar .menu__link.api-method--delete::before,
 .navbar-sidebar .api-method--delete > .menu__link::before {
+  background: var(--method-delete-soft);
   color: var(--method-delete);
+  --method-active: var(--method-delete);
 }
 
 /* ---------- sidebar settings ----------
