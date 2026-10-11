@@ -149,3 +149,19 @@ export function whenSaid(at: number, now = Date.now()): string {
   const days = Math.floor(hours / 24);
   return days < 7 ? `${days}d ago` : new Date(at).toLocaleDateString();
 }
+
+/**
+ * When a question was asked, in words, for the line under it: "just now",
+ * "1 minute ago", "3 hours ago". Spelt out rather than shortened the way the
+ * history list does it, because here it sits on its own under one message.
+ */
+export function askedAgo(at: number, now = Date.now()): string {
+  const mins = Math.floor((now - at) / 60000);
+  if (mins < 1) return 'just now';
+  const say = (n: number, unit: string) => `${n} ${unit}${n === 1 ? '' : 's'} ago`;
+  if (mins < 60) return say(mins, 'minute');
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return say(hours, 'hour');
+  const days = Math.floor(hours / 24);
+  return days < 7 ? say(days, 'day') : new Date(at).toLocaleDateString();
+}

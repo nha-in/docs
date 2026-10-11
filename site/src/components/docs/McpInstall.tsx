@@ -28,19 +28,19 @@ const CAPABILITIES = [
   {
     label: 'Search',
     detail:
-      'Hybrid keyword and semantic search over every page here, so an agent retrieves the paragraph it needs instead of loading the site.',
+      'Finds the paragraph it needs on any page.',
     tools: 'search_docs, get_atom, related_atoms, list_atoms',
   },
   {
     label: 'Decode',
     detail:
-      'Turn an error code you just received into what it means and what to do, without you finding the right table.',
+      'Turns an error code into its cause and fix.',
     tools: 'decode_error',
   },
   {
     label: 'Validate',
     detail:
-      'Check a request body against the specification before you send it, and list or read any operation.',
+      'Checks a request body before you send it.',
     tools: 'validate_request, list_operations, get_operation',
   },
 ];

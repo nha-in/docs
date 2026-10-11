@@ -142,20 +142,20 @@ const TARGETS: Record<AgentId, Target> = {
 const DETAIL: Record<string, (entry: Entry) => string> = {
   scaffold: (entry) =>
     entry.gateway === 'uhi'
-      ? 'Registration on the network, then each journey as a loop that ends on its observed exit condition rather than on an ACK.'
+      ? 'Registers, then builds each journey to its exit.'
       : entry.folder
-      ? 'The eight steps that build the use case into your system, from discovery and mapping through code to tests on the sandbox, each logged as it goes.'
-      : 'The loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.',
+      ? 'Eight steps from discovery to sandbox tests.'
+      : 'Builds each flow until the sandbox confirms it.',
   test: (entry) =>
     entry.gateway === 'uhi'
-      ? 'The checks the service is held to before go-live, and the steps to production.'
+      ? 'Go-live checks and the steps to production.'
       : (entry.tests ?? 0) > 0
-      ? `${entry.tests} test matrix rows, from offline pins up to a live payer on the sandbox.`
-      : 'The test pyramid, from offline pins up to a live payer on the sandbox.',
+      ? `${entry.tests} test rows, offline to live sandbox.`
+      : 'Tests from offline pins to a live sandbox.',
   design: () =>
-    'What the journey around the calls has to do, and what a screen is forbidden to claim.',
-  generate: () => 'Building NRCES compliant bundle generation into a codebase.',
-  audit: () => "Checking an existing FHIR store's output against the same profiles.",
+    'What a screen must do, and never claim.',
+  generate: () => 'Builds NRCES compliant bundles into your code.',
+  audit: () => "Checks a FHIR store against the profiles.",
 };
 
 function capabilities(entry: Entry) {
@@ -164,16 +164,16 @@ function capabilities(entry: Entry) {
       label: 'Integrate',
       detail:
         (entry.operations ?? 0) > 0
-          ? `${entry.operations} operations, with their hosts and headers${entry.gateway === 'uhi' ? ', and how each is signed' : ''}.`
+          ? `${entry.operations} operations, with hosts and headers${entry.gateway === 'uhi' ? ' and signing' : ''}.`
           : 'No operation is recorded yet.',
     },
     {
       label: 'Debug',
       detail:
         entry.gateway === 'uhi'
-          ? 'The loop from a status, an error object or a missing callback to a named fix. UHI publishes no error codes.'
+          ? 'From a status or missing callback to a fix.'
           : (entry.codes ?? 0) > 0
-          ? `${entry.codes} error codes, each with what to do about it.`
+          ? `${entry.codes} error codes, each with its fix.`
           : 'No error code is recorded yet.',
     },
   ];

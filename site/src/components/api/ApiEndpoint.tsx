@@ -9,6 +9,7 @@ import {
   ChevronDown,
   CodeXml,
   Copy,
+  Download,
   PanelRightClose,
   Play,
   Sparkles,
@@ -24,7 +25,14 @@ import {
   DialogContent,
   DialogTrigger,
 } from '@site/src/components/ui/dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@site/src/components/ui/dropdown-menu';
 import TryIt from './TryIt';
+import AgentOnly from '@site/src/components/mdx/AgentOnly';
 import Markdown from './Markdown';
 import {splitLede, isRestatement} from './lede';
 import {sections} from './sections';
@@ -158,15 +166,27 @@ export function SpecMeta({
         </span>
       ) : null}
       {spec.openapi ? <span className="api-spec__pill">OpenAPI {spec.openapi}</span> : null}
-      <span className="api-spec__download">
-        Download OpenAPI Document
-        <a href={json} download>
-          JSON
-        </a>
-        <a href={yaml} download>
-          YAML
-        </a>
-      </span>
+      {/* One control, and the format is the question it asks once pressed:
+          two links side by side read as two documents rather than one. */}
+      <DropdownMenu>
+        <DropdownMenuTrigger className="api-spec__download">
+          <Download className="size-3.5" aria-hidden="true" />
+          Download OpenAPI
+          <ChevronDown className="size-3.5" aria-hidden="true" />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start" className="w-40">
+          <DropdownMenuItem asChild>
+            <a href={json} download>
+              JSON
+            </a>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <a href={yaml} download>
+              YAML
+            </a>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 }
@@ -601,12 +621,18 @@ export default function ApiEndpoint({operation, children}: {operation: Operation
     ) : null,
   ].filter(Boolean);
 
+  // A page with a hand-written lede says what the call does already, and
+  // says it better: the specification's own overview under it repeated the
+  // same thing in vaguer words. So the tab goes for a reader, and the text
+  // stays in the page for an agent, which reads the .md built from the HTML
+  // and should still have any rule the overview states.
+  const overview = parts.overview && !children ? parts.overview : '';
   const panels = [
     {
       id: 'overview',
       label: 'Overview',
-      content: parts.overview ? (
-        <Markdown text={parts.overview} className="api-page__body" />
+      content: overview ? (
+        <Markdown text={overview} className="api-page__body" />
       ) : null,
     },
     {id: 'headers', label: 'Headers', content: headerParts.length ? headerParts : null},
@@ -702,6 +728,11 @@ export default function ApiEndpoint({operation, children}: {operation: Operation
         </div>
 
         {children ? <div className="api-page__body">{children}</div> : null}
+        {children && parts.overview ? (
+          <AgentOnly>
+            <Markdown text={parts.overview} className="api-page__body" />
+          </AgentOnly>
+        ) : null}
 
         {panels.length ? (
           <Tabs.Root className="api-tabs" value={tab} onValueChange={setTab}>

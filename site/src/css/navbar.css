@@ -242,7 +242,7 @@
   /* Centred on the bar, so the room it has is the distance from the middle to
      whichever cluster is wider, not the space between them. 26rem is that
      clearance doubled: enough for the brand and the gateway on the left. */
-  width: min(24rem, calc(100vw - 30rem));
+  width: min(19rem, calc(100vw - 30rem));
   transform: translate(-50%, -50%);
   /* One width for both panels that drop from this field. */
   --omnibox-panel: min(26rem, calc(100vw - 2rem));
