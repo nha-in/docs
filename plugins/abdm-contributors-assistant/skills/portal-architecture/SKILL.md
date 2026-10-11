@@ -1,9 +1,9 @@
 ---
 name: portal-architecture
 description: 'The architecture of the ABDM Developer Portal: the four building blocks, how the Catalogue compiles into docs, skills and MCP surfaces, the seven binding principles, the atom model, and what is deliberately excluded from V1. Use whenever someone asks how the portal fits together, why a design decision was made, whether something belongs in V1, where a new capability should live, or proposes a change to the structure. Also use before designing any new component so it lands in the right layer instead of beside it.'
-plan_version: 2026.09.29-13
+plan_version: 2026.10.07
 plan_source: abdm-v1-phase1-architecture-and-plan.md
-plan_hash: sha256:47cf8dcb036e7311e2381502b17818d74223ca9e13bb9dbccaad38a28695096c
+plan_hash: sha256:c01a6c7f16504d32011d0882d2e33851edb321c8d7273ed593355ed29c1feed6
 compiled_from_plan: true
 ---
 
@@ -117,6 +117,7 @@ PHR application services was on this list and its specification was retired in t
 - Execute-mode MCP exposed publicly
 - Any Eka-specific overlay content in the core Catalogue
 - Multi-agent orchestration. The index routes, a single agent executes.
+- The security pre-audit skills, `abdm-wasa-readiness` for integrators and the separate `abdm-wasa-assessor` plugin for NHA (plan#p4-6-wasa). Phase 2, designed, and the one planned exception to single-agent execution: each human role in a WASA is a subagent, and the signatory stays human.
 - Generated SDKs
 
 If someone wants one of these, the answer is not no, it is Phase 2, because each depends on a Catalogue that does not exist yet. NHCX is no longer an exception to that: its atoms and skills are Phase 2 like the rest, and its site pages already exist and are not going anywhere.

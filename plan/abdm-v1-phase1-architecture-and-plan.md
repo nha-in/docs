@@ -409,6 +409,18 @@ Installing one is a folder copy, not a port. `SKILL.md` is a cross-agent format:
 
 Agents (sub-agent definitions) and tools (scripts under `skills/*/scripts/`) accumulate in the same plugin. V1 ships: a `fhir-validate` script wrapping the NRCeS validator, a `callback-tunnel` script that sets up a public URL for sandbox callbacks, a `request-id` helper, and an `error-decode` script that reads a response and prints the matching error atom. Each is registered in the index.
 
+<a id="p4-6-wasa"></a>
+### 4.6 Security pre-audit skills (Phase 2, designed)
+
+Every integrator passes a Web Application Security Audit by a CERT-In empanelled auditor before production. Two skills emulate that audit so it holds no surprises. Neither issues a Safe to Host certificate.
+
+| Skill | Where it ships | Run by | Box | Output |
+|---|---|---|---|---|
+| `abdm-wasa-readiness` | `plugins/abdm-integrators-assistant/` | The integrator, on their own staging | Grey box plus source review | A readiness report in WASA format |
+| `abdm-wasa-assessor` | A separate plugin, `plugins/abdm-wasa-assessor/` | NHA, on NHA infrastructure, under a signed engagement record | Black box | Findings, a coverage ledger and an NHA-signed receipt |
+
+Both follow the audit lifecycle in CERT-In's Comprehensive Cyber Security Audit Policy Guidelines of 25 July 2025: a static scope bound to a version and hash, adaptive testing inside it, formal scope revisions, maker-checker verification, CVSS, EPSS and CWE on every finding, and narrowing retest rounds. Each human role in that lifecycle is a subagent, except the signatory, which stays human. Open source scanners do the bulk work, and three zero-dependency validators over the engagement, ledger and findings files supply every exit condition. Both skills compile from one source in `skills-src/wasa/`. Design: `docs/superpowers/specs/2026-10-07-wasa-pre-audit-design.md`.
+
 ---
 
 <a id="p5-update-pipeline"></a>
@@ -704,6 +716,7 @@ PHR application services was on this list, and its specification was retired in 
 - Execute-mode MCP for the public.
 - Any Eka-specific overlay (ABDM Connect endpoints, `X-Hip-Id`, `OHPL_001`). That becomes a separate overlay repo that depends on the Catalogue, built after V1.
 - Multi-agent orchestration. The index skill routes; a single agent executes.
+- The security pre-audit skills (§4.6). They are Phase 2, and the one planned exception to single-agent execution: each human role in the audit is a subagent.
 - Generated SDKs. Scalar can do this from the OpenAPI later; not needed to prove the model.
 
 ---
